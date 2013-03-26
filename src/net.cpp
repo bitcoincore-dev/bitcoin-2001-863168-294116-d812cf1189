@@ -78,6 +78,7 @@ ServiceFlags nRelevantServices = NODE_NETWORK;
 // Global state variables
 //
 bool fDiscover = true;
+bool fNetworkActive = true;
 bool fListen = true;
 ServiceFlags nLocalServices = NODE_NETWORK;
 bool fRelayTxes = true;
@@ -1038,6 +1039,12 @@ static void AcceptConnection(const ListenSocket& hListenSocket) {
         return;
     }
 
+    if (!fNetworkActive) {
+        LogPrintf("connection from %s dropped: not accepting new connections\n", addr.ToString());
+        CloseSocket(hSocket);
+        return;
+    }
+
     if (!IsSelectableSocket(hSocket))
     {
         LogPrintf("connection from %s dropped: non-selectable socket\n", addr.ToString());
@@ -1777,6 +1784,9 @@ bool OpenNetworkConnection(const CAddress& addrConnect, bool fCountFailure, CSem
     // Initiate outbound network connection
     //
     boost::this_thread::interruption_point();
+    if (!fNetworkActive) {
+        return false;
+    }
     if (!pszDest) {
         if (IsLocal(addrConnect) ||
             FindNode((CNetAddr)addrConnect) || CNode::IsBanned(addrConnect) ||
@@ -2106,6 +2116,25 @@ bool StopNode()
     }
 
     return true;
+}
+
+void SetNetworkActive(bool active)
+{
+    if (fDebug) {
+        LogPrint("net", "SetNetworkActive: %s\n", active);
+    }
+
+    if (!active) {
+        fNetworkActive = false;
+
+        LOCK(cs_vNodes);
+        // Close sockets to all nodes
+        BOOST_FOREACH(CNode* pnode, vNodes) {
+            pnode->CloseSocketDisconnect();
+        }
+    } else {
+        fNetworkActive = true;
+    }
 }
 
 class CNetCleanup
