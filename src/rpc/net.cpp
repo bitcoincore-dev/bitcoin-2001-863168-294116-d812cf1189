@@ -571,6 +571,20 @@ UniValue clearbanned(const UniValue& params, bool fHelp)
     return NullUniValue;
 }
 
+UniValue togglenetwork(const UniValue& params, bool fHelp)
+{
+    if (fHelp || params.size() != 0) {
+        throw runtime_error(
+            "togglenetwork\n"
+            "Toggle all network activity temporarily."
+        );
+    }
+
+    SetNetworkActive(!fNetworkActive);
+
+    return fNetworkActive;
+}
+
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         okSafeMode
   //  --------------------- ------------------------  -----------------------  ----------
@@ -585,6 +599,7 @@ static const CRPCCommand commands[] =
     { "network",            "setban",                 &setban,                 true  },
     { "network",            "listbanned",             &listbanned,             true  },
     { "network",            "clearbanned",            &clearbanned,            true  },
+    { "network",            "togglenetwork",          &togglenetwork,          true, },
 };
 
 void RegisterNetRPCCommands(CRPCTable &tableRPC)
