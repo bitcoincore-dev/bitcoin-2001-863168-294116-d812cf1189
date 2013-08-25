@@ -917,6 +917,23 @@ const char *HasNotoriousOutput(const CTransaction& tx)
     return NULL;
 }
 
+static
+const char *HasNotoriousInput(const CTransaction& tx, CCoinsViewCache& view)
+{
+    const char *entryname;
+    BOOST_FOREACH(const CTxIn txin, tx.vin)
+    {
+        const COutPoint &outpoint = txin.prevout;
+        const CCoins* coins = view.AccessCoins(outpoint.hash);
+        if (!coins)
+            break;
+        entryname = IsNotorious(coins->vout[outpoint.n].scriptPubKey);
+        if (entryname)
+            return entryname;
+    }
+    return NULL;
+}
+
 bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransaction &tx, bool fLimitFree,
                         bool* pfMissingInputs, bool fRejectAbsurdFee)
 {
@@ -1020,6 +1037,10 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransa
         // we have all inputs cached now, so switch back to dummy, so we don't need to keep lock on mempool
         view.SetBackend(dummy);
         }
+
+        entryname = HasNotoriousInput(tx, view);
+        if (entryname)
+            return error("CTxMemPool::accept() : ignoring transaction %s with notorious input (%s)", tx.GetHash().ToString(), entryname);
 
         // Check for non-standard pay-to-script-hash in inputs
         if (Params().RequireStandard() && !AreInputsStandard(tx, view))
