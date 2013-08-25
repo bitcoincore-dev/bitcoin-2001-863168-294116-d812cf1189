@@ -904,12 +904,29 @@ const char *IsNotorious(const CScript& script)
     return NULL;
 }
 
+static
+const char *HasNotoriousOutput(const CTransaction& tx)
+{
+    const char *entryname;
+    BOOST_FOREACH(const CTxOut& txout, tx.vout)
+    {
+        entryname = IsNotorious(txout.scriptPubKey);
+        if (entryname)
+            return entryname;
+    }
+    return NULL;
+}
+
 bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransaction &tx, bool fLimitFree,
                         bool* pfMissingInputs, bool fRejectAbsurdFee)
 {
     AssertLockHeld(cs_main);
     if (pfMissingInputs)
         *pfMissingInputs = false;
+
+    const char *entryname = HasNotoriousOutput(tx);
+    if (entryname)
+        return error("AcceptToMemoryPool : ignoring transaction %s with notorious output (%s)", tx.GetHash().ToString(), entryname);
 
     if (!CheckTransaction(tx, state))
         return error("AcceptToMemoryPool: CheckTransaction failed");
