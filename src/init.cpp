@@ -21,6 +21,9 @@
 #include "ui_interface.h"
 #include "util.h"
 #include "utilmoneystr.h"
+
+#include "ccl/cclglobals.h" // CCLGlobal * cclGlobal
+
 #ifdef ENABLE_WALLET
 #include "db.h"
 #include "wallet.h"
@@ -355,6 +358,8 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += "  -rpcsslcertificatechainfile=<file.cert>  " + _("Server certificate file (default: server.cert)") + "\n";
     strUsage += "  -rpcsslprivatekeyfile=<file.pem>         " + _("Server private key (default: server.pem)") + "\n";
     strUsage += "  -rpcsslciphers=<ciphers>                 " + _("Acceptable ciphers (default: TLSv1.2+HIGH:TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!3DES:@STRENGTH)") + "\n";
+
+    cclGlobals->UpdateUsage(strUsage);
 
     return strUsage;
 }
@@ -1056,6 +1061,8 @@ bool AppInit2(boost::thread_group& threadGroup)
     // Allowed to fail as this file IS missing on first startup.
     if (est_filein)
         mempool.ReadFeeEstimates(est_filein);
+
+    cclGlobals->Init();
 
     // ********************************************************* Step 8: load wallet
 #ifdef ENABLE_WALLET

@@ -1,0 +1,57 @@
+
+BITCOIN_INCLUDES += -I$(srcdir)/ccl
+
+# transaction and block logging
+
+CCL_BITCOIND_SRC = \
+  ccl/datalogger.cpp \
+  ccl/cclutil.cpp \
+  ccl/cclglobals.cpp
+
+CCL_BITCOIND_HDR = \
+  ccl/datalogger.h \
+  ccl/cclutil.h \
+  ccl/cclglobals.h
+
+libbitcoin_server_a_SOURCES += $(CCL_BITCOIND_SRC) $(CCL_BITCOIND_HDR)
+
+# txprinter binary 
+# 
+
+txprinter_SOURCES = ccl/txprinter.cpp
+txprinter_CPPFLAGS = $(BITCOIN_INCLUDES)
+
+txprinter_LDADD = \
+   $(LIBBITCOIN_SERVER) \
+   $(LIBBITCOIN_COMMON) \
+   $(LIBBITCOIN_UTIL) \
+   $(LIBBITCOIN_CRYPTO) \
+   $(LIBLEVELDB) \
+   $(LIBMEMENV) \
+   $(BOOST_LIBS)
+
+bin_PROGRAMS += txprinter
+
+# blockprinter binary 
+# 
+
+blockprinter_SOURCES = ccl/blockprinter.cpp
+blockprinter_CPPFLAGS = $(BITCOIN_INCLUDES)
+
+blockprinter_LDADD = \
+   $(LIBBITCOIN_SERVER) \
+   $(LIBBITCOIN_COMMON) \
+   $(LIBBITCOIN_UTIL) \
+   $(LIBBITCOIN_CRYPTO) \
+   $(LIBLEVELDB) \
+   $(LIBMEMENV) \
+   $(BOOST_LIBS)
+
+bin_PROGRAMS += blockprinter
+
+
+
+
+
+
+

@@ -18,6 +18,8 @@
 #include "ui_interface.h"
 #include "util.h"
 
+#include "ccl/cclglobals.h"
+
 #include <sstream>
 
 #include <boost/algorithm/string/replace.hpp>
@@ -3784,6 +3786,8 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         CTransaction tx;
         vRecv >> tx;
 
+        if (cclGlobals->dlog.get() != NULL) cclGlobals->dlog->OnNewTransaction(tx);
+
         CInv inv(MSG_TX, tx.GetHash());
         pfrom->AddInventoryKnown(inv);
 
@@ -3889,6 +3893,8 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
     {
         CBlock block;
         vRecv >> block;
+
+        if (cclGlobals->dlog.get() != NULL) cclGlobals->dlog->OnNewBlock(block);
 
         LogPrint("net", "received block %s peer=%d\n", block.GetHash().ToString(), pfrom->id);
 
