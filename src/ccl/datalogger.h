@@ -34,6 +34,7 @@ public:
 
 	void OnNewTransaction(CTransaction &tx);
 	void OnNewBlock(CBlock &block);
+
 };
 
 #endif

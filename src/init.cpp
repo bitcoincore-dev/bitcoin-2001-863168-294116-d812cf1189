@@ -1064,7 +1064,9 @@ bool AppInit2(boost::thread_group& threadGroup)
     if (est_filein)
         mempool.ReadFeeEstimates(est_filein);
 
-    cclGlobals->Init(&mempool);
+    if (!cclGlobals->Init(&mempool)) {
+        return false;
+    }
 
     // ********************************************************* Step 8: load wallet
 #ifdef ENABLE_WALLET
@@ -1255,7 +1257,9 @@ bool AppInit2(boost::thread_group& threadGroup)
     LogPrintf("mapAddressBook.size() = %u\n",  pwalletMain ? pwalletMain->mapAddressBook.size() : 0);
 #endif
 
-    StartNode(threadGroup);
+    if (!cclGlobals->Run(threadGroup)) {
+        StartNode(threadGroup);
+    } 
     if (fServer)
         StartRPCThreads();
 

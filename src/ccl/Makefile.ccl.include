@@ -6,12 +6,14 @@ BITCOIN_INCLUDES += -I$(srcdir)/ccl
 CCL_BITCOIND_SRC = \
   ccl/datalogger.cpp \
   ccl/cclutil.cpp \
-  ccl/cclglobals.cpp
+  ccl/cclglobals.cpp \
+  ccl/simulation.cpp
 
 CCL_BITCOIND_HDR = \
   ccl/datalogger.h \
   ccl/cclutil.h \
-  ccl/cclglobals.h
+  ccl/cclglobals.h \
+  ccl/simulation.h 
 
 libbitcoin_server_a_SOURCES += $(CCL_BITCOIND_SRC) $(CCL_BITCOIND_HDR)
 
@@ -66,4 +68,3 @@ mempoolprinter_LDADD = \
    $(BOOST_LIBS)
 
 bin_PROGRAMS += mempoolprinter
-

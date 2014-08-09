@@ -2554,7 +2554,7 @@ bool ProcessBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBl
         LogPrintf("ProcessBlock: ORPHAN BLOCK %lu, prev=%s\n", (unsigned long)mapOrphanBlocks.size(), pblock->hashPrevBlock.ToString());
 
         // Accept orphans as long as there is a node to request its parents from
-        if (pfrom) {
+        if (pfrom || cclGlobals->simulation.get() != NULL) {
             PruneOrphanBlocks();
             COrphanBlock* pblock2 = new COrphanBlock();
             {
@@ -2568,7 +2568,8 @@ bool ProcessBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBl
             mapOrphanBlocksByPrev.insert(make_pair(pblock2->hashPrev, pblock2));
 
             // Ask this guy to fill in what we're missing
-            PushGetBlocks(pfrom, chainActive.Tip(), GetOrphanRoot(hash));
+            if (pfrom)
+                PushGetBlocks(pfrom, chainActive.Tip(), GetOrphanRoot(hash));
         }
         return true;
     }
@@ -2614,10 +2615,72 @@ bool ProcessBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDiskBl
     return true;
 }
 
+// For simulations -- replicate the transaction processing done
+// in the message processing off the network.
+void ProcessTransaction(CTransaction &tx)
+{
+    vector<uint256> vWorkQueue;
+    vector<uint256> vEraseQueue;
 
+    CInv inv(MSG_TX, tx.GetHash());
+    LOCK(cs_main);
 
+    bool fMissingInputs = false;
+    CValidationState state;
+    if (AcceptToMemoryPool(mempool, state, tx, true, &fMissingInputs)) {
+        mempool.check(pcoinsTip);
+        vWorkQueue.push_back(inv.hash);
+        vEraseQueue.push_back(inv.hash);
 
+        LogPrint("processtx", "AcceptToMemoryPool: accepted %s (poolsz %u)\n",
+                tx.GetHash().ToString(),
+                mempool.mapTx.size());
+        
+        // Recursively process any orphan transactions that depended on this one
+        for (unsigned int i = 0; i < vWorkQueue.size(); i++)
+        {
+            map<uint256, set<uint256> >::iterator itByPrev = mapOrphanTransactionsByPrev.find(vWorkQueue[i]);
+            if (itByPrev == mapOrphanTransactionsByPrev.end())
+                continue;
+            for (set<uint256>::iterator mi = itByPrev->second.begin();
+                    mi != itByPrev->second.end(); ++mi)
+            {
+                const uint256& orphanHash = *mi;
+                const CTransaction& orphanTx = mapOrphanTransactions[orphanHash].tx;
+                bool fMissingInputs2 = false;
+                // Use a dummy CValidationState so someone can't setup nodes to counter-DoS based on orphan
+                // resolution (that is, feeding people an invalid transaction based on LegitTxX in order to get
+                // anyone relaying LegitTxX banned)
+                CValidationState stateDummy;
 
+                if (AcceptToMemoryPool(mempool, stateDummy, orphanTx, true, &fMissingInputs2))
+                {
+                    LogPrint("processtx", "   accepted orphan tx %s\n", orphanHash.ToString());
+                    mapAlreadyAskedFor.erase(CInv(MSG_TX, orphanHash));
+                    vWorkQueue.push_back(orphanHash);
+                    vEraseQueue.push_back(orphanHash);
+                }
+                else if (!fMissingInputs2)
+                {
+                    // invalid or too-little-fee orphan
+                    vEraseQueue.push_back(orphanHash);
+                    LogPrint("processtx", "   removed orphan tx %s\n",
+                        orphanHash.ToString());
+                }
+                mempool.check(pcoinsTip);
+            }
+        }
+        BOOST_FOREACH(uint256 hash, vEraseQueue)
+            EraseOrphanTx(hash);
+    } else if (fMissingInputs) {
+        AddOrphanTx(tx, 1234321); // hopefully a random unique value for the simulator to use
+                                  // (note: there shouldn't be any CNode's in use in sim)
+        unsigned int nMaxOrphanTx = (unsigned int)std::max((int64_t)0, GetArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS));
+        unsigned int nEvicted = LimitOrphanTxSize(nMaxOrphanTx);
+        if (nEvicted > 0)
+            LogPrint("processtx", "mapOrphan overflow, removed %u tx\n", nEvicted);
+    }
+}
 
 
 
@@ -4503,7 +4566,6 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
     return true;
 }
 
-
 bool CBlockUndo::WriteToDisk(CDiskBlockPos &pos, const uint256 &hashBlock)
 {
     // Open history file to append
@@ -4566,6 +4628,7 @@ bool CBlockUndo::ReadFromDisk(const CDiskBlockPos &pos, const uint256 &hashBlock
  std::string CBlockFileInfo::ToString() const {
      return strprintf("CBlockFileInfo(blocks=%u, size=%u, heights=%u...%u, time=%s...%s)", nBlocks, nSize, nHeightFirst, nHeightLast, DateTimeStrFormat("%Y-%m-%d", nTimeFirst), DateTimeStrFormat("%Y-%m-%d", nTimeLast));
  }
+
 
 
 
