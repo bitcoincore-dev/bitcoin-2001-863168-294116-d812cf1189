@@ -49,6 +49,23 @@ blockprinter_LDADD = \
 
 bin_PROGRAMS += blockprinter
 
+# mempoolprinter binary 
+# 
+
+mempoolprinter_SOURCES = ccl/mempoolprinter.cpp
+mempoolprinter_CPPFLAGS = $(BITCOIN_INCLUDES)
+
+mempoolprinter_LDADD = \
+   $(LIBBITCOIN_SERVER) \
+   $(LIBBITCOIN_COMMON) \
+   $(LIBBITCOIN_UTIL) \
+   $(LIBBITCOIN_CRYPTO) \
+   $(LIBLEVELDB) \
+   $(LIBMEMENV) \
+   $(BOOST_LIBS)
+
+bin_PROGRAMS += mempoolprinter
+
 
 
 

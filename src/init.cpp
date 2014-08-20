@@ -142,6 +142,8 @@ void Shutdown()
             LogPrintf("%s: Failed to write fee estimates to %s\n", __func__, est_path.string());
     }
 
+    cclGlobals->Shutdown();
+
     {
         LOCK(cs_main);
 #ifdef ENABLE_WALLET
@@ -1062,7 +1064,7 @@ bool AppInit2(boost::thread_group& threadGroup)
     if (est_filein)
         mempool.ReadFeeEstimates(est_filein);
 
-    cclGlobals->Init();
+    cclGlobals->Init(&mempool);
 
     // ********************************************************* Step 8: load wallet
 #ifdef ENABLE_WALLET

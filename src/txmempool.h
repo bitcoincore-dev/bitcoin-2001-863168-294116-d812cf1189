@@ -48,6 +48,8 @@ public:
     size_t GetTxSize() const { return nTxSize; }
     int64_t GetTime() const { return nTime; }
     unsigned int GetHeight() const { return nHeight; }
+
+    double GetOrigPriority() const { return dPriority; }
 };
 
 class CMinerPolicyEstimator;
