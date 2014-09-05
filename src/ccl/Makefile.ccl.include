@@ -68,3 +68,22 @@ mempoolprinter_LDADD = \
    $(BOOST_LIBS)
 
 bin_PROGRAMS += mempoolprinter
+
+# printdb binary 
+# 
+
+printdb_SOURCES = ccl/printdb.cpp
+printdb_CPPFLAGS = $(BITCOIN_INCLUDES)
+
+printdb_LDADD = \
+   $(LIBBITCOIN_SERVER) \
+   $(LIBBITCOIN_COMMON) \
+   $(LIBBITCOIN_UTIL) \
+   $(LIBBITCOIN_CRYPTO) \
+   $(LIBLEVELDB) \
+   $(LIBMEMENV) \
+   $(BOOST_LIBS) 
+
+bin_PROGRAMS += printdb
+
+

@@ -10,6 +10,7 @@ src/qt/test/test_bitcoin-qt
 src/txprinter
 src/blockprinter
 src/mempoolprinter
+src/printdb
 
 # autoreconf
 Makefile.in
