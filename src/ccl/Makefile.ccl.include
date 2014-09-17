@@ -60,15 +60,10 @@ mempoolprinter_LDADD = \
    $(LIBBITCOIN_COMMON) \
    $(LIBBITCOIN_UTIL) \
    $(LIBBITCOIN_CRYPTO) \
+   $(SSL_LIBS) \
    $(LIBLEVELDB) \
    $(LIBMEMENV) \
    $(BOOST_LIBS)
 
 bin_PROGRAMS += mempoolprinter
-
-
-
-
-
-
 

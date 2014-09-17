@@ -1,13 +1,13 @@
-#include "txmempool.h"
 #include "util.h"
 #include "core.h"
+#include "txmempool.h"
 
 #include <iostream>
 #include <stdio.h>
 
-using namespace std;
-
 void print(CTxMemPoolEntry &);
+
+using namespace std;
 
 int main(int argc, char **argv)
 {
