@@ -26,7 +26,7 @@ private:
 	void LoadOldMempool();
 
 public:
-	void WriteMempool();
+	void Shutdown();
 
 public:
 	DataLogger(string pathPrefix);

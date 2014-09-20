@@ -22,11 +22,17 @@ class CCLGlobals {
         void InitMemPool(CAutoFile &mempoolLog);
         bool Run(boost::thread_group &threadGroup);
 
+        void WriteMempool(CAutoFile &logfile);
+
         auto_ptr<DataLogger> dlog;
 	auto_ptr<Simulation> simulation;
 
         // Try to reduce reliance on global namespace
         CTxMemPool * mempool;
+
+    private:
+        bool writeMempoolAtShutdown;
+        std::string outputFileName;
 };
 
 extern CCLGlobals * cclGlobals;

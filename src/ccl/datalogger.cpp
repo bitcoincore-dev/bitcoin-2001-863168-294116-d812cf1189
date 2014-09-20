@@ -66,7 +66,7 @@ void DataLogger::RollDate()
     InitAutoFile(blockLog, "block.", to_iso_string(today));
     InitAutoFile(mempoolLog, "mempool.", to_iso_string(today));
 
-    WriteMempool();
+    cclGlobals->WriteMempool(mempoolLog);
 
     logRotateDate = today + days(1);
 }
@@ -85,23 +85,9 @@ void DataLogger::InitAutoFile(CAutoFile &which, std::string prefix, std::string 
     which = fopen(thispath.string().c_str(), "ab"); // append to be safe!
 }
 
-void DataLogger::WriteMempool()
+void DataLogger::Shutdown()
 {
-    if (mempoolLog) {
-        LOCK(cclGlobals->mempool->cs);
-        std::map<uint256, CTxMemPoolEntry>::iterator it;
-        for (it=cclGlobals->mempool->mapTx.begin(); 
-            it != cclGlobals->mempool->mapTx.end(); ++it) {
-            // can't get this to work:
-            // mempoolLog << it->second;
-            CTxMemPoolEntry &e = it->second;
-            mempoolLog << e.GetTx();
-            mempoolLog << e.GetFee();
-            mempoolLog << e.GetTime();
-            mempoolLog << e.GetOrigPriority();
-            mempoolLog << e.GetHeight();
-        }
-    }
+    cclGlobals->WriteMempool(mempoolLog);
 }
 
 void DataLogger::OnNewTransaction(CTransaction &tx)

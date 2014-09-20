@@ -7,7 +7,10 @@
 
 CCLGlobals *cclGlobals = new CCLGlobals;
 
-CCLGlobals::CCLGlobals() {}
+CCLGlobals::CCLGlobals() 
+    : mempool(NULL), writeMempoolAtShutdown(false)
+{
+}
 
 CCLGlobals::~CCLGlobals() 
 {
@@ -17,6 +20,9 @@ CCLGlobals::~CCLGlobals()
 void CCLGlobals::UpdateUsage(std::string &strUsage)
 {
     strUsage += "\n" + _("CCL Options:") + "\n";
+
+    // CCL options:
+    strUsage += " -writemempool=<file>            " + _("Write out mempool at end of run to DATADIR/file; specifying file is optional (default: 'mempool'") + "\n";
 
     // DataLogger options
     strUsage += "  -dlogdir=<dirname>      " + _("Turn on data logging to specified output directory") + "\n";    
@@ -32,6 +38,15 @@ void CCLGlobals::UpdateUsage(std::string &strUsage)
 bool CCLGlobals::Init(CTxMemPool *pool)
 {
     mempool = pool;
+
+    // CCL initialization
+    if (mapArgs.count("-writemempool")) {
+        writeMempoolAtShutdown = true;
+        if (mapArgs["-writemempool"].empty())
+            outputFileName = "mempool";
+        else
+            outputFileName = mapArgs["-writemempool"];
+    }
 
     // DataLogger initialization
     if (mapArgs.count("-dlogdir")) {
@@ -76,7 +91,14 @@ bool CCLGlobals::Run(boost::thread_group &threadGroup)
 
 void CCLGlobals::Shutdown()
 {
-    if (dlog.get()) dlog->WriteMempool();
+    if (dlog.get()) dlog->Shutdown();
+    if (writeMempoolAtShutdown) {
+        boost::filesystem::path output = GetDataDir() /
+            outputFileName;
+        CAutoFile mplog(fopen(output.string().c_str(), "wb"),
+                SER_DISK, CLIENT_VERSION);
+        WriteMempool(mplog);
+    }
 }
 
 void CCLGlobals::InitMemPool(CAutoFile &filein)
@@ -106,4 +128,23 @@ void CCLGlobals::InitMemPool(CAutoFile &filein)
 
     }
     LogPrintf("CCLGlobals: added %d entries to mempool\n", counter);
+}
+
+void CCLGlobals::WriteMempool(CAutoFile &logfile)
+{
+    if (logfile) {
+        LOCK(mempool->cs);
+        std::map<uint256, CTxMemPoolEntry>::iterator it;
+        for (it=cclGlobals->mempool->mapTx.begin(); 
+            it != cclGlobals->mempool->mapTx.end(); ++it) {
+            // can't get this to work:
+            // mempoolLog << it->second;
+            CTxMemPoolEntry &e = it->second;
+            logfile << e.GetTx();
+            logfile << e.GetFee();
+            logfile << e.GetTime();
+            logfile << e.GetOrigPriority();
+            logfile << e.GetHeight();
+        }
+    }
 }
