@@ -10,12 +10,13 @@
 using namespace boost;
 using namespace std;
 
-Simulation::Simulation(date sdate, date edate, string datadir)
+Simulation::Simulation(date sdate, date edate, string datadir, bool loadMempool)
  : blkfile(NULL, SER_DISK, CLIENT_VERSION),
    txfile(NULL, SER_DISK, CLIENT_VERSION),
    mempoolfile(NULL, SER_DISK, CLIENT_VERSION),
    logdir(datadir),
-   begindate(sdate), enddate(edate)
+   begindate(sdate), enddate(edate),
+   loadMempoolAtStartup(loadMempool)
 {
     LoadFiles(begindate);
     if (!blkfile) {
@@ -26,9 +27,11 @@ Simulation::Simulation(date sdate, date edate, string datadir)
     }
 
     // Actually, this should error if the right date can't be found...
-    InitAutoFile(mempoolfile, "mempool.", begindate);
-    if (!mempoolfile) {
-        LogPrintf("Simulation: can't open mempool file, continuing without\n");
+    if (loadMempoolAtStartup) {
+        InitAutoFile(mempoolfile, "mempool.", begindate);
+        if (!mempoolfile) {
+            LogPrintf("Simulation: can't open mempool file, continuing without\n");
+        }
     }
 }
 
@@ -60,8 +63,12 @@ void Simulation::operator()()
     LogPrintf("Simulation starting\n");
     
     date curdate = begindate;
-    // Start up with beginning mempool
-    cclGlobals->InitMemPool(mempoolfile);
+    if (loadMempoolAtStartup) {
+        // Start up with beginning mempool
+        cclGlobals->InitMemPool(mempoolfile);
+    } else {
+        LogPrintf("Simulation: not loading mempool\n");
+    }
     while (curdate <= enddate) {
         bool txEOF = false;
         bool blkEOF = false;

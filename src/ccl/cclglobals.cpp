@@ -32,6 +32,7 @@ void CCLGlobals::UpdateUsage(std::string &strUsage)
     strUsage += "      -simdatadir=<dir>     " + _("For simulations: specify data directory (default: /data/)") + "\n";
     strUsage += "      -start=<YYYYMMDD>  " + _("For simulations: start date") + "\n";
     strUsage += "      -end=<YYYYMMDD>    " + _("For simulations: end date (defaults to start date)") + "\n";
+    strUsage += "      -loadmempool=[1/0]" + _("Turn on/off loading initial mempool (default: 1)") + "\n";
 
 }
 
@@ -70,10 +71,11 @@ bool CCLGlobals::Init(CTxMemPool *pool)
         if (mapArgs.count("-simdatadir")) {
             simdatadir = mapArgs["-simdatadir"];
         }
+        bool loadMempool = GetBoolArg("-loadmempool", true);
         simulation.reset(new 
             Simulation(boost::gregorian::from_undelimited_string(startdate),
                 boost::gregorian::from_undelimited_string(enddate),
-                simdatadir)
+                simdatadir, loadMempool)
         );
     }
     return true;
