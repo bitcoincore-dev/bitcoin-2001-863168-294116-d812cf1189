@@ -77,13 +77,16 @@ printdb_CPPFLAGS = $(BITCOIN_INCLUDES)
 
 printdb_LDADD = \
    $(LIBBITCOIN_SERVER) \
+   $(LIBBITCOIN_WALLET) \
    $(LIBBITCOIN_COMMON) \
    $(LIBBITCOIN_UTIL) \
    $(LIBBITCOIN_CRYPTO) \
+   $(BDB_LIBS) \
+   $(SSL_LIBS) \
    $(LIBLEVELDB) \
    $(LIBMEMENV) \
-   $(BOOST_LIBS) 
+   $(LIBBITCOIN_UNIVALUE) \
+   $(BOOST_LIBS)
 
 bin_PROGRAMS += printdb
-
 
