@@ -11,6 +11,12 @@
 
 using namespace boost::gregorian;
 
+/**
+ * CCLEvent and derived classes BlockEvent/TxEvent allow for
+ * code deduplication; @see ReadEvent below.  BlockEvent and TxEvent
+ * are wrappers around the Block and Transaction objects.
+ */
+
 struct CCLEvent {
     CCLEvent() { reset(); }
     virtual void reset() { timeMicros = INT64_MAX; valid = false; }
@@ -30,31 +36,48 @@ struct TxEvent : public CCLEvent {
     CTransaction obj;
 };
 
+/**
+ * Simulation: plays historical data (@see DataLogger) back through bitcoind.
+ *
+ * Usage: Construct with dates to run the simulation, along with path to directory
+ *        where data is stored, and whether to start with an empty or pre-
+ *        populated mempool.
+ * 
+ * Currently only delivers events to bitcoind's main.cpp functions 
+ * (ProcessBlock and a new ProcessTransaction that mirrors the code that
+ * handles transactions coming in from the network).
+ *
+ * Should probably not use this code with the code that connects to peers
+ * over the network; preventing that is handled by init.cpp.
+ *
+ * This only works if you have a bitcoin datadir that is setup with the 
+ * blockindex and chainstate as of midnight on startdate.
+ */
+
 class Simulation {
-    public:
-        Simulation(date startdate, date enddate, std::string datadir, bool loadMempool);
-        ~Simulation() {}
+public:
+    Simulation(date startdate, date enddate, std::string datadir, bool loadMempool);
+    ~Simulation() {}
 
-        void operator()();
-        // Query the simulation for the current time (micros since epoch)
-        int64_t Clock() { return timeInMicros; }
+    void operator()();
+    // Query the simulation for the current time (micros since epoch)
+    int64_t Clock() { return timeInMicros; }
 
-    private:
-    	void LoadFiles(date d);
-    	void InitAutoFile(CAutoFile &which, std::string fileprefix, date d);
-        template<class T>
-        bool ReadEvent(CAutoFile &input, T *event);
+private:
+    void LoadFiles(date d);
+    void InitAutoFile(CAutoFile &which, std::string fileprefix, date d);
+    template<class T> bool ReadEvent(CAutoFile &input, T *event);
 
-        CAutoFile blkfile;
-        CAutoFile txfile;
-        CAutoFile mempoolfile;
+    CAutoFile blkfile;
+    CAutoFile txfile;
+    CAutoFile mempoolfile;
 
-        boost::filesystem::path logdir;
+    boost::filesystem::path logdir;
 
-        date begindate, enddate;
-        bool loadMempoolAtStartup;
+    date begindate, enddate;
+    bool loadMempoolAtStartup;
 
-        int64_t timeInMicros; // microseconds since epoch
+    int64_t timeInMicros; // microseconds since epoch
 };
 
 template<class T>
