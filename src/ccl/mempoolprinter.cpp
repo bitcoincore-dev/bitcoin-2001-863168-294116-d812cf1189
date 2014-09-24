@@ -45,6 +45,6 @@ void print(CTxMemPoolEntry &entry)
     cout << "nFee= " << entry.GetFee() << " ";
     cout << "nTxSize= " << entry.GetTxSize() << " ";
     cout << "nTime= " << entry.GetTime() << " ";
-    cout << "dPriority= " << entry.GetOrigPriority() << " ";
+    cout << "dPriority= " << entry.GetPriority(entry.GetHeight()) << " ";
     cout << "nHeight= " << entry.GetHeight() << endl;
 }

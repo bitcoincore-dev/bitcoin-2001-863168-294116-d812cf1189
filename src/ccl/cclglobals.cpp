@@ -1,6 +1,7 @@
 #include "cclglobals.h"
 #include "init.h"
 #include "ui_interface.h" // Defines the _() function!
+#include "uint256.h"
 #include "util.h"
 
 #include <string>
@@ -8,7 +9,7 @@
 CCLGlobals *cclGlobals = new CCLGlobals;
 
 CCLGlobals::CCLGlobals() 
-    : mempool(NULL), writeMempoolAtShutdown(false)
+    : mempool(NULL), writeMempoolAtShutdown(false), rnd(301)
 {
 }
 
@@ -145,8 +146,22 @@ void CCLGlobals::WriteMempool(CAutoFile &logfile)
             logfile << e.GetTx();
             logfile << e.GetFee();
             logfile << e.GetTime();
-            logfile << e.GetOrigPriority();
+            logfile << e.GetPriority(e.GetHeight());
             logfile << e.GetHeight();
         }
     }
+}
+
+// Use the leveldb random number generator -- not a crypto secure
+// random function, but we just need this to be deterministic so
+// low expectations...
+uint256 CCLGlobals::GetDetRandHash()
+{
+    uint256 ret;
+    for (unsigned i=0; i<16; ++i) {
+        uint256 val = rnd.Uniform(1<<16);
+        ret |= (val << i*16);
+    }
+    LogPrintf("random hash requested: %s\n", ret.GetHex());
+    return ret;
 }

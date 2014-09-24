@@ -540,6 +540,9 @@ unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans)
     {
         // Evict a random orphan:
         uint256 randomhash = GetRandHash();
+        if (cclGlobals->simulation.get() != NULL) {
+            randomhash = cclGlobals->GetDetRandHash(); // deterministic random
+        }
         map<uint256, COrphanTx>::iterator it = mapOrphanTransactions.lower_bound(randomhash);
         if (it == mapOrphanTransactions.end())
             it = mapOrphanTransactions.begin();
