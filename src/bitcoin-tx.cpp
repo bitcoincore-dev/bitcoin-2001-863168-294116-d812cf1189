@@ -224,9 +224,8 @@ static void MutateTxAddOutAddr(CMutableTransaction& tx, const string& strInput)
     if (!addr.IsValid())
         throw runtime_error("invalid TX output address");
 
-    // build standard output script via SetDestination()
-    CScript scriptPubKey;
-    scriptPubKey.SetDestination(addr.Get());
+    // build standard output script via GetScriptForDestination()
+    CScript scriptPubKey = GetScriptForDestination(addr.Get());
 
     // construct TxOut, append to transaction output list
     CTxOut txout(value, scriptPubKey);
@@ -436,7 +435,7 @@ static void MutateTxSign(CMutableTransaction& tx, const string& flagStr)
         BOOST_FOREACH(const CTransaction& txv, txVariants) {
             txin.scriptSig = CombineSignatures(prevPubKey, mergedTx, i, txin.scriptSig, txv.vin[i].scriptSig);
         }
-        if (!VerifyScript(txin.scriptSig, prevPubKey, mergedTx, i, STANDARD_SCRIPT_VERIFY_FLAGS, 0))
+        if (!VerifyScript(txin.scriptSig, prevPubKey, mergedTx, i, STANDARD_SCRIPT_VERIFY_FLAGS))
             fComplete = false;
     }
 

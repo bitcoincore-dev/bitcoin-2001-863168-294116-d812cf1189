@@ -11,6 +11,7 @@
 #include "sync.h"
 #include "timedata.h"
 #include "util.h"
+#include "version.h"
 
 #include <boost/foreach.hpp>
 
@@ -95,8 +96,8 @@ Value getpeerinfo(const Array& params, bool fHelp)
             "    \"subver\": \"/Satoshi:0.8.5/\",  (string) The string version\n"
             "    \"inbound\": true|false,     (boolean) Inbound (true) or Outbound (false)\n"
             "    \"startingheight\": n,       (numeric) The starting height (block) of the peer\n"
-            "    \"banscore\": n,              (numeric) The ban score (stats.nMisbehavior)\n"
-            "    \"syncnode\" : true|false     (booleamn) if sync node\n"
+            "    \"banscore\": n,             (numeric) The ban score\n"
+            "    \"syncnode\": true|false     (boolean) if sync node\n"
             "  }\n"
             "  ,...\n"
             "]\n"
@@ -393,6 +394,8 @@ Value getnetworkinfo(const Array& params, bool fHelp)
 
     Object obj;
     obj.push_back(Pair("version",       (int)CLIENT_VERSION));
+    obj.push_back(Pair("subversion",
+        FormatSubVersion(CLIENT_NAME, CLIENT_VERSION, std::vector<string>())));
     obj.push_back(Pair("protocolversion",(int)PROTOCOL_VERSION));
     obj.push_back(Pair("localservices",       strprintf("%016x", nLocalServices)));
     obj.push_back(Pair("timeoffset",    GetTimeOffset()));
