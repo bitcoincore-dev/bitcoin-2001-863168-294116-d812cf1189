@@ -11,7 +11,7 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-    CAutoFile filein = CAutoFile(fopen(argv[1], "rb"), SER_DISK, CLIENT_VERSION);
+    CAutoFile filein(fopen(argv[1], "rb"), SER_DISK, CLIENT_VERSION);
 
     try {
         while (1){
