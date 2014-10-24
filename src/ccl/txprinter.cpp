@@ -1,5 +1,6 @@
 #include "util.h"
 #include "core.h"
+#include "version.h"
 
 int main(int argc, char **argv)
 {

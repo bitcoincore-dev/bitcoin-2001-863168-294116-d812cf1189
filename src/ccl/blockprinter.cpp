@@ -1,5 +1,6 @@
 #include "util.h"
 #include "core.h"
+#include "version.h"
 
 void print(CBlock &);
 
@@ -29,7 +30,7 @@ int main(int argc, char **argv)
 
 void print(CBlock &block)
 {
-    printf("CBlock(hash=%s, ver=%d, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%u)\n",
+    printf("CBlock(hash=%s, ver=%d, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%lu)\n",
         block.GetHash().ToString().c_str(),
         block.nVersion,
         block.hashPrevBlock.ToString().c_str(),

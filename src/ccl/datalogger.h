@@ -5,6 +5,7 @@
 #include "txmempool.h"
 #include "util.h"
 #include <string>
+#include <memory>
 
 using namespace std;
 
@@ -22,9 +23,9 @@ using namespace std;
 
 class DataLogger {
 private:
-    CAutoFile transactionLog;
-    CAutoFile blockLog;
-    CAutoFile mempoolLog;
+    auto_ptr<CAutoFile> transactionLog;
+    auto_ptr<CAutoFile> blockLog;
+    auto_ptr<CAutoFile> mempoolLog;
 
     // Store the path where we're putting
     // all the data files, for log rotation
@@ -33,7 +34,7 @@ private:
 
     boost::gregorian::date logRotateDate;
 
-    void InitAutoFile(CAutoFile &which, std::string prefix, std::string curdate);
+    void InitAutoFile(auto_ptr<CAutoFile> &which, std::string prefix, std::string curdate);
     void RollDate();
     void LoadOldMempool();
 

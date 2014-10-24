@@ -7,6 +7,8 @@
 #include "txmempool.h"
 #include "leveldb/util/random.h"
 
+#include "version.h"
+
 #include <boost/thread/thread.hpp>
 #include <string>
 #include <memory>

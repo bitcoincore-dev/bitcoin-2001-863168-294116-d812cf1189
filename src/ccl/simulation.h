@@ -9,7 +9,10 @@
 #include <string>
 #include <serialize.h>
 
+#include <memory>
+
 using namespace boost::gregorian;
+using namespace std;
 
 /**
  * CCLEvent and derived classes BlockEvent/TxEvent allow for
@@ -65,12 +68,12 @@ public:
 
 private:
     void LoadFiles(date d);
-    void InitAutoFile(CAutoFile &which, std::string fileprefix, date d);
+    void InitAutoFile(auto_ptr<CAutoFile> &which, std::string fileprefix, date d);
     template<class T> bool ReadEvent(CAutoFile &input, T *event);
 
-    CAutoFile blkfile;
-    CAutoFile txfile;
-    CAutoFile mempoolfile;
+    auto_ptr<CAutoFile> blkfile;
+    auto_ptr<CAutoFile> txfile;
+    auto_ptr<CAutoFile> mempoolfile;
 
     boost::filesystem::path logdir;
 

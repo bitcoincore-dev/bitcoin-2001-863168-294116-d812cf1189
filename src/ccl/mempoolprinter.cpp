@@ -1,6 +1,7 @@
 #include "util.h"
 #include "core.h"
 #include "txmempool.h"
+#include "version.h"
 
 #include <iostream>
 #include <stdio.h>

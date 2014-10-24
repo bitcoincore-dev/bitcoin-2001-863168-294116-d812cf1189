@@ -135,7 +135,7 @@ void CCLGlobals::InitMemPool(CAutoFile &filein)
 
 void CCLGlobals::WriteMempool(CAutoFile &logfile)
 {
-    if (logfile) {
+    if (!logfile.IsNull()) {
         LOCK(mempool->cs);
         std::map<uint256, CTxMemPoolEntry>::iterator it;
         for (it=cclGlobals->mempool->mapTx.begin(); 

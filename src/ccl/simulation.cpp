@@ -11,25 +11,22 @@ using namespace boost;
 using namespace std;
 
 Simulation::Simulation(date sdate, date edate, string datadir, bool loadMempool)
- : blkfile(NULL, SER_DISK, CLIENT_VERSION),
-   txfile(NULL, SER_DISK, CLIENT_VERSION),
-   mempoolfile(NULL, SER_DISK, CLIENT_VERSION),
-   logdir(datadir),
+ : logdir(datadir),
    begindate(sdate), enddate(edate),
    loadMempoolAtStartup(loadMempool)
 {
     LoadFiles(begindate);
-    if (!blkfile) {
+    if (blkfile->IsNull()) {
         LogPrintf("Simulation: can't open block file, continuing without\n");
     }
-    if (!txfile) {
+    if (txfile->IsNull()) {
         LogPrintf("Simulation: can't open tx file, continuing without\n");
     }
 
     // Actually, this should error if the right date can't be found...
     if (loadMempoolAtStartup) {
         InitAutoFile(mempoolfile, "mempool.", begindate);
-        if (!mempoolfile) {
+        if (mempoolfile->IsNull()) {
             LogPrintf("Simulation: can't open mempool file, continuing without\n");
         }
     }
@@ -41,20 +38,18 @@ void Simulation::LoadFiles(date d)
     InitAutoFile(blkfile, "block.", d);
 }
 
-void Simulation::InitAutoFile(CAutoFile &which, std::string fileprefix, date d)
+void Simulation::InitAutoFile(auto_ptr<CAutoFile> &which, std::string fileprefix, date d)
 {
-    if (which) which.fclose();
-
     for (date s=d; s<= enddate; s += days(1)) {
         string filename = fileprefix + boost::gregorian::to_iso_string(s);
         boost::filesystem::path fullpath = logdir / filename; 
-        which = fopen(fullpath.string().c_str(), "rb"); 
-        if (which) {
+        which.reset(new CAutoFile(fopen(fullpath.string().c_str(), "rb"),
+                    SER_DISK, CLIENT_VERSION));
+        if (!which->IsNull()) {
             LogPrintf("Simulation: InitAutoFile opened %s\n", fullpath.string().c_str());
             break;
         }
     }
-
 }
 
 
@@ -65,7 +60,7 @@ void Simulation::operator()()
     date curdate = begindate;
     if (loadMempoolAtStartup) {
         // Start up with beginning mempool
-        cclGlobals->InitMemPool(mempoolfile);
+        cclGlobals->InitMemPool(*mempoolfile);
     } else {
         LogPrintf("Simulation: not loading mempool\n");
     }
@@ -78,13 +73,13 @@ void Simulation::operator()()
 
         while (!txEOF || !blkEOF) {
             if (!txEOF && !txEvent.valid) {
-                txEOF = !ReadEvent(txfile, &txEvent);
+                txEOF = !ReadEvent(*txfile, &txEvent);
             }
             // TODO: look at LoadExternalBlockFile (in main.cpp) and try
             // to understand why there's so much more code there.  Might
             // need to beef this up...
             if (!blkEOF && !blockEvent.valid) {
-                blkEOF = !ReadEvent(blkfile, &blockEvent);
+                blkEOF = !ReadEvent(*blkfile, &blockEvent);
             }
 
             if (!txEvent.valid && !blockEvent.valid) 

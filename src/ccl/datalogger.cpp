@@ -6,10 +6,11 @@
 using namespace boost::gregorian;
 using namespace boost::posix_time;
 
-DataLogger::DataLogger(string pathPrefix) : 
-    transactionLog(NULL, SER_DISK, CLIENT_VERSION), 
-    blockLog(NULL, SER_DISK, CLIENT_VERSION),
-    mempoolLog(NULL, SER_DISK, CLIENT_VERSION)
+//    transactionLog(NULL, SER_DISK, CLIENT_VERSION), 
+//    blockLog(NULL, SER_DISK, CLIENT_VERSION),
+//    mempoolLog(NULL, SER_DISK, CLIENT_VERSION)
+
+DataLogger::DataLogger(string pathPrefix) 
 {
     if (pathPrefix == "") {
         logdir = GetDataDir();
@@ -20,13 +21,13 @@ DataLogger::DataLogger(string pathPrefix) :
     LoadOldMempool();
     RollDate();
 
-    if (!transactionLog) {
+    if (transactionLog->IsNull()) {
         LogPrintf("DataLogger: Unable to create transaction log file, will proceed with no tx log\n");
     }
-    if (!blockLog) {
+    if (blockLog->IsNull()) {
         LogPrintf("DataLogger: Unable to create block log file, will proceed with no block log\n");
     }
-    if (!mempoolLog) {
+    if (mempoolLog->IsNull()) {
         LogPrintf("DataLogger: Unable to create mempool log file, will proceed with no mempool log\n");
     }
 }
@@ -35,22 +36,19 @@ DataLogger::~DataLogger() {}
 
 void DataLogger::LoadOldMempool()
 {
-    CAutoFile oldMempool(NULL, SER_DISK, CLIENT_VERSION);
     date today(day_clock::local_day());
 
     std::string fullname = "mempool." + to_iso_string(today);
     boost::filesystem::path thispath = logdir / fullname;
 
-    if (boost::filesystem::exists(thispath)) {
-        oldMempool = fopen(thispath.string().c_str(), "rb");
-    } else {
+    if (!boost::filesystem::exists(thispath)) {
         fullname = "mempool." + to_iso_string(today-days(1));
         thispath = logdir / fullname;
-        if (boost::filesystem::exists(thispath)) {
-            oldMempool = fopen(thispath.string().c_str(), "rb");
-        }
     }
-    if (oldMempool) {
+
+    CAutoFile oldMempool(fopen(thispath.string().c_str(), "rb"), SER_DISK, CLIENT_VERSION);
+
+    if (!oldMempool.IsNull()) {
         cclGlobals->InitMemPool(oldMempool);
     } else {
         LogPrintf("DataLogger: unable to load previous mempool, continuing without\n");
@@ -66,15 +64,15 @@ void DataLogger::RollDate()
     InitAutoFile(blockLog, "block.", to_iso_string(today));
     InitAutoFile(mempoolLog, "mempool.", to_iso_string(today));
 
-    cclGlobals->WriteMempool(mempoolLog);
+    cclGlobals->WriteMempool(*mempoolLog);
 
     logRotateDate = today + days(1);
 }
 
-void DataLogger::InitAutoFile(CAutoFile &which, std::string prefix, std::string curdate)
+// TODO: test this code to make sure we don't need to explicitly close the file
+void DataLogger::InitAutoFile(auto_ptr<CAutoFile> &which, std::string prefix, std::string curdate)
 {
-    if (which) which.fclose();
-
+    //if (!which.get()>IsNull()) which.get()->fclose();
     std::string fullname = prefix + curdate;
     boost::filesystem::path thispath = logdir / fullname;
 
@@ -82,32 +80,33 @@ void DataLogger::InitAutoFile(CAutoFile &which, std::string prefix, std::string 
         LogPrintf("DataLogger::InitAutoFile: Unable to rotate %s, check filesystem permissions\n",
             fullname);
     }
-    which = fopen(thispath.string().c_str(), "ab"); // append to be safe!
+
+    which.reset(new CAutoFile(fopen(thispath.string().c_str(), "ab"), SER_DISK, CLIENT_VERSION));
 }
 
 void DataLogger::Shutdown()
 {
-    cclGlobals->WriteMempool(mempoolLog);
+    cclGlobals->WriteMempool(*mempoolLog);
 }
 
 void DataLogger::OnNewTransaction(CTransaction &tx)
 {
-    if (transactionLog) {
+    if (!transactionLog->IsNull()) {
         if (day_clock::local_day() >= logRotateDate) {
             RollDate();
         }
-        transactionLog << GetTimeMicros();
-        transactionLog << tx;
+        *transactionLog << GetTimeMicros();
+        *transactionLog << tx;
     }
 }
 
 void DataLogger::OnNewBlock(CBlock &block)
 {
-    if (blockLog) {
+    if (!blockLog->IsNull()) {
         if (day_clock::local_day() >= logRotateDate) {
             RollDate();
         }
-        blockLog << GetTimeMicros();
-        blockLog << block;
+        *blockLog << GetTimeMicros();
+        *blockLog << block;
     }
 }
