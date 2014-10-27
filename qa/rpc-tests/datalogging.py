@@ -10,44 +10,42 @@ from util import *
 
 class DataLoggingTest(BitcoinTestFramework):
 
-    def setup_network(self, test_dir):
-        nodes = []
-        nodes.append(start_node(0, test_dir,
-                            ["-writemempool", "-dlogdir=" + test_dir]))
+    def setup_network(self):
+        self.nodes = []
+        self.nodes.append(start_node(0, self.options.tmpdir,
+                            ["-writemempool", "-dlogdir=" + self.options.tmpdir]))
 
         
-        nodes.append(start_node(1, test_dir));
-        nodes.append(start_node(2, test_dir));
-        connect_nodes(nodes[1], 0)
-        connect_nodes(nodes[1], 2)
+        self.nodes.append(start_node(1, self.options.tmpdir));
+        self.nodes.append(start_node(2, self.options.tmpdir));
+        connect_nodes_bi(self.nodes, 1, 0)
+        connect_nodes_bi(self.nodes, 1, 2)
 
-        sync_blocks(nodes)
-        return nodes
+        sync_blocks(self.nodes)
         
-
-    def run_test(self, nodes):
+    def run_test(self):
         # Prime the memory pool with pairs of transactions
         # (high-priority, random fee and zero-priority, random fee)
         min_fee = Decimal("0.001")
         fees_per_kb = [];
-        txnodes = [nodes[1], nodes[2]]
+        txnodes = [self.nodes[1], self.nodes[2]]
         for i in range(12):
             (txid, txhex, fee) = random_transaction(txnodes, Decimal("1.1"),
                                                             min_fee, min_fee, 20)
 
-        sync_mempools(nodes)
+        sync_mempools(self.nodes)
 
         # Mine blocks with node1 until the memory pool clears:
-        count_start = nodes[1].getblockcount()
-        while len(nodes[1].getrawmempool()) > 0:
-            nodes[1].setgenerate(True, 1)
-            sync_blocks(nodes)
+        count_start = self.nodes[1].getblockcount()
+        while len(self.nodes[1].getrawmempool()) > 0:
+            self.nodes[1].setgenerate(True, 1)
+            sync_blocks(self.nodes)
 
         for i in range(12):
             (txid, txhex, fee) = random_transaction(txnodes, Decimal("1.1"),
                                                             min_fee, min_fee, 20)
-        sync_mempools(nodes)
-        stop_nodes(nodes)
+        sync_mempools(self.nodes)
+        stop_nodes(self.nodes)
 
         time.sleep(5) # Need to wait for files to be written out
 
