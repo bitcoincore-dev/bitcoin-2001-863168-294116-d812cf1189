@@ -4,6 +4,7 @@
 #include "ccl/datalogger.h"
 #include "ccl/simulation.h"
 
+#include "streams.h"
 #include "txmempool.h"
 #include "leveldb/util/random.h"
 

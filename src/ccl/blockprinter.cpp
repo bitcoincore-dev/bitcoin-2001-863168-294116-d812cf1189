@@ -1,5 +1,6 @@
-#include "util.h"
 #include "core.h"
+#include "streams.h"
+#include "util.h"
 #include "version.h"
 
 void print(CBlock &);
