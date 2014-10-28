@@ -1,6 +1,6 @@
 #include "util.h"
-#include "core.h"
 #include "streams.h"
+#include "core/transaction.h"
 #include "txmempool.h"
 #include "version.h"
 

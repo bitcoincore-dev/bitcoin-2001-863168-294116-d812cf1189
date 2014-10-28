@@ -1,8 +1,11 @@
 #include "simulation.h"
+#include "ccl/cclglobals.h"
+
 #include "init.h"
 #include "main.h"
+#include "core/transaction.h"
+#include "core/block.h"
 #include "util.h"
-#include "ccl/cclglobals.h"
 
 #include <string>
 #include <boost/interprocess/sync/file_lock.hpp>

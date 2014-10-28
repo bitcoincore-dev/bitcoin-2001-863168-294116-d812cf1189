@@ -1,7 +1,6 @@
 #ifndef DATA_LOGGER_H
 #define DATA_LOGGER_H
 
-#include "core.h"
 #include "streams.h"
 #include "txmempool.h"
 #include "util.h"
@@ -9,6 +8,9 @@
 #include <memory>
 
 using namespace std;
+
+class CTransaction;
+class CBlock;
 
 /**
  * DataLogger: log block and tx data as it arrives.

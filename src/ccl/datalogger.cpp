@@ -1,6 +1,9 @@
 #include "datalogger.h"
 #include "cclutil.h"
 #include "cclglobals.h"
+
+#include "core/block.h"
+#include "core/transaction.h"
 #include "boost/date_time/gregorian/gregorian.hpp" //include all types plus i/o
 
 using namespace boost::gregorian;
