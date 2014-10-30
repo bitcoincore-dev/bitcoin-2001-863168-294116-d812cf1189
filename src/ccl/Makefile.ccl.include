@@ -17,23 +17,6 @@ CCL_BITCOIND_HDR = \
 
 libbitcoin_server_a_SOURCES += $(CCL_BITCOIND_SRC) $(CCL_BITCOIND_HDR)
 
-# txprinter binary 
-# 
-
-txprinter_SOURCES = ccl/txprinter.cpp
-txprinter_CPPFLAGS = $(BITCOIN_INCLUDES)
-
-txprinter_LDADD = \
-   $(LIBBITCOIN_SERVER) \
-   $(LIBBITCOIN_COMMON) \
-   $(LIBBITCOIN_UTIL) \
-   $(LIBBITCOIN_CRYPTO) \
-   $(LIBLEVELDB) \
-   $(LIBMEMENV) \
-   $(BOOST_LIBS)
-
-bin_PROGRAMS += txprinter
-
 # dataprinter binary 
 # 
 
@@ -56,41 +39,6 @@ dataprinter_LDADD = \
    $(MINIUPNPC_LIBS)
 
 bin_PROGRAMS += dataprinter
-
-# blockprinter binary 
-# 
-
-blockprinter_SOURCES = ccl/blockprinter.cpp
-blockprinter_CPPFLAGS = $(BITCOIN_INCLUDES)
-
-blockprinter_LDADD = \
-   $(LIBBITCOIN_SERVER) \
-   $(LIBBITCOIN_COMMON) \
-   $(LIBBITCOIN_UTIL) \
-   $(LIBBITCOIN_CRYPTO) \
-   $(LIBLEVELDB) \
-   $(LIBMEMENV) \
-   $(BOOST_LIBS)
-
-bin_PROGRAMS += blockprinter
-
-# mempoolprinter binary 
-# 
-
-mempoolprinter_SOURCES = ccl/mempoolprinter.cpp
-mempoolprinter_CPPFLAGS = $(BITCOIN_INCLUDES)
-
-mempoolprinter_LDADD = \
-   $(LIBBITCOIN_SERVER) \
-   $(LIBBITCOIN_COMMON) \
-   $(LIBBITCOIN_UTIL) \
-   $(LIBBITCOIN_CRYPTO) \
-   $(SSL_LIBS) \
-   $(LIBLEVELDB) \
-   $(LIBMEMENV) \
-   $(BOOST_LIBS)
-
-bin_PROGRAMS += mempoolprinter
 
 # printdb binary 
 # 
