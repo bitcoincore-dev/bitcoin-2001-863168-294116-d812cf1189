@@ -52,19 +52,19 @@ class DataLoggingTest(BitcoinTestFramework):
         today = time.strftime("%Y%m%d")
 
         # Check that the size of the tx log is correct
-        alltx = subprocess.check_output([ "txprinter", self.options.tmpdir+"/tx."+today])
+        alltx = subprocess.check_output([ "dataprinter", self.options.tmpdir+"/tx."+today])
         txheader = re.findall('CTransaction', alltx)
         if len(txheader) != 24:
                 raise AssertionError("Wrong number of logged tx's, expected 24, got %d"%(len(txheader)))
     
         # Check that the size of the block log is correct
-        allblocks = subprocess.check_output([ "blockprinter", self.options.tmpdir+"/block."+today])
+        allblocks = subprocess.check_output([ "dataprinter", self.options.tmpdir+"/block."+today])
         blockheaders = re.findall('CBlock', allblocks)
         if len(blockheaders) != 1:
                 raise AssertionError("Wrong number of logged blocks, expected 1, got %d" % len(blockheaders))
 
         # Check that the size of the mempool log is correct
-        allmptx = subprocess.check_output([ "mempoolprinter", self.options.tmpdir+"/mempool."+today])
+        allmptx = subprocess.check_output([ "dataprinter", self.options.tmpdir+"/mempool."+today])
         mpheaders = re.findall('CTransaction', allmptx)
         if len(mpheaders) != 12:
                 raise AssertionError("Wrong number of mempool entries, expected 12, got %d" % len(mpheaders))
