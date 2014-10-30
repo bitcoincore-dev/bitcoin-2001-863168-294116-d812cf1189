@@ -8,7 +8,7 @@
 #include "txmempool.h"
 #include "leveldb/util/random.h"
 
-#include "version.h"
+#include "clientversion.h"
 
 #include <boost/thread/thread.hpp>
 #include <string>

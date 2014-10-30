@@ -1,7 +1,7 @@
 #include "streams.h"
 #include "util.h"
 #include "core/block.h"
-#include "version.h"
+#include "clientversion.h"
 
 void print(CBlock &);
 
