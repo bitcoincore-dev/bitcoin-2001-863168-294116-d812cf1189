@@ -4,7 +4,7 @@
 #include "core/transaction.h"
 #include "simulation.h"
 #include "txmempool.h"
-#include "version.h"
+#include "clientversion.h"
 
 #include "boost/filesystem.hpp"
 #include <vector>
