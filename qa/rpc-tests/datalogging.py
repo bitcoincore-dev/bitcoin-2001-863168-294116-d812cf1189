@@ -69,5 +69,12 @@ class DataLoggingTest(BitcoinTestFramework):
         if len(mpheaders) != 12:
                 raise AssertionError("Wrong number of mempool entries, expected 12, got %d" % len(mpheaders))
 
+        # Check that the size of the headers log is correct
+        # TODO: figure out how many headers we should actually get...
+        allheaders = subprocess.check_output([ "dataprinter", self.options.tmpdir+"/headers."+today])
+        hdrheaders = re.findall('CBlockHeader', allheaders)
+        if len(mpheaders) == 0:
+                raise AssertionError("Wrong number of blockheader entries, expected some, got %d" % len(hdrheaders))
+
 if __name__ == '__main__':
     DataLoggingTest().main()
