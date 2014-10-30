@@ -41,6 +41,11 @@ struct TxEvent : public CCLEvent {
     CTransaction obj;
 };
 
+struct HeadersEvent : public CCLEvent {
+    HeadersEvent() : CCLEvent() {}
+    vector<CBlockHeader> obj;
+};
+
 /**
  * Simulation: plays historical data (@see DataLogger) back through bitcoind.
  *
@@ -68,14 +73,16 @@ public:
     // Query the simulation for the current time (micros since epoch)
     int64_t Clock() { return timeInMicros; }
 
+    template<class T> static bool ReadEvent(CAutoFile &input, T *event);
+
 private:
     void LoadFiles(date d);
     void InitAutoFile(auto_ptr<CAutoFile> &which, std::string fileprefix, date d);
-    template<class T> bool ReadEvent(CAutoFile &input, T *event);
 
     auto_ptr<CAutoFile> blkfile;
     auto_ptr<CAutoFile> txfile;
     auto_ptr<CAutoFile> mempoolfile;
+    auto_ptr<CAutoFile> headersfile;
 
     boost::filesystem::path logdir;
 
@@ -92,6 +99,24 @@ bool Simulation::ReadEvent(CAutoFile &input, T *event)
         input >> event->timeMicros;
         input >> event->obj;
         event->valid = true;
+    } catch (std::ios_base::failure) {
+        event->reset();
+        return false;
+    }
+    return true;
+}
+
+template<>
+inline bool Simulation::ReadEvent<HeadersEvent>(CAutoFile &input, HeadersEvent *event)
+{
+    try {
+        input >> event->timeMicros;
+        size_t numHeaders;
+        input >> numHeaders;
+        event->obj.resize(numHeaders);
+        for (size_t i=0; i<numHeaders; ++i) {
+            input >> event->obj[i];
+        }
     } catch (std::ios_base::failure) {
         event->reset();
         return false;

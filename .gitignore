@@ -11,6 +11,7 @@ src/txprinter
 src/blockprinter
 src/mempoolprinter
 src/printdb
+src/dataprinter
 
 # autoreconf
 Makefile.in

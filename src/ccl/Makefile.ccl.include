@@ -34,6 +34,29 @@ txprinter_LDADD = \
 
 bin_PROGRAMS += txprinter
 
+# dataprinter binary 
+# 
+
+dataprinter_SOURCES = ccl/dataprinter.cpp
+dataprinter_CPPFLAGS = $(BITCOIN_INCLUDES)
+
+dataprinter_LDADD = \
+   $(LIBBITCOIN_SERVER) \
+   $(LIBBITCOIN_COMMON) \
+   $(LIBBITCOIN_UNIVALUE) \
+   $(LIBBITCOIN_UTIL) \
+   $(LIBBITCOIN_CRYPTO) \
+   $(LIBLEVELDB) \
+   $(LIBMEMENV) \
+   $(LIBBITCOIN_WALLET) \
+   $(BOOST_LIBS) \
+   $(BDB_LIBS) \
+   $(SSL_LIBS) \
+   $(CRYPTO_LIBS) \
+   $(MINIUPNPC_LIBS)
+
+bin_PROGRAMS += dataprinter
+
 # blockprinter binary 
 # 
 
