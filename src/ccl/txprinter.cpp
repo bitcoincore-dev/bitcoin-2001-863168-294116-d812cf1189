@@ -1,7 +1,7 @@
 #include "streams.h"
 #include "util.h"
 #include "core/transaction.h"
-#include "version.h"
+#include "clientversion.h"
 
 int main(int argc, char **argv)
 {
