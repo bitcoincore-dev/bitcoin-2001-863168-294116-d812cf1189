@@ -11,6 +11,7 @@ using namespace std;
 
 class CTransaction;
 class CBlock;
+class CBlockHeader;
 
 /**
  * DataLogger: log block and tx data as it arrives.
@@ -29,6 +30,7 @@ private:
     auto_ptr<CAutoFile> transactionLog;
     auto_ptr<CAutoFile> blockLog;
     auto_ptr<CAutoFile> mempoolLog;
+    auto_ptr<CAutoFile> headersLog;
 
     // Store the path where we're putting
     // all the data files, for log rotation
@@ -50,6 +52,7 @@ public:
 
     void OnNewTransaction(CTransaction &tx);
     void OnNewBlock(CBlock &block);
+    void OnNewHeaders(vector<CBlockHeader> &headers);
 };
 
 #endif

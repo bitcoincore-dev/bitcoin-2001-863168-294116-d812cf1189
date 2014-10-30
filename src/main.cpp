@@ -3956,6 +3956,8 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             ReadCompactSize(vRecv); // ignore tx count; assume it is 0.
         }
 
+        if (cclGlobals->dlog.get() != NULL) cclGlobals->dlog->OnNewHeaders(headers);
+
         LOCK(cs_main);
 
         if (nCount == 0) {

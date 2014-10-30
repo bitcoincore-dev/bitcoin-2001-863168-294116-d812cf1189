@@ -33,6 +33,9 @@ DataLogger::DataLogger(string pathPrefix)
     if (mempoolLog->IsNull()) {
         LogPrintf("DataLogger: Unable to create mempool log file, will proceed with no mempool log\n");
     }
+    if (headersLog->IsNull()) {
+        LogPrintf("DataLogger: Unable to create headers log file, will proceed with no headers log\n");
+    }
 }
 
 DataLogger::~DataLogger() {}
@@ -63,19 +66,20 @@ void DataLogger::RollDate()
     LogPrintf("DataLogger: log files rolling to new date\n");
     date today(day_clock::local_day());
 
+    // Convention is to name these files based on the p2p strings used
+    // to specify the event type.
     InitAutoFile(transactionLog, "tx.", to_iso_string(today));
     InitAutoFile(blockLog, "block.", to_iso_string(today));
     InitAutoFile(mempoolLog, "mempool.", to_iso_string(today));
+    InitAutoFile(headersLog, "headers.", to_iso_string(today));
 
     cclGlobals->WriteMempool(*mempoolLog);
 
     logRotateDate = today + days(1);
 }
 
-// TODO: test this code to make sure we don't need to explicitly close the file
 void DataLogger::InitAutoFile(auto_ptr<CAutoFile> &which, std::string prefix, std::string curdate)
 {
-    //if (!which.get()>IsNull()) which.get()->fclose();
     std::string fullname = prefix + curdate;
     boost::filesystem::path thispath = logdir / fullname;
 
@@ -84,6 +88,7 @@ void DataLogger::InitAutoFile(auto_ptr<CAutoFile> &which, std::string prefix, st
             fullname);
     }
 
+    // Note that the CAutoFile destructor calls fclose()
     which.reset(new CAutoFile(fopen(thispath.string().c_str(), "ab"), SER_DISK, CLIENT_VERSION));
 }
 
@@ -111,5 +116,19 @@ void DataLogger::OnNewBlock(CBlock &block)
         }
         *blockLog << GetTimeMicros();
         *blockLog << block;
+    }
+}
+
+void DataLogger::OnNewHeaders(vector<CBlockHeader> &headers)
+{
+    if (!headersLog->IsNull()) {
+        if (day_clock::local_day() >= logRotateDate) {
+            RollDate();
+        }
+        *headersLog << GetTimeMicros();
+        *headersLog << headers.size();
+        for (size_t i=0; i<headers.size(); ++i) {
+            *headersLog << headers[i];
+        }
     }
 }

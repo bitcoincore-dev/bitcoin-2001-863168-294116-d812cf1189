@@ -25,6 +25,9 @@ Simulation::Simulation(date sdate, date edate, string datadir, bool loadMempool)
     if (txfile->IsNull()) {
         LogPrintf("Simulation: can't open tx file, continuing without\n");
     }
+    if (headersfile->IsNull()) {
+        LogPrintf("Simulation: can't open headers file, continuing without\n");
+    }
 
     // Actually, this should error if the right date can't be found...
     if (loadMempoolAtStartup) {
@@ -39,6 +42,7 @@ void Simulation::LoadFiles(date d)
 {
     InitAutoFile(txfile, "tx.", d);
     InitAutoFile(blkfile, "block.", d);
+    InitAutoFile(headersfile, "headers.", d);
 }
 
 void Simulation::InitAutoFile(auto_ptr<CAutoFile> &which, std::string fileprefix, date d)
@@ -70,11 +74,13 @@ void Simulation::operator()()
     while (curdate <= enddate) {
         bool txEOF = false;
         bool blkEOF = false;
+        bool hdrEOF = false;
 
         BlockEvent blockEvent;
         TxEvent txEvent;
+        HeadersEvent headersEvent;
 
-        while (!txEOF || !blkEOF) {
+        while (!txEOF || !blkEOF || !hdrEOF) {
             if (!txEOF && !txEvent.valid) {
                 txEOF = !ReadEvent(*txfile, &txEvent);
             }
@@ -84,24 +90,43 @@ void Simulation::operator()()
             if (!blkEOF && !blockEvent.valid) {
                 blkEOF = !ReadEvent(*blkfile, &blockEvent);
             }
+            if (!hdrEOF && !headersEvent.valid) {
+                hdrEOF = !ReadEvent(*headersfile, &headersEvent);
+            }
+            
+            vector<CCLEvent *> validEvents;
+            if (txEvent.valid) validEvents.push_back(&txEvent);
+            if (blockEvent.valid) validEvents.push_back(&blockEvent);
+            if (headersEvent.valid) validEvents.push_back(&headersEvent);
+            if (validEvents.empty()) break;
 
-            if (!txEvent.valid && !blockEvent.valid) 
-                break;
-            else if (!txEvent.valid || (blockEvent.valid && blockEvent < txEvent)) {
-                timeInMicros = blockEvent.timeMicros;
-                SetMockTime(timeInMicros / 1000000);
+            CCLEvent *nextEvent = validEvents[0];
+            for (size_t i=1; i<validEvents.size(); ++i) {
+                if (*validEvents[i] < *nextEvent) nextEvent = validEvents[i];
+            }
+            timeInMicros = nextEvent->timeMicros;
+            SetMockTime(nextEvent->timeMicros / 1000000);
+
+            if (nextEvent == &txEvent) {
+                ProcessTransaction(txEvent.obj);
+                txEvent.reset();
+            } else if (nextEvent == &blockEvent) {
                 CValidationState state;
                 ProcessBlock(state, NULL, &blockEvent.obj);
                 blockEvent.reset();
-            } else /* either no blocks or curTxTime <= curBlkTime */ {
-                timeInMicros = txEvent.timeMicros;;
-                SetMockTime(timeInMicros / 1000000);
-                ProcessTransaction(txEvent.obj);
-                txEvent.reset();
+            } else if (nextEvent == &headersEvent) {
+                CValidationState state;
+                for (size_t i=0; i<headersEvent.obj.size(); ++i) {
+                    // The 3rd argument to AcceptBlockHeader is only
+                    // used for catching misbehaving nodes.  This could
+                    // cause a sim-live discrepancy where 
+                    if (!AcceptBlockHeader(headersEvent.obj[i], state, NULL)) {
+                        int nDoS;
+                        if (state.IsInvalid(nDoS)) break;
+                    }
+                }
+                headersEvent.reset();
             }
-            // LogPrintf("Simulation current time: %s.%d\n", 
-            //     DateTimeStrFormat("%Y%m%d %H:%M:%S", timeInMicros/1000000).c_str(),
-            //     timeInMicros%1000000);
         }
         curdate += days(1);
         LoadFiles(curdate);
