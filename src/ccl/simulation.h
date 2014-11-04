@@ -54,7 +54,7 @@ struct HeadersEvent : public CCLEvent {
  *        populated mempool.
  * 
  * Currently only delivers events to bitcoind's main.cpp functions 
- * (ProcessBlock and a new ProcessTransaction that mirrors the code that
+ * (ProcessNewBlock and a new ProcessTransaction that mirrors the code that
  * handles transactions coming in from the network).
  *
  * Should probably not use this code with the code that connects to peers

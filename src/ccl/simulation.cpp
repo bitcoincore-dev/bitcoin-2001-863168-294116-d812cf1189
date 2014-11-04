@@ -112,7 +112,7 @@ void Simulation::operator()()
                 txEvent.reset();
             } else if (nextEvent == &blockEvent) {
                 CValidationState state;
-                ProcessBlock(state, NULL, &blockEvent.obj);
+                ProcessNewBlock(state, NULL, &blockEvent.obj);
                 blockEvent.reset();
             } else if (nextEvent == &headersEvent) {
                 CValidationState state;
