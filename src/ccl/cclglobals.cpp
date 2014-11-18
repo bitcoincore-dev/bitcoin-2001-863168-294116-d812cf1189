@@ -23,17 +23,17 @@ void CCLGlobals::UpdateUsage(std::string &strUsage)
     strUsage += "\n" + _("CCL Options:") + "\n";
 
     // CCL options:
-    strUsage += " -writemempool=<file>            " + _("Write out mempool at end of run to DATADIR/file; specifying file is optional (default: 'mempool'") + "\n";
+    strUsage += "  -writemempool=<file>            " + _("Write out mempool at end of run to DATADIR/file; specifying file is optional (default: 'mempool')") + "\n";
 
     // DataLogger options
     strUsage += "  -dlogdir=<dirname>      " + _("Turn on data logging to specified output directory") + "\n";    
 
     // Simulation options
     strUsage += "  -simulation            " + _("Sim mode! Don't call add networking threads to threadgroup") + "\n";
-    strUsage += "      -simdatadir=<dir>     " + _("For simulations: specify data directory (default: /data/)") + "\n";
+    strUsage += "      -simdatadir=<dir>  " + _("For simulations: specify data directory (default: /chaincode/data/)") + "\n";
     strUsage += "      -start=<YYYYMMDD>  " + _("For simulations: start date") + "\n";
     strUsage += "      -end=<YYYYMMDD>    " + _("For simulations: end date (defaults to start date)") + "\n";
-    strUsage += "      -loadmempool=[1/0]" + _("Turn on/off loading initial mempool (default: 1)") + "\n";
+    strUsage += "      -loadmempool=[1/0] " + _("Turn on/off loading initial mempool (default: 1)") + "\n";
 
 }
 
@@ -56,7 +56,7 @@ bool CCLGlobals::Init(CTxMemPool *pool)
     }
 
     // Simulation initialization
-    std::string startdate, enddate, simdatadir="/data";
+    std::string startdate, enddate, simdatadir="/chaincode/data";
     if (mapArgs.count("-simulation")) {
         if (mapArgs.count("-start")) {
             startdate = mapArgs["-start"];
