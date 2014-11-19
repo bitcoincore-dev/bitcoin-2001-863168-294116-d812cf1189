@@ -412,6 +412,7 @@ UniValue getnetworkinfo(const UniValue& params, bool fHelp)
             "  \"localrelay\": true|false,              (bool) true if transaction relay is requested from peers\n"
             "  \"timeoffset\": xxxxx,                   (numeric) the time offset\n"
             "  \"connections\": xxxxx,                  (numeric) the number of connections\n"
+            "  \"networkactive\": x,                    (numeric) the number of connections\n"
             "  \"networks\": [                          (array) information per network\n"
             "  {\n"
             "    \"name\": \"xxx\",                     (string) network (ipv4, ipv6 or onion)\n"
@@ -447,6 +448,7 @@ UniValue getnetworkinfo(const UniValue& params, bool fHelp)
     obj.push_back(Pair("localrelay",     fRelayTxes));
     obj.push_back(Pair("timeoffset",    GetTimeOffset()));
     obj.push_back(Pair("connections",   (int)vNodes.size()));
+    obj.push_back(Pair("networkactive",   (int)fNetworkActive));
     obj.push_back(Pair("networks",      GetNetworksInfo()));
     obj.push_back(Pair("relayfee",      ValueFromAmount(::minRelayTxFee.GetFeePerK())));
     UniValue localAddresses(UniValue::VARR);
@@ -571,16 +573,16 @@ UniValue clearbanned(const UniValue& params, bool fHelp)
     return NullUniValue;
 }
 
-UniValue togglenetwork(const UniValue& params, bool fHelp)
+UniValue setnetworkactive(const UniValue& params, bool fHelp)
 {
-    if (fHelp || params.size() != 0) {
+    if (fHelp || params.size() != 1) {
         throw runtime_error(
-            "togglenetwork\n"
-            "Toggle all network activity temporarily."
+            "setnetworkactive \"true|false\"\n"
+            "Disable/Re-Enable all network activity temporarily."
         );
     }
 
-    SetNetworkActive(!fNetworkActive);
+    SetNetworkActive(params[0].get_bool());
 
     return fNetworkActive;
 }
@@ -599,7 +601,7 @@ static const CRPCCommand commands[] =
     { "network",            "setban",                 &setban,                 true  },
     { "network",            "listbanned",             &listbanned,             true  },
     { "network",            "clearbanned",            &clearbanned,            true  },
-    { "network",            "togglenetwork",          &togglenetwork,          true, },
+    { "network",            "setnetworkactive",       &setnetworkactive,       true, },
 };
 
 void RegisterNetRPCCommands(CRPCTable &tableRPC)

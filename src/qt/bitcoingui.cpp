@@ -81,7 +81,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     walletFrame(0),
     unitDisplayControl(0),
     labelEncryptionIcon(0),
-    labelConnectionsIcon(0),
+    connectionsControl(0),
     labelBlocksIcon(0),
     progressBarLabel(0),
     progressBar(0),
@@ -195,7 +195,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     frameBlocksLayout->setSpacing(3);
     unitDisplayControl = new UnitDisplayStatusBarControl(platformStyle);
     labelEncryptionIcon = new QLabel();
-    labelConnectionsIcon = new QLabel();
+    connectionsControl = new NetworkToggleStatusBarControl();
     labelBlocksIcon = new QLabel();
     if(enableWallet)
     {
@@ -205,7 +205,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
         frameBlocksLayout->addWidget(labelEncryptionIcon);
     }
     frameBlocksLayout->addStretch();
-    frameBlocksLayout->addWidget(labelConnectionsIcon);
+    frameBlocksLayout->addWidget(connectionsControl);
     frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelBlocksIcon);
     frameBlocksLayout->addStretch();
@@ -479,6 +479,7 @@ void BitcoinGUI::setClientModel(ClientModel *clientModel)
         }
 #endif // ENABLE_WALLET
         unitDisplayControl->setOptionsModel(clientModel->getOptionsModel());
+        connectionsControl->setClientModel(clientModel);
         
         OptionsModel* optionsModel = clientModel->getOptionsModel();
         if(optionsModel)
@@ -698,13 +699,15 @@ void BitcoinGUI::updateNetworkState()
     case 7: case 8: case 9: icon = ":/icons/connect_3"; break;
     default: icon = ":/icons/connect_4"; break;
     }
-    labelConnectionsIcon->setPixmap(platformStyle->SingleColorIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
 
     if (clientModel->getNetworkActive()) {
-        labelConnectionsIcon->setToolTip(tr("%n active connection(s) to Bitcoin network", "", count));
+        connectionsControl->setToolTip(tr("%n active connection(s) to Bitcoin network", "", count));
     } else {
-        labelConnectionsIcon->setToolTip(tr("Network activity disabled"));
+        connectionsControl->setToolTip(tr("Network activity disabled"));
+        icon = ":/icons/network_disabled";
     }
+
+    connectionsControl->setPixmap(platformStyle->SingleColorIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
 }
 
 void BitcoinGUI::setNumConnections(int count)
@@ -1203,5 +1206,20 @@ void UnitDisplayStatusBarControl::onMenuSelection(QAction* action)
     if (action)
     {
         optionsModel->setDisplayUnit(action->data());
+    }
+}
+
+void NetworkToggleStatusBarControl::mousePressEvent(QMouseEvent *event)
+{
+    if (clientModel) {
+        clientModel->setNetworkActive(!clientModel->getNetworkActive());
+    }
+}
+
+/** Lets the control know about the Client Model */
+void NetworkToggleStatusBarControl::setClientModel(ClientModel *clientModel)
+{
+    if (clientModel) {
+        this->clientModel = clientModel;
     }
 }
