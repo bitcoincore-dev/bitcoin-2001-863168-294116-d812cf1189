@@ -47,6 +47,7 @@ src/qt/test/moc*.cpp
 
 .deps
 .dirstamp
+.libs
 .*.swp
 *.*~*
 *.bak
@@ -67,6 +68,10 @@ src/qt/test/moc*.cpp
 
 *.json.h
 *.raw.h
+
+#libtool object files
+*.lo
+*.la
 
 # Compilation and Qt preprocessor part
 *.qm
