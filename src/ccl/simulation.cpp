@@ -3,8 +3,8 @@
 
 #include "init.h"
 #include "main.h"
-#include "core/transaction.h"
-#include "core/block.h"
+#include "primitives/transaction.h"
+#include "primitives/block.h"
 #include "util.h"
 
 #include <string>

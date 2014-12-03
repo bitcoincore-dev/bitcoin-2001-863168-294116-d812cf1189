@@ -2,8 +2,8 @@
 #define BITCOIN_SIMULATION_H
 
 #include "streams.h"
-#include "core/block.h"
-#include "core/transaction.h"
+#include "primitives/block.h"
+#include "primitives/transaction.h"
 #include "txmempool.h"
 #include "boost/date_time/gregorian/gregorian.hpp" //include all types plus i/o
 #include "boost/filesystem.hpp"
