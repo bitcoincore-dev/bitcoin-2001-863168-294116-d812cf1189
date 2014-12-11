@@ -36,6 +36,7 @@ dataprinter_LDADD = \
    $(BDB_LIBS) \
    $(SSL_LIBS) \
    $(CRYPTO_LIBS) \
+   $(LIBSECP256K1) \
    $(MINIUPNPC_LIBS)
 
 bin_PROGRAMS += dataprinter
