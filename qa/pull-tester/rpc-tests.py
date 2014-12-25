@@ -45,8 +45,8 @@ if 'ENABLE_WALLET' not in vars():
     ENABLE_WALLET=0
 if 'ENABLE_BITCOIND' not in vars():
     ENABLE_BITCOIND=0
-if 'ENABLE_UTILS' not in vars():
-    ENABLE_UTILS=0
+if 'ENABLE_CLI' not in vars():
+    ENABLE_CLI=0
 if 'ENABLE_ZMQ' not in vars():
     ENABLE_ZMQ=0
 
@@ -86,8 +86,8 @@ if EXEEXT == ".exe" and "-win" not in opts:
     print("Win tests currently disabled by default.  Use -win option to enable")
     sys.exit(0)
 
-if not (ENABLE_WALLET == 1 and ENABLE_UTILS == 1 and ENABLE_BITCOIND == 1):
-    print("No rpc tests to run. Wallet, utils, and bitcoind must all be enabled")
+if not (ENABLE_WALLET == 1 and ENABLE_CLI == 1 and ENABLE_BITCOIND == 1):
+    print("No rpc tests to run. Wallet, cli, and bitcoind must all be enabled")
     sys.exit(0)
 
 # python3-zmq may not be installed. Handle this gracefully and with some helpful info
