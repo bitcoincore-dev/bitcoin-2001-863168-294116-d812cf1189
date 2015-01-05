@@ -1,6 +1,7 @@
 #include "cclglobals.h"
 #include "init.h"
 #include "ui_interface.h" // Defines the _() function!
+#include "arith_uint256.h"
 #include "uint256.h"
 #include "util.h"
 
@@ -157,11 +158,11 @@ void CCLGlobals::WriteMempool(CAutoFile &logfile)
 // low expectations...
 uint256 CCLGlobals::GetDetRandHash()
 {
-    uint256 ret;
+    arith_uint256 ret;
     for (unsigned i=0; i<16; ++i) {
-        uint256 val = rnd.Uniform(1<<16);
+        arith_uint256 val = rnd.Uniform(1<<16);
         ret |= (val << i*16);
     }
     LogPrintf("random hash requested: %s\n", ret.GetHex());
-    return ret;
+    return ArithToUint256(ret);
 }
