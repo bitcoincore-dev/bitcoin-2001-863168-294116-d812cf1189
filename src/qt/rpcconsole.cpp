@@ -458,11 +458,31 @@ RPCConsole::RPCConsole(const PlatformStyle *_platformStyle, QWidget *parent) :
     QSettings settings;
     consoleFontSize = settings.value(fontSizeSettingsKey, QFontInfo(QFont()).pointSize()).toInt();
     clear();
+
+    // load history
+    int size = settings.beginReadArray("nRPCConsoleWindowHistory");
+    history.clear();
+    for (int i = 0; i < size; ++i) {
+        settings.setArrayIndex(i);
+        history.append(settings.value("cmd").toString());
+    }
+    historyPtr = history.size();
+    settings.endArray();
 }
 
 RPCConsole::~RPCConsole()
 {
     GUIUtil::saveWindowGeometry("nRPCConsoleWindow", this);
+
+    // persist history
+    QSettings settings;
+    settings.beginWriteArray("nRPCConsoleWindowHistory");
+    for (int i = 0; i < history.size(); ++i) {
+        settings.setArrayIndex(i);
+        settings.setValue("cmd", history.at(i));
+    }
+    settings.endArray();
+
     RPCUnsetTimerInterface(rpcTimerInterface);
     delete rpcTimerInterface;
     delete ui;
