@@ -548,6 +548,8 @@ void RPCConsole::on_lineEdit_returnPressed()
 
     if(!cmd.isEmpty())
     {
+        cmdBeforeBrowsing = QString();
+
         message(CMD_REQUEST, cmd);
         Q_EMIT cmdRequest(cmd);
         // Remove command, if already in history
@@ -566,6 +568,11 @@ void RPCConsole::on_lineEdit_returnPressed()
 
 void RPCConsole::browseHistory(int offset)
 {
+    // store current text when start browsing through the history
+    if (historyPtr == history.size()) {
+        cmdBeforeBrowsing = ui->lineEdit->text();
+    }
+
     historyPtr += offset;
     if(historyPtr < 0)
         historyPtr = 0;
@@ -574,6 +581,9 @@ void RPCConsole::browseHistory(int offset)
     QString cmd;
     if(historyPtr < history.size())
         cmd = history.at(historyPtr);
+    else if (!cmdBeforeBrowsing.isNull()) {
+        cmd = cmdBeforeBrowsing;
+    }
     ui->lineEdit->setText(cmd);
 }
 
