@@ -42,9 +42,15 @@ enum DBErrors
 class CKeyMetadata
 {
 public:
-    static const int CURRENT_VERSION=1;
+    static const int CURRENT_VERSION=2;
+    static const uint8_t KEY_GENERATION_TYPE_UNKNOWN       = 0x0001;
+    static const uint8_t KEY_GENERATION_TYPE_IMPORTED      = 0x0002;
+    static const uint8_t KEY_GENERATION_TYPE_UNENC_WALLET  = 0x0004;
+    static const uint8_t KEY_GENERATION_TYPE_ENC_WALLET    = 0x0008;
+    
     int nVersion;
     int64_t nCreateTime; // 0 means unknown
+    uint8_t keyFlags;
 
     CKeyMetadata()
     {
@@ -54,6 +60,7 @@ public:
     {
         nVersion = CKeyMetadata::CURRENT_VERSION;
         nCreateTime = nCreateTime_;
+        keyFlags = KEY_GENERATION_TYPE_UNKNOWN;
     }
 
     ADD_SERIALIZE_METHODS;
@@ -63,12 +70,15 @@ public:
         READWRITE(this->nVersion);
         nVersion = this->nVersion;
         READWRITE(nCreateTime);
+        if (nVersion >= 2)
+            READWRITE(keyFlags);
     }
 
     void SetNull()
     {
         nVersion = CKeyMetadata::CURRENT_VERSION;
         nCreateTime = 0;
+        keyFlags = KEY_GENERATION_TYPE_UNKNOWN;
     }
 };
 

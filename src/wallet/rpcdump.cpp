@@ -129,6 +129,8 @@ Value importprivkey(const Array& params, bool fHelp)
             return Value::null;
 
         pwalletMain->mapKeyMetadata[vchAddress].nCreateTime = 1;
+        pwalletMain->mapKeyMetadata[vchAddress].keyFlags |= CKeyMetadata::KEY_GENERATION_TYPE_IMPORTED;
+        
 
         if (!pwalletMain->AddKeyPubKey(key, pubkey))
             throw JSONRPCError(RPC_WALLET_ERROR, "Error adding key to wallet");
