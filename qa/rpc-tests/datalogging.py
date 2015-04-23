@@ -38,7 +38,7 @@ class DataLoggingTest(BitcoinTestFramework):
         # Mine blocks with node1 until the memory pool clears:
         count_start = self.nodes[1].getblockcount()
         while len(self.nodes[1].getrawmempool()) > 0:
-            self.nodes[1].setgenerate(True, 1)
+            self.nodes[1].generate(1)
             sync_blocks(self.nodes)
 
         for i in range(12):
