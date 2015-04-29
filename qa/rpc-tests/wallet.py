@@ -151,6 +151,33 @@ class WalletTest (BitcoinTestFramework):
 
         assert(txid1 in self.nodes[3].getrawmempool())
         
+        #check if we can list zero value tx as available coins
+        #1. create rawtx
+        #2. hex-changed one output to 0.0 
+        #3. sign and send
+        #4. check if recipient (node0) can list the zero value tx
+        usp = self.nodes[1].listunspent()
+        inputs = [{"txid":usp[0]['txid'], "vout":usp[0]['vout']}]
+        outputs = {self.nodes[1].getnewaddress(): 49.998, self.nodes[0].getnewaddress(): 11.11}
+        
+        rawTx = self.nodes[1].createrawtransaction(inputs, outputs).replace("c0833842", "00000000") #replace 11.11 with 0.0 (int32)
+        decRawTx = self.nodes[1].decoderawtransaction(rawTx)
+        signedRawTx = self.nodes[1].signrawtransaction(rawTx)
+        decRawTx = self.nodes[1].decoderawtransaction(signedRawTx['hex'])
+        zeroValueTxid= decRawTx['txid']
+        sendResp = self.nodes[1].sendrawtransaction(signedRawTx['hex'])
+        
+        self.sync_all()
+        self.nodes[1].generate(1) #mine a block
+        self.sync_all()
+        
+        unspentTxs = self.nodes[0].listunspent() #zero value tx must be in listunspents output
+        found = False
+        for uTx in unspentTxs:
+            if uTx['txid'] == zeroValueTxid:
+                found = True
+                assert_equal(uTx['amount'], Decimal('0.00000000'));
+        assert(found)
         
         #do some -walletbroadcast tests
         stop_nodes(self.nodes)
@@ -163,13 +190,13 @@ class WalletTest (BitcoinTestFramework):
 
         txIdNotBroadcasted  = self.nodes[0].sendtoaddress(self.nodes[2].getnewaddress(), 2);
         txObjNotBroadcasted = self.nodes[0].gettransaction(txIdNotBroadcasted)
-        self.nodes[1].setgenerate(True, 1) #mine a block, tx should not be in there
+        self.nodes[1].generate(1) #mine a block, tx should not be in there
         self.sync_all()
         assert_equal(self.nodes[2].getbalance(), Decimal('59.99800000')); #should not be changed because tx was not broadcasted
         
         #now broadcast from another node, mine a block, sync, and check the balance
         self.nodes[1].sendrawtransaction(txObjNotBroadcasted['hex'])
-        self.nodes[1].setgenerate(True, 1)
+        self.nodes[1].generate(1)
         self.sync_all()
         txObjNotBroadcasted = self.nodes[0].gettransaction(txIdNotBroadcasted)
         assert_equal(self.nodes[2].getbalance(), Decimal('61.99800000')); #should not be
@@ -186,7 +213,7 @@ class WalletTest (BitcoinTestFramework):
         connect_nodes_bi(self.nodes,0,2)
         sync_blocks(self.nodes)
         
-        self.nodes[0].setgenerate(True, 1)
+        self.nodes[0].generate(1)
         sync_blocks(self.nodes)
         
         #tx should be added to balance because after restarting the nodes tx should be broadcastet
