@@ -1891,6 +1891,7 @@ bool static FlushStateToDisk(CValidationState &state, FlushStateMode mode) {
     try {
     if (fPruneMode && fCheckForPruning) {
         FindFilesToPrune(setFilesToPrune);
+        fCheckForPruning = false;
         if (!setFilesToPrune.empty()) {
             fFlushForPrune = true;
             if (!fHavePruned) {
@@ -1947,10 +1948,8 @@ bool static FlushStateToDisk(CValidationState &state, FlushStateMode mode) {
             }
         }
         // Finally remove any pruned files
-        if (fFlushForPrune) {
+        if (fFlushForPrune)
             UnlinkPrunedFiles(setFilesToPrune);
-            fCheckForPruning = false;
-        }
         nLastWrite = nNow;
     }
     // Flush best chain related state. This can only be done if the blocks / block index write was also done.
