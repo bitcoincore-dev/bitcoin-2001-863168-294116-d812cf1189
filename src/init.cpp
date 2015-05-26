@@ -42,7 +42,9 @@
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/function.hpp>
 #include <boost/interprocess/sync/file_lock.hpp>
 #include <boost/thread.hpp>
 #include <openssl/crypto.h>
@@ -1404,6 +1406,12 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     if (!cclGlobals->Run(threadGroup)) {
         StartNode(threadGroup, scheduler);
     } 
+
+    // Monitor the chain, and alert if we get blocks much quicker or slower than expected
+    int64_t nPowTargetSpacing = Params().GetConsensus().nPowTargetSpacing;
+    CScheduler::Function f = boost::bind(&PartitionCheck, &IsInitialBlockDownload,
+                                         boost::ref(cs_main), boost::cref(chainActive), nPowTargetSpacing);
+    scheduler.scheduleEvery(f, nPowTargetSpacing);
 
 #ifdef ENABLE_WALLET
     // Generate coins in the background
