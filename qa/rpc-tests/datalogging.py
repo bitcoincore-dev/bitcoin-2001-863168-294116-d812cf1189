@@ -4,8 +4,7 @@
 # Test datalogging code
 #
 
-from test_framework import BitcoinTestFramework
-from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
+from test_framework.test_framework import BitcoinTestFramework
 from util import *
 
 class DataLoggingTest(BitcoinTestFramework):

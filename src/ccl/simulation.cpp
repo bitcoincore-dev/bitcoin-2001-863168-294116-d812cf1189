@@ -3,6 +3,7 @@
 
 #include "init.h"
 #include "main.h"
+#include "consensus/validation.h"
 #include "primitives/transaction.h"
 #include "primitives/block.h"
 #include "util.h"
