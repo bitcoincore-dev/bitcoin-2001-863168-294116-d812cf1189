@@ -63,6 +63,7 @@ bool fCheckBlockIndex = false;
 bool fCheckpointsEnabled = true;
 size_t nCoinCacheUsage = 5000 * 300;
 uint64_t nPruneTarget = 0;
+bool fAlerts = DEFAULT_ALERTS;
 
 /** Fees smaller than this (in satoshi) are considered zero fee (for relaying and mining) */
 CFeeRate minRelayTxFee = CFeeRate(1000);
@@ -1400,22 +1401,21 @@ bool CScriptCheck::operator()() {
     return true;
 }
 
-bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks, unsigned int flags, bool cacheStore, std::vector<CScriptCheck> *pvChecks)
+int GetSpendHeight(const CCoinsViewCache& inputs)
 {
-    if (!tx.IsCoinBase())
-    {
-        if (pvChecks)
-            pvChecks->reserve(tx.vin.size());
+    LOCK(cs_main);
+    CBlockIndex* pindexPrev = mapBlockIndex.find(inputs.GetBestBlock())->second;
+    return pindexPrev->nHeight + 1;
+}
 
+namespace Consensus {
+bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoinsViewCache& inputs, int nSpendHeight)
+{
         // This doesn't trigger the DoS code on purpose; if it did, it would make it easier
         // for an attacker to attempt to split the network.
         if (!inputs.HaveInputs(tx))
             return state.Invalid(error("CheckInputs(): %s inputs unavailable", tx.GetHash().ToString()));
 
-        // While checking, GetBestBlock() refers to the parent block.
-        // This is also true for mempool checks.
-        CBlockIndex *pindexPrev = mapBlockIndex.find(inputs.GetBestBlock())->second;
-        int nSpendHeight = pindexPrev->nHeight + 1;
         CAmount nValueIn = 0;
         CAmount nFees = 0;
         for (unsigned int i = 0; i < tx.vin.size(); i++)
@@ -1454,6 +1454,19 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
         if (!MoneyRange(nFees))
             return state.DoS(100, error("CheckInputs(): nFees out of range"),
                              REJECT_INVALID, "bad-txns-fee-outofrange");
+    return true;
+}
+}// namespace Consensus
+
+bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks, unsigned int flags, bool cacheStore, std::vector<CScriptCheck> *pvChecks)
+{
+    if (!tx.IsCoinBase())
+    {
+        if (!Consensus::CheckTxInputs(tx, state, inputs, GetSpendHeight(inputs)))
+            return false;
+
+        if (pvChecks)
+            pvChecks->reserve(tx.vin.size());
 
         // The first loop above does all the inexpensive checks.
         // Only if ALL inputs pass do we perform expensive ECDSA signature checks.
@@ -1716,9 +1729,10 @@ void ThreadScriptCheck() {
 // we're being fed a bad chain (blocks being generated much
 // too slowly or too quickly).
 //
-void PartitionCheck(bool (*initialDownloadCheck)(), CCriticalSection& cs, const CChain& chain, int64_t nPowTargetSpacing)
+void PartitionCheck(bool (*initialDownloadCheck)(), CCriticalSection& cs, const CBlockIndex *const &bestHeader,
+                    int64_t nPowTargetSpacing)
 {
-    if (initialDownloadCheck()) return;
+    if (bestHeader == NULL || initialDownloadCheck()) return;
 
     static int64_t lastAlertTime = 0;
     int64_t now = GetAdjustedTime();
@@ -1734,10 +1748,13 @@ void PartitionCheck(bool (*initialDownloadCheck)(), CCriticalSection& cs, const 
     int64_t startTime = GetAdjustedTime()-SPAN_SECONDS;
 
     LOCK(cs);
-    int h = chain.Height();
-    while (h > 0 && chain[h]->GetBlockTime() >= startTime)
-        --h;
-    int nBlocks = chain.Height()-h;
+    const CBlockIndex* i = bestHeader;
+    int nBlocks = 0;
+    while (i->GetBlockTime() >= startTime) {
+        ++nBlocks;
+        i = i->pprev;
+        if (i == NULL) return; // Ran out of chain, we must not be fully sync'ed
+    }
 
     // How likely is it to find that many by chance?
     double p = boost::math::pdf(poisson, nBlocks);
@@ -3117,9 +3134,9 @@ void FindFilesToPrune(std::set<int>& setFilesToPrune)
             if (nCurrentUsage + nBuffer < nPruneTarget)  // are we below our target?
                 break;
 
-            // don't prune files that could have a block within MIN_BLOCKS_TO_KEEP of the main chain's tip
+            // don't prune files that could have a block within MIN_BLOCKS_TO_KEEP of the main chain's tip but keep scanning
             if (vinfoBlockFile[fileNumber].nHeightLast > nLastBlockWeCanPrune)
-                break;
+                continue;
 
             PruneOneBlockFile(fileNumber);
             // Queue up the files for removal
@@ -4688,7 +4705,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
     }
 
 
-    else if (strCommand == "alert")
+    else if (fAlerts && strCommand == "alert")
     {
         CAlert alert;
         vRecv >> alert;
