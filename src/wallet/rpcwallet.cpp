@@ -1147,6 +1147,26 @@ static UniValue ListReceived(interfaces::Chain::Lock& locked_chain, CWallet * co
             fIsWatchonly = (*it).second.fIsWatchonly;
         }
 
+        // convert keyflags into a string
+        CKeyID keyID = GetKeyForDestination(*pwallet, address);
+        uint8_t keyFlags = 0;
+        if (!keyID.IsNull()) {
+            keyFlags = pwallet->mapKeyMetadata[keyID].keyFlags;
+        }
+
+        std::string keyOrigin;
+        if (keyFlags & CKeyMetadata::KEY_ORIGIN_UNKNOWN) {
+            keyOrigin = "unknown";
+        }
+        if (keyFlags & CKeyMetadata::KEY_ORIGIN_ENC_WALLET) {
+            keyOrigin = "encrypted";
+        } else if (keyFlags & CKeyMetadata::KEY_ORIGIN_UNENC_WALLET) {
+            keyOrigin = "unencrypted";
+        }
+        if (keyFlags & CKeyMetadata::KEY_ORIGIN_IMPORTED) {
+            keyOrigin = "imported";
+        }
+
         if (by_label)
         {
             tallyitem& _item = label_tally[label];
@@ -1161,6 +1181,7 @@ static UniValue ListReceived(interfaces::Chain::Lock& locked_chain, CWallet * co
                 obj.pushKV("involvesWatchonly", true);
             obj.pushKV("address",       EncodeDestination(address));
             obj.pushKV("amount",        ValueFromAmount(nAmount));
+            obj.pushKV("key_origin",    keyOrigin);
             obj.pushKV("confirmations", (nConf == std::numeric_limits<int>::max() ? 0 : nConf));
             obj.pushKV("label", label);
             UniValue transactions(UniValue::VARR);
