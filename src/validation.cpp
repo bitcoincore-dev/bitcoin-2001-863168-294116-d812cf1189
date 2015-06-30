@@ -2175,6 +2175,7 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
         std::vector<uint256> vHashUpdate;
         for (const auto& it : block.vtx) {
             const CTransaction& tx = *it;
+            mempool.UpdateDependentPriorities(tx, pindexDelete->nHeight, false);
             // ignore validation errors in resurrected transactions
             CValidationState stateDummy;
             if (tx.IsCoinBase() || !AcceptToMemoryPool(mempool, stateDummy, it, false, NULL, NULL, true)) {
