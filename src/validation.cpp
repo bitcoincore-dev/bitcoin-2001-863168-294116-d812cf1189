@@ -2411,7 +2411,7 @@ static bool ActivateBestChainStep(CValidationState& state, const CChainParams& c
         mempool.removeForReorg(pcoinsTip, chainActive.Tip()->nHeight + 1, STANDARD_LOCKTIME_VERIFY_FLAGS);
         LimitMempoolSize(mempool, GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000, GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY) * 60 * 60);
     }
-    mempool.check(pcoinsTip);
+    mempool.check(pcoinsTip, chainActive.Height());
 
     // Callbacks/notifications for a new best chain.
     if (fInvalidFound)
