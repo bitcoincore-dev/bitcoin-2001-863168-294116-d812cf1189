@@ -13,17 +13,25 @@
 #include "checkqueue.h"
 #include "consensus/consensus.h"
 #include "consensus/validation.h"
+#include "hash.h"
 #include "init.h"
 #include "merkleblock.h"
 #include "net.h"
 #include "policy/policy.h"
 #include "pow.h"
+#include "primitives/block.h"
+#include "primitives/transaction.h"
+#include "script/script.h"
+#include "script/sigcache.h"
+#include "script/standard.h"
+#include "tinyformat.h"
 #include "txdb.h"
 #include "txmempool.h"
 #include "ui_interface.h"
 #include "undo.h"
 #include "util.h"
 #include "utilmoneystr.h"
+#include "utilstrencodings.h"
 #include "validationinterface.h"
 
 #include "ccl/cclglobals.h"
@@ -77,9 +85,9 @@ struct COrphanTx {
     CTransaction tx;
     NodeId fromPeer;
 };
-map<uint256, COrphanTx> mapOrphanTransactions;
-map<uint256, set<uint256> > mapOrphanTransactionsByPrev;
-void EraseOrphansFor(NodeId peer);
+map<uint256, COrphanTx> mapOrphanTransactions GUARDED_BY(cs_main);;
+map<uint256, set<uint256> > mapOrphanTransactionsByPrev GUARDED_BY(cs_main);;
+void EraseOrphansFor(NodeId peer) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
 /**
  * Returns true if there are nRequired or more blocks of minVersion or above
@@ -529,7 +537,7 @@ CBlockTreeDB *pblocktree = NULL;
 // mapOrphanTransactions
 //
 
-bool AddOrphanTx(const CTransaction& tx, NodeId peer)
+bool AddOrphanTx(const CTransaction& tx, NodeId peer) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
     uint256 hash = tx.GetHash();
     if (mapOrphanTransactions.count(hash))
@@ -559,7 +567,7 @@ bool AddOrphanTx(const CTransaction& tx, NodeId peer)
     return true;
 }
 
-void static EraseOrphanTx(uint256 hash)
+void static EraseOrphanTx(uint256 hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
     map<uint256, COrphanTx>::iterator it = mapOrphanTransactions.find(hash);
     if (it == mapOrphanTransactions.end())
@@ -593,7 +601,7 @@ void EraseOrphansFor(NodeId peer)
 }
 
 
-unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans)
+unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
     unsigned int nEvicted = 0;
     while (mapOrphanTransactions.size() > nMaxOrphans)
@@ -1274,6 +1282,9 @@ int GetSpendHeight(const CCoinsViewCache& inputs)
     return pindexPrev->nHeight + 1;
 }
 
+static mrumap<uint256, unsigned int> cacheCheck(2 * MAX_BLOCK_SIZE / CTransaction().GetSerializeSize(SER_NETWORK, PROTOCOL_VERSION));
+static boost::mutex cs_cacheCheck;
+
 namespace Consensus {
 bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoinsViewCache& inputs, int nSpendHeight)
 {
@@ -1328,6 +1339,17 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
 {
     if (!tx.IsCoinBase())
     {
+        if (fScriptChecks) {
+            boost::unique_lock<boost::mutex> lock(cs_cacheCheck);
+            mrumap<uint256, unsigned int>::const_iterator iter = cacheCheck.find(tx.GetHash());
+            if (iter != cacheCheck.end()) {
+                // The following test relies on the fact that all script validation flags are softforks (i.e. an extra bit set cannot cause a false result to become true).
+                if ((iter->second & flags) == flags) {
+                    return true;
+                }
+            }
+        }
+
         if (!Consensus::CheckTxInputs(tx, state, inputs, GetSpendHeight(inputs)))
             return false;
 
@@ -1376,6 +1398,11 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
                 }
             }
         }
+    }
+
+    if (cacheStore && fScriptChecks && pvChecks == NULL) {
+        boost::unique_lock<boost::mutex> lock(cs_cacheCheck);
+        cacheCheck.insert(tx.GetHash(), flags);
     }
 
     return true;
@@ -2097,6 +2124,13 @@ bool static ConnectTip(CValidationState &state, CBlockIndex *pindexNew, CBlock *
     // ... and about transactions that got confirmed:
     BOOST_FOREACH(const CTransaction &tx, pblock->vtx) {
         SyncWithWallets(tx, pblock);
+    }
+    // Erase block's transactions from the validation cache
+    {
+        boost::unique_lock<boost::mutex> lock(cs_cacheCheck);
+        BOOST_FOREACH(const CTransaction &tx, pblock->vtx) {
+            cacheCheck.erase(tx.GetHash());
+        }
     }
 
     int64_t nTime6 = GetTimeMicros(); nTimePostConnect += nTime6 - nTime5; nTimeTotal += nTime6 - nTime1;
@@ -3724,7 +3758,7 @@ std::string GetWarnings(const std::string& strFor)
 //
 
 
-bool static AlreadyHave(const CInv& inv)
+bool static AlreadyHave(const CInv& inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
     switch (inv.type)
     {

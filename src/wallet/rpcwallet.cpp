@@ -5,6 +5,7 @@
 
 #include "amount.h"
 #include "base58.h"
+#include "chain.h"
 #include "core_io.h"
 #include "init.h"
 #include "main.h"
@@ -476,7 +477,6 @@ UniValue listaddressgroupings(const UniValue& params, bool fHelp)
             addressInfo.push_back(CBitcoinAddress(address).ToString());
             addressInfo.push_back(ValueFromAmount(balances[address]));
             {
-                LOCK(pwalletMain->cs_wallet);
                 if (pwalletMain->mapAddressBook.find(CBitcoinAddress(address).Get()) != pwalletMain->mapAddressBook.end())
                     addressInfo.push_back(pwalletMain->mapAddressBook.find(CBitcoinAddress(address).Get())->second.name);
             }

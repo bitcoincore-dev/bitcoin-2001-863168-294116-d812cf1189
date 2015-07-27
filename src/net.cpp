@@ -12,10 +12,12 @@
 #include "addrman.h"
 #include "chainparams.h"
 #include "clientversion.h"
+#include "crypto/common.h"
+#include "hash.h"
 #include "primitives/transaction.h"
 #include "scheduler.h"
 #include "ui_interface.h"
-#include "crypto/common.h"
+#include "utilstrencodings.h"
 
 #ifdef WIN32
 #include <string.h>
@@ -2183,8 +2185,10 @@ void CNode::EndMessage() UNLOCK_FUNCTION(cs_vSend)
         Fuzz(GetArg("-fuzzmessagestest", 10));
 
     if (ssSend.size() == 0)
+    {
+        LEAVE_CRITICAL_SECTION(cs_vSend);
         return;
-
+    }
     // Set the size
     unsigned int nSize = ssSend.size() - CMessageHeader::HEADER_SIZE;
     WriteLE32((uint8_t*)&ssSend[CMessageHeader::MESSAGE_SIZE_OFFSET], nSize);

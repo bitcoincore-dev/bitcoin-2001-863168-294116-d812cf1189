@@ -11,6 +11,8 @@
 
 #include "addrman.h"
 #include "amount.h"
+#include "chain.h"
+#include "chainparams.h"
 #include "checkpoints.h"
 #include "compat/sanity.h"
 #include "consensus/validation.h"
@@ -23,14 +25,17 @@
 #include "script/standard.h"
 #include "scheduler.h"
 #include "txdb.h"
+#include "txmempool.h"
 #include "ui_interface.h"
 #include "util.h"
 #include "utilmoneystr.h"
+#include "utilstrencodings.h"
 #include "validationinterface.h"
 
 #include "ccl/cclglobals.h" // CCLGlobal * cclGlobal
 
 #ifdef ENABLE_WALLET
+#include "wallet/db.h"
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h"
 #endif
