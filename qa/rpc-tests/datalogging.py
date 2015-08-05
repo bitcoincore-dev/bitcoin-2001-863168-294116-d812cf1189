@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 #
 # Test datalogging code
 #
 
 from test_framework.test_framework import BitcoinTestFramework
-from util import *
+from test_framework.util import *
 
 class DataLoggingTest(BitcoinTestFramework):
 
