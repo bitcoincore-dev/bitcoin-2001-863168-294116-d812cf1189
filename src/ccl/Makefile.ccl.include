@@ -37,7 +37,9 @@ dataprinter_LDADD = \
    $(SSL_LIBS) \
    $(CRYPTO_LIBS) \
    $(LIBSECP256K1) \
-   $(MINIUPNPC_LIBS)
+   $(MINIUPNPC_LIBS) \
+   $(EVENT_PTHREADS_LIBS) \
+   $(EVENT_LIBS)
 
 bin_PROGRAMS += dataprinter
 
@@ -61,7 +63,9 @@ printdb_LDADD = \
    $(SSL_LIBS) \
    $(CRYPTO_LIBS) \
    $(LIBSECP256K1) \
-   $(MINIUPNPC_LIBS)
+   $(MINIUPNPC_LIBS) \
+   $(EVENT_PTHREADS_LIBS) \
+   $(EVENT_LIBS)
 
 bin_PROGRAMS += printdb
 
