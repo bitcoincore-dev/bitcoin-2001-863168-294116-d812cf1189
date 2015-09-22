@@ -138,12 +138,12 @@ void CCLGlobals::WriteMempool(CAutoFile &logfile)
 {
     if (!logfile.IsNull()) {
         LOCK(mempool->cs);
-        std::map<uint256, CTxMemPoolEntry>::iterator it;
+        CTxMemPool::txiter it;
         for (it=cclGlobals->mempool->mapTx.begin(); 
             it != cclGlobals->mempool->mapTx.end(); ++it) {
             // can't get this to work:
             // mempoolLog << it->second;
-            CTxMemPoolEntry &e = it->second;
+            const CTxMemPoolEntry &e = *it;
             logfile << e.GetTx();
             logfile << e.GetFee();
             logfile << e.GetTime();
