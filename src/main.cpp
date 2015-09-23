@@ -2938,7 +2938,7 @@ void ProcessTransaction(CTransaction &tx)
             LogPrint("orphan", "mapOrphan overflow, removed %u tx\n", nEvicted);
     } else {
         LogPrint("mempool", "%s was not accepted into the memory pool: %s\n", tx.GetHash().ToString(),
-                state.GetRejectReason());
+                FormatStateMessage(state));
     }
 }
 
