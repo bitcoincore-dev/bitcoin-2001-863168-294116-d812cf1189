@@ -6,6 +6,7 @@
 
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import *
+import os.path
 
 class DataLoggingTest(BitcoinTestFramework):
 
@@ -46,7 +47,9 @@ class DataLoggingTest(BitcoinTestFramework):
         sync_mempools(self.nodes)
         stop_nodes(self.nodes)
 
-        time.sleep(5) # Need to wait for files to be written out
+        # Need to wait for files to be written out
+	while (os.path.isfile(self.options.tmpdir+"/node0/regtest/bitcoind.pid")):
+            time.sleep(0.1)
 
         today = time.strftime("%Y%m%d")
 
