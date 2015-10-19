@@ -2,7 +2,7 @@
 
 [ZeroMQ](http://zeromq.org/) is a lightweight wrapper around TCP
 connections, inter-process communication, and shared-memory,
-providing various message-oriented semantics such as publish/subcribe,
+providing various message-oriented semantics such as publish/subscribe,
 request/reply, and push/pull.
 
 The Bitcoin Core daemon can be configured to act as a trusted "border
@@ -78,7 +78,7 @@ bytes).
 These options can also be provided in bitcoin.conf.
 
 ZeroMQ endpoint specifiers for TCP (and others) are documented in the
-[ZeroMQ API](http://api.zeromq.org).
+[ZeroMQ API](http://api.zeromq.org/4-0:_start).
 
 Client side, then, the ZeroMQ subscriber socket must have the
 ZMQ_SUBSCRIBE option set to one or either of these prefixes (for

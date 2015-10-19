@@ -16,11 +16,12 @@ int main(int argc, char **argv)
     for (int i=1; i<argc; ++i) {
         CLevelDBWrapper db(argv[i], 1<<23, false, false);
 
-        leveldb::Iterator* it = db.NewIterator();
+        CLevelDBIterator* it = db.NewIterator();
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
-            rawoutput << it->key().ToString() << it->value().ToString();
-            std::string strKey = it->key().ToString();
-            std::string strValue = it->value().ToString();
+            std::string strKey, strValue;
+            it->GetKey(strKey);
+            it->GetValue(strValue);
+            rawoutput << strKey << strValue;
             CDataStream ssKey(strKey.data(), strKey.data() + strKey.size(),
                     SER_DISK, CLIENT_VERSION);
             CDataStream ssValue(strValue.data(), strValue.data() + strValue.size(),
@@ -89,7 +90,7 @@ int main(int argc, char **argv)
                 ssValue >> value;
                 fmtoutput << p.first << p.second << ": " << value << endl;
             } else {
-                fmtoutput << it->key().ToString() << ": "  << it->value().ToString() << endl;
+                fmtoutput << strKey << ": "  << strValue << endl;
             }
         }
         delete it;
