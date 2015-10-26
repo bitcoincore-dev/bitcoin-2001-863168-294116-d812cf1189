@@ -1,6 +1,6 @@
 //#include <assert>
 #include <iostream>
-#include "leveldbwrapper.h"
+#include "dbwrapper.h"
 #include "uint256.h"
 #include "coins.h"
 #include "main.h"
@@ -14,9 +14,9 @@ int main(int argc, char **argv)
     std::stringstream fmtoutput;
 
     for (int i=1; i<argc; ++i) {
-        CLevelDBWrapper db(argv[i], 1<<23, false, false);
+        CDBWrapper db(argv[i], 1<<23, false, false);
 
-        CLevelDBIterator* it = db.NewIterator();
+        CDBIterator* it = db.NewIterator();
         for (it->SeekToFirst(); it->Valid(); it->Next()) {
             std::string strKey, strValue;
             it->GetKey(strKey);

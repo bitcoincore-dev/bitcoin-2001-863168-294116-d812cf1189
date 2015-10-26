@@ -32,15 +32,18 @@ dataprinter_LDADD = \
    $(LIBLEVELDB) \
    $(LIBMEMENV) \
    $(LIBBITCOIN_WALLET) \
+   $(LIBSECP256K1) \
+   $(LIBBITCOIN_ZMQ) \
+   $(ZMQ_LIBS) \
    $(BOOST_LIBS) \
    $(BDB_LIBS) \
    $(SSL_LIBS) \
    $(CRYPTO_LIBS) \
-   $(LIBSECP256K1) \
    $(MINIUPNPC_LIBS) \
    $(EVENT_PTHREADS_LIBS) \
    $(EVENT_LIBS)
 
+dataprinter_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 bin_PROGRAMS += dataprinter
 
 # printdb binary 
@@ -58,14 +61,17 @@ printdb_LDADD = \
    $(LIBLEVELDB) \
    $(LIBMEMENV) \
    $(LIBBITCOIN_WALLET) \
+   $(LIBSECP256K1) \
+   $(LIBBITCOIN_ZMQ) \
+   $(ZMQ_LIBS) \
    $(BOOST_LIBS) \
    $(BDB_LIBS) \
    $(SSL_LIBS) \
    $(CRYPTO_LIBS) \
-   $(LIBSECP256K1) \
    $(MINIUPNPC_LIBS) \
    $(EVENT_PTHREADS_LIBS) \
    $(EVENT_LIBS)
 
+printdb_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 bin_PROGRAMS += printdb
 
