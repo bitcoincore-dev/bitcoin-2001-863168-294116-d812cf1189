@@ -80,6 +80,16 @@ def sync_blocks(rpc_connections, wait=1):
             break
         time.sleep(wait)
 
+def sync_chain(rpc_connections, wait=1):
+    """
+    Wait until everybody has the same best block
+    """
+    while True:
+        counts = [ x.getbestblockhash() for x in rpc_connections ]
+        if counts == [ counts[0] ]*len(counts):
+            break
+        time.sleep(wait)
+
 def sync_mempools(rpc_connections, wait=1):
     """
     Wait until everybody has the same transactions in their memory

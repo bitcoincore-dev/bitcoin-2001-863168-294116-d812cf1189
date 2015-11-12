@@ -106,6 +106,7 @@ testScripts = [
     'invalidblockrequest.py',
     'invalidtxrequest.py',
     'abandonconflict.py',
+    'preciousblock.py',
 ]
 testScriptsExt = [
     'bip65-cltv.py',

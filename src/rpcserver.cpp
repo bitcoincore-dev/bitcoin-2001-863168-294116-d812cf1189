@@ -296,6 +296,7 @@ static const CRPCCommand vRPCCommands[] =
     { "mining",             "getnetworkhashps",       &getnetworkhashps,       true  },
     { "mining",             "prioritisetransaction",  &prioritisetransaction,  true  },
     { "mining",             "submitblock",            &submitblock,            true  },
+    { "mining",             "preciousblock",          &preciousblock,          true  },
 
     /* Coin generation */
     { "generating",         "getgenerate",            &getgenerate,            true  },
