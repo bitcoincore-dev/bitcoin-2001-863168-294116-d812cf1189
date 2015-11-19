@@ -1611,8 +1611,8 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, CBlock
     int64_t nNow = GetTime();
     const CChainParams& chainParams = Params();
 
-    if (pindexStop && pindexStop->nHeight < pindexStart->nHeight) {
-        return nullptr;
+    if (pindexStop) {
+        assert(pindexStop->nHeight >= pindexStart->nHeight);
     }
 
     CBlockIndex* pindex = pindexStart;

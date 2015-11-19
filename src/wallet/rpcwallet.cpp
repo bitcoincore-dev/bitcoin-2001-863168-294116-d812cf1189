@@ -3141,35 +3141,37 @@ UniValue rescanblockchain(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() > 2) {
         throw std::runtime_error(
-            "rescanblockchain (\"startheight\") (\"stopheight\")\n"
+            "rescanblockchain (\"start_height\") (\"stop_height\")\n"
             "\nRescan the local blockchain for wallet related transactions.\n"
             "\nArguments:\n"
-            "1. \"startheight\"    (number, optional) blockheight where the rescan should start\n"
-            "2. \"stopheight\"     (number, optional) blockheight where the rescan should stop\n"
+            "1. \"start_height\"    (numeric, optional) block height where the rescan should start\n"
+            "2. \"stop_height\"     (numeric, optional) the last block height that should be scanned\n"
+            "\nResult:\n"
+            "{\n"
+            "  \"start_height\"     (numeric) The block height where the rescan has started. If omitted, rescan started from the genesis block.\n"
+            "  \"stop_height\"      (numeric) The height of the last rescanned block. If omitted, rescan stopped at the chain tip.\n"
+            "}\n"
             "\nExamples:\n"
-            + HelpExampleCli("rescanblockchain", "\"100000 120000\"")
-            + HelpExampleRpc("rescanblockchain", "\"100000 120000\"")
+            + HelpExampleCli("rescanblockchain", "100000 120000")
+            + HelpExampleRpc("rescanblockchain", "100000 120000")
             );
     }
 
     LOCK2(cs_main, pwallet->cs_wallet);
 
-    CBlockIndex *pindexStart = nullptr;
+    CBlockIndex *pindexStart = chainActive.Genesis();
     CBlockIndex *pindexStop = nullptr;
     if (!request.params[0].isNull()) {
         pindexStart = chainActive[request.params[0].get_int()];
         if (!pindexStart) {
-            throw JSONRPCError(RPC_WALLET_ERROR, "Invalid startheight");
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid start_height");
         }
-    }
-    if (!pindexStart) {
-        pindexStart = chainActive.Genesis();
     }
 
     if (!request.params[1].isNull()) {
         pindexStop = chainActive[request.params[1].get_int()];
         if (!pindexStop) {
-            throw JSONRPCError(RPC_WALLET_ERROR, "Invalid stopheight");
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid stop_height");
         }
         if (pindexStop->nHeight < pindexStart->nHeight) {
             // Flip the parameters to the expected order
@@ -3180,29 +3182,29 @@ UniValue rescanblockchain(const JSONRPCRequest& request)
     // We can't rescan beyond non-pruned blocks, stop and throw an error
     if (fPruneMode) {
         CBlockIndex *block = pindexStop ? pindexStop : chainActive.Tip();
-        while (block) {
-            if (block->nHeight <= pindexStart->nHeight) {
-                break;
-            }
+        while (block && block->nHeight >= pindexStart->nHeight) {
             if (!(block->nStatus & BLOCK_HAVE_DATA)) {
-                throw JSONRPCError(RPC_WALLET_ERROR, "Can't rescan beyond pruned data. Use RPC call getblockchaininfo to determine your pruned height.");
+                throw JSONRPCError(RPC_MISC_ERROR, "Can't rescan beyond pruned data. Use RPC call getblockchaininfo to determine your pruned height.");
             }
             block = block->pprev;
         }
     }
 
-    CBlockIndex *stopBlock = nullptr;
-    if (pwallet) {
-        stopBlock = pwallet->ScanForWalletTransactions(pindexStart, pindexStop, true);
-        if (!stopBlock) {
-            // if we got a nullptr returned, ScanForWalletTransactions did rescan up to the requested stopindex
-            stopBlock = pindexStop ? pindexStop : chainActive.Tip();
+    CBlockIndex *stopBlock = pwallet->ScanForWalletTransactions(pindexStart, pindexStop, true);
+    if (!stopBlock) {
+        if (pwallet->IsAbortingRescan()) {
+            throw JSONRPCError(RPC_MISC_ERROR, "Rescan aborted.");
         }
+        // if we got a nullptr returned, ScanForWalletTransactions did rescan up to the requested stopindex
+        stopBlock = pindexStop ? pindexStop : chainActive.Tip();
+    }
+    else {
+        throw JSONRPCError(RPC_MISC_ERROR, "Rescan failed. Potentially corrupted data files.");
     }
 
     UniValue response(UniValue::VOBJ);
-    response.pushKV("startheight", pindexStart->nHeight);
-    response.pushKV("stopheight", stopBlock->nHeight);
+    response.pushKV("start_height", pindexStart->nHeight);
+    response.pushKV("stop_height", stopBlock->nHeight);
     return response;
 }
 
@@ -3271,9 +3273,9 @@ static const CRPCCommand commands[] =
     { "wallet",             "walletpassphrasechange",   &walletpassphrasechange,   true,   {"oldpassphrase","newpassphrase"} },
     { "wallet",             "walletpassphrase",         &walletpassphrase,         true,   {"passphrase","timeout"} },
     { "wallet",             "removeprunedfunds",        &removeprunedfunds,        true,   {"txid"} },
+    { "wallet",             "rescanblockchain",         &rescanblockchain,         true,   {"start_height", "stop_height"} },
 
     { "generating",         "generate",                 &generate,                 true,   {"nblocks","maxtries"} },
-    { "wallet",             "rescanblockchain",         &rescanblockchain,         true,   {"startheight", "stopheight"} },
 };
 
 void RegisterWalletRPCCommands(CRPCTable &t)
