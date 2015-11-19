@@ -1546,6 +1546,9 @@ void CWalletTx::GetAccountAmounts(const string& strAccount, CAmount& nReceived,
  * from or to us. If fUpdate is true, found transactions that already
  * exist in the wallet will be updated.
  *
+ * If pindexStop is not a nullptr, the scan will stop at the block-index
+ * defined by pindexStop
+ *
  * Returns pointer to the first block in the last contiguous range that was
  * successfully scanned.
  *
@@ -1556,8 +1559,9 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, CBlock
     int64_t nNow = GetTime();
     const CChainParams& chainParams = Params();
 
-    if (pindexStop && pindexStop->nHeight < pindexStart->nHeight)
-        return ret;
+    if (pindexStop && pindexStop->nHeight < pindexStart->nHeight) {
+        return nullptr;
+    }
 
     CBlockIndex* pindex = pindexStart;
     {
@@ -1587,8 +1591,9 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, CBlock
             } else {
                 ret = nullptr;
             }
-            if (pindex == pindexStop)
+            if (pindex == pindexStop) {
                 break;
+            }
             pindex = chainActive.Next(pindex);
             if (GetTime() >= nNow + 60) {
                 nNow = GetTime();
@@ -3718,7 +3723,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         uiInterface.InitMessage(_("Rescanning..."));
         LogPrintf("Rescanning last %i blocks (from block %i)...\n", chainActive.Height() - pindexRescan->nHeight, pindexRescan->nHeight);
         nStart = GetTimeMillis();
-        walletInstance->ScanForWalletTransactions(pindexRescan, NULL, true);
+        walletInstance->ScanForWalletTransactions(pindexRescan, true);
         LogPrintf(" rescan      %15dms\n", GetTimeMillis() - nStart);
         walletInstance->SetBestChain(chainActive.GetLocator());
         CWalletDB::IncrementUpdateCounter();
