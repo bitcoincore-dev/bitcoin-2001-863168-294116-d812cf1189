@@ -117,6 +117,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "setnetworkactive", 0, "state" },
     { "getmempoolancestors", 1, "verbose" },
     { "getmempooldescendants", 1, "verbose" },
+    { "rescanblockchain", 0, "height" },
     { "bumpfee", 1, "options" },
     // Echo with conversion (For testing only)
     { "echojson", 0, "arg0" },

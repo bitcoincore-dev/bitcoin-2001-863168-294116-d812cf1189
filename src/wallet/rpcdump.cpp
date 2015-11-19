@@ -1059,3 +1059,34 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
 
     return response;
 }
+
+UniValue rescanblockchain(const JSONRPCRequest& request)
+{
+    if (!EnsureWalletIsAvailable(request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() > 1)
+        throw runtime_error(
+                            "rescanblockchain \"height\"\n"
+                            "\nRescan the local blockchain for wallet related transactions.\n"
+                            "\nArguments:\n"
+                            "1. \"height\"    (number, optional) blockheight where the rescan should start\n"
+                            "\nExamples:\n"
+                            + HelpExampleCli("rescanblockchain", "\"100000\"")
+                            + HelpExampleRpc("rescanblockchain", "\"100000\"")
+                            );
+
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+
+    CBlockIndex *pIndexRescan = NULL;
+    if (request.params.size() > 0 && request.params[0].isNum())
+        pIndexRescan = chainActive[request.params[0].get_int()];
+
+    if (!pIndexRescan)
+         pIndexRescan = chainActive.Genesis();
+
+    if (pwalletMain)
+        pwalletMain->ScanForWalletTransactions(pIndexRescan, true);
+
+    return NullUniValue;
+}
