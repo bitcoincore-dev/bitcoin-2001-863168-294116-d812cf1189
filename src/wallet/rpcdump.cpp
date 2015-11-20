@@ -648,6 +648,17 @@ UniValue rescanblockchain(const UniValue& params, bool fHelp)
     if (!pIndexRescan)
          pIndexRescan = chainActive.Genesis();
 
+    //We can't rescan beyond non-pruned blocks, stop and throw an error
+    if (fPruneMode)
+    {
+        CBlockIndex *block = chainActive.Tip();
+        while (block && block->pprev && (block->pprev->nStatus & BLOCK_HAVE_DATA))
+            block = block->pprev;
+
+        if (pIndexRescan->nHeight < block->nHeight)
+            throw JSONRPCError(RPC_WALLET_ERROR, "Can't rescan beyond pruned data.");
+    }
+
     if (pwalletMain)
         pwalletMain->ScanForWalletTransactions(pIndexRescan, true);
 
