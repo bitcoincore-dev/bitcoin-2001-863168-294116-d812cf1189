@@ -1338,11 +1338,14 @@ void CWalletTx::GetAccountAmounts(const string& strAccount, CAmount& nReceived,
  * from or to us. If fUpdate is true, found transactions that already
  * exist in the wallet will be updated.
  */
-int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate)
+int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, CBlockIndex* pindexStop, bool fUpdate)
 {
     int ret = 0;
     int64_t nNow = GetTime();
     const CChainParams& chainParams = Params();
+
+    if (pindexStop && pindexStop->nHeight < pindexStart->nHeight)
+        return ret;
 
     CBlockIndex* pindex = pindexStart;
     {
@@ -1368,6 +1371,8 @@ int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate)
                 if (AddToWalletIfInvolvingMe(tx, &block, fUpdate))
                     ret++;
             }
+            if (pindex == pindexStop)
+                break;
             pindex = chainActive.Next(pindex);
             if (GetTime() >= nNow + 60) {
                 nNow = GetTime();
@@ -3351,7 +3356,7 @@ bool CWallet::InitLoadWallet()
         uiInterface.InitMessage(_("Rescanning..."));
         LogPrintf("Rescanning last %i blocks (from block %i)...\n", chainActive.Height() - pindexRescan->nHeight, pindexRescan->nHeight);
         nStart = GetTimeMillis();
-        walletInstance->ScanForWalletTransactions(pindexRescan, true);
+        walletInstance->ScanForWalletTransactions(pindexRescan, NULL, true);
         LogPrintf(" rescan      %15dms\n", GetTimeMillis() - nStart);
         walletInstance->SetBestChain(chainActive.GetLocator());
         nWalletDBUpdated++;
