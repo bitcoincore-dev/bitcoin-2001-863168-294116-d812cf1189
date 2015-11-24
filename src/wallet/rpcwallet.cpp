@@ -3043,6 +3043,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "walletpassphrasechange",   &walletpassphrasechange,   true,   {"oldpassphrase","newpassphrase"} },
     { "wallet",             "walletpassphrase",         &walletpassphrase,         true,   {"passphrase","timeout"} },
     { "wallet",             "removeprunedfunds",        &removeprunedfunds,        true,   {"txid"} },
+    { "wallet",             "rescanblockchain",         &rescanblockchain,         true,   {"height"}  },
 };
 
 void RegisterWalletRPCCommands(CRPCTable &t)

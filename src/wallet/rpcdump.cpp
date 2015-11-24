@@ -146,7 +146,7 @@ UniValue importprivkey(const JSONRPCRequest& request)
         pwalletMain->UpdateTimeFirstKey(1);
 
         if (fRescan) {
-            pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+            pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), NULL, true);
         }
     }
 
@@ -246,7 +246,7 @@ UniValue importaddress(const JSONRPCRequest& request)
 
     if (fRescan)
     {
-        pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+        pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), NULL, true);
         pwalletMain->ReacceptWalletTransactions();
     }
 
@@ -398,7 +398,7 @@ UniValue importpubkey(const JSONRPCRequest& request)
 
     if (fRescan)
     {
-        pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+        pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), NULL, true);
         pwalletMain->ReacceptWalletTransactions();
     }
 
@@ -503,7 +503,7 @@ UniValue importwallet(const JSONRPCRequest& request)
     pwalletMain->UpdateTimeFirstKey(nTimeBegin);
 
     LogPrintf("Rescanning last %i blocks\n", chainActive.Height() - pindex->nHeight + 1);
-    pwalletMain->ScanForWalletTransactions(pindex);
+    pwalletMain->ScanForWalletTransactions(pindex, NULL);
     pwalletMain->MarkDirty();
 
     if (!fGood)
@@ -1076,7 +1076,7 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
         CBlockIndex* pindex = nLowestTimestamp > minimumTimestamp ? chainActive.FindEarliestAtLeast(std::max<int64_t>(nLowestTimestamp - 7200, 0)) : chainActive.Genesis();
         CBlockIndex* scannedRange = nullptr;
         if (pindex) {
-            scannedRange = pwalletMain->ScanForWalletTransactions(pindex, true);
+            scannedRange = pwalletMain->ScanForWalletTransactions(pindex, NULL, true);
             pwalletMain->ReacceptWalletTransactions();
         }
 
@@ -1110,25 +1110,30 @@ UniValue rescanblockchain(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() > 1)
+    if (request.fHelp || request.params.size() > 2)
         throw runtime_error(
-                            "rescanblockchain \"height\"\n"
+                            "rescanblockchain \"start-height\" \"stop-height\"\n"
                             "\nRescan the local blockchain for wallet related transactions.\n"
                             "\nArguments:\n"
-                            "1. \"height\"    (number, optional) blockheight where the rescan should start\n"
+                            "1. \"start-height\"    (number, optional) blockheight where the rescan should start\n"
+                            "2. \"stop-height\"     (number, optional) blockheight where the rescan should stop\n"
                             "\nExamples:\n"
-                            + HelpExampleCli("rescanblockchain", "\"100000\"")
-                            + HelpExampleRpc("rescanblockchain", "\"100000\"")
+                            + HelpExampleCli("rescanblockchain", "\"100000 120000\"")
+                            + HelpExampleRpc("rescanblockchain", "\"100000 120000\"")
                             );
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    CBlockIndex *pIndexRescan = NULL;
+    CBlockIndex *pIndexStart = NULL;
+    CBlockIndex *pIndexStop = NULL;
     if (request.params.size() > 0 && request.params[0].isNum())
-        pIndexRescan = chainActive[request.params[0].get_int()];
+        pIndexStart = chainActive[request.params[0].get_int()];
 
-    if (!pIndexRescan)
-         pIndexRescan = chainActive.Genesis();
+    if (request.params.size() > 1 && request.params[1].isNum())
+        pIndexStop = chainActive[request.params[1].get_int()];
+
+    if (!pIndexStart)
+         pIndexStart = chainActive.Genesis();
 
     //We can't rescan beyond non-pruned blocks, stop and throw an error
     if (fPruneMode)
@@ -1137,12 +1142,12 @@ UniValue rescanblockchain(const JSONRPCRequest& request)
         while (block && block->pprev && (block->pprev->nStatus & BLOCK_HAVE_DATA))
             block = block->pprev;
 
-        if (pIndexRescan->nHeight < block->nHeight)
+        if (pIndexStart->nHeight < block->nHeight)
             throw JSONRPCError(RPC_WALLET_ERROR, "Can't rescan beyond pruned data.");
     }
 
     if (pwalletMain)
-        pwalletMain->ScanForWalletTransactions(pIndexRescan, true);
+        pwalletMain->ScanForWalletTransactions(pIndexStart, pIndexStop, true);
 
     return NullUniValue;
 }
