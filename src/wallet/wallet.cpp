@@ -1054,11 +1054,14 @@ bool CWalletTx::WriteToDisk(CWalletDB *pwalletdb)
  * from or to us. If fUpdate is true, found transactions that already
  * exist in the wallet will be updated.
  */
-int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate)
+int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, CBlockIndex* pindexStop, bool fUpdate)
 {
     int ret = 0;
     int64_t nNow = GetTime();
     const CChainParams& chainParams = Params();
+
+    if (pindexStop && pindexStop->nHeight < pindexStart->nHeight)
+        return ret;
 
     CBlockIndex* pindex = pindexStart;
     {
@@ -1084,6 +1087,8 @@ int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate)
                 if (AddToWalletIfInvolvingMe(tx, &block, fUpdate))
                     ret++;
             }
+            if (pindex == pindexStop)
+                break;
             pindex = chainActive.Next(pindex);
             if (GetTime() >= nNow + 60) {
                 nNow = GetTime();
