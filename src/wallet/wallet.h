@@ -555,7 +555,9 @@ private:
 
 enum CreateTransactionFlags {
     CREATE_TX_DEFAULT     = 0,
-    CREATE_TX_DONT_SIGN   = (1U << 0)
+    CREATE_TX_DONT_SIGN   = (1U << 0),
+    CREATE_TX_ENABLE_RBF  = (1U << 1), //!< Enable RBF, ignoring -walletrbf setting.
+    CREATE_TX_DISABLE_RBF = (1U << 2), //!< Disable RBF, ignoring -walletrbf setting.
 };
 
 /** 
