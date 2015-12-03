@@ -457,7 +457,8 @@ public:
 
 enum CreateTransactionFlags {
     CREATE_TX_DEFAULT     = 0,
-    CREATE_TX_DONT_SIGN   = (1U << 0)
+    CREATE_TX_DONT_SIGN   = (1U << 0),
+    CREATE_TX_RBF_OPT_IN  = (1U << 1)
 };
 
 /** 
