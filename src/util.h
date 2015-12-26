@@ -247,4 +247,6 @@ template <typename Callable> void TraceThread(const char* name,  Callable func)
     }
 }
 
+std::string CopyrightHolders();
+
 #endif // BITCOIN_UTIL_H
