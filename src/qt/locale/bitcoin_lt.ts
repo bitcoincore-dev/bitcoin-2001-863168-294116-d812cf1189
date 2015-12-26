@@ -1,4 +1,4 @@
-<TS language="lt" version="2.1">
+<TS language="lt" version="2.0">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -358,6 +358,10 @@
         <translation>&amp;Apie Bitcoin Core</translation>
     </message>
     <message>
+        <source>&amp;Command-line options</source>
+        <translation>Komandinės eilutės parametrai</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Klaida</translation>
     </message>
@@ -632,7 +636,7 @@
         <source>command-line options</source>
         <translation>komandinės eilutės parametrai</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>Intro</name>
     <message>
@@ -668,6 +672,10 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Tinklas</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation>Piniginė</translation>
     </message>
     <message>
         <source>Automatically open the Bitcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
@@ -836,6 +844,10 @@
         <translation>&amp;Informacija</translation>
     </message>
     <message>
+        <source>Debug window</source>
+        <translation>Derinimo langas</translation>
+    </message>
+    <message>
         <source>Using OpenSSL version</source>
         <translation>Naudojama OpenSSL versija</translation>
     </message>
@@ -884,6 +896,10 @@
         <translation>&amp;Konsolė</translation>
     </message>
     <message>
+        <source>&amp;Clear</source>
+        <translation>Išvalyti</translation>
+    </message>
+    <message>
         <source>Totals</source>
         <translation>Viso:</translation>
     </message>
@@ -923,8 +939,16 @@
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
+        <source>&amp;Amount:</source>
+        <translation>Suma:</translation>
+    </message>
+    <message>
         <source>&amp;Label:</source>
         <translation>Ž&amp;ymė:</translation>
+    </message>
+    <message>
+        <source>&amp;Message:</source>
+        <translation>Žinutė:</translation>
     </message>
     <message>
         <source>Clear</source>
@@ -944,6 +968,10 @@
     <message>
         <source>QR Code</source>
         <translation>QR kodas</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Kopijuoti adresą</translation>
     </message>
     <message>
         <source>Payment information</source>
@@ -1000,6 +1028,10 @@
         <translation>Siųsti monetas</translation>
     </message>
     <message>
+        <source>Insufficient funds!</source>
+        <translation>Nepakanka lėšų</translation>
+    </message>
+    <message>
         <source>Quantity:</source>
         <translation>Kiekis:</translation>
     </message>
@@ -1026,6 +1058,10 @@
     <message>
         <source>Change:</source>
         <translation>Graža:</translation>
+    </message>
+    <message>
+        <source>Transaction Fee:</source>
+        <translation>Sandorio mokestis:</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -1130,6 +1166,10 @@
         <source>Message:</source>
         <translation>Žinutė:</translation>
     </message>
+    <message>
+        <source>Pay To:</source>
+        <translation>Mokėti gavėjui:</translation>
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -1175,6 +1215,10 @@
     <message>
         <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
         <translation>Patikrinkite žinutę, jog įsitikintumėte, kad ją pasirašė nurodytas Bitcoin adresas</translation>
+    </message>
+    <message>
+        <source>Verify &amp;Message</source>
+        <translation>&amp;Patikrinti žinutę</translation>
     </message>
     <message>
         <source>Click "Sign Message" to generate signature</source>
@@ -1628,6 +1672,18 @@
     <message>
         <source>Information</source>
         <translation>Informacija</translation>
+    </message>
+    <message>
+        <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s'</source>
+        <translation>Neteisinga suma -maxtxfee=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for -minrelaytxfee=&lt;amount&gt;: '%s'</source>
+        <translation>Neteisinga suma -minrelaytxfee=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid amount for -mintxfee=&lt;amount&gt;: '%s'</source>
+        <translation>Neteisinga suma -mintxfee=&lt;amount&gt;: '%s'</translation>
     </message>
     <message>
         <source>Send trace/debug info to console instead of debug.log file</source>

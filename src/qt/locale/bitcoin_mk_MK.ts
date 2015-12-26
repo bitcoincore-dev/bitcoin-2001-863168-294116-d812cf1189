@@ -1,4 +1,4 @@
-<TS language="mk_MK" version="2.1">
+<TS language="mk_MK" version="2.0">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -913,8 +913,16 @@
 <context>
     <name>SendCoinsEntry</name>
     <message>
+        <source>A&amp;mount:</source>
+        <translation>Сума:</translation>
+    </message>
+    <message>
         <source>&amp;Label:</source>
         <translation>&amp;Етикета:</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation>Порака:</translation>
     </message>
     </context>
 <context>
@@ -1015,6 +1023,10 @@
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation>Опции:</translation>
+    </message>
     <message>
         <source>Warning</source>
         <translation>Предупредување</translation>

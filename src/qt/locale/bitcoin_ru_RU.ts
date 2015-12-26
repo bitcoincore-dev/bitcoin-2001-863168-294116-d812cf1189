@@ -1,4 +1,4 @@
-<TS language="ru_RU" version="2.1">
+<TS language="ru_RU" version="2.0">
 <context>
     <name>AddressBookPage</name>
     </context>
@@ -16,6 +16,14 @@
     <message>
         <source>Bitcoin Core</source>
         <translation>Bitcoin Core</translation>
+    </message>
+    <message>
+        <source>&amp;About Bitcoin Core</source>
+        <translation>О Bitcoin Core</translation>
+    </message>
+    <message>
+        <source>&amp;Command-line options</source>
+        <translation>Опции командной строки</translation>
     </message>
     <message>
         <source>Error</source>
@@ -88,6 +96,10 @@
         <source>Command-line options</source>
         <translation>Опции командной строки</translation>
     </message>
+    <message>
+        <source>command-line options</source>
+        <translation>Опции командной строки</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
@@ -131,6 +143,10 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation>Информация</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>

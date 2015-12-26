@@ -1,4 +1,4 @@
-<TS language="de" version="2.1">
+<TS language="de" version="2.0">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -882,6 +882,34 @@
         <source>command-line options</source>
         <translation>Kommandozeilenoptionen</translation>
     </message>
+    <message>
+        <source>UI Options:</source>
+        <translation>UI Einstellungen:</translation>
+    </message>
+    <message>
+        <source>Choose data directory on startup (default: %u)</source>
+        <translation>Datenverzeichnis beim Starten auswählen (Standard: %u)</translation>
+    </message>
+    <message>
+        <source>Set language, for example "de_DE" (default: system locale)</source>
+        <translation>Sprache einstellen, zum Beispiel "de_DE" (default: system locale)</translation>
+    </message>
+    <message>
+        <source>Start minimized</source>
+        <translation>Minimiert starten</translation>
+    </message>
+    <message>
+        <source>Set SSL root certificates for payment request (default: -system-)</source>
+        <translation>SSL-Wurzelzertifikate für Zahlungsanforderungen festlegen (Standard: -system-)</translation>
+    </message>
+    <message>
+        <source>Show splash screen on startup (default: %u)</source>
+        <translation>Startbildschirm beim Starten anzeigen (Standard: %u)</translation>
+    </message>
+    <message>
+        <source>Reset all settings changes made over the GUI</source>
+        <translation>Setze alle Einstellungen zurück, die über die grafische Oberfläche geändert wurden.</translation>
+    </message>
 </context>
 <context>
     <name>Intro</name>
@@ -1466,6 +1494,14 @@
         <translation>Aktuelle Anzahl Blöcke</translation>
     </message>
     <message>
+        <source>Current number of transactions</source>
+        <translation>Aktuelle Anzahl der Transaktionen</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>Speichernutzung</translation>
+    </message>
+    <message>
         <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Öffnet die "Bitcoin Core"-Debugprotokolldatei aus dem aktuellen Datenverzeichnis. Dies kann bei großen Protokolldateien einige Sekunden dauern.</translation>
     </message>
@@ -1496,6 +1532,10 @@
     <message>
         <source>Version</source>
         <translation>Version</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>Start Block</translation>
     </message>
     <message>
         <source>Synced Headers</source>
@@ -1532,6 +1572,10 @@
     <message>
         <source>Ping Time</source>
         <translation>Pingzeit</translation>
+    </message>
+    <message>
+        <source>Ping Wait</source>
+        <translation>Ping Wartezeit</translation>
     </message>
     <message>
         <source>Time Offset</source>
@@ -1584,6 +1628,10 @@
     <message>
         <source>&amp;Disconnect Node</source>
         <translation>Knoten &amp;trennen</translation>
+    </message>
+    <message>
+        <source>Ban Node for</source>
+        <translation>Knoten gebannt für</translation>
     </message>
     <message>
         <source>1 &amp;hour</source>
@@ -2701,6 +2749,10 @@
         <translation>Transaktions-ID kopieren</translation>
     </message>
     <message>
+        <source>Copy raw transaction</source>
+        <translation>Kopiere rohe Transaktion</translation>
+    </message>
+    <message>
         <source>Edit label</source>
         <translation>Bezeichnung bearbeiten</translation>
     </message>
@@ -2848,6 +2900,14 @@
         <translation>Kommandozeilen- und JSON-RPC-Befehle annehmen</translation>
     </message>
     <message>
+        <source>Maximum total fees (in %s) to use in a single wallet transaction; setting this too low may abort large transactions (default: %s)</source>
+        <translation>Maximale Gesamtgebühr (in %s) in einer Börsentransaktion; wird dies zu niedrig gesetzten können große Transaktionen abgebrochen werden (Standard: %s)</translation>
+    </message>
+    <message>
+        <source>Please check that your computer's date and time are correct! If your clock is wrong Bitcoin Core will not work properly.</source>
+        <translation>Bitte korrigieren Sie die Datums- und Uhrzeiteinstellungen Ihres Computers, da Bitcoin Core ansonsten nicht ordnungsgemäß funktionieren wird.</translation>
+    </message>
+    <message>
         <source>Error: A fatal internal error occurred, see debug.log for details</source>
         <translation>Fehler: Ein schwerer interner Fehler ist aufgetreten, siehe debug.log für Details.</translation>
     </message>
@@ -2858,6 +2918,10 @@
     <message>
         <source>Run in the background as a daemon and accept commands</source>
         <translation>Als Hintergrunddienst ausführen und Befehle annehmen</translation>
+    </message>
+    <message>
+        <source>Unable to start HTTP server. See debug log for details.</source>
+        <translation>Kann HTTP Server nicht starten. Siehe debug log für Details.</translation>
     </message>
     <message>
         <source>Accept connections from outside (default: 1 if no -proxy or -connect)</source>
@@ -3256,6 +3320,14 @@
         <translation>Dies ist experimentelle Software.</translation>
     </message>
     <message>
+        <source>Tor control port password (default: empty)</source>
+        <translation>TOR Kontrollport Passwort (Standard: leer)</translation>
+    </message>
+    <message>
+        <source>Tor control port to use if onion listening enabled (default: %s)</source>
+        <translation>Zu benutzender TOR Kontrollport wenn Onion Auflistung aktiv ist (Standard: %s)</translation>
+    </message>
+    <message>
         <source>Transaction amount too small</source>
         <translation>Transaktionsbetrag zu niedrig</translation>
     </message>
@@ -3398,6 +3470,10 @@
     <message>
         <source>Listen for JSON-RPC connections on &lt;port&gt; (default: %u or testnet: %u)</source>
         <translation>&lt;port&gt; nach JSON-RPC-Verbindungen abhören (Standard: %u oder Testnetz: %u)</translation>
+    </message>
+    <message>
+        <source>Listen for connections on &lt;port&gt; (default: %u or testnet: %u)</source>
+        <translation>&lt;port&gt; nach Verbindungen abhören (Standard: %u oder Testnetz: %u)</translation>
     </message>
     <message>
         <source>Maintain at most &lt;n&gt; connections to peers (default: %u)</source>

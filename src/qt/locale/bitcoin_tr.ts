@@ -1,4 +1,4 @@
-<TS language="tr" version="2.1">
+<TS language="tr" version="2.0">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -874,7 +874,7 @@
         <source>command-line options</source>
         <translation>komut satırı seçenekleri</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>Intro</name>
     <message>
@@ -1070,6 +1070,10 @@
     <message>
         <source>Port of the proxy (e.g. 9050)</source>
         <translation>Vekil sunucunun portu (mesela 9050)</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
+        <translation>Eşlere gizli Tor servisleri ile ulaşmak için ayrı SOCKS5 vekil sunucusu kullan:</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -1996,6 +2000,10 @@
     <message>
         <source>Payment request expired.</source>
         <translation>Ödeme talebinin ömrü doldu.</translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>Tahmini olarak %n blok içinde teyide başlanacaktır.</numerusform><numerusform>Tahmini olarak %n blok içinde teyide başlanacaktır.</numerusform></translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>

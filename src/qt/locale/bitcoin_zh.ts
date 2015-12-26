@@ -1,4 +1,4 @@
-<TS language="zh" version="2.1">
+<TS language="zh" version="2.0">
 <context>
     <name>AddressBookPage</name>
     </context>
@@ -87,6 +87,10 @@
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Insufficient funds!</source>
+        <translation>余额不足</translation>
+    </message>
     <message>
         <source>Choose...</source>
         <translation>选择...</translation>

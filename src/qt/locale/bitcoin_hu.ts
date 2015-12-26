@@ -1,4 +1,4 @@
-<TS language="hu" version="2.1">
+<TS language="hu" version="2.0">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -866,7 +866,7 @@
         <source>command-line options</source>
         <translation>parancssoros opciók</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>Intro</name>
     <message>
@@ -1774,6 +1774,10 @@
         <translation>Üzenet:</translation>
     </message>
     <message>
+        <source>Pay To:</source>
+        <translation>Címzett:</translation>
+    </message>
+    <message>
         <source>Memo:</source>
         <translation>Jegyzet:</translation>
     </message>
@@ -1841,6 +1845,10 @@
     </message>
     <message>
         <source>&amp;Verify Message</source>
+        <translation>Üzenet ellenőrzése</translation>
+    </message>
+    <message>
+        <source>Verify &amp;Message</source>
         <translation>Üzenet ellenőrzése</translation>
     </message>
     <message>
@@ -2186,6 +2194,10 @@
         <translation>Tranzakciós részletek megjelenítése</translation>
     </message>
     <message>
+        <source>Watch-only</source>
+        <translation>Csak megfigyelés</translation>
+    </message>
+    <message>
         <source>Exporting Failed</source>
         <translation>Az exportálás sikertelen volt</translation>
     </message>
@@ -2373,6 +2385,10 @@
         <translation>Az adatbázist újra kell építeni -reindex használatával (módosítás -tindex).</translation>
     </message>
     <message>
+        <source>Cannot resolve -whitebind address: '%s'</source>
+        <translation>Külső cím (-whitebind address) feloldása nem sikerült: '%s'</translation>
+    </message>
+    <message>
         <source>Copyright (C) 2009-%i The Bitcoin Core Developers</source>
         <translation>Copyright (C) 2009-%i A Bitcoin Core Fejlesztői</translation>
     </message>
@@ -2383,6 +2399,10 @@
     <message>
         <source>Information</source>
         <translation>Információ</translation>
+    </message>
+    <message>
+        <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s'</source>
+        <translation>Érvénytelen -maxtxfee=&lt;amount&gt;: '%s' összeg</translation>
     </message>
     <message>
         <source>Invalid amount for -minrelaytxfee=&lt;amount&gt;: '%s'</source>

@@ -1,4 +1,4 @@
-<TS language="fr_CA" version="2.1">
+<TS language="fr_CA" version="2.0">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -82,6 +82,14 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation>Record</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation>Addresse</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>

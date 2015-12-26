@@ -1,4 +1,4 @@
-<TS language="bg_BG" version="2.1">
+<TS language="bg_BG" version="2.0">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -59,6 +59,10 @@
     <message>
         <source>Bitcoin Core</source>
         <translation>Биткойн ядро</translation>
+    </message>
+    <message>
+        <source>About Bitcoin Core</source>
+        <translation>За Биткойн ядрото</translation>
     </message>
     </context>
 <context>
