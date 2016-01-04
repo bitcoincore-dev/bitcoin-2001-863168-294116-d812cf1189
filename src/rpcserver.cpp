@@ -274,7 +274,6 @@ static const CRPCCommand vRPCCommands[] =
     { "network",            "clearbanned",            &clearbanned,            true  },
 
     /* Block chain and UTXO */
-    { "blockchain",         "getmempoolancestors",    &getmempoolancestors,    true  },
     { "blockchain",         "getblockchaininfo",      &getblockchaininfo,      true  },
     { "blockchain",         "getbestblockhash",       &getbestblockhash,       true  },
     { "blockchain",         "getblockcount",          &getblockcount,          true  },
@@ -282,10 +281,11 @@ static const CRPCCommand vRPCCommands[] =
     { "blockchain",         "getblockhash",           &getblockhash,           true  },
     { "blockchain",         "getblockheader",         &getblockheader,         true  },
     { "blockchain",         "getchaintips",           &getchaintips,           true  },
-    { "blockchain",         "getmempooldescendants",  &getmempooldescendants,  true  },
     { "blockchain",         "getdifficulty",          &getdifficulty,          true  },
-    { "blockchain",         "getmempoolinfo",         &getmempoolinfo,         true  },
+    { "blockchain",         "getmempoolancestors",    &getmempoolancestors,    true  },
+    { "blockchain",         "getmempooldescendants",  &getmempooldescendants,  true  },
     { "blockchain",         "getmempoolentry",        &getmempoolentry,        true  },
+    { "blockchain",         "getmempoolinfo",         &getmempoolinfo,         true  },
     { "blockchain",         "getrawmempool",          &getrawmempool,          true  },
     { "blockchain",         "gettxout",               &gettxout,               true  },
     { "blockchain",         "gettxoutproof",          &gettxoutproof,          true  },
