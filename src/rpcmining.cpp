@@ -552,6 +552,9 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         int index_in_template = i - 1;
         entry.push_back(Pair("fee", pblocktemplate->vTxFees[index_in_template]));
         entry.push_back(Pair("sigops", pblocktemplate->vTxSigOps[index_in_template]));
+        if (index_in_template && !pblocktemplate->vTxPriorities.empty()) {
+            entry.push_back(Pair("priority", pblocktemplate->vTxPriorities[index_in_template]));
+        }
 
         transactions.push_back(entry);
     }
