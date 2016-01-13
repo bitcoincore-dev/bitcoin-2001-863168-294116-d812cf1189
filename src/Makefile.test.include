@@ -110,7 +110,6 @@ BITCOIN_TESTS =\
   test/policyestimator_tests.cpp \
   test/pow_tests.cpp \
   test/prevector_tests.cpp \
-  test/raii_event_tests.cpp \
   test/reverselock_tests.cpp \
   test/rpc_tests.cpp \
   test/sanity_tests.cpp \
@@ -135,6 +134,11 @@ BITCOIN_TESTS =\
   test/uint256_tests.cpp \
   test/univalue_tests.cpp \
   test/util_tests.cpp
+
+if USE_LIBEVENT
+BITCOIN_TESTS += \
+  test/raii_event_tests.cpp
+endif
 
 if ENABLE_WALLET
 BITCOIN_TESTS += \
