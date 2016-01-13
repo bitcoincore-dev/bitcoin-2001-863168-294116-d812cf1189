@@ -124,6 +124,9 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 
     std::priority_queue<CTxMemPool::txiter, std::vector<CTxMemPool::txiter>, ScoreCompare> clearedTxs;
     bool fPrintPriority = GetBoolArg("-printpriority", DEFAULT_PRINTPRIORITY);
+    if (fPrintPriority) {
+        pblocktemplate->vTxPriorities.push_back(-1);  // n/a
+    }
     uint64_t nBlockSize = 1000;
     uint64_t nBlockTx = 0;
     unsigned int nBlockSigOps = 100;
@@ -248,6 +251,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
                 mempool.ApplyDeltas(tx.GetHash(), dPriority, dummy);
                 LogPrintf("priority %.1f fee %s txid %s\n",
                           dPriority , CFeeRate(iter->GetModifiedFee(), nTxSize).ToString(), tx.GetHash().ToString());
+                pblocktemplate->vTxPriorities.push_back(dPriority);
             }
 
             inBlock.insert(iter);

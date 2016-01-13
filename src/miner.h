@@ -27,6 +27,7 @@ struct CBlockTemplate
     CBlock block;
     std::vector<CAmount> vTxFees;
     std::vector<int64_t> vTxSigOps;
+    std::vector<double> vTxPriorities;
 };
 
 /** Run the miner threads */
