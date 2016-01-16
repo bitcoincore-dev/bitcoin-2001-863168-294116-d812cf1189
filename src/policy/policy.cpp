@@ -69,7 +69,7 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
     // to MAX_STANDARD_TX_SIZE mitigates CPU exhaustion attacks.
     unsigned int sz = GetTransactionWeight(tx);
     if (sz >= MAX_STANDARD_TX_WEIGHT) {
-        reason = "tx-size";
+        reason = "tx-weight";
         return false;
     }
 
@@ -120,7 +120,7 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
     return true;
 }
 
-bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
+bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs, std::string& reason)
 {
     if (tx.IsCoinBase())
         return true; // Coinbases don't use vin normally
@@ -133,19 +133,26 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
         txnouttype whichType;
         // get the scriptPubKey corresponding to this input:
         const CScript& prevScript = prev.scriptPubKey;
-        if (!Solver(prevScript, whichType, vSolutions))
+        if (!Solver(prevScript, whichType, vSolutions)) {
+            reason = "script-unknown";
             return false;
+        }
 
         if (whichType == TX_SCRIPTHASH)
         {
             std::vector<std::vector<unsigned char> > stack;
             // convert the scriptSig into a stack, so we can inspect the redeemScript
-            if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(), SIGVERSION_BASE))
+            if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(), SIGVERSION_BASE)) {
+                reason = "scriptsig-failure";
                 return false;
-            if (stack.empty())
+            }
+            if (stack.empty()) {
+                reason = "scriptcheck-missing";
                 return false;
+            }
             CScript subscript(stack.back().begin(), stack.back().end());
             if (subscript.GetSigOpCount(true) > MAX_P2SH_SIGOPS) {
+                reason = "scriptcheck-sigops";
                 return false;
             }
         }

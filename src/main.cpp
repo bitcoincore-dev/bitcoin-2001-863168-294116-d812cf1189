@@ -1263,8 +1263,8 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
         }
 
         // Check for non-standard pay-to-script-hash in inputs
-        if (fRequireStandard && !AreInputsStandard(tx, view))
-            return state.Invalid(false, REJECT_NONSTANDARD, "bad-txns-nonstandard-inputs");
+        if (fRequireStandard && !AreInputsStandard(tx, view, reason))
+            return state.Invalid(false, REJECT_NONSTANDARD, "bad-txns-input-" + reason);
 
         int64_t nSigOpsCost = GetTransactionSigOpCost(tx, view, STANDARD_SCRIPT_VERIFY_FLAGS);
 

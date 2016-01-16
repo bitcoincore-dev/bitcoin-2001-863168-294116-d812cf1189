@@ -64,7 +64,7 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
      * @param[in] mapInputs    Map of previous transactions that have outputs we're spending
      * @return True if all inputs (scriptSigs) use only standard transaction forms
      */
-bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs);
+bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs, std::string& reason);
 
 /** Compute the virtual transaction size (weight reinterpreted as bytes). */
 int64_t GetVirtualTransactionSize(int64_t nWeight);
