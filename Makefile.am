@@ -56,7 +56,7 @@ BIN_CHECKS=$(top_srcdir)/contrib/devtools/symbol-check.py \
 
 WINDOWS_PACKAGING = src/qt/res/rendered_icons/bitcoin.ico \
   $(top_srcdir)/share/pixmaps/nsis-header.bmp \
-  $(top_srcdir)/share/pixmaps/nsis-wizard.bmp \
+  src/qt/res/rendered_icons/nsis-wizard.bmp \
   $(top_srcdir)/doc/README_windows.txt
 
 OSX_PACKAGING = $(OSX_DEPLOY_SCRIPT) $(OSX_FANCY_PLIST) $(OSX_INSTALLER_ICONS) \
@@ -73,7 +73,7 @@ COVERAGE_INFO = $(COV_TOOL_WRAPPER) baseline.info \
 dist-hook:
 	-$(GIT) archive --format=tar HEAD -- src/clientversion.cpp | $(AMTAR) -C $(top_distdir) -xf -
 
-$(BITCOIN_WIN_INSTALLER): all-recursive
+$(BITCOIN_WIN_INSTALLER): all-recursive $(WINDOWS_PACKAGING)
 	$(MKDIR_P) $(top_builddir)/release
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIND_BIN) $(top_builddir)/release
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIN_QT_BIN) $(top_builddir)/release
@@ -96,7 +96,7 @@ $(OSX_APP)/Contents/Info.plist: $(OSX_PLIST)
 	$(MKDIR_P) $(@D)
 	$(INSTALL_DATA) $< $@
 
-$(OSX_INSTALLER_ICONS): FORCE
+src/qt/res/rendered_icons/%: FORCE
 	$(MAKE) -C src $(patsubst src/%,%,$@)
 
 $(OSX_APP)/Contents/Resources/bitcoin.icns: $(OSX_INSTALLER_ICONS)
