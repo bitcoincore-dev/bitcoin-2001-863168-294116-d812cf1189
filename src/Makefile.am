@@ -524,11 +524,11 @@ qt/res/rendered_icons/chart.png: qt/res/src/chart.svg
 	$(RSVG_CONVERT) -f png < $< > $@
 
 qt/res/rendered_icons/about.png: qt/res/rendered_icons/about.svg
-	$(RSVG_CONVERT) -f png -d 142 -p 142 < $< | $(IMAGEMAGICK_CONVERT) - -crop 128x128+7+7 -colorspace Gray -strip $@
+	$(RSVG_CONVERT) -f png -d 142 -p 142 < $< | $(IMAGEMAGICK_CONVERT) - -crop 128x128+7+7 -bordercolor white -border 0x0 -colorspace Gray -negate -alpha copy -negate -strip $@
 
-qt/res/rendered_icons/about.svg: qt/res/src/bitcoin.svg
+qt/res/rendered_icons/about.svg: qt/res/src/bitcoin.svg Makefile
 	@$(MKDIR_P) $(@D)
-	sed '/fill="white"/d;s/\(stop-color:\)#....../\1black/' < $< > $@
+	sed 's/url(#\(Knot\|Pattern\))/white/;s/\(stop-color:\)#....../\1black/' < $< > $@
 
 qt/res/rendered_icons/bitcoin%.png: qt/res/src/bitcoin.svg
 	@$(MKDIR_P) $(@D)
