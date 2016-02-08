@@ -1592,10 +1592,10 @@ fi
 
 dnl univalue check
 AC_ARG_WITH([system-univalue],
-  [AS_HELP_STRING([--with-system-univalue],
-  [Build with system UniValue (default is no)])],
+  [AS_HELP_STRING([--without-system-univalue],
+  [Build with system UniValue (default is auto)])],
   [system_univalue=$withval],
-  [system_univalue=no]
+  [system_univalue=auto]
 )
 need_bundled_univalue=yes
 if test x$build_bitcoin_wallet$build_bitcoin_cli$build_bitcoin_tx$build_bitcoin_util$build_bitcoind$bitcoin_enable_qt$use_tests$use_bench = xnononononononono; then
