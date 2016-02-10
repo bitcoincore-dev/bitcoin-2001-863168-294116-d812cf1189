@@ -349,6 +349,7 @@ static const CRPCCommand vRPCCommands[] =
     { "wallet",             "abandontransaction",     &abandontransaction,     false },
     { "wallet",             "getunconfirmedbalance",  &getunconfirmedbalance,  false },
     { "wallet",             "getwalletinfo",          &getwalletinfo,          false },
+    { "wallet",             "importmulti",            &importmulti,            true  },
     { "wallet",             "importprivkey",          &importprivkey,          true  },
     { "wallet",             "importwallet",           &importwallet,           true  },
     { "wallet",             "importaddress",          &importaddress,          true  },
