@@ -16,6 +16,7 @@
 #include <chainparams.h>
 #include <validation.h> // For DEFAULT_SCRIPTCHECK_THREADS
 #include <net.h>
+#include <net_processing.h>
 #include <netbase.h>
 #include <txdb.h> // for -dbcache defaults
 
@@ -151,6 +152,9 @@ void OptionsModel::Init(bool resetSettings)
         addOverriddenOption("-onion");
     else if(!settings.value("fUseSeparateProxyTor").toBool() && !gArgs.GetArg("-onion", "").empty())
         addOverriddenOption("-onion");
+
+    // rwconf settings that require a restart
+    f_peerbloomfilters = gArgs.GetBoolArg("-peerbloomfilters", DEFAULT_PEERBLOOMFILTERS);
 
     // Display
     if (!settings.contains("language"))
@@ -326,6 +330,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("fListen");
         case maxuploadtarget:
             return qlonglong(g_connman->GetMaxOutboundTarget() / 1024 / 1024);
+        case peerbloomfilters:
+            return f_peerbloomfilters;
         default:
             return QVariant();
         }
@@ -495,6 +501,13 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             }
             break;
         }
+        case peerbloomfilters:
+            if (f_peerbloomfilters != value) {
+                gArgs.ModifyRWConfigFile("peerbloomfilters", strprintf("%d", value.toBool()));
+                f_peerbloomfilters = value.toBool();
+                setRestartRequired(true);
+            }
+            break;
         default:
             break;
         }
