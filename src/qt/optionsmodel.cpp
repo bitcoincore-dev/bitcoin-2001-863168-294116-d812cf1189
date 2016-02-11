@@ -17,6 +17,7 @@
 #include <validation.h> // For DEFAULT_SCRIPTCHECK_THREADS
 #include <net.h>
 #include <netbase.h>
+#include <node/context.h>
 #include <txdb.h> // for -dbcache defaults
 #include <util/string.h>
 
@@ -334,6 +335,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("nThreadsScriptVerif");
         case Listen:
             return settings.value("fListen");
+        case maxuploadtarget:
+            return qlonglong(node().context()->connman->GetMaxOutboundTarget() / 1024 / 1024);
         default:
             return QVariant();
         }
@@ -494,6 +497,15 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 setRestartRequired(true);
             }
             break;
+        case maxuploadtarget:
+        {
+            qlonglong nv = value.toLongLong();
+            if (node().context()->connman->GetMaxOutboundTarget() / 1024 / 1024 != uint64_t(nv)) {
+                gArgs.ModifyRWConfigFile("maxuploadtarget", value.toString().toStdString());
+                node().context()->connman->SetMaxOutboundTarget(nv * 1024 * 1024);
+            }
+            break;
+        }
         default:
             break;
         }

@@ -66,6 +66,7 @@ public:
         DatabaseCache,          // int
         SpendZeroConfChange,    // bool
         Listen,                 // bool
+        maxuploadtarget,
         OptionIDRowCount,
     };
 
