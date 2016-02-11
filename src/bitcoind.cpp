@@ -116,6 +116,12 @@ bool AppInit(int argc, char* argv[])
             return false;
         }
 
+        try {
+            gArgs.ReadRWConfigFile(gArgs.GetArg("-confrw", BITCOIN_RW_CONF_FILENAME));
+        } catch (const std::exception& e) {
+            // Ignore problems here, since we are responsible for this file
+        }
+
         // Error out when loose non-argument tokens are encountered on command line
         for (int i = 1; i < argc; i++) {
             if (!IsSwitchChar(argv[i][0])) {

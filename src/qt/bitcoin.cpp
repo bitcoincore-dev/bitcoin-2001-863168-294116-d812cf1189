@@ -652,6 +652,12 @@ int main(int argc, char *argv[])
     PaymentServer::ipcParseCommandLine(argc, argv);
 #endif
 
+    try {
+        gArgs.ReadRWConfigFile(gArgs.GetArg("-confrw", BITCOIN_RW_CONF_FILENAME));
+    } catch (const std::exception& e) {
+        // Ignore problems here, since we are responsible for this file
+    }
+
     QScopedPointer<const NetworkStyle> networkStyle(NetworkStyle::instantiate(QString::fromStdString(Params().NetworkIDString())));
     assert(!networkStyle.isNull());
     // Allow for separate UI settings for testnets
