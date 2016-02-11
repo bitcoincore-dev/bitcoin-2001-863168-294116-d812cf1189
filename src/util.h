@@ -48,6 +48,7 @@ public:
 extern CTranslationInterface translationInterface;
 
 extern const char * const BITCOIN_CONF_FILENAME;
+extern const char * const BITCOIN_RW_CONF_FILENAME;
 extern const char * const BITCOIN_PID_FILENAME;
 
 /**
@@ -90,6 +91,7 @@ const fs::path &GetBlocksDir(bool fNetSpecific = true);
 const fs::path &GetDataDir(bool fNetSpecific = true);
 void ClearDatadirCache();
 fs::path GetConfigFile(const std::string& confPath);
+fs::path GetRWConfigFile(const std::string& confPath);
 #ifndef WIN32
 fs::path GetPidFile();
 void CreatePidFile(const fs::path &path, pid_t pid);
@@ -136,6 +138,8 @@ enum class OptionsCategory {
     HIDDEN // Always the last option to avoid printing these in the help
 };
 
+void ModifyRWConfigStream(std::istream& stream_in, std::ostream& stream_out, const std::map<std::string, std::string>& settings_to_change);
+
 class ArgsManager
 {
 protected:
@@ -159,6 +163,9 @@ protected:
 
     bool ReadConfigStream(std::istream& stream, std::string& error, bool ignore_invalid_keys = false, bool prepend = false, bool make_net_specific = false);
 
+private:
+    fs::path rwconf_path;
+
 public:
     ArgsManager();
 
@@ -169,6 +176,10 @@ public:
 
     bool ParseParameters(int argc, const char* const argv[], std::string& error);
     bool ReadConfigFiles(std::string& error, bool ignore_invalid_keys = false);
+
+    void ModifyRWConfigFile(const std::map<std::string, std::string>& settings_to_change);
+    void ModifyRWConfigFile(const std::string& setting_to_change, const std::string& new_value);
+    void EraseRWConfigFile();
 
     /**
      * Log warnings for options in m_section_only_args when
