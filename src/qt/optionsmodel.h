@@ -75,6 +75,7 @@ public:
         Listen,                 // bool
         Server,                 // bool
         EnablePSBTControls,     // bool
+        maxuploadtarget,
         OptionIDRowCount,
     };
 
