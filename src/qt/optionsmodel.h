@@ -76,6 +76,7 @@ public:
         Server,                 // bool
         EnablePSBTControls,     // bool
         maxuploadtarget,
+        peerbloomfilters,       // bool
         OptionIDRowCount,
     };
 
@@ -141,6 +142,9 @@ private:
 
     static QString FontChoiceToString(const OptionsModel::FontChoice&);
     static FontChoice FontChoiceFromString(const QString&);
+
+    /* rwconf settings that require a restart */
+    bool f_peerbloomfilters;
 
     // Add option to list of GUI options overridden through command line/config file
     void addOverriddenOption(const std::string &option);
