@@ -46,6 +46,7 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->threadsScriptVerif->setMaximum(MAX_SCRIPTCHECK_THREADS);
 
     ui->networkPort->setValidator(new QIntValidator(1024, 65535, this));
+    connect(ui->networkPort, SIGNAL(textChanged(const QString&)), this, SLOT(checkLineEdit()));
 
     /* Network elements init */
 #ifndef USE_UPNP
@@ -204,6 +205,16 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->thirdPartyTxUrls, OptionsModel::ThirdPartyTxUrls);
 }
 
+void OptionsDialog::checkLineEdit()
+{
+    QLineEdit * const lineedit = qobject_cast<QLineEdit*>(QObject::sender());
+    if (lineedit->hasAcceptableInput()) {
+        lineedit->setStyleSheet("");
+    } else {
+        lineedit->setStyleSheet("color: red;");
+    }
+}
+
 void OptionsDialog::enableOkButton()
 {
     /* prevent enabling of the OK button when data modified, if there is an invalid proxy address present */
@@ -241,6 +252,19 @@ void OptionsDialog::on_resetButton_clicked()
 
 void OptionsDialog::on_okButton_clicked()
 {
+    for (int i = 0; i < ui->tabWidget->count(); ++i) {
+        QWidget * const tab = ui->tabWidget->widget(i);
+        Q_FOREACH(QObject* o, tab->children()) {
+            QLineEdit * const lineedit = qobject_cast<QLineEdit*>(o);
+            if (lineedit && !lineedit->hasAcceptableInput()) {
+                ui->tabWidget->setCurrentWidget(tab);
+                lineedit->setFocus(Qt::OtherFocusReason);
+                lineedit->selectAll();
+                QMessageBox::critical(this, tr("Invalid setting"), tr("The value entered is invalid."));
+                return;
+            }
+        }
+    }
     mapper->submit();
     accept();
     updateDefaultProxyNets();

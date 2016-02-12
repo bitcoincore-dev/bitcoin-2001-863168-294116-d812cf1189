@@ -49,6 +49,7 @@ private Q_SLOTS:
     void doProxyIpChecks(QValidatedLineEdit *pUiProxyIp, int nProxyPort);
     /* query the networks, for which the default proxy is used */
     void updateDefaultProxyNets();
+    void checkLineEdit();
 
 Q_SIGNALS:
     void proxyIpChecks(QValidatedLineEdit *pUiProxyIp, int nProxyPort);
