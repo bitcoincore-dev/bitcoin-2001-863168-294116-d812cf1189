@@ -6,7 +6,6 @@
 #include "ui_intro.h"
 
 #include "guiutil.h"
-#include "scicon.h"
 
 #include "util.h"
 
@@ -42,10 +41,10 @@ public:
         ST_ERROR
     };
 
-public slots:
+public Q_SLOTS:
     void check();
 
-signals:
+Q_SIGNALS:
     void reply(int status, const QString &message, quint64 available);
 
 private:
@@ -102,7 +101,7 @@ void FreespaceChecker::check()
         replyStatus = ST_ERROR;
         replyMessage = tr("Cannot create data directory here.");
     }
-    emit reply(replyStatus, replyMessage, freeBytesAvailable);
+    Q_EMIT reply(replyStatus, replyMessage, freeBytesAvailable);
 }
 
 
@@ -121,7 +120,7 @@ Intro::~Intro()
 {
     delete ui;
     /* Ensure thread is finished before it is deleted */
-    emit stopThread();
+    Q_EMIT stopThread();
     thread->wait();
 }
 
@@ -163,12 +162,12 @@ void Intro::pickDataDirectory()
     /* 2) Allow QSettings to override default dir */
     dataDir = settings.value("strDataDir", dataDir).toString();
 
-    if(!fs::exists(GUIUtil::qstringToBoostPath(dataDir)) || GetBoolArg("-choosedatadir", false))
+    if(!fs::exists(GUIUtil::qstringToBoostPath(dataDir)) || GetBoolArg("-choosedatadir", DEFAULT_CHOOSE_DATADIR))
     {
         /* If current default data directory does not exist, let the user choose one */
         Intro intro;
         intro.setDataDirectory(dataDir);
-        intro.setWindowIcon(SingleColorIcon(":icons/bitcoin"));
+        intro.setWindowIcon(QIcon(":icons/bitcoin"));
 
         while(true)
         {
@@ -277,7 +276,7 @@ void Intro::checkPath(const QString &dataDir)
     if(!signalled)
     {
         signalled = true;
-        emit requestCheck();
+        Q_EMIT requestCheck();
     }
     mutex.unlock();
 }

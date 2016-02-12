@@ -6,29 +6,31 @@
 #ifndef BITCOIN_TXDB_H
 #define BITCOIN_TXDB_H
 
-#include "leveldbwrapper.h"
-#include "main.h"
+#include "coins.h"
+#include "dbwrapper.h"
 
 #include <map>
 #include <string>
 #include <utility>
 #include <vector>
 
-class CCoins;
+class CBlockFileInfo;
+class CBlockIndex;
+struct CDiskTxPos;
 class uint256;
 
 //! -dbcache default (MiB)
 static const int64_t nDefaultDbCache = 100;
 //! max. -dbcache in (MiB)
-static const int64_t nMaxDbCache = sizeof(void*) > 4 ? 4096 : 1024;
+static const int64_t nMaxDbCache = sizeof(void*) > 4 ? 16384 : 1024;
 //! min. -dbcache in (MiB)
 static const int64_t nMinDbCache = 4;
 
-/** CCoinsView backed by the LevelDB coin database (chainstate/) */
+/** CCoinsView backed by the coin database (chainstate/) */
 class CCoinsViewDB : public CCoinsView
 {
 protected:
-    CLevelDBWrapper db;
+    CDBWrapper db;
 public:
     CCoinsViewDB(size_t nCacheSize, bool fMemory = false, bool fWipe = false);
 
@@ -40,7 +42,7 @@ public:
 };
 
 /** Access to the block database (blocks/index/) */
-class CBlockTreeDB : public CLevelDBWrapper
+class CBlockTreeDB : public CDBWrapper
 {
 public:
     CBlockTreeDB(size_t nCacheSize, bool fMemory = false, bool fWipe = false);

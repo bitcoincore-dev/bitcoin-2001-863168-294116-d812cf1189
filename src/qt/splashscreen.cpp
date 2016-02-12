@@ -4,15 +4,16 @@
 
 #include "splashscreen.h"
 
+#include "networkstyle.h"
+
 #include "clientversion.h"
 #include "init.h"
-#include "networkstyle.h"
-#include "ui_interface.h"
 #include "util.h"
+#include "ui_interface.h"
 #include "version.h"
 
 #ifdef ENABLE_WALLET
-#include "wallet.h"
+#include "wallet/wallet.h"
 #endif
 
 #include <QApplication>
@@ -56,7 +57,7 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
     QPainter pixPaint(&pixmap);
     pixPaint.setPen(QColor(100,100,100));
 
-    // draw a slighly radial gradient
+    // draw a slightly radial gradient
     QRadialGradient gradient(QPoint(0,0), splashSize.width()/devicePixelRatio);
     gradient.setColorAt(0, Qt::white);
     gradient.setColorAt(1, QColor(247,247,247));

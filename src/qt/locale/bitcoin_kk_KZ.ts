@@ -1,10 +1,6 @@
-<TS language="kk_KZ" version="2.0">
+<TS language="kk_KZ" version="2.1">
 <context>
     <name>AddressBookPage</name>
-    <message>
-        <source>Double-click to edit address or label</source>
-        <translation>Адресті немесе белгіні өзгерту үшін екі рет шертіңіз</translation>
-    </message>
     <message>
         <source>Create a new address</source>
         <translation>Жаңа адрес енгізу</translation>
@@ -87,6 +83,9 @@
         <source>Change passphrase</source>
         <translation>Құпия сөзді өзгерту</translation>
     </message>
+    </context>
+<context>
+    <name>BanTableModel</name>
     </context>
 <context>
     <name>BitcoinGUI</name>
@@ -377,8 +376,8 @@
         <translation>Күні</translation>
     </message>
     <message>
-        <source>Address</source>
-        <translation>Адрес</translation>
+        <source>Label</source>
+        <translation>таңба</translation>
     </message>
     </context>
 <context>

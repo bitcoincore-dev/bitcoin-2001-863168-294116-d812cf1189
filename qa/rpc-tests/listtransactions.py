@@ -5,9 +5,8 @@
 
 # Exercise the listtransactions API
 
-from test_framework import BitcoinTestFramework
-from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
-from util import *
+from test_framework.test_framework import BitcoinTestFramework
+from test_framework.util import *
 
 
 def check_array_result(object_array, to_match, expected):
@@ -44,7 +43,7 @@ class ListTransactionsTest(BitcoinTestFramework):
                            {"txid":txid},
                            {"category":"receive","account":"","amount":Decimal("0.1"),"confirmations":0})
         # mine a block, confirmations should change:
-        self.nodes[0].setgenerate(True, 1)
+        self.nodes[0].generate(1)
         self.sync_all()
         check_array_result(self.nodes[0].listtransactions(),
                            {"txid":txid},
@@ -93,6 +92,16 @@ class ListTransactionsTest(BitcoinTestFramework):
         check_array_result(self.nodes[1].listtransactions(),
                            {"category":"receive","amount":Decimal("0.44")},
                            {"txid":txid, "account" : "toself"} )
+
+        multisig = self.nodes[1].createmultisig(1, [self.nodes[1].getnewaddress()])
+        self.nodes[0].importaddress(multisig["redeemScript"], "watchonly", False, True)
+        txid = self.nodes[1].sendtoaddress(multisig["address"], 0.1)
+        self.nodes[1].generate(1)
+        self.sync_all()
+        assert(len(self.nodes[0].listtransactions("watchonly", 100, 0, False)) == 0)
+        check_array_result(self.nodes[0].listtransactions("watchonly", 100, 0, True),
+                           {"category":"receive","amount":Decimal("0.1")},
+                           {"txid":txid, "account" : "watchonly"} )
 
 if __name__ == '__main__':
     ListTransactionsTest().main()

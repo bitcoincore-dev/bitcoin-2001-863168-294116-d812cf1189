@@ -15,6 +15,7 @@
 class CBasicKeyStore;
 class CWallet;
 class uint256;
+class CBlockIndex;
 
 /** General change type (added, updated, removed). */
 enum ChangeType
@@ -78,9 +79,6 @@ public:
     /** Progress message during initialization. */
     boost::signals2::signal<void (const std::string &message)> InitMessage;
 
-    /** Translate a message to the native language of the user. */
-    boost::signals2::signal<std::string (const char* psz)> Translate;
-
     /** Number of network connections changed. */
     boost::signals2::signal<void (int newNumConnections)> NotifyNumConnectionsChanged;
 
@@ -97,19 +95,12 @@ public:
     boost::signals2::signal<void (const std::string &title, int nProgress)> ShowProgress;
 
     /** New block has been accepted */
-    boost::signals2::signal<void (const uint256& hash)> NotifyBlockTip;
+    boost::signals2::signal<void (bool, const CBlockIndex *)> NotifyBlockTip;
+
+    /** Banlist did change. */
+    boost::signals2::signal<void (void)> BannedListChanged;
 };
 
 extern CClientUIInterface uiInterface;
-
-/**
- * Translation function: Call Translate signal on UI interface, which returns a boost::optional result.
- * If no translation slot is registered, nothing is returned, and simply return the input.
- */
-inline std::string _(const char* psz)
-{
-    boost::optional<std::string> rv = uiInterface.Translate(psz);
-    return rv ? (*rv) : psz;
-}
 
 #endif // BITCOIN_UI_INTERFACE_H

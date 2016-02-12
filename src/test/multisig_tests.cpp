@@ -4,7 +4,7 @@
 
 #include "key.h"
 #include "keystore.h"
-#include "main.h"
+#include "policy/policy.h"
 #include "script/script.h"
 #include "script/script_error.h"
 #include "script/interpreter.h"
@@ -13,7 +13,7 @@
 #include "test/test_bitcoin.h"
 
 #ifdef ENABLE_WALLET
-#include "wallet_ismine.h"
+#include "wallet/wallet_ismine.h"
 #endif
 
 #include <boost/foreach.hpp>

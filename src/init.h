@@ -8,6 +8,7 @@
 
 #include <string>
 
+class CScheduler;
 class CWallet;
 
 namespace boost
@@ -19,8 +20,14 @@ extern CWallet* pwalletMain;
 
 void StartShutdown();
 bool ShutdownRequested();
+/** Interrupt threads */
+void Interrupt(boost::thread_group& threadGroup);
 void Shutdown();
-bool AppInit2(boost::thread_group& threadGroup);
+//!Initialize the logging infrastructure
+void InitLogging();
+//!Parameter interaction: change current parameters depending on various rules
+void InitParameterInteraction();
+bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler);
 
 /** The help message mode determines what help message to show */
 enum HelpMessageMode {

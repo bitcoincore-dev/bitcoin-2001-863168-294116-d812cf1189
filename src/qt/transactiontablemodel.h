@@ -10,6 +10,7 @@
 #include <QAbstractTableModel>
 #include <QStringList>
 
+class PlatformStyle;
 class TransactionRecord;
 class TransactionTablePriv;
 class WalletModel;
@@ -23,7 +24,7 @@ class TransactionTableModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    explicit TransactionTableModel(CWallet* wallet, WalletModel *parent = 0);
+    explicit TransactionTableModel(const PlatformStyle *platformStyle, CWallet* wallet, WalletModel *parent = 0);
     ~TransactionTableModel();
 
     enum ColumnIndex {
@@ -59,6 +60,8 @@ public:
         TxIDRole,
         /** Transaction hash */
         TxHashRole,
+        /** Transaction data, hex-encoded */
+        TxHexRole,
         /** Is transaction confirmed? */
         ConfirmedRole,
         /** Formatted amount, without brackets when unconfirmed */
@@ -82,6 +85,7 @@ private:
     QStringList columns;
     TransactionTablePriv *priv;
     bool fProcessingQueuedTransactions;
+    const PlatformStyle *platformStyle;
 
     void subscribeToCoreSignals();
     void unsubscribeFromCoreSignals();
@@ -98,7 +102,7 @@ private:
     QVariant txWatchonlyDecoration(const TransactionRecord *wtx) const;
     QVariant txAddressDecoration(const TransactionRecord *wtx) const;
 
-public slots:
+public Q_SLOTS:
     /* New transaction, or transaction changed status */
     void updateTransaction(const QString &hash, int status, bool showTransaction);
     void updateConfirmations();

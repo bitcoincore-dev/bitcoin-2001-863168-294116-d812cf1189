@@ -13,12 +13,15 @@
 #include <QWidget>
 
 class ClientModel;
+class PlatformStyle;
+class RPCTimerInterface;
 
 namespace Ui {
     class RPCConsole;
 }
 
 QT_BEGIN_NAMESPACE
+class QMenu;
 class QItemSelection;
 QT_END_NAMESPACE
 
@@ -28,7 +31,7 @@ class RPCConsole: public QWidget
     Q_OBJECT
 
 public:
-    explicit RPCConsole(QWidget *parent);
+    explicit RPCConsole(const PlatformStyle *platformStyle, QWidget *parent);
     ~RPCConsole();
 
     void setClientModel(ClientModel *model);
@@ -41,11 +44,18 @@ public:
         CMD_ERROR
     };
 
+    enum TabTypes {
+        TAB_INFO = 0,
+        TAB_CONSOLE = 1,
+        TAB_GRAPH = 2,
+        TAB_PEERS = 3
+    };
+
 protected:
     virtual bool eventFilter(QObject* obj, QEvent *event);
     void keyPressEvent(QKeyEvent *);
 
-private slots:
+private Q_SLOTS:
     void on_lineEdit_returnPressed();
     void on_tabWidget_currentChanged(int index);
     /** open the debug.log from the current datadir */
@@ -57,14 +67,25 @@ private slots:
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
     void hideEvent(QHideEvent *event);
+    /** Show custom context menu on Peers tab */
+    void showPeersTableContextMenu(const QPoint& point);
+    /** Show custom context menu on Bans tab */
+    void showBanTableContextMenu(const QPoint& point);
+    /** Hides ban table if no bans are present */
+    void showOrHideBanTableIfRequired();
+    /** clear the selected node */
+    void clearSelectedNode();
 
-public slots:
+public Q_SLOTS:
     void clear();
+    /** Append the message to the message widget */
     void message(int category, const QString &message, bool html = false);
     /** Set number of connections shown in the UI */
     void setNumConnections(int count);
     /** Set number of blocks and last block date shown in the UI */
-    void setNumBlocks(int count, const QDateTime& blockDate);
+    void setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress);
+    /** Set size (number of transactions and memory usage) of the mempool in the UI */
+    void setMempoolSize(long numberOfTxs, size_t dynUsage);
     /** Go forward or back in history */
     void browseHistory(int offset);
     /** Scroll console view to end */
@@ -73,8 +94,16 @@ public slots:
     void peerSelected(const QItemSelection &selected, const QItemSelection &deselected);
     /** Handle updated peer information */
     void peerLayoutChanged();
+    /** Disconnect a selected node on the Peers tab */
+    void disconnectSelectedNode();
+    /** Ban a selected node on the Peers tab */
+    void banSelectedNode(int bantime);
+    /** Unban a selected node on the Bans tab */
+    void unbanSelectedNode();
+    /** set which tab has the focus (is visible) */
+    void setTabFocus(enum TabTypes tabType);
 
-signals:
+Q_SIGNALS:
     // For RPC command executor
     void stopExecutor();
     void cmdRequest(const QString &command);
@@ -90,7 +119,10 @@ private:
     {
         ADDRESS_COLUMN_WIDTH = 200,
         SUBVERSION_COLUMN_WIDTH = 100,
-        PING_COLUMN_WIDTH = 80
+        PING_COLUMN_WIDTH = 80,
+        BANSUBNET_COLUMN_WIDTH = 200,
+        BANTIME_COLUMN_WIDTH = 250
+
     };
 
     Ui::RPCConsole *ui;
@@ -100,6 +132,10 @@ private:
     const static QStringList historyFilter;
     QString cmdBeforeBrowsing;
     NodeId cachedNodeid;
+    const PlatformStyle *platformStyle;
+    RPCTimerInterface *rpcTimerInterface;
+    QMenu *peersTableContextMenu;
+    QMenu *banTableContextMenu;
 };
 
 #endif // BITCOIN_QT_RPCCONSOLE_H
