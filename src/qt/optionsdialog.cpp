@@ -48,7 +48,7 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->pruneSize->setEnabled(false);
     connect(ui->prune, SIGNAL(toggled(bool)), ui->pruneSize, SLOT(setEnabled(bool)));
 
-    ui->networkPort->setValidator(new QIntValidator(1, 65535, this));
+    ui->networkPort->setValidator(new QIntValidator(1024, 65535, this));
 
     /* Network elements init */
 #ifndef USE_UPNP
