@@ -2489,8 +2489,13 @@ UniValue fundrawtransaction(const UniValue& params, bool fHelp)
     string strFailReason;
     int nChangePos = -1;
     unsigned int flags = CREATE_TX_DONT_SIGN;
-    if (params.size() > 2 && params[2].isTrue())
-        flags |= CREATE_TX_RBF_OPT_IN;
+    if (params.size() > 2) {
+        if (params[2].isTrue()) {
+            flags |= CREATE_TX_RBF_OPT_IN;
+        } else if (params[2].isFalse()) {  // NOTE: null does not get this behaviour
+            flags |= CREATE_TX_RBF_OPT_OUT;
+        }
+    }
     if(!pwalletMain->FundTransaction(tx, nFee, nChangePos, strFailReason, includeWatching, flags))
         throw JSONRPCError(RPC_INTERNAL_ERROR, strFailReason);
 
