@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2009-2014 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -459,7 +459,7 @@ std::string FormatParagraph(const std::string in, size_t width, size_t indent)
         }
         // Append word
         out << in.substr(ptr, endword - ptr);
-        col += endword - ptr;
+        col += endword - ptr + 1;
         ptr = endword;
     }
     return out.str();

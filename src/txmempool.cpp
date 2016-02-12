@@ -1,11 +1,12 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2009-2014 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "txmempool.h"
 
 #include "clientversion.h"
+#include "main.h"
 #include "streams.h"
 #include "util.h"
 #include "utilmoneystr.h"
@@ -90,22 +91,32 @@ public:
      * Used as belt-and-suspenders check when reading to detect
      * file corruption
      */
-    bool AreSane(const std::vector<CFeeRate>& vecFee, const CFeeRate& minRelayFee)
+    static bool AreSane(const CFeeRate fee, const CFeeRate& minRelayFee)
+    {
+        if (fee < CFeeRate(0))
+            return false;
+        if (fee.GetFeePerK() > minRelayFee.GetFeePerK() * 10000)
+            return false;
+        return true;
+    }
+    static bool AreSane(const std::vector<CFeeRate>& vecFee, const CFeeRate& minRelayFee)
     {
         BOOST_FOREACH(CFeeRate fee, vecFee)
         {
-            if (fee < CFeeRate(0))
-                return false;
-            if (fee.GetFeePerK() > minRelayFee.GetFeePerK() * 10000)
+            if (!AreSane(fee, minRelayFee))
                 return false;
         }
         return true;
     }
-    bool AreSane(const std::vector<double> vecPriority)
+    static bool AreSane(const double priority)
+    {
+        return priority >= 0;
+    }
+    static bool AreSane(const std::vector<double> vecPriority)
     {
         BOOST_FOREACH(double priority, vecPriority)
         {
-            if (priority < 0)
+            if (!AreSane(priority))
                 return false;
         }
         return true;
@@ -166,12 +177,12 @@ private:
         bool sufficientFee = (feeRate > minRelayFee);
         bool sufficientPriority = AllowFree(dPriority);
         const char* assignedTo = "unassigned";
-        if (sufficientFee && !sufficientPriority)
+        if (sufficientFee && !sufficientPriority && CBlockAverage::AreSane(feeRate, minRelayFee))
         {
             history[nBlocksTruncated].RecordFee(feeRate);
             assignedTo = "fee";
         }
-        else if (sufficientPriority && !sufficientFee)
+        else if (sufficientPriority && !sufficientFee && CBlockAverage::AreSane(dPriority))
         {
             history[nBlocksTruncated].RecordPriority(dPriority);
             assignedTo = "priority";
@@ -181,7 +192,7 @@ private:
             // Neither or both fee and priority sufficient to get confirmed:
             // don't know why they got confirmed.
         }
-        LogPrint("estimatefee", "Seen TX confirm: %s : %s fee/%g priority, took %d blocks\n",
+        LogPrint("estimatefee", "Seen TX confirm: %s: %s fee/%g priority, took %d blocks\n",
                  assignedTo, feeRate.ToString(), dPriority, nBlocksAgo);
     }
 
@@ -240,8 +251,8 @@ public:
             }
         }
 
-        //After new samples are added, we have to clear the sorted lists,
-        //so they'll be resorted the next time someone asks for an estimate
+        // After new samples are added, we have to clear the sorted lists,
+        // so they'll be resorted the next time someone asks for an estimate
         sortedFeeSamples.clear();
         sortedPrioritySamples.clear();
 
@@ -426,30 +437,61 @@ bool CTxMemPool::addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry)
 }
 
 
-void CTxMemPool::remove(const CTransaction &tx, std::list<CTransaction>& removed, bool fRecursive)
+void CTxMemPool::remove(const CTransaction &origTx, std::list<CTransaction>& removed, bool fRecursive)
 {
     // Remove transaction from memory pool
     {
         LOCK(cs);
-        uint256 hash = tx.GetHash();
-        if (fRecursive) {
-            for (unsigned int i = 0; i < tx.vout.size(); i++) {
-                std::map<COutPoint, CInPoint>::iterator it = mapNextTx.find(COutPoint(hash, i));
-                if (it == mapNextTx.end())
-                    continue;
-                remove(*it->second.ptx, removed, true);
-            }
-        }
-        if (mapTx.count(hash))
+        std::deque<uint256> txToRemove;
+        txToRemove.push_back(origTx.GetHash());
+        while (!txToRemove.empty())
         {
-            removed.push_front(tx);
+            uint256 hash = txToRemove.front();
+            txToRemove.pop_front();
+            if (!mapTx.count(hash))
+                continue;
+            const CTransaction& tx = mapTx[hash].GetTx();
+            if (fRecursive) {
+                for (unsigned int i = 0; i < tx.vout.size(); i++) {
+                    std::map<COutPoint, CInPoint>::iterator it = mapNextTx.find(COutPoint(hash, i));
+                    if (it == mapNextTx.end())
+                        continue;
+                    txToRemove.push_back(it->second.ptx->GetHash());
+                }
+            }
             BOOST_FOREACH(const CTxIn& txin, tx.vin)
                 mapNextTx.erase(txin.prevout);
 
+            removed.push_back(tx);
             totalTxSize -= mapTx[hash].GetTxSize();
             mapTx.erase(hash);
             nTransactionsUpdated++;
         }
+    }
+}
+
+void CTxMemPool::removeCoinbaseSpends(const CCoinsViewCache *pcoins, unsigned int nMemPoolHeight)
+{
+    // Remove transactions spending a coinbase which are now immature
+    LOCK(cs);
+    list<CTransaction> transactionsToRemove;
+    for (std::map<uint256, CTxMemPoolEntry>::const_iterator it = mapTx.begin(); it != mapTx.end(); it++) {
+        const CTransaction& tx = it->second.GetTx();
+        BOOST_FOREACH(const CTxIn& txin, tx.vin) {
+            std::map<uint256, CTxMemPoolEntry>::const_iterator it2 = mapTx.find(txin.prevout.hash);
+            if (it2 != mapTx.end())
+                continue;
+            const CCoins *coins = pcoins->AccessCoins(txin.prevout.hash);
+            if (fSanityCheck) assert(coins);
+            if (!coins || (coins->IsCoinBase() && nMemPoolHeight - coins->nHeight < COINBASE_MATURITY)) {
+                transactionsToRemove.push_back(tx);
+                break;
+            }
+        }
+    }
+    BOOST_FOREACH(const CTransaction& tx, transactionsToRemove) {
+        list<CTransaction> removed;
+        remove(tx, removed, true);
     }
 }
 
@@ -513,17 +555,22 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const
 
     uint64_t checkTotal = 0;
 
+    CCoinsViewCache mempoolDuplicate(const_cast<CCoinsViewCache*>(pcoins));
+
     LOCK(cs);
+    list<const CTxMemPoolEntry*> waitingOnDependants;
     for (std::map<uint256, CTxMemPoolEntry>::const_iterator it = mapTx.begin(); it != mapTx.end(); it++) {
         unsigned int i = 0;
         checkTotal += it->second.GetTxSize();
         const CTransaction& tx = it->second.GetTx();
+        bool fDependsWait = false;
         BOOST_FOREACH(const CTxIn &txin, tx.vin) {
             // Check that every mempool transaction's inputs refer to available coins, or other mempool tx's.
             std::map<uint256, CTxMemPoolEntry>::const_iterator it2 = mapTx.find(txin.prevout.hash);
             if (it2 != mapTx.end()) {
                 const CTransaction& tx2 = it2->second.GetTx();
                 assert(tx2.vout.size() > txin.prevout.n && !tx2.vout[txin.prevout.n].IsNull());
+                fDependsWait = true;
             } else {
                 const CCoins* coins = pcoins->AccessCoins(txin.prevout.hash);
                 assert(coins && coins->IsAvailable(txin.prevout.n));
@@ -534,6 +581,28 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const
             assert(it3->second.ptx == &tx);
             assert(it3->second.n == i);
             i++;
+        }
+        if (fDependsWait)
+            waitingOnDependants.push_back(&it->second);
+        else {
+            CValidationState state;
+            assert(CheckInputs(tx, state, mempoolDuplicate, false, 0, false, NULL));
+            UpdateCoins(tx, state, mempoolDuplicate, 1000000);
+        }
+    }
+    unsigned int stepsSinceLastRemove = 0;
+    while (!waitingOnDependants.empty()) {
+        const CTxMemPoolEntry* entry = waitingOnDependants.front();
+        waitingOnDependants.pop_front();
+        CValidationState state;
+        if (!mempoolDuplicate.HaveInputs(entry->GetTx())) {
+            waitingOnDependants.push_back(entry);
+            stepsSinceLastRemove++;
+            assert(stepsSinceLastRemove < waitingOnDependants.size());
+        } else {
+            assert(CheckInputs(entry->GetTx(), state, mempoolDuplicate, false, 0, false, NULL));
+            UpdateCoins(entry->GetTx(), state, mempoolDuplicate, 1000000);
+            stepsSinceLastRemove = 0;
         }
     }
     for (std::map<COutPoint, CInPoint>::const_iterator it = mapNextTx.begin(); it != mapNextTx.end(); it++) {
@@ -588,8 +657,8 @@ CTxMemPool::WriteFeeEstimates(CAutoFile& fileout) const
         fileout << CLIENT_VERSION; // version that wrote the file
         minerPolicyEstimator->Write(fileout);
     }
-    catch (const std::exception &) {
-        LogPrintf("CTxMemPool::WriteFeeEstimates() : unable to write policy estimator data (non-fatal)");
+    catch (const std::exception&) {
+        LogPrintf("CTxMemPool::WriteFeeEstimates(): unable to write policy estimator data (non-fatal)");
         return false;
     }
     return true;
@@ -602,13 +671,13 @@ CTxMemPool::ReadFeeEstimates(CAutoFile& filein)
         int nVersionRequired, nVersionThatWrote;
         filein >> nVersionRequired >> nVersionThatWrote;
         if (nVersionRequired > CLIENT_VERSION)
-            return error("CTxMemPool::ReadFeeEstimates() : up-version (%d) fee estimate file", nVersionRequired);
+            return error("CTxMemPool::ReadFeeEstimates(): up-version (%d) fee estimate file", nVersionRequired);
 
         LOCK(cs);
         minerPolicyEstimator->Read(filein, minRelayFee);
     }
-    catch (const std::exception &) {
-        LogPrintf("CTxMemPool::ReadFeeEstimates() : unable to read policy estimator data (non-fatal)");
+    catch (const std::exception&) {
+        LogPrintf("CTxMemPool::ReadFeeEstimates(): unable to read policy estimator data (non-fatal)");
         return false;
     }
     return true;

@@ -1,5 +1,5 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2009-2014 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -16,6 +16,7 @@
 using namespace json_spirit;
 using namespace std;
 
+extern void TxToJSON(const CTransaction& tx, const uint256 hashBlock, Object& entry);
 void ScriptPubKeyToJSON(const CScript& scriptPubKey, Object& out, bool fIncludeHex);
 
 double GetDifficulty(const CBlockIndex* blockindex)
@@ -50,7 +51,7 @@ double GetDifficulty(const CBlockIndex* blockindex)
 }
 
 
-Object blockToJSON(const CBlock& block, const CBlockIndex* blockindex)
+Object blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool txDetails = false)
 {
     Object result;
     result.push_back(Pair("hash", block.GetHash().GetHex()));
@@ -65,7 +66,16 @@ Object blockToJSON(const CBlock& block, const CBlockIndex* blockindex)
     result.push_back(Pair("merkleroot", block.hashMerkleRoot.GetHex()));
     Array txs;
     BOOST_FOREACH(const CTransaction&tx, block.vtx)
-        txs.push_back(tx.GetHash().GetHex());
+    {
+        if(txDetails)
+        {
+            Object objTx;
+            TxToJSON(tx, uint256(), objTx);
+            txs.push_back(objTx);
+        }
+        else
+            txs.push_back(tx.GetHash().GetHex());
+    }
     result.push_back(Pair("tx", txs));
     result.push_back(Pair("time", block.GetBlockTime()));
     result.push_back(Pair("nonce", (uint64_t)block.nNonce));
@@ -95,6 +105,7 @@ Value getblockcount(const Array& params, bool fHelp)
             + HelpExampleRpc("getblockcount", "")
         );
 
+    LOCK(cs_main);
     return chainActive.Height();
 }
 
@@ -111,6 +122,7 @@ Value getbestblockhash(const Array& params, bool fHelp)
             + HelpExampleRpc("getbestblockhash", "")
         );
 
+    LOCK(cs_main);
     return chainActive.Tip()->GetBlockHash().GetHex();
 }
 
@@ -127,6 +139,7 @@ Value getdifficulty(const Array& params, bool fHelp)
             + HelpExampleRpc("getdifficulty", "")
         );
 
+    LOCK(cs_main);
     return GetDifficulty();
 }
 
@@ -162,6 +175,8 @@ Value getrawmempool(const Array& params, bool fHelp)
             + HelpExampleCli("getrawmempool", "true")
             + HelpExampleRpc("getrawmempool", "true")
         );
+
+    LOCK(cs_main);
 
     bool fVerbose = false;
     if (params.size() > 0)
@@ -223,6 +238,8 @@ Value getblockhash(const Array& params, bool fHelp)
             + HelpExampleRpc("getblockhash", "1000")
         );
 
+    LOCK(cs_main);
+
     int nHeight = params[0].get_int();
     if (nHeight < 0 || nHeight > chainActive.Height())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Block height out of range");
@@ -267,8 +284,10 @@ Value getblock(const Array& params, bool fHelp)
             + HelpExampleRpc("getblock", "\"00000000c937983704a73af28acdec37b049d214adbda81d7e2a3dd146f6ed09\"")
         );
 
+    LOCK(cs_main);
+
     std::string strHash = params[0].get_str();
-    uint256 hash(strHash);
+    uint256 hash(uint256S(strHash));
 
     bool fVerbose = true;
     if (params.size() > 1)
@@ -315,6 +334,8 @@ Value gettxoutsetinfo(const Array& params, bool fHelp)
             + HelpExampleCli("gettxoutsetinfo", "")
             + HelpExampleRpc("gettxoutsetinfo", "")
         );
+
+    LOCK(cs_main);
 
     Object ret;
 
@@ -370,10 +391,12 @@ Value gettxout(const Array& params, bool fHelp)
             + HelpExampleRpc("gettxout", "\"txid\", 1")
         );
 
+    LOCK(cs_main);
+
     Object ret;
 
     std::string strHash = params[0].get_str();
-    uint256 hash(strHash);
+    uint256 hash(uint256S(strHash));
     int n = params[1].get_int();
     bool fMempool = true;
     if (params.size() > 2)
@@ -426,6 +449,8 @@ Value verifychain(const Array& params, bool fHelp)
             + HelpExampleRpc("verifychain", "")
         );
 
+    LOCK(cs_main);
+
     int nCheckLevel = GetArg("-checklevel", 3);
     int nCheckDepth = GetArg("-checkblocks", 288);
     if (params.size() > 0)
@@ -456,6 +481,8 @@ Value getblockchaininfo(const Array& params, bool fHelp)
             + HelpExampleCli("getblockchaininfo", "")
             + HelpExampleRpc("getblockchaininfo", "")
         );
+
+    LOCK(cs_main);
 
     Object obj;
     obj.push_back(Pair("chain",                 Params().NetworkIDString()));
@@ -505,10 +532,18 @@ Value getchaintips(const Array& params, bool fHelp)
             "    \"status\": \"xxxx\"        (string) status of the chain (active, valid-fork, valid-headers, headers-only, invalid)\n"
             "  }\n"
             "]\n"
+            "Possible values for status:\n"
+            "1.  \"invalid\"               This branch contains at least one invalid block\n"
+            "2.  \"headers-only\"          Not all blocks for this branch are available, but the headers are valid\n"
+            "3.  \"valid-headers\"         All blocks are available for this branch, but they were never fully validated\n"
+            "4.  \"valid-fork\"            This branch is not part of the active chain, but is fully validated\n"
+            "5.  \"active\"                This is the tip of the active main chain, which is certainly valid\n"
             "\nExamples:\n"
             + HelpExampleCli("getchaintips", "")
             + HelpExampleRpc("getchaintips", "")
         );
+
+    LOCK(cs_main);
 
     /* Build up a list of chain tips.  We start with the list of all
        known blocks, and successively remove blocks that appear as pprev
@@ -603,7 +638,7 @@ Value invalidateblock(const Array& params, bool fHelp)
         );
 
     std::string strHash = params[0].get_str();
-    uint256 hash(strHash);
+    uint256 hash(uint256S(strHash));
     CValidationState state;
 
     {
@@ -642,7 +677,7 @@ Value reconsiderblock(const Array& params, bool fHelp)
         );
 
     std::string strHash = params[0].get_str();
-    uint256 hash(strHash);
+    uint256 hash(uint256S(strHash));
     CValidationState state;
 
     {

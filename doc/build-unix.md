@@ -33,7 +33,6 @@ These dependencies are required:
  ------------|------------------|----------------------
  libssl      | SSL Support      | Secure communications
  libboost    | Boost            | C++ Library
- libgmp      | secp256k1        | Arbitrary-precision arithmetic (version >= 3.1)
 
 Optional dependencies:
 
@@ -58,7 +57,7 @@ Dependency Build Instructions: Ubuntu & Debian
 ----------------------------------------------
 Build requirements:
 
-	sudo apt-get install build-essential libtool autotools-dev autoconf pkg-config libssl-dev libgmp-dev
+	sudo apt-get install build-essential libtool autotools-dev autoconf pkg-config libssl-dev
 	
 for Ubuntu 12.04 and later or Debian 7 and later libboost-all-dev has to be installed:
 
@@ -106,7 +105,7 @@ To build with Qt 4 you need the following:
 
 For Qt 5 you need the following:
 
-    sudo apt-get install libqt5gui5 libqt5core5 libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler
+    sudo apt-get install libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler
 
 libqrencode (optional) can be installed with:
 
@@ -160,7 +159,7 @@ tar -xzvf db-4.8.30.NC.tar.gz
 
 # Build the library and install to our prefix
 cd db-4.8.30.NC/build_unix/
-#  Note: Do a static build so that it can be embedded into the exectuable, instead of having to find a .so at runtime
+#  Note: Do a static build so that it can be embedded into the executable, instead of having to find a .so at runtime
 ../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX
 make install
 
@@ -197,7 +196,7 @@ Hardening enables the following features:
 * Position Independent Executable
     Build position independent code to take advantage of Address Space Layout Randomization
     offered by some kernels. An attacker who is able to cause execution of code at an arbitrary
-    memory location is thwarted if he doesn't know where anything useful is located.
+    memory location is thwarted if he or she doesn't know where anything useful is located.
     The stack and heap are randomly located by default but this allows the code section to be
     randomly located as well.
 

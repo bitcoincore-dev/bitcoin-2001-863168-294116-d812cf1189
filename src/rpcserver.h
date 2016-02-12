@@ -1,5 +1,5 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2009-2014 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -18,6 +18,16 @@
 #include "json/json_spirit_reader_template.h"
 #include "json/json_spirit_utils.h"
 #include "json/json_spirit_writer_template.h"
+
+class CRPCCommand;
+
+namespace RPCServer
+{
+    void OnStarted(boost::function<void ()> slot);
+    void OnStopped(boost::function<void ()> slot);
+    void OnPreCommand(boost::function<void (const CRPCCommand&)> slot);
+    void OnPostCommand(boost::function<void (const CRPCCommand&)> slot);
+}
 
 class CBlockIndex;
 class CNetAddr;
@@ -88,7 +98,6 @@ public:
     std::string name;
     rpcfn_type actor;
     bool okSafeMode;
-    bool threadSafe;
     bool reqWallet;
 };
 
@@ -154,7 +163,6 @@ extern json_spirit::Value importwallet(const json_spirit::Array& params, bool fH
 extern json_spirit::Value getgenerate(const json_spirit::Array& params, bool fHelp); // in rpcmining.cpp
 extern json_spirit::Value setgenerate(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value getnetworkhashps(const json_spirit::Array& params, bool fHelp);
-extern json_spirit::Value gethashespersec(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value getmininginfo(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value prioritisetransaction(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value getblocktemplate(const json_spirit::Array& params, bool fHelp);
@@ -227,8 +235,8 @@ extern json_spirit::Value reconsiderblock(const json_spirit::Array& params, bool
 
 // in rest.cpp
 extern bool HTTPReq_REST(AcceptedConnection *conn,
-                  std::string& strURI,
-                  std::map<std::string, std::string>& mapHeaders,
+                  const std::string& strURI,
+                  const std::map<std::string, std::string>& mapHeaders,
                   bool fRun);
 
 #endif // BITCOIN_RPCSERVER_H

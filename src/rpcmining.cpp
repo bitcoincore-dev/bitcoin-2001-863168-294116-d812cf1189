@@ -1,5 +1,5 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2009-2014 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -44,7 +44,7 @@ Value GetNetworkHashPS(int lookup, int height) {
 
     // If lookup is -1, then use blocks since last difficulty change.
     if (lookup <= 0)
-        lookup = pb->nHeight % 2016 + 1;
+        lookup = pb->nHeight % Params().Interval() + 1;
 
     // If lookup is larger than chain, then set it to chain length.
     if (lookup > pb->nHeight)
@@ -64,7 +64,7 @@ Value GetNetworkHashPS(int lookup, int height) {
     if (minTime == maxTime)
         return 0;
 
-    uint256 workDiff = pb->nChainWork - pb0->nChainWork;
+    arith_uint256 workDiff = pb->nChainWork - pb0->nChainWork;
     int64_t timeDiff = maxTime - minTime;
 
     return (int64_t)(workDiff.getdouble() / timeDiff);
@@ -88,6 +88,7 @@ Value getnetworkhashps(const Array& params, bool fHelp)
             + HelpExampleRpc("getnetworkhashps", "")
        );
 
+    LOCK(cs_main);
     return GetNetworkHashPS(params.size() > 0 ? params[0].get_int() : 120, params.size() > 1 ? params[1].get_int() : -1);
 }
 
@@ -107,6 +108,7 @@ Value getgenerate(const Array& params, bool fHelp)
             + HelpExampleRpc("getgenerate", "")
         );
 
+    LOCK(cs_main);
     return GetBoolArg("-gen", false);
 }
 
@@ -200,25 +202,6 @@ Value setgenerate(const Array& params, bool fHelp)
 
     return Value::null;
 }
-
-Value gethashespersec(const Array& params, bool fHelp)
-{
-    if (fHelp || params.size() != 0)
-        throw runtime_error(
-            "gethashespersec\n"
-            "\nReturns a recent hashes per second performance measurement while generating.\n"
-            "See the getgenerate and setgenerate calls to turn generation on and off.\n"
-            "\nResult:\n"
-            "n            (numeric) The recent hashes per second when generation is on (will return 0 if generation is off)\n"
-            "\nExamples:\n"
-            + HelpExampleCli("gethashespersec", "")
-            + HelpExampleRpc("gethashespersec", "")
-        );
-
-    if (GetTimeMillis() - nHPSTimerStart > 8000)
-        return (int64_t)0;
-    return (int64_t)dHashesPerSec;
-}
 #endif
 
 
@@ -237,7 +220,6 @@ Value getmininginfo(const Array& params, bool fHelp)
             "  \"errors\": \"...\"          (string) Current errors\n"
             "  \"generate\": true|false     (boolean) If the generation is on or off (see getgenerate or setgenerate calls)\n"
             "  \"genproclimit\": n          (numeric) The processor limit for generation. -1 if no generation. (see getgenerate or setgenerate calls)\n"
-            "  \"hashespersec\": n          (numeric) The hashes per second of the generation, or 0 if no generation.\n"
             "  \"pooledtx\": n              (numeric) The size of the mem pool\n"
             "  \"testnet\": true|false      (boolean) If using testnet or not\n"
             "  \"chain\": \"xxxx\",         (string) current network name as defined in BIP70 (main, test, regtest)\n"
@@ -246,6 +228,9 @@ Value getmininginfo(const Array& params, bool fHelp)
             + HelpExampleCli("getmininginfo", "")
             + HelpExampleRpc("getmininginfo", "")
         );
+
+
+    LOCK(cs_main);
 
     Object obj;
     obj.push_back(Pair("blocks",           (int)chainActive.Height()));
@@ -260,12 +245,12 @@ Value getmininginfo(const Array& params, bool fHelp)
     obj.push_back(Pair("chain",            Params().NetworkIDString()));
 #ifdef ENABLE_WALLET
     obj.push_back(Pair("generate",         getgenerate(params, false)));
-    obj.push_back(Pair("hashespersec",     gethashespersec(params, false)));
 #endif
     return obj;
 }
 
 
+// NOTE: Unlike wallet RPC (which use BTC values), mining RPCs follow GBT (BIP 22) in using satoshi amounts
 Value prioritisetransaction(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 3)
@@ -277,22 +262,20 @@ Value prioritisetransaction(const Array& params, bool fHelp)
             "2. priority delta (numeric, required) The priority to add or subtract.\n"
             "                  The transaction selection algorithm considers the tx as it would have a higher priority.\n"
             "                  (priority of a transaction is calculated: coinage * value_in_satoshis / txsize) \n"
-            "3. fee delta      (numeric, required) The absolute fee value to add or subtract in bitcoin.\n"
+            "3. fee delta      (numeric, required) The fee value (in satoshis) to add (or subtract, if negative).\n"
             "                  The fee is not actually paid, only the algorithm for selecting transactions into a block\n"
             "                  considers the transaction as it would have paid a higher (or lower) fee.\n"
             "\nResult\n"
             "true              (boolean) Returns true\n"
             "\nExamples:\n"
-            + HelpExampleCli("prioritisetransaction", "\"txid\" 0.0 0.00010000")
-            + HelpExampleRpc("prioritisetransaction", "\"txid\", 0.0, 0.00010000")
+            + HelpExampleCli("prioritisetransaction", "\"txid\" 0.0 10000")
+            + HelpExampleRpc("prioritisetransaction", "\"txid\", 0.0, 10000")
         );
 
-    uint256 hash;
-    hash.SetHex(params[0].get_str());
+    LOCK(cs_main);
 
-    CAmount nAmount = 0;
-    if (params[2].get_real() != 0.0)
-        nAmount = AmountFromValue(params[2]);
+    uint256 hash = ParseHashStr(params[0].get_str(), "txid");
+    CAmount nAmount = params[2].get_int64();
 
     mempool.PrioritiseTransaction(hash, params[0].get_str(), params[1].get_real(), nAmount);
     return true;
@@ -380,6 +363,8 @@ Value getblocktemplate(const Array& params, bool fHelp)
             + HelpExampleRpc("getblocktemplate", "")
          );
 
+    LOCK(cs_main);
+
     std::string strMode = "template";
     Value lpval = Value::null;
     if (params.size() > 0)
@@ -461,10 +446,6 @@ Value getblocktemplate(const Array& params, bool fHelp)
         }
 
         // Release the wallet and main lock while waiting
-#ifdef ENABLE_WALLET
-        if(pwalletMain)
-            LEAVE_CRITICAL_SECTION(pwalletMain->cs_wallet);
-#endif
         LEAVE_CRITICAL_SECTION(cs_main);
         {
             checktxtime = boost::get_system_time() + boost::posix_time::minutes(1);
@@ -482,10 +463,6 @@ Value getblocktemplate(const Array& params, bool fHelp)
             }
         }
         ENTER_CRITICAL_SECTION(cs_main);
-#ifdef ENABLE_WALLET
-        if(pwalletMain)
-            ENTER_CRITICAL_SECTION(pwalletMain->cs_wallet);
-#endif
 
         if (!IsRPCRunning())
             throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Shutting down");
@@ -564,7 +541,7 @@ Value getblocktemplate(const Array& params, bool fHelp)
     Object aux;
     aux.push_back(Pair("flags", HexStr(COINBASE_FLAGS.begin(), COINBASE_FLAGS.end())));
 
-    uint256 hashTarget = uint256().SetCompact(pblock->nBits);
+    arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
 
     static Array aMutable;
     if (aMutable.empty())
@@ -675,7 +652,7 @@ Value estimatefee(const Array& params, bool fHelp)
         throw runtime_error(
             "estimatefee nblocks\n"
             "\nEstimates the approximate fee per kilobyte\n"
-            "needed for a transaction to get confirmed\n"
+            "needed for a transaction to begin confirmation\n"
             "within nblocks blocks.\n"
             "\nArguments:\n"
             "1. nblocks     (numeric)\n"
@@ -707,7 +684,7 @@ Value estimatepriority(const Array& params, bool fHelp)
         throw runtime_error(
             "estimatepriority nblocks\n"
             "\nEstimates the approximate priority\n"
-            "a zero-fee transaction needs to get confirmed\n"
+            "a zero-fee transaction needs to begin confirmation\n"
             "within nblocks blocks.\n"
             "\nArguments:\n"
             "1. nblocks     (numeric)\n"
