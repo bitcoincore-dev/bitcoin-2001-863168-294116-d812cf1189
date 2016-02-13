@@ -1210,8 +1210,16 @@ bool AppInitParameterInteraction(const ArgsManager& args)
         // Minimal effort at forwards compatibility
         std::string strReplacementModeList = gArgs.GetArg("-mempoolreplacement", "");  // default is impossible
         std::vector<std::string> vstrReplacementModes;
-        boost::split(vstrReplacementModes, strReplacementModeList, boost::is_any_of(","));
+        boost::split(vstrReplacementModes, strReplacementModeList, boost::is_any_of(",+"));
         fEnableReplacement = (std::find(vstrReplacementModes.begin(), vstrReplacementModes.end(), "fee") != vstrReplacementModes.end());
+        if (fEnableReplacement) {
+            fReplacementHonourOptOut = (std::find(vstrReplacementModes.begin(), vstrReplacementModes.end(), "-optin") == vstrReplacementModes.end());
+            if (!fReplacementHonourOptOut) {
+                nLocalServices = ServiceFlags(nLocalServices | NODE_REPLACE_BY_FEE);
+            }
+        } else {
+            fReplacementHonourOptOut = true;
+        }
     }
 
     if (!CStats::parameterInteraction()) return false;

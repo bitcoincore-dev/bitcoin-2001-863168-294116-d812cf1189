@@ -623,6 +623,8 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
                 bool fReplacementOptOut = true;
                 if (fEnableReplacement) {
 
+                    if (fReplacementHonourOptOut) {
+
                 for (const CTxIn &_txin : ptxConflicting->vin)
                 {
                     if (_txin.nSequence <= MAX_BIP125_RBF_SEQUENCE)
@@ -632,6 +634,9 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
                     }
                 }
 
+                    } else {  // if !fReplacementHonourOptOut
+                        fReplacementOptOut = false;
+                    }  // fReplacementHonourOptOut
                 }  // fEnableReplacement
                 if (fReplacementOptOut) {
                     return state.Invalid(TxValidationResult::TX_MEMPOOL_POLICY, "txn-mempool-conflict");
