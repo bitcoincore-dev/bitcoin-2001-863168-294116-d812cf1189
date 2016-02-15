@@ -87,6 +87,7 @@ public:
         peerbloomfilters,       // bool
         peerblockfilters,       // bool
         mempoolreplacement,
+        maxorphantx,
         OptionIDRowCount,
     };
 
