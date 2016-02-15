@@ -75,6 +75,8 @@ public:
         maxmempool,
         mempoolexpiry,
         rejectunknownscripts,   // bool
+        bytespersigop,
+        bytespersigopstrict,
         OptionIDRowCount,
     };
 
