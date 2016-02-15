@@ -592,6 +592,52 @@
         </layout>
        </item>
        <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_Mempool_maxorphantx">
+         <item>
+          <widget class="QLabel" name="maxorphantxLabel_before">
+           <property name="text">
+            <string notr="true">maxorphantx_before</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::PlainText</enum>
+           </property>
+           <property name="buddy">
+            <cstring>maxorphantx</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="maxorphantx"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="maxorphantxLabel_after">
+           <property name="text">
+            <string notr="true">maxorphantx_after</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::PlainText</enum>
+           </property>
+           <property name="buddy">
+            <cstring>maxorphantx</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_Mempool_maxorphantx">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
         <spacer name="verticalSpacer_Mempool">
          <property name="orientation">
           <enum>Qt::Vertical</enum>

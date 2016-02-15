@@ -246,6 +246,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return f_peerbloomfilters;
         case mempoolreplacement:
             return CanonicalMempoolReplacement();
+        case maxorphantx:
+            return GetArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS);
         default:
             return QVariant();
         }
@@ -419,6 +421,24 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                     fReplacementHonourOptOut = false;
                 }
                 ModifyRWConfigFile("mempoolreplacement", nv.toStdString());
+            }
+            break;
+        }
+        case maxorphantx:
+        {
+            unsigned int nMaxOrphanTx = GetArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS);
+            unsigned int nNv = value.toLongLong();
+            if (nNv != nMaxOrphanTx) {
+                std::string strNv = value.toString().toStdString();
+                mapArgs["-maxorphantx"] = strNv;
+                ModifyRWConfigFile("maxorphantx", strNv);
+                if (nNv < nMaxOrphanTx) {
+                    LOCK(cs_main);
+                    unsigned int nEvicted = LimitOrphanTxSize(nNv);
+                    if (nEvicted > 0) {
+                        LogPrint("mempool", "maxorphantx reduced from %d to %d, removed %u tx\n", nMaxOrphanTx, nNv, nEvicted);
+                    }
+                }
             }
             break;
         }
