@@ -21,6 +21,7 @@
 #include <netbase.h>
 #include <node/context.h>
 #include <outputtype.h>
+#include <policy/settings.h>
 #include <txdb.h>       // for -dbcache defaults
 #include <util/string.h>
 #include <validation.h> // For DEFAULT_SCRIPTCHECK_THREADS
@@ -73,6 +74,17 @@ OptionsModel::FontChoice OptionsModel::FontChoiceFromString(const QString& s)
         return f;
     } else {
         return FontChoiceAbstract::EmbeddedFont;  // default
+    }
+}
+
+static QString CanonicalMempoolReplacement()
+{
+    if (!fEnableReplacement) {
+        return "never";
+    } else if (fReplacementHonourOptOut) {
+        return "fee,optin";
+    } else {
+        return "fee,-optin";
     }
 }
 
@@ -484,6 +496,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return f_peerbloomfilters;
         case peerblockfilters:
             return gArgs.GetBoolArg("-peerblockfilters", DEFAULT_PEERBLOCKFILTERS);
+        case mempoolreplacement:
+            return CanonicalMempoolReplacement();
         default:
             return QVariant();
         }
@@ -745,6 +759,24 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                     gArgs.ForceSetArg("blockfilterindex", "basic");
                 }
                 setRestartRequired(true);
+            }
+            break;
+        }
+        case mempoolreplacement:
+        {
+            QString nv = value.toString();
+            if (nv != CanonicalMempoolReplacement()) {
+                if (nv == "never") {
+                    fEnableReplacement = false;
+                    fReplacementHonourOptOut = true;
+                } else if (nv == "fee,optin") {
+                    fEnableReplacement = true;
+                    fReplacementHonourOptOut = true;
+                } else {  // "fee,-optin"
+                    fEnableReplacement = true;
+                    fReplacementHonourOptOut = false;
+                }
+                gArgs.ModifyRWConfigFile("mempoolreplacement", nv.toStdString());
             }
             break;
         }
