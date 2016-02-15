@@ -912,9 +912,11 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, const C
     if (pfMissingInputs)
         *pfMissingInputs = false;
 
-    const char *entryname = HasNotoriousOutput(tx);
-    if (entryname)
-        return state.DoS(0, false, REJECT_NONSTANDARD, "spam-notorious", false, entryname);
+    if (GetArg("-spamfilter", DEFAULT_SPAMFILTER)) {
+        const char * const entryname = HasNotoriousOutput(tx);
+        if (entryname)
+            return state.DoS(0, false, REJECT_NONSTANDARD, "spam-notorious", false, entryname);
+    }
 
     if (!CheckTransaction(tx, state))
         return false;
@@ -1024,9 +1026,11 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, const C
         view.SetBackend(dummy);
         }
 
-        entryname = HasNotoriousInput(tx, view);
-        if (entryname)
-            return state.DoS(0, false, REJECT_NONSTANDARD, "spam-notorious", false, entryname);
+        if (GetArg("-spamfilter", DEFAULT_SPAMFILTER)) {
+            const char * const entryname = HasNotoriousInput(tx, view);
+            if (entryname)
+                return state.DoS(0, false, REJECT_NONSTANDARD, "spam-notorious", false, entryname);
+        }
 
         // Check for non-standard pay-to-script-hash in inputs
         if (fRequireStandard && !AreInputsStandard(tx, view))
