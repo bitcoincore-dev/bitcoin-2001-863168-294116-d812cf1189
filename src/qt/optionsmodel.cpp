@@ -14,6 +14,7 @@
 #include "amount.h"
 #include "chainparams.h"
 #include "init.h"
+#include "policy/policy.h" // for DEFAULT_MAX_MEMPOOL_SIZE
 #include "validation.h" // For DEFAULT_SCRIPTCHECK_THREADS
 #include "net.h"
 #include "net_processing.h"  // for DEFAULT_MAX_ORPHAN_TRANSACTIONS
@@ -290,6 +291,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return CanonicalMempoolReplacement();
         case maxorphantx:
             return qlonglong(GetArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS));
+        case maxmempool:
+            return qlonglong(GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE));
         default:
             return QVariant();
         }
@@ -502,6 +505,20 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                     if (nEvicted > 0) {
                         LogPrint("mempool", "maxorphantx reduced from %d to %d, removed %u tx\n", nMaxOrphanTx, nNv, nEvicted);
                     }
+                }
+            }
+            break;
+        }
+        case maxmempool:
+        {
+            long long nOldValue = GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                SetArg("-maxmempool", strNv);
+                ModifyRWConfigFile("maxmempool", strNv);
+                if (nNv < nOldValue) {
+                    LimitMempoolSize();
                 }
             }
             break;
