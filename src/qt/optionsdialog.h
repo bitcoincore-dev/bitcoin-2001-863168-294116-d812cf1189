@@ -67,6 +67,7 @@ private:
     QDataWidgetMapper *mapper;
 
     QSpinBox *limitancestorcount;
+    QSpinBox *limitancestorsize;
 };
 
 #endif // BITCOIN_QT_OPTIONSDIALOG_H
