@@ -251,6 +251,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return GetArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS);
         case maxmempool:
             return GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE);
+        case mempoolexpiry:
+            return GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY);
         default:
             return QVariant();
         }
@@ -453,6 +455,20 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 std::string strNv = value.toString().toStdString();
                 mapArgs["-maxmempool"] = strNv;
                 ModifyRWConfigFile("maxmempool", strNv);
+                if (nNv < nOldValue) {
+                    LimitMempoolSize();
+                }
+            }
+            break;
+        }
+        case mempoolexpiry:
+        {
+            long long nOldValue = GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                mapArgs["-mempoolexpiry"] = strNv;
+                ModifyRWConfigFile("mempoolexpiry", strNv);
                 if (nNv < nOldValue) {
                     LimitMempoolSize();
                 }
