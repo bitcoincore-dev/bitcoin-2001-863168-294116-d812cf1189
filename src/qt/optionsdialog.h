@@ -15,6 +15,7 @@ QT_BEGIN_NAMESPACE
 class QBoxLayout;
 class QDataWidgetMapper;
 class QString;
+class QValueComboBox;
 class QWidget;
 QT_END_NAMESPACE
 
@@ -75,6 +76,8 @@ private:
     QWidget *prevwidget;
     void FixTabOrder(QWidget *);
     void CreateOptionUI(QBoxLayout *, QWidget *, const QString& text);
+
+    QValueComboBox *mempoolreplacement;
 };
 
 #endif // BITCOIN_QT_OPTIONSDIALOG_H
