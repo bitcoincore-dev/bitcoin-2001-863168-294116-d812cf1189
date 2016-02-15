@@ -69,6 +69,12 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->maxuploadtarget->setMaximum(std::numeric_limits<int>::max());
     connect(ui->maxuploadtargetCheckbox, SIGNAL(stateChanged(int)), this, SLOT(maxuploadtargetCheckboxStateChanged(int)));
 
+    /* Mempool tab */
+
+    ui->mempoolreplacement->addItem(QString("never"), QVariant("never"));
+    ui->mempoolreplacement->addItem(QString("with a higher mining fee, and opt-in"), QVariant("fee,optin"));
+    ui->mempoolreplacement->addItem(QString("with a higher mining fee (no opt-out)"), QVariant("fee,-optin"));
+
     /* Window elements init */
 #ifdef Q_OS_MAC
     /* remove Window tab on Mac */
@@ -212,6 +218,16 @@ void OptionsDialog::setMapper()
 
     mapper->addMapping(ui->peerbloomfilters, OptionsModel::peerbloomfilters);
 
+    /* Mempool tab */
+
+    QVariant current_mempoolreplacement = model->data(model->index(OptionsModel::mempoolreplacement, 0), Qt::EditRole);
+    int current_mempoolreplacement_index = ui->mempoolreplacement->findData(current_mempoolreplacement);
+    if (current_mempoolreplacement_index == -1) {
+        ui->mempoolreplacement->addItem(current_mempoolreplacement.toString(), current_mempoolreplacement);
+        current_mempoolreplacement_index = ui->mempoolreplacement->count() - 1;
+    }
+    ui->mempoolreplacement->setCurrentIndex(current_mempoolreplacement_index);
+
     /* Window */
 #ifndef Q_OS_MAC
     mapper->addMapping(ui->minimizeToTray, OptionsModel::MinimizeToTray);
@@ -259,6 +275,8 @@ void OptionsDialog::on_okButton_clicked()
     } else {
         model->setData(model->index(OptionsModel::maxuploadtarget, 0), 0);
     }
+
+    model->setData(model->index(OptionsModel::mempoolreplacement, 0), ui->mempoolreplacement->itemData(ui->mempoolreplacement->currentIndex()));
 
     mapper->submit();
     accept();
