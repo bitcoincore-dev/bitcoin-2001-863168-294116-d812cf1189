@@ -56,6 +56,7 @@ public:
         mempoolexpiry,
         rejectunknownscripts,   // bool
         bytespersigop,
+        limitancestorcount,
         OptionIDRowCount,
     };
 
