@@ -93,6 +93,7 @@ private:
 
     QCheckBox *rejectunknownscripts;
     QSpinBox *bytespersigop, *bytespersigopstrict;
+    QSpinBox *limitancestorcount;
 };
 
 #endif // BITCOIN_QT_OPTIONSDIALOG_H
