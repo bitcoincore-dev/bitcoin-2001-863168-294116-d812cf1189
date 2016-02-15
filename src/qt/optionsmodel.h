@@ -62,6 +62,7 @@ public:
         bytespersigop,
         bytespersigopstrict,
         limitancestorcount,
+        limitancestorsize,
         OptionIDRowCount,
     };
 
