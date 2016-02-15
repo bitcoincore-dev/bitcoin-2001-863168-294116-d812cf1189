@@ -326,6 +326,8 @@ static inline bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state,
     return AcceptToMemoryPool(pool, state, tx, pfMissingInputs, plTxnReplaced, (bypass_limits ? ignore_rejects_legacy : empty_ignore_rejects), nAbsurdFee, test_accept);
 }
 
+void LimitMempoolSize();
+
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state);
 
