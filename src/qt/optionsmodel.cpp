@@ -15,7 +15,7 @@
 #include "chainparams.h"
 #include "init.h"
 #include "policy/policy.h" // for DEFAULT_MAX_MEMPOOL_SIZE
-#include "validation.h" // For DEFAULT_SCRIPTCHECK_THREADS, DEFAULT_MEMPOOL_EXPIRY
+#include "validation.h"
 #include "net.h"
 #include "net_processing.h"  // for DEFAULT_MAX_ORPHAN_TRANSACTIONS
 #include "netbase.h"
@@ -301,6 +301,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return nBytesPerSigOp;
         case limitancestorcount:
             return qlonglong(GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT));
+        case limitancestorsize:
+            return qlonglong(GetArg("-limitancestorsize", DEFAULT_ANCESTOR_SIZE_LIMIT));
         default:
             return QVariant();
         }
@@ -572,6 +574,17 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 std::string strNv = value.toString().toStdString();
                 SetArg("-limitancestorcount", strNv);
                 ModifyRWConfigFile("limitancestorcount", strNv);
+            }
+            break;
+        }
+        case limitancestorsize:
+        {
+            long long nOldValue = GetArg("-limitancestorsize", DEFAULT_ANCESTOR_SIZE_LIMIT);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                SetArg("-limitancestorsize", strNv);
+                ModifyRWConfigFile("limitancestorsize", strNv);
             }
             break;
         }
