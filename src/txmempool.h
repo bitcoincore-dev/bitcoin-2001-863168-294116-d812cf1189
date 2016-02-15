@@ -471,7 +471,7 @@ public:
     const TRUCPolicy m_truc_policy;
     const bool m_persist_v1_dat;
 
-    const Limits m_limits;
+    Limits m_limits;
 
     /** Create a new CTxMemPool.
      * Sanity checks will be off by default for performance, because otherwise
