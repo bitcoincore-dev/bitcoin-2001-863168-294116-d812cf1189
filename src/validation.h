@@ -427,6 +427,8 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
 
 } // namespace Consensus
 
+unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
 /**
  * Check if transaction is final and can be included in a block with the
  * specified height and time. Consensus critical.
