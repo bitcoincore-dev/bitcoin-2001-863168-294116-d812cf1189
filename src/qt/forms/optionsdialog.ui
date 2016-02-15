@@ -794,6 +794,52 @@
             </property>
            </widget>
           </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_Mempool_bytespersigop">
+            <item>
+             <widget class="QLabel" name="bytespersigopLabel_before">
+              <property name="text">
+               <string notr="true">bytespersigop_before</string>
+              </property>
+              <property name="textFormat">
+               <enum>Qt::PlainText</enum>
+              </property>
+              <property name="buddy">
+               <cstring>bytespersigop</cstring>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="bytespersigop"/>
+            </item>
+            <item>
+             <widget class="QLabel" name="bytespersigopLabel_after">
+              <property name="text">
+               <string notr="true">bytespersigop_after</string>
+              </property>
+              <property name="textFormat">
+               <enum>Qt::PlainText</enum>
+              </property>
+              <property name="buddy">
+               <cstring>bytespersigop</cstring>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_Mempool_bytespersigop">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
          </layout>
         </widget>
        </item>
