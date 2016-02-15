@@ -303,6 +303,10 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return qlonglong(GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT));
         case limitancestorsize:
             return qlonglong(GetArg("-limitancestorsize", DEFAULT_ANCESTOR_SIZE_LIMIT));
+        case limitdescendantcount:
+            return qlonglong(GetArg("-limitdescendantcount", DEFAULT_DESCENDANT_LIMIT));
+        case limitdescendantsize:
+            return qlonglong(GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT));
         default:
             return QVariant();
         }
@@ -585,6 +589,28 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 std::string strNv = value.toString().toStdString();
                 SetArg("-limitancestorsize", strNv);
                 ModifyRWConfigFile("limitancestorsize", strNv);
+            }
+            break;
+        }
+        case limitdescendantcount:
+        {
+            long long nOldValue = GetArg("-limitdescendantcount", DEFAULT_DESCENDANT_LIMIT);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                SetArg("-limitdescendantcount", strNv);
+                ModifyRWConfigFile("limitdescendantcount", strNv);
+            }
+            break;
+        }
+        case limitdescendantsize:
+        {
+            long long nOldValue = GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                SetArg("-limitdescendantsize", strNv);
+                ModifyRWConfigFile("limitdescendantsize", strNv);
             }
             break;
         }
