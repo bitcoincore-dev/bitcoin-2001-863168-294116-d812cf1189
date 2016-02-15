@@ -253,6 +253,8 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->maxmempool, OptionsModel::maxmempool);
     mapper->addMapping(ui->mempoolexpiry, OptionsModel::mempoolexpiry);
 
+    mapper->addMapping(ui->rejectunknownscripts, OptionsModel::rejectunknownscripts);
+
     /* Window */
 #ifndef Q_OS_MAC
     mapper->addMapping(ui->minimizeToTray, OptionsModel::MinimizeToTray);
