@@ -848,13 +848,13 @@ static const struct NotoriousFilterEntry NotoriousPrefixes[] = {
 static
 const char *IsNotorious(const CScript& script)
 {
-    if (script.size() >= 7 && script.at(0) == OP_DUP)
+    if (script.size() >= 7 && script[0] == OP_DUP)
     {
         // pay-to-pubkeyhash
-        uint32_t pfx = ((uint32_t)script.at(3) << 0x18)
-                     | ((uint32_t)script.at(4) << 0x10)
-                     | ((uint16_t)script.at(5) <<    8)
-                     | ((uint16_t)script.at(6) <<    0);
+        uint32_t pfx = ((uint32_t)script[3] << 0x18)
+                     | ((uint32_t)script[4] << 0x10)
+                     | ((uint16_t)script[5] <<    8)
+                     | ((uint16_t)script[6] <<    0);
         unsigned i;
 
         for (i = 0; i < (sizeof(NotoriousPrefixes) / sizeof(NotoriousPrefixes[0])); ++i)
@@ -914,7 +914,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, const C
 
     const char *entryname = HasNotoriousOutput(tx);
     if (entryname)
-        return error("AcceptToMemoryPool : ignoring transaction %s with notorious output (%s)", tx.GetHash().ToString(), entryname);
+        return state.DoS(0, false, REJECT_NONSTANDARD, "spam-notorious", false, entryname);
 
     if (!CheckTransaction(tx, state))
         return false;
@@ -1026,7 +1026,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, const C
 
         entryname = HasNotoriousInput(tx, view);
         if (entryname)
-            return error("CTxMemPool::accept() : ignoring transaction %s with notorious input (%s)", tx.GetHash().ToString(), entryname);
+            return state.DoS(0, false, REJECT_NONSTANDARD, "spam-notorious", false, entryname);
 
         // Check for non-standard pay-to-script-hash in inputs
         if (fRequireStandard && !AreInputsStandard(tx, view))
