@@ -67,6 +67,7 @@ public:
         maxuploadtarget,
         peerbloomfilters,       // bool
         peerblockfilters,       // bool
+        mempoolreplacement,
         OptionIDRowCount,
     };
 
