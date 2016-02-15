@@ -282,6 +282,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return nBytesPerSigOp;
         case limitancestorcount:
             return GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT);
+        case limitancestorsize:
+            return GetArg("-limitancestorsize", DEFAULT_ANCESTOR_SIZE_LIMIT);
         default:
             return QVariant();
         }
@@ -552,6 +554,17 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 std::string strNv = value.toString().toStdString();
                 mapArgs["-limitancestorcount"] = strNv;
                 ModifyRWConfigFile("limitancestorcount", strNv);
+            }
+            break;
+        }
+        case limitancestorsize:
+        {
+            long long nOldValue = GetArg("-limitancestorsize", DEFAULT_ANCESTOR_SIZE_LIMIT);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                mapArgs["-limitancestorsize"] = strNv;
+                ModifyRWConfigFile("limitancestorsize", strNv);
             }
             break;
         }
