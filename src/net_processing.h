@@ -7,7 +7,11 @@
 #define BITCOIN_NET_PROCESSING_H
 
 #include "net.h"
+#include "sync.h"
+#include "threadsafety.h"
 #include "validationinterface.h"
+
+extern CCriticalSection cs_main;
 
 /** Default for -maxorphantx, maximum number of orphan transactions kept in memory */
 static const unsigned int DEFAULT_MAX_ORPHAN_TRANSACTIONS = 100;
@@ -49,6 +53,7 @@ struct CNodeStateStats {
 
 /** Get statistics from node state */
 bool GetNodeStateStats(NodeId nodeid, CNodeStateStats &stats);
+unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 /** Increase a node's misbehavior score. */
 void Misbehaving(NodeId nodeid, int howmuch);
 

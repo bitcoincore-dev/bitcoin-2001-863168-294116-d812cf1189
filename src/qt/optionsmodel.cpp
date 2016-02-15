@@ -16,6 +16,7 @@
 #include "init.h"
 #include "validation.h" // For DEFAULT_SCRIPTCHECK_THREADS
 #include "net.h"
+#include "net_processing.h"  // for maxorphantx
 #include "netbase.h"
 #include "txdb.h" // for -dbcache defaults
 #include "intro.h" 
@@ -287,6 +288,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return f_peerbloomfilters;
         case mempoolreplacement:
             return CanonicalMempoolReplacement();
+        case maxorphantx:
+            return qlonglong(gArgs.GetArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS));
         default:
             return QVariant();
         }
@@ -482,6 +485,24 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                     fReplacementHonourOptOut = false;
                 }
                 gArgs.ModifyRWConfigFile("mempoolreplacement", nv.toStdString());
+            }
+            break;
+        }
+        case maxorphantx:
+        {
+            unsigned int nMaxOrphanTx = gArgs.GetArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS);
+            unsigned int nNv = value.toLongLong();
+            if (nNv != nMaxOrphanTx) {
+                std::string strNv = value.toString().toStdString();
+                gArgs.ForceSetArg("-maxorphantx", strNv);
+                gArgs.ModifyRWConfigFile("maxorphantx", strNv);
+                if (nNv < nMaxOrphanTx) {
+                    LOCK(cs_main);
+                    unsigned int nEvicted = LimitOrphanTxSize(nNv);
+                    if (nEvicted > 0) {
+                        LogPrint(BCLog::MEMPOOL, "maxorphantx reduced from %d to %d, removed %u tx\n", nMaxOrphanTx, nNv, nEvicted);
+                    }
+                }
             }
             break;
         }
