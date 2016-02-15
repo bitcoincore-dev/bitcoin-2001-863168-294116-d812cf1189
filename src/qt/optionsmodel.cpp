@@ -299,6 +299,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return fRequireStandard;
         case bytespersigop:
             return nBytesPerSigOp;
+        case limitancestorcount:
+            return qlonglong(GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT));
         default:
             return QVariant();
         }
@@ -559,6 +561,17 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             if (nNv != nBytesPerSigOp) {
                 ModifyRWConfigFile("bytespersigop", value.toString().toStdString());
                 nBytesPerSigOp = nNv;
+            }
+            break;
+        }
+        case limitancestorcount:
+        {
+            long long nOldValue = GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                SetArg("-limitancestorcount", strNv);
+                ModifyRWConfigFile("limitancestorcount", strNv);
             }
             break;
         }
