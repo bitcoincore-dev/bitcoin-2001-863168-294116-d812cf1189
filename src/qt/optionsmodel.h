@@ -50,6 +50,7 @@ public:
         Listen,                 // bool
         maxuploadtarget,
         peerbloomfilters,       // bool
+        mempoolreplacement,
         OptionIDRowCount,
     };
 
