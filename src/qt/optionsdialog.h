@@ -13,6 +13,7 @@ class QValidatedLineEdit;
 
 QT_BEGIN_NAMESPACE
 class QDataWidgetMapper;
+class QSpinBox;
 QT_END_NAMESPACE
 
 namespace Ui {
@@ -64,6 +65,8 @@ private:
     Ui::OptionsDialog *ui;
     OptionsModel *model;
     QDataWidgetMapper *mapper;
+
+    QSpinBox *limitancestorcount;
 };
 
 #endif // BITCOIN_QT_OPTIONSDIALOG_H
