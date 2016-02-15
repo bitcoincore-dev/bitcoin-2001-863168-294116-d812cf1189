@@ -30,6 +30,17 @@
 
 const char *DEFAULT_GUI_PROXY_HOST = "127.0.0.1";
 
+static QString CanonicalMempoolReplacement()
+{
+    if (!fEnableReplacement) {
+        return "never";
+    } else if (fReplacementHonourOptOut) {
+        return "fee,optin";
+    } else {
+        return "fee,-optin";
+    }
+}
+
 OptionsModel::OptionsModel(QObject *parent, bool resetSettings) :
     QAbstractListModel(parent)
 {
@@ -311,6 +322,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return qlonglong(g_connman->GetMaxOutboundTarget() / 1024 / 1024);
         case peerbloomfilters:
             return f_peerbloomfilters;
+        case mempoolreplacement:
+            return CanonicalMempoolReplacement();
         default:
             return QVariant();
         }
@@ -490,6 +503,24 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 setRestartRequired(true);
             }
             break;
+        case mempoolreplacement:
+        {
+            QString nv = value.toString();
+            if (nv != CanonicalMempoolReplacement()) {
+                if (nv == "never") {
+                    fEnableReplacement = false;
+                    fReplacementHonourOptOut = true;
+                } else if (nv == "fee,optin") {
+                    fEnableReplacement = true;
+                    fReplacementHonourOptOut = true;
+                } else {  // "fee,-optin"
+                    fEnableReplacement = true;
+                    fReplacementHonourOptOut = false;
+                }
+                gArgs.ModifyRWConfigFile("mempoolreplacement", nv.toStdString());
+            }
+            break;
+        }
         default:
             break;
         }
