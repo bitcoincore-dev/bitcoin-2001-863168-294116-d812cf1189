@@ -30,6 +30,13 @@
 #include <QMessageBox>
 #include <QTimer>
 
+static void SplitForLabels(const QString& text, QLabel* const labelBefore, QLabel* const labelAfter)
+{
+    QStringList text_parts = text.split("%s");
+    labelBefore->setText(text_parts[0]);
+    labelAfter->setText(text_parts[1]);
+}
+
 OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     QDialog(parent),
     ui(new Ui::OptionsDialog),
@@ -77,6 +84,10 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->mempoolreplacement->addItem(QString("never"), QVariant("never"));
     ui->mempoolreplacement->addItem(QString("with a higher mining fee, and opt-in"), QVariant("fee,optin"));
     ui->mempoolreplacement->addItem(QString("with a higher mining fee (no opt-out)"), QVariant("fee,-optin"));
+
+    SplitForLabels(tr("Keep at most %s unconnected transactions in memory"), ui->maxorphantxLabel_before, ui->maxorphantxLabel_after);
+    ui->maxorphantx->setMinimum(0);
+    ui->maxorphantx->setMaximum(std::numeric_limits<int>::max());
 
     /* Window elements init */
 #ifdef Q_OS_MAC
@@ -237,6 +248,8 @@ void OptionsDialog::setMapper()
         current_mempoolreplacement_index = ui->mempoolreplacement->count() - 1;
     }
     ui->mempoolreplacement->setCurrentIndex(current_mempoolreplacement_index);
+
+    mapper->addMapping(ui->maxorphantx, OptionsModel::maxorphantx);
 
     /* Window */
 #ifndef Q_OS_MAC
