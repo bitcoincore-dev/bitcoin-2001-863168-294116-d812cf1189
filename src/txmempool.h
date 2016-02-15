@@ -473,7 +473,7 @@ public:
     bool m_require_standard;
     RBFPolicy m_rbf_policy;
 
-    const Limits m_limits;
+    Limits m_limits;
 
     /** Create a new CTxMemPool.
      * Sanity checks will be off by default for performance, because otherwise
