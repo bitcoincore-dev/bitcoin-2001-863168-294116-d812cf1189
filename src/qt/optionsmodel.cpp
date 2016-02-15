@@ -390,6 +390,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return qlonglong(gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE));
         case mempoolexpiry:
             return qlonglong(gArgs.GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY));
+        case rejectunknownscripts:
+            return fRequireStandard;
         default:
             return QVariant();
         }
@@ -670,6 +672,16 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 if (nNv < nOldValue) {
                     LimitMempoolSize(*node().context()->mempool);
                 }
+            }
+            break;
+        }
+        case rejectunknownscripts:
+        {
+            const bool fNewValue = value.toBool();
+            if (fNewValue != fRequireStandard) {
+                fRequireStandard = fNewValue;
+                // This option is inverted in the config:
+                gArgs.ModifyRWConfigFile("acceptnonstdtxn", strprintf("%d", ! fNewValue));
             }
             break;
         }
