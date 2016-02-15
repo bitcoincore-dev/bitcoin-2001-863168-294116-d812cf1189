@@ -7,9 +7,12 @@
 #define BITCOIN_NET_PROCESSING_H
 
 #include <net.h>
+#include <threadsafety.h>
 #include <validationinterface.h>
 #include <consensus/params.h>
 #include <sync.h>
+
+extern CCriticalSection cs_main;
 
 extern CCriticalSection cs_main;
 
@@ -88,6 +91,7 @@ struct CNodeStateStats {
 
 /** Get statistics from node state */
 bool GetNodeStateStats(NodeId nodeid, CNodeStateStats &stats);
+unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
 /**
  * Get number of peers from which we're downloading blocks
