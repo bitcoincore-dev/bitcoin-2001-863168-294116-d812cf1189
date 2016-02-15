@@ -51,6 +51,7 @@ public:
         maxuploadtarget,
         peerbloomfilters,       // bool
         mempoolreplacement,
+        maxorphantx,
         OptionIDRowCount,
     };
 
