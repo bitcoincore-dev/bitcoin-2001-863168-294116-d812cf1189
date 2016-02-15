@@ -62,6 +62,7 @@ public:
         peercfilters,           // bool
         mempoolreplacement,
         maxorphantx,
+        maxmempool,
         OptionIDRowCount,
     };
 
