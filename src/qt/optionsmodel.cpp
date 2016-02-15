@@ -16,6 +16,7 @@
 #include <index/blockfilterindex.h>
 #include <interfaces/node.h>
 #include <mapport.h>
+#include <policy/policy.h> // for DEFAULT_MAX_MEMPOOL_SIZE
 #include <net.h>
 #include <net_processing.h>
 #include <netbase.h>
@@ -500,6 +501,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return CanonicalMempoolReplacement();
         case maxorphantx:
             return qlonglong(gArgs.GetIntArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS));
+        case maxmempool:
+            return qlonglong(gArgs.GetIntArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE));
         default:
             return QVariant();
         }
@@ -796,6 +799,24 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                     if (nEvicted > 0) {
                         LogPrint(BCLog::MEMPOOL, "maxorphantx reduced from %d to %d, removed %u tx\n", nMaxOrphanTx, nNv, nEvicted);
                     }
+                }
+            }
+            break;
+        }
+        case maxmempool:
+        {
+            long long nOldValue = gArgs.GetIntArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                gArgs.ForceSetArg("-maxmempool", strNv);
+                gArgs.ModifyRWConfigFile("maxmempool", strNv);
+                if (nNv < nOldValue) {
+                    LOCK(cs_main);
+                    auto node_ctx = node().context();
+                    assert(node_ctx && node_ctx->mempool && node_ctx->chainman);
+                    auto& active_chainstate = node_ctx->chainman->ActiveChainstate();
+                    LimitMempoolSize(*node_ctx->mempool, active_chainstate.CoinsTip());
                 }
             }
             break;
