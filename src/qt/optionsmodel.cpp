@@ -15,7 +15,7 @@
 #include "chainparams.h"
 #include "init.h"
 #include "policy/policy.h" // for DEFAULT_MAX_MEMPOOL_SIZE
-#include "validation.h" // For DEFAULT_SCRIPTCHECK_THREADS
+#include "validation.h" // For DEFAULT_SCRIPTCHECK_THREADS, DEFAULT_MEMPOOL_EXPIRY
 #include "net.h"
 #include "net_processing.h"  // for DEFAULT_MAX_ORPHAN_TRANSACTIONS
 #include "netbase.h"
@@ -293,6 +293,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return qlonglong(GetArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS));
         case maxmempool:
             return qlonglong(GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE));
+        case mempoolexpiry:
+            return qlonglong(GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY));
         default:
             return QVariant();
         }
@@ -517,6 +519,20 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 std::string strNv = value.toString().toStdString();
                 SetArg("-maxmempool", strNv);
                 ModifyRWConfigFile("maxmempool", strNv);
+                if (nNv < nOldValue) {
+                    LimitMempoolSize();
+                }
+            }
+            break;
+        }
+        case mempoolexpiry:
+        {
+            long long nOldValue = GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                SetArg("-mempoolexpiry", strNv);
+                ModifyRWConfigFile("mempoolexpiry", strNv);
                 if (nNv < nOldValue) {
                     LimitMempoolSize();
                 }
