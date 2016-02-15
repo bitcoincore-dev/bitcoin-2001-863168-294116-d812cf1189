@@ -95,6 +95,10 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->maxmempool->setMinimum(nMempoolSizeMinMB);
     ui->maxmempool->setMaximum(std::numeric_limits<int>::max());
 
+    SplitForLabels(tr("Do not keep transactions in memory more than %s hours"), ui->mempoolexpiryLabel_before, ui->mempoolexpiryLabel_after);
+    ui->mempoolexpiry->setMinimum(1);
+    ui->mempoolexpiry->setMaximum(std::numeric_limits<int>::max());
+
     /* Window elements init */
 #ifdef Q_OS_MAC
     /* remove Window tab on Mac */
@@ -257,6 +261,7 @@ void OptionsDialog::setMapper()
 
     mapper->addMapping(ui->maxorphantx, OptionsModel::maxorphantx);
     mapper->addMapping(ui->maxmempool, OptionsModel::maxmempool);
+    mapper->addMapping(ui->mempoolexpiry, OptionsModel::mempoolexpiry);
 
     /* Window */
 #ifndef Q_OS_MAC
