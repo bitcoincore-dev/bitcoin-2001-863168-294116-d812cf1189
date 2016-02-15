@@ -67,6 +67,7 @@ public:
         rejectunknownscripts,   // bool
         bytespersigop,
         bytespersigopstrict,
+        limitancestorcount,
         OptionIDRowCount,
     };
 
