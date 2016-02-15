@@ -140,6 +140,16 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     limitancestorsize->setMaximum(std::numeric_limits<int>::max());
     CreateOptionUI(ui->verticalLayout_Spamfiltering, limitancestorsize, tr("Ignore transactions whose size with all unconfirmed ancestors exceeds %s kilobytes."));
 
+    limitdescendantcount = new QSpinBox(ui->groupBox_Spamfiltering);
+    limitdescendantcount->setMinimum(1);
+    limitdescendantcount->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(ui->verticalLayout_Spamfiltering, limitdescendantcount, tr("Ignore transactions if any ancestor would have %s or more unconfirmed descendants."));
+
+    limitdescendantsize = new QSpinBox(ui->groupBox_Spamfiltering);
+    limitdescendantsize->setMinimum(1);
+    limitdescendantsize->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(ui->verticalLayout_Spamfiltering, limitdescendantsize, tr("Ignore transactions if any ancestor would have more than %s kilobytes of unconfirmed descendants."));
+
     /* Window elements init */
 #ifdef Q_OS_MAC
     /* remove Window tab on Mac */
@@ -301,6 +311,8 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->bytespersigop, OptionsModel::bytespersigop);
     mapper->addMapping(limitancestorcount, OptionsModel::limitancestorcount);
     mapper->addMapping(limitancestorsize, OptionsModel::limitancestorsize);
+    mapper->addMapping(limitdescendantcount, OptionsModel::limitdescendantcount);
+    mapper->addMapping(limitdescendantsize, OptionsModel::limitdescendantsize);
 
     /* Window */
 #ifndef Q_OS_MAC
