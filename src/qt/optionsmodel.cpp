@@ -25,7 +25,7 @@
 #include <policy/settings.h>
 #include <txdb.h>       // for -dbcache defaults
 #include <util/string.h>
-#include <validation.h> // For DEFAULT_SCRIPTCHECK_THREADS
+#include <validation.h> // For DEFAULT_SCRIPTCHECK_THREADS, DEFAULT_MEMPOOL_EXPIRY
 #ifdef ENABLE_WALLET
 #include <interfaces/wallet.h>
 #include <wallet/wallet.h>
@@ -503,6 +503,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return qlonglong(gArgs.GetIntArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS));
         case maxmempool:
             return qlonglong(gArgs.GetIntArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE));
+        case mempoolexpiry:
+            return qlonglong(gArgs.GetIntArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY));
         default:
             return QVariant();
         }
@@ -811,6 +813,24 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 std::string strNv = value.toString().toStdString();
                 gArgs.ForceSetArg("-maxmempool", strNv);
                 gArgs.ModifyRWConfigFile("maxmempool", strNv);
+                if (nNv < nOldValue) {
+                    LOCK(cs_main);
+                    auto node_ctx = node().context();
+                    assert(node_ctx && node_ctx->mempool && node_ctx->chainman);
+                    auto& active_chainstate = node_ctx->chainman->ActiveChainstate();
+                    LimitMempoolSize(*node_ctx->mempool, active_chainstate.CoinsTip());
+                }
+            }
+            break;
+        }
+        case mempoolexpiry:
+        {
+            long long nOldValue = gArgs.GetIntArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                gArgs.ForceSetArg("-mempoolexpiry", strNv);
+                gArgs.ModifyRWConfigFile("mempoolexpiry", strNv);
                 if (nNv < nOldValue) {
                     LOCK(cs_main);
                     auto node_ctx = node().context();
