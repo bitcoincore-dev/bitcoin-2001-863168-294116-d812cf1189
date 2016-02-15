@@ -16,6 +16,7 @@
 #include "main.h" // for DEFAULT_SCRIPTCHECK_THREADS and MAX_SCRIPTCHECK_THREADS
 #include "netbase.h"
 #include "txdb.h" // for -dbcache defaults
+#include "txmempool.h" // for maxmempoolMinimum
 
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h" // for CWallet::GetRequiredFee()
@@ -88,6 +89,11 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     SplitForLabels(tr("Keep at most %s unconnected transactions in memory"), ui->maxorphantxLabel_before, ui->maxorphantxLabel_after);
     ui->maxorphantx->setMinimum(0);
     ui->maxorphantx->setMaximum(std::numeric_limits<int>::max());
+
+    SplitForLabels(tr("Keep the transaction memory pool below %s MB"), ui->maxmempoolLabel_before, ui->maxmempoolLabel_after);
+    const int64_t nMempoolSizeMinMB = maxmempoolMinimum(GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT));
+    ui->maxmempool->setMinimum(nMempoolSizeMinMB);
+    ui->maxmempool->setMaximum(std::numeric_limits<int>::max());
 
     /* Window elements init */
 #ifdef Q_OS_MAC
@@ -250,6 +256,7 @@ void OptionsDialog::setMapper()
     ui->mempoolreplacement->setCurrentIndex(current_mempoolreplacement_index);
 
     mapper->addMapping(ui->maxorphantx, OptionsModel::maxorphantx);
+    mapper->addMapping(ui->maxmempool, OptionsModel::maxmempool);
 
     /* Window */
 #ifndef Q_OS_MAC

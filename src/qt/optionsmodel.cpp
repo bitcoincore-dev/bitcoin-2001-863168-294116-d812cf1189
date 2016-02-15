@@ -17,6 +17,7 @@
 #include "net.h"
 #include "txdb.h" // for -dbcache defaults
 #include "chainparams.h"
+#include "policy/policy.h" // for DEFAULT_MAX_MEMPOOL_SIZE
 
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
@@ -271,6 +272,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return CanonicalMempoolReplacement();
         case maxorphantx:
             return GetArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS);
+        case maxmempool:
+            return GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE);
         default:
             return QVariant();
         }
@@ -482,6 +485,20 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                     if (nEvicted > 0) {
                         LogPrint("mempool", "maxorphantx reduced from %d to %d, removed %u tx\n", nMaxOrphanTx, nNv, nEvicted);
                     }
+                }
+            }
+            break;
+        }
+        case maxmempool:
+        {
+            long long nOldValue = GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                mapArgs["-maxmempool"] = strNv;
+                ModifyRWConfigFile("maxmempool", strNv);
+                if (nNv < nOldValue) {
+                    LimitMempoolSize();
                 }
             }
             break;

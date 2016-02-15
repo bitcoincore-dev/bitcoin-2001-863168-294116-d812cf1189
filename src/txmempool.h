@@ -24,6 +24,11 @@
 class CAutoFile;
 class CBlockIndex;
 
+inline int64_t maxmempoolMinimum(const int64_t nLimitDescendantSize) {
+    int64_t nMempoolSizeMin = nLimitDescendantSize * 1000 * 40;
+    return std::max(int64_t(0), int64_t(std::ceil(nMempoolSizeMin / 1000000.0)));
+}
+
 inline double AllowFreeThreshold()
 {
     return COIN * 144 / 250;
