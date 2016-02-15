@@ -29,6 +29,7 @@
 #include <QIntValidator>
 #include <QLocale>
 #include <QMessageBox>
+#include <QSpinBox>
 #include <QTimer>
 
 static void SplitForLabels(const QString& text, QLabel* const labelBefore, QLabel* const labelAfter)
@@ -36,6 +37,35 @@ static void SplitForLabels(const QString& text, QLabel* const labelBefore, QLabe
     QStringList text_parts = text.split("%s");
     labelBefore->setText(text_parts[0]);
     labelAfter->setText(text_parts[1]);
+}
+
+void CreateOptionUI(QVBoxLayout * const layout, QWidget * const o, const QString& text)
+{
+    QWidget * const parent = o->parentWidget();
+    const QStringList text_parts = text.split("%s");
+
+    QHBoxLayout * const horizontalLayout = new QHBoxLayout();
+
+    QLabel * const labelBefore = new QLabel(parent);
+    labelBefore->setText(text_parts[0]);
+    labelBefore->setTextFormat(Qt::PlainText);
+    labelBefore->setBuddy(o);
+
+    horizontalLayout->addWidget(labelBefore);
+    horizontalLayout->addWidget(o);
+
+    QLabel * const labelAfter = new QLabel(parent);
+    labelAfter->setText(text_parts[1]);
+    labelAfter->setTextFormat(Qt::PlainText);
+    labelAfter->setBuddy(o);
+
+    horizontalLayout->addWidget(labelAfter);
+
+    QSpacerItem * const horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+    horizontalLayout->addItem(horizontalSpacer);
+
+    layout->addLayout(horizontalLayout);
 }
 
 OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
@@ -102,6 +132,11 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     SplitForLabels(tr("Ignore transactions with fewer than %s bytes per sigop."), ui->bytespersigopLabel_before, ui->bytespersigopLabel_after);
     ui->bytespersigop->setMinimum(1);
     ui->bytespersigop->setMaximum(std::numeric_limits<int>::max());
+
+    limitancestorcount = new QSpinBox(ui->groupBox_Spamfiltering);
+    limitancestorcount->setMinimum(1);
+    limitancestorcount->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(ui->verticalLayout_Spamfiltering, limitancestorcount, tr("Ignore transactions with %s or more unconfirmed ancestors."));
 
     /* Window elements init */
 #ifdef Q_OS_MAC
@@ -269,6 +304,7 @@ void OptionsDialog::setMapper()
 
     mapper->addMapping(ui->rejectunknownscripts, OptionsModel::rejectunknownscripts);
     mapper->addMapping(ui->bytespersigop, OptionsModel::bytespersigop);
+    mapper->addMapping(limitancestorcount, OptionsModel::limitancestorcount);
 
     /* Window */
 #ifndef Q_OS_MAC
