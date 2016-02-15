@@ -9,6 +9,7 @@
 #include <consensus/params.h>
 #include <net.h>
 #include <sync.h>
+#include <threadsafety.h>
 #include <validationinterface.h>
 
 class CTxMemPool;
@@ -96,6 +97,7 @@ struct CNodeStateStats {
 
 /** Get statistics from node state */
 bool GetNodeStateStats(NodeId nodeid, CNodeStateStats &stats);
+unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
 /** Relay transaction to every node */
 void RelayTransaction(const uint256&, const CConnman& connman);
