@@ -255,6 +255,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY);
         case rejectunknownscripts:
             return fRequireStandard;
+        case bytespersigop:
+            return nBytesPerSigOp;
         default:
             return QVariant();
         }
@@ -484,6 +486,15 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 fRequireStandard = fNewValue;
                 // This option is inverted in the config:
                 ModifyRWConfigFile("acceptnonstdtxn", strprintf("%d", ! fNewValue));
+            }
+            break;
+        }
+        case bytespersigop:
+        {
+            unsigned int nNv = value.toLongLong();
+            if (nNv != nBytesPerSigOp) {
+                ModifyRWConfigFile("bytespersigop", value.toString().toStdString());
+                nBytesPerSigOp = nNv;
             }
             break;
         }

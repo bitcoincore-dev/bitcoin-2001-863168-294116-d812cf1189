@@ -96,6 +96,10 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->mempoolexpiry->setMinimum(1);
     ui->mempoolexpiry->setMaximum(std::numeric_limits<int>::max());
 
+    SplitForLabels(tr("Ignore transactions with fewer than %s bytes per sigop."), ui->bytespersigopLabel_before, ui->bytespersigopLabel_after);
+    ui->bytespersigop->setMinimum(1);
+    ui->bytespersigop->setMaximum(std::numeric_limits<int>::max());
+
     /* Window elements init */
 #ifdef Q_OS_MAC
     /* remove Window tab on Mac */
@@ -254,6 +258,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->mempoolexpiry, OptionsModel::mempoolexpiry);
 
     mapper->addMapping(ui->rejectunknownscripts, OptionsModel::rejectunknownscripts);
+    mapper->addMapping(ui->bytespersigop, OptionsModel::bytespersigop);
 
     /* Window */
 #ifndef Q_OS_MAC
