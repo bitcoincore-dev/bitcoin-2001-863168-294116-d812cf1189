@@ -779,6 +779,25 @@
         </layout>
        </item>
        <item>
+        <widget class="QGroupBox" name="groupBox_Spamfiltering">
+         <property name="title">
+          <string>Spam filtering</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_Spamfiltering">
+          <item>
+           <widget class="QCheckBox" name="rejectunknownscripts">
+            <property name="toolTip">
+             <string>With this option enabled, unrecognised receiver ("pubkey") scripts will be ignored. Unrecognisable scripts could be used to bypass further spam filters. If your software is outdated, they may also be used to trick you into thinking you were sent bitcoins that will never confirm.</string>
+            </property>
+            <property name="text">
+             <string>Ignore unrecognised receiver scripts</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer_Mempool">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
