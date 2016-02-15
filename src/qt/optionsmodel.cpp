@@ -276,6 +276,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE);
         case mempoolexpiry:
             return GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY);
+        case rejectunknownscripts:
+            return fRequireStandard;
         default:
             return QVariant();
         }
@@ -516,6 +518,16 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 if (nNv < nOldValue) {
                     LimitMempoolSize();
                 }
+            }
+            break;
+        }
+        case rejectunknownscripts:
+        {
+            const bool fNewValue = value.toBool();
+            if (fNewValue != fRequireStandard) {
+                fRequireStandard = fNewValue;
+                // This option is inverted in the config:
+                ModifyRWConfigFile("acceptnonstdtxn", strprintf("%d", ! fNewValue));
             }
             break;
         }
