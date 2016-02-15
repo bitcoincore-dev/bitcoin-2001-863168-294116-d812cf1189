@@ -638,6 +638,52 @@
         </layout>
        </item>
        <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_Mempool_maxmempool">
+         <item>
+          <widget class="QLabel" name="maxmempoolLabel_before">
+           <property name="text">
+            <string notr="true">maxmempool_before</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::PlainText</enum>
+           </property>
+           <property name="buddy">
+            <cstring>maxmempool</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="maxmempool"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="maxmempoolLabel_after">
+           <property name="text">
+            <string notr="true">maxmempool_after</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::PlainText</enum>
+           </property>
+           <property name="buddy">
+            <cstring>maxmempool</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_Mempool_maxmempool">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
         <spacer name="verticalSpacer_Mempool">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
