@@ -39,7 +39,13 @@ static void SplitForLabels(const QString& text, QLabel* const labelBefore, QLabe
     labelAfter->setText(text_parts[1]);
 }
 
-void CreateOptionUI(QVBoxLayout * const layout, QWidget * const o, const QString& text)
+void OptionsDialog::FixTabOrder(QWidget * const o)
+{
+    setTabOrder(prevwidget, o);
+    prevwidget = o;
+}
+
+void OptionsDialog::CreateOptionUI(QVBoxLayout * const layout, QWidget * const o, const QString& text)
 {
     QWidget * const parent = o->parentWidget();
     const QStringList text_parts = text.split("%s");
@@ -68,6 +74,8 @@ void CreateOptionUI(QVBoxLayout * const layout, QWidget * const o, const QString
     horizontalLayout->addItem(horizontalSpacer);
 
     layout->addLayout(horizontalLayout);
+
+    FixTabOrder(o);
 }
 
 OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
@@ -132,6 +140,8 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->bytespersigop->setMinimum(1);
     ui->bytespersigop->setMaximum(std::numeric_limits<int>::max());
 
+    prevwidget = ui->bytespersigop;
+
     limitancestorcount = new QSpinBox(ui->groupBox_Spamfiltering);
     limitancestorcount->setMinimum(1);
     limitancestorcount->setMaximum(std::numeric_limits<int>::max());
@@ -156,11 +166,13 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     spamfilter->setText(tr("Ignore known spam using pattern matching"));
     spamfilter->setToolTip(tr("Some spam uses identifiable patterns in scripts. This filter looks for identified spam patterns."));
     ui->verticalLayout_Spamfiltering->addWidget(spamfilter);
+    FixTabOrder(spamfilter);
 
     rejectbaremultisig = new QCheckBox(ui->groupBox_Spamfiltering);
     rejectbaremultisig->setText(tr("Ignore bare/exposed \"multisig\" scripts"));
     rejectbaremultisig->setToolTip(tr("Spam is sometimes disguised to appear as if it is an old-style N-of-M multi-party transaction, where most of the keys are really bogus. At the same time, legitimate multi-party transactions typically have always used P2SH format (which is not filtered by this option), which is more secure."));
     ui->verticalLayout_Spamfiltering->addWidget(rejectbaremultisig);
+    FixTabOrder(rejectbaremultisig);
 
     datacarriersize = new QSpinBox(ui->groupBox_Spamfiltering);
     datacarriersize->setMinimum(0);

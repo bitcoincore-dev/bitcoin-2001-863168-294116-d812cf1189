@@ -15,6 +15,9 @@ QT_BEGIN_NAMESPACE
 class QCheckBox;
 class QDataWidgetMapper;
 class QSpinBox;
+class QString;
+class QVBoxLayout;
+class QWidget;
 QT_END_NAMESPACE
 
 namespace Ui {
@@ -66,6 +69,10 @@ private:
     Ui::OptionsDialog *ui;
     OptionsModel *model;
     QDataWidgetMapper *mapper;
+
+    QWidget *prevwidget;
+    void FixTabOrder(QWidget *);
+    void CreateOptionUI(QVBoxLayout *, QWidget *, const QString& text);
 
     QSpinBox *limitancestorcount;
     QSpinBox *limitancestorsize;
