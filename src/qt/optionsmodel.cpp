@@ -307,6 +307,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return qlonglong(GetArg("-limitdescendantcount", DEFAULT_DESCENDANT_LIMIT));
         case limitdescendantsize:
             return qlonglong(GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT));
+        case spamfilter:
+            return bool(GetArg("-spamfilter", DEFAULT_SPAMFILTER));
         default:
             return QVariant();
         }
@@ -611,6 +613,17 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 std::string strNv = value.toString().toStdString();
                 SetArg("-limitdescendantsize", strNv);
                 ModifyRWConfigFile("limitdescendantsize", strNv);
+            }
+            break;
+        }
+        case spamfilter:
+        {
+            bool fOldValue = GetArg("-spamfilter", DEFAULT_SPAMFILTER);
+            bool fNewValue = value.toBool();
+            if (fOldValue != fNewValue) {
+                std::string strNv = strprintf("%d", fNewValue);
+                SetArg("-spamfilter", strNv);
+                ModifyRWConfigFile("spamfilter", strNv);
             }
             break;
         }
