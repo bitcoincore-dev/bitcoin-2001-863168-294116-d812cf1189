@@ -61,6 +61,7 @@ public:
         limitdescendantcount,
         limitdescendantsize,
         spamfilter,             // bool
+        rejectbaremultisig,     // bool
         OptionIDRowCount,
     };
 
