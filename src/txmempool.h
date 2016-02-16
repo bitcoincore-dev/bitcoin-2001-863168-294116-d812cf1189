@@ -463,7 +463,7 @@ public:
     bool m_permit_bare_multisig;
     bool m_reject_parasites;
     bool m_reject_tokens;
-    const std::optional<unsigned> m_max_datacarrier_bytes;
+    std::optional<unsigned> m_max_datacarrier_bytes;
     bool m_datacarrier_fullcount;
     bool m_accept_non_std_datacarrier;
     bool m_require_standard;
