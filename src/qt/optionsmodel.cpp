@@ -267,6 +267,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT);
         case spamfilter:
             return GetArg("-spamfilter", DEFAULT_SPAMFILTER);
+        case rejectbaremultisig:
+            return !fIsBareMultisigStd;
         default:
             return QVariant();
         }
@@ -560,6 +562,16 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 std::string strNv = strprintf("%d", fNewValue);
                 mapArgs["-spamfilter"] = strNv;
                 ModifyRWConfigFile("spamfilter", strNv);
+            }
+            break;
+        }
+        case rejectbaremultisig:
+        {
+            // The config and internal option is inverted
+            const bool fNewValue = ! value.toBool();
+            if (fNewValue != fIsBareMultisigStd) {
+                fIsBareMultisigStd = fNewValue;
+                ModifyRWConfigFile("permitbaremultisig", strprintf("%d", fNewValue));
             }
             break;
         }

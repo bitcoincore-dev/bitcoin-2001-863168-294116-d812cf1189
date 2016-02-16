@@ -155,6 +155,11 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     spamfilter->setToolTip(tr("Some spam uses identifiable patterns in scripts. This filter looks for identified spam patterns."));
     ui->verticalLayout_Spamfiltering->addWidget(spamfilter);
 
+    rejectbaremultisig = new QCheckBox(ui->groupBox_Spamfiltering);
+    rejectbaremultisig->setText(tr("Ignore bare/exposed \"multisig\" scripts"));
+    rejectbaremultisig->setToolTip(tr("Spam is sometimes disguised to appear as if it is an old-style N-of-M multi-party transaction, where most of the keys are really bogus. At the same time, legitimate multi-party transactions typically have always used P2SH format (which is not filtered by this option), which is more secure."));
+    ui->verticalLayout_Spamfiltering->addWidget(rejectbaremultisig);
+
     /* Window elements init */
 #ifdef Q_OS_MAC
     /* remove Window tab on Mac */
@@ -319,6 +324,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(limitdescendantcount, OptionsModel::limitdescendantcount);
     mapper->addMapping(limitdescendantsize, OptionsModel::limitdescendantsize);
     mapper->addMapping(spamfilter, OptionsModel::spamfilter);
+    mapper->addMapping(rejectbaremultisig, OptionsModel::rejectbaremultisig);
 
     /* Window */
 #ifndef Q_OS_MAC
