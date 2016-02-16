@@ -90,6 +90,7 @@ private:
     QSpinBox *limitancestorsize;
     QSpinBox *limitdescendantcount;
     QSpinBox *limitdescendantsize;
+    QCheckBox *rejectbaremultisig;
 };
 
 #endif // BITCOIN_QT_OPTIONSDIALOG_H
