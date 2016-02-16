@@ -50,6 +50,7 @@ void CreateOptionUI(QVBoxLayout * const layout, QWidget * const o, const QString
     labelBefore->setText(text_parts[0]);
     labelBefore->setTextFormat(Qt::PlainText);
     labelBefore->setBuddy(o);
+    labelBefore->setToolTip(o->toolTip());
 
     horizontalLayout->addWidget(labelBefore);
     horizontalLayout->addWidget(o);
@@ -58,6 +59,7 @@ void CreateOptionUI(QVBoxLayout * const layout, QWidget * const o, const QString
     labelAfter->setText(text_parts[1]);
     labelAfter->setTextFormat(Qt::PlainText);
     labelAfter->setBuddy(o);
+    labelAfter->setToolTip(o->toolTip());
 
     horizontalLayout->addWidget(labelAfter);
 
@@ -162,6 +164,12 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     rejectbaremultisig->setText(tr("Ignore bare/exposed \"multisig\" scripts"));
     rejectbaremultisig->setToolTip(tr("Spam is sometimes disguised to appear as if it is an old-style N-of-M multi-party transaction, where most of the keys are really bogus. At the same time, legitimate multi-party transactions typically have always used P2SH format (which is not filtered by this option), which is more secure."));
     ui->verticalLayout_Spamfiltering->addWidget(rejectbaremultisig);
+
+    datacarriersize = new QSpinBox(ui->groupBox_Spamfiltering);
+    datacarriersize->setMinimum(0);
+    datacarriersize->setMaximum(std::numeric_limits<int>::max());
+    datacarriersize->setToolTip(tr("Since 2014, a specific method for attaching arbitrary data to transactions has been recognised as not requiring space in the coin database. Since it is sometimes impractical to detect small spam disguised as ordinary transactions, it is sometimes considered beneficial to treat these less harmful data attachments as equals to legitimate usage."));
+    CreateOptionUI(ui->verticalLayout_Spamfiltering, datacarriersize, tr("Ignore additional data when its size is greater than %s bytes."));
 
     /* Window elements init */
 #ifdef Q_OS_MAC
@@ -335,6 +343,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(limitdescendantsize, OptionsModel::limitdescendantsize);
     mapper->addMapping(spamfilter, OptionsModel::spamfilter);
     mapper->addMapping(rejectbaremultisig, OptionsModel::rejectbaremultisig);
+    mapper->addMapping(datacarriersize, OptionsModel::datacarriersize);
 
     /* Window */
 #ifndef Q_OS_MAC
