@@ -73,6 +73,7 @@ private:
     QSpinBox *limitdescendantsize;
     QCheckBox *spamfilter;
     QCheckBox *rejectbaremultisig;
+    QSpinBox *datacarriersize;
 };
 
 #endif // BITCOIN_QT_OPTIONSDIALOG_H

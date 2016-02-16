@@ -269,6 +269,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return GetArg("-spamfilter", DEFAULT_SPAMFILTER);
         case rejectbaremultisig:
             return !fIsBareMultisigStd;
+        case datacarriersize:
+            return fAcceptDatacarrier ? nMaxDatacarrierBytes : 0;
         default:
             return QVariant();
         }
@@ -572,6 +574,20 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             if (fNewValue != fIsBareMultisigStd) {
                 fIsBareMultisigStd = fNewValue;
                 ModifyRWConfigFile("permitbaremultisig", strprintf("%d", fNewValue));
+            }
+            break;
+        }
+        case datacarriersize:
+        {
+            const int nNewSize = value.toInt();
+            const bool fNewEn = (nNewSize > 0);
+            if (fNewEn && unsigned(nNewSize) != nMaxDatacarrierBytes) {
+                ModifyRWConfigFile("datacarriersize", value.toString().toStdString());
+                nMaxDatacarrierBytes = nNewSize;
+            }
+            if (fNewEn != fAcceptDatacarrier) {
+                ModifyRWConfigFile("datacarrier", strprintf("%d", fNewEn));
+                fAcceptDatacarrier = fNewEn;
             }
             break;
         }
