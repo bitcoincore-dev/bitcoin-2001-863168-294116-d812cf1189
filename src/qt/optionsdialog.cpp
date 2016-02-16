@@ -13,6 +13,7 @@
 #include "guiutil.h"
 #include "optionsmodel.h"
 
+#include "consensus/consensus.h" // for MAX_BLOCK_SIZE
 #include "main.h" // for DEFAULT_SCRIPTCHECK_THREADS and MAX_SCRIPTCHECK_THREADS
 #include "netbase.h"
 #include "txdb.h" // for -dbcache defaults
@@ -24,6 +25,7 @@
 
 #include <boost/thread.hpp>
 
+#include <QBoxLayout>
 #include <QDataWidgetMapper>
 #include <QDir>
 #include <QIntValidator>
@@ -45,7 +47,7 @@ void OptionsDialog::FixTabOrder(QWidget * const o)
     prevwidget = o;
 }
 
-void OptionsDialog::CreateOptionUI(QVBoxLayout * const layout, QWidget * const o, const QString& text)
+void OptionsDialog::CreateOptionUI(QBoxLayout * const layout, QWidget * const o, const QString& text)
 {
     QWidget * const parent = o->parentWidget();
     const QStringList text_parts = text.split("%s");
@@ -182,6 +184,34 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     datacarriersize->setMaximum(std::numeric_limits<int>::max());
     datacarriersize->setToolTip(tr("Since 2014, a specific method for attaching arbitrary data to transactions has been recognised as not requiring space in the coin database. Since it is sometimes impractical to detect small spam disguised as ordinary transactions, it is sometimes considered beneficial to treat these less harmful data attachments as equals to legitimate usage."));
     CreateOptionUI(ui->verticalLayout_Spamfiltering, datacarriersize, tr("Ignore additional data when its size is greater than %s bytes."));
+
+    /* Mining tab */
+
+    QWidget * const tabMining = new QWidget();
+    QVBoxLayout * const verticalLayout_Mining = new QVBoxLayout(tabMining);
+
+    verticalLayout_Mining->addWidget(new QLabel(tr("<strong>Note that mining is heavily influenced by the settings on the Mempool tab.</strong>")));
+
+    blockmaxsize = new QSpinBox(tabMining);
+    blockmaxsize->setMinimum(1);
+    blockmaxsize->setMaximum((MAX_BLOCK_SIZE - 1000) / 1000);
+    connect(blockmaxsize, SIGNAL(valueChanged(int)), this, SLOT(blockmaxsize_changed(int)));
+    CreateOptionUI(verticalLayout_Mining, blockmaxsize, tr("Never mine a block larger than %s kB."));
+
+    blockprioritysize = new QSpinBox(tabMining);
+    blockprioritysize->setMinimum(0);
+    blockprioritysize->setMaximum(blockmaxsize->maximum());
+    connect(blockprioritysize, SIGNAL(valueChanged(int)), this, SLOT(blockmaxsize_increase(int)));
+    CreateOptionUI(verticalLayout_Mining, blockprioritysize, tr("Mine first %s kB of transactions sorted by coin-age priority."));
+
+    blockminsize = new QSpinBox(tabMining);
+    blockminsize->setMinimum(0);
+    blockminsize->setMaximum(blockmaxsize->maximum());
+    connect(blockminsize, SIGNAL(valueChanged(int)), this, SLOT(blockmaxsize_increase(int)));
+    CreateOptionUI(verticalLayout_Mining, blockminsize, tr("Fill blocks up to %s kB with low or no-fee transactions."));
+
+    verticalLayout_Mining->addItem(new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding));
+    ui->tabWidget->insertTab(ui->tabWidget->indexOf(ui->tabMempool) + 1, tabMining, tr("M&ining"));
 
     /* Window elements init */
 #ifdef Q_OS_MAC
@@ -357,6 +387,12 @@ void OptionsDialog::setMapper()
     mapper->addMapping(rejectbaremultisig, OptionsModel::rejectbaremultisig);
     mapper->addMapping(datacarriersize, OptionsModel::datacarriersize);
 
+    /* Mining tab */
+
+    mapper->addMapping(blockmaxsize, OptionsModel::blockmaxsize);
+    mapper->addMapping(blockprioritysize, OptionsModel::blockprioritysize);
+    mapper->addMapping(blockminsize, OptionsModel::blockminsize);
+
     /* Window */
 #ifndef Q_OS_MAC
     mapper->addMapping(ui->hideTrayIcon, OptionsModel::HideTrayIcon);
@@ -389,6 +425,23 @@ void OptionsDialog::setOkButtonState(bool fState)
 void OptionsDialog::maxuploadtargetCheckboxStateChanged(const int state)
 {
     ui->maxuploadtarget->setEnabled(state);
+}
+
+void OptionsDialog::blockmaxsize_changed(int i)
+{
+    if (blockprioritysize->value() > i) {
+        blockprioritysize->setValue(i);
+    }
+    if (blockminsize->value() > i) {
+        blockminsize->setValue(i);
+    }
+}
+
+void OptionsDialog::blockmaxsize_increase(int i)
+{
+    if (blockmaxsize->value() < i) {
+        blockmaxsize->setValue(i);
+    }
 }
 
 void OptionsDialog::on_resetButton_clicked()

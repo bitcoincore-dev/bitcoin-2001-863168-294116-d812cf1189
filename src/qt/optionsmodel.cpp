@@ -294,6 +294,12 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return !fIsBareMultisigStd;
         case datacarriersize:
             return fAcceptDatacarrier ? nMaxDatacarrierBytes : 0;
+        case blockmaxsize:
+            return GetArg("-blockmaxsize", DEFAULT_BLOCK_MAX_SIZE) / 1000;
+        case blockprioritysize:
+            return GetArg("-blockprioritysize", DEFAULT_BLOCK_PRIORITY_SIZE) / 1000;
+        case blockminsize:
+            return GetArg("-blockminsize", DEFAULT_BLOCK_MIN_SIZE) / 1000;
         default:
             return QVariant();
         }
@@ -632,6 +638,31 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             if (fNewEn != fAcceptDatacarrier) {
                 ModifyRWConfigFile("datacarrier", strprintf("%d", fNewEn));
                 fAcceptDatacarrier = fNewEn;
+            }
+            break;
+        }
+        case blockmaxsize:
+        case blockprioritysize:
+        case blockminsize:
+        {
+            const int nNewValue_kB = value.toInt();
+            const int nOldValue_kB = data(index, role).toInt();
+            if (nNewValue_kB != nOldValue_kB) {
+                std::string strNv = strprintf("%d000", nNewValue_kB);
+                std::string strKey;
+                switch(index.row()) {
+                    case blockmaxsize:
+                        strKey = "blockmaxsize";
+                        break;
+                    case blockprioritysize:
+                        strKey = "blockprioritysize";
+                        break;
+                    case blockminsize:
+                        strKey = "blockminsize";
+                        break;
+                }
+                mapArgs["-" + strKey] = strNv;
+                ModifyRWConfigFile(strKey, strNv);
             }
             break;
         }
