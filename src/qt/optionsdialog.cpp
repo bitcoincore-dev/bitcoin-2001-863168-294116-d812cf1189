@@ -150,6 +150,11 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     limitdescendantsize->setMaximum(std::numeric_limits<int>::max());
     CreateOptionUI(ui->verticalLayout_Spamfiltering, limitdescendantsize, tr("Ignore transactions if any ancestor would have more than %s kilobytes of unconfirmed descendants."));
 
+    spamfilter = new QCheckBox(ui->groupBox_Spamfiltering);
+    spamfilter->setText(tr("Ignore known spam using pattern matching"));
+    spamfilter->setToolTip(tr("Some spam uses identifiable patterns in scripts. This filter looks for identified spam patterns."));
+    ui->verticalLayout_Spamfiltering->addWidget(spamfilter);
+
     /* Window elements init */
 #ifdef Q_OS_MAC
     /* remove Window tab on Mac */
@@ -313,6 +318,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(limitancestorsize, OptionsModel::limitancestorsize);
     mapper->addMapping(limitdescendantcount, OptionsModel::limitdescendantcount);
     mapper->addMapping(limitdescendantsize, OptionsModel::limitdescendantsize);
+    mapper->addMapping(spamfilter, OptionsModel::spamfilter);
 
     /* Window */
 #ifndef Q_OS_MAC

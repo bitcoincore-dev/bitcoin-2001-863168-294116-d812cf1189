@@ -57,6 +57,7 @@ public:
         limitancestorsize,
         limitdescendantcount,
         limitdescendantsize,
+        spamfilter,             // bool
         OptionIDRowCount,
     };
 
