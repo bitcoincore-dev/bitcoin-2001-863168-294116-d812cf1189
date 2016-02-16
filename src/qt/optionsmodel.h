@@ -83,6 +83,9 @@ public:
         limitdescendantsize,
         rejectbaremultisig,     // bool
         datacarriersize,
+        blockmaxsize,
+        blockprioritysize,
+        blockmaxweight,
         OptionIDRowCount,
     };
 
