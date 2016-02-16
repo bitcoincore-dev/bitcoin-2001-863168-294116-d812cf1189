@@ -63,6 +63,9 @@ public:
         spamfilter,             // bool
         rejectbaremultisig,     // bool
         datacarriersize,
+        blockmaxsize,
+        blockprioritysize,
+        blockminsize,
         OptionIDRowCount,
     };
 
