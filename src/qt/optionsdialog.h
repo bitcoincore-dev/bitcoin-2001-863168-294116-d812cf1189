@@ -12,11 +12,11 @@ class OptionsModel;
 class QValidatedLineEdit;
 
 QT_BEGIN_NAMESPACE
+class QBoxLayout;
 class QCheckBox;
 class QDataWidgetMapper;
 class QSpinBox;
 class QString;
-class QVBoxLayout;
 class QWidget;
 QT_END_NAMESPACE
 
@@ -62,6 +62,9 @@ private Q_SLOTS:
     void updateDefaultProxyNets();
     void maxuploadtargetCheckboxStateChanged(int);
 
+    void blockmaxsize_changed(int);
+    void blockmaxsize_increase(int);
+
 Q_SIGNALS:
     void proxyIpChecks(QValidatedLineEdit *pUiProxyIp, int nProxyPort);
 
@@ -72,7 +75,7 @@ private:
 
     QWidget *prevwidget;
     void FixTabOrder(QWidget *);
-    void CreateOptionUI(QVBoxLayout *, QWidget *, const QString& text);
+    void CreateOptionUI(QBoxLayout *, QWidget *, const QString& text);
 
     QSpinBox *limitancestorcount;
     QSpinBox *limitancestorsize;
@@ -81,6 +84,8 @@ private:
     QCheckBox *spamfilter;
     QCheckBox *rejectbaremultisig;
     QSpinBox *datacarriersize;
+
+    QSpinBox *blockmaxsize, *blockprioritysize, *blockminsize;
 };
 
 #endif // BITCOIN_QT_OPTIONSDIALOG_H
