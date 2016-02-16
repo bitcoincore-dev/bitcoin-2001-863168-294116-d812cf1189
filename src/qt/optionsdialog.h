@@ -12,6 +12,7 @@ class OptionsModel;
 class QValidatedLineEdit;
 
 QT_BEGIN_NAMESPACE
+class QCheckBox;
 class QDataWidgetMapper;
 class QSpinBox;
 QT_END_NAMESPACE
@@ -73,6 +74,7 @@ private:
     QSpinBox *limitancestorsize;
     QSpinBox *limitdescendantcount;
     QSpinBox *limitdescendantsize;
+    QCheckBox *spamfilter;
 };
 
 #endif // BITCOIN_QT_OPTIONSDIALOG_H
