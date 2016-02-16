@@ -61,6 +61,7 @@ public:
         limitancestorsize,
         limitdescendantcount,
         limitdescendantsize,
+        rejectbaremultisig,     // bool
         OptionIDRowCount,
     };
 
