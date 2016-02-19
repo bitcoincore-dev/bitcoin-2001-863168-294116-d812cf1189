@@ -34,13 +34,6 @@
 #include <QSpinBox>
 #include <QTimer>
 
-static void SplitForLabels(const QString& text, QLabel* const labelBefore, QLabel* const labelAfter)
-{
-    QStringList text_parts = text.split("%s");
-    labelBefore->setText(text_parts[0]);
-    labelAfter->setText(text_parts[1]);
-}
-
 void OptionsDialog::FixTabOrder(QWidget * const o)
 {
     setTabOrder(prevwidget, o);
@@ -119,73 +112,98 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->maxuploadtarget->setMaximum(std::numeric_limits<int>::max());
     connect(ui->maxuploadtargetCheckbox, SIGNAL(stateChanged(int)), this, SLOT(maxuploadtargetCheckboxStateChanged(int)));
 
+    prevwidget = ui->peerbloomfilters;
+
     /* Mempool tab */
 
-    ui->mempoolreplacement->addItem(QString("never"), QVariant("never"));
-    ui->mempoolreplacement->addItem(QString("with a higher mining fee, and opt-in"), QVariant("fee,optin"));
-    ui->mempoolreplacement->addItem(QString("with a higher mining fee (no opt-out)"), QVariant("fee,-optin"));
+    QWidget * const tabMempool = new QWidget();
+    QVBoxLayout * const verticalLayout_Mempool = new QVBoxLayout(tabMempool);
+    ui->tabWidget->insertTab(ui->tabWidget->indexOf(ui->tabWindow), tabMempool, tr("Mem&pool"));
 
-    SplitForLabels(tr("Keep at most %s unconnected transactions in memory"), ui->maxorphantxLabel_before, ui->maxorphantxLabel_after);
-    ui->maxorphantx->setMinimum(0);
-    ui->maxorphantx->setMaximum(std::numeric_limits<int>::max());
+    mempoolreplacement = new QValueComboBox(tabMempool);
+    mempoolreplacement->addItem(QString("never"), QVariant("never"));
+    mempoolreplacement->addItem(QString("with a higher mining fee, and opt-in"), QVariant("fee,optin"));
+    mempoolreplacement->addItem(QString("with a higher mining fee (no opt-out)"), QVariant("fee,-optin"));
+    CreateOptionUI(verticalLayout_Mempool, mempoolreplacement, tr("Transaction &replacement: %s"));
 
-    SplitForLabels(tr("Keep the transaction memory pool below %s MB"), ui->maxmempoolLabel_before, ui->maxmempoolLabel_after);
+    maxorphantx = new QSpinBox(tabMempool);
+    maxorphantx->setMinimum(0);
+    maxorphantx->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(verticalLayout_Mempool, maxorphantx, tr("Keep at most %s unconnected transactions in memory"));
+
+    maxmempool = new QSpinBox(tabMempool);
     const int64_t nMempoolSizeMinMB = maxmempoolMinimum(GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT));
-    ui->maxmempool->setMinimum(nMempoolSizeMinMB);
-    ui->maxmempool->setMaximum(std::numeric_limits<int>::max());
+    maxmempool->setMinimum(nMempoolSizeMinMB);
+    maxmempool->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(verticalLayout_Mempool, maxmempool, tr("Keep the transaction memory pool below %s MB"));
 
-    SplitForLabels(tr("Do not keep transactions in memory more than %s hours"), ui->mempoolexpiryLabel_before, ui->mempoolexpiryLabel_after);
-    ui->mempoolexpiry->setMinimum(1);
-    ui->mempoolexpiry->setMaximum(std::numeric_limits<int>::max());
+    mempoolexpiry = new QSpinBox(tabMempool);
+    mempoolexpiry->setMinimum(1);
+    mempoolexpiry->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(verticalLayout_Mempool, mempoolexpiry, tr("Do not keep transactions in memory more than %s hours"));
 
-    SplitForLabels(tr("Ignore transactions with fewer than %s bytes per sigop."), ui->bytespersigopLabel_before, ui->bytespersigopLabel_after);
-    ui->bytespersigop->setMinimum(1);
-    ui->bytespersigop->setMaximum(std::numeric_limits<int>::max());
+    QGroupBox * const groupBox_Spamfiltering = new QGroupBox(tabMempool);
+    groupBox_Spamfiltering->setTitle(tr("Spam filtering"));
+    QVBoxLayout * const verticalLayout_Spamfiltering = new QVBoxLayout(groupBox_Spamfiltering);
 
-    prevwidget = ui->bytespersigop;
+    rejectunknownscripts = new QCheckBox(groupBox_Spamfiltering);
+    rejectunknownscripts->setText(tr("Ignore unrecognised receiver scripts"));
+    rejectunknownscripts->setToolTip(tr("With this option enabled, unrecognised receiver (\"pubkey\") scripts will be ignored. Unrecognisable scripts could be used to bypass further spam filters. If your software is outdated, they may also be used to trick you into thinking you were sent bitcoins that will never confirm."));
+    verticalLayout_Spamfiltering->addWidget(rejectunknownscripts);
+    FixTabOrder(rejectunknownscripts);
 
-    limitancestorcount = new QSpinBox(ui->groupBox_Spamfiltering);
+    bytespersigop = new QSpinBox(groupBox_Spamfiltering);
+    bytespersigop->setMinimum(1);
+    bytespersigop->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(verticalLayout_Spamfiltering, bytespersigop, tr("Ignore transactions with fewer than %s bytes per sigop."));
+
+    limitancestorcount = new QSpinBox(groupBox_Spamfiltering);
     limitancestorcount->setMinimum(1);
     limitancestorcount->setMaximum(std::numeric_limits<int>::max());
-    CreateOptionUI(ui->verticalLayout_Spamfiltering, limitancestorcount, tr("Ignore transactions with %s or more unconfirmed ancestors."));
+    CreateOptionUI(verticalLayout_Spamfiltering, limitancestorcount, tr("Ignore transactions with %s or more unconfirmed ancestors."));
 
-    limitancestorsize = new QSpinBox(ui->groupBox_Spamfiltering);
+    limitancestorsize = new QSpinBox(groupBox_Spamfiltering);
     limitancestorsize->setMinimum(1);
     limitancestorsize->setMaximum(std::numeric_limits<int>::max());
-    CreateOptionUI(ui->verticalLayout_Spamfiltering, limitancestorsize, tr("Ignore transactions whose size with all unconfirmed ancestors exceeds %s kilobytes."));
+    CreateOptionUI(verticalLayout_Spamfiltering, limitancestorsize, tr("Ignore transactions whose size with all unconfirmed ancestors exceeds %s kilobytes."));
 
-    limitdescendantcount = new QSpinBox(ui->groupBox_Spamfiltering);
+    limitdescendantcount = new QSpinBox(groupBox_Spamfiltering);
     limitdescendantcount->setMinimum(1);
     limitdescendantcount->setMaximum(std::numeric_limits<int>::max());
-    CreateOptionUI(ui->verticalLayout_Spamfiltering, limitdescendantcount, tr("Ignore transactions if any ancestor would have %s or more unconfirmed descendants."));
+    CreateOptionUI(verticalLayout_Spamfiltering, limitdescendantcount, tr("Ignore transactions if any ancestor would have %s or more unconfirmed descendants."));
 
-    limitdescendantsize = new QSpinBox(ui->groupBox_Spamfiltering);
+    limitdescendantsize = new QSpinBox(groupBox_Spamfiltering);
     limitdescendantsize->setMinimum(1);
     limitdescendantsize->setMaximum(std::numeric_limits<int>::max());
-    CreateOptionUI(ui->verticalLayout_Spamfiltering, limitdescendantsize, tr("Ignore transactions if any ancestor would have more than %s kilobytes of unconfirmed descendants."));
+    CreateOptionUI(verticalLayout_Spamfiltering, limitdescendantsize, tr("Ignore transactions if any ancestor would have more than %s kilobytes of unconfirmed descendants."));
 
-    spamfilter = new QCheckBox(ui->groupBox_Spamfiltering);
+    spamfilter = new QCheckBox(groupBox_Spamfiltering);
     spamfilter->setText(tr("Ignore known spam using pattern matching"));
     spamfilter->setToolTip(tr("Some spam uses identifiable patterns in scripts. This filter looks for identified spam patterns."));
-    ui->verticalLayout_Spamfiltering->addWidget(spamfilter);
+    verticalLayout_Spamfiltering->addWidget(spamfilter);
     FixTabOrder(spamfilter);
 
-    rejectbaremultisig = new QCheckBox(ui->groupBox_Spamfiltering);
+    rejectbaremultisig = new QCheckBox(groupBox_Spamfiltering);
     rejectbaremultisig->setText(tr("Ignore bare/exposed \"multisig\" scripts"));
     rejectbaremultisig->setToolTip(tr("Spam is sometimes disguised to appear as if it is an old-style N-of-M multi-party transaction, where most of the keys are really bogus. At the same time, legitimate multi-party transactions typically have always used P2SH format (which is not filtered by this option), which is more secure."));
-    ui->verticalLayout_Spamfiltering->addWidget(rejectbaremultisig);
+    verticalLayout_Spamfiltering->addWidget(rejectbaremultisig);
     FixTabOrder(rejectbaremultisig);
 
-    datacarriersize = new QSpinBox(ui->groupBox_Spamfiltering);
+    datacarriersize = new QSpinBox(groupBox_Spamfiltering);
     datacarriersize->setMinimum(0);
     datacarriersize->setMaximum(std::numeric_limits<int>::max());
     datacarriersize->setToolTip(tr("Since 2014, a specific method for attaching arbitrary data to transactions has been recognised as not requiring space in the coin database. Since it is sometimes impractical to detect small spam disguised as ordinary transactions, it is sometimes considered beneficial to treat these less harmful data attachments as equals to legitimate usage."));
-    CreateOptionUI(ui->verticalLayout_Spamfiltering, datacarriersize, tr("Ignore additional data when its size is greater than %s bytes."));
+    CreateOptionUI(verticalLayout_Spamfiltering, datacarriersize, tr("Ignore additional data when its size is greater than %s bytes."));
+
+    verticalLayout_Mempool->addWidget(groupBox_Spamfiltering);
+
+    verticalLayout_Mempool->addItem(new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
     /* Mining tab */
 
     QWidget * const tabMining = new QWidget();
     QVBoxLayout * const verticalLayout_Mining = new QVBoxLayout(tabMining);
+    ui->tabWidget->insertTab(ui->tabWidget->indexOf(ui->tabWindow), tabMining, tr("M&ining"));
 
     verticalLayout_Mining->addWidget(new QLabel(tr("<strong>Note that mining is heavily influenced by the settings on the Mempool tab.</strong>")));
 
@@ -208,7 +226,6 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     CreateOptionUI(verticalLayout_Mining, blockminsize, tr("Fill blocks up to %s kB with low or no-fee transactions."));
 
     verticalLayout_Mining->addItem(new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding));
-    ui->tabWidget->insertTab(ui->tabWidget->indexOf(ui->tabMempool) + 1, tabMining, tr("M&ining"));
 
     /* Window elements init */
 #ifdef Q_OS_MAC
@@ -356,19 +373,19 @@ void OptionsDialog::setMapper()
     /* Mempool tab */
 
     QVariant current_mempoolreplacement = model->data(model->index(OptionsModel::mempoolreplacement, 0), Qt::EditRole);
-    int current_mempoolreplacement_index = ui->mempoolreplacement->findData(current_mempoolreplacement);
+    int current_mempoolreplacement_index = mempoolreplacement->findData(current_mempoolreplacement);
     if (current_mempoolreplacement_index == -1) {
-        ui->mempoolreplacement->addItem(current_mempoolreplacement.toString(), current_mempoolreplacement);
-        current_mempoolreplacement_index = ui->mempoolreplacement->count() - 1;
+        mempoolreplacement->addItem(current_mempoolreplacement.toString(), current_mempoolreplacement);
+        current_mempoolreplacement_index = mempoolreplacement->count() - 1;
     }
-    ui->mempoolreplacement->setCurrentIndex(current_mempoolreplacement_index);
+    mempoolreplacement->setCurrentIndex(current_mempoolreplacement_index);
 
-    mapper->addMapping(ui->maxorphantx, OptionsModel::maxorphantx);
-    mapper->addMapping(ui->maxmempool, OptionsModel::maxmempool);
-    mapper->addMapping(ui->mempoolexpiry, OptionsModel::mempoolexpiry);
+    mapper->addMapping(maxorphantx, OptionsModel::maxorphantx);
+    mapper->addMapping(maxmempool, OptionsModel::maxmempool);
+    mapper->addMapping(mempoolexpiry, OptionsModel::mempoolexpiry);
 
-    mapper->addMapping(ui->rejectunknownscripts, OptionsModel::rejectunknownscripts);
-    mapper->addMapping(ui->bytespersigop, OptionsModel::bytespersigop);
+    mapper->addMapping(rejectunknownscripts, OptionsModel::rejectunknownscripts);
+    mapper->addMapping(bytespersigop, OptionsModel::bytespersigop);
     mapper->addMapping(limitancestorcount, OptionsModel::limitancestorcount);
     mapper->addMapping(limitancestorsize, OptionsModel::limitancestorsize);
     mapper->addMapping(limitdescendantcount, OptionsModel::limitdescendantcount);
@@ -448,7 +465,7 @@ void OptionsDialog::on_okButton_clicked()
         model->setData(model->index(OptionsModel::maxuploadtarget, 0), 0);
     }
 
-    model->setData(model->index(OptionsModel::mempoolreplacement, 0), ui->mempoolreplacement->itemData(ui->mempoolreplacement->currentIndex()));
+    model->setData(model->index(OptionsModel::mempoolreplacement, 0), mempoolreplacement->itemData(mempoolreplacement->currentIndex()));
 
     mapper->submit();
     accept();
