@@ -14,6 +14,7 @@ class QValidatedLineEdit;
 QT_BEGIN_NAMESPACE
 class QBoxLayout;
 class QCheckBox;
+class QValueComboBox;
 class QDataWidgetMapper;
 class QSpinBox;
 class QString;
@@ -80,6 +81,13 @@ private:
     void FixTabOrder(QWidget *);
     void CreateOptionUI(QBoxLayout *, QWidget *, const QString& text);
 
+    QValueComboBox *mempoolreplacement;
+    QSpinBox *maxorphantx;
+    QSpinBox *maxmempool;
+    QSpinBox *mempoolexpiry;
+
+    QCheckBox *rejectunknownscripts;
+    QSpinBox *bytespersigop;
     QSpinBox *limitancestorcount;
     QSpinBox *limitancestorsize;
     QSpinBox *limitdescendantcount;
