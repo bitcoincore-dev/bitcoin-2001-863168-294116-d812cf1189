@@ -83,6 +83,7 @@ public:
         blockprioritysize,
         blockmaxweight,
         blockreconstructionextratxn,
+        corepolicy,
         OptionIDRowCount,
     };
 
