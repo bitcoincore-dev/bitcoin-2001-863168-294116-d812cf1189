@@ -502,6 +502,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-blockprioritysize=<n>", strprintf(_("Set maximum size of high-priority/low-fee transactions in bytes (default: %d)"), DEFAULT_BLOCK_PRIORITY_SIZE));
     if (showDebug)
         strUsage += HelpMessageOpt("-blockversion=<n>", strprintf("Override block version to test forking scenarios (default: %d)", (int)CBlock::CURRENT_VERSION));
+    strUsage += HelpMessageOpt("-priorityaccurate", strprintf(_("Update coin-age priority accurately when parent transactions are confirmed (default: %d)"), fPriorityAccurate));
 
     strUsage += HelpMessageGroup(_("RPC server options:"));
     strUsage += HelpMessageOpt("-server", _("Accept command line and JSON-RPC commands"));
@@ -703,6 +704,7 @@ void InitParameterInteraction()
         SoftSetArg("-datacarriersize", "83");
 
         SoftSetArg("-blockprioritysize", "0");
+        SoftSetArg("-priorityaccurate", "0");
         SoftSetArg("-blockmaxsize", "750000");
     }
 
@@ -893,6 +895,8 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     const vector<string>& categories = mapMultiArgs["-debug"];
     if (GetBoolArg("-nodebug", false) || find(categories.begin(), categories.end(), string("0")) != categories.end())
         fDebug = false;
+
+    fPriorityAccurate = GetBoolArg("-priorityaccurate", fPriorityAccurate);
 
     // Check for -debugnet
     if (GetBoolArg("-debugnet", false))

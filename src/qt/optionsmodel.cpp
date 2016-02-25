@@ -16,6 +16,7 @@
 #include "main.h" // For DEFAULT_SCRIPTCHECK_THREADS
 #include "net.h"
 #include "txdb.h" // for -dbcache defaults
+#include "txmempool.h" // for fPriorityAccurate
 #include "policy/policy.h" // for DEFAULT_MAX_MEMPOOL_SIZE
 
 #ifdef ENABLE_WALLET
@@ -277,6 +278,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return GetArg("-blockprioritysize", DEFAULT_BLOCK_PRIORITY_SIZE) / 1000;
         case blockminsize:
             return GetArg("-blockminsize", DEFAULT_BLOCK_MIN_SIZE) / 1000;
+        case priorityaccurate:
+            return fPriorityAccurate;
         default:
             return QVariant();
         }
@@ -619,6 +622,15 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 }
                 mapArgs["-" + strKey] = strNv;
                 ModifyRWConfigFile(strKey, strNv);
+            }
+            break;
+        }
+        case priorityaccurate:
+        {
+            const bool fNewValue = value.toBool();
+            if (fNewValue != fPriorityAccurate) {
+                fPriorityAccurate = fNewValue;
+                ModifyRWConfigFile("priorityaccurate", strprintf("%d", fNewValue));
             }
             break;
         }
