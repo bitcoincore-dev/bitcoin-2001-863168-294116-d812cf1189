@@ -504,6 +504,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-blockmintxfee=<amt>", strprintf(_("Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)"), CURRENCY_UNIT, FormatMoney(DEFAULT_BLOCK_MIN_TX_FEE)));
     if (showDebug)
         strUsage += HelpMessageOpt("-blockversion=<n>", "Override block version to test forking scenarios");
+    strUsage += HelpMessageOpt("-priorityaccurate", strprintf(_("Update coin-age priority accurately when parent transactions are confirmed (default: %d)"), fPriorityAccurate));
 
 #ifdef USE_LIBEVENT
     strUsage += HelpMessageGroup(_("RPC server options:"));
@@ -747,6 +748,7 @@ void InitParameterInteraction()
         SoftSetArg("-datacarriersize", "83");
 
         SoftSetArg("-blockprioritysize", "0");
+        SoftSetArg("-priorityaccurate", "0");
         SoftSetArg("-blockmaxsize", "750000");
     }
 
@@ -931,6 +933,8 @@ bool AppInitParameterInteraction()
         if (GetBoolArg("-nodebug", false) || find(categories.begin(), categories.end(), std::string("0")) != categories.end())
             fDebug = false;
     }
+
+    fPriorityAccurate = GetBoolArg("-priorityaccurate", fPriorityAccurate);
 
     // Check for -debugnet
     if (GetBoolArg("-debugnet", false))
