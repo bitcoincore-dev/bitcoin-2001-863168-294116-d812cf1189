@@ -46,6 +46,8 @@ static const bool DEFAULT_ALERTS = true;
 static const bool DEFAULT_WHITELISTRELAY = true;
 /** Default for DEFAULT_WHITELISTFORCERELAY. */
 static const bool DEFAULT_WHITELISTFORCERELAY = true;
+/** Default for -spamfilter, whether to use notorious spam pattern matching */
+static const bool DEFAULT_SPAMFILTER = true;
 /** Default for -minrelaytxfee, minimum relay fee for transactions */
 static const unsigned int DEFAULT_MIN_RELAY_TX_FEE = 1000;
 /** Default for -maxorphantx, maximum number of orphan transactions kept in memory */
