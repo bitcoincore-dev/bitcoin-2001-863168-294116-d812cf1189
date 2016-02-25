@@ -1,4 +1,4 @@
-<TS language="ca" version="2.0">
+<TS language="ca" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -1106,18 +1106,6 @@
     <message>
         <source>Port of the proxy (e.g. 9050)</source>
         <translation>Port del proxy (per exemple 9050)</translation>
-    </message>
-    <message>
-        <source>Used for reaching peers via:</source>
-        <translation>Utilitzat per arribar als iguals mitjançant:</translation>
-    </message>
-    <message>
-        <source>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
-        <translation>Mostra si el proxy SOCKS5 per defecte proporcionat s'utilitza per arribar als iguals mitjançant aquest tipus de xarxa.</translation>
-    </message>
-    <message>
-        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
-        <translation>Utilitza un proxy SOCKS4 apart per a arribar als iguals a través de serveis ocults de Tor:</translation>
     </message>
     <message>
         <source>Used for reaching peers via:</source>

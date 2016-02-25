@@ -19,7 +19,9 @@
         <file alias="en_GB">locale/bitcoin_en_GB.qm</file>
         <file alias="en">locale/bitcoin_en.qm</file>
         <file alias="eo">locale/bitcoin_eo.qm</file>
+        <file alias="es_AR">locale/bitcoin_es_AR.qm</file>
         <file alias="es_CL">locale/bitcoin_es_CL.qm</file>
+        <file alias="es_CO">locale/bitcoin_es_CO.qm</file>
         <file alias="es_DO">locale/bitcoin_es_DO.qm</file>
         <file alias="es_ES">locale/bitcoin_es_ES.qm</file>
         <file alias="es_MX">locale/bitcoin_es_MX.qm</file>
@@ -66,6 +68,7 @@
         <file alias="sq">locale/bitcoin_sq.qm</file>
         <file alias="sr">locale/bitcoin_sr.qm</file>
         <file alias="sv">locale/bitcoin_sv.qm</file>
+        <file alias="ta">locale/bitcoin_ta.qm</file>
         <file alias="th_TH">locale/bitcoin_th_TH.qm</file>
         <file alias="tr_TR">locale/bitcoin_tr_TR.qm</file>
         <file alias="tr">locale/bitcoin_tr.qm</file>

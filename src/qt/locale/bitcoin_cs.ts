@@ -1,4 +1,4 @@
-<TS language="cs" version="2.0">
+<TS language="cs" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -874,6 +874,30 @@
         <source>command-line options</source>
         <translation>možnosti příkazové řádky</translation>
     </message>
+    <message>
+        <source>UI Options:</source>
+        <translation>Možnosti UI:</translation>
+    </message>
+    <message>
+        <source>Choose data directory on startup (default: %u)</source>
+        <translation>Zvolit při startu adresář pro data (výchozí: %u)</translation>
+    </message>
+    <message>
+        <source>Set language, for example "de_DE" (default: system locale)</source>
+        <translation>Nastavit jazyk, například „de_DE“ (výchozí: systémové nastavení)</translation>
+    </message>
+    <message>
+        <source>Start minimized</source>
+        <translation>Nastartovat minimalizovaně</translation>
+    </message>
+    <message>
+        <source>Set SSL root certificates for payment request (default: -system-)</source>
+        <translation>Nastavit kořenové SSL certifikáty pro platební požadavky (výchozí: -system-)</translation>
+    </message>
+    <message>
+        <source>Show splash screen on startup (default: %u)</source>
+        <translation>Zobrazit startovací obrazovku (výchozí: %u)</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
@@ -1070,6 +1094,18 @@
     <message>
         <source>Port of the proxy (e.g. 9050)</source>
         <translation>Port proxy (např. 9050)</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
@@ -1550,6 +1586,30 @@
         <translation>Vyčistit konzoli</translation>
     </message>
     <message>
+        <source>&amp;Disconnect Node</source>
+        <translation>&amp;Odpojit uzel</translation>
+    </message>
+    <message>
+        <source>Ban Node for</source>
+        <translation>Uvalit na uzel klatbu na</translation>
+    </message>
+    <message>
+        <source>1 &amp;hour</source>
+        <translation>1 &amp;hodinu</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1 &amp;den</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>1 &amp;týden</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp;rok</translation>
+    </message>
+    <message>
         <source>Welcome to the Bitcoin Core RPC console.</source>
         <translation>Vítej v RPC konzoli Bitcoin Core.</translation>
     </message>
@@ -1576,6 +1636,10 @@
     <message>
         <source>%1 GB</source>
         <translation>%1 GB</translation>
+    </message>
+    <message>
+        <source>(node id: %1)</source>
+        <translation>(id uzlu: %1)</translation>
     </message>
     <message>
         <source>via %1</source>
@@ -1970,6 +2034,10 @@
         <translation>Kopíruj drobné</translation>
     </message>
     <message>
+        <source>Total Amount %1</source>
+        <translation>Celková částka %1</translation>
+    </message>
+    <message>
         <source>or</source>
         <translation>nebo</translation>
     </message>
@@ -2000,6 +2068,10 @@
     <message>
         <source>Payment request expired.</source>
         <translation>Platební požadavek vypršel.</translation>
+    </message>
+    <message>
+        <source>Pay only the required fee of %1</source>
+        <translation>Zaplatit pouze vyžadovaný poplatek %1</translation>
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
@@ -2784,6 +2856,30 @@
         <translation>Akceptovat příkazy z příkazové řádky a přes JSON-RPC</translation>
     </message>
     <message>
+        <source>If &lt;category&gt; is not supplied or if &lt;category&gt; = 1, output all debugging information.</source>
+        <translation>Pokud není &lt;category&gt; zadána nebo je &lt;category&gt; = 1, bude tisknout veškeré ladicí informace.</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of pruned node)</source>
+        <translation>Prořezávání: poslední synchronizace peněženky proběhla před už prořezanými daty. Je třeba provést -reindex (tedy v případě prořezávacího režimu stáhnout znovu celý řetězec bloků)</translation>
+    </message>
+    <message>
+        <source>Reduce storage requirements by pruning (deleting) old blocks. This mode is incompatible with -txindex and -rescan. Warning: Reverting this setting requires re-downloading the entire blockchain. (default: 0 = disable pruning blocks, &gt;%u = target size in MiB to use for block files)</source>
+        <translation>Omezit nároky na úložný prostor prořezáváním (mazáním) starých bloků. Tento režim není slučitelný s -txindex ani -rescan. Upozornění: opětovná změna tohoto nastavení bude vyžadovat nové stažení celého řetězce bloků. (výchozí: 0 = bloky neprořezávat, &gt;%u = cílová velikost souborů s bloky, v MiB)</translation>
+    </message>
+    <message>
+        <source>Rescans are not possible in pruned mode. You will need to use -reindex which will download the whole blockchain again.</source>
+        <translation>V prořezávacím režimu není možné přeskenovávat řetězec bloků. Musíš provést -reindex, což znovu stáhne celý řetězec bloků.</translation>
+    </message>
+    <message>
+        <source>Error: A fatal internal error occurred, see debug.log for details</source>
+        <translation>Chyba: Přihodila se závažná vnitřní chyba, podrobnosti viz v debug.log</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore...</source>
+        <translation>Prořezávám úložiště bloků...</translation>
+    </message>
+    <message>
         <source>Run in the background as a daemon and accept commands</source>
         <translation>Běžet na pozadí jako démon a akceptovat příkazy</translation>
     </message>
@@ -2820,6 +2916,10 @@
         <translation>Nedaří se mi připojit na %s na tomhle počítači. Bitcoin Core už pravděpodobně jednou běží.</translation>
     </message>
     <message>
+        <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
+        <translation>Použít UPnP k namapování naslouchacího portu (výchozí: 1, pokud naslouchá a nepoužívá -proxy)</translation>
+    </message>
+    <message>
         <source>WARNING: abnormally high number of blocks generated, %d blocks received in the last %d hours (%d expected)</source>
         <translation>UPOZORNĚNÍ: vygenerováno nezvykle mnoho bloků – přijato %d bloků jen za posledních %d hodin (očekáváno %d)</translation>
     </message>
@@ -2837,7 +2937,7 @@
     </message>
     <message>
         <source>Warning: wallet.dat corrupt, data salvaged! Original wallet.dat saved as wallet.{timestamp}.bak in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
-        <translation>Upozornění: soubor wallet.dat je poškozený, data jsou však zachráněna! Původní soubor wallet.dat je uložený jako wallet.{timestamp}.bak v %s. Pokud je stav tvého účtu nebo transakce nesprávné, zřejmě bys měl obnovit zálohu.</translation>
+        <translation>Upozornění: soubor wallet.dat je poškozený, data jsou však zachráněna! Původní soubor wallet.dat je uložený jako wallet.{timestamp}.bak v %s. Pokud jsou stav tvého účtu nebo transakce nesprávné, zřejmě bys měl obnovit zálohu.</translation>
     </message>
     <message>
         <source>Whitelist peers connecting from the given netmask or IP address. Can be specified multiple times.</source>
@@ -2940,6 +3040,18 @@
         <translation>Udej název souboru s peněženkou (v rámci datového adresáře)</translation>
     </message>
     <message>
+        <source>Unsupported argument -benchmark ignored, use -debug=bench.</source>
+        <translation>Nepodporovaný argument -benchmark se ignoruje, použij -debug=bench.</translation>
+    </message>
+    <message>
+        <source>Unsupported argument -debugnet ignored, use -debug=net.</source>
+        <translation>Nepodporovaný argument -debugnet se ignoruje, použij -debug=net.</translation>
+    </message>
+    <message>
+        <source>Unsupported argument -tor found, use -onion.</source>
+        <translation>Argument -tor již není podporovaný, použij -onion.</translation>
+    </message>
+    <message>
         <source>Use UPnP to map the listening port (default: %u)</source>
         <translation>Použít UPnP k namapování naslouchacího portu (výchozí: %u)</translation>
     </message>
@@ -3000,6 +3112,10 @@
         <translation>Spustit příkaz, když přijde relevantní upozornění nebo když dojde k opravdu dlouhému rozštěpení řetezce bloků (%s se v příkazu nahradí zprávou)</translation>
     </message>
     <message>
+        <source>Fees (in %s/kB) smaller than this are considered zero fee for relaying, mining and transaction creation (default: %s)</source>
+        <translation>Poplatky (v %s/kB) menší než tato hodnota jsou považovány za nulové pro účely přeposílání, těžení a vytváření transakcí (výchozí: %s)</translation>
+    </message>
+    <message>
         <source>If paytxfee is not set, include enough fee so transactions begin confirmation on average within n blocks (default: %u)</source>
         <translation>Pokud paytxfee není nastaveno, platit dostatečný poplatek na to, aby začaly být transakce potvrzovány v průměru během n bloků (výchozí: %u)</translation>
     </message>
@@ -3056,6 +3172,10 @@
         <translation>Aktivuji nejlepší řetězec...</translation>
     </message>
     <message>
+        <source>Attempt to recover private keys from a corrupt wallet.dat on startup</source>
+        <translation>Pokusit se při startu zachránit soukromé klíče z poškozeného souboru wallet.dat</translation>
+    </message>
+    <message>
         <source>Cannot resolve -whitebind address: '%s'</source>
         <translation>Nemohu přeložit -whitebind adresu: '%s'</translation>
     </message>
@@ -3074,6 +3194,10 @@
     <message>
         <source>Error reading from database, shutting down.</source>
         <translation>Chyba při čtení z databáze, ukončuji se.</translation>
+    </message>
+    <message>
+        <source>Imports blocks from external blk000??.dat file on startup</source>
+        <translation>Importovat při startu bloky z externího souboru blk000??.dat</translation>
     </message>
     <message>
         <source>Information</source>
@@ -3128,6 +3252,14 @@
         <translation>Přijímat a zobrazovat poplachy z P2P sítě (výchozí: %u)</translation>
     </message>
     <message>
+        <source>Reducing -maxconnections from %d to %d, because of system limitations.</source>
+        <translation>Omezuji -maxconnections z %d na %d kvůli systémovým omezením.</translation>
+    </message>
+    <message>
+        <source>Rescan the block chain for missing wallet transactions on startup</source>
+        <translation>Přeskenovat při startu řetězec bloků na chybějící transakce tvé pěněženky</translation>
+    </message>
+    <message>
         <source>Send trace/debug info to console instead of debug.log file</source>
         <translation>Posílat stopovací/ladicí informace do konzole místo do souboru debug.log</translation>
     </message>
@@ -3174,6 +3306,10 @@
     <message>
         <source>Unable to bind to %s on this computer (bind returned error %s)</source>
         <translation>Nedaří se mi připojit na %s na tomhle počítači (operace bind vrátila chybu %s)</translation>
+    </message>
+    <message>
+        <source>Upgrade wallet to latest format on startup</source>
+        <translation>Převést při startu peněženku na nejnovější formát</translation>
     </message>
     <message>
         <source>Username for JSON-RPC connections</source>
@@ -3224,6 +3360,22 @@
         <translation>(1 = ukládat transakční metadata, např. majitele účtu a informace o platebním požadavku, 2 = mazat transakční metadata)</translation>
     </message>
     <message>
+        <source>-maxtxfee is set very high! Fees this large could be paid on a single transaction.</source>
+        <translation>-maxtxfee je nastaveno velmi vysoko! Takto vysoký poplatek může být zaplacen v jednotlivé transakci.</translation>
+    </message>
+    <message>
+        <source>-paytxfee is set very high! This is the transaction fee you will pay if you send a transaction.</source>
+        <translation>-paytxfee je nastaveno velmi vysoko! Toto je transakční poplatek, který zaplatíš za každou poslanou transakci.</translation>
+    </message>
+    <message>
+        <source>Error reading wallet.dat! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
+        <translation>Nastala chyba při čtení souboru wallet.dat! Všechny klíče se přečetly správně, ale data o transakcích nebo záznamy v adresáři mohou chybět či být nesprávné.</translation>
+    </message>
+    <message>
+        <source>Fees (in %s/kB) smaller than this are considered zero fee for transaction creation (default: %s)</source>
+        <translation>Poplatky (v %s/kB) menší než tato hodnota jsou považovány za nulové pro účely vytváření transakcí (výchozí: %s)</translation>
+    </message>
+    <message>
         <source>How thorough the block verification of -checkblocks is (0-4, default: %u)</source>
         <translation>Jak moc důkladná má být verifikace bloků -checkblocks (0-4, výchozí: %u)</translation>
     </message>
@@ -3238,6 +3390,10 @@
     <message>
         <source>Output debugging information (default: %u, supplying &lt;category&gt; is optional)</source>
         <translation>Tisknout ladicí informace (výchozí: %u, zadání &lt;category&gt; je volitelné)</translation>
+    </message>
+    <message>
+        <source>Unsupported argument -socks found. Setting SOCKS version isn't possible anymore, only SOCKS5 proxies are supported.</source>
+        <translation>Byl použit nepodporovaný argument -socks. Nastavení verze SOCKS už není možné, podporovány jsou pouze SOCKS5 proxy.</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
@@ -3326,10 +3482,6 @@
     <message>
         <source>Specify connection timeout in milliseconds (minimum: 1, default: %d)</source>
         <translation>Zadej časový limit spojení v milivteřinách (minimum: 1, výchozí: %d)</translation>
-    </message>
-    <message>
-        <source>Specify pid file (default: %s)</source>
-        <translation>PID soubor (výchozí: %s)</translation>
     </message>
     <message>
         <source>Spend unconfirmed change when sending transactions (default: %u)</source>

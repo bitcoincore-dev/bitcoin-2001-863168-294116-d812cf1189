@@ -1,4 +1,4 @@
-<TS language="es_CL" version="2.0">
+<TS language="es_CL" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -342,10 +342,6 @@
         <translation>bitcoin core</translation>
     </message>
     <message>
-        <source>%1 and %2</source>
-        <translation>%1 y %2</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Pide pagos (genera codigos QR and bitcoin: URls)</translation>
     </message>
@@ -410,10 +406,6 @@
     <message>
         <source>Amount:</source>
         <translation>Cantidad:</translation>
-    </message>
-    <message>
-        <source>Priority:</source>
-        <translation>prioridad:</translation>
     </message>
     <message>
         <source>Priority:</source>
@@ -877,14 +869,6 @@
     <message>
         <source>Amount:</source>
         <translation>Cantidad:</translation>
-    </message>
-    <message>
-        <source>Priority:</source>
-        <translation>prioridad:</translation>
-    </message>
-    <message>
-        <source>Transaction Fee:</source>
-        <translation>Comisión transacción:</translation>
     </message>
     <message>
         <source>Priority:</source>

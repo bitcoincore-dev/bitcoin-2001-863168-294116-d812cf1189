@@ -1,4 +1,4 @@
-<TS language="es" version="2.0">
+<TS language="es" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -883,10 +883,6 @@
         <translation>opciones de la consola de comandos</translation>
     </message>
     <message>
-        <source>Start minimized</source>
-        <translation>Arrancar minimizado</translation>
-    </message>
-    <message>
         <source>UI Options:</source>
         <translation>Opciones de interfaz de usuario:</translation>
     </message>
@@ -1126,10 +1122,6 @@
     <message>
         <source>Tor</source>
         <translation>Tor</translation>
-    </message>
-    <message>
-        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
-        <translation>Usar distintos proxys SOCKS5 para comunicarse vía Tor de forma anónima:</translation>
     </message>
     <message>
         <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor hidden services.</source>

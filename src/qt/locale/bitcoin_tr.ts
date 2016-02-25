@@ -1,4 +1,4 @@
-<TS language="tr" version="2.0">
+<TS language="tr" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -1108,10 +1108,6 @@
         <translation>Vekil sunucunun portu (mesela 9050)</translation>
     </message>
     <message>
-        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
-        <translation>Eşlere gizli Tor servisleri ile ulaşmak için ayrı SOCKS5 vekil sunucusu kullan:</translation>
-    </message>
-    <message>
         <source>Used for reaching peers via:</source>
         <translation>Eşlere ulaşmak için kullanılır, şu yoluyla:</translation>
     </message>
@@ -2141,10 +2137,6 @@
         <source>Payment request expired.</source>
         <translation>Ödeme talebinin ömrü doldu.</translation>
     </message>
-    <message numerus="yes">
-        <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Tahmini olarak %n blok içinde teyide başlanacaktır.</numerusform><numerusform>Tahmini olarak %n blok içinde teyide başlanacaktır.</numerusform></translation>
-    </message>
     <message>
         <source>Pay only the required fee of %1</source>
         <translation>Sadece gerekli ücret olan %1 tutarını öde</translation>
@@ -2949,7 +2941,7 @@
     </message>
     <message>
         <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
-        <translation>Prune, asgari değer olan %d MiB'den düşük olarak ayarlanmıştır. Lütfen daha yüksek bir sayı kullanınız.</translation>
+        <translation>Budama, asgari değer olan %d MiB'den düşük olarak ayarlanmıştır. Lütfen daha yüksek bir sayı kullanınız.</translation>
     </message>
     <message>
         <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of pruned node)</source>
@@ -3149,11 +3141,11 @@
     </message>
     <message>
         <source>Prune cannot be configured with a negative value.</source>
-        <translation>Prune negatif bir değerle yapılandırılamaz.</translation>
+        <translation>Budama negatif bir değerle yapılandırılamaz.</translation>
     </message>
     <message>
         <source>Prune mode is incompatible with -txindex.</source>
-        <translation>Prune kipi -txindex ile uyumsuzdur.</translation>
+        <translation>Budama kipi -txindex ile uyumsuzdur.</translation>
     </message>
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
@@ -3289,7 +3281,7 @@
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
-        <translation>Prune olmayan kipe dönmek için veritabanını -reindex ile tekrar derlemeniz gerekir. Bu, tüm blok zincirini tekrar indirecektir</translation>
+        <translation>Budama olmayan kipe dönmek için veritabanını -reindex ile tekrar derlemeniz gerekir. Bu, tüm blok zincirini tekrar indirecektir</translation>
     </message>
     <message>
         <source>(default: %u)</source>

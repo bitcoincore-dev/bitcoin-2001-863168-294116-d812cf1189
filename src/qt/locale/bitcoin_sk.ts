@@ -1,4 +1,4 @@
-<TS language="sk" version="2.0">
+<TS language="sk" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -1009,7 +1009,7 @@
     </message>
     <message>
         <source>&amp;Network</source>
-        <translation>Sieť</translation>
+        <translation>&amp;Sieť</translation>
     </message>
     <message>
         <source>Automatically start Bitcoin Core after logging in to the system.</source>
@@ -1025,7 +1025,7 @@
     </message>
     <message>
         <source>W&amp;allet</source>
-        <translation>Peňaženka</translation>
+        <translation>&amp;Peňaženka</translation>
     </message>
     <message>
         <source>Expert</source>
@@ -1072,12 +1072,24 @@
         <translation>Port proxy (napr. 9050)</translation>
     </message>
     <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
+    <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
         <translation>Použiť samostatný SOCKS5 proxy server na dosiahnutie počítačov cez skryté služby Tor:</translation>
     </message>
     <message>
         <source>&amp;Window</source>
-        <translation>Okno</translation>
+        <translation>&amp;Okno</translation>
     </message>
     <message>
         <source>Show only a tray icon after minimizing the window.</source>
@@ -1093,7 +1105,7 @@
     </message>
     <message>
         <source>&amp;Display</source>
-        <translation>&amp;Displej</translation>
+        <translation>&amp;Zobrazenie</translation>
     </message>
     <message>
         <source>User Interface &amp;language:</source>

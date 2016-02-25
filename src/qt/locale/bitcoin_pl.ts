@@ -1,4 +1,4 @@
-<TS language="pl" version="2.0">
+<TS language="pl" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -91,7 +91,7 @@
     </message>
     <message>
         <source>Exporting Failed</source>
-        <translation>Błąd przy próbie eksportu</translation>
+        <translation>Błąd przy próbie eksportowania</translation>
     </message>
     <message>
         <source>There was an error trying to save the address list to %1. Please try again.</source>
@@ -371,7 +371,7 @@
     </message>
     <message>
         <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Szyfruj klucze prywatne, które są w Twoim portfelu</translation>
+        <translation>Szyfruj klucze prywatne, które są w twoim portfelu</translation>
     </message>
     <message>
         <source>Sign messages with your Bitcoin addresses to prove you own them</source>
@@ -403,7 +403,7 @@
     </message>
     <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation>Żądaj płatności (generuje kod QR oraz bitcoin URI)</translation>
+        <translation>Żądaj płatności (generuje kod QR oraz bitcoinowe URI)</translation>
     </message>
     <message>
         <source>&amp;About Bitcoin Core</source>
@@ -1125,10 +1125,6 @@
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
-        <translation>Użyj oddzielnego prozy SOCKS5 aby osiągnąć węzły w ukrytych usługach Tor:</translation>
-    </message>
-    <message>
-        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
         <translation>Użyj oddzielnego proxy SOCKS5 aby osiągnąć węzły w ukrytych usługach Tor:</translation>
     </message>
     <message>
@@ -1141,7 +1137,7 @@
     </message>
     <message>
         <source>&amp;Minimize to the tray instead of the taskbar</source>
-        <translation>&amp;Minimalizuj do paska przy zegarku zamiast do paska zadań</translation>
+        <translation>&amp;Minimalizuj do zasobnika systemowego zamiast do paska zadań</translation>
     </message>
     <message>
         <source>M&amp;inimize on close</source>
