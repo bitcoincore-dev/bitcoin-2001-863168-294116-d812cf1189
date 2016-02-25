@@ -67,6 +67,7 @@
 #endif
 
 bool fFeeEstimatesInitialized = false;
+static const bool DEFAULT_COREPOLICY = false;
 static const bool DEFAULT_PROXYRANDOMIZE = true;
 static const bool DEFAULT_REST_ENABLE = false;
 static const bool DEFAULT_DISABLE_SAFEMODE = false;
@@ -340,6 +341,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage +=HelpMessageOpt("-assumevalid=<hex>", strprintf(_("If this block is in the chain assume that it and its ancestors are valid and potentially skip their script verification (0 to verify all, default: %s, testnet: %s)"), Params(CBaseChainParams::MAIN).GetConsensus().defaultAssumeValid.GetHex(), Params(CBaseChainParams::TESTNET).GetConsensus().defaultAssumeValid.GetHex()));
     strUsage += HelpMessageOpt("-conf=<file>", strprintf(_("Specify configuration file (default: %s)"), BITCOIN_CONF_FILENAME));
     strUsage += HelpMessageOpt("-confrw=<file>", strprintf(_("Specify read/write configuration file (default: %s)"), BITCOIN_RW_CONF_FILENAME));
+    strUsage += HelpMessageOpt("-corepolicy", strprintf(_("Use Bitcoin Core policy defaults (default: %s)"), DEFAULT_COREPOLICY));
     if (mode == HMM_BITCOIND)
     {
 #if HAVE_DECL_DAEMON
@@ -739,6 +741,15 @@ bool AppInitServers(boost::thread_group& threadGroup)
 // Parameter interaction based on rules
 void InitParameterInteraction()
 {
+    if (GetBoolArg("-corepolicy", DEFAULT_COREPOLICY)) {
+        SoftSetArg("-spamfilter", "0");
+        SoftSetArg("-permitbaremultisig", "1");
+        SoftSetArg("-datacarriersize", "83");
+
+        SoftSetArg("-blockprioritysize", "0");
+        SoftSetArg("-blockmaxsize", "750000");
+    }
+
     // when specifying an explicit binding address, you want to listen on it
     // even when -connect or -proxy is specified
     if (IsArgSet("-bind")) {
