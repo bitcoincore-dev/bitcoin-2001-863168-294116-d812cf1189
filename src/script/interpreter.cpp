@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2014 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -165,7 +165,10 @@ bool static IsLowDERSignature(const valtype &vchSig, ScriptError* serror) {
         return set_error(serror, SCRIPT_ERR_SIG_DER);
     }
     std::vector<unsigned char> vchSigCopy(vchSig.begin(), vchSig.begin() + vchSig.size() - 1);
-    return CPubKey::CheckLowS(vchSigCopy);
+    if (!CPubKey::CheckLowS(vchSigCopy)) {
+        return set_error(serror, SCRIPT_ERR_SIG_HIGH_S);
+    }
+    return true;
 }
 
 bool static IsDefinedHashtypeSignature(const valtype &vchSig) {

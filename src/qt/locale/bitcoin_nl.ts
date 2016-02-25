@@ -263,7 +263,7 @@
     </message>
     <message>
         <source>E&amp;xit</source>
-        <translation>&amp;Afsluiten</translation>
+        <translation>A&amp;fsluiten</translation>
     </message>
     <message>
         <source>Quit application</source>
@@ -279,7 +279,7 @@
     </message>
     <message>
         <source>&amp;Options...</source>
-        <translation>O&amp;pties...</translation>
+        <translation>&amp;Opties...</translation>
     </message>
     <message>
         <source>&amp;Encrypt Wallet...</source>
@@ -295,11 +295,11 @@
     </message>
     <message>
         <source>&amp;Sending addresses...</source>
-        <translation>V&amp;erstuuradressen...</translation>
+        <translation>&amp;Verstuuradressen...</translation>
     </message>
     <message>
         <source>&amp;Receiving addresses...</source>
-        <translation>O&amp;ntvang adressen...</translation>
+        <translation>&amp;Ontvang adressen...</translation>
     </message>
     <message>
         <source>Open &amp;URI...</source>
@@ -755,7 +755,7 @@
     </message>
     <message>
         <source>Can vary +/- 1 byte per input.</source>
-        <translation>Kan +/- byte per invoer variëren.</translation>
+        <translation>Kan +/- 1 byte per invoer variëren.</translation>
     </message>
     <message>
         <source>Transactions with higher priority are more likely to get included into a block.</source>
@@ -1177,7 +1177,7 @@
     </message>
     <message>
         <source>&amp;Cancel</source>
-        <translation>Ann&amp;uleren</translation>
+        <translation>&amp;Annuleren</translation>
     </message>
     <message>
         <source>default</source>
@@ -1401,7 +1401,7 @@
     </message>
     <message>
         <source>%1 d</source>
-        <translation>%1d</translation>
+        <translation>%1 d</translation>
     </message>
     <message>
         <source>%1 h</source>
@@ -1413,7 +1413,7 @@
     </message>
     <message>
         <source>%1 s</source>
-        <translation>%1s</translation>
+        <translation>%1 s</translation>
     </message>
     <message>
         <source>None</source>
@@ -2063,7 +2063,7 @@
     </message>
     <message>
         <source>S&amp;end</source>
-        <translation>&amp;Verstuur</translation>
+        <translation>V&amp;erstuur</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -2182,7 +2182,7 @@
     <name>SendCoinsEntry</name>
     <message>
         <source>A&amp;mount:</source>
-        <translation>Bedra&amp;g:</translation>
+        <translation>B&amp;edrag:</translation>
     </message>
     <message>
         <source>Pay &amp;To:</source>
@@ -2280,7 +2280,7 @@
     </message>
     <message>
         <source>&amp;Sign Message</source>
-        <translation>O&amp;nderteken Bericht</translation>
+        <translation>&amp;Onderteken Bericht</translation>
     </message>
     <message>
         <source>You can sign messages/agreements with your addresses to prove you can receive bitcoins sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
