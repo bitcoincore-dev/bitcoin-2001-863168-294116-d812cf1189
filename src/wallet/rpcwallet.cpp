@@ -2517,8 +2517,13 @@ UniValue fundrawtransaction(const UniValue& params, bool fHelp)
         if (options.exists("includeWatching"))
             includeWatching = options["includeWatching"].get_bool();
 
-        if (options.exists("optIntoRbf") && options["optIntoRbf"].get_bool()) {
-            flags |= CREATE_TX_RBF_OPT_IN;
+        if (options.exists("optIntoRbf")) {
+            const bool val = options["optIntoRbf"].get_bool();
+            if (val) {
+                flags |= CREATE_TX_RBF_OPT_IN;
+            } else {
+                flags |= CREATE_TX_RBF_OPT_OUT;
+            }
         }
       }
     }
