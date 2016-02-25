@@ -44,8 +44,16 @@ class CKeyMetadata
 {
 public:
     static const int CURRENT_VERSION=1;
+    static const int VERSION_SUPPORT_FLAGS=2;
+    static const uint8_t KEY_ORIGIN_UNSET         = 0x0000;
+    static const uint8_t KEY_ORIGIN_UNKNOWN       = 0x0001;
+    static const uint8_t KEY_ORIGIN_IMPORTED      = 0x0002;
+    static const uint8_t KEY_ORIGIN_UNENC_WALLET  = 0x0004;
+    static const uint8_t KEY_ORIGIN_ENC_WALLET    = 0x0008;
+
     int nVersion;
     int64_t nCreateTime; // 0 means unknown
+    uint8_t keyFlags;
 
     CKeyMetadata()
     {
@@ -55,6 +63,7 @@ public:
     {
         nVersion = CKeyMetadata::CURRENT_VERSION;
         nCreateTime = nCreateTime_;
+        keyFlags = KEY_ORIGIN_UNSET;
     }
 
     ADD_SERIALIZE_METHODS;
@@ -64,12 +73,15 @@ public:
         READWRITE(this->nVersion);
         nVersion = this->nVersion;
         READWRITE(nCreateTime);
+        if (nVersion >= VERSION_SUPPORT_FLAGS)
+            READWRITE(keyFlags);
     }
 
     void SetNull()
     {
         nVersion = CKeyMetadata::CURRENT_VERSION;
         nCreateTime = 0;
+        keyFlags = KEY_ORIGIN_UNSET;
     }
 };
 
