@@ -66,6 +66,7 @@ public:
         blockmaxsize,
         blockprioritysize,
         blockminsize,
+        corepolicy,
         OptionIDRowCount,
     };
 
