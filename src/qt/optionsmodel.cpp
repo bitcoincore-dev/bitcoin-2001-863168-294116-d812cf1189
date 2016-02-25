@@ -20,6 +20,7 @@
 #include "net_processing.h"  // for DEFAULT_MAX_ORPHAN_TRANSACTIONS
 #include "netbase.h"
 #include "txdb.h" // for -dbcache defaults
+#include "txmempool.h" // for fPriorityAccurate
 #include "intro.h" 
 
 #ifdef ENABLE_WALLET
@@ -319,6 +320,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return qlonglong(GetArg("-blockprioritysize", DEFAULT_BLOCK_PRIORITY_SIZE) / 1000);
         case blockmaxweight:
             return qlonglong(GetArg("-blockmaxweight", DEFAULT_BLOCK_MAX_WEIGHT) / 1000);
+        case priorityaccurate:
+            return fPriorityAccurate;
         default:
             return QVariant();
         }
@@ -683,6 +686,15 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 }
                 SetArg("-" + strKey, strNv);
                 ModifyRWConfigFile(strKey, strNv);
+            }
+            break;
+        }
+        case priorityaccurate:
+        {
+            const bool fNewValue = value.toBool();
+            if (fNewValue != fPriorityAccurate) {
+                fPriorityAccurate = fNewValue;
+                ModifyRWConfigFile("priorityaccurate", strprintf("%d", fNewValue));
             }
             break;
         }

@@ -66,6 +66,7 @@ public:
         blockmaxsize,
         blockprioritysize,
         blockmaxweight,
+        priorityaccurate,       // bool
         corepolicy,
         OptionIDRowCount,
     };

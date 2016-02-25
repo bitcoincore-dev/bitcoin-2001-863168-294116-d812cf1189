@@ -29,6 +29,9 @@
 
 #include <boost/signals2/signal.hpp>
 
+static const bool DEFAULT_PRIORITY_ACCURATE = true;
+extern bool fPriorityAccurate;
+
 class CAutoFile;
 class CBlockIndex;
 class CScript;
