@@ -1740,9 +1740,9 @@ static void ApproximateBestSubset(vector<pair<CAmount, pair<const CWalletTx*,uns
         }
     }
 
-    //Reduces the approximate best subset by removing any inputs that are smaller than the surplus of nTotal beyond nTargetValue. 
+    //Reduces the approximate best subset by removing any inputs that are smaller than the surplus of nTotal beyond nTargetValue.
     for (unsigned int i = 0; i < vValue.size(); i++)
-    {                        
+    {
         if (vfBest[i] && (nBest - vValue[i].first) >= nTargetValue )
         {
             vfBest[i] = false;
@@ -1915,7 +1915,7 @@ bool CWallet::SelectCoins(const CAmount& nTargetValue, set<pair<const CWalletTx*
     return res;
 }
 
-bool CWallet::FundTransaction(CMutableTransaction& tx, CAmount &nFeeRet, int& nChangePosRet, std::string& strFailReason, bool includeWatching)
+bool CWallet::FundTransaction(CMutableTransaction& tx, CAmount &nFeeRet, int& nChangePos, std::string& strFailReason, bool includeWatching, const CTxDestination& destChange)
 {
     vector<CRecipient> vecSend;
 
@@ -1927,6 +1927,7 @@ bool CWallet::FundTransaction(CMutableTransaction& tx, CAmount &nFeeRet, int& nC
     }
 
     CCoinControl coinControl;
+    coinControl.destChange = destChange;
     coinControl.fAllowOtherInputs = true;
     coinControl.fAllowWatchOnly = includeWatching;
     BOOST_FOREACH(const CTxIn& txin, tx.vin)
@@ -1934,11 +1935,11 @@ bool CWallet::FundTransaction(CMutableTransaction& tx, CAmount &nFeeRet, int& nC
 
     CReserveKey reservekey(this);
     CWalletTx wtx;
-    if (!CreateTransaction(vecSend, wtx, reservekey, nFeeRet, nChangePosRet, strFailReason, &coinControl, false))
+    if (!CreateTransaction(vecSend, wtx, reservekey, nFeeRet, nChangePos, strFailReason, &coinControl, false))
         return false;
 
-    if (nChangePosRet != -1)
-        tx.vout.insert(tx.vout.begin() + nChangePosRet, wtx.vout[nChangePosRet]);
+    if (nChangePos != -1)
+        tx.vout.insert(tx.vout.begin() + nChangePos, wtx.vout[nChangePos]);
 
     // Add new txins (keeping original txin scriptSig/order)
     BOOST_FOREACH(const CTxIn& txin, wtx.vin)
@@ -1960,9 +1961,10 @@ bool CWallet::FundTransaction(CMutableTransaction& tx, CAmount &nFeeRet, int& nC
 }
 
 bool CWallet::CreateTransaction(const vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet,
-                                int& nChangePosRet, std::string& strFailReason, const CCoinControl* coinControl, bool sign)
+                                int& nChangePos, std::string& strFailReason, const CCoinControl* coinControl, bool sign)
 {
     CAmount nValue = 0;
+    int nChangePosRequest = nChangePos;
     unsigned int nSubtractFeeFromAmount = 0;
     BOOST_FOREACH (const CRecipient& recipient, vecSend)
     {
@@ -2025,10 +2027,10 @@ bool CWallet::CreateTransaction(const vector<CRecipient>& vecSend, CWalletTx& wt
             // Start with no fee and loop until there is enough fee
             while (true)
             {
+                nChangePos = nChangePosRequest;
                 txNew.vin.clear();
                 txNew.vout.clear();
                 wtxNew.fFromMe = true;
-                nChangePosRet = -1;
                 bool fFirst = true;
 
                 CAmount nValueToSelect = nValue;
@@ -2148,14 +2150,17 @@ bool CWallet::CreateTransaction(const vector<CRecipient>& vecSend, CWalletTx& wt
                     // add the dust to the fee.
                     if (newTxOut.IsDust(::minRelayTxFee))
                     {
+                      nChangePos = -1;
                         nFeeRet += nChange;
                         reservekey.ReturnKey();
                     }
                     else
                     {
-                        // Insert change txn at random position:
-                        nChangePosRet = GetRandInt(txNew.vout.size()+1);
-                        vector<CTxOut>::iterator position = txNew.vout.begin()+nChangePosRet;
+                        if (nChangePos == -1) {
+                          // Insert change txn at random position:
+                          nChangePos = GetRandInt(txNew.vout.size()+1);
+                        }
+                        vector<CTxOut>::iterator position = txNew.vout.begin()+nChangePos;
                         txNew.vout.insert(position, newTxOut);
                     }
                 }
