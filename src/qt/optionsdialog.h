@@ -97,6 +97,7 @@ private:
     QSpinBox *datacarriersize;
 
     QSpinBox *blockmaxsize, *blockprioritysize, *blockminsize;
+    QCheckBox *priorityaccurate;
 };
 
 #endif // BITCOIN_QT_OPTIONSDIALOG_H

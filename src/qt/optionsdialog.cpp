@@ -222,6 +222,12 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     connect(blockprioritysize, SIGNAL(valueChanged(int)), this, SLOT(blockmaxsize_increase(int)));
     CreateOptionUI(verticalLayout_Mining, blockprioritysize, tr("Mine first %s kB of transactions sorted by coin-age priority."));
 
+    priorityaccurate = new QCheckBox(tabMining);
+    priorityaccurate->setText(tr("Update coin-age priority accurately when parent transactions are confirmed."));
+    priorityaccurate->setToolTip(tr("Bitcoin Core 0.12.0 approximates coin-age priority rather than updating it accurately. This option is provided to allow the user choice over whether to use this approximation or to use accurate updates."));
+    verticalLayout_Mining->addWidget(priorityaccurate);
+    FixTabOrder(priorityaccurate);
+
     blockminsize = new QSpinBox(tabMining);
     blockminsize->setMinimum(0);
     blockminsize->setMaximum(blockmaxsize->maximum());
@@ -408,6 +414,7 @@ void OptionsDialog::setMapper()
 
     mapper->addMapping(blockmaxsize, OptionsModel::blockmaxsize);
     mapper->addMapping(blockprioritysize, OptionsModel::blockprioritysize);
+    mapper->addMapping(priorityaccurate, OptionsModel::priorityaccurate);
     mapper->addMapping(blockminsize, OptionsModel::blockminsize);
 
     /* Window */

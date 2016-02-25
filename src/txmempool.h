@@ -21,6 +21,9 @@
 #include "boost/multi_index/ordered_index.hpp"
 #include "boost/multi_index/hashed_index.hpp"
 
+static const bool DEFAULT_PRIORITY_ACCURATE = true;
+extern bool fPriorityAccurate;
+
 class CAutoFile;
 class CBlockIndex;
 
