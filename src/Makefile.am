@@ -485,7 +485,7 @@ qt/res/rendered_icons/about.png: qt/res/rendered_icons/about.svg
 
 qt/res/rendered_icons/about.svg: qt/res/src/bitcoin.svg Makefile
 	@$(MKDIR_P) $(@D)
-	sed 's/url(#\(Knot\|Pattern\))/white/;s/\(stop-color:\)#....../\1black/' < $< > $@
+	sed 's/#\(006837\|00FF00\)/white/g;s/\(stop-color:\)#....../\1black/;s/#\(8C6239\|42210B\)/black/g' < $< > $@
 
 qt/res/rendered_icons/bitcoin%.png: qt/res/src/bitcoin.svg
 	@$(MKDIR_P) $(@D)
