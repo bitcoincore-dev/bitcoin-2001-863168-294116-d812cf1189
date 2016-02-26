@@ -272,35 +272,35 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
         case mempoolreplacement:
             return CanonicalMempoolReplacement();
         case maxorphantx:
-            return GetArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS);
+            return qlonglong(GetArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS));
         case maxmempool:
-            return GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE);
+            return qlonglong(GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE));
         case mempoolexpiry:
-            return GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY);
+            return qlonglong(GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY));
         case rejectunknownscripts:
             return fRequireStandard;
         case bytespersigop:
             return nBytesPerSigOp;
         case limitancestorcount:
-            return GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT);
+            return qlonglong(GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT));
         case limitancestorsize:
-            return GetArg("-limitancestorsize", DEFAULT_ANCESTOR_SIZE_LIMIT);
+            return qlonglong(GetArg("-limitancestorsize", DEFAULT_ANCESTOR_SIZE_LIMIT));
         case limitdescendantcount:
-            return GetArg("-limitdescendantcount", DEFAULT_DESCENDANT_LIMIT);
+            return qlonglong(GetArg("-limitdescendantcount", DEFAULT_DESCENDANT_LIMIT));
         case limitdescendantsize:
-            return GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT);
+            return qlonglong(GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT));
         case spamfilter:
-            return GetArg("-spamfilter", DEFAULT_SPAMFILTER);
+            return bool(GetArg("-spamfilter", DEFAULT_SPAMFILTER));
         case rejectbaremultisig:
             return !fIsBareMultisigStd;
         case datacarriersize:
-            return fAcceptDatacarrier ? nMaxDatacarrierBytes : 0;
+            return fAcceptDatacarrier ? qlonglong(nMaxDatacarrierBytes) : qlonglong(0);
         case blockmaxsize:
-            return GetArg("-blockmaxsize", DEFAULT_BLOCK_MAX_SIZE) / 1000;
+            return qlonglong(GetArg("-blockmaxsize", DEFAULT_BLOCK_MAX_SIZE) / 1000);
         case blockprioritysize:
-            return GetArg("-blockprioritysize", DEFAULT_BLOCK_PRIORITY_SIZE) / 1000;
+            return qlonglong(GetArg("-blockprioritysize", DEFAULT_BLOCK_PRIORITY_SIZE) / 1000);
         case blockminsize:
-            return GetArg("-blockminsize", DEFAULT_BLOCK_MIN_SIZE) / 1000;
+            return qlonglong(GetArg("-blockminsize", DEFAULT_BLOCK_MIN_SIZE) / 1000);
         case priorityaccurate:
             return fPriorityAccurate;
         default:
