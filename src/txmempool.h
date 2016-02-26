@@ -18,7 +18,15 @@
 #include "boost/multi_index_container.hpp"
 #include "boost/multi_index/ordered_index.hpp"
 
+static const bool DEFAULT_PRIORITY_ACCURATE = true;
+extern bool fPriorityAccurate;
+
 class CAutoFile;
+
+inline int64_t maxmempoolMinimum(const int64_t nLimitDescendantSize) {
+    int64_t nMempoolSizeMin = nLimitDescendantSize * 1000 * 40;
+    return std::max(int64_t(0), int64_t(std::ceil(nMempoolSizeMin / 1000000.0)));
+}
 
 inline double AllowFreeThreshold()
 {
