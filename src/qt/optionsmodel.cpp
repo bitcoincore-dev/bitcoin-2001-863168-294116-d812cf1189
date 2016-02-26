@@ -313,7 +313,7 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
         case rejectbaremultisig:
             return !fIsBareMultisigStd;
         case datacarriersize:
-            return fAcceptDatacarrier ? nMaxDatacarrierBytes : 0;
+            return fAcceptDatacarrier ? qlonglong(nMaxDatacarrierBytes) : qlonglong(0);
         case blockmaxsize:
             return qlonglong(GetArg("-blockmaxsize", DEFAULT_BLOCK_MAX_SIZE) / 1000);
         case blockprioritysize:
