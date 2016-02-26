@@ -498,11 +498,11 @@ EXTRA_DIST += $(RES_RENDERED_ICON_SOURCES) $(RES_ALL_RENDERED_ICONS)
 if CAN_RENDER_ICONS
 
 qt/res/rendered_icons/about.png: qt/res/rendered_icons/about.svg
-	$(RSVG_CONVERT) -f png -d 142 -p 142 < $< | $(IMAGEMAGICK_CONVERT) - -crop 128x128+7+7 -bordercolor white -border 0x0 -colorspace Gray -negate -alpha copy -negate -strip $@
+	$(RSVG_CONVERT) -f png -d 142 -p 142 < $< | $(IMAGEMAGICK_CONVERT) - -crop 128x128+7+7 -background white -alpha remove -colorspace Gray -negate -alpha copy -negate -strip $@
 
 qt/res/rendered_icons/about.svg: qt/res/src/bitcoin.svg Makefile
 	@$(MKDIR_P) $(@D)
-	sed 's/url(#\(Knot\|Pattern\))/white/;s/\(stop-color:\)#....../\1black/' < $< > $@
+	sed 's/#\(006837\|00FF00\)/white/g;s/\(stop-color:\)#....../\1black/;s/#\(8C6239\|42210B\)/black/g' < $< > $@
 
 qt/res/rendered_icons/bitcoin%.png: qt/res/src/bitcoin.svg
 	@$(MKDIR_P) $(@D)
