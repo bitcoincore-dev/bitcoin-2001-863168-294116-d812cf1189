@@ -1,12 +1,12 @@
-Bitcoin Core version 0.12.0 is now available from:
+Bitcoin Knots version 0.12.0.knots20160226 is now available from:
 
-  <https://bitcoin.org/bin/bitcoin-core-0.12.0/>
+  <https://bitcoinknots.org/files/0.12.x/0.12.0.knots20160226/>
 
 This is a new major version release, bringing new features and other improvements.
 
 Please report bugs using the issue tracker at github:
 
-  <https://github.com/bitcoin/bitcoin/issues>
+  <https://github.com/bitcoinknots/bitcoin/issues>
 
 Upgrading and downgrading
 =========================
@@ -51,8 +51,8 @@ fresh sync or reindex, the chainstate is not backwards-compatible with
 pre-0.12 versions of Bitcoin Core or other software.
 
 If you want to downgrade after you have done a reindex with 0.12.0 or later,
-you will need to reindex when you first start Bitcoin Core version 0.11 or
-earlier.
+you will need to reindex when you first start Bitcoin Core or Knots version
+0.11.
 
 Notable changes
 ===============
@@ -131,23 +131,44 @@ Bitcoin Core 0.12 also introduces new default policy limits on the length and
 size of unconfirmed transaction chains that are allowed in the mempool
 (generally limiting the length of unconfirmed chains to 25 transactions, with a
 total size of 101 KB).  These limits can be overriden using command line
-arguments; see the extended help (`--help -help-debug`) for more information.
+arguments or in the Mempool page of the GUI options.
 
-Opt-in Replace-by-fee transactions
-----------------------------------
+Policy options and discontinuation of functional-only builds
+------------------------------------------------------------
+
+With previous versions of Bitcoin Knots (under the name Bitcoin LJR), there
+were alternative functional-only builds that omitted changes to Core's default
+policies. These builds have been discontinued, as all policy options are now
+configurable at startup. If you wish to use policy defaults as set in Bitcoin
+Core 0.12.0 rather than those recommended by the Knots project, use the
+`-corepolicy` command-line option. Alternatively, upon resetting settings in
+the GUI, you will be prompted which set of policy defaults you wish to use.
+
+In addition, most configurable policy settings have also been added
+individually to the GUI Options dialog, notably under the Mempool and Mining
+tabs. Unlike other GUI settings, these values will persist when switching to
+the headless bitcoind, and you can copy the new bitcoin_rw.conf file to share
+them between nodes.
+
+Replace-by-fee transactions
+---------------------------
 
 It is now possible to replace transactions in the transaction memory pool of
-Bitcoin Core 0.12 nodes. Bitcoin Core will only allow replacement of
-transactions which have any of their inputs' `nSequence` number set to less
-than `0xffffffff - 1`.  Moreover, a replacement transaction may only be
-accepted when it pays sufficient fee, as described in [BIP 125]
-(https://github.com/bitcoin/bips/blob/master/bip-0125.mediawiki).
+Bitcoin Knots 0.12 nodes.
+
+By default, Bitcoin Knots will only allow replacement of transactions which
+have any of their inputs' `nSequence` number set to less than `0xffffffff - 1`.
+Moreover, a replacement transaction may only be accepted when it pays
+sufficient fee, as described in [BIP 125](https://github.com/bitcoin/bips/blob/master/bip-0125.mediawiki).
+It is possible to ignore BIP 125 signalling entirely and always replace with
+higher paying transactions by setting the new command line option
+`-mempoolreplacement=fee,-optin`, but this is not recommended.
 
 Transaction replacement can be disabled with a new command line option,
 `-mempoolreplacement=0`.  Transactions signaling replacement under BIP125 will
 still be allowed into the mempool in this configuration, but replacements will
-be rejected.  This option is intended for miners who want to continue the
-transaction selection behavior of previous releases.
+be rejected.  This option is intended for nodes whose operators want to
+continue the transaction selection policy of previous releases.
 
 The `-mempoolreplacement` option is *not recommended* for wallet users seeking
 to avoid receipt of unconfirmed opt-in transactions, because this option does
@@ -159,70 +180,28 @@ updated RPC calls `gettransaction` and `listtransactions`, which now have an
 additional field in the output indicating if a transaction is replaceable under
 BIP125 ("bip125-replaceable").
 
-Note that the wallet in Bitcoin Core 0.12 does not yet have support for
-creating transactions that would be replaceable under BIP 125.
-
-
-RPC: Random-cookie RPC authentication
--------------------------------------
-
-When no `-rpcpassword` is specified, the daemon now uses a special 'cookie'
-file for authentication. This file is generated with random content when the
-daemon starts, and deleted when it exits. Its contents are used as
-authentication token. Read access to this file controls who can access through
-RPC. By default it is stored in the data directory but its location can be
-overridden with the option `-rpccookiefile`.
-
-This is similar to Tor's CookieAuthentication: see
-https://www.torproject.org/docs/tor-manual.html.en
-
-This allows running bitcoind without having to do any manual configuration.
-
-Relay: Any sequence of pushdatas in OP_RETURN outputs now allowed
------------------------------------------------------------------
-
-Previously OP_RETURN outputs with a payload were only relayed and mined if they
-had a single pushdata. This restriction has been lifted to allow any
-combination of data pushes and numeric constant opcodes (OP_1 to OP_16) after
-the OP_RETURN. The limit on OP_RETURN output size is now applied to the entire
-serialized scriptPubKey, 83 bytes by default. (the previous 80 byte default plus
-three bytes overhead)
+The wallet now has minimal ability to signal BIP 125 opt-in RBF using the
+`optIntoRbf` option for the `fundrawtransaction` RPC call, or setting the
+command-line `-walletrbf` option. However, as of this release, the wallet still
+does not have support for actually double spending in any way.
 
 Relay and Mining: Priority transactions
 ---------------------------------------
 
-Bitcoin Core has a heuristic 'priority' based on coin value and age. This
+Bitcoin has a heuristic 'priority' based on coin value and age. This
 calculation is used for relaying of transactions which do not pay the
 minimum relay fee, and can be used as an alternative way of sorting
-transactions for mined blocks. Bitcoin Core will relay transactions with
+transactions for mined blocks. Bitcoin Knots will relay transactions with
 insufficient fees depending on the setting of `-limitfreerelay=<r>` (default:
 `r=15` kB per minute) and `-blockprioritysize=<s>`.
 
-In Bitcoin Core 0.12, when mempool limit has been reached a higher minimum
+In Bitcoin Knots 0.12, when mempool limit has been reached a higher minimum
 relay fee takes effect to limit memory usage. Transactions which do not meet
 this higher effective minimum relay fee will not be relayed or mined even if
 they rank highly according to the priority heuristic.
 
-The mining of transactions based on their priority is also now disabled by
-default. To re-enable it, simply set `-blockprioritysize=<n>` where is the size
-in bytes of your blocks to reserve for these transactions. The old default was
-50k, so to retain approximately the same policy, you would set
-`-blockprioritysize=50000`.
-
-Additionally, as a result of computational simplifications, the priority value
-used for transactions received with unconfirmed inputs is lower than in prior
-versions due to avoiding recomputing the amounts as input transactions confirm.
-
 External miner policy set via the `prioritisetransaction` RPC to rank
 transactions already in the mempool continues to work as it has previously.
-Note, however, that if mining priority transactions is left disabled, the
-priority delta will be ignored and only the fee metric will be effective.
-
-This internal automatic prioritization handling is being considered for removal
-entirely in Bitcoin Core 0.13, and it is at this time undecided whether the
-more accurate priority calculation for chained unconfirmed transactions will be
-restored. Community direction on this topic is particularly requested to help
-set project priorities.
 
 Automatically use Tor hidden services
 -------------------------------------
@@ -232,24 +211,15 @@ API, to create and destroy 'ephemeral' hidden services programmatically.
 Bitcoin Core has been updated to make use of this.
 
 This means that if Tor is running (and proper authorization is available),
-Bitcoin Core automatically creates a hidden service to listen on, without
-manual configuration. Bitcoin Core will also use Tor automatically to connect
+Bitcoin Knots automatically creates a hidden service to listen on, without
+manual configuration. Bitcoin Knots will also use Tor automatically to connect
 to other .onion nodes if the control socket can be successfully opened. This
 will positively affect the number of available .onion nodes and their usage.
 
-This new feature is enabled by default if Bitcoin Core is listening, and
+This new feature is enabled by default if Bitcoin Knots is listening, and
 a connection to Tor can be made. It can be configured with the `-listenonion`,
 `-torcontrol` and `-torpassword` settings. To show verbose debugging
 information, pass `-debug=tor`.
-
-Notifications through ZMQ
--------------------------
-
-Bitcoind can now (optionally) asynchronously notify clients through a
-ZMQ-based PUB socket of the arrival of new transactions and blocks.
-This feature requires installation of the ZMQ C API library 4.x and
-configuring its use through the command line or configuration file.
-Please see [docs/zmq.md](/doc/zmq.md) for details of operation.
 
 Wallet: Transaction fees
 ------------------------
@@ -450,6 +420,13 @@ transaction's acceptance into the mempool and the mining code now relies on the
 consistency of the mempool to assemble blocks. However all blocks are still tested
 for validity after assembly.
 
+Sometimes miners will collide and find the next block at nearly the same
+moment. When this happens, only one block will prevail in the main blockchain,
+while the other becomes what is known as a 'stale block'. The decision as to
+which prevails is made by the miner of the subsequent block. Miners can use the
+new `preciousblock` RPC call in these scenarios to select which of the
+competing blocks they prefer to confirm.
+
 Other P2P Changes
 -----------------
 
@@ -464,7 +441,8 @@ a new RPC call (`clearbanned`) can be used to manually clear the list.  The new
 Detailed release notes follow. This overview includes changes that affect
 behavior, not code moves, refactors and string updates. For convenience in locating
 the code changes and accompanying discussion, both the pull request and
-git merge commit are mentioned.
+git merge commit are mentioned. Changes specific to Bitcoin Knots (beyond Core)
+are flagged with an asterisk ('*') before the description.
 
 ### RPC and REST
 
@@ -517,6 +495,14 @@ git merge commit are mentioned.
 - #7222 `e25b158` RPC: indicate which transactions are replaceable (Suhas Daftuar)
 - #7472 `b2f2b85` rpc: Add WWW-Authenticate header to 401 response (Wladimir J. van der Laan)
 - #7469 `9cb31e6` net.h fix spelling: misbeha{b,v}ing (Matt)
+- #7339 `ed9048c` *Support building without libevent (Luke-Jr)
+- #7349 `026a412` *Build against system UniValue when available (Luke-Jr)
+- #7485 `e282f9f` *Use system univalue by default (Luke-Jr)
+- #7156 `b23f618` *rpc: remove cs_main lock from `createrawtransaction` (Wladimir J. van der Laan)
+- #7149 `cbd2f10` *Bugfix: Correctly calculate priority when inputs are mined after dependent transactions enter the memory pool (Luke-Jr)
+- #6996 `2fcf77a` *Add preciousblock RPC (Pieter Wuille)
+- #7292 `fba58d1` *[RPC] Expose ancestor/descendant information over RPC (Suhas Daftuar)
+- #7533 `aa41073` *RPC: sendrawtransaction: Allow the user to ignore/override specific rejections (Luke-Jr)
 
 ### Configuration and command-line options
 
@@ -577,6 +563,7 @@ git merge commit are mentioned.
 - #7276 `76de36f` Report non-mandatory script failures correctly (Pieter Wuille)
 - #7217 `e08b7cb` Mark blocks with too many sigops as failed (Suhas Daftuar)
 - #7387 `f4b2ce8` Get rid of inaccurate ScriptSigArgsExpected (Pieter Wuille)
+- #7219 `f6154f8` *Make it possible to unconditionally RBF with mempoolreplacement=fee,-optin (Luke-Jr)
 
 ### P2P protocol and network code
 
@@ -614,6 +601,7 @@ git merge commit are mentioned.
 - #7438 `e2d9a58` Do not absolutely protect local peers; decide group ties based on time (Gregory Maxwell)
 - #7439 `86755bc` Add whitelistforcerelay to control forced relaying. [#7099 redux] (Gregory Maxwell)
 - #7482 `e16f5b4` Ensure headers count is correct (Suhas Daftuar)
+- #7458 `582fb5c` *[Net] peers.dat, banlist.dat recreated when missing (kirkalx)
 
 ### Validation
 
@@ -646,6 +634,9 @@ git merge commit are mentioned.
 - #7092 `348b281` build: Set osx permissions in the dmg to make Gatekeeper happy (Cory Fields)
 - #6980 `eccd671` [Depends] Bump Boost, miniupnpc, ccache & zeromq (Michael Ford)
 - #7424 `aa26ee0` Add security/export checks to gitian and fix current failures (Cory Fields)
+- #7522 `485e527` *Bugfix: Only use git for build info if the repository is actually the right one (Luke-Jr)
+- #7520 `f2b94b2` *LibreSSL doesn't define OPENSSL_VERSION, use LIBRESSL_VERSION_TEXT instead (paveljanik)
+- #7586 `6526999` *fixes for building against LibreSSL (Alice Wonder)
 
 ### Wallet
 
@@ -675,6 +666,13 @@ git merge commit are mentioned.
 - #7381 `621bbd8` [walletdb] Fix syntax error in key parser (MarcoFalke)
 - #7491 `00ec73e` wallet: Ignore MarkConflict if block hash is not known (Wladimir J. van der Laan)
 - #7502 `1329963` Update the wallet best block marker before pruning (Pieter Wuille)
+- #7061 `349f78b` *[Wallet] add rescanblockchain <height> RPC command (Jonas Schnelli)
+- #7154 `ca92cf5` *[Qt] add InMempool() info to transaction details (Jonas Schnelli)
+- #7518 `7be1aff` *Add change options to fundrawtransaction (João Barbosa)
+- #7159 `47b4420` *[RPC] Add RBF opt-in possibilities to rawtx functions (Jonas Schnelli)
+- #7132 `05fc4bd` *Add option to opt into full-RBF when sending funds (Peter Todd)
+- #7262 `8b954b9` *Reduce inefficiency of GetAccountAddress() (Chris Moore)
+- #7551 `661d591` *Add importmulti RPC call (Pedro Branco)
 
 ### GUI
 
@@ -706,6 +704,10 @@ git merge commit are mentioned.
 - #7327 `b16b5bc` [Wallet] Transaction View: LastMonth calculation fixed (crowning-)
 - #7364 `7726c48` [qt] Windows: Make rpcconsole monospace font larger (MarcoFalke)
 - #7384 `294f432` [qt] Peertable: Increase SUBVERSION_COLUMN_WIDTH (MarcoFalke)
+- #7437 `582fb5c` *GUI: Disable tab navigation for peers tables. (Kefkius)
+- #7107 `e26d84e` *Qt: Add network port input box to GUI settings (Hampus Sjöberg)
+- #7510 `4aef7e7` *Read/write bitcoin_rw.conf for exposing shared Daemon/GUI options in the GUI (Luke-Jr)
+- n/a   `b19e107` *Add numeous policy settings to GUI Options, and add -corepolicy argument to get Core defaults (Luke-Jr)
 
 ### Tests and QA
 
@@ -752,6 +754,8 @@ git merge commit are mentioned.
 - #7229 `1ed938b` [qa] wallet: Check if maintenance changes the balance (MarcoFalke)
 - #7308 `d513405` [Tests] Eliminate intermittent failures in sendheaders.py (Suhas Daftuar)
 - #7468 `947c4ff` [rpc-tests] Change solve() to use rehash (Brad Andrews)
+- #7320 `582fb5c` *[qa] Test walletpassphrase timeout (MarcoFalke)
+- #7236 `582fb5c` *Use createrawtx locktime parm in txn_clone (Tom Harding)
 
 ### Miscellaneous
 
@@ -785,6 +789,9 @@ git merge commit are mentioned.
 - #7114 `f3d0fdd` util: Don't set strMiscWarning on every exception (Wladimir J. van der Laan)
 - #7078 `93e0514` uint256::GetCheapHash bigendian compatibility (arowser)
 - #7094 `34e02e0` Assert now > 0 in GetTime GetTimeMillis GetTimeMicros (Patrick Strateman)
+- #7550 `c5102e1` *rpc: Input-from-stdin mode for bitcoin-cli (Wladimir J. van der Laan)
+- #7192 `fa4b41a` *Unify product name to as few places as possible (Luke-Jr)
+- #7483 `a2e4a87` *Render icons from SVG (Luke-Jr)
 
 Credits
 =======
@@ -795,6 +802,7 @@ Thanks to everyone who directly contributed to this release:
 - Adam Weiss
 - Alex Morcos
 - Alex van der Peet
+- Alice Wonder
 - AlSzacrel
 - Altoidnerd
 - Andriy Voskoboinyk
@@ -804,9 +812,12 @@ Thanks to everyone who directly contributed to this release:
 - Bob McElrath
 - Braydon Fuller
 - BtcDrak
+- calebogden
 - Casey Rodarmor
 - centaur1
 - Chris Kleeschulte
+- Chris Moore
+- Chris Wheeler
 - Christian Decker
 - Cory Fields
 - daniel
@@ -825,6 +836,7 @@ Thanks to everyone who directly contributed to this release:
 - Gavin Andresen
 - Gregory Maxwell
 - Gregory Sanders / instagibbs
+- Hampus Sjöberg
 - Ian T
 - Irving Ruan
 - Jacob Welsh
@@ -838,9 +850,12 @@ Thanks to everyone who directly contributed to this release:
 - Josh Lehan
 - J Ross Nicoll
 - kazcw
+- Kefkius
 - Kevin Cooper
+- kirkalx
 - lpescher
 - Luke Dashjr
+- Marcel Krüger
 - Marco
 - MarcoFalke
 - Mark Friedenbach
@@ -862,6 +877,7 @@ Thanks to everyone who directly contributed to this release:
 - Pavel Janík / paveljanik
 - Pavel Vasin
 - Pavol Rusnak
+- Pedro Branco
 - Peter Josling
 - Peter Todd
 - Philip Kaufmann
@@ -874,6 +890,7 @@ Thanks to everyone who directly contributed to this release:
 - Shaul Kfir
 - Simon Males
 - Stephen
+- Steven Hay
 - Suhas Daftuar
 - tailsjoin
 - Thomas Kerin
