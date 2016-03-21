@@ -184,6 +184,12 @@ CBitcoinAddress GetAccountAddress(string strAccount, bool bForceNew=false)
     return CBitcoinAddress(account.vchPubKey.GetID());
 }
 
+void DeleteAccount(string strAccount)
+{
+    CWalletDB walletdb(pwalletMain->strWalletFile);
+    walletdb.EraseAccount(strAccount);
+}
+
 UniValue getaccountaddress(const UniValue& params, bool fHelp)
 {
     if (!EnsureWalletIsAvailable(fHelp))
@@ -2497,6 +2503,216 @@ UniValue fundrawtransaction(const UniValue& params, bool fHelp)
     return result;
 }
 
+UniValue getlabeladdress(const UniValue& params, bool fHelp)
+{
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+
+    if (fHelp || params.size() != 1)
+        throw runtime_error(
+            "getlabeladdress \"label\"\n"
+            "\nReturns the current 'label address' for this label.\n"
+            "\nArguments:\n"
+            "1. \"label\"       (string, required) The label for the address. It can also be set to the empty string \"\" to represent the default label.\n"
+            "\nResult:\n"
+            "\"bitcoinaddress\"   (string) The 'label address' for the label\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getlabeladdress", "")
+            + HelpExampleCli("getlabeladdress", "\"\"")
+            + HelpExampleCli("getlabeladdress", "\"mylabel\"")
+            + HelpExampleRpc("getlabeladdress", "\"mylabel\"")
+        );
+
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+
+    // Parse the label first so we don't generate a key if there's an error
+    string strLabel = AccountFromValue(params[0]);
+
+    UniValue ret(UniValue::VSTR);
+
+    ret = GetAccountAddress(strLabel).ToString();
+    return ret;
+}
+
+/** Convert CAddressBookData to JSON record.
+ * The verbosity of the output is configurable based on the command.
+ */
+static UniValue AddressBookDataToJSON(const CAddressBookData& data, bool includeName, bool includeDestData)
+{
+    UniValue ret(UniValue::VOBJ);
+    if (includeName)
+        ret.push_back(Pair("name", data.name));
+    ret.push_back(Pair("purpose", data.purpose));
+    if (includeDestData) {
+        UniValue ddata(UniValue::VOBJ);
+        BOOST_FOREACH(const PAIRTYPE(std::string, std::string) &item, data.destdata)
+            ddata.push_back(Pair(item.first, item.second));
+        ret.push_back(Pair("destdata", ddata));
+    }
+    return ret;
+}
+
+UniValue getlabel(const UniValue& params, bool fHelp)
+{
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+
+    if (fHelp || params.size() != 1)
+        throw runtime_error(
+            "getlabel \"bitcoinaddress\"\n"
+            "\nReturns the label associated with the given address.\n"
+            "\nArguments:\n"
+            "1. \"bitcoinaddress\"  (string, required) The bitcoin address for label lookup.\n"
+            "\nResult:\n"
+            "  { (json object with information about address)\n"
+            "    \"name\": \"labelname\" (string) The label\n"
+            "    \"purpose\": \"string\" (string) Purpose of address (\"send\" for sending address, \"receive\" for receiving address)\n"
+            "  },...\n"
+            "  Result is null if there is no record for this address.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getlabel", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\"")
+            + HelpExampleRpc("getlabel", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\"")
+        );
+
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+
+    CBitcoinAddress address(params[0].get_str());
+    if (!address.IsValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Bitcoin address");
+
+    map<CTxDestination, CAddressBookData>::iterator mi = pwalletMain->mapAddressBook.find(address.Get());
+    if (mi != pwalletMain->mapAddressBook.end())
+        return AddressBookDataToJSON((*mi).second, true, true);
+    return NullUniValue;
+}
+
+UniValue getaddressesbylabel(const UniValue& params, bool fHelp)
+{
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+
+    if (fHelp || params.size() != 1)
+        throw runtime_error(
+            "getaddressesbylabel \"label\"\n"
+            "\nReturns the list of addresses assigned the specified label.\n"
+            "\nArguments:\n"
+            "1. \"label\"  (string, required) The label.\n"
+            "\nResult:\n"
+            "{ (json object with addresses as keys)\n"
+            "  \"bitcoinaddress\": { (json object with information about address)\n"
+            "    \"purpose\": \"string\" (string)  Purpose of address (\"send\" for sending address, \"receive\" for receiving address)\n"
+            "  },...\n"
+            "}\n"
+            "\nExamples:\n"
+            + HelpExampleCli("getaddressesbylabel", "\"tabby\"")
+            + HelpExampleRpc("getaddressesbylabel", "\"tabby\"")
+        );
+
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+
+    string strLabel = AccountFromValue(params[0]);
+
+    // Find all addresses that have the given label
+    UniValue ret(UniValue::VOBJ);
+    BOOST_FOREACH(const PAIRTYPE(CBitcoinAddress, CAddressBookData)& item, pwalletMain->mapAddressBook)
+    {
+        if (item.second.name == strLabel)
+            ret.push_back(Pair(item.first.ToString(), AddressBookDataToJSON(item.second, false, false)));
+    }
+    return ret;
+}
+
+UniValue listlabels(const UniValue& params, bool fHelp)
+{
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+
+    if (fHelp || params.size() > 1)
+        throw runtime_error(
+            "listlabels ( \"purpose\" )\n"
+            "\nReturns the list of all labels, or labels that are assigned to addresses with a specific purpose.\n"
+            "\nArguments:\n"
+            "1. \"purpose\"  (string, optional) Address purpose to list labels for ('send','receive'). An empty string is the same as not providing this argument.\n"
+            "\nResult:\n"
+            "[                      (json array of string)\n"
+            "  \"label\",  (string) Label name\n"
+            "  ...\n"
+            "]\n"
+            "\nExamples:\n"
+            "\nList all labels\n"
+            + HelpExampleCli("listlabels", "") +
+            "\nList labels that have receiving addresses\n"
+            + HelpExampleCli("listlabels", "receive") +
+            "\nList labels that have sending addresses\n"
+            + HelpExampleCli("listlabels", "send") +
+            "\nAs json rpc call\n"
+            + HelpExampleRpc("listlabels", "receive")
+        );
+
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+
+    std::string purpose;
+    if (params.size() > 0)
+        purpose = params[0].get_str();
+
+    std::set<std::string> setLabels;
+    BOOST_FOREACH(const PAIRTYPE(CTxDestination, CAddressBookData)& entry, pwalletMain->mapAddressBook) {
+        if (purpose.empty() || entry.second.purpose == purpose)
+            setLabels.insert(entry.second.name);
+    }
+    UniValue ret(UniValue::VARR);
+    BOOST_FOREACH(const std::string &name, setLabels)
+        ret.push_back(name);
+
+    return ret;
+}
+
+UniValue setlabel(const UniValue& params, bool fHelp)
+{
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+
+    if (fHelp || params.size() < 1 || params.size() > 2)
+        throw runtime_error(
+            "setlabel \"bitcoinaddress\" \"label\"\n"
+            "\nSets the label associated with the given address.\n"
+            "\nArguments:\n"
+            "1. \"bitcoinaddress\"  (string, required) The bitcoin address to be associated with an label.\n"
+            "2. \"label\"           (string, required) The label to assign to the address.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("setlabel", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\" \"tabby\"")
+            + HelpExampleRpc("setlabel", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\", \"tabby\"")
+        );
+
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+
+    CBitcoinAddress address(params[0].get_str());
+    if (!address.IsValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Bitcoin address");
+
+    string strLabel;
+    if (params.size() > 1)
+        strLabel = AccountFromValue(params[1]);
+
+    if (IsMine(*pwalletMain, address.Get()))
+    {
+        // Detect when changing the label of an address that is the 'label address' of another label:
+        // If so, delete the account record for it. Labels, unlike addresses can be deleted,
+        // and we wouldn't do this, the record would stick around forever.
+        if (pwalletMain->mapAddressBook.count(address.Get()))
+        {
+            string strOldLabel = pwalletMain->mapAddressBook[address.Get()].name;
+            if (address == GetAccountAddress(strOldLabel))
+                DeleteAccount(strOldLabel);
+        }
+        pwalletMain->SetAddressBook(address.Get(), strLabel, "receive");
+    }
+    else
+        pwalletMain->SetAddressBook(address.Get(), strLabel, "send");
+
+    return NullUniValue;
+}
+
 extern UniValue dumpprivkey(const UniValue& params, bool fHelp); // in rpcdump.cpp
 extern UniValue importprivkey(const UniValue& params, bool fHelp);
 extern UniValue importaddress(const UniValue& params, bool fHelp);
@@ -2515,13 +2731,9 @@ const CRPCCommand vWalletRPCCommands[] =
     { "wallet",             "dumpprivkey",              &dumpprivkey,              true  },
     { "wallet",             "dumpwallet",               &dumpwallet,               true  },
     { "wallet",             "encryptwallet",            &encryptwallet,            true  },
-    { "wallet",             "getaccountaddress",        &getaccountaddress,        true  },
-    { "wallet",             "getaccount",               &getaccount,               true  },
-    { "wallet",             "getaddressesbyaccount",    &getaddressesbyaccount,    true  },
     { "wallet",             "getbalance",               &getbalance,               false },
     { "wallet",             "getnewaddress",            &getnewaddress,            true  },
     { "wallet",             "getrawchangeaddress",      &getrawchangeaddress,      true  },
-    { "wallet",             "getreceivedbyaccount",     &getreceivedbyaccount,     false },
     { "wallet",             "getreceivedbyaddress",     &getreceivedbyaddress,     false },
     { "wallet",             "gettransaction",           &gettransaction,           false },
     { "wallet",             "getunconfirmedbalance",    &getunconfirmedbalance,    false },
@@ -2531,25 +2743,38 @@ const CRPCCommand vWalletRPCCommands[] =
     { "wallet",             "importaddress",            &importaddress,            true  },
     { "wallet",             "importpubkey",             &importpubkey,             true  },
     { "wallet",             "keypoolrefill",            &keypoolrefill,            true  },
-    { "wallet",             "listaccounts",             &listaccounts,             false },
     { "wallet",             "listaddressgroupings",     &listaddressgroupings,     false },
     { "wallet",             "listlockunspent",          &listlockunspent,          false },
-    { "wallet",             "listreceivedbyaccount",    &listreceivedbyaccount,    false },
     { "wallet",             "listreceivedbyaddress",    &listreceivedbyaddress,    false },
     { "wallet",             "listsinceblock",           &listsinceblock,           false },
     { "wallet",             "listtransactions",         &listtransactions,         false },
     { "wallet",             "listunspent",              &listunspent,              false },
     { "wallet",             "lockunspent",              &lockunspent,              true  },
-    { "wallet",             "move",                     &movecmd,                  false },
     { "wallet",             "sendfrom",                 &sendfrom,                 false },
     { "wallet",             "sendmany",                 &sendmany,                 false },
     { "wallet",             "sendtoaddress",            &sendtoaddress,            false },
-    { "wallet",             "setaccount",               &setaccount,               true  },
     { "wallet",             "settxfee",                 &settxfee,                 true  },
     { "wallet",             "signmessage",              &signmessage,              true  },
     { "wallet",             "walletlock",               &walletlock,               true  },
     { "wallet",             "walletpassphrasechange",   &walletpassphrasechange,   true  },
     { "wallet",             "walletpassphrase",         &walletpassphrase,         true  },
+
+    /** Account functions (deprecated) */
+    { "wallet",             "getaccountaddress",        &getaccountaddress,        true  },
+    { "wallet",             "getaccount",               &getaccount,               true  },
+    { "wallet",             "getaddressesbyaccount",    &getaddressesbyaccount,    true  },
+    { "wallet",             "getreceivedbyaccount",     &getreceivedbyaccount,     false },
+    { "wallet",             "listaccounts",             &listaccounts,             false },
+    { "wallet",             "listreceivedbyaccount",    &listreceivedbyaccount,    false },
+    { "wallet",             "setaccount",               &setaccount,               true  },
+    { "wallet",             "move",                     &movecmd,                  false },
+
+    /** Label functions (to replace non-balance account functions) */
+    { "wallet",             "getlabeladdress",          &getlabeladdress,          true  },
+    { "wallet",             "getlabel",                 &getlabel,                 true  },
+    { "wallet",             "getaddressesbylabel",      &getaddressesbylabel,      true  },
+    { "wallet",             "listlabels",               &listlabels,               false },
+    { "wallet",             "setlabel",                 &setlabel,                 true  },
 };
 
 void walletRegisterRPCCommands()
