@@ -29,9 +29,20 @@ class Label:
 
         for address in self.addresses:
             assert_equal(node.getaccount(address), self.name)
+            assert_equal(
+                node.getlabel(address),
+                {"name": self.name,
+                 "purpose": "receive",
+                 "destdata": {}})
 
         assert_equal(
             set(node.getaddressesbyaccount(self.name)), set(self.addresses))
+        assert_equal(
+            node.getaddressesbylabel(self.name),
+            {address: {
+                "purpose": "receive"
+            }
+             for address in self.addresses})
 
 
 def overwrite_label(node, old_label, address_idx, is_label_address, new_label):
@@ -83,6 +94,7 @@ class WalletLabelsTest(BitcoinTestFramework):
         assert_equal(
             sorted(node.listaccounts().keys()),
             [""] + [label.name for label in labels])
+        assert_equal(node.listlabels(), [label.name for label in labels])
 
         # Send a transaction to each address, and make sure this forces
         # getlabeladdress to generate new unused addresses.
@@ -116,6 +128,11 @@ class WalletLabelsTest(BitcoinTestFramework):
         # Check that setlabel can safely overwrite the label of an address
         # which already has the same label, effectively performing a no-op.
         overwrite_label(node, labels[2], 0, False, labels[2])
+
+        # Check that setlabel can safely overwrite the label of an address
+        # which already has the same label, and which is the default "label
+        # address" of that label, effectively performing a no-op.
+        overwrite_label(node, labels[2], 1, True, labels[2])
 
 
 if __name__ == '__main__':
