@@ -2537,13 +2537,13 @@ UniValue getlabeladdress(const UniValue& params, bool fHelp)
 /** Convert CAddressBookData to JSON record.
  * The verbosity of the output is configurable based on the command.
  */
-static UniValue AddressBookDataToJSON(const CAddressBookData& data, bool includeName, bool includeDestData)
+static UniValue AddressBookDataToJSON(const CAddressBookData& data, bool verbose)
 {
     UniValue ret(UniValue::VOBJ);
-    if (includeName)
+    if (verbose)
         ret.push_back(Pair("name", data.name));
     ret.push_back(Pair("purpose", data.purpose));
-    if (includeDestData) {
+    if (verbose) {
         UniValue ddata(UniValue::VOBJ);
         BOOST_FOREACH(const PAIRTYPE(std::string, std::string) &item, data.destdata)
             ddata.push_back(Pair(item.first, item.second));
@@ -2582,7 +2582,7 @@ UniValue getlabel(const UniValue& params, bool fHelp)
 
     map<CTxDestination, CAddressBookData>::iterator mi = pwalletMain->mapAddressBook.find(address.Get());
     if (mi != pwalletMain->mapAddressBook.end())
-        return AddressBookDataToJSON((*mi).second, true, true);
+        return AddressBookDataToJSON((*mi).second, true);
     return NullUniValue;
 }
 
@@ -2617,7 +2617,7 @@ UniValue getaddressesbylabel(const UniValue& params, bool fHelp)
     BOOST_FOREACH(const PAIRTYPE(CBitcoinAddress, CAddressBookData)& item, pwalletMain->mapAddressBook)
     {
         if (item.second.name == strLabel)
-            ret.push_back(Pair(item.first.ToString(), AddressBookDataToJSON(item.second, false, false)));
+            ret.push_back(Pair(item.first.ToString(), AddressBookDataToJSON(item.second, false)));
     }
     return ret;
 }
