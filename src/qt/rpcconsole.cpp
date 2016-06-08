@@ -266,10 +266,8 @@ RPCConsole::RPCConsole(const PlatformStyle *platformStyle, QWidget *parent) :
 
 #if (OPENSSL_VERSION_NUMBER < 0x10100000L)
     ui->openSSLVersion->setText(SSLeay_version(SSLEAY_VERSION));
-#elif defined OPENSSL_VERSION
+#else
     ui->openSSLVersion->setText(OpenSSL_version(OPENSSL_VERSION));
-#elif defined LIBRESSL_VERSION_TEXT
-    ui->openSSLVersion->setText(LIBRESSL_VERSION_TEXT);
 #endif
 
 #ifdef ENABLE_WALLET
