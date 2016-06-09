@@ -836,11 +836,10 @@ if test x$use_libevent$build_bitcoind$build_bitcoin_cli$bitcoin_enable_qt = xyes
   use_libevent=no
 elif test x$build_bitcoind$build_bitcoin_cli != xnono; then
   # Mandatory to build bitcoind or bitcoin-cli
-  if test x$use_libevent = xauto; then
-    use_libevent=yes
-  else
+  if test x$use_libevent = xno; then
     AC_MSG_ERROR([Cannot build bitcoind or bitcoin-cli without libevent.])
   fi
+  use_libevent=yes
 fi
 
 found_libevent=no
