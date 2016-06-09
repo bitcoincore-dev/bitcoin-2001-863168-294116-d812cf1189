@@ -1920,8 +1920,10 @@ void StartNode(boost::thread_group& threadGroup, CScheduler& scheduler)
         CAddrDB adb;
         if (adb.Read(addrman))
             LogPrintf("Loaded %i addresses from peers.dat  %dms\n", addrman.size(), GetTimeMillis() - nStart);
-        else
+        else {
             LogPrintf("Invalid or missing peers.dat; recreating\n");
+            DumpAddresses();
+        }
     }
 
     uiInterface.InitMessage(_("Loading banlist..."));
@@ -1936,8 +1938,11 @@ void StartNode(boost::thread_group& threadGroup, CScheduler& scheduler)
 
         LogPrint("net", "Loaded %d banned node ips/subnets from banlist.dat  %dms\n",
             banmap.size(), GetTimeMillis() - nStart);
-    } else
+    } else {
         LogPrintf("Invalid or missing banlist.dat; recreating\n");
+        CNode::SetBannedSetDirty(true); // force write
+        DumpBanlist();
+    }
 
     fAddressesInitialized = true;
 
@@ -2158,7 +2163,7 @@ bool CNode::OutboundTargetReached(bool historicalBlockServingLimit)
 
     if (historicalBlockServingLimit)
     {
-        // keep a large enought buffer to at least relay each block once
+        // keep a large enough buffer to at least relay each block once
         uint64_t timeLeftInCycle = GetMaxOutboundTimeLeftInCycle();
         uint64_t buffer = timeLeftInCycle / 600 * MAX_BLOCK_SIZE;
         if (buffer >= nMaxOutboundLimit || nMaxOutboundTotalBytesSentInCycle >= nMaxOutboundLimit - buffer)
