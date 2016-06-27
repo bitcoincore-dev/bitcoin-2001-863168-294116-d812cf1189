@@ -2470,10 +2470,11 @@ UniValue fundrawtransaction(const UniValue& params, bool fHelp)
                             "1. \"hexstring\"           (string, required) The hex string of the raw transaction\n"
                             "2. options               (object, optional)\n"
                             "   {\n"
-                            "     \"changeAddress\"     (string, optional, default pool address) The bitcoin address to receive the change\n"
-                            "     \"changePosition\"    (numeric, optional, default random) The index of the change output\n"
-                            "     \"includeWatching\"   (boolean, optional, default false) Also select inputs which are watch only\n"
-                            "     \"lockUnspents\"      (boolean, optional, default false) Lock selected unspent outputs\n"
+                            "     \"changeAddress\"     (string, optional, default=pool address) The bitcoin address to receive the change\n"
+                            "     \"changePosition\"    (numeric, optional, default=random) The index of the change output\n"
+                            "     \"includeWatching\"   (boolean, optional, default=false) Also select inputs which are watch only\n"
+                            "     \"lockUnspents\"      (boolean, optional, default=false) Lock selected unspent outputs\n"
+                            "     \"optIntoRbf\"        (boolean, optional, default=false) Allow this transaction to be replaced by a transaction with heigher fees\n"
                             "   }\n"
                             "                         for backward compatibility: passing in a true instzead of an object will result in {\"includeWatching\":true}\n"
                             "\nResult:\n"
@@ -2500,6 +2501,7 @@ UniValue fundrawtransaction(const UniValue& params, bool fHelp)
     int changePosition = -1;
     bool includeWatching = false;
     bool lockUnspents = false;
+    unsigned int flags = CREATE_TX_DONT_SIGN;
 
     if (params.size() > 1) {
       if (params[1].type() == UniValue::VBOOL) {
@@ -2530,6 +2532,10 @@ UniValue fundrawtransaction(const UniValue& params, bool fHelp)
 
         if (options.exists("lockUnspents"))
             lockUnspents = options["lockUnspents"].get_bool();
+
+        if (options.exists("optIntoRbf") && options["optIntoRbf"].get_bool()) {
+            flags |= CREATE_TX_RBF_OPT_IN;
+        }
       }
     }
 
@@ -2548,7 +2554,7 @@ UniValue fundrawtransaction(const UniValue& params, bool fHelp)
     CAmount nFee;
     string strFailReason;
 
-    if(!pwalletMain->FundTransaction(tx, nFee, changePosition, strFailReason, includeWatching, lockUnspents, changeAddress))
+    if(!pwalletMain->FundTransaction(tx, nFee, changePosition, strFailReason, includeWatching, lockUnspents, changeAddress, flags))
         throw JSONRPCError(RPC_INTERNAL_ERROR, strFailReason);
 
     UniValue result(UniValue::VOBJ);
