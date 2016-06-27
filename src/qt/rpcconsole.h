@@ -129,6 +129,8 @@ private:
     ClientModel *clientModel;
     QStringList history;
     int historyPtr;
+    const static QStringList historyFilter;
+    QString cmdBeforeBrowsing;
     NodeId cachedNodeid;
     const PlatformStyle *platformStyle;
     RPCTimerInterface *rpcTimerInterface;
