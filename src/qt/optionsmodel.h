@@ -29,6 +29,7 @@ public:
     enum OptionID {
         StartAtStartup,         // bool
         MinimizeToTray,         // bool
+        NetworkPort,            // int
         MapPortUPnP,            // bool
         MinimizeOnClose,        // bool
         ProxyUse,               // bool
