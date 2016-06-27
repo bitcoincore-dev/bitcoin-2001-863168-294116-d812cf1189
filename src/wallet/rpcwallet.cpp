@@ -2456,6 +2456,7 @@ UniValue fundrawtransaction(const UniValue& params, bool fHelp)
                             "     \"changePosition\"    (numeric, optional, default random) The index of the change output\n"
                             "     \"includeWatching\"   (boolean, optional, default false) Also select inputs which are watch only\n"
                             "   }\n"
+                            "                         for backward compatibility: passing in a true instzead of an object will result in {\"includeWatching\":true}\n"
                             "\nResult:\n"
                             "{\n"
                             "  \"hex\":       \"value\", (string)  The resulting raw transaction (hex-encoded string)\n"
@@ -2482,6 +2483,7 @@ UniValue fundrawtransaction(const UniValue& params, bool fHelp)
 
     if (params.size() > 1) {
       if (params[1].type() == UniValue::VBOOL) {
+        // backward compatibility bool only fallback
         includeWatching = params[1].get_bool();
       }
       else {
@@ -2489,8 +2491,16 @@ UniValue fundrawtransaction(const UniValue& params, bool fHelp)
 
         UniValue options = params[1];
 
-        if (options.exists("changeAddress"))
-            changeAddress = CBitcoinAddress(options["changeAddress"].get_str()).Get();
+        RPCTypeCheckObj(options, boost::assign::map_list_of("changeAddress", UniValue::VSTR)("changePosition", UniValue::VNUM)("includeWatching", UniValue::VBOOL), true, true);
+
+        if (options.exists("changeAddress")) {
+            CBitcoinAddress address(options["changeAddress"].get_str());
+
+            if (!address.IsValid())
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "changeAddress must be a valid bitcoin address");
+
+            changeAddress = address.Get();
+        }
 
         if (options.exists("changePosition"))
             changePosition = options["changePosition"].get_int();
@@ -2507,6 +2517,9 @@ UniValue fundrawtransaction(const UniValue& params, bool fHelp)
 
     if (origTx.vout.size() == 0)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "TX must have at least one output");
+
+    if (changePosition != -1 && (changePosition < 0 || changePosition > origTx.vout.size()))
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "changePosition out of bounds");
 
     CMutableTransaction tx(origTx);
     CAmount nFee;
