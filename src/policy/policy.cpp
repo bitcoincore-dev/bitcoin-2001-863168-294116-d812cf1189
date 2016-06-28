@@ -75,7 +75,7 @@ static inline bool IsStandardTx_Rejection_(std::string& reasonOut, const std::st
 
 bool IsStandardTx(const CTransaction& tx, std::string& reason, const std::set<std::string>& setIgnoreRejects)
 {
-    if (tx.nVersion > CTransaction::CURRENT_VERSION || tx.nVersion < 1) {
+    if (tx.nVersion > CTransaction::MAX_STANDARD_VERSION || tx.nVersion < 1) {
         IsStandardTx_Rejection("version");
     }
 
