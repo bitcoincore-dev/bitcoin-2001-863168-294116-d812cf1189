@@ -998,6 +998,10 @@ void LimitMempoolSize(CTxMemPool& pool, size_t limit, unsigned long age) {
         pcoinsTip->Uncache(removed);
 }
 
+void LimitMempoolSize() {
+    LimitMempoolSize(mempool, GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000, GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY) * 60 * 60);
+}
+
 struct NotoriousFilterEntry {
     uint32_t begin;
     uint32_t end;
@@ -1247,7 +1251,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
 
         CAmount inChainInputValue;
         // Since entries arrive *after* the tip's height, their priority is for the height+1
-        double dPriority = view.GetPriority(tx, chainActive.Height() + 1, inChainInputValue);
+        double dPriority = view.GetPriority(tx, chainActive.Height() + (fPriorityAccurate ? 1 : 0), inChainInputValue);
 
         // Keep track of transactions that spend a coinbase, which we re-scan
         // during reorgs to ensure COINBASE_MATURITY is still met.

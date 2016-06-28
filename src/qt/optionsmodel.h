@@ -49,6 +49,24 @@ public:
         Listen,                 // bool
         maxuploadtarget,
         peerbloomfilters,       // bool
+        mempoolreplacement,
+        maxorphantx,
+        maxmempool,
+        mempoolexpiry,
+        rejectunknownscripts,   // bool
+        bytespersigop,
+        limitancestorcount,
+        limitancestorsize,
+        limitdescendantcount,
+        limitdescendantsize,
+        spamfilter,             // bool
+        rejectbaremultisig,     // bool
+        datacarriersize,
+        blockmaxsize,
+        blockprioritysize,
+        blockminsize,
+        priorityaccurate,       // bool
+        corepolicy,
         OptionIDRowCount,
     };
 
