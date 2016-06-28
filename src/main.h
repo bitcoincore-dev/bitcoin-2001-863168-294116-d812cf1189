@@ -116,6 +116,7 @@ static const unsigned int DEFAULT_BANSCORE_THRESHOLD = 100;
 static const bool DEFAULT_TESTSAFEMODE = false;
 /** Default for -mempoolreplacement */
 static const bool DEFAULT_ENABLE_REPLACEMENT = true;
+static const bool DEFAULT_REPLACEMENT_HONOUR_OPTOUT = true;
 
 /** Maximum number of headers to announce when relaying blocks with headers message.*/
 static const unsigned int MAX_BLOCKS_TO_ANNOUNCE = 8;
@@ -151,6 +152,7 @@ extern size_t nCoinCacheUsage;
 extern CFeeRate minRelayTxFee;
 extern bool fAlerts;
 extern bool fEnableReplacement;
+extern bool fReplacementHonourOptOut;
 
 /** Best header we've seen so far (used for getheaders queries' starting points). */
 extern CBlockIndex *pindexBestHeader;
