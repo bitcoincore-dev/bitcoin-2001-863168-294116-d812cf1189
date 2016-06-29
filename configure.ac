@@ -192,8 +192,8 @@ AC_ARG_WITH([utils],
   [AS_HELP_STRING([--with-utils],
   [build bitcoin-cli bitcoin-tx (default=yes)])],
   [
-    build_bitcoin_tx=yes
-    build_bitcoin_cli=yes
+    build_bitcoin_tx=$withval
+    build_bitcoin_cli=$withval
   ],
   [
     build_bitcoin_tx=yes
