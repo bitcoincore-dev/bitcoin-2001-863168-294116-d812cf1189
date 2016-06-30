@@ -901,6 +901,10 @@ fi
 
 dnl univalue check
 
+if test x$build_bitcoin_cli$build_bitcoin_tx$build_bitcoind$bitcoin_enable_qt$use_tests$use_bench = xnononononono; then
+  system_univalue=yes
+else
+
 if test x$system_univalue != xno ; then
   found_univalue=no
   if test x$use_pkgconfig = xyes; then
@@ -933,6 +937,9 @@ if test x$system_univalue = xno ; then
   UNIVALUE_CFLAGS='-I$(srcdir)/univalue/include'
   UNIVALUE_LIBS='univalue/libunivalue.la'
 fi
+
+fi
+
 AM_CONDITIONAL([EMBEDDED_UNIVALUE],[test x$system_univalue = xno])
 AC_SUBST(UNIVALUE_CFLAGS)
 AC_SUBST(UNIVALUE_LIBS)
