@@ -1,4 +1,4 @@
-<TS language="sk" version="2.0">
+<TS language="sk" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>Ste si istí, že si želáte zašifrovať peňaženku?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Jadro Bitcoin sa teraz ukončí pre dokončenie procesu šifrovania. Pamätaj, že šifrovanie peňaženky Ťa nemôže úplne ochrániť pred krádežou bitcoinov pomocou škodlivého software.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>DÔLEŽITÉ: Všetky doterajšie záložné kópie peňaženky ktoré ste zhotovili by mali byť nahradené novým zašifrovaným súborom s peňaženkou. Z bezpečnostných dôvodov sa predchádzajúce kópie nezašifrovanej peňaženky stanú neužitočné keď začnete používať novú zašifrovanú peňaženku.</translation>
     </message>
@@ -190,6 +186,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Zadajte staré a nové heslo k peňaženke.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 sa teraz ukončí pre dokončenie procesu šifrovania. Pamätaj, že šifrovanie peňaženky Ťa nemôže úplne ochrániť pred krádežou bitcoinov pomocou škodlivého software.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -270,6 +270,14 @@
         <translation>Ukončiť program</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;O %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Zobraziť informácie o %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>O &amp;Qt</translation>
     </message>
@@ -304,10 +312,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Otvoriť &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Core klient</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,10 +362,6 @@
         <translation>&amp;Prijať</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Zobraziť informácie o Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>Zobraziť / skryť</translation>
     </message>
@@ -398,20 +398,8 @@
         <translation>Lišta záložiek</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Jadro Bitcoin</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Vyžiadať platby (vygeneruje QR kódy a bitcoin: URI)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>O jadre Bitcoin</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Upraviť možnosti nastavenia pre Jadro Bitcoin</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -428,10 +416,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>Možnosti príkazového riadku</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Zobraziť pomocnú správu od Bitcoin Jadra pre získanie zoznamu dostupných možností príkazového riadku</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -492,6 +476,10 @@
     <message>
         <source>Up to date</source>
         <translation>Aktualizovaný</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Zobraziť pomocnú správu od %1 pre získanie zoznamu dostupných možností príkazového riadku</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -734,10 +722,6 @@
         <translation>Tento popis sčervenie ak je priorita nižšia ako "stredná".</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Tento popis sčervenie ak ktorýkoľvek príjemca dostane sumu menšiu ako %1.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Môže sa líšiť o +/- %1 satoshi pre každý vstup</translation>
     </message>
@@ -855,10 +839,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Jadro Bitcoin</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>verzia</translation>
     </message>
@@ -867,8 +847,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>O jadre Bitcoin</translation>
+        <source>About %1</source>
+        <translation>O %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,16 +898,12 @@
         <translation>Vitajte</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Vitajte v jadre Bitcoin.</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Keďže spúštate program prvý krát, môžte si vybrať kde bude %1 ukladať svoje dáta.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Keďže spúštate program prvý krát, môžte si vybrať kde bude Bitcoin Jadro ukladať svoje dáta.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Jadro Bitcoin stiahne zo siete a uloží kópiu Bitcoin blockchain. Aspoň %1GB dát bude uložených v tomto priečinku a časom porastie. Peňaženka bude tiež uložená v tomto priečinku.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 stiahne zo siete a uloží kópiu Bitcoin blockchain. Aspoň %2GB dát bude uložených v tomto priečinku a časom porastie. Peňaženka bude tiež uložená v tomto priečinku.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -936,10 +912,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Použiť vlastný dátový adresár:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Jadro Bitcoin</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1020,10 +992,6 @@
         <translation>Minimalizovať namiesto ukončenia aplikácie keď sa okno zavrie. Keď je zvolená táto možnosť, aplikácia sa zavrie len po zvolení Ukončiť v menu.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>Tu sa dá nastaviť jazyk užívateľského rozhrania. Toto nastavenie bude účinné po reštartovaní Jadra Bitcoin.</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>URL tretích strán (napr. prehliadač blockchain) ktoré sa zobrazujú v záložke transakcií ako položky kontextového menu. %s v URL je nahradené hash-om transakcie. Viaceré URL sú oddelené zvislou čiarou |.</translation>
     </message>
@@ -1046,14 +1014,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Sieť</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Automaticky spustiť Jadro Bitcoin po prihlásení do systému</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>&amp;Spustiť Bitcoin pri spustení systému správy okien</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1160,6 +1120,10 @@
         <translation>Jazyk užívateľského rozhrania:</translation>
     </message>
     <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>Tu sa dá nastaviť jazyk užívateľského rozhrania. Toto nastavenie bude účinné po reštartovaní %1.</translation>
+    </message>
+    <message>
         <source>&amp;Unit to show amounts in:</source>
         <translation>&amp;Zobrazovať hodnoty v jednotkách:</translation>
     </message>
@@ -1186,6 +1150,10 @@
     <message>
         <source>none</source>
         <translation>žiadne</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Jadro Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1474,10 +1442,6 @@
         <translation>Všeobecné</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Používa OpenSSL verziu</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Používa BerkeleyDB verziu</translation>
     </message>
@@ -1516,10 +1480,6 @@
     <message>
         <source>Memory usage</source>
         <translation>Využitie pamäte</translation>
-    </message>
-    <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Otvoriť Bitcoin log súbor pre ladenie z aktuálneho dátového adresára. Toto môže trvať niekoľko sekúnd pre veľké súbory.</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1673,10 +1633,6 @@
     <message>
         <source>&amp;Unban Node</source>
         <translation>&amp;odblokovať uzol</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Vitajte v RPC konzole pre Jadro Bitcoin.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2257,10 +2213,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Jadro Bitcoin sa ukončuje...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>Nevypínajte počítač kým toto okno nezmizne.</translation>
     </message>
@@ -2399,14 +2351,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Jadro Bitcoin</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Vývojári jadra Bitcoin</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testovacia sieť]</translation>
     </message>
@@ -2423,10 +2367,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Otvorené do %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>sporné</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -3071,6 +3011,10 @@ The network does not appear to fully agree! Some miners appear to be experiencin
         <translation>Neplatná -onion adresa:  '%s'</translation>
     </message>
     <message>
+        <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
+        <translation>Neplatná suma pre -fallbackfee=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Nedostatok kľúčových slov súboru.</translation>
     </message>
@@ -3129,10 +3073,6 @@ The network does not appear to fully agree! Some miners appear to be experiencin
     <message>
         <source>Wallet options:</source>
         <translation>Voľby peňaženky:</translation>
-    </message>
-    <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Varovanie: Táto verzia je zastaralá; vyžaduje sa aktualizácia!</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>

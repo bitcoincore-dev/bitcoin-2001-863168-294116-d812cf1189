@@ -1,4 +1,4 @@
-<TS language="be_BY" version="2.0">
+<TS language="be_BY" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>Ці ўпэўненыя вы, што жадаеце зашыфраваць свой гаманец?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin Core зараз будзе зачынены, каб фіналізаваць працэс шыфравання. Памятайце, што шыфраванне вашага гаманца не гарантуе абсалютную абарону ад магчымасці крадзяжу біткойнаў шкоднымі праграмамі, якія могуць інфікаваць ваш камп'ютар.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>ВАЖНА: Усе папярэднія копіі гаманца варта замяніць новым зашыфраваным файлам. У мэтах бяспекі папярэднія копіі незашыфраванага файла-гаманца стануць неўжывальнымі, калі вы станеце карыстацца новым зашыфраваным гаманцом.</translation>
     </message>
@@ -190,6 +186,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Увядзіце стары пароль і новы пароль для гаманца.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 зараз будзе зачынены, каб фіналізаваць працэс шыфравання. Памятайце, што шыфраванне вашага гаманца не гарантуе абсалютную абарону ад магчымасці крадзяжу біткойнаў шкоднымі праграмамі, якія могуць інфікаваць ваш камп'ютар.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -262,6 +262,10 @@
         <translation>Выйсці з праграмы</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Паказаць інфармацыю аб %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Аб Qt</translation>
     </message>
@@ -296,10 +300,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Адчыниць &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Core кліент</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -350,10 +350,6 @@
         <translation>Атрымаць</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Паказаць інфармацыю аб Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Паказаць / Схаваць</translation>
     </message>
@@ -386,20 +382,8 @@
         <translation>Дапамога</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Запатрабаваць плацёж (генеруецца QR-код для біткойн URI)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>Аб Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Мадыфікаваць опцыі канфігурацыі Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -416,10 +400,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>Опцыі каманднага радка</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Паказваць даведку Bitcoin Core каб атрымаць спіс магчымых опцый каманднага радка</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -480,6 +460,10 @@
     <message>
         <source>Up to date</source>
         <translation>Сінхранізавана</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Паказваць даведку %1 каб атрымаць спіс магчымых опцый каманднага радка</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -775,16 +759,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>(%1-bit)</source>
         <translation>(%1-біт)</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Аб Bitcoin Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -804,14 +780,6 @@
     <message>
         <source>Welcome</source>
         <translation>Вітаем</translation>
-    </message>
-    <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Вітаем у Bitcoin Core.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -846,6 +814,10 @@
     <message>
         <source>W&amp;allet</source>
         <translation>Гаманец</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     </context>
 <context>
@@ -891,6 +863,10 @@
     <message>
         <source>&amp;Label:</source>
         <translation>Метка:</translation>
+    </message>
+    <message>
+        <source>&amp;Message:</source>
+        <translation>&amp;Паведамленне:</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -1101,14 +1077,6 @@
     </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Распрацоўнікі Bitcoin Core</translation>
-    </message>
     <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>

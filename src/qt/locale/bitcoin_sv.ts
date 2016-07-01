@@ -1,4 +1,4 @@
-<TS language="sv" version="2.0">
+<TS language="sv" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -169,10 +169,6 @@ Var vänlig och försök igen.</translation>
         <translation>Är du säker på att du vill kryptera din plånbok?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin Core kommer att stängas för att slutföra krypteringsprocessen. Kom ihåg att plånbokskryptering inte garanterar fullt skydd mot skadlig kod på din dator.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>VIKTIGT: Alla tidigare säkerhetskopior du har gjort av plånbokens fil ska ersättas med den nya genererade, krypterade plånboks filen. Av säkerhetsskäl kommer tidigare säkerhetskopior av den okrypterade plånboks filen blir oanvändbara när du börjar använda en ny, krypterad plånbok.</translation>
     </message>
@@ -191,6 +187,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Ge det gamla lösenordet och det nya lösenordet för plånboken.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 kommer att stängas för att slutföra krypteringsprocessen. Kom ihåg att plånbokskryptering inte garanterar fullt skydd mot skadlig kod på din dator.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -271,6 +271,14 @@ Var vänlig och försök igen.</translation>
         <translation>Avsluta programmet</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;Om %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Visa information om %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Om &amp;Qt</translation>
     </message>
@@ -281,6 +289,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>&amp;Options...</source>
         <translation>&amp;Alternativ...</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for %1</source>
+        <translation>Ändra konfigurationsalternativ för %1</translation>
     </message>
     <message>
         <source>&amp;Encrypt Wallet...</source>
@@ -305,10 +317,6 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Open &amp;URI...</source>
         <translation>Öppna &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Core-klient</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -359,10 +367,6 @@ Var vänlig och försök igen.</translation>
         <translation>&amp;Ta emot</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Visa information om Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Visa / Göm</translation>
     </message>
@@ -399,20 +403,8 @@ Var vänlig och försök igen.</translation>
         <translation>Verktygsfält för tabbar</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Begär betalning (genererar QR-koder och bitcoin-URI)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Om Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Ändra konfigurationsalternativ för Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -429,10 +421,6 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;Kommandoradsalternativ</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Visa Bitcoin Cores hjälpmeddelande för att få en lista med möjliga Bitcoin-kommandoradsalternativ.</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -493,6 +481,14 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Up to date</source>
         <translation>Uppdaterad</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Visa %1 hjälpmeddelande för att få en lista med möjliga Bitcoin kommandoradsalternativ.</translation>
+    </message>
+    <message>
+        <source>%1 client</source>
+        <translation>%1-klient</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -735,10 +731,6 @@ Var vänlig och försök igen.</translation>
         <translation>Denna etikett blir röd om prioriteten är lägre än "medium".</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Denna etikett blir röd om någon mottagare får ett belopp mindre än %1.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Kan variera +/- %1 satoshi per inmatning.</translation>
     </message>
@@ -856,10 +848,6 @@ Var vänlig och försök igen.</translation>
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>version</translation>
     </message>
@@ -868,8 +856,8 @@ Var vänlig och försök igen.</translation>
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>Om Bitcoin Core</translation>
+        <source>About %1</source>
+        <translation>Om %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -919,16 +907,16 @@ Var vänlig och försök igen.</translation>
         <translation>Välkommen</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Välkommen till Bitcoin Core.</translation>
+        <source>Welcome to %1.</source>
+        <translation>Välkommen till %1.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Eftersom detta är första gången programmet startas får du välja var Bitcoin Core skall lagra sina data.</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Eftersom detta är första gången programmet startas får du välja var %1 skall lagra sitt data.</translation>
     </message>
     <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin Core kommer att ladda ner och spara en kopia av Bitcoin-blockkedjan. Åtminstone %1GB av data kommer att sparas i denna katalog, och den kommer att växa över tiden. Plånboken kommer också att sparas i denna katalog.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 kommer att ladda ner och spara en kopia av Bitcoin blockkedjan. Åtminstone %2GB av data kommer att sparas i denna katalog, och den kommer att växa över tiden. Plånboken kommer också att sparas i denna katalog.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -937,10 +925,6 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Använd en anpassad datakatalog:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -993,6 +977,14 @@ Var vänlig och försök igen.</translation>
         <translation>&amp;Allmänt</translation>
     </message>
     <message>
+        <source>Automatically start %1 after logging in to the system.</source>
+        <translation>Starta %1 automatiskt efter inloggningen.</translation>
+    </message>
+    <message>
+        <source>&amp;Start %1 on system login</source>
+        <translation>&amp;Starta %1 vid systemlogin</translation>
+    </message>
+    <message>
         <source>Size of &amp;database cache</source>
         <translation>Storleken på &amp;databascache</translation>
     </message>
@@ -1021,10 +1013,6 @@ Var vänlig och försök igen.</translation>
         <translation>Minimera istället för att stänga programmet när fönstret stängs. När detta alternativ är aktiverat stängs programmet endast genom att välja Stäng i menyn.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>Gränssnittets språk kan väljas här. Denna inställning träder i kraft efter omstart av Bitcoin Core.</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>Tredjeparts URL:er (t.ex. en blockutforskare) som finns i transaktionstabben som ett menyval i sammanhanget. %s i URL:en ersätts med tansaktionshashen. Flera URL:er är separerade med vertikala streck |.</translation>
     </message>
@@ -1047,14 +1035,6 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Nätverk</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Kör Bitcoin Core automatiskt vid systeminloggning.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>&amp;Kör Bitcoin Core vid systeminloggning</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1161,6 +1141,10 @@ Var vänlig och försök igen.</translation>
         <translation>Användargränssnittets &amp;språk: </translation>
     </message>
     <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>Användargränssnittets språk kan ställas in här. Denna inställning träder i kraft efter en omstart av %1.</translation>
+    </message>
+    <message>
         <source>&amp;Unit to show amounts in:</source>
         <translation>&amp;Måttenhet att visa belopp i: </translation>
     </message>
@@ -1187,6 +1171,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>none</source>
         <translation>ingen</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1475,10 +1463,6 @@ Var vänlig och försök igen.</translation>
         <translation>Generell</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Använder OpenSSL version</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Använder BerkeleyDB versionen</translation>
     </message>
@@ -1517,10 +1501,6 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Memory usage</source>
         <translation>Minnesåtgång</translation>
-    </message>
-    <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Öppna felsökningsloggfilen för Bitcoin Core från den nuvarande datakatalogen. Detta kan ta några sekunder om loggfilen är stor.</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1569,6 +1549,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>User Agent</source>
         <translation>Användaragent</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Öppna %1 debug-loggfilen från aktuell datakatalog. Detta kan ta några sekunder för stora loggfiler.</translation>
     </message>
     <message>
         <source>Services</source>
@@ -1679,8 +1663,8 @@ Var vänlig och försök igen.</translation>
         <translation>&amp;Ta bort ban från nod</translation>
     </message>
     <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Välkommen till RPC-konsolen för Bitcoin Core.</translation>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>Välkommen till %1 RPC-konsolen.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2265,8 +2249,8 @@ Var vänlig och försök igen.</translation>
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin Core stängs av...</translation>
+        <source>%1 is shutting down...</source>
+        <translation>%1 stängs av...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -2415,14 +2399,6 @@ Var vänlig och försök igen.</translation>
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Kärna</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Bitcoin Core-utvecklarna</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -2439,10 +2415,6 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Open until %1</source>
         <translation>Öppet till %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>konflikterade</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -2981,6 +2953,18 @@ Var vänlig och försök igen.</translation>
         <translation>Acceptera anslutningar utifrån (förvalt: 1 om ingen -proxy eller -connect)</translation>
     </message>
     <message>
+        <source>-fallbackfee is set very high! This is the transaction fee you may pay when fee estimates are not available.</source>
+        <translation>-fallbackfee är satt väldigt högt! Detta är avgiften du kan komma att betala om uppskattad avgift inte finns tillgänglig.</translation>
+    </message>
+    <message>
+        <source>A fee rate (in %s/kB) that will be used when fee estimation has insufficient data (default: %s)</source>
+        <translation>En avgiftskurs (i %s/kB) som används när det inte finns tillräcklig data för att uppskatta avgiften (förvalt: %s)</translation>
+    </message>
+    <message>
+        <source>Accept relayed transactions received from whitelisted peers even when not relaying transactions (default: %d)</source>
+        <translation>Acceptera vidarebefodrade transaktioner från vitlistade noder även när transaktioner inte vidarebefodras (förvalt: %d)</translation>
+    </message>
+    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>Bind till given adress och lyssna alltid på den. Använd [värd]:port notation för IPv6</translation>
     </message>
@@ -2995,6 +2979,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
         <translation>Exekvera kommando när en plånbokstransaktion ändras (%s i cmd är ersatt av TxID)</translation>
+    </message>
+    <message>
+        <source>Force relay of transactions from whitelisted peers even they violate local relay policy (default: %d)</source>
+        <translation>Vidarebefodra alltid transaktioner från vitlistade noder även om de bryter mot lokala reläpolicyn (förvalt: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3013,6 +3001,10 @@ Var vänlig och försök igen.</translation>
         <translation>Det går inte att binda till %s på den här datorn. Bitcoin Core är förmodligen redan igång.</translation>
     </message>
     <message>
+        <source>Unsupported argument -whitelistalwaysrelay ignored, use -whitelistrelay and/or -whitelistforcerelay.</source>
+        <translation>Argumentet -whitelistalwaysrelay stöds inte utan ignoreras, använd -whitelistrelay och/eller -whitelistforcerelay.</translation>
+    </message>
+    <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
         <translation>Använd UPnP för att mappa den lyssnande porten (förvalt: 1 när lyssning aktiverat och utan -proxy)</translation>
     </message>
@@ -3027,6 +3019,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
         <translation>Varning: Nätverket verkar inte vara helt överens! Några miners verkar ha problem.</translation>
+    </message>
+    <message>
+        <source>Warning: Unknown block versions being mined! It's possible unknown rules are in effect</source>
+        <translation>Varning: Okända blockversioner bryts! Det är möjligt att okända regler används</translation>
     </message>
     <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
@@ -3047,6 +3043,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>&lt;category&gt; can be:</source>
         <translation>&lt;category&gt; Kan vara:</translation>
+    </message>
+    <message>
+        <source>Append comment to the user agent string</source>
+        <translation>Lägg till kommentar till user-agent-strängen</translation>
     </message>
     <message>
         <source>Block creation options:</source>
@@ -3093,6 +3093,10 @@ Var vänlig och försök igen.</translation>
         <translation>Aktivera publicering av råa transaktioner i &lt;adress&gt;</translation>
     </message>
     <message>
+        <source>Enable transaction replacement in the memory pool (default: %u)</source>
+        <translation>Aktivera byte av transaktioner i minnespoolen (förvalt: %u)</translation>
+    </message>
+    <message>
         <source>Error initializing block database</source>
         <translation>Fel vid initiering av blockdatabasen</translation>
     </message>
@@ -3129,8 +3133,20 @@ Var vänlig och försök igen.</translation>
         <translation>Ogiltig -onion adress:'%s'</translation>
     </message>
     <message>
+        <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
+        <translation>Ogiltigt belopp för -fallbackfee=&lt;belopp&gt;: '%s'</translation>
+    </message>
+    <message>
         <source>Keep the transaction memory pool below &lt;n&gt; megabytes (default: %u)</source>
         <translation>Håll minnespoolen över transaktioner under &lt;n&gt; megabyte (förvalt: %u)</translation>
+    </message>
+    <message>
+        <source>Location of the auth cookie (default: data dir)</source>
+        <translation>Plats för authcookie (förvalt: datamapp)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimum antal byte per sigop i transaktioner som vi reläar och bryter (förvalt: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3139,6 +3155,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
         <translation>Anslut enbart till noder i nätverket &lt;net&gt; (IPv4, IPv6 eller onion)</translation>
+    </message>
+    <message>
+        <source>Print version and exit</source>
+        <translation>Visa version och avsluta</translation>
     </message>
     <message>
         <source>Prune cannot be configured with a negative value.</source>
@@ -3195,10 +3215,6 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Wallet options:</source>
         <translation>Plånboksinställningar:</translation>
-    </message>
-    <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Varning: Denna version är föråldrad; uppgradering krävs!</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>
@@ -3295,10 +3311,6 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Activating best chain...</source>
         <translation>Aktiverar bästa kedjan...</translation>
-    </message>
-    <message>
-        <source>Always relay transactions received from whitelisted peers (default: %d)</source>
-        <translation>Vidarebefordra alltid transaktioner från vitlistade noder (förval: %d)</translation>
     </message>
     <message>
         <source>Attempt to recover private keys from a corrupt wallet.dat on startup</source>
@@ -3463,6 +3475,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Warning</source>
         <translation>Varning</translation>
+    </message>
+    <message>
+        <source>Warning: unknown new rules activated (versionbit %i)</source>
+        <translation>Varning: okända nya regler aktiverade (versionsbit %i)</translation>
     </message>
     <message>
         <source>Whether to operate in a blocks only mode (default: %u)</source>

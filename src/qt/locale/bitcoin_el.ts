@@ -1,4 +1,4 @@
-<TS language="el" version="2.0">
+<TS language="el" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -147,6 +147,14 @@
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
+        <source>&amp;Label:</source>
+        <translation>Ετικέτα:</translation>
+    </message>
+    <message>
+        <source>&amp;Message:</source>
+        <translation>&amp;Μήνυμα:</translation>
+    </message>
+    <message>
         <source>Remove</source>
         <translation>Αφαίρεση</translation>
     </message>
@@ -218,6 +226,10 @@
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>Ετικέτα:</translation>
+    </message>
     <message>
         <source>Message:</source>
         <translation>Μήνυμα:</translation>

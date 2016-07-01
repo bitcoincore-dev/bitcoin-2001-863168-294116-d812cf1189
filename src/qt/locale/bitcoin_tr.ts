@@ -1,4 +1,4 @@
-<TS language="tr" version="2.0">
+<TS language="tr" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>Cüzdanınızı şifrelemek istediğinizden emin misiniz?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Şifreleme işlemini tamamlamak için Bitcoin Çekirdeği şimdi kapanacaktır. Cüzdanınızı şifrelemenin, Bitcoinlerinizin bilgisayara bulaşan kötücül bir yazılım tarafından çalınmaya karşı tamamen koruyamayacağını unutmayınız.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>ÖNEMLİ: Önceden yapmış olduğunuz cüzdan dosyası yedeklemelerinin yeni oluşturulan şifrelenmiş cüzdan dosyası ile değiştirilmeleri gerekir. Güvenlik nedenleriyle yeni, şifrelenmiş cüzdanı kullanmaya başladığınızda eski şifrelenmemiş cüzdan dosyaları işe yaramaz hale gelecektir.</translation>
     </message>
@@ -190,6 +186,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Cüzdan için eski parolayı ve yeni parolayı giriniz.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>Şifreleme işlemini tamamlamak için %1 şimdi kapanacaktır. Cüzdanınızı şifrelemenin, Bitcoinlerinizin bilgisayara bulaşan kötücül bir yazılım tarafından çalınmaya karşı tamamen koruyamayacağını unutmayınız.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -270,6 +270,14 @@
         <translation>Uygulamadan çık</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>%1 &amp;hakkında</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>%1 hakkında bilgi göster</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>&amp;Qt hakkında</translation>
     </message>
@@ -280,6 +288,10 @@
     <message>
         <source>&amp;Options...</source>
         <translation>&amp;Seçenekler...</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for %1</source>
+        <translation>%1 için yapılandırma ayarlarını değiştir</translation>
     </message>
     <message>
         <source>&amp;Encrypt Wallet...</source>
@@ -304,10 +316,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>&amp;URI aç...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Çekirdeği istemcisi</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,10 +366,6 @@
         <translation>&amp;Al</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Bitcoin Çekirdeği hakkında bilgi göster</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Göster / Sakla</translation>
     </message>
@@ -398,20 +402,8 @@
         <translation>Sekme araç çubuğu</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Çekirdeği</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Ödeme talep et (QR kodu ve bitcoin URI'si oluşturur)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>Bitcoin Çekirdeği &amp;hakkında</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Bitcoin Çekirdeği yapılandırma seçeneklerini değiştir</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -428,10 +420,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;Komut satırı seçenekleri</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Bitcoin komut satırı seçeneklerinin listesini elde etmek için Bitcoin Çekirdeği yardım mesajını göster</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -492,6 +480,14 @@
     <message>
         <source>Up to date</source>
         <translation>Güncel</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Olası Bitcoin komut satırı seçeneklerinin listesini görmek için %1 yardım mesajını göster</translation>
+    </message>
+    <message>
+        <source>%1 client</source>
+        <translation>%1 istemcisi</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -734,10 +730,6 @@
         <translation>Eğer öncelik "ortadan" düşükse bu etiket kırmızı olur.</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Eğer herhangi bir alıcı %1'den düşük bir meblağ alırsa bu etiket kırmızı olur.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Giriş başına +/- %1 satoshi olarak değişebilir.</translation>
     </message>
@@ -855,10 +847,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Çekirdeği</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>sürüm</translation>
     </message>
@@ -867,8 +855,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>Bitcoin Çekirdeği hakkında</translation>
+        <source>About %1</source>
+        <translation>%1 Hakkında</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,16 +906,16 @@
         <translation>Hoş geldiniz</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Bitcoin Çekirdeğine hoş geldiniz.</translation>
+        <source>Welcome to %1.</source>
+        <translation>%1'a hoş geldiniz.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Bu programı ilk kez başlattığınızdan dolayı Bitcoin Çekirdeğinin verilerini nereye saklayacağını seçebilirsiniz.</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Bu programın ilk kez başlatılmasından dolayı %1 yazılımının verilerini nerede saklayacağını seçebilirsiniz.</translation>
     </message>
     <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin çekirdeği Bitcoin blok zincirinin bir kopyasını indirip saklayacaktır. Asgari %1GB bouyutunda veri bu klasörde saklanacak ve zamanla bu boyut artacaktır. Cüzdan da bu klasörde saklanacaktır. </translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1, Bitcoin blok zincirinin bir kopyasını indirecek ve saklayacaktır. Bu klasörde en az %2GB veri saklanacak ve bu zamanla artacaktır. Cüzdan da bu klasörde saklanacaktır.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -936,10 +924,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Özel bir veri klasörü kullan:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Çekirdeği</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -992,6 +976,14 @@
         <translation>&amp;Esas ayarlar</translation>
     </message>
     <message>
+        <source>Automatically start %1 after logging in to the system.</source>
+        <translation>Sistemde oturum açıldığında %1 programını otomatik olarak başlat.</translation>
+    </message>
+    <message>
+        <source>&amp;Start %1 on system login</source>
+        <translation>&amp;Açılışta %1 açılsın</translation>
+    </message>
+    <message>
         <source>Size of &amp;database cache</source>
         <translation>&amp;Veritabanı tamponunun boyutu</translation>
     </message>
@@ -1020,10 +1012,6 @@
         <translation>Pencere kapatıldığında uygulamadan çıkmak yerine uygulamayı küçültür. Bu seçenek etkinleştirildiğinde, uygulama sadece menüden çıkış seçildiğinde kapanacaktır.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>Kullanıcı arayüzünün dili burada belirtilebilir. Bu ayar Bitcoin Çekirdeği tekrar başlatıldığında etkinleşecektir.</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>Muameleler sekmesinde bağlam menüsü unsurları olarak görünen üçüncü taraf bağlantıları (mesela bir blok tarayıcısı). URL'deki %s, muamele hash değeri ile değiştirilecektir. Birden çok bağlantılar düşey çubuklar | ile ayrılacaktır.</translation>
     </message>
@@ -1046,14 +1034,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Şebeke</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Sistemde oturum açıldığında Bitcoin Çekirdeğini otomatik olarak başlat.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>Bitcoin Çekirdeğini sistem oturumuyla &amp;başlat</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1108,10 +1088,6 @@
         <translation>Vekil sunucunun portu (mesela 9050)</translation>
     </message>
     <message>
-        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
-        <translation>Eşlere gizli Tor servisleri ile ulaşmak için ayrı SOCKS5 vekil sunucusu kullan:</translation>
-    </message>
-    <message>
         <source>Used for reaching peers via:</source>
         <translation>Eşlere ulaşmak için kullanılır, şu yoluyla:</translation>
     </message>
@@ -1164,6 +1140,10 @@
         <translation>Kullanıcı arayüzü &amp;lisanı:</translation>
     </message>
     <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>Kullanıcı arayüzünün dili burada belirtilebilir. Bu ayar %1 tekrar başlatıldığında etkinleşecektir.</translation>
+    </message>
+    <message>
         <source>&amp;Unit to show amounts in:</source>
         <translation>Meblağları göstermek için &amp;birim:</translation>
     </message>
@@ -1190,6 +1170,10 @@
     <message>
         <source>none</source>
         <translation>boş</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Çekirdeği</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1478,10 +1462,6 @@
         <translation>Genel</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Kullanılan OpenSSL sürümü</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Kullanılan BerkeleyDB sürümü</translation>
     </message>
@@ -1520,10 +1500,6 @@
     <message>
         <source>Memory usage</source>
         <translation>Bellek kullanımı</translation>
-    </message>
-    <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Güncel veri klasöründen Bitcoin Çekirdeği hata ayıklama kütük dosyasını açar. Büyük kütük dosyaları için bu birkaç saniye alabilir.</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1572,6 +1548,10 @@
     <message>
         <source>User Agent</source>
         <translation>Kullanıcı Yazılımı</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Güncel veri klasöründen %1 hata ayıklama kütük dosyasını açar. Büyük kütük dosyaları için bu birkaç saniye alabilir.</translation>
     </message>
     <message>
         <source>Services</source>
@@ -1682,8 +1662,8 @@
         <translation>Düğümün Yasağını Kald&amp;ır</translation>
     </message>
     <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Bitcoin Çekirdeği RPC konsoluna hoş geldiniz.</translation>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>%1 RPC konsoluna hoş geldiniz.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2141,10 +2121,6 @@
         <source>Payment request expired.</source>
         <translation>Ödeme talebinin ömrü doldu.</translation>
     </message>
-    <message numerus="yes">
-        <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Tahmini olarak %n blok içinde teyide başlanacaktır.</numerusform><numerusform>Tahmini olarak %n blok içinde teyide başlanacaktır.</numerusform></translation>
-    </message>
     <message>
         <source>Pay only the required fee of %1</source>
         <translation>Sadece gerekli ücret olan %1 tutarını öde</translation>
@@ -2272,8 +2248,8 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin Çekirdeği kapanıyor...</translation>
+        <source>%1 is shutting down...</source>
+        <translation>%1 kapanıyor...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -2422,14 +2398,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Çekirdeği</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Bitcoin Çekirdeği geliştiricileri</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -2446,10 +2414,6 @@
     <message>
         <source>Open until %1</source>
         <translation>%1 değerine dek açık</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>çakışma</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -2988,6 +2952,18 @@
         <translation>Dışarıdan gelen bağlantıları kabul et (varsayılan: -proxy veya -connect yoksa 1)</translation>
     </message>
     <message>
+        <source>-fallbackfee is set very high! This is the transaction fee you may pay when fee estimates are not available.</source>
+        <translation>-fallbackfee çok yüksek bir değere ayarlanmış! Ücret tahminleri mevcut değilken ödeyebileceğiniz muamele ücretidir bu.</translation>
+    </message>
+    <message>
+        <source>A fee rate (in %s/kB) that will be used when fee estimation has insufficient data (default: %s)</source>
+        <translation>Ücret tahmini için yetersiz veri bulunduğunda kullanılacak ücret oranı (%s/kB olarak) (varsayılan: %s)</translation>
+    </message>
+    <message>
+        <source>Accept relayed transactions received from whitelisted peers even when not relaying transactions (default: %d)</source>
+        <translation>Muameleler aktarılmadığında dahi beyaz listedeki eşlerden aktarılan muameleleri kabul et (varsayılan: %d)</translation>
+    </message>
+    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>Belirtilen adrese bağlan ve daima ondan dinle. IPv6 için [makine]:port yazımını kullanınız</translation>
     </message>
@@ -3002,6 +2978,10 @@
     <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
         <translation>Bir cüzdan muamelesi değiştiğinde komutu çalıştır (komuttaki %s muamele kimliği ile değiştirilecektir)</translation>
+    </message>
+    <message>
+        <source>Force relay of transactions from whitelisted peers even they violate local relay policy (default: %d)</source>
+        <translation>Yerel aktarma politikasını ihlal ettiklerinde bile beyaz listedeki eşlerden gelen muamelelerin aktarılmasını zorla (varsayılan: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3020,6 +3000,10 @@
         <translation>Bu bilgisayarda %s unsuruna bağlanılamadı. Bitcoin Çekirdeği muhtemelen hâlihazırda çalışmaktadır.</translation>
     </message>
     <message>
+        <source>Unsupported argument -whitelistalwaysrelay ignored, use -whitelistrelay and/or -whitelistforcerelay.</source>
+        <translation>Desteklenmeyen argüman -whitelistalwaysrelay görmezden gelindi, -whitelistrelay ve/veya -whitelistforcerelay kullanın.</translation>
+    </message>
+    <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
         <translation>Dinlenecek portu haritalamak için UPnP kullan (varsayılan: dinlenildiğinde ve -proxy olmadığında 1)</translation>
     </message>
@@ -3034,6 +3018,10 @@
     <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
         <translation>Uyarı: şebeke tamamen mutabık değil gibi görünüyor! Bazı madenciler sorun yaşıyor gibi görünüyor.</translation>
+    </message>
+    <message>
+        <source>Warning: Unknown block versions being mined! It's possible unknown rules are in effect</source>
+        <translation>İkaz: bilinmeyen blok sürümü oluşturulmaya çalışılıyor. Bilinmeyen kuralların işlemesi mümkündür.</translation>
     </message>
     <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
@@ -3054,6 +3042,10 @@
     <message>
         <source>&lt;category&gt; can be:</source>
         <translation>&lt;kategori&gt; şunlar olabilir:</translation>
+    </message>
+    <message>
+        <source>Append comment to the user agent string</source>
+        <translation>Kullanıcı aracı zincirine yorumu ekle</translation>
     </message>
     <message>
         <source>Block creation options:</source>
@@ -3100,6 +3092,10 @@
         <translation>Ham muamelenin &lt;adres&gt;te yayınlanmasını etkinleştir</translation>
     </message>
     <message>
+        <source>Enable transaction replacement in the memory pool (default: %u)</source>
+        <translation>Bellek alanında muamele değiştirmeyi etkinleştir (varsayılan: %u)</translation>
+    </message>
+    <message>
         <source>Error initializing block database</source>
         <translation>Blok veritabanını başlatılırken bir hata meydana geldi</translation>
     </message>
@@ -3136,8 +3132,20 @@
         <translation>Geçersiz -onion adresi: '%s'</translation>
     </message>
     <message>
+        <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
+        <translation> -fallbackfee=&lt;meblağ&gt; için geçersiz meblağ: '%s'</translation>
+    </message>
+    <message>
         <source>Keep the transaction memory pool below &lt;n&gt; megabytes (default: %u)</source>
         <translation>Muamele bellek alanını &lt;n&gt; megabayttan düşük tut (varsayılan: %u)</translation>
+    </message>
+    <message>
+        <source>Location of the auth cookie (default: data dir)</source>
+        <translation>auth çerezinin konumu (varsayılan: veri klasörü)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Aktardığımız ve oluşturduğumuz muamelelerdeki sigop başına asgari bayt (varsayılan: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3146,6 +3154,10 @@
     <message>
         <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
         <translation>Sadece &lt;net&gt; şebekesindeki düğümlere bağlan (ipv4, ipv6 veya onion)</translation>
+    </message>
+    <message>
+        <source>Print version and exit</source>
+        <translation>Sürümü yaz ve çık</translation>
     </message>
     <message>
         <source>Prune cannot be configured with a negative value.</source>
@@ -3202,10 +3214,6 @@
     <message>
         <source>Wallet options:</source>
         <translation>Cüzdan seçenekleri:</translation>
-    </message>
-    <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Uyarı: Bu sürüm çok eskidir; güncellemeniz gerekir!</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>
@@ -3302,10 +3310,6 @@
     <message>
         <source>Activating best chain...</source>
         <translation>En iyi zincir etkinleştiriliyor...</translation>
-    </message>
-    <message>
-        <source>Always relay transactions received from whitelisted peers (default: %d)</source>
-        <translation>Beyaz listedeki eşlerden gelen muameleleri daima aktar (varsayılan: %d)</translation>
     </message>
     <message>
         <source>Attempt to recover private keys from a corrupt wallet.dat on startup</source>
@@ -3470,6 +3474,10 @@
     <message>
         <source>Warning</source>
         <translation>Uyarı</translation>
+    </message>
+    <message>
+        <source>Warning: unknown new rules activated (versionbit %i)</source>
+        <translation>İkaz: bilinmeyen yeni kurallar etkinleştirilmiştir (versionbit %i)</translation>
     </message>
     <message>
         <source>Whether to operate in a blocks only mode (default: %u)</source>

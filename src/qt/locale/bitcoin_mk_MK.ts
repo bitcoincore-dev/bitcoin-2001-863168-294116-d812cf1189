@@ -1,4 +1,4 @@
-<TS language="mk_MK" version="2.0">
+<TS language="mk_MK" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -214,6 +214,10 @@
         <translation>Напушти ја апликацијата</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation />
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>За &amp;Qt</translation>
     </message>
@@ -250,10 +254,6 @@
         <translation>Отвори &amp;URI...</translation>
     </message>
     <message>
-        <source>Bitcoin Core client</source>
-        <translation>Биткоин Core софтверот</translation>
-    </message>
-    <message>
         <source>Importing blocks from disk...</source>
         <translation>Внесување на блокови од дискот...</translation>
     </message>
@@ -286,10 +286,6 @@
         <translation>&amp;Прими</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Прикажи информации за Биткоин Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Прикажи / Сокриј</translation>
     </message>
@@ -304,14 +300,6 @@
     <message>
         <source>&amp;Help</source>
         <translation>&amp;Помош</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Биткоин Core</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;За Биткоин Core</translation>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
@@ -526,10 +514,6 @@
         <translation>Оваа етикета станува црвена ако приоритетот е помал од "среден".</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Оваа етикета станува црвена ако примачот прими сума помала од %1.</translation>
-    </message>
-    <message>
         <source>yes</source>
         <translation>да</translation>
     </message>
@@ -575,10 +559,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Биткоин Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>верзија</translation>
     </message>
@@ -586,17 +566,9 @@
         <source>(%1-bit)</source>
         <translation>(%1-бит)</translation>
     </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>За Биткоин Core</translation>
-    </message>
     </context>
 <context>
     <name>Intro</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Биткоин Core</translation>
-    </message>
     <message>
         <source>Error</source>
         <translation>Грешка</translation>
@@ -646,6 +618,10 @@
     <message>
         <source>none</source>
         <translation>нема</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Биткоин Core</translation>
     </message>
     </context>
 <context>
@@ -933,10 +909,6 @@
     </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Биткоин Core</translation>
-    </message>
     </context>
 <context>
     <name>TrafficGraphWidget</name>

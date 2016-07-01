@@ -1,4 +1,4 @@
-<TS language="nl" version="2.0">
+<TS language="nl" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -7,7 +7,7 @@
     </message>
     <message>
         <source>Create a new address</source>
-        <translation>Maak een nieuw adres</translation>
+        <translation>Maak een nieuw adres aan</translation>
     </message>
     <message>
         <source>&amp;New</source>
@@ -168,10 +168,6 @@
         <translation>Weet u zeker dat u uw portemonnee wilt versleutelen?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin Core zal nu afsluiten om het versleutelingsproces te voltooien. Hou er rekening mee dat versleuteling van je portemonnee je niet volledig beschermt tegen diefstal van jouw bitcoins door malware op je computer.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>BELANGRIJK: Elke eerder gemaakte backup van uw portemonneebestand dient u te vervangen door het nieuw gegenereerde, versleutelde portemonneebestand. Om veiligheidsredenen zullen eerdere backups van het niet-versleutelde portemonneebestand onbruikbaar worden zodra u uw nieuwe, versleutelde, portemonnee begint te gebruiken.</translation>
     </message>
@@ -190,6 +186,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Voer het oude en nieuwe wachtwoord in voor uw portemonnee.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 zal nu afsluiten om het versleutelingsproces te voltooien. Hou er rekening mee dat versleuteling van uw portemonnee u niet volledig beschermt tegen diefstal van jouw bitcoins door malware op je computer.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -270,6 +270,14 @@
         <translation>Programma afsluiten</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;Over %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Toon informatie over %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Over &amp;Qt</translation>
     </message>
@@ -280,6 +288,10 @@
     <message>
         <source>&amp;Options...</source>
         <translation>&amp;Opties...</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for %1</source>
+        <translation>Wijzig configuratieopties voor %1</translation>
     </message>
     <message>
         <source>&amp;Encrypt Wallet...</source>
@@ -304,10 +316,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Open &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Coreapplicatie</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,10 +366,6 @@
         <translation>&amp;Ontvangen</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Toon informatie over Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Toon / Verberg</translation>
     </message>
@@ -398,20 +402,8 @@
         <translation>Tab-werkbalk</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Vraag betaling aan (genereert QR-codes en bitcoin: URI's)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Over Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Wijzig configuratieopties voor Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -428,10 +420,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;Opdrachytregelopties</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Toon het Bitcoin Core hulpbericht om een lijst te krijgen met mogelijke Bitcoinopdrachtregelopties</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -492,6 +480,10 @@
     <message>
         <source>Up to date</source>
         <translation>Bijgewerkt</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Toon het %1 hulpbericht om een lijst te krijgen met mogelijke Bitcoin commandoregelopties</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -734,10 +726,6 @@
         <translation>Dit label wordt rood als de prioriteit lager is dan "gemiddeld".</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Dit label wordt rood wanneer een ontvanger minder dan %1 krijgt.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Kan per input +/- %1 satoshi(s)  variëren.</translation>
     </message>
@@ -855,10 +843,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versie</translation>
     </message>
@@ -867,8 +851,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>Over Bitcoin Core</translation>
+        <source>About %1</source>
+        <translation>Over %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,16 +902,16 @@
         <translation>Welkom</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Welkom bij Bitcoin Core</translation>
+        <source>Welcome to %1.</source>
+        <translation>Welkom bij %1.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Omdat dit de eerste keer is dat het programma gestart is, kunt u nu kiezen waar Bitcoin Core de data moet opslaan.</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Omdat dit de eerste keer is dat het programma gestart is, kunt u nu kiezen waar %1 de data moet opslaan.</translation>
     </message>
     <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin Core zal een kopie van de Bitcoinblokketen downloaden en opslaan. Tenminste %1 GB aan data wordt opgeslagen in deze map en het zal groeien in de tijd. De portemonnee wordt ook in deze map opgeslagen.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 zal een kopie van de Bitcoin blokketen downloaden en opslaan. Tenminste %2 GB aan data wordt opgeslagen in deze map en het zal groeien in de tijd. De portemonnee wordt ook in deze map opgeslagen.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -936,10 +920,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Gebruik een persoonlijke gegevensmap:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -992,6 +972,14 @@
         <translation>&amp;Algemeen</translation>
     </message>
     <message>
+        <source>Automatically start %1 after logging in to the system.</source>
+        <translation>Start %1 automatisch na inloggen in het systeem.</translation>
+    </message>
+    <message>
+        <source>&amp;Start %1 on system login</source>
+        <translation>&amp;Start %1 bij het inloggen op het systeem</translation>
+    </message>
+    <message>
         <source>Size of &amp;database cache</source>
         <translation>Grootte van de &amp;databasecache</translation>
     </message>
@@ -1020,10 +1008,6 @@
         <translation>Minimaliseren in plaats van de applicatie af te sluiten wanneer het venster is afgesloten. Als deze optie is ingeschakeld, zal de toepassing pas worden afgesloten na het selecteren van Exit in het menu.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>Stel hier de taal van de applicatie in. Deze instelling zal van kracht worden na het herstarten van de applicatie.</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>URL's van derden (bijvoorbeeld block explorer) die in de transacties tab verschijnen als contextmenuelementen. %s in de URL is vervangen door transactiehash. Verscheidene URL's zijn gescheiden door een verticale streep |.  </translation>
     </message>
@@ -1046,14 +1030,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Netwerk</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Bitcoin Core automatisch starten bij inloggen.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>&amp;Start Bitcoin Core tijdens login.</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1160,6 +1136,10 @@
         <translation>Taal &amp;Gebruikersinterface:</translation>
     </message>
     <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>De taal van de gebruikersinterface kan hier ingesteld worden. Deze instelling zal pas van kracht worden nadat %1 herstart wordt.</translation>
+    </message>
+    <message>
         <source>&amp;Unit to show amounts in:</source>
         <translation>&amp;Eenheid om bedrag in te tonen:</translation>
     </message>
@@ -1186,6 +1166,10 @@
     <message>
         <source>none</source>
         <translation>geen</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1474,10 +1458,6 @@
         <translation>Algemeen</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Gebruikt OpenSSL versie</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Gebruikt BerkeleyDB versie</translation>
     </message>
@@ -1516,10 +1496,6 @@
     <message>
         <source>Memory usage</source>
         <translation>Geheugengebruik</translation>
-    </message>
-    <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Open het Bitcoin Core debuglogbestand van de huidige gegevensmap. Dit kan enkele seconden duren voor grote logbestanden.</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1568,6 +1544,10 @@
     <message>
         <source>User Agent</source>
         <translation>User Agent</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Open het %1 debug-logbestand van de huidige datamap. Dit kan een aantal seconden duren voor grote logbestanden.</translation>
     </message>
     <message>
         <source>Services</source>
@@ -1678,8 +1658,8 @@
         <translation>&amp;Maak Ban Ongedaan voor Node</translation>
     </message>
     <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Welkom op de Bitcoin Core RPC console.</translation>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>Welkom bij de %1 RPC-console.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2264,8 +2244,8 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin Core is aan het afsluiten...</translation>
+        <source>%1 is shutting down...</source>
+        <translation>%1 is aan het afsluiten...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -2414,14 +2394,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>De Bitcoin Core-ontwikkelaars</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnetwerk]</translation>
     </message>
@@ -2438,10 +2410,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Openen totdat %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>conflicterend</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -2980,6 +2948,18 @@
         <translation>Accepteer verbindingen van buitenaf (standaard: 1 als geen -proxy of -connect is opgegeven)</translation>
     </message>
     <message>
+        <source>-fallbackfee is set very high! This is the transaction fee you may pay when fee estimates are not available.</source>
+        <translation>-fallbackfee is zeer hoog ingesteld! Dit zijn de transactie kosten die u mogelijk betaald wanneer de schattingen niet beschikbaar zijn.</translation>
+    </message>
+    <message>
+        <source>A fee rate (in %s/kB) that will be used when fee estimation has insufficient data (default: %s)</source>
+        <translation>Een transactietarief (in %s/kB) dat gebruikt wordt als de transactiekosten schatting niet genoeg data heeft. (normaal: %s)</translation>
+    </message>
+    <message>
+        <source>Accept relayed transactions received from whitelisted peers even when not relaying transactions (default: %d)</source>
+        <translation>Accepteer doorgestuurde transacties ontvangen van goedgekeurde peers, ook wanneer je zelf geen transacties doorstuurt (standaard: %d)</translation>
+    </message>
+    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>Bind aan opgegeven adres en luister er altijd op. Gebruik [host]:port notatie voor IPv6</translation>
     </message>
@@ -2994,6 +2974,10 @@
     <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
         <translation>Voer opdracht uit zodra een portemonneetransactie verandert (%s in cmd wordt vervangen door TxID)</translation>
+    </message>
+    <message>
+        <source>Force relay of transactions from whitelisted peers even they violate local relay policy (default: %d)</source>
+        <translation>Forceer het doorsturen van transacties van goedgekeurde peers, zelfs wanneer deze niet voldoen aan de lokale doorstuur regels (standaard: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3012,6 +2996,10 @@
         <translation>Niet in staat om %s te verbinden op deze computer. Bitcoin Core draait waarschijnlijk al.</translation>
     </message>
     <message>
+        <source>Unsupported argument -whitelistalwaysrelay ignored, use -whitelistrelay and/or -whitelistforcerelay.</source>
+        <translation>Niet ondersteund argument -whitelistalwaysrelay genegeerd, gebruik -whitelistrelay en/of -whitelistforcerelay.</translation>
+    </message>
+    <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
         <translation>Gebruik UPnP om de luisterende poort te mappen (standaard: 1 als er geluisterd worden en geen -proxy is meegegeven)</translation>
     </message>
@@ -3026,6 +3014,10 @@
     <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
         <translation>Waarschuwing: Het lijkt erop dat het netwerk geen consensus kan vinden! Sommige delvers lijken problemen te ondervinden.</translation>
+    </message>
+    <message>
+        <source>Warning: Unknown block versions being mined! It's possible unknown rules are in effect</source>
+        <translation>Waarschuwing: Onbekende blok versies worden gemined! Er zijn mogelijk onbekende regels in werking getreden</translation>
     </message>
     <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
@@ -3046,6 +3038,10 @@
     <message>
         <source>&lt;category&gt; can be:</source>
         <translation>&lt;categorie&gt; kan zijn:</translation>
+    </message>
+    <message>
+        <source>Append comment to the user agent string</source>
+        <translation>Voeg commentaar toe aan de user agent string</translation>
     </message>
     <message>
         <source>Block creation options:</source>
@@ -3092,6 +3088,10 @@
         <translation>Sta toe ruwe transacties te publiceren in &lt;adres&gt;</translation>
     </message>
     <message>
+        <source>Enable transaction replacement in the memory pool (default: %u)</source>
+        <translation>Transactie vervanging inschakelen in het geheugen (standaard: %u)</translation>
+    </message>
+    <message>
         <source>Error initializing block database</source>
         <translation>Fout bij intialisatie blokkendatabase</translation>
     </message>
@@ -3128,8 +3128,20 @@
         <translation>Ongeldig -onion adres '%s'</translation>
     </message>
     <message>
+        <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
+        <translation>Ongeldig bedrag voor -fallbackfee=&lt;bedrag&gt;: '%s'</translation>
+    </message>
+    <message>
         <source>Keep the transaction memory pool below &lt;n&gt; megabytes (default: %u)</source>
         <translation>De transactiegeheugenpool moet onder de &lt;n&gt; megabytes blijven (standaard: %u)</translation>
+    </message>
+    <message>
+        <source>Location of the auth cookie (default: data dir)</source>
+        <translation>Locatie van de auth cookie (standaard: data dir)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimum aantal bytes dat er per sigop in een transactie gerelayed en gemined worden (standaard: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3138,6 +3150,10 @@
     <message>
         <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
         <translation>Verbind alleen met nodes in netwerk &lt;net&gt; (ipv4, ipv6 of onion)</translation>
+    </message>
+    <message>
+        <source>Print version and exit</source>
+        <translation>Laat versie zien en sluit af</translation>
     </message>
     <message>
         <source>Prune cannot be configured with a negative value.</source>
@@ -3194,10 +3210,6 @@
     <message>
         <source>Wallet options:</source>
         <translation>Portemonnee instellingen:</translation>
-    </message>
-    <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Waarschuwing: Deze versie is verouderd; upgraden verplicht!</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>
@@ -3294,10 +3306,6 @@
     <message>
         <source>Activating best chain...</source>
         <translation>Beste reeks activeren...</translation>
-    </message>
-    <message>
-        <source>Always relay transactions received from whitelisted peers (default: %d)</source>
-        <translation>Geef transacties altijd door aan goedgekeurde peers (standaard: %d)</translation>
     </message>
     <message>
         <source>Attempt to recover private keys from a corrupt wallet.dat on startup</source>
@@ -3462,6 +3470,10 @@
     <message>
         <source>Warning</source>
         <translation>Waarschuwing</translation>
+    </message>
+    <message>
+        <source>Warning: unknown new rules activated (versionbit %i)</source>
+        <translation>Waarschuwing: onbekende nieuwe regels geactiveerd (versionbit %i)</translation>
     </message>
     <message>
         <source>Whether to operate in a blocks only mode (default: %u)</source>

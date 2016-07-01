@@ -1,4 +1,4 @@
-<TS language="af_ZA" version="2.0">
+<TS language="af_ZA" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -144,6 +144,10 @@
     <message>
         <source>Quit application</source>
         <translation>Sluit af</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Wys inligting oor %1</translation>
     </message>
     <message>
         <source>Show information about Qt</source>
@@ -323,6 +327,10 @@
         <translation>&amp;Bedrag:</translation>
     </message>
     <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Etiket:</translation>
+    </message>
+    <message>
         <source>&amp;Message:</source>
         <translation>&amp;Boodskap:</translation>
     </message>
@@ -417,6 +425,10 @@
     <message>
         <source>A&amp;mount:</source>
         <translation>&amp;Bedrag:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Etiket:</translation>
     </message>
     <message>
         <source>Message:</source>

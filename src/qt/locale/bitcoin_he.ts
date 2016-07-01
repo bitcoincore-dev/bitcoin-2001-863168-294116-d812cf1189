@@ -1,4 +1,4 @@
-<TS language="he" version="2.0">
+<TS language="he" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>האם אכן להצפין את הארנק?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>ליבת ביטקוין תיסגר עכשיו כדי לסיים את תליך ההצפנה. זכור כי הצפנה אינה יכולה להגן עלייך באופן מלא מגניבה שמקורה בתוכנות זדוניות המצויות במחשב שלך.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>לתשומת לבך: כל גיבוי קודם שביצעת לארנק שלך יש להחליף בקובץ הארנק המוצפן שזה עתה נוצר. מטעמי אבטחה, גיבויים קודמים של קובץ הארנק הבלתי-מוצפן יהפכו לחסרי תועלת עם התחלת השימוש בארנק החדש המוצפן.</translation>
     </message>
@@ -222,7 +218,11 @@
 </context>
 <context>
     <name>BanTableModel</name>
-    </context>
+    <message>
+        <source>Banned Until</source>
+        <translation>חסום עד</translation>
+    </message>
+</context>
 <context>
     <name>BitcoinGUI</name>
     <message>
@@ -262,6 +262,14 @@
         <translation>יציאה מהתכנית</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;אודות %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>הצג מידע על %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>על אודות Qt</translation>
     </message>
@@ -296,10 +304,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>פתיחת &amp;כתובת משאב…</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>לקוח ליבה של ביטקוין</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -350,10 +354,6 @@
         <translation>&amp;קבלה</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>הצגת מידע על ליבת ביטקוין</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>ה&amp;צגה / הסתרה</translation>
     </message>
@@ -390,16 +390,8 @@
         <translation>סרגל כלים לשוניות</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>ליבת ביטקוין</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>בקשת תשלומים (יצירה של קודים מסוג QR וסכימות כתובות משאב של :bitcoin)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>על &amp;אודות ליבת ביטקוין</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -416,10 +408,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>אפשרויות &amp;שורת הפקודה</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>הצגת הודעות העזרה של ליבת ביטקוין כדי לקבל רשימה עם אפשרויות שורת הפקודה האפשריות של ביטקוין</translation>
     </message>
     <message>
         <source>No block source available...</source>
@@ -488,6 +476,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Coin Selection</source>
+        <translation>בחירת מטבע</translation>
+    </message>
+    <message>
         <source>Quantity:</source>
         <translation>כמות:</translation>
     </message>
@@ -534,6 +526,14 @@
     <message>
         <source>Amount</source>
         <translation>כמות</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>התקבל עם תווית</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>התקבל עם כתובת</translation>
     </message>
     <message>
         <source>Date</source>
@@ -765,10 +765,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>ליבת ביטקוין</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>גרסה</translation>
     </message>
@@ -777,8 +773,8 @@
         <translation>(%1-סיביות)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>על אודות ליבת ביטקוין</translation>
+        <source>About %1</source>
+        <translation>אודות %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -792,6 +788,14 @@
         <source>command-line options</source>
         <translation>אפשרויות שורת פקודה</translation>
     </message>
+    <message>
+        <source>UI Options:</source>
+        <translation>אפשרויות ממשק</translation>
+    </message>
+    <message>
+        <source>Start minimized</source>
+        <translation>התחל ממוזער</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
@@ -800,16 +804,8 @@
         <translation>ברוך בואך</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>ברוך בואך לליבת ביטקוין</translation>
-    </message>
-    <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>מכיוון שזאת הפעם הראשונה שהתכנית פועלת ניתן לבחור איפה ליבת ביטקוין תאחסן את הנתונים שלה.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>לקוח ביטקוין יוריד וישמור העתק של שרשרת המקטעים של ביטקוין. לפחות %1 ג״ב מהנתונים יאוחסנו בתיקייה זו, והיא תגדל עם הזמן. הארנק גם יאוחסן בתיקייה הזו.</translation>
+        <source>Welcome to %1.</source>
+        <translation>ברוך הבא ל %1.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -818,10 +814,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>שימוש בתיקיית נתונים מותאמת אישית:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>ליבת ביטקוין</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -958,6 +950,18 @@
         <translation>הפתחה של המתווך (למשל 9050)</translation>
     </message>
     <message>
+        <source>IPv4</source>
+        <translation>IPV4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
+    <message>
         <source>&amp;Window</source>
         <translation>&amp;חלון</translation>
     </message>
@@ -1008,6 +1012,10 @@
     <message>
         <source>none</source>
         <translation>ללא</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>ליבת ביטקוין</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1081,6 +1089,10 @@
         <translation>המאזן הנוכחי שלך בכתובות לקריאה בלבד</translation>
     </message>
     <message>
+        <source>Spendable:</source>
+        <translation>ניתנים לבזבוז</translation>
+    </message>
+    <message>
         <source>Recent transactions</source>
         <translation>העברות אחרונות</translation>
     </message>
@@ -1148,8 +1160,16 @@
         <translation>לא ניתן לקרוא את קובץ בקשת התשלום! מצב כזה יכול לקרות בעקבות קובץ בקשת תשלום פגום.</translation>
     </message>
     <message>
+        <source>Payment request expired.</source>
+        <translation>תוקף בקשת תשלום פג</translation>
+    </message>
+    <message>
         <source>Unverified payment requests to custom payment scripts are unsupported.</source>
         <translation>בקשות תשלום בלתי מאומתות לסקריפטים לתשלום מותאמים אישית אינן נתמכות.</translation>
+    </message>
+    <message>
+        <source>Invalid payment request.</source>
+        <translation>שגיאה בבקשת תשלום.</translation>
     </message>
     <message>
         <source>Refund from %1</source>
@@ -1272,10 +1292,6 @@
         <translation>כללי</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>שימוש ב־OpenSSL גרסה</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>שימוש ב־BerkeleyDB גרסה</translation>
     </message>
@@ -1304,6 +1320,18 @@
         <translation>מספר המקטעים הנוכחי</translation>
     </message>
     <message>
+        <source>Memory Pool</source>
+        <translation>מאגר זכרון</translation>
+    </message>
+    <message>
+        <source>Current number of transactions</source>
+        <translation>מספר הפעולה הנוכחי</translation>
+    </message>
+    <message>
+        <source>Memory usage</source>
+        <translation>שימוש בזכרון</translation>
+    </message>
+    <message>
         <source>Received</source>
         <translation>התקבלו</translation>
     </message>
@@ -1316,8 +1344,16 @@
         <translation>&amp;עמיתים</translation>
     </message>
     <message>
+        <source>Banned peers</source>
+        <translation>משתמשים חסומים</translation>
+    </message>
+    <message>
         <source>Select a peer to view detailed information.</source>
         <translation>נא לבחור בעמית כדי להציג מידע מפורט.</translation>
+    </message>
+    <message>
+        <source>Whitelisted</source>
+        <translation>ברשימה הלבנה</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -1326,6 +1362,14 @@
     <message>
         <source>Version</source>
         <translation>גרסה</translation>
+    </message>
+    <message>
+        <source>Starting Block</source>
+        <translation>בלוק התחלה</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>בלוקים מסונכרנים</translation>
     </message>
     <message>
         <source>User Agent</source>
@@ -1354,6 +1398,10 @@
     <message>
         <source>Ping Time</source>
         <translation>זמן המענה</translation>
+    </message>
+    <message>
+        <source>Time Offset</source>
+        <translation>הפרש זמן</translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -1398,6 +1446,22 @@
     <message>
         <source>Clear console</source>
         <translation>ניקוי מסוף הבקרה</translation>
+    </message>
+    <message>
+        <source>Ban Node for</source>
+        <translation>חסום משתמש ל</translation>
+    </message>
+    <message>
+        <source>1 &amp;day</source>
+        <translation>1&amp; יום</translation>
+    </message>
+    <message>
+        <source>1 &amp;week</source>
+        <translation>! &amp; שבוע</translation>
+    </message>
+    <message>
+        <source>1 &amp;year</source>
+        <translation>1 &amp; שנה</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -1684,6 +1748,42 @@
         <translation>עמלת העברה:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation>בחר...</translation>
+    </message>
+    <message>
+        <source>per kilobyte</source>
+        <translation>עבור קילו-בית</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>הסתר</translation>
+    </message>
+    <message>
+        <source>total at least</source>
+        <translation>סה''כ לפחות</translation>
+    </message>
+    <message>
+        <source>Recommended:</source>
+        <translation>מומלץ:</translation>
+    </message>
+    <message>
+        <source>Custom:</source>
+        <translation>מותאם אישית:</translation>
+    </message>
+    <message>
+        <source>Confirmation time:</source>
+        <translation>זמן האישור:</translation>
+    </message>
+    <message>
+        <source>normal</source>
+        <translation>רגיל</translation>
+    </message>
+    <message>
+        <source>fast</source>
+        <translation>מהיר</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>שליחה למספר מוטבים בו־זמנית</translation>
     </message>
@@ -1752,6 +1852,10 @@
         <translation>העתקת עודף</translation>
     </message>
     <message>
+        <source>Total Amount %1</source>
+        <translation>סכום כולל %1</translation>
+    </message>
+    <message>
         <source>or</source>
         <translation>או</translation>
     </message>
@@ -1774,6 +1878,10 @@
     <message>
         <source>The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
         <translation>ההעברה נדחתה! מצב כזה עשוי לקרות אם חלק מהמטבעות בארנק שלך כבר הושקעו, כמו למשל עקב שימוש בעותק של wallet.dat והמטבעות הושקעו בעותק אבל לא סומנו כאילו הושקעו דרך כאן.</translation>
+    </message>
+    <message>
+        <source>Payment request expired.</source>
+        <translation>תוקף בקשת תשלום פג</translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -1851,6 +1959,10 @@
         <translation>הודעה:</translation>
     </message>
     <message>
+        <source>This is an authenticated payment request.</source>
+        <translation>זוהי בקשה מאומתת לתשלום.</translation>
+    </message>
+    <message>
         <source>Enter a label for this address to add it to the list of used addresses</source>
         <translation>יש להזין תווית עבור כתובת זו כדי להוסיף אותה לרשימת הכתובות בשימוש</translation>
     </message>
@@ -1869,10 +1981,6 @@
 </context>
 <context>
     <name>ShutdownWindow</name>
-    <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>ליבת ביטקוין נסגרת…</translation>
-    </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>אין לכבות את המחשב עד שחלון זה נעלם.</translation>
@@ -2012,14 +2120,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>ליבת ביטקוין</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>מתכנתי ליבת ביטקוין</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[רשת-בדיקה]</translation>
     </message>
@@ -2036,10 +2136,6 @@
     <message>
         <source>Open until %1</source>
         <translation>פתוחה עד %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>מתנגש</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -2355,6 +2451,10 @@
         <translation>העתקת מזהה העברה</translation>
     </message>
     <message>
+        <source>Copy raw transaction</source>
+        <translation>העתק העברה גולמית</translation>
+    </message>
+    <message>
         <source>Edit label</source>
         <translation>עריכת תווית</translation>
     </message>
@@ -2502,6 +2602,10 @@
         <translation>קבלת פקודות משורת הפקודה ומ־JSON-RPC</translation>
     </message>
     <message>
+        <source>Error: A fatal internal error occurred, see debug.log for details</source>
+        <translation>שגיאה: סניה קלמה קריטית פנימית קרטה, פנה ל debug.log לפרטים</translation>
+    </message>
+    <message>
         <source>Run in the background as a daemon and accept commands</source>
         <translation>ריצה כסוכן ברקע וקבלת פקודות</translation>
     </message>
@@ -2618,6 +2722,10 @@
         <translation>תמיד להתחבר למפרקים ברשת &lt;net&gt;‏ (ipv4,‏ ipv6 או onion)</translation>
     </message>
     <message>
+        <source>Print version and exit</source>
+        <translation>הדפס גירסא וצא</translation>
+    </message>
+    <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>הגדרת גודל מטמון מסדי הנתונים במגה בתים (%d עד %d, בררת מחדל: %d)</translation>
     </message>
@@ -2652,6 +2760,14 @@
     <message>
         <source>Execute command when a relevant alert is received or we see a really long fork (%s in cmd is replaced by message)</source>
         <translation>הרץ פקודה כאשר ההתראה הרלוונטית מתקבלת או כשאנחנו עדים לפיצול ארוך מאוד (%s בשורת הפקודה יוחלף ע"י ההודעה)</translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to send after the fee has been deducted</source>
+        <translation>סכום העברה נמוך מדי לשליחה אחרי גביית העמלה</translation>
+    </message>
+    <message>
+        <source>(default: %u)</source>
+        <translation>(ברירת מחדל: %u)</translation>
     </message>
     <message>
         <source>Cannot resolve -whitebind address: '%s'</source>
@@ -2726,6 +2842,10 @@
         <translation>החתימה על ההעברה נכשלה</translation>
     </message>
     <message>
+        <source>The transaction amount is too small to pay the fee</source>
+        <translation>סכום ההעברה נמוך מכדי לשלם את העמלה</translation>
+    </message>
+    <message>
         <source>This is experimental software.</source>
         <translation>זוהי תכנית נסיונית.</translation>
     </message>
@@ -2738,12 +2858,20 @@
         <translation>סכומי ההעברות חייבים להיות חיוביים</translation>
     </message>
     <message>
+        <source>Transaction too large for fee policy</source>
+        <translation>ההעברה גבוהה מדי עבור מדיניות העמלות</translation>
+    </message>
+    <message>
         <source>Transaction too large</source>
         <translation>סכום ההעברה גדול מדי</translation>
     </message>
     <message>
         <source>Unable to bind to %s on this computer (bind returned error %s)</source>
         <translation>לא ניתן להתאגד עם הפתחה %s במחשב זה (פעולת האיגוד החזירה את השגיאה %s)</translation>
+    </message>
+    <message>
+        <source>Upgrade wallet to latest format on startup</source>
+        <translation>עדכן ארק לפורמט העדכני בהפעלה</translation>
     </message>
     <message>
         <source>Username for JSON-RPC connections</source>
@@ -2784,6 +2912,10 @@
     <message>
         <source>Error loading wallet.dat: Wallet corrupted</source>
         <translation>שגיאה בטעינת הקובץ wallet.dat: הארנק מושחת</translation>
+    </message>
+    <message>
+        <source>(default: %s)</source>
+        <translation>(ברירת מחדל: %s)</translation>
     </message>
     <message>
         <source>Error loading wallet.dat</source>

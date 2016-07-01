@@ -1,4 +1,4 @@
-<TS language="el_GR" version="2.0">
+<TS language="el_GR" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -169,11 +169,6 @@
         <translation>Είστε σίγουροι ότι θέλετε να κρυπτογραφήσετε το πορτοφόλι σας;</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Το Bitcoin Core θα κλεισει τώρα για να τελειώσει την διαδικασία κρυπτογράφησης. Θυμήσου ότι κρυπτογραφώντας το πορτοφόλι σου δεν μπορείς να προστατέψεις πλήρως τα bitcoins σου από κλοπή στην περίπτωση που μολυνθεί ο υπολογιστής σου με κακόβουλο λογισμικό.
-</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>ΣΗΜΑΝΤΙΚΟ: Τα προηγούμενα αντίγραφα ασφαλείας που έχετε κάνει από το αρχείο του πορτοφόλιου σας θα πρέπει να αντικατασταθουν με το νέο που δημιουργείται, κρυπτογραφημένο αρχείο πορτοφόλιου. Για λόγους ασφαλείας, τα προηγούμενα αντίγραφα ασφαλείας του μη κρυπτογραφημένου αρχείου πορτοφόλιου θα καταστουν άχρηστα μόλις αρχίσετε να χρησιμοποιείτε το νέο κρυπτογραφημένο πορτοφόλι. </translation>
     </message>
@@ -192,6 +187,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Πληκτρολόγησε τον παλιό και τον νέο κωδικό στο πορτοφολι.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>Το %1 θα κλεισει τώρα για να τελειώσει την διαδικασία κρυπτογράφησης. Θυμήσου ότι κρυπτογραφώντας το πορτοφόλι σου δεν μπορείς να προστατέψεις πλήρως τα bitcoins σου από κλοπή στην περίπτωση που μολυνθεί ο υπολογιστής σου με κακόβουλο λογισμικό.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -264,6 +263,14 @@
         <translation>Εξοδος από την εφαρμογή</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;Περί %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Σχετικά με το %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Σχετικά με &amp;Qt</translation>
     </message>
@@ -298,10 +305,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>'Ανοιγμα &amp;URI</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Εφαρμογή Bitcoin Core</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -352,10 +355,6 @@
         <translation>&amp;Παραλαβή </translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Σχετικά με το Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Εμφάνισε/Κρύψε</translation>
     </message>
@@ -392,16 +391,8 @@
         <translation>Εργαλειοθήκη καρτελών</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Αίτηση πληρωμών (δημιουργεί QR codes και διευθύνσεις bitcoin: )</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Σχετικά με το Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -418,10 +409,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;Επιλογές γραμμής εντολών</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Εμφανιση του Bitcoin-Qt μήνυματος βοήθειας για να πάρετε μια λίστα με τις πιθανές επιλογές Bitcoin γραμμής εντολών.</translation>
     </message>
     <message>
         <source>No block source available...</source>
@@ -458,6 +445,10 @@
     <message>
         <source>Up to date</source>
         <translation>Ενημερωμένο</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Εμφανιση του %1 μήνυματος βοήθειας για να πάρετε μια λίστα με τις πιθανές επιλογές Bitcoin γραμμής εντολών.</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -700,10 +691,6 @@
         <translation>Αυτή η ετικέτα γίνεται κόκκινη αν η προτεραιότητα είναι μικρότερη από "μεσαία".</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Αυτή η ετικέτα γίνεται κόκκινη αν οποιοσδήποτε παραλήπτης λάβει ποσό μικρότερο από %1.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Μπορεί να διαφέρει +/- %1 Satoshi (ες) ανά εγγραφή.</translation>
     </message>
@@ -822,10 +809,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>έκδοση</translation>
     </message>
@@ -834,8 +817,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>Σχετικά με το Bitcoin Core</translation>
+        <source>About %1</source>
+        <translation>Περί %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -857,16 +840,8 @@
         <translation>Καλώς ήρθατε</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Καλώς ήρθατε στο Bitcoin Core.</translation>
-    </message>
-    <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Καθώς αυτή είναι η πρώτη φορά που εκκινείται το πρόγραμμα, μπορείτε να διαλέξετε πού θα αποθηκεύει το Bitcoin Core τα δεδομένα του.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>O πυρήνας Bitcoin θα κατεβάσει και να αποθηκεύσει ένα αντίγραφο της αλυσίδας μπλοκ Bitcoin. Τουλάχιστον %1GB δεδομένων θα αποθηκευτούν σε αυτόν τον κατάλογο, και θα αυξηθεί με την πάροδο του χρόνου. Το πορτοφόλι θα αποθηκευτεί σε αυτόν τον κατάλογο.</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Καθώς αυτή είναι η πρώτη φορά που εκκινείται το πρόγραμμα, μπορείτε να διαλέξετε πού θα αποθηκεύει το %1 τα δεδομένα του.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -875,10 +850,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Προσαρμογή του φακέλου δεδομένων: </translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1086,6 +1057,10 @@
     <message>
         <source>none</source>
         <translation>κανένα</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1332,10 +1307,6 @@
     <message>
         <source>General</source>
         <translation>Γενικά</translation>
-    </message>
-    <message>
-        <source>Using OpenSSL version</source>
-        <translation>Χρησιμοποιηση της OpenSSL εκδοσης</translation>
     </message>
     <message>
         <source>Using BerkeleyDB version</source>
@@ -1916,10 +1887,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Το Bitcoin Core τερματίζεται...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>Μην απενεργοποιήσετε τον υπολογιστή μέχρι να κλείσει αυτό το παράθυρο.</translation>
     </message>
@@ -2058,14 +2025,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Οι προγραμματιστές του Bitcoin Core</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -2082,10 +2041,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Ανοιχτό μέχρι %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>σύγκρουση</translation>
     </message>
     <message>
         <source>%1/offline</source>

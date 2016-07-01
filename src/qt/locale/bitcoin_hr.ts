@@ -1,4 +1,4 @@
-<TS language="hr" version="2.0">
+<TS language="hr" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -258,6 +258,14 @@
         <translation>Izlazak iz programa</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;Više o %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Prikaži informacije o programu %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Više o &amp;Qt</translation>
     </message>
@@ -292,10 +300,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Otvori &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Core klijent</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -346,10 +350,6 @@
         <translation>Pri&amp;mi</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Prikaži informacije o programu Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>Po&amp;kaži / Sakrij</translation>
     </message>
@@ -386,20 +386,8 @@
         <translation>Traka kartica</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Zatraži uplatu (stvara QR kod i bitcoin: URI adresu)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;O programu Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Promijeni postavke programa</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -416,10 +404,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>Opcije &amp;naredbene linije</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Ispis svih opcija naredbene linije programa sa kratkim opisom</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -654,10 +638,6 @@
         <translation>Oznaka postane crvene boje ako je prioriteta transakcije niža od "srednja"</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Oznaka postane crvene boje ako je iznos manji od %1</translation>
-    </message>
-    <message>
         <source>yes</source>
         <translation>da</translation>
     </message>
@@ -747,10 +727,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>verzija</translation>
     </message>
@@ -759,8 +735,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>O programu Bitcoin Core</translation>
+        <source>About %1</source>
+        <translation>Više o %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -780,14 +756,6 @@
     <message>
         <source>Welcome</source>
         <translation>Dobrodošli</translation>
-    </message>
-    <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Dobrodošli u programu Bitcoin Core.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -864,14 +832,6 @@
         <translation>&amp;Mreža</translation>
     </message>
     <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Program se automatski pokrene po prijavi u sustav.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>&amp;Pokreni program kod prijave u sustav</translation>
-    </message>
-    <message>
         <source>W&amp;allet</source>
         <translation>&amp;Novčanik</translation>
     </message>
@@ -942,6 +902,10 @@
     <message>
         <source>default</source>
         <translation>standardne vrijednosti</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>The supplied proxy address is invalid.</source>
@@ -1018,10 +982,6 @@
         <translation>Konzola za dijagnostiku</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>OpenSSL verzija u upotrebi</translation>
-    </message>
-    <message>
         <source>Network</source>
         <translation>Mreža</translation>
     </message>
@@ -1084,10 +1044,6 @@
     <message>
         <source>Clear console</source>
         <translation>Očisti konzolu</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Dobrodošli u Bitcoin RPC konzolu.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -1405,10 +1361,6 @@
     </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
     <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>

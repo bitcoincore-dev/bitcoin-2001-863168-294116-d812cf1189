@@ -1,4 +1,4 @@
-<TS language="es_VE" version="2.0">
+<TS language="es_VE" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -20,6 +20,10 @@
     <message>
         <source>&amp;Copy</source>
         <translation>&amp;Copiar</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>C&amp;errar</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -234,16 +238,20 @@
         <translation>Buscar historial de transacciones</translation>
     </message>
     <message>
+        <source>E&amp;xit</source>
+        <translation>S&amp;alir</translation>
+    </message>
+    <message>
         <source>Quit application</source>
         <translation>Quitar aplicación</translation>
     </message>
     <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Recepción de direcciones</translation>
+        <source>&amp;Options...</source>
+        <translation>&amp;Opciones...</translation>
     </message>
     <message>
-        <source>Bitcoin Core client</source>
-        <translation>Cliente Bitcoin Core</translation>
+        <source>&amp;Receiving addresses...</source>
+        <translation>Recepción de direcciones</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -286,10 +294,6 @@
         <translation>&amp;Recibir</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Mostrar información acerca de Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Mostar / Ocultar</translation>
     </message>
@@ -316,14 +320,6 @@
     <message>
         <source>&amp;Settings</source>
         <translation>&amp;Configuración</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>Acerca de Bitcoin Core</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -673,20 +669,12 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versión</translation>
     </message>
     <message>
         <source>(%1-bit)</source>
         <translation>(%1-bit)</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Acerca de Bitcoin Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -704,8 +692,8 @@
 <context>
     <name>Intro</name>
     <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin Core descargará y almacenará una copia de la cadena de bloques Bitcoin. Al menos %1GB de datos serán almacenados en este directorio, y crecerá con el tiempo. La billetera será también almacenada en este directorio.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 descargará y almacenará una copia de la cadena de bloques Bitcoin. Al menos %2GB de datos serán almacenados en este directorio, y crecerá con el tiempo. La billetera será también almacenada en este directorio.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -714,10 +702,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Usa un directorio de datos personalizado:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -762,16 +746,36 @@
         <translation>&amp;Main</translation>
     </message>
     <message>
+        <source>&amp;Network</source>
+        <translation>&amp;Red</translation>
+    </message>
+    <message>
         <source>W&amp;allet</source>
         <translation>Billetera</translation>
+    </message>
+    <message>
+        <source>Expert</source>
+        <translation>Experto</translation>
     </message>
     <message>
         <source>none</source>
         <translation>ninguno</translation>
     </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
+    <message>
+        <source>Available:</source>
+        <translation>Disponible:</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>Pendiente:</translation>
+    </message>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -795,6 +799,18 @@
         <source>&amp;Information</source>
         <translation>Información</translation>
     </message>
+    <message>
+        <source>Network</source>
+        <translation>Red</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Entrada:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Salida:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -805,6 +821,10 @@
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Etiqueta:</translation>
+    </message>
+    <message>
+        <source>Show</source>
+        <translation>Mostrar</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -935,10 +955,6 @@
     </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
     </context>
 <context>
     <name>TrafficGraphWidget</name>

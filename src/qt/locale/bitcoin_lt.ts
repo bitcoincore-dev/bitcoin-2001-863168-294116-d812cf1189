@@ -1,4 +1,4 @@
-<TS language="lt" version="2.0">
+<TS language="lt" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -250,6 +250,14 @@
         <translation>Išjungti programą</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;Apie %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Rodyti informaciją apie %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Apie &amp;Qt</translation>
     </message>
@@ -284,10 +292,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Atidaryti &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Core klientas</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -338,10 +342,6 @@
         <translation>&amp;Gauti</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Rodyti informaciją apie Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Rodyti / Slėpti</translation>
     </message>
@@ -368,14 +368,6 @@
     <message>
         <source>Tabs toolbar</source>
         <translation>Kortelių įrankinė</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin branduolys</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Apie Bitcoin Core</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -637,16 +629,12 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin branduolys</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versija</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>Apie Bitcoin Core</translation>
+        <source>About %1</source>
+        <translation>Apie %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -666,14 +654,6 @@
     <message>
         <source>Welcome</source>
         <translation>Sveiki</translation>
-    </message>
-    <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Sveiki atvykę į Bitcoin Core.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin branduolys</translation>
     </message>
     <message>
         <source>Error</source>
@@ -792,6 +772,10 @@
     <message>
         <source>none</source>
         <translation>niekas</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin branduolys</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -922,10 +906,6 @@
     <message>
         <source>Debug window</source>
         <translation>Derinimo langas</translation>
-    </message>
-    <message>
-        <source>Using OpenSSL version</source>
-        <translation>Naudojama OpenSSL versija</translation>
     </message>
     <message>
         <source>Startup time</source>
@@ -1359,10 +1339,6 @@
 </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin branduolys</translation>
-    </message>
     <message>
         <source>[testnet]</source>
         <translation>[testavimotinklas]</translation>

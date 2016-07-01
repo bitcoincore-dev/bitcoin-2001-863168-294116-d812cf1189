@@ -1,4 +1,4 @@
-<TS language="es" version="2.0">
+<TS language="es" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>¿Estás seguro que deseas cifrar tu monedero ?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin Core se cerrará ahora para completar el procedo de encriptación. Recuerda que encriptar tu cartera no te protegerá completamente de la pérdida de bitcoins por infección de malware en tu computadora.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>IMPORTANTE: Cualquier copia de seguridad que haya realizado previamente de su archivo de monedero debe reemplazarse con el nuevo archivo de monedero cifrado. Por razones de seguridad, las copias de seguridad previas del archivo de monedero no cifradas serán inservibles en cuanto comience a usar el nuevo monedero cifrado.</translation>
     </message>
@@ -190,6 +186,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Introduce la antigua y la nueva contraseña de la cartera.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 se cerrará ahora para completar el procedo de encriptación. Recuerda que encriptar tu cartera no te protegerá completamente de la pérdida de bitcoins por infección de malware en tu computadora.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -270,6 +270,14 @@
         <translation>Salir de la aplicación</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;Acerca de %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Mostrar información acerca de %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Acerca de &amp;Qt</translation>
     </message>
@@ -280,6 +288,10 @@
     <message>
         <source>&amp;Options...</source>
         <translation>&amp;Opciones...</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for %1</source>
+        <translation>Modificar las opciones de configuración para %1</translation>
     </message>
     <message>
         <source>&amp;Encrypt Wallet...</source>
@@ -304,10 +316,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Abrir &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Cliente Bitcoin Core</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,10 +366,6 @@
         <translation>&amp;Recibir</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Mostrar información acerca de Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Mostrar / Ocultar</translation>
     </message>
@@ -398,20 +402,8 @@
         <translation>Barra de pestañas</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Solicitar pagos (generando códigos QR e identificadores URI "bitcoin:")</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Acerca de Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Modificar las opciones de configuración de Bitcoin</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -428,10 +420,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;Opciones de consola de comandos</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Mostrar el mensaje de ayuda de Bitcoin Core con una lista de las posibles opciones de la consola de comandos de Bitcoin</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -492,6 +480,14 @@
     <message>
         <source>Up to date</source>
         <translation>Actualizado</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Mostrar el mensaje de ayuda %1 para obtener una lista de los posibles comandos de linea de comandos de Bitcoin</translation>
+    </message>
+    <message>
+        <source>%1 client</source>
+        <translation>%1 cliente</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -734,10 +730,6 @@
         <translation>Esta etiqueta se mostrará en rojo si la prioridad es menor a "media"</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Esta etiqueta se vuelve roja si el cambio es menor que %1</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Puede variar en +/- %1 satoshi(s) por entrada.</translation>
     </message>
@@ -855,10 +847,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versión</translation>
     </message>
@@ -867,8 +855,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>Acerca de Bitcoin Core</translation>
+        <source>About %1</source>
+        <translation>Acerda de %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -881,10 +869,6 @@
     <message>
         <source>command-line options</source>
         <translation>opciones de la consola de comandos</translation>
-    </message>
-    <message>
-        <source>Start minimized</source>
-        <translation>Arrancar minimizado</translation>
     </message>
     <message>
         <source>UI Options:</source>
@@ -918,16 +902,16 @@
         <translation>Bienvenido</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Bienvenido a Bitcoin Core</translation>
+        <source>Welcome to %1.</source>
+        <translation>Bienvenido a %1</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Al ser la primera vez que se ejecuta el programa, puede elegir dónde almacenará sus datos Bitcoin Core.</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Al ser la primera vez que se ejecuta el programa, puede elegir donde %1 almacenara sus datos</translation>
     </message>
     <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin Core va a descargar y guardar una copia de la cadena de bloques de Bitcoin. Se almacenará al menos %1GB de datos en este directorio, que irá creciendo con el tiempo. El monedero se guardará también en este directorio.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 va a descargar y almacenar una copia de la cadena de bloques de Bitcoin. Al menos %2GB de datos seran almacenados en este directorio, que ira creciendo con el tiempo. El monedero se guardara tambien en ese directorio. </translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -936,10 +920,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Utilizar un directorio de datos personalizado:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -992,6 +972,14 @@
         <translation>&amp;Principal</translation>
     </message>
     <message>
+        <source>Automatically start %1 after logging in to the system.</source>
+        <translation>Iniciar automaticamente  %1 al encender el sistema.</translation>
+    </message>
+    <message>
+        <source>&amp;Start %1 on system login</source>
+        <translation>&amp;Iniciar %1 al iniciar el sistema</translation>
+    </message>
+    <message>
         <source>Size of &amp;database cache</source>
         <translation>Tamaño de cache de la &amp;base de datos</translation>
     </message>
@@ -1020,10 +1008,6 @@
         <translation>Minimizar en lugar de salir de la aplicación cuando la ventana está cerrada. Cuando se activa esta opción, la aplicación sólo se cerrará después de seleccionar Salir en el menú.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>El idioma de la interfaz de usuario puede establecerse aquí. Este ajuste se aplicará cuando se reinicie Bitcoin.</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>Identificadores URL de terceros (por ejemplo, un explorador de bloques) que aparecen en la pestaña de transacciones como elementos del menú contextual. El %s en la URL es reemplazado por el valor hash de la transacción. Se pueden separar URL múltiples por una barra vertical |.</translation>
     </message>
@@ -1046,14 +1030,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Red</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Iniciar automáticamente Bitcoin Core al iniciar el sistema.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>&amp;Iniciar Bitcoin Core al inicio del sistema</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1128,10 +1104,6 @@
         <translation>Tor</translation>
     </message>
     <message>
-        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
-        <translation>Usar distintos proxys SOCKS5 para comunicarse vía Tor de forma anónima:</translation>
-    </message>
-    <message>
         <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor hidden services.</source>
         <translation>Conectar a la red Bitcoin mediante un proxy SOCKS5 por separado para los servicios ocultos de Tor.</translation>
     </message>
@@ -1164,6 +1136,10 @@
         <translation>I&amp;dioma de la interfaz de usuario</translation>
     </message>
     <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>El idioma de la interfaz de usuario puede establecerse aquí. Esta configuración tendrá efecto tras reiniciar %1.</translation>
+    </message>
+    <message>
         <source>&amp;Unit to show amounts in:</source>
         <translation>Mostrar las cantidades en la &amp;unidad:</translation>
     </message>
@@ -1190,6 +1166,10 @@
     <message>
         <source>none</source>
         <translation>ninguna</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1478,10 +1458,6 @@
         <translation>General</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Utilizando la versión de OpenSSL</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Utilizando la versión de BerkeleyDB</translation>
     </message>
@@ -1520,10 +1496,6 @@
     <message>
         <source>Memory usage</source>
         <translation>Uso de memoria</translation>
-    </message>
-    <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Abre el archivo de registro de depuración de Bitcoin desde el directorio de datos actual. Esto puede tardar unos segundos para ficheros de registro de gran tamaño.</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1572,6 +1544,10 @@
     <message>
         <source>User Agent</source>
         <translation>User Agent</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Abrir el archivo de depuración %1 desde el directorio de datos actual. Puede tardar unos segundos para ficheros de gran tamaño.</translation>
     </message>
     <message>
         <source>Services</source>
@@ -1682,8 +1658,8 @@
         <translation>&amp;Desbanear Nodo</translation>
     </message>
     <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Bienvenido a la consola RPC de Bitcoin Core.</translation>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>Bienvenido a la consola RPC %1.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2268,8 +2244,8 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin Core se está cerrando...</translation>
+        <source>%1 is shutting down...</source>
+        <translation>%1 se esta cerrando...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -2418,14 +2394,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Los desarrolladores de Bitcoin Core</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -2442,10 +2410,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Abierto hasta %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>en conflicto</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -2987,6 +2951,18 @@
         <translation>Aceptar conexiones desde el exterior (predeterminado: 1 si no -proxy o -connect)</translation>
     </message>
     <message>
+        <source>-fallbackfee is set very high! This is the transaction fee you may pay when fee estimates are not available.</source>
+        <translation>-fallbackfee tiene un ajuste muy alto! Esta es la comisión de transacción que pagarás cuando las estimaciones de comisiones no estén disponibles.</translation>
+    </message>
+    <message>
+        <source>A fee rate (in %s/kB) that will be used when fee estimation has insufficient data (default: %s)</source>
+        <translation>Una comision (en %s/kB) que sera usada cuando las estimacion de comision no disponga de suficientes datos (predeterminado: %s)</translation>
+    </message>
+    <message>
+        <source>Accept relayed transactions received from whitelisted peers even when not relaying transactions (default: %d)</source>
+        <translation>Aceptar transacciones retransmitidas recibidas desde nodos en la lista blanca incluso cuando no estés retransmitiendo transacciones (predeterminado: %d)</translation>
+    </message>
+    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>Vincular a la dirección dada y escuchar siempre en ella. Utilice la notación [host]:port para IPv6</translation>
     </message>
@@ -3001,6 +2977,10 @@
     <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
         <translation>Ejecutar comando cuando una transacción del monedero cambia (%s en cmd se remplazará por TxID)</translation>
+    </message>
+    <message>
+        <source>Force relay of transactions from whitelisted peers even they violate local relay policy (default: %d)</source>
+        <translation>Fuerza la retransmisión de transacciones desde nodos en la lista blanca incluso si violan la política de retransmisiones local (predeterminado: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3019,6 +2999,10 @@
         <translation>No se ha podido acceder a %s en esta máquina. Probablemente ya se está ejecutando Bitcoin Core.</translation>
     </message>
     <message>
+        <source>Unsupported argument -whitelistalwaysrelay ignored, use -whitelistrelay and/or -whitelistforcerelay.</source>
+        <translation>El argumento no soportado -whitelistalwaysrelay ha sido ignorado, utiliza -whitelistrelay  y/o -whitelistforcerelay.</translation>
+    </message>
+    <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
         <translation>Utiliza UPnP para asignar el puerto de escucha (predeterminado: 1 cuando esta escuchando sin -proxy)</translation>
     </message>
@@ -3033,6 +3017,10 @@
     <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
         <translation>Atención: ¡Parece que la red no está totalmente de acuerdo! Algunos mineros están presentando inconvenientes.</translation>
+    </message>
+    <message>
+        <source>Warning: Unknown block versions being mined! It's possible unknown rules are in effect</source>
+        <translation>Advertencia: Se están minando versiones de bloques desconocidas! Es posible que normas desconocidas estén activas</translation>
     </message>
     <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
@@ -3053,6 +3041,10 @@
     <message>
         <source>&lt;category&gt; can be:</source>
         <translation>&lt;category&gt; puede ser:</translation>
+    </message>
+    <message>
+        <source>Append comment to the user agent string</source>
+        <translation>Adjunta un comentario a la linea de agente de usuario</translation>
     </message>
     <message>
         <source>Block creation options:</source>
@@ -3091,8 +3083,16 @@
         <translation>Activar publicar transacción .hash en &lt;.Address&gt;</translation>
     </message>
     <message>
+        <source>Enable publish raw block in &lt;address&gt;</source>
+        <translation>Habilita la publicacion de bloques en bruto en &lt;direccion&gt;</translation>
+    </message>
+    <message>
         <source>Enable publish raw transaction in &lt;address&gt;</source>
         <translation>Habilitar publicar transacción en rama en &lt;dirección&gt;</translation>
+    </message>
+    <message>
+        <source>Enable transaction replacement in the memory pool (default: %u)</source>
+        <translation>Habilita el reemplazamiento de transacciones en la piscina de memoria (predeterminado: %u)</translation>
     </message>
     <message>
         <source>Error initializing block database</source>
@@ -3131,8 +3131,20 @@
         <translation>Dirección -onion inválida: '%s'</translation>
     </message>
     <message>
+        <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
+        <translation>Cantidad inválida para -fallbackfee=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
         <source>Keep the transaction memory pool below &lt;n&gt; megabytes (default: %u)</source>
         <translation>Mantener la memoria de transacciones por debajo de &lt;n&gt; megabytes (predeterminado: %u)</translation>
+    </message>
+    <message>
+        <source>Location of the auth cookie (default: data dir)</source>
+        <translation>Ubicación de la cookie de autenticación (default: data dir)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Mínimo de bytes por sigop en transacciones que retransmitimos y minamos (predeterminado: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3141,6 +3153,10 @@
     <message>
         <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
         <translation>Sólo conectar a nodos en redes &lt;net&gt; (ipv4, ipv6 o onion)</translation>
+    </message>
+    <message>
+        <source>Print version and exit</source>
+        <translation>Imprimir versión y salir</translation>
     </message>
     <message>
         <source>Prune cannot be configured with a negative value.</source>
@@ -3197,10 +3213,6 @@
     <message>
         <source>Wallet options:</source>
         <translation>Opciones de monedero:</translation>
-    </message>
-    <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Peligro: Esta versión es obsoleta; actualización requerida!</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>
@@ -3297,10 +3309,6 @@
     <message>
         <source>Activating best chain...</source>
         <translation>Activando la mejor cadena...</translation>
-    </message>
-    <message>
-        <source>Always relay transactions received from whitelisted peers (default: %d)</source>
-        <translation>Siempre retrasmitir las transacciones recibidas de nodos en la lista blanca (predeterminado: %d)</translation>
     </message>
     <message>
         <source>Attempt to recover private keys from a corrupt wallet.dat on startup</source>
@@ -3466,6 +3474,10 @@
     <message>
         <source>Warning</source>
         <translation>Aviso</translation>
+    </message>
+    <message>
+        <source>Warning: unknown new rules activated (versionbit %i)</source>
+        <translation>Advertencia: nuevas reglas desconocidas activadas (versionbit %i)</translation>
     </message>
     <message>
         <source>Whether to operate in a blocks only mode (default: %u)</source>

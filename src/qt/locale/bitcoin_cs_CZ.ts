@@ -1,4 +1,4 @@
-<TS language="cs_CZ" version="2.0">
+<TS language="cs_CZ" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -343,6 +343,10 @@
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
+        <source>&amp;Amount:</source>
+        <translation>&amp;Množství:</translation>
+    </message>
+    <message>
         <source>&amp;Label:</source>
         <translation>&amp;Popisek:</translation>
     </message>
@@ -418,6 +422,10 @@
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation>&amp;Množství:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Popisek:</translation>

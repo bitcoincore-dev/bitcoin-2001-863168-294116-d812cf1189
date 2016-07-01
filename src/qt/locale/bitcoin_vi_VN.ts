@@ -1,4 +1,4 @@
-<TS language="vi_VN" version="2.0">
+<TS language="vi_VN" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -158,6 +158,10 @@
         <translation>Thoát chương trình</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Xem thông tin về %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Về &amp;Qt</translation>
     </message>
@@ -172,10 +176,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Mở &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Core client</translation>
     </message>
     <message>
         <source>Bitcoin</source>
@@ -212,14 +212,6 @@
     <message>
         <source>&amp;Help</source>
         <translation>Trợ &amp;giúp</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Về Bitcoin Core</translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
@@ -377,16 +369,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>version</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Về Bitcoin Core</translation>
     </message>
     </context>
 <context>
@@ -394,10 +378,6 @@
     <message>
         <source>Welcome</source>
         <translation>Chào mừng</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -448,6 +428,10 @@
     <message>
         <source>default</source>
         <translation>mặc định</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     </context>
 <context>
@@ -513,6 +497,10 @@
     <message>
         <source>&amp;Amount:</source>
         <translation>Lượng:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>Nhãn:</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -606,6 +594,10 @@
         <source>A&amp;mount:</source>
         <translation>Lượng:</translation>
     </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>Nhãn:</translation>
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -615,10 +607,6 @@
     </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
     </context>
 <context>
     <name>TrafficGraphWidget</name>

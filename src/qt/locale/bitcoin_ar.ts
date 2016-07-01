@@ -1,4 +1,4 @@
-<TS language="ar" version="2.0">
+<TS language="ar" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>هل أنت متأكد من رغبتك في تشفير محفظتك ؟</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>بتكوين سوف يغلق الآن لإنهاء عملية التشفير. تذكر أن التشفير لا يستطيع حماية محفظتك تمامًا من السرقة من خلال البرمجيات الخبيثة التي تصيب جهازك </translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>هام: أي نسخة إحتياطية سابقة  قمت بها لمحفظتك يجب استبدالها  بأخرى حديثة، مشفرة. لأسباب أمنية، النسخ الاحتياطية السابقة لملفات المحفظة الغير مشفرة تصبح عديمة الفائدة مع بداية استخدام المحفظة المشفرة الجديدة.</translation>
     </message>
@@ -222,7 +218,15 @@
 </context>
 <context>
     <name>BanTableModel</name>
-    </context>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>عنوان البروتوكول/قناع</translation>
+    </message>
+    <message>
+        <source>Banned Until</source>
+        <translation>محظور حتى</translation>
+    </message>
+</context>
 <context>
     <name>BitcoinGUI</name>
     <message>
@@ -262,8 +266,16 @@
         <translation>الخروج من التطبيق</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;عن %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>أظهر المعلومات حولة %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
-        <translation>عن</translation>
+        <translation>عن &amp;Qt</translation>
     </message>
     <message>
         <source>Show information about Qt</source>
@@ -296,10 +308,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>افتح &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>عميل bitcion core</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -350,10 +358,6 @@
         <translation>&amp;استقبل</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>  اظهار معلومات حول bitcion core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;عرض / اخفاء</translation>
     </message>
@@ -390,16 +394,8 @@
         <translation>شريط أدوات علامات التبويب</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>جوهر البيت كوين</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>حول bitcoin core</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>تغيير خيارات الإعداد لأساس Bitcoin</translation>
+        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
+        <translation>أطلب دفعات (يولد كودات الرمز المربع وبيت كوين: العناوين المعطاة)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -414,8 +410,32 @@
         <translation>فتح URI : Bitcoin أو طلب دفع</translation>
     </message>
     <message>
+        <source>&amp;Command-line options</source>
+        <translation>&amp;خيارات سطر الأوامر</translation>
+    </message>
+    <message>
+        <source>No block source available...</source>
+        <translation>لا يوجد أي مصدر الكتلة</translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation><numerusform>لم يتم معالجة أي كتلة سجل المعاملات</numerusform><numerusform>تم معالجة كتلة واحدة سجل المعاملات</numerusform><numerusform>تم معالجة كتلتين سجل المعاملات</numerusform><numerusform>تم معالجة %n كتل سجل المعاملات</numerusform><numerusform>تم معالجة %n كتلة سجل المعاملات</numerusform><numerusform>تم معالجة %n كتلة سجل المعاملات</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>0 ساعة</numerusform><numerusform>%n ساعة</numerusform><numerusform>%n ساعتين</numerusform><numerusform>%n ساعات</numerusform><numerusform>%n ساعة</numerusform><numerusform>%n ساعات</numerusform></translation>
+    </message>
+    <message>
         <source>%1 and %2</source>
         <translation>%1 و %2</translation>
+    </message>
+    <message>
+        <source>Last received block was generated %1 ago.</source>
+        <translation>تم توليد الكتلة المستقبلة الأخيرة منذ %1.</translation>
+    </message>
+    <message>
+        <source>Transactions after this will not yet be visible.</source>
+        <translation>المعاملات بعد ذلك لن تكون مريئة بعد.</translation>
     </message>
     <message>
         <source>Error</source>
@@ -492,6 +512,14 @@
         <translation>المبلغ</translation>
     </message>
     <message>
+        <source>Received with label</source>
+        <translation>مستقبل مع ملصق</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>مستقبل مع عنوان</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>التاريخ</translation>
     </message>
@@ -560,6 +588,14 @@
         <translation>متوسط-مرتفع</translation>
     </message>
     <message>
+        <source>medium</source>
+        <translation>متوسط</translation>
+    </message>
+    <message>
+        <source>low-medium</source>
+        <translation>متوسط-منخفض</translation>
+    </message>
+    <message>
         <source>low</source>
         <translation>منخفض</translation>
     </message>
@@ -576,12 +612,28 @@
         <translation>لا شيء</translation>
     </message>
     <message>
+        <source>This label turns red if the transaction size is greater than 1000 bytes.</source>
+        <translation>هذا الملصق يصبح أخمرا إذا كان حجم المعاملة أكبر من 1000 بايت.</translation>
+    </message>
+    <message>
         <source>yes</source>
         <translation>نعم</translation>
     </message>
     <message>
         <source>no</source>
         <translation>لا</translation>
+    </message>
+    <message>
+        <source>This means a fee of at least %1 per kB is required.</source>
+        <translation>هذا يعني أن من المطلوب أن يكون الرسم ألى الأقل %1 لكل كيلوبايت.</translation>
+    </message>
+    <message>
+        <source>Can vary +/- 1 byte per input.</source>
+        <translation>يمكن أن يتفاوت بـ 1 بايت لكل مساهمة.</translation>
+    </message>
+    <message>
+        <source>Transactions with higher priority are more likely to get included into a block.</source>
+        <translation>المعاملات التي لديها أولوية أعلى على الأرجح سيتم إنضمامها في الكتلة.</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -627,6 +679,10 @@
         <translation>هدا العنوان "%1" موجود مسبقا في دفتر العناوين</translation>
     </message>
     <message>
+        <source>The entered address "%1" is not a valid Bitcoin address.</source>
+        <translation>العنوان المدخل "%1" ليس عنوان بيت كوين صحيح.</translation>
+    </message>
+    <message>
         <source>Could not unlock wallet.</source>
         <translation> يمكن فتح المحفظة.</translation>
     </message>
@@ -646,6 +702,14 @@
         <translation>الاسم</translation>
     </message>
     <message>
+        <source>Directory already exists. Add %1 if you intend to create a new directory here.</source>
+        <translation>الدليل موجوج بالفعل. أضف %1 لو نويت إنشاء دليل جديد هنا.</translation>
+    </message>
+    <message>
+        <source>Path already exists, and is not a directory.</source>
+        <translation>المسار موجود بالفعل، وهو ليس دليلاً.</translation>
+    </message>
+    <message>
         <source>Cannot create data directory here.</source>
         <translation>لا يمكن انشاء دليل بيانات هنا .</translation>
     </message>
@@ -653,22 +717,46 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>جوهر البيت كوين</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>النسخة</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>عن جوهر البيت كوين</translation>
+        <source>About %1</source>
+        <translation>عن %1</translation>
+    </message>
+    <message>
+        <source>Command-line options</source>
+        <translation>خيارات سطر الأوامر</translation>
     </message>
     <message>
         <source>Usage:</source>
         <translation>المستخدم</translation>
     </message>
-    </context>
+    <message>
+        <source>command-line options</source>
+        <translation>خيارات سطر الأوامر</translation>
+    </message>
+    <message>
+        <source>UI Options:</source>
+        <translation>خيارات واجهة المستخدم</translation>
+    </message>
+    <message>
+        <source>Choose data directory on startup (default: %u)</source>
+        <translation>اختر دليل البيانات عند بدء التشغير (افتراضي: %u)</translation>
+    </message>
+    <message>
+        <source>Set SSL root certificates for payment request (default: -system-)</source>
+        <translation>أضع شهادة بروتوكول الشبقة الأمنية لطلب المدفوع (افتراضي: -نظام-)</translation>
+    </message>
+    <message>
+        <source>Show splash screen on startup (default: %u)</source>
+        <translation>أظهر شاشة البداية عند بدء التشغيل (افتراضي: %u)</translation>
+    </message>
+    <message>
+        <source>Reset all settings changes made over the GUI</source>
+        <translation>إعادة تعيين كل الإعدادات تم تغييرها من خلال الواجهة الرسومية</translation>
+    </message>
+</context>
 <context>
     <name>Intro</name>
     <message>
@@ -682,10 +770,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>استخدام دليل بيانات مخصص:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>جوهر البيت كوين</translation>
     </message>
     <message>
         <source>Error</source>
@@ -780,6 +864,10 @@
     <message>
         <source>none</source>
         <translation>لا شيء</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>جوهر البيت كوين</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1152,6 +1240,10 @@
         <translation>رسوم المعاملة:</translation>
     </message>
     <message>
+        <source>Hide</source>
+        <translation>إخفاء</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>إرسال إلى عدة مستلمين في وقت واحد</translation>
     </message>
@@ -1372,14 +1464,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>جوهر البيت كوين</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>مطوري جوهر البيت كوين</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -1392,10 +1476,6 @@
     <message>
         <source>Open until %1</source>
         <translation>مفتوح حتى %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>يتعارض</translation>
     </message>
     <message>
         <source>%1/offline</source>

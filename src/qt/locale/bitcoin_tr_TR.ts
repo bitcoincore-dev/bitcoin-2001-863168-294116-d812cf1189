@@ -1,4 +1,4 @@
-<TS language="tr_TR" version="2.0">
+<TS language="tr_TR" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -84,6 +84,10 @@
     <message>
         <source>Export Address List</source>
         <translation>Adres Listesini Dışa Aktar</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Virgül ile ayrılmış dosya (*.csv)</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -178,6 +182,10 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>Etiket:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -214,6 +222,10 @@
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>Etiket:</translation>
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -245,6 +257,10 @@
     <message>
         <source>Exporting Failed</source>
         <translation>Dışa Aktarma Başarısız Oldu</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Virgül ile ayrılmış dosya (*.csv)</translation>
     </message>
     <message>
         <source>Label</source>

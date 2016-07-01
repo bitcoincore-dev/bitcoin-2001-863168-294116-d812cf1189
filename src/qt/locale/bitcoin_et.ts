@@ -1,4 +1,4 @@
-<TS language="et" version="2.0">
+<TS language="et" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -214,6 +214,10 @@
         <translation>Väljumine</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Kuva %1 kohta käiv info</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Teave &amp;Qt kohta</translation>
     </message>
@@ -324,14 +328,6 @@
     <message>
         <source>Tabs toolbar</source>
         <translation>Vahelehe tööriistariba</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoini tuumik</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>Kirjeldus Bitcoini Tuumast</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -591,16 +587,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoini tuumik</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versioon</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Kirjeldus Bitcoini Tuumast</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -620,10 +608,6 @@
     <message>
         <source>Welcome</source>
         <translation>Teretulemast</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoini tuumik</translation>
     </message>
     <message>
         <source>Error</source>
@@ -740,6 +724,10 @@
         <translation>vaikeväärtus</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoini tuumik</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Kinnita valikute algseadistamine</translation>
     </message>
@@ -828,10 +816,6 @@
     <message>
         <source>General</source>
         <translation>Üldine</translation>
-    </message>
-    <message>
-        <source>Using OpenSSL version</source>
-        <translation>Kasutan OpenSSL versiooni</translation>
     </message>
     <message>
         <source>Startup time</source>
@@ -1289,14 +1273,6 @@
 </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoini tuumik</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Bitcoini Tuuma arendajad</translation>
-    </message>
     <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>

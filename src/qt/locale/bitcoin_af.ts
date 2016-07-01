@@ -152,10 +152,6 @@
         <translation>Is u seker dat u die beursie wil kodifiseer?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin Kern gaan nou toemaak om die kodifikasie af te handel. Onthou dat die kodifikasie van u beursie nie altyd u munte kan beskerm teen diefstal deur kwaadwillige sagteware op u rekenaar nie.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>BELANGRIK:  Alle vorige kopieë en rugsteun-weergawes wat u tevore van die gemaak het, moet vervang word met die jongste weergawe van u nuutste gekodifiseerde beursie.  Alle vorige weergawes en rugsteun-kopieë van u beursie sal nutteloos raak die oomblik wat u die nuut-gekodifiseerde beursie begin gebruik.</translation>
     </message>
@@ -174,6 +170,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Tik die ou en die nuwe wagwoorde vir die beursie.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 gaan nou toemaak om die kodifikasie af te handel. Onthou dat die kodifikasie van u beursie nie altyd u munte kan beskerm teen diefstal deur kwaadwillige sagteware op u rekenaar nie.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -258,10 +258,6 @@
         <translation>Oop &amp; URI...</translation>
     </message>
     <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Kern klient</translation>
-    </message>
-    <message>
         <source>Importing blocks from disk...</source>
         <translation>Besig om blokke vanaf die hardeskyf in te voer...</translation>
     </message>
@@ -298,10 +294,6 @@
         <translation>&amp;Ontvang</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Vertoon inligting oor Bitcoin Kern</translation>
-    </message>
-    <message>
         <source>Show or hide the main Window</source>
         <translation>Wys of versteek die hoofbladsy</translation>
     </message>
@@ -322,20 +314,8 @@
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Kern</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Versoek betalings (genereer QR-kodes en bitcoin: URI's)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Omtrent Bitcoin Kern</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Verander konfigurasie-opsies vir Bitcoin Kern</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -362,6 +342,10 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;Adres</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -369,26 +353,26 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Kern</translation>
-    </message>
-    <message>
         <source>Reset all settings changes made over the GUI</source>
         <translation>Herstel al my veranderinge aan die stellings terug na die verstek-opsies</translation>
     </message>
 </context>
 <context>
     <name>Intro</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Kern</translation>
-    </message>
     </context>
 <context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>W&amp;allet</source>
+        <translation>&amp;Beursie</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Kern</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -413,6 +397,10 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Dupliseer Adres</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adres</translation>
@@ -443,10 +431,6 @@
     </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Kern</translation>
-    </message>
     </context>
 <context>
     <name>TrafficGraphWidget</name>

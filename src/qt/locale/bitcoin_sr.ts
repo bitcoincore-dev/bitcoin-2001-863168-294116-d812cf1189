@@ -1,4 +1,4 @@
-<TS language="sr" version="2.0">
+<TS language="sr" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -166,6 +166,10 @@
         <translation>Напустите програм</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Прегледајте информације о %1-у</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>О &amp;Qt-у</translation>
     </message>
@@ -220,10 +224,6 @@
     <message>
         <source>Tabs toolbar</source>
         <translation>Трака са картицама</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>O Bitcoin Coru</translation>
     </message>
     <message>
         <source>Up to date</source>
@@ -319,10 +319,6 @@
     <message>
         <source>version</source>
         <translation>верзија</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>O Bitcoin Coru</translation>
     </message>
     <message>
         <source>Usage:</source>

@@ -1,4 +1,4 @@
-<TS language="ja" version="2.0">
+<TS language="ja" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>本当にウォレットを暗号化しますか?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>暗号化処理を完了させるため Bitcoin Core をいますぐ終了します。ウォレットの暗号化では、コンピュータに感染したマルウェアなどによるビットコインの盗難から完全に守ることはできないことにご注意ください。</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>重要: 過去のウォレット ファイルのバックアップは、暗号化された新しいウォレット ファイルに取り替える必要があります。セキュリティ上の理由により、暗号化された新しいウォレットを使い始めると、暗号化されていないウォレット ファイルのバックアップはすぐに使えなくなります。</translation>
     </message>
@@ -190,6 +186,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>ウォレットの古いパスフレーズおよび新しいパスフレーズを入力してください。</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>暗号化処理を完了させるため %1 をいますぐ終了します。ウォレットの暗号化では、コンピュータに感染したマルウェアなどによるビットコインの盗難から完全に守ることはできないことにご注意ください。</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -270,6 +270,14 @@
         <translation>アプリケーションを終了</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>%1 について (&amp;A)</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>%1 の情報を表示</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Qt について(&amp;Q)</translation>
     </message>
@@ -280,6 +288,10 @@
     <message>
         <source>&amp;Options...</source>
         <translation>オプション... (&amp;O)</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for %1</source>
+        <translation>%1 の設定を変更する</translation>
     </message>
     <message>
         <source>&amp;Encrypt Wallet...</source>
@@ -304,10 +316,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>URI を開く (&amp;U)...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoinコア クライアント</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,10 +366,6 @@
         <translation>入金 (&amp;R)</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Bitcoinコアに関する情報を表示</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>見る/隠す (&amp;S)</translation>
     </message>
@@ -398,20 +402,8 @@
         <translation>タブツールバー</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin のコア</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>支払いを要求する (QRコードとbitcoin:ではじまるURIを生成する)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>ビットコインコアについて (&amp;A)</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Bitcoin Core の設定を編集する</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -428,10 +420,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>コマンドラインオプション (&amp;C)</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>有効な Bitcoin のコマンドライン オプションを見るために Bitcoin Core のヘルプメッセージを表示します。</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -492,6 +480,14 @@
     <message>
         <source>Up to date</source>
         <translation>バージョンは最新です</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>有効な Bitcoin のコマンドライン オプションを見るために %1 のヘルプメッセージを表示します。</translation>
+    </message>
+    <message>
+        <source>%1 client</source>
+        <translation>%1 クライアント</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -734,10 +730,6 @@
         <translation>優先度が「中」未満の場合、このラベルは赤色になります。</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>受取人のうち誰かの受取額が %1 未満の場合にこのラベルは赤色になります。</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>ひとつの入力につき %1 satoshi 前後ずれることがあります。</translation>
     </message>
@@ -855,10 +847,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin のコア</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>バージョン</translation>
     </message>
@@ -867,8 +855,8 @@
         <translation>(%1ビット)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>Bitcoinコアについて</translation>
+        <source>About %1</source>
+        <translation>%1 について</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,16 +906,16 @@
         <translation>ようこそ</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>ようこそ！</translation>
+        <source>Welcome to %1.</source>
+        <translation>%1 へようこそ。</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>これはプログラム最初の起動です。Bitcoin Coreがデータを保存する場所を選択して下さい。</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>これはプログラム最初の起動です。%1 がデータを保存する場所を選択して下さい。</translation>
     </message>
     <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin Coreは、ビットコインのブロックチェーンのコピーを、ダウンロードして保存します。少なくとも%1ギガバイトのデータが、このディレクトリに保存されます。そしてそれは時間と共に増加します。またウォレットもこのディレクトリに保存されます。</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 は、ビットコインのブロックチェーンのコピーを、ダウンロードして保存します。少なくとも %2 ギガバイトのデータが、このディレクトリに保存されます。そしてそれは時間と共に増加します。またウォレットもこのディレクトリに保存されます。</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -936,10 +924,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>任意のデータ ディレクトリを使用:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin のコア</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -992,6 +976,14 @@
         <translation>メイン (&amp;M)</translation>
     </message>
     <message>
+        <source>Automatically start %1 after logging in to the system.</source>
+        <translation>システムにログインした際、自動的に %1 を起動する。</translation>
+    </message>
+    <message>
+        <source>&amp;Start %1 on system login</source>
+        <translation>システムにログインした時に %1 を起動 (&amp;S)</translation>
+    </message>
+    <message>
         <source>Size of &amp;database cache</source>
         <translation>データベースキャッシュのサイズ (&amp;D)</translation>
     </message>
@@ -1020,10 +1012,6 @@
         <translation>ウィンドウを閉じる際にアプリケーションを終了するのではなく、最小化します。このオプションが有効化された場合、メニューから終了を選択した場合にのみアプリケーションは閉じられます。</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>ユーザ・インタフェイス言語はここで設定できます。この設定はBitcoin Coreの再起動後に有効となります。</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>トランザクションタブのコンテキストメニュー項目に表示する、サードパーティURL (例えばブロックエクスプローラ)。URL中の%sはトランザクションのハッシュ値に置き換えられます。垂直バー | で区切ることで、複数のURLを指定できます。</translation>
     </message>
@@ -1046,14 +1034,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>ネットワーク (&amp;N)</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>システムにログインした際、自動的にBitcoin Coreを起動する。</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>システムへログインした際にBitcoin Coreを起動する (&amp;S)</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1160,6 +1140,10 @@
         <translation>ユーザインターフェースの言語 (&amp;l) :</translation>
     </message>
     <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>ここでユーザインターフェースの言語を設定できます。設定を反映するには %1 を再起動します。</translation>
+    </message>
+    <message>
         <source>&amp;Unit to show amounts in:</source>
         <translation>額を表示する単位 (&amp;U) :</translation>
     </message>
@@ -1186,6 +1170,10 @@
     <message>
         <source>none</source>
         <translation>なし</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin のコア</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1474,10 +1462,6 @@
         <translation>一般</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>使用中の OpenSSL のバージョン</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>使用中のBerkleyDBバージョン</translation>
     </message>
@@ -1516,10 +1500,6 @@
     <message>
         <source>Memory usage</source>
         <translation>メモリ使用量</translation>
-    </message>
-    <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>現在のデータディレクトリからBitcoin Coreのデバッグ用ログファイルを開きます。ログファイルが巨大な場合、数秒かかることがあります。</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1568,6 +1548,10 @@
     <message>
         <source>User Agent</source>
         <translation>ユーザエージェント</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>現在のデータディレクトリから %1 のデバッグ用ログファイルを開きます。ログファイルが巨大な場合、数秒かかることがあります。</translation>
     </message>
     <message>
         <source>Services</source>
@@ -1678,8 +1662,8 @@
         <translation>ノードのbanを解除する (&amp;U)</translation>
     </message>
     <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Bitcoin CoreのRPCコンソールへようこそ。</translation>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>%1 のRPCコンソールへようこそ。</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2264,8 +2248,8 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin Coreをシャットダウンしています。</translation>
+        <source>%1 is shutting down...</source>
+        <translation>%1 をシャットダウンしています...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -2414,14 +2398,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin のコア</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>ビットコインコアの開発者</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -2438,10 +2414,6 @@
     <message>
         <source>Open until %1</source>
         <translation>ユニット %1 を開く</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>衝突</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -2980,6 +2952,18 @@
         <translation>外部からの接続を許可 (初期値:  -proxy または -connect を使用していない場合は1)</translation>
     </message>
     <message>
+        <source>-fallbackfee is set very high! This is the transaction fee you may pay when fee estimates are not available.</source>
+        <translation>-fallbackfee が高すぎます！これは手数料の推定機能が利用できない場合に支払うトランザクション手数料です。</translation>
+    </message>
+    <message>
+        <source>A fee rate (in %s/kB) that will be used when fee estimation has insufficient data (default: %s)</source>
+        <translation>十分なデータが蓄積されていない場合に手数料推定機能が利用する手数料レート (%s/kB) (デフォルト: %s)</translation>
+    </message>
+    <message>
+        <source>Accept relayed transactions received from whitelisted peers even when not relaying transactions (default: %d)</source>
+        <translation>トランザクションの中継を行っていない場合でも、ホワイトリストのピアから受け取った中継トランザクションは受け取るようにする (デフォルト: %d)</translation>
+    </message>
+    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>指定のアドレスへバインドし、その上で常にリスンします。IPv6 は [ホスト名]:ポート番号 と表記します</translation>
     </message>
@@ -2994,6 +2978,10 @@
     <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
         <translation>ウォレットの取引を変更する際にコマンドを実行 (cmd の %s は TxID に置換される)</translation>
+    </message>
+    <message>
+        <source>Force relay of transactions from whitelisted peers even they violate local relay policy (default: %d)</source>
+        <translation>ホワイトリストのピアから受け取ったトランザクションに関しては、たとえローカルの中継ポリシーに違反しているとしても中継を行うようにする (デフォルト: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3012,6 +3000,10 @@
         <translation>このコンピュータの %s にバインドすることができません。おそらく Bitcoin Core は既に実行されています。</translation>
     </message>
     <message>
+        <source>Unsupported argument -whitelistalwaysrelay ignored, use -whitelistrelay and/or -whitelistforcerelay.</source>
+        <translation>サポートされていない引数 -whitelistalwaysrelay は無視されました。-whitelistrelay または -whitelistforcerelay を利用してください</translation>
+    </message>
+    <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
         <translation>リスン ポートの割当に UPnP を使用 (初期値: リスン中および-proxyが指定されていない場合は1)</translation>
     </message>
@@ -3026,6 +3018,10 @@
     <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
         <translation>警告： ネットワークは完全に同意しないみたいです。マイナーは何かの問題を経験してるみたいなんです。</translation>
+    </message>
+    <message>
+        <source>Warning: Unknown block versions being mined! It's possible unknown rules are in effect</source>
+        <translation>警告: 未知のバージョンのブロックが採掘されました。未知のルールが導入された可能性があります</translation>
     </message>
     <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
@@ -3046,6 +3042,10 @@
     <message>
         <source>&lt;category&gt; can be:</source>
         <translation>&lt;category&gt;は以下の値を指定できます：</translation>
+    </message>
+    <message>
+        <source>Append comment to the user agent string</source>
+        <translation>ユーザエージェント文字列にコメントを</translation>
     </message>
     <message>
         <source>Block creation options:</source>
@@ -3093,6 +3093,10 @@
         <translation>&lt;address&gt; に対し、生トランザクションの公開を有効にする</translation>
     </message>
     <message>
+        <source>Enable transaction replacement in the memory pool (default: %u)</source>
+        <translation>メモリプール内のトランザクションの置換を有効化する (デフォルト: %u)</translation>
+    </message>
+    <message>
         <source>Error initializing block database</source>
         <translation>ブロック データベースの初期化中にエラー</translation>
     </message>
@@ -3129,8 +3133,20 @@
         <translation>無効な -onion アドレス：'%s'</translation>
     </message>
     <message>
+        <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
+        <translation>不正な額 -fallbackfee=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
         <source>Keep the transaction memory pool below &lt;n&gt; megabytes (default: %u)</source>
         <translation>トランザクションのメモリ・プールの総量を &lt;n&gt; メガバイト以下に維持する (初期値: %u)</translation>
+    </message>
+    <message>
+        <source>Location of the auth cookie (default: data dir)</source>
+        <translation>認証クッキーの場所 (デフォルト: )</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>中継や採掘を行ってもよい、sigopあたりの最小バイト数 (デフォルト: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3139,6 +3155,10 @@
     <message>
         <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
         <translation>&lt;net&gt; (ipv4, ipv6 または onion) ネットワーク内のノードだけに接続する</translation>
+    </message>
+    <message>
+        <source>Print version and exit</source>
+        <translation>バージョンを表示し終了</translation>
     </message>
     <message>
         <source>Prune cannot be configured with a negative value.</source>
@@ -3195,10 +3215,6 @@
     <message>
         <source>Wallet options:</source>
         <translation>ウォレットオプション：</translation>
-    </message>
-    <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>警告: このバージョンはサポートされません。アップグレードが必要です！</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>
@@ -3295,10 +3311,6 @@
     <message>
         <source>Activating best chain...</source>
         <translation>最優良のチェインを有効化しています...</translation>
-    </message>
-    <message>
-        <source>Always relay transactions received from whitelisted peers (default: %d)</source>
-        <translation>ホワイトリストにあるピアから受け取ったトランザクションを常にリレーする (初期値: %d)</translation>
     </message>
     <message>
         <source>Attempt to recover private keys from a corrupt wallet.dat on startup</source>
@@ -3463,6 +3475,10 @@
     <message>
         <source>Warning</source>
         <translation>警告</translation>
+    </message>
+    <message>
+        <source>Warning: unknown new rules activated (versionbit %i)</source>
+        <translation>警告: 未知の新しいルールが有効化されました (バージョンビット %i)</translation>
     </message>
     <message>
         <source>Whether to operate in a blocks only mode (default: %u)</source>

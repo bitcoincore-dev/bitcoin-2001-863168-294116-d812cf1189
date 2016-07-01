@@ -1,4 +1,4 @@
-<TS language="kk_KZ" version="2.0">
+<TS language="kk_KZ" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -294,6 +294,10 @@
         <source>&amp;Amount:</source>
         <translation>Саны</translation>
     </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>таңба:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -361,6 +365,10 @@
     <message>
         <source>A&amp;mount:</source>
         <translation>Саны</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>таңба:</translation>
     </message>
     </context>
 <context>

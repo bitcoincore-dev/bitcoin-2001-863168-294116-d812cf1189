@@ -1,4 +1,4 @@
-<TS language="lv_LV" version="2.0">
+<TS language="lv_LV" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -164,10 +164,6 @@
         <translation>Vai tu tiešām vēlies šifrēt savu maciņu?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin Core tiks aizvērts, lai pabeigtu šifrēšansa procesu. Atcerieties, ka jūsu maka šifrēšana nevar pilnībā pasargāt jūsu monētas no to nozagašanas, inficējot datoru ar ļaunprātīgām programmām.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>SVARĪGI: Iepriekšējie maka faila dublējumi ir jāaizvieto ar jauno, šifrēto maka failu. Drošības apsvērumu dēļ iepriekšējie nešifrētā maka dublējumi vairs nebūs derīgi, tiklīdz sāksiet izmantot jauno, šifrēto maku.</translation>
     </message>
@@ -182,6 +178,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Ievadiet veco un jauno maka paroli.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 tiks aizvērts, lai pabeigtu šifrēšansa procesu. Atcerieties, ka jūsu maka šifrēšana nevar pilnībā pasargāt jūsu monētas no to nozagašanas, inficējot datoru ar ļaunprātīgām programmām.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -254,6 +254,10 @@
         <translation>Aizvērt programmu</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Parādīt informāciju par %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Par &amp;Qt</translation>
     </message>
@@ -288,10 +292,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Atvērt &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Core klients</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -342,10 +342,6 @@
         <translation>&amp;Saņemt</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Parādīt informāciju par Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Rādīt / Paslēpt</translation>
     </message>
@@ -382,16 +378,8 @@
         <translation>Ciļņu rīkjosla</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Pieprasīt maksājumus (izveido QR kodu un bitcoin: URIs)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>Par &amp;Bitcoin Core</translation>
     </message>
     <message>
         <source>Open a bitcoin: URI or payment request</source>
@@ -705,20 +693,12 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versija</translation>
     </message>
     <message>
         <source>(%1-bit)</source>
         <translation>(%1-biti)</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Par Bitcoin Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -740,20 +720,12 @@
         <translation>Sveiciens</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Sveicināts Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Izmantot noklusēto datu mapi</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Izmantot pielāgotu datu mapi:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -926,6 +898,10 @@
         <translation>neviena</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Apstiprināt iestatījumu atiestatīšanu</translation>
     </message>
@@ -1078,10 +1054,6 @@
     <message>
         <source>General</source>
         <translation>Vispārējs</translation>
-    </message>
-    <message>
-        <source>Using OpenSSL version</source>
-        <translation>Izmantotā OpenSSL versija</translation>
     </message>
     <message>
         <source>Startup time</source>
@@ -1542,10 +1514,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin Core tiek izslēgta...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>Neizslēdziet datoru kamēr šis logs nepazūd.</translation>
     </message>
@@ -1672,14 +1640,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Bitcoin Core izstrādātāji</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnets]</translation>
     </message>
@@ -1696,10 +1656,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Atvērts līdz %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>pretrunā</translation>
     </message>
     <message>
         <source>%1/offline</source>

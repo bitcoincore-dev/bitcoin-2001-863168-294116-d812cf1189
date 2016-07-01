@@ -1,4 +1,4 @@
-<TS language="ca@valencia" version="2.0">
+<TS language="ca@valencia" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>Esteu segur que voleu encriptar el vostre moneder?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Ara es tancarà el Bitcoin Core per finalitzar el procés d'encriptació. Tingueu present que encriptar el vostre moneder no garanteix que les vostres bitcoins no puguen ser robades per programari maliciós que infecti l'ordinador.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>IMPORTANT: Tota copia de seguretat que hàgeu realitzat hauria de ser reemplaçada pel, recentment generat, fitxer encriptat del moneder.</translation>
     </message>
@@ -190,6 +186,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Introduïu la contrasenya antiga i la contrasenya nova al moneder.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>Ara es tancarà el %1 per finalitzar el procés d'encriptació. Tingueu present que encriptar el vostre moneder no garanteix que les vostres bitcoins no puguen ser robades per programari maliciós que infecti l'ordinador.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -262,6 +262,10 @@
         <translation>Ix de l'aplicació</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Mostra informació del %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Quant a &amp;Qt</translation>
     </message>
@@ -296,10 +300,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Obri un &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Client del Bitcoin Core</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -350,10 +350,6 @@
         <translation>&amp;Rep</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Mostra informació del Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Mostra / Amaga</translation>
     </message>
@@ -390,20 +386,8 @@
         <translation>Barra d'eines de les pestanyes</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Nucli de Bitcoin</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Sol·licita pagaments (genera codis QR i bitcoin: URI)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Quant al Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Modifica les opcions de configuració del Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -420,10 +404,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>Opcions de la &amp;línia d'ordes</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Mostra el missatge d'ajuda del Bitcoin Core per obtindre una llista amb les possibles opcions de línia d'ordes de Bitcoin</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -484,6 +464,10 @@
     <message>
         <source>Up to date</source>
         <translation>Al dia</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Mostra el missatge d'ajuda del %1 per obtindre una llista amb les possibles opcions de línia d'ordes de Bitcoin</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -726,10 +710,6 @@
         <translation>Esta etiqueta es torna en roig si la propietat és inferior que la «mitjana».</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Esta etiqueta es torna roja si el destinatari rep un import inferior de %1.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Pot variar +/- %1 satoshi(s) per entrada.</translation>
     </message>
@@ -847,20 +827,12 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Nucli de Bitcoin</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versió</translation>
     </message>
     <message>
         <source>(%1-bit)</source>
         <translation>(%1-bit)</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Quant al Bitcoin Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -882,16 +854,12 @@
         <translation>Vos donem la benviguda</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Vos donem la benvinguda al Bitcoin Core.</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Atès que és la primera vegada que executeu el programa, podeu triar on emmagatzemarà el %1 les dades.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Atès que és la primera vegada que executeu el programa, podeu triar on emmagatzemarà el Bitcoin Core les dades.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>El Bitcoin Core descarregarà i emmagatzemarà una còpia de la cadena de blocs de Bitcoin. Com a mínim s'emmagatzemaran %1 GB de dades en este directori, que seguiran creixent gradualment. També s'hi emmagatzemarà el moneder.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>El %1 descarregarà i emmagatzemarà una còpia de la cadena de blocs de Bitcoin. Com a mínim s'emmagatzemaran %2 GB de dades en este directori, que seguiran creixent gradualment. També s'hi emmagatzemarà el moneder.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -900,10 +868,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Utilitza un directori de dades personalitzat:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Nucli de Bitcoin</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -984,10 +948,6 @@
         <translation>Minimitza en comptes d'eixir de l'aplicació quan la finestra es tanca. Quan s'habilita esta opció l'aplicació es tancara només quan se selecciona Ix del menú. </translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>La interfície d'usuari pot definir-se des d'ací. El paràmetre tindrà efecte després de reiniciar el Bitcoin Core.</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>URL de terceres parts (p. ex. explorador de blocs) que apareix en la pestanya de transaccions com elements del menú contextual. %s en l'URL es reemplaçat pel resum de la transacció. Diferents URL estan separades per una barra vertical |.</translation>
     </message>
@@ -1010,14 +970,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Xarxa</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Inicia el Bitcoin Core automàticament després d'iniciar una sessió en el sistema.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>&amp;Inicia el Bitcoin Core en inciar el sistema</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1100,6 +1052,10 @@
         <translation>&amp;Llengua de la interfície d'usuari:</translation>
     </message>
     <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>La interfície d'usuari pot definir-se des d'ací. El paràmetre tindrà efecte després de reiniciar el %1.</translation>
+    </message>
+    <message>
         <source>&amp;Unit to show amounts in:</source>
         <translation>&amp;Unitats per mostrar els imports en:</translation>
     </message>
@@ -1126,6 +1082,10 @@
     <message>
         <source>none</source>
         <translation>cap</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Nucli de Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1414,10 +1374,6 @@
         <translation>General</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Utilitzant OpenSSL versió</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Utilitzant BerkeleyDB versió</translation>
     </message>
@@ -1446,10 +1402,6 @@
         <translation>Nombre de blocs actuals</translation>
     </message>
     <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Obri el fitxer de registre de depuració del Bitcoin Core del directori de dades actual. Pot portar uns quants segons per a fitxers de registre grans.</translation>
-    </message>
-    <message>
         <source>Received</source>
         <translation>Rebut</translation>
     </message>
@@ -1476,6 +1428,10 @@
     <message>
         <source>User Agent</source>
         <translation>Agent d'usuari</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Obri el fitxer de registre de depuració del %1 del directori de dades actual. Pot portar uns quants segons per a fitxers de registre grans.</translation>
     </message>
     <message>
         <source>Services</source>
@@ -1548,10 +1504,6 @@
     <message>
         <source>Clear console</source>
         <translation>Neteja la consola</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Vos donem la benviguda a la consola RPC del Bitcoin Core.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2124,10 +2076,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>S'està parant el Bitcoin Core...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>No apagueu l'ordinador fins que no desaparegui esta finestra.</translation>
     </message>
@@ -2274,14 +2222,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Els desenvolupadors del Bitcoin Core</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -2298,10 +2238,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Obert fins %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>en conflicte</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -2958,10 +2894,6 @@
     <message>
         <source>Wallet options:</source>
         <translation>Opcions de moneder:</translation>
-    </message>
-    <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Avís: esta versió és obsoleta; cal actualitzar-la!</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>

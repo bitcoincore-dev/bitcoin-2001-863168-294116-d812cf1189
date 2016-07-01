@@ -54,6 +54,14 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Yorliq</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;Manzil</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -90,9 +98,17 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation />
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Manzillarni nusxalash</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Manzil</translation>
@@ -114,6 +130,10 @@
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation />
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>

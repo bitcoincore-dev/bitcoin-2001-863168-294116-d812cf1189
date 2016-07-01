@@ -1,4 +1,4 @@
-<TS language="eo" version="2.0">
+<TS language="eo" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -254,6 +254,10 @@
         <translation>Eliri la aplikaĵon</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Vidigi informon pri %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Pri &amp;Qt</translation>
     </message>
@@ -288,10 +292,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Malfermi &amp;URI-on...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>kliento de bitmon-kerno</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -342,10 +342,6 @@
         <translation>&amp;Ricevi</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Vidigi informon pri Bitmona Kerno</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Montri / Kaŝi</translation>
     </message>
@@ -382,16 +378,8 @@
         <translation>Langeto-breto</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Kerno de Bitmono</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Peti pagon (kreas QR-kodojn kaj URI-ojn kun prefikso bitcoin:)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Pri la Bitmona Kerno</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -803,16 +791,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Kerno de Bitmono</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versio</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Pri la Bitmona Kerno</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -838,16 +818,12 @@
         <translation>Bonvenon</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Bonvenon al la bitmona kerno, Bitcoin Core.</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Dum tiu ĉi unua uzo de la programo, vi povas elekti lokon, kie %1 stokos siajn datumojn.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Dum tiu ĉi unua uzo de la programo, vi povas elekti lokon, kie Bitcoin Core stokos siajn datumojn.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin Core elŝutos kaj konservos kopion de la bitmona blokĉeno. Almenaŭ %1GB da datumoj konserviĝos en tiu loko, kaj tio poiome kreskos. Ankaŭ via monujo konserviĝos en tiu dosierujo.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 elŝutos kaj konservos kopion de la bitmona blokĉeno. Almenaŭ %2GB da datumoj konserviĝos en tiu loko, kaj tio poiome kreskos. Ankaŭ via monujo konserviĝos en tiu dosierujo.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -856,10 +832,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Uzi alian dosierujon por datumoj:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Kerno de Bitmono</translation>
     </message>
     <message>
         <source>Error</source>
@@ -1018,6 +990,10 @@
     <message>
         <source>none</source>
         <translation>neniu</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Kerno de Bitmono</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1192,10 +1168,6 @@
     <message>
         <source>General</source>
         <translation>Ĝenerala</translation>
-    </message>
-    <message>
-        <source>Using OpenSSL version</source>
-        <translation>uzas OpenSSL-version</translation>
     </message>
     <message>
         <source>Startup time</source>
@@ -1805,14 +1777,6 @@
 </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Kerno de Bitmono</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>La programistoj de Bitmona Kerno</translation>
-    </message>
     <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>

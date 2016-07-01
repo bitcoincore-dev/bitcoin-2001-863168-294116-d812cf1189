@@ -1,4 +1,4 @@
-<TS language="ru_RU" version="2.0">
+<TS language="ru_RU" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -11,7 +11,7 @@
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Скопировать выделенный адрес в буфер</translation>
+        <translation>Copy the currently selected address to the system clipboardый адрес в буфер</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
@@ -57,14 +57,6 @@
     </context>
 <context>
     <name>BitcoinGUI</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>О Bitcoin Core</translation>
-    </message>
     <message>
         <source>&amp;Command-line options</source>
         <translation>Опции командной строки</translation>
@@ -125,16 +117,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>версия</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>О Bitcoin Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -147,10 +131,6 @@
     </context>
 <context>
     <name>Intro</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
     <message>
         <source>Error</source>
         <translation>Ошибка</translation>
@@ -169,6 +149,10 @@
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -197,6 +181,10 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Копировать адрес</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -219,10 +207,6 @@
     </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
     </context>
 <context>
     <name>TrafficGraphWidget</name>

@@ -1,4 +1,4 @@
-<TS language="es_ES" version="2.0">
+<TS language="es_ES" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>Estás seguro ue deseas encriptar tu cartera?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin Core se cerrará ahora para finalizar el proceso de encriptación. Recuerda que encriptar tu cartera no protege completamente tus bitcoins de ser robados por malware infectando tu ordenador.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>IMPORTANTE: Cualquier copia de seguridad anterior del archivo de tu cartera debería ser remplazado con el nuevo archivo encriptado. Por motivos de seguridad, las copias de seguridad anteriores de la cartera desencriptada quedaran inusables tan pronto como empieces a usar la nueva cartera encriptada.</translation>
     </message>
@@ -190,6 +186,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Introduzca la antigua contraseña y la nueva contraseña en la cartera.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 se cerrará ahora para finalizar el proceso de encriptación. Recuerda que encriptar tu cartera no protege completamente tus bitcoins de ser robados por malware infectando tu ordenador.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -262,6 +262,10 @@
         <translation>Salir de la aplicación</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Muestra información acerca de %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Acerca de &amp;Qt</translation>
     </message>
@@ -296,10 +300,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Abrir &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Cliente Bitcoin Core</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -374,6 +374,10 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>Etiqueta:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -410,6 +414,10 @@
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>Etiqueta:</translation>
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>

@@ -1,6 +1,10 @@
-<TS language="es_MX" version="2.0">
+<TS language="es_MX" version="2.1">
 <context>
     <name>AddressBookPage</name>
+    <message>
+        <source>Right-click to edit address or label</source>
+        <translation>Click derecho para editar tu dirección o etiqueta</translation>
+    </message>
     <message>
         <source>Create a new address</source>
         <translation>Crear una dirección nueva</translation>
@@ -234,6 +238,10 @@
         <translation>Salir de la aplicación</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Mostrar información acerca de %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Acerca de &amp;Qt</translation>
     </message>
@@ -268,10 +276,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Abrir &amp;URL...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>cliente Bitcoin Core</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -338,20 +342,20 @@
         <translation>Pestañas</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>nucleo Bitcoin</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>Acerca de Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Command-line options</source>
         <translation>opciones de la &amp;Linea de comandos</translation>
     </message>
     <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Mostrar mensaje de ayuda del nucleo de Bitcoin para optener una lista con los posibles comandos  de Bitcoin</translation>
+        <source>Error</source>
+        <translation>Error</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Aviso</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>Información </translation>
     </message>
     <message>
         <source>Up to date</source>
@@ -384,6 +388,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Quantity:</source>
+        <translation>Cantidad</translation>
+    </message>
+    <message>
         <source>Bytes:</source>
         <translation>Bytes:</translation>
     </message>
@@ -398,6 +406,14 @@
     <message>
         <source>Fee:</source>
         <translation>Cuota:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Después de los cargos por comisión. </translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Cambio</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -428,6 +444,10 @@
         <translation>Copiar monto</translation>
     </message>
     <message>
+        <source>Copy transaction ID</source>
+        <translation>Copiar identificación de la transacción. </translation>
+    </message>
+    <message>
         <source>Copy quantity</source>
         <translation>Copiar cantidad</translation>
     </message>
@@ -452,10 +472,30 @@
         <translation>Copiar cambio</translation>
     </message>
     <message>
+        <source>low</source>
+        <translation>Bajo</translation>
+    </message>
+    <message>
+        <source>none</source>
+        <translation>Ninguno </translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>si</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>no</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(sin etiqueta)</translation>
     </message>
-    </context>
+    <message>
+        <source>(change)</source>
+        <translation>cambio</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -501,13 +541,13 @@
 </context>
 <context>
     <name>FreespaceChecker</name>
+    <message>
+        <source>name</source>
+        <translation>nombre</translation>
+    </message>
     </context>
 <context>
     <name>HelpMessageDialog</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>nucleo Bitcoin</translation>
-    </message>
     <message>
         <source>version</source>
         <translation>versión</translation>
@@ -515,10 +555,6 @@
     <message>
         <source>(%1-bit)</source>
         <translation>(%1-bit)</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Acerca de Bitcoin Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -536,8 +572,8 @@
 <context>
     <name>Intro</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>nucleo Bitcoin</translation>
+        <source>Error</source>
+        <translation>Error</translation>
     </message>
     </context>
 <context>
@@ -556,6 +592,14 @@
     <message>
         <source>W&amp;allet</source>
         <translation>Cartera</translation>
+    </message>
+    <message>
+        <source>none</source>
+        <translation>Ninguno </translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>nucleo Bitcoin</translation>
     </message>
     </context>
 <context>
@@ -583,6 +627,10 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Información </translation>
+    </message>
     <message>
         <source>Debug window</source>
         <translation>Depurar ventana</translation>
@@ -676,6 +724,10 @@
         <translation>Enviar monedas</translation>
     </message>
     <message>
+        <source>Quantity:</source>
+        <translation>Cantidad</translation>
+    </message>
+    <message>
         <source>Bytes:</source>
         <translation>Bytes:</translation>
     </message>
@@ -690,6 +742,14 @@
     <message>
         <source>Fee:</source>
         <translation>Cuota:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Después de los cargos por comisión. </translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Cambio</translation>
     </message>
     <message>
         <source>fast</source>
@@ -818,10 +878,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Apagando el nucleo de Bitcoin...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>No apague su computadora hasta que esta ventana desaparesca.</translation>
     </message>
@@ -847,14 +903,6 @@
     </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Los desarrolladores de Bitcoin Core</translation>
-    </message>
     </context>
 <context>
     <name>TrafficGraphWidget</name>
@@ -1063,6 +1111,10 @@
         <translation>copiar monto</translation>
     </message>
     <message>
+        <source>Copy transaction ID</source>
+        <translation>Copiar identificación de la transacción. </translation>
+    </message>
+    <message>
         <source>Edit label</source>
         <translation>Editar capa </translation>
     </message>
@@ -1178,6 +1230,14 @@
         <translation>Opciones de cartera:</translation>
     </message>
     <message>
+        <source>Information</source>
+        <translation>Información </translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Aviso</translation>
+    </message>
+    <message>
         <source>Loading addresses...</source>
         <translation>Cargando direcciones...</translation>
     </message>
@@ -1193,5 +1253,9 @@
         <source>Done loading</source>
         <translation>Carga completa</translation>
     </message>
-    </context>
+    <message>
+        <source>Error</source>
+        <translation>Error</translation>
+    </message>
+</context>
 </TS>

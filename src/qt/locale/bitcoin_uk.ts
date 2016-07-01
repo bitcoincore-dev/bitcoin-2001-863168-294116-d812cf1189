@@ -1,4 +1,4 @@
-<TS language="uk" version="2.0">
+<TS language="uk" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>Ви дійсно хочете зашифрувати свій гаманець?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Клієнт «Bitcoin Core» буде закрито для завершення процесу шифрування. Пам'ятайте, що шифрування гаманця не зможе повністю захистити ваші біткоїни від крадіжки якщо ваш комп'ютер буде інфіковано шкідливими програмами.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>ВАЖЛИВО: Всі попередні резервні копії, які ви зробили з вашого файлу гаманця повинні бути замінені новоствореним, зашифрованим файлом гаманця. З міркувань безпеки, попередні резервні копії незашифрованого файла гаманця стануть непридатними одразу ж, як тільки ви почнете використовувати новий, зашифрований гаманець.</translation>
     </message>
@@ -190,6 +186,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Введіть старий пароль та новий пароль до гаманця.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>Клієнт «%1» буде закрито для завершення процесу шифрування. Пам'ятайте, що шифрування гаманця не зможе повністю захистити ваші біткоїни від крадіжки якщо ваш комп'ютер буде інфіковано шкідливими програмами.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -270,6 +270,14 @@
         <translation>Вийти</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>П&amp;ро %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Показати інформацію про %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>&amp;Про Qt</translation>
     </message>
@@ -304,10 +312,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Відкрити &amp;URI</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Клієнт «Bitcoin Core»</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,10 +362,6 @@
         <translation>&amp;Отримати</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Показати інформацію про Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>Показа&amp;ти / Приховати</translation>
     </message>
@@ -398,20 +398,8 @@
         <translation>Панель вкладок</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Створити запит платежу (генерує QR-код та bitcoin: URI)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>П&amp;ро Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Редагувати параметри Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -428,10 +416,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>П&amp;араметри командного рядка</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Показати довідку Bitcoin Core для отримання переліку можливих параметрів командного рядка.</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -492,6 +476,10 @@
     <message>
         <source>Up to date</source>
         <translation>Синхронізовано</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Показати довідку %1 для отримання переліку можливих параметрів командного рядка.</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -734,10 +722,6 @@
         <translation>Ця позначка стане червоною, якщо пріоритет транзакції менше, ніж «середній».</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Ця позначка стане червоною, якщо будь-який отримувач отримає суму, меншу за %1.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Може відрізнятися на +/- %1 сатоші за вхід</translation>
     </message>
@@ -855,10 +839,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>версії</translation>
     </message>
@@ -867,8 +847,8 @@
         <translation>(%1-бітний)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>Про Bitcoin Core</translation>
+        <source>About %1</source>
+        <translation>Про %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,16 +898,12 @@
         <translation>Вітання</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Ласкаво просимо в Bitcoin Core.</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Оскільки це перший запуск програми, ви можете обрати де %1 буде зберігати дані.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Оскільки це перший запуск програми, ви можете обрати де Bitcoin Core буде зберігати дані.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin Core завантажить та збереже копію ланцюжка блоків Bitcoin. Щонайменше %1ГБ даних буде збережено в цьому каталозі. Гаманець теж буде збережено в цьому каталозі.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 завантажить та збереже копію ланцюжка блоків Bitcoin. Щонайменше %2ГБ даних буде збережено в цьому каталозі. Гаманець теж буде збережено в цьому каталозі.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -936,10 +912,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Використовувати свій каталог даних:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1020,10 +992,6 @@
         <translation>Згортати замість закриття. Якщо ця опція включена, програма закриється лише після вибору відповідного пункту в меню.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>Встановлює мову інтерфейсу. Зміни набудуть чинності після перезапуску Bitcoin Core.</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>Сторонні URL (наприклад, block explorer), що з'являться на вкладці транзакцій у вигляді пункту контекстного меню. %s в URL буде замінено на хеш транзакції. Для відокремлення URLів використовуйте вертикальну риску |.</translation>
     </message>
@@ -1046,14 +1014,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Мережа</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Автоматично запускати Bitcoin Core при вході до системи.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>&amp;Запускати Bitcoin Core при вході до системи</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1160,6 +1120,10 @@
         <translation>Мов&amp;а інтерфейсу користувача:</translation>
     </message>
     <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>Встановлює мову інтерфейсу. Зміни набудуть чинності після перезапуску %1.</translation>
+    </message>
+    <message>
         <source>&amp;Unit to show amounts in:</source>
         <translation>В&amp;имірювати монети в:</translation>
     </message>
@@ -1186,6 +1150,10 @@
     <message>
         <source>none</source>
         <translation>відсутні</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1474,10 +1442,6 @@
         <translation>Загальна</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Використовується OpenSSL версії</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Використовується BerkeleyDB версії</translation>
     </message>
@@ -1516,10 +1480,6 @@
     <message>
         <source>Memory usage</source>
         <translation>Використання пам'яті</translation>
-    </message>
-    <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Відкрити файл журналу налагодження Bitcoin Core з поточного каталогу даних. Це може зайняти кілька секунд для великих файлів журналів.</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1568,6 +1528,10 @@
     <message>
         <source>User Agent</source>
         <translation>Клієнт користувача</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Відкрити файл журналу налагодження %1 з поточного каталогу даних. Це може зайняти кілька секунд для великих файлів журналів.</translation>
     </message>
     <message>
         <source>Services</source>
@@ -1676,10 +1640,6 @@
     <message>
         <source>&amp;Unban Node</source>
         <translation>&amp;Розблокувати Вузол</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Вітаємо у RPC-консолі Bitcoin Core.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2264,10 +2224,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin Core вимикається...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>Не вимикайте комп’ютер до зникнення цього вікна.</translation>
     </message>
@@ -2414,14 +2370,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Розробники Bitcoin Core</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[тестова мережа]</translation>
     </message>
@@ -2438,10 +2386,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Відкрито до %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>суперечить</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -3140,6 +3084,10 @@
         <translation>Підключатися тільки до вузлів в мережі &lt;net&gt; (ipv4, ipv6 або onion)</translation>
     </message>
     <message>
+        <source>Print version and exit</source>
+        <translation>Версія для друку і виходу</translation>
+    </message>
+    <message>
         <source>Prune cannot be configured with a negative value.</source>
         <translation>Розмір скороченого ланцюжка блоків не може бути від'ємним. </translation>
     </message>
@@ -3194,10 +3142,6 @@
     <message>
         <source>Wallet options:</source>
         <translation>Параметри гаманця:</translation>
-    </message>
-    <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Увага: Поточна версія застаріла, необхідне оновлення!</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>
@@ -3294,10 +3238,6 @@
     <message>
         <source>Activating best chain...</source>
         <translation>Активація найкращого ланцюжка...</translation>
-    </message>
-    <message>
-        <source>Always relay transactions received from whitelisted peers (default: %d)</source>
-        <translation>Завжди передавайте транзакції отримані від пірів з білого списку (типово: %d)</translation>
     </message>
     <message>
         <source>Attempt to recover private keys from a corrupt wallet.dat on startup</source>

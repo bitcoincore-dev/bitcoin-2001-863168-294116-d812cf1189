@@ -1,4 +1,4 @@
-<TS language="vi" version="2.0">
+<TS language="vi" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -122,6 +122,14 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation>&amp;Số lượng:&gt;</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>Nhãn dữ liệu:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -170,6 +178,14 @@
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation>&amp;Số lượng:&gt;</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>Nhãn dữ liệu:</translation>
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>

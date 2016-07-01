@@ -1,4 +1,4 @@
-<TS language="ka" version="2.0">
+<TS language="ka" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -242,6 +242,10 @@
         <translation>გასვლა</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>ინფორმაცია %1-ს შესახებ</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>&amp;Qt-ს შესახებ</translation>
     </message>
@@ -362,16 +366,8 @@
         <translation>ბარათების პანელი</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>გადახდის მოთხოვნა (შეიქმნება QR-კოდები და bitcoin: ბმულები)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>Bitcoin Core-ს შეს&amp;ახებ</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -388,10 +384,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>საკომანდო სტრიქონის ოპ&amp;ციები</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Bitcoin Core-ს დახმარების ჩვენება Bitcoin-ის საკომანდო სტრიქონის დასაშვები ოპციების სანახავად</translation>
     </message>
     <message>
         <source>No block source available...</source>
@@ -428,6 +420,10 @@
     <message>
         <source>Up to date</source>
         <translation>განახლებულია</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>%1-ს დახმარების ჩვენება Bitcoin-ის საკომანდო სტრიქონის დასაშვები ოპციების სანახავად</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -725,16 +721,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>ვერსია</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Bitcoin Core-ს შესახებ</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -756,16 +744,12 @@
         <translation>მოგესალმებით</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>მოგესალმებათ Bitcoin Core.</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>ეს პროგრამის პირველი გაშვებაა; შეგიძლიათ მიუთითოთ, სად შეინახოს მონაცემები %1-მ.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>ეს პროგრამის პირველი გაშვებაა; შეგიძლიათ მიუთითოთ, სად შეინახოს მონაცემები Bitcoin Core-მ.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin Core გადმოტვირთავს და შეინახავს Bitcoin-ის ბლოკთა ჯაჭვს. მითითებულ კატალოგში დაგროვდება სულ ცოტა %1 გბ მონაცემები, და მომავალში უფრო გაიზრდება. საფულეც ამავე კატალოგში შეინახება.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 გადმოტვირთავს და შეინახავს Bitcoin-ის ბლოკთა ჯაჭვს. მითითებულ კატალოგში დაგროვდება სულ ცოტა %2 გბ მონაცემები, და მომავალში უფრო გაიზრდება. საფულეც ამავე კატალოგში შეინახება.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -774,10 +758,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>მითითებული კატალოგის გამოყენება:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -928,6 +908,10 @@
     <message>
         <source>none</source>
         <translation>ცარიელი</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1110,10 +1094,6 @@
     <message>
         <source>General</source>
         <translation>საერთო</translation>
-    </message>
-    <message>
-        <source>Using OpenSSL version</source>
-        <translation>OpenSSL-ის ვერსია</translation>
     </message>
     <message>
         <source>Startup time</source>
@@ -1614,10 +1594,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin Core იხურება...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>არ გამორთოთ კომპიუტერი ამ ფანჯრის გაქრობამდე.</translation>
     </message>
@@ -1748,14 +1724,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Bitcoin Core-ს ავტორები</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -1772,10 +1740,6 @@
     <message>
         <source>Open until %1</source>
         <translation>ღია იქნება სანამ %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>კონფლიქტშია</translation>
     </message>
     <message>
         <source>%1/offline</source>

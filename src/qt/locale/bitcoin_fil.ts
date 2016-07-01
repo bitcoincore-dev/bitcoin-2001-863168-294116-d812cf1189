@@ -1,25 +1,49 @@
-<TS language="bg_BG" version="2.1">
+<TS language="fil" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Клик с десен бутон на мишката за промяна на адрес или етикет</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
-        <translation>Създай нов адрес</translation>
+        <translation>Gumawa ng bagong address</translation>
     </message>
     <message>
-        <source>&amp;New</source>
-        <translation>Нов</translation>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Kopyahin ang napiling tahanan sa clipboard</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation>Копирай</translation>
+        <translation>Kumopya</translation>
     </message>
     <message>
         <source>C&amp;lose</source>
-        <translation>Затвори</translation>
+        <translation>Isarado</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>Tumulad ng kinatatahanan</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>Alisin ang napiling address sa pagpipilian</translation>
+    </message>
+    <message>
+        <source>Choose the address to send coins to</source>
+        <translation>Pumili ng pagpapadalahang address</translation>
+    </message>
+    <message>
+        <source>Choose the address to receive coins with</source>
+        <translation>Piliin ang address ng nagpadala</translation>
+    </message>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation>Piliin</translation>
+    </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation>Address pagpapadala</translation>
+    </message>
+    <message>
+        <source>Receiving addresses</source>
+        <translation>Address bilang pagtanggap</translation>
     </message>
     </context>
 <context>
@@ -33,6 +57,10 @@
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation>Address bilang &amp;pagtanggap...</translation>
+    </message>
     </context>
 <context>
     <name>ClientModel</name>
@@ -57,10 +85,6 @@
     </context>
 <context>
     <name>OptionsDialog</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Биткойн ядро</translation>
-    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -85,6 +109,10 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Tumulad ng kinatatahanan</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>

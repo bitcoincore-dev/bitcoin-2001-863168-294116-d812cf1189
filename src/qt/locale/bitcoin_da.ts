@@ -1,4 +1,4 @@
-<TS language="da" version="2.0">
+<TS language="da" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>Er du sikker på, at du ønsker at kryptere din tegnebog?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin Core vil nu lukke for at færdiggøre krypteringsprocessen. Husk at kryptering af din tegnebog kan ikke beskytte dine bitcoin fuldt ud mod at blive stjålet af eventuel malware, der måtte have inficeret din computer.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>VIGTIGT: Enhver tidligere sikkerhedskopi, som du har lavet af tegnebogsfilen, bør blive erstattet af den nyligt genererede, krypterede tegnebogsfil. Af sikkerhedsmæssige årsager vil tidligere sikkerhedskopier af den ikke-krypterede tegnebogsfil blive ubrugelige i det øjeblik, du starter med at anvende den nye, krypterede tegnebog.</translation>
     </message>
@@ -190,6 +186,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Indtast den gamle adgangskode og en ny adgangskode til tegnebogen.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -270,6 +270,14 @@
         <translation>Afslut program</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;Om %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Vis informationer om %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Om &amp;Qt</translation>
     </message>
@@ -280,6 +288,10 @@
     <message>
         <source>&amp;Options...</source>
         <translation>&amp;Indstillinger…</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for %1</source>
+        <translation>Redigér konfigurationsindstillinger for %1</translation>
     </message>
     <message>
         <source>&amp;Encrypt Wallet...</source>
@@ -304,10 +316,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>&amp;Åbn URI…</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Core-klient</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,10 +366,6 @@
         <translation>&amp;Modtag</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Vis oplysninger om Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Vis / skjul</translation>
     </message>
@@ -398,20 +402,8 @@
         <translation>Faneværktøjslinje</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Anmod om betalinger (genererer QR-koder og "bitcoin:"-URI'er)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Om Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Ændr opsætning af Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -428,10 +420,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>Tilvalg for &amp;kommandolinje</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Vis Bitcoin Core hjælpebesked for at få en liste over mulige tilvalg for Bitcoin kommandolinje</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -492,6 +480,14 @@
     <message>
         <source>Up to date</source>
         <translation>Opdateret</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Vis %1 hjælpebesked for at få en liste over mulige tilvalg for Bitcoin kommandolinje</translation>
+    </message>
+    <message>
+        <source>%1 client</source>
+        <translation>%1-klient</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -734,10 +730,6 @@
         <translation>Denne mærkat bliver rød, hvis prioriteten er mindre end "medium".</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Denne mærkat bliver rød, hvis en eller flere modtagere modtager et beløb, der er mindre end %1.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Kan variere med +/- %1 satoshi per input.</translation>
     </message>
@@ -855,10 +847,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>version</translation>
     </message>
@@ -867,8 +855,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>Om Bitcoin Core</translation>
+        <source>About %1</source>
+        <translation>Om %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,16 +906,16 @@
         <translation>Velkommen</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Velkommen til Bitcoin Core.</translation>
+        <source>Welcome to %1.</source>
+        <translation>Velkommen til %1.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Siden dette er første gang, programmet startes, kan du vælge, hvor Bitcoin Core skal gemme sin data.</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Siden dette er første gang, programmet startes, kan du vælge, hvor %1 skal gemme sin data.</translation>
     </message>
     <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin Core vil downloade og gemme et kopi af Bitcoin-blokkæden. Mindst %1 GB data vil blive gemt i denne mappe, og den vil vokse over tid. Tegnebogen vil også blive gemt i denne mappe.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 vil downloade og gemme et kopi af Bitcoin-blokkæden. Mindst %2 GB data vil blive gemt i denne mappe, og den vil vokse over tid. Tegnebogen vil også blive gemt i denne mappe.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -936,10 +924,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Brug tilpasset mappe for data:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -992,6 +976,14 @@
         <translation>&amp;Generelt</translation>
     </message>
     <message>
+        <source>Automatically start %1 after logging in to the system.</source>
+        <translation>Start %1 automatisk, når der logges ind på systemet.</translation>
+    </message>
+    <message>
+        <source>&amp;Start %1 on system login</source>
+        <translation>&amp;Start %1 ved systemlogin</translation>
+    </message>
+    <message>
         <source>Size of &amp;database cache</source>
         <translation>Størrelsen på &amp;databasens cache</translation>
     </message>
@@ -1017,11 +1009,7 @@
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
-        <translation>Minimér i stedet for at lukke applikationen, når vinduet lukkes. Når denne indstilling er slået til, vil applikationen først blive lukket, når Afslut vælges i menuen.</translation>
-    </message>
-    <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>Sproget for brugerfladen kan vælges her. Denne indstilling vil træde i kraft efter genstart af Bitcoin Core.</translation>
+        <translation>Minimér i stedet for at lukke applikationen, når vinduet lukkes. Når denne indstilling er aktiveret, vil applikationen først blive lukket, når Afslut vælges i menuen.</translation>
     </message>
     <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
@@ -1048,14 +1036,6 @@
         <translation>&amp;Netværk</translation>
     </message>
     <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Start Bitcoin Core automatisk efter der logges ind på systemet.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>&amp;Start Bitcoin Core ved system-login</translation>
-    </message>
-    <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
         <translation>(0 = auto, &lt;0 = efterlad så mange kerner fri)</translation>
     </message>
@@ -1069,7 +1049,7 @@
     </message>
     <message>
         <source>Enable coin &amp;control features</source>
-        <translation>Slå egenskaber for &amp;coin-styring til</translation>
+        <translation>Aktivér egenskaber for &amp;coin-styring</translation>
     </message>
     <message>
         <source>If you disable the spending of unconfirmed change, the change from a transaction cannot be used until that transaction has at least one confirmation. This also affects how your balance is computed.</source>
@@ -1160,6 +1140,10 @@
         <translation>&amp;Sprog for brugergrænseflade:</translation>
     </message>
     <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>Sproget for brugerfladen kan vælges her. Denne indstilling vil træde i kraft efter genstart af %1.</translation>
+    </message>
+    <message>
         <source>&amp;Unit to show amounts in:</source>
         <translation>&amp;Enhed, som beløb vises i:</translation>
     </message>
@@ -1186,6 +1170,10 @@
     <message>
         <source>none</source>
         <translation>ingen</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1474,10 +1462,6 @@
         <translation>Generelt</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Anvender OpenSSL-version</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Bruger BerkeleyDB version</translation>
     </message>
@@ -1516,10 +1500,6 @@
     <message>
         <source>Memory usage</source>
         <translation>Hukommelsesforbrug</translation>
-    </message>
-    <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Åbn Bitcoin Cores fejlsøgningslogfil fra den aktuelle datamappe. Dette kan tage nogle få sekunder for store logfiler.</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1568,6 +1548,10 @@
     <message>
         <source>User Agent</source>
         <translation>Brugeragent</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Åbn %1s fejlsøgningslogfil fra den aktuelle datamappe. Dette kan tage nogle få sekunder for store logfiler.</translation>
     </message>
     <message>
         <source>Services</source>
@@ -1678,8 +1662,8 @@
         <translation>&amp;Fjern bandlysning af knude</translation>
     </message>
     <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Velkommen til Bitcoin Cores RPC-konsol.</translation>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>Velkommen til %1s RPC-konsol.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2264,8 +2248,8 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin Core lukker ned…</translation>
+        <source>%1 is shutting down...</source>
+        <translation>%1 lukker ned…</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -2414,14 +2398,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Udviklerne af Bitcoin Core</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnetværk]</translation>
     </message>
@@ -2438,10 +2414,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Åben indtil %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>konflikt</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -2980,6 +2952,18 @@
         <translation>Acceptér forbindelser udefra (standard: 1 hvis hverken -proxy eller -connect)</translation>
     </message>
     <message>
+        <source>-fallbackfee is set very high! This is the transaction fee you may pay when fee estimates are not available.</source>
+        <translation>-fallbackfee er sat meget højt! Dette er transaktionsgebyret, du eventuelt betaler, hvis gebyrestimater ikke er tilgængelige.</translation>
+    </message>
+    <message>
+        <source>A fee rate (in %s/kB) that will be used when fee estimation has insufficient data (default: %s)</source>
+        <translation>En gebyrsats (i %s/kB), som vil blive brugt, hvis gebyrestimering har utilstrækkelig data (standard: %s)</translation>
+    </message>
+    <message>
+        <source>Accept relayed transactions received from whitelisted peers even when not relaying transactions (default: %d)</source>
+        <translation>Acceptér videresendte transaktioner, der modtages fra hvidlistede knuder, selv når transaktioner ikke videresendes (standard: %d)</translation>
+    </message>
+    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>Tildel til den givne adresse og lyt altid på den. Brug [vært]:port-notation for IPv6</translation>
     </message>
@@ -2994,6 +2978,10 @@
     <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
         <translation>Udfør kommando, når en transaktion i tegnebogen ændres (%s i kommandoen erstattes med TxID)</translation>
+    </message>
+    <message>
+        <source>Force relay of transactions from whitelisted peers even they violate local relay policy (default: %d)</source>
+        <translation>Gennemtving videresendelse af transaktioner fra hvidlistede knuder, selv om de overtræder lokal videresendelsespolitik (standard: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3012,6 +3000,10 @@
         <translation>Ikke i stand til at tildele til %s på denne computer. Bitcoin Core kører sansynligvis allerede.</translation>
     </message>
     <message>
+        <source>Unsupported argument -whitelistalwaysrelay ignored, use -whitelistrelay and/or -whitelistforcerelay.</source>
+        <translation>Argument -whitelistalwaysrelay understøttes ikke og ignoreres; brug -whitelistrelay og/eller -whitelistforcerelay.</translation>
+    </message>
+    <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
         <translation>Brug UPnP for at konfigurere den lyttende port (standard: 1 under lytning og ingen -proxy)</translation>
     </message>
@@ -3026,6 +3018,10 @@
     <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
         <translation>Advarsel: Netværket ser ikke ud til at være fuldt ud enige! Enkelte minere ser ud til at opleve problemer.</translation>
+    </message>
+    <message>
+        <source>Warning: Unknown block versions being mined! It's possible unknown rules are in effect</source>
+        <translation>Advarsel: Ukendte blokversioner bliver minet! Det er muligt, at ukendte regler er i brug</translation>
     </message>
     <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
@@ -3046,6 +3042,10 @@
     <message>
         <source>&lt;category&gt; can be:</source>
         <translation>&lt;kategori&gt; kan være:</translation>
+    </message>
+    <message>
+        <source>Append comment to the user agent string</source>
+        <translation>Føj kommentar til brugeragentstrengen</translation>
     </message>
     <message>
         <source>Block creation options:</source>
@@ -3092,6 +3092,10 @@
         <translation>Aktivér offentliggørelse af rå transaktion i &lt;address&gt;</translation>
     </message>
     <message>
+        <source>Enable transaction replacement in the memory pool (default: %u)</source>
+        <translation>Aktivér transaktionserstatning i hukommelsespuljen (standard: %u)</translation>
+    </message>
+    <message>
         <source>Error initializing block database</source>
         <translation>Klargøring af blokdatabase mislykkedes</translation>
     </message>
@@ -3128,8 +3132,20 @@
         <translation>Ugyldig -onion adresse: "%s"</translation>
     </message>
     <message>
+        <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
+        <translation>Ugyldigt beløb for -fallbackfee=&lt;beløb&gt;: "%s"</translation>
+    </message>
+    <message>
         <source>Keep the transaction memory pool below &lt;n&gt; megabytes (default: %u)</source>
         <translation>Hold hukommelsespuljen med transaktioner under &lt;n&gt; megabyte (standard: %u)</translation>
+    </message>
+    <message>
+        <source>Location of the auth cookie (default: data dir)</source>
+        <translation>Placering for autentificerings-cookie (standard: datamappe)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimum bytes pr. sigop i transaktioner, vi videresender og miner (standard: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3138,6 +3154,10 @@
     <message>
         <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
         <translation>Tilslut kun til knuder i netværk &lt;net&gt; (IPv4, IPv6 eller Onion)</translation>
+    </message>
+    <message>
+        <source>Print version and exit</source>
+        <translation>Udskriv version og afslut</translation>
     </message>
     <message>
         <source>Prune cannot be configured with a negative value.</source>
@@ -3194,10 +3214,6 @@
     <message>
         <source>Wallet options:</source>
         <translation>Tilvalg for tegnebog:</translation>
-    </message>
-    <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Advarsel: Denne version er forældet; opgradering påkrævet!</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>
@@ -3257,7 +3273,7 @@
     </message>
     <message>
         <source>Randomize credentials for every proxy connection. This enables Tor stream isolation (default: %u)</source>
-        <translation>Brug tilfældige akkreditiver for hver proxy-forbindelse. Dette tillader strømisolation med Tor (standard: %u)</translation>
+        <translation>Brug tilfældige akkreditiver for hver proxy-forbindelse. Dette aktiverer strømisolation med Tor (standard: %u)</translation>
     </message>
     <message>
         <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
@@ -3277,7 +3293,7 @@
     </message>
     <message>
         <source>Whitelisted peers cannot be DoS banned and their transactions are always relayed, even if they are already in the mempool, useful e.g. for a gateway</source>
-        <translation>Andre knuder på hvidliste kan ikke DoS-bandlyses, og deres transaktioner videresendes altid, selv hvis de allerede er i mempool'en. Brugbart til fx et adgangspunkt</translation>
+        <translation>Andre knuder på hvidliste kan ikke DoS-bandlyses, og deres transaktioner videresendes altid, selv hvis de allerede er i hukommelsespuljen. Brugbart til fx et adgangspunkt</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
@@ -3294,10 +3310,6 @@
     <message>
         <source>Activating best chain...</source>
         <translation>Aktiverer bedste kæde…</translation>
-    </message>
-    <message>
-        <source>Always relay transactions received from whitelisted peers (default: %d)</source>
-        <translation>Videresend altid transaktioner, der modtages fra hvidlistede knuder (standard: %d)</translation>
     </message>
     <message>
         <source>Attempt to recover private keys from a corrupt wallet.dat on startup</source>
@@ -3425,7 +3437,7 @@
     </message>
     <message>
         <source>Tor control port to use if onion listening enabled (default: %s)</source>
-        <translation>Tor kontrolport, der skal bruges, hvis onion-lytning er slået til (standard: %s)</translation>
+        <translation>Tor kontrolport, der skal bruges, hvis onion-lytning er aktiveret (standard: %s)</translation>
     </message>
     <message>
         <source>Transaction amount too small</source>
@@ -3462,6 +3474,10 @@
     <message>
         <source>Warning</source>
         <translation>Advarsel</translation>
+    </message>
+    <message>
+        <source>Warning: unknown new rules activated (versionbit %i)</source>
+        <translation>Advarsel: Ukendte nye regler aktiveret (versionsbit %i)</translation>
     </message>
     <message>
         <source>Whether to operate in a blocks only mode (default: %u)</source>

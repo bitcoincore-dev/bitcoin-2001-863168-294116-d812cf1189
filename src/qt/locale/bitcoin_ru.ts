@@ -1,4 +1,4 @@
-<TS language="ru" version="2.0">
+<TS language="ru" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>Вы уверены, что хотите зашифровать ваш бумажник?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Сейчас программа закроется для завершения процесса шифрования. Помните, что шифрование вашего бумажника не может полностью защитить ваши биткоины от кражи с помощью инфицирования вашего компьютера вредоносным ПО.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>ВАЖНО: все предыдущие резервные копии вашего бумажника должны быть заменены новым зашифрованным файлом. В целях безопасности предыдущие резервные копии незашифрованного бумажника станут бесполезны, как только вы начнёте использовать новый зашифрованный бумажник.</translation>
     </message>
@@ -270,6 +266,14 @@
         <translation>Закрыть приложение</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;О %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Показать информацию о %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>О &amp;Qt</translation>
     </message>
@@ -304,10 +308,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Открыть &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Core клиент</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,10 +358,6 @@
         <translation>&amp;Получить</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Показать информацию о Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Показать / Скрыть</translation>
     </message>
@@ -398,20 +394,8 @@
         <translation>Панель вкладок</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Запросить платежи (создаёт QR-коды и bitcoin: ссылки)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;О Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Изменить опции конфигурации Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -428,10 +412,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;Параметры командной строки</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Показать помощь по Bitcoin Core и получить список доступных параметров командной строки.</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -492,6 +472,14 @@
     <message>
         <source>Up to date</source>
         <translation>Синхронизировано</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Показать помощь по %1 и получить список доступных параметров командной строки.</translation>
+    </message>
+    <message>
+        <source>%1 client</source>
+        <translation>%1 клиент</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -734,10 +722,6 @@
         <translation>Эта метка становится красной, если приоритет меньше, чем "среднее".</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Эта метка становится красной, если любой из получателей принимает количество меньше, чем %1.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Может отличаться на +/- %1 сатоши на вход.</translation>
     </message>
@@ -855,10 +839,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>версия</translation>
     </message>
@@ -867,8 +847,8 @@
         <translation>(%1-бит)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>О Bitcoin Core</translation>
+        <source>About %1</source>
+        <translation>О %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,16 +898,16 @@
         <translation>Добро пожаловать</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Добро пожаловать в Bitcoin Core.</translation>
+        <source>Welcome to %1.</source>
+        <translation>Добро пожаловать в %1</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Так как вы впервые запустили программу, вы можете выбрать, где Bitcoin Core будет хранить данные.</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Так как вы впервые запустили программу, вы можете выбрать, где %1 будет хранить данные.</translation>
     </message>
     <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin Core скачает и сохранит копию цепи блоков. Как минимум, %1ГБ данных будет храниться в этом каталоге, и со временем он будет расти. Бумажник будет также сохранён в этом каталоге.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 скачает и сохранит копию цепи блоков. Как минимум, %2ГБ данных будет храниться в этом каталоге, и со временем он будет расти. Бумажник будет также сохранён в этом каталоге.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -936,10 +916,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Использовать другой каталог данных:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1020,10 +996,6 @@
         <translation>Сворачивать вместо закрытия. Если данная опция будет выбрана — приложение закроется только после выбора соответствующего пункта в меню.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>Здесь можно выбрать язык интерфейса. Настройки вступят в силу после перезапуска Bitcoin Core.</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>Сторонние URL (например, block explorer), которые отображаются на вкладке транзакций как пункты контекстного меню. %s в URL заменяется хэшем транзакции. URL отделяются друг от друга вертикальной чертой |.</translation>
     </message>
@@ -1046,14 +1018,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Сеть</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Автоматически запускать Bitcoin Core после входа в систему</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>&amp;Запускать Bitcoin Core при входе в систему</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1160,6 +1124,10 @@
         <translation>&amp;Язык интерфейса:</translation>
     </message>
     <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>Здесь можно выбрать язык интерфейса. Настройки вступят в силу после перезапуска %1.</translation>
+    </message>
+    <message>
         <source>&amp;Unit to show amounts in:</source>
         <translation>&amp;Отображать суммы в единицах: </translation>
     </message>
@@ -1186,6 +1154,10 @@
     <message>
         <source>none</source>
         <translation>ничего</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1474,10 +1446,6 @@
         <translation>Общие</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Используется версия OpenSSL</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Используется версия BerkeleyDB</translation>
     </message>
@@ -1516,10 +1484,6 @@
     <message>
         <source>Memory usage</source>
         <translation>Использование памяти</translation>
-    </message>
-    <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Открыть отладочный лог-файл Bitcoin Core из текущего каталога данных. Это может занять несколько секунд для больших лог-файлов.</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1568,6 +1532,10 @@
     <message>
         <source>User Agent</source>
         <translation>Юзер-агент</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Открыть отладочный лог-файл %1 из текущего каталога данных. Это может занять несколько секунд для больших лог-файлов.</translation>
     </message>
     <message>
         <source>Services</source>
@@ -1676,10 +1644,6 @@
     <message>
         <source>&amp;Unban Node</source>
         <translation>&amp;Разблокировать узел</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Добро пожаловать в RPC-консоль Bitcoin Core.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2264,10 +2228,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin Core выключается...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>Не выключайте компьютер, пока это окно не исчезнет.</translation>
     </message>
@@ -2414,14 +2374,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Разработчики Bitcoin Core</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[тестовая сеть]</translation>
     </message>
@@ -2438,10 +2390,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Открыто до %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>в противоречии</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -2996,6 +2944,10 @@
         <translation>Выполнить команду, когда меняется транзакция в бумажнике (%s в команде заменяется на TxID)</translation>
     </message>
     <message>
+        <source>Force relay of transactions from whitelisted peers even they violate local relay policy (default: %d)</source>
+        <translation>Всегда разрешать транзакции, полученные от участников из белого списка (по умолчанию: %d)</translation>
+    </message>
+    <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
         <translation>Задать число потоков проверки скрипта (от %u до %d, 0=авто, &lt;0 = оставить столько ядер свободными, по умолчанию: %d)</translation>
     </message>
@@ -3028,6 +2980,10 @@
         <translation>Внимание: похоже, в сети нет полного согласия! Некоторый майнеры, возможно, испытывают проблемы.</translation>
     </message>
     <message>
+        <source>Warning: Unknown block versions being mined! It's possible unknown rules are in effect</source>
+        <translation>Внимание: Получена неизвестная версия блока! Возможно неизвестные правила вступили в силу.</translation>
+    </message>
+    <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
         <translation>Внимание: мы не полностью согласны с подключенными участниками! Вам или другим участникам, возможно, следует обновиться.</translation>
     </message>
@@ -3046,6 +3002,10 @@
     <message>
         <source>&lt;category&gt; can be:</source>
         <translation>&lt;category&gt; может быть:</translation>
+    </message>
+    <message>
+        <source>Append comment to the user agent string</source>
+        <translation>Добавить комментарий к строке пользовательского агента</translation>
     </message>
     <message>
         <source>Block creation options:</source>
@@ -3132,12 +3092,20 @@
         <translation>Сбрасывать транзакции из памяти на диск каждые &lt;n&gt; мегабайт (по умолчанию: %u)</translation>
     </message>
     <message>
+        <source>Location of the auth cookie (default: data dir)</source>
+        <translation>Расположение куки входы(по умолчанию: data dir)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Недостаточно файловых дескрипторов.</translation>
     </message>
     <message>
         <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
         <translation>Соединяться только по сети &lt;net&gt; (ipv4, ipv6 или onion)</translation>
+    </message>
+    <message>
+        <source>Print version and exit</source>
+        <translation>Написать версию и выйти</translation>
     </message>
     <message>
         <source>Prune cannot be configured with a negative value.</source>
@@ -3194,10 +3162,6 @@
     <message>
         <source>Wallet options:</source>
         <translation>Настройки бумажника:</translation>
-    </message>
-    <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Внимание: эта версия устарела; требуется обновление!</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>
@@ -3294,10 +3258,6 @@
     <message>
         <source>Activating best chain...</source>
         <translation>Активируется лучшая цепь...</translation>
-    </message>
-    <message>
-        <source>Always relay transactions received from whitelisted peers (default: %d)</source>
-        <translation>Всегда транслировать транзакции, полученные из белого списка участников (по умолчанию: %d)</translation>
     </message>
     <message>
         <source>Attempt to recover private keys from a corrupt wallet.dat on startup</source>
@@ -3462,6 +3422,10 @@
     <message>
         <source>Warning</source>
         <translation>Внимание</translation>
+    </message>
+    <message>
+        <source>Warning: unknown new rules activated (versionbit %i)</source>
+        <translation>Внимание: неизвестные правила вступили в силу(versionbit %i)</translation>
     </message>
     <message>
         <source>Whether to operate in a blocks only mode (default: %u)</source>

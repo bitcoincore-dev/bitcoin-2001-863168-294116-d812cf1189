@@ -1,4 +1,4 @@
-<TS language="fr_FR" version="2.0">
+<TS language="fr_FR" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -20,6 +20,10 @@
     <message>
         <source>&amp;Copy</source>
         <translation>&amp;Copie</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>F&amp;ermer</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -48,6 +52,10 @@
     <message>
         <source>Choose the address to receive coins with</source>
         <translation>Choisissez une adresse où recevoir les bitcoins</translation>
+    </message>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation>C&amp;oisir</translation>
     </message>
     <message>
         <source>Sending addresses</source>
@@ -161,10 +169,6 @@ Réessayez.</translation>
         <translation>Êtes-vous sûr de de vouloir crypter votre portefeuille ? </translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin Core fermera maintenant pour finir le processus de chiffrement. Rappelez-vous que crypter votre portefeuille ne protége pas totalement vos bitcoins d'être volé par un malware ayant infecté votre ordinateur. </translation>
-    </message>
-    <message>
         <source>Warning: The Caps Lock key is on!</source>
         <translation>Attention : La touche majuscule est enfoncé.</translation>
     </message>
@@ -175,6 +179,10 @@ Réessayez.</translation>
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Entrez l'ancien mot de passe et le nouveau mot de passe pour le portefeuille</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 fermera maintenant pour finir le processus de chiffrement. Rappelez-vous que crypter votre portefeuille ne protége pas totalement vos bitcoins d'être volé par un malware ayant infecté votre ordinateur.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -255,6 +263,14 @@ Réessayez.</translation>
         <translation>Quitter l'application</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;À propos de %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Afficher les informations sur %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>À propos de &amp;Qt</translation>
     </message>
@@ -265,6 +281,10 @@ Réessayez.</translation>
     <message>
         <source>&amp;Options...</source>
         <translation>&amp;Options...</translation>
+    </message>
+    <message>
+        <source>Modify configuration options for %1</source>
+        <translation>Modifier les options de configuration pour %1</translation>
     </message>
     <message>
         <source>&amp;Encrypt Wallet...</source>
@@ -289,10 +309,6 @@ Réessayez.</translation>
     <message>
         <source>Open &amp;URI...</source>
         <translation>Ouvrir &amp;URI</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Client Bitcoin Core</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -343,10 +359,6 @@ Réessayez.</translation>
         <translation>&amp;Réception</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Montrer les informations à propos de Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Montrer / Cacher</translation>
     </message>
@@ -379,20 +391,8 @@ Réessayez.</translation>
         <translation>Barre d'outils des onglets</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Demander des paiements (générer QR codes et bitcoin: URIs)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;À propos de Bitcoin</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Modifier les options de configuration de Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -804,10 +804,6 @@ Réessayez.</translation>
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>version</translation>
     </message>
@@ -816,8 +812,8 @@ Réessayez.</translation>
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>À propos de Bitcoin Core</translation>
+        <source>About %1</source>
+        <translation>A propos %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -847,20 +843,12 @@ Réessayez.</translation>
         <translation>Bienvenue </translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Bienvenue sur Bitcoin Core.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Utiliser le répertoire par défaut </translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Utiliser votre propre répertoire</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -945,8 +933,8 @@ Réessayez.</translation>
         <translation>&amp;Réseau</translation>
     </message>
     <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Démarrer automatiquement Bitcoin Core après s'être connecté au système. </translation>
+        <source>W&amp;allet</source>
+        <translation>&amp;Portefeuille</translation>
     </message>
     <message>
         <source>Expert</source>
@@ -1023,6 +1011,10 @@ Réessayez.</translation>
     <message>
         <source>none</source>
         <translation>aucun</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1223,10 +1215,6 @@ Réessayez.</translation>
         <translation>Général</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Version OpenSSL utilisée </translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Version BerkeleyDButilisée </translation>
     </message>
@@ -1297,6 +1285,10 @@ Réessayez.</translation>
     <message>
         <source>Starting Block</source>
         <translation>Bloc de départ</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>Blocs Synchronisés </translation>
     </message>
     <message>
         <source>User Agent</source>
@@ -1879,14 +1871,6 @@ Réessayez.</translation>
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Les développeurs de Bitcoin Core</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -1941,6 +1925,10 @@ Réessayez.</translation>
         <translation>Votre adresse</translation>
     </message>
     <message>
+        <source>watch-only</source>
+        <translation>Lecture uniquement</translation>
+    </message>
+    <message>
         <source>label</source>
         <translation>Étiquette </translation>
     </message>
@@ -1983,6 +1971,10 @@ Réessayez.</translation>
     <message>
         <source>Transaction ID</source>
         <translation>ID de transaction</translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation>Marchant</translation>
     </message>
     <message>
         <source>Debug information</source>
@@ -2071,6 +2063,10 @@ Réessayez.</translation>
         <translation>Étiquette</translation>
     </message>
     <message>
+        <source>Unconfirmed</source>
+        <translation>Non Confirmé</translation>
+    </message>
+    <message>
         <source>Received with</source>
         <translation>Reçues avec</translation>
     </message>
@@ -2089,6 +2085,10 @@ Réessayez.</translation>
     <message>
         <source>Mined</source>
         <translation>Extraction</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>Lecture uniquement</translation>
     </message>
     <message>
         <source>(n/a)</source>
@@ -2196,6 +2196,10 @@ Réessayez.</translation>
     <message>
         <source>Export Transaction History</source>
         <translation>Exporter l'historique des transactions</translation>
+    </message>
+    <message>
+        <source>Watch-only</source>
+        <translation>Regarder seulement</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -2340,10 +2344,6 @@ Importation ...</translation>
     <message>
         <source>Wallet options:</source>
         <translation>Options du portefeuille:</translation>
-    </message>
-    <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Attention: Cette version est obsolète; mise à jour nécessaire</translation>
     </message>
     <message>
         <source>(default: %u)</source>

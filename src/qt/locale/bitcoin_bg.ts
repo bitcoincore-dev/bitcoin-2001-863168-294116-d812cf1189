@@ -1,4 +1,4 @@
-<TS language="bg" version="2.0">
+<TS language="bg" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>Наистина ли желаете да шифрирате портфейла си?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Биткоин сега ще се затоври за да завърши процеса на криптиране. Запомнете, че криптирането на вашия портефейл не може напълно да предпази вашите монети от кражба чрез зловреден софтуер, инфектирал вашия компютър</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>ВАЖНО: Всички стари запазвания, които сте направили на Вашият портфейл трябва да замените с запазване на новополучения, шифриран портфейл. От съображения за сигурност, предишните запазвания на нешифрирани портфейли ще станат неизползваеми веднага, щом започнете да използвате новият, шифриран портфейл.</translation>
     </message>
@@ -258,6 +254,10 @@
         <translation>Изход от приложението</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation />
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>За &amp;Qt</translation>
     </message>
@@ -292,10 +292,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Отвори &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Core клиент</translation>
     </message>
     <message>
         <source>Send coins to a Bitcoin address</source>
@@ -338,10 +334,6 @@
         <translation>&amp;Получаване</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Покажете информация за Биткойн ядрото</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Показване / Скриване</translation>
     </message>
@@ -378,16 +370,8 @@
         <translation>Раздели</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Биткойн ядро</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Изискване на плащания(генерира QR кодове и биткойн: URIs)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Относно Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -404,10 +388,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;Налични команди</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Покажи помощните съобщения на Биткойн за да видиш наличните и валидни команди</translation>
     </message>
     <message>
         <source>No block source available...</source>
@@ -783,20 +763,12 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Биткойн ядро</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>версия</translation>
     </message>
     <message>
         <source>(%1-bit)</source>
         <translation>(%1-битов)</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Относно Bitcoin Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -818,24 +790,12 @@
         <translation>Добре дошли</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Добре дошли в Биткойн ядрото.</translation>
-    </message>
-    <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Тъй като това е първото стартиране на програмата можете да изберете къде Биткон ядрото да запази данните си.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Използване на директория по подразбиране</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Използване на директория ръчно</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Биткойн ядро</translation>
     </message>
     <message>
         <source>Error</source>
@@ -898,10 +858,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Мрежа</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Автоматично стартиране на Bitcoin Core след влизане в системата.</translation>
     </message>
     <message>
         <source>W&amp;allet</source>
@@ -998,6 +954,10 @@
     <message>
         <source>none</source>
         <translation>нищо</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Биткойн ядро</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1232,10 +1192,6 @@
     <message>
         <source>General</source>
         <translation>Основни</translation>
-    </message>
-    <message>
-        <source>Using OpenSSL version</source>
-        <translation>Използване на OpenSSL версия</translation>
     </message>
     <message>
         <source>Using BerkeleyDB version</source>
@@ -1804,10 +1760,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Биткойн ядрото се изключва...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>Не изключвайте компютъра докато този прозорец не изчезне.</translation>
     </message>
@@ -1930,14 +1882,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Биткойн ядро</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Разработчици на Bitcoin Core</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -1954,10 +1898,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Подлежи на промяна до %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>припокриващ се</translation>
     </message>
     <message>
         <source>%1/offline</source>

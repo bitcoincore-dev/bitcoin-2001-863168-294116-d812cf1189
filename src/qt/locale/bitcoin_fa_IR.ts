@@ -1,4 +1,4 @@
-<TS language="fa_IR" version="2.0">
+<TS language="fa_IR" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -224,6 +224,10 @@
     <message>
         <source>Quit application</source>
         <translation>از "درخواست نامه"/ application خارج شو</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>نمایش اطلاعات درباره %1</translation>
     </message>
     <message>
         <source>About &amp;Qt</source>
@@ -690,10 +694,6 @@
 </context>
 <context>
     <name>ShutdownWindow</name>
-    <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>هسته بیت کوین در حال خاموش شدن است...</translation>
-    </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>تا پیش از بسته شدن این پنجره کامپیوتر خود را خاموش نکنید.</translation>

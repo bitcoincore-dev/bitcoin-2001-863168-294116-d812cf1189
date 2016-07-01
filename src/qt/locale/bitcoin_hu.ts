@@ -1,4 +1,4 @@
-<TS language="hu" version="2.0">
+<TS language="hu" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -258,6 +258,14 @@
         <translation>Kilépés az alkalmazásból</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;A %1-ról</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>%1 információ megjelenítése</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>A &amp;Qt-ról</translation>
     </message>
@@ -292,10 +300,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>&amp;URI azonosító megnyitása...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Core kliens</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -346,10 +350,6 @@
         <translation>&amp;Fogadás</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Bitcoin Core információ megjelenítése</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Mutat / Elrejt</translation>
     </message>
@@ -386,20 +386,8 @@
         <translation>Fül eszköztár</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Fizetési kérelem (QR-kódot és "bitcoin:" URI azonosítót hoz létre)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;A Bitcoin Core-ról</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Konfigurációs opciók módosítása a Bitcoin Core-hoz</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -416,10 +404,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>Paran&amp;cssor kapcsolók</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>A Bitcoin Core súgóüzenet megjelenítése a Bitcoin lehetséges parancssori kapcsolóival.</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -480,6 +464,10 @@
     <message>
         <source>Up to date</source>
         <translation>Naprakész</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>A %1 súgóüzenet megjelenítése a Bitcoin lehetséges parancssori kapcsolóival.</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -722,10 +710,6 @@
         <translation>Ez a címke pirosra változik, ha a prioritás kisebb mint "közepes".</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Ez a címke pirosra változik, ha bármely fogadónak %1-nál kevesebb összeg érkezik.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Bemenetenként  +/- %1 satoshi-val változhat</translation>
     </message>
@@ -839,10 +823,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>verzió</translation>
     </message>
@@ -851,8 +831,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>A Bitcoin Core-ról</translation>
+        <source>About %1</source>
+        <translation>A %1-ról</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -874,12 +854,8 @@
         <translation>Üdvözlünk</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Üdvözlünk a Bitcoin Core-ban.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>A Bitcoin Core le fogja tölteni és tárolni fogja a Bitcoin blokklánc egy másolatát. Legalább %1GB adat lesz tárolva ebben a mappában, és ez folyamatosan nőni fog. A tárca szintén itt lesz tárolva.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>A %1 le fogja tölteni és tárolni fogja a Bitcoin blokklánc egy másolatát. Legalább %2GB adat lesz tárolva ebben a mappában, és ez folyamatosan nőni fog. A tárca szintén itt lesz tárolva.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -888,10 +864,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Saját adatkönyvtár használata:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -960,10 +932,6 @@
         <translation>A proxy IP címe (pl.: IPv4: 127.0.0.1 / IPv6: ::1)</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>Itt beállíthatod a kezelőfelület nyelvét. A beállítás a Bitcoin újraindítása után lép érvénybe.</translation>
-    </message>
-    <message>
         <source>Third party transaction URLs</source>
         <translation>Harmadik fél tranzakció URL-ek</translation>
     </message>
@@ -978,10 +946,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Hálózat</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>A Bitcoin elindítása bejelentkezéskor</translation>
     </message>
     <message>
         <source>W&amp;allet</source>
@@ -1074,6 +1038,10 @@
     <message>
         <source>none</source>
         <translation>semmi</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1260,10 +1228,6 @@
     <message>
         <source>General</source>
         <translation>Általános</translation>
-    </message>
-    <message>
-        <source>Using OpenSSL version</source>
-        <translation>Használt OpenSSL verzió</translation>
     </message>
     <message>
         <source>Using BerkeleyDB version</source>
@@ -1829,10 +1793,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>A Bitcoin Core leáll...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>Ne állítsd le a számítógépet amíg ez az ablak el nem tűnik.</translation>
     </message>
@@ -1935,14 +1895,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>A Bitcoin Core fejlesztői</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[teszthálózat]</translation>
     </message>
@@ -1995,6 +1947,10 @@
     <message>
         <source>own address</source>
         <translation>saját cím</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>csak megfigyelés</translation>
     </message>
     <message>
         <source>label</source>
@@ -2133,6 +2089,10 @@
     <message>
         <source>Mined</source>
         <translation>Kibányászva</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>csak megfigyelés</translation>
     </message>
     <message>
         <source>(n/a)</source>

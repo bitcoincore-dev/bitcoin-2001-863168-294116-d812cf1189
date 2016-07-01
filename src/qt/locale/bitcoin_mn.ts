@@ -1,4 +1,4 @@
-<TS language="mn" version="2.0">
+<TS language="mn" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -750,10 +750,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Биткойны цѳм хаагдаж байна...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>Энэ цонхыг хаагдтал компьютерээ бүү унтраагаарай</translation>
     </message>
@@ -788,10 +784,6 @@
     <message>
         <source>Open until %1</source>
         <translation>%1 хүртэл нээлттэй</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>зѳрчилдлѳѳ</translation>
     </message>
     <message>
         <source>%1/unconfirmed</source>

@@ -1,4 +1,4 @@
-<TS language="id_ID" version="2.0">
+<TS language="id_ID" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>Apakah Anda yakin ingin mengenkripsi dompet Anda?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin Core akan ditutup untuk menyelesaikan proses enkripsi. Mohon diingat bahwa mengenkripsi dompet Anda tidak akan sepenuhnya melindungi bitcoin Anda dari virus atau malware yang menginfeksi komputer Anda.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>PENTING: Setiap back up yang sudah Anda buat sebaiknya diganti dengan data dompet Anda yang baru dan terenkripsi. Untuk alasan keamanan, data back up tidak terenkripsi yang sudah Anda buat sebelumnya tidak akan dapat digunakan setelah Anda mulai menggunakan dompet yang baru dan terenkripsi.</translation>
     </message>
@@ -190,6 +186,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Masukkan kata kunci lama dan kata kunci baru dompet Anda.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 akan ditutup untuk menyelesaikan proses enkripsi. Mohon diingat bahwa mengenkripsi dompet Anda tidak akan sepenuhnya melindungi bitcoin Anda dari virus atau malware yang menginfeksi komputer Anda.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -270,6 +270,10 @@
         <translation>Keluar dari aplikasi</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Tampilkan informasi tentang %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Mengenai &amp;Qt</translation>
     </message>
@@ -304,10 +308,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Buka &amp;URI</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Klien Bitcoin Core</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,10 +358,6 @@
         <translation>&amp;Menerima</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Tampilkan informasi tentang Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Tampilkan / Sembunyikan</translation>
     </message>
@@ -398,20 +394,8 @@
         <translation>Baris tab</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Permintaan pembayaran (membuat kode QR dan bitcoin: URIs)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Mengenai Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Modifikasi pengaturan konfigurasi untuk Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -428,10 +412,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;pilihan Command-line</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Tampilkan pesan bantuan Bitcoin Core untuk mendapatkan daftar pilihan Command-line</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -492,6 +472,10 @@
     <message>
         <source>Up to date</source>
         <translation>Terbaru</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Tampilkan pesan bantuan %1 untuk mendapatkan daftar pilihan Command-line</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -734,10 +718,6 @@
         <translation>Label ini akan menjadi merah apabila prioritasnya lebih kecil dari "sedang"</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Label ini akan menjadi merah apabila penerima menerima jumlah yang lebih kecil dari %1.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Dapat beragam +/- %1 satoshi per input.</translation>
     </message>
@@ -855,20 +835,12 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versi</translation>
     </message>
     <message>
         <source>(%1-bit)</source>
         <translation>(%1-bit)</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Mengenai Bitcoin Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,16 +890,12 @@
         <translation>Selamat Datang</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Selamat Datang ke Bitcoin Core</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Ini adalah pertama kali program ini dijalankan, Anda dapat memilih dimana %1 menyimpan data.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Ini adalah pertama kali program ini dijalankan, Anda dapat memilih dimana Bitcoin Core menyimpan data.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin Core akan mengunduh dan menyimpan salinan dari block chain Bitcoin. Setidaknya %1GB data akan disimpan di direktori ini, dan akan terus bertambah. Dompet Anda juga akan disimpan di direktori ini.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 akan mengunduh dan menyimpan salinan dari block chain Bitcoin. Setidaknya %2GB data akan disimpan di direktori ini, dan akan terus bertambah. Dompet Anda juga akan disimpan di direktori ini.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -936,10 +904,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Gunakan direktori pilihan Anda:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1020,10 +984,6 @@
         <translation>Minimalisasi aplikasi ketika jendela ditutup. Ketika pilihan ini dipilih, aplikasi akan menutup seluruhnya jika anda memilih Keluar di menu yang tersedia.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>Bahasa interface pengguna bisa diubah disini. Pengaturan ini akan memberikan efek setelah Bitcoin Core di-restart.</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>URL pihak ketika (misalnya sebuah block explorer) yang mumcul dalam tab transaksi sebagai konteks menu. %s dalam URL diganti dengan kode transaksi. URL dipisahkan dengan tanda vertikal |.</translation>
     </message>
@@ -1046,14 +1006,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Jaringan</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Buka Bitcoin Core secara otomatis setelah Anda log-in ke sistem Anda.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>&amp;Mulai Bitcoin Core saat log-in sistem</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1140,6 +1092,10 @@
         <translation>&amp;Bahasa Antarmuka Pengguna:</translation>
     </message>
     <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>Bahasa interface pengguna bisa diubah disini. Pengaturan ini akan memberikan efek setelah %1 di-restart.</translation>
+    </message>
+    <message>
         <source>&amp;Unit to show amounts in:</source>
         <translation>&amp;Unit untuk menunjukkan nilai:</translation>
     </message>
@@ -1166,6 +1122,10 @@
     <message>
         <source>none</source>
         <translation>tidak satupun</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1358,10 +1318,6 @@
         <translation>Umum</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Menggunakan versi OpenSSL</translation>
-    </message>
-    <message>
         <source>Startup time</source>
         <translation>Waktu nyala</translation>
     </message>
@@ -1462,10 +1418,6 @@
     <message>
         <source>1 &amp;year</source>
         <translation>1 &amp;tahun</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Selamat datang di konsol RPC Bitcoin.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -1930,10 +1882,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin Core sementara dimatikan...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>Kamu tidak dapat mematikan komputer sebelum jendela ini tertutup sendiri.</translation>
     </message>
@@ -2060,14 +2008,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Pembangun Bitcoin Core</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -2084,10 +2024,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Buka hingga %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>Terkonflik</translation>
     </message>
     <message>
         <source>%1/offline</source>

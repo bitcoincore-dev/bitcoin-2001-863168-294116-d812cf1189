@@ -1,4 +1,4 @@
-<TS language="fi" version="2.0">
+<TS language="fi" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>Haluatko varmasti salata lompakkosi?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin Core sammuu nyt viimeistelläkseen kryptaamisen. Muista että lompakon kryptaaminen ei voi täysin suojata bitcoinejasi varkaudelta malwaren saastuttamalla tietokoneella.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>TÄRKEÄÄ: Kaikki vanhat lompakon varmuuskopiot pitäisi korvata uusilla suojatuilla varmuuskopioilla. Turvallisuussyistä edelliset varmuuskopiot muuttuvat turhiksi, kun aloitat suojatun lompakon käytön.</translation>
     </message>
@@ -190,6 +186,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Syötä vanha ja uusi salasana lompakolle.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 sammuu nyt viimeistelläkseen kryptaamisen. Muista että lompakon kryptaaminen ei voi täysin suojata bitcoinejasi varkaudelta malwaren saastuttamalla tietokoneella.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -270,6 +270,14 @@
         <translation>Sulje ohjelma</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;Tietoja %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Näytä tietoja %1:sta</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Tietoja &amp;Qt</translation>
     </message>
@@ -304,10 +312,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Avaa &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Core ohjelma</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,10 +362,6 @@
         <translation>&amp;Vastaanota</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Näytä tietoja Bitcoin Core:sta</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Näytä / Piilota</translation>
     </message>
@@ -398,20 +398,8 @@
         <translation>Välilehtipalkki</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin-ydin</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Pyydä maksuja (Luo QR koodit ja bitcoin: URIt)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Tietoja Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Muokkaa kokoonpanoasetuksia Bitcoin Corelle</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -428,10 +416,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;Komentorivin valinnat</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Näytä Bitcoin Core ohjeet saadaksesi listan mahdollisista Bitcoinin komentorivivalinnoista</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -492,6 +476,10 @@
     <message>
         <source>Up to date</source>
         <translation>Rahansiirtohistoria on ajan tasalla</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Näytä %1 ohjeet saadaksesi listan mahdollisista Bitcoinin komentorivivalinnoista</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -734,10 +722,6 @@
         <translation>Tämä nimi muuttuu punaiseksi mikäli prioriteetti on pienempi kuin "medium".</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Tämä nimike muuttuu punaiseksi mikäli mikä tahansa saaja vastaanottaa pienemmän määrän kuin %1.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Saattaa vaihdella +/- %1 satoshia per syöte.</translation>
     </message>
@@ -855,10 +839,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin-ydin</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versio</translation>
     </message>
@@ -867,8 +847,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>Tietoja Bitcoin Core</translation>
+        <source>About %1</source>
+        <translation>Tietoja %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,16 +898,12 @@
         <translation>Tervetuloa</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Tervetuloa Bitcoin Core</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Tämän on ensimmäinen kerta kun %1 on käynnistetty joten voit valita data-hakemiston paikan.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Tämän on ensimmäinen kerta kun Bitcoin Core on käynnistetty joten voit valita data-hakemiston paikan.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin Core lataa ja tallentaa kopion Bitcoinin lohkoketjusta. Vähintään %1GB dataa tullaan tallentamaan tähän hakemistoon ja tarve kasvaa ajan myötä. Lomakko tullaan myös tallentamaan tähän hakemistoon.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 lataa ja tallentaa kopion Bitcoinin lohkoketjusta. Vähintään %2GB dataa tullaan tallentamaan tähän hakemistoon ja tarve kasvaa ajan myötä. Lomakko tullaan myös tallentamaan tähän hakemistoon.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -936,10 +912,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Määritä oma kansio:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin-ydin</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1020,10 +992,6 @@
         <translation>Minimoi ikkuna ohjelman sulkemisen sijasta kun ikkuna suljetaan. Kun tämä asetus on käytössä, ohjelma suljetaan vain valittaessa valikosta Poistu.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>Käyttöliittymän kieli voidaan asettaa tässä. Tämä asetus tulee käyttöön vasta kun Bitcoin Core käynnistetään uudelleen.</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>Ulkopuoliset URL-osoitteet (esim. block explorer,) jotka esiintyvät siirrot-välilehdellä valikossa. %s URL-osoitteessa korvataan siirtotunnuksella. Useampi URL-osoite on eroteltu pystyviivalla |.</translation>
     </message>
@@ -1046,14 +1014,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Verkko</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Käynnistä Bitcoin Core automaattisesti järjestelmään kirjautumisen jälkeen.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>&amp;Käynnistä Bitcoin Core järjestelmään kirjautuessa</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1160,6 +1120,10 @@
         <translation>&amp;Käyttöliittymän kieli</translation>
     </message>
     <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>Käyttöliittymän kieli voidaan asettaa tässä. Tämä asetus tulee käyttöön vasta kun %1 käynnistetään uudelleen.</translation>
+    </message>
+    <message>
         <source>&amp;Unit to show amounts in:</source>
         <translation>Yksikkö jona bitcoin-määrät näytetään</translation>
     </message>
@@ -1186,6 +1150,10 @@
     <message>
         <source>none</source>
         <translation>ei mitään</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin-ydin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1474,10 +1442,6 @@
         <translation>Yleinen</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Käytössä oleva OpenSSL-versio</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Käyttää BerkeleyDB-versiota</translation>
     </message>
@@ -1516,10 +1480,6 @@
     <message>
         <source>Memory usage</source>
         <translation>Muistin käyttö</translation>
-    </message>
-    <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Avaa Bitcoin Coren debug-loki tämänhetkisestä datahakemistosta. Tämä voi viedä muutaman sekunnin suurille lokitiedostoille.</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1568,6 +1528,10 @@
     <message>
         <source>User Agent</source>
         <translation>Käyttöliittymä</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Avaa %1n debug-loki tämänhetkisestä datahakemistosta. Tämä voi viedä muutaman sekunnin suurille lokitiedostoille.</translation>
     </message>
     <message>
         <source>Services</source>
@@ -1676,10 +1640,6 @@
     <message>
         <source>&amp;Unban Node</source>
         <translation>&amp;Poista solmukohdan esto</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Tervetuloa Bitcoin Coren RPC-konsoliin.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2252,10 +2212,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin core sulkeutuu...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>Älä sammuta tietokonetta ennenkuin tämä ikkuna katoaa.</translation>
     </message>
@@ -2394,14 +2350,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin-ydin</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Bitcoin Core kehittäjät</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -2418,10 +2366,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Avoinna %1 asti</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>ristiriitainen</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -2912,8 +2856,36 @@
         <translation>Jos &lt;category&gt; on toimittamatta tai jos &lt;category&gt; = 1, tulosta kaikki debug-tieto.</translation>
     </message>
     <message>
+        <source>Please check that your computer's date and time are correct! If your clock is wrong Bitcoin Core will not work properly.</source>
+        <translation>Tarkistathan että tietokoneesi päivämäärä ja kellonaika ovat oikeassa! Jos kellosi on väärässä, Bitcoin Core ei toimi oikein.</translation>
+    </message>
+    <message>
+        <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
+        <translation>Karsinta konfiguroitu alle minimin %d MiB. Käytä surempaa numeroa.</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of pruned node)</source>
+        <translation>Karsinta: viime lompakon synkronisointi menee karsitun datan taakse. Sinun tarvitsee ajaa -reindex (lataa koko lohkoketju uudelleen tapauksessa jossa karsiva noodi)</translation>
+    </message>
+    <message>
+        <source>Reduce storage requirements by pruning (deleting) old blocks. This mode is incompatible with -txindex and -rescan. Warning: Reverting this setting requires re-downloading the entire blockchain. (default: 0 = disable pruning blocks, &gt;%u = target size in MiB to use for block files)</source>
+        <translation>Vähennä levytilan tarvetta karsimalla (poistamalla) vanhoja lohkoja. Tämä tila ei ole yhteensopiva -txindex ja -rescan -parametrien kanssa. Varoitus: Tämän asetuksen peruutus vaatii koko lohkoketjun uudelleenlataamisen. (oletus: 0 = poista karsinta käytöstä, &gt;%u = kohdekoko muodossa MiB jota käytetään lohkotiedostoille) </translation>
+    </message>
+    <message>
+        <source>Rescans are not possible in pruned mode. You will need to use -reindex which will download the whole blockchain again.</source>
+        <translation>Uudelleenskannaukset eivät ole mahdollisia karsivassa tilassa. Sinun täytyy käyttää -reindex joka lataa koko lohkoketjun uudelleen.</translation>
+    </message>
+    <message>
         <source>Error: A fatal internal error occurred, see debug.log for details</source>
         <translation>Virhe: Kriittinen sisäinen virhe kohdattiin, katso debug.log lisätietoja varten</translation>
+    </message>
+    <message>
+        <source>Fee (in %s/kB) to add to transactions you send (default: %s)</source>
+        <translation>Kulu (muodossa %s/kB) joka lisätään rahansiirtoihin joita lähetät (oletus: %s)</translation>
+    </message>
+    <message>
+        <source>Pruning blockstore...</source>
+        <translation>Karsitaan lohkovarastoa...</translation>
     </message>
     <message>
         <source>Run in the background as a daemon and accept commands</source>
@@ -2926,6 +2898,10 @@
     <message>
         <source>Accept connections from outside (default: 1 if no -proxy or -connect)</source>
         <translation>Hyväksy yhteyksiä ulkopuolelta (vakioasetus: 1 jos -proxy tai -connect ei määritelty)</translation>
+    </message>
+    <message>
+        <source>-fallbackfee is set very high! This is the transaction fee you may pay when fee estimates are not available.</source>
+        <translation>-fallbackfee on asetettu erittäin suureksi! Tämä on rahansiirtokulu jonka voit maksaa kun arvioitu rahansirtokulu ei ole saatavilla.</translation>
     </message>
     <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
@@ -2952,10 +2928,6 @@
         <translation>Käytä UPnP:ta kuuntelevan portin kartoitukseen (oletus: 1 kun kuunnellaan ja -proxy ei käytössä)</translation>
     </message>
     <message>
-        <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
-        <translation>Käytä UPnP:ta kuuntelevan portin kartoitukseen (oletus: 1 kun kuunnellaan ja -proxy ei käytössä)</translation>
-    </message>
-    <message>
         <source>WARNING: abnormally high number of blocks generated, %d blocks received in the last %d hours (%d expected)</source>
         <translation>VAROITUS: epätavallisen monta lohkoa generoitu, vastaanotettu %d lohkoa viimeisen %d tunnin aikana (odotettavissa %d)</translation>
     </message>
@@ -2974,6 +2946,10 @@
     <message>
         <source>Warning: wallet.dat corrupt, data salvaged! Original wallet.dat saved as wallet.{timestamp}.bak in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Varoitus: wallet.dat -lompakkotiedosto on korruptoitunut, tiedot pelastettu. Alkuperäinen wallet.dat -lompakkotiedosto on tallennettu wallet.{timestamp}.bak kansioon %s; jos balanssisi tai siirtohistoria on virheellinen, sinun tulisi palauttaa lompakkotiedosto varmuuskopiosta.</translation>
+    </message>
+    <message>
+        <source>Whitelist peers connecting from the given netmask or IP address. Can be specified multiple times.</source>
+        <translation>Salli vertaisten yhdistää annetusta verkkomaskista tai IP-osoitteesta. Voidaan määrittää useampia kertoja.</translation>
     </message>
     <message>
         <source>-maxmempool must be at least %d MB</source>
@@ -3096,10 +3072,6 @@
         <translation>Lompakon valinnat:</translation>
     </message>
     <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Varoitus: Tämä versio on vanhentunut; päivittämistä vaaditaan!</translation>
-    </message>
-    <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>
         <translation>Sinun tulee uudelleenrakentaa tietokanta käyttäen -reindex vaihtaen -txindex</translation>
     </message>
@@ -3110,6 +3082,10 @@
     <message>
         <source>Cannot obtain a lock on data directory %s. Bitcoin Core is probably already running.</source>
         <translation>Ei voida lukita data-hakemistoa %s. Bitcoin Core on luultavasti jo käynnissä.</translation>
+    </message>
+    <message>
+        <source>Discover own IP addresses (default: 1 when listening and no -externalip or -proxy)</source>
+        <translation>Paljasta omat IP-osoitteet (oletus: 1 kun kuunnellaan ja -externalip tai -proxy ei ole käytössä)</translation>
     </message>
     <message>
         <source>Execute command when a relevant alert is received or we see a really long fork (%s in cmd is replaced by message)</source>
@@ -3306,10 +3282,6 @@
     <message>
         <source>-paytxfee is set very high! This is the transaction fee you will pay if you send a transaction.</source>
         <translation>-paytxfee on asetettu erittäin suureksi! Tämä on rahansiirtokulu, jonka maksat, mikäli lähetät rahansiirron.</translation>
-    </message>
-    <message>
-        <source>How thorough the block verification of -checkblocks is (0-4, default: %u)</source>
-        <translation>Kuinka läpikäyvä lohkojen -checkblocks -todennus on (0-4, oletus: %u)</translation>
     </message>
     <message>
         <source>Do not keep transactions in the mempool longer than &lt;n&gt; hours (default: %u)</source>

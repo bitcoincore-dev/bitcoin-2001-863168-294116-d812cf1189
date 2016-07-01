@@ -1,4 +1,4 @@
-<TS language="cy" version="2.0">
+<TS language="cy" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -230,10 +230,6 @@
         <translation>&amp;Derbyn</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Dangos gwybodaeth am Graidd Bitcoin</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Dangos / Cuddio</translation>
     </message>
@@ -252,14 +248,6 @@
     <message>
         <source>Tabs toolbar</source>
         <translation>Bar offer tabiau</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Craidd Bitcoin</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Ynghylch Craidd Bitcoin</translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
@@ -352,6 +340,10 @@
         <translation>Maint</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>Maint</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>Dyddiad</translation>
     </message>
@@ -425,14 +417,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Craidd Bitcoin</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Ynghylch Craidd Bitcoin</translation>
-    </message>
-    <message>
         <source>Usage:</source>
         <translation>Cynefod:</translation>
     </message>
@@ -442,14 +426,6 @@
     <message>
         <source>Welcome</source>
         <translation>Croeso</translation>
-    </message>
-    <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Croeso i Graidd Bitcoin</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Craidd Bitcoin</translation>
     </message>
     <message>
         <source>Error</source>
@@ -501,6 +477,10 @@
         <source>&amp;Display</source>
         <translation>&amp;Dangos</translation>
     </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Craidd Bitcoin</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -517,6 +497,10 @@
     </context>
 <context>
     <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Maint</translation>
+    </message>
     </context>
 <context>
     <name>QRImageWidget</name>
@@ -539,8 +523,16 @@
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
+        <source>&amp;Amount:</source>
+        <translation>&amp;Maint</translation>
+    </message>
+    <message>
         <source>&amp;Label:</source>
         <translation>&amp;Label:</translation>
+    </message>
+    <message>
+        <source>&amp;Message:</source>
+        <translation>&amp;Neges:</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -556,6 +548,10 @@
     <message>
         <source>Address</source>
         <translation>Cyfeiriad</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Maint</translation>
     </message>
     <message>
         <source>Label</source>
@@ -579,6 +575,10 @@
     <message>
         <source>Message</source>
         <translation>Neges</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Maint</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -664,14 +664,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Craidd Bitcoin</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Datblygwyr Graidd Bitcoin</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -692,6 +684,10 @@
     <message>
         <source>Message</source>
         <translation>Neges</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Maint</translation>
     </message>
     </context>
 <context>

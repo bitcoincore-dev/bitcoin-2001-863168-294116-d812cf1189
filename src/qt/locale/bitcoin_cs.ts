@@ -1,9 +1,9 @@
-<TS language="cs" version="2.0">
+<TS language="cs" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation>Pravým tlačítkem myši začneš upravovat označení adresy</translation>
+        <translation>Pravým tlačítkem myši můžeš upravit označení adresy</translation>
     </message>
     <message>
         <source>Create a new address</source>
@@ -71,7 +71,7 @@
     </message>
     <message>
         <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Tohle jsou tvé Bitcoinové adresy pro příjem plateb. Je doporučené používat pokaždé novou adresu pro každou transakci.</translation>
+        <translation>Tohle jsou tvé Bitcoinové adresy pro příjem plateb. Nezapomeň si pro každou transakci vždy vygenerovat novou adresu.</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
@@ -83,11 +83,11 @@
     </message>
     <message>
         <source>Export Address List</source>
-        <translation>Exportuj seznam adres</translation>
+        <translation>Export seznamu adres</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
-        <translation>CSV formát (*.csv)</translation>
+        <translation>Formát CSV (*.csv)</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -168,10 +168,6 @@
         <translation>Jsi si jistý, že chceš peněženku zašifrovat?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin Core se teď ukončí, aby dokončil zašifrování. Pamatuj však, že pouhé zašifrování peněženky nemůže zabránit krádeži tvých bitcoinů malwarem, kterým se může počítač nakazit.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>DŮLEŽITÉ: Všechny předchozí zálohy peněženky by měly být nahrazeny nově vygenerovanou, zašifrovanou peněženkou. Z bezpečnostních důvodů budou předchozí zálohy nešifrované peněženky nepoužitelné, jakmile začneš používat novou zašifrovanou peněženku.</translation>
     </message>
@@ -190,6 +186,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Zadej staré a nové heslo k peněžence.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 se teď ukončí, aby dokončil zašifrování. Pamatuj však, že pouhé zašifrování peněženky nemůže zabránit krádeži tvých bitcoinů malwarem, kterým se může počítač nakazit.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -262,6 +262,10 @@
         <translation>Ukonči aplikaci</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Zobraz informace o %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>O &amp;Qt</translation>
     </message>
@@ -296,10 +300,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Načíst &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Core klient</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -350,10 +350,6 @@
         <translation>Při&amp;jmi</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Zobraz informace o Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Zobraz/Skryj</translation>
     </message>
@@ -390,20 +386,8 @@
         <translation>Panel s listy</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Požaduj platby (generuje QR kódy a bitcoin: URI)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>O &amp;Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Uprav nastavení Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -419,11 +403,7 @@
     </message>
     <message>
         <source>&amp;Command-line options</source>
-        <translation>Ar&amp;gumenty z příkazové řádky</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Seznam argumentů Bitcoinu pro příkazovou řádku získáš v nápovědě Bitcoinu Core</translation>
+        <translation>Ar&amp;gumenty příkazové řádky</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -467,7 +447,7 @@
     </message>
     <message>
         <source>Transactions after this will not yet be visible.</source>
-        <translation>Následné transakce ještě nebudou vidět.</translation>
+        <translation>Novější transakce zatím nejsou vidět.</translation>
     </message>
     <message>
         <source>Error</source>
@@ -484,6 +464,10 @@
     <message>
         <source>Up to date</source>
         <translation>Aktuální</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Seznam argumentů Bitcoinu pro příkazovou řádku získáš v nápovědě %1</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -726,10 +710,6 @@
         <translation>Popisek zčervená, pokud je priorita menší než „střední“.</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Popisek zčervená, pokud má některý příjemce obdržet částku menší než %1.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Může se lišit o +/– %1 satoshi na každý vstup.</translation>
     </message>
@@ -806,11 +786,11 @@
     </message>
     <message>
         <source>The entered address "%1" is already in the address book.</source>
-        <translation>Zadaná adresa "%1" už v adresáři je.</translation>
+        <translation>Zadaná adresa „%1“ už v adresáři je.</translation>
     </message>
     <message>
         <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation>Zadaná adresa "%1" není platná Bitcoinová adresa.</translation>
+        <translation>Zadaná adresa „%1“ není platná Bitcoinová adresa.</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -847,10 +827,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>verze</translation>
     </message>
@@ -859,12 +835,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>O Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Command-line options</source>
-        <translation>Argumenty z příkazové řádky</translation>
+        <translation>Argumenty příkazové řádky</translation>
     </message>
     <message>
         <source>Usage:</source>
@@ -898,7 +870,11 @@
         <source>Show splash screen on startup (default: %u)</source>
         <translation>Zobrazit startovací obrazovku (výchozí: %u)</translation>
     </message>
-    </context>
+    <message>
+        <source>Reset all settings changes made over the GUI</source>
+        <translation>Resetovat všechna nastavení provedené v GUI</translation>
+    </message>
+</context>
 <context>
     <name>Intro</name>
     <message>
@@ -906,16 +882,12 @@
         <translation>Vítej</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Vítej v Bitcoin Core.</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Tohle je poprvé, co spouštíš %1, takže si můžeš zvolit, kam bude ukládat svá data.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Tohle je poprvé, co spouštíš Bitcoin Core, takže si můžeš zvolit, kam bude ukládat svá data.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin Core bude stahovat kopii řetězce bloků. Proto bude potřeba do tohoto adresáře uložit nejméně %1 GB dat – toto číslo bude navíc v průběhu času pomalu růst. Tvá peněženka bude rovněž uložena v tomto adresáři.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 bude stahovat kopii řetězce bloků. Proto bude potřeba do tohoto adresáře uložit nejméně %2 GB dat – toto číslo bude navíc v průběhu času pomalu růst. Tvá peněženka bude rovněž uložena v tomto adresáři.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -924,10 +896,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Použij tento adresář pro data:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1008,12 +976,8 @@
         <translation>Zavřením se aplikace minimalizuje. Pokud je tato volba zaškrtnuta, tak se aplikace ukončí pouze zvolením Konec v menu.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>Tady lze nastavit jazyk uživatelského rozhraní. Nastavení se projeví až po restartování Bitcoin Core.</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
-        <translation>URL třetích stran (např. block exploreru), které se zobrazí v kontextovém menu v záložce Transakce. %s v URL se nahradí hashem transakce. Více URL odděl svislítkem |.</translation>
+        <translation>URL třetích stran (např. block exploreru), která se zobrazí v kontextovém menu v záložce Transakce. %s v URL se nahradí hashem transakce. Více URL odděl svislítkem |.</translation>
     </message>
     <message>
         <source>Third party transaction URLs</source>
@@ -1021,7 +985,7 @@
     </message>
     <message>
         <source>Active command-line options that override above options:</source>
-        <translation>Aktivní argumenty z příkazové řádky, které přetloukly tato nastavení:</translation>
+        <translation>Aktivní argumenty z příkazové řádky, které mají přednost před nastavením výše:</translation>
     </message>
     <message>
         <source>Reset all client options to default.</source>
@@ -1036,14 +1000,6 @@
         <translation>&amp;Síť</translation>
     </message>
     <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Automaticky spustí Bitcoin Core po přihlášení do systému.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>S&amp;pustit Bitcoin Core po přihlášení do systému</translation>
-    </message>
-    <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
         <translation>(0 = automaticky, &lt;0 = nechat daný počet jader volný, výchozí: 0)</translation>
     </message>
@@ -1053,7 +1009,7 @@
     </message>
     <message>
         <source>Expert</source>
-        <translation>Odborník</translation>
+        <translation>Pokročilá nastavení</translation>
     </message>
     <message>
         <source>Enable coin &amp;control features</source>
@@ -1097,7 +1053,7 @@
     </message>
     <message>
         <source>Used for reaching peers via:</source>
-        <translation>Použije se k připojování k protějskům přes:</translation>
+        <translation>Použije se k připojování k protějškům přes:</translation>
     </message>
     <message>
         <source>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
@@ -1148,8 +1104,12 @@
         <translation>&amp;Jazyk uživatelského rozhraní:</translation>
     </message>
     <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>Tady lze nastavit jazyk uživatelského rozhraní. Nastavení se projeví až po restartování %1.</translation>
+    </message>
+    <message>
         <source>&amp;Unit to show amounts in:</source>
-        <translation>J&amp;ednotka pro částky:</translation>
+        <translation>Je&amp;dnotka pro částky:</translation>
     </message>
     <message>
         <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
@@ -1161,7 +1121,7 @@
     </message>
     <message>
         <source>&amp;OK</source>
-        <translation>&amp;Budiž</translation>
+        <translation>&amp;Použít</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
@@ -1174,6 +1134,10 @@
     <message>
         <source>none</source>
         <translation>žádné</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1189,7 +1153,7 @@
     </message>
     <message>
         <source>This change would require a client restart.</source>
-        <translation>Tahle změna bude chtít restartovat klienta.</translation>
+        <translation>Tato změna vyžaduje restart aplikace.</translation>
     </message>
     <message>
         <source>The supplied proxy address is invalid.</source>
@@ -1236,7 +1200,7 @@
     </message>
     <message>
         <source>Balances</source>
-        <translation>Stavy účtů</translation>
+        <translation>Stav účtů</translation>
     </message>
     <message>
         <source>Total:</source>
@@ -1462,10 +1426,6 @@
         <translation>Obecné</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Používaná verze OpenSSL</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Používaná verze BerkeleyDB</translation>
     </message>
@@ -1494,8 +1454,8 @@
         <translation>Aktuální počet bloků</translation>
     </message>
     <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Otevři soubor s ladicími záznamy Bitcoin Core z aktuálního datového adresáře. U velkých logů to může pár vteřin zabrat.</translation>
+        <source>Memory usage</source>
+        <translation>Využití paměti</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1524,6 +1484,10 @@
     <message>
         <source>User Agent</source>
         <translation>Typ klienta</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Otevři soubor s ladicími záznamy %1 z aktuálního datového adresáře. U velkých logů to může pár vteřin zabrat.</translation>
     </message>
     <message>
         <source>Services</source>
@@ -1626,10 +1590,6 @@
         <translation>&amp;Zbavit uzel klatby</translation>
     </message>
     <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Vítej v RPC konzoli Bitcoin Core.</translation>
-    </message>
-    <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
         <translation>V historii se pohybuješ šipkami nahoru a dolů a pomocí &lt;b&gt;Ctrl-L&lt;/b&gt; čistíš obrazovku.</translation>
     </message>
@@ -1710,7 +1670,7 @@
     </message>
     <message>
         <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation>Volitelná zpráva, která se připojí k platebnímu požadavku a která se zobrazí, když se požadavek otevře. Poznámka: Tahle zpráva se neposílá s platbou po Bitcoinové síti.</translation>
+        <translation>Volitelná zpráva, která se připojí k platebnímu požadavku a která se zobrazí, když se požadavek otevře. Poznámka: tahle zpráva se neposílá s platbou po Bitcoinové síti.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -1718,7 +1678,7 @@
     </message>
     <message>
         <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>Tímto formulář můžeš požadovat platby. Všechna pole jsou &lt;b&gt;volitelná&lt;/b&gt;.</translation>
+        <translation>Tímto formulářem můžeš požadovat platby. Všechna pole jsou &lt;b&gt;volitelná&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
@@ -2212,10 +2172,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin Core se ukončuje...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>Nevypínej počítač, dokud toto okno nezmizí.</translation>
     </message>
@@ -2264,7 +2220,7 @@
     </message>
     <message>
         <source>Copy the current signature to the system clipboard</source>
-        <translation>Zkopíruj aktuálně vybraný podpis do systémové schránky</translation>
+        <translation>Zkopíruj tento podpis do schránky</translation>
     </message>
     <message>
         <source>Sign the message to prove you own this Bitcoin address</source>
@@ -2308,7 +2264,7 @@
     </message>
     <message>
         <source>Click "Sign Message" to generate signature</source>
-        <translation>Kliknutím na "Podepiš zprávu" vygeneruješ podpis</translation>
+        <translation>Kliknutím na „Podepiš zprávu“ vygeneruješ podpis</translation>
     </message>
     <message>
         <source>The entered address is invalid.</source>
@@ -2336,7 +2292,7 @@
     </message>
     <message>
         <source>Message signed.</source>
-        <translation>Zpráv podepsána.</translation>
+        <translation>Zpráva podepsána.</translation>
     </message>
     <message>
         <source>The signature could not be decoded.</source>
@@ -2362,14 +2318,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Vývojáři Bitcoin Core</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -2386,10 +2334,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Otřevřeno dokud %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>kolidující</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -2493,7 +2437,7 @@
     </message>
     <message>
         <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Vygenerované mince musí čekat %1 bloků, než mohou být utraceny. Když jsi vygeneroval tenhle blok, tak byl rozposlán do sítě, aby byl přidán do řetězce bloků. Pokud se mu nepodaří dostat se do řetězce, změní se na "neakceptovaný" a nepůjde utratit. To se občas může stát, pokud jiný uzel vygeneruje blok zhruba ve stejném okamžiku jako ty.</translation>
+        <translation>Vygenerované mince musí čekat %1 bloků, než mohou být utraceny. Když jsi vygeneroval tenhle blok, tak byl rozposlán do sítě, aby byl přidán do řetězce bloků. Pokud se mu nepodaří dostat se do řetězce, změní se na „neakceptovaný“ a nepůjde utratit. To se občas může stát, pokud jiný uzel vygeneruje blok zhruba ve stejném okamžiku jako ty.</translation>
     </message>
     <message>
         <source>Debug information</source>
@@ -2555,7 +2499,7 @@
     </message>
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
-        <translation>Nedozráno (%1 potvrzení, bude k dispozici za %2)</translation>
+        <translation>Nedozráno (%1 potvrzení, dozraje při %2 potvrzeních)</translation>
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
@@ -2762,7 +2706,7 @@
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
-        <translation>CSV formát (*.csv)</translation>
+        <translation>Formát CSV (*.csv)</translation>
     </message>
     <message>
         <source>Confirmed</source>
@@ -2880,6 +2824,10 @@
         <translation>Pokud není &lt;category&gt; zadána nebo je &lt;category&gt; = 1, bude tisknout veškeré ladicí informace.</translation>
     </message>
     <message>
+        <source>Please check that your computer's date and time are correct! If your clock is wrong Bitcoin Core will not work properly.</source>
+        <translation>Prosím zkontrolujte nastavení času na svém počítači. Pokud čas a datum není nastaven správně, Bitcoin Core nebude fungovat!</translation>
+    </message>
+    <message>
         <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
         <translation>Prořezávání je nastaveno pod minimum %d MiB.  Použij, prosím, nějaké vyšší číslo.</translation>
     </message>
@@ -2920,6 +2868,18 @@
         <translation>Přijímat spojení zvenčí (výchozí: 1, pokud není zadáno -proxy nebo -connect)</translation>
     </message>
     <message>
+        <source>-fallbackfee is set very high! This is the transaction fee you may pay when fee estimates are not available.</source>
+        <translation>-fallbackfee je nastaveno velmi vysoko! Toto je transakční poplatek, který bys platil, pokud nebude k dispozici odhad poplatků.</translation>
+    </message>
+    <message>
+        <source>A fee rate (in %s/kB) that will be used when fee estimation has insufficient data (default: %s)</source>
+        <translation>Sazba poplatku (v %s/kB), která se použije, pokud nebude k dispozici dostatek dat pro automatický odhad poplatku (výchozí: %s)</translation>
+    </message>
+    <message>
+        <source>Accept relayed transactions received from whitelisted peers even when not relaying transactions (default: %d)</source>
+        <translation>Přijímat přeposílané transakce obdržené od vždy vítaných protějšků, i když transakce nepřeposíláme (výchozí: %d)</translation>
+    </message>
+    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>Poslouchat na zadané adrese. Pro zápis IPv6 adresy použij notaci [adresa]:port</translation>
     </message>
@@ -2936,6 +2896,10 @@
         <translation>Spustit příkaz, když se objeví transakce týkající se peněženky (%s se v příkazu nahradí za TxID)</translation>
     </message>
     <message>
+        <source>Force relay of transactions from whitelisted peers even they violate local relay policy (default: %d)</source>
+        <translation>Vynutit přeposílání transakcí od vždy vítaných protějšků (tj. těch na bílé listině), i když porušují místní zásady pro přeposílání (výchozí: %d)</translation>
+    </message>
+    <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
         <translation>Nastavení počtu vláken pro verifikaci skriptů (%u až %d, 0 = automaticky, &lt;0 = nechat daný počet jader volný, výchozí: %d)</translation>
     </message>
@@ -2950,6 +2914,10 @@
     <message>
         <source>Unable to bind to %s on this computer. Bitcoin Core is probably already running.</source>
         <translation>Nedaří se mi připojit na %s na tomhle počítači. Bitcoin Core už pravděpodobně jednou běží.</translation>
+    </message>
+    <message>
+        <source>Unsupported argument -whitelistalwaysrelay ignored, use -whitelistrelay and/or -whitelistforcerelay.</source>
+        <translation>Nepodporovaný argument -whitelistalwaysrelay se ignoruje, použij -whitelistrelay a/nebo -whitelistforcerelay.</translation>
     </message>
     <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
@@ -2986,6 +2954,10 @@
     <message>
         <source>&lt;category&gt; can be:</source>
         <translation>&lt;category&gt; může být:</translation>
+    </message>
+    <message>
+        <source>Append comment to the user agent string</source>
+        <translation>Připojit komentář k typu klienta</translation>
     </message>
     <message>
         <source>Block creation options:</source>
@@ -3052,8 +3024,20 @@
         <translation>Neplatná -onion adresa: '%s'</translation>
     </message>
     <message>
+        <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
+        <translation>Neplatná částka pro -fallbackfee=&lt;částka&gt;: '%s'</translation>
+    </message>
+    <message>
         <source>Keep the transaction memory pool below &lt;n&gt; megabytes (default: %u)</source>
         <translation>Udržovat zasobník transakcí menší než &lt;n&gt; megabajtů (výchozí: %u)</translation>
+    </message>
+    <message>
+        <source>Location of the auth cookie (default: data dir)</source>
+        <translation>Místo pro autentizační cookie (výchozí: adresář pro data)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimální počet bajtů na každý sigop v transakcích, které přeposíláme a těžíme (výchozí: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3062,6 +3046,10 @@
     <message>
         <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
         <translation>Připojovat se pouze k uzlům v &lt;net&gt; síti (ipv4, ipv6 nebo onion)</translation>
+    </message>
+    <message>
+        <source>Print version and exit</source>
+        <translation>Vypsat verzi a skončit</translation>
     </message>
     <message>
         <source>Prune cannot be configured with a negative value.</source>
@@ -3118,10 +3106,6 @@
     <message>
         <source>Wallet options:</source>
         <translation>Možnosti peněženky:</translation>
-    </message>
-    <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Upozornění: tahle verze je zastaralá, měl bys ji aktualizovat!</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>

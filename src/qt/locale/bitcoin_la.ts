@@ -1,4 +1,4 @@
-<TS language="la" version="2.0">
+<TS language="la" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -194,6 +194,10 @@
         <translation>Exi applicatione</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Monstra informationem de %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Informatio de &amp;Qt</translation>
     </message>
@@ -300,10 +304,6 @@
     <message>
         <source>Tabs toolbar</source>
         <translation>Tabella instrumentorum "Tabs"</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Nucleus</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -461,10 +461,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Nucleus</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versio</translation>
     </message>
@@ -483,10 +479,6 @@
     </context>
 <context>
     <name>Intro</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Nucleus</translation>
-    </message>
     <message>
         <source>Error</source>
         <translation>Error</translation>
@@ -586,6 +578,10 @@
         <translation>praedefinitum</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Nucleus</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Confirma optionum reconstituere</translation>
     </message>
@@ -666,10 +662,6 @@
     <message>
         <source>Debug window</source>
         <translation>Fenestra Debug</translation>
-    </message>
-    <message>
-        <source>Using OpenSSL version</source>
-        <translation>Utens OpenSSL versione</translation>
     </message>
     <message>
         <source>Startup time</source>
@@ -1031,10 +1023,6 @@
 </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Nucleus</translation>
-    </message>
     <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>

@@ -1,32 +1,64 @@
-<TS language="bg_BG" version="2.1">
+<TS language="es_419" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation>Клик с десен бутон на мишката за промяна на адрес или етикет</translation>
+        <translation>Haga clic para editar la dirección o etiqueta</translation>
     </message>
     <message>
         <source>Create a new address</source>
-        <translation>Създай нов адрес</translation>
+        <translation>Crear una nueva dirección</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>Нов</translation>
+        <translation>&amp;New</translation>
     </message>
     <message>
-        <source>&amp;Copy</source>
-        <translation>Копирай</translation>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Copia la dirección seleccionada al portapapeles del sistema</translation>
     </message>
     <message>
-        <source>C&amp;lose</source>
-        <translation>Затвори</translation>
+        <source>Choose the address to send coins to</source>
+        <translation>Seleccione la Direccion a la que enviara dinero</translation>
+    </message>
+    <message>
+        <source>Choose the address to receive coins with</source>
+        <translation>Seleccione la direccion de la que recibira dinero</translation>
+    </message>
+    <message>
+        <source>Export Address List</source>
+        <translation>Exportar Lista de Direcciones</translation>
     </message>
     </context>
 <context>
     <name>AddressTableModel</name>
+    <message>
+        <source>Address</source>
+        <translation>Direccion</translation>
+    </message>
     </context>
 <context>
     <name>AskPassphraseDialog</name>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>Desencriptar Monedero</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>Confirmar Encriptacion de Monedero</translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Advertencia: La Tecla Caps Lock esta habilitada!</translation>
+    </message>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>Monedero ha sido encriptado</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed</source>
+        <translation>La encriptacion del monedero ha fallado</translation>
+    </message>
     </context>
 <context>
     <name>BanTableModel</name>
@@ -42,6 +74,10 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;Direccion</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -57,10 +93,6 @@
     </context>
 <context>
     <name>OptionsDialog</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Биткойн ядро</translation>
-    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -85,6 +117,10 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address</source>
+        <translation>Direccion</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -118,6 +154,10 @@
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Address</source>
+        <translation>Direccion</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>

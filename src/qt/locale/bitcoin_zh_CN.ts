@@ -1,4 +1,4 @@
-<TS language="zh_CN" version="2.0">
+<TS language="zh_CN" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>您确定需要为钱包加密吗？</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>比特币核心现在将关闭以完成加密过程。请记住，在您的计算机被恶意软件感染的情况下，加密不能完全保护您的比特币免于被盗。</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>重要提示：您以前备份的钱包文件应该替换成最新生成的加密钱包文件（重新备份）。从安全性上考虑，您以前备份的未加密的钱包文件，在您使用新的加密钱包后将无效，请重新备份。</translation>
     </message>
@@ -270,6 +266,14 @@
         <translation>退出程序</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;关于 %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation />
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>关于Qt(&amp;Q)</translation>
     </message>
@@ -304,10 +308,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>打开 &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>比特币核心钱包客户端</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,10 +358,6 @@
         <translation>接收(&amp;R)</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>显示有关比特币核心钱包信息</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>显示 / 隐藏(&amp;S)</translation>
     </message>
@@ -398,20 +394,8 @@
         <translation>分页工具栏</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>比特币核心</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>请求支付（生成二维码和 bitcoin: URI）</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>关于比特币核心(&amp;A)</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>修改比特币核心的配置选项</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -428,10 +412,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>命令行选项(&amp;C)</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>显示比特币核心 程序帮助信息，获取可用的命令行选项 </translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -734,10 +714,6 @@
         <translation>如果优先级小于“中等”，此标签将变为红色。</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>如果任何接收人收到的金额小于 %1，此标签将变为红色。</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>可能会有 正负 %1 聪(satoshi)的偏差 </translation>
     </message>
@@ -855,10 +831,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>比特币核心</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>版本</translation>
     </message>
@@ -867,8 +839,8 @@
         <translation>(%1 位)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>关于比特币核心</translation>
+        <source>About %1</source>
+        <translation>关于 %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,28 +890,12 @@
         <translation>欢迎</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>欢迎使用 比特币核心 程序。</translation>
-    </message>
-    <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>由于这是第一次运行 比特币核心 程序，您可以选择数据存储目录。</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>比特币核心 程序会下载储存一份数据块链(blockchain)。至少需要 %1 GB的存储空间，随着时间推移会需要更多的存储空间。钱包文件也储存在该目录。</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>使用默认的数据目录</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>使用自定义的数据目录：</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>比特币核心</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1020,10 +976,6 @@
         <translation>窗口被关闭时最小化而不是退出应用程序。当此选项启用时，应用程序只会在菜单中选择退出时退出。</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>可以在这里设置用户界面语言。此设置将在重新启动比特币核心后生效。</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>出现在交易的选项卡的上下文菜单项的第三方网址 (例如：区块链接查询) 。 %s的URL被替换为交易哈希。多个的URL需要竖线 | 分隔。</translation>
     </message>
@@ -1046,14 +998,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>网络(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>登录到系统后自动启动比特币核心。</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>系统登录时启动比特币核心(&amp;S)</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1186,6 +1130,10 @@
     <message>
         <source>none</source>
         <translation>无</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>比特币核心</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1474,10 +1422,6 @@
         <translation>常规</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>使用 OpenSSL 版本</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>使用的 BerkeleyDB 版本</translation>
     </message>
@@ -1516,10 +1460,6 @@
     <message>
         <source>Memory usage</source>
         <translation>内存使用</translation>
-    </message>
-    <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>从当前的数据目录打开比特币核心调试日志文件。对于较大的日志文件，这可能需要几秒钟。</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1672,10 +1612,6 @@
     <message>
         <source>&amp;Unban Node</source>
         <translation>(&amp;U)允许节点连接</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>欢迎使用 比特币核心 RPC 控制台。</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2260,10 +2196,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>比特币核心正在关机...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>在此窗口消失前不要关闭计算机。</translation>
     </message>
@@ -2410,14 +2342,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>比特币核心</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Bitcoin Core 的开发者</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[测试网络]</translation>
     </message>
@@ -2434,10 +2358,6 @@
     <message>
         <source>Open until %1</source>
         <translation>至 %1 个数据块时开启</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>发现冲突</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -2931,10 +2851,6 @@
         <translation>如果&lt;category&gt;未提供或&lt;category&gt; = 1，输出所有调试信息。</translation>
     </message>
     <message>
-        <source>If &lt;category&gt; is not supplied or if &lt;category&gt; = 1, output all debugging information.</source>
-        <translation>如果&lt;category&gt;未提供或&lt;category&gt; = 1，输出所有调试信息。</translation>
-    </message>
-    <message>
         <source>Maximum total fees (in %s) to use in a single wallet transaction; setting this too low may abort large transactions (default: %s)</source>
         <translation>最大单次转账费用（%s），设置太低可能导致大宗交易失败（默认：%s）</translation>
     </message>
@@ -2945,6 +2861,14 @@
     <message>
         <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
         <translation>修剪值被设置为低于最小值%d MiB，请使用更大的数值。</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of pruned node)</source>
+        <translation>修剪：最后的钱包同步超过了修剪的数据。你需要通过 -reindex (重新下载整个区块链以防修剪节点)</translation>
+    </message>
+    <message>
+        <source>Reduce storage requirements by pruning (deleting) old blocks. This mode is incompatible with -txindex and -rescan. Warning: Reverting this setting requires re-downloading the entire blockchain. (default: 0 = disable pruning blocks, &gt;%u = target size in MiB to use for block files)</source>
+        <translation>通过修剪(删除)旧数据块减少存储需求。此模式与 -txindex 和 -rescan不兼容。警告：还原此设置需要重新下载整个区块链。(默认: 0 = 禁用修剪数据块， &gt;%u = 数据块文件目标大小，单位 MiB)</translation>
     </message>
     <message>
         <source>Rescans are not possible in pruned mode. You will need to use -reindex which will download the whole blockchain again.</source>
@@ -2977,6 +2901,18 @@
         <translation>接受来自外部的连接 (缺省: 如果不带 -proxy or -connect 参数设置为1)</translation>
     </message>
     <message>
+        <source>-fallbackfee is set very high! This is the transaction fee you may pay when fee estimates are not available.</source>
+        <translation>-fallbackfree 交易费设置得很高！这是在费用估计不可用时你可能会支付的交易费。</translation>
+    </message>
+    <message>
+        <source>A fee rate (in %s/kB) that will be used when fee estimation has insufficient data (default: %s)</source>
+        <translation>当费用估计数据(default: %s)不足时将会启用的费率 (in %s/kB) </translation>
+    </message>
+    <message>
+        <source>Accept relayed transactions received from whitelisted peers even when not relaying transactions (default: %d)</source>
+        <translation>即使在无关联交易(默认: %d)时也接受来自白名单同行的关联交易</translation>
+    </message>
+    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>绑定指定的IP地址开始监听。IPv6地址请使用[host]:port 格式</translation>
     </message>
@@ -2991,6 +2927,10 @@
     <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
         <translation>当最佳区块变化时执行命令 (命令行中的 %s 会被替换成区块哈希值)</translation>
+    </message>
+    <message>
+        <source>Force relay of transactions from whitelisted peers even they violate local relay policy (default: %d)</source>
+        <translation>强制关联来自白名单同行的交易即使他们违反本地关联政策(默认: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3009,6 +2949,10 @@
         <translation>无法 %s的绑定到电脑上，比特币核心钱包可能已经在运行。</translation>
     </message>
     <message>
+        <source>Unsupported argument -whitelistalwaysrelay ignored, use -whitelistrelay and/or -whitelistforcerelay.</source>
+        <translation>一个不被支持的参数 -whitelistalwaysrelay 被忽略了。请使用 -whitelistrelay 或者 -whitelistforcerelay.</translation>
+    </message>
+    <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
         <translation>使用UPnP暴露本机监听端口（默认：1 当正在监听且不使用代理）</translation>
     </message>
@@ -3023,6 +2967,10 @@
     <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
         <translation>警告：网络似乎并不完全同意！有些矿工似乎遇到了问题。</translation>
+    </message>
+    <message>
+        <source>Warning: Unknown block versions being mined! It's possible unknown rules are in effect</source>
+        <translation>警告: 未知的区块版本被挖掘！未知规则可能已生效</translation>
     </message>
     <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
@@ -3043,6 +2991,10 @@
     <message>
         <source>&lt;category&gt; can be:</source>
         <translation>&lt;category&gt; 可能是：</translation>
+    </message>
+    <message>
+        <source>Append comment to the user agent string</source>
+        <translation>为用户代理字符串附加说明</translation>
     </message>
     <message>
         <source>Block creation options:</source>
@@ -3089,6 +3041,10 @@
         <translation>允许在&lt;address&gt;广播原始交易</translation>
     </message>
     <message>
+        <source>Enable transaction replacement in the memory pool (default: %u)</source>
+        <translation>保证内存池中的交易更换(默认：%u)</translation>
+    </message>
+    <message>
         <source>Error initializing block database</source>
         <translation>初始化数据块数据库出错</translation>
     </message>
@@ -3125,8 +3081,20 @@
         <translation>无效的 -onion 地址：“%s”</translation>
     </message>
     <message>
+        <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
+        <translation>-fallbackfee 的无效数额=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
         <source>Keep the transaction memory pool below &lt;n&gt; megabytes (default: %u)</source>
         <translation>保持交易内存池大小低于&lt;n&gt;MB（默认：%u）</translation>
+    </message>
+    <message>
+        <source>Location of the auth cookie (default: data dir)</source>
+        <translation>认证Cookie的位置 (默认: data目录)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>我们关联和挖掘的每sigop的最低交易字节(默认: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3135,6 +3103,10 @@
     <message>
         <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
         <translation>只连接 &lt;net&gt;网络中的节点 (ipv4, ipv6 或 onion) </translation>
+    </message>
+    <message>
+        <source>Print version and exit</source>
+        <translation>打印版本信息并退出</translation>
     </message>
     <message>
         <source>Prune cannot be configured with a negative value.</source>
@@ -3173,6 +3145,10 @@
         <translation>使用UPnp映射监听端口 (默认: %u) </translation>
     </message>
     <message>
+        <source>User Agent comment (%s) contains unsafe characters.</source>
+        <translation>用户代理评论(%s)包含不安全的字符。</translation>
+    </message>
+    <message>
         <source>Verifying blocks...</source>
         <translation>正在验证数据库的完整性...</translation>
     </message>
@@ -3187,10 +3163,6 @@
     <message>
         <source>Wallet options:</source>
         <translation>钱包选项:</translation>
-    </message>
-    <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>警告：此版本已过时，必须升级！</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>
@@ -3227,6 +3199,10 @@
     <message>
         <source>Execute command when a relevant alert is received or we see a really long fork (%s in cmd is replaced by message)</source>
         <translation>当收到相关提醒或者我们看到一个长分叉时执行命令（%s 将替换为消息）</translation>
+    </message>
+    <message>
+        <source>Fees (in %s/kB) smaller than this are considered zero fee for relaying, mining and transaction creation (default: %s)</source>
+        <translation>交易费(in %s/kB)比这更小的在关联、挖掘和生成交易时将被视为零费交易 (默认: %s)</translation>
     </message>
     <message>
         <source>If paytxfee is not set, include enough fee so transactions begin confirmation on average within n blocks (default: %u)</source>
@@ -3283,6 +3259,14 @@
     <message>
         <source>Activating best chain...</source>
         <translation>正在激活最佳数据链...</translation>
+    </message>
+    <message>
+        <source>Attempt to recover private keys from a corrupt wallet.dat on startup</source>
+        <translation>尝试从启动页上的损坏钱包文件中恢复私钥</translation>
+    </message>
+    <message>
+        <source>Automatically create Tor hidden service (default: %d)</source>
+        <translation>自动建立Tor隐藏服务 (默认:%d)</translation>
     </message>
     <message>
         <source>Cannot resolve -whitebind address: '%s'</source>

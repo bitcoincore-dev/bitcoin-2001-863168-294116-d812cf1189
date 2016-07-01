@@ -1,157 +1,182 @@
-<TS language="ro" version="2.1">
+<TS language="it_IT" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation>Click dreapta pentru a modifica adresa o eticheta</translation>
+        <translation>Click destro per modificare indirizzo o etichetta</translation>
     </message>
     <message>
         <source>Create a new address</source>
-        <translation>Crează o nouă adresă</translation>
+        <translation>Crea un nuovo indirizzo</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>&amp;Nou</translation>
+        <translation>nuovo</translation>
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Copiază în notițe adresa selectată în prezent</translation>
+        <translation>copia l'indirizzo selezionato correntemente nella clipboard di sistema</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation>&amp;Copiază</translation>
+        <translation>copia</translation>
     </message>
     <message>
         <source>C&amp;lose</source>
-        <translation>Î&amp;nchide</translation>
+        <translation>chiudi </translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
-        <translation>&amp;Copiază Adresa</translation>
+        <translation>copia indirizzo </translation>
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
-        <translation>Șterge adresa curentă selectata din listă</translation>
+        <translation>Cancella l'indirizzo attualmente selezionato dalla lista.</translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
-        <translation>Exportă datele din tabul curent in fisier</translation>
+        <translation>Esportare i dati nella scheda corrente in un file</translation>
     </message>
     <message>
         <source>&amp;Export</source>
-        <translation>&amp;Exportă</translation>
+        <translation>Esporta</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
-        <translation>Șterge</translation>
+        <translation>Cancella</translation>
     </message>
     <message>
         <source>Choose the address to send coins to</source>
-        <translation>Indică adresa de expediere a monedelor</translation>
+        <translation>Scegli l'indirizzo a cui inviare denaro</translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
-        <translation>Indică adresa de a primi monedele</translation>
+        <translation>Scegli l'indirizzo con cui ricevere i coin</translation>
     </message>
     <message>
         <source>C&amp;hoose</source>
-        <translation>Selectează</translation>
+        <translation>Scegli</translation>
     </message>
     <message>
         <source>Sending addresses</source>
-        <translation>Adresele de destinatie</translation>
+        <translation>Indirizzi mittenti</translation>
     </message>
     <message>
         <source>Receiving addresses</source>
-        <translation>Adresele de primire </translation>
+        <translation>Indirizzi destinatari</translation>
     </message>
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Acestea sunt adresele tale Bitcoin pentru a trimite platile. Întotdeauna verifica suma si adresa de primire înainte de a trimite monede.</translation>
+        <translation>Questi sono gli indirizzi Bitcoin per l'invio di pagamenti. Controlla sempre la quantità e l'indirizzo di ricezione prima di inviare monete.</translation>
     </message>
     <message>
         <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Acestea sunt adresele tale pentru a primi Bitcoin. Recomandăm sp folosești câte o nouă adresă pentru fiecare tranzacție.</translation>
+        <translation>Questi sono i tuoi indirizzi Bitcoin per ricevere pagamenti. Si raccomanda di generare un nuovo indirizzo per ogni transazione</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
-        <translation>Copiere&amp; Etichetare</translation>
+        <translation>copia etichetta</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation>Editare</translation>
+        <translation>Modifica</translation>
     </message>
     <message>
         <source>Export Address List</source>
-        <translation>Exporta lista de adrese</translation>
+        <translation>Esporta lista degli indirizzi</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
-        <translation>Fisier text separat prin virgule (*.csv)</translation>
+        <translation>Contenuto del file separato da virgole (*.csv)</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
-        <translation>Exportul a eșuat</translation>
+        <translation>Esportazione fallita</translation>
     </message>
     </context>
 <context>
     <name>AddressTableModel</name>
     <message>
         <source>Label</source>
-        <translation>Etichetă</translation>
+        <translation>Etichetta</translation>
     </message>
     <message>
         <source>Address</source>
-        <translation>Adresă</translation>
+        <translation>Indirizzo</translation>
     </message>
     <message>
         <source>(no label)</source>
-        <translation>(fără etichetă)</translation>
+        <translation>(nessuna etichetta)
+</translation>
     </message>
 </context>
 <context>
     <name>AskPassphraseDialog</name>
     <message>
-        <source>Passphrase Dialog</source>
-        <translation>Secventa de cuvinte a parolei</translation>
-    </message>
-    <message>
         <source>Enter passphrase</source>
-        <translation>Introduceti parola</translation>
+        <translation>Invia passphrase</translation>
     </message>
     <message>
         <source>New passphrase</source>
-        <translation>Noua parolă</translation>
+        <translation>Nuova passphrase</translation>
     </message>
     <message>
         <source>Repeat new passphrase</source>
-        <translation>Repetati noua parolă</translation>
+        <translation>Ripeti nuova passphrase</translation>
     </message>
     <message>
         <source>Encrypt wallet</source>
-        <translation>Parolează portofelul</translation>
+        <translation>Cifra portagoflio</translation>
     </message>
     <message>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation>Această operație cere parola portofelului pentru a deschide portofelul.</translation>
+        <translation>Questa operazione richiede la passphrase del tuo portafoglio per sbloccare il portafoglio.</translation>
     </message>
     <message>
         <source>Unlock wallet</source>
-        <translation>Deblochează portofelul</translation>
+        <translation>Sblocca portafoglio</translation>
     </message>
     <message>
         <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <translation>Această operație cere parola portofelului pentru a deschide portofelul.</translation>
+        <translation>Questa operazione richiede la passphrase del tuo portafoglio per sbloccare il portafoglio.</translation>
+    </message>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>decifra portafoglio</translation>
+    </message>
+    <message>
+        <source>Change passphrase</source>
+        <translation>cambia passphrase</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>conferma cifrazione del portagoglio</translation>
+    </message>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>portafoglio cifrato</translation>
+    </message>
+    <message>
+        <source>Wallet unlock failed</source>
+        <translation>sblocco portafoglio fallito</translation>
     </message>
     </context>
 <context>
     <name>BanTableModel</name>
-    </context>
+    <message>
+        <source>Banned Until</source>
+        <translation>bannato fino </translation>
+    </message>
+</context>
 <context>
     <name>BitcoinGUI</name>
     <message>
+        <source>&amp;Transactions</source>
+        <translation>Transazioni</translation>
+    </message>
+    <message>
         <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Adresele de primire...</translation>
+        <translation>&amp;Indirizzi destinatari...</translation>
     </message>
     </context>
 <context>
@@ -161,18 +186,19 @@
     <name>CoinControlDialog</name>
     <message>
         <source>(no label)</source>
-        <translation>(fără etichetă)</translation>
+        <translation>(nessuna etichetta)
+</translation>
     </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
         <source>&amp;Label</source>
-        <translation>&amp;Etichetă</translation>
+        <translation>&amp;Etichetta</translation>
     </message>
     <message>
         <source>&amp;Address</source>
-        <translation>&amp;Adresă</translation>
+        <translation>&amp;Indirizzo</translation>
     </message>
     </context>
 <context>
@@ -219,33 +245,35 @@
     <name>ReceiveRequestDialog</name>
     <message>
         <source>Copy &amp;Address</source>
-        <translation>&amp;Copiază Adresa</translation>
+        <translation>copia indirizzo </translation>
     </message>
     <message>
         <source>Address</source>
-        <translation>Adresă</translation>
+        <translation>Indirizzo</translation>
     </message>
     <message>
         <source>Label</source>
-        <translation>Etichetă</translation>
+        <translation>Etichetta</translation>
     </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Label</source>
-        <translation>Etichetă</translation>
+        <translation>Etichetta</translation>
     </message>
     <message>
         <source>(no label)</source>
-        <translation>(fără etichetă)</translation>
+        <translation>(nessuna etichetta)
+</translation>
     </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
     <message>
         <source>(no label)</source>
-        <translation>(fără etichetă)</translation>
+        <translation>(nessuna etichetta)
+</translation>
     </message>
     </context>
 <context>
@@ -277,26 +305,26 @@
     <name>TransactionTableModel</name>
     <message>
         <source>Label</source>
-        <translation>Etichetă</translation>
+        <translation>Etichetta</translation>
     </message>
     </context>
 <context>
     <name>TransactionView</name>
     <message>
         <source>Exporting Failed</source>
-        <translation>Exportul a eșuat</translation>
+        <translation>Esportazione fallita</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
-        <translation>Fisier text separat prin virgule (*.csv)</translation>
+        <translation>Contenuto del file separato da virgole (*.csv)</translation>
     </message>
     <message>
         <source>Label</source>
-        <translation>Etichetă</translation>
+        <translation>Etichetta</translation>
     </message>
     <message>
         <source>Address</source>
-        <translation>Adresă</translation>
+        <translation>Indirizzo</translation>
     </message>
     </context>
 <context>
@@ -312,11 +340,11 @@
     <name>WalletView</name>
     <message>
         <source>&amp;Export</source>
-        <translation>&amp;Exportă</translation>
+        <translation>Esporta</translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
-        <translation>Exportă datele din tabul curent in fisier</translation>
+        <translation>Esportare i dati nella scheda corrente in un file</translation>
     </message>
     </context>
 <context>

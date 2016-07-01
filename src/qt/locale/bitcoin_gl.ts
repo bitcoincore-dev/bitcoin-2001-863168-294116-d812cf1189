@@ -1,4 +1,4 @@
-<TS language="gl" version="2.0">
+<TS language="gl" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -238,6 +238,10 @@
         <translation>Saír da aplicación</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Amosar información acerca de %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Acerca de &amp;Qt</translation>
     </message>
@@ -350,16 +354,8 @@
         <translation>Barra de ferramentas</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Core de Bitcoin</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Solicitar pagos (xenera códigos QR e bitcoin: URIs)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Sobre Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -681,16 +677,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Core de Bitcoin</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versión</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Sobre Bitcoin core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -718,10 +706,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Empregar un directorio de datos personalizado</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Core de Bitcoin</translation>
     </message>
     <message>
         <source>Error</source>
@@ -840,6 +824,10 @@
     <message>
         <source>default</source>
         <translation>por defecto</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Core de Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -982,10 +970,6 @@
     <message>
         <source>Debug window</source>
         <translation>Ventana de Depuración</translation>
-    </message>
-    <message>
-        <source>Using OpenSSL version</source>
-        <translation>Usar versión OpenSSL</translation>
     </message>
     <message>
         <source>Startup time</source>
@@ -1519,14 +1503,6 @@
 </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Core de Bitcoin</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Os desarrolladores de Bitcoin Core</translation>
-    </message>
     <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>

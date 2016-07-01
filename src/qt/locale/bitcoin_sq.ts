@@ -1,4 +1,4 @@
-<TS language="sq" version="2.0">
+<TS language="sq" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -28,6 +28,10 @@
     <message>
         <source>Delete the currently selected address from the list</source>
         <translation>Fshi adresen e selektuar nga lista</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Eksporto të dhënat e skedës korrente në një skedar</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
@@ -246,14 +250,6 @@
         <translation>Shiriti i mjeteve</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Berthama Bitcoin</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>Rreth Berthames Bitkoin</translation>
-    </message>
-    <message>
         <source>%1 and %2</source>
         <translation>%1 dhe %2</translation>
     </message>
@@ -385,16 +381,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Berthama Bitcoin</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versioni</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Rreth Berthames Bitkoin</translation>
     </message>
     </context>
 <context>
@@ -402,14 +390,6 @@
     <message>
         <source>Welcome</source>
         <translation>Miresevini</translation>
-    </message>
-    <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Miresevini ne Berthamen Bitcoin</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Berthama Bitcoin</translation>
     </message>
     <message>
         <source>Error</source>
@@ -428,6 +408,10 @@
     <message>
         <source>W&amp;allet</source>
         <translation>Portofol</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Berthama Bitcoin</translation>
     </message>
     </context>
 <context>
@@ -624,10 +608,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Berthama Bitcoin</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testo rrjetin]</translation>
     </message>
@@ -790,6 +770,10 @@
 </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Eksporto të dhënat e skedës korrente në një skedar</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>

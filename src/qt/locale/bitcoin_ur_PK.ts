@@ -1,4 +1,4 @@
-<TS language="ur_PK" version="2.0">
+<TS language="ur_PK" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -194,6 +194,14 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation>&amp;رقم:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>چٹ:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -254,6 +262,14 @@
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation>رقم:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>چٹ:</translation>
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>

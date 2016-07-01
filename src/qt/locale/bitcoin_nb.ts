@@ -1,4 +1,4 @@
-<TS language="nb" version="2.0">
+<TS language="nb" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>Er du sikker på at du vil kryptere lommeboken?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin Core vil nå avslutte for å fullføre krypteringsprosessen. Husk at kryptering av lommeboken ikke kan beskytte fullstendig mot tyveri av dine bitcoins hvis datamaskinen din er infisert av skadevare.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>VIKTIG: Tidligere sikkerhetskopier av din lommebokfil bør erstattes med den nylig genererte og krypterte filen, da de blir ugyldiggjort av sikkerhetshensyn så snart du begynner å bruke den nye krypterte lommeboken.</translation>
     </message>
@@ -190,6 +186,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Oppgi gammel og ny adgangsfrase til lommeboken.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 vil nå avslutte for å fullføre krypteringsprosessen. Husk at kryptering av lommeboken ikke kan beskytte fullstendig mot tyveri av dine bitcoins hvis datamaskinen din er infisert av skadevare.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -270,6 +270,14 @@
         <translation>Avslutt applikasjonen</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation> &amp;Om %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Vis informasjon om %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Om &amp;Qt</translation>
     </message>
@@ -304,10 +312,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Åpne &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Bitcoin Core-klient</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,10 +362,6 @@
         <translation>&amp;Motta</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Vis informasjon om Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Vis / Skjul</translation>
     </message>
@@ -398,20 +398,8 @@
         <translation>Verktøylinje for faner</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Forespør betalinger (genererer QR-koder og bitcoin: URIer)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Om Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Endre konfigurasjonsvalg for Bitcoin Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -428,10 +416,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;Kommandolinjevalg</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Vis Bitcoin Core hjelpemeldingen for å få en liste med mulige kommandolinjevalg</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -492,6 +476,10 @@
     <message>
         <source>Up to date</source>
         <translation>Oppdatert</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Vis %1 hjelpemeldingen for å få en liste med mulige kommandolinjevalg</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -734,10 +722,6 @@
         <translation>Denne teksten blir rød hvis prioriteten er lavere enn "medium".</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Denne teksten blir rød dersom en mottaker mottar et beløp mindre enn %1.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Kan variere +/- %1 satoshi(er) per input.</translation>
     </message>
@@ -855,10 +839,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versjon</translation>
     </message>
@@ -867,8 +847,8 @@
         <translation> (%1-bit)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>Om Bitcoin Core</translation>
+        <source>About %1</source>
+        <translation> Om %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,16 +898,12 @@
         <translation>Velkommen</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Velkommen til Bitcoin Core.</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Siden dette er første gang programmet starter, kan du nå velge hvor %1 skal lagre sine data.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Siden dette er første gang programmet starter, kan du nå velge hvor Bitcoin Core skal lagre sine data.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin Core vil laste ned og lagre en kopi av Bitcoin sin blokkjede. Minst %1GB av data vil bli lagret i denne mappen, og det vil vokse over tid. Lommeboken vil også bli lagret i denne mappen.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 vil laste ned og lagre en kopi av Bitcoin sin blokkjede. Minst %2GB av data vil bli lagret i denne mappen, og det vil vokse over tid. Lommeboken vil også bli lagret i denne mappen.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -936,10 +912,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Bruk en egendefinert datamappe:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1020,10 +992,6 @@
         <translation>Minimer i stedet for å avslutte applikasjonen når vinduet lukkes. Når dette er valgt, vil applikasjonen avsluttes kun etter at Avslutte er valgt i menyen.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>Språk for brukergrensesnittet kan velges her. Denne innstillingen trer i kraft etter omstart av Bitcoin Core.</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>Tredjepart URLer (f. eks. en blokkutforsker) som dukker opp i transaksjonsfanen som kontekst meny elementer. %s i URLen er erstattet med transaksjonen sin hash. Flere URLer er separert av en vertikal linje |.</translation>
     </message>
@@ -1046,14 +1014,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Nettverk</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Start Bitcoin Core automatisk ved oppstart av datamaskinen.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>&amp;Start Bitcoin Core ved oppstart av datamaskinen</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1160,6 +1120,10 @@
         <translation>&amp;Språk for brukergrensesnitt</translation>
     </message>
     <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>Språk for brukergrensesnittet kan velges her. Denne innstillingen trer i kraft etter omstart av %1.</translation>
+    </message>
+    <message>
         <source>&amp;Unit to show amounts in:</source>
         <translation>&amp;Enhet for visning av beløper:</translation>
     </message>
@@ -1186,6 +1150,10 @@
     <message>
         <source>none</source>
         <translation>ingen</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1474,10 +1442,6 @@
         <translation>Generelt</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Bruker OpenSSL versjon</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Bruker BerkeleyDB versjon</translation>
     </message>
@@ -1516,10 +1480,6 @@
     <message>
         <source>Memory usage</source>
         <translation>Minnebruk</translation>
-    </message>
-    <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Åpne Bitcoin Core sin loggfil for feilsøk fra gjeldende datamappe. Dette kan ta noen sekunder for store loggfiler.</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1568,6 +1528,10 @@
     <message>
         <source>User Agent</source>
         <translation>Brukeragent</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Åpne %1 sin loggfil for feilsøk fra gjeldende datamappe. Dette kan ta noen sekunder for store loggfiler.</translation>
     </message>
     <message>
         <source>Services</source>
@@ -1676,10 +1640,6 @@
     <message>
         <source>&amp;Unban Node</source>
         <translation>Fjern &amp;Utestengning av Node</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Velkommen til Bitcoin Core sin RPC-konsoll.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2264,10 +2224,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Bitcoin Core lukker...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>Slå ikke av datamaskinen før dette vinduet forsvinner.</translation>
     </message>
@@ -2414,14 +2370,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Bitcoin Core utviklerne</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnett]</translation>
     </message>
@@ -2438,10 +2386,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Åpen til %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>konflikt</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -3196,10 +3140,6 @@
         <translation>Valg for lommebok:</translation>
     </message>
     <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Advarsel: Denne versjonen er utdatert; oppgradering er påkrevd!</translation>
-    </message>
-    <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>
         <translation>Du må gjenoppbygge databasen med å bruke -reindex for å endre -txindex</translation>
     </message>
@@ -3294,10 +3234,6 @@
     <message>
         <source>Activating best chain...</source>
         <translation>Aktiverer beste kjede...</translation>
-    </message>
-    <message>
-        <source>Always relay transactions received from whitelisted peers (default: %d)</source>
-        <translation>Alltid videresend transaksjoner mottatt fra hvitlistede noder (standardverdi: %d)</translation>
     </message>
     <message>
         <source>Attempt to recover private keys from a corrupt wallet.dat on startup</source>

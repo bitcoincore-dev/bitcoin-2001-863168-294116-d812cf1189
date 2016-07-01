@@ -1,4 +1,4 @@
-<TS language="es_DO" version="2.0">
+<TS language="es_DO" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -242,6 +242,10 @@
         <translation>Salir de la aplicación</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Mostrar información acerca de %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Acerca de &amp;Qt</translation>
     </message>
@@ -362,16 +366,8 @@
         <translation>Barra de pestañas</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Núcleo de Bitcoin</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Solicitar pagos (genera codigo QR y URL's de Bitcoin)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Acerca del Núcleo de Bitcoin</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -717,16 +713,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Núcleo de Bitcoin</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versión</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Acerca del Núcleo de Bitcoin</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -748,16 +736,12 @@
         <translation>Bienvenido</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Bienvenido al Núcleo de Bitcoin</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Al ser la primera vez que se ejecuta el programa, puede elegir dónde almacenará sus datos %1.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Al ser la primera vez que se ejecuta el programa, puede elegir dónde almacenará sus datos Bitcoin-Qt.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Bitcoin-Qt va a descargar y guardar una copia de la cadena de bloques de Bitcoin. Se almacenará al menos %1GB de datos en este directorio, que irá creciendo con el tiempo. El monedero se guardará también en este directorio.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 va a descargar y guardar una copia de la cadena de bloques de Bitcoin. Se almacenará al menos %2GB de datos en este directorio, que irá creciendo con el tiempo. El monedero se guardará también en este directorio.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -766,10 +750,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Utilice un directorio de datos personalizado:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Núcleo de Bitcoin</translation>
     </message>
     <message>
         <source>Error</source>
@@ -908,6 +888,10 @@
     <message>
         <source>none</source>
         <translation>ninguno</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Núcleo de Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1074,10 +1058,6 @@
     <message>
         <source>General</source>
         <translation>General</translation>
-    </message>
-    <message>
-        <source>Using OpenSSL version</source>
-        <translation>Utilizando la versión OpenSSL</translation>
     </message>
     <message>
         <source>Startup time</source>
@@ -1671,14 +1651,6 @@
 </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Núcleo de Bitcoin</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Los desarrolladores del Núcleo de Bitcoin</translation>
-    </message>
     <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>

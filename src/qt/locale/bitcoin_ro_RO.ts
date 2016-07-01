@@ -1,4 +1,4 @@
-<TS language="ro_RO" version="2.0">
+<TS language="ro_RO" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>Sigur doriţi să criptaţi portofelul dvs.?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin se va închide acum pentru a termina procesul de criptare. Ţineţi minte că criptarea portofelului nu vă poate proteja în totalitate de furtul monedelor de către programe dăunătoare care vă infectează calculatorul.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>IMPORTANT: Orice copie de siguranţă făcută anterior portofelului dumneavoastră ar trebui înlocuită cu cea generată cel mai recent, fişier criptat al portofelului. Pentru siguranţă, copiile de siguranţă vechi ale portofelului ne-criptat vor deveni inutile imediat ce veţi începe folosirea noului fişier criptat al portofelului.</translation>
     </message>
@@ -270,6 +266,14 @@
         <translation>Închide aplicaţia</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;Despre %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Arată informaţii despre %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Despre &amp;Qt</translation>
     </message>
@@ -304,10 +308,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Deschide &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Clientul Bitcoin Core</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,10 +358,6 @@
         <translation>P&amp;rimeşte</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Arată informaţii despre Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>Arată/Ascunde</translation>
     </message>
@@ -398,20 +394,8 @@
         <translation>Bara de unelte</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Nucleul Bitcoin</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Cereţi plăţi (generează coduri QR şi bitcoin-uri: URls)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Despre Nucleul Bitcoin</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Modifică opţiunile de configurare pentru Bitcoin</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -428,10 +412,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>Opţiuni linie de &amp;comandă</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Arată mesajul de ajutor Bitcoin Core pentru a obţine o listă cu opţiunile posibile de linii de comandă Bitcoin</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -492,6 +472,10 @@
     <message>
         <source>Up to date</source>
         <translation>Actualizat</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Arată mesajul de ajutor %1 pentru a obţine o listă cu opţiunile posibile de linii de comandă Bitcoin</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -734,10 +718,6 @@
         <translation>Această etichetă devine roşie dacă prioritatea e mai mică decît "medie".</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Această etichetă devine roşie, dacă orice beneficiar primeşte o sumă mai mică decât %1.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Poate varia +/- %1 satoshi pentru fiecare intrare.</translation>
     </message>
@@ -855,10 +835,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Nucleul Bitcoin</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versiunea</translation>
     </message>
@@ -867,8 +843,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About Bitcoin Core</source>
-        <translation>Despre Nucleul Bitcoin</translation>
+        <source>About %1</source>
+        <translation>Despre %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,16 +894,12 @@
         <translation>Bun venit</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Bine aţi venit la Nucleul Bitcoin.</translation>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Dacă aceasta este prima dată cînd programul este lansat, puteţi alege unde %1 va stoca datele.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>Dacă aceasta este prima dată cînd programul este lansat, puteţi alege unde Nucleul Bitcoin va stoca datele.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Nucleul Bitcoin se va descărca şi va stoca o copie a lanţului blocului Bitcoin. Cel puţin %1GB de date vor fi stocate în acest dosar şi se va mări în timp. Portofelul va fi, de asemenea, stocat în acest dosar.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 se va descărca şi va stoca o copie a lanţului blocului Bitcoin. Cel puţin %2GB de date vor fi stocate în acest dosar şi se va mări în timp. Portofelul va fi, de asemenea, stocat în acest dosar.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -936,10 +908,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Foloseşte un dosar de date personalizat:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Nucleul Bitcoin</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1020,10 +988,6 @@
         <translation>Minimizează fereastra în locul părăsirii programului în momentul închiderii ferestrei. Cînd acestă opţiune e activă, aplicaţia se va opri doar în momentul selectării comenzii 'Închide aplicaţia' din menu.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>Limba interfeţei utilizatorului poate fi setată aici. Această setare va avea efect după repornirea Nucleului Bitcoin.</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>URL-uri terţe părţi (de exemplu, un explorator de bloc), care apar în tab-ul tranzacţiilor ca elemente de meniu contextual. %s în URL este înlocuit cu hash de tranzacţie. URL-urile multiple sînt separate prin bară verticală |.</translation>
     </message>
@@ -1046,14 +1010,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>Reţea</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Porneşte automat Bitcoin Core după logarea în sistem.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>Porneşte Nucleul Bitcoin la pornirea sistemului</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1144,6 +1100,10 @@
         <translation>&amp;Limbă interfaţă utilizator</translation>
     </message>
     <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>Limba interfeţei utilizatorului poate fi setată aici. Această setare va avea efect după repornirea %1.</translation>
+    </message>
+    <message>
         <source>&amp;Unit to show amounts in:</source>
         <translation>&amp;Unitatea de măsură pentru afişarea sumelor:</translation>
     </message>
@@ -1170,6 +1130,10 @@
     <message>
         <source>none</source>
         <translation>nimic</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Nucleul Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1458,10 +1422,6 @@
         <translation>General</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Foloseşte OpenSSL versiunea</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Foloseşte BerkeleyDB versiunea</translation>
     </message>
@@ -1624,10 +1584,6 @@
     <message>
         <source>1 &amp;year</source>
         <translation>1 &amp;an</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Bun venit la consola Nucleului Bitcoin RPC.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2160,8 +2116,8 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Nucleul Bitcoin se închide...</translation>
+        <source>%1 is shutting down...</source>
+        <translation>%1 se închide</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -2302,14 +2258,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Nucleul Bitcoin</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Dezvoltatorii Nucleului Bitcoin</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -2326,10 +2274,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Deschis pînă la %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>în conflict</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -2960,10 +2904,6 @@
         <translation>Opţiuni portofel:</translation>
     </message>
     <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Atenţie: această versiune este depăşită, actualizarea este necesară !</translation>
-    </message>
-    <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>
         <translation>Trebuie să reconstruiţi baza de date folosind -reindex pentru a schimba -txindex</translation>
     </message>
@@ -2994,6 +2934,10 @@
     <message>
         <source>Accept public REST requests (default: %u)</source>
         <translation>Acceptă cererile publice REST (implicit: %u)</translation>
+    </message>
+    <message>
+        <source>Automatically create Tor hidden service (default: %d)</source>
+        <translation>Crează automat un serviciu Tor ascuns (implicit: %d)</translation>
     </message>
     <message>
         <source>Cannot resolve -whitebind address: '%s'</source>

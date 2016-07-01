@@ -1,4 +1,4 @@
-<TS language="es_CL" version="2.0">
+<TS language="es_CL" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -7,7 +7,7 @@
     </message>
     <message>
         <source>Create a new address</source>
-        <translation>Crea una nueva direCrea una nueva direccióncción</translation>
+        <translation>Crea una nueva dirección</translation>
     </message>
     <message>
         <source>&amp;New</source>
@@ -226,6 +226,14 @@
         <translation>Salir del programa</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation>S&amp;obre %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Mostrar informacion sobre %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Acerca de</translation>
     </message>
@@ -260,10 +268,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Abrir y url...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>cliente bitcoin core</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -310,10 +314,6 @@
         <translation>y recibir</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Mostrar informacion sobre Bitcoin Core</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Mostrar/Ocultar</translation>
     </message>
@@ -338,24 +338,12 @@
         <translation>Barra de pestañas</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>bitcoin core</translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 y %2</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Pide pagos (genera codigos QR and bitcoin: URls)</translation>
     </message>
     <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;Sobre Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Modifica las opciones para BitCoin Core</translation>
+        <source>&amp;Command-line options</source>
+        <translation>&amp;opciones de linea de comando</translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -410,10 +398,6 @@
     <message>
         <source>Amount:</source>
         <translation>Cantidad:</translation>
-    </message>
-    <message>
-        <source>Priority:</source>
-        <translation>prioridad:</translation>
     </message>
     <message>
         <source>Priority:</source>
@@ -546,12 +530,12 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>bitcoin core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>versión</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation>Sobre %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -561,16 +545,16 @@
         <source>Usage:</source>
         <translation>Uso:</translation>
     </message>
+    <message>
+        <source>command-line options</source>
+        <translation>opciones de linea de comando</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
     <message>
         <source>Welcome</source>
         <translation>bienvenido</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>bitcoin core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -670,6 +654,10 @@
     <message>
         <source>default</source>
         <translation>predeterminado</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>bitcoin core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -883,14 +871,6 @@
         <translation>prioridad:</translation>
     </message>
     <message>
-        <source>Transaction Fee:</source>
-        <translation>Comisión transacción:</translation>
-    </message>
-    <message>
-        <source>Priority:</source>
-        <translation>prioridad:</translation>
-    </message>
-    <message>
         <source>Fee:</source>
         <translation>comisión:
 </translation>
@@ -1087,10 +1067,6 @@
 </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>bitcoin core</translation>
-    </message>
     <message>
         <source>[testnet]</source>
         <translation>[red-de-pruebas]</translation>

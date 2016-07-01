@@ -1,4 +1,4 @@
-<TS language="bs" version="2.0">
+<TS language="bs" version="2.1">
 <context>
     <name>AddressBookPage</name>
     </context>
@@ -17,10 +17,6 @@
         <source>Bitcoin</source>
         <translation>Bitcoin</translation>
     </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Jezrga</translation>
-    </message>
     </context>
 <context>
     <name>ClientModel</name>
@@ -36,23 +32,19 @@
     </context>
 <context>
     <name>HelpMessageDialog</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Jezrga</translation>
-    </message>
     </context>
 <context>
     <name>Intro</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Jezrga</translation>
-    </message>
     </context>
 <context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Jezrga</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -111,10 +103,6 @@
     </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Jezrga</translation>
-    </message>
     </context>
 <context>
     <name>TrafficGraphWidget</name>

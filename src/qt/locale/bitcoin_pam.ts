@@ -1,4 +1,4 @@
-<TS language="pam" version="2.0">
+<TS language="pam" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -226,6 +226,10 @@
         <translation>Tuknangan ing aplikasyon</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Magpakit impormasion tungkul king %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Tungkul &amp;Qt</translation>
     </message>
@@ -308,10 +312,6 @@
     <message>
         <source>Tabs toolbar</source>
         <translation>Gamit para king Tabs</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Kapilubluban ning Bitcoin</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -457,10 +457,6 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Kapilubluban ning Bitcoin</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>bersion</translation>
     </message>
@@ -482,10 +478,6 @@
     <message>
         <source>Welcome</source>
         <translation>Malaus ka</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Kapilubluban ning Bitcoin</translation>
     </message>
     <message>
         <source>Error</source>
@@ -574,6 +566,10 @@
         <translation>default</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Kapilubluban ning Bitcoin</translation>
+    </message>
+    <message>
         <source>The supplied proxy address is invalid.</source>
         <translation>Ing milageng proxy address eya katanggap-tanggap.</translation>
     </message>
@@ -656,10 +652,6 @@
         <translation>I-Debug ing awang</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>Gagamit bersion na ning OpenSSL</translation>
-    </message>
-    <message>
         <source>Startup time</source>
         <translation>Oras ning umpisa</translation>
     </message>
@@ -719,8 +711,16 @@
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
+        <source>&amp;Amount:</source>
+        <translation>A&amp;laga:</translation>
+    </message>
+    <message>
         <source>&amp;Label:</source>
         <translation>&amp;Label:</translation>
+    </message>
+    <message>
+        <source>&amp;Message:</source>
+        <translation>&amp;Mensayi:</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -1007,10 +1007,6 @@
 </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Kapilubluban ning Bitcoin</translation>
-    </message>
     <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>

@@ -106,6 +106,10 @@
         <translation>&amp;என்க்ரிப்ட் பணப்பை...</translation>
     </message>
     <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation>&amp;பெறும் முகவரிகள்&gt;&gt;&gt;</translation>
+    </message>
+    <message>
         <source>Open &amp;URI...</source>
         <translation>&amp;URI-ஐ திற</translation>
     </message>
@@ -144,10 +148,6 @@
     <message>
         <source>&amp;Help</source>
         <translation>&amp;உதவி</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin மையம்</translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
@@ -278,6 +278,14 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;சிட்டை</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;&amp;விலாசம்</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -288,24 +296,12 @@
     </context>
 <context>
     <name>HelpMessageDialog</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin மையம்</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>Bitcoin மையம் பற்றி</translation>
-    </message>
     </context>
 <context>
     <name>Intro</name>
     <message>
         <source>Welcome</source>
         <translation>நல்வரவு</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin மையம்</translation>
     </message>
     <message>
         <source>Error</source>
@@ -384,6 +380,10 @@
     <message>
         <source>none</source>
         <translation>none</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin மையம்</translation>
     </message>
     </context>
 <context>
@@ -811,10 +811,6 @@
     </context>
 <context>
     <name>SplashScreen</name>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin மையம்</translation>
-    </message>
     </context>
 <context>
     <name>TrafficGraphWidget</name>
@@ -1005,6 +1001,10 @@
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation>விருப்பத்தேர்வு:</translation>
+    </message>
     <message>
         <source>(default: %u)</source>
         <translation>(default: %u)</translation>

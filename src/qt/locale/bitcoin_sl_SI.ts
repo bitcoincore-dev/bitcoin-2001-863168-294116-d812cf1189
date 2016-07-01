@@ -1,4 +1,4 @@
-<TS language="sl_SI" version="2.0">
+<TS language="sl_SI" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -168,10 +168,6 @@
         <translation>Ali ste prepričani, da želite šifrirati vašo denarnico?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Program se bo zaprl, da dokonča proces šifriranja. Zapomnite si, da šifriranje ne more popolnoma zaščititi vaše denarnice pred krajami in zlonamernimi programi, ki bi lahko bili nameščeni na vašem računalniku.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>POMEMBNO: Vse starejše obstoječe varnostne kopije denarnice je potrebno zamenjati s to novo, šifrirano varnostno kopijo. Iz varnostnih razlogov bodo stare varnostne kopije postale neuporabne takoj, ko začnete uporabljati novo, šifrirano denarnico.</translation>
     </message>
@@ -262,6 +258,10 @@
         <translation>Ustavite program</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation />
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>O &amp;Qt</translation>
     </message>
@@ -296,10 +296,6 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Odpri &amp;URI ...</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core client</source>
-        <translation>Odjemalec Bitcoin Core</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -350,10 +346,6 @@
         <translation>P&amp;rejmi</translation>
     </message>
     <message>
-        <source>Show information about Bitcoin Core</source>
-        <translation>Oglejte si informacije o programu</translation>
-    </message>
-    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Prikaži / Skrij</translation>
     </message>
@@ -390,20 +382,8 @@
         <translation>Orodna vrstica zavihkov</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Zahtevajte plačilo (ustvarite zahtevek s kodo QR in URI tipa bitcoin:)</translation>
-    </message>
-    <message>
-        <source>&amp;About Bitcoin Core</source>
-        <translation>&amp;O programu</translation>
-    </message>
-    <message>
-        <source>Modify configuration options for Bitcoin Core</source>
-        <translation>Spremenite programske nastavitve</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -420,10 +400,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>Opcije &amp;ukazne vrstice</translation>
-    </message>
-    <message>
-        <source>Show the Bitcoin Core help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Oglejte si seznam in kratek opis vseh opcij pri zagonu programa iz ukazne vrstice</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
@@ -726,10 +702,6 @@
         <translation>Oznaka postane rdeča, če je prioriteta transakcije manjša kot "srednja".</translation>
     </message>
     <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Oznaka postane rdeča, če je znesek manjši od %1.</translation>
-    </message>
-    <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
         <translation>Lahko variira +/- %1 satoshijev na vhod.</translation>
     </message>
@@ -847,20 +819,12 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>version</source>
         <translation>različica</translation>
     </message>
     <message>
         <source>(%1-bit)</source>
         <translation>(%1-bit)</translation>
-    </message>
-    <message>
-        <source>About Bitcoin Core</source>
-        <translation>O programu Bitcoin Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -882,28 +846,12 @@
         <translation>Dobrodošli</translation>
     </message>
     <message>
-        <source>Welcome to Bitcoin Core.</source>
-        <translation>Dobrodošli v programu Bitcoin Core.</translation>
-    </message>
-    <message>
-        <source>As this is the first time the program is launched, you can choose where Bitcoin Core will store its data.</source>
-        <translation>To je prvi zagon programa, zato lahko izberete mapo, v katero bo program shranjeval podatke.</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core will download and store a copy of the Bitcoin block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Program bo prenesel in shranil kopijo verige blokov. V izbrani podatkovni mapi bo shranjenih vsaj %1 GiB podatkov, ta količina pa bo sčasoma še naraščala. V tej mapi bo shranjena tudi denarnica.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Uporabi privzeto podatkovno mapo</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Uporabi to podatkovno mapo:</translation>
-    </message>
-    <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -984,10 +932,6 @@
         <translation>Ko zaprete glavno okno programa, bo program tekel še naprej, okno pa bo zgolj minimirano. Program v tem primeru ustavite tako, da v meniju izberete ukaz Izhod.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Bitcoin Core.</source>
-        <translation>Nastavitev jezika uporabniškega vmesnika programa. Nova nastavitev jezika bo uporabljena šele, ko boste znova zagnali program.</translation>
-    </message>
-    <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>Naslovi URL tretjih oseb (npr. raziskovalec blokov), ki bodo navedeni v kontekstnem meniju seznama transakcij. Niz %s iz naslova URL je nadomeščen s hash vrednostjo transakcije. Več zaporednih naslovov URL je med seboj ločenih z znakom |.</translation>
     </message>
@@ -1010,14 +954,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Omrežje</translation>
-    </message>
-    <message>
-        <source>Automatically start Bitcoin Core after logging in to the system.</source>
-        <translation>Ob uporabnikovi prijavi v sistem se bo program samodejno zagnal</translation>
-    </message>
-    <message>
-        <source>&amp;Start Bitcoin Core on system login</source>
-        <translation>&amp;Zaženi program ob prijavi v sistem</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1126,6 +1062,10 @@
     <message>
         <source>none</source>
         <translation>nič</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1414,10 +1354,6 @@
         <translation>Splošno</translation>
     </message>
     <message>
-        <source>Using OpenSSL version</source>
-        <translation>OpenSSL različica v rabi</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>BerkeleyDB različica v rabi</translation>
     </message>
@@ -1444,10 +1380,6 @@
     <message>
         <source>Current number of blocks</source>
         <translation>Trenutno število blokov</translation>
-    </message>
-    <message>
-        <source>Open the Bitcoin Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Odpre razhroščevalni dnevnik debug.log, ki se nahaja v trenutni podatkovni mapi. Če je datoteka velika, lahko postopek traja nekaj sekund.</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1548,10 +1480,6 @@
     <message>
         <source>Clear console</source>
         <translation>Počisti konzolo</translation>
-    </message>
-    <message>
-        <source>Welcome to the Bitcoin Core RPC console.</source>
-        <translation>Dobrodošli v konzoli RPC programa Bitcoin Core.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2124,10 +2052,6 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Bitcoin Core is shutting down...</source>
-        <translation>Program se ustavlja ...</translation>
-    </message>
-    <message>
         <source>Do not shut down the computer until this window disappears.</source>
         <translation>Dokler to okno ne izgine, ne zaustavljajte računalnika.</translation>
     </message>
@@ -2274,14 +2198,6 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
-        <source>The Bitcoin Core developers</source>
-        <translation>Bitcoin Core razvijalci</translation>
-    </message>
-    <message>
         <source>[testnet]</source>
         <translation>[testnet]</translation>
     </message>
@@ -2298,10 +2214,6 @@
     <message>
         <source>Open until %1</source>
         <translation>Odprto do %1</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>v konfliktu</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -2954,10 +2866,6 @@
     <message>
         <source>Wallet options:</source>
         <translation>Izbire denarnice:</translation>
-    </message>
-    <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Opozorilo: Različica vašega odjemalca je zastarela. Potrebna je nadgradnja!</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>

@@ -168,10 +168,6 @@
         <translation>¿Estás seguro que querés encriptar tu billetera?</translation>
     </message>
     <message>
-        <source>Bitcoin Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Bitcoin Core ahora se va a cerrar para terminar el proceso de encriptación. Acordate que encriptar tu billetera no te protege completamente de que algún malware que pueda infectar tu computadora te robe tus bitcoins.</translation>
-    </message>
-    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>IMPORTANTE: Todos los backups que hayas hecho de tu billetera tendrían que ser reemplazados por el archivo encriptado de billetera que generaste. Por razones de seguridad, los backups anteriores del archivo de billetera no encriptado se inutilizan en el momento en que empezás a usar la nueva billetera encriptada</translation>
     </message>
@@ -190,6 +186,10 @@
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Ingresá la frase de contraseña  vieja y la nueva para la billetera.</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 ahora se va a cerrar para terminar el proceso de encriptación. Acordate que encriptar tu billetera no te protege completamente de que algún malware que pueda infectar tu computadora te robe tus bitcoins.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -221,6 +221,10 @@
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation>Direcciones de &amp;recepción...</translation>
+    </message>
     </context>
 <context>
     <name>ClientModel</name>
@@ -234,6 +238,14 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Etiqueta</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;Dirección</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -270,9 +282,17 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation />
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Copiar Dirección</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Dirección</translation>
@@ -302,6 +322,10 @@
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation />
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>

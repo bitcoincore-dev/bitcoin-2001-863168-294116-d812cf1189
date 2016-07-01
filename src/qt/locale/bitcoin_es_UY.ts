@@ -1,4 +1,4 @@
-<TS language="es_UY" version="2.0">
+<TS language="es_UY" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -328,6 +328,10 @@
         <translation>Cambio:</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>AMonto</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>Fecha</translation>
     </message>
@@ -429,6 +433,10 @@
     </context>
 <context>
     <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>AMonto</translation>
+    </message>
     </context>
 <context>
     <name>QRImageWidget</name>
@@ -442,6 +450,10 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation>A&amp;Monto:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Etiqueta:</translation>
@@ -458,6 +470,10 @@
         <translation>Direccion </translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>AMonto</translation>
+    </message>
+    <message>
         <source>Label</source>
         <translation>Etiqueta</translation>
     </message>
@@ -471,6 +487,10 @@
     <message>
         <source>Label</source>
         <translation>Etiqueta</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>AMonto</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -604,6 +624,10 @@
     <message>
         <source>Transaction</source>
         <translation>Transaccion</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>AMonto</translation>
     </message>
     <message>
         <source>unknown</source>
