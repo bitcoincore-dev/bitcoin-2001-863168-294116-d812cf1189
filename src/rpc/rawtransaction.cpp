@@ -582,11 +582,16 @@ UniValue decodescript(const JSONRPCRequest& request)
 }
 
 /** Pushes a JSON object for script verification or signing errors to vErrorsRet. */
-static void TxInErrorToJSON(const CTxIn& txin, UniValue& vErrorsRet, const std::string& strMessage)
+static void TxInErrorToJSON(const CTxIn& txin, const CScriptWitness& witness, UniValue& vErrorsRet, const std::string& strMessage)
 {
     UniValue entry(UniValue::VOBJ);
     entry.push_back(Pair("txid", txin.prevout.hash.ToString()));
     entry.push_back(Pair("vout", (uint64_t)txin.prevout.n));
+    UniValue txinwitness(UniValue::VARR);
+    for (unsigned int i = 0; i < witness.stack.size(); i++) {
+        txinwitness.push_back(HexStr(witness.stack[i].begin(), witness.stack[i].end()));
+    }
+    entry.push_back(Pair("txinwitness", txinwitness));
     entry.push_back(Pair("scriptSig", HexStr(txin.scriptSig.begin(), txin.scriptSig.end())));
     entry.push_back(Pair("sequence", (uint64_t)txin.nSequence));
     entry.push_back(Pair("error", strMessage));
@@ -820,9 +825,13 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
     // Sign what we can:
     for (unsigned int i = 0; i < mergedTx.vin.size(); i++) {
         CTxIn& txin = mergedTx.vin[i];
+        CScriptWitness witness;
+        if (txin.scriptWitness.stack.size() >= i + 1) {
+            witness = txin.scriptWitness;
+        }
         const CCoins* coins = view.AccessCoins(txin.prevout.hash);
         if (coins == NULL || !coins->IsAvailable(txin.prevout.n)) {
-            TxInErrorToJSON(txin, vErrors, "Input not found or already spent");
+            TxInErrorToJSON(txin, witness, vErrors, "Input not found or already spent");
             continue;
         }
         const CScript& prevPubKey = coins->vout[txin.prevout.n].scriptPubKey;
@@ -842,7 +851,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
 
         ScriptError serror = SCRIPT_ERR_OK;
         if (!VerifyScript(txin.scriptSig, prevPubKey, &txin.scriptWitness, STANDARD_SCRIPT_VERIFY_FLAGS, TransactionSignatureChecker(&txConst, i, amount), &serror)) {
-            TxInErrorToJSON(txin, vErrors, ScriptErrorString(serror));
+            TxInErrorToJSON(txin, witness, vErrors, ScriptErrorString(serror));
         }
     }
     bool fComplete = vErrors.empty();
