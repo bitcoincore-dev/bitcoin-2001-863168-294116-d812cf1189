@@ -1465,7 +1465,7 @@ UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bool fByA
         CKeyID keyID = GetKeyForDestination(*pwallet, dest);
         uint8_t keyFlags = 0;
         if (!keyID.IsNull()) {
-            keyFlags = pwallet->mapKeyMetadata[keyID].keyFlags;
+            keyFlags = pwallet->mapKeyMetadata[keyID].GetKeyOrigin();
         }
 
         std::string keyOrigin;
