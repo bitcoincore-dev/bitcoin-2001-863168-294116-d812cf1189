@@ -137,8 +137,9 @@ UniValue importprivkey(const JSONRPCRequest& request)
             return NullUniValue;
         }
 
-        pwallet->mapKeyMetadata[vchAddress].nCreateTime = 1;
-        pwallet->mapKeyMetadata[vchAddress].keyFlags |= CKeyMetadata::KEY_ORIGIN_IMPORTED;
+        CKeyMetadata& metadata = pwallet->mapKeyMetadata[vchAddress];
+        metadata.nCreateTime = 1;
+        metadata.SetKeyOrigin(metadata.GetKeyOrigin() | CKeyMetadata::KEY_ORIGIN_IMPORTED);
 
         if (!pwallet->AddKeyPubKey(key, pubkey)) {
             throw JSONRPCError(RPC_WALLET_ERROR, "Error adding key to wallet");
