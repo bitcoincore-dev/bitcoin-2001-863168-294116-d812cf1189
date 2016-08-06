@@ -815,7 +815,14 @@ public:
     const CWalletTx* GetWalletTx(const uint256& hash) const;
 
     //! check whether we are allowed to upgrade (or already support) to the named feature
-    bool CanSupportFeature(enum WalletFeature wf) const { AssertLockHeld(cs_wallet); return nWalletMaxVersion >= wf; }
+    bool CanSupportFeature(enum WalletFeature wf) const {
+        AssertLockHeld(cs_wallet);
+        if (wf == FEATURE_KEYFLAGS && nWalletVersion >= FEATURE_HD) {
+            // HD wallets are incompatible with keyflags
+            return false;
+        }
+        return nWalletMaxVersion >= wf;
+    }
 
     /**
      * populate vCoins with vector of available COutputs.
