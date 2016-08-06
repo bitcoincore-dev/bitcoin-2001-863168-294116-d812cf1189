@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # Copyright (c) 2016 The Bitcoin Core developers
 # Distributed under the MIT/X11 software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -41,6 +41,7 @@ BTC = Decimal('100000000')
 class PriorityTest(BitcoinTestFramework):
 
     def __init__(self):
+        super().__init__()
         self.num_nodes = 4
         self.testmsg_num = 0
 
@@ -55,7 +56,7 @@ class PriorityTest(BitcoinTestFramework):
 
         nodes = []
         nodes.append(start_node(0, self.options.tmpdir, ['-blockmaxsize=0']))
-        nodes.append(start_node(1, self.options.tmpdir, ['-blockminsize=1000000', '-blockmaxsize=1000000'] + ppopt))
+        nodes.append(start_node(1, self.options.tmpdir, ['-blockprioritysize=1000000', '-blockmaxsize=1000000'] + ppopt))
         nodes.append(start_node(2, self.options.tmpdir, ['-blockmaxsize=0']))
         nodes.append(start_node(3, self.options.tmpdir, ['-blockmaxsize=0']))
         return nodes
