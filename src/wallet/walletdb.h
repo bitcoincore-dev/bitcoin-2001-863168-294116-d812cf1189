@@ -93,7 +93,7 @@ class CKeyMetadata
 {
 public:
     static const int VERSION_BASIC=1;
-    static const int VERSION_SUPPORT_FLAGS=2;
+    static const int VERSION_WITH_FLAGS=2;
     static const int VERSION_WITH_HDDATA=10;
     static const int VERSION_WITH_KEY_ORIGIN = 12;
     static const int CURRENT_VERSION=VERSION_WITH_KEY_ORIGIN;
@@ -108,7 +108,9 @@ public:
     int64_t nCreateTime; // 0 means unknown
     std::string hdKeypath; //optional HD/bip32 keypath. Still used to determine whether a key is a seed. Also kept for backwards compatibility
     CKeyID hd_seed_id; //id of the HD seed used to derive this key
+private:
     uint8_t keyFlags;
+public:
     KeyOriginInfo key_origin; // Key origin info with path and fingerprint
     bool has_key_origin = false; //< Whether the key_origin is useful
 
@@ -133,7 +135,7 @@ public:
         {
             READWRITE(hdKeypath);
             READWRITE(hd_seed_id);
-        } else if (nVersion >= VERSION_SUPPORT_FLAGS) {
+        } else if (nVersion >= VERSION_WITH_FLAGS) {
             READWRITE(keyFlags);
         }
         if (this->nVersion >= VERSION_WITH_KEY_ORIGIN)
@@ -152,6 +154,14 @@ public:
         keyFlags = KEY_ORIGIN_UNSET;
         key_origin.clear();
         has_key_origin = false;
+    }
+
+    void SetKeyOrigin(const uint8_t n) {
+        keyFlags = n;
+    }
+
+    uint8_t GetKeyOrigin() const {
+        return keyFlags;
     }
 };
 

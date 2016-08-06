@@ -202,11 +202,10 @@ CPubKey CWallet::GenerateNewKey(WalletBatch &batch, bool internal)
     CKeyMetadata metadata(nCreationTime);
 
     //check if the wallet supports keyflags
-    if (CanSupportFeature(FEATURE_KEYFLAGS))
-    {
-        metadata.nVersion = CKeyMetadata::VERSION_SUPPORT_FLAGS;
-        metadata.keyFlags |= IsCrypted() ? CKeyMetadata::KEY_ORIGIN_ENC_WALLET : CKeyMetadata::KEY_ORIGIN_UNENC_WALLET;
+    if (CanSupportFeature(FEATURE_KEYFLAGS)) {
+        metadata.nVersion = CKeyMetadata::VERSION_WITH_FLAGS;
     }
+    metadata.SetKeyOrigin(IsCrypted() ? CKeyMetadata::KEY_ORIGIN_ENC_WALLET : CKeyMetadata::KEY_ORIGIN_UNENC_WALLET);
 
     // use HD key derivation if HD was enabled during wallet creation and a seed is present
     if (IsHDEnabled()) {

@@ -1151,7 +1151,7 @@ static UniValue ListReceived(interfaces::Chain::Lock& locked_chain, CWallet * co
         CKeyID keyID = GetKeyForDestination(*pwallet, address);
         uint8_t keyFlags = 0;
         if (!keyID.IsNull()) {
-            keyFlags = pwallet->mapKeyMetadata[keyID].keyFlags;
+            keyFlags = pwallet->mapKeyMetadata[keyID].GetKeyOrigin();
         }
 
         std::string keyOrigin;
