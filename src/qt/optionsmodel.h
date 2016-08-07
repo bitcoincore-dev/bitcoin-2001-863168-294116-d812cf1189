@@ -65,7 +65,7 @@ public:
         datacarriersize,
         blockmaxsize,
         blockprioritysize,
-        blockminsize,
+        blockmaxweight,
         priorityaccurate,       // bool
         corepolicy,
         OptionIDRowCount,

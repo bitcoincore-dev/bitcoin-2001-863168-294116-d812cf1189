@@ -299,8 +299,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return qlonglong(GetArg("-blockmaxsize", DEFAULT_BLOCK_MAX_SIZE) / 1000);
         case blockprioritysize:
             return qlonglong(GetArg("-blockprioritysize", DEFAULT_BLOCK_PRIORITY_SIZE) / 1000);
-        case blockminsize:
-            return qlonglong(GetArg("-blockminsize", DEFAULT_BLOCK_MIN_SIZE) / 1000);
+        case blockmaxweight:
+            return qlonglong(GetArg("-blockmaxweight", DEFAULT_BLOCK_MAX_WEIGHT) / 1000);
         case priorityaccurate:
             return fPriorityAccurate;
         default:
@@ -646,7 +646,7 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
         }
         case blockmaxsize:
         case blockprioritysize:
-        case blockminsize:
+        case blockmaxweight:
         {
             const int nNewValue_kB = value.toInt();
             const int nOldValue_kB = data(index, role).toInt();
@@ -660,8 +660,8 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                     case blockprioritysize:
                         strKey = "blockprioritysize";
                         break;
-                    case blockminsize:
-                        strKey = "blockminsize";
+                    case blockmaxweight:
+                        strKey = "blockmaxweight";
                         break;
                 }
                 mapArgs["-" + strKey] = strNv;

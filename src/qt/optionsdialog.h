@@ -68,6 +68,7 @@ private Q_SLOTS:
 
     void blockmaxsize_changed(int);
     void blockmaxsize_increase(int);
+    void blockmaxweight_changed(int);
 
 Q_SIGNALS:
     void proxyIpChecks(QValidatedLineEdit *pUiProxyIp, int nProxyPort);
@@ -96,7 +97,7 @@ private:
     QCheckBox *rejectbaremultisig;
     QSpinBox *datacarriersize;
 
-    QSpinBox *blockmaxsize, *blockprioritysize, *blockminsize;
+    QSpinBox *blockmaxsize, *blockprioritysize, *blockmaxweight;
     QCheckBox *priorityaccurate;
 };
 
