@@ -13,9 +13,10 @@
 #include "guiutil.h"
 #include "optionsmodel.h"
 
-#include "consensus/consensus.h" // for MAX_BLOCK_SIZE
+#include "consensus/consensus.h" // for MAX_BLOCK_SERIALIZED_SIZE
 #include "validation.h" // for DEFAULT_SCRIPTCHECK_THREADS and MAX_SCRIPTCHECK_THREADS
 #include "netbase.h"
+#include "primitives/transaction.h" // for WITNESS_SCALE_FACTOR
 #include "txdb.h" // for -dbcache defaults
 #include "txmempool.h" // for maxmempoolMinimum
 
@@ -194,7 +195,7 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
 
     blockmaxsize = new QSpinBox(tabMining);
     blockmaxsize->setMinimum(1);
-    blockmaxsize->setMaximum((MAX_BLOCK_SIZE - 1000) / 1000);
+    blockmaxsize->setMaximum((MAX_BLOCK_SERIALIZED_SIZE - 1000) / 1000);
     connect(blockmaxsize, SIGNAL(valueChanged(int)), this, SLOT(blockmaxsize_changed(int)));
     CreateOptionUI(verticalLayout_Mining, blockmaxsize, tr("Never mine a block larger than %s kB."));
 
@@ -204,11 +205,11 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     connect(blockprioritysize, SIGNAL(valueChanged(int)), this, SLOT(blockmaxsize_increase(int)));
     CreateOptionUI(verticalLayout_Mining, blockprioritysize, tr("Mine first %s kB of transactions sorted by coin-age priority."));
 
-    blockminsize = new QSpinBox(tabMining);
-    blockminsize->setMinimum(0);
-    blockminsize->setMaximum(blockmaxsize->maximum());
-    connect(blockminsize, SIGNAL(valueChanged(int)), this, SLOT(blockmaxsize_increase(int)));
-    CreateOptionUI(verticalLayout_Mining, blockminsize, tr("Fill blocks up to %s kB with low or no-fee transactions."));
+    blockmaxweight = new QSpinBox(tabMining);
+    blockmaxweight->setMinimum(1);
+    blockmaxweight->setMaximum((MAX_BLOCK_WEIGHT-4000) / 1000);
+    connect(blockmaxweight, SIGNAL(valueChanged(int)), this, SLOT(blockmaxweight_changed(int)));
+    CreateOptionUI(verticalLayout_Mining, blockmaxweight, tr("Never mine a block weighing more than %s,000."));
 
     verticalLayout_Mining->addItem(new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding));
     ui->tabWidget->insertTab(ui->tabWidget->indexOf(ui->tabMempool) + 1, tabMining, tr("M&ining"));
@@ -391,7 +392,7 @@ void OptionsDialog::setMapper()
 
     mapper->addMapping(blockmaxsize, OptionsModel::blockmaxsize);
     mapper->addMapping(blockprioritysize, OptionsModel::blockprioritysize);
-    mapper->addMapping(blockminsize, OptionsModel::blockminsize);
+    mapper->addMapping(blockmaxweight, OptionsModel::blockmaxweight);
 
     /* Window */
 #ifndef Q_OS_MAC
@@ -432,14 +433,26 @@ void OptionsDialog::blockmaxsize_changed(int i)
     if (blockprioritysize->value() > i) {
         blockprioritysize->setValue(i);
     }
-    if (blockminsize->value() > i) {
-        blockminsize->setValue(i);
+
+    if (blockmaxweight->value() < i) {
+        blockmaxweight->setValue(i);
+    } else if (blockmaxweight->value() > i * WITNESS_SCALE_FACTOR) {
+        blockmaxweight->setValue(i * WITNESS_SCALE_FACTOR);
     }
 }
 
 void OptionsDialog::blockmaxsize_increase(int i)
 {
     if (blockmaxsize->value() < i) {
+        blockmaxsize->setValue(i);
+    }
+}
+
+void OptionsDialog::blockmaxweight_changed(int i)
+{
+    if (blockmaxsize->value() < i / WITNESS_SCALE_FACTOR) {
+        blockmaxsize->setValue(i / WITNESS_SCALE_FACTOR);
+    } else if (blockmaxsize->value() > i) {
         blockmaxsize->setValue(i);
     }
 }
