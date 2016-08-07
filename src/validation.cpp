@@ -650,7 +650,8 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
     if (pfMissingInputs)
         *pfMissingInputs = false;
 
-    if (GetArg("-spamfilter", DEFAULT_SPAMFILTER)) {
+    const bool fCheckNotoriousSpam = GetArg("-spamfilter", DEFAULT_SPAMFILTER) && setIgnoreRejects.find("spam-notorious") == setIgnoreRejects.end();
+    if (fCheckNotoriousSpam) {
         const char * const entryname = HasNotoriousOutput(tx);
         if (entryname)
             return state.DoS(0, false, REJECT_NONSTANDARD, "spam-notorious", false, entryname);
@@ -787,7 +788,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
             return state.DoS(0, false, REJECT_NONSTANDARD, "non-BIP68-final");
         }
 
-        if (GetArg("-spamfilter", DEFAULT_SPAMFILTER)) {
+        if (fCheckNotoriousSpam) {
             const char * const entryname = HasNotoriousInput(tx, view);
             if (entryname)
                 return state.DoS(0, false, REJECT_NONSTANDARD, "spam-notorious", false, entryname);
