@@ -130,6 +130,15 @@ cases it also reduces propagation delay. It is automatically enabled between
 compatible peers.
 [BIP 152](https://github.com/bitcoin/bips/blob/master/bip-0152.mediawiki)
 
+As a side-effect, ordinary non-mining nodes will download and upload blocks
+faster if those blocks were produced by miners using similar transaction
+filtering policies. This means that a miner who produces a block with many
+transactions discouraged by your node will be relayed slower than one with
+only transactions already in your memory pool. The overall effect of such
+relay differences on the network may result in blocks which include widely-
+discouraged transactions losing a stale block race, and therefore miners may
+wish to configure their node to take common relay policies into consideration.
+
 Hierarchical Deterministic Key Generation
 -----------------------------------------
 Newly created wallets will use hierarchical deterministic key generation
