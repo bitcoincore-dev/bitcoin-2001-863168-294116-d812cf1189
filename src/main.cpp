@@ -1046,6 +1046,34 @@ int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& i
     return nSigOps;
 }
 
+/** Compute accurate total signature operation cost of a transaction.
+ *  Not consensus-critical, since legacy sigops counting is always used in the protocol.
+ */
+int64_t GetAccurateTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& inputs, int flags)
+{
+    if (tx.IsCoinBase())
+        return 0;
+
+    unsigned int nSigOps = 0;
+    BOOST_FOREACH(const CTxIn& txin, tx.vin) {
+        nSigOps += txin.scriptSig.GetSigOpCount(false);
+    }
+
+    if (flags & SCRIPT_VERIFY_P2SH) {
+        nSigOps += GetP2SHSigOpCount(tx, inputs);
+    }
+
+    nSigOps *= WITNESS_SCALE_FACTOR;
+
+    if (flags & SCRIPT_VERIFY_WITNESS) {
+        for (unsigned int i = 0; i < tx.vin.size(); i++) {
+            const CTxOut &prevout = inputs.GetOutputFor(tx.vin[i]);
+            nSigOps += CountWitnessSigOps(tx.vin[i].scriptSig, prevout.scriptPubKey, i < tx.wit.vtxinwit.size() ? &tx.wit.vtxinwit[i].scriptWitness : NULL, flags);
+        }
+    }
+
+    return nSigOps;
+}
 
 
 
@@ -1296,7 +1324,10 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
         // itself can contain sigops MAX_STANDARD_TX_SIGOPS is less than
         // MAX_BLOCK_SIGOPS; we still consider this an invalid rather than
         // merely non-standard transaction.
-        if (nSigOpsCost > MAX_STANDARD_TX_SIGOPS_COST)
+        // To avoid rejecting low-sigop bare-multisig transactions, the sigops
+        // are counted a second time more accurately.
+        int64_t nAccurateSigOpsCost = GetAccurateTransactionSigOpCost(tx, view, STANDARD_SCRIPT_VERIFY_FLAGS);
+        if ((nSigOpsCost > MAX_STANDARD_TX_SIGOPS_COST) || (nBytesPerSigOpStrict && nAccurateSigOpsCost > nSize * WITNESS_SCALE_FACTOR / nBytesPerSigOpStrict))
             return state.DoS(0, false, REJECT_NONSTANDARD, "bad-txns-too-many-sigops", false,
                 strprintf("%d", nSigOpsCost));
 

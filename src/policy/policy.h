@@ -30,6 +30,8 @@ static const unsigned int MAX_STANDARD_TX_SIGOPS_COST = MAX_BLOCK_SIGOPS_COST/5;
 static const unsigned int DEFAULT_MAX_MEMPOOL_SIZE = 300;
 /** Default for -bytespersigop */
 static const unsigned int DEFAULT_BYTES_PER_SIGOP = 20;
+/** Default for -bytespersigopstrict */
+static const unsigned int DEFAULT_BYTES_PER_SIGOP_STRICT = 20;
 /**
  * Standard script verification flags that standard transactions will comply
  * with. However scripts violating these flags may still be present in valid
@@ -69,6 +71,7 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
 bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs);
 
 extern unsigned int nBytesPerSigOp;
+extern unsigned int nBytesPerSigOpStrict;
 
 /** Compute the virtual transaction size (weight reinterpreted as bytes). */
 int64_t GetVirtualTransactionSize(int64_t nWeight, int64_t nSigOpCost);
