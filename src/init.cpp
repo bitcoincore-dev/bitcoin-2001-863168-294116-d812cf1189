@@ -685,6 +685,7 @@ bool AppInitServers(boost::thread_group& threadGroup)
 void InitParameterInteraction()
 {
     if (GetBoolArg("-corepolicy", DEFAULT_COREPOLICY)) {
+        SoftSetArg("-bytespersigopstrict", "0");
         SoftSetArg("-spamfilter", "0");
         SoftSetArg("-permitbaremultisig", "1");
         SoftSetArg("-datacarriersize", "83");
