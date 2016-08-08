@@ -166,7 +166,6 @@ BITCOIN_QT_H = \
 RES_ICONS = $(RES_RENDERED_ICONS) \
   qt/res/icons/add.png \
   qt/res/icons/address-book.png \
-  qt/res/icons/bitcoin_testnet.ico \
   qt/res/icons/chevron.png \
   qt/res/icons/clock1.png \
   qt/res/icons/clock2.png \
@@ -279,7 +278,7 @@ RES_ANIMATION = $(wildcard $(srcdir)/qt/res/animation/spinner-*.png)
 
 BITCOIN_RC = qt/res/bitcoin-qt-res.rc
 
-$(BITCOIN_RC): qt/res/rendered_icons/bitcoin.ico
+$(BITCOIN_RC): qt/res/rendered_icons/bitcoin.ico qt/res/rendered_icons/bitcoin_testnet.ico
 
 BITCOIN_QT_INCLUDES = -DQT_NO_KEYWORDS
 
