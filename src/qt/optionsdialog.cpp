@@ -159,7 +159,12 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     bytespersigop = new QSpinBox(groupBox_Spamfiltering);
     bytespersigop->setMinimum(1);
     bytespersigop->setMaximum(std::numeric_limits<int>::max());
-    CreateOptionUI(verticalLayout_Spamfiltering, bytespersigop, tr("Ignore transactions with fewer than %s bytes per sigop."));
+    CreateOptionUI(verticalLayout_Spamfiltering, bytespersigop, tr("Treat each consensus-counted sigop as at least %s bytes."));
+
+    bytespersigopstrict = new QSpinBox(groupBox_Spamfiltering);
+    bytespersigopstrict->setMinimum(1);
+    bytespersigopstrict->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(verticalLayout_Spamfiltering, bytespersigopstrict, tr("Ignore transactions with fewer than %s bytes per potentially-executed sigop."));
 
     limitancestorcount = new QSpinBox(groupBox_Spamfiltering);
     limitancestorcount->setMinimum(1);
@@ -403,6 +408,7 @@ void OptionsDialog::setMapper()
 
     mapper->addMapping(rejectunknownscripts, OptionsModel::rejectunknownscripts);
     mapper->addMapping(bytespersigop, OptionsModel::bytespersigop);
+    mapper->addMapping(bytespersigopstrict, OptionsModel::bytespersigopstrict);
     mapper->addMapping(limitancestorcount, OptionsModel::limitancestorcount);
     mapper->addMapping(limitancestorsize, OptionsModel::limitancestorsize);
     mapper->addMapping(limitdescendantcount, OptionsModel::limitdescendantcount);
