@@ -17,7 +17,7 @@
 #include "net.h"
 #include "txdb.h" // for -dbcache defaults
 #include "chainparams.h"
-#include "policy/policy.h" // for DEFAULT_MAX_MEMPOOL_SIZE
+#include "policy/policy.h"
 #include "txmempool.h" // for fPriorityAccurate
 
 #ifdef ENABLE_WALLET
@@ -281,6 +281,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return fRequireStandard;
         case bytespersigop:
             return nBytesPerSigOp;
+        case bytespersigopstrict:
+            return nBytesPerSigOpStrict;
         case limitancestorcount:
             return qlonglong(GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT));
         case limitancestorsize:
@@ -562,6 +564,15 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             if (nNv != nBytesPerSigOp) {
                 ModifyRWConfigFile("bytespersigop", value.toString().toStdString());
                 nBytesPerSigOp = nNv;
+            }
+            break;
+        }
+        case bytespersigopstrict:
+        {
+            unsigned int nNv = value.toLongLong();
+            if (nNv != nBytesPerSigOpStrict) {
+                ModifyRWConfigFile("bytespersigopstrict", value.toString().toStdString());
+                nBytesPerSigOpStrict = nNv;
             }
             break;
         }

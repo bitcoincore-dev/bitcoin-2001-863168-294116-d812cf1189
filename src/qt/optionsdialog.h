@@ -88,7 +88,7 @@ private:
     QSpinBox *mempoolexpiry;
 
     QCheckBox *rejectunknownscripts;
-    QSpinBox *bytespersigop;
+    QSpinBox *bytespersigop, *bytespersigopstrict;
     QSpinBox *limitancestorcount;
     QSpinBox *limitancestorsize;
     QSpinBox *limitdescendantcount;
