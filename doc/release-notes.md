@@ -1,17 +1,13 @@
-Bitcoin Core version 0.13.0 is now available from:
+Bitcoin Knots version 0.13.0.knots20160814 is now available from:
 
-  <https://bitcoin.org/bin/bitcoin-core-0.13.0/>
+  <https://bitcoinknots.org/files/0.13.x/0.13.0.knots20160814/>
 
 This is a new major version release, including new features, various bugfixes
 and performance improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at github:
 
-  <https://github.com/bitcoin/bitcoin/issues>
-
-To receive security and update notifications, please subscribe to:
-
-  <https://bitcoincore.org/en/list/announcements/join/>
+  <https://github.com/bitcoinknots/bitcoin/issues>
 
 Compatibility
 ==============
@@ -58,9 +54,10 @@ their policy to be. Miners should think about whether their current policy is
 widely accepted by the community, and consider possibly making adjustments.
 
 Many policy options are available in the GUI settings. For reference, the
-equivalent bitcoin.conf settings are: `permitbaremultisig`, `bytespersigop`,
-`datacarrier`, `datacarriersize`, `mempoolreplacement`, `maxorphantx`,
-`maxmempool`, `mempoolexpiry`, `limitancestorcount`, `limitancestorsize`,
+equivalent bitcoin.conf settings are: `permitbaremultisig`, `acceptnonstdtxn`,
+`bytespersigop`, `bytespersigopstrict`, `datacarrier`, `datacarriersize`,
+`mempoolreplacement`, `spamfilter`, `maxorphantx`, `maxmempool`,
+`mempoolexpiry`, `limitancestorcount`, `limitancestorsize`,
 `limitdescendantcount`, and `limitdescendantsize`. Further details on the
 config file options can be seen with the `-help` command line option.
 
@@ -103,12 +100,9 @@ table by any user on the system.
 C++11 and Python 3
 ------------------
 
-Various code modernizations have been done. The Bitcoin Core code base has
+Various code modernizations have been done. The Bitcoin Knots code base has
 started using C++11. This means that a C++11-capable compiler is now needed for
 building. Effectively this means GCC 4.7 or higher, or Clang 3.3 or higher.
-
-When cross-compiling for a target that doesn't have C++11 libraries, configure with
-`./configure --enable-glibc-back-compat ... LDFLAGS=-static-libstdc++`.
 
 For running the functional tests in `qa/rpc-tests`, Python3.4 or higher is now
 required.
@@ -132,13 +126,6 @@ possible to resolve them.
 
 Note that Android is not considered ARM Linux in this context. The executables
 are not expected to work out of the box on Android.
-
-New mempool information RPC calls
----------------------------------
-
-RPC calls have been added to output detailed statistics for individual mempool
-entries, as well as to calculate the in-mempool ancestors or descendants of a
-transaction: see `getmempoolentry`, `getmempoolancestors`, `getmempooldescendants`.
 
 Fee filtering of invs (BIP 133)
 -------------------------------
@@ -177,7 +164,7 @@ You can't disable HD key generation once you have created a HD wallet.
 
 There is no distinction between internal (change) and external keys.
 
-HD wallets are incompatible with older versions of Bitcoin Core.
+HD wallets are incompatible with older versions of Bitcoin Knots.
 
 [Pull request](https://github.com/bitcoin/bitcoin/pull/8035/files), [BIP 32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)
 
@@ -192,7 +179,7 @@ The code preparations for Segregated Witness ("segwit"), as described in [BIP
 finished and included in this release.  However, BIP 141 does not yet specify
 activation parameters on mainnet, and so this release does not support segwit
 use on mainnet.  Testnet use is supported, and after BIP 141 is updated with
-proposed parameters, a future release of Bitcoin Core is expected that
+proposed parameters, a future release of Bitcoin Knots is expected that
 implements those parameters for mainnet.
 
 Furthermore, because segwit activation is not yet specified for mainnet,
@@ -226,7 +213,6 @@ of serialized bytes.  In this release, transaction selection is unaffected by
 this distinction (as BIP 141 activation is not supported on mainnet in this
 release, see above), but in future releases and after BIP 141 activation,
 these calculations would be expected to differ.
-
 
 Reindexing changes
 ------------------
@@ -272,6 +258,9 @@ replaced with a new implementation that rather than filter such transactions,
 instead treats them (for fee purposes only) as if they were in fact the size
 of a transaction actually using all 20 sigops.
 
+The original filtering behaviour is also available under the new
+`bytespersigopstrict` option, but with fixed/accurate sigop counting.
+
 Low-level P2P changes
 ----------------------
 
@@ -312,7 +301,7 @@ Low-level RPC changes
 - Full UTF-8 support in the RPC API. Non-ASCII characters in, for example,
   wallet labels have always been malformed because they weren't taken into account
   properly in JSON RPC processing. This is no longer the case. This also affects
-  the GUI debug console.
+  the GUI debug console. (This may require upgrading system UniValue library.)
 
 - Asm script outputs replacements for OP_NOP2 and OP_NOP3
 
@@ -334,12 +323,11 @@ Low-level RPC changes
 - The sorting of the output of the `getrawmempool` output has changed.
 
 - New RPC commands: `generatetoaddress`, `importprunedfunds`, `removeprunedfunds`, `signmessagewithprivkey`,
-  `getmempoolancestors`, `getmempooldescendants`, `getmempoolentry`,
   `createwitnessaddress`, `addwitnessaddress`.
 
 - Removed RPC commands: `setgenerate`, `getgenerate`.
 
-- New options were added to `fundrawtransaction`: `includeWatching`, `changeAddress`, `changePosition` and `feeRate`.
+- New `feeRate` option was added to `fundrawtransaction`
 
 Low-level ZMQ changes
 ----------------------
@@ -350,13 +338,14 @@ Low-level ZMQ changes
   therefore backward compatible. Each message type has its own counter.
   PR [#7762](https://github.com/bitcoin/bitcoin/pull/7762).
 
-0.13.0 Change log
-=================
+0.13.0.knots20160814 Change log
+===============================
 
 Detailed release notes follow. This overview includes changes that affect
 behavior, not code moves, refactors and string updates. For convenience in locating
 the code changes and accompanying discussion, both the pull request and
-git merge commit are mentioned.
+git merge commit are mentioned. Changes specific to Bitcoin Knots (beyond Core)
+are flagged with an asterisk ('*') before the description.
 
 ### RPC and other APIs
 
@@ -419,6 +408,8 @@ git merge commit are mentioned.
 - #8363 `fca1a41` Rename "block cost" to "block weight" (sdaftuar)
 - #8381 `f84ee3d` Make witness v0 outputs non-standard (jl2012)
 - #8364 `3f65ba2` Treat high-sigop transactions as larger rather than rejecting them (sipa)
+- n/a   `15edeeb` *Add a new checkpoint at block 421,888 (luke-jr)
+- n/a   `6ae2e2d` *Restore original bytespersigop as bytespersigopstrict (luke-jr)
 
 ### P2P protocol and network code
 
@@ -511,6 +502,8 @@ git merge commit are mentioned.
 - #8314 `67caef6` Fix pkg-config issues for 0.13 (theuni)
 - #8373 `1fe7f40` Fix OSX non-deterministic dmg (theuni)
 - #8358 `cfd1280` Gbuild: Set memory explicitly (default is too low) (MarcoFalke)
+- #8492 `216d796` *configure: Allow building bench_bitcoin by itself (luke-jr)
+- n/a   `2271350` *Qt/Options: Fix warning about comparing signed/unsigned (luke-jr)
 
 ### GUI
 
@@ -555,6 +548,9 @@ git merge commit are mentioned.
 - #8207 `f7a403b` Add a link to the Bitcoin-Core repository and website to the About Dialog (MarcoFalke)
 - #8281 `6a87eb0` Remove client name from debug window (laanwj)
 - #8407 `45eba4b` Add dbcache migration path (jonasschnelli)
+- n/a   `1e345d2` *Qt/Options: Replace blockminsize with blockmaxweight (luke-jr)
+- n/a   `2185e93` *Qt/Options: Update for bytespersigopstrict (luke-jr)
+- n/a   `2da1d28` *Recognise NODE_XTHIN service bit (luke-jr)
 
 ### Wallet
 
@@ -589,6 +585,7 @@ git merge commit are mentioned.
 - #8390 `73adfe3` Correct hdmasterkeyid/masterkeyid name confusion (jonasschnelli)
 - #8206 `18b8ee1` Add HD xpriv to dumpwallet (jonasschnelli)
 - #8389 `c3c82c4` Create a new HD seed after encrypting the wallet (jonasschnelli)
+- n/a   `9480ef4` *wallet: Prevent key origin support for HD wallets, since they are incompatible (luke-jr)
 
 ### Tests and QA
 
@@ -672,6 +669,7 @@ git merge commit are mentioned.
 - #8070 `7771aa5` Remove non-determinism which is breaking net_tests #8069 (EthanHeilman)
 - #8309 `bb2646a` Add wallet-hd test (MarcoFalke)
 - #8444 `cd0910b` Fix p2p-feefilter.py for changed tx relay behavior (sdaftuar)
+- #6996 `5e6af82` *qa: Adapt preciousblock test to current test framework (and Py3) (luke-jr)
 
 ### Mining
 
@@ -685,6 +683,7 @@ git merge commit are mentioned.
 - #7796 `536b75e` Add support for negative fee rates, fixes `prioritizetransaction` (MarcoFalke)
 - #8362 `86edc20` Scale legacy sigop count in CreateNewBlock (sdaftuar)
 - #8489 `8b0eee6` Bugfix: Use pre-BIP141 sigops until segwit activates (GBT) (luke-jr)
+- n/a   `5a716a3` *Trivially map blockmaxsize to blockmaxweight while segwit is unactivated (luke-jr)
 
 ### Documentation and miscellaneous
 
@@ -752,6 +751,8 @@ git merge commit are mentioned.
 - #8004 `2efe38b` signal handling: fReopenDebugLog and fRequestShutdown should be type sig_atomic_t (catilac)
 - #7713 `f6598df` Fixes for verify-commits script (petertodd)
 - #8412 `8360d5b` libconsensus: Expose a flag for BIP112 (jtimon)
+- n/a   `d5d0ce6` *corepolicy: Add bytespersigopstrict=0 (luke-jr)
+- #7483 `f8bf558` *Update SVG icon rendering for 0.13 (bitcoin_test.ico, RPM spec, VPATH builds) (luke-jr)
 
 Credits
 =======
