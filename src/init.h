@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2013 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef BITCOIN_INIT_H
@@ -8,6 +8,7 @@
 
 #include <string>
 
+class CScheduler;
 class CWallet;
 
 namespace boost
@@ -15,14 +16,18 @@ namespace boost
 class thread_group;
 } // namespace boost
 
-extern CWallet* pwalletMain;
-
 void StartShutdown();
 bool ShutdownRequested();
+/** Interrupt threads */
+void Interrupt(boost::thread_group& threadGroup);
 void Shutdown();
-bool AppInit2(boost::thread_group& threadGroup);
+//!Initialize the logging infrastructure
+void InitLogging();
+//!Parameter interaction: change current parameters depending on various rules
+void InitParameterInteraction();
+bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler);
 
-/* The help message mode determines what help message to show */
+/** The help message mode determines what help message to show */
 enum HelpMessageMode {
     HMM_BITCOIND,
     HMM_BITCOIN_QT
