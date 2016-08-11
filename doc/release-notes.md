@@ -38,6 +38,35 @@ report issues about Windows XP to the issue tracker.
 Notable changes
 ===============
 
+Non-mining nodes may influence miner policy
+-------------------------------------------
+
+As a side-effect of Compact Blocks support (see below), ordinary non-mining
+nodes will download and upload blocks faster if those blocks were produced by
+miners using similar transaction filtering policies. This means that a miner
+who produces a block with many transactions discouraged by your node will be
+relayed slower than one with only transactions already in your memory pool.
+
+The overall effect of such relay differences on the network may result in
+blocks which include widely-discouraged transactions losing a stale block
+race, and therefore miners may wish to configure their node to take common
+relay policies into consideration.
+
+Because of this influence, ordinary nodes should review their mempool policy
+configuration, and explicitly make informed decisions about what they wish
+their policy to be. Miners should think about whether their current policy is
+widely accepted by the community, and consider possibly making adjustments.
+
+Many policy options are available in the GUI settings. For reference, the
+equivalent bitcoin.conf settings are: `permitbaremultisig`, `bytespersigop`,
+`datacarrier`, `datacarriersize`, `mempoolreplacement`, `maxorphantx`,
+`maxmempool`, `mempoolexpiry`, `limitancestorcount`, `limitancestorsize`,
+`limitdescendantcount`, and `limitdescendantsize`. Further details on the
+config file options can be seen with the `-help` command line option.
+
+(Note that nodes still respect a strict first-seen order for competing tip
+blocks, and this change only affects relay speed to peer nodes.)
+
 Database cache memory increased
 --------------------------------
 
@@ -129,15 +158,6 @@ The primary goal is reducing the bandwidth spikes at relay time, though in many
 cases it also reduces propagation delay. It is automatically enabled between
 compatible peers.
 [BIP 152](https://github.com/bitcoin/bips/blob/master/bip-0152.mediawiki)
-
-As a side-effect, ordinary non-mining nodes will download and upload blocks
-faster if those blocks were produced by miners using similar transaction
-filtering policies. This means that a miner who produces a block with many
-transactions discouraged by your node will be relayed slower than one with
-only transactions already in your memory pool. The overall effect of such
-relay differences on the network may result in blocks which include widely-
-discouraged transactions losing a stale block race, and therefore miners may
-wish to configure their node to take common relay policies into consideration.
 
 Hierarchical Deterministic Key Generation
 -----------------------------------------
