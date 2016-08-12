@@ -27,6 +27,7 @@
 #include <qt/splashscreen.h>
 #include <qt/utilitydialog.h>
 #include <qt/winshutdownmonitor.h>
+#include <stats/stats.h>
 #include <uint256.h>
 #include <util/string.h>
 #include <util/system.h>
@@ -638,6 +639,9 @@ int GuiMain(int argc, char* argv[])
         // Store intro dialog settings other than datadir (network specific)
         app.InitPruneSetting(prune_MiB);
     }
+
+    // Enable mempool stats by default
+    gArgs.SoftSetBoolArg("-statsenable", true);
 
     if (gArgs.GetBoolArg("-splash", DEFAULT_SPLASHSCREEN) && !gArgs.GetBoolArg("-min", false))
         app.createSplashScreen(networkStyle.data());
