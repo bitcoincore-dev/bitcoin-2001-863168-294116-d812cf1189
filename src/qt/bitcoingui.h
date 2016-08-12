@@ -30,6 +30,7 @@ class WalletFrame;
 class WalletModel;
 class HelpMessageDialog;
 class ModalOverlay;
+class MempoolStats;
 
 class CWallet;
 
@@ -112,6 +113,7 @@ private:
     QAction *openRPCConsoleAction;
     QAction *openAction;
     QAction *showHelpMessageAction;
+    QAction *showMempoolStatsAction;
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
@@ -119,6 +121,7 @@ private:
     RPCConsole *rpcConsole;
     HelpMessageDialog *helpMessageDialog;
     ModalOverlay *modalOverlay;
+    MempoolStats *mempoolStats;
 
     /** Keep track of previous number of blocks, to detect progress */
     int prevBlocks;
@@ -206,6 +209,8 @@ private Q_SLOTS:
     void showDebugWindowActivateConsole();
     /** Show help message dialog */
     void showHelpMessageClicked();
+    /** Show mempool stats window */
+    void showMempoolStatsWindow();
 #ifndef Q_OS_MAC
     /** Handle tray icon clicked */
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
