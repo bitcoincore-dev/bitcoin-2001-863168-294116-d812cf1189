@@ -461,6 +461,7 @@ libbitcoin_node_a_SOURCES = \
   rpc/txoutproof.cpp \
   script/sigcache.cpp \
   signet.cpp \
+  stats/rpc_stats.cpp \
   stats/stats.cpp \
   timedata.cpp \
   torcontrol.cpp \
