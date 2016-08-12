@@ -29,6 +29,7 @@
 #include <interfaces/handler.h>
 #include <interfaces/node.h>
 #include <rpc/server.h>
+#include <stats/stats.h>
 #include <ui_interface.h>
 #include <uint256.h>
 #include <util.h>
@@ -704,6 +705,9 @@ int main(int argc, char *argv[])
 
     // Subscribe to global signals from core
     std::unique_ptr<interfaces::Handler> handler = node->handleInitMessage(InitMessage);
+
+    // Enable mempool stats by default
+    gArgs.SoftSetBoolArg("-statsenable", true);
 
     if (gArgs.GetBoolArg("-splash", DEFAULT_SPLASHSCREEN) && !gArgs.GetBoolArg("-min", false))
         app.createSplashScreen(networkStyle.data());
