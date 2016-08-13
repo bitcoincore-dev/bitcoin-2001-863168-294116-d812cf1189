@@ -62,6 +62,9 @@ const struct {
     {NULL, NULL}
 };
 
+//don't add private key handling cmd's to the history
+const QStringList RPCConsole::historyFilter = QStringList() << "importprivkey" << "signrawtransaction" << "walletpassphrase" << "walletpassphrasechange" << "encryptwallet";
+
 /* Object for executing console RPC commands in a separate thread.
 */
 class RPCExecutor : public QObject
@@ -297,11 +300,31 @@ RPCConsole::RPCConsole(const PlatformStyle *platformStyle, QWidget *parent) :
     QSettings settings;
     consoleFontSize = settings.value(fontSizeSettingsKey, QFontInfo(QFont()).pointSize()).toInt();
     clear();
+    
+    //load history
+    int size = settings.beginReadArray("nRPCConsoleWindowHistory");
+    history.clear();
+    for (int i=0; i<size; i++){
+        settings.setArrayIndex(i);
+        history.append(settings.value("cmd").toString());
+    }
+    historyPtr = history.size();
+    settings.endArray();
 }
 
 RPCConsole::~RPCConsole()
 {
     GUIUtil::saveWindowGeometry("nRPCConsoleWindow", this);
+    
+    //persist history
+    QSettings settings;
+    settings.beginWriteArray("nRPCConsoleWindowHistory");
+    for (int i = 0; i < history.size(); ++i) {
+        settings.setArrayIndex(i);
+        settings.setValue("cmd", history.at(i));
+    }
+    settings.endArray();
+    
     Q_EMIT stopExecutor();
     RPCUnsetTimerInterface(rpcTimerInterface);
     delete rpcTimerInterface;
@@ -615,17 +638,30 @@ void RPCConsole::on_lineEdit_returnPressed()
 
     if(!cmd.isEmpty())
     {
+        cmdBeforeBrowsing = QString();
+        
         message(CMD_REQUEST, cmd);
         Q_EMIT cmdRequest(cmd);
-        // Remove command, if already in history
-        history.removeOne(cmd);
-        // Append command to history
-        history.append(cmd);
-        // Enforce maximum history size
-        while(history.size() > CONSOLE_HISTORY)
-            history.removeFirst();
-        // Set pointer to end of history
-        historyPtr = history.size();
+        
+        bool storeHistory = true;
+        Q_FOREACH(QString unallowedCmd, historyFilter)
+        {
+            if(cmd.trimmed().startsWith(unallowedCmd))
+                storeHistory = false; break;
+        }
+        
+        if (storeHistory)
+        {
+            // Remove command, if already in history
+            history.removeOne(cmd);
+            // Append command to history
+            history.append(cmd);
+            // Enforce maximum history size
+            while(history.size() > CONSOLE_HISTORY)
+                history.removeFirst();
+            // Set pointer to end of history
+            historyPtr = history.size();
+        }
         // Scroll console view to end
         scrollToEnd();
     }
@@ -633,6 +669,10 @@ void RPCConsole::on_lineEdit_returnPressed()
 
 void RPCConsole::browseHistory(int offset)
 {
+    // store current text when start browsing through the history
+    if(historyPtr == history.size())
+        cmdBeforeBrowsing = ui->lineEdit->text();
+    
     historyPtr += offset;
     if(historyPtr < 0)
         historyPtr = 0;
@@ -641,6 +681,8 @@ void RPCConsole::browseHistory(int offset)
     QString cmd;
     if(historyPtr < history.size())
         cmd = history.at(historyPtr);
+    else if(historyPtr == history.size() && !cmdBeforeBrowsing.isNull())
+        cmd = cmdBeforeBrowsing;
     ui->lineEdit->setText(cmd);
 }
 
