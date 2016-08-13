@@ -101,8 +101,6 @@ BITCOIN_CORE_H = \
   consensus/consensus.h \
   core_io.h \
   core_memusage.h \
-  httprpc.h \
-  httpserver.h \
   indirectmap.h \
   init.h \
   key.h \
@@ -140,7 +138,6 @@ BITCOIN_CORE_H = \
   sync.h \
   threadsafety.h \
   timedata.h \
-  torcontrol.h \
   txdb.h \
   txmempool.h \
   ui_interface.h \
@@ -176,8 +173,6 @@ libbitcoin_server_a_SOURCES = \
   blockencodings.cpp \
   chain.cpp \
   checkpoints.cpp \
-  httprpc.cpp \
-  httpserver.cpp \
   init.cpp \
   dbwrapper.cpp \
   main.cpp \
@@ -188,7 +183,6 @@ libbitcoin_server_a_SOURCES = \
   policy/fees.cpp \
   policy/policy.cpp \
   pow.cpp \
-  rest.cpp \
   rpc/blockchain.cpp \
   rpc/mining.cpp \
   rpc/misc.cpp \
@@ -198,13 +192,24 @@ libbitcoin_server_a_SOURCES = \
   script/sigcache.cpp \
   script/ismine.cpp \
   timedata.cpp \
-  torcontrol.cpp \
   txdb.cpp \
   txmempool.cpp \
   ui_interface.cpp \
   validationinterface.cpp \
   versionbits.cpp \
   $(BITCOIN_CORE_H)
+
+if USE_LIBEVENT
+BITCOIN_CORE_H += \
+  httprpc.h \
+  httpserver.h \
+  torcontrol.h
+libbitcoin_server_a_SOURCES += \
+  httprpc.cpp \
+  httpserver.cpp \
+  rest.cpp \
+  torcontrol.cpp
+endif
 
 if ENABLE_ZMQ
 libbitcoin_zmq_a_CPPFLAGS = $(BITCOIN_INCLUDES) $(ZMQ_CFLAGS)
