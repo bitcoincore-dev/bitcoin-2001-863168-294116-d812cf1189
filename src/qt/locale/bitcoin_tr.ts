@@ -2055,10 +2055,6 @@
         <translation>auth çerezinin konumu (varsayılan: veri klasörü)</translation>
     </message>
     <message>
-        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
-        <translation>Aktardığımız ve oluşturduğumuz muamelelerdeki sigop başına asgari bayt (varsayılan: %u)</translation>
-    </message>
-    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Kafi derecede dosya tanımlayıcıları mevcut değil.</translation>
     </message>

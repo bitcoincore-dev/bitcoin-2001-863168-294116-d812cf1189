@@ -1880,10 +1880,6 @@
         <translation>认证Cookie的位置 (默认: data目录)</translation>
     </message>
     <message>
-        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
-        <translation>我们关联和挖掘的每sigop的最低交易字节(默认: %u)</translation>
-    </message>
-    <message>
         <source>Not enough file descriptors available.</source>
         <translation>没有足够的文件描述符可用。</translation>
     </message>

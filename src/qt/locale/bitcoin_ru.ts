@@ -2027,10 +2027,6 @@
         <translation>Расположение куки входы(по умолчанию: data dir)</translation>
     </message>
     <message>
-        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
-        <translation>Минимально байт на sigop в транзакциях, которые мы ретранслируем и добываем (по умолчанию: %u)</translation>
-    </message>
-    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Недостаточно файловых дескрипторов.</translation>
     </message>

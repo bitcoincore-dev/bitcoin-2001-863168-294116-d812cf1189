@@ -2056,10 +2056,6 @@
         <translation>認証クッキーの場所 (デフォルト: )</translation>
     </message>
     <message>
-        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
-        <translation>中継や採掘を行ってもよい、sigopあたりの最小バイト数 (デフォルト: %u)</translation>
-    </message>
-    <message>
         <source>Not enough file descriptors available.</source>
         <translation>使用可能なファイルディスクリプタが不足しています。</translation>
     </message>

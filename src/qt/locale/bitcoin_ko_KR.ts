@@ -1875,10 +1875,6 @@
         <translation>인증 쿠키의 위치 (기본값: data dir)</translation>
     </message>
     <message>
-        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
-        <translation>중계 및 채굴을 할 때 트랜잭션에서의 sigop 당 데이터의 최소 크기 (기본값: %u)</translation>
-    </message>
-    <message>
         <source>Not enough file descriptors available.</source>
         <translation>사용 가능한 파일 디스크립터-File Descriptor-가 부족합니다. </translation>
     </message>

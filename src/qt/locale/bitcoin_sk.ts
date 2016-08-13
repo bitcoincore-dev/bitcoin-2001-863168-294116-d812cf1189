@@ -580,6 +580,10 @@
         <translation>Keďže toto je prvé spustenie programu, môžete si vybrať, kam %1 bude ukladať vaše údaje.</translation>
     </message>
     <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>%1 stiahne a uloží kópiu Bitcoin block chain. Minimálne %2GB dát bude uložených v tejto zložke, a bude sa zväčšovať postupom času. Peňaženka bude taktiež uložená v tejto zložke.</translation>
+    </message>
+    <message>
         <source>Use the default data directory</source>
         <translation>Použiť predvolený dátový adresár</translation>
     </message>
@@ -1014,6 +1018,10 @@
         <translation>Používa BerkeleyDB verziu</translation>
     </message>
     <message>
+        <source>Datadir</source>
+        <translation>Zložka  s dátami</translation>
+    </message>
+    <message>
         <source>Startup time</source>
         <translation>Čas spustenia</translation>
     </message>
@@ -1135,6 +1143,10 @@
         <translation>Čas odozvy</translation>
     </message>
     <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>Trvanie aktuálneho pingu</translation>
+    </message>
+    <message>
         <source>Ping Wait</source>
         <translation>Čakanie na ping</translation>
     </message>
@@ -1209,6 +1221,10 @@
     <message>
         <source>&amp;Unban Node</source>
         <translation>&amp;odblokovať uzol</translation>
+    </message>
+    <message>
+        <source>Welcome to the %1 RPC console.</source>
+        <translation>Vitajte v %1 RPC konzole</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -1764,6 +1780,10 @@
         <translation>Jadro Bitcoin</translation>
     </message>
     <message>
+        <source>-fallbackfee is set very high! This is the transaction fee you may pay when fee estimates are not available.</source>
+        <translation>-fallbackfee je nastavená veľmi vysoko. Ide o poplatok za transakciu, ktorý môže platiť, keď odhady poplatku nie sú k dispozícii.</translation>
+    </message>
+    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>Spojiť s danou adresou a vždy na nej počúvať. Použite zápis [host]:port pre IPv6</translation>
     </message>
@@ -1778,6 +1798,10 @@
     <message>
         <source>Distributed under the MIT software license, see the accompanying file COPYING or &lt;http://www.opensource.org/licenses/mit-license.php&gt;.</source>
         <translation>Distribuované pod softvérovou licenciou MIT, viď sprievodný súbor COPYING alebo &lt;http://www.opensource.org/licenses/mit-license.php&gt;.</translation>
+    </message>
+    <message>
+        <source>Error loading %s: You can't enable HD on a already existing non-HD wallet</source>
+        <translation>Chyba počas načítavania %s: Nemôžete povoliť HD na už existujúcej non-HD peaženke</translation>
     </message>
     <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>

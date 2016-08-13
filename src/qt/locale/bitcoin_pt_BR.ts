@@ -1887,6 +1887,10 @@
         <translation>Lista Branca pares de ligação da máscara de rede dado ou o endereço IP . Pode ser especificado várias vezes.</translation>
     </message>
     <message>
+        <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
+        <translation>Você precisa reconstruir o banco de dados utilizando -reindex-chainstate para mudar -txindex</translation>
+    </message>
+    <message>
         <source>%s corrupt, salvage failed</source>
         <translation>%s corrompido, recuperação falhou</translation>
     </message>
@@ -1909,6 +1913,10 @@
     <message>
         <source>Block creation options:</source>
         <translation>Opções de criação de blocos:</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>Impossível resolver  -%s endereço: '%s'</translation>
     </message>
     <message>
         <source>Connect only to the specified node(s)</source>
@@ -2031,16 +2039,16 @@
         <translation>Localização do cookie de autenticação (padrão: diretório de dados)</translation>
     </message>
     <message>
-        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
-        <translation>Número mínimo de bytes por sigop em transações que transmitimos e mineramos (default: %u)</translation>
-    </message>
-    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Decriptadores de arquivos disponíveis insuficientes.</translation>
     </message>
     <message>
         <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
         <translation>Somente conectar a clientes na rede &lt;net&gt; (ipv4, ipv6 ou onion)</translation>
+    </message>
+    <message>
+        <source>Print this help message and exit</source>
+        <translation>Mostra essa mensagem de ajuda e sai</translation>
     </message>
     <message>
         <source>Print version and exit</source>
@@ -2061,6 +2069,10 @@
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Define o tamanho do cache do banco de dados em megabytes (%d para %d, padrão: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum BIP141 block weight (default: %d)</source>
+        <translation>Define a altura máxima BIP141 do bloco (padrão: %d)</translation>
     </message>
     <message>
         <source>Set maximum block size in bytes (default: %d)</source>
