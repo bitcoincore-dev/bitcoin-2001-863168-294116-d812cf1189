@@ -38,6 +38,35 @@ report issues about Windows XP to the issue tracker.
 Notable changes
 ===============
 
+Non-mining nodes may influence miner policy
+-------------------------------------------
+
+As a side-effect of Compact Blocks support (see below), ordinary non-mining
+nodes will download and upload blocks faster if those blocks were produced by
+miners using similar transaction filtering policies. This means that a miner
+who produces a block with many transactions discouraged by your node will be
+relayed slower than one with only transactions already in your memory pool.
+
+The overall effect of such relay differences on the network may result in
+blocks which include widely-discouraged transactions losing a stale block
+race, and therefore miners may wish to configure their node to take common
+relay policies into consideration.
+
+Because of this influence, ordinary nodes should review their mempool policy
+configuration, and explicitly make informed decisions about what they wish
+their policy to be. Miners should think about whether their current policy is
+widely accepted by the community, and consider possibly making adjustments.
+
+Many policy options are available in the GUI settings. For reference, the
+equivalent bitcoin.conf settings are: `permitbaremultisig`, `bytespersigop`,
+`datacarrier`, `datacarriersize`, `mempoolreplacement`, `maxorphantx`,
+`maxmempool`, `mempoolexpiry`, `limitancestorcount`, `limitancestorsize`,
+`limitdescendantcount`, and `limitdescendantsize`. Further details on the
+config file options can be seen with the `-help` command line option.
+
+(Note that nodes still respect a strict first-seen order for competing tip
+blocks, and this change only affects relay speed to peer nodes.)
+
 Database cache memory increased
 --------------------------------
 
@@ -55,7 +84,7 @@ Note that the database cache setting has the most performance impact
 during initial sync of a node, and when catching up after downtime.
 
 bitcoin-cli: arguments privacy
---------------------------------
+------------------------------
 
 The RPC command line client gained a new argument, `-stdin`
 to read extra arguments from standard input, one per line until EOF/Ctrl-D.
@@ -72,7 +101,7 @@ passphrases, as command-line arguments can usually be read from the process
 table by any user on the system.
 
 C++11 and Python 3
--------------------
+------------------
 
 Various code modernizations have been done. The Bitcoin Core code base has
 started using C++11. This means that a C++11-capable compiler is now needed for
@@ -85,7 +114,7 @@ For running the functional tests in `qa/rpc-tests`, Python3.4 or higher is now
 required.
 
 Linux ARM builds
-------------------
+----------------
 
 Due to popular request, Linux ARM builds have been added to the uploaded
 executables.
@@ -112,7 +141,7 @@ entries, as well as to calculate the in-mempool ancestors or descendants of a
 transaction: see `getmempoolentry`, `getmempoolancestors`, `getmempooldescendants`.
 
 Fee filtering of invs (BIP 133)
-------------------------------------
+-------------------------------
 
 The optional new p2p message "feefilter" is implemented and the protocol
 version is bumped to 70013. Upon receiving a feefilter message from a peer,
@@ -230,6 +259,18 @@ well as the `-gen` and `-genproclimit` command-line options.
 For testing, the `generate` call can still be used to mine a block, and a new
 RPC call `generatetoaddress` has been added to mine to a specific address. This
 works with wallet disabled.
+
+New bytespersigop implementation
+--------------------------------
+
+The former implementation of the bytespersigop filter accidentally broke bare
+multisig (which is meant to be controlled by the `permitbaremultisig` option),
+since the consensus protocol always counts these older transaction forms as 20
+sigops for backwards compatibility. Simply fixing this bug by counting more
+accurately would have reintroduced a vulnerability. It has therefore been
+replaced with a new implementation that rather than filter such transactions,
+instead treats them (for fee purposes only) as if they were in fact the size
+of a transaction actually using all 20 sigops.
 
 Low-level P2P changes
 ----------------------
