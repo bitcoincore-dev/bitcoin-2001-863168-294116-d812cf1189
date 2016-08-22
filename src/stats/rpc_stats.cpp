@@ -21,8 +21,11 @@ UniValue getmempoolstats(const JSONRPCRequest& request)
             "  {\n"
             "    \"time_from\" : \"timestamp\",     (numeric) Timestamp, first sample\n"
             "    \"time_to\"   : \"timestamp\",     (numeric) Timestamp, last sample\n"
-            "    \"flatdata\"  : \"<delta_in_secs>,<tx_count>,<dynamic_mem_usage>,<min_fee_per_k>,<delta_in_secs_2>,...>\"\n"
-            "                   (all samples in a single string, 4 numeric values per sample, no delimiter between samples)"
+            "    \"samples\"   : [\n"
+            "                    [<delta_in_secs>,<tx_count>,<dynamic_mem_usage>,<min_fee_per_k>],\n"
+            "                    [<delta_in_secs>,<tx_count>,<dynamic_mem_usage>,<min_fee_per_k>],\n"
+            "                    ...\n"
+            "                  ]\n"
             "  }\n"
             "\nExamples:\n" +
             HelpExampleCli("getmempoolstats", "") + HelpExampleRpc("getmempoolstats", ""));
@@ -33,20 +36,20 @@ UniValue getmempoolstats(const JSONRPCRequest& request)
     mempoolSamples_t samples = CStats::DefaultStats()->mempoolGetValuesInRange(timeFrom, timeTo);
 
     // use "flat" json encoding for performance reasons
-    std::string flatData;
+    UniValue samplesObj(UniValue::VARR);
     for (struct CStatsMempoolSample& sample : samples) {
-        flatData += std::to_string(sample.timeDelta) + ",";
-        flatData += std::to_string(sample.txCount) + ",";
-        flatData += std::to_string(sample.dynMemUsage) + ",";
-        flatData += std::to_string(sample.minFeePerK) + ",";
+        UniValue singleSample(UniValue::VARR);
+        singleSample.push_back(UniValue((uint64_t)sample.timeDelta));
+        singleSample.push_back(UniValue(sample.txCount));
+        singleSample.push_back(UniValue(sample.dynMemUsage));
+        singleSample.push_back(UniValue(sample.minFeePerK));
+        samplesObj.push_back(singleSample);
     }
-    if (flatData.size() > 0)
-        flatData.pop_back();
 
     UniValue result(UniValue::VOBJ);
     result.push_back(Pair("time_from", timeFrom));
     result.push_back(Pair("time_to", timeTo));
-    result.push_back(Pair("flatdata", flatData));
+    result.push_back(Pair("samples", samplesObj));
 
     return result;
 }
