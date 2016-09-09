@@ -31,7 +31,8 @@ using namespace std;
 
 CWallet *GetWalletForJSONRPCRequest(const JSONRPCRequest& request)
 {
-    return pwalletMain;
+    // TODO: Some way to access secondary wallets
+    return vpwallets.empty() ? NULL : vpwallets[0];
 }
 
 std::string HelpRequiringPassphrase(CWallet * const pwallet)
