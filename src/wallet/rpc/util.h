@@ -29,6 +29,7 @@ extern const std::string HELP_REQUIRING_PASSPHRASE;
  * @return nullptr if no wallet should be used, or a pointer to the CWallet
  */
 std::shared_ptr<CWallet> GetWalletForJSONRPCRequest(const JSONRPCRequest& request);
+bool GetWalletRestrictionFromJSONRPCRequest(const JSONRPCRequest& request, std::string& out_wallet_allowed);
 bool GetWalletNameFromJSONRPCRequest(const JSONRPCRequest& request, std::string& wallet_name);
 
 void EnsureWalletIsUnlocked(const CWallet&);

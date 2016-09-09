@@ -12,6 +12,8 @@
 
 #include <univalue.h>
 
+#include <boost/algorithm/string.hpp>  // boost::split
+
 namespace wallet {
 static const std::string WALLET_ENDPOINT_BASE = "/wallet/";
 const std::string HELP_REQUIRING_PASSPHRASE{"\nRequires wallet passphrase to be set with walletpassphrase call if wallet is encrypted.\n"};
@@ -42,6 +44,27 @@ bool ParseIncludeWatchonly(const UniValue& include_watchonly, const CWallet& wal
     return include_watchonly.get_bool();
 }
 
+bool GetWalletRestrictionFromJSONRPCRequest(const JSONRPCRequest& request, std::string& out_wallet_allowed)
+{
+    for (const std::string& rpcauth_arg : gArgs.GetArgs("-rpcauth")) {
+        // Search for multi-user login/pass "rpcauth" from config
+        std::vector<std::string> fields;
+        boost::split(fields, rpcauth_arg, boost::is_any_of(":$"));
+        if (fields.size() < 3 || fields.size() > 4) {
+            // Incorrect formatting in config file
+            continue;
+        }
+
+        if (fields[0] != request.authUser) continue;
+
+        if (fields.size() > 3) {
+            out_wallet_allowed = fields[3];
+            return true;
+        }
+    }
+    return false;
+}
+
 bool GetWalletNameFromJSONRPCRequest(const JSONRPCRequest& request, std::string& wallet_name)
 {
     if (URL_DECODE && request.URI.substr(0, WALLET_ENDPOINT_BASE.size()) == WALLET_ENDPOINT_BASE) {
@@ -57,19 +80,44 @@ std::shared_ptr<CWallet> GetWalletForJSONRPCRequest(const JSONRPCRequest& reques
     CHECK_NONFATAL(request.mode == JSONRPCRequest::EXECUTE);
     WalletContext& context = EnsureWalletContext(request.context);
 
-    std::string wallet_name;
-    if (GetWalletNameFromJSONRPCRequest(request, wallet_name)) {
-        const std::shared_ptr<CWallet> pwallet = GetWallet(context, wallet_name);
-        if (!pwallet) throw JSONRPCError(RPC_WALLET_NOT_FOUND, "Requested wallet does not exist or is not loaded");
+    bool have_wallet_restriction;
+    std::string authorized_wallet_name;
+    have_wallet_restriction = GetWalletRestrictionFromJSONRPCRequest(request, authorized_wallet_name);
+
+    bool have_requested_wallet;
+    std::string requested_wallet_name;
+    have_requested_wallet = GetWalletNameFromJSONRPCRequest(request, requested_wallet_name);
+
+    std::shared_ptr<CWallet> pwallet;
+
+    if (!have_wallet_restriction) {
+        // Any wallet is permitted; select by endpoint, or use the sole wallet
+        if (have_requested_wallet) {
+            pwallet = GetWallet(context, requested_wallet_name);
+        } else {
+            std::vector<std::shared_ptr<CWallet>> wallets = GetWallets(context);
+            if (wallets.size() == 1) {
+                pwallet = wallets[0];
+            }
+        }
+    } else if (authorized_wallet_name == "-") {
+        // Block wallet access always
+    } else if ((!have_requested_wallet) || requested_wallet_name == authorized_wallet_name) {
+        // Select specifically the authorized wallet
+        pwallet = GetWallet(context, authorized_wallet_name);
+    }
+
+    if (pwallet) {
         return pwallet;
     }
 
-    std::vector<std::shared_ptr<CWallet>> wallets = GetWallets(context);
-    if (wallets.size() == 1) {
-        return wallets[0];
+    if (have_requested_wallet) {
+        throw JSONRPCError(RPC_WALLET_NOT_FOUND, "Requested wallet does not exist or is not loaded");
     }
-
-    if (wallets.empty()) {
+    if (have_wallet_restriction
+    ? (authorized_wallet_name == "-" || !GetWallet(context, authorized_wallet_name))
+    : GetWallets(context).empty()
+     ) {
         throw JSONRPCError(
             RPC_WALLET_NOT_FOUND, "No wallet is loaded. Load a wallet using loadwallet or create a new one with createwallet. (Note: A default wallet is no longer automatically created)");
     }
