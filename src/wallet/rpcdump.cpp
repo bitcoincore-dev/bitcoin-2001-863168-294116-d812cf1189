@@ -152,8 +152,8 @@ UniValue importprivkey(const UniValue& params, bool fHelp)
     return NullUniValue;
 }
 
-void ImportAddress(const CBitcoinAddress& address, const string& strLabel);
-void ImportScript(const CScript& script, const string& strLabel, bool isRedeemScript)
+void ImportAddress(CWallet*, const CBitcoinAddress& address, const string& strLabel);
+void ImportScript(CWallet * const pwallet, const CScript& script, const string& strLabel, bool isRedeemScript)
 {
     if (!isRedeemScript && ::IsMine(*pwalletMain, script) == ISMINE_SPENDABLE)
         throw JSONRPCError(RPC_WALLET_ERROR, "The wallet already contains the private key for this address or script");
@@ -166,7 +166,7 @@ void ImportScript(const CScript& script, const string& strLabel, bool isRedeemSc
     if (isRedeemScript) {
         if (!pwalletMain->HaveCScript(script) && !pwalletMain->AddCScript(script))
             throw JSONRPCError(RPC_WALLET_ERROR, "Error adding p2sh redeemScript to wallet");
-        ImportAddress(CBitcoinAddress(CScriptID(script)), strLabel);
+        ImportAddress(pwallet, CBitcoinAddress(CScriptID(script)), strLabel);
     } else {
         CTxDestination destination;
         if (ExtractDestination(script, destination)) {
@@ -175,10 +175,10 @@ void ImportScript(const CScript& script, const string& strLabel, bool isRedeemSc
     }
 }
 
-void ImportAddress(const CBitcoinAddress& address, const string& strLabel)
+void ImportAddress(CWallet * const pwallet, const CBitcoinAddress& address, const string& strLabel)
 {
     CScript script = GetScriptForDestination(address.Get());
-    ImportScript(script, strLabel, false);
+    ImportScript(pwallet, script, strLabel, false);
     // add to address book or update label
     if (address.IsValid())
         pwalletMain->SetAddressBook(address.Get(), strLabel, "receive");
@@ -235,10 +235,10 @@ UniValue importaddress(const UniValue& params, bool fHelp)
     if (address.IsValid()) {
         if (fP2SH)
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Cannot use the p2sh flag with an address - use a script instead");
-        ImportAddress(address, strLabel);
+        ImportAddress(pwalletMain, address, strLabel);
     } else if (IsHex(params[0].get_str())) {
         std::vector<unsigned char> data(ParseHex(params[0].get_str()));
-        ImportScript(CScript(data.begin(), data.end()), strLabel, fP2SH);
+        ImportScript(pwalletMain, CScript(data.begin(), data.end()), strLabel, fP2SH);
     } else {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Bitcoin address or script");
     }
@@ -394,8 +394,8 @@ UniValue importpubkey(const UniValue& params, bool fHelp)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    ImportAddress(CBitcoinAddress(pubKey.GetID()), strLabel);
-    ImportScript(GetScriptForRawPubKey(pubKey), strLabel, false);
+    ImportAddress(pwalletMain, CBitcoinAddress(pubKey.GetID()), strLabel);
+    ImportScript(pwalletMain, GetScriptForRawPubKey(pubKey), strLabel, false);
 
     if (fRescan)
     {

@@ -39,8 +39,9 @@ UniValue CallRPC(string args)
     UniValue params = RPCConvertValues(strMethod, vArgs);
     BOOST_CHECK(tableRPC[strMethod]);
     rpcfn_type method = tableRPC[strMethod]->actor;
+    CRPCRequestInfo reqinfo;
     try {
-        UniValue result = (*method)(params, false);
+        UniValue result = method(params, false, reqinfo);
         return result;
     }
     catch (const UniValue& objError) {
