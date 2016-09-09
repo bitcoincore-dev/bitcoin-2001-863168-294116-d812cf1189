@@ -28,7 +28,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-extern CWallet* pwalletMain;
+typedef CWallet* CWallet_ptr;
+extern std::vector<CWallet_ptr> vpwallets;
 
 /**
  * Settings

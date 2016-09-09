@@ -893,21 +893,23 @@ void ThreadFlushWalletDB()
                 if (nRefCount == 0)
                 {
                     boost::this_thread::interruption_point();
-                    const std::string& strFile = pwalletMain->strWalletFile;
-                    map<string, int>::iterator mi = bitdb.mapFileUseCount.find(strFile);
-                    if (mi != bitdb.mapFileUseCount.end())
-                    {
-                        LogPrint("db", "Flushing %s\n", strFile);
-                        nLastFlushed = nWalletDBUpdated;
-                        int64_t nStart = GetTimeMillis();
+                    for (CWallet_ptr pwallet : vpwallets) {
+                        const std::string& strFile = pwallet->strWalletFile;
+                        map<string, int>::iterator mi = bitdb.mapFileUseCount.find(strFile);
+                        if (mi != bitdb.mapFileUseCount.end())
+                        {
+                            LogPrint("db", "Flushing %s\n", strFile);
+                            int64_t nStart = GetTimeMillis();
 
-                        // Flush wallet file so it's self contained
-                        bitdb.CloseDb(strFile);
-                        bitdb.CheckpointLSN(strFile);
+                            // Flush wallet file so it's self contained
+                            bitdb.CloseDb(strFile);
+                            bitdb.CheckpointLSN(strFile);
 
-                        bitdb.mapFileUseCount.erase(mi++);
-                        LogPrint("db", "Flushed %s %dms\n", strFile, GetTimeMillis() - nStart);
+                            bitdb.mapFileUseCount.erase(mi++);
+                            LogPrint("db", "Flushed %s %dms\n", strFile, GetTimeMillis() - nStart);
+                        }
                     }
+                    nLastFlushed = nWalletDBUpdated;
                 }
             }
         }

@@ -452,7 +452,8 @@ UniValue CRPCTable::execute(const std::string &strMethod, const UniValue &params
         // Execute
         CRPCRequestInfo reqinfo;
 #ifdef ENABLE_WALLET
-        reqinfo.wallet = pwalletMain;
+        // TODO: Some way to access secondary wallets
+        reqinfo.wallet = vpwallets.empty() ? NULL : vpwallets[0];
 #endif
         return pcmd->actor(params, false, reqinfo);
     }
