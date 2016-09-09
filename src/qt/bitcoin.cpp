@@ -252,7 +252,7 @@ private:
     QTimer *pollShutdownTimer;
 #ifdef ENABLE_WALLET
     PaymentServer* paymentServer;
-    std::vector<WalletModel*> walletModels;
+    std::vector<WalletModel*> m_wallet_models;
 #endif
     int returnValue;
     const PlatformStyle *platformStyle;
@@ -335,7 +335,7 @@ BitcoinApplication::BitcoinApplication(int &argc, char **argv):
     pollShutdownTimer(0),
 #ifdef ENABLE_WALLET
     paymentServer(0),
-    walletModels(),
+    m_wallet_models(),
 #endif
     returnValue(0)
 {
@@ -454,10 +454,10 @@ void BitcoinApplication::requestShutdown()
 
 #ifdef ENABLE_WALLET
     window->removeAllWallets();
-    for (WalletModel *walletModel : walletModels) {
+    for (WalletModel *walletModel : m_wallet_models) {
         delete walletModel;
     }
-    walletModels.clear();
+    m_wallet_models.clear();
 #endif
     delete clientModel;
     clientModel = 0;
@@ -504,7 +504,7 @@ void BitcoinApplication::initializeResult(bool success)
             connect(walletModel, SIGNAL(coinsSent(CWallet*,SendCoinsRecipient,QByteArray)),
                              paymentServer, SLOT(fetchPaymentACK(CWallet*,const SendCoinsRecipient&,QByteArray)));
 
-            walletModels.push_back(walletModel);
+            m_wallet_models.push_back(walletModel);
         }
 #endif
 
