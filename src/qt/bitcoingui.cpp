@@ -73,8 +73,6 @@ const std::string BitcoinGUI::DEFAULT_UIPLATFORM =
 #endif
         ;
 
-const QString BitcoinGUI::DEFAULT_WALLET = "~Default";
-
 BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent) :
     QMainWindow(parent),
     clientModel(0),
