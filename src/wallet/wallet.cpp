@@ -34,7 +34,7 @@
 
 using namespace std;
 
-CWallet* pwalletMain = NULL;
+std::vector<CWallet_ptr> vpwallets;
 /** Transaction fee set by the user */
 CFeeRate payTxFee(DEFAULT_TRANSACTION_FEE);
 unsigned int nTxConfirmTarget = DEFAULT_TX_CONFIRM_TARGET;
@@ -3758,7 +3758,6 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 bool CWallet::InitLoadWallet()
 {
     if (GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
-        pwalletMain = NULL;
         LogPrintf("Wallet disabled!\n");
         return true;
     }
@@ -3775,7 +3774,7 @@ bool CWallet::InitLoadWallet()
     if (!pwallet) {
         return false;
     }
-    pwalletMain = pwallet;
+    vpwallets.push_back(pwallet);
 
     return true;
 }

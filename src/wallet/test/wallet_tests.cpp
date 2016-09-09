@@ -397,8 +397,7 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
 
     {
         CWallet wallet;
-        CWallet *backup = ::pwalletMain;
-        ::pwalletMain = &wallet;
+        vpwallets.insert(vpwallets.begin(), &wallet);
         UniValue key;
         key.setObject();
         key.pushKV("scriptPubKey", HexStr(GetScriptForRawPubKey(coinbaseKey.GetPubKey())));
@@ -413,7 +412,7 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
 
         UniValue response = importmulti(request);
         BOOST_CHECK_EQUAL(response.write(), strprintf("[{\"success\":false,\"error\":{\"code\":-1,\"message\":\"Failed to rescan before time %d, transactions may be missing.\"}}]", newTip->GetBlockTimeMax()));
-        ::pwalletMain = backup;
+        vpwallets.erase(vpwallets.begin());
     }
 }
 
