@@ -20,6 +20,9 @@
 #include "rpc/server.h"
 #include "rpc/client.h"
 #include "util.h"
+#ifdef ENABLE_WALLET
+#include "wallet/wallet.h"
+#endif
 
 #include <openssl/crypto.h>
 
@@ -299,6 +302,10 @@ bool RPCConsole::RPCParseCommandLine(std::string &strResult, const std::string &
                             JSONRPCRequest req;
                             req.params = RPCConvertValues(stack.back()[0], std::vector<std::string>(stack.back().begin() + 1, stack.back().end()));
                             req.strMethod = stack.back()[0];
+#ifdef ENABLE_WALLET
+                            // TODO: Some way to access secondary wallets
+                            req.wallet = vpwallets.empty() ? NULL : vpwallets[0];
+#endif
                             lastResult = tableRPC.execute(req);
                         }
 
