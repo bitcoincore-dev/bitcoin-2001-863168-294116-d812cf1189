@@ -18,6 +18,8 @@
 #include <boost/test/unit_test.hpp>
 #include <univalue.h>
 
+extern CWallet* pwalletMain;
+
 extern UniValue importmulti(const JSONRPCRequest& request);
 
 // how many times to run all the tests to have a chance to catch errors that only show up with particular random shuffles
