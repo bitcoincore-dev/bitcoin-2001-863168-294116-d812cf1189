@@ -100,7 +100,7 @@ UniValue getinfo(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo)
         obj.push_back(Pair("keypoolsize",   (int)pwallet->GetKeyPoolSize()));
     }
     if (pwallet && pwallet->IsCrypted()) {
-        obj.push_back(Pair("unlocked_until", nWalletUnlockTime));
+        obj.push_back(Pair("unlocked_until", pwallet->nRelockTime));
     }
     obj.push_back(Pair("paytxfee",      ValueFromAmount(payTxFee.GetFeePerK())));
 #endif
