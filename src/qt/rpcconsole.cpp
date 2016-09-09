@@ -19,6 +19,9 @@
 #include "rpc/server.h"
 #include "rpc/client.h"
 #include "util.h"
+#ifdef ENABLE_WALLET
+#include "wallet/wallet.h"
+#endif
 
 #include <openssl/crypto.h>
 
@@ -210,9 +213,14 @@ void RPCExecutor::request(const QString &command)
         std::string strPrint;
         // Convert argument list to JSON objects in method-dependent way,
         // and pass it along with the method name to the dispatcher.
+        CRPCRequestInfo reqinfo;
+#ifdef ENABLE_WALLET
+        // TODO: Some way to access secondary wallets
+        reqinfo.wallet = vpwallets.empty() ? NULL : vpwallets[0];
+#endif
         UniValue result = tableRPC.execute(
             args[0],
-            RPCConvertValues(args[0], std::vector<std::string>(args.begin() + 1, args.end())));
+            RPCConvertValues(args[0], std::vector<std::string>(args.begin() + 1, args.end())), reqinfo);
 
         // Format result reply
         if (result.isNull())
