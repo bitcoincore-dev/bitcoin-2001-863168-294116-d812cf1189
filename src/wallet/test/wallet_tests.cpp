@@ -437,7 +437,6 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
 // than or equal to key birthday.
 BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
 {
-    CWallet *pwalletMainBackup = ::pwalletMain;
     LOCK(cs_main);
 
     // Create two blocks with same timestamp to verify that importwallet rescan
@@ -463,7 +462,7 @@ BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
         JSONRPCRequest request;
         request.params.setArray();
         request.params.push_back("wallet.backup");
-        ::pwalletMain = &wallet;
+        vpwallets.insert(vpwallets.begin(), &wallet);
         ::dumpwallet(request);
     }
 
@@ -475,7 +474,7 @@ BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
         JSONRPCRequest request;
         request.params.setArray();
         request.params.push_back("wallet.backup");
-        ::pwalletMain = &wallet;
+        vpwallets[0] = &wallet;
         ::importwallet(request);
 
         BOOST_CHECK_EQUAL(wallet.mapWallet.size(), 3);
@@ -488,7 +487,7 @@ BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
     }
 
     SetMockTime(0);
-    ::pwalletMain = pwalletMainBackup;
+    vpwallets.erase(vpwallets.begin());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
