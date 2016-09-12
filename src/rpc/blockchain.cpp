@@ -547,9 +547,10 @@ UniValue getblock(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-            "getblock \"hash\" ( verbose )\n"
+            "getblock \"hash\" ( verbose ) ( extraVerbose )\n"
             "\nIf verbose is false, returns a string that is serialized, hex-encoded data for block 'hash'.\n"
             "If verbose is true, returns an Object with information about block <hash>.\n"
+            "If extraVerbose is true, returns an Object with information about block <hash> and information about each transaction. Verbose will be true regardless\n"
             "\nArguments:\n"
             "1. \"hash\"          (string, required) The block hash\n"
             "2. verbose           (boolean, optional, default=true) true for a json object, false for the hex encoded data\n"
@@ -560,6 +561,72 @@ UniValue getblock(const UniValue& params, bool fHelp)
             "  \"size\" : n,            (numeric) The block size\n"
             "  \"strippedsize\" : n,    (numeric) The block size excluding witness data\n"
             "  \"cost\" : n             (numeric) The block cost\n"
+            "  \"height\" : n,          (numeric) The block height or index\n"
+            "  \"version\" : n,         (numeric) The block version\n"
+            "  \"versionHex\" : \"00000000\", (string) The block version formatted in hexadecimal\n"
+            "  \"merkleroot\" : \"xxxx\", (string) The merkle root\n"
+            "  \"tx\" : [               (array of Objects) The transactions\n"
+            "         {\n"
+            "          \"hex\" : \"data\",       (string) The serialized, hex-encoded data for 'txid'\n"
+            "          \"txid\" : \"id\",        (string) The transaction id (same as provided)\n"
+            "          \"hash\" : \"id\",        (string) The transaction hash (differs from txid for witness transactions)\n"
+            "          \"size\" : n,             (numeric) The serialized transaction size\n"
+            "          \"vsize\" : n,            (numeric) The virtual transaction size (differs from size for witness transactions)\n"
+            "          \"version\" : n,          (numeric) The version\n"
+            "          \"locktime\" : ttt,       (numeric) The lock time\n"
+            "          \"vin\" : [               (array of json objects)\n"
+            "            {\n"
+            "              \"txid\": \"id\",    (string) The transaction id\n"
+            "              \"vout\": n,         (numeric) \n"
+            "              \"scriptSig\": {     (json object) The script\n"
+            "                \"asm\": \"asm\",  (string) asm\n"
+            "                \"hex\": \"hex\"   (string) hex\n"
+            "                },\n"
+            "             \"sequence\": n      (numeric) The script sequence number\n"
+            "             \"txinwitness\": [\"hex\", ...] (array of string) hex-encoded witness data (if any)\n"
+            "             }\n"
+            "            ,...\n"
+            "          ],\n"
+            "          \"vout\" : [              (array of json objects)\n"
+            "             {\n"
+            "               \"value\" : x.xxx,            (numeric) The value in " + CURRENCY_UNIT + "\n"
+            "               \"n\" : n,                    (numeric) index\n"
+            "               \"scriptPubKey\" : {          (json object)\n"
+            "                  \"asm\" : \"asm\",          (string) the asm\n"
+            "                  \"hex\" : \"hex\",          (string) the hex\n"
+            "                  \"reqSigs\" : n,            (numeric) The required sigs\n"
+            "                  \"type\" : \"pubkeyhash\",  (string) The type, eg 'pubkeyhash'\n"
+            "                  \"addresses\" : [           (json array of string)\n"
+            "                     \"bitcoinaddress\"        (string) bitcoin address\n"
+            "                      ,...\n"
+            "                    ]\n"
+            "                  }\n"
+            "                }\n"
+            "                ,...\n"
+            "            ],\n"
+            "            \"blockhash\" : \"hash\",   (string) the block hash\n"
+            "            \"confirmations\" : n,      (numeric) The confirmations\n"
+            "            \"time\" : ttt,             (numeric) The transaction time in seconds since epoch (Jan 1 1970 GMT)\n"
+            "            \"blocktime\" : ttt         (numeric) The block time in seconds since epoch (Jan 1 1970 GMT)\n"
+            "         }\n"
+            "         ,...\n"
+            "  ],\n"
+            "  \"time\" : ttt,          (numeric) The block time in seconds since epoch (Jan 1 1970 GMT)\n"
+            "  \"mediantime\" : ttt,    (numeric) The median block time in seconds since epoch (Jan 1 1970 GMT)\n"
+            "  \"nonce\" : n,           (numeric) The nonce\n"
+            "  \"bits\" : \"1d00ffff\", (string) The bits\n"
+            "  \"difficulty\" : x.xxx,  (numeric) The difficulty\n"
+            "  \"chainwork\" : \"xxxx\",  (string) Expected number of hashes required to produce the chain up to this block (in hex)\n"
+            "  \"previousblockhash\" : \"hash\",  (string) The hash of the previous block\n"
+            "  \"nextblockhash\" : \"hash\"       (string) The hash of the next block\n"
+            "}\n"
+            "\nResult (for extraVerbose = true):\n"
+            "{\n"
+            "  \"hash\" : \"hash\",     (string) the block hash (same as provided)\n"
+            "  \"confirmations\" : n,   (numeric) The number of confirmations, or -1 if the block is not on the main chain\n"
+            "  \"size\" : n,            (numeric) The block size\n"
+            "  \"strippedsize\" : n,    (numeric) The block size excluding witness data\n"
+            "  \"weight\" : n           (numeric) The block weight (BIP 141)\n"
             "  \"height\" : n,          (numeric) The block height or index\n"
             "  \"version\" : n,         (numeric) The block version\n"
             "  \"versionHex\" : \"00000000\", (string) The block version formatted in hexadecimal\n"
@@ -593,6 +660,12 @@ UniValue getblock(const UniValue& params, bool fHelp)
     if (params.size() > 1)
         fVerbose = params[1].get_bool();
 
+    bool fExtraVerbose = false;
+    if (params.size() > 2)
+        fExtraVerbose = params[1].get_bool();
+    if (fExtraVerbose)
+        fVerbose = true;
+
     if (mapBlockIndex.count(hash) == 0)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found");
 
@@ -613,7 +686,7 @@ UniValue getblock(const UniValue& params, bool fHelp)
         return strHex;
     }
 
-    return blockToJSON(block, pblockindex);
+    return blockToJSON(block, pblockindex, fExtraVerbose);
 }
 
 struct CCoinsStats
