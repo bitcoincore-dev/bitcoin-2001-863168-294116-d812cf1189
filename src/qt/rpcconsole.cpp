@@ -374,7 +374,7 @@ void RPCConsole::setClientModel(ClientModel *model)
         ui->peerWidget->verticalHeader()->hide();
         ui->peerWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
         ui->peerWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-        ui->peerWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+        ui->peerWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
         ui->peerWidget->setContextMenuPolicy(Qt::CustomContextMenu);
         ui->peerWidget->setColumnWidth(PeerTableModel::Address, ADDRESS_COLUMN_WIDTH);
         ui->peerWidget->setColumnWidth(PeerTableModel::Subversion, SUBVERSION_COLUMN_WIDTH);
@@ -382,11 +382,11 @@ void RPCConsole::setClientModel(ClientModel *model)
         ui->peerWidget->horizontalHeader()->setStretchLastSection(true);
 
         // create peer table context menu actions
-        QAction* disconnectAction = new QAction(tr("&Disconnect Node"), this);
-        QAction* banAction1h      = new QAction(tr("Ban Node for") + " " + tr("1 &hour"), this);
-        QAction* banAction24h     = new QAction(tr("Ban Node for") + " " + tr("1 &day"), this);
-        QAction* banAction7d      = new QAction(tr("Ban Node for") + " " + tr("1 &week"), this);
-        QAction* banAction365d    = new QAction(tr("Ban Node for") + " " + tr("1 &year"), this);
+        QAction* disconnectAction = new QAction(tr("&Disconnect"), this);
+        QAction* banAction1h      = new QAction(tr("Ban for") + " " + tr("1 &hour"), this);
+        QAction* banAction24h     = new QAction(tr("Ban for") + " " + tr("1 &day"), this);
+        QAction* banAction7d      = new QAction(tr("Ban for") + " " + tr("1 &week"), this);
+        QAction* banAction365d    = new QAction(tr("Ban for") + " " + tr("1 &year"), this);
 
         // create peer table context menu
         peersTableContextMenu = new QMenu();
@@ -432,7 +432,7 @@ void RPCConsole::setClientModel(ClientModel *model)
         ui->banlistWidget->horizontalHeader()->setStretchLastSection(true);
 
         // create ban table context menu action
-        QAction* unbanAction = new QAction(tr("&Unban Node"), this);
+        QAction* unbanAction = new QAction(tr("&Unban"), this);
 
         // create ban table context menu
         banTableContextMenu = new QMenu();
@@ -875,12 +875,17 @@ void RPCConsole::showBanTableContextMenu(const QPoint& point)
 
 void RPCConsole::disconnectSelectedNode()
 {
-    // Get currently selected peer address
-    NodeId id = GUIUtil::getEntryData(ui->peerWidget, 0, PeerTableModel::NetNodeId).toInt();
-    // Find the node, disconnect it and clear the selected node
-    if (CNode *bannedNode = FindNode(id)) {
-        bannedNode->fDisconnect = true;
-        clearSelectedNode();
+    // Get selected peer addresses
+    QList<QModelIndex> nodes = GUIUtil::getEntryData(ui->peerWidget, 0);
+    for(int i = 0; i < nodes.count(); i++)
+    {
+        // Get currently selected peer address
+        NodeId id = nodes.at(i).data(PeerTableModel::NetNodeId).toInt();
+        // Find the node, disconnect it and clear the selected node
+        if (CNode *bannedNode = FindNode(id)) {
+            bannedNode->fDisconnect = true;
+            clearSelectedNode();
+        }
     }
 }
 
@@ -889,20 +894,26 @@ void RPCConsole::banSelectedNode(int bantime)
     if (!clientModel)
         return;
 
-    // Get currently selected peer address
-    QString strNode = GUIUtil::getEntryData(ui->peerWidget, 0, PeerTableModel::Address).toString();
-    // Find possible nodes, ban it and clear the selected node
-    if (FindNode(strNode.toStdString())) {
-        std::string nStr = strNode.toStdString();
-        std::string addr;
-        int port = 0;
-        SplitHostPort(nStr, port, addr);
+    // Get selected peer addresses
+    QList<QModelIndex> nodes = GUIUtil::getEntryData(ui->peerWidget, PeerTableModel::Address);
+    for(int i = 0; i < nodes.count(); i++)
+    {
+        // Get currently selected peer address
+        QString strNode = nodes.at(i).data().toString();
 
-        CNode::Ban(CNetAddr(addr), BanReasonManuallyAdded, bantime);
+        // Find possible nodes, ban it and clear the selected node
+        if (FindNode(strNode.toStdString())) {
+            std::string nStr = strNode.toStdString();
+            std::string addr;
+            int port = 0;
+            SplitHostPort(nStr, port, addr);
 
-        clearSelectedNode();
-        clientModel->getBanTableModel()->refresh();
+            CNode::Ban(CNetAddr(addr), BanReasonManuallyAdded, bantime);
+        }
     }
+
+    clearSelectedNode();
+    clientModel->getBanTableModel()->refresh();
 }
 
 void RPCConsole::unbanSelectedNode()
@@ -910,14 +921,19 @@ void RPCConsole::unbanSelectedNode()
     if (!clientModel)
         return;
 
-    // Get currently selected ban address
-    QString strNode = GUIUtil::getEntryData(ui->banlistWidget, 0, BanTableModel::Address).toString();
-    CSubNet possibleSubnet(strNode.toStdString());
-
-    if (possibleSubnet.IsValid())
+    // Get selected ban addresses
+    QList<QModelIndex> nodes = GUIUtil::getEntryData(ui->banlistWidget, 0);
+    for(int i = 0; i < nodes.count(); i++)
     {
-        CNode::Unban(possibleSubnet);
-        clientModel->getBanTableModel()->refresh();
+        // Get currently selected ban address
+        QString strNode = nodes.at(i).data(BanTableModel::Address).toString();
+        CSubNet possibleSubnet(strNode.toStdString());
+
+        if (possibleSubnet.IsValid())
+        {
+            CNode::Unban(possibleSubnet);
+            clientModel->getBanTableModel()->refresh();
+        }
     }
 }
 
