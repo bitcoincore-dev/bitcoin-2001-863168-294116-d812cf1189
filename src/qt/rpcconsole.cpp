@@ -332,10 +332,8 @@ RPCConsole::RPCConsole(const PlatformStyle *platformStyle, QWidget *parent) :
     settings.endArray();
 }
 
-RPCConsole::~RPCConsole()
+void RPCConsole::WriteCommandHistory()
 {
-    GUIUtil::saveWindowGeometry("nRPCConsoleWindow", this);
-    
     //persist history
     QSettings settings;
     settings.beginWriteArray("nRPCConsoleWindowHistory");
@@ -344,6 +342,13 @@ RPCConsole::~RPCConsole()
         settings.setValue("cmd", history.at(i));
     }
     settings.endArray();
+}
+
+RPCConsole::~RPCConsole()
+{
+    GUIUtil::saveWindowGeometry("nRPCConsoleWindow", this);
+    
+    WriteCommandHistory();
     
     Q_EMIT stopExecutor();
     RPCUnsetTimerInterface(rpcTimerInterface);
