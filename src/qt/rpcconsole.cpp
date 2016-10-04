@@ -62,13 +62,28 @@ const struct {
     {NULL, NULL}
 };
 
+namespace {
+
 // don't add private key handling cmd's to the history
-const QStringList RPCConsole::historyFilter = QStringList()
+const QStringList historyFilter = QStringList()
     << "importprivkey"
+    << "signmessagewithprivkey"
     << "signrawtransaction"
     << "walletpassphrase"
     << "walletpassphrasechange"
     << "encryptwallet";
+
+QString command_filter_sensitive_data(const QString cmd)
+{
+    Q_FOREACH(QString unallowedCmd, historyFilter) {
+        if (cmd.trimmed().startsWith(unallowedCmd)) {
+            return unallowedCmd;
+        }
+    }
+    return cmd;
+}
+
+}
 
 /* Object for executing console RPC commands in a separate thread.
 */
@@ -648,25 +663,18 @@ void RPCConsole::on_lineEdit_returnPressed()
         message(CMD_REQUEST, cmd);
         Q_EMIT cmdRequest(cmd);
 
-        bool storeHistory = true;
-        Q_FOREACH(QString unallowedCmd, historyFilter)
-        {
-            if (cmd.trimmed().startsWith(unallowedCmd))
-                storeHistory = false; break;
-        }
+        cmd = command_filter_sensitive_data(cmd);
 
-        if (storeHistory)
-        {
-            // Remove command, if already in history
-            history.removeOne(cmd);
-            // Append command to history
-            history.append(cmd);
-            // Enforce maximum history size
-            while(history.size() > CONSOLE_HISTORY)
-                history.removeFirst();
-            // Set pointer to end of history
-            historyPtr = history.size();
-        }
+        // Remove command, if already in history
+        history.removeOne(cmd);
+        // Append command to history
+        history.append(cmd);
+        // Enforce maximum history size
+        while(history.size() > CONSOLE_HISTORY)
+            history.removeFirst();
+        // Set pointer to end of history
+        historyPtr = history.size();
+
         // Scroll console view to end
         scrollToEnd();
     }
