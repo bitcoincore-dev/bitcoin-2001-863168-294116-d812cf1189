@@ -515,11 +515,8 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
     settings.endArray();
 }
 
-RPCConsole::~RPCConsole()
+void RPCConsole::WriteCommandHistory()
 {
-    QSettings settings;
-    settings.setValue("RPCConsoleWindowGeometry", saveGeometry());
-
     // persist history
     QSettings settings;
     settings.beginWriteArray("nRPCConsoleWindowHistory");
@@ -528,6 +525,14 @@ RPCConsole::~RPCConsole()
         settings.setValue("cmd", history.at(i));
     }
     settings.endArray();
+}
+
+RPCConsole::~RPCConsole()
+{
+    QSettings settings;
+    settings.setValue("RPCConsoleWindowGeometry", saveGeometry());
+
+    WriteCommandHistory();
 
     m_node.rpcUnsetTimerInterface(rpcTimerInterface);
     delete rpcTimerInterface;
