@@ -62,8 +62,13 @@ const struct {
     {NULL, NULL}
 };
 
-//don't add private key handling cmd's to the history
-const QStringList RPCConsole::historyFilter = QStringList() << "importprivkey" << "signrawtransaction" << "walletpassphrase" << "walletpassphrasechange" << "encryptwallet";
+// don't add private key handling cmd's to the history
+const QStringList RPCConsole::historyFilter = QStringList()
+    << "importprivkey"
+    << "signrawtransaction"
+    << "walletpassphrase"
+    << "walletpassphrasechange"
+    << "encryptwallet";
 
 /* Object for executing console RPC commands in a separate thread.
 */
@@ -639,17 +644,17 @@ void RPCConsole::on_lineEdit_returnPressed()
     if(!cmd.isEmpty())
     {
         cmdBeforeBrowsing = QString();
-        
+
         message(CMD_REQUEST, cmd);
         Q_EMIT cmdRequest(cmd);
-        
+
         bool storeHistory = true;
         Q_FOREACH(QString unallowedCmd, historyFilter)
         {
-            if(cmd.trimmed().startsWith(unallowedCmd))
+            if (cmd.trimmed().startsWith(unallowedCmd))
                 storeHistory = false; break;
         }
-        
+
         if (storeHistory)
         {
             // Remove command, if already in history
@@ -670,9 +675,10 @@ void RPCConsole::on_lineEdit_returnPressed()
 void RPCConsole::browseHistory(int offset)
 {
     // store current text when start browsing through the history
-    if(historyPtr == history.size())
+    if (historyPtr == history.size()) {
         cmdBeforeBrowsing = ui->lineEdit->text();
-    
+    }
+
     historyPtr += offset;
     if(historyPtr < 0)
         historyPtr = 0;
@@ -681,8 +687,9 @@ void RPCConsole::browseHistory(int offset)
     QString cmd;
     if(historyPtr < history.size())
         cmd = history.at(historyPtr);
-    else if(historyPtr == history.size() && !cmdBeforeBrowsing.isNull())
+    else if (!cmdBeforeBrowsing.isNull()) {
         cmd = cmdBeforeBrowsing;
+    }
     ui->lineEdit->setText(cmd);
 }
 
