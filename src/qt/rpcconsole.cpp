@@ -525,6 +525,18 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
     QObject::connect(new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_D), ui->tab_console), &QShortcut::activated, this, &QWidget::close);
 }
 
+void RPCConsole::WriteCommandHistory()
+{
+    // persist history
+    QSettings settings;
+    settings.beginWriteArray("nRPCConsoleWindowHistory");
+    for (int i = 0; i < history.size(); ++i) {
+        settings.setArrayIndex(i);
+        settings.setValue("cmd", history.at(i));
+    }
+    settings.endArray();
+}
+
 RPCConsole::~RPCConsole()
 {
     QSettings settings;
@@ -540,14 +552,7 @@ RPCConsole::~RPCConsole()
         settings.setValue("RPCConsoleWidgetPeersTabSplitterSizes_Knots21", ui->splitter->saveState());
     }
 
-    // persist history
-    QSettings settings;
-    settings.beginWriteArray("nRPCConsoleWindowHistory");
-    for (int i = 0; i < history.size(); ++i) {
-        settings.setArrayIndex(i);
-        settings.setValue("cmd", history.at(i));
-    }
-    settings.endArray();
+    WriteCommandHistory();
 
     m_node.rpcUnsetTimerInterface(rpcTimerInterface);
     delete rpcTimerInterface;
