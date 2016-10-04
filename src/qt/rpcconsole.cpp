@@ -514,11 +514,8 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
     QObject::connect(new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_D), ui->tab_console), &QShortcut::activated, this, &QWidget::close);
 }
 
-RPCConsole::~RPCConsole()
+void RPCConsole::WriteCommandHistory()
 {
-    QSettings settings;
-    settings.setValue("RPCConsoleWindowGeometry", saveGeometry());
-
     // persist history
     QSettings settings;
     settings.beginWriteArray("nRPCConsoleWindowHistory");
@@ -527,6 +524,14 @@ RPCConsole::~RPCConsole()
         settings.setValue("cmd", history.at(i));
     }
     settings.endArray();
+}
+
+RPCConsole::~RPCConsole()
+{
+    QSettings settings;
+    settings.setValue("RPCConsoleWindowGeometry", saveGeometry());
+
+    WriteCommandHistory();
 
     m_node.rpcUnsetTimerInterface(rpcTimerInterface);
     delete rpcTimerInterface;
