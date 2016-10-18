@@ -2704,6 +2704,9 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
 
     // check that fee rate is higher than mempool's mininum fee
     // (no point in bumping fee if we know that the new tx won't be accepted to the mempool)
+    // This may occur if the user set TotalFee or paytxfee too low, if fallbackfee is too low, or, perhaps,
+    // in a rare situation where the mempool minimum fee increased significantly since the fee estimation just a
+    // moment earlier. In this case, we report an error to the user, who may use totalFee to make an adjustment.
     CFeeRate minMempoolFeeRate = mempool.GetMinFee(GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000);
     if (nNewFeeRate.GetFeePerK() < minMempoolFeeRate.GetFeePerK()) {
         strError = strprintf("New fee rate (%s) is too low to get into the mempool (min rate: %s)", FormatMoney(nNewFeeRate.GetFeePerK()), FormatMoney(minMempoolFeeRate.GetFeePerK()));
@@ -2768,10 +2771,9 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
     // sign the new tx
     CTransaction txNewConst(tx);
     int nIn = 0;
-//    for (auto it(tx.vin.begin()); it != tx.vin.end(); ++it, nIn++) {
     for (auto &it : tx.vin) {
         std::map<uint256, CWalletTx>::const_iterator mi = pwalletMain->mapWallet.find(it.prevout.hash);
-        if (mi != pwalletMain->mapWallet.end() && it.prevout.n < (int)(*mi).second.vout.size()) {
+        if (mi != pwalletMain->mapWallet.end() && it.prevout.n < (*mi).second.vout.size()) {
             const CScript& scriptPubKey = (*mi).second.vout[it.prevout.n].scriptPubKey;
             SignatureData sigdata;
             if (!ProduceSignature(TransactionSignatureCreator(pwalletMain, &txNewConst, nIn, SIGHASH_ALL), scriptPubKey, sigdata))
