@@ -16,6 +16,7 @@
 #include <string>
 
 #include <boost/function.hpp>
+#include <boost/variant.hpp>
 
 #include <univalue.h>
 
@@ -31,6 +32,7 @@ namespace RPCServer
 
 class CBlockIndex;
 class CNetAddr;
+class CWallet;
 
 /** Wrapper for UniValue::VType, which includes typeAny:
  * Used to denote don't care type. Only used by RPCTypeCheckObj */
@@ -122,7 +124,33 @@ void RPCUnsetTimerInterface(RPCTimerInterface *iface);
  */
 void RPCRunLater(const std::string& name, boost::function<void(void)> func, int64_t nSeconds);
 
-typedef UniValue(*rpcfn_type)(const UniValue& params, bool fHelp);
+class CRPCRequestInfo
+{
+public:
+#ifdef ENABLE_WALLET
+    CWallet *wallet;
+    CRPCRequestInfo() : wallet(NULL) {}
+#endif
+};
+
+class rpcfn_type
+{
+    typedef UniValue(*simple_rpcfn_type)(const UniValue& params, bool fHelp);
+    typedef UniValue(*reqinfo_rpcfn_type)(const UniValue& params, bool fHelp, CRPCRequestInfo&);
+
+    boost::variant<simple_rpcfn_type, reqinfo_rpcfn_type> func;
+
+public:
+    rpcfn_type(simple_rpcfn_type f) : func(f) {}
+    rpcfn_type(reqinfo_rpcfn_type f) : func(f) {}
+
+    UniValue operator()(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo) const;
+
+    // Needed for adding to a set
+    bool operator<(const rpcfn_type& other) const {
+        return func < other.func;
+    }
+};
 
 class CRPCCommand
 {
@@ -180,15 +208,14 @@ extern uint256 ParseHashO(const UniValue& o, std::string strKey);
 extern std::vector<unsigned char> ParseHexV(const UniValue& v, std::string strName);
 extern std::vector<unsigned char> ParseHexO(const UniValue& o, std::string strKey);
 
-extern int64_t nWalletUnlockTime;
 extern CAmount AmountFromValue(const UniValue& value);
 extern UniValue ValueFromAmount(const CAmount& amount);
 extern double GetDifficulty(const CBlockIndex* blockindex = NULL);
-extern std::string HelpRequiringPassphrase();
+extern std::string HelpRequiringPassphrase(CWallet*);
 extern std::string HelpExampleCli(const std::string& methodname, const std::string& args);
 extern std::string HelpExampleRpc(const std::string& methodname, const std::string& args);
 
-extern void EnsureWalletIsUnlocked();
+extern void EnsureWalletIsUnlocked(CWallet*);
 
 bool StartRPC();
 void InterruptRPC();
