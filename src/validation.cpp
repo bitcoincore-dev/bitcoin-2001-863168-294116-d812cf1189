@@ -705,8 +705,8 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
     }
 
     // Check for non-standard witness in P2WSH
-    if (tx.HasWitness() && fRequireStandard && !IsWitnessStandard(tx, m_view))
-        MaybeReject(ValidationInvalidReason::TX_WITNESS_MUTATED, REJECT_NONSTANDARD, "bad-witness-nonstandard");
+    if (tx.HasWitness() && fRequireStandard && !IsWitnessStandard(tx, m_view, "bad-witness-", reason, ignore_rejects))
+        return state.Invalid(ValidationInvalidReason::TX_WITNESS_MUTATED, false, REJECT_NONSTANDARD, reason);
 
     int64_t nSigOpsCost = GetTransactionSigOpCost(tx, m_view, STANDARD_SCRIPT_VERIFY_FLAGS);
 
