@@ -302,13 +302,18 @@ class SegWitTest(BitcoinTestFramework):
         sync_blocks(self.nodes)
 
         # We'll add an unnecessary witness to this transaction that would cause
-        # it to be too large according to IsStandard.
+        # it to be non-standard, to test that violating policy with a witness before
+        # segwit activation doesn't blind a node to a transaction.  Transactions
+        # rejected for having a witness before segwit activation shouldn't be added
+        # to the rejection cache.
         tx3 = CTransaction()
         tx3.vin.append(CTxIn(COutPoint(tx2.sha256, 0), CScript([p2sh_program])))
         tx3.vout.append(CTxOut(tx2.vout[0].nValue-1000, scriptPubKey))
         tx3.wit.vtxinwit.append(CTxInWitness())
         tx3.wit.vtxinwit[0].scriptWitness.stack = [b'a'*400000]
         tx3.rehash()
+        # Note that this should be rejected for the premature witness reason,
+        # rather than a policy check, since segwit hasn't activated yet.
         self.std_node.test_transaction_acceptance(tx3, True, False, b'no-witness-yet')
 
         # If we send without witness, it should be accepted.
@@ -904,14 +909,6 @@ class SegWitTest(BitcoinTestFramework):
         # But eliminating the witness should fix it
         self.test_node.test_transaction_acceptance(tx, with_witness=False, accepted=True)
 
-        # Verify that inv's to test_node come with getdata's for non-witness tx's
-        # Just tweak the transaction, announce it, and verify we get a getdata
-        # for a normal tx
-        tx.vout[0].scriptPubKey = CScript([OP_TRUE, OP_TRUE])
-        tx.rehash()
-        self.test_node.announce_tx_and_wait_for_getdata(tx)
-        assert(self.test_node.last_getdata.inv[0].type == 1)
-
         # Cleanup: mine the first transaction and update utxo
         self.nodes[0].generate(1)
         assert_equal(len(self.nodes[0].getrawmempool()),  0)
@@ -946,8 +943,7 @@ class SegWitTest(BitcoinTestFramework):
         self.test_node.test_transaction_acceptance(tx, with_witness=True, accepted=False)
 
         # Verify that removing the witness succeeds.
-        # Re-announcing won't result in a getdata for ~2.5 minutes, so just
-        # deliver the modified transaction.
+        self.test_node.announce_tx_and_wait_for_getdata(tx)
         self.test_node.test_transaction_acceptance(tx, with_witness=False, accepted=True)
 
         # Now try to add extra witness data to a valid witness tx.
@@ -961,8 +957,24 @@ class SegWitTest(BitcoinTestFramework):
 
         tx3 = CTransaction()
         tx3.vin.append(CTxIn(COutPoint(tx2.sha256, 0), b""))
-        tx3.vout.append(CTxOut(tx2.vout[0].nValue-1000, CScript([OP_TRUE])))
         tx3.wit.vtxinwit.append(CTxInWitness())
+
+        # Add too-large for IsStandard witness and check that it does not enter reject filter
+        p2sh_program = CScript([OP_TRUE])
+        p2sh_pubkey = hash160(p2sh_program)
+        witness_program2 = CScript([b'a'*400000])
+        tx3.vout.append(CTxOut(tx2.vout[0].nValue-1000, CScript([OP_HASH160, p2sh_pubkey, OP_EQUAL])))
+        tx3.wit.vtxinwit[0].scriptWitness.stack = [witness_program2]
+        tx3.rehash()
+
+        # Node will not be blinded to the transaction
+        self.std_node.announce_tx_and_wait_for_getdata(tx3)
+        self.std_node.test_transaction_acceptance(tx3, True, False, b'tx-size')
+        self.std_node.announce_tx_and_wait_for_getdata(tx3)
+        self.std_node.test_transaction_acceptance(tx3, True, False, b'tx-size')
+
+        # Remove witness stuffing, instead add extra witness push on stack
+        tx3.vout[0] = CTxOut(tx2.vout[0].nValue-1000, CScript([OP_TRUE]))
         tx3.wit.vtxinwit[0].scriptWitness.stack = [CScript([CScriptNum(1)]), witness_program ]
         tx3.rehash()
 
@@ -1002,7 +1014,7 @@ class SegWitTest(BitcoinTestFramework):
     def test_block_relay(self, segwit_activated):
         print("\tTesting block relay")
 
-        blocktype = 2|MSG_WITNESS_FLAG if segwit_activated else 2
+        blocktype = 2|MSG_WITNESS_FLAG
 
         # test_node has set NODE_WITNESS, so all getdata requests should be for
         # witness blocks.
@@ -1369,6 +1381,9 @@ class SegWitTest(BitcoinTestFramework):
         block = self.build_next_block()
         used_sighash_single_out_of_bounds = False
         for i in range(NUM_TESTS):
+            # Ping regularly to keep the connection alive
+            if (not i % 100):
+                self.test_node.sync_with_ping()
             # Choose random number of inputs to use.
             num_inputs = random.randint(1, 10)
             # Create a slight bias for producing more utxos
