@@ -59,8 +59,8 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool w
     return whichType != TX_NONSTANDARD;
 }
 
-static inline bool IsStandardTx_Rejection_(std::string& reasonOut, const std::string& reason, const std::set<std::string>& setIgnoreRejects=std::set<std::string>()) {
-    if (setIgnoreRejects.find(reason) != setIgnoreRejects.end())
+static inline bool IsStandardTx_Rejection_(std::string& reasonOut, const std::string& reason, const std::string& reasonPrefix, const std::set<std::string>& setIgnoreRejects=std::set<std::string>()) {
+    if (setIgnoreRejects.find(reasonPrefix + reason) != setIgnoreRejects.end())
         return false;
 
     reasonOut = reason;
@@ -68,7 +68,7 @@ static inline bool IsStandardTx_Rejection_(std::string& reasonOut, const std::st
 }
 
 #define IsStandardTx_Rejection(reasonIn)  do {  \
-    if (IsStandardTx_Rejection_(reason, reasonIn, setIgnoreRejects)) {  \
+    if (IsStandardTx_Rejection_(reason, reasonIn, "", setIgnoreRejects)) {  \
         return false;  \
     }  \
 } while(0)
@@ -141,6 +141,12 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
     return true;
 }
 
+#define AreInputsStandard_Rejection(reasonIn)  do {  \
+    if (IsStandardTx_Rejection_(reason, reasonIn, "bad-txns-input-", setIgnoreRejects)) {  \
+        return false;  \
+    }  \
+} while(0)
+
 bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs, std::string& reason, const std::set<std::string>& setIgnoreRejects)
 {
     if (tx.IsCoinBase())
@@ -155,7 +161,7 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs,
         // get the scriptPubKey corresponding to this input:
         const CScript& prevScript = prev.scriptPubKey;
         if (!Solver(prevScript, whichType, vSolutions)) {
-            IsStandardTx_Rejection("script-unknown");
+            AreInputsStandard_Rejection("script-unknown");
         }
 
         if (whichType == TX_SCRIPTHASH)
@@ -180,7 +186,7 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs,
             }
             CScript subscript(stack.back().begin(), stack.back().end());
             if (subscript.GetSigOpCount(true) > MAX_P2SH_SIGOPS) {
-                IsStandardTx_Rejection("scriptcheck-sigops");
+                AreInputsStandard_Rejection("scriptcheck-sigops");
             }
         }
     }
