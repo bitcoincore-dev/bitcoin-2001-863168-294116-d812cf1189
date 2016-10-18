@@ -2667,7 +2667,7 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
 
     // calculate the old fee and fee-rate
     CAmount nDebit = wtx.GetDebit(ISMINE_SPENDABLE);
-    CAmount nOldFee = -(wtx.IsFromMe(ISMINE_SPENDABLE) ? wtx.GetValueOut() - nDebit : 0);
+    CAmount nOldFee = (wtx.IsFromMe(ISMINE_SPENDABLE) ? nDebit - wtx.GetValueOut() : 0);
     int txSize = (int)GetVirtualTransactionSize((CTransaction)wtx);
     CFeeRate nOldFeeRate(nOldFee, txSize);
 
@@ -2729,9 +2729,9 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
             // really wants to pay full price for all of the child transactions.  If so, the user can set payTxFee
             // and run the command again.
             //
-            CAmount nFeesWithDescendants = it->GetModFeesWithDescendants();
-            if (nNewFee < nFeesWithDescendants + ::minRelayTxFee.GetFee(txSize)) {
-                std::string strError = strprintf("Insufficent fee due to child transactions, the bumped fee must be at least: %s", FormatMoney(nFeesWithDescendants + ::minRelayTxFee.GetFee(txSize)));
+            CAmount nFeesWithDescendantsPlusRelay = it->GetModFeesWithDescendants() + ::minRelayTxFee.GetFee(txSize);
+            if (nNewFee < nFeesWithDescendantsPlusRelay) {
+                std::string strError = strprintf("Insufficent fee due to child transactions, the bumped fee must be at least: %s", FormatMoney(nFeesWithDescendantsPlusRelay));
                 throw JSONRPCError(RPC_INVALID_PARAMETER, strError);
             }
         }
@@ -2768,15 +2768,17 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
     // sign the new tx
     CTransaction txNewConst(tx);
     int nIn = 0;
-    for (auto it(tx.vin.begin()); it != tx.vin.end(); ++it, nIn++) {
-        std::map<uint256, CWalletTx>::const_iterator mi = pwalletMain->mapWallet.find((*it).prevout.hash);
-        if (mi != pwalletMain->mapWallet.end() && (nIn < (int)(*mi).second.vout.size())) {
-            const CScript& scriptPubKey = (*mi).second.vout[(*it).prevout.n].scriptPubKey;
+//    for (auto it(tx.vin.begin()); it != tx.vin.end(); ++it, nIn++) {
+    for (auto &it : tx.vin) {
+        std::map<uint256, CWalletTx>::const_iterator mi = pwalletMain->mapWallet.find(it.prevout.hash);
+        if (mi != pwalletMain->mapWallet.end() && it.prevout.n < (int)(*mi).second.vout.size()) {
+            const CScript& scriptPubKey = (*mi).second.vout[it.prevout.n].scriptPubKey;
             SignatureData sigdata;
             if (!ProduceSignature(TransactionSignatureCreator(pwalletMain, &txNewConst, nIn, SIGHASH_ALL), scriptPubKey, sigdata))
                 throw JSONRPCError(RPC_WALLET_ERROR, "Can't sign transaction.");
             tx.vin[nIn].scriptSig = sigdata.scriptSig;
         }
+        nIn++;
     }
 
     // commit/broadcast the tx
