@@ -2576,6 +2576,7 @@ extern UniValue importwallet(const UniValue& params, bool fHelp);
 extern UniValue importprunedfunds(const UniValue& params, bool fHelp);
 extern UniValue removeprunedfunds(const UniValue& params, bool fHelp);
 extern UniValue importmulti(const UniValue& params, bool fHelp);
+extern UniValue rescanblockchain(const UniValue& params, bool fHelp);
 
 static const CRPCCommand commands[] =
 { //  category              name                        actor (function)           okSafeMode
@@ -2627,6 +2628,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "walletpassphrasechange",   &walletpassphrasechange,   true  },
     { "wallet",             "walletpassphrase",         &walletpassphrase,         true  },
     { "wallet",             "removeprunedfunds",        &removeprunedfunds,        true  },
+    { "wallet",             "rescanblockchain",         &rescanblockchain,         true  },
 };
 
 void RegisterWalletRPCCommands(CRPCTable &tableRPC)
