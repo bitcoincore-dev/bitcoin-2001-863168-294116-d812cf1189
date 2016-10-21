@@ -86,7 +86,7 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
         // to MAX_STANDARD_TX_SIZE mitigates CPU exhaustion attacks.
         unsigned int sz = GetTransactionWeight(tx);
         if (sz >= MAX_STANDARD_TX_WEIGHT) {
-            reason = "tx-weight";
+            reason = "tx-size";
             return false;
         }
     }
