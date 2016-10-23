@@ -482,11 +482,13 @@ endif
 RES_RENDERED_ICON_SOURCES = \
   qt/res/src/hd_disabled.svg \
   qt/res/src/hd_enabled.svg \
+  qt/res/src/network_disabled.svg \
   qt/res/src/bitcoin.svg
 
 RES_RENDERED_ICONS = \
   qt/res/rendered_icons/hd_disabled.png \
   qt/res/rendered_icons/hd_enabled.png \
+  qt/res/rendered_icons/network_disabled.png \
   qt/res/rendered_icons/about.png \
   qt/res/rendered_icons/bitcoin.ico \
   qt/res/rendered_icons/bitcoin_testnet.ico \
@@ -503,6 +505,10 @@ EXTRA_DIST += $(RES_RENDERED_ICON_SOURCES) $(RES_ALL_RENDERED_ICONS)
 if CAN_RENDER_ICONS
 
 qt/res/rendered_icons/hd_%.png: qt/res/src/hd_%.svg
+	@$(MKDIR_P) $(@D)
+	$(RSVG_CONVERT) -f png < $< > $@
+
+qt/res/rendered_icons/network_disabled.png: qt/res/src/network_disabled.svg
 	@$(MKDIR_P) $(@D)
 	$(RSVG_CONVERT) -f png < $< > $@
 
