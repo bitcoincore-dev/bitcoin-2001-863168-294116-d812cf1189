@@ -44,7 +44,6 @@ Files: src/qt/res/icons/add.png
        src/qt/res/icons/transaction*.png
        src/qt/res/icons/tx_output.png
        src/qt/res/icons/warning.png
-       src/qt/res/src/network_disabled.svg
 Copyright: Stephen Hutchings (and more)
            http://typicons.com
 License: Expat
@@ -52,7 +51,10 @@ Comment: Site: https://github.com/stephenhutchings/typicons.font
 
 Files: src/qt/res/icons/connect*.png
        src/qt/res/src/connect-*.svg
+       src/qt/res/icons/network_disabled.png
+       src/qt/res/src/network_disabled.svg
 Copyright: Marco Falke
+           Luke Dashjr
 License: Expat
 Comment: Inspired by Stephan Hutchings Typicons
 
