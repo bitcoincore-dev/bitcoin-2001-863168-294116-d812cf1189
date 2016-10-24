@@ -206,6 +206,8 @@ public:
     bool transactionCanBeAbandoned(uint256 hash) const;
     bool abandonTransaction(uint256 hash) const;
 
+    bool hdEnabled() const;
+
 private:
     CWallet *wallet;
     bool fHaveWatchOnly;
