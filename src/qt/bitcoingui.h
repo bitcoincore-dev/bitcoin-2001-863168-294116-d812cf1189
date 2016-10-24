@@ -168,6 +168,11 @@ public Q_SLOTS:
 #ifdef ENABLE_WALLET
     bool setCurrentWallet(const QString& name);
 
+    /** Set the UI status indicators based on the currently selected wallet.
+    */
+    void updateWalletStatus();
+
+private:
     /** Set the encryption status as shown in the UI.
        @param[in] status            current encryption status
        @see WalletModel::EncryptionStatus
@@ -180,6 +185,7 @@ public Q_SLOTS:
      */
     void setHDStatus(int hdEnabled);
 
+public Q_SLOTS:
     bool handlePaymentRequest(const SendCoinsRecipient& recipient);
 
     /** Show incoming transaction notification for new transactions. */
