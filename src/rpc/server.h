@@ -28,6 +28,8 @@ namespace RPCServer
     void OnPreCommand(std::function<void (const CRPCCommand&)> slot);
 }
 
+class CWallet;
+
 /** Wrapper for UniValue::VType, which includes typeAny:
  * Used to denote don't care type. Only used by RPCTypeCheckObj */
 struct UniValueType {
@@ -46,8 +48,15 @@ public:
     bool fHelp;
     std::string URI;
     std::string authUser;
+#ifdef ENABLE_WALLET
+    CWallet *wallet;
+#endif
 
-    JSONRPCRequest() : id(NullUniValue), params(NullUniValue), fHelp(false) {}
+    JSONRPCRequest() : id(NullUniValue), params(NullUniValue), fHelp(false)
+#ifdef ENABLE_WALLET
+        , wallet(nullptr)
+#endif
+    {}
     void parse(const UniValue& valRequest);
 };
 

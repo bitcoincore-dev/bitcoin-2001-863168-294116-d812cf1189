@@ -13,6 +13,9 @@
 #include "ui_interface.h"
 #include "util.h"
 #include "utilstrencodings.h"
+#ifdef ENABLE_WALLET
+#include "wallet/wallet.h"
+#endif
 
 #include <univalue.h>
 
@@ -172,6 +175,12 @@ std::string CRPCTable::help(const std::string& strCommand, const JSONRPCRequest&
     JSONRPCRequest jreq(helpreq);
     jreq.fHelp = true;
     jreq.params = UniValue();
+
+#ifdef ENABLE_WALLET
+    if ((!jreq.wallet) && ::vpwallets.size() > 0) {
+        jreq.wallet = ::vpwallets[0];
+    }
+#endif
 
     for (const std::pair<std::string, const CRPCCommand*>& command : vCommands)
     {
