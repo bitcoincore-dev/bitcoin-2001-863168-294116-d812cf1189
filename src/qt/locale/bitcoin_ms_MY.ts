@@ -34,9 +34,33 @@ Alihkan fail data ke dalam tab semasa</translation>
         <source>&amp;Delete</source>
         <translation>&amp;Padam</translation>
     </message>
+    <message>
+        <source>Choose the address to send coins to</source>
+        <translation>Pilih alamat untuk menghantar syiling</translation>
+    </message>
+    <message>
+        <source>Choose the address to receive coins with</source>
+        <translation>Pilih alamat untuk menerima syiling</translation>
+    </message>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation>&amp;Pilih</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;Salin Alamat</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Fail yang dipisahkan dengan koma</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
+    <message>
+        <source>Address</source>
+        <translation>Alamat</translation>
+    </message>
     </context>
 <context>
     <name>AskPassphraseDialog</name>
@@ -75,6 +99,9 @@ Alihkan fail data ke dalam tab semasa</translation>
     <name>Intro</name>
     </context>
 <context>
+    <name>ModalOverlay</name>
+    </context>
+<context>
     <name>OpenURIDialog</name>
     </context>
 <context>
@@ -107,12 +134,20 @@ Alihkan fail data ke dalam tab semasa</translation>
         <source>Copy &amp;Address</source>
         <translation>&amp;Salin Alamat</translation>
     </message>
+    <message>
+        <source>Address</source>
+        <translation>Alamat</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Pilih...</translation>
+    </message>
     <message>
         <source>Balance:</source>
         <translation>Baki</translation>
@@ -147,6 +182,14 @@ Alihkan fail data ke dalam tab semasa</translation>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Fail yang dipisahkan dengan koma</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Alamat</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -159,6 +202,15 @@ Alihkan fail data ke dalam tab semasa</translation>
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Eksport</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>
+Alihkan fail data ke dalam tab semasa</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>

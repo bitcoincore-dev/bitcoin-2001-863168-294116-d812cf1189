@@ -41,10 +41,62 @@
         <source>&amp;Delete</source>
         <translation>&amp;Xó&amp;a</translation>
     </message>
+    <message>
+        <source>Choose the address to send coins to</source>
+        <translation>Chọn địa chỉ để gửi coin tới</translation>
+    </message>
+    <message>
+        <source>Choose the address to receive coins with</source>
+        <translation>Chọn địa chỉ để nhận coin</translation>
+    </message>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation>C&amp;họn</translation>
+    </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation>Địa chỉ gửi</translation>
+    </message>
+    <message>
+        <source>Receiving addresses</source>
+        <translation>Địa chỉ nhận</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;Copy Địa Chỉ</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Label</source>
+        <translation>Copy &amp;Nhãn</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;Sửa</translation>
+    </message>
+    <message>
+        <source>Export Address List</source>
+        <translation>Xuất Danh Sách Địa Chỉ</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Xuất Đã Thất Bại</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
-    </context>
+    <message>
+        <source>Label</source>
+        <translation>Nhãn</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Địa chỉ</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(không nhãn)</translation>
+    </message>
+</context>
 <context>
     <name>AskPassphraseDialog</name>
     <message>
@@ -62,6 +114,22 @@
     <message>
         <source>Repeat new passphrase</source>
         <translation>Điền lại passphrase</translation>
+    </message>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>Mã hóa ví</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Mở khóa ví</translation>
+    </message>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>Giải mã ví</translation>
+    </message>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>Ví đã được mã hóa</translation>
     </message>
     </context>
 <context>
@@ -162,6 +230,10 @@
         <translation>Mở &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Ví:</translation>
+    </message>
+    <message>
         <source>Reindexing blocks on disk...</source>
         <translation>Đánh chỉ số (indexing) lại các khối (blocks) trên ổ đĩa ...</translation>
     </message>
@@ -256,26 +328,6 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>7Tùy chọn dòng lệnh</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation><numerusform>%n giờ</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation><numerusform>%n ngày</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation><numerusform>%n tuần</numerusform></translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 và %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation><numerusform>%n năm</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -418,6 +470,46 @@
         <source>Priority</source>
         <translation>Tầm quan trọng</translation>
     </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Copy địa chỉ</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Copy nhãn</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Lượng copy</translation>
+    </message>
+    <message>
+        <source>low</source>
+        <translation>thấp</translation>
+    </message>
+    <message>
+        <source>lower</source>
+        <translation>thấp hơn</translation>
+    </message>
+    <message>
+        <source>lowest</source>
+        <translation>thấp nhất</translation>
+    </message>
+    <message>
+        <source>none</source>
+        <translation>Trống</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>có</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>không</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(không nhãn)</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -450,6 +542,10 @@
     <message>
         <source>(%1-bit)</source>
         <translation>(%1-bit)</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Thông tin về %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -485,6 +581,13 @@
     <message>
         <source>Error</source>
         <translation>Lỗi</translation>
+    </message>
+    </context>
+<context>
+    <name>ModalOverlay</name>
+    <message>
+        <source>Form</source>
+        <translation>Form</translation>
     </message>
     </context>
 <context>
@@ -580,6 +683,10 @@
         <source>none</source>
         <translation>Trống</translation>
     </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -616,7 +723,27 @@
         <source>Amount</source>
         <translation>Lượng</translation>
     </message>
-    </context>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n giờ</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n ngày</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n tuần</numerusform></translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 và %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n năm</numerusform></translation>
+    </message>
+</context>
 <context>
     <name>QRImageWidget</name>
     </context>
@@ -625,6 +752,10 @@
     <message>
         <source>&amp;Information</source>
         <translation>Thông tin</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Cửa sổ xử lý lỗi (debug)</translation>
     </message>
     <message>
         <source>General</source>
@@ -637,6 +768,10 @@
     <message>
         <source>Block chain</source>
         <translation>Block chain</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Ví: </translation>
     </message>
     <message>
         <source>Sent</source>
@@ -653,16 +788,56 @@
         <source>&amp;Amount:</source>
         <translation>Lượng:</translation>
     </message>
-    </context>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>Nhãn:</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Copy nhãn</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Lượng copy</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
         <source>Copy &amp;Address</source>
         <translation>&amp;Copy Địa Chỉ</translation>
     </message>
+    <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Địa chỉ</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Lượng</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Nhãn</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Ngày tháng</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Nhãn</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(không nhãn)</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
@@ -698,12 +873,32 @@
         <source>Change:</source>
         <translation>Thay đổi:</translation>
     </message>
-    </context>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Chọn...</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Gửi</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Lượng copy</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(không nhãn)</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsEntry</name>
     <message>
         <source>A&amp;mount:</source>
         <translation>Lượng:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>Nhãn:</translation>
     </message>
     </context>
 <context>
@@ -723,15 +918,67 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Date</source>
+        <translation>Ngày tháng</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Lượng</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Ngày tháng</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Nhãn</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(không nhãn)</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Copy address</source>
+        <translation>Copy địa chỉ</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Copy nhãn</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Lượng copy</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Đã xác nhận</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Ngày tháng</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Nhãn</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Địa chỉ</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Xuất Đã Thất Bại</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -744,6 +991,18 @@
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>X&amp;uất</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Xuất dữ liệu trong mục hiện tại ra file</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Sao lưu ví tiền</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>

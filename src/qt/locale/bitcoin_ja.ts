@@ -318,6 +318,10 @@
         <translation>URI を開く (&amp;U)...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">ウォレット:</translation>
+    </message>
+    <message>
         <source>Reindexing blocks on disk...</source>
         <translation>ディスク上のブロックのインデックスを再作成中...</translation>
     </message>
@@ -436,26 +440,6 @@
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
         <translation><numerusform>トランザクション履歴の %n ブロックを処理しました。</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation><numerusform>%n 時間</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation><numerusform>%n 日</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation><numerusform>%n 週間</numerusform></translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 と %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation><numerusform>%n 年</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -944,6 +928,25 @@
     </message>
 </context>
 <context>
+    <name>ModalOverlay</name>
+    <message>
+        <source>Form</source>
+        <translation>フォーム</translation>
+    </message>
+    <message>
+        <source>unknown...</source>
+        <translation type="unfinished">未確認...</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>最終ブロックの日時</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>隠す</translation>
+    </message>
+    </context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -1179,6 +1182,10 @@
     <message>
         <source>none</source>
         <translation>なし</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin のコア</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1420,6 +1427,26 @@
         <source>%1 ms</source>
         <translation>%1ミリ秒</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n 時間</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n 日</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n 週間</numerusform></translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 と %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n 年</numerusform></translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -1505,6 +1532,10 @@
     <message>
         <source>Memory usage</source>
         <translation>メモリ使用量</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">ウォレット: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1800,6 +1831,10 @@
     <message>
         <source>Remove</source>
         <translation>削除</translation>
+    </message>
+    <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">URI をコピーする</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -2145,6 +2180,10 @@
     <message>
         <source>Pay only the required fee of %1</source>
         <translation>要求手数料 %1 のみを支払う</translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>%n ブロック以内に検証が開始されると予想されます。</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>

@@ -41,6 +41,14 @@
         <source>&amp;Delete</source>
         <translation>Изтрий</translation>
     </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation type="unfinished">Адреси за пращане</translation>
+    </message>
+    <message>
+        <source>Receiving addresses</source>
+        <translation type="unfinished">Адреси за получаване</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
@@ -177,15 +185,30 @@
     </context>
 <context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">За %1</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
+    </context>
+<context>
+    <name>ModalOverlay</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Настройки</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Биткойн ядро</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -258,9 +281,25 @@
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>Изнеси</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Изнеси данните в избрания раздел към файл</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Направи резервно копие на портфейла</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">Настройки:</translation>
+    </message>
     <message>
         <source>Bitcoin Core</source>
         <translation>Биткойн ядро</translation>
