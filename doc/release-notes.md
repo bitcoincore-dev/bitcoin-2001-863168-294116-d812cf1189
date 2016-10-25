@@ -1,6 +1,6 @@
-Bitcoin Core version 0.13.1 is now available from:
+Bitcoin Knots version 0.13.1.knots20161027 is now available from:
 
-  <https://bitcoin.org/bin/bitcoin-core-0.13.1/>
+  <https://bitcoinknots.org/files/0.13.x/0.13.1.knots20161027/>
 
 This is a new minor version release, including activation parameters for the
 segwit softfork, various bugfixes and performance improvements, as well as
@@ -8,11 +8,7 @@ updated translations.
 
 Please report bugs using the issue tracker at github:
 
-  <https://github.com/bitcoin/bitcoin/issues>
-
-To receive security and update notifications, please subscribe to:
-
-  <https://bitcoincore.org/en/list/announcements/join/>
+  <https://github.com/bitcoinknots/bitcoin/issues>
 
 Compatibility
 ==============
@@ -22,7 +18,7 @@ an OS initially released in 2001. This means that not even critical security
 updates will be released anymore. Without security updates, using a bitcoin
 wallet on a XP machine is irresponsible at least.
 
-In addition to that, with 0.12.x there have been varied reports of Bitcoin Core
+In addition to that, with 0.12.x there have been varied reports of Bitcoin Knots
 randomly crashing on Windows XP. It is [not clear](https://github.com/bitcoin/bitcoin/issues/7681#issuecomment-217439891)
 what the source of these crashes is, but it is likely that upstream
 libraries such as Qt are no longer being tested on XP.
@@ -42,6 +38,20 @@ but severe issues with the libc++ version on 10.7.x keep it from running reliabl
 
 Notable changes
 ===============
+
+Sensitive data is no longer stored in debug console history
+-----------------------------------------------------------
+
+Since v0.11.0, Knots has supported saving the debug console history across
+restarts. This was intended to exclude sensitive data, such as private keys
+and the wallet passphrase, but the logic to detect this was skipped in
+practice (this security issue is assigned CVE-2016-8889).
+
+This security issue is fixed as of this release. Additionally, when you start
+Knots, it will scan through your current persisted history and filter out any
+sensitive information it finds. This is implemented such that the sensitive
+info is erased as securely as possible, but due to the nature of configuration
+storage, it is unlikely to succeed in entirely removing it from your disk.
 
 Segregated witness soft fork
 ----------------------------
@@ -198,12 +208,48 @@ For more information, please see [BIP147][].
 
 [BIP147]: https://github.com/bitcoin/bips/blob/master/bip-0147.mediawiki
 
+Bumpfee RPC method
+------------------
+
+A new RPC method `bumpfee` has been added enabling reissuing opt-in RBF
+transactions with a higher fee. The caller must explicitly specify the output
+to be decremented offsetting the increased fee. See `help bumpfee` for usage.
+
+Support for multiple wallets
+----------------------------
+
+You can load multiple wallets at startup by specifying the `-wallet` parameter
+multiple times. For example, to simply load two wallets, you might start with
+`bitcoin-qt -wallet=wallet.dat -wallet=wallet2.dat`. In this mode, the GUI will
+show a dropdown box selector for which wallet to view.
+
+For RPC access, only a single wallet can currently be used per RPC username.
+An optional fourth field is added to the `rpcauth` configuration parameter to
+specify which wallet file the username should access. If omitted, the first
+loaded wallet is used. It can also be provided as a single hyphen to disable
+wallet access for that user.
+
+Note that multi-wallet support is currently experimental. It is not
+well-tested, and may be removed in future releases.
+
 Low-level RPC changes
 ---------------------
 
+- `getblockchaininfo` now includes the block height at which BIP 9 softforks
+  activated.
+- `importmulti` has been updated to the final version merged into Bitcoin Core.
+  In addition to greatly expanding its capabilities, this brings a minor break
+  to the interface: the second parameter has changed from a boolean controlling
+  rescanning, to a JSON Object with a single `rescan` key.
 - `importprunedfunds` only accepts two required arguments. Some versions accept
   an optional third arg, which was always ignored. Make sure to never pass more
   than two arguments.
+
+Memory pool not prefilled
+-------------------------
+
+When connecting to new peers, their memory pool is no longer requested. This
+was found to use too much bandwidth and not done at the appropriate time.
 
 
 Linux ARM builds
@@ -239,7 +285,8 @@ are not expected to work out of the box on Android.
 Detailed release notes follow. This overview includes changes that affect
 behavior, not code moves, refactors and string updates. For convenience in locating
 the code changes and accompanying discussion, both the pull request and
-git merge commit are mentioned.
+git merge commit are mentioned. Changes specific to Bitcoin Knots (beyond Core)
+are flagged with an asterisk ('*') before the description.
 
 ### Consensus
 - #8636 `9dfa0c8` Implement NULLDUMMY softfork (BIP147) (jl2012)
@@ -254,6 +301,15 @@ git merge commit are mentioned.
 - #8884 `b987348` getblockchaininfo help: pruneheight is the lowest, not highest, block (luke-jr)
 - #8858 `3f508ed` rpc: Generate auth cookie in hex instead of base64 (laanwj)
 - #8951 `7c2bf4b` RPC/Mining: getblocktemplate: Update and fix formatting of help (luke-jr)
+- #8845 `103c724` *Bugfix: Don't return the address of a P2SH of a P2SH (jnewbery)
+- #7533 `f7c365b` *Bugfix: AreInputsStandard: Use the "bad-txns-input-" prefix in checking setIgnoreRejects (luke-jr)
+- #7533 `91f9bfc` *Make bad-witness-nonstandard rejection more specific, and support overriding some (luke-jr)
+- #7551 `bf54cfb` *Upgrade importmulti RPC to final version (Pedro Branco)
+- #8456 `27cd254` *[RPC] Simplified bumpfee command. (mrbandrews)
+- #7948 `3c5cae9` *RPC: augment getblockchaininfo bip9_softforks data (mruddy)
+- #8384 `d002e05` *Add witness data output to TxInError messages (instagibbs)
+- #8775 `34b418e` *RPC refactoring: Never access wallet directly, only via new CRPCRequestInfo (luke-jr)
+- #8694 `1f62f13` *RPC: Allow rpcauth configs to specify a 4th parameter naming a specific wallet (luke-jr)
 
 ### Block and transaction handling
 - #8611 `a9429ca` Reduce default number of blocks to check at startup (sipa)
@@ -263,6 +319,10 @@ git merge commit are mentioned.
 - #8526 `0027672` Make non-minimal OP_IF/NOTIF argument non-standard for P2WSH (jl2012)
 - #8524 `b8c79a0` Precompute sighashes (sipa)
 - #8651 `b8c79a0` Predeclare PrecomputedTransactionData as struct (sipa)
+- #8357 `94a34a5` *Fix relaypriority calculation error (maiiz)
+- #8610 `053506e` *Share unused mempool memory with coincache (sipa)
+- #7149 `887fc24` *CTxMemPool::check: Use height+1 for priority comparison, since height is not guaranteed to work (luke-jr)
+- n/a   `811e04c1` *Bugfix: AcceptToMemoryPool: Use height+1 for !priorityaccurate too, since the rest of the code assumes it
 
 ### P2P protocol and network code
 - #8740 `42ea51a` No longer send local address in addrMe (laanwj)
@@ -278,6 +338,8 @@ git merge commit are mentioned.
 - #8940 `5b4192b` Add x9 service bit support to dnsseed.bluematt.me, seed.bitcoinstats.com (TheBlueMatt, cdecker)
 - #8944 `685e4c7` Remove bogus assert on number of oubound connections. (TheBlueMatt)
 - #8949 `0dbc48a` Be more agressive in getting connections to peers with relevant services (gmaxwell)
+- n/a   `82af0de` *Revert "Send 'mempool' P2P command at the start of each P2P session to query remote node mempool contents."
+- #8996 `3d0965a` *Allow network activity to be temporarily suspended. (Jon Lund Steffensen)
 
 ### Build system
 - #8293 `fa5b249` Allow building libbitcoinconsensus without any univalue (luke-jr)
@@ -294,6 +356,17 @@ git merge commit are mentioned.
 - #8911 `7634d8e` Translate all files, even if wallet disabled (laanwj)
 - #8540 `1db3352` Fix random segfault when closing "Choose data directory" dialog (laanwj)
 - #7579 `f1c0d78` Show network/chain errors in the GUI (jonasschnelli)
+- #8877 `8be89f2` *Bugfix: Do not add sensitive information to history for real (luke-jr)
+- #8877 `dda19af` *Qt/RPCConsole: Add signmessagewithprivkey to list of commands filtered from history (luke-jr)
+- #8877 `4008781` *Qt/RPCConsole: Truncate filtered commands to just the command name, rather than skip it entirely in history (luke-jr)
+- #5891 `7eebe58` *Qt/RPCConsole: If filtered commands are found in history at startup, erase them best we can (luke-jr)
+- #7107 `b55737c` *Qt: Ask user to use standard port on startup if specified port is in use (Hampus Sjöberg)
+- #8371 `4ce9749` *[Qt] Add out-of-sync modal info layer (jonasschnelli)
+- #8517 `6147383` *[Qt] add HD enabled/disabled icon to the status bar (jonasschnelli)
+- #8672 `44f88a6` *qt: Adding transaction size to transaction details window (Hampus Sjöberg)
+- #8918 `21f5a63` *Qt: Add "Copy URI" to payment request context menu (luke-jr)
+- #8774 `bed19c6` *Qt refactors to better abstract wallet access (luke-jr)
+- #8694 `8f36208` *Qt: Add a combobox to toolbar to select from multiple wallets (luke-jr)
 
 ### Wallet
 - #8443 `464dedd` Trivial cleanup of HD wallet changes (jonasschnelli)
@@ -301,6 +374,8 @@ git merge commit are mentioned.
 - #8664 `091cdeb` Fix segwit-related wallet bug (sdaftuar)
 - #8693 `c6a6291` Add witness address to address book (instagibbs)
 - #8765 `6288659` Remove "unused" ThreadFlushWalletDB from removeprunedfunds (jonasschnelli)
+- #8776 `6ca908d` *Wallet refactoring leading up to multiwallet (luke-jr)
+- #8694 `8f36208` *Basic multiwallet support (luke-jr)
 
 ### Tests and QA
 - #8713 `ae8c7df` create_cache: Delete temp dir when done (MarcoFalke)
@@ -332,6 +407,7 @@ git merge commit are mentioned.
 - #8860 `0bee740` util: Move wait_bitcoinds() into stop_nodes() (MarcoFalke)
 - #8882 `b73f065` Fix race conditions in p2p-compactblocks.py and sendheaders.py (sdaftuar)
 - #8904 `cc6f551` Fix compact block shortids for a test case (dagurval)
+- #7728 `6089dea` *Fees: Tests: Check CFeeRate internal precision in mempool_tests.cpp (jtimon)
 
 ### Documentation
 - #8754 `0e2c6bd` Target protobuf 2.6 in OS X build notes. (fanquake)
@@ -376,30 +452,37 @@ Thanks to everyone who directly contributed to this release:
 - crowning-
 - Dagur Valberg Johannsson
 - David A. Harding
+- Derek Miller
 - Eric Lombrozo
 - Ethan Heilman
 - fanquake
 - Gaurav Rana
 - Gregory Maxwell
+- Hampus Sjöberg
 - instagibbs
 - isle2983
 - Jameson Lopp
 - Jeremy Rubin
 - jnewbery
 - Johnson Lau
+- Jon Lund Steffensen
 - Jonas Schnelli
 - jonnynewbs
+- Jorge Timón
 - Justin Camarena
 - Kaz Wesley
 - leijurv
 - Luke Dashjr
+- maiiz
 - MarcoFalke
 - Marty Jones
 - Matt Corallo
 - Micha
 - Michael Ford
+- mrbandrews
 - mruddy
 - Pavel Janík
+- Pedro Branco
 - Pieter Wuille
 - rodasmith
 - Sev
