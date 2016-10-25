@@ -461,7 +461,7 @@ BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
         JSONRPCRequest request;
         request.params.setArray();
         request.params.push_back("wallet.backup");
-        vpwallets.insert(vpwallets.begin(), &wallet);
+        request.wallet = &wallet;
         ::dumpwallet(request);
     }
 
@@ -473,7 +473,7 @@ BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
         JSONRPCRequest request;
         request.params.setArray();
         request.params.push_back("wallet.backup");
-        vpwallets[0] = &wallet;
+        request.wallet = &wallet;
         ::importwallet(request);
 
         BOOST_CHECK_EQUAL(wallet.mapWallet.size(), 3);
@@ -486,7 +486,6 @@ BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
     }
 
     SetMockTime(0);
-    vpwallets.erase(vpwallets.begin());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
