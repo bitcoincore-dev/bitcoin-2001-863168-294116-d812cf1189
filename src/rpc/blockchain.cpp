@@ -691,13 +691,16 @@ UniValue getblock(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
         throw runtime_error(
-            "getblock \"blockhash\" ( verbose )\n"
-            "\nIf verbose is false, returns a string that is serialized, hex-encoded data for block 'hash'.\n"
-            "If verbose is true, returns an Object with information about block <hash>.\n"
+            "getblock \"blockhash\" ( verbosity ) \n"
+            "\nIf verbosity is 0, returns a string that is serialized, hex-encoded data for block 'hash'.\n"
+            "If verbosity is 1, returns an Object with information about block <hash>.\n"
+            "If verbosity is 2, returns an Object with information about block <hash> and information about each transaction. \n"
             "\nArguments:\n"
             "1. \"blockhash\"          (string, required) The block hash\n"
-            "2. verbose                (boolean, optional, default=true) true for a json object, false for the hex encoded data\n"
-            "\nResult (for verbose = true):\n"
+            "2. verbosity              (numeric, optional, default=1) 0 for hex encoded data, 1 for a json object, and 2 for json object with transaction data\n"
+            "\nResult (for verbosity = 0):\n"
+            "\"data\"             (string) A string that is serialized, hex-encoded data for block 'hash'.\n"
+            "\nResult (for verbosity = 1):\n"
             "{\n"
             "  \"hash\" : \"hash\",     (string) the block hash (same as provided)\n"
             "  \"confirmations\" : n,   (numeric) The number of confirmations, or -1 if the block is not on the main chain\n"
@@ -721,8 +724,72 @@ UniValue getblock(const JSONRPCRequest& request)
             "  \"previousblockhash\" : \"hash\",  (string) The hash of the previous block\n"
             "  \"nextblockhash\" : \"hash\"       (string) The hash of the next block\n"
             "}\n"
-            "\nResult (for verbose=false):\n"
-            "\"data\"             (string) A string that is serialized, hex-encoded data for block 'hash'.\n"
+            "\nResult (for verbosity = 2):\n"
+            "{\n"
+            "  \"hash\" : \"hash\",     (string) the block hash (same as provided)\n"
+            "  \"confirmations\" : n,   (numeric) The number of confirmations, or -1 if the block is not on the main chain\n"
+            "  \"size\" : n,            (numeric) The block size\n"
+            "  \"strippedsize\" : n,    (numeric) The block size excluding witness data\n"
+            "  \"weight\" : n           (numeric) The block weight (BIP 141)\n"
+            "  \"height\" : n,          (numeric) The block height or index\n"
+            "  \"version\" : n,         (numeric) The block version\n"
+            "  \"versionHex\" : \"00000000\", (string) The block version formatted in hexadecimal\n"
+            "  \"merkleroot\" : \"xxxx\", (string) The merkle root\n"
+            "  \"tx\" : [               (array of Objects) The transactions\n"
+            "         {\n"
+            "          \"hex\" : \"data\",       (string) The serialized, hex-encoded data for 'txid'\n"
+            "          \"txid\" : \"id\",        (string) The transaction id (same as provided)\n"
+            "          \"hash\" : \"id\",        (string) The transaction hash (differs from txid for witness transactions)\n"
+            "          \"size\" : n,             (numeric) The serialized transaction size\n"
+            "          \"vsize\" : n,            (numeric) The virtual transaction size (differs from size for witness transactions)\n"
+            "          \"version\" : n,          (numeric) The version\n"
+            "          \"locktime\" : ttt,       (numeric) The lock time\n"
+            "          \"vin\" : [               (array of json objects)\n"
+            "            {\n"
+            "              \"txid\": \"id\",    (string) The transaction id\n"
+            "              \"vout\": n,         (numeric) \n"
+            "              \"scriptSig\": {     (json object) The script\n"
+            "                \"asm\": \"asm\",  (string) asm\n"
+            "                \"hex\": \"hex\"   (string) hex\n"
+            "                },\n"
+            "             \"sequence\": n      (numeric) The script sequence number\n"
+            "             \"txinwitness\": [\"hex\", ...] (array of string) hex-encoded witness data (if any)\n"
+            "             }\n"
+            "            ,...\n"
+            "          ],\n"
+            "          \"vout\" : [              (array of json objects)\n"
+            "             {\n"
+            "               \"value\" : x.xxx,            (numeric) The value in " + CURRENCY_UNIT + "\n"
+            "               \"n\" : n,                    (numeric) index\n"
+            "               \"scriptPubKey\" : {          (json object)\n"
+            "                  \"asm\" : \"asm\",          (string) the asm\n"
+            "                  \"hex\" : \"hex\",          (string) the hex\n"
+            "                  \"reqSigs\" : n,            (numeric) The required sigs\n"
+            "                  \"type\" : \"pubkeyhash\",  (string) The type, eg 'pubkeyhash'\n"
+            "                  \"addresses\" : [           (json array of string)\n"
+            "                     \"bitcoinaddress\"        (string) bitcoin address\n"
+            "                      ,...\n"
+            "                    ]\n"
+            "                  }\n"
+            "                }\n"
+            "                ,...\n"
+            "            ],\n"
+            "            \"blockhash\" : \"hash\",   (string) the block hash\n"
+            "            \"confirmations\" : n,      (numeric) The confirmations\n"
+            "            \"time\" : ttt,             (numeric) The transaction time in seconds since epoch (Jan 1 1970 GMT)\n"
+            "            \"blocktime\" : ttt         (numeric) The block time in seconds since epoch (Jan 1 1970 GMT)\n"
+            "         }\n"
+            "         ,...\n"
+            "  ],\n"
+            "  \"time\" : ttt,          (numeric) The block time in seconds since epoch (Jan 1 1970 GMT)\n"
+            "  \"mediantime\" : ttt,    (numeric) The median block time in seconds since epoch (Jan 1 1970 GMT)\n"
+            "  \"nonce\" : n,           (numeric) The nonce\n"
+            "  \"bits\" : \"1d00ffff\", (string) The bits\n"
+            "  \"difficulty\" : x.xxx,  (numeric) The difficulty\n"
+            "  \"chainwork\" : \"xxxx\",  (string) Expected number of hashes required to produce the chain up to this block (in hex)\n"
+            "  \"previousblockhash\" : \"hash\",  (string) The hash of the previous block\n"
+            "  \"nextblockhash\" : \"hash\"       (string) The hash of the next block\n"
+            "}\n"
             "\nExamples:\n"
             + HelpExampleCli("getblock", "\"00000000c937983704a73af28acdec37b049d214adbda81d7e2a3dd146f6ed09\"")
             + HelpExampleRpc("getblock", "\"00000000c937983704a73af28acdec37b049d214adbda81d7e2a3dd146f6ed09\"")
@@ -733,9 +800,13 @@ UniValue getblock(const JSONRPCRequest& request)
     std::string strHash = request.params[0].get_str();
     uint256 hash(uint256S(strHash));
 
-    bool fVerbose = true;
-    if (request.params.size() > 1)
-        fVerbose = request.params[1].get_bool();
+    int verbosity = 1;
+    if (request.params.size() > 1) {
+        if(request.params[1].isNum())
+            verbosity = request.params[1].get_int();
+        else
+            verbosity = request.params[1].get_bool() ? 1 : 0;
+    }
 
     if (mapBlockIndex.count(hash) == 0)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found");
@@ -749,7 +820,7 @@ UniValue getblock(const JSONRPCRequest& request)
     if(!ReadBlockFromDisk(block, pblockindex, Params().GetConsensus()))
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Can't read block from disk");
 
-    if (!fVerbose)
+    if (verbosity <= 0)
     {
         CDataStream ssBlock(SER_NETWORK, PROTOCOL_VERSION | RPCSerializationFlags());
         ssBlock << block;
@@ -757,7 +828,7 @@ UniValue getblock(const JSONRPCRequest& request)
         return strHex;
     }
 
-    return blockToJSON(block, pblockindex);
+    return blockToJSON(block, pblockindex, verbosity >= 2);
 }
 
 struct CCoinsStats
@@ -1419,7 +1490,7 @@ static const CRPCCommand commands[] =
     { "blockchain",         "getblockchaininfo",      &getblockchaininfo,      true,  {} },
     { "blockchain",         "getbestblockhash",       &getbestblockhash,       true,  {} },
     { "blockchain",         "getblockcount",          &getblockcount,          true,  {} },
-    { "blockchain",         "getblock",               &getblock,               true,  {"blockhash","verbose"} },
+    { "blockchain",         "getblock",               &getblock,               true,  {"blockhash","verbosity|verbose"} },
     { "blockchain",         "getblockhash",           &getblockhash,           true,  {"height"} },
     { "blockchain",         "getblockheader",         &getblockheader,         true,  {"blockhash","verbose"} },
     { "blockchain",         "getchaintips",           &getchaintips,           true,  {} },
