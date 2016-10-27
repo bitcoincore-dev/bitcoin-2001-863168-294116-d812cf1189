@@ -19,16 +19,44 @@
 using namespace std;
 
 extern UniValue createArgs(int nRequired, const char* address1 = NULL, const char* address2 = NULL);
-extern UniValue CallRPC(string args);
 
 extern CWallet* pwalletMain;
 
 BOOST_FIXTURE_TEST_SUITE(rpc_wallet_tests, WalletTestingSetup)
 
+namespace {
+
+UniValue CallRPC(string args)
+{
+    vector<string> vArgs;
+    boost::split(vArgs, args, boost::is_any_of(" \t"));
+    string strMethod = vArgs[0];
+    vArgs.erase(vArgs.begin());
+    UniValue params = RPCConvertValues(strMethod, vArgs);
+    BOOST_CHECK(tableRPC[strMethod]);
+    rpcfn_type method = tableRPC[strMethod]->actor;
+    CRPCRequestInfo reqinfo;
+    reqinfo.wallet = pwalletMain;
+    try {
+        UniValue result = method(params, false, reqinfo);
+        return result;
+    }
+    catch (const UniValue& objError) {
+        throw runtime_error(find_value(objError, "message").get_str());
+    }
+}
+
+UniValue addmultisig(const UniValue& args, bool fHelp) {
+    CRPCRequestInfo reqinfo;
+    reqinfo.wallet = pwalletMain;
+
+    return tableRPC["addmultisigaddress"]->actor(args, fHelp, reqinfo);
+}
+
+};
+
 BOOST_AUTO_TEST_CASE(rpc_addmultisig)
 {
-    rpcfn_type addmultisig = tableRPC["addmultisigaddress"]->actor;
-
     // old, 65-byte-long:
     const char address1Hex[] = "0434e3e09f49ea168c5bbf53f877ff4206923858aab7c7e1df25bc263978107c95e35065a27ef6f1b27222db0ec97e0e895eaca603d3ee0d4c060ce3d8a00286c8";
     // new, compressed:
