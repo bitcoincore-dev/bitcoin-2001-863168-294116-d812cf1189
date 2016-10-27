@@ -1159,6 +1159,75 @@ void LimitMempoolSize(CTxMemPool& pool, size_t limit, unsigned long age) {
         pcoinsTip->Uncache(removed);
 }
 
+struct NotoriousFilterEntry {
+    uint32_t begin;
+    uint32_t end;
+    const char *name;
+};
+
+static const struct NotoriousFilterEntry NotoriousPrefixes[] = {
+    {0x74db3700, 0x74db59ff, "BetCoin Dice"},
+    {0xc4c5d791, 0xc4c5d791, "CHBS"},          // 1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T
+    {0x434e5452, 0x434e5452, "old Counterparty"},
+    {0xda5dde84, 0xda5dde94, "Lucky Bit"},     // 1Lucky*
+    {0xf0dd368c, 0xf0dd368c, "Lucky Bit"},     // 1NxaBCFQwejSZbQfWcYNwgqML5wWoE3rK4
+    {0x946cb2e0, 0x946cb2e0, "Mastercoin"},
+    {0x069532d8, 0x069532d9, "SatoshiBones"},  // 1bones*
+    {0x06c06f6d, 0x06c06f6d, "SatoshiBones"},  // 1change*
+    {0x06f1b600, 0x06f1b6ff, "SatoshiDICE"},   // 1dice*
+    {0x068a5919, 0x068a5929, "SatoshiDICE"},   // 1bank*
+};
+
+static
+const char *IsNotorious(const CScript& script)
+{
+    if (script.size() >= 7 && script[0] == OP_DUP)
+    {
+        // pay-to-pubkeyhash
+        uint32_t pfx = ((uint32_t)script[3] << 0x18)
+                     | ((uint32_t)script[4] << 0x10)
+                     | ((uint16_t)script[5] <<    8)
+                     | ((uint16_t)script[6] <<    0);
+        unsigned i;
+
+        for (i = 0; i < (sizeof(NotoriousPrefixes) / sizeof(NotoriousPrefixes[0])); ++i)
+            if (pfx >= NotoriousPrefixes[i].begin && pfx <= NotoriousPrefixes[i].end)
+                return NotoriousPrefixes[i].name;
+    }
+
+    return NULL;
+}
+
+static
+const char *HasNotoriousOutput(const CTransaction& tx)
+{
+    const char *entryname;
+    BOOST_FOREACH(const CTxOut& txout, tx.vout)
+    {
+        entryname = IsNotorious(txout.scriptPubKey);
+        if (entryname)
+            return entryname;
+    }
+    return NULL;
+}
+
+static
+const char *HasNotoriousInput(const CTransaction& tx, CCoinsViewCache& view)
+{
+    const char *entryname;
+    BOOST_FOREACH(const CTxIn txin, tx.vin)
+    {
+        const COutPoint &outpoint = txin.prevout;
+        const CCoins* coins = view.AccessCoins(outpoint.hash);
+        if (!coins)
+            break;
+        entryname = IsNotorious(coins->vout[outpoint.n].scriptPubKey);
+        if (entryname)
+            return entryname;
+    }
+    return NULL;
+}
+
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state)
 {
@@ -1176,6 +1245,13 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
     AssertLockHeld(cs_main);
     if (pfMissingInputs)
         *pfMissingInputs = false;
+
+    const bool fCheckNotoriousSpam = GetArg("-spamfilter", DEFAULT_SPAMFILTER) && setIgnoreRejects.find("spam-notorious") == setIgnoreRejects.end();
+    if (fCheckNotoriousSpam) {
+        const char * const entryname = HasNotoriousOutput(tx);
+        if (entryname)
+            return state.DoS(0, false, REJECT_NONSTANDARD, "spam-notorious", false, entryname);
+    }
 
     if (!CheckTransaction(tx, state))
         return false; // state filled in by CheckTransaction
@@ -1318,6 +1394,12 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
         // CoinsViewCache instead of create its own
         if (!CheckSequenceLocks(tx, STANDARD_LOCKTIME_VERIFY_FLAGS, &lp))
             return state.DoS(0, false, REJECT_NONSTANDARD, "non-BIP68-final");
+        }
+
+        if (fCheckNotoriousSpam) {
+            const char * const entryname = HasNotoriousInput(tx, view);
+            if (entryname)
+                return state.DoS(0, false, REJECT_NONSTANDARD, "spam-notorious", false, entryname);
         }
 
         // Check for non-standard pay-to-script-hash in inputs
