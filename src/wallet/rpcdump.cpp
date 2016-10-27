@@ -146,7 +146,7 @@ UniValue importprivkey(const UniValue& params, bool fHelp)
         pwalletMain->nTimeFirstKey = 1; // 0 would be considered 'no value'
 
         if (fRescan) {
-            pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+            pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), NULL, true);
         }
     }
 
@@ -246,7 +246,7 @@ UniValue importaddress(const UniValue& params, bool fHelp)
 
     if (fRescan)
     {
-        pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+        pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), NULL, true);
         pwalletMain->ReacceptWalletTransactions();
     }
 
@@ -400,7 +400,7 @@ UniValue importpubkey(const UniValue& params, bool fHelp)
 
     if (fRescan)
     {
-        pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+        pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), NULL, true);
         pwalletMain->ReacceptWalletTransactions();
     }
 
@@ -506,7 +506,7 @@ UniValue importwallet(const UniValue& params, bool fHelp)
         pwalletMain->nTimeFirstKey = nTimeBegin;
 
     LogPrintf("Rescanning last %i blocks\n", chainActive.Height() - pindex->nHeight + 1);
-    pwalletMain->ScanForWalletTransactions(pindex);
+    pwalletMain->ScanForWalletTransactions(pindex, NULL);
     pwalletMain->MarkDirty();
 
     if (!fGood)
@@ -638,5 +638,52 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
     file << "\n";
     file << "# End of dump\n";
     file.close();
+    return NullUniValue;
+}
+
+UniValue rescanblockchain(const UniValue& params, bool fHelp)
+{
+    if (!EnsureWalletIsAvailable(fHelp))
+        return NullUniValue;
+
+    if (fHelp || params.size() > 2)
+        throw runtime_error(
+                            "rescanblockchain \"start-height\" \"stop-height\"\n"
+                            "\nRescan the local blockchain for wallet related transactions.\n"
+                            "\nArguments:\n"
+                            "1. \"start-height\"    (number, optional) blockheight where the rescan should start\n"
+                            "2. \"stop-height\"     (number, optional) blockheight where the rescan should stop\n"
+                            "\nExamples:\n"
+                            + HelpExampleCli("rescanblockchain", "\"100000 120000\"")
+                            + HelpExampleRpc("rescanblockchain", "\"100000 120000\"")
+                            );
+
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+
+    CBlockIndex *pIndexStart = NULL;
+    CBlockIndex *pIndexStop = NULL;
+    if (params.size() > 0 && params[0].isNum())
+        pIndexStart = chainActive[params[0].get_int()];
+
+    if (params.size() > 1 && params[1].isNum())
+        pIndexStop = chainActive[params[1].get_int()];
+
+    if (!pIndexStart)
+         pIndexStart = chainActive.Genesis();
+
+    //We can't rescan beyond non-pruned blocks, stop and throw an error
+    if (fPruneMode)
+    {
+        CBlockIndex *block = chainActive.Tip();
+        while (block && block->pprev && (block->pprev->nStatus & BLOCK_HAVE_DATA))
+            block = block->pprev;
+
+        if (pIndexStart->nHeight < block->nHeight)
+            throw JSONRPCError(RPC_WALLET_ERROR, "Can't rescan beyond pruned data.");
+    }
+
+    if (pwalletMain)
+        pwalletMain->ScanForWalletTransactions(pIndexStart, pIndexStop, true);
+
     return NullUniValue;
 }
