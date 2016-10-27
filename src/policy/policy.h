@@ -69,19 +69,19 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool w
      * Check for standard transaction types
      * @return True if all outputs (scriptPubKeys) use only standard transaction forms
      */
-bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnessEnabled = false);
+bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnessEnabled = false, const std::set<std::string>& setIgnoreRejects=std::set<std::string>());
     /**
      * Check for standard transaction types
      * @param[in] mapInputs    Map of previous transactions that have outputs we're spending
      * @return True if all inputs (scriptSigs) use only standard transaction forms
      */
-bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs);
+bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs, std::string& reason, const std::set<std::string>& setIgnoreRejects=std::set<std::string>());
     /**
      * Check if the transaction is over standard P2WSH resources limit:
      * 3600bytes witnessScript size, 80bytes per witness stack element, 100 witness stack elements
      * These limits are adequate for multi-signature up to n-of-100 using OP_CHECKSIG, OP_ADD, and OP_EQUAL,
      */
-bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs);
+bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs, std::string& reason, const std::set<std::string>& setIgnoreRejects=std::set<std::string>());
 
 extern unsigned int nBytesPerSigOp;
 
