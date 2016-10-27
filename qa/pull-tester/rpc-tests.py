@@ -133,7 +133,6 @@ testScripts = [
     'sendheaders.py',
     'keypool.py',
     'prioritise_transaction.py',
-    'importmulti.py',
     'invalidblockrequest.py',
     'invalidtxrequest.py',
     'abandonconflict.py',
