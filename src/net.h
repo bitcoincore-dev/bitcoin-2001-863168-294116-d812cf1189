@@ -98,6 +98,7 @@ bool BindListenPort(const CService &bindAddr, std::string& strError, bool fWhite
 void StartNode(boost::thread_group& threadGroup, CScheduler& scheduler);
 bool StopNode();
 void SocketSendData(CNode *pnode);
+void SetNetworkActive(bool active);
 
 struct CombinerAll
 {
@@ -156,6 +157,7 @@ CAddress GetLocalAddress(const CNetAddr *paddrPeer = NULL);
 
 
 extern bool fDiscover;
+extern bool fNetworkActive;
 extern bool fListen;
 extern ServiceFlags nLocalServices;
 extern ServiceFlags nRelevantServices;
