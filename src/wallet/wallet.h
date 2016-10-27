@@ -37,6 +37,7 @@ extern CFeeRate payTxFee;
 extern unsigned int nTxConfirmTarget;
 extern bool bSpendZeroConfChange;
 extern bool fSendFreeTransactions;
+extern bool fWalletRbf;
 
 static const unsigned int DEFAULT_KEYPOOL_SIZE = 100;
 //! -paytxfee default
@@ -53,6 +54,8 @@ static const bool DEFAULT_SPEND_ZEROCONF_CHANGE = true;
 static const bool DEFAULT_SEND_FREE_TRANSACTIONS = false;
 //! -txconfirmtarget default
 static const unsigned int DEFAULT_TX_CONFIRM_TARGET = 2;
+//! -walletrbf default
+static const bool DEFAULT_WALLET_RBF = false;
 //! Largest (in bytes) free transaction we're willing to create
 static const unsigned int MAX_FREE_TRANSACTION_CREATE_SIZE = 1000;
 static const bool DEFAULT_WALLETBROADCAST = true;
@@ -540,7 +543,8 @@ private:
 enum CreateTransactionFlags {
     CREATE_TX_DEFAULT     = 0,
     CREATE_TX_DONT_SIGN   = (1U << 0),
-    CREATE_TX_RBF_OPT_IN  = (1U << 1)
+    CREATE_TX_RBF_OPT_IN  = (1U << 1),
+    CREATE_TX_RBF_OPT_OUT = (1U << 15)
 };
 
 /** 
