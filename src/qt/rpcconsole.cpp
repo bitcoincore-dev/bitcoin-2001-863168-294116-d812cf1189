@@ -320,11 +320,52 @@ RPCConsole::RPCConsole(const PlatformStyle *platformStyle, QWidget *parent) :
     QSettings settings;
     consoleFontSize = settings.value(fontSizeSettingsKey, QFontInfo(QFont()).pointSize()).toInt();
     clear();
+    
+    //load history
+    QMap<size_t, QString> rewrite_replace;
+    int size = settings.beginReadArray("nRPCConsoleWindowHistory");
+    history.clear();
+    for (int i=0; i<size; i++){
+        settings.setArrayIndex(i);
+        QString cmd = settings.value("cmd").toString();
+        const QString filtered_cmd = command_filter_sensitive_data(cmd);
+        if (cmd != filtered_cmd) {
+            // Overwrite this line, and trigger an immediate rewrite of history to purge it
+            cmd = QString(cmd.size(), 'x');
+            rewrite_replace[history.size()] = filtered_cmd;
+        }
+        history.append(cmd);
+    }
+    historyPtr = history.size();
+    settings.endArray();
+    if (!rewrite_replace.empty()) {
+        WriteCommandHistory();
+        for (QMapIterator<size_t, QString> i(rewrite_replace); i.hasNext(); ) {
+            i.next();
+            history[i.key()] = i.value();
+        }
+        WriteCommandHistory();
+    }
+}
+
+void RPCConsole::WriteCommandHistory()
+{
+    //persist history
+    QSettings settings;
+    settings.beginWriteArray("nRPCConsoleWindowHistory");
+    for (int i = 0; i < history.size(); ++i) {
+        settings.setArrayIndex(i);
+        settings.setValue("cmd", history.at(i));
+    }
+    settings.endArray();
 }
 
 RPCConsole::~RPCConsole()
 {
     GUIUtil::saveWindowGeometry("nRPCConsoleWindow", this);
+    
+    WriteCommandHistory();
+    
     Q_EMIT stopExecutor();
     RPCUnsetTimerInterface(rpcTimerInterface);
     delete rpcTimerInterface;
