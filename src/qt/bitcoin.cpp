@@ -241,7 +241,7 @@ private:
     QTimer *pollShutdownTimer;
 #ifdef ENABLE_WALLET
     PaymentServer* paymentServer;
-    WalletModel *walletModel;
+    std::vector<WalletModel*> walletModels;
 #endif
     int returnValue;
     const PlatformStyle *platformStyle;
@@ -302,7 +302,7 @@ BitcoinApplication::BitcoinApplication(int &argc, char **argv):
     pollShutdownTimer(0),
 #ifdef ENABLE_WALLET
     paymentServer(0),
-    walletModel(0),
+    walletModels(),
 #endif
     returnValue(0)
 {
@@ -417,8 +417,10 @@ void BitcoinApplication::requestShutdown()
 
 #ifdef ENABLE_WALLET
     window->removeAllWallets();
-    delete walletModel;
-    walletModel = 0;
+    for (WalletModel *walletModel : walletModels) {
+        delete walletModel;
+    }
+    walletModels.clear();
 #endif
     delete clientModel;
     clientModel = 0;
@@ -448,15 +450,25 @@ void BitcoinApplication::initializeResult(int retval)
         window->setClientModel(clientModel);
 
 #ifdef ENABLE_WALLET
-        if(pwalletMain)
-        {
-            walletModel = new WalletModel(platformStyle, pwalletMain, optionsModel);
+        bool fFirstWallet = true;
+        for (CWallet_ptr pwallet : vpwallets) {
+            WalletModel * const walletModel = new WalletModel(platformStyle, pwallet, optionsModel);
 
-            window->addWallet(BitcoinGUI::DEFAULT_WALLET, walletModel);
-            window->setCurrentWallet(BitcoinGUI::DEFAULT_WALLET);
+            QString WalletName = QString::fromStdString(pwallet->strWalletFile);
+            if (WalletName.endsWith(".dat")) {
+                WalletName.truncate(WalletName.size() - 4);
+            }
+
+            window->addWallet(WalletName, walletModel);
+            if (fFirstWallet) {
+                window->setCurrentWallet(WalletName);
+                fFirstWallet = false;
+            }
 
             connect(walletModel, SIGNAL(coinsSent(CWallet*,SendCoinsRecipient,QByteArray)),
                              paymentServer, SLOT(fetchPaymentACK(CWallet*,const SendCoinsRecipient&,QByteArray)));
+
+            walletModels.push_back(walletModel);
         }
 #endif
 

@@ -16,6 +16,7 @@
 class ClientModel;
 class PlatformStyle;
 class RPCTimerInterface;
+class WalletModel;
 
 namespace Ui {
     class RPCConsole;
@@ -36,6 +37,7 @@ public:
     ~RPCConsole();
 
     void setClientModel(ClientModel *model);
+    void addWallet(const QString name, WalletModel * const walletModel);
 
     enum MessageClass {
         MC_ERROR,
@@ -110,7 +112,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     // For RPC command executor
     void stopExecutor();
-    void cmdRequest(const QString &command);
+    void cmdRequest(const QString &command, void *ppwallet);
 
 private:
     static QString FormatBytes(quint64 bytes);

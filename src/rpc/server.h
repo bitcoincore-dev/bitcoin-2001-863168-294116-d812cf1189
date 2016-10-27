@@ -180,7 +180,7 @@ public:
      * @returns Result of the call.
      * @throws an exception (UniValue) when an error happens.
      */
-    UniValue execute(const std::string &method, const UniValue &params) const;
+    UniValue execute(const std::string &method, const UniValue &params, CRPCRequestInfo& reqinfo) const;
 
     /**
     * Returns a list of registered commands
@@ -220,6 +220,6 @@ extern void EnsureWalletIsUnlocked(CWallet*);
 bool StartRPC();
 void InterruptRPC();
 void StopRPC();
-std::string JSONRPCExecBatch(const UniValue& vReq);
+std::string JSONRPCExecBatch(const UniValue& vReq, CRPCRequestInfo& reqinfo);
 
 #endif // BITCOIN_RPCSERVER_H

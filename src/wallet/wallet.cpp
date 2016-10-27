@@ -34,7 +34,7 @@
 
 using namespace std;
 
-CWallet* pwalletMain = NULL;
+std::vector<CWallet_ptr> vpwallets;
 /** Transaction fee set by the user */
 CFeeRate payTxFee(DEFAULT_TRANSACTION_FEE);
 unsigned int nTxConfirmTarget = DEFAULT_TX_CONFIRM_TARGET;
@@ -3463,13 +3463,17 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
 bool CWallet::InitLoadWallet()
 {
-    std::string walletFile = GetArg("-wallet", DEFAULT_WALLET_DAT);
-
-    CWallet * const pwallet = CreateWalletFromFile(walletFile);
-    if (!pwallet) {
-        return false;
+    if (mapMultiArgs["-wallet"].empty()) {
+        mapMultiArgs["-wallet"].push_back(DEFAULT_WALLET_DAT);
     }
-    pwalletMain = pwallet;
+
+    for (const std::string& walletFile : mapMultiArgs["-wallet"]) {
+        CWallet * const pwallet = CreateWalletFromFile(walletFile);
+        if (!pwallet) {
+            return false;
+        }
+        vpwallets.push_back(pwallet);
+    }
 
     return true;
 }
