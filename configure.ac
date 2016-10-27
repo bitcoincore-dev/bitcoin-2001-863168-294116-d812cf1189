@@ -271,6 +271,17 @@ AC_ARG_WITH([daemon],
     fi
   ])
 
+can_render_icons=yes
+AC_PATH_PROGS([RSVG_CONVERT],[rsvg-convert rsvg],no)
+AC_PATH_PROGS([IMAGEMAGICK_CONVERT],[convert],no)
+AC_PATH_PROGS([PNG2ICNS],[png2icns],no)
+
+if test x$RSVG_CONVERT = xno; then
+  can_render_icons='rsvg-convert'
+elif test x$IMAGEMAGICK_CONVERT = xno; then
+  can_render_icons='(ImageMagick) convert'
+fi
+
 use_pkgconfig=yes
 case $host in
   *mingw*)
@@ -335,6 +346,10 @@ case $host in
 
      ;;
   *darwin*)
+     if test x$PNG2ICNS = xno; then
+       can_render_icons='png2icns'
+     fi
+
      TARGET_OS=darwin
      LEVELDB_TARGET_FLAGS="-DOS_MACOSX"
      if  test x$cross_compiling != xyes; then
@@ -383,8 +398,6 @@ case $host in
            AC_PATH_TOOL([INSTALLNAMETOOL], [install_name_tool], install_name_tool)
            AC_PATH_TOOL([OTOOL], [otool], otool)
            AC_PATH_PROGS([GENISOIMAGE], [genisoimage mkisofs],genisoimage)
-           AC_PATH_PROGS([RSVG_CONVERT], [rsvg-convert rsvg],rsvg-convert)
-           AC_PATH_PROGS([IMAGEMAGICK_CONVERT], [convert],convert)
            AC_PATH_PROGS([TIFFCP], [tiffcp],tiffcp)
 
            dnl libtool will try to strip the static lib, which is a problem for
@@ -416,6 +429,8 @@ case $host in
      LEVELDB_TARGET_FLAGS="-DOS_${OTHER_OS}"
      ;;
 esac
+
+AM_CONDITIONAL([CAN_RENDER_ICONS], [test x$can_render_icons = xyes])
 
 if test x$use_pkgconfig = xyes; then
   m4_ifndef([PKG_PROG_PKG_CONFIG], [AC_MSG_ERROR(PKG_PROG_PKG_CONFIG macro not found. Please install pkg-config and re-run autogen.sh.)])
