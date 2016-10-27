@@ -64,6 +64,7 @@
 using namespace std;
 
 bool fFeeEstimatesInitialized = false;
+static const bool DEFAULT_COREPOLICY = false;
 static const bool DEFAULT_PROXYRANDOMIZE = true;
 static const bool DEFAULT_REST_ENABLE = false;
 static const bool DEFAULT_DISABLE_SAFEMODE = false;
@@ -319,6 +320,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-checklevel=<n>", strprintf(_("How thorough the block verification of -checkblocks is (0-4, default: %u)"), DEFAULT_CHECKLEVEL));
     strUsage += HelpMessageOpt("-conf=<file>", strprintf(_("Specify configuration file (default: %s)"), BITCOIN_CONF_FILENAME));
     strUsage += HelpMessageOpt("-confrw=<file>", strprintf(_("Specify read/write configuration file (default: %s)"), BITCOIN_RW_CONF_FILENAME));
+    strUsage += HelpMessageOpt("-corepolicy", strprintf(_("Use Bitcoin Core policy defaults (default: %s)"), DEFAULT_COREPOLICY));
     if (mode == HMM_BITCOIND)
     {
 #ifndef WIN32
@@ -469,6 +471,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-blockprioritysize=<n>", strprintf(_("Set maximum size of high-priority/low-fee transactions in bytes (default: %d)"), DEFAULT_BLOCK_PRIORITY_SIZE));
     if (showDebug)
         strUsage += HelpMessageOpt("-blockversion=<n>", "Override block version to test forking scenarios");
+    strUsage += HelpMessageOpt("-priorityaccurate", strprintf(_("Update coin-age priority accurately when parent transactions are confirmed (default: %d)"), fPriorityAccurate));
 
     strUsage += HelpMessageGroup(_("RPC server options:"));
 #ifdef USE_LIBEVENT
@@ -698,6 +701,17 @@ bool AppInitServers(boost::thread_group& threadGroup)
 // Parameter interaction based on rules
 void InitParameterInteraction()
 {
+    if (GetBoolArg("-corepolicy", DEFAULT_COREPOLICY)) {
+        SoftSetArg("-bytespersigopstrict", "0");
+        SoftSetArg("-spamfilter", "0");
+        SoftSetArg("-permitbaremultisig", "1");
+        SoftSetArg("-datacarriersize", "83");
+
+        SoftSetArg("-blockprioritysize", "0");
+        SoftSetArg("-priorityaccurate", "0");
+        SoftSetArg("-blockmaxsize", "750000");
+    }
+
     // when specifying an explicit binding address, you want to listen on it
     // even when -connect or -proxy is specified
     if (mapArgs.count("-bind")) {
@@ -891,6 +905,8 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     if (GetBoolArg("-nodebug", false) || find(categories.begin(), categories.end(), string("0")) != categories.end())
         fDebug = false;
 
+    fPriorityAccurate = GetBoolArg("-priorityaccurate", fPriorityAccurate);
+
     // Check for -debugnet
     if (GetBoolArg("-debugnet", false))
         InitWarning(_("Unsupported argument -debugnet ignored, use -debug=net."));
@@ -919,10 +935,10 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     fCheckpointsEnabled = GetBoolArg("-checkpoints", DEFAULT_CHECKPOINTS_ENABLED);
 
     // mempool limits
-    int64_t nMempoolSizeMax = GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000;
-    int64_t nMempoolSizeMin = GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT) * 1000 * 40;
-    if (nMempoolSizeMax < 0 || nMempoolSizeMax < nMempoolSizeMin)
-        return InitError(strprintf(_("-maxmempool must be at least %d MB"), std::ceil(nMempoolSizeMin / 1000000.0)));
+    int64_t nMempoolSizeMaxMB = GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE);
+    int64_t nMempoolSizeMinMB = maxmempoolMinimum(GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT));
+    if (nMempoolSizeMaxMB < 0 || nMempoolSizeMaxMB < nMempoolSizeMinMB)
+        return InitError(strprintf(_("-maxmempool must be at least %d MB"), nMempoolSizeMinMB));
 
     // -par=0 means autodetect, but nScriptCheckThreads==0 means no concurrency
     nScriptCheckThreads = GetArg("-par", DEFAULT_SCRIPTCHECK_THREADS);
@@ -1320,6 +1336,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     int64_t nCoinDBCache = std::min(nTotalCache / 2, (nTotalCache / 4) + (1 << 23)); // use 25%-50% of the remainder for disk cache
     nCoinDBCache = std::min(nCoinDBCache, nMaxCoinsDBCache << 20); // cap total coins db cache
     nTotalCache -= nCoinDBCache;
+    const int64_t nMempoolSizeMax = nMempoolSizeMaxMB * 1000000;
     nCoinCachePlusMempoolUsage = nMempoolSizeMax + nTotalCache; // the rest goes to in-memory cache
     LogPrintf("Cache configuration:\n");
     LogPrintf("* Using %.1fMiB for block index database\n", nBlockTreeDBCache * (1.0 / 1024 / 1024));

@@ -13,9 +13,12 @@
 #include "guiutil.h"
 #include "optionsmodel.h"
 
+#include "consensus/consensus.h" // for MAX_BLOCK_SERIALIZED_SIZE
 #include "main.h" // for DEFAULT_SCRIPTCHECK_THREADS and MAX_SCRIPTCHECK_THREADS
 #include "netbase.h"
+#include "primitives/transaction.h" // for WITNESS_SCALE_FACTOR
 #include "txdb.h" // for -dbcache defaults
+#include "txmempool.h" // for maxmempoolMinimum
 
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h" // for CWallet::GetRequiredFee()
@@ -23,12 +26,53 @@
 
 #include <boost/thread.hpp>
 
+#include <QBoxLayout>
 #include <QDataWidgetMapper>
 #include <QDir>
 #include <QIntValidator>
 #include <QLocale>
-#include <QMessageBox>
+#include <QInputDialog>
+#include <QSpinBox>
 #include <QTimer>
+
+void OptionsDialog::FixTabOrder(QWidget * const o)
+{
+    setTabOrder(prevwidget, o);
+    prevwidget = o;
+}
+
+void OptionsDialog::CreateOptionUI(QBoxLayout * const layout, QWidget * const o, const QString& text)
+{
+    QWidget * const parent = o->parentWidget();
+    const QStringList text_parts = text.split("%s");
+
+    QHBoxLayout * const horizontalLayout = new QHBoxLayout();
+
+    QLabel * const labelBefore = new QLabel(parent);
+    labelBefore->setText(text_parts[0]);
+    labelBefore->setTextFormat(Qt::PlainText);
+    labelBefore->setBuddy(o);
+    labelBefore->setToolTip(o->toolTip());
+
+    horizontalLayout->addWidget(labelBefore);
+    horizontalLayout->addWidget(o);
+
+    QLabel * const labelAfter = new QLabel(parent);
+    labelAfter->setText(text_parts[1]);
+    labelAfter->setTextFormat(Qt::PlainText);
+    labelAfter->setBuddy(o);
+    labelAfter->setToolTip(o->toolTip());
+
+    horizontalLayout->addWidget(labelAfter);
+
+    QSpacerItem * const horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+    horizontalLayout->addItem(horizontalSpacer);
+
+    layout->addLayout(horizontalLayout);
+
+    FixTabOrder(o);
+}
 
 OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     QDialog(parent),
@@ -71,6 +115,132 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->maxuploadtarget->setMinimum(1);
     ui->maxuploadtarget->setMaximum(std::numeric_limits<int>::max());
     connect(ui->maxuploadtargetCheckbox, SIGNAL(stateChanged(int)), this, SLOT(maxuploadtargetCheckboxStateChanged(int)));
+
+    prevwidget = ui->peerbloomfilters;
+
+    /* Mempool tab */
+
+    QWidget * const tabMempool = new QWidget();
+    QVBoxLayout * const verticalLayout_Mempool = new QVBoxLayout(tabMempool);
+    ui->tabWidget->insertTab(ui->tabWidget->indexOf(ui->tabWindow), tabMempool, tr("Mem&pool"));
+
+    mempoolreplacement = new QValueComboBox(tabMempool);
+    mempoolreplacement->addItem(QString("never"), QVariant("never"));
+    mempoolreplacement->addItem(QString("with a higher mining fee, and opt-in"), QVariant("fee,optin"));
+    mempoolreplacement->addItem(QString("with a higher mining fee (no opt-out)"), QVariant("fee,-optin"));
+    CreateOptionUI(verticalLayout_Mempool, mempoolreplacement, tr("Transaction &replacement: %s"));
+
+    maxorphantx = new QSpinBox(tabMempool);
+    maxorphantx->setMinimum(0);
+    maxorphantx->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(verticalLayout_Mempool, maxorphantx, tr("Keep at most %s unconnected transactions in memory"));
+
+    maxmempool = new QSpinBox(tabMempool);
+    const int64_t nMempoolSizeMinMB = maxmempoolMinimum(GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT));
+    maxmempool->setMinimum(nMempoolSizeMinMB);
+    maxmempool->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(verticalLayout_Mempool, maxmempool, tr("Keep the transaction memory pool below %s MB"));
+
+    mempoolexpiry = new QSpinBox(tabMempool);
+    mempoolexpiry->setMinimum(1);
+    mempoolexpiry->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(verticalLayout_Mempool, mempoolexpiry, tr("Do not keep transactions in memory more than %s hours"));
+
+    QGroupBox * const groupBox_Spamfiltering = new QGroupBox(tabMempool);
+    groupBox_Spamfiltering->setTitle(tr("Spam filtering"));
+    QVBoxLayout * const verticalLayout_Spamfiltering = new QVBoxLayout(groupBox_Spamfiltering);
+
+    rejectunknownscripts = new QCheckBox(groupBox_Spamfiltering);
+    rejectunknownscripts->setText(tr("Ignore unrecognised receiver scripts"));
+    rejectunknownscripts->setToolTip(tr("With this option enabled, unrecognised receiver (\"pubkey\") scripts will be ignored. Unrecognisable scripts could be used to bypass further spam filters. If your software is outdated, they may also be used to trick you into thinking you were sent bitcoins that will never confirm."));
+    verticalLayout_Spamfiltering->addWidget(rejectunknownscripts);
+    FixTabOrder(rejectunknownscripts);
+
+    bytespersigop = new QSpinBox(groupBox_Spamfiltering);
+    bytespersigop->setMinimum(1);
+    bytespersigop->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(verticalLayout_Spamfiltering, bytespersigop, tr("Treat each consensus-counted sigop as at least %s bytes."));
+
+    bytespersigopstrict = new QSpinBox(groupBox_Spamfiltering);
+    bytespersigopstrict->setMinimum(1);
+    bytespersigopstrict->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(verticalLayout_Spamfiltering, bytespersigopstrict, tr("Ignore transactions with fewer than %s bytes per potentially-executed sigop."));
+
+    limitancestorcount = new QSpinBox(groupBox_Spamfiltering);
+    limitancestorcount->setMinimum(1);
+    limitancestorcount->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(verticalLayout_Spamfiltering, limitancestorcount, tr("Ignore transactions with %s or more unconfirmed ancestors."));
+
+    limitancestorsize = new QSpinBox(groupBox_Spamfiltering);
+    limitancestorsize->setMinimum(1);
+    limitancestorsize->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(verticalLayout_Spamfiltering, limitancestorsize, tr("Ignore transactions whose size with all unconfirmed ancestors exceeds %s kilobytes."));
+
+    limitdescendantcount = new QSpinBox(groupBox_Spamfiltering);
+    limitdescendantcount->setMinimum(1);
+    limitdescendantcount->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(verticalLayout_Spamfiltering, limitdescendantcount, tr("Ignore transactions if any ancestor would have %s or more unconfirmed descendants."));
+
+    limitdescendantsize = new QSpinBox(groupBox_Spamfiltering);
+    limitdescendantsize->setMinimum(1);
+    limitdescendantsize->setMaximum(std::numeric_limits<int>::max());
+    CreateOptionUI(verticalLayout_Spamfiltering, limitdescendantsize, tr("Ignore transactions if any ancestor would have more than %s kilobytes of unconfirmed descendants."));
+
+    spamfilter = new QCheckBox(groupBox_Spamfiltering);
+    spamfilter->setText(tr("Ignore known spam using pattern matching"));
+    spamfilter->setToolTip(tr("Some spam uses identifiable patterns in scripts. This filter looks for identified spam patterns."));
+    verticalLayout_Spamfiltering->addWidget(spamfilter);
+    FixTabOrder(spamfilter);
+
+    rejectbaremultisig = new QCheckBox(groupBox_Spamfiltering);
+    rejectbaremultisig->setText(tr("Ignore bare/exposed \"multisig\" scripts"));
+    rejectbaremultisig->setToolTip(tr("Spam is sometimes disguised to appear as if it is an old-style N-of-M multi-party transaction, where most of the keys are really bogus. At the same time, legitimate multi-party transactions typically have always used P2SH format (which is not filtered by this option), which is more secure."));
+    verticalLayout_Spamfiltering->addWidget(rejectbaremultisig);
+    FixTabOrder(rejectbaremultisig);
+
+    datacarriersize = new QSpinBox(groupBox_Spamfiltering);
+    datacarriersize->setMinimum(0);
+    datacarriersize->setMaximum(std::numeric_limits<int>::max());
+    datacarriersize->setToolTip(tr("Since 2014, a specific method for attaching arbitrary data to transactions has been recognised as not requiring space in the coin database. Since it is sometimes impractical to detect small spam disguised as ordinary transactions, it is sometimes considered beneficial to treat these less harmful data attachments as equals to legitimate usage."));
+    CreateOptionUI(verticalLayout_Spamfiltering, datacarriersize, tr("Ignore additional data when its size is greater than %s bytes."));
+
+    verticalLayout_Mempool->addWidget(groupBox_Spamfiltering);
+
+    verticalLayout_Mempool->addItem(new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding));
+
+    /* Mining tab */
+
+    QWidget * const tabMining = new QWidget();
+    QVBoxLayout * const verticalLayout_Mining = new QVBoxLayout(tabMining);
+    ui->tabWidget->insertTab(ui->tabWidget->indexOf(ui->tabWindow), tabMining, tr("M&ining"));
+
+    verticalLayout_Mining->addWidget(new QLabel(tr("<strong>Note that mining is heavily influenced by the settings on the Mempool tab.</strong>")));
+
+    blockmaxsize = new QSpinBox(tabMining);
+    blockmaxsize->setMinimum(1);
+    blockmaxsize->setMaximum((MAX_BLOCK_SERIALIZED_SIZE - 1000) / 1000);
+    connect(blockmaxsize, SIGNAL(valueChanged(int)), this, SLOT(blockmaxsize_changed(int)));
+    CreateOptionUI(verticalLayout_Mining, blockmaxsize, tr("Never mine a block larger than %s kB."));
+
+    blockprioritysize = new QSpinBox(tabMining);
+    blockprioritysize->setMinimum(0);
+    blockprioritysize->setMaximum(blockmaxsize->maximum());
+    connect(blockprioritysize, SIGNAL(valueChanged(int)), this, SLOT(blockmaxsize_increase(int)));
+    CreateOptionUI(verticalLayout_Mining, blockprioritysize, tr("Mine first %s kB of transactions sorted by coin-age priority."));
+
+    priorityaccurate = new QCheckBox(tabMining);
+    priorityaccurate->setText(tr("Update coin-age priority accurately when parent transactions are confirmed."));
+    priorityaccurate->setToolTip(tr("Bitcoin Core 0.12.0 approximates coin-age priority rather than updating it accurately. This option is provided to allow the user choice over whether to use this approximation or to use accurate updates."));
+    verticalLayout_Mining->addWidget(priorityaccurate);
+    FixTabOrder(priorityaccurate);
+
+    blockmaxweight = new QSpinBox(tabMining);
+    blockmaxweight->setMinimum(1);
+    blockmaxweight->setMaximum((MAX_BLOCK_WEIGHT-4000) / 1000);
+    connect(blockmaxweight, SIGNAL(valueChanged(int)), this, SLOT(blockmaxweight_changed(int)));
+    CreateOptionUI(verticalLayout_Mining, blockmaxweight, tr("Never mine a block weighing more than %s,000."));
+
+    verticalLayout_Mining->addItem(new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
     /* Window elements init */
 #ifdef Q_OS_MAC
@@ -222,6 +392,38 @@ void OptionsDialog::setMapper()
 
     mapper->addMapping(ui->peerbloomfilters, OptionsModel::peerbloomfilters);
 
+    /* Mempool tab */
+
+    QVariant current_mempoolreplacement = model->data(model->index(OptionsModel::mempoolreplacement, 0), Qt::EditRole);
+    int current_mempoolreplacement_index = mempoolreplacement->findData(current_mempoolreplacement);
+    if (current_mempoolreplacement_index == -1) {
+        mempoolreplacement->addItem(current_mempoolreplacement.toString(), current_mempoolreplacement);
+        current_mempoolreplacement_index = mempoolreplacement->count() - 1;
+    }
+    mempoolreplacement->setCurrentIndex(current_mempoolreplacement_index);
+
+    mapper->addMapping(maxorphantx, OptionsModel::maxorphantx);
+    mapper->addMapping(maxmempool, OptionsModel::maxmempool);
+    mapper->addMapping(mempoolexpiry, OptionsModel::mempoolexpiry);
+
+    mapper->addMapping(rejectunknownscripts, OptionsModel::rejectunknownscripts);
+    mapper->addMapping(bytespersigop, OptionsModel::bytespersigop);
+    mapper->addMapping(bytespersigopstrict, OptionsModel::bytespersigopstrict);
+    mapper->addMapping(limitancestorcount, OptionsModel::limitancestorcount);
+    mapper->addMapping(limitancestorsize, OptionsModel::limitancestorsize);
+    mapper->addMapping(limitdescendantcount, OptionsModel::limitdescendantcount);
+    mapper->addMapping(limitdescendantsize, OptionsModel::limitdescendantsize);
+    mapper->addMapping(spamfilter, OptionsModel::spamfilter);
+    mapper->addMapping(rejectbaremultisig, OptionsModel::rejectbaremultisig);
+    mapper->addMapping(datacarriersize, OptionsModel::datacarriersize);
+
+    /* Mining tab */
+
+    mapper->addMapping(blockmaxsize, OptionsModel::blockmaxsize);
+    mapper->addMapping(blockprioritysize, OptionsModel::blockprioritysize);
+    mapper->addMapping(priorityaccurate, OptionsModel::priorityaccurate);
+    mapper->addMapping(blockmaxweight, OptionsModel::blockmaxweight);
+
     /* Window */
 #ifndef Q_OS_MAC
     mapper->addMapping(ui->hideTrayIcon, OptionsModel::HideTrayIcon);
@@ -256,20 +458,59 @@ void OptionsDialog::maxuploadtargetCheckboxStateChanged(const int state)
     ui->maxuploadtarget->setEnabled(state);
 }
 
+void OptionsDialog::blockmaxsize_changed(int i)
+{
+    if (blockprioritysize->value() > i) {
+        blockprioritysize->setValue(i);
+    }
+
+    if (blockmaxweight->value() < i) {
+        blockmaxweight->setValue(i);
+    } else if (blockmaxweight->value() > i * WITNESS_SCALE_FACTOR) {
+        blockmaxweight->setValue(i * WITNESS_SCALE_FACTOR);
+    }
+}
+
+void OptionsDialog::blockmaxsize_increase(int i)
+{
+    if (blockmaxsize->value() < i) {
+        blockmaxsize->setValue(i);
+    }
+}
+
+void OptionsDialog::blockmaxweight_changed(int i)
+{
+    if (blockmaxsize->value() < i / WITNESS_SCALE_FACTOR) {
+        blockmaxsize->setValue(i / WITNESS_SCALE_FACTOR);
+    } else if (blockmaxsize->value() > i) {
+        blockmaxsize->setValue(i);
+    }
+}
+
 void OptionsDialog::on_resetButton_clicked()
 {
     if(model)
     {
         // confirmation dialog
-        QMessageBox::StandardButton btnRetVal = QMessageBox::question(this, tr("Confirm options reset"),
-            tr("Client restart required to activate changes.") + "<br><br>" + tr("Client will be shut down. Do you want to proceed?"),
-            QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+        QStringList items;
+        QString strPrefix = tr("Use policy defaults for %1");
+        items << strPrefix.arg(tr(PACKAGE_NAME));
+        items << strPrefix.arg(tr("Bitcoin Core")+" ");
 
-        if(btnRetVal == QMessageBox::Cancel)
+        QInputDialog dialog(this);
+        dialog.setWindowTitle(tr("Confirm options reset"));
+        dialog.setLabelText(tr("Client restart required to activate changes.") + "<br><br>" + tr("Client will be shut down. Do you want to proceed?"));
+        dialog.setComboBoxItems(items);
+        dialog.setTextValue(items[0]);
+        dialog.setComboBoxEditable(false);
+
+        if (!dialog.exec()) {
             return;
+        }
 
         /* reset all options and close GUI */
         model->Reset();
+        model->setData(model->index(OptionsModel::corepolicy, 0), items.indexOf(dialog.textValue()));
         QApplication::quit();
     }
 }
@@ -300,6 +541,8 @@ void OptionsDialog::on_okButton_clicked()
     } else {
         model->setData(model->index(OptionsModel::maxuploadtarget, 0), 0);
     }
+
+    model->setData(model->index(OptionsModel::mempoolreplacement, 0), mempoolreplacement->itemData(mempoolreplacement->currentIndex()));
 
     mapper->submit();
     accept();
