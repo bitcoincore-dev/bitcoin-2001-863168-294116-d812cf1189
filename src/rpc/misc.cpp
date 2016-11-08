@@ -92,11 +92,12 @@ class CWallet;
 
 static UniValue createmultisig(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
+    if (request.fHelp || request.params.size() < 2 || request.params.size() > 4)
     {
-        std::string msg = "createmultisig nrequired [\"key\",...] ( \"address_type\" )\n"
+        std::string msg = "createmultisig nrequired [\"key\",...] ( \"address_type\" sort )\n"
             "\nCreates a multi-signature address with n signature of m keys required.\n"
             "It returns a json object with the address and redeemScript.\n"
+            "Public keys can be sorted according to BIP67 during the request if required.\n"
             "\nArguments:\n"
             "1. nrequired                    (numeric, required) The number of required signatures out of the n keys.\n"
             "2. \"keys\"                       (string, required) A json array of hex-encoded public keys\n"
@@ -105,6 +106,7 @@ static UniValue createmultisig(const JSONRPCRequest& request)
             "       ,...\n"
             "     ]\n"
             "3. \"address_type\"               (string, optional) The address type to use. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\". Default is legacy.\n"
+            "4. sort                         (bool, optional) Whether to sort public keys according to BIP67. Default setting is false.\n"
 
             "\nResult:\n"
             "{\n"
@@ -122,6 +124,8 @@ static UniValue createmultisig(const JSONRPCRequest& request)
     }
 
     int required = request.params[0].get_int();
+
+    bool fSorted = request.params.size() > 3 && request.params[3].get_bool();
 
     // Get the public keys
     const UniValue& keys = request.params[1].get_array();
@@ -144,7 +148,7 @@ static UniValue createmultisig(const JSONRPCRequest& request)
     }
 
     // Construct using pay-to-script-hash:
-    const CScript inner = CreateMultisigRedeemscript(required, pubkeys);
+    const CScript inner = CreateMultisigRedeemscript(required, pubkeys, fSorted);
     CBasicKeyStore keystore;
     const CTxDestination dest = AddAndGetDestinationForScript(keystore, inner, output_type);
 
@@ -474,7 +478,7 @@ static const CRPCCommand commands[] =
     { "control",            "getmemoryinfo",          &getmemoryinfo,          {"mode"} },
     { "control",            "logging",                &logging,                {"include", "exclude"}},
     { "util",               "validateaddress",        &validateaddress,        {"address"} }, /* uses wallet if enabled */
-    { "util",               "createmultisig",         &createmultisig,         {"nrequired","keys","address_type"} },
+    { "util",               "createmultisig",         &createmultisig,         {"nrequired","keys","address_type","sort"} },
     { "util",               "verifymessage",          &verifymessage,          {"address","signature","message"} },
     { "util",               "signmessagewithprivkey", &signmessagewithprivkey, {"privkey","message"} },
 

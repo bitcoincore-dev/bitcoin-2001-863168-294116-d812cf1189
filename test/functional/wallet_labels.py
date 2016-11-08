@@ -24,7 +24,26 @@ class WalletLabelsTest(BitcoinTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 2
-        self.extra_args = [['-deprecatedrpc=accounts'], []]
+        self.extra_args = [['-deprecatedrpc=accounts', '-maxorphantx=1000', '-whitelist=127.0.0.1'], []]
+
+    def test_sort_multisig(self, node):
+        node.importprivkey("cSJUMwramrFYHKPfY77FH94bv4Q5rwUCyfD6zX3kLro4ZcWsXFEM")
+        node.importprivkey("cSpQbSsdKRmxaSWJ3TckCFTrksXNPbh8tfeZESGNQekkVxMbQ77H")
+        node.importprivkey("cRNbfcJgnvk2QJEVbMsxzoprotm1cy3kVA2HoyjSs3ss5NY5mQqr")
+
+        addresses = [
+            "muRmfCwue81ZT9oc3NaepefPscUHtP5kyC",
+            "n12RzKwqWPPA4cWGzkiebiM7Gu6NXUnDW8",
+            "n2yWMtx8jVbo8wv9BK2eN1LdbaakgKL3Mt",
+        ]
+
+        sorted_default = node.addmultisigaddress(2, addresses, "sort-test", 'legacy')
+        sorted_false = node.addmultisigaddress(2, addresses, "sort-test", 'legacy', False)
+        sorted_true = node.addmultisigaddress(2, addresses, "sort-test", 'legacy', True)
+
+        assert_equal(sorted_default, sorted_false)
+        assert_equal("2N6dne8yzh13wsRJxCcMgCYNeN9fxKWNHt8", sorted_default['address'])
+        assert_equal("2MsJ2YhGewgDPGEQk4vahGs4wRikJXpRRtU", sorted_true['address'])
 
     def setup_network(self):
         """Don't connect nodes."""
@@ -193,6 +212,8 @@ class WalletLabelsTest(BitcoinTestFramework):
             # Check that setaccount can set the label of an address which is
             # already the receiving address of the label. This is a no-op.
             change_label(node, labels[2].receive_address, labels[2], labels[2], accounts_api)
+
+        self.test_sort_multisig(node)
 
 class Label:
     def __init__(self, name, accounts_api):

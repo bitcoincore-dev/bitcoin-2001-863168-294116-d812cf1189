@@ -1318,13 +1318,14 @@ static UniValue addmultisigaddress(const JSONRPCRequest& request)
         return NullUniValue;
     }
 
-    if (request.fHelp || request.params.size() < 2 || request.params.size() > 4) {
-        std::string msg = "addmultisigaddress nrequired [\"key\",...] ( \"label\" \"address_type\" )\n"
+    if (request.fHelp || request.params.size() < 2 || request.params.size() > 5) {
+        std::string msg = "addmultisigaddress nrequired [\"key\",...] ( \"label\" \"address_type\" sort )\n"
             "\nAdd a nrequired-to-sign multisignature address to the wallet. Requires a new wallet backup.\n"
             "Each key is a Bitcoin address or hex-encoded public key.\n"
             "This functionality is only intended for use with non-watchonly addresses.\n"
             "See `importaddress` for watchonly p2sh address support.\n"
             "If 'label' is specified, assign address to that label.\n"
+            "Public keys can be sorted according to BIP67 during the request if required.\n"
 
             "\nArguments:\n"
             "1. nrequired                      (numeric, required) The number of required signatures out of the n keys or addresses.\n"
@@ -1335,6 +1336,7 @@ static UniValue addmultisigaddress(const JSONRPCRequest& request)
             "     ]\n"
             "3. \"label\"                        (string, optional) A label to assign the addresses to.\n"
             "4. \"address_type\"                 (string, optional) The address type to use. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\". Default is set by -addresstype.\n"
+            "5. sort                           (bool, optional) Whether to sort public keys according to BIP67. Default setting is false.\n"
 
             "\nResult:\n"
             "{\n"
@@ -1358,6 +1360,8 @@ static UniValue addmultisigaddress(const JSONRPCRequest& request)
 
     int required = request.params[0].get_int();
 
+    bool fSorted = request.params.size() > 4 && request.params[4].get_bool();
+
     // Get the public keys
     const UniValue& keys_or_addrs = request.params[1].get_array();
     std::vector<CPubKey> pubkeys;
@@ -1377,7 +1381,7 @@ static UniValue addmultisigaddress(const JSONRPCRequest& request)
     }
 
     // Construct using pay-to-script-hash:
-    CScript inner = CreateMultisigRedeemscript(required, pubkeys);
+    CScript inner = CreateMultisigRedeemscript(required, pubkeys, fSorted);
     CTxDestination dest = AddAndGetDestinationForScript(*pwallet, inner, output_type);
     pwallet->SetAddressBook(dest, label, "send");
 
@@ -4780,7 +4784,7 @@ static const CRPCCommand commands[] =
     { "hidden",             "resendwallettransactions",         &resendwallettransactions,      {} },
     { "wallet",             "abandontransaction",               &abandontransaction,            {"txid"} },
     { "wallet",             "abortrescan",                      &abortrescan,                   {} },
-    { "wallet",             "addmultisigaddress",               &addmultisigaddress,            {"nrequired","keys","label|account","address_type"} },
+    { "wallet",             "addmultisigaddress",               &addmultisigaddress,            {"nrequired","keys","label|account","address_type","sort"} },
     { "hidden",             "addwitnessaddress",                &addwitnessaddress,             {"address","p2sh"} },
     { "wallet",             "backupwallet",                     &backupwallet,                  {"destination"} },
     { "wallet",             "bumpfee",                          &bumpfee,                       {"txid", "options"} },
