@@ -48,16 +48,20 @@ class ImportMultiTest (BitcoinTestFramework):
 
         # Bitcoin Address
         print("Should import an address")
+        watchonly_timestamp = 1478736000
         address = self.nodes[0].validateaddress(self.nodes[0].getnewaddress())
         result = self.nodes[1].importmulti([{
             "scriptPubKey": {
                 "address": address['address']
-            }
+            },
+            "timestamp": watchonly_timestamp,
         }])
         assert_equal(result[0]['success'], True)
         address_assert = self.nodes[1].validateaddress(address['address'])
         assert_equal(address_assert['iswatchonly'], True)
         assert_equal(address_assert['ismine'], False)
+        assert_equal(address_assert['timestamp'], watchonly_timestamp);
+        watchonly_address = address['address']
 
 
         # ScriptPubKey + internal
@@ -355,6 +359,14 @@ class ImportMultiTest (BitcoinTestFramework):
         address_assert = self.nodes[1].validateaddress(address['address'])
         assert_equal(address_assert['iswatchonly'], False)
         assert_equal(address_assert['ismine'], False)
+
+        # restart nodes to check for proper serialization/deserialization of watch only address
+        stop_nodes(self.nodes)
+        self.nodes = start_nodes(2, self.options.tmpdir)
+        address_assert = self.nodes[1].validateaddress(watchonly_address)
+        assert_equal(address_assert['iswatchonly'], True)
+        assert_equal(address_assert['ismine'], False)
+        assert_equal(address_assert['timestamp'], watchonly_timestamp);
 
 if __name__ == '__main__':
     ImportMultiTest ().main ()
