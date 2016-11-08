@@ -257,11 +257,12 @@ class CWallet;
 
 UniValue createmultisig(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() < 2 || request.params.size() > 2)
+    if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
     {
-        std::string msg = "createmultisig nrequired [\"key\",...]\n"
+        std::string msg = "createmultisig nrequired [\"key\",...] ( sort )\n"
             "\nCreates a multi-signature address with n signature of m keys required.\n"
             "It returns a json object with the address and redeemScript.\n"
+            "Public keys can be sorted according to BIP67 during the request if required.\n"
             "DEPRECATION WARNING: Using addresses with createmultisig is deprecated. Clients must\n"
             "transition to using addmultisigaddress to create multisig addresses with addresses known\n"
             "to the wallet before upgrading to v0.17. To use the deprecated functionality, start bitcoind with -deprecatedrpc=createmultisig\n"
@@ -272,6 +273,7 @@ UniValue createmultisig(const JSONRPCRequest& request)
             "       \"key\"                    (string) The hex-encoded public key\n"
             "       ,...\n"
             "     ]\n"
+            "3. sort           (bool, optional) Whether to sort public keys according to BIP67. Default setting is false.\n"
 
             "\nResult:\n"
             "{\n"
@@ -289,6 +291,8 @@ UniValue createmultisig(const JSONRPCRequest& request)
     }
 
     int required = request.params[0].get_int();
+
+    bool fSorted = request.params.size() > 2 && request.params[2].get_bool();
 
     // Get the public keys
     const UniValue& keys = request.params[1].get_array();
@@ -310,7 +314,7 @@ UniValue createmultisig(const JSONRPCRequest& request)
     }
 
     // Construct using pay-to-script-hash:
-    CScript inner = CreateMultisigRedeemscript(required, pubkeys);
+    CScript inner = CreateMultisigRedeemscript(required, pubkeys, fSorted);
     CScriptID innerID(inner);
 
     UniValue result(UniValue::VOBJ);
@@ -641,7 +645,7 @@ static const CRPCCommand commands[] =
     { "control",            "getmemoryinfo",          &getmemoryinfo,          {"mode"} },
     { "control",            "logging",                &logging,                {"include", "exclude"}},
     { "util",               "validateaddress",        &validateaddress,        {"address"} }, /* uses wallet if enabled */
-    { "util",               "createmultisig",         &createmultisig,         {"nrequired","keys"} },
+    { "util",               "createmultisig",         &createmultisig,         {"nrequired","keys","sort"} },
     { "util",               "verifymessage",          &verifymessage,          {"address","signature","message"} },
     { "util",               "signmessagewithprivkey", &signmessagewithprivkey, {"privkey","message"} },
 

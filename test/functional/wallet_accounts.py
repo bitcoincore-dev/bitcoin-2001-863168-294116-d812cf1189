@@ -20,9 +20,28 @@ class WalletAccountsTest(BitcoinTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 1
-        self.extra_args = [[]]
+        self.extra_args = [["-maxorphantx=1000", "-whitelist=127.0.0.1"]]
 
-    def run_test(self):
+    def test_sort_multisig(self, node):
+        node.importprivkey("cSJUMwramrFYHKPfY77FH94bv4Q5rwUCyfD6zX3kLro4ZcWsXFEM")
+        node.importprivkey("cSpQbSsdKRmxaSWJ3TckCFTrksXNPbh8tfeZESGNQekkVxMbQ77H")
+        node.importprivkey("cRNbfcJgnvk2QJEVbMsxzoprotm1cy3kVA2HoyjSs3ss5NY5mQqr")
+
+        addresses = [
+            "muRmfCwue81ZT9oc3NaepefPscUHtP5kyC",
+            "n12RzKwqWPPA4cWGzkiebiM7Gu6NXUnDW8",
+            "n2yWMtx8jVbo8wv9BK2eN1LdbaakgKL3Mt",
+        ]
+
+        sorted_default = node.addmultisigaddress(2, addresses, "sort-test", 'legacy')
+        sorted_false = node.addmultisigaddress(2, addresses, "sort-test", 'legacy', False)
+        sorted_true = node.addmultisigaddress(2, addresses, "sort-test", 'legacy', True)
+
+        assert_equal(sorted_default, sorted_false)
+        assert_equal("2N6dne8yzh13wsRJxCcMgCYNeN9fxKWNHt8", sorted_default['address'])
+        assert_equal("2MsJ2YhGewgDPGEQk4vahGs4wRikJXpRRtU", sorted_true['address'])
+
+    def run_test (self):
         node = self.nodes[0]
         # Check that there's no UTXO on any of the nodes
         assert_equal(len(node.listunspent()), 0)
@@ -152,6 +171,8 @@ class WalletAccountsTest(BitcoinTestFramework):
         # address, causing getaccountaddress to return a brand new address.
         change_account(node, accounts[2].receive_address, accounts[2], accounts[2])
 
+        self.test_sort_multisig(node)
+
 class Account:
     def __init__(self, name):
         # Account name
@@ -200,7 +221,6 @@ def change_account(node, address, old_account, new_account):
 
     old_account.verify(node)
     new_account.verify(node)
-
 
 if __name__ == '__main__':
     WalletAccountsTest().main()
