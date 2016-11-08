@@ -950,7 +950,8 @@ static UniValue addmultisigaddress(const JSONRPCRequest& request)
                 "Each key is a Bitcoin address or hex-encoded public key.\n"
                 "This functionality is only intended for use with non-watchonly addresses.\n"
                 "See `importaddress` for watchonly p2sh address support.\n"
-                "If 'label' is specified, assign address to that label.\n",
+                "If 'label' is specified, assign address to that label.\n"
+                "Public keys can be sorted according to BIP67 during the request if required.\n",
                 {
                     {"nrequired", RPCArg::Type::NUM, RPCArg::Optional::NO, "The number of required signatures out of the n keys or addresses."},
                     {"keys", RPCArg::Type::ARR, RPCArg::Optional::NO, "A json array of bitcoin addresses or hex-encoded public keys",
@@ -960,6 +961,7 @@ static UniValue addmultisigaddress(const JSONRPCRequest& request)
                         },
                     {"label", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "A label to assign the addresses to."},
                     {"address_type", RPCArg::Type::STR, /* default */ "set by -addresstype", "The address type to use. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\"."},
+                    {"sort", RPCArg::Type::BOOL, /* default */ "false", "Whether to sort public keys according to BIP67."},
                 },
                 RPCResult{
             "{\n"
@@ -984,6 +986,8 @@ static UniValue addmultisigaddress(const JSONRPCRequest& request)
 
     int required = request.params[0].get_int();
 
+    bool sort = request.params.size() > 4 && request.params[4].get_bool();
+
     // Get the public keys
     const UniValue& keys_or_addrs = request.params[1].get_array();
     std::vector<CPubKey> pubkeys;
@@ -1004,7 +1008,7 @@ static UniValue addmultisigaddress(const JSONRPCRequest& request)
 
     // Construct using pay-to-script-hash:
     CScript inner;
-    CTxDestination dest = AddAndGetMultisigDestination(required, pubkeys, output_type, *pwallet, inner);
+    CTxDestination dest = AddAndGetMultisigDestination(required, pubkeys, output_type, *pwallet, inner, sort);
     pwallet->SetAddressBook(dest, label, "send");
 
     UniValue result(UniValue::VOBJ);
@@ -4191,7 +4195,7 @@ static const CRPCCommand commands[] =
     { "rawtransactions",    "fundrawtransaction",               &fundrawtransaction,            {"hexstring","options","iswitness"} },
     { "wallet",             "abandontransaction",               &abandontransaction,            {"txid"} },
     { "wallet",             "abortrescan",                      &abortrescan,                   {} },
-    { "wallet",             "addmultisigaddress",               &addmultisigaddress,            {"nrequired","keys","label","address_type"} },
+    { "wallet",             "addmultisigaddress",               &addmultisigaddress,            {"nrequired","keys","label","address_type","sort"} },
     { "wallet",             "backupwallet",                     &backupwallet,                  {"destination"} },
     { "wallet",             "bumpfee",                          &bumpfee,                       {"txid", "options"} },
     { "wallet",             "createwallet",                     &createwallet,                  {"wallet_name", "disable_private_keys", "blank", "passphrase", "avoid_reuse"} },
