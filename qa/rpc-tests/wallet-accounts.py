@@ -5,7 +5,6 @@
 
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
-    start_nodes,
     start_node,
     assert_equal,
     connect_nodes_bi,
@@ -21,7 +20,9 @@ class WalletAccountsTest(BitcoinTestFramework):
         self.node_args = [[]]
 
     def setup_network(self):
-        self.nodes = start_nodes(self.num_nodes, self.options.tmpdir, self.node_args)
+        self.nodes = []
+        self.nodes.append(start_node(0, self.options.tmpdir, ["-maxorphantx=1000",
+                                                              "-whitelist=127.0.0.1"]))
         self.is_network_split = False
 
     def test_sort_multisig(self, node):

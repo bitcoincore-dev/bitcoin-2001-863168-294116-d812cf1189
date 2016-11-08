@@ -288,7 +288,7 @@ UniValue createmultisig(const JSONRPCRequest& request)
             "Public keys can be sorted according to BIP67 during the request if required.\n"
 
             "\nArguments:\n"
-            "1. nrequired    (numeric, required) The number of required signatures out of the n keys or addresses.\n"
+            "1. nrequired      (numeric, required) The number of required signatures out of the n keys or addresses.\n"
             "2. \"keys\"       (string, required) A json array of keys which are bitcoin addresses or hex-encoded public keys\n"
             "     [\n"
             "       \"key\"    (string) bitcoin address or hex-encoded public key\n"
