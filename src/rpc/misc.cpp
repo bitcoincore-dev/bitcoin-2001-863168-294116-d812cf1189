@@ -79,7 +79,8 @@ static RPCHelpMan createmultisig()
 {
     return RPCHelpMan{"createmultisig",
                 "\nCreates a multi-signature address with n signature of m keys required.\n"
-                "It returns a json object with the address and redeemScript.\n",
+                "It returns a json object with the address and redeemScript.\n"
+                "Public keys can be sorted according to BIP67 during the request if required.\n",
                 {
                     {"nrequired", RPCArg::Type::NUM, RPCArg::Optional::NO, "The number of required signatures out of the n keys."},
                     {"keys", RPCArg::Type::ARR, RPCArg::Optional::NO, "The hex-encoded public keys.",
@@ -87,6 +88,7 @@ static RPCHelpMan createmultisig()
                             {"key", RPCArg::Type::STR_HEX, RPCArg::Optional::OMITTED, "The hex-encoded public key"},
                         }},
                     {"address_type", RPCArg::Type::STR, /* default */ "legacy", "The address type to use. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\"."},
+                    {"sort", RPCArg::Type::BOOL, /* default */ "false", "Whether to sort public keys according to BIP67."},
                 },
                 RPCResult{
                     RPCResult::Type::OBJ, "", "",
@@ -105,6 +107,8 @@ static RPCHelpMan createmultisig()
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {
     int required = request.params[0].get_int();
+
+    bool sort = request.params.size() > 3 && request.params[3].get_bool();
 
     // Get the public keys
     const UniValue& keys = request.params[1].get_array();
@@ -128,7 +132,7 @@ static RPCHelpMan createmultisig()
     // Construct using pay-to-script-hash:
     FillableSigningProvider keystore;
     CScript inner;
-    const CTxDestination dest = AddAndGetMultisigDestination(required, pubkeys, output_type, keystore, inner);
+    const CTxDestination dest = AddAndGetMultisigDestination(required, pubkeys, output_type, keystore, inner, sort);
 
     // Make the descriptor
     std::unique_ptr<Descriptor> descriptor = InferDescriptor(GetScriptForDestination(dest), keystore);
@@ -701,7 +705,7 @@ static const CRPCCommand commands[] =
     { "control",            "getmemoryinfo",          &getmemoryinfo,          {"mode"} },
     { "control",            "logging",                &logging,                {"include", "exclude"}},
     { "util",               "validateaddress",        &validateaddress,        {"address"} },
-    { "util",               "createmultisig",         &createmultisig,         {"nrequired","keys","address_type"} },
+    { "util",               "createmultisig",         &createmultisig,         {"nrequired","keys","address_type","sort"} },
     { "util",               "deriveaddresses",        &deriveaddresses,        {"descriptor", "range"} },
     { "util",               "getdescriptorinfo",      &getdescriptorinfo,      {"descriptor"} },
     { "util",               "verifymessage",          &verifymessage,          {"address","signature","message"} },
