@@ -147,6 +147,7 @@ testScripts = [
     'invalidtxrequest.py',
     'p2p-versionbits-warning.py',
     'preciousblock.py',
+    'sort_multisig.py',
     'importprunedfunds.py',
     'signmessages.py',
     'nulldummy.py',
