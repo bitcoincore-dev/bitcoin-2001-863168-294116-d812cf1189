@@ -720,7 +720,7 @@ UniValue processImport(const UniValue& data) {
 
             pwalletMain->MarkDirty();
 
-            if (!pwalletMain->HaveWatchOnly(redeemScript) && !pwalletMain->AddWatchOnly(redeemScript)) {
+            if (!pwalletMain->HaveWatchOnly(redeemScript) && !pwalletMain->AddWatchOnly(redeemScript, timestamp)) {
                 throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
             }
 
@@ -737,7 +737,7 @@ UniValue processImport(const UniValue& data) {
 
             pwalletMain->MarkDirty();
 
-            if (!pwalletMain->HaveWatchOnly(redeemDestination) && !pwalletMain->AddWatchOnly(redeemDestination)) {
+            if (!pwalletMain->HaveWatchOnly(redeemDestination) && !pwalletMain->AddWatchOnly(redeemDestination, timestamp)) {
                 throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
             }
 
@@ -922,7 +922,7 @@ UniValue processImport(const UniValue& data) {
 
                 pwalletMain->MarkDirty();
 
-                if (!pwalletMain->HaveWatchOnly(script) && !pwalletMain->AddWatchOnly(script)) {
+                if (!pwalletMain->HaveWatchOnly(script) && !pwalletMain->AddWatchOnly(script, timestamp)) {
                     throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
                 }
 
