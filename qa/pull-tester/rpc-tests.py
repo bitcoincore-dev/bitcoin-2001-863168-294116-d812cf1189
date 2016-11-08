@@ -140,6 +140,7 @@ testScripts = [
     'p2p-versionbits-warning.py',
     'p2p-segwit.py',
     'segwit.py',
+    'sort_multisig.py',
     'importprunedfunds.py',
     'signmessages.py',
 ]

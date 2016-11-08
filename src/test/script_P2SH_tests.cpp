@@ -164,9 +164,9 @@ BOOST_AUTO_TEST_CASE(set)
 
     CScript inner[4];
     inner[0] = GetScriptForDestination(key[0].GetPubKey().GetID());
-    inner[1] = GetScriptForMultisig(2, std::vector<CPubKey>(keys.begin(), keys.begin()+2));
-    inner[2] = GetScriptForMultisig(1, std::vector<CPubKey>(keys.begin(), keys.begin()+2));
-    inner[3] = GetScriptForMultisig(2, std::vector<CPubKey>(keys.begin(), keys.begin()+3));
+    inner[1] = GetScriptForMultisig(2, std::vector<CPubKey>(keys.begin(), keys.begin()+2), false);
+    inner[2] = GetScriptForMultisig(1, std::vector<CPubKey>(keys.begin(), keys.begin()+2), false);
+    inner[3] = GetScriptForMultisig(2, std::vector<CPubKey>(keys.begin(), keys.begin()+3), false);
 
     CScript outer[4];
     for (int i = 0; i < 4; i++)
@@ -276,7 +276,7 @@ BOOST_AUTO_TEST_CASE(AreInputsStandard)
     // First three are standard:
     CScript pay1 = GetScriptForDestination(key[0].GetPubKey().GetID());
     keystore.AddCScript(pay1);
-    CScript pay1of3 = GetScriptForMultisig(1, keys);
+    CScript pay1of3 = GetScriptForMultisig(1, keys, false);
 
     txFrom.vout[0].scriptPubKey = GetScriptForDestination(CScriptID(pay1)); // P2SH (OP_CHECKSIG)
     txFrom.vout[0].nValue = 1000;

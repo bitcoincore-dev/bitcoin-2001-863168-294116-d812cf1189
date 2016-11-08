@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(GetSigOpCount)
         k.MakeNewKey(true);
         keys.push_back(k.GetPubKey());
     }
-    CScript s2 = GetScriptForMultisig(1, keys);
+    CScript s2 = GetScriptForMultisig(1, keys, false);
     BOOST_CHECK_EQUAL(s2.GetSigOpCount(true), 3U);
     BOOST_CHECK_EQUAL(s2.GetSigOpCount(false), 20U);
 

@@ -216,7 +216,7 @@ UniValue validateaddress(const UniValue& params, bool fHelp)
 /**
  * Used by addmultisigaddress / createmultisig:
  */
-CScript _createmultisig_redeemScript(const UniValue& params)
+CScript _createmultisig_redeemScript(const UniValue& params, bool fSorted)
 {
     int nRequired = params[0].get_int();
     const UniValue& keys = params[1].get_array();
@@ -268,7 +268,7 @@ CScript _createmultisig_redeemScript(const UniValue& params)
             throw runtime_error(" Invalid public key: "+ks);
         }
     }
-    CScript result = GetScriptForMultisig(nRequired, pubkeys);
+    CScript result = GetScriptForMultisig(nRequired, pubkeys, fSorted);
 
     if (result.size() > MAX_SCRIPT_ELEMENT_SIZE)
         throw runtime_error(
@@ -279,19 +279,21 @@ CScript _createmultisig_redeemScript(const UniValue& params)
 
 UniValue createmultisig(const UniValue& params, bool fHelp)
 {
-    if (fHelp || params.size() < 2 || params.size() > 2)
+    if (fHelp || params.size() < 2 || params.size() > 3)
     {
-        string msg = "createmultisig nrequired [\"key\",...]\n"
+        string msg = "createmultisig nrequired [\"key\",...] ( fSort )\n"
             "\nCreates a multi-signature address with n signature of m keys required.\n"
             "It returns a json object with the address and redeemScript.\n"
+            "Public keys can be sorted according to BIP67 during the request if required.\n"
 
             "\nArguments:\n"
-            "1. nrequired      (numeric, required) The number of required signatures out of the n keys or addresses.\n"
+            "1. nrequired    (numeric, required) The number of required signatures out of the n keys or addresses.\n"
             "2. \"keys\"       (string, required) A json array of keys which are bitcoin addresses or hex-encoded public keys\n"
             "     [\n"
             "       \"key\"    (string) bitcoin address or hex-encoded public key\n"
             "       ,...\n"
             "     ]\n"
+            "3. fSort        (bool, optional) Whether to sort public keys according to BIP67. Default setting is false.\n"
 
             "\nResult:\n"
             "{\n"
@@ -308,8 +310,10 @@ UniValue createmultisig(const UniValue& params, bool fHelp)
         throw runtime_error(msg);
     }
 
+    bool fSorted = params.size() > 2 && params[2].get_bool();
+
     // Construct using pay-to-script-hash:
-    CScript inner = _createmultisig_redeemScript(params);
+    CScript inner = _createmultisig_redeemScript(params, fSorted);
     CScriptID innerID(inner);
     CBitcoinAddress address(innerID);
 
