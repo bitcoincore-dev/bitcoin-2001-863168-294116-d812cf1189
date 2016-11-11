@@ -78,7 +78,7 @@ ServiceFlags nRelevantServices = NODE_NETWORK;
 // Global state variables
 //
 bool fDiscover = true;
-bool fNetworkActive = true;
+std::atomic<bool> fNetworkActive(true);
 bool fListen = true;
 ServiceFlags nLocalServices = NODE_NETWORK;
 bool fRelayTxes = true;
