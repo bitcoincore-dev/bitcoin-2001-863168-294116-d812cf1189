@@ -16,6 +16,9 @@
 #include <assert.h>
 #include <stdint.h>
 
+#include <map>
+#include <set>
+
 #include <boost/foreach.hpp>
 #include <boost/unordered_map.hpp>
 
@@ -333,6 +336,9 @@ public:
 
     //! Retrieve the block hash whose state this CCoinsView currently represents
     virtual uint256 GetBestBlock() const;
+
+    //! Search for a given set of pubkey scripts
+    std::map<uint256, CCoins> FindScriptPubKey(const std::set<CScript>& setscriptNeedles);
 
     //! Do a bulk modification (multiple CCoins changes + BestBlock change).
     //! The passed mapCoins can be modified.

@@ -9,6 +9,8 @@
 
 #include <assert.h>
 
+#include <stdexcept>
+
 /**
  * calculate number of bytes for the bitmask, and its number of non-zero bytes
  * each bit in the bitmask represents the availability of one output, but the
@@ -46,6 +48,33 @@ bool CCoinsView::HaveCoins(const uint256 &txid) const { return false; }
 uint256 CCoinsView::GetBestBlock() const { return uint256(); }
 bool CCoinsView::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock) { return false; }
 CCoinsViewCursor *CCoinsView::Cursor() const { return 0; }
+
+std::map<uint256, CCoins> CCoinsView::FindScriptPubKey(const std::set<CScript>& setscriptNeedles) {
+    std::map<uint256, CCoins> rv;
+    for (std::unique_ptr<CCoinsViewCursor> pcursor(Cursor()); pcursor->Valid(); pcursor->Next()) {
+        uint256 hash;
+        CCoins coins;
+        if (!pcursor->GetKey(hash)) {
+            throw std::runtime_error(std::string(__func__) + ": GetKey failed");
+        } else if (!pcursor->GetValue(coins)) {
+            throw std::runtime_error(std::string(__func__) + ": GetValue failed");
+        }
+        bool fFoundAny = false;
+        for (CTxOut& txo : coins.vout) {
+            if (setscriptNeedles.find(txo.scriptPubKey) == setscriptNeedles.end()) {
+                txo.SetNull();
+            } else {
+                fFoundAny = true;
+            }
+        }
+        if (!fFoundAny) {
+            continue;
+        }
+        coins.Cleanup();
+        rv.insert(std::pair<uint256, CCoins>(hash, coins));
+    }
+    return rv;
+}
 
 
 CCoinsViewBacked::CCoinsViewBacked(CCoinsView *viewIn) : base(viewIn) { }
