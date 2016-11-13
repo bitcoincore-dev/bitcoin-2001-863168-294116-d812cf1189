@@ -55,6 +55,22 @@ void EnsureWalletIsUnlocked()
         throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Error: Please enter the wallet passphrase with walletpassphrase first.");
 }
 
+void ParseWIFPrivKey(const std::string strSecret, CKey& key, CPubKey& pubkey)
+{
+    CBitcoinSecret vchSecret;
+    if (!vchSecret.SetString(strSecret)) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid private key encoding");
+    }
+
+    key = vchSecret.GetKey();
+    if (!key.IsValid()) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Private key outside allowed range");
+    }
+
+    pubkey = key.GetPubKey();
+    assert(key.VerifyPubKey(pubkey));
+}
+
 void WalletTxToJSON(const CWalletTx& wtx, UniValue& entry)
 {
     int confirms = wtx.GetDepthInMainChain();

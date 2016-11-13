@@ -74,6 +74,8 @@ std::string DecodeDumpString(const std::string &str) {
     return ret.str();
 }
 
+void ParseWIFPrivKey(const std::string strSecret, CKey& key, CPubKey& pubkey);
+
 UniValue importprivkey(const UniValue& params, bool fHelp)
 {
     if (!EnsureWalletIsAvailable(fHelp))
@@ -117,16 +119,9 @@ UniValue importprivkey(const UniValue& params, bool fHelp)
     if (fRescan && fPruneMode)
         throw JSONRPCError(RPC_WALLET_ERROR, "Rescan is disabled in pruned mode");
 
-    CBitcoinSecret vchSecret;
-    bool fGood = vchSecret.SetString(strSecret);
-
-    if (!fGood) throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid private key encoding");
-
-    CKey key = vchSecret.GetKey();
-    if (!key.IsValid()) throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Private key outside allowed range");
-
-    CPubKey pubkey = key.GetPubKey();
-    assert(key.VerifyPubKey(pubkey));
+    CKey key;
+    CPubKey pubkey;
+    ParseWIFPrivKey(strSecret, key, pubkey);
     CKeyID vchAddress = pubkey.GetID();
     {
         pwalletMain->MarkDirty();
