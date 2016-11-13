@@ -40,6 +40,7 @@
 #include <vector>
 
 class CChain;
+class CScript;
 
 /** Fake height value used in Coin to signify they are only in the memory pool (since 0.8) */
 static const uint32_t MEMPOOL_HEIGHT = 0x7FFFFFFF;
@@ -695,6 +696,8 @@ public:
 
     std::vector<CTxMemPoolEntryRef> entryAll() const EXCLUSIVE_LOCKS_REQUIRED(cs);
     std::vector<TxMempoolInfo> infoAll() const;
+
+    void FindScriptPubKey(const std::set<CScript>& needles, std::map<COutPoint, Coin>& out_results);
 
     size_t DynamicMemoryUsage() const;
 
