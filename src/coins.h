@@ -17,6 +17,8 @@
 #include <assert.h>
 #include <stdint.h>
 
+#include <map>
+#include <set>
 #include <unordered_map>
 
 /**
@@ -162,6 +164,10 @@ public:
     //! Otherwise, a two-element vector is returned consisting of the new and
     //! the old block hash, in that order.
     virtual std::vector<uint256> GetHeadBlocks() const;
+
+    //! Search for a given set of pubkey scripts
+    static void FindScriptPubKey(CCoinsViewCursor& cursor, const std::set<CScript>& needles, std::map<COutPoint, Coin>& out_results);
+    void FindScriptPubKey(const std::set<CScript>& needles, std::map<COutPoint, Coin>& out_results);
 
     //! Do a bulk modification (multiple Coin changes + BestBlock change).
     //! The passed mapCoins can be modified.
