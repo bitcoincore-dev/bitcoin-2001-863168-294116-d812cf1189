@@ -950,6 +950,11 @@ UniValue processImport(const UniValue& data) {
         result.pushKV("success", UniValue(false));
         result.pushKV("error", e);
         return result;
+    } catch (const std::exception& e) {
+        UniValue result = UniValue(UniValue::VOBJ);
+        result.pushKV("success", UniValue(false));
+        result.pushKV("error", JSONRPCError(RPC_MISC_ERROR, e.what()));
+        return result;
     } catch (...) {
         UniValue result = UniValue(UniValue::VOBJ);
         result.pushKV("success", UniValue(false));

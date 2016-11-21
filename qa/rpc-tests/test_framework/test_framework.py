@@ -158,6 +158,7 @@ class BitcoinTestFramework(object):
             traceback.print_tb(sys.exc_info()[2])
         except KeyboardInterrupt as e:
             print("Exiting after " + repr(e))
+            traceback.print_tb(sys.exc_info()[2])
 
         if not self.options.noshutdown:
             print("Stopping nodes")
@@ -172,6 +173,8 @@ class BitcoinTestFramework(object):
                 os.rmdir(self.options.root)
         else:
             print("Not cleaning up dir %s" % self.options.tmpdir)
+            sys.stdout.flush()
+            os.system("find {} -name debug.log".format(self.options.tmpdir))
             if os.getenv("PYTHON_DEBUG", ""):
                 # Dump the end of the debug logs, to aid in debugging rare
                 # travis failures.
