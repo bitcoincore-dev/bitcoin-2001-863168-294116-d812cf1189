@@ -80,7 +80,6 @@ Comment: Modifications of Stephan Hutchings Typicons
 
 Files: src/qt/res/icons/about.png
        src/qt/res/icons/bitcoin.*
-       src/qt/res/icons/button_*
        share/pixmaps/bitcoin*
        src/qt/res/src/bitcoin.svg
 Copyright: Bitboy, Jonas Schnelli

@@ -10,29 +10,19 @@
 #include <QGraphicsPixmapItem>
 
 #include <QCheckBox>
+#include <QDialog>
 #include <QGraphicsProxyWidget>
+#include <QGraphicsView>
+#include <QGridLayout>
+#include <QLabel>
+#include <QSlider>
 
 #include <QEvent>
 
 class ClientModel;
 
-class ClickableTextItem : public QGraphicsTextItem
-{
-    Q_OBJECT
-public:
-    void setEnabled(bool state);
-protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-Q_SIGNALS:
-    void objectClicked(QGraphicsItem*);
-};
 
-
-namespace Ui {
-    class MempoolStats;
-}
-
-class MempoolStats : public QWidget
+class MempoolStats : public QDialog
 {
     Q_OBJECT
 
@@ -42,43 +32,38 @@ public:
 
     void setClientModel(ClientModel *model);
 
+    virtual QSize sizeHint() const;
+
 public Q_SLOTS:
     void drawChart();
-    void objectClicked(QGraphicsItem *);
 
 private:
     ClientModel *clientModel;
 
+    void setupValueUI(QWidget *checkbox, QWidget *label, const QString&);
     virtual void resizeEvent(QResizeEvent *event);
     virtual void showEvent(QShowEvent *event);
 
-    QGraphicsTextItem *titleItem;
-    QGraphicsLineItem *titleLine;
+    QGridLayout *opts_grid;
+
+    QCheckBox *cbShowMemUsage;
+    QLabel *lblMemUsage;
+
+    QCheckBox *cbShowNumTxns;
+    QLabel *lblNumTxns;
+
+    QCheckBox *cbShowMinFeerate;
+    QLabel *lblMinFeerate;
+
+    QGraphicsView *gvChart;
+
     QGraphicsTextItem *noDataItem;
 
-    QGraphicsTextItem *dynMemUsageValueItem;
-    QGraphicsTextItem *txCountValueItem;
-    QGraphicsTextItem *minFeeValueItem;
-
-    ClickableTextItem *last10MinLabel;
-    ClickableTextItem *lastHourLabel;
-    ClickableTextItem *lastDayLabel;
-    ClickableTextItem *allDataLabel;
-
-    QGraphicsProxyWidget *txCountSwitch;
-    QGraphicsProxyWidget *minFeeSwitch;
-    QGraphicsProxyWidget *dynMemUsageSwitch;
+    QSlider *sliderScale;
+    QLabel *lblGraphRange;
 
     QGraphicsScene *scene;
     QVector<QGraphicsItem*> redrawItems;
-
-    bool drawTxCount;
-    bool drawMinFee;
-    bool drawDynMemUsage;
-
-    int64_t timeFilter;
-
-    Ui::MempoolStats *ui;
 };
 
 #endif // BITCOIN_QT_MEMPOOLSTATS_H
