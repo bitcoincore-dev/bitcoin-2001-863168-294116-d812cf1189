@@ -3,71 +3,148 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "mempoolstats.h"
-#include "ui_mempoolstats.h"
 
 #include "clientmodel.h"
 #include "guiutil.h"
 #include "stats/stats.h"
 
+#include <QCheckBox>
+#include <QDialog>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QVBoxLayout>
+
 static const char *LABEL_FONT = "Arial";
 static int LABEL_TITLE_SIZE = 22;
-static int LABEL_KV_SIZE = 12;
-
-static const int TEN_MINS = 600;
-static const int ONE_HOUR = 3600;
-static const int ONE_DAY = ONE_HOUR*24;
 
 static const int LABEL_LEFT_SIZE = 30;
 static const int LABEL_RIGHT_SIZE = 30;
 static const int GRAPH_PADDING_LEFT = 30+LABEL_LEFT_SIZE;
 static const int GRAPH_PADDING_RIGHT = 30+LABEL_RIGHT_SIZE;
 static const int GRAPH_PADDING_TOP = 10;
-static const int GRAPH_PADDING_TOP_LABEL = 150;
 static const int GRAPH_PADDING_BOTTOM = 50;
-static const int LABEL_HEIGHT = 15;
 
-void ClickableTextItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_EMIT objectClicked(this);
+namespace {
+
+void setCenterPos(QGraphicsTextItem * const item, const QSizeF &pos) {
+    const QRectF boundingRect = item->boundingRect();
+    item->setPos(pos.width() - (boundingRect.width() / 2.0), pos.height() - (boundingRect.height() / 2.0));
 }
 
-void ClickableTextItem::setEnabled(bool state)
-{
-    if (state)
-        setDefaultTextColor(QColor(15,68,113, 250));
-    else
-        setDefaultTextColor(QColor(100,100,100, 200));
 }
 
 MempoolStats::MempoolStats(QWidget *parent) :
-QWidget(parent, Qt::Window),
-clientModel(0),
-titleItem(0),
-scene(0),
-drawTxCount(true),
-drawMinFee(false),
-drawDynMemUsage(true),
-timeFilter(TEN_MINS),
-ui(new Ui::MempoolStats)
+QDialog(parent),
+clientModel(0)
 {
-    ui->setupUi(this);
+    this->setWindowTitle(tr("Memory pool statistics"));
+
+    QVBoxLayout * const mainlayout = new QVBoxLayout(this);
+    this->setLayout(mainlayout);
+
+    QHBoxLayout * const toplayout = new QHBoxLayout(this);
+    mainlayout->addLayout(toplayout);
+
+    {
+        QLabel * const secondTitle = new QLabel(this->windowTitle(), this);
+        int secondTitleFontSize = secondTitle->font().pointSize() * 2;
+        secondTitle->setStyleSheet(
+            "QLabel {"
+                "font-size: " + QString::number(secondTitleFontSize) + "pt;"
+            "}"
+        );
+        toplayout->addWidget(secondTitle, 0, Qt::AlignBottom);
+    }
+
+    opts_grid = new QGridLayout(this);
+    toplayout->addLayout(opts_grid);
+
+    cbShowMemUsage = new QCheckBox(tr("Dynamic &memory usage"), this);
+    cbShowMemUsage->setChecked(true);
+    lblMemUsage = new QLabel(this);
+    setupValueUI(cbShowMemUsage, lblMemUsage, "blue");
+
+    cbShowNumTxns = new QCheckBox(tr("Number of &transactions"), this);
+    cbShowNumTxns->setChecked(true);
+    lblNumTxns = new QLabel(this);
+    setupValueUI(cbShowNumTxns, lblNumTxns, "red");
+
+    cbShowMinFeerate = new QCheckBox(tr("Minimum &fee-rate per kB"), this);
+    cbShowMinFeerate->setChecked(false);
+    lblMinFeerate = new QLabel(this);
+    setupValueUI(cbShowMinFeerate, lblMinFeerate, "green");
+
+    scene = new QGraphicsScene();
+    gvChart = new QGraphicsView(scene, this);
+    gvChart->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    mainlayout->addWidget(gvChart);
+
+    noDataItem = scene->addText(tr("No data available"));
+    noDataItem->setDefaultTextColor(QColor(100,100,100, 200));
+
+    QHBoxLayout * const bottomlayout = new QHBoxLayout(this);
+    mainlayout->addLayout(bottomlayout);
+
+    sliderScale = new QSlider(Qt::Horizontal, this);
+    bottomlayout->addWidget(sliderScale);
+    sliderScale->setMinimum(1);
+    sliderScale->setMaximum(288);
+    sliderScale->setPageStep(12);
+    sliderScale->setValue(6);
+    connect(sliderScale, SIGNAL(valueChanged(int)), this, SLOT(drawChart()));
+
+    lblGraphRange = new QLabel(this);
+    bottomlayout->addWidget(lblGraphRange);
+    lblGraphRange->setFixedWidth(100);
+    lblGraphRange->setAlignment(Qt::AlignCenter);
+
     if (parent) {
         parent->installEventFilter(this);
         raise();
     }
 
-    // autoadjust font size
-    QGraphicsTextItem testText("jY"); //screendesign expected 27.5 pixel in width for this string
-    testText.setFont(QFont(LABEL_FONT, LABEL_TITLE_SIZE, QFont::Light));
-    LABEL_TITLE_SIZE *= 27.5/testText.boundingRect().width();
-    LABEL_KV_SIZE *= 27.5/testText.boundingRect().width();
-
-    scene = new QGraphicsScene();
-    ui->graphicsView->setScene(scene);
-    ui->graphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-
     if (clientModel)
         drawChart();
+}
+
+QSize MempoolStats::sizeHint() const
+{
+    QSize sz = QDialog::sizeHint();
+    if (sz.width() < 640) {
+        sz.setWidth(640);
+    }
+    sz.setHeight(sz.height() * 2);
+    if (sz.height() < 400) {
+        sz.setHeight(400);
+    }
+    return sz;
+}
+
+void MempoolStats::setupValueUI(QWidget * const checkbox, QWidget * const label, const QString &color)
+{
+    const int row = opts_grid->rowCount();
+
+    connect(checkbox, SIGNAL(stateChanged(int)), this, SLOT(drawChart()));
+    opts_grid->addWidget(checkbox, row, 0, Qt::AlignLeft);
+    checkbox->setStyleSheet(
+        "QCheckBox {"
+            "border-bottom: 2px solid transparent;"
+        "}"
+        "QCheckBox::checked {"
+            "border-bottom: 2px solid " + color + ";"
+        "}"
+    );
+
+    label->setStyleSheet(
+        "QLabel {"
+            "font-weight: bold;"
+        "}"
+    );
+//     label->setAlignment(Qt::AlignRight);
+    opts_grid->addWidget(label, row, 1, Qt::AlignRight);
 }
 
 void MempoolStats::setClientModel(ClientModel *model)
@@ -83,73 +160,9 @@ void MempoolStats::drawChart()
     if (!isVisible())
         return;
 
-    QGraphicsProxyWidget *proxyW;
-    if (!titleItem)
-    {
-        // create labels (only once)
-        titleItem = scene->addText(tr("Mempool Statistics"));
-        titleItem->setFont(QFont(LABEL_FONT, LABEL_TITLE_SIZE, QFont::Light));
-        titleLine = scene->addLine(0,0,100,100);
-        titleLine->setPen(QPen(QColor(100,100,100, 200), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        
-        
-        QCheckBox *cb0 = new QCheckBox("Dynamic Memory Usage");
-        cb0->setStyleSheet("background-color: rgb(255,255,255);");
-        dynMemUsageSwitch = scene->addWidget(cb0);
-        connect(cb0, &QCheckBox::stateChanged, [cb0, this](){ drawDynMemUsage = cb0->isChecked(); drawChart(); });
-        cb0->setFont(QFont(LABEL_FONT, LABEL_KV_SIZE, QFont::Light));
-        dynMemUsageValueItem = scene->addText("N/A");
-        dynMemUsageValueItem->setFont(QFont(LABEL_FONT, LABEL_KV_SIZE, QFont::Bold));
-
-        QCheckBox *cb1 = new QCheckBox("Amount of Transactions");
-        cb1->setStyleSheet("background-color: rgb(255,255,255);");
-        txCountSwitch = scene->addWidget(cb1);
-        scene->addItem(txCountSwitch);
-        connect(cb1, &QCheckBox::stateChanged, [cb1, this](){ drawTxCount = cb1->isChecked(); drawChart(); });
-        cb1->setFont(QFont(LABEL_FONT, LABEL_KV_SIZE, QFont::Light));
-        txCountValueItem = scene->addText("N/A");
-        txCountValueItem->setFont(QFont(LABEL_FONT, LABEL_KV_SIZE, QFont::Bold));
-
-        QCheckBox *cb2 = new QCheckBox("MinRelayFee per KB");
-        cb2->setStyleSheet("background-color: rgb(255,255,255);");
-        minFeeSwitch = scene->addWidget(cb2);
-        scene->addItem(minFeeSwitch);
-        connect(cb2, &QCheckBox::stateChanged, [cb2, this](){ drawMinFee = cb2->isChecked(); drawChart(); });
-        cb2->setFont(QFont(LABEL_FONT, LABEL_KV_SIZE, QFont::Light));
-        minFeeValueItem = scene->addText(tr("N/A"));
-        minFeeValueItem->setFont(QFont(LABEL_FONT, LABEL_KV_SIZE, QFont::Bold));
-
-        noDataItem = scene->addText(tr("No Data available"));
-        noDataItem->setFont(QFont(LABEL_FONT, LABEL_TITLE_SIZE, QFont::Light));
-        noDataItem->setDefaultTextColor(QColor(100,100,100, 200));
-
-        last10MinLabel = new ClickableTextItem(); last10MinLabel->setPlainText(tr("Last 10 min"));
-        scene->addItem(last10MinLabel);
-        connect(last10MinLabel, SIGNAL(objectClicked(QGraphicsItem*)), this, SLOT(objectClicked(QGraphicsItem*)));
-        last10MinLabel->setFont(QFont(LABEL_FONT, LABEL_KV_SIZE, QFont::Light));
-        lastHourLabel = new ClickableTextItem(); lastHourLabel->setPlainText(tr("Last Hour"));
-        scene->addItem(lastHourLabel);
-        connect(lastHourLabel, SIGNAL(objectClicked(QGraphicsItem*)), this, SLOT(objectClicked(QGraphicsItem*)));
-        lastHourLabel->setFont(QFont(LABEL_FONT, LABEL_KV_SIZE, QFont::Light));
-        lastDayLabel = new ClickableTextItem(); lastDayLabel->setPlainText(tr("Last Day"));
-        scene->addItem(lastDayLabel);
-        connect(lastDayLabel, SIGNAL(objectClicked(QGraphicsItem*)), this, SLOT(objectClicked(QGraphicsItem*)));
-        lastDayLabel->setFont(QFont(LABEL_FONT, LABEL_KV_SIZE, QFont::Light));
-        allDataLabel = new ClickableTextItem(); allDataLabel->setPlainText(tr("All Data"));
-        scene->addItem(allDataLabel);
-        connect(allDataLabel, SIGNAL(objectClicked(QGraphicsItem*)), this, SLOT(objectClicked(QGraphicsItem*)));
-        allDataLabel->setFont(QFont(LABEL_FONT, LABEL_KV_SIZE, QFont::Light));
-    }
-
-    // set button states
-    ((QCheckBox *)dynMemUsageSwitch->widget())->setChecked(drawDynMemUsage);
-    ((QCheckBox *)txCountSwitch->widget())->setChecked(drawTxCount);
-    ((QCheckBox *)minFeeSwitch->widget())->setChecked(drawMinFee);
-
-    last10MinLabel->setEnabled((timeFilter == TEN_MINS));
-    lastHourLabel->setEnabled((timeFilter == ONE_HOUR));
-    lastDayLabel->setEnabled((timeFilter == ONE_DAY));
-    allDataLabel->setEnabled((timeFilter == 0));
+    const bool drawTxCount = cbShowNumTxns->isChecked();
+    const bool drawMinFee = cbShowMinFeerate->isChecked();
+    const bool drawDynMemUsage = cbShowMemUsage->isChecked();
 
     // remove the items which needs to be redrawn
     for (QGraphicsItem * item : redrawItems)
@@ -159,67 +172,40 @@ void MempoolStats::drawChart()
     }
     redrawItems.clear();
 
+    const int64_t timeFilter = sliderScale->value() * 5 * 60;
+    lblGraphRange->setText(GUIUtil::formatDurationStr(timeFilter));
+
     // get the samples
     QDateTime toDateTime = QDateTime::currentDateTime();
     QDateTime fromDateTime = toDateTime.addSecs(-timeFilter); //-1h
-    if (timeFilter == 0)
-    {
-        // disable filter if timeFilter == 0
-        toDateTime.setTime_t(0);
-        fromDateTime.setTime_t(0);
-    }
 
     mempoolSamples_t vSamples = clientModel->getMempoolStatsInRange(fromDateTime, toDateTime);
 
     // set the values into the overview labels
     if (vSamples.size())
     {
-        dynMemUsageValueItem->setPlainText(GUIUtil::formatBytes(vSamples.back().dynMemUsage));
-        txCountValueItem->setPlainText(QString::number(vSamples.back().txCount));
-        minFeeValueItem->setPlainText(QString::number(vSamples.back().minFeePerK));
+        lblMemUsage->setText(GUIUtil::formatBytes(vSamples.back().dynMemUsage));
+        lblNumTxns->setText(QString::number(vSamples.back().txCount));
+        lblMinFeerate->setText(QString::number(vSamples.back().minFeePerK));
     }
 
-    // set dynamic label positions
-    int maxValueSize = std::max(std::max(txCountValueItem->boundingRect().width(), dynMemUsageValueItem->boundingRect().width()), minFeeValueItem->boundingRect().width());
-    maxValueSize = ceil(maxValueSize*0.11)*10; //use size steps of 10dip
-
-    int rightPaddingLabels = std::max(std::max(dynMemUsageSwitch->boundingRect().width(), txCountSwitch->boundingRect().width()), minFeeSwitch->boundingRect().width())+maxValueSize;
-    int rightPadding = 10;
-    dynMemUsageSwitch->setPos(width()-rightPaddingLabels-rightPadding, 5);
-    
-    txCountSwitch->setPos(width()-rightPaddingLabels-rightPadding, dynMemUsageSwitch->pos().y()+dynMemUsageSwitch->boundingRect().height());
-    
-    minFeeSwitch->setPos(width()-rightPaddingLabels-rightPadding, txCountSwitch->pos().y()+txCountSwitch->boundingRect().height());
-
-    dynMemUsageValueItem->setPos(width()-dynMemUsageValueItem->boundingRect().width()-rightPadding, dynMemUsageSwitch->pos().y());
-    txCountValueItem->setPos(width()-txCountValueItem->boundingRect().width()-rightPadding, txCountSwitch->pos().y());
-    minFeeValueItem->setPos(width()-minFeeValueItem->boundingRect().width()-rightPadding, minFeeSwitch->pos().y());
-
-    titleItem->setPos(5,minFeeSwitch->pos().y()+minFeeSwitch->boundingRect().height()-titleItem->boundingRect().height()+10);
-    titleLine->setLine(10, titleItem->pos().y()+titleItem->boundingRect().height(), width()-10, titleItem->pos().y()+titleItem->boundingRect().height());
-
-    // center the optional "no data" label
-    noDataItem->setPos(width()/2.0-noDataItem->boundingRect().width()/2.0, height()/2.0);
-
-    // set the position of the filter icons
-    static const int filterBottomPadding = 30;
-    int totalWidth = last10MinLabel->boundingRect().width()+lastHourLabel->boundingRect().width()+lastDayLabel->boundingRect().width()+allDataLabel->boundingRect().width()+30;
-    last10MinLabel->setPos((width()-totalWidth)/2.0,height()-filterBottomPadding);
-    lastHourLabel->setPos((width()-totalWidth)/2.0+last10MinLabel->boundingRect().width()+10,height()-filterBottomPadding);
-    lastDayLabel->setPos((width()-totalWidth)/2.0+last10MinLabel->boundingRect().width()+lastHourLabel->boundingRect().width()+20,height()-filterBottomPadding);
-    allDataLabel->setPos((width()-totalWidth)/2.0+last10MinLabel->boundingRect().width()+lastHourLabel->boundingRect().width()+lastDayLabel->boundingRect().width()+30,height()-filterBottomPadding);
+    QSizeF chartsize = gvChart->sceneRect().size();
 
     // don't paint the grind/graph if there are no or only a signle sample
     if (vSamples.size() < 2)
     {
+        QFont font = lblMinFeerate->font();
+        font.setPointSize(font.pointSize() * 2);
+        noDataItem->setFont(QFont(LABEL_FONT, LABEL_TITLE_SIZE, QFont::Light));
+        setCenterPos(noDataItem, chartsize / 2);
         noDataItem->setVisible(true);
         return;
     }
     noDataItem->setVisible(false);
 
-    int bottom = ui->graphicsView->size().height()-GRAPH_PADDING_BOTTOM;
-    qreal maxwidth = ui->graphicsView->size().width()-GRAPH_PADDING_LEFT-GRAPH_PADDING_RIGHT;
-    qreal maxheightG = ui->graphicsView->size().height()-GRAPH_PADDING_TOP-GRAPH_PADDING_TOP_LABEL-LABEL_HEIGHT;
+    int bottom = gvChart->size().height()-GRAPH_PADDING_BOTTOM;
+    qreal maxwidth = gvChart->size().width()-GRAPH_PADDING_LEFT-GRAPH_PADDING_RIGHT;
+    qreal maxheightG = gvChart->size().height()-GRAPH_PADDING_TOP-GRAPH_PADDING_BOTTOM;
     float paddingTopSizeFactor = 1.2;
     qreal step = maxwidth/(double)vSamples.size();
 
@@ -366,8 +352,7 @@ void MempoolStats::drawChart()
 void MempoolStats::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
-    ui->graphicsView->resize(size());
-    ui->graphicsView->scene()->setSceneRect(rect());
+    scene->setSceneRect(QRect(QPoint(0, 0), gvChart->contentsRect().size()));
     drawChart();
 }
 
@@ -378,47 +363,15 @@ void MempoolStats::showEvent(QShowEvent *event)
         drawChart();
 }
 
-void MempoolStats::objectClicked(QGraphicsItem *item)
-{
-    if (item == last10MinLabel)
-        timeFilter = 600;
-
-    if (item == lastHourLabel)
-        timeFilter = 3600;
-
-    if (item == lastDayLabel)
-        timeFilter = 24*3600;
-
-    if (item == allDataLabel)
-        timeFilter = 0;
-    
-    drawChart();
-}
-
 MempoolStats::~MempoolStats()
 {
-    if (titleItem)
+    for (QGraphicsItem * item : redrawItems)
     {
-        for (QGraphicsItem * item : redrawItems)
-        {
-            scene->removeItem(item);
-            delete item;
-        }
-        redrawItems.clear();
-
-        delete titleItem;
-        delete titleLine;
-        delete noDataItem;
-        delete dynMemUsageValueItem;
-        delete txCountValueItem;
-        delete minFeeValueItem;
-        delete last10MinLabel;
-        delete lastHourLabel;
-        delete lastDayLabel;
-        delete allDataLabel;
-        delete txCountSwitch;
-        delete minFeeSwitch;
-        delete dynMemUsageSwitch;
-        delete scene;
+        scene->removeItem(item);
+        delete item;
     }
+    redrawItems.clear();
+
+    delete noDataItem;
+    delete scene;
 }
