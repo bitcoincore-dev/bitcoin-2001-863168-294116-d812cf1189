@@ -12,7 +12,7 @@ import enum
 import itertools
 import functools
 
-Call = enum.Enum("Call", "single multi")
+Call = enum.Enum("Call", "single multiaddress multiscript")
 Data = enum.Enum("Data", "address pub priv")
 ImportNode = collections.namedtuple("ImportNode", "rescan")
 
@@ -28,11 +28,11 @@ def call_import_rpc(call, data, address, scriptPubKey, pubkey, key, label, node,
         elif data == Data.priv:
             response = node.importprivkey(key, label, rescan)
         assert_equal(response, None)
-    elif call == Call.multi:
+    elif call in (Call.multiaddress, Call.multiscript):
         response = node.importmulti([{
             "scriptPubKey": {
                 "address": address
-            },
+            } if call == Call.multiaddress else scriptPubKey,
             "pubkeys": [pubkey] if data == Data.pub else [],
             "keys": [key] if data == Data.priv else [],
             "label": label,
