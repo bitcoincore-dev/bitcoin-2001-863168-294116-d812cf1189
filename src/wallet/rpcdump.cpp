@@ -743,6 +743,9 @@ UniValue ProcessImport(CWallet * const pwallet, const UniValue& data, const int6
 
             std::vector<unsigned char> vData(ParseHex(output));
             script = CScript(vData.begin(), vData.end());
+            if (!ExtractDestination(script, dest) && !internal) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "Internal must be set to true for nonstandard scriptPubKey imports.");
+            }
         }
 
         // Watchonly and private keys
@@ -753,11 +756,6 @@ UniValue ProcessImport(CWallet * const pwallet, const UniValue& data, const int6
         // Internal + Label
         if (internal && data.exists("label")) {
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Incompatibility found between internal and label");
-        }
-
-        // Not having Internal + Script
-        if (!internal && isScript) {
-            throw JSONRPCError(RPC_INVALID_PARAMETER, "Internal must be set for hex scriptPubKey");
         }
 
         // Keys / PubKeys size check.
@@ -870,19 +868,8 @@ UniValue ProcessImport(CWallet * const pwallet, const UniValue& data, const int6
                 CTxDestination pubkey_dest = pubKey.GetID();
 
                 // Consistency check.
-                if (!isScript && !(pubkey_dest == dest)) {
+                if (!(pubkey_dest == dest)) {
                     throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Consistency check failed");
-                }
-
-                // Consistency check.
-                if (isScript) {
-                    CTxDestination destination;
-
-                    if (ExtractDestination(script, destination)) {
-                        if (!(destination == pubkey_dest)) {
-                            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Consistency check failed");
-                        }
-                    }
                 }
 
                 CScript pubKeyScript = GetScriptForDestination(pubkey_dest);
@@ -941,19 +928,8 @@ UniValue ProcessImport(CWallet * const pwallet, const UniValue& data, const int6
                 CTxDestination pubkey_dest = pubKey.GetID();
 
                 // Consistency check.
-                if (!isScript && !(pubkey_dest == dest)) {
+                if (!(pubkey_dest == dest)) {
                     throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Consistency check failed");
-                }
-
-                // Consistency check.
-                if (isScript) {
-                    CTxDestination destination;
-
-                    if (ExtractDestination(script, destination)) {
-                        if (!(destination == pubkey_dest)) {
-                            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Consistency check failed");
-                        }
-                    }
                 }
 
                 CKeyID vchAddress = pubKey.GetID();
@@ -987,11 +963,9 @@ UniValue ProcessImport(CWallet * const pwallet, const UniValue& data, const int6
                     throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
                 }
 
-                if (scriptPubKey.getType() == UniValue::VOBJ) {
-                    // add to address book or update label
-                    if (IsValidDestination(dest)) {
-                        pwallet->SetAddressBook(dest, label, "receive");
-                    }
+                // add to address book or update label
+                if (IsValidDestination(dest)) {
+                    pwallet->SetAddressBook(dest, label, "receive");
                 }
 
                 success = true;
