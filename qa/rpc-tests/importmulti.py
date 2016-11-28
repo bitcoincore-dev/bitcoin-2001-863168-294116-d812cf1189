@@ -3,6 +3,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+from test_framework import script
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import *
 
@@ -76,15 +77,16 @@ class ImportMultiTest (BitcoinTestFramework):
         assert_equal(address_assert['iswatchonly'], True)
         assert_equal(address_assert['ismine'], False)
 
-        # ScriptPubKey + !internal
-        print("Should not import a scriptPubKey without internal flag")
+        # Nonstandard scriptPubKey + !internal
+        print("Should not import a nonstandard scriptPubKey without internal flag")
+        nonstandardScriptPubKey = address['scriptPubKey'] + bytes_to_hex_str(script.CScript([script.OP_NOP]))
         address = self.nodes[0].validateaddress(self.nodes[0].getnewaddress())
         result = self.nodes[1].importmulti([{
-            "scriptPubKey": address['scriptPubKey']
+            "scriptPubKey": nonstandardScriptPubKey,
         }])
         assert_equal(result[0]['success'], False)
         assert_equal(result[0]['error']['code'], -8)
-        assert_equal(result[0]['error']['message'], 'Internal must be set for hex scriptPubKey')
+        assert_equal(result[0]['error']['message'], 'Internal must be set to true for nonstandard scriptPubKey imports.')
         address_assert = self.nodes[1].validateaddress(address['address'])
         assert_equal(address_assert['iswatchonly'], False)
         assert_equal(address_assert['ismine'], False)
@@ -119,17 +121,17 @@ class ImportMultiTest (BitcoinTestFramework):
         assert_equal(address_assert['iswatchonly'], True)
         assert_equal(address_assert['ismine'], False)
 
-        # ScriptPubKey + Public key + !internal
-        print("Should not import a scriptPubKey without internal and with public key")
+        # Nonstandard scriptPubKey + Public key + !internal
+        print("Should not import a nonstandard scriptPubKey without internal and with public key")
         address = self.nodes[0].validateaddress(self.nodes[0].getnewaddress())
         request = [{
-            "scriptPubKey": address['scriptPubKey'],
+            "scriptPubKey": nonstandardScriptPubKey,
             "pubkeys": [ address['pubkey'] ]
         }];
         result = self.nodes[1].importmulti(request)
         assert_equal(result[0]['success'], False)
         assert_equal(result[0]['error']['code'], -8)
-        assert_equal(result[0]['error']['message'], 'Internal must be set for hex scriptPubKey')
+        assert_equal(result[0]['error']['message'], 'Internal must be set to true for nonstandard scriptPubKey imports.')
         address_assert = self.nodes[1].validateaddress(address['address'])
         assert_equal(address_assert['iswatchonly'], False)
         assert_equal(address_assert['ismine'], False)
@@ -178,16 +180,16 @@ class ImportMultiTest (BitcoinTestFramework):
         assert_equal(address_assert['iswatchonly'], False)
         assert_equal(address_assert['ismine'], True)
 
-        # ScriptPubKey + Private key + !internal
-        print("Should not import a scriptPubKey without internal and with private key")
+        # Nonstandard scriptPubKey + Private key + !internal
+        print("Should not import a nonstandard scriptPubKey without internal and with private key")
         address = self.nodes[0].validateaddress(self.nodes[0].getnewaddress())
         result = self.nodes[1].importmulti([{
-            "scriptPubKey": address['scriptPubKey'],
+            "scriptPubKey": nonstandardScriptPubKey,
             "keys": [ self.nodes[0].dumpprivkey(address['address']) ]
         }])
         assert_equal(result[0]['success'], False)
         assert_equal(result[0]['error']['code'], -8)
-        assert_equal(result[0]['error']['message'], 'Internal must be set for hex scriptPubKey')
+        assert_equal(result[0]['error']['message'], 'Internal must be set to true for nonstandard scriptPubKey imports.')
         address_assert = self.nodes[1].validateaddress(address['address'])
         assert_equal(address_assert['iswatchonly'], False)
         assert_equal(address_assert['ismine'], False)
