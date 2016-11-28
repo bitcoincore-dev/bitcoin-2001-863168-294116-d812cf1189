@@ -711,13 +711,15 @@ UniValue ProcessImport(CWallet * const pwallet, const UniValue& data, const int6
         // Parse the output.
         CScript script;
         CBitcoinAddress address;
+        CTxDestination dest;
 
         if (!isScript) {
             address = CBitcoinAddress(output);
             if (!address.IsValid()) {
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid address");
             }
-            script = GetScriptForDestination(address.Get());
+            dest = address.Get();
+            script = GetScriptForDestination(dest);
         } else {
             if (!IsHex(output)) {
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid scriptPubKey");
@@ -725,6 +727,11 @@ UniValue ProcessImport(CWallet * const pwallet, const UniValue& data, const int6
 
             std::vector<unsigned char> vData(ParseHex(output));
             script = CScript(vData.begin(), vData.end());
+            if (ExtractDestination(script, dest)) {
+                address = CBitcoinAddress(dest);
+            } else if (!internal) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "Internal must be set to true for nonstandard scriptPubKey imports.");
+            }
         }
 
         // Watchonly and private keys
@@ -735,11 +742,6 @@ UniValue ProcessImport(CWallet * const pwallet, const UniValue& data, const int6
         // Internal + Label
         if (internal && data.exists("label")) {
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Incompatibility found between internal and label");
-        }
-
-        // Not having Internal + Script
-        if (!internal && isScript) {
-            throw JSONRPCError(RPC_INVALID_PARAMETER, "Internal must be set for hex scriptPubKey");
         }
 
         // Keys / PubKeys size check.
@@ -852,21 +854,8 @@ UniValue ProcessImport(CWallet * const pwallet, const UniValue& data, const int6
                 CBitcoinAddress pubKeyAddress = CBitcoinAddress(pubKey.GetID());
 
                 // Consistency check.
-                if (!isScript && !(pubKeyAddress.Get() == address.Get())) {
+                if (!(pubKeyAddress.Get() == address.Get())) {
                     throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Consistency check failed");
-                }
-
-                // Consistency check.
-                if (isScript) {
-                    CBitcoinAddress scriptAddress;
-                    CTxDestination destination;
-
-                    if (ExtractDestination(script, destination)) {
-                        scriptAddress = CBitcoinAddress(destination);
-                        if (!(scriptAddress.Get() == pubKeyAddress.Get())) {
-                            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Consistency check failed");
-                        }
-                    }
                 }
 
                 CScript pubKeyScript = GetScriptForDestination(pubKeyAddress.Get());
@@ -925,21 +914,8 @@ UniValue ProcessImport(CWallet * const pwallet, const UniValue& data, const int6
                 CBitcoinAddress pubKeyAddress = CBitcoinAddress(pubKey.GetID());
 
                 // Consistency check.
-                if (!isScript && !(pubKeyAddress.Get() == address.Get())) {
+                if (!(pubKeyAddress.Get() == address.Get())) {
                     throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Consistency check failed");
-                }
-
-                // Consistency check.
-                if (isScript) {
-                    CBitcoinAddress scriptAddress;
-                    CTxDestination destination;
-
-                    if (ExtractDestination(script, destination)) {
-                        scriptAddress = CBitcoinAddress(destination);
-                        if (!(scriptAddress.Get() == pubKeyAddress.Get())) {
-                            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Consistency check failed");
-                        }
-                    }
                 }
 
                 CKeyID vchAddress = pubKey.GetID();
@@ -973,11 +949,9 @@ UniValue ProcessImport(CWallet * const pwallet, const UniValue& data, const int6
                     throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
                 }
 
-                if (scriptPubKey.getType() == UniValue::VOBJ) {
-                    // add to address book or update label
-                    if (address.IsValid()) {
-                        pwallet->SetAddressBook(address.Get(), label, "receive");
-                    }
+                // add to address book or update label
+                if (address.IsValid()) {
+                    pwallet->SetAddressBook(address.Get(), label, "receive");
                 }
 
                 success = true;
