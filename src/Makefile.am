@@ -418,6 +418,7 @@ libbitcoin_util_a_SOURCES = \
   sync.cpp \
   threadinterrupt.cpp \
   util.cpp \
+  utilioprio.cpp \
   utilmoneystr.cpp \
   utilstrencodings.cpp \
   utiltime.cpp \
@@ -426,10 +427,6 @@ libbitcoin_util_a_SOURCES = \
 if GLIBC_BACK_COMPAT
 libbitcoin_util_a_SOURCES += compat/glibc_compat.cpp
 AM_LDFLAGS += $(COMPAT_LDFLAGS)
-endif
-
-if HAVE_IOPRIO_SYSCALL
-libbitcoin_util_a_SOURCES += utilioprio.cpp
 endif
 
 # cli: shared between bitcoin-cli and bitcoin-qt
