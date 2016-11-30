@@ -290,6 +290,7 @@ BITCOIN_CORE_H = \
   util/golombrice.h \
   util/hash_type.h \
   util/hasher.h \
+  util/ioprio.h \
   util/macros.h \
   util/message.h \
   util/moneystr.h \
@@ -731,6 +732,10 @@ libbitcoin_util_a_SOURCES = \
   util/tokenpipe.cpp \
   $(BITCOIN_CORE_H)
 #
+
+if HAVE_IOPRIO_SYSCALL
+libbitcoin_util_a_SOURCES += util/ioprio.cpp
+endif
 
 # cli #
 libbitcoin_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
