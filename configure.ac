@@ -608,6 +608,24 @@ AC_CHECK_DECLS([bswap_16, bswap_32, bswap_64],,,
 
 AC_CHECK_DECLS([__builtin_clz, __builtin_clzl, __builtin_clzll])
 
+AC_MSG_CHECKING(for ioprio syscalls)
+AC_COMPILE_IFELSE([
+  AC_LANG_PROGRAM([[
+    #define _GNU_SOURCE
+    #include <unistd.h>
+    #include <sys/syscall.h>
+  ]],[[
+    int x = syscall(SYS_ioprio_get, 1, 0);
+    syscall(SYS_ioprio_set, 1, 0, x);
+  ]])
+],[
+  have_ioprio_syscall=yes
+  AC_DEFINE(HAVE_IOPRIO_SYSCALL,1,[Define this symbol if you have ioprio syscalls])
+],[
+  have_ioprio_syscall=no
+])
+AC_MSG_RESULT($have_ioprio_syscall)
+
 dnl Check for MSG_NOSIGNAL
 AC_MSG_CHECKING(for MSG_NOSIGNAL)
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/socket.h>]],
@@ -1177,6 +1195,7 @@ AM_CONDITIONAL([ENABLE_BENCH],[test x$use_bench = xyes])
 AM_CONDITIONAL([USE_QRCODE], [test x$use_qr = xyes])
 AM_CONDITIONAL([USE_LCOV],[test x$use_lcov = xyes])
 AM_CONDITIONAL([GLIBC_BACK_COMPAT],[test x$use_glibc_compat = xyes])
+AM_CONDITIONAL([HAVE_IOPRIO_SYSCALL],[test x$have_ioprio_syscall = xyes])
 AM_CONDITIONAL([HARDEN],[test x$use_hardening = xyes])
 AM_CONDITIONAL([ENABLE_HWCRC32],[test x$enable_hwcrc32 = xyes])
 AM_CONDITIONAL([EXPERIMENTAL_ASM],[test x$experimental_asm = xyes])
