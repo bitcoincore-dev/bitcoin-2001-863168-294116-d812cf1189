@@ -712,6 +712,7 @@ libbitcoin_util_a_SOURCES = \
   util/fs_helpers.cpp \
   util/getuniquepath.cpp \
   util/hasher.cpp \
+  util/ioprio.cpp \
   util/sock.cpp \
   util/syserror.cpp \
   util/system.cpp \
@@ -732,10 +733,6 @@ libbitcoin_util_a_SOURCES = \
   util/tokenpipe.cpp \
   $(BITCOIN_CORE_H)
 #
-
-if HAVE_IOPRIO_SYSCALL
-libbitcoin_util_a_SOURCES += util/ioprio.cpp
-endif
 
 # cli #
 libbitcoin_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
