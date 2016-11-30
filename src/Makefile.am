@@ -619,6 +619,7 @@ libbitcoin_util_a_SOURCES = \
   util/fees.cpp \
   util/getuniquepath.cpp \
   util/hasher.cpp \
+  util/ioprio.cpp \
   util/sock.cpp \
   util/system.cpp \
   util/message.cpp \
@@ -639,10 +640,6 @@ libbitcoin_util_a_SOURCES = \
 
 if USE_LIBEVENT
 libbitcoin_util_a_SOURCES += util/url.cpp
-endif
-
-if HAVE_IOPRIO_SYSCALL
-libbitcoin_util_a_SOURCES += util/ioprio.cpp
 endif
 
 # cli: shared between bitcoin-cli and bitcoin-qt
