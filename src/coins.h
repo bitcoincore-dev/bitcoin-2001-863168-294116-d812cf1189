@@ -203,6 +203,10 @@ protected:
     /* Cached dynamic memory usage for the inner Coin objects. */
     mutable size_t cachedCoinsUsage;
 
+    /* Whether this cache has an active modifier. */
+    mutable bool hasModifier = false;
+
+    class Modifier;
 public:
     CCoinsViewCache(CCoinsView *baseIn);
 
