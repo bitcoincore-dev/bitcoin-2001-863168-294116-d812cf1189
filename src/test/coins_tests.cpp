@@ -14,6 +14,7 @@
 #include <vector>
 #include <map>
 
+#include <boost/test/execution_monitor.hpp>
 #include <boost/test/unit_test.hpp>
 
 namespace
@@ -420,6 +421,7 @@ BOOST_AUTO_TEST_CASE(ccoins_serialization)
 const static uint256 TXID;
 const static CAmount PRUNED = -1;
 const static CAmount ABSENT = -2;
+const static CAmount FAIL   = -3;
 const static CAmount VALUE1 = 100;
 const static CAmount VALUE2 = 200;
 const static CAmount VALUE3 = 300;
@@ -685,12 +687,19 @@ BOOST_AUTO_TEST_CASE(ccoins_modify_new)
 void CheckWriteCoins(CAmount parent_value, CAmount child_value, CAmount expected_value, char parent_flags, char child_flags, char expected_flags)
 {
     SingleEntryCacheTest test(ABSENT, parent_value, parent_flags);
-    WriteCoinsViewEntry(test.cache, child_value, child_flags);
-    test.cache.SelfTest();
+    boost::execution_monitor monitor;
 
     CAmount result_value;
     char result_flags;
-    GetCoinsMapEntry(test.cache.map(), result_value, result_flags);
+    try {
+        monitor.execute([&]() { WriteCoinsViewEntry(test.cache, child_value, child_flags); return 0; });
+        GetCoinsMapEntry(test.cache.map(), result_value, result_flags);
+        test.cache.SelfTest();
+    } catch (boost::execution_exception& e) {
+        result_value = FAIL;
+        result_flags = NO_ENTRY;
+    }
+
     BOOST_CHECK_EQUAL(result_value, expected_value);
     BOOST_CHECK_EQUAL(result_flags, expected_flags);
 }
@@ -734,21 +743,21 @@ BOOST_AUTO_TEST_CASE(ccoins_write)
     CheckWriteCoins(VALUE1, ABSENT, VALUE1, DIRTY      , NO_ENTRY   , DIRTY      );
     CheckWriteCoins(VALUE1, ABSENT, VALUE1, DIRTY|FRESH, NO_ENTRY   , DIRTY|FRESH);
     CheckWriteCoins(VALUE1, PRUNED, PRUNED, 0          , DIRTY      , DIRTY      );
-    CheckWriteCoins(VALUE1, PRUNED, PRUNED, 0          , DIRTY|FRESH, DIRTY      );
+    CheckWriteCoins(VALUE1, PRUNED, FAIL  , 0          , DIRTY|FRESH, NO_ENTRY   );
     CheckWriteCoins(VALUE1, PRUNED, ABSENT, FRESH      , DIRTY      , NO_ENTRY   );
-    CheckWriteCoins(VALUE1, PRUNED, ABSENT, FRESH      , DIRTY|FRESH, NO_ENTRY   );
+    CheckWriteCoins(VALUE1, PRUNED, FAIL  , FRESH      , DIRTY|FRESH, NO_ENTRY   );
     CheckWriteCoins(VALUE1, PRUNED, PRUNED, DIRTY      , DIRTY      , DIRTY      );
-    CheckWriteCoins(VALUE1, PRUNED, PRUNED, DIRTY      , DIRTY|FRESH, DIRTY      );
+    CheckWriteCoins(VALUE1, PRUNED, FAIL  , DIRTY      , DIRTY|FRESH, NO_ENTRY   );
     CheckWriteCoins(VALUE1, PRUNED, ABSENT, DIRTY|FRESH, DIRTY      , NO_ENTRY   );
-    CheckWriteCoins(VALUE1, PRUNED, ABSENT, DIRTY|FRESH, DIRTY|FRESH, NO_ENTRY   );
+    CheckWriteCoins(VALUE1, PRUNED, FAIL  , DIRTY|FRESH, DIRTY|FRESH, NO_ENTRY   );
     CheckWriteCoins(VALUE1, VALUE2, VALUE2, 0          , DIRTY      , DIRTY      );
-    CheckWriteCoins(VALUE1, VALUE2, VALUE2, 0          , DIRTY|FRESH, DIRTY      );
+    CheckWriteCoins(VALUE1, VALUE2, FAIL  , 0          , DIRTY|FRESH, NO_ENTRY   );
     CheckWriteCoins(VALUE1, VALUE2, VALUE2, FRESH      , DIRTY      , DIRTY|FRESH);
-    CheckWriteCoins(VALUE1, VALUE2, VALUE2, FRESH      , DIRTY|FRESH, DIRTY|FRESH);
+    CheckWriteCoins(VALUE1, VALUE2, FAIL  , FRESH      , DIRTY|FRESH, NO_ENTRY   );
     CheckWriteCoins(VALUE1, VALUE2, VALUE2, DIRTY      , DIRTY      , DIRTY      );
-    CheckWriteCoins(VALUE1, VALUE2, VALUE2, DIRTY      , DIRTY|FRESH, DIRTY      );
+    CheckWriteCoins(VALUE1, VALUE2, FAIL  , DIRTY      , DIRTY|FRESH, NO_ENTRY   );
     CheckWriteCoins(VALUE1, VALUE2, VALUE2, DIRTY|FRESH, DIRTY      , DIRTY|FRESH);
-    CheckWriteCoins(VALUE1, VALUE2, VALUE2, DIRTY|FRESH, DIRTY|FRESH, DIRTY|FRESH);
+    CheckWriteCoins(VALUE1, VALUE2, FAIL  , DIRTY|FRESH, DIRTY|FRESH, NO_ENTRY   );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
