@@ -716,6 +716,7 @@ void CheckModifyNewCoins(CAmount cache_value, CAmount modify_value, CAmount expe
     try {
         monitor.execute([&]() { SetCoinsValue(modify_value, *test.cache.ModifyNewCoins(TXID, coinbase)); return 0; });
         GetCoinsMapEntry(test.cache.map(), result_value, result_flags);
+        test.cache.SelfTest();
     } catch (boost::execution_exception& e) {
         result_value = FAIL;
         result_flags = NO_ENTRY;
