@@ -490,6 +490,44 @@ const static char DIRTY = CCoinsCacheEntry::DIRTY;
 const static char FRESH = CCoinsCacheEntry::FRESH;
 const static char NO_ENTRY = -1;
 
+const char* ValueString(CAmount value)
+{
+  switch (value) {
+  case ABSENT:
+    return "ABSENT";
+  case PRUNED:
+    return "PRUNED";
+#if 0
+  case FAIL:
+    return "FAIL";
+#endif
+  case VALUE1:
+    return "VALUE1";
+  case VALUE2:
+    return "VALUE2";
+  case VALUE3:
+    return "VALUE3";
+  }
+  return nullptr;
+};
+
+const char* FlagString(char flags)
+{
+  switch (flags) {
+  case 0:
+    return "0";
+  case DIRTY:
+    return "DIRTY";
+  case FRESH:
+    return "FRESH";
+  case DIRTY | FRESH:
+    return "DIRTY|FRESH";
+  case NO_ENTRY:
+    return "NO_ENTRY";
+  }
+  return nullptr;
+}
+
 void SetCoinsValue(CAmount value, CCoins& coins)
 {
     assert(value != ABSENT);
@@ -568,6 +606,8 @@ void CheckAccessCoins(CAmount base_value, CAmount cache_value, CAmount expected_
     GetCoinsMapEntry(test.cache.map(), result_value, result_flags);
     BOOST_CHECK_EQUAL(result_value, expected_value);
     BOOST_CHECK_EQUAL(result_flags, expected_flags);
+
+    printf("CheckAccessCoins(%-6s, %-6s, %-6s, %-11s, %-11s);\n", ValueString(base_value), ValueString(cache_value), ValueString(result_value), FlagString(cache_flags), FlagString(result_flags));
 }
 
 BOOST_AUTO_TEST_CASE(ccoins_access)
@@ -619,6 +659,8 @@ void CheckModifyCoins(CAmount base_value, CAmount cache_value, CAmount modify_va
     GetCoinsMapEntry(test.cache.map(), result_value, result_flags);
     BOOST_CHECK_EQUAL(result_value, expected_value);
     BOOST_CHECK_EQUAL(result_flags, expected_flags);
+
+    printf("CheckModifyCoins(%-6s, %-6s, %-6s, %-6s, %-11s, %-11s);\n", ValueString(base_value), ValueString(cache_value), ValueString(modify_value), ValueString(result_value), FlagString(cache_flags), FlagString(result_flags));
 };
 
 BOOST_AUTO_TEST_CASE(ccoins_modify)
@@ -696,6 +738,8 @@ void CheckModifyNewCoins(CAmount cache_value, CAmount modify_value, CAmount expe
     GetCoinsMapEntry(test.cache.map(), result_value, result_flags);
     BOOST_CHECK_EQUAL(result_value, expected_value);
     BOOST_CHECK_EQUAL(result_flags, expected_flags);
+
+    printf("CheckModifyNewCoins(%-6s, %-6s, %-6s, %-11s, %-11s, %-5s);\n", ValueString(cache_value), ValueString(modify_value), ValueString(result_value), FlagString(cache_flags), FlagString(result_flags), coinbase ? "true" : "false");
 }
 
 BOOST_AUTO_TEST_CASE(ccoins_modify_new)
@@ -757,6 +801,8 @@ void CheckWriteCoins(CAmount parent_value, CAmount child_value, CAmount expected
     GetCoinsMapEntry(test.cache.map(), result_value, result_flags);
     BOOST_CHECK_EQUAL(result_value, expected_value);
     BOOST_CHECK_EQUAL(result_flags, expected_flags);
+
+    printf("CheckWriteCoins(%-6s, %-6s, %-6s, %-11s, %-11s, %-11s);\n", ValueString(parent_value), ValueString(child_value), ValueString(result_value), FlagString(parent_flags), FlagString(child_flags), FlagString(result_flags));
 }
 
 BOOST_AUTO_TEST_CASE(ccoins_write)
@@ -813,6 +859,41 @@ BOOST_AUTO_TEST_CASE(ccoins_write)
     CheckWriteCoins(VALUE1, VALUE2, VALUE2, DIRTY      , DIRTY|FRESH, DIRTY      );
     CheckWriteCoins(VALUE1, VALUE2, VALUE2, DIRTY|FRESH, DIRTY      , DIRTY|FRESH);
     CheckWriteCoins(VALUE1, VALUE2, VALUE2, DIRTY|FRESH, DIRTY|FRESH, DIRTY|FRESH);
+}
+
+BOOST_AUTO_TEST_CASE(ccoins_dump)
+{
+    return;
+    printf("~~ start ccoins_dump ~~\n");
+
+    const auto FLAGS = {char(0), FRESH, DIRTY, char(DIRTY | FRESH)};
+    const auto DIRTY_FLAGS = {DIRTY, char(DIRTY | FRESH)};
+    const auto ABSENT_FLAGS = {NO_ENTRY};
+
+    for (CAmount base_value : {ABSENT, PRUNED, VALUE1})
+        for (CAmount cache_value : {ABSENT, PRUNED, VALUE2})
+            for (char cache_flags : cache_value == ABSENT ? ABSENT_FLAGS : FLAGS)
+                CheckAccessCoins(base_value, cache_value, 0, cache_flags, 0);
+
+    for (CAmount base_value : {ABSENT, PRUNED, VALUE1})
+        for (CAmount cache_value : {ABSENT, PRUNED, VALUE2})
+            for (CAmount modify_value : {PRUNED, VALUE3})
+                for (char cache_flags : cache_value == ABSENT ? ABSENT_FLAGS : FLAGS)
+                    CheckModifyCoins(base_value, cache_value, modify_value, 0, cache_flags, 0);
+
+    for (CAmount cache_value : {ABSENT, PRUNED, VALUE1})
+        for (CAmount modify_value : {PRUNED, VALUE2})
+            for (char cache_flags : cache_value == ABSENT ? ABSENT_FLAGS : FLAGS)
+                for (bool coinbase : {false, true})
+                    CheckModifyNewCoins(cache_value, modify_value, 0, cache_flags, 0, coinbase);
+
+    for (CAmount parent_value : {ABSENT, PRUNED, VALUE1})
+        for (CAmount child_value : {ABSENT, PRUNED, VALUE2})
+            for (char parent_flags : parent_value == ABSENT ? ABSENT_FLAGS : FLAGS)
+                for (char child_flags : child_value == ABSENT ? ABSENT_FLAGS : DIRTY_FLAGS)
+                    CheckWriteCoins(parent_value, child_value, 0, parent_flags, child_flags, 0);
+
+    printf("~~ end ccoins_dump ~~\n");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
