@@ -16,6 +16,7 @@
 #include "rpc/server.h"
 #include "script/sign.h"
 #include "timedata.h"
+#include "ui_interface.h"
 #include "util.h"
 #include "utilmoneystr.h"
 #include "wallet.h"
@@ -2574,80 +2575,88 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
 
-    if (fHelp || params.size() < 2 || params.size() > 3)
+    if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-                            "bumpfee \"txid\"\n"
+                            "bumpfee \"txid\" ( options ) \n"
                             "\nBumps the fee of a opt-in-RBF transaction.\n"
-                            "\nThis command requires that the txid is in the wallet.\n"
-                            "\nUser specifies which output (e.g., a change output) will be used to bump the fee.\n"
-                            "\nThis command will NOT add new inputs.\n"
-                            "\nFee must be high enough to pay a new relay fee.\n"
-                            "\nIf tx has child transactions in mempool, the new fee must pay for them as well.\n"
-                            "\nThis command will fail if fee is not high enough or output is not large enough.\n"
-                            "\nUser can specify totalFee, or use RPC setpaytxfee to set a higher fee rate.\n"
+                            "This command requires that the transaction with the given txid is in the wallet.\n"
+                            "This command will NOT add new inputs.\n"
+                            "Fee must be high enough to pay a new relay fee.\n"
+                            "If tx has child transactions in mempool, the new fee must pay for them as well.\n"
+                            "This command will fail if fee is not high enough or output is not large enough.\n"
+                            "User can specify totalFee, or use RPC setpaytxfee to set a higher fee rate.\n"
                             "\nArguments:\n"
-                            "1. \"transactionid\"     (string, required) The txid to be bumped\n"
-                            "2. \"output\"            (int, required) The output to be decremented\n"
-                            "3. options               (object, optional)\n"
+                            "1. \"txid\"              (string, required) The txid to be bumped\n"
+                            "2. options               (object, optional)\n"
                             "   {\n"
-                            "     \"confTarget\"      (int, optional) Confirmation target (in blocks)\n"
-                            "     \"totalFee\"        (numeric, optional) Total fee to pay, in satoshis (not btc)\n"
+                            "     \"confTarget\":       \"n\",          (numeric, optional) Confirmation target (in blocks)\n"
+                            "     \"totalFee\":         \"n\",          (numeric, optional) Total fee (NOT feerate) to pay, in satoshis\n"
+                            "     \"maxFee\":           \"n\",          (numeric, optional) Allows user to override bumpfee's max fee\n"
                             "   }\n"
                             "\nResult:\n"
                             "{\n"
-                            "  \"txid\":    \"value\", (string)  The id of the new transaction\n"
+                            "  \"txid\":    \"value\",   (string)  The id of the new transaction\n"
                             "  \"oldfee\":    n,         (numeric) Fee of the replaced transaction\n"
                             "  \"fee\":       n,         (numeric) Fee of the new transaction\n"
                             "}\n"
                             "\nExamples:\n"
-                            "\nBump the fee, get the new transactions txid\n"
+                            "\nBump the fee, get the new transaction\'s txid\n"
                             + HelpExampleCli("bumpfee", "<txid> <output>")
                             );
 
-    RPCTypeCheck(params, boost::assign::list_of(UniValue::VSTR)(UniValue::VNUM));
+    RPCTypeCheck(params, boost::assign::list_of(UniValue::VSTR));
     uint256 hash;
     hash.SetHex(params[0].get_str());
     std::string strError;
 
     // retrieve the original tx from the wallet
+    assert(pwalletMain != NULL);
+    LOCK2(cs_main, pwalletMain->cs_wallet);
     if (!pwalletMain->mapWallet.count(hash))
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid or non-wallet transaction id");
-    const CWalletTx& wtx = pwalletMain->mapWallet[hash];
+    CWalletTx& wtx = pwalletMain->mapWallet[hash];
 
-    // check that original tx signals opt-in-RBF
+    if (wtx.GetDepthInMainChain() != 0)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Transaction has been mined, or is conflicted with a mined transaction");
+
     if (!SignalsOptInRBF(wtx))
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Transaction is not bip-125 replaceable");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Transaction is not BIP 125 replaceable");
 
-    // Check that if the original tx has wallet conflicts (meaning there is at least one other tx
-    // in the wallet that spends at least one of the same outputs) that it is the most recent one.
-    // This prevents us from trying to bump fee on a tx that has already been bumped.  So if the
-    // user created txid1, bumped the fee which resulted in txid2, and now wishes to bump the fee
-    // again, the user must call bumpfee on txid2.
-    const CWalletTx *conflictTx;
-    BOOST_FOREACH(const uint256& conflict, wtx.GetConflicts()) {
-        conflictTx = pwalletMain->GetWalletTx(conflict);
-        LogPrint("rpc", "bumpfee wallet conflict, conflicted tx has time: %d\n", conflictTx->GetTxTime());
-        if (conflictTx->GetTxTime() > wtx.GetTxTime()) {
-            strError = strprintf("Transaction conflicts with later wallet tx: %s", conflict.GetHex());
-            throw JSONRPCError(RPC_INVALID_PARAMETER, strError);
+    if (wtx.mapValue.count("replaced_by_txid"))
+      throw JSONRPCError(RPC_INVALID_REQUEST, strprintf("Cannot bump transaction %s which was already bumped by transaction %s", hash.ToString(), wtx.mapValue.at("replaced_by_txid")));
+
+    // check that original tx consists entirely of our inputs
+    // if not, we can't bump the fee, because the wallet has no way of knowing the value of the other inputs (thus the fee)
+    if (!pwalletMain->IsAllFromMe(wtx, ISMINE_SPENDABLE))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Transaction contains inputs that don't belong to this wallet");
+
+    // figure out which output was change
+    // if there was no change output or if there were multiple change outputs, fail
+    int nOutput = -1;
+    for (int i=0; i < (int) wtx.vout.size(); i++) {
+        if (pwalletMain->IsChange(wtx.vout[i])) {
+            if (nOutput != -1)
+                throw JSONRPCError(RPC_MISC_ERROR, "Transaction has multiple change outputs");
+            nOutput = i;
         }
     }
-
-    // bounds-check the output to decrement
-    int nOutput = params[1].get_int();
-    if (nOutput < 0 || (unsigned int) nOutput > wtx.vout.size())
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "Output out of bounds");
+    if (nOutput == -1)
+        throw JSONRPCError(RPC_MISC_ERROR, "Transaction does not have a change output");
 
     // optional parameters
     int newConfirmTarget = nTxConfirmTarget;
     CAmount totalFee = 0;
-    if (params.size() > 2) {
-        RPCTypeCheck(params, boost::assign::list_of(UniValue::VSTR)(UniValue::VNUM)(UniValue::VOBJ));
-        UniValue options = params[2];
+    CAmount bumpfeeMaxTxFee = 0.01 * COIN;
+    if (params.size() > 1) {
+        RPCTypeCheck(params, boost::assign::list_of(UniValue::VSTR)(UniValue::VOBJ));
+        UniValue options = params[1];
+        if (options.size() > 3)
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "Too many optional parameters");
         RPCTypeCheckObj(options,
             {
                 {"confTarget", UniValueType(UniValue::VNUM)},
                 {"totalFee", UniValueType(UniValue::VNUM)},
+                {"maxFee", UniValueType(UniValue::VNUM)},
             },
             true, true);
 
@@ -2656,44 +2665,47 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
             if (newConfirmTarget <= 0) // upper-bound will be checked by estimatefee/smartfee
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid confTarget (cannot be <= 0)");
         }
+        if (options.exists("maxFee")) {
+            CAmount proposedMaxFee = options["maxFee"].get_int();
+            if (proposedMaxFee <= 0)
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid maxFee (cannot be <= 0)");
+            else if (proposedMaxFee > maxTxFee)
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid maxFee (cannot be higher than the global maxTxFee)");
+            bumpfeeMaxTxFee = proposedMaxFee;
+        }
         if (options.exists("totalFee")) {
             totalFee = options["totalFee"].get_int();
             if (totalFee <= 0)
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid totalFee (cannot be <= 0)");
-            else if (totalFee > maxTxFee)
-                throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid totalFee (higher than maxTxFee)");
+            else if (totalFee > bumpfeeMaxTxFee)
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid totalFee (cannot be higher than bumpfee's maxFee)");
         }
     }
 
     // calculate the old fee and fee-rate
-    CAmount nDebit = wtx.GetDebit(ISMINE_SPENDABLE);
-    CAmount nOldFee = (wtx.IsFromMe(ISMINE_SPENDABLE) ? nDebit - wtx.GetValueOut() : 0);
-    int txSize = (int)GetVirtualTransactionSize((CTransaction)wtx);
+    CAmount nOldFee = wtx.GetDebit(ISMINE_SPENDABLE) - wtx.GetValueOut();
+    int64_t txSize = GetVirtualTransactionSize((CTransaction)wtx);
     CFeeRate nOldFeeRate(nOldFee, txSize);
 
     // use the user-defined payTxFee if possible, otherwise use smartfee / fallbackfee
     CAmount nNewFee = 0;
-    CFeeRate nNewFeeRate;
-    if (payTxFee.GetFeePerK() > 0) {
-        nNewFeeRate = CFeeRate(payTxFee.GetFeePerK());
-    }
-    else {
-        int estimateFoundTarget = newConfirmTarget;
-        nNewFeeRate = mempool.estimateSmartFee(newConfirmTarget, &estimateFoundTarget);
-        if (nNewFeeRate.GetFeePerK() == 0) nNewFeeRate = CWallet::fallbackFee;
-    }
+    CFeeRate nNewFeeRate = payTxFee;
+    if (nNewFeeRate.GetFeePerK() == 0)
+        nNewFeeRate = mempool.estimateSmartFee(newConfirmTarget);
+    if (nNewFeeRate.GetFeePerK() == 0)
+        nNewFeeRate = CWallet::fallbackFee;
 
     // new fee rate must be at least old rate + minimum relay rate
-    if (nNewFeeRate.GetFeePerK() < nOldFeeRate.GetFeePerK() + ::minRelayTxFee.GetFeePerK()) {
+    if (nNewFeeRate.GetFeePerK() < nOldFeeRate.GetFeePerK() + ::minRelayTxFee.GetFeePerK())
         nNewFeeRate = CFeeRate(nOldFeeRate.GetFeePerK() + ::minRelayTxFee.GetFeePerK());
-    }
 
     // signature sizes can vary by a byte, so add 1 for each input when calculating the new fee
-    nNewFee = nNewFeeRate.GetFee(txSize + wtx.vin.size());
+    const int64_t maxNewTxSize = txSize + wtx.vin.size();
+    nNewFee = nNewFeeRate.GetFee(maxNewTxSize);
 
     // if user set totalFee, use that instead
     if (totalFee > 0) {
-        CAmount minTotalFee = nOldFeeRate.GetFee(txSize) + minRelayTxFee.GetFee(txSize);
+        CAmount minTotalFee = nOldFeeRate.GetFee(maxNewTxSize) + minRelayTxFee.GetFee(maxNewTxSize);
         if (totalFee < minTotalFee) {
             strError = strprintf("Invalid totalFee, must be at least oldFee + relayFee: %s", FormatMoney(minTotalFee));
             throw JSONRPCError(RPC_INVALID_PARAMETER, strError);
@@ -2702,7 +2714,7 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
         nNewFeeRate = CFeeRate(totalFee, txSize);
     }
 
-    // check that fee rate is higher than mempool's mininum fee
+    // check that fee rate is higher than mempool's minimum fee
     // (no point in bumping fee if we know that the new tx won't be accepted to the mempool)
     // This may occur if the user set TotalFee or paytxfee too low, if fallbackfee is too low, or, perhaps,
     // in a rare situation where the mempool minimum fee increased significantly since the fee estimation just a
@@ -2714,58 +2726,32 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
     }
 
     CAmount nDelta = nNewFee - nOldFee;
+    if (nDelta <= 0) // it should not be possible to have a negative delta at this point (an attempt to reduce the fee)
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "New fee must be higher than old fee");
 
+    // Fail if the tx has any descendants - check both the wallet and the mempool
+    if (pwalletMain->HasWalletSpend(hash))
+        throw JSONRPCError(RPC_MISC_ERROR, "Transaction has descendants in the wallet");
     {
         LOCK(mempool.cs);
         auto it = mempool.mapTx.find(hash);
-        if (it != mempool.mapTx.end()) {
-
-            // Tx with descendants
-            // --------------------
-            // Idea:  When a tx is bumped, its descendants (if any) are evicted from the mempool.
-            // Policy is that when you replace a tx, the total fees in the mempool cannot go down.
-            // So when you bump a tx that has children, you have to bump your fee by the sum of all of the
-            // descendants, plus the new bumped tx's relay fee.
-            //
-            // If the bumped fee is less than what's required because of children, we fail.  This is a different
-            // situation than bumping the fee to pay the minimum relay fee. Here, we can't be sure whether the user
-            // really wants to pay full price for all of the child transactions.  If so, the user can set payTxFee
-            // and run the command again.
-            //
-            CAmount nFeesWithDescendantsPlusRelay = it->GetModFeesWithDescendants() + ::minRelayTxFee.GetFee(txSize);
-            if (nNewFee < nFeesWithDescendantsPlusRelay) {
-                std::string strError = strprintf("Insufficent fee due to child transactions, the bumped fee must be at least: %s", FormatMoney(nFeesWithDescendantsPlusRelay));
-                throw JSONRPCError(RPC_INVALID_PARAMETER, strError);
-            }
-        }
-        else
-        {
-            // Tx not in mempool
-            // -----------------
-            // If the tx is in the wallet but not the mempool, we cannot check its descendants' fees.
-            //
-            // Not being in the mempool likely means that it was evicted for having a low fee.
-            // In this situation, we may not need RBF for this node (if the tx is not in the mempool,
-            // then it doesn't need to be replaced), but it may still be in the mempol of peers
-            // (perhaps a peer has allocated more space for the mempool).
-            //
-            // Our approach is to go ahead and bump/commit/relay the transaction.  In the event that
-            // the tx does have children and the fee is insufficient to cover, the peer(s) will reject
-            // the tx on that basis, so we warn the user of this possibility.
-            //
-            LogPrint("rpc", "Warning: bumping fee on tx that is not in the mempool; if it has child transactions, it may be rejected by peers\n");
-        }
+        if (it != mempool.mapTx.end() && it->GetCountWithDescendants() > 1)
+            throw JSONRPCError(RPC_MISC_ERROR, "Transaction has descendants in the mempool");
     }
 
     // Now modify the output to increase the fee.
-    // Output must be able to pay the increased fee, without being reduced to dust
+    // If the output is not large enough to pay the fee, fail.
     CMutableTransaction tx(wtx);
     CTxOut* poutput = &(tx.vout[nOutput]);
-    if (poutput->nValue >= nDelta + poutput->GetDustThreshold(::minRelayTxFee)) {
-        poutput->nValue = poutput->nValue - nDelta;
-    }
-    else {
-        throw JSONRPCError(RPC_MISC_ERROR, "Output does not have enough money to bump the fee");
+    if (poutput->nValue < nDelta)
+        throw JSONRPCError(RPC_MISC_ERROR, "Change output is too small to bump the fee");
+
+    // If the output would become dust, discard it (converting the dust to fee)
+    poutput->nValue = poutput->nValue - nDelta;
+    if (poutput->nValue < poutput->GetDustThreshold(::minRelayTxFee)) {
+        LogPrint("rpc", "Bumping fee and discarding dust output\n");
+        nNewFee = nNewFee + poutput->nValue;
+        tx.vout.erase(tx.vout.begin() + nOutput);
     }
 
     // sign the new tx
@@ -2786,8 +2772,21 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
     // commit/broadcast the tx
     CReserveKey reservekey(pwalletMain);
     CWalletTx wtxBumped(pwalletMain, tx);
-    if (!pwalletMain->CommitTransaction(wtxBumped, reservekey))
-        throw JSONRPCError(RPC_WALLET_ERROR, "Error: The transaction was rejected");
+    wtxBumped.mapValue["replaces_txid"] = hash.ToString();
+    if (!pwalletMain->CommitTransaction(wtxBumped, reservekey)) {
+        strError = "Error: The transaction was rejected!";
+        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+    }
+
+    // mark the original tx as bumped
+    {
+        CWalletDB walletdb(pwalletMain->strWalletFile, "r+");
+        CWalletTx& wtx = pwalletMain->mapWallet[hash];
+        assert(wtx.mapValue.count("replaced_by_txid") == 0);
+        wtx.mapValue["replaced_by_txid"] = wtxBumped.GetHash().ToString();
+        walletdb.WriteTx(wtx);
+        pwalletMain->NotifyTransactionChanged(pwalletMain, hash, CT_UPDATED);
+    }
 
     UniValue result(UniValue::VOBJ);
     result.push_back(Pair("txid", wtxBumped.GetHash().GetHex()));
