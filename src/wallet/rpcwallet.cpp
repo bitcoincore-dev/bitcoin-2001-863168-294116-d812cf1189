@@ -2575,7 +2575,7 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
     if (!EnsureWalletIsAvailable(fHelp))
         return NullUniValue;
 
-    if (fHelp || params.size() < 1 || params.size() > 2)
+    if (fHelp || params.size() < 1 || params.size() > 3 || (params.size() > 2 && !params[1].isNum()))
         throw runtime_error(
                             "bumpfee \"txid\" ( options ) \n"
                             "\nBumps the fee of an opt-in-RBF transaction T, replacing it with a new transaction B.\n"
@@ -2630,9 +2630,20 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
     if (!pwalletMain->IsAllFromMe(wtx, ISMINE_SPENDABLE))
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Transaction contains inputs that don't belong to this wallet");
 
+    int nOutput = -1;
+    if (params.size() > 1 && params[1].isNum()) {
+        // Backwards compatibility with Knots 0.13.1, which required specifying the change output as second param
+        nOutput = params[1].get_int();
+        if (nOutput < 0 || (unsigned int) nOutput > wtx.vout.size()) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Output out of bounds");
+        }
+        if (!pwalletMain->IsChange(wtx.vout[nOutput])) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Selected output is not change");
+        }
+    } else {
+
     // figure out which output was change
     // if there was no change output or multiple change outputs, fail
-    int nOutput = -1;
     for (size_t i=0; i < wtx.vout.size(); ++i) {
         if (pwalletMain->IsChange(wtx.vout[i])) {
             if (nOutput != -1)
@@ -2643,12 +2654,20 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
     if (nOutput == -1)
         throw JSONRPCError(RPC_MISC_ERROR, "Transaction does not have a change output");
 
+    }
+
     // optional parameters
     int newConfirmTarget = nTxConfirmTarget;
     CAmount totalFee = 0;
-    if (params.size() > 1) {
+    if (params.size() > 1 && ((!params[1].isNum()) || params.size() > 2)) {
+        UniValue options;
+        if (params[1].isNum()) {
+            RPCTypeCheck(params, boost::assign::list_of(UniValue::VSTR)(UniValue::VNUM)(UniValue::VOBJ));
+            options = params[2];
+        } else {
         RPCTypeCheck(params, boost::assign::list_of(UniValue::VSTR)(UniValue::VOBJ));
-        UniValue options = params[1];
+            options = params[1];
+        }
         if (options.size() > 2)
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "Too many optional parameters");
         RPCTypeCheckObj(options,
