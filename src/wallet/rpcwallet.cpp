@@ -2702,7 +2702,7 @@ UniValue setlabel(const UniValue& params, bool fHelp)
         if (pwalletMain->mapAddressBook.count(address.Get()))
         {
             string strOldLabel = pwalletMain->mapAddressBook[address.Get()].name;
-            if (address == GetAccountAddress(strOldLabel))
+            if (strOldLabel != strLabel && address == GetAccountAddress(strOldLabel))
                 DeleteAccount(strOldLabel);
         }
         pwalletMain->SetAddressBook(address.Get(), strLabel, "receive");
