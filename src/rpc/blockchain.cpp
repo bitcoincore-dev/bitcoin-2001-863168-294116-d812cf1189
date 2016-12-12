@@ -101,7 +101,7 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
     result.push_back(Pair("confirmations", confirmations));
     result.push_back(Pair("strippedsize", (int)::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS)));
     result.push_back(Pair("size", (int)::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION)));
-    result.push_back(Pair("cost", (int)::GetBlockCost(block)));
+    result.push_back(Pair("weight", (int)::GetBlockWeight(block)));
     result.push_back(Pair("height", blockindex->nHeight));
     result.push_back(Pair("version", block.nVersion));
     result.push_back(Pair("versionHex", strprintf("%08x", block.nVersion)));
@@ -559,7 +559,7 @@ UniValue getblock(const UniValue& params, bool fHelp)
             "  \"confirmations\" : n,   (numeric) The number of confirmations, or -1 if the block is not on the main chain\n"
             "  \"size\" : n,            (numeric) The block size\n"
             "  \"strippedsize\" : n,    (numeric) The block size excluding witness data\n"
-            "  \"cost\" : n             (numeric) The block cost\n"
+            "  \"weight\" : n           (numeric) The block weight (BIP 141)\n"
             "  \"height\" : n,          (numeric) The block height or index\n"
             "  \"version\" : n,         (numeric) The block version\n"
             "  \"versionHex\" : \"00000000\", (string) The block version formatted in hexadecimal\n"
@@ -607,7 +607,7 @@ UniValue getblock(const UniValue& params, bool fHelp)
 
     if (!fVerbose)
     {
-        CDataStream ssBlock(SER_NETWORK, PROTOCOL_VERSION);
+        CDataStream ssBlock(SER_NETWORK, PROTOCOL_VERSION | RPCSerializationFlags());
         ssBlock << block;
         std::string strHex = HexStr(ssBlock.begin(), ssBlock.end());
         return strHex;
@@ -704,6 +704,8 @@ UniValue gettxoutsetinfo(const UniValue& params, bool fHelp)
         ret.push_back(Pair("bytes_serialized", (int64_t)stats.nSerializedSize));
         ret.push_back(Pair("hash_serialized", stats.hashSerialized.GetHex()));
         ret.push_back(Pair("total_amount", ValueFromAmount(stats.nTotalAmount)));
+    } else {
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Unable to read UTXO set");
     }
     return ret;
 }
@@ -717,7 +719,7 @@ UniValue gettxout(const UniValue& params, bool fHelp)
             "\nArguments:\n"
             "1. \"txid\"       (string, required) The transaction id\n"
             "2. n              (numeric, required) vout number\n"
-            "3. includemempool  (boolean, optional) Whether to include the mem pool\n"
+            "3. includemempool  (boolean, optional) Whether to include the mempool\n"
             "\nResult:\n"
             "{\n"
             "  \"bestblock\" : \"hash\",    (string) the block hash\n"
@@ -892,7 +894,7 @@ UniValue getblockchaininfo(const UniValue& params, bool fHelp)
             "  \"verificationprogress\": xxxx, (numeric) estimate of verification progress [0..1]\n"
             "  \"chainwork\": \"xxxx\"     (string) total amount of work in active chain, in hexadecimal\n"
             "  \"pruned\": xx,             (boolean) if the blocks are subject to pruning\n"
-            "  \"pruneheight\": xxxxxx,    (numeric) heighest block available\n"
+            "  \"pruneheight\": xxxxxx,    (numeric) lowest-height complete block stored\n"
             "  \"softforks\": [            (array) status of softforks in progress\n"
             "     {\n"
             "        \"id\": \"xxxx\",        (string) name of softfork\n"

@@ -1,5 +1,5 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2016 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -1020,9 +1020,12 @@ public:
 
     bool operator()(const CKeyID &keyID) {
         CPubKey pubkey;
-        if (pwalletMain && pwalletMain->GetPubKey(keyID, pubkey)) {
-            CScript basescript;
-            basescript << ToByteVector(pubkey) << OP_CHECKSIG;
+        if (pwalletMain) {
+            CScript basescript = GetScriptForDestination(keyID);
+            isminetype typ;
+            typ = IsMine(*pwalletMain, basescript, SIGVERSION_WITNESS_V0);
+            if (typ != ISMINE_SPENDABLE && typ != ISMINE_WATCH_SOLVABLE)
+                return false;
             CScript witscript = GetScriptForWitness(basescript);
             pwalletMain->AddCScript(witscript);
             result = CScriptID(witscript);
@@ -1040,6 +1043,10 @@ public:
                 result = scriptID;
                 return true;
             }
+            isminetype typ;
+            typ = IsMine(*pwalletMain, subscript, SIGVERSION_WITNESS_V0);
+            if (typ != ISMINE_SPENDABLE && typ != ISMINE_WATCH_SOLVABLE)
+                return false;
             CScript witscript = GetScriptForWitness(subscript);
             pwalletMain->AddCScript(witscript);
             result = CScriptID(witscript);
@@ -1085,8 +1092,10 @@ UniValue addwitnessaddress(const UniValue& params, bool fHelp)
     CTxDestination dest = address.Get();
     bool ret = boost::apply_visitor(w, dest);
     if (!ret) {
-        throw JSONRPCError(RPC_WALLET_ERROR, "Public key or redeemscript not known to wallet");
+        throw JSONRPCError(RPC_WALLET_ERROR, "Public key or redeemscript not known to wallet, or the key is uncompressed");
     }
+
+    pwalletMain->SetAddressBook(w.result, "", "receive");
 
     return CBitcoinAddress(w.result).ToString();
 }
@@ -1771,7 +1780,7 @@ UniValue gettransaction(const UniValue& params, bool fHelp)
     ListTransactions(wtx, "*", 0, false, details, filter);
     entry.push_back(Pair("details", details));
 
-    string strHex = EncodeHexTx(static_cast<CTransaction>(wtx));
+    string strHex = EncodeHexTx(static_cast<CTransaction>(wtx), RPCSerializationFlags());
     entry.push_back(Pair("hex", strHex));
 
     return entry;
@@ -2081,7 +2090,7 @@ UniValue encryptwallet(const UniValue& params, bool fHelp)
     // slack space in .dat files; that is bad if the old data is
     // unencrypted private keys. So:
     StartShutdown();
-    return "wallet encrypted; Bitcoin server stopping, restart to run with encrypted wallet. The keypool has been flushed, you need to make a new backup.";
+    return "wallet encrypted; Bitcoin server stopping, restart to run with encrypted wallet. The keypool has been flushed and a new HD seed was generated (if you are using HD). You need to make a new backup.";
 }
 
 UniValue lockunspent(const UniValue& params, bool fHelp)
@@ -2260,16 +2269,16 @@ UniValue getwalletinfo(const UniValue& params, bool fHelp)
             "Returns an object containing various wallet state info.\n"
             "\nResult:\n"
             "{\n"
-            "  \"walletversion\": xxxxx,     (numeric) the wallet version\n"
-            "  \"balance\": xxxxxxx,         (numeric) the total confirmed balance of the wallet in " + CURRENCY_UNIT + "\n"
-            "  \"unconfirmed_balance\": xxx, (numeric) the total unconfirmed balance of the wallet in " + CURRENCY_UNIT + "\n"
-            "  \"immature_balance\": xxxxxx, (numeric) the total immature balance of the wallet in " + CURRENCY_UNIT + "\n"
-            "  \"txcount\": xxxxxxx,         (numeric) the total number of transactions in the wallet\n"
-            "  \"keypoololdest\": xxxxxx,    (numeric) the timestamp (seconds since GMT epoch) of the oldest pre-generated key in the key pool\n"
-            "  \"keypoolsize\": xxxx,        (numeric) how many new keys are pre-generated\n"
-            "  \"unlocked_until\": ttt,      (numeric) the timestamp in seconds since epoch (midnight Jan 1 1970 GMT) that the wallet is unlocked for transfers, or 0 if the wallet is locked\n"
-            "  \"paytxfee\": x.xxxx,         (numeric) the transaction fee configuration, set in " + CURRENCY_UNIT + "/kB\n"
-            "  \"masterkeyid\": \"<hash160>\", (string) the Hash160 of the HD master pubkey\n"
+            "  \"walletversion\": xxxxx,       (numeric) the wallet version\n"
+            "  \"balance\": xxxxxxx,           (numeric) the total confirmed balance of the wallet in " + CURRENCY_UNIT + "\n"
+            "  \"unconfirmed_balance\": xxx,   (numeric) the total unconfirmed balance of the wallet in " + CURRENCY_UNIT + "\n"
+            "  \"immature_balance\": xxxxxx,   (numeric) the total immature balance of the wallet in " + CURRENCY_UNIT + "\n"
+            "  \"txcount\": xxxxxxx,           (numeric) the total number of transactions in the wallet\n"
+            "  \"keypoololdest\": xxxxxx,      (numeric) the timestamp (seconds since Unix epoch) of the oldest pre-generated key in the key pool\n"
+            "  \"keypoolsize\": xxxx,          (numeric) how many new keys are pre-generated\n"
+            "  \"unlocked_until\": ttt,        (numeric) the timestamp in seconds since epoch (midnight Jan 1 1970 GMT) that the wallet is unlocked for transfers, or 0 if the wallet is locked\n"
+            "  \"paytxfee\": x.xxxx,           (numeric) the transaction fee configuration, set in " + CURRENCY_UNIT + "/kB\n"
+            "  \"hdmasterkeyid\": \"<hash160>\", (string) the Hash160 of the HD master pubkey\n"
             "}\n"
             "\nExamples:\n"
             + HelpExampleCli("getwalletinfo", "")
@@ -2291,7 +2300,7 @@ UniValue getwalletinfo(const UniValue& params, bool fHelp)
     obj.push_back(Pair("paytxfee",      ValueFromAmount(payTxFee.GetFeePerK())));
     CKeyID masterKeyID = pwalletMain->GetHDChain().masterKeyID;
     if (!masterKeyID.IsNull())
-         obj.push_back(Pair("masterkeyid", masterKeyID.GetHex()));
+         obj.push_back(Pair("hdmasterkeyid", masterKeyID.GetHex()));
     return obj;
 }
 
