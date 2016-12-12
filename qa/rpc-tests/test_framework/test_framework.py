@@ -30,6 +30,8 @@ from authproxy import AuthServiceProxy, JSONRPCException
 
 
 class BitcoinTestFramework(object):
+    def __init__(self):
+        self.setup_clean_chain = False
 
     # These may be over-ridden by subclasses:
     def run_test(self):
@@ -42,7 +44,10 @@ class BitcoinTestFramework(object):
 
     def setup_chain(self):
         print("Initializing test directory "+self.options.tmpdir)
-        initialize_chain(self.options.tmpdir)
+        if self.setup_clean_chain:
+            initialize_chain_clean(self.options.tmpdir, self.num_nodes)
+        else:
+            initialize_chain(self.options.tmpdir, self.num_nodes, self.options.cachedir)
 
     def setup_nodes(self):
         return start_nodes(4, self.options.tmpdir)
