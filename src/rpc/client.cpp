@@ -105,7 +105,6 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "getmempoolancestors", 1 },
     { "getmempooldescendants", 1 },
     { "bumpfee", 1 },
-    { "bumpfee", 2 },
 };
 
 class CRPCConvertTable

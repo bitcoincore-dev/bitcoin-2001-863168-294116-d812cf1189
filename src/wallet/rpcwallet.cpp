@@ -2578,13 +2578,14 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
                             "bumpfee \"txid\" ( options ) \n"
-                            "\nBumps the fee of a opt-in-RBF transaction.\n"
-                            "This command requires that the transaction with the given txid is in the wallet.\n"
-                            "This command will NOT add new inputs.\n"
-                            "Fee must be high enough to pay a new relay fee.\n"
-                            "If tx has child transactions in mempool, the new fee must pay for them as well.\n"
-                            "This command will fail if fee is not high enough or output is not large enough.\n"
-                            "User can specify totalFee, or use RPC setpaytxfee to set a higher fee rate.\n"
+                            "\nBumps the fee of an opt-in-RBF transaction T, replacing it with a new transaction B.\n"
+                            "An opt-in RBF transaction with the given txid must be in the wallet.\n"
+                            "The command will not add new inputs.\n"
+                            "The command will fail if the wallet or mempool contains a transaction that spends one of T's outputs.\n"
+                            "By default, the new fee will be calculated automatically using estimatefee/fallbackfee.\n"
+                            "The user can specify a confirmation target for estimatefee.\n"
+                            "Alternatively, the user can specify totalFee, or use RPC setpaytxfee to set a higher fee rate.\n"
+                            "At a minimum, the new fee rate must be high enough to pay a new relay fee and to enter the node's mempool.\n"
                             "\nArguments:\n"
                             "1. \"txid\"              (string, required) The txid to be bumped\n"
                             "2. options               (object, optional)\n"
@@ -2601,7 +2602,7 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
                             "}\n"
                             "\nExamples:\n"
                             "\nBump the fee, get the new transaction\'s txid\n"
-                            + HelpExampleCli("bumpfee", "<txid> <output>")
+                            + HelpExampleCli("bumpfee", "<txid>")
                             );
 
     RPCTypeCheck(params, boost::assign::list_of(UniValue::VSTR));
@@ -2631,9 +2632,9 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Transaction contains inputs that don't belong to this wallet");
 
     // figure out which output was change
-    // if there was no change output or if there were multiple change outputs, fail
+    // if there was no change output or multiple change outputs, fail
     int nOutput = -1;
-    for (int i=0; i < (int) wtx.vout.size(); i++) {
+    for (size_t i=0; i < wtx.vout.size(); ++i) {
         if (pwalletMain->IsChange(wtx.vout[i])) {
             if (nOutput != -1)
                 throw JSONRPCError(RPC_MISC_ERROR, "Transaction has multiple change outputs");
@@ -2779,14 +2780,8 @@ UniValue bumpfee(const UniValue& params, bool fHelp)
     }
 
     // mark the original tx as bumped
-    {
-        CWalletDB walletdb(pwalletMain->strWalletFile, "r+");
-        CWalletTx& wtx = pwalletMain->mapWallet[hash];
-        assert(wtx.mapValue.count("replaced_by_txid") == 0);
-        wtx.mapValue["replaced_by_txid"] = wtxBumped.GetHash().ToString();
-        walletdb.WriteTx(wtx);
-        pwalletMain->NotifyTransactionChanged(pwalletMain, hash, CT_UPDATED);
-    }
+    if (!pwalletMain->MarkReplaced(wtx.GetHash(), wtxBumped.GetHash()))
+        throw JSONRPCError(RPC_WALLET_ERROR, "Unable to mark the original transaction as replaced.");
 
     UniValue result(UniValue::VOBJ);
     result.push_back(Pair("txid", wtxBumped.GetHash().GetHex()));

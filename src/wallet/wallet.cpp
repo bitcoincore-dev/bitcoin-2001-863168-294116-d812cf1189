@@ -748,6 +748,29 @@ void CWallet::MarkDirty()
     }
 }
 
+bool CWallet::MarkReplaced(const uint256& originalHash, const uint256& newHash)
+{
+    LOCK(cs_wallet);
+
+    auto mi = mapWallet.find(originalHash);
+    if (mi == mapWallet.end())
+        return false;
+
+    CWalletTx& wtx = (*mi).second;
+
+    // Ensure for now that we're not overwriting data
+    assert(wtx.mapValue.count("replaced_by_txid") == 0);
+
+    wtx.mapValue["replaced_by_txid"] = newHash.ToString();
+
+    CWalletDB walletdb(strWalletFile, "r+");
+    walletdb.WriteTx(wtx);
+
+    NotifyTransactionChanged(this, originalHash, CT_UPDATED);
+
+    return true;
+}
+
 bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFromLoadWallet, CWalletDB* pwalletdb)
 {
     uint256 hash = wtxIn.GetHash();
