@@ -520,7 +520,6 @@ void CWallet::SyncMetaData(pair<TxSpends::iterator, TxSpends::iterator> range)
         // fTimeReceivedIsTxTime not copied on purpose
         // nTimeReceived not copied on purpose
         copyTo->nTimeSmart = copyFrom->nTimeSmart;
-        copyTo->fFromMe = copyFrom->fFromMe;
         copyTo->strFromAccount = copyFrom->strFromAccount;
         // nOrderPos not copied on purpose
         // cached members not copied on purpose
@@ -925,11 +924,6 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
         if (wtxIn.nIndex != -1 && (wtxIn.nIndex != wtx.nIndex))
         {
             wtx.nIndex = wtxIn.nIndex;
-            fUpdated = true;
-        }
-        if (wtxIn.fFromMe && wtxIn.fFromMe != wtx.fFromMe)
-        {
-            wtx.fFromMe = wtxIn.fFromMe;
             fUpdated = true;
         }
     }
@@ -2342,7 +2336,6 @@ bool CWallet::CreateTransaction(const vector<CRecipient>& vecSend, CWalletTx& wt
                 txNew.vin.clear();
                 txNew.vout.clear();
                 txNew.wit.SetNull();
-                wtxNew.fFromMe = true;
                 bool fFirst = true;
 
                 CAmount nValueToSelect = nValue;
@@ -3572,7 +3565,6 @@ bool CWallet::InitLoadWallet(CoinsCursorCallback coinsCursor)
                     copyTo->vOrderForm = copyFrom->vOrderForm;
                     copyTo->nTimeReceived = copyFrom->nTimeReceived;
                     copyTo->nTimeSmart = copyFrom->nTimeSmart;
-                    copyTo->fFromMe = copyFrom->fFromMe;
                     copyTo->strFromAccount = copyFrom->strFromAccount;
                     copyTo->nOrderPos = copyFrom->nOrderPos;
                     walletdb.WriteTx(*copyTo);
