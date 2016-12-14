@@ -253,7 +253,6 @@ public:
     unsigned int fTimeReceivedIsTxTime;
     unsigned int nTimeReceived; //!< time received by this node
     unsigned int nTimeSmart;
-    char fFromMe;
     std::string strFromAccount;
     int64_t nOrderPos; //!< position in ordered transaction list
 
@@ -295,7 +294,6 @@ public:
         fTimeReceivedIsTxTime = false;
         nTimeReceived = 0;
         nTimeSmart = 0;
-        fFromMe = false;
         strFromAccount.clear();
         fDebitCached = false;
         fCreditCached = false;
@@ -343,7 +341,8 @@ public:
         READWRITE(vOrderForm);
         READWRITE(fTimeReceivedIsTxTime);
         READWRITE(nTimeReceived);
-        READWRITE(fFromMe);
+        char fUnused; // Used to be fFromMe;
+        READWRITE(fUnused);
         READWRITE(fSpent);
 
         if (ser_action.ForRead())
