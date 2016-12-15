@@ -166,11 +166,10 @@ struct COutputEntry
 /** A transaction with a merkle branch linking it to the block chain. */
 class CMerkleTx
 {
-private:
+public:
   /** Constant used in hashBlock to indicate tx has been abandoned */
     static const uint256 ABANDON_HASH;
 
-public:
     CTransactionRef tx;
     uint256 hashBlock;
 
@@ -317,11 +316,6 @@ public:
     mutable CAmount nAvailableWatchCreditCached;
     mutable CAmount nChangeCached;
 
-    CWalletTx()
-    {
-        Init(NULL);
-    }
-
     CWalletTx(const CWallet* pwalletIn, CTransactionRef arg) : CMerkleTx(std::move(arg))
     {
         Init(pwalletIn);
@@ -416,12 +410,6 @@ public:
         fChangeCached = false;
     }
 
-    void BindWallet(CWallet *pwalletIn)
-    {
-        pwallet = pwalletIn;
-        MarkDirty();
-    }
-
     //! filter decides which addresses will count towards the debit
     CAmount GetDebit(const isminefilter& filter) const;
     CAmount GetCredit(const isminefilter& filter) const;
@@ -456,8 +444,7 @@ public:
     std::set<uint256> GetConflicts() const;
 };
 
-
-
+typedef std::pair<const uint256, CWalletTx> TxEntry;
 
 class COutput
 {
@@ -802,7 +789,8 @@ public:
     bool GetAccountPubkey(CPubKey &pubKey, std::string strAccount, bool bForceNew = false);
 
     void MarkDirty();
-    bool AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose=true);
+    typedef std::function<bool(TxEntry& entry, bool fNew)> UpdateEntry;
+    bool AddToWallet(CTransactionRef tx, UpdateEntry update, bool fFlush=true);
     bool LoadToWallet(const CWalletTx& wtxIn);
     void SyncTransaction(const CTransaction& tx, const CBlockIndex *pindex, int posInBlock);
     bool AddToWalletIfInvolvingMe(const CTransaction& tx, bool fIncomplete, const CBlockIndex* pIndex, int posInBlock, bool fUpdate);
@@ -829,9 +817,9 @@ public:
      * selected by SelectCoins(); Also create the change output, when needed
      * @note passing nChangePosInOut as -1 will result in setting a random position
      */
-    bool CreateTransaction(const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet, int& nChangePosInOut,
+    bool CreateTransaction(const std::vector<CRecipient>& vecSend, CTransactionRef& tx, CReserveKey& reservekey, CAmount& nFeeRet, int& nChangePosInOut,
                            std::string& strFailReason, const CCoinControl *coinControl = NULL, bool sign = true);
-    bool CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, CConnman* connman, CValidationState& state);
+    bool CommitTransaction(CTransactionRef tx, UpdateEntry entry, CReserveKey& reservekey, CConnman* connman, CValidationState& state);
 
     void ListAccountCreditDebit(const std::string& strAccount, std::list<CAccountingEntry>& entries);
     bool AddAccountingEntry(const CAccountingEntry&);

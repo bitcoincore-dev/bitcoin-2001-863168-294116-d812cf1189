@@ -336,7 +336,7 @@ UniValue getaddressesbyaccount(const JSONRPCRequest& request)
     return ret;
 }
 
-static void SendMoney(const CTxDestination &address, CAmount nValue, bool fSubtractFeeFromAmount, CWalletTx& wtxNew)
+static CTransactionRef SendMoney(const CTxDestination &address, CAmount nValue, bool fSubtractFeeFromAmount, const string& comment, const string& to, const string& strFromAccount)
 {
     CAmount curBalance = pwalletMain->GetBalance();
 
@@ -361,16 +361,35 @@ static void SendMoney(const CTxDestination &address, CAmount nValue, bool fSubtr
     int nChangePosRet = -1;
     CRecipient recipient = {scriptPubKey, nValue, fSubtractFeeFromAmount};
     vecSend.push_back(recipient);
-    if (!pwalletMain->CreateTransaction(vecSend, wtxNew, reservekey, nFeeRequired, nChangePosRet, strError)) {
+
+    CTransactionRef tx;
+    if (!pwalletMain->CreateTransaction(vecSend, tx, reservekey, nFeeRequired, nChangePosRet, strError)) {
         if (!fSubtractFeeFromAmount && nValue + nFeeRequired > curBalance)
             strError = strprintf("Error: This transaction requires a transaction fee of at least %s", FormatMoney(nFeeRequired));
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
+
+    auto update = [&](TxEntry& entry, bool fNew) {
+        if (fNew) {
+            entry.second.fTimeReceivedIsTxTime = true;
+            entry.second.strFromAccount = strFromAccount;
+            if (!comment.empty())
+                entry.second.mapValue["comment"] = comment;
+            if (!to.empty())
+                entry.second.mapValue["to"]      = to;
+        }
+        bool fUpdated = fNew;
+        entry.second.MarkDirty();
+        return fUpdated;
+    };
+
     CValidationState state;
-    if (!pwalletMain->CommitTransaction(wtxNew, reservekey, g_connman.get(), state)) {
+    if (!pwalletMain->CommitTransaction(tx, update, reservekey, g_connman.get(), state)) {
         strError = strprintf("Error: The transaction was rejected! Reason given: %s", state.GetRejectReason());
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
+
+    return tx;
 }
 
 UniValue sendtoaddress(const JSONRPCRequest& request)
@@ -414,11 +433,12 @@ UniValue sendtoaddress(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount for send");
 
     // Wallet comments
-    CWalletTx wtx;
-    if (request.params.size() > 2 && !request.params[2].isNull() && !request.params[2].get_str().empty())
-        wtx.mapValue["comment"] = request.params[2].get_str();
-    if (request.params.size() > 3 && !request.params[3].isNull() && !request.params[3].get_str().empty())
-        wtx.mapValue["to"]      = request.params[3].get_str();
+    string comment;
+    if (request.params.size() > 2 && !request.params[2].isNull())
+        comment = request.params[2].get_str();
+    string to;
+    if (request.params.size() > 3 && !request.params[3].isNull())
+        to = request.params[3].get_str();
 
     bool fSubtractFeeFromAmount = false;
     if (request.params.size() > 4)
@@ -426,9 +446,7 @@ UniValue sendtoaddress(const JSONRPCRequest& request)
 
     EnsureWalletIsUnlocked();
 
-    SendMoney(address.Get(), nAmount, fSubtractFeeFromAmount, wtx);
-
-    return wtx.GetHash().GetHex();
+    return SendMoney(address.Get(), nAmount, fSubtractFeeFromAmount, comment, to, {})->GetHash().GetHex();
 }
 
 UniValue listaddressgroupings(const JSONRPCRequest& request)
@@ -835,12 +853,12 @@ UniValue sendfrom(const JSONRPCRequest& request)
     if (request.params.size() > 3)
         nMinDepth = request.params[3].get_int();
 
-    CWalletTx wtx;
-    wtx.strFromAccount = strAccount;
-    if (request.params.size() > 4 && !request.params[4].isNull() && !request.params[4].get_str().empty())
-        wtx.mapValue["comment"] = request.params[4].get_str();
-    if (request.params.size() > 5 && !request.params[5].isNull() && !request.params[5].get_str().empty())
-        wtx.mapValue["to"]      = request.params[5].get_str();
+    string comment;
+    if (request.params.size() > 4 && !request.params[4].isNull())
+        comment = request.params[4].get_str();
+    string to;
+    if (request.params.size() > 5 && !request.params[5].isNull())
+        to = request.params[5].get_str();
 
     EnsureWalletIsUnlocked();
 
@@ -849,9 +867,7 @@ UniValue sendfrom(const JSONRPCRequest& request)
     if (nAmount > nBalance)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Account has insufficient funds");
 
-    SendMoney(address.Get(), nAmount, false, wtx);
-
-    return wtx.GetHash().GetHex();
+    return SendMoney(address.Get(), nAmount, false, comment, to, strAccount)->GetHash().GetHex();
 }
 
 
@@ -907,10 +923,9 @@ UniValue sendmany(const JSONRPCRequest& request)
     if (request.params.size() > 2)
         nMinDepth = request.params[2].get_int();
 
-    CWalletTx wtx;
-    wtx.strFromAccount = strAccount;
-    if (request.params.size() > 3 && !request.params[3].isNull() && !request.params[3].get_str().empty())
-        wtx.mapValue["comment"] = request.params[3].get_str();
+    string comment;
+    if (request.params.size() > 3 && !request.params[3].isNull())
+        comment = request.params[3].get_str();
 
     UniValue subtractFeeFromAmount(UniValue::VARR);
     if (request.params.size() > 4)
@@ -960,16 +975,28 @@ UniValue sendmany(const JSONRPCRequest& request)
     CAmount nFeeRequired = 0;
     int nChangePosRet = -1;
     string strFailReason;
-    bool fCreated = pwalletMain->CreateTransaction(vecSend, wtx, keyChange, nFeeRequired, nChangePosRet, strFailReason);
+    CTransactionRef tx;
+    bool fCreated = pwalletMain->CreateTransaction(vecSend, tx, keyChange, nFeeRequired, nChangePosRet, strFailReason);
     if (!fCreated)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, strFailReason);
     CValidationState state;
-    if (!pwalletMain->CommitTransaction(wtx, keyChange, g_connman.get(), state)) {
+    auto update = [&](TxEntry& entry, bool fNew) {
+        if (fNew) {
+            entry.second.fTimeReceivedIsTxTime = true;
+            entry.second.strFromAccount = strAccount;
+            if (!comment.empty())
+                entry.second.mapValue["comment"] = comment;
+        }
+        bool fUpdated = fNew;
+        entry.second.MarkDirty();
+        return fUpdated;
+    };
+    if (!pwalletMain->CommitTransaction(tx, update, keyChange, g_connman.get(), state)) {
         strFailReason = strprintf("Transaction commit failed:: %s", state.GetRejectReason());
         throw JSONRPCError(RPC_WALLET_ERROR, strFailReason);
     }
 
-    return wtx.GetHash().GetHex();
+    return tx->GetHash().GetHex();
 }
 
 // Defined in rpc/misc.cpp
@@ -1773,9 +1800,10 @@ UniValue gettransaction(const JSONRPCRequest& request)
             filter = filter | ISMINE_WATCH_ONLY;
 
     UniValue entry(UniValue::VOBJ);
-    if (!pwalletMain->mapWallet.count(hash))
+    auto it = pwalletMain->mapWallet.find(hash);
+    if (it == pwalletMain->mapWallet.end())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid or non-wallet transaction id");
-    const CWalletTx& wtx = pwalletMain->mapWallet[hash];
+    const CWalletTx& wtx = it->second;
 
     CAmount nCredit = wtx.GetCredit(filter);
     CAmount nDebit = wtx.GetDebit(filter);

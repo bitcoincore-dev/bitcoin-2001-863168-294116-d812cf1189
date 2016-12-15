@@ -32,7 +32,6 @@ GetResults(std::map<CAmount, CAccountingEntry>& results)
 BOOST_AUTO_TEST_CASE(acc_orderupgrade)
 {
     std::vector<CWalletTx*> vpwtx;
-    CWalletTx wtx;
     CAccountingEntry ae;
     std::map<CAmount, CAccountingEntry> results;
 
@@ -45,11 +44,14 @@ BOOST_AUTO_TEST_CASE(acc_orderupgrade)
     ae.strComment = "";
     pwalletMain->AddAccountingEntry(ae);
 
-    wtx.mapValue["comment"] = "z";
-    pwalletMain->AddToWallet(wtx);
-    vpwtx.push_back(&pwalletMain->mapWallet[wtx.GetHash()]);
-    vpwtx[0]->nTimeReceived = (unsigned int)1333333335;
-    vpwtx[0]->nOrderPos = -1;
+    CTransactionRef ctx = MakeTransactionRef();
+    pwalletMain->AddToWallet(ctx, [&](TxEntry& entry, bool fNew) {
+        entry.second.mapValue["comment"] = "z";
+        entry.second.nTimeReceived = (unsigned int)1333333335;
+        entry.second.nOrderPos = -1;
+        vpwtx.push_back(&entry.second);
+        return true;
+    });
 
     ae.nTime = 1333333336;
     ae.strOtherAccount = "c";
@@ -81,27 +83,31 @@ BOOST_AUTO_TEST_CASE(acc_orderupgrade)
     BOOST_CHECK(results[3].nTime == 1333333330);
     BOOST_CHECK(results[3].strComment.empty());
 
-
-    wtx.mapValue["comment"] = "y";
     {
-        CMutableTransaction tx(wtx);
+        CMutableTransaction tx(*ctx);
         --tx.nLockTime;  // Just to change the hash :)
-        wtx.SetTx(MakeTransactionRef(std::move(tx)));
+        ctx = MakeTransactionRef(std::move(tx));
     }
-    pwalletMain->AddToWallet(wtx);
-    vpwtx.push_back(&pwalletMain->mapWallet[wtx.GetHash()]);
-    vpwtx[1]->nTimeReceived = (unsigned int)1333333336;
+    pwalletMain->AddToWallet(ctx, [&](TxEntry& entry, bool fNew) {
+        entry.second.mapValue["comment"] = "y";
+        entry.second.nTimeReceived = (unsigned int)1333333336;
+        entry.second.nOrderPos = -1;
+        vpwtx.push_back(&entry.second);
+        return true;
+      });
 
-    wtx.mapValue["comment"] = "x";
     {
-        CMutableTransaction tx(wtx);
+        CMutableTransaction tx(*ctx);
         --tx.nLockTime;  // Just to change the hash :)
-        wtx.SetTx(MakeTransactionRef(std::move(tx)));
+        ctx = MakeTransactionRef(std::move(tx));
     }
-    pwalletMain->AddToWallet(wtx);
-    vpwtx.push_back(&pwalletMain->mapWallet[wtx.GetHash()]);
-    vpwtx[2]->nTimeReceived = (unsigned int)1333333329;
-    vpwtx[2]->nOrderPos = -1;
+    pwalletMain->AddToWallet(ctx, [&](TxEntry& entry, bool fNew) {
+        entry.second.mapValue["comment"] = "x";
+        entry.second.nTimeReceived = (unsigned int)1333333329;
+        entry.second.nOrderPos = -1;
+        vpwtx.push_back(&entry.second);
+        return true;
+      });
 
     GetResults(results);
 
