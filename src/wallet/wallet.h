@@ -742,6 +742,7 @@ public:
     bool EncryptWallet(const SecureString& strWalletPassphrase);
 
     void GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const;
+    unsigned int GetTimeSmart(const CWalletTx& wtx) const;
 
     /** 
      * Increment the next transaction order id
