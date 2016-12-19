@@ -2962,7 +2962,13 @@ UniValue bumpfee(const JSONRPCRequest& request)
     }
 
     // mark the original tx as bumped
-    if (!pwalletMain->MarkReplaced(wtx.GetHash(), txHash)) {
+    auto updateEntry = [&](TxEntry& entry, bool fNew) {
+        // Ensure for now that we're not overwriting data
+        assert(wtx.mapValue.count("replaced_by_txid") == 0);
+        wtx.mapValue["replaced_by_txid"] = txHash.ToString();
+        return true;
+    };
+    if (!pwalletMain->AddToWallet(wtx.tx, updateEntry)) {
         // TODO: see if JSON-RPC has a standard way of returning a response
         // along with an exception. It would be good to return information about
         // wtxBumped to the caller even if marking the original transaction
