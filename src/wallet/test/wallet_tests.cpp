@@ -540,15 +540,11 @@ static int64_t AddTx(CWallet& wallet, uint32_t lockTime, int64_t mockTime, int64
         block = inserted.first->second;
         block->nTime = blockTime;
         block->phashBlock = &hash;
+        wallet.AddTransaction(MakeTransactionRef(tx), hash, 0);
+    } else {
+        wallet.AddTransaction(MakeTransactionRef(tx));
     }
-
-    CWalletTx wtx(&wallet, MakeTransactionRef(tx));
-    if (block) {
-        wtx.SetMerkleBranch(block, 0);
-    }
-    wallet.AddToWallet(wtx);
-    LOCK(wallet.cs_wallet);
-    return wallet.mapWallet.at(wtx.GetHash()).nTimeSmart;
+    return wallet.GetWalletTx(tx.GetHash())->nTimeSmart;
 }
 
 // Simple test to verify assignment of CWalletTx::nSmartTime value. Could be
