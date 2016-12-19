@@ -542,12 +542,15 @@ static int64_t AddTx(CWallet& wallet, uint32_t lockTime, int64_t mockTime, int64
         block->phashBlock = &hash;
     }
 
-    CWalletTx wtx(&wallet, MakeTransactionRef(tx));
-    if (block) {
-        wtx.SetMerkleBranch(block, 0);
-    }
-    wallet.AddToWallet(wtx);
-    return wallet.mapWallet.at(wtx.GetHash()).nTimeSmart;
+    CWalletTx* wtx = nullptr;
+    wallet.AddToWallet(MakeTransactionRef(tx), [&](TxEntry& entry, bool fNew) {
+        wtx = &entry.second;
+        if (block) {
+            wtx->SetMerkleBranch(block, 0);
+        }
+        return true;
+    });
+    return wtx->nTimeSmart;
 }
 
 // Simple test to verify assignment of CWalletTx::nSmartTime value. Could be
