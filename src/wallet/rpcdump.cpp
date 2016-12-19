@@ -271,7 +271,6 @@ UniValue importprunedfunds(const JSONRPCRequest& request)
     if (!DecodeHexTx(tx, request.params[0].get_str()))
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
     uint256 hashTx = tx.GetHash();
-    CWalletTx wtx(pwalletMain, MakeTransactionRef(std::move(tx)));
 
     CDataStream ssMB(ParseHexV(request.params[1], "proof"), SER_NETWORK, PROTOCOL_VERSION);
     CMerkleBlock merkleBlock;
@@ -299,13 +298,28 @@ UniValue importprunedfunds(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Something wrong with merkleblock");
     }
 
-    wtx.nIndex = txnIndex;
-    wtx.hashBlock = merkleBlock.header.GetHash();
+    int nIndex = txnIndex;
+    uint256 hashBlock = merkleBlock.header.GetHash();
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    if (pwalletMain->IsMine(wtx)) {
-        pwalletMain->AddToWallet(wtx, false);
+    if (pwalletMain->IsMine(tx)) {
+        auto updateEntry = [&](TxEntry& entry, bool fNew) {
+            bool fWriteTx = fNew;
+
+            // Update transaction block position if it has changed.
+            if (entry.second.nIndex != nIndex || entry.second.hashBlock != hashBlock) {
+                entry.second.nIndex = nIndex;
+                entry.second.hashBlock = hashBlock;
+                fWriteTx = true;
+            }
+
+            // Break debit/credit balance caches.
+            entry.second.MarkDirty();
+
+            return fWriteTx;
+        };
+        pwalletMain->AddToWallet(MakeTransactionRef(std::move(tx)), updateEntry, false);
         return NullUniValue;
     }
 
