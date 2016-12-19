@@ -277,7 +277,13 @@ bool CFeeBumper::commit(CWallet *pWallet)
     }
 
     // mark the original tx as bumped
-    if (!pWallet->MarkReplaced(oldWtx.GetHash(), txHash)) {
+    auto updateEntry = [&](TxEntry& entry, bool fNew) {
+        // Ensure for now that we're not overwriting data
+        assert(oldWtx.mapValue.count("replaced_by_txid") == 0);
+        oldWtx.mapValue["replaced_by_txid"] = txHash.ToString();
+        return true;
+    };
+    if (!pWallet->AddToWallet(oldWtx.tx, updateEntry)) {
         // TODO: see if JSON-RPC has a standard way of returning a response
         // along with an exception. It would be good to return information about
         // wtxBumped to the caller even if marking the original transaction
