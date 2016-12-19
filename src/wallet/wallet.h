@@ -504,6 +504,10 @@ public:
         Status status = UNCONFIRMED;
         uint256 hashBlock = uint256();
         int nIndex = 0;
+
+        Confirmation() {}
+        Confirmation(Status status_in, const uint256& block_hash_in, int block_position_in)
+        : status{status_in}, hashBlock{block_hash_in}, nIndex{block_position_in} {}
     };
 
     Confirmation m_confirm;
@@ -1092,7 +1096,16 @@ public:
     DBErrors ReorderTransactions();
 
     void MarkDirty();
-    bool AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose=true);
+
+    //! Callback for updating transaction metadata in mapWallet.
+    //!
+    //! @param wtx - reference to mapWallet transaction to update
+    //! @param new_tx - true if wtx is newly inserted, false it it previously existed
+    //!
+    //! @return true if wtx is changed and needs to be saved to disk, otherwise false
+    using UpdateWalletTxFn = std::function<bool(CWalletTx& wtx, bool new_tx)>;
+
+    bool AddToWallet(CTransactionRef tx, const CWalletTx::Confirmation& confirm, const UpdateWalletTxFn& update_wtx=nullptr, bool fFlushOnClose=true);
     void LoadToWallet(CWalletTx& wtxIn) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
     void TransactionAddedToMempool(const CTransactionRef& tx) override;
     void BlockConnected(const CBlock& block, const std::vector<CTransactionRef>& vtxConflicted) override;
