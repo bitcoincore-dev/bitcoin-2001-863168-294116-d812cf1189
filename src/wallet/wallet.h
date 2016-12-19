@@ -425,6 +425,7 @@ public:
 };
 
 
+typedef std::pair<const uint256, CWalletTx> TxEntry;
 
 
 class COutput
@@ -782,7 +783,8 @@ public:
     bool GetAccountPubkey(CPubKey &pubKey, std::string strAccount, bool bForceNew = false);
 
     void MarkDirty();
-    bool AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose=true);
+    typedef std::function<bool(TxEntry& entry, bool fNew)> UpdateEntry;
+    bool AddToWallet(CTransactionRef tx, UpdateEntry updateEntry, bool fFlushOnClose=true);
     bool LoadToWallet(const CWalletTx& wtxIn);
     void SyncTransaction(const CTransaction& tx, const CBlockIndex *pindex, int posInBlock) override;
     bool AddToWalletIfInvolvingMe(const CTransaction& tx, const CBlockIndex* pIndex, int posInBlock, bool fUpdate);
@@ -957,9 +959,6 @@ public:
 
     /* Mark a transaction (and it in-wallet descendants) as abandoned so its inputs may be respent. */
     bool AbandonTransaction(const uint256& hashTx);
-
-    /** Mark a transaction as replaced by another transaction (e.g., BIP 125). */
-    bool MarkReplaced(const uint256& originalHash, const uint256& newHash);
 
     /* Returns the wallets help message */
     static std::string GetWalletHelpString(bool showDebug);
