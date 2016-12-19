@@ -938,7 +938,8 @@ public:
     bool GetAccountDestination(CTxDestination &dest, std::string strAccount, bool bForceNew = false);
 
     void MarkDirty();
-    bool AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose=true);
+    typedef std::function<bool(CWalletTx& wtx, bool new_tx)> UpdateWalletTxFn;
+    bool AddToWallet(CTransactionRef tx, UpdateWalletTxFn update_wtx, bool fFlushOnClose=true);
     bool LoadToWallet(const CWalletTx& wtxIn);
     void TransactionAddedToMempool(const CTransactionRef& tx) override;
     void BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex *pindex, const std::vector<CTransactionRef>& vtxConflicted) override;
@@ -1105,6 +1106,9 @@ public:
 
     /* Mark a transaction (and it in-wallet descendants) as abandoned so its inputs may be respent. */
     bool AbandonTransaction(const uint256& hashTx);
+
+    /** Add transaction with optional block position. */
+    bool AddTransaction(CTransactionRef tx, const uint256& block_hash = uint256(), int block_position = -1);
 
     /** Mark a transaction as replaced by another transaction (e.g., BIP 125). */
     bool MarkReplaced(const uint256& originalHash, const uint256& newHash);
