@@ -29,7 +29,6 @@ GetResults(CWallet *wallet, std::map<CAmount, CAccountingEntry>& results)
 BOOST_AUTO_TEST_CASE(acc_orderupgrade)
 {
     std::vector<CWalletTx*> vpwtx;
-    CWalletTx wtx(nullptr /* pwallet */, MakeTransactionRef());
     CAccountingEntry ae;
     std::map<CAmount, CAccountingEntry> results;
 
@@ -42,9 +41,12 @@ BOOST_AUTO_TEST_CASE(acc_orderupgrade)
     ae.strComment = "";
     pwalletMain->AddAccountingEntry(ae);
 
-    wtx.mapValue["comment"] = "z";
-    pwalletMain->AddToWallet(wtx);
-    vpwtx.push_back(&pwalletMain->mapWallet.at(wtx.GetHash()));
+    CTransactionRef tx_new = MakeTransactionRef();
+    pwalletMain->AddToWallet(tx_new, [&](CWalletTx& wtx, bool new_tx) {
+        wtx.mapValue["comment"] = "z";
+        vpwtx.push_back(&wtx);
+        return true;
+    });
     vpwtx[0]->nTimeReceived = (unsigned int)1333333335;
     vpwtx[0]->nOrderPos = -1;
 
@@ -79,24 +81,28 @@ BOOST_AUTO_TEST_CASE(acc_orderupgrade)
     BOOST_CHECK(results[3].strComment.empty());
 
 
-    wtx.mapValue["comment"] = "y";
     {
-        CMutableTransaction tx(*wtx.tx);
+        CMutableTransaction tx(*tx_new);
         ++tx.nLockTime;  // Just to change the hash :)
-        wtx.SetTx(MakeTransactionRef(std::move(tx)));
+        tx_new = MakeTransactionRef(std::move(tx));
     }
-    pwalletMain->AddToWallet(wtx);
-    vpwtx.push_back(&pwalletMain->mapWallet.at(wtx.GetHash()));
+    pwalletMain->AddToWallet(tx_new, [&](CWalletTx& wtx, bool new_tx) {
+        wtx.mapValue["comment"] = "y";
+        vpwtx.push_back(&wtx);
+        return true;
+    });
     vpwtx[1]->nTimeReceived = (unsigned int)1333333336;
 
-    wtx.mapValue["comment"] = "x";
     {
-        CMutableTransaction tx(*wtx.tx);
+        CMutableTransaction tx(*tx_new);
         ++tx.nLockTime;  // Just to change the hash :)
-        wtx.SetTx(MakeTransactionRef(std::move(tx)));
+        tx_new = MakeTransactionRef(std::move(tx));
     }
-    pwalletMain->AddToWallet(wtx);
-    vpwtx.push_back(&pwalletMain->mapWallet.at(wtx.GetHash()));
+    pwalletMain->AddToWallet(tx_new, [&](CWalletTx& wtx, bool new_tx) {
+        wtx.mapValue["comment"] = "x";
+        vpwtx.push_back(&wtx);
+        return true;
+    });
     vpwtx[2]->nTimeReceived = (unsigned int)1333333329;
     vpwtx[2]->nOrderPos = -1;
 
