@@ -744,11 +744,6 @@ private:
      * notifications happen and cached balances are marked dirty.
      *
      * If fUpdate is true, existing transactions will be updated.
-     * TODO: One exception to this is that the abandoned state is cleared under the
-     * assumption that any further notification of a transaction that was considered
-     * abandoned is an indication that it is not safe to be considered abandoned.
-     * Abandoned state should probably be more carefully tracked via different
-     * posInBlock signals or by checking mempool presence when necessary.
      */
     bool AddToWalletIfInvolvingMe(const CTransactionRef& tx, const uint256& block_hash, int posInBlock, bool fUpdate) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
 
@@ -1041,7 +1036,16 @@ public:
     DBErrors ReorderTransactions();
 
     void MarkDirty();
-    bool AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose=true);
+
+    //! Callback for updating transaction metadata in mapWallet.
+    //!
+    //! @param wtx - reference to mapWallet transaction to update
+    //! @param new_tx - true if wtx is newly inserted, false it it previously existed
+    //!
+    //! @return true if wtx is changed and needs to be saved to disk, otherwise false
+    using UpdateWalletTxFn = std::function<bool(CWalletTx& wtx, bool new_tx)>;
+
+    bool AddToWallet(CTransactionRef tx, const UpdateWalletTxFn& update_wtx, bool fFlushOnClose=true);
     void LoadToWallet(const CWalletTx& wtxIn) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
     void TransactionAddedToMempool(const CTransactionRef& tx) override;
     void BlockConnected(const CBlock& block, const std::vector<CTransactionRef>& vtxConflicted) override;
@@ -1264,6 +1268,9 @@ public:
 
     /* Mark a transaction (and it in-wallet descendants) as abandoned so its inputs may be respent. */
     bool AbandonTransaction(interfaces::Chain::Lock& locked_chain, const uint256& hashTx);
+
+    /** Add transaction with optional block position. */
+    bool AddTransaction(CTransactionRef tx, const uint256& block_hash = uint256(), int block_position = -1);
 
     /** Mark a transaction as replaced by another transaction (e.g., BIP 125). */
     bool MarkReplaced(const uint256& originalHash, const uint256& newHash);
