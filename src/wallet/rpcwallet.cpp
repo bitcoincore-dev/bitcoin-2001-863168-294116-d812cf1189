@@ -338,7 +338,7 @@ UniValue getaddressesbyaccount(const JSONRPCRequest& request)
     return ret;
 }
 
-static void SendMoney(const CTxDestination &address, CAmount nValue, bool fSubtractFeeFromAmount, CWalletTx& wtxNew)
+static void SendMoney(const CTxDestination& address, CAmount nValue, bool fSubtractFeeFromAmount, const string& comment, const string& to, const string& strFromAccount, CTransactionRef& txNew)
 {
     CAmount curBalance = pwalletMain->GetBalance();
 
@@ -363,13 +363,26 @@ static void SendMoney(const CTxDestination &address, CAmount nValue, bool fSubtr
     int nChangePosRet = -1;
     CRecipient recipient = {scriptPubKey, nValue, fSubtractFeeFromAmount};
     vecSend.push_back(recipient);
-    if (!pwalletMain->CreateTransaction(vecSend, wtxNew, reservekey, nFeeRequired, nChangePosRet, strError)) {
+    if (!pwalletMain->CreateTransaction(vecSend, txNew, reservekey, nFeeRequired, nChangePosRet, strError)) {
         if (!fSubtractFeeFromAmount && nValue + nFeeRequired > curBalance)
             strError = strprintf("Error: This transaction requires a transaction fee of at least %s", FormatMoney(nFeeRequired));
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
+
+    auto updateEntry = [&](TxEntry& entry, bool fNew) {
+        assert(fNew);
+        entry.second.fFromMe = true;
+        entry.second.fTimeReceivedIsTxTime = true;
+        entry.second.strFromAccount = strFromAccount;
+        if (!comment.empty())
+            entry.second.mapValue["comment"] = comment;
+        if (!to.empty())
+            entry.second.mapValue["to"] = to;
+        return true;
+    };
+
     CValidationState state;
-    if (!pwalletMain->CommitTransaction(wtxNew, reservekey, g_connman.get(), state)) {
+    if (!pwalletMain->CommitTransaction(txNew, updateEntry, reservekey, g_connman.get(), state)) {
         strError = strprintf("Error: The transaction was rejected! Reason given: %s", state.GetRejectReason());
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
@@ -416,11 +429,12 @@ UniValue sendtoaddress(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount for send");
 
     // Wallet comments
-    CWalletTx wtx;
-    if (request.params.size() > 2 && !request.params[2].isNull() && !request.params[2].get_str().empty())
-        wtx.mapValue["comment"] = request.params[2].get_str();
-    if (request.params.size() > 3 && !request.params[3].isNull() && !request.params[3].get_str().empty())
-        wtx.mapValue["to"]      = request.params[3].get_str();
+    string comment;
+    if (request.params.size() > 2 && !request.params[2].isNull())
+        comment = request.params[2].get_str();
+    string to;
+    if (request.params.size() > 3 && !request.params[3].isNull())
+        to = request.params[3].get_str();
 
     bool fSubtractFeeFromAmount = false;
     if (request.params.size() > 4)
@@ -428,9 +442,10 @@ UniValue sendtoaddress(const JSONRPCRequest& request)
 
     EnsureWalletIsUnlocked();
 
-    SendMoney(address.Get(), nAmount, fSubtractFeeFromAmount, wtx);
+    CTransactionRef txNew;
+    SendMoney(address.Get(), nAmount, fSubtractFeeFromAmount, comment, to, {}, txNew);
 
-    return wtx.GetHash().GetHex();
+    return txNew->GetHash().GetHex();
 }
 
 UniValue listaddressgroupings(const JSONRPCRequest& request)
@@ -837,12 +852,12 @@ UniValue sendfrom(const JSONRPCRequest& request)
     if (request.params.size() > 3)
         nMinDepth = request.params[3].get_int();
 
-    CWalletTx wtx;
-    wtx.strFromAccount = strAccount;
-    if (request.params.size() > 4 && !request.params[4].isNull() && !request.params[4].get_str().empty())
-        wtx.mapValue["comment"] = request.params[4].get_str();
-    if (request.params.size() > 5 && !request.params[5].isNull() && !request.params[5].get_str().empty())
-        wtx.mapValue["to"]      = request.params[5].get_str();
+    string comment;
+    if (request.params.size() > 4 && !request.params[4].isNull())
+        comment = request.params[4].get_str();
+    string to;
+    if (request.params.size() > 5 && !request.params[5].isNull())
+        to = request.params[5].get_str();
 
     EnsureWalletIsUnlocked();
 
@@ -851,9 +866,10 @@ UniValue sendfrom(const JSONRPCRequest& request)
     if (nAmount > nBalance)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Account has insufficient funds");
 
-    SendMoney(address.Get(), nAmount, false, wtx);
+    CTransactionRef txNew;
+    SendMoney(address.Get(), nAmount, false, comment, to, strAccount, txNew);
 
-    return wtx.GetHash().GetHex();
+    return txNew->GetHash().GetHex();
 }
 
 
@@ -909,10 +925,9 @@ UniValue sendmany(const JSONRPCRequest& request)
     if (request.params.size() > 2)
         nMinDepth = request.params[2].get_int();
 
-    CWalletTx wtx;
-    wtx.strFromAccount = strAccount;
-    if (request.params.size() > 3 && !request.params[3].isNull() && !request.params[3].get_str().empty())
-        wtx.mapValue["comment"] = request.params[3].get_str();
+    string comment;
+    if (request.params.size() > 3 && !request.params[3].isNull())
+        comment = request.params[3].get_str();
 
     UniValue subtractFeeFromAmount(UniValue::VARR);
     if (request.params.size() > 4)
@@ -962,16 +977,26 @@ UniValue sendmany(const JSONRPCRequest& request)
     CAmount nFeeRequired = 0;
     int nChangePosRet = -1;
     string strFailReason;
-    bool fCreated = pwalletMain->CreateTransaction(vecSend, wtx, keyChange, nFeeRequired, nChangePosRet, strFailReason);
+    CTransactionRef txNew;
+    bool fCreated = pwalletMain->CreateTransaction(vecSend, txNew, keyChange, nFeeRequired, nChangePosRet, strFailReason);
     if (!fCreated)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, strFailReason);
     CValidationState state;
-    if (!pwalletMain->CommitTransaction(wtx, keyChange, g_connman.get(), state)) {
+    auto updateEntry = [&](TxEntry& entry, bool fNew) {
+        assert(fNew);
+        entry.second.fFromMe = true;
+        entry.second.fTimeReceivedIsTxTime = true;
+        entry.second.strFromAccount = strAccount;
+        if (!comment.empty())
+            entry.second.mapValue["comment"] = comment;
+        return true;
+    };
+    if (!pwalletMain->CommitTransaction(txNew, updateEntry, keyChange, g_connman.get(), state)) {
         strFailReason = strprintf("Transaction commit failed:: %s", state.GetRejectReason());
         throw JSONRPCError(RPC_WALLET_ERROR, strFailReason);
     }
 
-    return wtx.GetHash().GetHex();
+    return txNew->GetHash().GetHex();
 }
 
 // Defined in rpc/misc.cpp
@@ -2698,7 +2723,7 @@ UniValue bumpfee(const JSONRPCRequest& request)
     if (!pwalletMain->mapWallet.count(hash)) {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid or non-wallet transaction id");
     }
-    CWalletTx& wtx = pwalletMain->mapWallet[hash];
+    CWalletTx& wtx = pwalletMain->mapWallet.at(hash);
 
     if (pwalletMain->HasWalletSpend(hash)) {
         throw JSONRPCError(RPC_MISC_ERROR, "Transaction has descendants in the wallet");
@@ -2870,16 +2895,28 @@ UniValue bumpfee(const JSONRPCRequest& request)
     }
 
     // commit/broadcast the tx
+    auto updateReplaces = [&](TxEntry& entry, bool fNew) {
+        entry.second.fFromMe = true;
+        entry.second.fTimeReceivedIsTxTime = true;
+        entry.second.mapValue["replaces_txid"] = hash.ToString();
+        return true;
+    };
     CReserveKey reservekey(pwalletMain);
-    CWalletTx wtxBumped(pwalletMain, MakeTransactionRef(std::move(tx)));
-    wtxBumped.mapValue["replaces_txid"] = hash.ToString();
     CValidationState state;
-    if (!pwalletMain->CommitTransaction(wtxBumped, reservekey, g_connman.get(), state) || !state.IsValid()) {
+    CTransactionRef txRef = MakeTransactionRef(std::move(tx));
+    const uint256& txHash = txRef->GetHash();
+    if (!pwalletMain->CommitTransaction(std::move(txRef), updateReplaces, reservekey, g_connman.get(), state) || !state.IsValid()) {
         throw JSONRPCError(RPC_WALLET_ERROR, strprintf("Error: The transaction was rejected! Reason given: %s", state.GetRejectReason()));
     }
 
     // mark the original tx as bumped
-    if (!pwalletMain->MarkReplaced(wtx.GetHash(), wtxBumped.GetHash())) {
+    auto updateReplaced = [&](TxEntry& entry, bool fNew) {
+        // Ensure for now that we're not overwriting data
+        assert(wtx.mapValue.count("replaced_by_txid") == 0);
+        wtx.mapValue["replaced_by_txid"] = txHash.ToString();
+        return true;
+    };
+    if (!pwalletMain->AddToWallet(wtx.tx, updateReplaced)) {
         // TODO: see if JSON-RPC has a standard way of returning a response
         // along with an exception. It would be good to return information about
         // wtxBumped to the caller even if marking the original transaction
@@ -2888,7 +2925,7 @@ UniValue bumpfee(const JSONRPCRequest& request)
     }
 
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair("txid", wtxBumped.GetHash().GetHex()));
+    result.push_back(Pair("txid", txHash.GetHex()));
     result.push_back(Pair("oldfee", ValueFromAmount(nOldFee)));
     result.push_back(Pair("fee", ValueFromAmount(nNewFee)));
 
