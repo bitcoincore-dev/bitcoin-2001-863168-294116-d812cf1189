@@ -1086,27 +1086,28 @@ bool CWallet::IsUsedDestination(const uint256& hash, unsigned int n) const
     return srctx && ExtractDestination(srctx->tx->vout[n].scriptPubKey, dst) && IsUsedDestination(dst);
 }
 
-bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
+bool CWallet::AddToWallet(CTransactionRef tx, const UpdateWalletTxFn& update_wtx, bool fFlushOnClose)
 {
     LOCK(cs_wallet);
 
     WalletBatch batch(*database, "r+", fFlushOnClose);
 
-    uint256 hash = wtxIn.GetHash();
+    uint256 hash = tx->GetHash();
 
     if (IsWalletFlagSet(WALLET_FLAG_AVOID_REUSE)) {
         // Mark used destinations
-        for (const CTxIn& txin : wtxIn.tx->vin) {
+        for (const CTxIn& txin : tx->vin) {
             const COutPoint& op = txin.prevout;
             SetUsedDestinationState(op.hash, op.n, true);
         }
     }
 
     // Inserts only if not already there, returns tx inserted or tx found
-    std::pair<std::map<uint256, CWalletTx>::iterator, bool> ret = mapWallet.insert(std::make_pair(hash, wtxIn));
+    auto ret = mapWallet.emplace(std::piecewise_construct, std::forward_as_tuple(hash), std::forward_as_tuple(this, tx));
     CWalletTx& wtx = (*ret.first).second;
     wtx.BindWallet(this);
     bool fInsertedNew = ret.second;
+    bool fUpdated = update_wtx(wtx, fInsertedNew);
     if (fInsertedNew) {
         wtx.nTimeReceived = chain().getAdjustedTime();
         wtx.nOrderPos = IncOrderPosNext(&batch);
@@ -1114,45 +1115,21 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
         wtx.nTimeSmart = ComputeTimeSmart(wtx);
         AddToSpends(hash);
     }
-
-    bool fUpdated = false;
     if (!fInsertedNew)
     {
-        // Merge
-        if (!wtxIn.hashUnset() && wtxIn.hashBlock != wtx.hashBlock)
-        {
-            wtx.hashBlock = wtxIn.hashBlock;
-            fUpdated = true;
-        }
-        // If no longer abandoned, update
-        if (wtxIn.hashBlock.IsNull() && wtx.isAbandoned())
-        {
-            wtx.hashBlock = wtxIn.hashBlock;
-            fUpdated = true;
-        }
-        if (wtxIn.nIndex != -1 && (wtxIn.nIndex != wtx.nIndex))
-        {
-            wtx.nIndex = wtxIn.nIndex;
-            fUpdated = true;
-        }
-        if (wtxIn.fFromMe && wtxIn.fFromMe != wtx.fFromMe)
-        {
-            wtx.fFromMe = wtxIn.fFromMe;
-            fUpdated = true;
-        }
         // If we have a witness-stripped version of this transaction, and we
         // see a new version with a witness, then we must be upgrading a pre-segwit
         // wallet.  Store the new version of the transaction with the witness,
         // as the stripped-version must be invalid.
         // TODO: Store all versions of the transaction, instead of just one.
-        if (wtxIn.tx->HasWitness() && !wtx.tx->HasWitness()) {
-            wtx.SetTx(wtxIn.tx);
+        if (tx->HasWitness() && !wtx.tx->HasWitness()) {
+            wtx.SetTx(tx);
             fUpdated = true;
         }
     }
 
     //// debug print
-    WalletLogPrintf("AddToWallet %s  %s%s\n", wtxIn.GetHash().ToString(), (fInsertedNew ? "new" : ""), (fUpdated ? "update" : ""));
+    WalletLogPrintf("AddToWallet %s  %s%s\n", hash.ToString(), (fInsertedNew ? "new" : ""), (fUpdated ? "update" : ""));
 
     // Write to disk
     if (fInsertedNew || fUpdated)
@@ -1171,7 +1148,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
 
     if (!strCmd.empty())
     {
-        boost::replace_all(strCmd, "%s", wtxIn.GetHash().GetHex());
+        boost::replace_all(strCmd, "%s", hash.GetHex());
         std::thread t(runCommand, strCmd);
         t.detach(); // thread runs free
     }
@@ -1246,13 +1223,26 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const uint256
                 }
             }
 
-            CWalletTx wtx(this, ptx);
-
-            // Get merkle branch if transaction was found in a block
-            if (!block_hash.IsNull())
-                wtx.SetMerkleBranch(block_hash, posInBlock);
-
-            return AddToWallet(wtx, false);
+            auto update_wtx = [&](CWalletTx& wtx, bool /* new_tx */) {
+                bool updated = false;
+                // Update block position if transaction was found in a block
+                if (!block_hash.IsNull() && (wtx.nIndex != posInBlock || wtx.hashBlock != block_hash)) {
+                    wtx.nIndex = posInBlock;
+                    wtx.hashBlock = block_hash;
+                    updated = true;
+                }
+                // Clear abandoned state assuming notification means it isn't
+                // safe to consider the transaction abandoned.
+                // TODO: Abandoned state should probably be more carefully
+                // tracked via different posInBlock signals or by checking
+                // mempool presence when necessary.
+                if (wtx.isAbandoned()) {
+                    wtx.hashBlock.SetNull();
+                    updated = true;
+                }
+                return updated;
+            };
+            return AddToWallet(MakeTransactionRef(tx), update_wtx, false /* fFlushOnClose */);
         }
     }
     return false;
@@ -1330,6 +1320,20 @@ bool CWallet::AbandonTransaction(interfaces::Chain::Lock& locked_chain, const ui
     }
 
     return true;
+}
+
+bool CWallet::AddTransaction(CTransactionRef tx, const uint256& block_hash, int block_position)
+{
+    auto update_wtx = [&](CWalletTx& wtx, bool /* new_tx */) {
+        // Update block position if it changed.
+        if (wtx.nIndex != block_position || wtx.hashBlock != block_hash) {
+            wtx.nIndex = block_position;
+            wtx.hashBlock = block_hash;
+            return true;
+        }
+        return false;
+    };
+    return AddToWallet(std::move(tx), update_wtx, false /* flush */);
 }
 
 void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
@@ -3299,22 +3303,24 @@ bool CWallet::CommitTransaction(CTransactionRef tx, mapValue_t mapValue, std::ve
     {
         auto locked_chain = chain().lock();
         LOCK(cs_wallet);
-
-        CWalletTx wtxNew(this, std::move(tx));
-        wtxNew.mapValue = std::move(mapValue);
-        wtxNew.vOrderForm = std::move(orderForm);
-        wtxNew.fTimeReceivedIsTxTime = true;
-        wtxNew.fFromMe = true;
-
-        WalletLogPrintf("CommitTransaction:\n%s", wtxNew.tx->ToString()); /* Continued */
+        WalletLogPrintf("CommitTransaction:\n%s", tx->ToString()); /* Continued */
+        CWalletTx* wtx_new = nullptr;
         {
 
             // Add tx to wallet, because if it has change it's also ours,
             // otherwise just for transaction history.
-            AddToWallet(wtxNew);
+            AddToWallet(std::move(tx), [&](CWalletTx& wtx, bool new_tx) {
+                assert(new_tx);
+                wtx_new = &wtx;
+                wtx.mapValue = std::move(mapValue);
+                wtx.vOrderForm = std::move(orderForm);
+                wtx.fTimeReceivedIsTxTime = true;
+                wtx.fFromMe = true;
+                return true;
+            });
 
             // Notify that old coins are spent
-            for (const CTxIn& txin : wtxNew.tx->vin)
+            for (const CTxIn& txin : wtx_new->tx->vin)
             {
                 CWalletTx &coin = mapWallet.at(txin.prevout.hash);
                 coin.BindWallet(this);
@@ -3324,12 +3330,10 @@ bool CWallet::CommitTransaction(CTransactionRef tx, mapValue_t mapValue, std::ve
 
         // Get the inserted-CWalletTx from mapWallet so that the
         // fInMempool flag is cached properly
-        CWalletTx& wtx = mapWallet.at(wtxNew.GetHash());
-
         if (fBroadcastTransactions)
         {
             std::string err_string;
-            if (!wtx.SubmitMemoryPoolAndRelay(err_string, true, *locked_chain)) {
+            if (!wtx_new->SubmitMemoryPoolAndRelay(err_string, true, *locked_chain)) {
                 WalletLogPrintf("CommitTransaction(): Transaction cannot be broadcast immediately, %s\n", err_string);
                 // TODO: if we expect the failure to be long term or permanent, instead delete wtx from the wallet and return failure.
             }
