@@ -898,19 +898,20 @@ bool CWallet::MarkReplaced(const uint256& originalHash, const uint256& newHash)
     return success;
 }
 
-bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
+bool CWallet::AddToWallet(CTransactionRef tx, UpdateWalletTxFn update_wtx, bool fFlushOnClose)
 {
     LOCK(cs_wallet);
 
     CWalletDB walletdb(*dbw, "r+", fFlushOnClose);
 
-    uint256 hash = wtxIn.GetHash();
+    uint256 hash = tx->GetHash();
 
     // Inserts only if not already there, returns tx inserted or tx found
-    std::pair<std::map<uint256, CWalletTx>::iterator, bool> ret = mapWallet.insert(std::make_pair(hash, wtxIn));
+    auto ret = mapWallet.emplace(std::piecewise_construct, std::forward_as_tuple(hash), std::forward_as_tuple(this, tx));
     CWalletTx& wtx = (*ret.first).second;
     wtx.BindWallet(this);
     bool fInsertedNew = ret.second;
+    bool fUpdated = update_wtx(wtx, fInsertedNew);
     if (fInsertedNew)
     {
         wtx.nTimeReceived = GetAdjustedTime();
@@ -919,45 +920,21 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
         wtx.nTimeSmart = ComputeTimeSmart(wtx);
         AddToSpends(hash);
     }
-
-    bool fUpdated = false;
     if (!fInsertedNew)
     {
-        // Merge
-        if (!wtxIn.hashUnset() && wtxIn.hashBlock != wtx.hashBlock)
-        {
-            wtx.hashBlock = wtxIn.hashBlock;
-            fUpdated = true;
-        }
-        // If no longer abandoned, update
-        if (wtxIn.hashBlock.IsNull() && wtx.isAbandoned())
-        {
-            wtx.hashBlock = wtxIn.hashBlock;
-            fUpdated = true;
-        }
-        if (wtxIn.nIndex != -1 && (wtxIn.nIndex != wtx.nIndex))
-        {
-            wtx.nIndex = wtxIn.nIndex;
-            fUpdated = true;
-        }
-        if (wtxIn.fFromMe && wtxIn.fFromMe != wtx.fFromMe)
-        {
-            wtx.fFromMe = wtxIn.fFromMe;
-            fUpdated = true;
-        }
         // If we have a witness-stripped version of this transaction, and we
         // see a new version with a witness, then we must be upgrading a pre-segwit
         // wallet.  Store the new version of the transaction with the witness,
         // as the stripped-version must be invalid.
         // TODO: Store all versions of the transaction, instead of just one.
-        if (wtxIn.tx->HasWitness() && !wtx.tx->HasWitness()) {
-            wtx.SetTx(wtxIn.tx);
+        if (tx->HasWitness() && !wtx.tx->HasWitness()) {
+            wtx.SetTx(tx);
             fUpdated = true;
         }
     }
 
     //// debug print
-    LogPrintf("AddToWallet %s  %s%s\n", wtxIn.GetHash().ToString(), (fInsertedNew ? "new" : ""), (fUpdated ? "update" : ""));
+    LogPrintf("AddToWallet %s  %s%s\n", hash.ToString(), (fInsertedNew ? "new" : ""), (fUpdated ? "update" : ""));
 
     // Write to disk
     if (fInsertedNew || fUpdated)
@@ -975,7 +952,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
 
     if (!strCmd.empty())
     {
-        boost::replace_all(strCmd, "%s", wtxIn.GetHash().GetHex());
+        boost::replace_all(strCmd, "%s", hash.GetHex());
         std::thread t(runCommand, strCmd);
         t.detach(); // thread runs free
     }
@@ -1063,13 +1040,23 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                 }
             }
 
-            CWalletTx wtx(this, ptx);
-
-            // Get merkle branch if transaction was found in a block
-            if (pIndex != nullptr)
-                wtx.SetMerkleBranch(pIndex, posInBlock);
-
-            return AddToWallet(wtx, false);
+            auto update_wtx = [&](CWalletTx& wtx, bool new_tx) {
+                bool updated = false;
+                // Update block position if transaction was found in a block
+                if (pIndex && (wtx.nIndex != posInBlock || wtx.hashBlock != pIndex->GetBlockHash())) {
+                    wtx.nIndex = posInBlock;
+                    wtx.hashBlock = pIndex->GetBlockHash();
+                    updated = true;
+                }
+                // Clear abandoned state assuming notification means it isn't
+                // safe to consider the tranaction abandoned (see TODO above).
+                if (wtx.isAbandoned()) {
+                    wtx.hashBlock.SetNull();
+                    updated = true;
+                }
+                return updated;
+            };
+            return AddToWallet(MakeTransactionRef(tx), update_wtx);
         }
     }
     return false;
@@ -1141,6 +1128,20 @@ bool CWallet::AbandonTransaction(const uint256& hashTx)
     }
 
     return true;
+}
+
+bool CWallet::AddTransaction(CTransactionRef tx, const uint256& block_hash, int block_position)
+{
+    auto update_wtx = [&](CWalletTx& wtx, bool new_tx) {
+        // Update block position if it changed.
+        if (wtx.nIndex != block_position || wtx.hashBlock != block_hash) {
+            wtx.nIndex = block_position;
+            wtx.hashBlock = block_hash;
+            return true;
+        }
+        return false;
+    };
+    return AddToWallet(std::move(tx), update_wtx, false /* flush */);
 }
 
 void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
@@ -3062,25 +3063,27 @@ bool CWallet::CommitTransaction(CTransactionRef tx, mapValue_t mapValue, std::ve
 {
     {
         LOCK2(cs_main, cs_wallet);
-
-        CWalletTx wtxNew(this, std::move(tx));
-        wtxNew.mapValue = std::move(mapValue);
-        wtxNew.vOrderForm = std::move(orderForm);
-        wtxNew.strFromAccount = std::move(fromAccount);
-        wtxNew.fTimeReceivedIsTxTime = true;
-        wtxNew.fFromMe = true;
-
-        LogPrintf("CommitTransaction:\n%s", wtxNew.tx->ToString());
+        LogPrintf("CommitTransaction:\n%s", tx->ToString());
+        CWalletTx* wtx_new = nullptr;
         {
             // Take key pair from key pool so it won't be used again
             reservekey.KeepKey();
 
             // Add tx to wallet, because if it has change it's also ours,
             // otherwise just for transaction history.
-            AddToWallet(wtxNew);
+            AddToWallet(std::move(tx), [&](CWalletTx& wtx, bool new_tx) {
+                assert(new_tx);
+                wtx_new = &wtx;
+                wtx.mapValue = std::move(mapValue);
+                wtx.vOrderForm = std::move(orderForm);
+                wtx.strFromAccount = std::move(fromAccount);
+                wtx.fTimeReceivedIsTxTime = true;
+                wtx.fFromMe = true;
+                return true;
+            });
 
             // Notify that old coins are spent
-            for (const CTxIn& txin : wtxNew.tx->vin)
+            for (const CTxIn& txin : wtx_new->tx->vin)
             {
                 CWalletTx &coin = mapWallet.at(txin.prevout.hash);
                 coin.BindWallet(this);
@@ -3089,20 +3092,18 @@ bool CWallet::CommitTransaction(CTransactionRef tx, mapValue_t mapValue, std::ve
         }
 
         // Track how many getdata requests our transaction gets
-        mapRequestCount[wtxNew.GetHash()] = 0;
+        mapRequestCount[wtx_new->GetHash()] = 0;
 
         // Get the inserted-CWalletTx from mapWallet so that the
         // fInMempool flag is cached properly
-        CWalletTx& wtx = mapWallet.at(wtxNew.GetHash());
-
         if (fBroadcastTransactions)
         {
             // Broadcast
-            if (!wtx.AcceptToMemoryPool(maxTxFee, state)) {
+            if (!wtx_new->AcceptToMemoryPool(maxTxFee, state)) {
                 LogPrintf("CommitTransaction(): Transaction cannot be broadcast immediately, %s\n", FormatStateMessage(state));
                 // TODO: if we expect the failure to be long term or permanent, instead delete wtx from the wallet and return failure.
             } else {
-                wtx.RelayWalletTransaction(connman);
+                wtx_new->RelayWalletTransaction(connman);
             }
         }
     }
