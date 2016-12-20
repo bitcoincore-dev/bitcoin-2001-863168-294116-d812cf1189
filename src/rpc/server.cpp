@@ -12,6 +12,9 @@
 #include "ui_interface.h"
 #include "util.h"
 #include "utilstrencodings.h"
+#ifdef ENABLE_WALLET
+#include "wallet/wallet.h"
+#endif
 
 #include <univalue.h>
 
@@ -196,8 +199,10 @@ std::string CRPCTable::help(const std::string& strCommand) const
         {
             UniValue params;
             rpcfn_type pfn = pcmd->actor;
-            if (setDone.insert(pfn).second)
-                (*pfn)(params, true);
+            if (setDone.insert(pfn).second) {
+                CRPCRequestInfo reqinfo;
+                pfn(params, true, reqinfo);
+            }
         }
         catch (const std::exception& e)
         {
@@ -383,7 +388,7 @@ void JSONRequest::parse(const UniValue& valRequest)
         throw JSONRPCError(RPC_INVALID_REQUEST, "Params must be an array");
 }
 
-static UniValue JSONRPCExecOne(const UniValue& req)
+static UniValue JSONRPCExecOne(const UniValue& req, CRPCRequestInfo& reqinfo)
 {
     UniValue rpc_result(UniValue::VOBJ);
 
@@ -391,7 +396,7 @@ static UniValue JSONRPCExecOne(const UniValue& req)
     try {
         jreq.parse(req);
 
-        UniValue result = tableRPC.execute(jreq.strMethod, jreq.params);
+        UniValue result = tableRPC.execute(jreq.strMethod, jreq.params, reqinfo);
         rpc_result = JSONRPCReplyObj(result, NullUniValue, jreq.id);
     }
     catch (const UniValue& objError)
@@ -407,16 +412,26 @@ static UniValue JSONRPCExecOne(const UniValue& req)
     return rpc_result;
 }
 
-std::string JSONRPCExecBatch(const UniValue& vReq)
+std::string JSONRPCExecBatch(const UniValue& vReq, CRPCRequestInfo& reqinfo)
 {
     UniValue ret(UniValue::VARR);
     for (unsigned int reqIdx = 0; reqIdx < vReq.size(); reqIdx++)
-        ret.push_back(JSONRPCExecOne(vReq[reqIdx]));
+        ret.push_back(JSONRPCExecOne(vReq[reqIdx], reqinfo));
 
     return ret.write() + "\n";
 }
 
-UniValue CRPCTable::execute(const std::string &strMethod, const UniValue &params) const
+UniValue rpcfn_type::operator()(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo) const {
+    if (func.which()) {
+        const reqinfo_rpcfn_type f = boost::get<reqinfo_rpcfn_type>(func);
+        return f(params, fHelp, reqinfo);
+    } else {
+        const simple_rpcfn_type f = boost::get<simple_rpcfn_type>(func);
+        return f(params, fHelp);
+    }
+}
+
+UniValue CRPCTable::execute(const std::string &strMethod, const UniValue &params, CRPCRequestInfo& reqinfo) const
 {
     // Return immediately if in warmup
     {
@@ -435,7 +450,7 @@ UniValue CRPCTable::execute(const std::string &strMethod, const UniValue &params
     try
     {
         // Execute
-        return pcmd->actor(params, false);
+        return pcmd->actor(params, false, reqinfo);
     }
     catch (const std::exception& e)
     {

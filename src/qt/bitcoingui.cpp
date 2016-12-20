@@ -38,6 +38,7 @@
 
 #include <QAction>
 #include <QApplication>
+#include <QComboBox>
 #include <QDateTime>
 #include <QDesktopWidget>
 #include <QDragEnterEvent>
@@ -72,8 +73,6 @@ const std::string BitcoinGUI::DEFAULT_UIPLATFORM =
         "other"
 #endif
         ;
-
-const QString BitcoinGUI::DEFAULT_WALLET = "~Default";
 
 BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent) :
     QMainWindow(parent),
@@ -445,6 +444,23 @@ void BitcoinGUI::createToolBars()
         toolbar->addAction(receiveCoinsAction);
         toolbar->addAction(historyAction);
         overviewAction->setChecked(true);
+
+#ifdef ENABLE_WALLET
+        QWidget *spacer = new QWidget();
+        spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        toolbar->addWidget(spacer);
+
+        WalletSelectorLabel = new QLabel();
+        WalletSelectorLabel->setText(tr("Wallet:") + " ");
+        toolbar->addWidget(WalletSelectorLabel);
+        WalletSelectorLabel->setVisible(false);
+        WalletSelector = new QComboBox();
+        toolbar->addWidget(WalletSelector);
+        WalletSelector->setVisible(false);
+        WalletSelectorLabel->setBuddy(WalletSelector);
+
+        connect(WalletSelector, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(setCurrentWallet(const QString&)));
+#endif
     }
 }
 
@@ -505,6 +521,12 @@ bool BitcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
     if(!walletFrame)
         return false;
     setWalletActionsEnabled(true);
+    WalletSelector->addItem(name);
+    if (WalletSelector->count() == 2) {
+        WalletSelectorLabel->setVisible(true);
+        WalletSelector->setVisible(true);
+    }
+    rpcConsole->addWallet(name, walletModel);
     return walletFrame->addWallet(name, walletModel);
 }
 
@@ -902,17 +924,22 @@ void BitcoinGUI::closeEvent(QCloseEvent *event)
 #ifndef Q_OS_MAC // Ignored on Mac
     if(clientModel && clientModel->getOptionsModel())
     {
-        if(!clientModel->getOptionsModel()->getMinimizeToTray() &&
-           !clientModel->getOptionsModel()->getMinimizeOnClose())
+        if(!clientModel->getOptionsModel()->getMinimizeOnClose())
         {
             // close rpcConsole in case it was open to make some space for the shutdown window
             rpcConsole->close();
 
             QApplication::quit();
         }
+        else
+        {
+            QMainWindow::showMinimized();
+            event->ignore();
+        }
     }
-#endif
+#else
     QMainWindow::closeEvent(event);
+#endif
 }
 
 void BitcoinGUI::showEvent(QShowEvent *event)

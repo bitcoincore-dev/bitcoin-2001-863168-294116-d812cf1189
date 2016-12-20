@@ -28,7 +28,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-extern CWallet* pwalletMain;
+typedef CWallet* CWallet_ptr;
+extern std::vector<CWallet_ptr> vpwallets;
 
 /**
  * Settings
@@ -78,7 +79,8 @@ enum WalletFeature
     FEATURE_WALLETCRYPT = 40000, // wallet encryption
     FEATURE_COMPRPUBKEY = 60000, // compressed public keys
 
-    FEATURE_LATEST = 60000
+    FEATURE_HD = 130000, // Hierarchical key derivation after BIP32 (HD Wallet)
+    FEATURE_LATEST = FEATURE_COMPRPUBKEY // HD is optional, use FEATURE_COMPRPUBKEY as latest version
 };
 
 
@@ -713,6 +715,9 @@ public:
     //! Adds a watch-only address to the store, without saving it to disk (used by LoadWallet)
     bool LoadWatchOnly(const CScript &dest);
 
+    //! Holds a timestamp at which point the wallet is scheduled (externally) to be relocked. Caller must arrange for actual relocking to occur via Lock().
+    int64_t nRelockTime;
+
     bool Unlock(const SecureString& strWalletPassphrase);
     bool ChangeWalletPassphrase(const SecureString& strOldWalletPassphrase, const SecureString& strNewWalletPassphrase);
     bool EncryptWallet(const SecureString& strWalletPassphrase);
@@ -889,6 +894,7 @@ public:
     static std::string GetWalletHelpString(bool showDebug);
 
     /* Initializes the wallet, returns a new CWallet instance or a null pointer in case of an error */
+    static CWallet* CreateWalletFromFile(const std::string walletFile);
     static bool InitLoadWallet();
 
     /* Wallets parameter interaction */
@@ -898,10 +904,13 @@ public:
 
     /* Set the HD chain model (chain child index counters) */
     bool SetHDChain(const CHDChain& chain, bool memonly);
-
-    /* Set the current HD master key (will reset the chain child index counters) */
-    bool SetHDMasterKey(const CKey& key);
     const CHDChain& GetHDChain() { return hdChain; }
+
+    /* Generates a new HD master key (will not be activated) */
+    CPubKey GenerateNewHDMasterKey();
+    
+    /* Set the current HD master key (will reset the chain child index counters) */
+    bool SetHDMasterKey(const CPubKey& key);
 };
 
 /** A key allocated from the key pool. */

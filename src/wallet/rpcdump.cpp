@@ -28,8 +28,8 @@
 
 using namespace std;
 
-void EnsureWalletIsUnlocked();
-bool EnsureWalletIsAvailable(bool avoidException);
+void EnsureWalletIsUnlocked(CWallet*);
+bool EnsureWalletIsAvailable(CWallet*, bool avoidException);
 
 std::string static EncodeDumpTime(int64_t nTime) {
     return DateTimeStrFormat("%Y-%m-%dT%H:%M:%SZ", nTime);
@@ -74,9 +74,11 @@ std::string DecodeDumpString(const std::string &str) {
     return ret.str();
 }
 
-UniValue importprivkey(const UniValue& params, bool fHelp)
+UniValue importprivkey(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    CWallet *& pwallet = reqinfo.wallet;
+
+    if (!EnsureWalletIsAvailable(pwallet, fHelp))
         return NullUniValue;
     
     if (fHelp || params.size() < 1 || params.size() > 3)
@@ -100,9 +102,9 @@ UniValue importprivkey(const UniValue& params, bool fHelp)
         );
 
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    LOCK2(cs_main, pwallet->cs_wallet);
 
-    EnsureWalletIsUnlocked();
+    EnsureWalletIsUnlocked(pwallet);
 
     string strSecret = params[0].get_str();
     string strLabel = "";
@@ -129,64 +131,66 @@ UniValue importprivkey(const UniValue& params, bool fHelp)
     assert(key.VerifyPubKey(pubkey));
     CKeyID vchAddress = pubkey.GetID();
     {
-        pwalletMain->MarkDirty();
-        pwalletMain->SetAddressBook(vchAddress, strLabel, "receive");
+        pwallet->MarkDirty();
+        pwallet->SetAddressBook(vchAddress, strLabel, "receive");
 
         // Don't throw error in case a key is already there
-        if (pwalletMain->HaveKey(vchAddress))
+        if (pwallet->HaveKey(vchAddress))
             return NullUniValue;
 
-        pwalletMain->mapKeyMetadata[vchAddress].nCreateTime = 1;
+        pwallet->mapKeyMetadata[vchAddress].nCreateTime = 1;
 
-        if (!pwalletMain->AddKeyPubKey(key, pubkey))
+        if (!pwallet->AddKeyPubKey(key, pubkey))
             throw JSONRPCError(RPC_WALLET_ERROR, "Error adding key to wallet");
 
         // whenever a key is imported, we need to scan the whole chain
-        pwalletMain->nTimeFirstKey = 1; // 0 would be considered 'no value'
+        pwallet->nTimeFirstKey = 1; // 0 would be considered 'no value'
 
         if (fRescan) {
-            pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+            pwallet->ScanForWalletTransactions(chainActive.Genesis(), true);
         }
     }
 
     return NullUniValue;
 }
 
-void ImportAddress(const CBitcoinAddress& address, const string& strLabel);
-void ImportScript(const CScript& script, const string& strLabel, bool isRedeemScript)
+void ImportAddress(CWallet*, const CBitcoinAddress& address, const string& strLabel);
+void ImportScript(CWallet * const pwallet, const CScript& script, const string& strLabel, bool isRedeemScript)
 {
-    if (!isRedeemScript && ::IsMine(*pwalletMain, script) == ISMINE_SPENDABLE)
+    if (!isRedeemScript && ::IsMine(*pwallet, script) == ISMINE_SPENDABLE)
         throw JSONRPCError(RPC_WALLET_ERROR, "The wallet already contains the private key for this address or script");
 
-    pwalletMain->MarkDirty();
+    pwallet->MarkDirty();
 
-    if (!pwalletMain->HaveWatchOnly(script) && !pwalletMain->AddWatchOnly(script))
+    if (!pwallet->HaveWatchOnly(script) && !pwallet->AddWatchOnly(script))
         throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
 
     if (isRedeemScript) {
-        if (!pwalletMain->HaveCScript(script) && !pwalletMain->AddCScript(script))
+        if (!pwallet->HaveCScript(script) && !pwallet->AddCScript(script))
             throw JSONRPCError(RPC_WALLET_ERROR, "Error adding p2sh redeemScript to wallet");
-        ImportAddress(CBitcoinAddress(CScriptID(script)), strLabel);
+        ImportAddress(pwallet, CBitcoinAddress(CScriptID(script)), strLabel);
     } else {
         CTxDestination destination;
         if (ExtractDestination(script, destination)) {
-            pwalletMain->SetAddressBook(destination, strLabel, "receive");
+            pwallet->SetAddressBook(destination, strLabel, "receive");
         }
     }
 }
 
-void ImportAddress(const CBitcoinAddress& address, const string& strLabel)
+void ImportAddress(CWallet * const pwallet, const CBitcoinAddress& address, const string& strLabel)
 {
     CScript script = GetScriptForDestination(address.Get());
-    ImportScript(script, strLabel, false);
+    ImportScript(pwallet, script, strLabel, false);
     // add to address book or update label
     if (address.IsValid())
-        pwalletMain->SetAddressBook(address.Get(), strLabel, "receive");
+        pwallet->SetAddressBook(address.Get(), strLabel, "receive");
 }
 
-UniValue importaddress(const UniValue& params, bool fHelp)
+UniValue importaddress(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    CWallet *& pwallet = reqinfo.wallet;
+
+    if (!EnsureWalletIsAvailable(pwallet, fHelp))
         return NullUniValue;
     
     if (fHelp || params.size() < 1 || params.size() > 4)
@@ -229,34 +233,37 @@ UniValue importaddress(const UniValue& params, bool fHelp)
     if (params.size() > 3)
         fP2SH = params[3].get_bool();
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    LOCK2(cs_main, pwallet->cs_wallet);
 
     CBitcoinAddress address(params[0].get_str());
     if (address.IsValid()) {
         if (fP2SH)
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Cannot use the p2sh flag with an address - use a script instead");
-        ImportAddress(address, strLabel);
+        ImportAddress(pwallet, address, strLabel);
     } else if (IsHex(params[0].get_str())) {
         std::vector<unsigned char> data(ParseHex(params[0].get_str()));
-        ImportScript(CScript(data.begin(), data.end()), strLabel, fP2SH);
+        ImportScript(pwallet, CScript(data.begin(), data.end()), strLabel, fP2SH);
     } else {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Bitcoin address or script");
     }
 
     if (fRescan)
     {
-        pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
-        pwalletMain->ReacceptWalletTransactions();
+        pwallet->ScanForWalletTransactions(chainActive.Genesis(), true);
+        pwallet->ReacceptWalletTransactions();
     }
 
     return NullUniValue;
 }
 
-UniValue importprunedfunds(const UniValue& params, bool fHelp)
+UniValue importprunedfunds(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    CWallet *& pwallet = reqinfo.wallet;
+
+    if (!EnsureWalletIsAvailable(pwallet, fHelp))
         return NullUniValue;
 
+    // 0.13.x: Silently accept up to 3 params, but ignore the third:
     if (fHelp || params.size() < 2 || params.size() > 3)
         throw runtime_error(
             "importprunedfunds\n"
@@ -264,22 +271,17 @@ UniValue importprunedfunds(const UniValue& params, bool fHelp)
             "\nArguments:\n"
             "1. \"rawtransaction\" (string, required) A raw transaction in hex funding an already-existing address in wallet\n"
             "2. \"txoutproof\"     (string, required) The hex output from gettxoutproof that contains the transaction\n"
-            "3. \"label\"          (string, optional) An optional label\n"
         );
 
     CTransaction tx;
     if (!DecodeHexTx(tx, params[0].get_str()))
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
     uint256 hashTx = tx.GetHash();
-    CWalletTx wtx(pwalletMain,tx);
+    CWalletTx wtx(pwallet,tx);
 
     CDataStream ssMB(ParseHexV(params[1], "proof"), SER_NETWORK, PROTOCOL_VERSION);
     CMerkleBlock merkleBlock;
     ssMB >> merkleBlock;
-
-    string strLabel = "";
-    if (params.size() == 3)
-        strLabel = params[2].get_str();
 
     //Search partial merkle tree in proof for our transaction and index in valid block
     vector<uint256> vMatch;
@@ -306,20 +308,22 @@ UniValue importprunedfunds(const UniValue& params, bool fHelp)
     wtx.nIndex = txnIndex;
     wtx.hashBlock = merkleBlock.header.GetHash();
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    LOCK2(cs_main, pwallet->cs_wallet);
 
-    if (pwalletMain->IsMine(tx)) {
-        CWalletDB walletdb(pwalletMain->strWalletFile, "r+", false);
-        pwalletMain->AddToWallet(wtx, false, &walletdb);
+    if (pwallet->IsMine(tx)) {
+        CWalletDB walletdb(pwallet->strWalletFile, "r+", false);
+        pwallet->AddToWallet(wtx, false, &walletdb);
         return NullUniValue;
     }
 
     throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "No addresses in wallet correspond to included transaction");
 }
 
-UniValue removeprunedfunds(const UniValue& params, bool fHelp)
+UniValue removeprunedfunds(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    CWallet *& pwallet = reqinfo.wallet;
+
+    if (!EnsureWalletIsAvailable(pwallet, fHelp))
         return NullUniValue;
 
     if (fHelp || params.size() != 1)
@@ -334,7 +338,7 @@ UniValue removeprunedfunds(const UniValue& params, bool fHelp)
             + HelpExampleRpc("removprunedfunds", "\"a8d0c0184dde994a09ec054286f1ce581bebf46446a512166eae7628734ea0a5\"")
         );
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    LOCK2(cs_main, pwallet->cs_wallet);
 
     uint256 hash;
     hash.SetHex(params[0].get_str());
@@ -342,7 +346,7 @@ UniValue removeprunedfunds(const UniValue& params, bool fHelp)
     vHash.push_back(hash);
     vector<uint256> vHashOut;
 
-    if(pwalletMain->ZapSelectTx(vHash, vHashOut) != DB_LOAD_OK) {
+    if(pwallet->ZapSelectTx(vHash, vHashOut) != DB_LOAD_OK) {
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Could not properly delete the transaction.");
     }
 
@@ -350,14 +354,14 @@ UniValue removeprunedfunds(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Transaction does not exist in wallet.");
     }
 
-    ThreadFlushWalletDB(pwalletMain->strWalletFile);
-
     return NullUniValue;
 }
 
-UniValue importpubkey(const UniValue& params, bool fHelp)
+UniValue importpubkey(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    CWallet *& pwallet = reqinfo.wallet;
+
+    if (!EnsureWalletIsAvailable(pwallet, fHelp))
         return NullUniValue;
 
     if (fHelp || params.size() < 1 || params.size() > 4)
@@ -398,24 +402,26 @@ UniValue importpubkey(const UniValue& params, bool fHelp)
     if (!pubKey.IsFullyValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Pubkey is not a valid public key");
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    LOCK2(cs_main, pwallet->cs_wallet);
 
-    ImportAddress(CBitcoinAddress(pubKey.GetID()), strLabel);
-    ImportScript(GetScriptForRawPubKey(pubKey), strLabel, false);
+    ImportAddress(pwallet, CBitcoinAddress(pubKey.GetID()), strLabel);
+    ImportScript(pwallet, GetScriptForRawPubKey(pubKey), strLabel, false);
 
     if (fRescan)
     {
-        pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
-        pwalletMain->ReacceptWalletTransactions();
+        pwallet->ScanForWalletTransactions(chainActive.Genesis(), true);
+        pwallet->ReacceptWalletTransactions();
     }
 
     return NullUniValue;
 }
 
 
-UniValue importwallet(const UniValue& params, bool fHelp)
+UniValue importwallet(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    CWallet *& pwallet = reqinfo.wallet;
+
+    if (!EnsureWalletIsAvailable(pwallet, fHelp))
         return NullUniValue;
     
     if (fHelp || params.size() != 1)
@@ -436,9 +442,9 @@ UniValue importwallet(const UniValue& params, bool fHelp)
     if (fPruneMode)
         throw JSONRPCError(RPC_WALLET_ERROR, "Importing wallets is disabled in pruned mode");
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    LOCK2(cs_main, pwallet->cs_wallet);
 
-    EnsureWalletIsUnlocked();
+    EnsureWalletIsUnlocked(pwallet);
 
     ifstream file;
     file.open(params[0].get_str().c_str(), std::ios::in | std::ios::ate);
@@ -452,9 +458,9 @@ UniValue importwallet(const UniValue& params, bool fHelp)
     int64_t nFilesize = std::max((int64_t)1, (int64_t)file.tellg());
     file.seekg(0, file.beg);
 
-    pwalletMain->ShowProgress(_("Importing..."), 0); // show progress dialog in GUI
+    pwallet->ShowProgress(_("Importing..."), 0); // show progress dialog in GUI
     while (file.good()) {
-        pwalletMain->ShowProgress("", std::max(1, std::min(99, (int)(((double)file.tellg() / (double)nFilesize) * 100))));
+        pwallet->ShowProgress("", std::max(1, std::min(99, (int)(((double)file.tellg() / (double)nFilesize) * 100))));
         std::string line;
         std::getline(file, line);
         if (line.empty() || line[0] == '#')
@@ -471,7 +477,7 @@ UniValue importwallet(const UniValue& params, bool fHelp)
         CPubKey pubkey = key.GetPubKey();
         assert(key.VerifyPubKey(pubkey));
         CKeyID keyid = pubkey.GetID();
-        if (pwalletMain->HaveKey(keyid)) {
+        if (pwallet->HaveKey(keyid)) {
             LogPrintf("Skipping import of %s (key already present)\n", CBitcoinAddress(keyid).ToString());
             continue;
         }
@@ -491,28 +497,28 @@ UniValue importwallet(const UniValue& params, bool fHelp)
             }
         }
         LogPrintf("Importing %s...\n", CBitcoinAddress(keyid).ToString());
-        if (!pwalletMain->AddKeyPubKey(key, pubkey)) {
+        if (!pwallet->AddKeyPubKey(key, pubkey)) {
             fGood = false;
             continue;
         }
-        pwalletMain->mapKeyMetadata[keyid].nCreateTime = nTime;
+        pwallet->mapKeyMetadata[keyid].nCreateTime = nTime;
         if (fLabel)
-            pwalletMain->SetAddressBook(keyid, strLabel, "receive");
+            pwallet->SetAddressBook(keyid, strLabel, "receive");
         nTimeBegin = std::min(nTimeBegin, nTime);
     }
     file.close();
-    pwalletMain->ShowProgress("", 100); // hide progress dialog in GUI
+    pwallet->ShowProgress("", 100); // hide progress dialog in GUI
 
     CBlockIndex *pindex = chainActive.Tip();
     while (pindex && pindex->pprev && pindex->GetBlockTime() > nTimeBegin - 7200)
         pindex = pindex->pprev;
 
-    if (!pwalletMain->nTimeFirstKey || nTimeBegin < pwalletMain->nTimeFirstKey)
-        pwalletMain->nTimeFirstKey = nTimeBegin;
+    if (!pwallet->nTimeFirstKey || nTimeBegin < pwallet->nTimeFirstKey)
+        pwallet->nTimeFirstKey = nTimeBegin;
 
     LogPrintf("Rescanning last %i blocks\n", chainActive.Height() - pindex->nHeight + 1);
-    pwalletMain->ScanForWalletTransactions(pindex);
-    pwalletMain->MarkDirty();
+    pwallet->ScanForWalletTransactions(pindex);
+    pwallet->MarkDirty();
 
     if (!fGood)
         throw JSONRPCError(RPC_WALLET_ERROR, "Error adding some keys to wallet");
@@ -520,9 +526,11 @@ UniValue importwallet(const UniValue& params, bool fHelp)
     return NullUniValue;
 }
 
-UniValue dumpprivkey(const UniValue& params, bool fHelp)
+UniValue dumpprivkey(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    CWallet *& pwallet = reqinfo.wallet;
+
+    if (!EnsureWalletIsAvailable(pwallet, fHelp))
         return NullUniValue;
     
     if (fHelp || params.size() != 1)
@@ -540,9 +548,9 @@ UniValue dumpprivkey(const UniValue& params, bool fHelp)
             + HelpExampleRpc("dumpprivkey", "\"myaddress\"")
         );
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    LOCK2(cs_main, pwallet->cs_wallet);
 
-    EnsureWalletIsUnlocked();
+    EnsureWalletIsUnlocked(pwallet);
 
     string strAddress = params[0].get_str();
     CBitcoinAddress address;
@@ -552,15 +560,17 @@ UniValue dumpprivkey(const UniValue& params, bool fHelp)
     if (!address.GetKeyID(keyID))
         throw JSONRPCError(RPC_TYPE_ERROR, "Address does not refer to a key");
     CKey vchSecret;
-    if (!pwalletMain->GetKey(keyID, vchSecret))
+    if (!pwallet->GetKey(keyID, vchSecret))
         throw JSONRPCError(RPC_WALLET_ERROR, "Private key for address " + strAddress + " is not known");
     return CBitcoinSecret(vchSecret).ToString();
 }
 
 
-UniValue dumpwallet(const UniValue& params, bool fHelp)
+UniValue dumpwallet(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo)
 {
-    if (!EnsureWalletIsAvailable(fHelp))
+    CWallet *& pwallet = reqinfo.wallet;
+
+    if (!EnsureWalletIsAvailable(pwallet, fHelp))
         return NullUniValue;
     
     if (fHelp || params.size() != 1)
@@ -574,9 +584,9 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
             + HelpExampleRpc("dumpwallet", "\"test\"")
         );
 
-    LOCK2(cs_main, pwalletMain->cs_wallet);
+    LOCK2(cs_main, pwallet->cs_wallet);
 
-    EnsureWalletIsUnlocked();
+    EnsureWalletIsUnlocked(pwallet);
 
     ofstream file;
     file.open(params[0].get_str().c_str());
@@ -585,8 +595,8 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
 
     std::map<CKeyID, int64_t> mapKeyBirth;
     std::set<CKeyID> setKeyPool;
-    pwalletMain->GetKeyBirthTimes(mapKeyBirth);
-    pwalletMain->GetAllReserveKeys(setKeyPool);
+    pwallet->GetKeyBirthTimes(mapKeyBirth);
+    pwallet->GetAllReserveKeys(setKeyPool);
 
     // sort time/key pairs
     std::vector<std::pair<int64_t, CKeyID> > vKeyBirth;
@@ -602,19 +612,42 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
     file << strprintf("# * Best block at time of backup was %i (%s),\n", chainActive.Height(), chainActive.Tip()->GetBlockHash().ToString());
     file << strprintf("#   mined on %s\n", EncodeDumpTime(chainActive.Tip()->GetBlockTime()));
     file << "\n";
+
+    // add the base58check encoded extended master if the wallet uses HD 
+    CKeyID masterKeyID = pwallet->GetHDChain().masterKeyID;
+    if (!masterKeyID.IsNull())
+    {
+        CKey key;
+        if (pwallet->GetKey(masterKeyID, key))
+        {
+            CExtKey masterKey;
+            masterKey.SetMaster(key.begin(), key.size());
+
+            CBitcoinExtKey b58extkey;
+            b58extkey.SetKey(masterKey);
+
+            file << "# extended private masterkey: " << b58extkey.ToString() << "\n\n";
+        }
+    }
     for (std::vector<std::pair<int64_t, CKeyID> >::const_iterator it = vKeyBirth.begin(); it != vKeyBirth.end(); it++) {
         const CKeyID &keyid = it->second;
         std::string strTime = EncodeDumpTime(it->first);
         std::string strAddr = CBitcoinAddress(keyid).ToString();
         CKey key;
-        if (pwalletMain->GetKey(keyid, key)) {
-            if (pwalletMain->mapAddressBook.count(keyid)) {
-                file << strprintf("%s %s label=%s # addr=%s\n", CBitcoinSecret(key).ToString(), strTime, EncodeDumpString(pwalletMain->mapAddressBook[keyid].name), strAddr);
+        if (pwallet->GetKey(keyid, key)) {
+            file << strprintf("%s %s ", CBitcoinSecret(key).ToString(), strTime);
+            if (pwallet->mapAddressBook.count(keyid)) {
+                file << strprintf("label=%s", EncodeDumpString(pwallet->mapAddressBook[keyid].name));
+            } else if (keyid == masterKeyID) {
+                file << "hdmaster=1";
             } else if (setKeyPool.count(keyid)) {
-                file << strprintf("%s %s reserve=1 # addr=%s\n", CBitcoinSecret(key).ToString(), strTime, strAddr);
+                file << "reserve=1";
+            } else if (pwallet->mapKeyMetadata[keyid].hdKeypath == "m") {
+                file << "inactivehdmaster=1";
             } else {
-                file << strprintf("%s %s change=1 # addr=%s\n", CBitcoinSecret(key).ToString(), strTime, strAddr);
+                file << "change=1";
             }
+            file << strprintf(" # addr=%s%s\n", strAddr, (pwallet->mapKeyMetadata[keyid].hdKeypath.size() > 0 ? " hdkeypath="+pwallet->mapKeyMetadata[keyid].hdKeypath : ""));
         }
     }
     file << "\n";

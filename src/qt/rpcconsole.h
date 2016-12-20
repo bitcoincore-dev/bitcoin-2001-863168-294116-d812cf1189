@@ -9,6 +9,7 @@
 #include "peertablemodel.h"
 
 #include "net.h"
+#include "rpc/server.h"
 
 #include <QWidget>
 #include <QCompleter>
@@ -16,6 +17,7 @@
 class ClientModel;
 class PlatformStyle;
 class RPCTimerInterface;
+class WalletModel;
 
 namespace Ui {
     class RPCConsole;
@@ -35,9 +37,14 @@ public:
     explicit RPCConsole(const PlatformStyle *platformStyle, QWidget *parent);
     ~RPCConsole();
 
-    static bool RPCExecuteCommandLine(std::string &strResult, const std::string &strCommand);
+    static bool RPCExecuteCommandLine(std::string &strResult, const std::string &strCommand, CRPCRequestInfo& reqinfo);
+    static bool RPCExecuteCommandLine(std::string &strResult, const std::string &strCommand) {
+        CRPCRequestInfo reqinfo;
+        return RPCExecuteCommandLine(strResult, strCommand, reqinfo);
+    }
 
     void setClientModel(ClientModel *model);
+    void addWallet(const QString name, WalletModel * const walletModel);
 
     enum MessageClass {
         MC_ERROR,
@@ -112,7 +119,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     // For RPC command executor
     void stopExecutor();
-    void cmdRequest(const QString &command);
+    void cmdRequest(const QString &command, void *ppwallet);
 
 private:
     static QString FormatBytes(quint64 bytes);

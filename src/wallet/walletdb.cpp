@@ -215,7 +215,7 @@ void CWalletDB::ListAccountCreditDebit(const string& strAccount, list<CAccountin
 
     Dbc* pcursor = GetCursor();
     if (!pcursor)
-        throw runtime_error("CWalletDB::ListAccountCreditDebit(): cannot create DB cursor");
+        throw runtime_error(std::string(__func__) + ": cannot create DB cursor");
     unsigned int fFlags = DB_SET_RANGE;
     while (true)
     {
@@ -231,7 +231,7 @@ void CWalletDB::ListAccountCreditDebit(const string& strAccount, list<CAccountin
         else if (ret != 0)
         {
             pcursor->close();
-            throw runtime_error("CWalletDB::ListAccountCreditDebit(): error scanning DB");
+            throw runtime_error(std::string(__func__) + ": error scanning DB");
         }
 
         // Unserialize
@@ -851,7 +851,7 @@ DBErrors CWalletDB::ZapWalletTx(CWallet* pwallet, vector<CWalletTx>& vWtx)
     return DB_LOAD_OK;
 }
 
-void ThreadFlushWalletDB(const string& strFile)
+void ThreadFlushWalletDB()
 {
     // Make this thread recognisable as the wallet flushing thread
     RenameThread("bitcoin-wallet");
@@ -893,20 +893,23 @@ void ThreadFlushWalletDB(const string& strFile)
                 if (nRefCount == 0)
                 {
                     boost::this_thread::interruption_point();
-                    map<string, int>::iterator mi = bitdb.mapFileUseCount.find(strFile);
-                    if (mi != bitdb.mapFileUseCount.end())
-                    {
-                        LogPrint("db", "Flushing %s\n", strFile);
-                        nLastFlushed = nWalletDBUpdated;
-                        int64_t nStart = GetTimeMillis();
+                    for (CWallet_ptr pwallet : vpwallets) {
+                        const std::string& strFile = pwallet->strWalletFile;
+                        map<string, int>::iterator mi = bitdb.mapFileUseCount.find(strFile);
+                        if (mi != bitdb.mapFileUseCount.end())
+                        {
+                            LogPrint("db", "Flushing %s\n", strFile);
+                            int64_t nStart = GetTimeMillis();
 
-                        // Flush wallet file so it's self contained
-                        bitdb.CloseDb(strFile);
-                        bitdb.CheckpointLSN(strFile);
+                            // Flush wallet file so it's self contained
+                            bitdb.CloseDb(strFile);
+                            bitdb.CheckpointLSN(strFile);
 
-                        bitdb.mapFileUseCount.erase(mi++);
-                        LogPrint("db", "Flushed %s %dms\n", strFile, GetTimeMillis() - nStart);
+                            bitdb.mapFileUseCount.erase(mi++);
+                            LogPrint("db", "Flushed %s %dms\n", strFile, GetTimeMillis() - nStart);
+                        }
                     }
+                    nLastFlushed = nWalletDBUpdated;
                 }
             }
         }
