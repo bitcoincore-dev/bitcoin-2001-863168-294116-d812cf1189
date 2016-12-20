@@ -59,8 +59,8 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool w
     return whichType != TX_NONSTANDARD;
 }
 
-static inline bool IsStandardTx_Rejection_(std::string& reasonOut, const std::string& reason, const std::set<std::string>& setIgnoreRejects=std::set<std::string>()) {
-    if (setIgnoreRejects.find(reason) != setIgnoreRejects.end())
+static inline bool IsStandardTx_Rejection_(std::string& reasonOut, const std::string& reason, const std::string& reasonPrefix, const std::set<std::string>& setIgnoreRejects=std::set<std::string>()) {
+    if (setIgnoreRejects.find(reasonPrefix + reason) != setIgnoreRejects.end())
         return false;
 
     reasonOut = reason;
@@ -68,7 +68,7 @@ static inline bool IsStandardTx_Rejection_(std::string& reasonOut, const std::st
 }
 
 #define IsStandardTx_Rejection(reasonIn)  do {  \
-    if (IsStandardTx_Rejection_(reason, reasonIn, setIgnoreRejects)) {  \
+    if (IsStandardTx_Rejection_(reason, reasonIn, "", setIgnoreRejects)) {  \
         return false;  \
     }  \
 } while(0)
@@ -86,7 +86,7 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
         // to MAX_STANDARD_TX_SIZE mitigates CPU exhaustion attacks.
         unsigned int sz = GetTransactionWeight(tx);
         if (sz >= MAX_STANDARD_TX_WEIGHT) {
-            reason = "tx-weight";
+            reason = "tx-size";
             return false;
         }
     }
@@ -141,6 +141,12 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
     return true;
 }
 
+#define AreInputsStandard_Rejection(reasonIn)  do {  \
+    if (IsStandardTx_Rejection_(reason, reasonIn, "bad-txns-input-", setIgnoreRejects)) {  \
+        return false;  \
+    }  \
+} while(0)
+
 bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs, std::string& reason, const std::set<std::string>& setIgnoreRejects)
 {
     if (tx.IsCoinBase())
@@ -155,7 +161,7 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs,
         // get the scriptPubKey corresponding to this input:
         const CScript& prevScript = prev.scriptPubKey;
         if (!Solver(prevScript, whichType, vSolutions)) {
-            IsStandardTx_Rejection("script-unknown");
+            AreInputsStandard_Rejection("script-unknown");
         }
 
         if (whichType == TX_SCRIPTHASH)
@@ -180,7 +186,7 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs,
             }
             CScript subscript(stack.back().begin(), stack.back().end());
             if (subscript.GetSigOpCount(true) > MAX_P2SH_SIGOPS) {
-                IsStandardTx_Rejection("scriptcheck-sigops");
+                AreInputsStandard_Rejection("scriptcheck-sigops");
             }
         }
     }
@@ -188,7 +194,13 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs,
     return true;
 }
 
-bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
+#define IsWitnessStandard_Rejection(reasonIn)  do {  \
+    if (IsStandardTx_Rejection_(reason, reasonIn, "bad-witness-", setIgnoreRejects)) {  \
+        return false;  \
+    }  \
+} while(0)
+
+bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs, std::string& reason, const std::set<std::string>& setIgnoreRejects)
 {
     if (tx.IsCoinBase())
         return true; // Coinbases are skipped
@@ -211,9 +223,15 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
             // into a stack. We do not check IsPushOnly nor compare the hash as these will be done later anyway.
             // If the check fails at this stage, we know that this txid must be a bad one.
             if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(), SIGVERSION_BASE))
+            {
+                reason = "scriptsig-failure";
                 return false;
+            }
             if (stack.empty())
+            {
+                reason = "scriptcheck-missing";
                 return false;
+            }
             prevScript = CScript(stack.back().begin(), stack.back().end());
         }
 
@@ -222,18 +240,21 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
 
         // Non-witness program must not be associated with any witness
         if (!prevScript.IsWitnessProgram(witnessversion, witnessprogram))
+        {
+            reason = "nonwitness-input";
             return false;
+        }
 
         // Check P2WSH standard limits
         if (witnessversion == 0 && witnessprogram.size() == 32) {
             if (tx.wit.vtxinwit[i].scriptWitness.stack.back().size() > MAX_STANDARD_P2WSH_SCRIPT_SIZE)
-                return false;
+                IsWitnessStandard_Rejection("script-size");
             size_t sizeWitnessStack = tx.wit.vtxinwit[i].scriptWitness.stack.size() - 1;
             if (sizeWitnessStack > MAX_STANDARD_P2WSH_STACK_ITEMS)
-                return false;
+                IsWitnessStandard_Rejection("stackitem-count");
             for (unsigned int j = 0; j < sizeWitnessStack; j++) {
                 if (tx.wit.vtxinwit[i].scriptWitness.stack[j].size() > MAX_STANDARD_P2WSH_STACK_ITEM_SIZE)
-                    return false;
+                    IsWitnessStandard_Rejection("stackitem-size");
             }
         }
     }
