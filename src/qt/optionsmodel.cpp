@@ -22,6 +22,7 @@
 #include "txdb.h" // for -dbcache defaults
 #include "txmempool.h" // for fPriorityAccurate
 #include "intro.h" 
+#include "utilmoneystr.h" // for FormatMoney
 
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
@@ -298,6 +299,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return qlonglong(GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY));
         case rejectunknownscripts:
             return fRequireStandard;
+        case minrelaytxfee:
+            return qlonglong(::minRelayTxFee.GetFeePerK());
         case bytespersigop:
             return nBytesPerSigOp;
         case bytespersigopstrict:
@@ -575,6 +578,15 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 fRequireStandard = fNewValue;
                 // This option is inverted in the config:
                 ModifyRWConfigFile("acceptnonstdtxn", strprintf("%d", ! fNewValue));
+            }
+            break;
+        }
+        case minrelaytxfee:
+        {
+            CAmount nNv = value.toLongLong();
+            if (nNv != ::minRelayTxFee.GetFeePerK()) {
+                ModifyRWConfigFile("minrelaytxfee", FormatMoney(nNv));
+                ::minRelayTxFee = CFeeRate(nNv);
             }
             break;
         }
