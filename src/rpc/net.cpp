@@ -584,7 +584,7 @@ UniValue setnetworkactive(const UniValue& params, bool fHelp)
 
     SetNetworkActive(params[0].get_bool());
 
-    return fNetworkActive;
+    return fNetworkActive.load();
 }
 
 static const CRPCCommand commands[] =

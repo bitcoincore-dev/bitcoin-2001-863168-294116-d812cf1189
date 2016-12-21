@@ -157,7 +157,7 @@ CAddress GetLocalAddress(const CNetAddr *paddrPeer = NULL);
 
 
 extern bool fDiscover;
-extern bool fNetworkActive;
+extern std::atomic<bool> fNetworkActive;
 extern bool fListen;
 extern ServiceFlags nLocalServices;
 extern ServiceFlags nRelevantServices;
