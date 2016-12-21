@@ -12,6 +12,7 @@
 
 #include <QWidget>
 #include <QCompleter>
+#include <QThread>
 
 class ClientModel;
 class PlatformStyle;
@@ -144,6 +145,7 @@ private:
     QMenu *banTableContextMenu;
     int consoleFontSize;
     QCompleter *autoCompleter;
+    QThread thread;
 
     /** Update UI with latest network info from model. */
     void updateNetworkState();
