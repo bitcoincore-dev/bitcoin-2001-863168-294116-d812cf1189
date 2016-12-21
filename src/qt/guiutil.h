@@ -200,6 +200,10 @@ namespace GUIUtil
     /* Format a CNodeCombinedStats.nTimeOffset into a user-readable string. */
     QString formatTimeOffset(int64_t nTimeOffset);
 
+    QString formateNiceTimeOffset(qint64 secs);
+
+    /* Format bytes into GB/MB/KB */
+    QString formatBytes(size_t nBytes);
 #if defined(Q_OS_MAC) && QT_VERSION >= 0x050000
     // workaround for Qt OSX Bug:
     // https://bugreports.qt-project.org/browse/QTBUG-15631

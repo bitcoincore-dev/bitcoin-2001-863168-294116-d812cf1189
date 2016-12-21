@@ -8,6 +8,8 @@
 #include <QObject>
 #include <QDateTime>
 
+#include "stats/stats.h"
+
 class AddressTableModel;
 class BanTableModel;
 class OptionsModel;
@@ -51,7 +53,8 @@ public:
     //! Return number of connections, default is in- and outbound (total)
     int getNumConnections(unsigned int flags = CONNECTIONS_ALL) const;
     int getNumBlocks() const;
-
+    int getHeaderTipHeight() const;
+    int64_t getHeaderTipTime() const;
     //! Return number of transactions in the mempool
     long getMempoolSize() const;
     //! Return the dynamic memory usage of the mempool
@@ -80,6 +83,8 @@ public:
     QString formatClientStartupTime() const;
     QString dataDir() const;
 
+    mempoolSamples_t getMempoolStatsInRange(QDateTime &from, QDateTime &to);
+
 private:
     OptionsModel *optionsModel;
     PeerTableModel *peerTableModel;
@@ -104,12 +109,17 @@ Q_SIGNALS:
     // Show progress dialog e.g. for verifychain
     void showProgress(const QString &title, int nProgress);
 
+    void mempoolStatsDidUpdate();
+
 public Q_SLOTS:
     void updateTimer();
     void updateNumConnections(int numConnections);
     void updateNetworkActive(bool networkActive);
     void updateAlert();
     void updateBanlist();
+
+    /* stats stack */
+    void updateMempoolStats();
 };
 
 #endif // BITCOIN_QT_CLIENTMODEL_H
