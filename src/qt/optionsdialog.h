@@ -8,6 +8,7 @@
 #include <QDialog>
 #include <QValidator>
 
+class BitcoinAmountField;
 class OptionsModel;
 class QValidatedLineEdit;
 
@@ -88,6 +89,7 @@ private:
     QSpinBox *mempoolexpiry;
 
     QCheckBox *rejectunknownscripts;
+    BitcoinAmountField *minrelaytxfee;
     QSpinBox *bytespersigop, *bytespersigopstrict;
     QSpinBox *limitancestorcount;
     QSpinBox *limitancestorsize;
