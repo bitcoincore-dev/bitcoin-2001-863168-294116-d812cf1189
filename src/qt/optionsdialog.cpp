@@ -9,6 +9,7 @@
 #include "optionsdialog.h"
 #include "ui_optionsdialog.h"
 
+#include "bitcoinamountfield.h"
 #include "bitcoinunits.h"
 #include "guiutil.h"
 #include "optionsmodel.h"
@@ -160,6 +161,9 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     rejectunknownscripts->setToolTip(tr("With this option enabled, unrecognised receiver (\"pubkey\") scripts will be ignored. Unrecognisable scripts could be used to bypass further spam filters. If your software is outdated, they may also be used to trick you into thinking you were sent bitcoins that will never confirm."));
     verticalLayout_Spamfiltering->addWidget(rejectunknownscripts);
     FixTabOrder(rejectunknownscripts);
+
+    minrelaytxfee = new BitcoinAmountField(groupBox_Spamfiltering);
+    CreateOptionUI(verticalLayout_Spamfiltering, minrelaytxfee, tr("Consider transaction fees less than %s per kB relayed to be worthless."));
 
     bytespersigop = new QSpinBox(groupBox_Spamfiltering);
     bytespersigop->setMinimum(1);
@@ -402,6 +406,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(mempoolexpiry, OptionsModel::mempoolexpiry);
 
     mapper->addMapping(rejectunknownscripts, OptionsModel::rejectunknownscripts);
+    mapper->addMapping(minrelaytxfee, OptionsModel::minrelaytxfee);
     mapper->addMapping(bytespersigop, OptionsModel::bytespersigop);
     mapper->addMapping(bytespersigopstrict, OptionsModel::bytespersigopstrict);
     mapper->addMapping(limitancestorcount, OptionsModel::limitancestorcount);
