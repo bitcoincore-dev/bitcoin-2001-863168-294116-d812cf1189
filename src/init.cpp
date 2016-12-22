@@ -365,6 +365,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-port=<port>", strprintf(_("Listen for connections on <port> (default: %u or testnet: %u)"), Params(CBaseChainParams::MAIN).GetDefaultPort(), Params(CBaseChainParams::TESTNET).GetDefaultPort()));
     strUsage += HelpMessageOpt("-proxy=<ip:port>", _("Connect through SOCKS5 proxy"));
     strUsage += HelpMessageOpt("-proxyrandomize", strprintf(_("Randomize credentials for every proxy connection. This enables Tor stream isolation (default: %u)"), DEFAULT_PROXYRANDOMIZE));
+    strUsage += HelpMessageOpt("-rpcserialversion", strprintf(_("Sets the serialization of raw transaction or block hex returned in non-verbose mode, non-segwit(0) or segwit(1) (default: %d)"), DEFAULT_RPC_SERIALIZE_VERSION));
     strUsage += HelpMessageOpt("-seednode=<ip>", _("Connect to a node to retrieve peer addresses, and disconnect"));
     strUsage += HelpMessageOpt("-timeout=<n>", strprintf(_("Specify connection timeout in milliseconds (minimum: 1, default: %d)"), DEFAULT_CONNECT_TIMEOUT));
     strUsage += HelpMessageOpt("-torcontrol=<ip>:<port>", strprintf(_("Tor control port to use if onion listening enabled (default: %s)"), DEFAULT_TOR_CONTROL));
@@ -377,10 +378,10 @@ std::string HelpMessage(HelpMessageMode mode)
 #endif
 #endif
     strUsage += HelpMessageOpt("-whitebind=<addr>", _("Bind to given address and whitelist peers connecting to it. Use [host]:port notation for IPv6"));
-    strUsage += HelpMessageOpt("-whitelist=<netmask>", _("Whitelist peers connecting from the given netmask or IP address. Can be specified multiple times.") +
+    strUsage += HelpMessageOpt("-whitelist=<IP address or network>", _("Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.") +
         " " + _("Whitelisted peers cannot be DoS banned and their transactions are always relayed, even if they are already in the mempool, useful e.g. for a gateway"));
     strUsage += HelpMessageOpt("-whitelistrelay", strprintf(_("Accept relayed transactions received from whitelisted peers even when not relaying transactions (default: %d)"), DEFAULT_WHITELISTRELAY));
-    strUsage += HelpMessageOpt("-whitelistforcerelay", strprintf(_("Force relay of transactions from whitelisted peers even they violate local relay policy (default: %d)"), DEFAULT_WHITELISTFORCERELAY));
+    strUsage += HelpMessageOpt("-whitelistforcerelay", strprintf(_("Force relay of transactions from whitelisted peers even if they violate local relay policy (default: %d)"), DEFAULT_WHITELISTFORCERELAY));
     strUsage += HelpMessageOpt("-maxuploadtarget=<n>", strprintf(_("Tries to keep outbound traffic under the given target (in MiB per 24h), 0 = no limit (default: %d)"), DEFAULT_MAX_UPLOAD_TARGET));
 
 #ifdef ENABLE_WALLET
@@ -411,8 +412,9 @@ std::string HelpMessage(HelpMessageMode mode)
         strUsage += HelpMessageOpt("-limitancestorsize=<n>", strprintf("Do not accept transactions whose size with all in-mempool ancestors exceeds <n> kilobytes (default: %u)", DEFAULT_ANCESTOR_SIZE_LIMIT));
         strUsage += HelpMessageOpt("-limitdescendantcount=<n>", strprintf("Do not accept transactions if any ancestor would have <n> or more in-mempool descendants (default: %u)", DEFAULT_DESCENDANT_LIMIT));
         strUsage += HelpMessageOpt("-limitdescendantsize=<n>", strprintf("Do not accept transactions if any ancestor would have more than <n> kilobytes of in-mempool descendants (default: %u).", DEFAULT_DESCENDANT_SIZE_LIMIT));
+        strUsage += HelpMessageOpt("-bip9params=deployment:start:end", "Use given start/end times for specified bip9 deployment (regtest-only)");
     }
-    string debugCategories = "addrman, alert, bench, coindb, db, http, libevent, lock, mempool, mempoolrej, net, proxy, prune, rand, reindex, rpc, selectcoins, tor, zmq"; // Don't translate these and qt below
+    string debugCategories = "addrman, alert, bench, cmpctblock, coindb, db, http, libevent, lock, mempool, mempoolrej, net, proxy, prune, rand, reindex, rpc, selectcoins, tor, zmq"; // Don't translate these and qt below
     if (mode == HMM_BITCOIN_QT)
         debugCategories += ", qt";
     strUsage += HelpMessageOpt("-debug=<category>", strprintf(_("Output debugging information (default: %u, supplying <category> is optional)"), 0) + ". " +
@@ -447,13 +449,13 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageGroup(_("Node relay options:"));
     if (showDebug)
         strUsage += HelpMessageOpt("-acceptnonstdtxn", strprintf("Relay and mine \"non-standard\" transactions (%sdefault: %u)", "testnet/regtest only; ", !Params(CBaseChainParams::TESTNET).RequireStandard()));
-    strUsage += HelpMessageOpt("-bytespersigop", strprintf(_("Minimum bytes per sigop in transactions we relay and mine (default: %u)"), DEFAULT_BYTES_PER_SIGOP));
+    strUsage += HelpMessageOpt("-bytespersigop", strprintf(_("Equivalent bytes per sigop in transactions for relay and mining (default: %u)"), DEFAULT_BYTES_PER_SIGOP));
     strUsage += HelpMessageOpt("-datacarrier", strprintf(_("Relay and mine data carrier transactions (default: %u)"), DEFAULT_ACCEPT_DATACARRIER));
     strUsage += HelpMessageOpt("-datacarriersize", strprintf(_("Maximum size of data in data carrier transactions we relay and mine (default: %u)"), MAX_OP_RETURN_RELAY));
     strUsage += HelpMessageOpt("-mempoolreplacement", strprintf(_("Enable transaction replacement in the memory pool (default: %u)"), DEFAULT_ENABLE_REPLACEMENT));
 
     strUsage += HelpMessageGroup(_("Block creation options:"));
-    strUsage += HelpMessageOpt("-blockmaxcost=<n>", strprintf(_("Set maximum BIP141 block cost (default: %d)"), DEFAULT_BLOCK_MAX_COST));
+    strUsage += HelpMessageOpt("-blockmaxweight=<n>", strprintf(_("Set maximum BIP141 block weight (default: %d)"), DEFAULT_BLOCK_MAX_WEIGHT));
     strUsage += HelpMessageOpt("-blockmaxsize=<n>", strprintf(_("Set maximum block size in bytes (default: %d)"), DEFAULT_BLOCK_MAX_SIZE));
     strUsage += HelpMessageOpt("-blockprioritysize=<n>", strprintf(_("Set maximum size of high-priority/low-fee transactions in bytes (default: %d)"), DEFAULT_BLOCK_PRIORITY_SIZE));
     if (showDebug)
@@ -509,6 +511,21 @@ static void BlockNotifyCallback(bool initialSync, const CBlockIndex *pBlockIndex
 
     boost::replace_all(strCmd, "%s", pBlockIndex->GetBlockHash().GetHex());
     boost::thread t(runCommand, strCmd); // thread runs free
+}
+
+static bool fHaveGenesis = false;
+static boost::mutex cs_GenesisWait;
+static CConditionVariable condvar_GenesisWait;
+
+static void BlockNotifyGenesisWait(bool, const CBlockIndex *pBlockIndex)
+{
+    if (pBlockIndex != NULL) {
+        {
+            boost::unique_lock<boost::mutex> lock_GenesisWait(cs_GenesisWait);
+            fHaveGenesis = true;
+        }
+        condvar_GenesisWait.notify_all();
+    }
 }
 
 struct CImportingNow
@@ -841,7 +858,9 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     }
 
     // Make sure enough file descriptors are available
-    int nBind = std::max((int)mapArgs.count("-bind") + (int)mapArgs.count("-whitebind"), 1);
+    int nBind = std::max(
+                (mapMultiArgs.count("-bind") ? mapMultiArgs.at("-bind").size() : 0) +
+                (mapMultiArgs.count("-whitebind") ? mapMultiArgs.at("-whitebind").size() : 0), size_t(1));
     int nUserMaxConnections = GetArg("-maxconnections", DEFAULT_MAX_PEER_CONNECTIONS);
     nMaxConnections = std::max(nUserMaxConnections, 0);
 
@@ -967,6 +986,12 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     if (GetBoolArg("-peerbloomfilters", DEFAULT_PEERBLOOMFILTERS))
         nLocalServices = ServiceFlags(nLocalServices | NODE_BLOOM);
 
+    if (GetArg("-rpcserialversion", DEFAULT_RPC_SERIALIZE_VERSION) < 0)
+        return InitError("rpcserialversion must be non-negative.");
+
+    if (GetArg("-rpcserialversion", DEFAULT_RPC_SERIALIZE_VERSION) > 1)
+        return InitError("unknown rpcserialversion requested.");
+
     nMaxTipAge = GetArg("-maxtipage", DEFAULT_MAX_TIP_AGE);
 
     fEnableReplacement = GetBoolArg("-mempoolreplacement", DEFAULT_ENABLE_REPLACEMENT);
@@ -976,6 +1001,41 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
         std::vector<std::string> vstrReplacementModes;
         boost::split(vstrReplacementModes, strReplacementModeList, boost::is_any_of(","));
         fEnableReplacement = (std::find(vstrReplacementModes.begin(), vstrReplacementModes.end(), "fee") != vstrReplacementModes.end());
+    }
+
+    if (!mapMultiArgs["-bip9params"].empty()) {
+        // Allow overriding bip9 parameters for testing
+        if (!Params().MineBlocksOnDemand()) {
+            return InitError("BIP9 parameters may only be overridden on regtest.");
+        }
+        const vector<string>& deployments = mapMultiArgs["-bip9params"];
+        for (auto i : deployments) {
+            std::vector<std::string> vDeploymentParams;
+            boost::split(vDeploymentParams, i, boost::is_any_of(":"));
+            if (vDeploymentParams.size() != 3) {
+                return InitError("BIP9 parameters malformed, expecting deployment:start:end");
+            }
+            int64_t nStartTime, nTimeout;
+            if (!ParseInt64(vDeploymentParams[1], &nStartTime)) {
+                return InitError(strprintf("Invalid nStartTime (%s)", vDeploymentParams[1]));
+            }
+            if (!ParseInt64(vDeploymentParams[2], &nTimeout)) {
+                return InitError(strprintf("Invalid nTimeout (%s)", vDeploymentParams[2]));
+            }
+            bool found = false;
+            for (int i=0; i<(int)Consensus::MAX_VERSION_BITS_DEPLOYMENTS; ++i)
+            {
+                if (vDeploymentParams[0].compare(VersionBitsDeploymentInfo[i].name) == 0) {
+                    UpdateRegtestBIP9Parameters(Consensus::DeploymentPos(i), nStartTime, nTimeout);
+                    found = true;
+                    LogPrintf("Setting BIP9 activation parameters for %s to start=%ld, timeout=%ld\n", vDeploymentParams[0], nStartTime, nTimeout);
+                    break;
+                }
+            }
+            if (!found) {
+                return InitError(strprintf("Invalid deployment (%s)", vDeploymentParams[0]));
+            }
+        }
     }
 
     // ********************************************************* Step 4: application initialization: dir lock, daemonize, pidfile, debug log
@@ -1219,7 +1279,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     // cache size calculations
     int64_t nTotalCache = (GetArg("-dbcache", nDefaultDbCache) << 20);
     nTotalCache = std::max(nTotalCache, nMinDbCache << 20); // total cache cannot be less than nMinDbCache
-    nTotalCache = std::min(nTotalCache, nMaxDbCache << 20); // total cache cannot be greated than nMaxDbcache
+    nTotalCache = std::min(nTotalCache, nMaxDbCache << 20); // total cache cannot be greater than nMaxDbcache
     int64_t nBlockTreeDBCache = nTotalCache / 8;
     nBlockTreeDBCache = std::min(nBlockTreeDBCache, (GetBoolArg("-txindex", DEFAULT_TXINDEX) ? nMaxBlockDBAndTxIndexCache : nMaxBlockDBCache) << 20);
     nTotalCache -= nBlockTreeDBCache;
@@ -1289,7 +1349,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
                     break;
                 }
 
-                if (!fReindex) {
+                if (!fReindex && chainActive.Tip() != NULL) {
                     uiInterface.InitMessage(_("Rewinding blocks..."));
                     if (!RewindBlockIndex(chainparams)) {
                         strLoadError = _("Unable to rewind the database to a pre-fork state. You will need to redownload the blockchain");
@@ -1406,6 +1466,17 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     // ********************************************************* Step 10: import blocks
 
+    if (!CheckDiskSpace())
+        return false;
+
+    // Either install a handler to notify us when genesis activates, or set fHaveGenesis directly.
+    // No locking, as this happens before any background thread is started.
+    if (chainActive.Tip() == NULL) {
+        uiInterface.NotifyBlockTip.connect(BlockNotifyGenesisWait);
+    } else {
+        fHaveGenesis = true;
+    }
+
     if (mapArgs.count("-blocknotify"))
         uiInterface.NotifyBlockTip.connect(BlockNotifyCallback);
 
@@ -1415,25 +1486,19 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
         BOOST_FOREACH(const std::string& strFile, mapMultiArgs["-loadblock"])
             vImportFiles.push_back(strFile);
     }
+
     threadGroup.create_thread(boost::bind(&ThreadImport, vImportFiles));
 
     // Wait for genesis block to be processed
-    bool fHaveGenesis = false;
-    while (!fHaveGenesis && !fRequestShutdown) {
-        {
-            LOCK(cs_main);
-            fHaveGenesis = (chainActive.Tip() != NULL);
+    {
+        boost::unique_lock<boost::mutex> lock(cs_GenesisWait);
+        while (!fHaveGenesis) {
+            condvar_GenesisWait.wait(lock);
         }
-
-        if (!fHaveGenesis) {
-            MilliSleep(10);
-        }
+        uiInterface.NotifyBlockTip.disconnect(BlockNotifyGenesisWait);
     }
 
     // ********************************************************* Step 11: start node
-
-    if (!CheckDiskSpace())
-        return false;
 
     if (!strErrors.str().empty())
         return InitError(strErrors.str());

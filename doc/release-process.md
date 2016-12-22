@@ -10,6 +10,7 @@ Before every minor and major release:
 * Update [bips.md](bips.md) to account for changes since the last release.
 * Update version in sources (see below)
 * Write release notes (see below)
+* Update `src/chainparams.cpp` nMinimumChainWork with information from the getblockchaininfo rpc.
 
 Before every major release:
 
@@ -112,16 +113,16 @@ The gbuild invocations below <b>DO NOT DO THIS</b> by default.
 ### Build and sign Bitcoin Core for Linux, Windows, and OS X:
 
     pushd ./gitian-builder
-    ./bin/gbuild --commit bitcoin=v${VERSION} ../bitcoin/contrib/gitian-descriptors/gitian-linux.yml
+    ./bin/gbuild --memory 3000 --commit bitcoin=v${VERSION} ../bitcoin/contrib/gitian-descriptors/gitian-linux.yml
     ./bin/gsign --signer $SIGNER --release ${VERSION}-linux --destination ../gitian.sigs/ ../bitcoin/contrib/gitian-descriptors/gitian-linux.yml
     mv build/out/bitcoin-*.tar.gz build/out/src/bitcoin-*.tar.gz ../
 
-    ./bin/gbuild --commit bitcoin=v${VERSION} ../bitcoin/contrib/gitian-descriptors/gitian-win.yml
+    ./bin/gbuild --memory 3000 --commit bitcoin=v${VERSION} ../bitcoin/contrib/gitian-descriptors/gitian-win.yml
     ./bin/gsign --signer $SIGNER --release ${VERSION}-win-unsigned --destination ../gitian.sigs/ ../bitcoin/contrib/gitian-descriptors/gitian-win.yml
     mv build/out/bitcoin-*-win-unsigned.tar.gz inputs/bitcoin-win-unsigned.tar.gz
     mv build/out/bitcoin-*.zip build/out/bitcoin-*.exe ../
 
-    ./bin/gbuild --commit bitcoin=v${VERSION} ../bitcoin/contrib/gitian-descriptors/gitian-osx.yml
+    ./bin/gbuild --memory 3000 --commit bitcoin=v${VERSION} ../bitcoin/contrib/gitian-descriptors/gitian-osx.yml
     ./bin/gsign --signer $SIGNER --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../bitcoin/contrib/gitian-descriptors/gitian-osx.yml
     mv build/out/bitcoin-*-osx-unsigned.tar.gz inputs/bitcoin-osx-unsigned.tar.gz
     mv build/out/bitcoin-*.tar.gz build/out/bitcoin-*.dmg ../

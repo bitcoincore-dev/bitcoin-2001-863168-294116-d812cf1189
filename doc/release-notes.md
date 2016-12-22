@@ -1,12 +1,9 @@
-(note: this is a temporary file, to be added-to by anybody, and moved to
-release-notes at release time)
+Bitcoin Core version 0.13.2 is now available from:
 
-Bitcoin Core version *version* is now available from:
+  <https://bitcoin.org/bin/bitcoin-core-0.13.2/>
 
-  <https://bitcoin.org/bin/bitcoin-core-*version*/>
-
-This is a new major version release, including new features, various bugfixes
-and performance improvements, as well as updated translations.
+This is a new minor version release, including ..., various bugfixes and
+performance improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at github:
 
@@ -31,91 +28,39 @@ libraries such as Qt are no longer being tested on XP.
 
 We do not have time nor resources to provide support for an OS that is
 end-of-life. From 0.13.0 on, Windows XP is no longer supported. Users are
-suggested to upgrade to a newer verion of Windows, or install an alternative OS
+suggested to upgrade to a newer version of Windows, or install an alternative OS
 that is supported.
 
 No attempt is made to prevent installing or running the software on Windows XP,
 you can still do so at your own risk, but do not expect it to work: do not
 report issues about Windows XP to the issue tracker.
 
+From 0.13.1 onwards OS X 10.7 is no longer supported. 0.13.0 was intended to work on 10.7+, 
+but severe issues with the libc++ version on 10.7.x keep it from running reliably. 
+0.13.1 now requires 10.8+, and will communicate that to 10.7 users, rather than crashing unexpectedly.
+
 Notable changes
 ===============
 
-Database cache memory increased
---------------------------------
+Change to wallet handling of mempool rejection
+-----------------------------------------------
 
-As a result of growth of the UTXO set, performance with the prior default
-database cache of 100 MiB has suffered.
-For this reason the default was changed to 300 MiB in this release.
+When a newly created transaction failed to enter the mempool due to
+the limits on chains of unconfirmed transactions the sending RPC
+calls would return an error.  The transaction would still be queued
+in the wallet and, once some of the parent transactions were
+confirmed, broadcast after the software was restarted.
 
-For nodes on low-memory systems, the database cache can be changed back to
-100 MiB (or to another value) by either:
+This behavior has been changed to return success and to reattempt
+mempool insertion at the same time transaction rebroadcast is
+attempted, avoiding a need for a restart.
 
-- Adding `dbcache=100` in bitcoin.conf
-- Changing it in the GUI under `Options → Size of database cache`
+Transactions in the wallet which cannot be accepted into the mempool
+can be abandoned with the previously existing abandontransaction RPC
+(or in the GUI via a context menu on the transaction).
 
-Note that the database cache setting has the most performance impact
-during initial sync of a node, and when catching up after downtime.
 
-bitcoin-cli: arguments privacy
---------------------------------
-
-The RPC command line client gained a new argument, `-stdin`
-to read extra arguments from standard input, one per line until EOF/Ctrl-D.
-For example:
-
-    $ echo -e "mysecretcode\n120" | src/bitcoin-cli -stdin walletpassphrase
-
-It is recommended to use this for sensitive information such as wallet
-passphrases, as command-line arguments can usually be read from the process
-table by any user on the system.
-
-RPC low-level changes
-----------------------
-
-- `gettxoutsetinfo` UTXO hash (`hash_serialized`) has changed. There was a divergence between
-  32-bit and 64-bit platforms, and the txids were missing in the hashed data. This has been
-  fixed, but this means that the output will be different than from previous versions.
-
-- Full UTF-8 support in the RPC API. Non-ASCII characters in, for example,
-  wallet labels have always been malformed because they weren't taken into account
-  properly in JSON RPC processing. This is no longer the case. This also affects
-  the GUI debug console.
-
-C++11 and Python 3
--------------------
-
-Various code modernizations have been done. The Bitcoin Core code base has
-started using C++11. This means that a C++11-capable compiler is now needed for
-building. Effectively this means GCC 4.7 or higher, or Clang 3.3 or higher.
-
-When cross-compiling for a target that doesn't have C++11 libraries, configure with
-`./configure --enable-glibc-back-compat ... LDFLAGS=-static-libstdc++`.
-
-For running the functional tests in `qa/rpc-tests`, Python3.4 or higher is now
-required.
-
-Linux ARM builds
-------------------
-
-Due to popular request, Linux ARM builds have been added to the uploaded
-executables.
-
-The following extra files can be found in the download directory or torrent:
-
-- `bitcoin-${VERSION}-arm-linux-gnueabihf.tar.gz`: Linux binaries for the most
-  common 32-bit ARM architecture.
-- `bitcoin-${VERSION}-aarch64-linux-gnu.tar.gz`: Linux binaries for the most
-  common 64-bit ARM architecture.
-
-ARM builds are still experimental. If you have problems on a certain device or
-Linux distribution combination please report them on the bug tracker, it may be
-possible to resolve them.
-
-Note that Android is not considered ARM Linux in this context. The executables
-are not expected to work out of the box on Android.
-
-0.13.0 Change log
+0.13.2 Change log
 =================
 
 Detailed release notes follow. This overview includes changes that affect
@@ -123,85 +68,111 @@ behavior, not code moves, refactors and string updates. For convenience in locat
 the code changes and accompanying discussion, both the pull request and
 git merge commit are mentioned.
 
-### RPC and REST
+### Consensus
+- #9293 `e591c10` [0.13 Backport #9053] IBD using chainwork instead of height and not using header timestamp (gmaxwell)
+- #9053 `5b93eee` IBD using chainwork instead of height and not using header timestamps (gmaxwell)
 
-Asm script outputs replacements for OP_NOP2 and OP_NOP3
--------------------------------------------------------
-
-OP_NOP2 has been renamed to OP_CHECKLOCKTIMEVERIFY by [BIP 
-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki)
-
-OP_NOP3 has been renamed to OP_CHECKSEQUENCEVERIFY by [BIP 
-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawiki)
-
-The following outputs are affected by this change:
-- RPC `getrawtransaction` (in verbose mode)
-- RPC `decoderawtransaction`
-- RPC `decodescript`
-- REST `/rest/tx/` (JSON format)
-- REST `/rest/block/` (JSON format when including extended tx details)
-- `bitcoin-tx -json`
-
-New mempool information RPC calls
----------------------------------
-
-RPC calls have been added to output detailed statistics for individual mempool
-entries, as well as to calculate the in-mempool ancestors or descendants of a
-transaction: see `getmempoolentry`, `getmempoolancestors`, `getmempooldescendants`.
-
-### ZMQ
-
-Each ZMQ notification now contains an up-counting sequence number that allows
-listeners to detect lost notifications.
-The sequence number is always the last element in a multi-part ZMQ notification and
-therefore backward compatible.
-Each message type has its own counter.
-(https://github.com/bitcoin/bitcoin/pull/7762)
-
-### Configuration and command-line options
+### RPC and other APIs
+- #8845 `1d048b9` Don't return the address of a P2SH of a P2SH (jnewbery)
+- #9041 `87fbced` keypoololdest denote Unix epoch, not GMT (s-matthew-english)
+- #9122 `f82c81b` fix getnettotals RPC description about timemillis (visvirial)
+- #9042 `5bcb05d` [rpc] ParseHash: Fail when length is not 64 (MarcoFalke)
+- #9194 `f26dab7` Add option to return non-segwit serialization via rpc (instagibbs)
+- #9347 `b711390` [0.13.2] wallet/rpc backports (MarcoFalke)
+- #9292 `c365556` Complain when unknown rpcserialversion is specified (sipa)
+- #9322 `49a612f` [qa] Don't set unknown rpcserialversion (MarcoFalke)
 
 ### Block and transaction handling
+- #8357 `ce0d817` [mempool] Fix relaypriority calculation error (maiiz)
+- #9267 `0a4aa87` [0.13 backport #9239] Disable fee estimates for a confirm target of 1 block (morcos)
+- #9196 `0c09d9f` Send tip change notification from invalidateblock (ryanofsky)
 
 ### P2P protocol and network code
-
-The p2p alert system has been removed in #7692 and the 'alert' message is no longer supported.
-
-
-Fee filtering of invs (BIP 133)
-------------------------------------
-
-The optional new p2p message "feefilter" is implemented and the protocol
-version is bumped to 70013. Upon receiving a feefilter message from a peer,
-a node will not send invs for any transactions which do not meet the filter
-feerate. [BIP 133](https://github.com/bitcoin/bips/blob/master/bip-0133.mediawiki)
-
-### Validation
+- #8995 `9ef3875` Add missing cs_main lock to ::GETBLOCKTXN processing (TheBlueMatt)
+- #9234 `94531b5` torcontrol: Explicitly request RSA1024 private key (laanwj)
+- #8637 `2cad5db` Compact Block Tweaks (rebase of #8235) (sipa)
+- #9058 `286e548` Fixes for p2p-compactblocks.py test timeouts on travis (#8842) (ryanofsky)
+- #8865 `4c71fc4` Decouple peer-processing-logic from block-connection-logic (TheBlueMatt)
+- #9117 `6fe3981` net: don't send feefilter messages before the version handshake is complete (theuni)
+- #9188 `ca1fd75` Make orphan parent fetching ask for witnesses (gmaxwell)
+- #9052 `3a3bcbf` Use RelevantServices instead of node_network in AttemptToEvict (gmaxwell)
+- #9048 `9460771` [0.13 backport #9026] Fix handling of invalid compact blocks (sdaftuar)
+- #9357 `03b6f62` [0.13 backport #9352] Attempt reconstruction from all compact block announcements (sdaftuar)
+- #9189 `b96a8f7` Always add default_witness_commitment with GBT client support (sipa)
+- #9253 `28d0f22` Fix calculation of number of bound sockets to use (TheBlueMatt)
+- #9199 `da5a16b` Always drop the least preferred HB peer when adding a new one (gmaxwell)
 
 ### Build system
-
-### Wallet
-
-Hierarchical Deterministic Key Generation
------------------------------------------
-Newly created wallets will use hierarchical deterministic key generation
-according to BIP32 (keypath m/0'/0'/k').
-Existing wallets will still use traditional key generation.
-
-Backups of HD wallets, regardless of when they have been created, can
-therefore be used to re-generate all possible private keys, even the
-ones which haven't already been generated during the time of the backup.
-
-HD key generation for new wallets can be disabled by `-usehd=0`. Keep in
-mind that this flag only has affect on newly created wallets.
-You can't disable HD key generation once you have created a HD wallet.
-
-There is no distinction between internal (change) and external keys.
-
-[Pull request](https://github.com/bitcoin/bitcoin/pull/8035/files), [BIP 32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)
+- #9169 `d1b4da9` build: fix qt5.7 build under macOS (theuni)
+- #9326 `a0f7ece` Update for OpenSSL 1.1 API (gmaxwell)
+- #9224 `396c405` Prevent FD_SETSIZE error building on OpenBSD (ivdsangen)
 
 ### GUI
+- #8972 `6f86b53` Make warnings label selectable (jonasschnelli) (MarcoFalke)
+- #9185 `6d70a73` Fix coincontrol sort issue (jonasschnelli)
+- #9094 `5f3a12c` Use correct conversion function for boost::path datadir (laanwj)
+- #8908 `4a974b2` Update bitcoin-qt.desktop (s-matthew-english)
+- #9190 `dc46b10` Plug many memory leaks (laanwj)
 
-### Tests
+### Wallet
+- #9290 `35174a0` Make RelayWalletTransaction attempt to AcceptToMemoryPool (gmaxwell)
+- #9295 `43bcfca` Bugfix: Fundrawtransaction: don't terminate when keypool is empty (jonasschnelli)
+- #9302 `f5d606e` Return txid even if ATMP fails for new transaction (sipa)
+- #9262 `fe39f26` Prefer coins that have fewer ancestors, sanity check txn before ATMP (instagibbs)
+
+### Tests and QA
+- #9159 `eca9b46` Wait for specific block announcement in p2p-compactblocks (ryanofsky)
+- #9186 `dccdc3a` Fix use-after-free in scheduler tests (laanwj)
+- #9168 `3107280` Add assert_raises_message to check specific error message (mrbandrews)
+- #9191 `29435db` 0.13.2 Backports (MarcoFalke)
+- #9077 `1d4c884` Increase wallet-dump RPC timeout (ryanofsky)
+- #9098 `ecd7db5` Handle zombies and cluttered tmpdirs (MarcoFalke)
+- #8927 `387ec9d` Add script tests for FindAndDelete in pre-segwit and segwit scripts (jl2012)
+- #9200 `eebc699` bench: Fix subtle counting issue when rescaling iteration count (laanwj)
 
 ### Miscellaneous
+- #8838 `094848b` Calculate size and weight of block correctly in CreateNewBlock() (jnewbery)
+- #8920 `40169dc` Set minimum required Boost to 1.47.0 (fanquake)
+- #9251 `a710a43` Improvement of documentation of command line parameter 'whitelist' (wodry)
+- #8932 `106da69` Allow bitcoin-tx to create v2 transactions (btcdrak)
+- #8929 `12428b4` add software-properties-common (sigwo)
+- #9120 `08d1c90` bug: Missed one "return false" in recent refactoring in #9067 (UdjinM6)
+- #9067 `f85ee01` Fix exit codes (UdjinM6)
+- #9340 `fb987b3` [0.13] Update secp256k1 subtree (MarcoFalke)
+- #9229 `b172377` Remove calls to getaddrinfo_a (TheBlueMatt)
 
+Credits
+=======
+
+Thanks to everyone who directly contributed to this release:
+
+- Alex Morcos
+- BtcDrak
+- Cory Fields
+- fanquake
+- Gregory Maxwell
+- Gregory Sanders
+- instagibbs
+- Ivo van der Sangen
+- jnewbery
+- Johnson Lau
+- Jonas Schnelli
+- Luke Dashjr
+- maiiz
+- MarcoFalke
+- Masahiko Hyuga
+- Matt Corallo
+- matthias
+- mrbandrews
+- Pavel Janík
+- Pieter Wuille
+- randy-waterhouse
+- Russell Yanofsky
+- S. Matthew English
+- Steven
+- Suhas Daftuar
+- UdjinM6
+- Wladimir J. van der Laan
+- wodry
+
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/bitcoin/).

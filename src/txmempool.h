@@ -78,7 +78,7 @@ class CTxMemPoolEntry
 private:
     std::shared_ptr<const CTransaction> tx;
     CAmount nFee;              //!< Cached to avoid expensive parent-transaction lookups
-    size_t nTxCost;            //!< ... and avoid recomputing tx cost (also used for GetTxSize())
+    size_t nTxWeight;          //!< ... and avoid recomputing tx weight (also used for GetTxSize())
     size_t nModSize;           //!< ... and modified size for priority
     size_t nUsageSize;         //!< ... and total memory usage
     int64_t nTime;             //!< Local time when entering the mempool
@@ -122,7 +122,7 @@ public:
     double GetPriority(unsigned int currentHeight) const;
     const CAmount& GetFee() const { return nFee; }
     size_t GetTxSize() const;
-    size_t GetTxCost() const { return nTxCost; }
+    size_t GetTxWeight() const { return nTxWeight; }
     int64_t GetTime() const { return nTime; }
     unsigned int GetHeight() const { return entryHeight; }
     bool WasClearAtEntry() const { return hadNoDependencies; }
@@ -465,7 +465,7 @@ public:
     indexed_transaction_set mapTx;
 
     typedef indexed_transaction_set::nth_index<0>::type::iterator txiter;
-    std::vector<std::pair<uint256, txiter> > vTxHashes; //!< All tx hashes/entries in mapTx, in random order
+    std::vector<std::pair<uint256, txiter> > vTxHashes; //!< All tx witness hashes/entries in mapTx, in random order
 
     struct CompareIteratorByHash {
         bool operator()(const txiter &a, const txiter &b) const {
@@ -597,6 +597,9 @@ public:
 
     /** Expire all transaction (and their dependencies) in the mempool older than time. Return the number of removed transactions. */
     int Expire(int64_t time);
+
+    /** Returns false if the transaction is in the mempool and not within the chain limit specified. */
+    bool TransactionWithinChainLimit(const uint256& txid, size_t chainLimit) const;
 
     unsigned long size()
     {

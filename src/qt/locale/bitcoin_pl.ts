@@ -41,7 +41,58 @@
         <source>&amp;Delete</source>
         <translation>&amp;Usuń</translation>
     </message>
-</context>
+    <message>
+        <source>Sending addresses</source>
+        <translation>Adresy wysyłania</translation>
+    </message>
+    <message>
+        <source>Receiving addresses</source>
+        <translation>Adresy odbioru</translation>
+    </message>
+    <message>
+        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Tutaj znajdują się adresy Bitcoin na które wysyłasz płatności. Zawsze sprawdzaj ilość i adres odbiorcy przed wysyłką monet.</translation>
+    </message>
+    <message>
+        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>To są twoje adresy Bitcoin do odbierania płatności. Zaleca się używanie nowych adresów odbiorczych dla każdej transakcji.</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;Kopiuj adres</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Label</source>
+        <translation>Kopiuj &amp;Etykietę</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;Edytuj</translation>
+    </message>
+    <message>
+        <source>Export Address List</source>
+        <translation>Eksportuj listę adresów</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Plik *.CSV (dane rozdzielane przecinkami)</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Eksportowanie nie powiodło się</translation>
+    </message>
+    </context>
+<context>
+    <name>AddressTableModel</name>
+    <message>
+        <source>Label</source>
+        <translation>Etykieta</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    </context>
 <context>
     <name>AskPassphraseDialog</name>
     <message>
@@ -60,7 +111,51 @@
         <source>Repeat new passphrase</source>
         <translation>Powtórz nowe hasło</translation>
     </message>
-</context>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>Zaszyfruj portfel</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Odblokuj portfel</translation>
+    </message>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>Odszyfruj portfel</translation>
+    </message>
+    <message>
+        <source>Change passphrase</source>
+        <translation>Zmień hasło</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase to the wallet.</source>
+        <translation>Podaj stare i nowe hasło do portfela.</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>Potwierdź szyfrowanie portfela</translation>
+    </message>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>Portfel zaszyfrowany</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed</source>
+        <translation>Szyfrowanie portfela nie powiodło się</translation>
+    </message>
+    <message>
+        <source>Wallet unlock failed</source>
+        <translation>Odblokowanie portfela nie powiodło się</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>Wprowadzone hasło do odszyfrowania portfela jest niepoprawne.</translation>
+    </message>
+    <message>
+        <source>Wallet decryption failed</source>
+        <translation>Odszyfrowanie portfela nie powiodło się</translation>
+    </message>
+    </context>
 <context>
     <name>BanTableModel</name>
     <message>
@@ -463,7 +558,87 @@
         <source>Priority</source>
         <translation>Priorytet</translation>
     </message>
-</context>
+    <message>
+        <source>Copy address</source>
+        <translation>Kopiuj adres</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Kopiuj etykietę</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopiuj kwotę</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Skopiuj ID transakcji</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>Zablokuj niewydane</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>Odblokuj niewydane</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Skopiuj ilość</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Skopiuj prowizję</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Skopiuj ilość po opłacie</translation>
+    </message>
+    <message>
+        <source>highest</source>
+        <translation>najwyższy</translation>
+    </message>
+    <message>
+        <source>higher</source>
+        <translation>wyższy</translation>
+    </message>
+    <message>
+        <source>high</source>
+        <translation>wysoki</translation>
+    </message>
+    <message>
+        <source>medium-high</source>
+        <translation>średnio wysoki</translation>
+    </message>
+    <message>
+        <source>medium</source>
+        <translation>średni</translation>
+    </message>
+    <message>
+        <source>low-medium</source>
+        <translation>średnio niski</translation>
+    </message>
+    <message>
+        <source>low</source>
+        <translation>niski</translation>
+    </message>
+    <message>
+        <source>lower</source>
+        <translation>niższy</translation>
+    </message>
+    <message>
+        <source>lowest</source>
+        <translation>najniższy</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>tak</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>nie</translation>
+    </message>
+    </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -486,7 +661,7 @@
         <source>&amp;Address</source>
         <translation>&amp;Adres</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>FreespaceChecker</name>
     <message>
@@ -626,7 +801,7 @@
         <source>Select payment request file</source>
         <translation>Otwórz żądanie zapłaty z pliku</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>OptionsDialog</name>
     <message>
@@ -938,6 +1113,9 @@
     </message>
 </context>
 <context>
+    <name>PaymentServer</name>
+    </context>
+<context>
     <name>PeerTableModel</name>
     <message>
         <source>User Agent</source>
@@ -991,6 +1169,9 @@
         <translation>%1 ms</translation>
     </message>
 </context>
+<context>
+    <name>QRImageWidget</name>
+    </context>
 <context>
     <name>RPCConsole</name>
     <message>
@@ -1140,6 +1321,10 @@
     <message>
         <source>Ping Time</source>
         <translation>Czas odpowiedzi</translation>
+    </message>
+    <message>
+        <source>The duration of a currently outstanding ping.</source>
+        <translation>Czas trwania nadmiarowego pingu</translation>
     </message>
     <message>
         <source>Ping Wait</source>
@@ -1348,6 +1533,14 @@
         <source>Remove</source>
         <translation>Usuń</translation>
     </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Kopiuj etykietę</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopiuj kwotę</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -1367,7 +1560,22 @@
         <source>&amp;Save Image...</source>
         <translation>&amp;Zapisz obraz...</translation>
     </message>
-</context>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Etykieta</translation>
+    </message>
+    </context>
+<context>
+    <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Label</source>
+        <translation>Etykieta</translation>
+    </message>
+    </context>
 <context>
     <name>SendCoinsDialog</name>
     <message>
@@ -1518,7 +1726,23 @@
         <source>S&amp;end</source>
         <translation>Wy&amp;syłka</translation>
     </message>
-</context>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Skopiuj ilość</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopiuj kwotę</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Skopiuj prowizję</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Skopiuj ilość po opłacie</translation>
+    </message>
+    </context>
 <context>
     <name>SendCoinsEntry</name>
     <message>
@@ -1597,7 +1821,10 @@
         <source>Memo:</source>
         <translation>Notatka:</translation>
     </message>
-</context>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
+    </context>
 <context>
     <name>ShutdownWindow</name>
     <message>
@@ -1696,7 +1923,7 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
         <source>Reset all verify message fields</source>
         <translation>Resetuje wszystkie pola weryfikacji wiadomości</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>SplashScreen</name>
     <message>
@@ -1712,12 +1939,57 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
     </message>
 </context>
 <context>
+    <name>TransactionDesc</name>
+    </context>
+<context>
     <name>TransactionDescDialog</name>
     <message>
         <source>This pane shows a detailed description of the transaction</source>
         <translation>Ten panel pokazuje szczegółowy opis transakcji</translation>
     </message>
-</context>
+    </context>
+<context>
+    <name>TransactionTableModel</name>
+    <message>
+        <source>Label</source>
+        <translation>Etykieta</translation>
+    </message>
+    </context>
+<context>
+    <name>TransactionView</name>
+    <message>
+        <source>Copy address</source>
+        <translation>Kopiuj adres</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Kopiuj etykietę</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopiuj kwotę</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Skopiuj ID transakcji</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Plik *.CSV (dane rozdzielane przecinkami)</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Etykieta</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Eksportowanie nie powiodło się</translation>
+    </message>
+    </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
     <message>
@@ -1725,6 +1997,15 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
         <translation>Jednostka w jakiej pokazywane są kwoty. Kliknij aby wybrać inną.</translation>
     </message>
 </context>
+<context>
+    <name>WalletFrame</name>
+    </context>
+<context>
+    <name>WalletModel</name>
+    </context>
+<context>
+    <name>WalletView</name>
+    </context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -1754,6 +2035,18 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
     <message>
         <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
         <translation>Przycinanie skonfigurowano poniżej minimalnych %d MiB. Proszę użyć wyższej liczby.</translation>
+    </message>
+    <message>
+        <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of pruned node)</source>
+        <translation>Prune: ostatnia synchronizacja portfela jest za danymi. Muszisz -reindexować (pobrać cały ciąg bloków ponownie w przypadku przyciętego węzła)</translation>
+    </message>
+    <message>
+        <source>Reduce storage requirements by pruning (deleting) old blocks. This mode is incompatible with -txindex and -rescan. Warning: Reverting this setting requires re-downloading the entire blockchain. (default: 0 = disable pruning blocks, &gt;%u = target size in MiB to use for block files)</source>
+        <translation>Zredukuj wymaganą ilość miejsca na dysku poprzez usuwanie starych bloków. Ten tryb jest niekompatybilny z -txindex oraz -rescan. Ostrzeżenie: Wycofanie tego ustawienia wymaga ponownego pobrania całego łańcucha bloków. (domyślnie: 0 = wyłącz usuwanie bloków, &gt;%u = docelowy rozmiar w MiB jaki wykorzystać na pliki z blokami)</translation>
+    </message>
+    <message>
+        <source>Rescans are not possible in pruned mode. You will need to use -reindex which will download the whole blockchain again.</source>
+        <translation>Ponowne skanowanie nie jest możliwe w trybie przycinania. Będzie trzeba użyć -reindex, co pobierze ponownie cały łańcuch bloków.</translation>
     </message>
     <message>
         <source>Error: A fatal internal error occurred, see debug.log for details</source>
@@ -1792,6 +2085,14 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
         <translation>-fallbackfee ma ustawioną bardzo dużą wartość!  Jest to prowizja za transakcje, którą możesz zapłacić gdy oszacowanie opłaty jest niemożliwe.</translation>
     </message>
     <message>
+        <source>A fee rate (in %s/kB) that will be used when fee estimation has insufficient data (default: %s)</source>
+        <translation>Stawka prowizji (w %s/kB), która będzie użyta, gdy oszacowane dane o prowizjach nie będą wystarczające (domyślnie: %s)</translation>
+    </message>
+    <message>
+        <source>Accept relayed transactions received from whitelisted peers even when not relaying transactions (default: %d)</source>
+        <translation>Accept relayed transactions received from whitelisted peers even when not relaying transactions (default: %d)</translation>
+    </message>
+    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>Skojarz z podanym adresem i nasłuchuj na nim. Użyj formatu [host]:port dla IPv6</translation>
     </message>
@@ -1814,10 +2115,6 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
     <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
         <translation>Wykonaj polecenie, kiedy transakcja portfela ulegnie zmianie (%s w poleceniu zostanie zastąpione przez TxID)</translation>
-    </message>
-    <message>
-        <source>Force relay of transactions from whitelisted peers even they violate local relay policy (default: %d)</source>
-        <translation>Wymuś przekazywanie transakcji od osób z białej listy, nawet jeśli narusza to lokalną politykę przekazywania (default: %d)</translation>
     </message>
     <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
@@ -1864,12 +2161,20 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
         <translation>&lt;category&gt; mogą być:</translation>
     </message>
     <message>
+        <source>Append comment to the user agent string</source>
+        <translation>Dodaj komentarz do pola user agent</translation>
+    </message>
+    <message>
         <source>Attempt to recover private keys from a corrupt wallet on startup</source>
         <translation>Próbuj odzyskać klucze prywatne z uszkodzonego portfela podczas uruchamiania.</translation>
     </message>
     <message>
         <source>Block creation options:</source>
         <translation>Opcje tworzenia bloku:</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>Nie można rozpoznać -%s adresu: '%s'</translation>
     </message>
     <message>
         <source>Connect only to the specified node(s)</source>
@@ -1968,6 +2273,14 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
         <translation>Utrzymuj obszar pamięci dla transakcji poniżej &lt;n&gt; MB (default: %u)</translation>
     </message>
     <message>
+        <source>Loading banlist...</source>
+        <translation>Ładowanie listy zablokowanych...</translation>
+    </message>
+    <message>
+        <source>Location of the auth cookie (default: data dir)</source>
+        <translation>Lokalizacja autoryzacyjnego pliku cookie (domyślnie: ścieżka danych)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Brak wystarczającej liczby deskryptorów plików. </translation>
     </message>
@@ -2010,6 +2323,10 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
     <message>
         <source>Specify wallet file (within data directory)</source>
         <translation>Określ plik portfela (w obrębie folderu danych)</translation>
+    </message>
+    <message>
+        <source>The source code is available from %s.</source>
+        <translation>Kod źródłowy dostępny jest z %s.</translation>
     </message>
     <message>
         <source>Unable to bind to %s on this computer. %s is probably already running.</source>
@@ -2212,6 +2529,10 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
         <translation>Hasło zabezpieczające portu kontrolnego Tora (domyślnie: puste)</translation>
     </message>
     <message>
+        <source>Tor control port to use if onion listening enabled (default: %s)</source>
+        <translation>Port kontrolny sieci Tor jeśli onion listening jest włączone (domyślnie: %s)</translation>
+    </message>
+    <message>
         <source>Transaction amount too small</source>
         <translation>Zbyt niska kwota transakcji </translation>
     </message>
@@ -2390,10 +2711,6 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
     <message>
         <source>Set key pool size to &lt;n&gt; (default: %u)</source>
         <translation>Ustaw rozmiar puli kluczy na &lt;n&gt; (domyślnie: %u)</translation>
-    </message>
-    <message>
-        <source>Set minimum block size in bytes (default: %u)</source>
-        <translation>Ustaw minimalny rozmiar bloku w bajtach (domyślnie: %u)</translation>
     </message>
     <message>
         <source>Set the number of threads to service RPC calls (default: %d)</source>
