@@ -5137,7 +5137,17 @@ bool LoadMempool(CTxMemPool& pool)
         std::map<std::string, std::vector<unsigned char>> mapData;
         file >> mapData;
 
-        auto it = mapData.find("deltas");
+        auto it = mapData.find("minfee");
+        if (it != mapData.end()) {
+            try {
+                CDataStream ss(it->second, SER_DISK, CLIENT_VERSION);
+                pool.LoadMinFeeInternal(ss);
+            } catch (const std::exception& e) {
+                LogPrintf("Failed to deserialize mempool %s from disk: %s. Continuing anyway.\n", "minfee", e.what());
+            }
+        }
+
+        it = mapData.find("deltas");
         if (it != mapData.end()) {
             try {
                 CDataStream ss(it->second, SER_DISK, CLIENT_VERSION);
@@ -5287,6 +5297,11 @@ bool DumpMempool(const CTxMemPool& pool)
             mapData["txs"] = SerializeToVector(txMapDatas);
         }
         mapData["unbroadcast_txids"] = SerializeToVector(unbroadcast_txids);
+        {
+            CDataStream ss(SER_DISK, CLIENT_VERSION);
+            pool.DumpMinFeeInternal(ss);
+            mapData["minfee"] = std::vector<unsigned char>(ss.begin(), ss.end());
+        }
 
         FILE* filestr = fsbridge::fopen(GetDataDir() / "mempool.dat.new", "wb");
         if (!filestr) {
