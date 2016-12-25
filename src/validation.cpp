@@ -4195,7 +4195,17 @@ bool LoadMempool(void)
         std::map<std::string, std::vector<unsigned char>> mapData;
         file >> mapData;
 
-        auto it = mapData.find("deltas");
+        auto it = mapData.find("minfee");
+        if (it == mapData.end()) {
+            try {
+                CDataStream ss(it->second, SER_DISK, CLIENT_VERSION);
+                mempool.LoadMinFeeInternal(ss);
+            } catch (const std::exception& e) {
+                LogPrintf("Failed to deserialize mempool %s from disk: %s. Continuing anyway.\n", "minfee", e.what());
+            }
+        }
+
+        it = mapData.find("deltas");
         if (it == mapData.end()) {
             try {
                 CDataStream ss(it->second, SER_DISK, CLIENT_VERSION);
@@ -4293,6 +4303,11 @@ void DumpMempool(void)
             }
 
             mapData["txs"] = SerializeToVector(txMapDatas);
+        }
+        {
+            CDataStream ss(SER_DISK, CLIENT_VERSION);
+            mempool.DumpMinFeeInternal(ss);
+            mapData["minfee"] = std::vector<unsigned char>(ss.begin(), ss.end());
         }
 
         FILE* filestr = fopen((GetDataDir() / "mempool.dat.new").string().c_str(), "w");
