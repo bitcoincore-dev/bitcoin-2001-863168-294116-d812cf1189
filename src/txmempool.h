@@ -7,6 +7,7 @@
 #define BITCOIN_TXMEMPOOL_H
 
 #include <list>
+#include <map>
 #include <memory>
 #include <set>
 
@@ -23,6 +24,7 @@
 
 class CAutoFile;
 class CBlockIndex;
+class CScript;
 
 inline double AllowFreeThreshold()
 {
@@ -616,6 +618,8 @@ public:
     std::shared_ptr<const CTransaction> get(const uint256& hash) const;
     TxMempoolInfo info(const uint256& hash) const;
     std::vector<TxMempoolInfo> infoAll() const;
+
+    void FindScriptPubKey(const std::set<CScript>& setscriptNeedles, std::map<uint256, CCoins>& outResults);
 
     /** Estimate fee rate needed to get into the next nBlocks
      *  If no answer can be given at nBlocks, return an estimate
