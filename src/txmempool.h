@@ -708,6 +708,7 @@ private:
 /** 
  * CCoinsView that brings transactions from a memorypool into view.
  * It does not check for spendings by memory pool transactions.
+ * Its Cursor also doesn't work. In general, it is broken as a CCoinsView implementation outside of a few use cases.
  */
 class CCoinsViewMemPool : public CCoinsViewBacked
 {
