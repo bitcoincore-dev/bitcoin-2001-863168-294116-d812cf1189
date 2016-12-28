@@ -320,7 +320,8 @@ public:
     virtual uint256 GetBestBlock() const;
 
     //! Search for a given set of pubkey scripts
-    std::map<uint256, CCoins> FindScriptPubKey(const std::set<CScript>& setscriptNeedles);
+    static void FindScriptPubKey(CCoinsViewCursor& cursor, const std::set<CScript>& setscriptNeedles, std::map<uint256, CCoins>& outResults);
+    void FindScriptPubKey(const std::set<CScript>& setscriptNeedles, std::map<uint256, CCoins>& outResults);
 
     //! Do a bulk modification (multiple CCoins changes + BestBlock change).
     //! The passed mapCoins can be modified.

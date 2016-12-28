@@ -1083,9 +1083,10 @@ UniValue sweepprivkeys(const JSONRPCRequest& request)
         // Collect all possible inputs
         std::map<uint256, CCoins> mapcoins;
         {
-            LOCK(mempool.cs);
-            CCoinsViewMemPool view(pcoinsTip, mempool);
-            mapcoins = view.FindScriptPubKey(setscriptSearch);
+            LOCK(cs_main);
+            mempool.FindScriptPubKey(setscriptSearch, mapcoins);
+            FlushStateToDisk();
+            pcoinsTip->FindScriptPubKey(setscriptSearch, mapcoins);
         }
 
         // Add them as inputs to the transaction, and count the total value
