@@ -175,7 +175,7 @@ vector<unsigned char> ParseHexO(const UniValue& o, string strKey)
  * Note: This interface may still be subject to change.
  */
 
-std::string CRPCTable::help(const std::string& strCommand) const
+std::string CRPCTable::help(const std::string& strCommand, const CRPCRequestInfo& helpreq) const
 {
     string strRet;
     string category;
@@ -200,7 +200,7 @@ std::string CRPCTable::help(const std::string& strCommand) const
             UniValue params;
             rpcfn_type pfn = pcmd->actor;
             if (setDone.insert(pfn).second) {
-                CRPCRequestInfo reqinfo;
+                CRPCRequestInfo reqinfo(helpreq);
                 pfn(params, true, reqinfo);
             }
         }
@@ -232,7 +232,7 @@ std::string CRPCTable::help(const std::string& strCommand) const
     return strRet;
 }
 
-UniValue help(const UniValue& params, bool fHelp)
+UniValue help(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo)
 {
     if (fHelp || params.size() > 1)
         throw runtime_error(
@@ -248,7 +248,7 @@ UniValue help(const UniValue& params, bool fHelp)
     if (params.size() > 0)
         strCommand = params[0].get_str();
 
-    return tableRPC.help(strCommand);
+    return tableRPC.help(strCommand, reqinfo);
 }
 
 
