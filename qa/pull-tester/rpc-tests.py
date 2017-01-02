@@ -139,6 +139,7 @@ testScripts = [
     'abandonconflict.py',
     'p2p-versionbits-warning.py',
     'p2p-segwit.py',
+    'preciousblock.py',
     'segwit.py',
     'importprunedfunds.py',
     'signmessages.py',
