@@ -324,6 +324,10 @@ static const std::string strRejectMsg_AbsurdFee = "absurdly-high-fee";
 static const std::string setIgnoreRejects_mempool_full_[] = {"mempool full"};
 static const std::set<std::string> setIgnoreRejects_mempool_full(setIgnoreRejects_mempool_full_, setIgnoreRejects_mempool_full_ + (sizeof(setIgnoreRejects_mempool_full_)/sizeof(setIgnoreRejects_mempool_full_[0])));
 
+/** (try to) add transaction to memory pool with a specified acceptance time **/
+bool AcceptToMemoryPoolWithTime(CTxMemPool& pool, CValidationState &state, const CTransaction &tx, bool fLimitFree,
+                        bool* pfMissingInputs, int64_t nAcceptTime, const CAmount nAbsurdFee, const std::set<std::string>& setIgnoreRejects);
+
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state);
 
@@ -557,5 +561,11 @@ static const unsigned int REJECT_HIGHFEE = 0x100;
 static const unsigned int REJECT_ALREADY_KNOWN = 0x101;
 /** Transaction conflicts with a transaction already known */
 static const unsigned int REJECT_CONFLICT = 0x102;
+
+/** Dump the mempool to disk. */
+void DumpMempool();
+
+/** Load the mempool from disk. */
+bool LoadMempool();
 
 #endif // BITCOIN_MAIN_H
