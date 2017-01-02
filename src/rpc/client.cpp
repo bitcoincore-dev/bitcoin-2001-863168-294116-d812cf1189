@@ -110,6 +110,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "getmempooldescendants", 1 },
     { "rescanblockchain", 0 },
     { "rescanblockchain", 1 },
+    { "bumpfee", 1 },
 };
 
 class CRPCConvertTable
