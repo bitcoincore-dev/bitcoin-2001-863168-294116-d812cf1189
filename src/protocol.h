@@ -268,6 +268,9 @@ enum ServiceFlags : uint64_t {
     // witness data.
     NODE_WITNESS = (1 << 3),
 
+    // NODE_XTHIN means the node supports Xtreme Thinblocks
+    NODE_XTHIN = (1 << 4),
+
     // Bits 24-31 are reserved for temporary experiments. Just pick a bit that
     // isn't getting used, or one not being used much, and notify the
     // bitcoin-development mailing list. Remember that service bits are just
