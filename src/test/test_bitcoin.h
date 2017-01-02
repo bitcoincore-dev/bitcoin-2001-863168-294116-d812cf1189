@@ -7,6 +7,7 @@
 
 #include "chainparamsbase.h"
 #include "key.h"
+#include "policy/policy.h"
 #include "pubkey.h"
 #include "txdb.h"
 #include "txmempool.h"
@@ -89,4 +90,10 @@ struct TestMemPoolEntryHelper
     TestMemPoolEntryHelper &SpendsCoinbase(bool _flag) { spendsCoinbase = _flag; return *this; }
     TestMemPoolEntryHelper &SigOpsCost(unsigned int _sigopsCost) { sigOpCost = _sigopsCost; return *this; }
 };
+
+static inline bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs) {
+    std::string reason;
+    return AreInputsStandard(tx, mapInputs, reason);
+}
+
 #endif
