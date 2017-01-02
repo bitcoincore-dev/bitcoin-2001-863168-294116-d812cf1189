@@ -17,6 +17,9 @@
 #include "crypto/hmac_sha256.h"
 #include <stdio.h>
 #include "utilstrencodings.h"
+#ifdef ENABLE_WALLET
+#include "wallet/wallet.h"
+#endif
 
 #include <boost/algorithm/string.hpp> // boost::trim
 #include <boost/foreach.hpp> //BOOST_FOREACH
@@ -85,7 +88,7 @@ static void JSONErrorReply(HTTPRequest* req, const UniValue& objError, const Uni
 
 //This function checks username and password against -rpcauth
 //entries from config file.
-static bool multiUserAuthorized(std::string strUserPass)
+static bool multiUserAuthorized(std::string strUserPass, std::string& walletName)
 {    
     if (strUserPass.find(":") == std::string::npos) {
         return false;
@@ -99,7 +102,7 @@ static bool multiUserAuthorized(std::string strUserPass)
         {
             std::vector<std::string> vFields;
             boost::split(vFields, strRPCAuth, boost::is_any_of(":$"));
-            if (vFields.size() != 3) {
+            if (vFields.size() < 3 || vFields.size() > 4) {
                 //Incorrect formatting in config file
                 continue;
             }
@@ -120,6 +123,9 @@ static bool multiUserAuthorized(std::string strUserPass)
             std::string strHashFromPass = HexStr(hexvec);
 
             if (TimingResistantEqual(strHashFromPass, strHash)) {
+                if (vFields.size() > 3) {
+                    walletName = vFields[3];
+                }
                 return true;
             }
         }
@@ -127,7 +133,7 @@ static bool multiUserAuthorized(std::string strUserPass)
     return false;
 }
 
-static bool RPCAuthorized(const std::string& strAuth)
+static bool RPCAuthorized(const std::string& strAuth, std::string& walletName)
 {
     if (strRPCUserColonPass.empty()) // Belt-and-suspenders measure if InitRPCAuthentication was not called
         return false;
@@ -141,7 +147,7 @@ static bool RPCAuthorized(const std::string& strAuth)
     if (TimingResistantEqual(strUserPass, strRPCUserColonPass)) {
         return true;
     }
-    return multiUserAuthorized(strUserPass);
+    return multiUserAuthorized(strUserPass, walletName);
 }
 
 static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
@@ -159,7 +165,8 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
         return false;
     }
 
-    if (!RPCAuthorized(authHeader.second)) {
+    std::string walletName;
+    if (!RPCAuthorized(authHeader.second, walletName)) {
         LogPrintf("ThreadRPCServer incorrect password attempt from %s\n", req->GetPeer().ToString());
 
         /* Deter brute-forcing
@@ -179,19 +186,38 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
         if (!valRequest.read(req->ReadBody()))
             throw JSONRPCError(RPC_PARSE_ERROR, "Parse error");
 
+        CRPCRequestInfo reqinfo;
+
+#ifdef ENABLE_WALLET
+        if (walletName.empty()) {
+            // Any wallet is permitted, so just use the first
+            reqinfo.wallet = vpwallets.empty() ? NULL : vpwallets[0];
+        } else if (walletName == "-") {
+            // Block wallet access always
+            reqinfo.wallet = NULL;
+        } else {
+            // Select specifically a named wallet
+            for (CWallet_ptr pwallet : vpwallets) {
+                if (walletName == pwallet->strWalletFile) {
+                    reqinfo.wallet = pwallet;
+                }
+            }
+        }
+#endif
+
         std::string strReply;
         // singleton request
         if (valRequest.isObject()) {
             jreq.parse(valRequest);
 
-            UniValue result = tableRPC.execute(jreq.strMethod, jreq.params);
+            UniValue result = tableRPC.execute(jreq.strMethod, jreq.params, reqinfo);
 
             // Send reply
             strReply = JSONRPCReply(result, NullUniValue, jreq.id);
 
         // array of requests
         } else if (valRequest.isArray())
-            strReply = JSONRPCExecBatch(valRequest.get_array());
+            strReply = JSONRPCExecBatch(valRequest.get_array(), reqinfo);
         else
             throw JSONRPCError(RPC_PARSE_ERROR, "Top-level object parse error");
 
