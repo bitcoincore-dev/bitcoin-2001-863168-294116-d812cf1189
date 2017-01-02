@@ -63,11 +63,11 @@
     </message>
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Tohle jsou tvé Bitcoinové adresy pro posílání plateb. Před odesláním mincí si vždy zkontroluj částku a cílovou adresu.</translation>
+        <translation>Tohle jsou tvé bitcoinové adresy pro posílání plateb. Před odesláním mincí si vždy zkontroluj částku a cílovou adresu.</translation>
     </message>
     <message>
         <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Tohle jsou tvé Bitcoinové adresy pro příjem plateb. Nezapomeň si pro každou transakci vždy vygenerovat novou adresu.</translation>
+        <translation>Tohle jsou tvé bitcoinové adresy pro příjem plateb. Nezapomeň si pro každou transakci vždy vygenerovat novou adresu.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -318,12 +318,16 @@
         <translation>Načíst &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Peněženka:</translation>
+    </message>
+    <message>
         <source>Reindexing blocks on disk...</source>
         <translation>Vytvářím nový index bloků na disku...</translation>
     </message>
     <message>
         <source>Send coins to a Bitcoin address</source>
-        <translation>Pošli mince na Bitcoinovou adresu</translation>
+        <translation>Pošli mince na bitcoinovou adresu</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -375,11 +379,11 @@
     </message>
     <message>
         <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation>Podepiš zprávy svými Bitcoinovými adresami, čímž prokážeš, že jsi jejich vlastníkem</translation>
+        <translation>Podepiš zprávy svými bitcoinovými adresami, čímž prokážeš, že jsi jejich vlastníkem</translation>
     </message>
     <message>
         <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation>Ověř zprávy, aby ses ujistil, že byly podepsány danými Bitcoinovými adresami</translation>
+        <translation>Ověř zprávy, aby ses ujistil, že byly podepsány danými bitcoinovými adresami</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -419,7 +423,7 @@
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n aktivní spojení do Bitcoinové sítě</numerusform><numerusform>%n aktivní spojení do Bitcoinové sítě</numerusform><numerusform>%n aktivních spojení do Bitcoinové sítě</numerusform></translation>
+        <translation><numerusform>%n aktivní spojení do bitcoinové sítě</numerusform><numerusform>%n aktivní spojení do bitcoinové sítě</numerusform><numerusform>%n aktivních spojení do bitcoinové sítě</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -437,29 +441,9 @@
         <source>Processed %n block(s) of transaction history.</source>
         <translation><numerusform>Zpracován %n blok transakční historie.</numerusform><numerusform>Zpracovány %n bloky transakční historie.</numerusform><numerusform>Zpracováno %n bloků transakční historie.</numerusform></translation>
     </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation><numerusform>%n hodinu</numerusform><numerusform>%n hodiny</numerusform><numerusform>%n hodin</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation><numerusform>%n den</numerusform><numerusform>%n dny</numerusform><numerusform>%n dnů</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation><numerusform>%n týden</numerusform><numerusform>%n týdny</numerusform><numerusform>%n týdnů</numerusform></translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation>%1 a %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation><numerusform>%n rok</numerusform><numerusform>%n roky</numerusform><numerusform>%n roků</numerusform></translation>
-    </message>
     <message>
         <source>%1 behind</source>
-        <translation>Stahuji ještě bloky transakcí za poslední %1</translation>
+        <translation>Stahuji ještě %1 bloků transakcí</translation>
     </message>
     <message>
         <source>Last received block was generated %1 ago.</source>
@@ -663,6 +647,10 @@
         <translation>Kopíruj bajty</translation>
     </message>
     <message>
+        <source>Copy priority</source>
+        <translation>Kopíruj prioritu</translation>
+    </message>
+    <message>
         <source>Copy dust</source>
         <translation>Kopíruj prach</translation>
     </message>
@@ -671,8 +659,48 @@
         <translation>Kopíruj drobné</translation>
     </message>
     <message>
+        <source>highest</source>
+        <translation>nejvyšší</translation>
+    </message>
+    <message>
+        <source>higher</source>
+        <translation>vyšší</translation>
+    </message>
+    <message>
+        <source>high</source>
+        <translation>vysoká</translation>
+    </message>
+    <message>
+        <source>medium-high</source>
+        <translation>vyšší střední</translation>
+    </message>
+    <message>
+        <source>medium</source>
+        <translation>střední</translation>
+    </message>
+    <message>
+        <source>low-medium</source>
+        <translation>nižší střední</translation>
+    </message>
+    <message>
+        <source>low</source>
+        <translation>nízká</translation>
+    </message>
+    <message>
+        <source>lower</source>
+        <translation>nižší</translation>
+    </message>
+    <message>
+        <source>lowest</source>
+        <translation>nejnižší</translation>
+    </message>
+    <message>
         <source>(%1 locked)</source>
         <translation>(%1 zamčeno)</translation>
+    </message>
+    <message>
+        <source>none</source>
+        <translation>žádné</translation>
     </message>
     <message>
         <source>yes</source>
@@ -681,6 +709,26 @@
     <message>
         <source>no</source>
         <translation>ne</translation>
+    </message>
+    <message>
+        <source>This label turns red if the transaction size is greater than 1000 bytes.</source>
+        <translation>Popisek zčervená, pokud je velikost transakce větší než 1000 bajtů.</translation>
+    </message>
+    <message>
+        <source>This means a fee of at least %1 per kB is required.</source>
+        <translation>To znamená, že je vyžadován poplatek alespoň %1 za kB.</translation>
+    </message>
+    <message>
+        <source>Can vary +/- 1 byte per input.</source>
+        <translation>Může se lišit o +/– 1 bajt na každý vstup.</translation>
+    </message>
+    <message>
+        <source>Transactions with higher priority are more likely to get included into a block.</source>
+        <translation>Transakce s vyšší prioritou mají větší šanci na zařazení do bloku.</translation>
+    </message>
+    <message>
+        <source>This label turns red if the priority is smaller than "medium".</source>
+        <translation>Popisek zčervená, pokud je priorita menší než „střední“.</translation>
     </message>
     <message>
         <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
@@ -743,7 +791,7 @@
     </message>
     <message>
         <source>The entered address "%1" is not a valid Bitcoin address.</source>
-        <translation>Zadaná adresa „%1“ není platná Bitcoinová adresa.</translation>
+        <translation>Zadaná adresa „%1“ není platná bitcoinová adresa.</translation>
     </message>
     <message>
         <source>The entered address "%1" is already in the address book.</source>
@@ -880,6 +928,28 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
+    <name>ModalOverlay</name>
+    <message>
+        <source>Form</source>
+        <translation>Formulář</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Neznámá...</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Čas posledního bloku</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Skryj</translation>
+    </message>
+    </context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -1006,7 +1076,7 @@
     </message>
     <message>
         <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation>Připojí se do Bitcoinové sítě přes SOCKS5 proxy.</translation>
+        <translation>Připojí se do bitcoinové sítě přes SOCKS5 proxy.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1046,7 +1116,7 @@
     </message>
     <message>
         <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor hidden services.</source>
-        <translation>Připojí se do Bitcoinové sítě přes SOCKS5 proxy vyhrazenou pro skryté služby v Tor síti.</translation>
+        <translation>Připojí se do bitcoinové sítě přes SOCKS5 proxy vyhrazenou pro skryté služby v Tor síti.</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
@@ -1117,6 +1187,10 @@
         <translation>žádné</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Potvrzení obnovení nastavení</translation>
     </message>
@@ -1145,7 +1219,7 @@
     </message>
     <message>
         <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
-        <translation>Zobrazené informace nemusí být aktuální. Tvá peněženka se automaticky sesynchronizuje s Bitcoinovou sítí, jakmile se s ní spojí. Zatím ale ještě není synchronizace dokončena.</translation>
+        <translation>Zobrazené informace nemusí být aktuální. Tvá peněženka se automaticky sesynchronizuje s bitcoinovou sítí, jakmile se s ní spojí. Zatím ale ještě není synchronizace dokončena.</translation>
     </message>
     <message>
         <source>Watch-only:</source>
@@ -1236,7 +1310,7 @@
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
-        <translation>Nepodařilo se analyzovat URI! Důvodem může být neplatná Bitcoinová adresa nebo poškozené parametry URI.</translation>
+        <translation>Nepodařilo se analyzovat URI! Důvodem může být neplatná bitcoinová adresa nebo poškozené parametry URI.</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -1317,7 +1391,7 @@
         <source>Ping Time</source>
         <translation>Odezva</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1326,7 +1400,7 @@
     </message>
     <message>
         <source>Enter a Bitcoin address (e.g. %1)</source>
-        <translation>Zadej Bitcoinovou adresu (např. %1)</translation>
+        <translation>Zadej bitcoinovou adresu (např. %1)</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -1355,6 +1429,26 @@
     <message>
         <source>%1 ms</source>
         <translation>%1 ms</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n hodinu</numerusform><numerusform>%n hodiny</numerusform><numerusform>%n hodin</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n den</numerusform><numerusform>%n dny</numerusform><numerusform>%n dnů</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n týden</numerusform><numerusform>%n týdny</numerusform><numerusform>%n týdnů</numerusform></translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 a %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n rok</numerusform><numerusform>%n roky</numerusform><numerusform>%n roků</numerusform></translation>
     </message>
 </context>
 <context>
@@ -1441,6 +1535,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Obsazenost paměti</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Peněženka: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1579,14 +1677,6 @@
         <translation>Vyčistit konzoli</translation>
     </message>
     <message>
-        <source>&amp;Disconnect Node</source>
-        <translation>&amp;Odpojit uzel</translation>
-    </message>
-    <message>
-        <source>Ban Node for</source>
-        <translation>Uvalit na uzel klatbu na</translation>
-    </message>
-    <message>
         <source>1 &amp;hour</source>
         <translation>1 &amp;hodinu</translation>
     </message>
@@ -1601,10 +1691,6 @@
     <message>
         <source>1 &amp;year</source>
         <translation>1 &amp;rok</translation>
-    </message>
-    <message>
-        <source>&amp;Unban Node</source>
-        <translation>&amp;Zbavit uzel klatby</translation>
     </message>
     <message>
         <source>Welcome to the %1 RPC console.</source>
@@ -1691,7 +1777,7 @@
     </message>
     <message>
         <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
-        <translation>Volitelná zpráva, která se připojí k platebnímu požadavku a která se zobrazí, když se požadavek otevře. Poznámka: tahle zpráva se neposílá s platbou po Bitcoinové síti.</translation>
+        <translation>Volitelná zpráva, která se připojí k platebnímu požadavku a která se zobrazí, když se požadavek otevře. Poznámka: tahle zpráva se neposílá s platbou po bitcoinové síti.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -1736,6 +1822,10 @@
     <message>
         <source>Remove</source>
         <translation>Smazat</translation>
+    </message>
+    <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Kopíruj URI</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -2007,6 +2097,10 @@
         <translation>Kopíruj bajty</translation>
     </message>
     <message>
+        <source>Copy priority</source>
+        <translation>Kopíruj prioritu</translation>
+    </message>
+    <message>
         <source>Copy dust</source>
         <translation>Kopíruj prach</translation>
     </message>
@@ -2063,6 +2157,10 @@
         <translation>Vytvoření transakce selhalo!</translation>
     </message>
     <message>
+        <source>The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
+        <translation>Transakce byla odmítnuta! Tohle může nastat, pokud nějaké mince z tvé peněženky už jednou byly utraceny, například pokud používáš kopii souboru wallet.dat a mince byly utraceny v druhé kopii, ale nebyly označeny jako utracené v této.</translation>
+    </message>
+    <message>
         <source>A fee higher than %1 is considered an absurdly high fee.</source>
         <translation>Poplatek vyšší než %1 je považován za absurdně vysoký.</translation>
     </message>
@@ -2080,7 +2178,7 @@
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
-        <translation>Upozornění: Neplatná Bitcoinová adresa</translation>
+        <translation>Upozornění: Neplatná bitcoinová adresa</translation>
     </message>
     <message>
         <source>Warning: Unknown change address</source>
@@ -2159,7 +2257,7 @@
     </message>
     <message>
         <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
-        <translation>Zpráva, která byla připojena k bitcoin: URI a která se ti pro přehled uloží k transakci. Poznámka: Tahle zpráva se neposílá s platbou po Bitcoinové síti.</translation>
+        <translation>Zpráva, která byla připojena k bitcoin: URI a která se ti pro přehled uloží k transakci. Poznámka: Tahle zpráva se neposílá s platbou po bitcoinové síti.</translation>
     </message>
     <message>
         <source>Pay To:</source>
@@ -2240,7 +2338,7 @@
     </message>
     <message>
         <source>Sign the message to prove you own this Bitcoin address</source>
-        <translation>Podepiš zprávu, čímž prokážeš, že jsi vlastníkem této Bitcoinové adresy</translation>
+        <translation>Podepiš zprávu, čímž prokážeš, že jsi vlastníkem této bitcoinové adresy</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -2268,7 +2366,7 @@
     </message>
     <message>
         <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
-        <translation>Ověř zprávu, aby ses ujistil, že byla podepsána danou Bitcoinovou adresou</translation>
+        <translation>Ověř zprávu, aby ses ujistil, že byla podepsána danou bitcoinovou adresou</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -2952,6 +3050,14 @@
         <translation>Šířen pod softwarovou licencí MIT, viz přiložený soubor COPYING nebo &lt;http://www.opensource.org/licenses/mit-license.php&gt;.</translation>
     </message>
     <message>
+        <source>Error loading %s: You can't enable HD on a already existing non-HD wallet</source>
+        <translation>Chyba při načítání %s: nemůžeš zapnout HD u existující ne-HD peněženky</translation>
+    </message>
+    <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
+        <translation>Nastala chyba při čtení souboru %s! Všechny klíče se přečetly správně, ale data o transakcích nebo záznamy v adresáři mohou chybět či být nesprávné.</translation>
+    </message>
+    <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
         <translation>Spustit příkaz, když se objeví transakce týkající se peněženky (%s se v příkazu nahradí za TxID)</translation>
     </message>
@@ -2992,10 +3098,6 @@
         <translation>Upozornění: Nesouhlasím zcela se svými protějšky! Možná potřebuji aktualizovat nebo ostatní uzly potřebují aktualizovat.</translation>
     </message>
     <message>
-        <source>Whitelist peers connecting from the given netmask or IP address. Can be specified multiple times.</source>
-        <translation>Vždy vítat protějšky připojující se z dané podsítě či IP adresy. Lze zadat i vícekrát.</translation>
-    </message>
-    <message>
         <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
         <translation>Je třeba přestavět databázi použitím -reindex-chainstate, aby bylo možné změnit -txindex</translation>
     </message>
@@ -3028,6 +3130,10 @@
         <translation>Nemohu přeložit -%s adresu: '%s'</translation>
     </message>
     <message>
+        <source>Change index out of range</source>
+        <translation>Index drobných je mimo platný rozsah</translation>
+    </message>
+    <message>
         <source>Connect only to the specified node(s)</source>
         <translation>Připojit se pouze k zadanému uzlu (příp. zadaným uzlům)</translation>
     </message>
@@ -3056,6 +3162,22 @@
         <translation>Chceš přestavět databázi bloků hned teď?</translation>
     </message>
     <message>
+        <source>Enable publish hash block in &lt;address&gt;</source>
+        <translation>Zapnout oznamování hashů bloků na adrese &lt;address&gt;</translation>
+    </message>
+    <message>
+        <source>Enable publish hash transaction in &lt;address&gt;</source>
+        <translation>Zapnout oznamování hashů transakcí na adrese &lt;address&gt;</translation>
+    </message>
+    <message>
+        <source>Enable publish raw block in &lt;address&gt;</source>
+        <translation>Zapnout oznamování surových bloků na adrese &lt;address&gt;</translation>
+    </message>
+    <message>
+        <source>Enable publish raw transaction in &lt;address&gt;</source>
+        <translation>Zapnout oznamování surových transakcí na adrese &lt;address&gt;</translation>
+    </message>
+    <message>
         <source>Enable transaction replacement in the memory pool (default: %u)</source>
         <translation>Povolit výměnu transakcí v transakčním zásobníku (výchozí: %u)</translation>
     </message>
@@ -3078,6 +3200,10 @@
     <message>
         <source>Error loading %s: Wallet requires newer version of %s</source>
         <translation>Chyba při načítání %s: peněženka vyžaduje novější verzi %s</translation>
+    </message>
+    <message>
+        <source>Error loading %s: You can't disable HD on a already existing HD wallet</source>
+        <translation>Chyba při načítání %s: nemůžeš vypnout HD u existující HD peněženky</translation>
     </message>
     <message>
         <source>Error loading block database</source>
@@ -3132,6 +3258,10 @@
         <translation>Místo pro autentizační cookie (výchozí: adresář pro data)</translation>
     </message>
     <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimální počet bajtů na každý sigop v transakcích, které přeposíláme a těžíme (výchozí: %u)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Je nedostatek deskriptorů souborů.</translation>
     </message>
@@ -3172,6 +3302,14 @@
         <translation>Udej název souboru s peněženkou (v rámci datového adresáře)</translation>
     </message>
     <message>
+        <source>Starting network threads...</source>
+        <translation>Spouštím síťová vlákna…</translation>
+    </message>
+    <message>
+        <source>The source code is available from %s.</source>
+        <translation>Zdrojový kód je dostupný na %s.</translation>
+    </message>
+    <message>
         <source>Unable to bind to %s on this computer. %s is probably already running.</source>
         <translation>Nedaří se mi připojit na %s na tomhle počítači. %s už pravděpodobně jednou běží.</translation>
     </message>
@@ -3197,11 +3335,11 @@
     </message>
     <message>
         <source>Verifying blocks...</source>
-        <translation>Ověřuji bloky...</translation>
+        <translation>Ověřuji bloky…</translation>
     </message>
     <message>
         <source>Verifying wallet...</source>
-        <translation>Kontroluji peněženku...</translation>
+        <translation>Kontroluji peněženku…</translation>
     </message>
     <message>
         <source>Wallet %s resides outside data directory %s</source>
@@ -3437,7 +3575,7 @@
     </message>
     <message>
         <source>ZeroMQ notification options:</source>
-        <translation>Možnosti ZeroMQ oznámení:</translation>
+        <translation>Možnosti ZeroMQ oznamování:</translation>
     </message>
     <message>
         <source>Password for JSON-RPC connections</source>
@@ -3520,6 +3658,10 @@
         <translation>Uživatelské jméno a zahašované heslo pro JSON-RPC spojení. Pole &lt;userpw&gt; má formát: &lt;UŽIVATELSKÉ_JMÉNO&gt;:&lt;SŮL&gt;$&lt;HAŠ&gt;. Pomocný pythonní skript je přiložen v share/rpcuser. Tuto volbu lze použít i vícekrát</translation>
     </message>
     <message>
+        <source>Warning: Unknown block versions being mined! It's possible unknown rules are in effect</source>
+        <translation>Upozornění: Síť těží neznámé verze bloků! Je možné, že jsou v platnosti neznámá pravidla</translation>
+    </message>
+    <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Upozornění: soubor s peněženkou je poškozený, data jsou však zachráněna! Původní soubor %s je uložený jako %s v %s. Pokud nejsou stav tvého účtu nebo transakce v pořádku, zřejmě bys měl obnovit zálohu.</translation>
     </message>
@@ -3596,6 +3738,10 @@
         <translation>Zadej časový limit spojení v milivteřinách (minimum: 1, výchozí: %d)</translation>
     </message>
     <message>
+        <source>Specify pid file (default: %s)</source>
+        <translation>PID soubor (výchozí: %s)</translation>
+    </message>
+    <message>
         <source>Spend unconfirmed change when sending transactions (default: %u)</source>
         <translation>Utrácet i ještě nepotvrzené drobné při posílání transakcí (výchozí: %u)</translation>
     </message>
@@ -3633,7 +3779,7 @@
     </message>
     <message>
         <source>Rescanning...</source>
-        <translation>Přeskenovávám...</translation>
+        <translation>Přeskenovávám…</translation>
     </message>
     <message>
         <source>Done loading</source>

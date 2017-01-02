@@ -25,6 +25,14 @@
         <source>&amp;Delete</source>
         <translation>&amp;سڕینەوە</translation>
     </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;ڕوونووسکردن ناوونیشان</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;دەسکاریکردن</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
@@ -41,6 +49,10 @@
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Options...</source>
+        <translation type="unfinished">&amp;هەڵبژاردنەکان...</translation>
+    </message>
     <message>
         <source>&amp;Send</source>
         <translation>&amp;ناردن</translation>
@@ -97,6 +109,10 @@
         <translation>لەپێشی</translation>
     </message>
     <message>
+        <source>Copy address</source>
+        <translation>ڕوونووسکردن ناوونیشان</translation>
+    </message>
+    <message>
         <source>high</source>
         <translation>بەرز</translation>
     </message>
@@ -115,6 +131,10 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;ناوونیشان</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -142,6 +162,12 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
+    <name>ModalOverlay</name>
+    </context>
+<context>
     <name>OpenURIDialog</name>
     </context>
 <context>
@@ -149,6 +175,10 @@
     <message>
         <source>Options</source>
         <translation>هەڵبژاردنەکان</translation>
+    </message>
+    <message>
+        <source>&amp;Network</source>
+        <translation type="unfinished">&amp;تۆڕ</translation>
     </message>
     </context>
 <context>
@@ -279,12 +309,32 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;ڕوونووسکردن ناوونیشان</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>ناوونیشان</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>سەرجەم</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>پەیام</translation>
     </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>رێکەت</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>پەیام</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
@@ -304,9 +354,21 @@
         <source>fast</source>
         <translation>خێرا</translation>
     </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;ناردن</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>یان</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation>&amp;سەرجەم:</translation>
+    </message>
     <message>
         <source>Message:</source>
         <translation>پەیام:</translation>
@@ -314,7 +376,11 @@
     </context>
 <context>
     <name>SendConfirmationDialog</name>
-    </context>
+    <message>
+        <source>Yes</source>
+        <translation>بەڵێ</translation>
+    </message>
+</context>
 <context>
     <name>ShutdownWindow</name>
     </context>
@@ -329,20 +395,88 @@
     </context>
 <context>
     <name>TransactionDesc</name>
-    </context>
+    <message>
+        <source>Status</source>
+        <translation>بارودۆخ</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>رێکەت</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>سەرچاوە</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>لە</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>بۆ</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>پەیام</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>سەرجەم</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>دروستە</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>نادروستە</translation>
+    </message>
+</context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>رێکەت</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>جۆر</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>ناردن بۆ</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
     <message>
+        <source>Sent to</source>
+        <translation>ناردن بۆ</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>ڕوونووسکردن ناوونیشان</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>رێکەت</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>جۆر</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>ناوونیشان</translation>
     </message>
-    </context>
+    <message>
+        <source>to</source>
+        <translation>بۆ</translation>
+    </message>
+</context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
     </context>
@@ -354,6 +488,10 @@
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;هەناردن</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>

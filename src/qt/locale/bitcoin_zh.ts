@@ -1,6 +1,10 @@
 <TS language="zh" version="2.1">
 <context>
     <name>AddressBookPage</name>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation type="unfinished">&amp;选择</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
@@ -46,6 +50,12 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
+    <name>ModalOverlay</name>
+    </context>
+<context>
     <name>OpenURIDialog</name>
     </context>
 <context>
@@ -77,6 +87,10 @@
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>日期</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
@@ -87,6 +101,18 @@
     <message>
         <source>Choose...</source>
         <translation>选择...</translation>
+    </message>
+    <message>
+        <source>The recipient address is not valid. Please recheck.</source>
+        <translation>收款人地址无效，请再次确认。</translation>
+    </message>
+    <message>
+        <source>Pay only the required fee of %1</source>
+        <translation>仅支付全额的%1</translation>
+    </message>
+    <message>
+        <source>Warning: Invalid Bitcoin address</source>
+        <translation>警告：比特币地址无效</translation>
     </message>
     </context>
 <context>
@@ -109,15 +135,27 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Date</source>
+        <translation>日期</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>日期</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Date</source>
+        <translation>日期</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>

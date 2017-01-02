@@ -41,6 +41,14 @@
         <source>&amp;Delete</source>
         <translation>&amp;amp;मेटाउनुहोस्</translation>
     </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation type="unfinished">amp;पठाउने ठेगानाहरू</translation>
+    </message>
+    <message>
+        <source>Receiving addresses</source>
+        <translation type="unfinished">amp;प्राप्त गर्ने ठेगानाहरू</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
@@ -189,6 +197,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount:</source>
+        <translation type="unfinished">रकम:</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>रकम</translation>
     </message>
@@ -201,15 +213,33 @@
     </context>
 <context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">amp;बारेमा %1</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
+    <name>ModalOverlay</name>
+    </context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">URI amp;खोल्नुहोस्</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">amp;विकल्प</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -275,7 +305,7 @@
         <source>Ping Time</source>
         <translation>पिङ समय</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -289,6 +319,10 @@
 <context>
     <name>RPCConsole</name>
     <message>
+        <source>Debug window</source>
+        <translation type="unfinished">amp;डिबग विन्डो</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation>प्रयोगकर्ता एजेन्ट</translation>
     </message>
@@ -299,18 +333,34 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;रकम:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>रकम</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Amount:</source>
+        <translation type="unfinished">रकम:</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;रकम:</translation>
+    </message>
     <message>
         <source>The fee will be deducted from the amount being sent. The recipient will receive less bitcoins than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
         <translation>पठाइँदै गरेको रकमबाट शुल्क कटौती गरिनेछ । प्राप्तकर्ताले तपाईंले रकम क्षेत्रमा प्रवेष गरेको भन्दा थोरै बिटकोइन प्राप्त गर्ने छन् । धेरै प्राप्तकर्ता चयन गरिएको छ भने समान रूपमा शुल्क विभाजित गरिनेछ ।</translation>
@@ -341,15 +391,31 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>watch-only</source>
+        <translation type="unfinished">हेर्ने-मात्र</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>रकम</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>watch-only</source>
+        <translation type="unfinished">हेर्ने-मात्र</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">हेर्ने-मात्र</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -362,9 +428,25 @@
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;amp;निर्यात गर्नुहोस्</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>वर्तमान ट्याबको डाटालाई फाइलमा निर्यात गर्नुहोस् </translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">amp;वालेटलाई ब्याकअप गर्नुहोस्</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">amp;विकल्प:</translation>
+    </message>
     <message>
         <source>The block database contains a block which appears to be from the future. This may be due to your computer's date and time being set incorrectly. Only rebuild the block database if you are sure that your computer's date and time are correct</source>
         <translation>ब्लक डाटाबेसमा भविष्यबाट आए जस्तो देखिने एउटा ब्लक हुन्छ । तपाईंको कम्प्युटरको मिति र समय गलत तरिकाले सेट गरिएकाले यस्तो हुन सक्छ । तपाईं आफ्नो कम्प्युटरको मिति र समय सही छ भनेर पक्का हुनुहुन्छ भने मात्र ब्लक डाटाबेस पुनर्निर्माण गर्नुहोस् ।</translation>
@@ -388,10 +470,6 @@
     <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
         <translation>चेतावनी: हामी हाम्रा सहकर्मीहरूसँग पूर्णतया सहमत छैनौं जस्तो देखिन्छ! तपाईंले अपग्रेड गर्नु पर्ने हुनसक्छ वा अरू नोडहरूले अपग्रेड गर्नु पर्ने हुनसक्छ ।</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given netmask or IP address. Can be specified multiple times.</source>
-        <translation>दिइएको नेटमास्क वा ठेगानाबाट कनेक्ट भइरहेका श्वेतसूचीका सहकर्मी ।</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
