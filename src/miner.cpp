@@ -141,6 +141,13 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
     CBlockIndex* pindexPrev = chainActive.Tip();
     nHeight = pindexPrev->nHeight + 1;
 
+    if (fNeedSizeAccounting && !IsWitnessEnabled(pindexPrev, chainparams.GetConsensus())) {
+        // Just translate to nBlockMaxWeight
+        nBlockMaxWeight = min(nBlockMaxSize * WITNESS_SCALE_FACTOR, nBlockMaxWeight);
+        nBlockMaxSize = MAX_BLOCK_SERIALIZED_SIZE-1000;
+        fNeedSizeAccounting = false;
+    }
+
     pblock->nVersion = ComputeBlockVersion(pindexPrev, chainparams.GetConsensus());
     // -regtest only: allow overriding block.nVersion with
     // -blockversion=N to test forking scenarios
