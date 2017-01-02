@@ -12,6 +12,9 @@
 #include "ui_interface.h"
 #include "util.h"
 #include "utilstrencodings.h"
+#ifdef ENABLE_WALLET
+#include "wallet/wallet.h"
+#endif
 
 #include <univalue.h>
 
@@ -174,7 +177,7 @@ vector<unsigned char> ParseHexO(const UniValue& o, string strKey)
  * Note: This interface may still be subject to change.
  */
 
-std::string CRPCTable::help(const std::string& strCommand) const
+std::string CRPCTable::help(const std::string& strCommand, const CRPCRequestInfo& helpreq) const
 {
     string strRet;
     string category;
@@ -198,8 +201,10 @@ std::string CRPCTable::help(const std::string& strCommand) const
         {
             UniValue params;
             rpcfn_type pfn = pcmd->actor;
-            if (setDone.insert(pfn).second)
-                (*pfn)(params, true);
+            if (setDone.insert(pfn).second) {
+                CRPCRequestInfo reqinfo(helpreq);
+                pfn(params, true, reqinfo);
+            }
         }
         catch (const std::exception& e)
         {
@@ -229,7 +234,7 @@ std::string CRPCTable::help(const std::string& strCommand) const
     return strRet;
 }
 
-UniValue help(const UniValue& params, bool fHelp)
+UniValue help(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo)
 {
     if (fHelp || params.size() > 1)
         throw runtime_error(
@@ -245,7 +250,7 @@ UniValue help(const UniValue& params, bool fHelp)
     if (params.size() > 0)
         strCommand = params[0].get_str();
 
-    return tableRPC.help(strCommand);
+    return tableRPC.help(strCommand, reqinfo);
 }
 
 
@@ -418,6 +423,16 @@ std::string JSONRPCExecBatch(const UniValue& vReq)
     return ret.write() + "\n";
 }
 
+UniValue rpcfn_type::operator()(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo) const {
+    if (func.which()) {
+        const reqinfo_rpcfn_type f = boost::get<reqinfo_rpcfn_type>(func);
+        return f(params, fHelp, reqinfo);
+    } else {
+        const simple_rpcfn_type f = boost::get<simple_rpcfn_type>(func);
+        return f(params, fHelp);
+    }
+}
+
 UniValue CRPCTable::execute(const std::string &strMethod, const UniValue &params) const
 {
     // Return immediately if in warmup
@@ -437,7 +452,11 @@ UniValue CRPCTable::execute(const std::string &strMethod, const UniValue &params
     try
     {
         // Execute
-        return pcmd->actor(params, false);
+        CRPCRequestInfo reqinfo;
+#ifdef ENABLE_WALLET
+        reqinfo.wallet = pwalletMain;
+#endif
+        return pcmd->actor(params, false, reqinfo);
     }
     catch (const std::exception& e)
     {
