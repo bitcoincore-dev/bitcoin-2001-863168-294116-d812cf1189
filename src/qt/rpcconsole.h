@@ -9,6 +9,7 @@
 #include "peertablemodel.h"
 
 #include "net.h"
+#include "rpc/server.h"
 
 #include <QWidget>
 #include <QCompleter>
@@ -36,6 +37,12 @@ class RPCConsole: public QWidget
 public:
     explicit RPCConsole(const PlatformStyle *platformStyle, QWidget *parent);
     ~RPCConsole();
+
+    static bool RPCExecuteCommandLine(std::string &strResult, const std::string &strCommand, CRPCRequestInfo& reqinfo);
+    static bool RPCExecuteCommandLine(std::string &strResult, const std::string &strCommand) {
+        CRPCRequestInfo reqinfo;
+        return RPCExecuteCommandLine(strResult, strCommand, reqinfo);
+    }
 
     void setClientModel(ClientModel *model);
     void addWallet(const QString name, WalletModel * const walletModel);
