@@ -1002,7 +1002,7 @@ UniValue sendmany(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo)
 }
 
 // Defined in rpc/misc.cpp
-extern CScript _createmultisig_redeemScript(const UniValue& params, CRPCRequestInfo&);
+extern CScript _createmultisig_redeemScript(const UniValue& params, CRPCRequestInfo&, bool fSorted);
 
 UniValue addmultisigaddress(const UniValue& params, bool fHelp, CRPCRequestInfo& reqinfo)
 {
@@ -1011,21 +1011,23 @@ UniValue addmultisigaddress(const UniValue& params, bool fHelp, CRPCRequestInfo&
     if (!EnsureWalletIsAvailable(pwallet, fHelp))
         return NullUniValue;
 
-    if (fHelp || params.size() < 2 || params.size() > 3)
+    if (fHelp || params.size() < 2 || params.size() > 4)
     {
-        string msg = "addmultisigaddress nrequired [\"key\",...] ( \"account\" )\n"
+        string msg = "addmultisigaddress nrequired [\"key\",...] ( \"account\" ) ( fSort )\n"
             "\nAdd a nrequired-to-sign multisignature address to the wallet.\n"
             "Each key is a Bitcoin address or hex-encoded public key.\n"
             "If 'account' is specified (DEPRECATED), assign address to that account.\n"
+            "Public keys can be sorted according to BIP67 during the request if required.\n"
 
             "\nArguments:\n"
-            "1. nrequired        (numeric, required) The number of required signatures out of the n keys or addresses.\n"
+            "1. nrequired      (numeric, required) The number of required signatures out of the n keys or addresses.\n"
             "2. \"keysobject\"   (string, required) A json array of bitcoin addresses or hex-encoded public keys\n"
             "     [\n"
             "       \"address\"  (string) bitcoin address or hex-encoded public key\n"
             "       ...,\n"
             "     ]\n"
             "3. \"account\"      (string, optional) DEPRECATED. An account to assign the addresses to.\n"
+            "4. fSort          (bool, optional) Whether to sort public keys according to BIP67. Default setting is false.\n"
 
             "\nResult:\n"
             "\"bitcoinaddress\"  (string) A bitcoin address associated with the keys.\n"
@@ -1045,8 +1047,10 @@ UniValue addmultisigaddress(const UniValue& params, bool fHelp, CRPCRequestInfo&
     if (params.size() > 2)
         strAccount = AccountFromValue(params[2]);
 
+    bool fSorted = params.size() > 3 && params[3].get_bool();
+
     // Construct using pay-to-script-hash:
-    CScript inner = _createmultisig_redeemScript(params, reqinfo);
+    CScript inner = _createmultisig_redeemScript(params, reqinfo, fSorted);
     CScriptID innerID(inner);
     pwallet->AddCScript(inner);
 

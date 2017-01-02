@@ -532,7 +532,7 @@ BOOST_AUTO_TEST_CASE(test_witness)
     std::vector<CPubKey> oneandthree;
     oneandthree.push_back(pubkey1);
     oneandthree.push_back(pubkey3);
-    scriptMulti = GetScriptForMultisig(2, oneandthree);
+    scriptMulti = GetScriptForMultisig(2, oneandthree, false);
     keystore.AddCScript(scriptPubkey1);
     keystore.AddCScript(scriptPubkey2);
     keystore.AddCScript(scriptPubkey1L);

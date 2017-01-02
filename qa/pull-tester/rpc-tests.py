@@ -142,6 +142,7 @@ testScripts = [
     'p2p-segwit.py',
     'preciousblock.py',
     'segwit.py',
+    'sort_multisig.py',
     'importprunedfunds.py',
     'signmessages.py',
     'p2p-compactblocks.py',
