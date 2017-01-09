@@ -1394,7 +1394,7 @@ UniValue listreceivedbyaddress(const JSONRPCRequest& request)
             "1. minconf           (numeric, optional, default=1) The minimum number of confirmations before payments are included.\n"
             "2. include_empty     (bool, optional, default=false) Whether to include addresses that haven't received any payments.\n"
             "3. include_watchonly (bool, optional, default=false) Whether to include watch-only addresses (see 'importaddress').\n"
-            "4. only_address   (string, optional) If present, only return information on this address. Otherwise, return all information.\n"
+            "4. only_address      (string, optional) If present, only return information on this address. Otherwise, return all information.\n"
             "\nResult:\n"
             "[\n"
             "  {\n"
