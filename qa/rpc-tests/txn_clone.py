@@ -21,6 +21,9 @@ class TxnMallTest(BitcoinTestFramework):
         parser.add_option("--mineblock", dest="mine_block", default=False, action="store_true",
                           help="Test double-spend of 1-confirmed transaction")
 
+    def setup_nodes(self):
+        return start_nodes(self.num_nodes, self.options.tmpdir, [["-walletrbf=0"]] * self.num_nodes)
+
     def setup_network(self):
         # Start with split network:
         return super(TxnMallTest, self).setup_network(True)
