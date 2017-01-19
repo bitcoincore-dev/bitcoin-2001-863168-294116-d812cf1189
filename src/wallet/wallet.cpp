@@ -493,18 +493,18 @@ void CWallet::SyncMetaData(pair<TxSpends::iterator, TxSpends::iterator> range)
     for (TxSpends::iterator it = range.first; it != range.second; ++it)
     {
         const uint256& hash = it->second;
-        int n = mapWallet[hash].nOrderPos;
+        int n = mapWallet.at(hash).nOrderPos;
         if (n < nMinOrderPos)
         {
             nMinOrderPos = n;
-            copyFrom = &mapWallet[hash];
+            copyFrom = &mapWallet.at(hash);
         }
     }
     // Now copy data from copyFrom to rest:
     for (TxSpends::iterator it = range.first; it != range.second; ++it)
     {
         const uint256& hash = it->second;
-        CWalletTx* copyTo = &mapWallet[hash];
+        CWalletTx* copyTo = &mapWallet.at(hash);
         if (copyFrom == copyTo) continue;
         if (!copyFrom->IsEquivalentTo(*copyTo)) continue;
         copyTo->mapValue = copyFrom->mapValue;
@@ -555,7 +555,7 @@ void CWallet::AddToSpends(const COutPoint& outpoint, const uint256& wtxid)
 void CWallet::AddToSpends(const uint256& wtxid)
 {
     assert(mapWallet.count(wtxid));
-    CWalletTx& thisTx = mapWallet[wtxid];
+    CWalletTx& thisTx = mapWallet.at(wtxid);
     if (thisTx.IsCoinBase()) // Coinbases don't spend anything!
         return;
 
@@ -844,7 +844,6 @@ bool CWallet::AddToWallet(CTransactionRef tx, UpdateEntry updateEntry, bool fFlu
     auto ret = mapWallet.emplace(std::piecewise_construct, std::forward_as_tuple(hash), std::forward_as_tuple(this, std::move(tx)));
     bool fUpdated = updateEntry(*ret.first, ret.second);
     CWalletTx& wtx = (*ret.first).second;
-    wtx.BindWallet(this);
     bool fInsertedNew = ret.second;
     if (fInsertedNew)
     {
@@ -926,14 +925,17 @@ bool CWallet::LoadToWallet(const CWalletTx& wtxIn)
 {
     uint256 hash = wtxIn.GetHash();
 
-    mapWallet[hash] = wtxIn;
-    CWalletTx& wtx = mapWallet[hash];
-    wtx.BindWallet(this);
+    auto inserted = mapWallet.emplace(hash, wtxIn);
+    CWalletTx& wtx = inserted.first->second;
+    if (!inserted.second) {
+        wtx = wtxIn;
+    }
+
     wtxOrdered.insert(make_pair(wtx.nOrderPos, TxPair(&wtx, (CAccountingEntry*)0)));
     AddToSpends(hash);
     BOOST_FOREACH(const CTxIn& txin, wtx.tx->vin) {
         if (mapWallet.count(txin.prevout.hash)) {
-            CWalletTx& prevtx = mapWallet[txin.prevout.hash];
+            CWalletTx& prevtx = mapWallet.at(txin.prevout.hash);
             if (prevtx.nIndex == -1 && !prevtx.hashUnset()) {
                 MarkConflicted(prevtx.hashBlock, wtx.GetHash());
             }
@@ -1021,7 +1023,7 @@ bool CWallet::AbandonTransaction(const uint256& hashTx)
 
     // Can't mark abandoned if confirmed or in mempool
     assert(mapWallet.count(hashTx));
-    CWalletTx& origtx = mapWallet[hashTx];
+    CWalletTx& origtx = mapWallet.at(hashTx);
     if (origtx.GetDepthInMainChain() > 0 || origtx.InMempool()) {
         return false;
     }
@@ -1033,7 +1035,7 @@ bool CWallet::AbandonTransaction(const uint256& hashTx)
         todo.erase(now);
         done.insert(now);
         assert(mapWallet.count(now));
-        CWalletTx& wtx = mapWallet[now];
+        CWalletTx& wtx = mapWallet.at(now);
         int currentconfirm = wtx.GetDepthInMainChain();
         // If the orig tx was not in block, none of its spends can be
         assert(currentconfirm <= 0);
@@ -1059,7 +1061,7 @@ bool CWallet::AbandonTransaction(const uint256& hashTx)
             BOOST_FOREACH(const CTxIn& txin, wtx.tx->vin)
             {
                 if (mapWallet.count(txin.prevout.hash))
-                    mapWallet[txin.prevout.hash].MarkDirty();
+                    mapWallet.at(txin.prevout.hash).MarkDirty();
             }
         }
     }
@@ -1098,7 +1100,7 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
         todo.erase(now);
         done.insert(now);
         assert(mapWallet.count(now));
-        CWalletTx& wtx = mapWallet[now];
+        CWalletTx& wtx = mapWallet.at(now);
         int currentconfirm = wtx.GetDepthInMainChain();
         if (conflictconfirms < currentconfirm) {
             // Block is 'more conflicted' than current confirm; update.
@@ -1120,7 +1122,7 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
             BOOST_FOREACH(const CTxIn& txin, wtx.tx->vin)
             {
                 if (mapWallet.count(txin.prevout.hash))
-                    mapWallet[txin.prevout.hash].MarkDirty();
+                    mapWallet.at(txin.prevout.hash).MarkDirty();
             }
         }
     }
@@ -1139,7 +1141,7 @@ void CWallet::SyncTransaction(const CTransaction& tx, const CBlockIndex *pindex,
     BOOST_FOREACH(const CTxIn& txin, tx.vin)
     {
         if (mapWallet.count(txin.prevout.hash))
-            mapWallet[txin.prevout.hash].MarkDirty();
+            mapWallet.at(txin.prevout.hash).MarkDirty();
     }
 }
 
@@ -2704,8 +2706,7 @@ bool CWallet::CommitTransaction(CTransactionRef tx, mapValue_t mapValue, std::ve
             // Notify that old coins are spent
             BOOST_FOREACH(const CTxIn& txin, pEntry->second.tx->vin)
             {
-                CWalletTx &coin = mapWallet[txin.prevout.hash];
-                coin.BindWallet(this);
+                CWalletTx &coin = mapWallet.at(txin.prevout.hash);
                 NotifyTransactionChanged(this, coin.GetHash(), CT_UPDATED);
             }
         }
@@ -3120,7 +3121,7 @@ set< set<CTxDestination> > CWallet::GetAddressGroupings()
                 CTxDestination address;
                 if(!IsMine(txin)) /* If this input isn't mine, ignore it */
                     continue;
-                if(!ExtractDestination(mapWallet[txin.prevout.hash].tx->vout[txin.prevout.n].scriptPubKey, address))
+                if(!ExtractDestination(mapWallet.at(txin.prevout.hash).tx->vout[txin.prevout.n].scriptPubKey, address))
                     continue;
                 grouping.insert(address);
                 any_mine = true;
