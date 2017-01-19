@@ -32,7 +32,7 @@ GetResults(std::map<CAmount, CAccountingEntry>& results)
 BOOST_AUTO_TEST_CASE(acc_orderupgrade)
 {
     std::vector<CWalletTx*> vpwtx;
-    CWalletTx wtx;
+    CWalletTx wtx(nullptr /* pwallet */, MakeTransactionRef());
     CAccountingEntry ae;
     std::map<CAmount, CAccountingEntry> results;
 
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(acc_orderupgrade)
 
     wtx.mapValue["comment"] = "z";
     pwalletMain->AddToWallet(wtx);
-    vpwtx.push_back(&pwalletMain->mapWallet[wtx.GetHash()]);
+    vpwtx.push_back(&pwalletMain->mapWallet.at(wtx.GetHash()));
     vpwtx[0]->nTimeReceived = (unsigned int)1333333335;
     vpwtx[0]->nOrderPos = -1;
 
@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(acc_orderupgrade)
         wtx.SetTx(MakeTransactionRef(std::move(tx)));
     }
     pwalletMain->AddToWallet(wtx);
-    vpwtx.push_back(&pwalletMain->mapWallet[wtx.GetHash()]);
+    vpwtx.push_back(&pwalletMain->mapWallet.at(wtx.GetHash()));
     vpwtx[1]->nTimeReceived = (unsigned int)1333333336;
 
     wtx.mapValue["comment"] = "x";
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(acc_orderupgrade)
         wtx.SetTx(MakeTransactionRef(std::move(tx)));
     }
     pwalletMain->AddToWallet(wtx);
-    vpwtx.push_back(&pwalletMain->mapWallet[wtx.GetHash()]);
+    vpwtx.push_back(&pwalletMain->mapWallet.at(wtx.GetHash()));
     vpwtx[2]->nTimeReceived = (unsigned int)1333333329;
     vpwtx[2]->nOrderPos = -1;
 

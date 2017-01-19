@@ -612,15 +612,15 @@ public:
 
     CWalletTx& AddTx(CRecipient recipient)
     {
-        CWalletTx wtx;
+        CTransactionRef tx;
         CReserveKey reservekey(wallet.get());
         CAmount fee;
         int changePos = -1;
         std::string error;
-        BOOST_CHECK(wallet->CreateTransaction({recipient}, wtx, reservekey, fee, changePos, error));
+        BOOST_CHECK(wallet->CreateTransaction({recipient}, tx, reservekey, fee, changePos, error));
         CValidationState state;
-        BOOST_CHECK(wallet->CommitTransaction(wtx, reservekey, nullptr, state));
-        auto it = wallet->mapWallet.find(wtx.GetHash());
+        BOOST_CHECK(wallet->CommitTransaction(tx, {}, {}, {}, reservekey, nullptr, state));
+        auto it = wallet->mapWallet.find(tx->GetHash());
         BOOST_CHECK(it != wallet->mapWallet.end());
         CreateAndProcessBlock({CMutableTransaction(*it->second.tx)}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));
         it->second.SetMerkleBranch(chainActive.Tip(), 1);
