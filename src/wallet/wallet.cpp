@@ -525,11 +525,11 @@ void CWallet::SyncMetaData(std::pair<TxSpends::iterator, TxSpends::iterator> ran
     for (TxSpends::iterator it = range.first; it != range.second; ++it)
     {
         const uint256& hash = it->second;
-        int n = mapWallet[hash].nOrderPos;
+        int n = mapWallet.at(hash).nOrderPos;
         if (n < nMinOrderPos)
         {
             nMinOrderPos = n;
-            copyFrom = &mapWallet[hash];
+            copyFrom = &mapWallet.at(hash);
         }
     }
 
@@ -539,7 +539,7 @@ void CWallet::SyncMetaData(std::pair<TxSpends::iterator, TxSpends::iterator> ran
     for (TxSpends::iterator it = range.first; it != range.second; ++it)
     {
         const uint256& hash = it->second;
-        CWalletTx* copyTo = &mapWallet[hash];
+        CWalletTx* copyTo = &mapWallet.at(hash);
         if (copyFrom == copyTo) continue;
         assert(copyFrom && "Oldest wallet transaction in range assumed to have been found.");
         if (!copyFrom->IsEquivalentTo(*copyTo)) continue;
@@ -978,8 +978,11 @@ bool CWallet::LoadToWallet(const CWalletTx& wtxIn)
 {
     uint256 hash = wtxIn.GetHash();
 
-    mapWallet[hash] = wtxIn;
-    CWalletTx& wtx = mapWallet[hash];
+    auto inserted = mapWallet.emplace(hash, wtxIn);
+    CWalletTx& wtx = inserted.first->second;
+    if (!inserted.second) {
+        wtx = wtxIn;
+    }
     wtx.BindWallet(this);
     wtxOrdered.insert(std::make_pair(wtx.nOrderPos, TxPair(&wtx, nullptr)));
     AddToSpends(hash);
@@ -2976,7 +2979,7 @@ bool CWallet::CommitTransaction(CTransactionRef tx, mapValue_t mapValue, std::ve
             // Notify that old coins are spent
             for (const CTxIn& txin : wtxNew.tx->vin)
             {
-                CWalletTx &coin = mapWallet[txin.prevout.hash];
+                CWalletTx &coin = mapWallet.at(txin.prevout.hash);
                 coin.BindWallet(this);
                 NotifyTransactionChanged(this, coin.GetHash(), CT_UPDATED);
             }
@@ -3439,7 +3442,7 @@ std::set< std::set<CTxDestination> > CWallet::GetAddressGroupings()
                 CTxDestination address;
                 if(!IsMine(txin)) /* If this input isn't mine, ignore it */
                     continue;
-                if(!ExtractDestination(mapWallet[txin.prevout.hash].tx->vout[txin.prevout.n].scriptPubKey, address))
+                if(!ExtractDestination(mapWallet.at(txin.prevout.hash).tx->vout[txin.prevout.n].scriptPubKey, address))
                     continue;
                 grouping.insert(address);
                 any_mine = true;
