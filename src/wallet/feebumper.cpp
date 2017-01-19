@@ -246,7 +246,7 @@ bool CFeeBumper::commit(CWallet *pWallet)
         currentResult = BumpFeeResult::MISC_ERROR;
         return false;
     }
-    CWalletTx& oldWtx = pWallet->mapWallet[txid];
+    CWalletTx& oldWtx = pWallet->mapWallet.at(txid);
 
     // make sure the transaction still has no descendants and hasn't been mined in the meantime
     if (!preconditionChecks(pWallet, oldWtx)) {
