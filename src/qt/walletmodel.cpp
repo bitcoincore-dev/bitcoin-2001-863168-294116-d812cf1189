@@ -578,9 +578,9 @@ void WalletModel::getOutputs(const std::vector<COutPoint>& vOutpoints, std::vect
     for (const COutPoint& outpoint : vOutpoints)
     {
         if (!wallet->mapWallet.count(outpoint.hash)) continue;
-        int nDepth = wallet->mapWallet[outpoint.hash].GetDepthInMainChain();
+        int nDepth = wallet->mapWallet.at(outpoint.hash).GetDepthInMainChain();
         if (nDepth < 0) continue;
-        COutput out(&wallet->mapWallet[outpoint.hash], outpoint.n, nDepth, true /* spendable */, true /* solvable */, true /* safe */);
+        COutput out(&wallet->mapWallet.at(outpoint.hash), outpoint.n, nDepth, true /* spendable */, true /* solvable */, true /* safe */);
         vOutputs.push_back(out);
     }
 }
