@@ -1878,7 +1878,7 @@ UniValue listsinceblock(const JSONRPCRequest& request)
             if (pwallet->mapWallet.count(tx->GetHash()) > 0) {
                 // We want all transactions regardless of confirmation count to appear here,
                 // even negative confirmation ones, hence the big negative.
-                ListTransactions(pwallet, pwallet->mapWallet[tx->GetHash()], "*", -100000000, true, removed, filter);
+                ListTransactions(pwallet, pwallet->mapWallet.at(tx->GetHash()), "*", -100000000, true, removed, filter);
             }
         }
         paltindex = paltindex->pprev;
@@ -1958,10 +1958,11 @@ UniValue gettransaction(const JSONRPCRequest& request)
             filter = filter | ISMINE_WATCH_ONLY;
 
     UniValue entry(UniValue::VOBJ);
-    if (!pwallet->mapWallet.count(hash)) {
+    auto it = pwallet->mapWallet.find(hash);
+    if (it == pwallet->mapWallet.end()) {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid or non-wallet transaction id");
     }
-    const CWalletTx& wtx = pwallet->mapWallet[hash];
+    const CWalletTx& wtx = it->second;
 
     CAmount nCredit = wtx.GetCredit(filter);
     CAmount nDebit = wtx.GetDebit(filter);
