@@ -13,13 +13,11 @@ WalletModelTransaction::WalletModelTransaction(const QList<SendCoinsRecipient> &
     keyChange(0),
     fee(0)
 {
-    walletTransaction = new CWalletTx();
 }
 
 WalletModelTransaction::~WalletModelTransaction()
 {
     delete keyChange;
-    delete walletTransaction;
 }
 
 QList<SendCoinsRecipient> WalletModelTransaction::getRecipients() const
@@ -27,9 +25,9 @@ QList<SendCoinsRecipient> WalletModelTransaction::getRecipients() const
     return recipients;
 }
 
-CWalletTx *WalletModelTransaction::getTransaction() const
+CTransactionRef* WalletModelTransaction::getTransaction()
 {
-    return walletTransaction;
+    return &walletTransaction;
 }
 
 unsigned int WalletModelTransaction::getTransactionSize()
@@ -64,7 +62,7 @@ void WalletModelTransaction::reassignAmounts(int nChangePosRet)
                 if (out.amount() <= 0) continue;
                 if (i == nChangePosRet)
                     i++;
-                subtotal += walletTransaction->tx->vout[i].nValue;
+                subtotal += walletTransaction->vout[i].nValue;
                 i++;
             }
             rcp.amount = subtotal;
@@ -73,7 +71,7 @@ void WalletModelTransaction::reassignAmounts(int nChangePosRet)
         {
             if (i == nChangePosRet)
                 i++;
-            rcp.amount = walletTransaction->tx->vout[i].nValue;
+            rcp.amount = walletTransaction->vout[i].nValue;
             i++;
         }
     }
