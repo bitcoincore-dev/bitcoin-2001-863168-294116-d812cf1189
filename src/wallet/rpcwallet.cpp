@@ -1815,9 +1815,10 @@ UniValue gettransaction(const JSONRPCRequest& request)
             filter = filter | ISMINE_WATCH_ONLY;
 
     UniValue entry(UniValue::VOBJ);
-    if (!pwalletMain->mapWallet.count(hash))
+    auto it = pwalletMain->mapWallet.find(hash);
+    if (it == pwalletMain->mapWallet.end())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid or non-wallet transaction id");
-    const CWalletTx& wtx = pwalletMain->mapWallet[hash];
+    const CWalletTx& wtx = it->second;
 
     CAmount nCredit = wtx.GetCredit(filter);
     CAmount nDebit = wtx.GetDebit(filter);
@@ -2751,7 +2752,7 @@ UniValue bumpfee(const JSONRPCRequest& request)
     if (!pwalletMain->mapWallet.count(hash)) {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid or non-wallet transaction id");
     }
-    CWalletTx& wtx = pwalletMain->mapWallet[hash];
+    CWalletTx& wtx = pwalletMain->mapWallet.at(hash);
 
     if (pwalletMain->HasWalletSpend(hash)) {
         throw JSONRPCError(RPC_MISC_ERROR, "Transaction has descendants in the wallet");
