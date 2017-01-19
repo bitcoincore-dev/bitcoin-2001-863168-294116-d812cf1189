@@ -262,7 +262,7 @@ public:
      * transaction was received if it wasn't part of a block, with the timestamp
      * adjusted in both cases so timestamp order matches the order transactions
      * were added to the wallet. More details can be found in
-     * CWallet::GetTimeSmart().
+     * CWallet::ComputeTimeSmart().
      */
     unsigned int nTimeSmart;
     char fFromMe;
@@ -757,7 +757,7 @@ public:
     bool EncryptWallet(const SecureString& strWalletPassphrase);
 
     void GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const;
-    unsigned int GetTimeSmart(const CWalletTx& wtx) const;
+    unsigned int ComputeTimeSmart(const CWalletTx& wtx) const;
 
     /** 
      * Increment the next transaction order id

@@ -844,7 +844,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
         wtx.nTimeReceived = GetAdjustedTime();
         wtx.nOrderPos = IncOrderPosNext(&walletdb);
         wtxOrdered.insert(make_pair(wtx.nOrderPos, TxPair(&wtx, (CAccountingEntry*)0)));
-        wtx.nTimeSmart = GetTimeSmart(wtx);
+        wtx.nTimeSmart = ComputeTimeSmart(wtx);
         AddToSpends(hash);
     }
 
@@ -3301,7 +3301,7 @@ void CWallet::GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const {
  * https://bitcointalk.org/?topic=54527, or
  * https://github.com/bitcoin/bitcoin/pull/1393.
  */
-unsigned int CWallet::GetTimeSmart(const CWalletTx& wtx) const
+unsigned int CWallet::ComputeTimeSmart(const CWalletTx& wtx) const
 {
     unsigned int nTimeSmart = wtx.nTimeReceived;
     if (!wtx.hashUnset()) {
