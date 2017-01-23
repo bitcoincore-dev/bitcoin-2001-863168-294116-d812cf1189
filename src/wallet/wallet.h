@@ -553,12 +553,6 @@ private:
     std::vector<char> _ssExtra;
 };
 
-enum CreateTransactionFlags {
-    CREATE_TX_DEFAULT     = 0,
-    CREATE_TX_DONT_SIGN   = (1U << 0),
-    CREATE_TX_ENABLE_RBF  = (1U << 1), //!< Enable RBF, ignoring -walletrbf setting.
-    CREATE_TX_DISABLE_RBF = (1U << 2), //!< Disable RBF, ignoring -walletrbf setting.
-};
 
 /** 
  * A CWallet is an extension of a keystore, which also maintains a set of transactions and balances,
@@ -794,7 +788,7 @@ public:
      * @note passing nChangePosInOut as -1 will result in setting a random position
      */
     bool CreateTransaction(const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet, int& nChangePosInOut,
-                           std::string& strFailReason, const CCoinControl *coinControl = NULL, unsigned int flags = CREATE_TX_DEFAULT);
+                           std::string& strFailReason, const CCoinControl *coinControl = NULL, bool sign = true);
     bool CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, CConnman* connman, CValidationState& state);
 
     void ListAccountCreditDebit(const std::string& strAccount, std::list<CAccountingEntry>& entries);
