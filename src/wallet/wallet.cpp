@@ -2566,7 +2566,7 @@ bool CWallet::CreateTransaction(const vector<CRecipient>& vecSend, CWalletTx& wt
                 // to avoid conflicting with other possible uses of nSequence,
                 // and in the spirit of "smallest posible change from prior
                 // behavior."
-                bool rbf = (flags & CREATE_TX_ENABLE_RBF || ::fWalletRbf) && !(flags & CREATE_TX_DISABLE_RBF);
+                bool rbf = coinControl ? coinControl->signalRbf : fWalletRbf;
                 for (const auto& coin : setCoins)
                     txNew.vin.push_back(CTxIn(coin.first->GetHash(),coin.second,CScript(),
                                               std::numeric_limits<unsigned int>::max() - (rbf ? 2 : 1)));
