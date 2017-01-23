@@ -1253,7 +1253,7 @@
         <string>Request Replace-By-Fee</string>
        </property>
        <property name="toolTip">
-        <string>Signals that this transaction can be replaced with a transation paying higher fees (as long as the transaction is NOT confirmed).</string>
+        <string>Indicates that the sender may wish to replace this transaction with a new one paying higher fees (prior to being confirmed).</string>
        </property>
       </widget>
      </item>
