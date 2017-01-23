@@ -663,13 +663,29 @@ UniValue getbalance(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() > 3)
         throw runtime_error(
             "getbalance ( \"account\" minconf include_watchonly )\n"
-            "\nIf account is not specified, returns the server's total available balance.\n"
-            "If account is specified (DEPRECATED), returns the balance in the account.\n"
-            "Note that the account \"\" is not the same as leaving the parameter out.\n"
-            "The server total may be different to the balance in the default \"\" account.\n"
+            "\nIf account is not specified, returns the server's total available balance. The balance is\n"
+            "computed by iterating through known wallet transactions, and adding up the values of unspent\n"
+            "transaction outputs which pay to wallet keys. If account is specified (DEPRECATED), the\n"
+            "balance is computed in a different, less reliable way for backwards compatibility.\n"
             "\nArguments:\n"
-            "1. \"account\"      (string, optional) DEPRECATED. The selected account, or \"*\" for entire wallet. It may be the default account using \"\".\n"
-            "2. minconf          (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
+            "1. \"account\"         (string, optional) DEPRECATED. If this parameter is provided, it causes\n"
+            "                     the balance to be computed in a different, incompatible way from the\n"
+            "                     default method. Instead of iterating over wallet transactions and\n"
+            "                     returning the sum of /unspent/ outputs which pay to wallet keys, this\n"
+            "                     returns the sum of /all/ outputs which pay to wallet keys (whether they\n"
+            "                     have been spent or not) minus the sum of all transaction inputs which\n"
+            "                     spend from wallet keys. This method of computing the balance does not\n"
+            "                     work well when there are pending conflicting wallet transactions which\n"
+            "                     spend the same inputs (for example, if there are unconfirmed replacement\n"
+            "                     transactions created by bumpfee), because the values of all inputs will be\n"
+            "                     subtracted, even though they conflict with each other, resulting in\n"
+            "                     misleadingly low or even negative balances.\n"
+            "                     The account string may be given as a specific account name to find the\n"
+            "                     balance associated with wallet keys in a named account, or as the empty\n"
+            "                     string (\"\") to find the balance associated with wallet keys not in any\n"
+            "                     named account, or as \"*\" to find the balances associated with all wallet\n"
+            "                     keys, regardless of whether they are in any named account or not.\n"
+            "2. minconf           (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
             "3. include_watchonly (bool, optional, default=false) Also include balance in watch-only addresses (see 'importaddress')\n"
             "\nResult:\n"
             "amount              (numeric) The total amount in " + CURRENCY_UNIT + " received for this account.\n"
@@ -698,7 +714,6 @@ UniValue getbalance(const JSONRPCRequest& request)
     if (request.params[0].get_str() == "*") {
         // Calculate total balance a different way from GetBalance()
         // (GetBalance() sums up all unspent TxOuts)
-        // getbalance and "getbalance * 1 true" should return the same number
         CAmount nBalance = 0;
         for (map<uint256, CWalletTx>::iterator it = pwalletMain->mapWallet.begin(); it != pwalletMain->mapWallet.end(); ++it)
         {
