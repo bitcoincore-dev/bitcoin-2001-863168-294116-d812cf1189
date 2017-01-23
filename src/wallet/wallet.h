@@ -801,6 +801,7 @@ public:
     CAmount GetWatchOnlyBalance() const;
     CAmount GetUnconfirmedWatchOnlyBalance() const;
     CAmount GetImmatureWatchOnlyBalance() const;
+    CAmount GetLegacyBalance(const isminefilter& filter, int minDepth, const std::string* account) const;
 
     /**
      * Insert additional inputs into the transaction by
@@ -884,6 +885,8 @@ public:
     bool SetAddressBook(const CTxDestination& address, const std::string& strName, const std::string& purpose);
 
     bool DelAddressBook(const CTxDestination& address);
+
+    const std::string& GetAccountName(const CScript& scriptPubKey) const;
 
     void UpdatedTransaction(const uint256 &hashTx) override;
 
