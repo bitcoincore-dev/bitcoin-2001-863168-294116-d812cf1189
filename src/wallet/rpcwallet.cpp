@@ -697,43 +697,7 @@ UniValue getbalance(const JSONRPCRequest& request)
         if(request.params[2].get_bool())
             filter = filter | ISMINE_WATCH_ONLY;
 
-    CAmount legacyBalance = pwalletMain->GetLegacyBalance(filter, nMinDepth, account);
-
-    if (request.params[0].get_str() == "*") {
-        // Calculate total balance a different way from GetBalance()
-        // (GetBalance() sums up all unspent TxOuts)
-        // getbalance and "getbalance * 1 true" should return the same number
-        CAmount nBalance = 0;
-        for (map<uint256, CWalletTx>::iterator it = pwalletMain->mapWallet.begin(); it != pwalletMain->mapWallet.end(); ++it)
-        {
-            const CWalletTx& wtx = (*it).second;
-            if (!CheckFinalTx(wtx) || wtx.GetBlocksToMaturity() > 0 || wtx.GetDepthInMainChain() < 0)
-                continue;
-
-            CAmount allFee;
-            string strSentAccount;
-            list<COutputEntry> listReceived;
-            list<COutputEntry> listSent;
-            wtx.GetAmounts(listReceived, listSent, allFee, strSentAccount, filter);
-            if (wtx.GetDepthInMainChain() >= nMinDepth)
-            {
-                BOOST_FOREACH(const COutputEntry& r, listReceived)
-                    nBalance += r.amount;
-            }
-            BOOST_FOREACH(const COutputEntry& s, listSent)
-                nBalance -= s.amount;
-            nBalance -= allFee;
-        }
-        assert(nBalance == legacyBalance);
-        return  ValueFromAmount(nBalance);
-    }
-
-    string strAccount = AccountFromValue(request.params[0]);
-
-    CAmount nBalance = pwalletMain->GetAccountBalance(strAccount, nMinDepth, filter);
-
-    assert(nBalance == legacyBalance);
-    return ValueFromAmount(nBalance);
+    return ValueFromAmount(pwalletMain->GetLegacyBalance(filter, nMinDepth, account));
 }
 
 UniValue getunconfirmedbalance(const JSONRPCRequest &request)
@@ -853,9 +817,7 @@ UniValue sendfrom(const JSONRPCRequest& request)
     EnsureWalletIsUnlocked();
 
     // Check funds
-    CAmount nBalance = pwalletMain->GetAccountBalance(strAccount, nMinDepth, ISMINE_SPENDABLE);
-    CAmount legacyBalance = pwalletMain->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &strAccount);
-    assert(nBalance == legacyBalance);
+    CAmount nBalance = pwalletMain->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &strAccount);
     if (nAmount > nBalance)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Account has insufficient funds");
 
@@ -961,9 +923,7 @@ UniValue sendmany(const JSONRPCRequest& request)
     EnsureWalletIsUnlocked();
 
     // Check funds
-    CAmount nBalance = pwalletMain->GetAccountBalance(strAccount, nMinDepth, ISMINE_SPENDABLE);
-    CAmount legacyBalance = pwalletMain->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &strAccount);
-    assert(nBalance == legacyBalance);
+    CAmount nBalance = pwalletMain->GetLegacyBalance(ISMINE_SPENDABLE, nMinDepth, &strAccount);
     if (totalAmount > nBalance)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Account has insufficient funds");
 
