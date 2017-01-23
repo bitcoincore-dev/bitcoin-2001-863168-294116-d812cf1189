@@ -246,7 +246,9 @@ void SendCoinsDialog::on_sendButton_clicked()
     else
         ctrl.nConfirmTarget = 0;
 
-    prepareStatus = model->prepareTransaction(currentTransaction, &ctrl, ui->optInRBF->isChecked());
+    ctrl.signalRbf = ui->optInRBF->isChecked();
+
+    prepareStatus = model->prepareTransaction(currentTransaction, &ctrl);
 
     // process prepareStatus and on error generate message shown to user
     processSendCoinsReturn(prepareStatus,
