@@ -219,7 +219,7 @@ bool CWallet::LoadCryptedKey(const CPubKey &vchPubKey, const std::vector<unsigne
     return CCryptoKeyStore::AddCryptedKey(vchPubKey, vchCryptedSecret);
 }
 
-void CWallet::UpdateTimeFirstKey(int nCreateTime)
+void CWallet::UpdateTimeFirstKey(int64_t nCreateTime)
 {
     AssertLockHeld(cs_wallet);
     // Cannot determine birthday information, so set the wallet birthday to the
