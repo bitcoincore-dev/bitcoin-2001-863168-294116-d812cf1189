@@ -206,11 +206,11 @@ bool CWallet::AddCryptedKey(const CPubKey &vchPubKey,
     return false;
 }
 
-bool CWallet::LoadKeyMetadata(uint160 id, const CKeyMetadata &meta)
+bool CWallet::LoadKeyMetadata(const CTxDestination& keyID, const CKeyMetadata &meta)
 {
     AssertLockHeld(cs_wallet); // mapKeyMetadata
     UpdateTimeFirstKey(meta.nCreateTime);
-    mapKeyMetadata[id] = meta;
+    mapKeyMetadata[keyID] = meta;
     return true;
 }
 
@@ -3257,12 +3257,12 @@ public:
     void operator()(const CNoDestination &none) {}
 };
 
-void CWallet::GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const {
+void CWallet::GetKeyBirthTimes(std::map<CTxDestination, int64_t> &mapKeyBirth) const {
     AssertLockHeld(cs_wallet); // mapKeyMetadata
     mapKeyBirth.clear();
 
     // get birth times for keys with metadata
-    for (std::map<uint160, CKeyMetadata>::const_iterator it = mapKeyMetadata.begin(); it != mapKeyMetadata.end(); it++)
+    for (auto it = mapKeyMetadata.begin(); it != mapKeyMetadata.end(); it++)
         if (it->second.nCreateTime)
             mapKeyBirth[it->first] = it->second.nCreateTime;
 

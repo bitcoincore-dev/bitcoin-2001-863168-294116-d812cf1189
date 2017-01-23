@@ -459,25 +459,25 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
         }
         else if (strType == "keymeta" || strType == "watchmeta")
         {
-            uint160 keyId;
+            CTxDestination keyID;
             if (strType == "keymeta")
             {
               CPubKey vchPubKey;
               ssKey >> vchPubKey;
-              keyId = vchPubKey.GetID();
+              keyID = vchPubKey.GetID();
             }
             else if (strType == "watchmeta")
             {
               CScript script;
               ssKey >> *(CScriptBase*)(&script);
-              keyId = CScriptID(script);
+              keyID = CScriptID(script);
             }
 
             CKeyMetadata keyMeta;
             ssValue >> keyMeta;
             wss.nKeyMeta++;
 
-            pwallet->LoadKeyMetadata(keyId, keyMeta);
+            pwallet->LoadKeyMetadata(keyID, keyMeta);
         }
         else if (strType == "defaultkey")
         {
