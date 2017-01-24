@@ -4,7 +4,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 from test_framework.test_framework import BitcoinTestFramework
-from test_framework.util import assert_equal
+from test_framework.util import assert_equal, connect_nodes_bi
 
 class ListSinceBlockTest (BitcoinTestFramework):
 
@@ -13,7 +13,17 @@ class ListSinceBlockTest (BitcoinTestFramework):
         self.setup_clean_chain = True
         self.num_nodes = 4
 
+    # Taken from master test_framework.py
+    def join_network(self):
+        connect_nodes_bi(self.nodes, 1, 2)
+        self.sync_all()
+        # Added for compatibility with 0.14 split_network:
+        self.is_network_split = False
+
     def run_test(self):
+        self.nodes[2].generate(101)
+        self.sync_all()
+
         self.test_reorg()
         self.test_double_spend()
         self.test_double_send()
@@ -47,18 +57,8 @@ class ListSinceBlockTest (BitcoinTestFramework):
         This test only checks that [tx0] is present.
         '''
 
-        assert_equal(self.is_network_split, False)
-        self.nodes[2].generate(101)
-        self.sync_all()
-
-        assert_equal(self.nodes[0].getbalance(), 0)
-        assert_equal(self.nodes[1].getbalance(), 0)
-        assert_equal(self.nodes[2].getbalance(), 50)
-        assert_equal(self.nodes[3].getbalance(), 0)
-
         # Split network into two
         self.split_network()
-        assert self.is_network_split
 
         # send to nodes[0] from nodes[2]
         senttx = self.nodes[2].sendtoaddress(self.nodes[0].getnewaddress(), 1)
@@ -111,12 +111,10 @@ class ListSinceBlockTest (BitcoinTestFramework):
         node wallet.
         '''
 
-        assert not self.is_network_split
         self.sync_all()
 
         # Split network into two
         self.split_network()
-        assert self.is_network_split
 
         # share utxo between nodes[1] and nodes[2]
         utxos = self.nodes[2].listunspent()
@@ -143,7 +141,7 @@ class ListSinceBlockTest (BitcoinTestFramework):
             self.nodes[3].getnewaddress(): 1,
             self.nodes[2].getnewaddress(): change,
         }
-        txid2 = self.nodes[2].sendrawtransaction(
+        self.nodes[2].sendrawtransaction(
             self.nodes[2].signrawtransaction(
                 self.nodes[2].createrawtransaction(utxoDicts, recipientDict2))['hex'])
 
@@ -151,20 +149,19 @@ class ListSinceBlockTest (BitcoinTestFramework):
         lastblockhash = self.nodes[1].generate(3)[2]
         self.nodes[2].generate(4)
 
-        self.sync_all()
-
         self.join_network()
 
-        # gettransaction should work for txid1; if it does not, an exception is
-        # raised, so the returned value does not need verification
-        self.nodes[0].gettransaction(txid1)
+        self.sync_all()
+
+        # gettransaction should work for txid1
+        assert self.nodes[0].gettransaction(txid1)['txid'] == txid1, "gettransaction failed to find txid1"
 
         # listsinceblock(lastblockhash) should now include txid1, as seen from nodes[0]
         lsbres = self.nodes[0].listsinceblock(lastblockhash)
         assert any(tx['txid'] == txid1 for tx in lsbres['removed'])
 
         # but it should not include 'removed' if include_removed=false
-        lsbres2 = self.nodes[0].listsinceblock(lastblockhash, 1, False, False)
+        lsbres2 = self.nodes[0].listsinceblock(blockhash=lastblockhash, include_removed=False)
         assert 'removed' not in lsbres2
 
     def test_double_send(self):
@@ -192,12 +189,10 @@ class ListSinceBlockTest (BitcoinTestFramework):
            3 (aa1, aa2, aa3).
         '''
 
-        assert not self.is_network_split
         self.sync_all()
 
         # Split network into two
         self.split_network()
-        assert self.is_network_split
 
         # create and sign a transaction
         utxos = self.nodes[2].listunspent()
@@ -232,9 +227,9 @@ class ListSinceBlockTest (BitcoinTestFramework):
         lastblockhash = self.nodes[1].generate(3)[2]
         self.nodes[2].generate(2)
 
-        self.sync_all()
-
         self.join_network()
+
+        self.sync_all()
 
         # gettransaction should work for txid1
         self.nodes[0].gettransaction(txid1)
