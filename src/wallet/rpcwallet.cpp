@@ -1670,9 +1670,9 @@ UniValue listsinceblock(const JSONRPCRequest& request)
             "Additionally, if include_removed is set, transactions affecting the wallet which were removed are returned in the \"removed\" array.\n"
             "\nArguments:\n"
             "1. \"blockhash\"            (string, optional) The block hash to list transactions since\n"
-            "2. target_confirmations:    (numeric, optional) The confirmations required, must be 1 or more\n"
-            "3. include_watchonly:       (bool, optional, default=false) Include transactions to watch-only addresses (see 'importaddress')"
-            "4. include_removed:         (bool, optional, default=true) Show transactions that were removed due to a reorg in the \"removed\" array"
+            "2. target_confirmations:    (numeric, optional, default=1) The confirmations required, must be 1 or more\n"
+            "3. include_watchonly:       (bool, optional, default=false) Include transactions to watch-only addresses (see 'importaddress')\n"
+            "4. include_removed:         (bool, optional, default=true) Show transactions that were removed due to a reorg in the \"removed\" array\n"
             "\nResult:\n"
             "{\n"
             "  \"transactions\": [\n"
@@ -1711,12 +1711,12 @@ UniValue listsinceblock(const JSONRPCRequest& request)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    const CBlockIndex* pindex = NULL;
-    const CBlockIndex* paltindex = NULL;
+    const CBlockIndex* pindex = NULL;    // Block index of the specified block or the common ancestor, if the block provided was in a deactivated chain.
+    const CBlockIndex* paltindex = NULL; // Block index of the specified block, even if it's in a deactivated chain.
     int target_confirms = 1;
     isminefilter filter = ISMINE_SPENDABLE;
 
-    if (request.params.size() > 0)
+    if (request.params.size() > 0 && !request.params[0].isNull())
     {
         uint256 blockId;
 
@@ -1735,7 +1735,7 @@ UniValue listsinceblock(const JSONRPCRequest& request)
         }
     }
 
-    if (request.params.size() > 1)
+    if (request.params.size() > 1 && !request.params[1].isNull())
     {
         target_confirms = request.params[1].get_int();
 
@@ -1743,12 +1743,12 @@ UniValue listsinceblock(const JSONRPCRequest& request)
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter");
     }
 
-    if (request.params.size() > 2 && request.params[2].get_bool())
+    if (request.params.size() > 2 && !request.params[2].isNull() && request.params[2].get_bool())
     {
         filter = filter | ISMINE_WATCH_ONLY;
     }
 
-    bool include_removed = (request.params.size() < 4 || request.params[3].get_bool());
+    bool include_removed = (request.params.size() < 4 || request.params[3].isNull() || request.params[3].get_bool());
 
     int depth = pindex ? (1 + chainActive.Height() - pindex->nHeight) : -1;
 
