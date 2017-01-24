@@ -1349,9 +1349,7 @@ static void MaybePushAddress(UniValue & entry, const CTxDestination &dest)
 }
 
 /**
- * List transactions based on the given criteria. If the criteria applied in
- * reference to being sent or received (if the ret UniValue array was appended
- * to), the function returns true, otherwise false is returned.
+ * List transactions based on the given criteria.
  *
  * @param  wtx        The wallet transaction.
  * @param  strAccount The account, if any, or "*" for all.
@@ -1359,15 +1357,13 @@ static void MaybePushAddress(UniValue & entry, const CTxDestination &dest)
  * @param  fLong      Whether to include the JSON version of the transaction.
  * @param  ret        The UniValue into which the result is stored.
  * @param  filter     The "is mine" filter bool.
- * @return            true if appends were made to ret, false otherwise.
  */
-bool ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDepth, bool fLong, UniValue& ret, const isminefilter& filter)
+void ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDepth, bool fLong, UniValue& ret, const isminefilter& filter)
 {
     CAmount nFee;
     string strSentAccount;
     list<COutputEntry> listReceived;
     list<COutputEntry> listSent;
-    bool inserted = false;
 
     wtx.GetAmounts(listReceived, listSent, nFee, strSentAccount, filter);
 
@@ -1377,7 +1373,6 @@ bool ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDe
     // Sent
     if ((!listSent.empty() || nFee != 0) && (fAllAccounts || strAccount == strSentAccount))
     {
-        inserted = true;
         BOOST_FOREACH(const COutputEntry& s, listSent)
         {
             UniValue entry(UniValue::VOBJ);
@@ -1401,7 +1396,6 @@ bool ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDe
     // Received
     if (listReceived.size() > 0 && wtx.GetDepthInMainChain() >= nMinDepth)
     {
-        inserted = true;
         BOOST_FOREACH(const COutputEntry& r, listReceived)
         {
             string account;
@@ -1437,7 +1431,6 @@ bool ListTransactions(const CWalletTx& wtx, const string& strAccount, int nMinDe
             }
         }
     }
-    return inserted;
 }
 
 void AcentryToJSON(const CAccountingEntry& acentry, const string& strAccount, UniValue& ret)
@@ -1669,7 +1662,7 @@ UniValue listsinceblock(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp)
+    if (request.fHelp || request.params.size() > 4)
         throw runtime_error(
             "listsinceblock ( \"blockhash\" target_confirmations include_watchonly include_removed )\n"
             "\nGet all transactions in blocks since block [blockhash], or all transactions if omitted.\n"
@@ -1760,19 +1753,13 @@ UniValue listsinceblock(const JSONRPCRequest& request)
     int depth = pindex ? (1 + chainActive.Height() - pindex->nHeight) : -1;
 
     UniValue transactions(UniValue::VARR);
-    std::set<uint256> listed;
 
     for (map<uint256, CWalletTx>::iterator it = pwalletMain->mapWallet.begin(); it != pwalletMain->mapWallet.end(); it++)
     {
         CWalletTx tx = (*it).second;
 
         if (depth == -1 || tx.GetDepthInMainChain() < depth)
-        {
-            if (ListTransactions(tx, "*", 0, true, transactions, filter) && include_removed)
-            {
-                listed.insert(it->first);
-            }
-        }
+            ListTransactions(tx, "*", 0, true, transactions, filter);
     }
 
     // when a reorg'd block is requested, we also list any relevant transactions
@@ -1787,7 +1774,7 @@ UniValue listsinceblock(const JSONRPCRequest& request)
         }
         for (const CTransactionRef& tx : block.vtx)
         {
-            if (listed.count(tx->GetHash()) == 0 && pwalletMain->mapWallet.count(tx->GetHash()) > 0)
+            if (pwalletMain->mapWallet.count(tx->GetHash()) > 0)
             {
                 // Use -depth as minDepth parameter to ListTransactions to prevent incoming
                 // transactions from being filtered. These transactions have negative
@@ -3083,7 +3070,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "listlockunspent",          &listlockunspent,          false,  {} },
     { "wallet",             "listreceivedbyaccount",    &listreceivedbyaccount,    false,  {"minconf","include_empty","include_watchonly"} },
     { "wallet",             "listreceivedbyaddress",    &listreceivedbyaddress,    false,  {"minconf","include_empty","include_watchonly"} },
-    { "wallet",             "listsinceblock",           &listsinceblock,           false,  {"blockhash","target_confirmations","include_watchonly", "include_removed"} },
+    { "wallet",             "listsinceblock",           &listsinceblock,           false,  {"blockhash","target_confirmations","include_watchonly","include_removed"} },
     { "wallet",             "listtransactions",         &listtransactions,         false,  {"account","count","skip","include_watchonly"} },
     { "wallet",             "listunspent",              &listunspent,              false,  {"minconf","maxconf","addresses","include_unsafe"} },
     { "wallet",             "lockunspent",              &lockunspent,              true,   {"unlock","transactions"} },
