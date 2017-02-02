@@ -261,23 +261,21 @@ bool CFeeBumper::commit(CWallet *pWallet)
         return false;
     }
 
-    CWalletTx wtxBumped(pWallet, MakeTransactionRef(std::move(mtx)));
     // commit/broadcast the tx
+    CTransactionRef txRef = MakeTransactionRef(std::move(mtx));
+    const uint256& txHash = txRef->GetHash();
+    mapValue_t mapValue = oldWtx.mapValue;
+    mapValue["replaces_txid"] = oldWtx.GetHash().ToString();
+
     CReserveKey reservekey(pWallet);
-    wtxBumped.mapValue = oldWtx.mapValue;
-    wtxBumped.mapValue["replaces_txid"] = oldWtx.GetHash().ToString();
-    wtxBumped.vOrderForm = oldWtx.vOrderForm;
-    wtxBumped.strFromAccount = oldWtx.strFromAccount;
-    wtxBumped.fTimeReceivedIsTxTime = true;
-    wtxBumped.fFromMe = true;
     CValidationState state;
-    if (!pWallet->CommitTransaction(wtxBumped, reservekey, g_connman.get(), state)) {
+    if (!pWallet->CommitTransaction(std::move(txRef), std::move(mapValue), oldWtx.vOrderForm, oldWtx.strFromAccount, reservekey, g_connman.get(), state)) {
         // NOTE: CommitTransaction never returns false, so this should never happen.
         vErrors.push_back(strprintf("The transaction was rejected: %s", state.GetRejectReason()));
         return false;
     }
 
-    bumpedTxid = wtxBumped.GetHash();
+    bumpedTxid = txHash;
     if (state.IsInvalid()) {
         // This can happen if the mempool rejected the transaction.  Report
         // what happened in the "errors" response.
@@ -285,7 +283,7 @@ bool CFeeBumper::commit(CWallet *pWallet)
     }
 
     // mark the original tx as bumped
-    if (!pWallet->MarkReplaced(oldWtx.GetHash(), wtxBumped.GetHash())) {
+    if (!pWallet->MarkReplaced(oldWtx.GetHash(), txHash)) {
         // TODO: see if JSON-RPC has a standard way of returning a response
         // along with an exception. It would be good to return information about
         // wtxBumped to the caller even if marking the original transaction
