@@ -86,6 +86,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "createrawtransaction", 0, "transactions" },
     { "createrawtransaction", 1, "outputs" },
     { "createrawtransaction", 2, "locktime" },
+    { "createrawtransaction", 3, "optintorbf" },
     { "signrawtransaction", 1, "prevtxs" },
     { "signrawtransaction", 2, "privkeys" },
     { "sendrawtransaction", 1, "allowhighfees" },
