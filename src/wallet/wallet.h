@@ -590,6 +590,15 @@ private:
 
     int64_t nTimeFirstKey;
 
+    /**
+     * Private version of AddWatchOnly method which does not accept a timestamp.
+     * Because this is an inherited virtual method, it is accessible despite
+     * being marked private, but it is marked private anyway to encourage use of
+     * the other AddWatchOnly which accepts a timestamp and sets nTimeFirstKey
+     * more intelligently for more efficient rescans.
+     */
+    bool AddWatchOnly(const CScript &dest) override;
+
 public:
     /*
      * Main wallet lock.
@@ -730,7 +739,6 @@ public:
     bool GetDestData(const CTxDestination &dest, const std::string &key, std::string *value) const;
 
     //! Adds a watch-only address to the store, and saves it to disk.
-    bool AddWatchOnly(const CScript &dest);
     bool AddWatchOnly(const CScript &dest, int64_t nCreateTime);
     bool RemoveWatchOnly(const CScript &dest);
     //! Adds a watch-only address to the store, without saving it to disk (used by LoadWallet)
