@@ -2882,7 +2882,12 @@ UniValue bumpfee(const JSONRPCRequest& request)
     // commit/broadcast the tx
     CReserveKey reservekey(pwalletMain);
     CWalletTx wtxBumped(pwalletMain, MakeTransactionRef(std::move(tx)));
+    wtxBumped.mapValue = wtx.mapValue;
     wtxBumped.mapValue["replaces_txid"] = hash.ToString();
+    wtxBumped.vOrderForm = wtx.vOrderForm;
+    wtxBumped.strFromAccount = wtx.strFromAccount;
+    wtxBumped.fTimeReceivedIsTxTime = true;
+    wtxBumped.fFromMe = true;
     CValidationState state;
     if (!pwalletMain->CommitTransaction(wtxBumped, reservekey, g_connman.get(), state) || !state.IsValid()) {
         throw JSONRPCError(RPC_WALLET_ERROR, strprintf("Error: The transaction was rejected! Reason given: %s", state.GetRejectReason()));
