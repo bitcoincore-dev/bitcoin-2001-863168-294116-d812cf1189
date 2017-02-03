@@ -2753,11 +2753,39 @@ UniValue bumpfee(const JSONRPCRequest& request)
     LOCK2(cs_main, pwalletMain->cs_wallet);
     EnsureWalletIsUnlocked();
 
+    CAmount nOldFee(0);
+    CAmount nNewFee(0);
+    std::shared_ptr<CWalletTx> wtxRef;
+    std::vector<std::string> vErrors;
+    CWallet::BumpFeeResult res = pwalletMain->BumpFee(hash, newConfirmTarget, specifiedConfirmTarget, totalFee, replaceable, nOldFee, nNewFee, wtxRef, vErrors);
+    if (res != CWallet::BumpFeeResult_OK)
+    {
+        switch(res) {
+            case CWallet::BumpFeeResult_INVALID_ADDRESS_OR_KEY:
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, vErrors[0]);
+                break;
+            case CWallet::BumpFeeResult_INVALID_REQUEST:
+                throw JSONRPCError(RPC_INVALID_REQUEST, vErrors[0]);
+                break;
+            case CWallet::BumpFeeResult_INVALID_PARAMETER:
+                throw JSONRPCError(RPC_INVALID_PARAMETER, vErrors[0]);
+                break;
+            case CWallet::BumpFeeResult_WALLET_ERROR:
+                throw JSONRPCError(RPC_WALLET_ERROR, vErrors[0]);
+                break;
+            default:
+                throw JSONRPCError(RPC_MISC_ERROR, vErrors[0]);
+                break;
+        }
+    }
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair("txid", wtxBumped.GetHash().GetHex()));
+    result.push_back(Pair("txid", wtxRef->GetHash().GetHex()));
     result.push_back(Pair("origfee", ValueFromAmount(nOldFee)));
     result.push_back(Pair("fee", ValueFromAmount(nNewFee)));
-    result.push_back(Pair("errors", vErrors));
+    UniValue errors(UniValue::VARR);
+    for (const std::string& err: vErrors)
+        errors.push_back(err);
+    result.push_back(errors);
 
     return result;
 }
