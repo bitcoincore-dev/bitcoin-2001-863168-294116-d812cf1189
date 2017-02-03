@@ -607,11 +607,13 @@ private:
     int64_t nTimeFirstKey;
 
     /**
-     * Private version of AddWatchOnly method which does not accept a timestamp.
+     * Private version of AddWatchOnly method which does not accept a
+     * timestamp, and which will reset the wallet's nTimeFirstKey value to 1 if
+     * the watch key did not previously have a timestamp associated with it.
      * Because this is an inherited virtual method, it is accessible despite
-     * being marked private, but it is marked private anyway to encourage use of
-     * the other AddWatchOnly which accepts a timestamp and sets nTimeFirstKey
-     * more intelligently for more efficient rescans.
+     * being marked private, but it is marked private anyway to encourage use
+     * of the other AddWatchOnly which accepts a timestamp and sets
+     * nTimeFirstKey more intelligently for more efficient rescans.
      */
     bool AddWatchOnly(const CScript &dest) override;
 
