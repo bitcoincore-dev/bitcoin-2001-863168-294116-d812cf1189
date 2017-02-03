@@ -791,6 +791,21 @@ public:
     bool FundTransaction(CMutableTransaction& tx, CAmount& nFeeRet, bool overrideEstimatedFeeRate, const CFeeRate& specificFeeRate, int& nChangePosInOut, std::string& strFailReason, bool includeWatching, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, bool keepReserveKey = true, const CTxDestination& destChange = CNoDestination());
 
     /**
+     * Bumps the fee of an opt-in-RBF transaction <txid>,
+     * replacing it with a new transaction <wtxNew>
+     */
+    enum BumpFeeResult
+    {
+        BumpFeeResult_OK,
+        BumpFeeResult_INVALID_ADDRESS_OR_KEY,
+        BumpFeeResult_INVALID_REQUEST,
+        BumpFeeResult_INVALID_PARAMETER,
+        BumpFeeResult_WALLET_ERROR,
+        BumpFeeResult_MISC_ERROR,
+    };
+    enum BumpFeeResult BumpFee(uint256 txid, int newConfirmTarget, bool specifiedConfirmTarget, CAmount totalFee, bool newTxReplaceable, CAmount& nOldFee, CAmount& nNewFee, std::shared_ptr<CWalletTx>& wtxNew, std::vector<std::string>& vErrors);
+
+    /**
      * Create a new transaction paying the recipients with a set of coins
      * selected by SelectCoins(); Also create the change output, when needed
      * @note passing nChangePosInOut as -1 will result in setting a random position
