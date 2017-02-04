@@ -11,11 +11,8 @@ from test_framework.util import *
 class SortMultisigTest(BitcoinTestFramework):
     def __init__(self):
         super().__init__()
-        self.num_nodes = 4
-        self.setup_clean_chain = False
-
-    def setup_nodes(self):
-        return start_nodes(self.num_nodes, self.options.tmpdir)
+        self.num_nodes = 1
+        self.setup_clean_chain = True
 
     def run_test(self):
         pub1 = "022df8750480ad5b26950b25c7ba79d3e37d75f640f8e5d9bcd5b150a0f85014da"
