@@ -87,8 +87,12 @@ static RPCHelpMan createmultisig()
                         {
                             {"key", RPCArg::Type::STR_HEX, RPCArg::Optional::OMITTED, "The hex-encoded public key"},
                         }},
-                    {"address_type", RPCArg::Type::STR, /* default */ "legacy", "The address type to use. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\"."},
-                    {"sort", RPCArg::Type::BOOL, /* default */ "false", "Whether to sort public keys according to BIP67."},
+                    {"options", RPCArg::Type::OBJ, RPCArg::Optional::OMITTED_NAMED_ARG, "",
+                        {
+                            {"address_type", RPCArg::Type::STR, /* default */ "legacy", "The address type to use. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\"."},
+                            {"sort", RPCArg::Type::BOOL, /* default */ "false", "Whether to sort public keys according to BIP67."},
+                        },
+                        "options"},
                 },
                 RPCResult{
                     RPCResult::Type::OBJ, "", "",
@@ -108,7 +112,34 @@ static RPCHelpMan createmultisig()
 {
     int required = request.params[0].get_int();
 
-    bool sort = request.params.size() > 3 && request.params[3].get_bool();
+    bool sort = false;
+    OutputType output_type = OutputType::LEGACY;
+
+    if (request.params[2].isStr()) {
+        // backward compatibility
+        if (!ParseOutputType(request.params[2].get_str(), output_type)) {
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Unknown address type '%s'", request.params[2].get_str()));
+        }
+    } else if (!request.params[2].isNull()) {
+        const UniValue& options = request.params[2];
+        RPCTypeCheckArgument(options, UniValue::VOBJ);
+        RPCTypeCheckObj(options,
+            {
+                {"address_type", UniValueType(UniValue::VSTR)},
+                {"sort", UniValueType(UniValue::VBOOL)},
+            },
+            true, true);
+
+        if (options.exists("address_type")) {
+            if (!ParseOutputType(options["address_type"].get_str(), output_type)) {
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Unknown address type '%s'", options["address_type"].get_str()));
+            }
+        }
+
+        if (options.exists("sort")) {
+            sort = options["sort"].get_bool();
+        }
+    }
 
     // Get the public keys
     const UniValue& keys = request.params[1].get_array();
@@ -118,14 +149,6 @@ static RPCHelpMan createmultisig()
             pubkeys.push_back(HexToPubKey(keys[i].get_str()));
         } else {
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Invalid public key: %s\n.", keys[i].get_str()));
-        }
-    }
-
-    // Get the output type
-    OutputType output_type = OutputType::LEGACY;
-    if (!request.params[2].isNull()) {
-        if (!ParseOutputType(request.params[2].get_str(), output_type)) {
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Unknown address type '%s'", request.params[2].get_str()));
         }
     }
 
@@ -705,7 +728,7 @@ static const CRPCCommand commands[] =
     { "control",            "getmemoryinfo",          &getmemoryinfo,          {"mode"} },
     { "control",            "logging",                &logging,                {"include", "exclude"}},
     { "util",               "validateaddress",        &validateaddress,        {"address"} },
-    { "util",               "createmultisig",         &createmultisig,         {"nrequired","keys","address_type","sort"} },
+    { "util",               "createmultisig",         &createmultisig,         {"nrequired","keys","options||address_type"} },
     { "util",               "deriveaddresses",        &deriveaddresses,        {"descriptor", "range"} },
     { "util",               "getdescriptorinfo",      &getdescriptorinfo,      {"descriptor"} },
     { "util",               "verifymessage",          &verifymessage,          {"address","signature","message"} },
