@@ -35,9 +35,9 @@ class WalletAccountsTest(BitcoinTestFramework):
             "n2yWMtx8jVbo8wv9BK2eN1LdbaakgKL3Mt",
         ]
 
-        sorted_default = node.addmultisigaddress(2, addresses, "sort-test")
-        sorted_false = node.addmultisigaddress(2, addresses, "sort-test", False)
-        sorted_true = node.addmultisigaddress(2, addresses, "sort-test", True)
+        sorted_default = node.addmultisigaddress(2, addresses)
+        sorted_false = node.addmultisigaddress(2, addresses, {"sort": False})
+        sorted_true = node.addmultisigaddress(2, addresses, {"sort": True})
 
         assert_equal(sorted_default, sorted_false)
         assert_equal("2N6dne8yzh13wsRJxCcMgCYNeN9fxKWNHt8", sorted_default)
