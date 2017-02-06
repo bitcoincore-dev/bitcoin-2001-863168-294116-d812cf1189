@@ -984,7 +984,7 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
             "  [     (array of json objects)\n"
             "    {\n"
             "      \"scriptPubKey\": \"<script>\" | { \"address\":\"<address>\" }, (string / json, required) Type of scriptPubKey (string for script, json for address)\n"
-            "      \"timestamp\": 1454686740 | \"now\"                       , (integer / string) Integer timestamp, or the string \"now\" to substitute the current synced\n"
+            "      \"timestamp\": <timestamp> | \"now\"                      , (integer / string, required) Integer timestamp, or the string \"now\" to substitute the current synced\n"
             "                                                              blockchain time. The timestamp of the oldest key will determine how far back blockchain rescans\n"
             "                                                              for missing wallet transactions need to begin. \"now\" can be specified to bypass scanning, for\n"
             "                                                              keys which are known to never have been used, and 0 can be specified to scan the entire blockchain.\n"
