@@ -6,6 +6,7 @@
 #ifndef BITCOIN_TXMEMPOOL_H
 #define BITCOIN_TXMEMPOOL_H
 
+#include <map>
 #include <memory>
 #include <set>
 #include <map>
@@ -29,6 +30,7 @@
 
 class CAutoFile;
 class CBlockIndex;
+class CScript;
 
 inline double AllowFreeThreshold()
 {
@@ -642,6 +644,8 @@ public:
     TxMempoolInfo info(const uint256& hash) const;
     std::vector<TxMempoolInfo> infoAll() const;
 
+    void FindScriptPubKey(const std::set<CScript>& setscriptNeedles, std::map<uint256, CCoins>& outResults);
+
     /** Estimate fee rate needed to get into the next nBlocks
      *  If no answer can be given at nBlocks, return an estimate
      *  at the lowest number of blocks where one can be given
@@ -711,6 +715,7 @@ private:
 /** 
  * CCoinsView that brings transactions from a memorypool into view.
  * It does not check for spendings by memory pool transactions.
+ * Its Cursor also doesn't work. In general, it is broken as a CCoinsView implementation outside of a few use cases.
  */
 class CCoinsViewMemPool : public CCoinsViewBacked
 {

@@ -57,6 +57,22 @@ void EnsureWalletIsUnlocked()
         throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Error: Please enter the wallet passphrase with walletpassphrase first.");
 }
 
+void ParseWIFPrivKey(const std::string strSecret, CKey& key, CPubKey& pubkey)
+{
+    CBitcoinSecret vchSecret;
+    if (!vchSecret.SetString(strSecret)) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid private key encoding");
+    }
+
+    key = vchSecret.GetKey();
+    if (!key.IsValid()) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Private key outside allowed range");
+    }
+
+    pubkey = key.GetPubKey();
+    assert(key.VerifyPubKey(pubkey));
+}
+
 void WalletTxToJSON(const CWalletTx& wtx, UniValue& entry)
 {
     int confirms = wtx.GetDepthInMainChain();
@@ -986,6 +1002,153 @@ UniValue sendmany(const JSONRPCRequest& request)
     }
 
     return wtx.GetHash().GetHex();
+}
+
+UniValue sweepprivkeys(const JSONRPCRequest& request)
+{
+    CWallet *&pwallet = pwalletMain;
+    if (!EnsureWalletIsAvailable(request.fHelp))
+        return NullUniValue;
+
+    if (request.fHelp || request.params.size() != 1)
+        throw runtime_error(
+            "sweepprivkeys {\"privkeys\": [\"bitcoinprivkey\",...], other options}\n"
+            "\nSends bitcoins controlled by private key to specified destinations.\n"
+            "\nOptions:\n"
+            "  \"privkeys\":[\"bitcoinprivkey\",...]   (array of strings, required) An array of WIF private key(s)\n"
+            "  \"label\":\"actuallabelname\"           (string, optional) Label for received bitcoins\n"
+            "  \"comment\":\"description\"             (string, optional) Local comment for the receive transaction\n"
+        );
+
+    // NOTE: It isn't safe to sweep-and-send in a single action, since this would leave the send missing from the transaction history
+
+    RPCTypeCheck(request.params, boost::assign::list_of(UniValue::VOBJ));
+
+    // Parse options
+    std::set<CScript> setscriptSearch;
+    CBasicKeyStore tempKeystore;
+    CMutableTransaction tx;
+    std::string strLabel, strComment;
+    CAmount nTotalIn = 0;
+    for (const std::string& optname : request.params[0].getKeys()) {
+        const UniValue& optval = request.params[0][optname];
+        if (optname == "privkeys") {
+            const UniValue& privkeys_a = optval.get_array();
+            for (size_t privkey_i = 0; privkey_i < privkeys_a.size(); ++privkey_i) {
+                const UniValue& privkey_wif = privkeys_a[privkey_i];
+                std::string strSecret = privkey_wif.get_str();
+                CKey key;
+                CPubKey pubkey;
+                ParseWIFPrivKey(strSecret, key, pubkey);
+
+                tempKeystore.AddKey(key);
+                CKeyID vchAddress = pubkey.GetID();
+                CScript script = GetScriptForDestination(vchAddress);
+                if (!script.empty()) {
+                    setscriptSearch.insert(script);
+                }
+                script = GetScriptForRawPubKey(pubkey);
+                if (!script.empty()) {
+                    setscriptSearch.insert(script);
+                }
+            }
+        } else if (optname == "label") {
+            strLabel = AccountFromValue(optval.get_str());
+        } else if (optname == "comment") {
+            strComment = optval.get_str();
+        } else {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Unrecognised option '%s'", optname));
+        }
+    }
+
+    // Ensure keypool is filled if possible
+    {
+        LOCK2(cs_main, pwallet->cs_wallet);
+
+        if (!pwallet->IsLocked()) {
+            pwallet->TopUpKeyPool();
+        }
+    }
+
+    // Reserve the key we will be using
+    CReserveKey reservekey(pwallet);
+    CPubKey vchPubKey;
+    if (!reservekey.GetReservedKey(vchPubKey)) {
+        throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
+    }
+
+    // Scan UTXO set for inputs
+    std::vector<CTxOut> vInTXOs;
+    {
+        // Collect all possible inputs
+        std::map<uint256, CCoins> mapcoins;
+        {
+            LOCK(cs_main);
+            mempool.FindScriptPubKey(setscriptSearch, mapcoins);
+            FlushStateToDisk();
+            pcoinsTip->FindScriptPubKey(setscriptSearch, mapcoins);
+        }
+
+        // Add them as inputs to the transaction, and count the total value
+        for (auto& it : mapcoins) {
+            const uint256& hash = it.first;
+            const CCoins& coins = it.second;
+            for (size_t txo_n = 0; txo_n < coins.vout.size(); ++txo_n) {
+                const CTxOut& txo = coins.vout[txo_n];
+                if (txo.IsNull()) {
+                    continue;
+                }
+                tx.vin.emplace_back(hash, txo_n);
+                vInTXOs.push_back(txo);
+                nTotalIn += txo.nValue;
+            }
+        }
+    }
+
+    if (nTotalIn == 0) {
+        throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "No value to sweep");
+    }
+
+    CKeyID keyID = vchPubKey.GetID();
+    CTxDestination txdest = CBitcoinAddress(keyID).Get();
+
+    tx.vout.emplace_back(nTotalIn, GetScriptForDestination(txdest));
+
+    while (true) {
+        if (tx.vout[0].IsDust(::minRelayTxFee)) {
+            throw JSONRPCError(RPC_VERIFY_REJECTED, "Swept value would be dust");
+        }
+        for (size_t nIn = 0; nIn < tx.vin.size(); ++nIn) {
+            SignatureData sigdata;
+            if (!ProduceSignature(MutableTransactionSignatureCreator(&tempKeystore, &tx, nIn, vInTXOs[nIn].nValue, SIGHASH_ALL), vInTXOs[nIn].scriptPubKey, sigdata)) {
+                throw JSONRPCError(RPC_MISC_ERROR, "Failed to sign");
+            }
+            UpdateTransaction(tx, nIn, sigdata);
+        }
+        int64_t nBytes = GetVirtualTransactionSize(tx);
+        CAmount nFeeNeeded = pwallet->GetMinimumFee(nBytes, nTxConfirmTarget, mempool);
+        const CAmount nTotalOut = tx.vout[0].nValue;
+        if (nFeeNeeded <= nTotalIn - nTotalOut) {
+            break;
+        }
+        tx.vout[0].nValue = nTotalIn - nFeeNeeded;
+    }
+
+    CTransactionRef txFinal(MakeTransactionRef(std::move(tx)));
+    pwallet->SetAddressBook(keyID, strLabel, "receive");
+
+    CValidationState state;
+    if (!AcceptToMemoryPool(mempool, state, txFinal, true, NULL, NULL, maxTxFee, std::set<std::string>())) {
+        pwallet->DelAddressBook(keyID);
+        if (state.IsInvalid()) {
+            throw JSONRPCError(RPC_TRANSACTION_REJECTED, strprintf("%i: %s", state.GetRejectCode(), state.GetRejectReason()));
+        } else {
+            throw JSONRPCError(RPC_TRANSACTION_ERROR, state.GetRejectReason());
+        }
+    }
+    reservekey.KeepKey();
+
+    return txFinal->GetHash().GetHex();
 }
 
 // Defined in rpc/misc.cpp
@@ -3030,6 +3193,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "sendfrom",                 &sendfrom,                 false,  {"fromaccount","toaddress","amount","minconf","comment","comment_to"} },
     { "wallet",             "sendmany",                 &sendmany,                 false,  {"fromaccount","amounts","minconf","comment","subtractfeefrom"} },
     { "wallet",             "sendtoaddress",            &sendtoaddress,            false,  {"address","amount","comment","comment_to","subtractfeefromamount"} },
+    { "wallet",             "sweepprivkeys",            &sweepprivkeys,            false,  {"options"} },
     { "wallet",             "setaccount",               &setaccount,               true,   {"address","account"} },
     { "wallet",             "settxfee",                 &settxfee,                 true,   {"amount"} },
     { "wallet",             "signmessage",              &signmessage,              true,   {"address","message"} },
