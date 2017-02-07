@@ -2749,37 +2749,46 @@ UniValue bumpfee(const JSONRPCRequest& request)
         }
     }
 
-    // retrieve the original tx from the wallet
     LOCK2(cs_main, pwalletMain->cs_wallet);
     EnsureWalletIsUnlocked();
 
     CAmount nOldFee(0);
     CAmount nNewFee(0);
-    std::shared_ptr<CWalletTx> wtxRef;
+    std::shared_ptr<CMutableTransaction> txRef;
     std::vector<std::string> vErrors;
-    CWallet::BumpFeeResult res = pwalletMain->BumpFee(hash, newConfirmTarget, specifiedConfirmTarget, totalFee, replaceable, nOldFee, nNewFee, wtxRef, vErrors);
-    if (res != CWallet::BumpFeeResult_OK)
+    CWallet::BumpFeeResult res = pwalletMain->BumpFeePrepare(hash, newConfirmTarget, specifiedConfirmTarget, totalFee, replaceable, nOldFee, nNewFee, txRef, vErrors);
+    if (res != CWallet::BumpFeeResult::OK)
     {
         switch(res) {
-            case CWallet::BumpFeeResult_INVALID_ADDRESS_OR_KEY:
+            case CWallet::BumpFeeResult::INVALID_ADDRESS_OR_KEY:
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, vErrors[0]);
                 break;
-            case CWallet::BumpFeeResult_INVALID_REQUEST:
+            case CWallet::BumpFeeResult::INVALID_REQUEST:
                 throw JSONRPCError(RPC_INVALID_REQUEST, vErrors[0]);
                 break;
-            case CWallet::BumpFeeResult_INVALID_PARAMETER:
+            case CWallet::BumpFeeResult::INVALID_PARAMETER:
                 throw JSONRPCError(RPC_INVALID_PARAMETER, vErrors[0]);
-                break;
-            case CWallet::BumpFeeResult_WALLET_ERROR:
-                throw JSONRPCError(RPC_WALLET_ERROR, vErrors[0]);
                 break;
             default:
                 throw JSONRPCError(RPC_MISC_ERROR, vErrors[0]);
                 break;
         }
     }
+
+    // sign bumped transaction
+    if (!pwalletMain->SignTransaction(txRef)) {
+        throw JSONRPCError(RPC_WALLET_ERROR, "Can't sign transaction.");
+    }
+
+    // commit the bumped tx
+    CWalletTx wtxBumped(pwalletMain, MakeTransactionRef(std::move(*txRef)));
+    CWalletTx& oldWtx = pwalletMain->mapWallet[hash];
+    if (!pwalletMain->BumpFeeCommit(oldWtx, wtxBumped, vErrors)) {
+        throw JSONRPCError(RPC_WALLET_ERROR, vErrors[0]);
+    }
+
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair("txid", wtxRef->GetHash().GetHex()));
+    result.push_back(Pair("txid", wtxBumped.GetHash().GetHex()));
     result.push_back(Pair("origfee", ValueFromAmount(nOldFee)));
     result.push_back(Pair("fee", ValueFromAmount(nNewFee)));
     UniValue errors(UniValue::VARR);
