@@ -74,6 +74,7 @@ private Q_SLOTS:
     void updateDefaultProxyNets();
     void checkLineEdit();
 
+    void incrementalrelayfee_changed();
     void blockmaxsize_changed(int);
     void blockmaxsize_increase(int);
     void blockmaxweight_changed(int);
@@ -97,6 +98,7 @@ private:
 
     QValueComboBox *mempoolreplacement;
     QSpinBox *maxorphantx;
+    BitcoinAmountField *incrementalrelayfee;
     QSpinBox *maxmempool;
     QSpinBox *mempoolexpiry;
 
