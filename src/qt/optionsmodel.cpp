@@ -276,6 +276,10 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return strThirdPartyTxUrls;
         case Language:
             return settings.value("language");
+#ifdef ENABLE_WALLET
+        case walletrbf:
+            return fWalletRbf;
+#endif
         case CoinControlFeatures:
             return fCoinControlFeatures;
         case DatabaseCache:
@@ -463,6 +467,17 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 setRestartRequired(true);
             }
             break;
+#ifdef ENABLE_WALLET
+        case walletrbf:
+        {
+            const bool fNewValue = value.toBool();
+            if (fNewValue != fWalletRbf) {
+                gArgs.ModifyRWConfigFile("walletrbf", strprintf("%d", fNewValue));
+                fWalletRbf = fNewValue;
+            }
+            break;
+        }
+#endif
         case CoinControlFeatures:
             fCoinControlFeatures = value.toBool();
             settings.setValue("fCoinControlFeatures", fCoinControlFeatures);
