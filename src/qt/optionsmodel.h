@@ -72,6 +72,7 @@ public:
         FontForMoney,           // FontChoice
         FontForQRCodes,         // FontChoice
         PeersTabAlternatingRowColors, // bool
+        walletrbf,              // bool
         CoinControlFeatures,    // bool
         SubFeeFromAmount,       // bool
         ThreadsScriptVerif,     // int
