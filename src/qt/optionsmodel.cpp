@@ -17,7 +17,7 @@
 #include "policy/policy.h"
 #include "validation.h"
 #include "net.h"
-#include "net_processing.h"  // for DEFAULT_MAX_ORPHAN_TRANSACTIONS
+#include "net_processing.h"
 #include "netbase.h"
 #include "txdb.h" // for -dbcache defaults
 #include "txmempool.h" // for fPriorityAccurate
@@ -293,6 +293,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return qlonglong(g_connman->GetMaxOutboundTarget() / 1024 / 1024);
         case peerbloomfilters:
             return f_peerbloomfilters;
+        case blockreconstructionextratxn:
+            return qlonglong(GetArg("-blockreconstructionextratxn", DEFAULT_BLOCK_RECONSTRUCTION_EXTRA_TXN));
         case mempoolreplacement:
             return CanonicalMempoolReplacement();
         case maxorphantx:
@@ -520,6 +522,13 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 ModifyRWConfigFile("peerbloomfilters", strprintf("%d", value.toBool()));
                 f_peerbloomfilters = value.toBool();
                 setRestartRequired(true);
+            }
+            break;
+        case blockreconstructionextratxn:
+            if (value.toLongLong() != GetArg("-blockreconstructionextratxn", DEFAULT_BLOCK_RECONSTRUCTION_EXTRA_TXN)) {
+                std::string strNv = value.toString().toStdString();
+                SetArg("-blockreconstructionextratxn", strNv);
+                ModifyRWConfigFile("blockreconstructionextratxn", strNv);
             }
             break;
         case mempoolreplacement:
