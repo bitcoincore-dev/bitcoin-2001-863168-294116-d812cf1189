@@ -55,6 +55,7 @@ public:
         Listen,                 // bool
         maxuploadtarget,
         peerbloomfilters,       // bool
+        blockreconstructionextratxn,
         mempoolreplacement,
         maxorphantx,
         maxmempool,
