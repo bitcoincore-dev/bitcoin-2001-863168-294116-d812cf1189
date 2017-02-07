@@ -451,7 +451,9 @@ struct CMutableTransaction
 };
 
 typedef std::shared_ptr<const CTransaction> CTransactionRef;
+typedef std::shared_ptr<CMutableTransaction> CMutableTransactionRef;
 static inline CTransactionRef MakeTransactionRef() { return std::make_shared<const CTransaction>(); }
+static inline CMutableTransactionRef MakeMutableTransactionRef(const CTransactionRef& txRef) { return std::make_shared<CMutableTransaction>(*txRef); }
 template <typename Tx> static inline CTransactionRef MakeTransactionRef(Tx&& txIn) { return std::make_shared<const CTransaction>(std::forward<Tx>(txIn)); }
 
 /** Compute the weight of a transaction, as defined by BIP 141 */

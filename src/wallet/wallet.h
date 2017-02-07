@@ -789,23 +789,8 @@ public:
      * calling CreateTransaction();
      */
     bool FundTransaction(CMutableTransaction& tx, CAmount& nFeeRet, bool overrideEstimatedFeeRate, const CFeeRate& specificFeeRate, int& nChangePosInOut, std::string& strFailReason, bool includeWatching, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, bool keepReserveKey = true, const CTxDestination& destChange = CNoDestination());
-
     bool SignTransaction(std::shared_ptr<CMutableTransaction> tx);
 
-    /**
-     * Bumps the fee of an opt-in-RBF transaction <txid>,
-     * replacing it with a new transaction <wtxNew>
-     */
-    enum class BumpFeeResult
-    {
-        OK,
-        INVALID_ADDRESS_OR_KEY,
-        INVALID_REQUEST,
-        INVALID_PARAMETER,
-        MISC_ERROR,
-    };
-    BumpFeeResult BumpFeePrepare(uint256 txid, int newConfirmTarget, bool specifiedConfirmTarget, CAmount totalFee, bool newTxReplaceable, CAmount& nOldFee, CAmount& nNewFee, std::shared_ptr<CMutableTransaction>& txNew, std::vector<std::string>& vErrors);
-    bool BumpFeeCommit(const CWalletTx& oldWtx, CWalletTx& wtxBumped, std::vector<std::string>& vErrors);
     /**
      * Create a new transaction paying the recipients with a set of coins
      * selected by SelectCoins(); Also create the change output, when needed

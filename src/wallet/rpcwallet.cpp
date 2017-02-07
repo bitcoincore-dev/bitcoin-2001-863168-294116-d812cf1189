@@ -18,8 +18,9 @@
 #include "timedata.h"
 #include "util.h"
 #include "utilmoneystr.h"
-#include "wallet.h"
-#include "walletdb.h"
+#include "wallet/feebumper.h"
+#include "wallet/wallet.h"
+#include "wallet/walletdb.h"
 
 #include <stdint.h>
 
@@ -2752,47 +2753,40 @@ UniValue bumpfee(const JSONRPCRequest& request)
     LOCK2(cs_main, pwalletMain->cs_wallet);
     EnsureWalletIsUnlocked();
 
-    CAmount nOldFee(0);
-    CAmount nNewFee(0);
-    std::shared_ptr<CMutableTransaction> txRef;
-    std::vector<std::string> vErrors;
-    CWallet::BumpFeeResult res = pwalletMain->BumpFeePrepare(hash, newConfirmTarget, specifiedConfirmTarget, totalFee, replaceable, nOldFee, nNewFee, txRef, vErrors);
-    if (res != CWallet::BumpFeeResult::OK)
+    CFeeBumper feeBump(pwalletMain, hash, newConfirmTarget, specifiedConfirmTarget, totalFee, replaceable);
+    CFeeBumper::BumpFeeResult res = feeBump.getResult();
+    if (res != CFeeBumper::BumpFeeResult::OK)
     {
         switch(res) {
-            case CWallet::BumpFeeResult::INVALID_ADDRESS_OR_KEY:
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, vErrors[0]);
+            case CFeeBumper::BumpFeeResult::INVALID_ADDRESS_OR_KEY:
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, feeBump.getErrors()[0]);
                 break;
-            case CWallet::BumpFeeResult::INVALID_REQUEST:
-                throw JSONRPCError(RPC_INVALID_REQUEST, vErrors[0]);
+            case CFeeBumper::BumpFeeResult::INVALID_REQUEST:
+                throw JSONRPCError(RPC_INVALID_REQUEST, feeBump.getErrors()[0]);
                 break;
-            case CWallet::BumpFeeResult::INVALID_PARAMETER:
-                throw JSONRPCError(RPC_INVALID_PARAMETER, vErrors[0]);
+            case CFeeBumper::BumpFeeResult::INVALID_PARAMETER:
+                throw JSONRPCError(RPC_INVALID_PARAMETER, feeBump.getErrors()[0]);
                 break;
             default:
-                throw JSONRPCError(RPC_MISC_ERROR, vErrors[0]);
+                throw JSONRPCError(RPC_MISC_ERROR, feeBump.getErrors()[0]);
                 break;
         }
     }
 
     // sign bumped transaction
-    if (!pwalletMain->SignTransaction(txRef)) {
+    if (!pwalletMain->SignTransaction(feeBump.getBumpedTxRef())) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Can't sign transaction.");
     }
-
-    // commit the bumped tx
-    CWalletTx wtxBumped(pwalletMain, MakeTransactionRef(std::move(*txRef)));
-    CWalletTx& oldWtx = pwalletMain->mapWallet[hash];
-    if (!pwalletMain->BumpFeeCommit(oldWtx, wtxBumped, vErrors)) {
-        throw JSONRPCError(RPC_WALLET_ERROR, vErrors[0]);
+    // commit the bumped transaction
+    if(!feeBump.commit(pwalletMain)) {
+        throw JSONRPCError(RPC_WALLET_ERROR, feeBump.getErrors()[0]);
     }
-
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair("txid", wtxBumped.GetHash().GetHex()));
-    result.push_back(Pair("origfee", ValueFromAmount(nOldFee)));
-    result.push_back(Pair("fee", ValueFromAmount(nNewFee)));
+    result.push_back(Pair("txid", feeBump.getBumpedTxId().GetHex()));
+    result.push_back(Pair("origfee", ValueFromAmount(feeBump.getOldFee())));
+    result.push_back(Pair("fee", ValueFromAmount(feeBump.getNewFee())));
     UniValue errors(UniValue::VARR);
-    for (const std::string& err: vErrors)
+    for (const std::string& err: feeBump.getErrors())
         errors.push_back(err);
     result.push_back(errors);
 
