@@ -106,6 +106,7 @@ private:
     QSpinBox *datacarriersize;
     BitcoinAmountField *dustrelayfee;
 
+    BitcoinAmountField *blockmintxfee;
     QSpinBox *blockmaxsize, *blockprioritysize, *blockmaxweight;
 };
 
