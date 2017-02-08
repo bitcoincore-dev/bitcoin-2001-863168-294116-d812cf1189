@@ -81,7 +81,7 @@ public:
     const QString& getOverriddenByCommandLine() { return strOverriddenByCommandLine; }
 
     /* Explicit setters */
-    void SetPrune(bool prune, bool force = false);
+    void SetPruneMiB(uint64_t prune, bool force = false);
 
     /* Restart flag helper */
     void setRestartRequired(bool fRequired);

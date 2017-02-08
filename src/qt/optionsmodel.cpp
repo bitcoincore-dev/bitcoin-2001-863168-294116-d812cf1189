@@ -263,13 +263,19 @@ static const QString GetDefaultProxyAddress()
     return QString("%1:%2").arg(DEFAULT_GUI_PROXY_HOST).arg(DEFAULT_GUI_PROXY_PORT);
 }
 
-void OptionsModel::SetPrune(bool prune, bool force)
+void OptionsModel::SetPruneMiB(const uint64_t nPruneSizeMiB, bool force)
 {
+    // Initialise specified prune setting
+    const std::string prune_val = std::to_string(nPruneSizeMiB);
+    gArgs.ModifyRWConfigFile("prune", prune_val);
+
+    // Set QSettings for Core
     QSettings settings;
-    settings.setValue("bPrune", prune);
-    // Convert prune size from GB to MiB:
-    const uint64_t nPruneSizeMiB = (settings.value("nPruneSize").toInt() * GB_BYTES) >> 20;
-    std::string prune_val = prune ? std::to_string(nPruneSizeMiB) : "0";
+    settings.setValue("bPrune", (nPruneSizeMiB > 1));
+    if (nPruneSizeMiB > 1) {
+        settings.setValue("nPruneSize", qlonglong(((nPruneSizeMiB * 1024 * 1024) + GB_BYTES - 1) / GB_BYTES));
+    }
+
     if (force) {
         m_node.forceSetArg("-prune", prune_val);
         return;

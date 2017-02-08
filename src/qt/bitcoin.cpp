@@ -282,8 +282,8 @@ void BitcoinApplication::parameterSetup()
     m_node.initParameterInteraction();
 }
 
-void BitcoinApplication::SetPrune(bool prune, bool force) {
-     optionsModel->SetPrune(prune, force);
+void BitcoinApplication::SetPruneMiB(uint64_t prune, bool force) {
+     optionsModel->SetPruneMiB(prune, force);
 }
 
 void BitcoinApplication::requestInitialize()
@@ -489,7 +489,7 @@ int GuiMain(int argc, char* argv[])
     /// 5. Now that settings and translations are available, ask user for data directory
     // User language is set up: pick a data directory
     bool did_show_intro = false;
-    bool prune = false; // Intro dialog prune check box
+    uint64_t prune = 0; // Intro dialog prune configuration
     // Gracefully exit if the user cancels
     if (!Intro::showIfNeeded(*node, did_show_intro, prune)) return EXIT_SUCCESS;
 
@@ -567,7 +567,7 @@ int GuiMain(int argc, char* argv[])
 
     if (did_show_intro) {
         // Store intro dialog settings other than datadir (network specific)
-        app.SetPrune(prune, true);
+        app.SetPruneMiB(prune, true);
     }
 
     if (gArgs.GetBoolArg("-splash", DEFAULT_SPLASHSCREEN) && !gArgs.GetBoolArg("-min", false))
