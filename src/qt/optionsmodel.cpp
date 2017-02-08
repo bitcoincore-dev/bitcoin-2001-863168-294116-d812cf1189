@@ -646,6 +646,8 @@ QVariant OptionsModel::getOption(OptionID option, const std::string& suffix) con
         return !node().mempool().m_permit_bare_multisig;
     case datacarriersize:
         return qlonglong(node().mempool().m_max_datacarrier_bytes.value_or(0));
+    case dustrelayfee:
+        return qlonglong(node().mempool().m_dust_relay_feerate.GetFeePerK());
     case blockmaxsize:
         return qlonglong(gArgs.GetIntArg("-blockmaxsize", DEFAULT_BLOCK_MAX_SIZE) / 1000);
     case blockprioritysize:
@@ -1136,6 +1138,13 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
                 gArgs.ModifyRWConfigFile("datacarrier", "0");
                 node().mempool().m_max_datacarrier_bytes = std::nullopt;
             }
+        }
+        break;
+    case dustrelayfee:
+        if (changed()) {
+            CAmount nNv = value.toLongLong();
+            gArgs.ModifyRWConfigFile("dustrelayfee", FormatMoney(nNv));
+            node().mempool().m_dust_relay_feerate = CFeeRate(nNv);
         }
         break;
     case blockmaxsize:
