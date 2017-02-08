@@ -102,6 +102,7 @@ public:
         limitdescendantsize,
         rejectbaremultisig,     // bool
         datacarriersize,
+        dustrelayfee,
         blockmaxsize,
         blockprioritysize,
         blockmaxweight,

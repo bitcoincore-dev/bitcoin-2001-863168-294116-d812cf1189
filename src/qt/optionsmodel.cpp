@@ -532,6 +532,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return !fIsBareMultisigStd;
         case datacarriersize:
             return fAcceptDatacarrier ? qlonglong(nMaxDatacarrierBytes) : qlonglong(0);
+        case dustrelayfee:
+            return qlonglong(dustRelayFee.GetFeePerK());
         case blockmaxsize:
             return qlonglong(gArgs.GetIntArg("-blockmaxsize", DEFAULT_BLOCK_MAX_SIZE) / 1000);
         case blockprioritysize:
@@ -1007,6 +1009,15 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             if (fNewEn != fAcceptDatacarrier) {
                 gArgs.ModifyRWConfigFile("datacarrier", strprintf("%d", fNewEn));
                 fAcceptDatacarrier = fNewEn;
+            }
+            break;
+        }
+        case dustrelayfee:
+        {
+            CAmount nNv = value.toLongLong();
+            if (nNv != dustRelayFee.GetFeePerK()) {
+                gArgs.ModifyRWConfigFile("dustrelayfee", FormatMoney(nNv));
+                dustRelayFee = CFeeRate(nNv);
             }
             break;
         }
