@@ -104,6 +104,7 @@ private:
     QCheckBox *spamfilter;
     QCheckBox *rejectbaremultisig;
     QSpinBox *datacarriersize;
+    BitcoinAmountField *dustrelayfee;
 
     QSpinBox *blockmaxsize, *blockprioritysize, *blockmaxweight;
     QCheckBox *priorityaccurate;
