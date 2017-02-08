@@ -69,6 +69,7 @@ public:
         rejectbaremultisig,     // bool
         datacarriersize,
         dustrelayfee,
+        blockmintxfee,
         blockmaxsize,
         blockprioritysize,
         blockmaxweight,
