@@ -648,6 +648,12 @@ QVariant OptionsModel::getOption(OptionID option, const std::string& suffix) con
         return qlonglong(node().mempool().m_max_datacarrier_bytes.value_or(0));
     case dustrelayfee:
         return qlonglong(node().mempool().m_dust_relay_feerate.GetFeePerK());
+    case blockmintxfee:
+        if (gArgs.IsArgSet("-blockmintxfee")) {
+            return qlonglong(ParseMoney(gArgs.GetArg("-blockmintxfee", "")).value_or(0));
+        } else {
+            return qlonglong(DEFAULT_BLOCK_MIN_TX_FEE);
+        }
     case blockmaxsize:
         return qlonglong(gArgs.GetIntArg("-blockmaxsize", DEFAULT_BLOCK_MAX_SIZE) / 1000);
     case blockprioritysize:
@@ -1145,6 +1151,13 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
             CAmount nNv = value.toLongLong();
             gArgs.ModifyRWConfigFile("dustrelayfee", FormatMoney(nNv));
             node().mempool().m_dust_relay_feerate = CFeeRate(nNv);
+        }
+        break;
+    case blockmintxfee:
+        if (changed()) {
+            std::string strNv = FormatMoney(value.toLongLong());
+            gArgs.ForceSetArg("-blockmintxfee", strNv);
+            gArgs.ModifyRWConfigFile("blockmintxfee", strNv);
         }
         break;
     case blockmaxsize:
