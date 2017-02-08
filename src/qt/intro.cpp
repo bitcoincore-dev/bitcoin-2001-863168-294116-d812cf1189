@@ -12,7 +12,9 @@
 
 #include "guiutil.h"
 
+#include "consensus/consensus.h"
 #include "util.h"
+#include "validation.h"
 
 #include <QFileDialog>
 #include <QSettings>
@@ -131,26 +133,55 @@ Intro::Intro(QWidget *parent) :
     );
     ui->lblExplanation2->setText(ui->lblExplanation2->text().arg(tr(PACKAGE_NAME)));
 
-    uint64_t pruneTarget = std::max<int64_t>(0, gArgs.GetArg("-prune", 0));
+    int minPruneTarget = std::ceil(MIN_DISK_SPACE_FOR_BLOCK_FILES / 1024.0 / 1024.0);
+    ui->pruneMiB->setMinimum(minPruneTarget);
+    ui->pruneMiB->setMaximum(std::numeric_limits<int>::max());
+
+    int64_t pruneTarget = gArgs.GetArg("-prune", 0);
+    if (pruneTarget > 1) {
+        ui->chkPrune->setChecked(true);
+        ui->pruneMiB->setValue(pruneTarget);
+    } else {
+        ui->chkPrune->setChecked(false);
+        ui->pruneMiB->setValue(minPruneTarget);
+    }
+    connect(ui->chkPrune, SIGNAL(stateChanged(int)), this, SLOT(UpdateText()));
+    connect(ui->pruneMiB, SIGNAL(valueChanged(int)), this, SLOT(UpdateText()));
+
+    UpdateText();
+
+    startThread();
+}
+
+void Intro::UpdateText()
+{
     requiredSpace = BLOCK_CHAIN_SIZE;
     QString storageRequiresMsg = tr("At least %1 GB of data will be stored in this directory, and it will grow over time.");
-    if (pruneTarget) {
-        uint64_t prunedGBs = std::ceil(pruneTarget * 1024 * 1024.0 / GB_BYTES);
+    uint64_t pruneBytes = uint64_t(ui->pruneMiB->value()) * 1024 * 1024;
+    if (ui->chkPrune->isChecked()) {
+        uint64_t prunedGBs = std::ceil(double(pruneBytes) / GB_BYTES);
         if (prunedGBs <= requiredSpace) {
             requiredSpace = prunedGBs;
             storageRequiresMsg = tr("Approximately %1 GB of data will be stored in this directory.");
+            ui->lblExplanation3->setVisible(true);
+        } else {
+            ui->lblExplanation3->setVisible(false);
         }
-        ui->lblExplanation3->setVisible(true);
+        ui->pruneMiB->setEnabled(true);
     } else {
         ui->lblExplanation3->setVisible(false);
+        ui->pruneMiB->setEnabled(false);
     }
+    static const uint64_t nPowTargetSpacing = 10 * 60;  // from chainparams, which we don't have at this stage
+    // TODO: Bump this to 2-3 MB after segwit activates, based on real world changes
+    static const uint32_t nExpectedBlockDataSize = 1125000;  // includes undo data
+    ui->lblPruneSuffix->setText(tr("MiB (sufficient to restore backups %n day(s) old)", "block chain pruning", pruneBytes / (uint64_t(nExpectedBlockDataSize) * 86400 / nPowTargetSpacing)));
     requiredSpace += CHAIN_STATE_SIZE;
     ui->sizeWarningLabel->setText(
         tr("%1 will download and store a copy of the Bitcoin block chain.").arg(tr(PACKAGE_NAME)) + " " +
         storageRequiresMsg.arg(requiredSpace) + " " +
         tr("The wallet will also be stored in this directory.")
     );
-    startThread();
 }
 
 Intro::~Intro()
@@ -178,6 +209,15 @@ void Intro::setDataDirectory(const QString &dataDir)
         ui->dataDirCustom->setChecked(true);
         ui->dataDirectory->setEnabled(true);
         ui->ellipsisButton->setEnabled(true);
+    }
+}
+
+uint64_t Intro::getPrune()
+{
+    if (ui->chkPrune->isChecked()) {
+        return ui->pruneMiB->value();
+    } else {
+        return 0;
     }
 }
 
@@ -220,6 +260,14 @@ bool Intro::pickDataDirectory()
                 QMessageBox::critical(0, tr(PACKAGE_NAME),
                     tr("Error: Specified data directory \"%1\" cannot be created.").arg(dataDir));
                 /* fall through, back to choosing screen */
+            }
+
+            int64_t introPrune = intro.getPrune();
+            if (introPrune || gArgs.GetArg("-prune", 0) > 1) {
+                // Initialise specified prune setting
+                std::string strPrune = strprintf("%d", introPrune);
+                gArgs.ForceSetArg("-prune", strPrune);
+                gArgs.ModifyRWConfigFile("prune", strPrune);
             }
         }
 
