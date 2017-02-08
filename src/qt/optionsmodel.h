@@ -68,6 +68,7 @@ public:
         spamfilter,             // bool
         rejectbaremultisig,     // bool
         datacarriersize,
+        dustrelayfee,
         blockmaxsize,
         blockprioritysize,
         blockmaxweight,
