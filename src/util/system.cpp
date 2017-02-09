@@ -755,6 +755,7 @@ bool ArgsManager::ReadConfigFiles(std::string& error, bool ignore_invalid_keys)
         LOCK(cs_args);
         m_settings.ro_config.clear();
         m_settings.rw_config.clear();
+        rwconf_had_prune_option = false;
         m_config_sections.clear();
     }
 
@@ -852,6 +853,7 @@ bool ArgsManager::ReadConfigFiles(std::string& error, bool ignore_invalid_keys)
         if (!ReadConfigStream(rwconf_stream, rwconf_path_str, error, ignore_invalid_keys, &m_settings.rw_config)) {
             return false;
         }
+        rwconf_had_prune_option = m_settings.rw_config.count("prune");
     }
 
     return true;
@@ -1112,6 +1114,9 @@ void ArgsManager::ModifyRWConfigFile(const std::map<std::string, std::string>& s
     if (!RenameOver(rwconf_new_path, rwconf_path)) {
         std::remove(new_path_str.c_str());
         throw std::ios_base::failure(strprintf("Failed to replace %s", new_path_str));
+    }
+    if (settings_to_change.count("prune")) {
+        rwconf_had_prune_option = true;
     }
 }
 
