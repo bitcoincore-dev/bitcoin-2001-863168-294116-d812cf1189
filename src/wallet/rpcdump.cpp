@@ -640,7 +640,7 @@ UniValue dumpwallet(const JSONRPCRequest& request)
 }
 
 
-UniValue processImport(const UniValue& data, int64_t timestamp)
+UniValue ProcessImport(const UniValue& data, const int64_t timestamp)
 {
     try {
         bool success = false;
@@ -958,7 +958,7 @@ UniValue processImport(const UniValue& data, int64_t timestamp)
     }
 }
 
-int64_t getImportTimestamp(const UniValue& data, int64_t now)
+int64_t GetImportTimestamp(const UniValue& data, int64_t now)
 {
     if (data.exists("timestamp")) {
         const UniValue& timestamp = data["timestamp"];
@@ -984,10 +984,11 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
             "  [     (array of json objects)\n"
             "    {\n"
             "      \"scriptPubKey\": \"<script>\" | { \"address\":\"<address>\" }, (string / json, required) Type of scriptPubKey (string for script, json for address)\n"
-            "      \"timestamp\": <timestamp> | \"now\"                      , (integer / string, required) Integer timestamp, or the string \"now\" to substitute the current synced\n"
-            "                                                              blockchain time. The timestamp of the oldest key will determine how far back blockchain rescans\n"
-            "                                                              for missing wallet transactions need to begin. \"now\" can be specified to bypass scanning, for\n"
-            "                                                              keys which are known to never have been used, and 0 can be specified to scan the entire blockchain.\n"
+            "      \"timestamp\": timestamp | \"now\"                        , (integer / string, required) Creation time of the key in seconds since epoch (Jan 1 1970 GMT),\n"
+            "                                                              or the string \"now\" to substitute the current synced blockchain time. The timestamp of the oldest\n"
+            "                                                              key will determine how far back blockchain rescans need to begin for missing wallet transactions.\n"
+            "                                                              \"now\" can be specified to bypass scanning, for keys which are known to never have been used, and\n"
+            "                                                              0 can be specified to scan the entire blockchain.\n"
             "      \"redeemscript\": \"<script>\"                            , (string, optional) Allowed only if the scriptPubKey is a P2SH address or a P2SH scriptPubKey\n"
             "      \"pubkeys\": [\"<pubKey>\", ... ]                         , (array, optional) Array of strings giving pubkeys that must occur in the output or redeemscript\n"
             "      \"keys\": [\"<key>\", ... ]                               , (array, optional) Array of strings giving private keys whose corresponding public keys must occur in the output or redeemscript\n"
@@ -1035,7 +1036,7 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
     // Verify all timestamps are present before importing any keys.
     const int64_t now = chainActive.Tip() ? chainActive.Tip()->GetMedianTimePast() : 0;
     for (const UniValue& data : requests.getValues()) {
-        getImportTimestamp(data, now);
+        GetImportTimestamp(data, now);
     }
 
     bool fRunScan = false;
@@ -1051,8 +1052,8 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
     UniValue response(UniValue::VARR);
 
     BOOST_FOREACH (const UniValue& data, requests.getValues()) {
-        const int64_t timestamp = std::max(getImportTimestamp(data, now), minimumTimestamp);
-        const UniValue result = processImport(data, timestamp);
+        const int64_t timestamp = std::max(GetImportTimestamp(data, now), minimumTimestamp);
+        const UniValue result = ProcessImport(data, timestamp);
         response.push_back(result);
 
         if (!fRescan) {
