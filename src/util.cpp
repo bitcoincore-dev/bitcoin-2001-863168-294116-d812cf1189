@@ -647,8 +647,10 @@ void ArgsManager::ReadRWConfigFile(const std::string& confPath)
 {
     rwconf_path = GetRWConfigFile(confPath);
     fs::ifstream streamRWConfig(rwconf_path);
-    ReadConfigFile(streamRWConfig, &args_assigned_by_conf, NULL);
+    std::unordered_set<std::string> rwconf_assigned;
+    ReadConfigFile(streamRWConfig, &args_assigned_by_conf, &rwconf_assigned);
     args_assigned_by_conf.clear();
+    rwconf_had_prune_option = rwconf_assigned.count("prune");
 }
 
 namespace {
