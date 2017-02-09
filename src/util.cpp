@@ -616,6 +616,7 @@ static void ReadConfigFile(boost::filesystem::ifstream& streamConfig, std::set<s
 }
 
 static std::set<std::string> setConfigAssigned;
+static bool fRWConfigHadPruneOption;
 
 void ReadConfigFile(const std::string& mainconfPath)
 {
@@ -626,8 +627,15 @@ void ReadConfigFile(const std::string& mainconfPath)
 void ReadRWConfigFile()
 {
     boost::filesystem::ifstream streamRWConfig(GetRWConfigFile());
-    ReadConfigFile(streamRWConfig, &setConfigAssigned, NULL);
+    std::set<std::string> setRWConfigAssigned;
+    ReadConfigFile(streamRWConfig, &setConfigAssigned, &setRWConfigAssigned);
     setConfigAssigned.clear();
+    fRWConfigHadPruneOption = (setRWConfigAssigned.find("prune") != setRWConfigAssigned.end());
+}
+
+bool RWConfigHasPruneOption()
+{
+    return fRWConfigHadPruneOption;
 }
 
 // Like std::getline, but includes the EOL character in the result
