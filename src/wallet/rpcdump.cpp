@@ -582,9 +582,9 @@ UniValue dumpwallet(const JSONRPCRequest& request)
 
     // sort time/key pairs
     std::vector<std::pair<int64_t, CKeyID> > vKeyBirth;
-    for (auto it = mapKeyBirth.begin(); it != mapKeyBirth.end(); it++) {
-        if (const CKeyID* keyID = boost::get<CKeyID>(&it->first)) {
-            vKeyBirth.push_back(std::make_pair(it->second, *keyID));
+    for (const auto& entry : mapKeyBirth) {
+        if (const CKeyID* keyID = boost::get<CKeyID>(&entry.first)) { // set and test
+            vKeyBirth.push_back(std::make_pair(entry.second, *keyID));
         }
     }
     mapKeyBirth.clear();
