@@ -199,6 +199,11 @@ void OptionsModel::Reset()
     // Set strDataDir
     settings.setValue("strDataDir", dataDir);
 
+    // Set prune option iff it was initialised using Intro
+    if (RWConfigHasPruneOption()) {
+        ModifyRWConfigFile("prune", GetArg("prune", ""));
+    }
+
     // Set that this was reset
     settings.setValue("fReset", true);
 
