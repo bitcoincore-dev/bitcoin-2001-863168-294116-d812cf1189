@@ -256,7 +256,7 @@ bool CWallet::LoadCScript(const CScript& redeemScript)
     return CCryptoKeyStore::AddCScript(redeemScript);
 }
 
-bool CWallet::AddWatchOnly(const CScript &dest)
+bool CWallet::AddWatchOnly(const CScript& dest)
 {
     if (!CCryptoKeyStore::AddWatchOnly(dest))
         return false;
@@ -268,7 +268,7 @@ bool CWallet::AddWatchOnly(const CScript &dest)
     return CWalletDB(strWalletFile).WriteWatchOnly(dest, meta);
 }
 
-bool CWallet::AddWatchOnly(const CScript &dest, int64_t nCreateTime)
+bool CWallet::AddWatchOnly(const CScript& dest, int64_t nCreateTime)
 {
     mapKeyMetadata[CScriptID(dest)].nCreateTime = nCreateTime;
     return AddWatchOnly(dest);
