@@ -561,7 +561,11 @@ UniValue dumpwallet(const JSONRPCRequest& request)
             "dumpwallet \"filename\"\n"
             "\nDumps all wallet keys in a human-readable format.\n"
             "\nArguments:\n"
-            "1. \"filename\"    (string, required) The filename\n"
+            "1. \"filename\"    (string, required) The filename (if not full path, relative to bitcoind path)\n"
+            "\nResult:\n"
+            "{                           (json object)\n"
+            "  \"dumpfilepath\" : {        (string) The filename\n"
+            "}\n"
             "\nExamples:\n"
             + HelpExampleCli("dumpwallet", "\"test\"")
             + HelpExampleRpc("dumpwallet", "\"test\"")
@@ -572,7 +576,9 @@ UniValue dumpwallet(const JSONRPCRequest& request)
     EnsureWalletIsUnlocked();
 
     ofstream file;
-    file.open(request.params[0].get_str().c_str());
+    boost::filesystem::path filepath = request.params[0].get_str();
+    filepath = absolute(filepath);
+    file.open(filepath.string().c_str());
     if (!file.is_open())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
 
@@ -636,7 +642,11 @@ UniValue dumpwallet(const JSONRPCRequest& request)
     file << "\n";
     file << "# End of dump\n";
     file.close();
-    return NullUniValue;
+
+    UniValue reply(UniValue::VOBJ);
+    reply.push_back(Pair("dumpfilepath", filepath.string()));
+
+    return reply;
 }
 
 
