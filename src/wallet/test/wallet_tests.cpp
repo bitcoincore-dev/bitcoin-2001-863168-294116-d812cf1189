@@ -428,4 +428,67 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
     }
 }
 
+static CWalletTx MakeTx(uint32_t lockTime, int64_t blockTime)
+{
+    CMutableTransaction tx;
+    tx.nLockTime = lockTime;
+    CWalletTx wtx(nullptr, MakeTransactionRef(std::move(tx)));
+    if (blockTime > 0) {
+        auto inserted = mapBlockIndex.emplace(GetRandHash(), new CBlockIndex);
+        assert(inserted.second);
+        const uint256& hash = inserted.first->first;
+        CBlockIndex& block = *inserted.first->second;
+        block.nTime = blockTime;
+        block.phashBlock = &hash;
+        wtx.SetMerkleBranch(&block, 0);
+    }
+    return wtx;
+}
+
+// Simple test to verify assignment of CWalletTx::nSmartTime value. Could be
+// expanded to cover more corner cases of smart time logic.
+BOOST_AUTO_TEST_CASE(ComputeTimeSmart)
+{
+    CWallet wallet;
+    CWalletTx wtx;
+
+    // New transaction should use clock time if lower than block time.
+    SetMockTime(100);
+    wtx = MakeTx(1, 120);
+    wallet.AddToWallet(wtx);
+    BOOST_CHECK_EQUAL(wallet.mapWallet[wtx.GetHash()].nTimeSmart, 100);
+
+    // Test that updating existing transaction does not change smart time.
+    SetMockTime(200);
+    wtx = MakeTx(1, 220);
+    wallet.AddToWallet(wtx);
+    BOOST_CHECK_EQUAL(wallet.mapWallet[wtx.GetHash()].nTimeSmart, 100);
+
+    // New transaction should use clock time if there's no block time.
+    SetMockTime(300);
+    wtx = MakeTx(2, 0);
+    wallet.AddToWallet(wtx);
+    BOOST_CHECK_EQUAL(wallet.mapWallet[wtx.GetHash()].nTimeSmart, 300);
+
+    // New transaction should use block time if lower than clock time.
+    SetMockTime(420);
+    wtx = MakeTx(3, 400);
+    wallet.AddToWallet(wtx);
+    BOOST_CHECK_EQUAL(wallet.mapWallet[wtx.GetHash()].nTimeSmart, 400);
+
+    // New transaction should use latest entry time if higher than
+    // min(block time, clock time).
+    SetMockTime(500);
+    wtx = MakeTx(4, 390);
+    wallet.AddToWallet(wtx);
+    BOOST_CHECK_EQUAL(wallet.mapWallet[wtx.GetHash()].nTimeSmart, 400);
+
+    // If there are future entries, new transaction should use time of the
+    // newest entry that is no more than 300 seconds ahead of the clock time.
+    SetMockTime(50);
+    wtx = MakeTx(5, 600);
+    wallet.AddToWallet(wtx);
+    BOOST_CHECK_EQUAL(wallet.mapWallet[wtx.GetHash()].nTimeSmart, 300);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
