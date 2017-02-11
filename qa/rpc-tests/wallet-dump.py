@@ -84,7 +84,7 @@ class WalletDumpTest(BitcoinTestFramework):
 
         # dump unencrypted wallet
         result = self.nodes[0].dumpwallet(tmpdir + "/node0/wallet.unencrypted.dump")
-        assert_equal(result['dumpfilepath'], os.path.abspath(tmpdir + "/node0/wallet.unencrypted.dump"))
+        assert_equal(result['filename'], os.path.abspath(tmpdir + "/node0/wallet.unencrypted.dump"))
 
         found_addr, found_addr_chg, found_addr_rsv, hd_master_addr_unenc = \
             read_dump(tmpdir + "/node0/wallet.unencrypted.dump", addrs, None)
