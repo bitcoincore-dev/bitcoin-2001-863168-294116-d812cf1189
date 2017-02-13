@@ -332,6 +332,7 @@ bool OptionsModel::Init(bilingual_str& error)
 
     // rwconf settings that require a restart
     f_peerbloomfilters = gArgs.GetBoolArg("-peerbloomfilters", DEFAULT_PEERBLOOMFILTERS);
+    f_rejectspkreuse = (SpkReuseMode != SRM_ALLOW);
 
     // Display
     if (settings.contains("FontForMoney")) {
@@ -628,6 +629,8 @@ QVariant OptionsModel::getOption(OptionID option, const std::string& suffix) con
         return qlonglong(std::chrono::duration_cast<std::chrono::hours>(node().mempool().m_expiry).count());
     case rejectunknownscripts:
         return node().mempool().m_require_standard;
+    case rejectspkreuse:
+        return f_rejectspkreuse;
     case minrelaytxfee:
         return qlonglong(node().mempool().m_min_relay_feerate.GetFeePerK());
     case bytespersigop:
@@ -1067,6 +1070,14 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
         }
         break;
     }
+    case rejectspkreuse:
+        if (changed()) {
+            const bool fNewValue = value.toBool();
+            gArgs.ModifyRWConfigFile("spkreuse", fNewValue ? "conflict" : "allow");
+            f_rejectspkreuse = fNewValue;
+            setRestartRequired(true);
+        }
+        break;
     case minrelaytxfee:
         if (changed()) {
             CAmount nNv = value.toLongLong();
