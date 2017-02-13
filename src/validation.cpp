@@ -727,9 +727,9 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
                     return state.Invalid(ValidationInvalidReason::TX_NOT_STANDARD, false, REJECT_NONSTANDARD, "txn-spk-reused-change");
                 }
             }
-            mssit = m_pool.mapUsedSPK.find(hashSPK);
-            if (mssit != m_pool.mapUsedSPK.end()) {
-                if (mssit->second & MSS_SPENT) {
+            const auto& SPKit = m_pool.mapUsedSPK.find(hashSPK);
+            if (SPKit != m_pool.mapUsedSPK.end()) {
+                if (SPKit->second.second /* Spent */) {
                     return state.Invalid(ValidationInvalidReason::TX_MEMPOOL_POLICY, false, REJECT_DUPLICATE, "txn-mempool-spk-reused-spend");
                 }
             }
