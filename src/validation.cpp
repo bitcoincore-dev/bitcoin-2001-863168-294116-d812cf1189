@@ -609,6 +609,9 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
     }
 
     auto spk_reuse_mode = SpkReuseMode;
+    if (ignore_rejects.count("txn-spk-reused")) {
+        spk_reuse_mode = SRM_ALLOW;
+    }
     SPKStates_t mapSPK;
 
     // Check for conflicts with in-memory transactions
@@ -665,7 +668,7 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
                 }
             }
             if (mapSPK.find(hashSPK) != mapSPK.end()) {
-                return state.Invalid(ValidationInvalidReason::TX_NOT_STANDARD, false, REJECT_NONSTANDARD, "txn-spk-reused-twinoutputs");
+                MaybeReject(ValidationInvalidReason::TX_NOT_STANDARD, REJECT_NONSTANDARD, "txn-spk-reused-twinoutputs");
             }
             mapSPK[hashSPK] = MemPool_SPK_State(mapSPK[hashSPK] | MSS_CREATED);
         }
@@ -730,7 +733,7 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
             SPKStates_t::iterator mssit = mapSPK.find(hashSPK);
             if (mssit != mapSPK.end()) {
                 if (mssit->second & MSS_CREATED) {
-                    return state.Invalid(ValidationInvalidReason::TX_NOT_STANDARD, false, REJECT_NONSTANDARD, "txn-spk-reused-change");
+                    MaybeReject(ValidationInvalidReason::TX_NOT_STANDARD, REJECT_NONSTANDARD, "txn-spk-reused-change");
                 }
             }
             const auto& SPKit = m_pool.mapUsedSPK.find(hashSPK);
@@ -864,8 +867,8 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
         if (conflictit != setConflicts.end())
         {
             if (!conflictit->second /* mere SPK conflict, NOT invalid */) {
-                return state.Invalid(ValidationInvalidReason::TX_MEMPOOL_POLICY, false, REJECT_NONSTANDARD, "txn-spk-reused-chained");
-            }
+                MaybeReject(ValidationInvalidReason::TX_MEMPOOL_POLICY, REJECT_NONSTANDARD, "txn-spk-reused-chained");
+            } else
             return state.Invalid(ValidationInvalidReason::CONSENSUS, false, REJECT_INVALID, "bad-txns-spends-conflicting-tx",
                     strprintf("%s spends conflicting transaction %s",
                         hash.ToString(),
