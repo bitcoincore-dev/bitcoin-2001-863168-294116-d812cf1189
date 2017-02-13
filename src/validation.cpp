@@ -115,6 +115,7 @@ std::atomic_bool fReindex(false);
 bool fHavePruned = false;
 bool fPruneMode = false;
 bool fRequireStandard = true;
+SpkReuseModes SpkReuseMode;
 bool fCheckBlockIndex = false;
 bool fCheckpointsEnabled = DEFAULT_CHECKPOINTS_ENABLED;
 size_t nCoinCacheUsage = 5000 * 300;
@@ -599,6 +600,9 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
         return state.Invalid(TxValidationResult::TX_CONFLICT, "txn-already-in-mempool");
     }
 
+    auto spk_reuse_mode = SpkReuseMode;
+    SPKStates_t mapSPK;
+
     // Check for conflicts with in-memory transactions
     for (const CTxIn &txin : tx.vin)
     {
@@ -637,6 +641,19 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
 
                 setConflicts.insert(ptxConflicting->GetHash());
             }
+        }
+    }
+
+    if (spk_reuse_mode != SRM_ALLOW) {
+        for (const CTxOut& txout : tx.vout) {
+            uint160 hashSPK = ScriptHashkey(txout.scriptPubKey);
+            if (m_pool.mapUsedSPK.find(hashSPK) != m_pool.mapUsedSPK.end()) {
+                return state.Invalid(TxValidationResult::TX_MEMPOOL_POLICY, "txn-mempool-spk-reused");
+            }
+            if (mapSPK.find(hashSPK) != mapSPK.end()) {
+                return state.Invalid(TxValidationResult::TX_MEMPOOL_POLICY, "txn-spk-reused-twinoutputs");
+            }
+            mapSPK[hashSPK] = MemPool_SPK_State(mapSPK[hashSPK] | MSS_CREATED);
         }
     }
 
@@ -693,6 +710,26 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
         *args.m_fee = nFees;
     }
 
+    if (spk_reuse_mode != SRM_ALLOW) {
+        for (const CTxIn& txin : tx.vin) {
+            const Coin &coin = m_view.AccessCoin(txin.prevout);
+            uint160 hashSPK = ScriptHashkey(coin.out.scriptPubKey);
+
+            SPKStates_t::iterator mssit = mapSPK.find(hashSPK);
+            if (mssit != mapSPK.end()) {
+                if (mssit->second & MSS_CREATED) {
+                    return state.Invalid(TxValidationResult::TX_MEMPOOL_POLICY, "txn-spk-reused-change");
+                }
+            }
+            mssit = m_pool.mapUsedSPK.find(hashSPK);
+            if (mssit != m_pool.mapUsedSPK.end()) {
+                if (mssit->second & MSS_SPENT) {
+                    return state.Invalid(TxValidationResult::TX_MEMPOOL_POLICY, "txn-mempool-spk-reused-spend");
+                }
+            }
+            mapSPK[hashSPK] = MemPool_SPK_State(mapSPK[hashSPK] | MSS_SPENT);
+        }
+    }
 
     // Check for non-standard pay-to-script-hash in inputs
     if (fRequireStandard && !AreInputsStandard(tx, m_view, "bad-txns-input-", reason, ignore_rejects)) {
@@ -723,6 +760,7 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
     entry.reset(new CTxMemPoolEntry(ptx, nFees, nAcceptTime, ::ChainActive().Height(),
             fSpendsCoinbase, nSigOpsCost, lp));
     unsigned int nSize = entry->GetTxSize();
+    entry->mapSPK = mapSPK;
 
     if (nSigOpsCost > MAX_STANDARD_TX_SIGOPS_COST)
         MaybeRejectDbg(TxValidationResult::TX_NOT_STANDARD, "bad-txns-too-many-sigops",
