@@ -586,7 +586,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
     SPKStates_t mapSPK;
 
     // Check for conflicts with in-memory transactions
-    std::set<uint256> setConflicts;
+    std::map<uint256, bool> setConflicts;
     for (const CTxIn &txin : tx.vin)
     {
         auto itConflicting = pool.mapNextTx.find(txin.prevout);
@@ -623,7 +623,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
                     return state.Invalid(false, REJECT_DUPLICATE, "txn-mempool-conflict");
                 }
 
-                setConflicts.insert(ptxConflicting->GetHash());
+                setConflicts.emplace(ptxConflicting->GetHash(), true);
             }
         }
     }
@@ -631,8 +631,14 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
     if (spk_reuse_mode != SRM_ALLOW) {
         for (const CTxOut& txout : tx.vout) {
             uint160 hashSPK = ScriptHashkey(txout.scriptPubKey);
-            if (pool.mapUsedSPK.find(hashSPK) != pool.mapUsedSPK.end()) {
-                return state.DoS(0, false, REJECT_DUPLICATE, "txn-mempool-spk-reused");
+            const auto& SPKUsedIn = pool.mapUsedSPK.find(hashSPK);
+            if (SPKUsedIn != pool.mapUsedSPK.end()) {
+                if (SPKUsedIn->second.first) {
+                    setConflicts.emplace(SPKUsedIn->second.first->GetHash(), false);
+                }
+                if (SPKUsedIn->second.second) {
+                    setConflicts.emplace(SPKUsedIn->second.second->GetHash(), false);
+                }
             }
             if (mapSPK.find(hashSPK) != mapSPK.end()) {
                 return state.DoS(0, false, REJECT_NONSTANDARD, "txn-spk-reused-twinoutputs");
@@ -703,7 +709,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
                 const auto& SPKit = pool.mapUsedSPK.find(hashSPK);
                 if (SPKit != pool.mapUsedSPK.end()) {
                     if (SPKit->second.second /* Spent */) {
-                        return state.DoS(0, false, REJECT_DUPLICATE, "txn-mempool-spk-reused-spend");
+                        setConflicts.emplace(SPKit->second.second->GetHash(), false);
                     }
                 }
                 mapSPK[hashSPK] = MemPool_SPK_State(mapSPK[hashSPK] | MSS_SPENT);
@@ -782,8 +788,12 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         for (CTxMemPool::txiter ancestorIt : setAncestors)
         {
             const uint256 &hashAncestor = ancestorIt->GetTx().GetHash();
-            if (setConflicts.count(hashAncestor))
+            const auto& conflictit = setConflicts.find(hashAncestor);
+            if (conflictit != setConflicts.end())
             {
+                if (!conflictit->second /* mere SPK conflict, NOT invalid */) {
+                    return state.DoS(0, false, REJECT_NONSTANDARD, "txn-spk-reused-chained");
+                }
                 return state.DoS(10, false,
                                  REJECT_INVALID, "bad-txns-spends-conflicting-tx", false,
                                  strprintf("%s spends conflicting transaction %s",
@@ -809,8 +819,9 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
             std::set<uint256> setConflictsParents;
             const int maxDescendantsToVisit = 100;
             CTxMemPool::setEntries setIterConflicting;
-            for (const uint256 &hashConflicting : setConflicts)
+            for (const auto &conflictit : setConflicts)
             {
+                const uint256& hashConflicting = conflictit.first;
                 CTxMemPool::txiter mi = pool.mapTx.find(hashConflicting);
                 if (mi == pool.mapTx.end())
                     continue;
