@@ -418,6 +418,7 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             if (f_peerbloomfilters != value) {
                 ModifyRWConfigFile("peerbloomfilters", strprintf("%d", value.toBool()));
                 f_peerbloomfilters = value.toBool();
+                setRestartRequired(true);
             }
             break;
         default:
