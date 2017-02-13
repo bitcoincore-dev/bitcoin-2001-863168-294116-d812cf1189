@@ -35,6 +35,15 @@ struct LockPoints {
     CBlockIndex* maxInputBlock{nullptr};
 };
 
+enum MemPool_SPK_State {
+    MSS_UNSEEN  = 0,
+    MSS_SPENT   = 1,
+    MSS_CREATED = 2,
+    MSS_BOTH    = 3,
+};
+
+typedef std::map<uint160, enum MemPool_SPK_State> SPKStates_t;
+
 struct CompareIteratorByHash {
     // SFINAE for T where T is either a pointer type (e.g., a txiter) or a reference_wrapper<T>
     // (e.g. a wrapped CTxMemPoolEntry&)
@@ -169,6 +178,8 @@ public:
 
     mutable size_t vTxHashesIdx; //!< Index in mempool's vTxHashes
     mutable Epoch::Marker m_epoch_marker; //!< epoch when last touched, useful for graph algorithms
+
+    SPKStates_t mapSPK;
 };
 
 #endif // BITCOIN_KERNEL_MEMPOOL_ENTRY_H
