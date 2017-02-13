@@ -601,6 +601,9 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
     }
 
     auto spk_reuse_mode = SpkReuseMode;
+    if (ignore_rejects.count("txn-spk-reused")) {
+        spk_reuse_mode = SRM_ALLOW;
+    }
     SPKStates_t mapSPK;
 
     // Check for conflicts with in-memory transactions
@@ -657,7 +660,7 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
                 }
             }
             if (mapSPK.find(hashSPK) != mapSPK.end()) {
-                return state.Invalid(TxValidationResult::TX_MEMPOOL_POLICY, "txn-spk-reused-twinoutputs");
+                MaybeReject(TxValidationResult::TX_MEMPOOL_POLICY, "txn-spk-reused-twinoutputs");
             }
             mapSPK[hashSPK] = MemPool_SPK_State(mapSPK[hashSPK] | MSS_CREATED);
         }
@@ -724,7 +727,7 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
             SPKStates_t::iterator mssit = mapSPK.find(hashSPK);
             if (mssit != mapSPK.end()) {
                 if (mssit->second & MSS_CREATED) {
-                    return state.Invalid(TxValidationResult::TX_MEMPOOL_POLICY, "txn-spk-reused-change");
+                    MaybeReject(TxValidationResult::TX_MEMPOOL_POLICY, "txn-spk-reused-change");
                 }
             }
             const auto& SPKit = m_pool.mapUsedSPK.find(hashSPK);
@@ -857,8 +860,8 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
         if (conflictit != setConflicts.end())
         {
             if (!conflictit->second /* mere SPK conflict, NOT invalid */) {
-                return state.Invalid(TxValidationResult::TX_MEMPOOL_POLICY, "txn-spk-reused-chained");
-            }
+                MaybeReject(TxValidationResult::TX_MEMPOOL_POLICY, "txn-spk-reused-chained");
+            } else
             return state.Invalid(TxValidationResult::TX_CONSENSUS, "bad-txns-spends-conflicting-tx",
                     strprintf("%s spends conflicting transaction %s",
                         hash.ToString(),
