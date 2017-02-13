@@ -498,6 +498,9 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
     }
 
     auto spk_reuse_mode = SpkReuseMode;
+    if (ignore_rejects.count("txn-spk-reused")) {
+        spk_reuse_mode = SRM_ALLOW;
+    }
     SPKStates_t mapSPK;
 
     // Check for conflicts with in-memory transactions
@@ -562,7 +565,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
                 }
             }
             if (mapSPK.find(hashSPK) != mapSPK.end()) {
-                return state.DoS(0, false, REJECT_NONSTANDARD, "txn-spk-reused-twinoutputs");
+                MaybeReject(REJECT_NONSTANDARD, "txn-spk-reused-twinoutputs");
             }
             mapSPK[hashSPK] = MemPool_SPK_State(mapSPK[hashSPK] | MSS_CREATED);
         }
@@ -627,7 +630,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
                 SPKStates_t::iterator mssit = mapSPK.find(hashSPK);
                 if (mssit != mapSPK.end()) {
                     if (mssit->second & MSS_CREATED) {
-                        return state.DoS(0, false, REJECT_NONSTANDARD, "txn-spk-reused-change");
+                        MaybeReject(REJECT_NONSTANDARD, "txn-spk-reused-change");
                     }
                 }
                 const auto& SPKit = pool.mapUsedSPK.find(hashSPK);
@@ -723,8 +726,8 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
             if (conflictit != setConflicts.end())
             {
                 if (!conflictit->second /* mere SPK conflict, NOT invalid */) {
-                    return state.DoS(0, false, REJECT_NONSTANDARD, "txn-spk-reused-chained");
-                }
+                    MaybeReject(REJECT_NONSTANDARD, "txn-spk-reused-chained");
+                } else
                 return state.DoS(10, false,
                                  REJECT_INVALID, "bad-txns-spends-conflicting-tx", false,
                                  strprintf("%s spends conflicting transaction %s",
