@@ -18,6 +18,7 @@
 #include <indirectmap.h>
 #include <policy/feerate.h>
 #include <primitives/transaction.h>
+#include <script/script.h>
 #include <sync.h>
 #include <random.h>
 
@@ -46,6 +47,15 @@ struct LockPoints
 
     LockPoints() : height(0), time(0), maxInputBlock(nullptr) { }
 };
+
+enum MemPool_SPK_State {
+    MSS_UNSEEN  = 0,
+    MSS_SPENT   = 1,
+    MSS_CREATED = 2,
+    MSS_BOTH    = 3,
+};
+
+typedef std::map<uint160, enum MemPool_SPK_State> SPKStates_t;
 
 class CTxMemPool;
 
@@ -128,6 +138,8 @@ public:
     int64_t GetSigOpCostWithAncestors() const { return nSigOpCostWithAncestors; }
 
     mutable size_t vTxHashesIdx; //!< Index in mempool's vTxHashes
+
+    SPKStates_t mapSPK;
 };
 
 // Helpers for modifying CTxMemPool::mapTx, which is a boost multi_index.
@@ -309,6 +321,8 @@ public:
         }
     }
 };
+
+uint160 ScriptHashkey(const CScript& script);
 
 // Multi_index tag names
 struct descendant_score {};
@@ -494,6 +508,9 @@ public:
 
     const setEntries & GetMemPoolParents(txiter entry) const;
     const setEntries & GetMemPoolChildren(txiter entry) const;
+
+    SPKStates_t mapUsedSPK;
+
 private:
     typedef std::map<txiter, setEntries, CompareIteratorByHash> cacheMap;
 
