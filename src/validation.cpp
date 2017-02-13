@@ -660,7 +660,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
         }
     }
 
-    if (SpkReuseMode != SRM_ALLOW) {
+    if (SpkReuseMode != SRM_ALLOW && setIgnoreRejects.find("txn-spk-reused") == setIgnoreRejects.end()) {
         for (const CTxOut& txout : tx.vout) {
             uint160 hashSPK = ScriptHashkey(txout.scriptPubKey);
             const auto& SPKUsedIn = pool.mapUsedSPK.find(hashSPK);
@@ -733,7 +733,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
         if (!CheckSequenceLocks(tx, STANDARD_LOCKTIME_VERIFY_FLAGS, &lp))
             return state.DoS(0, false, REJECT_NONSTANDARD, "non-BIP68-final");
 
-        if (SpkReuseMode != SRM_ALLOW) {
+        if (SpkReuseMode != SRM_ALLOW && setIgnoreRejects.find("txn-spk-reused") == setIgnoreRejects.end()) {
             for (const CTxIn& txin : tx.vin) {
                 const COutPoint &outpoint = txin.prevout;
                 const CCoins &coins = *view.AccessCoins(outpoint.hash);
@@ -741,7 +741,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
 
                 SPKStates_t::iterator mssit = mapSPK.find(hashSPK);
                 if (mssit != mapSPK.end()) {
-                    if (mssit->second & MSS_CREATED) {
+                    if (mssit->second & MSS_CREATED && setIgnoreRejects.find("txn-spk-reused-change") == setIgnoreRejects.end()) {
                         return state.DoS(0, false, REJECT_NONSTANDARD, "txn-spk-reused-change");
                     }
                 }
