@@ -1072,7 +1072,7 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
     }
 
     if (fRescan && fRunScan && requests.size() && nLowestTimestamp <= chainActive.Tip()->GetBlockTimeMax()) {
-        CBlockIndex* pindex = nLowestTimestamp > minimumTimestamp ? chainActive.FindEarliestAtLeast(nLowestTimestamp) : chainActive.Genesis();
+        CBlockIndex* pindex = nLowestTimestamp > minimumTimestamp ? chainActive.FindEarliestAtLeast(nLowestTimestamp - 7200) : chainActive.Genesis();
 
         if (pindex) {
             pwalletMain->ScanForWalletTransactions(pindex, true);
