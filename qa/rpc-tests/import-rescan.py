@@ -20,7 +20,7 @@ happened previously.
 """
 
 from test_framework.test_framework import BitcoinTestFramework
-from test_framework.util import (start_nodes, connect_nodes, sync_blocks, assert_equal)
+from test_framework.util import (start_nodes, connect_nodes, sync_blocks, assert_equal, set_node_times)
 from decimal import Decimal
 
 import collections
@@ -29,13 +29,13 @@ import itertools
 
 Call = enum.Enum("Call", "single multi")
 Data = enum.Enum("Data", "address pub priv")
-Rescan = enum.Enum("Rescan", "no yes")
+Rescan = enum.Enum("Rescan", "no yes late_timestamp")
 
 
 class Variant(collections.namedtuple("Variant", "call data rescan")):
     """Helper for importing one key and verifying scanned transactions."""
 
-    def do_import(self):
+    def do_import(self, timestamp):
         """Call one key import RPC."""
 
         if self.call == Call.single:
@@ -51,7 +51,7 @@ class Variant(collections.namedtuple("Variant", "call data rescan")):
                 "scriptPubKey": {
                     "address": self.address["address"]
                 },
-                "timestamp": "now",
+                "timestamp": timestamp + RESCAN_WINDOW + (1 if self.rescan == Rescan.late_timestamp else 0),
                 "pubkeys": [self.address["pubkey"]] if self.data == Data.pub else [],
                 "keys": [self.key] if self.data == Data.priv else [],
                 "label": self.label,
@@ -59,7 +59,7 @@ class Variant(collections.namedtuple("Variant", "call data rescan")):
             }], {"rescan": self.rescan != Rescan.no})
             assert_equal(response, [{"success": True}])
 
-    def check(self, txid=None, amount=None):
+    def check(self, txid=None, amount=None, confirmations=None):
         """Verify that getbalance/listtransactions return expected values."""
 
         balance = self.node.getbalance(self.label, 0, True)
@@ -76,7 +76,7 @@ class Variant(collections.namedtuple("Variant", "call data rescan")):
             assert_equal(tx["category"], "receive")
             assert_equal(tx["label"], self.label)
             assert_equal(tx["txid"], txid)
-            assert_equal(tx["confirmations"], 1)
+            assert_equal(tx["confirmations"], confirmations)
             assert_equal("trusted" not in tx, True)
             if self.data != Data.priv:
                 assert_equal(tx["involvesWatchonly"], True)
@@ -86,6 +86,9 @@ class Variant(collections.namedtuple("Variant", "call data rescan")):
 
 # List of Variants for each way a key or address could be imported.
 IMPORT_VARIANTS = [Variant(*variants) for variants in itertools.product(Call, Data, Rescan)]
+
+# Rescans start at the earliest block up to 2 hours before the key timestamp.
+RESCAN_WINDOW = 2 * 60 * 60
 
 
 class ImportRescanTest(BitcoinTestFramework):
@@ -109,9 +112,13 @@ class ImportRescanTest(BitcoinTestFramework):
             variant.initial_amount = 25 - (i + 1) / 4.0
             variant.initial_txid = self.nodes[0].sendtoaddress(variant.address["address"], variant.initial_amount)
 
-        # Generate a block containing the initial transactions.
+        # Generate a block containing the initial transactions, then another
+        # block further in the future (past the rescan window).
         self.nodes[0].generate(1)
         assert_equal(self.nodes[0].getrawmempool(), [])
+        timestamp = self.nodes[0].getblockheader(self.nodes[0].getbestblockhash())["time"]
+        set_node_times(self.nodes, timestamp + RESCAN_WINDOW + 1)
+        self.nodes[0].generate(1)
         sync_blocks(self.nodes)
 
         # For each variation of wallet key import, invoke the import RPC and
@@ -123,13 +130,14 @@ class ImportRescanTest(BitcoinTestFramework):
         # expected (this would make it complicated to figure out expected
         # balances in the second part of the test.)
         for variant in IMPORT_VARIANTS:
-            expected_rescan = variant.rescan == Rescan.yes
+            expected_rescan = variant.rescan == Rescan.yes or (variant.rescan == Rescan.late_timestamp and
+                                                               variant.call == Call.single)
             variant.node = self.nodes[1 if expected_rescan else 2]
-            variant.do_import()
+            variant.do_import(timestamp)
             if expected_rescan:
                 variant.expected_balance = variant.initial_amount
                 variant.expected_txs = 1
-                variant.check(variant.initial_txid, variant.initial_amount)
+                variant.check(variant.initial_txid, variant.initial_amount, 2)
             else:
                 variant.expected_balance = 0
                 variant.expected_txs = 0
@@ -150,7 +158,7 @@ class ImportRescanTest(BitcoinTestFramework):
         for variant in IMPORT_VARIANTS:
             variant.expected_balance += variant.sent_amount
             variant.expected_txs += 1
-            variant.check(variant.sent_txid, variant.sent_amount)
+            variant.check(variant.sent_txid, variant.sent_amount, 1)
 
 
 if __name__ == "__main__":
