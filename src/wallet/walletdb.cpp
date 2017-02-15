@@ -634,8 +634,10 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet)
            wss.nKeys, wss.nCKeys, wss.nKeyMeta, wss.nKeys + wss.nCKeys);
 
     // nTimeFirstKey is only reliable if all keys have metadata
-    if ((wss.nKeys + wss.nCKeys + wss.nWatchKeys) != wss.nKeyMeta)
+    if ((wss.nKeys + wss.nCKeys + wss.nWatchKeys) != wss.nKeyMeta) {
+        LOCK(pwallet->cs_wallet);
         pwallet->UpdateTimeFirstKey(1);
+    }
 
     BOOST_FOREACH(uint256 hash, wss.vWalletUpgrade)
         WriteTx(pwallet->mapWallet[hash]);
