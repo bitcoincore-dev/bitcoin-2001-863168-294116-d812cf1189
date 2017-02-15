@@ -1073,10 +1073,30 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
 
     if (fRescan && fRunScan && requests.size() && nLowestTimestamp <= chainActive.Tip()->GetBlockTimeMax()) {
         CBlockIndex* pindex = nLowestTimestamp > minimumTimestamp ? chainActive.FindEarliestAtLeast(nLowestTimestamp) : chainActive.Genesis();
-
+        CBlockIndex* scannedRange = nullptr;
         if (pindex) {
-            pwalletMain->ScanForWalletTransactions(pindex, true);
+            scannedRange = pwalletMain->ScanForWalletTransactions(pindex, true);
             pwalletMain->ReacceptWalletTransactions();
+        }
+
+        if (!scannedRange || scannedRange->nHeight > pindex->nHeight) {
+            std::vector<UniValue> results = response.getValues();
+            response.clear();
+            size_t i = 0;
+            for (const UniValue& request : requests.getValues()) {
+                // If key creation date is within the successfully scanned
+                // range, or if the import result already has an error set, let
+                // the result stand unmodified. Otherwise replace the result
+                // with an error message.
+                if (GetImportTimestamp(request, now) >= scannedRange->GetBlockTimeMax() || results.at(i).exists("error")) {
+                    response.push_back(results.at(i));
+                } else {
+                    UniValue result = UniValue(UniValue::VOBJ);
+                    result.pushKV("success", UniValue(false));
+                    result.pushKV("error", JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to rescan before time %" PRId64 ", transactions may be missing.", (long long)scannedRange->GetBlockTimeMax())));
+                    response.push_back(std::move(result));
+                }
+            }
         }
     }
 
