@@ -1083,6 +1083,7 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
         if (!scannedRange || scannedRange->nHeight > pindex->nHeight) {
             std::vector<UniValue> results = response.getValues();
             response.clear();
+            response.setArray();
             size_t i = 0;
             for (const UniValue& request : requests.getValues()) {
                 // If key creation date is within the successfully scanned
@@ -1094,7 +1095,7 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
                 } else {
                     UniValue result = UniValue(UniValue::VOBJ);
                     result.pushKV("success", UniValue(false));
-                    result.pushKV("error", JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to rescan before time %" PRId64 ", transactions may be missing.", (long long)scannedRange->GetBlockTimeMax())));
+                    result.pushKV("error", JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to rescan before time %" PRId64 ", transactions may be missing.", scannedRange->GetBlockTimeMax())));
                     response.push_back(std::move(result));
                 }
             }
