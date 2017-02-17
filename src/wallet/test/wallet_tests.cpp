@@ -411,7 +411,7 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
         request.params.push_back(keys);
 
         UniValue response = importmulti(request);
-        BOOST_CHECK_EQUAL(response.write(), strprintf("[{\"success\":false,\"error\":{\"code\":-1,\"message\":\"Failed to rescan before time %" PRId64 ", transactions may be missing.\"}}]", newTip->GetBlockTimeMax()));
+        BOOST_CHECK_EQUAL(response.write(), strprintf("[{\"success\":false,\"error\":{\"code\":-1,\"message\":\"Failed to rescan before time %d, transactions may be missing.\"}}]", newTip->GetBlockTimeMax()));
     }
 }
 

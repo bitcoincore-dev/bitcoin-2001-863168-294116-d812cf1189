@@ -1095,7 +1095,7 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
                 } else {
                     UniValue result = UniValue(UniValue::VOBJ);
                     result.pushKV("success", UniValue(false));
-                    result.pushKV("error", JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to rescan before time %" PRId64 ", transactions may be missing.", scannedRange->GetBlockTimeMax())));
+                    result.pushKV("error", JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to rescan before time %d, transactions may be missing.", scannedRange->GetBlockTimeMax())));
                     response.push_back(std::move(result));
                 }
             }
