@@ -36,6 +36,7 @@ class CWallet;
 
 QT_BEGIN_NAMESPACE
 class QAction;
+class QComboBox;
 class QProgressBar;
 class QProgressDialog;
 QT_END_NAMESPACE
@@ -49,7 +50,6 @@ class BitcoinGUI : public QMainWindow
     Q_OBJECT
 
 public:
-    static const QString DEFAULT_WALLET;
     static const std::string DEFAULT_UIPLATFORM;
 
     explicit BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent = 0);
@@ -66,7 +66,6 @@ public:
         functionality.
     */
     bool addWallet(const QString& name, WalletModel *walletModel);
-    bool setCurrentWallet(const QString& name);
     void removeAllWallets();
 #endif // ENABLE_WALLET
     bool enableWallet;
@@ -93,6 +92,7 @@ private:
     QProgressDialog *progressDialog;
 
     QMenuBar *appMenuBar;
+    QToolBar *appToolBar;
     QAction *overviewAction;
     QAction *historyAction;
     QAction *quitAction;
@@ -115,6 +115,9 @@ private:
     QAction *openAction;
     QAction *showHelpMessageAction;
     QAction *showMempoolStatsAction;
+
+    QLabel *WalletSelectorLabel;
+    QComboBox *WalletSelector;
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
@@ -176,6 +179,13 @@ public Q_SLOTS:
     void message(const QString &title, const QString &message, unsigned int style, bool *ret = NULL);
 
 #ifdef ENABLE_WALLET
+    bool setCurrentWallet(const QString& name);
+
+    /** Set the UI status indicators based on the currently selected wallet.
+    */
+    void updateWalletStatus();
+
+private:
     /** Set the encryption status as shown in the UI.
        @param[in] status            current encryption status
        @see WalletModel::EncryptionStatus
@@ -188,6 +198,7 @@ public Q_SLOTS:
      */
     void setHDStatus(int hdEnabled);
 
+public Q_SLOTS:
     bool handlePaymentRequest(const SendCoinsRecipient& recipient);
 
     /** Show incoming transaction notification for new transactions. */
