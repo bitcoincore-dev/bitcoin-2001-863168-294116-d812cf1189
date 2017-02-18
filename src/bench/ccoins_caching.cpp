@@ -58,6 +58,7 @@ static void CCoinsCaching(benchmark::State& state)
     CBasicKeyStore keystore;
     CCoinsView coinsDummy;
     CCoinsViewCache coins(&coinsDummy);
+    std::string reason;
     std::vector<CMutableTransaction> dummyTransactions = SetupDummyInputs(keystore, coins);
 
     CMutableTransaction t1;
@@ -77,7 +78,7 @@ static void CCoinsCaching(benchmark::State& state)
 
     // Benchmark.
     while (state.KeepRunning()) {
-        bool success = AreInputsStandard(t1, coins);
+        bool success = AreInputsStandard(t1, coins, reason);
         assert(success);
         CAmount value = coins.GetValueIn(t1);
         assert(value == (50 + 21 + 22) * CENT);
