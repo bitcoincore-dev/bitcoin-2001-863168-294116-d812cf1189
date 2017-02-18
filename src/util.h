@@ -53,6 +53,7 @@ extern std::atomic<bool> fReopenDebugLog;
 extern CTranslationInterface translationInterface;
 
 extern const char * const BITCOIN_CONF_FILENAME;
+extern const char * const BITCOIN_RW_CONF_FILENAME;
 extern const char * const BITCOIN_PID_FILENAME;
 
 /**
@@ -102,11 +103,17 @@ boost::filesystem::path GetDefaultDataDir();
 const boost::filesystem::path &GetDataDir(bool fNetSpecific = true);
 void ClearDatadirCache();
 boost::filesystem::path GetConfigFile(const std::string& confPath);
+boost::filesystem::path GetRWConfigFile();
 #ifndef WIN32
 boost::filesystem::path GetPidFile();
 void CreatePidFile(const boost::filesystem::path &path, pid_t pid);
 #endif
 void ReadConfigFile(const std::string& confPath);
+void ReadRWConfigFile();
+void ModifyRWConfigFile(std::istream& streamIn, std::ostream& streamOut, const std::map<std::string, std::string>& mapChangeSettings);
+void ModifyRWConfigFile(const std::map<std::string, std::string>& mapChangeSettings);
+void ModifyRWConfigFile(const std::string& strArg, const std::string& strNewValue);
+void EraseRWConfigFile();
 #ifdef WIN32
 boost::filesystem::path GetSpecialFolderPath(int nFolder, bool fCreate = true);
 #endif
