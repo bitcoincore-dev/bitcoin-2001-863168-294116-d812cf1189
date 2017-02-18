@@ -227,7 +227,7 @@ UniValue validateaddress(const JSONRPCRequest& request)
 /**
  * Used by addmultisigaddress / createmultisig:
  */
-CScript _createmultisig_redeemScript(const UniValue& params)
+CScript _createmultisig_redeemScript(const UniValue& params, bool fSorted)
 {
     int nRequired = params[0].get_int();
     const UniValue& keys = params[1].get_array();
@@ -279,7 +279,7 @@ CScript _createmultisig_redeemScript(const UniValue& params)
             throw runtime_error(" Invalid public key: "+ks);
         }
     }
-    CScript result = GetScriptForMultisig(nRequired, pubkeys);
+    CScript result = GetScriptForMultisig(nRequired, pubkeys, fSorted);
 
     if (result.size() > MAX_SCRIPT_ELEMENT_SIZE)
         throw runtime_error(
@@ -290,19 +290,24 @@ CScript _createmultisig_redeemScript(const UniValue& params)
 
 UniValue createmultisig(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() < 2 || request.params.size() > 2)
+    if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
     {
-        string msg = "createmultisig nrequired [\"key\",...]\n"
+        string msg = "createmultisig nrequired [\"key\",...] ( options )\n"
             "\nCreates a multi-signature address with n signature of m keys required.\n"
             "It returns a json object with the address and redeemScript.\n"
+            "Public keys can be sorted according to BIP67 during the request if required.\n"
 
             "\nArguments:\n"
-            "1. nrequired      (numeric, required) The number of required signatures out of the n keys or addresses.\n"
+            "1. nrequired    (numeric, required) The number of required signatures out of the n keys or addresses.\n"
             "2. \"keys\"       (string, required) A json array of keys which are bitcoin addresses or hex-encoded public keys\n"
             "     [\n"
             "       \"key\"    (string) bitcoin address or hex-encoded public key\n"
             "       ,...\n"
             "     ]\n"
+            "3. options      (object, optional)\n"
+            "   {\n"
+            "     \"sort\"       (bool, optional, default=false) Whether to sort public keys according to BIP67.\n"
+            "   }\n"
 
             "\nResult:\n"
             "{\n"
@@ -319,8 +324,24 @@ UniValue createmultisig(const JSONRPCRequest& request)
         throw runtime_error(msg);
     }
 
+    bool fSorted = false;
+
+    if (request.params.size() > 2) {
+        const UniValue& options = request.params[2];
+        RPCTypeCheckArgument(options, UniValue::VOBJ);
+        RPCTypeCheckObj(options,
+            {
+                {"sort", UniValueType(UniValue::VBOOL)},
+            },
+            true, true);
+
+        if (options.exists("sort")) {
+            fSorted = options["sort"].get_bool();
+        }
+    }
+
     // Construct using pay-to-script-hash:
-    CScript inner = _createmultisig_redeemScript(request.params);
+    CScript inner = _createmultisig_redeemScript(request.params, fSorted);
     CScriptID innerID(inner);
     CBitcoinAddress address(innerID);
 
@@ -515,7 +536,7 @@ static const CRPCCommand commands[] =
     { "control",            "getinfo",                &getinfo,                true,  {} }, /* uses wallet if enabled */
     { "control",            "getmemoryinfo",          &getmemoryinfo,          true,  {} },
     { "util",               "validateaddress",        &validateaddress,        true,  {"address"} }, /* uses wallet if enabled */
-    { "util",               "createmultisig",         &createmultisig,         true,  {"nrequired","keys"} },
+    { "util",               "createmultisig",         &createmultisig,         true,  {"nrequired","keys","options"} },
     { "util",               "verifymessage",          &verifymessage,          true,  {"address","signature","message"} },
     { "util",               "signmessagewithprivkey", &signmessagewithprivkey, true,  {"privkey","message"} },
 
