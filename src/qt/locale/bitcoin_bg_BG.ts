@@ -271,15 +271,30 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;Етикет</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;Адрес</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">За %1</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -289,6 +304,14 @@
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Настройки</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Биткойн ядро</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -313,9 +336,17 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Етикет:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">Копирай адрес</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Адрес</translation>
@@ -339,12 +370,20 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Избери...</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(без етикет)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Етикет:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -416,9 +455,17 @@
         <source>Export the data in the current tab to a file</source>
         <translation>Изнеси данните в избрания раздел към файл</translation>
     </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Направи резервно копие на портфейла</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">Настройки:</translation>
+    </message>
     <message>
         <source>Bitcoin Core</source>
         <translation>Биткойн ядро</translation>

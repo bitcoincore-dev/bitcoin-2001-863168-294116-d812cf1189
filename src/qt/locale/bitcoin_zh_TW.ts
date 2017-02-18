@@ -318,6 +318,10 @@
         <translation>開啓 URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">錢包:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>按一下就會不使用網路。</translation>
     </message>
@@ -851,16 +855,16 @@
         <translation>因為這是程式第一次啓動，你可以選擇 %1 儲存資料的地方。</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 會下載並儲存一份 Bitcoin 區塊鏈的拷貝。至少有 %2GB 的資料會儲存到這個目錄中，並且還會持續增長。另外錢包資料也會儲存在這個目錄。</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>使用預設的資料目錄</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>使用自訂的資料目錄:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -879,6 +883,9 @@
         <translation><numerusform>(需要 %n GB)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1166,6 +1173,10 @@
     <message>
         <source>none</source>
         <translation>無</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1543,6 +1554,10 @@
     <message>
         <source>Memory usage</source>
         <translation>記憶體使用量</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">錢包: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -2195,6 +2210,10 @@
     <message>
         <source>Pay only the required fee of %1</source>
         <translation>只付必要的手續費 %1</translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>預計可在 %n 個區塊內開始確認。</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -3321,6 +3340,10 @@
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>認證 cookie 資料的位置(預設值: 同資料目錄)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>轉發和開採時，對交易資料的 sigop 平均位元組數下限(預設值: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>

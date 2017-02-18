@@ -314,6 +314,10 @@
         <translation>Abrir &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Carteira:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Clique para desativar a atividade de rede.</translation>
     </message>
@@ -847,16 +851,16 @@
         <translation>Como essa é a primeira vez que o programa é executado, você pode escolher onde %1 armazenará seus dados.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>O %1 irá baixar e armazenar uma cópia do block chain do Bitcoin. Pelo menos %2GB de dados serão armazenados neste diretório, e ele crescerá ao longo do tempo. A carteira também será armazenada neste diretório.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Use o diretório de dados padrão</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Use um diretório de dados personalizado:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -875,6 +879,9 @@
         <translation><numerusform>(de %n GB necessário)</numerusform><numerusform>(de %n GB necessário)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1162,6 +1169,10 @@
     <message>
         <source>none</source>
         <translation>Nenhum</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1539,6 +1550,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Uso de memória</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Carteira: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -2194,7 +2209,7 @@
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Confirmação em %n bloco.</numerusform><numerusform>Confirmação em %n blocos.</numerusform></translation>
+        <translation><numerusform>Confirmação estimada em %n bloco.</numerusform><numerusform>Confirmação estimada em %n blocos.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -3320,6 +3335,10 @@
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>Localização do cookie de autenticação (padrão: diretório de dados)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Número mínimo de bytes por sigop em transações que transmitimos e mineramos (default: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>

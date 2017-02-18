@@ -1,6 +1,10 @@
 <TS language="zh" version="2.1">
 <context>
     <name>AddressBookPage</name>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation type="unfinished">&amp;选择</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
@@ -44,6 +48,9 @@
         <source>Error</source>
         <translation>错误</translation>
     </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>

@@ -22,6 +22,10 @@
         <translation>&amp;Kustuta</translation>
     </message>
     <message>
+        <source>C&amp;hoose</source>
+        <translation type="unfinished">&amp;Vali</translation>
+    </message>
+    <message>
         <source>&amp;Edit</source>
         <translation>&amp;Muuda</translation>
     </message>
@@ -110,8 +114,20 @@
         <translation>&amp;Ülevaade</translation>
     </message>
     <message>
+        <source>&amp;Options...</source>
+        <translation type="unfinished">&amp;Valikud...</translation>
+    </message>
+    <message>
+        <source>&amp;Backup Wallet...</source>
+        <translation type="unfinished">&amp;Varunda Rahakott...</translation>
+    </message>
+    <message>
         <source>Open &amp;URI...</source>
         <translation>Ava &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Rahakott:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -132,6 +148,10 @@
     <message>
         <source>&amp;Help</source>
         <translation>&amp;Abi</translation>
+    </message>
+    <message>
+        <source>&amp;Command-line options</source>
+        <translation type="unfinished">&amp;Käsurea valikud</translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -204,6 +224,14 @@
 <context>
     <name>EditAddressDialog</name>
     <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;Silt</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;Aadress</translation>
+    </message>
+    <message>
         <source>New key generation failed.</source>
         <translation>Uue võtme genereerimine ebaõnnestus.</translation>
     </message>
@@ -241,15 +269,26 @@
         <translation>Tere tulemast</translation>
     </message>
     <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Viga</translation>
     </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Ava URI</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
@@ -266,6 +305,10 @@
         <translation>&amp;Võrk</translation>
     </message>
     <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Rahakott</translation>
+    </message>
+    <message>
         <source>IPv4</source>
         <translation>IPv4</translation>
     </message>
@@ -280,6 +323,10 @@
     <message>
         <source>&amp;OK</source>
         <translation>&amp;OK</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     </context>
 <context>
@@ -308,6 +355,18 @@
     <message>
         <source>Amount</source>
         <translation>Kogus</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n tund</numerusform><numerusform>%n tundi</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n päev</numerusform><numerusform>%n päeva</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n aasta</numerusform><numerusform>%n aastat</numerusform></translation>
     </message>
     </context>
 <context>
@@ -357,6 +416,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Mälu kasutus</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Rahakott: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -416,6 +479,10 @@
     <message>
         <source>&amp;Amount:</source>
         <translation>&amp;Kogus:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Silt:</translation>
     </message>
     <message>
         <source>&amp;Message:</source>
@@ -510,12 +577,24 @@
 <context>
     <name>SendCoinsEntry</name>
     <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Kogus:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Silt:</translation>
+    </message>
+    <message>
         <source>Alt+A</source>
         <translation>Alt+A</translation>
     </message>
     <message>
         <source>Alt+P</source>
         <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished">Sõnum:</translation>
     </message>
     </context>
 <context>

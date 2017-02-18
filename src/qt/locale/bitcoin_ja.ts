@@ -318,6 +318,10 @@
         <translation>URI を開く (&amp;U)...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">ウォレット:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>クリックするとネットワーク活動を無効化します。</translation>
     </message>
@@ -851,16 +855,16 @@
         <translation>これはプログラム最初の起動です。%1 がデータを保存する場所を選択して下さい。</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 は、ビットコインのブロックチェーンのコピーを、ダウンロードして保存します。少なくとも %2 ギガバイトのデータが、このディレクトリに保存されます。そしてそれは時間と共に増加します。またウォレットもこのディレクトリに保存されます。</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>初期値のデータ ディレクトリを使用</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>任意のデータ ディレクトリを使用:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -879,6 +883,9 @@
         <translation><numerusform>(%n GB必要)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1166,6 +1173,10 @@
     <message>
         <source>none</source>
         <translation>なし</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin のコア</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1543,6 +1554,10 @@
     <message>
         <source>Memory usage</source>
         <translation>メモリ使用量</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">ウォレット: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -3325,6 +3340,10 @@
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>認証クッキーの場所 (デフォルト: )</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>中継や採掘を行ってもよい、sigopあたりの最小バイト数 (デフォルト: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>

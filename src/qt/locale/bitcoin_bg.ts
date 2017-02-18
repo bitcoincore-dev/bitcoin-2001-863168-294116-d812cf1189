@@ -314,6 +314,10 @@
         <translation>Отвори &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Портфейл:</translation>
+    </message>
+    <message>
         <source>Reindexing blocks on disk...</source>
         <translation>Повторно индексиране на блоковете на диска...</translation>
     </message>
@@ -413,6 +417,10 @@
         <source>&amp;Command-line options</source>
         <translation>&amp;Налични команди</translation>
     </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network</source>
+        <translation><numerusform>%n активна връзка към Биткойн мрежата</numerusform><numerusform>%n активни връзки към Биткойн мрежата</numerusform></translation>
+    </message>
     <message>
         <source>Indexing blocks on disk...</source>
         <translation>Индексиране на блокове на диска...</translation>
@@ -420,6 +428,10 @@
     <message>
         <source>Processing blocks on disk...</source>
         <translation>Обработване на блокове на диска...</translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation><numerusform>Преработен %n блок от историята с транзакции.</numerusform><numerusform>Преработени %n блокове от историята с транзакции.</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -803,15 +815,34 @@
         <translation>Използване на директория ръчно</translation>
     </message>
     <message>
+        <source>Bitcoin</source>
+        <translation>Биткоин</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Грешка</translation>
     </message>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation><numerusform>%n GB свободно пространство на разположение</numerusform><numerusform>%n GB свободно пространство на разположение</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation><numerusform>(%n GB е нужен)</numerusform><numerusform>(%n GB са нужни)</numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Формуляр</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Неизвестен...</translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -982,6 +1013,10 @@
     <message>
         <source>none</source>
         <translation>нищо</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Биткойн ядро</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1167,9 +1202,25 @@
         <source>%1 ms</source>
         <translation>%1 милисекунда</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n час</numerusform><numerusform>%n часа</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n ден</numerusform><numerusform>%n дни</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n седмица</numerusform><numerusform>%n седмици</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 и %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n година</numerusform><numerusform>%n години</numerusform></translation>
     </message>
     </context>
 <context>
@@ -1239,6 +1290,10 @@
     <message>
         <source>Current number of blocks</source>
         <translation>Текущ брой блокове</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Портфейл: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1428,6 +1483,10 @@
         <translation>Премахване</translation>
     </message>
     <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Копиране на URI</translation>
+    </message>
+    <message>
         <source>Copy label</source>
         <translation>Копирай име</translation>
     </message>
@@ -1465,6 +1524,10 @@
     <message>
         <source>Payment information</source>
         <translation>Данни за плащането</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
     </message>
     <message>
         <source>Address</source>
@@ -2344,6 +2407,10 @@
     <message>
         <source>Specify your own public address</source>
         <translation>Въведете Ваш публичен адрес</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside (default: 1 if no -proxy or -connect/-noconnect)</source>
+        <translation>Приемайте връзки отвън.(по подразбиране:1 в противен случай -proxy или -connect)</translation>
     </message>
     <message>
         <source>Bitcoin Core</source>

@@ -180,8 +180,24 @@
         <translation>Portamonete cifrato</translation>
     </message>
     <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 si chiuderà per portare a termine il processo di cifratura. Si ricorda che la cifratura del portamonete non garantisce protezione totale contro i furti causati da infezioni malware.</translation>
+    </message>
+    <message>
+        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
+        <translation>IMPORTANTE: qualsiasi backup del file portamonete effettuato in precedenza dovrà essere sostituito con il file del portamonete cifrato appena generato. Per ragioni di sicurezza, i precedenti backup del file del portamonete non cifrato diventeranno inservibili non appena si inizierà ad utilizzare il nuovo portamonete cifrato.</translation>
+    </message>
+    <message>
         <source>Wallet encryption failed</source>
         <translation>Il processo di crittografia del tuo portafogli è fallito</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
+        <translation>Cifratura del portamonete fallita a causa di un errore interno. Il portamonete non è stato cifrato.</translation>
+    </message>
+    <message>
+        <source>The supplied passphrases do not match.</source>
+        <translation>Le passphrase inserite non corrispondono.</translation>
     </message>
     <message>
         <source>Wallet unlock failed</source>
@@ -191,7 +207,19 @@
         <source>The passphrase entered for the wallet decryption was incorrect.</source>
         <translation>La frase inserita per decrittografare il tuo portafoglio è incorretta</translation>
     </message>
-    </context>
+    <message>
+        <source>Wallet decryption failed</source>
+        <translation>Decifrazione del portamonete fallita</translation>
+    </message>
+    <message>
+        <source>Wallet passphrase was successfully changed.</source>
+        <translation>Passphrase del portamonete modificata con successo.</translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Attenzione: il tasto Blocco maiuscole è attivo!</translation>
+    </message>
+</context>
 <context>
     <name>BanTableModel</name>
     <message>
@@ -288,6 +316,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Apri &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portamonete:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -623,8 +655,16 @@
         <translation>no</translation>
     </message>
     <message>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation>Può variare di +/- %1 satoshi per input.</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(nessuna etichetta)</translation>
+    </message>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation>resto da %1 (%2)</translation>
     </message>
     <message>
         <source>(change)</source>
@@ -653,7 +693,39 @@
         <source>&amp;Address</source>
         <translation>&amp;Indirizzo</translation>
     </message>
-    </context>
+    <message>
+        <source>New receiving address</source>
+        <translation>Nuovo indirizzo di ricezione</translation>
+    </message>
+    <message>
+        <source>New sending address</source>
+        <translation>Nuovo indirizzo d'invio</translation>
+    </message>
+    <message>
+        <source>Edit receiving address</source>
+        <translation>Modifica indirizzo di ricezione</translation>
+    </message>
+    <message>
+        <source>Edit sending address</source>
+        <translation>Modifica indirizzo d'invio</translation>
+    </message>
+    <message>
+        <source>The entered address "%1" is not a valid Bitcoin address.</source>
+        <translation>L'indirizzo "%1" non è un indirizzo bitcoin valido.</translation>
+    </message>
+    <message>
+        <source>The entered address "%1" is already in the address book.</source>
+        <translation>L'indirizzo "%1" è già presente in rubrica.</translation>
+    </message>
+    <message>
+        <source>Could not unlock wallet.</source>
+        <translation>Impossibile sbloccare il portamonete.</translation>
+    </message>
+    <message>
+        <source>New key generation failed.</source>
+        <translation>Generazione della nuova chiave non riuscita.</translation>
+    </message>
+</context>
 <context>
     <name>FreespaceChecker</name>
     <message>
@@ -747,16 +819,16 @@
         <translation>Dato che questa è la prima volta che il programma viene lanciato, puoi scegliere dove %1 salverà i suoi dati.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 scaricherà e salverà una copia della Blockchain di Bitcoin. Saranno salvati almeno %2GB di dati in questo percorso e continueranno ad aumentare col tempo. Anche il portafoglio verrà salvato in questo percorso.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Usa la cartella dati predefinita</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Usa una cartella dati personalizzata:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -775,6 +847,9 @@
         <translation><numerusform>(di %nGB richiesti)</numerusform><numerusform>(%n GB richiesti)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -812,7 +887,11 @@
         <source>Select payment request file</source>
         <translation>Seleziona il file di richiesta di pagamento</translation>
     </message>
-    </context>
+    <message>
+        <source>Select payment request file to open</source>
+        <translation>Seleziona il file di richiesta di pagamento da aprire</translation>
+    </message>
+</context>
 <context>
     <name>OptionsDialog</name>
     <message>
@@ -1029,6 +1108,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>nessuno</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Conferma ripristino opzioni</translation>
     </message>
@@ -1127,14 +1210,94 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
 <context>
     <name>PaymentServer</name>
     <message>
+        <source>Payment request error</source>
+        <translation>Errore di richiesta di pagamento</translation>
+    </message>
+    <message>
+        <source>Cannot start bitcoin: click-to-pay handler</source>
+        <translation>Impossibile avviare bitcoin: gestore click-to-pay</translation>
+    </message>
+    <message>
+        <source>URI handling</source>
+        <translation>Gestione URI</translation>
+    </message>
+    <message>
+        <source>Payment request fetch URL is invalid: %1</source>
+        <translation>URL di recupero della Richiesta di pagamento non valido: %1</translation>
+    </message>
+    <message>
+        <source>Invalid payment address %1</source>
+        <translation>Indirizzo di pagamento non valido %1</translation>
+    </message>
+    <message>
+        <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
+        <translation>Impossibile interpretare l'URI! I parametri URI o l'indirizzo Bitcoin potrebbero non essere corretti.</translation>
+    </message>
+    <message>
+        <source>Payment request file handling</source>
+        <translation>Gestione del file di richiesta del pagamento</translation>
+    </message>
+    <message>
+        <source>Payment request file cannot be read! This can be caused by an invalid payment request file.</source>
+        <translation>Impossibile leggere il file della richiesta di pagamento! Il file della richiesta di pagamento potrebbe non essere valido.</translation>
+    </message>
+    <message>
+        <source>Payment request rejected</source>
+        <translation>Richiesta di pagamento respinta</translation>
+    </message>
+    <message>
+        <source>Payment request network doesn't match client network.</source>
+        <translation>La rete della richiesta di pagamento non corrisponde alla rete del client.</translation>
+    </message>
+    <message>
         <source>Payment request expired.</source>
         <translation>Richiesta di pagamento scaduta.</translation>
+    </message>
+    <message>
+        <source>Payment request is not initialized.</source>
+        <translation>La richiesta di pagamento non è stata inizializzata.</translation>
+    </message>
+    <message>
+        <source>Unverified payment requests to custom payment scripts are unsupported.</source>
+        <translation>Le richieste di pagamento non verificate verso script di pagamento personalizzati non sono supportate.</translation>
     </message>
     <message>
         <source>Invalid payment request.</source>
         <translation>Richiesta di pagamento invalida</translation>
     </message>
-    </context>
+    <message>
+        <source>Requested payment amount of %1 is too small (considered dust).</source>
+        <translation>L'importo di pagamento di %1 richiesto è troppo basso (considerato come trascurabile).</translation>
+    </message>
+    <message>
+        <source>Refund from %1</source>
+        <translation>Rimborso da %1</translation>
+    </message>
+    <message>
+        <source>Payment request %1 is too large (%2 bytes, allowed %3 bytes).</source>
+        <translation>La richiesta di pagamento %1 (%2 byte) supera la dimensione massima di %3 byte.</translation>
+    </message>
+    <message>
+        <source>Error communicating with %1: %2</source>
+        <translation>Errore di comunicazione con %1: %2</translation>
+    </message>
+    <message>
+        <source>Payment request cannot be parsed!</source>
+        <translation>La richiesta di pagamento non può essere analizzata!</translation>
+    </message>
+    <message>
+        <source>Bad response from server %1</source>
+        <translation>Risposta errata da parte del server %1</translation>
+    </message>
+    <message>
+        <source>Network request error</source>
+        <translation>Errore di richiesta di rete</translation>
+    </message>
+    <message>
+        <source>Payment acknowledged</source>
+        <translation>Pagamento riconosciuto</translation>
+    </message>
+</context>
 <context>
     <name>PeerTableModel</name>
     <message>
@@ -1227,6 +1390,18 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
 <context>
     <name>QRImageWidget</name>
     <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Salva Immagine...</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Image</source>
+        <translation>&amp;Copia Immagine</translation>
+    </message>
+    <message>
+        <source>Save QR Code</source>
+        <translation>Salva codice QR</translation>
+    </message>
+    <message>
         <source>PNG Image (*.png)</source>
         <translation>Immagine PNG (*.png)</translation>
     </message>
@@ -1296,6 +1471,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>Memory usage</source>
         <translation>Utilizzo memoria</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portamonete: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1616,6 +1795,14 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>&amp;Salva Immagine...</translation>
     </message>
     <message>
+        <source>Request payment to %1</source>
+        <translation>Richiesta di pagamento a %1</translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation>Informazioni pagamento</translation>
+    </message>
+    <message>
         <source>URI</source>
         <translation>URI</translation>
     </message>
@@ -1635,7 +1822,15 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <source>Message</source>
         <translation>Messaggio</translation>
     </message>
-    </context>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>L'URI risultante è troppo lungo, prova a ridurre il testo nell'etichetta / messaggio.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Errore nella codifica dell'URI nel codice QR.</translation>
+    </message>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
@@ -1842,12 +2037,68 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>%1 a %2</translation>
     </message>
     <message>
+        <source>Are you sure you want to send?</source>
+        <translation>Sei sicuro di voler inviare?</translation>
+    </message>
+    <message>
+        <source>added as transaction fee</source>
+        <translation>aggiunto come tassa di transazione</translation>
+    </message>
+    <message>
+        <source>Total Amount %1</source>
+        <translation>Ammontare Totale %1</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>o</translation>
+    </message>
+    <message>
+        <source>Confirm send coins</source>
+        <translation>Conferma l'invio di bitcoin</translation>
+    </message>
+    <message>
+        <source>The recipient address is not valid. Please recheck.</source>
+        <translation>L'indirizzo del beneficiario non è valido. Si prega di ricontrollare.</translation>
+    </message>
+    <message>
+        <source>The amount to pay must be larger than 0.</source>
+        <translation>L'importo da pagare deve essere maggiore di 0.</translation>
+    </message>
+    <message>
+        <source>The amount exceeds your balance.</source>
+        <translation>L'importo è superiore al tuo saldo attuale.</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %1 transaction fee is included.</source>
+        <translation>Il totale è superiore al tuo saldo attuale includendo la commissione di %1.</translation>
+    </message>
+    <message>
+        <source>Duplicate address found: addresses should only be used once each.</source>
+        <translation>Rilevato un indirizzo duplicato Ciascun indirizzo dovrebbe essere utilizzato una sola volta.</translation>
+    </message>
+    <message>
+        <source>Transaction creation failed!</source>
+        <translation>Creazione transazione fallita!</translation>
+    </message>
+    <message>
+        <source>A fee higher than %1 is considered an absurdly high fee.</source>
+        <translation>Una commissione maggiore di %1 è considerata irragionevolmente elevata.</translation>
+    </message>
+    <message>
         <source>Payment request expired.</source>
         <translation>Richiesta di pagamento scaduta.</translation>
     </message>
     <message numerus="yes">
         <source>%n block(s)</source>
         <translation><numerusform>%n blocco</numerusform><numerusform>%n blocchi</numerusform></translation>
+    </message>
+    <message>
+        <source>Pay only the required fee of %1</source>
+        <translation>Paga solamente la commissione richiesta di %1</translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>Inizio delle conferme stimato entro %n blocco.</numerusform><numerusform>Inizio delle conferme stimato entro %n blocchi.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -1940,7 +2191,11 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <source>Memo:</source>
         <translation>Memo:</translation>
     </message>
-    </context>
+    <message>
+        <source>Enter a label for this address to add it to your address book</source>
+        <translation>Inserisci un'etichetta per questo indirizzo, per aggiungerlo alla rubrica</translation>
+    </message>
+</context>
 <context>
     <name>SendConfirmationDialog</name>
     <message>
@@ -2046,6 +2301,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>Reimposta tutti i campi della verifica messaggio</translation>
     </message>
     <message>
+        <source>Click "Sign Message" to generate signature</source>
+        <translation>Clicca "Firma il messaggio" per ottenere la firma</translation>
+    </message>
+    <message>
         <source>The entered address is invalid.</source>
         <translation>L'indirizzo inserito non è valido.</translation>
     </message>
@@ -2110,9 +2369,25 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Aperto per %n altro blocco</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Aperto fino a %1</translation>
+    </message>
     <message>
         <source>%1/offline</source>
         <translation>%1/offline</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1/non confermata</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>%1 conferme</translation>
     </message>
     <message>
         <source>Status</source>
@@ -2121,6 +2396,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>, has not been successfully broadcast yet</source>
         <translation>, non è ancora stata trasmessa con successo</translation>
+    </message>
+    <message numerus="yes">
+        <source>, broadcast through %n node(s)</source>
+        <translation><numerusform>, trasmesso attraverso %n nodo</numerusform><numerusform>, trasmessa attraverso %n nodi</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2162,6 +2441,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <source>Credit</source>
         <translation>Credito</translation>
     </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation><numerusform>matura tra %n blocco</numerusform><numerusform>matura tra %n blocchi</numerusform></translation>
+    </message>
     <message>
         <source>not accepted</source>
         <translation>non accettate</translation>
@@ -2201,6 +2484,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>Merchant</source>
         <translation>Commerciante</translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>È necessario attendere %1 blocchi prima che i bitcoin generati possano essere spesi. Al momento della generazione questo blocco è stato trasmesso alla rete in modo da poter essere aggiunto alla block chain. Se l'inserimento avrà esito negativo lo stato del blocco sarà modificato in "non accettato" ed esso risulterà non spendibile. Ciò può verificarsi occasionalmente nel caso in cui un altro blocco sia stato generato entro pochi secondi dal tuo.</translation>
     </message>
     <message>
         <source>Debug information</source>
@@ -2248,6 +2535,14 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <source>Label</source>
         <translation>Etichetta</translation>
     </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Aperto per %n altro blocco</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Aperto fino a %1</translation>
+    </message>
     <message>
         <source>Offline</source>
         <translation>Offline</translation>
@@ -2257,8 +2552,20 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>Non confermata</translation>
     </message>
     <message>
+        <source>Confirming (%1 of %2 recommended confirmations)</source>
+        <translation>In conferma (%1 di %2 conferme raccomandate)</translation>
+    </message>
+    <message>
         <source>Confirmed (%1 confirmations)</source>
         <translation>Confermata (%1 conferme)</translation>
+    </message>
+    <message>
+        <source>Conflicted</source>
+        <translation>In conflitto</translation>
+    </message>
+    <message>
+        <source>Immature (%1 confirmations, will be available after %2)</source>
+        <translation>Immaturo (%1 conferme, sarà disponibile fra %2)</translation>
     </message>
     <message>
         <source>This block was not received by any other nodes and will probably not be accepted!</source>
@@ -2271,6 +2578,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>Received with</source>
         <translation>Ricevuto tramite</translation>
+    </message>
+    <message>
+        <source>Received from</source>
+        <translation>Ricevuto da</translation>
     </message>
     <message>
         <source>Sent to</source>
@@ -2547,6 +2858,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>Accetta comandi da riga di comando e JSON-RPC</translation>
     </message>
     <message>
+        <source>Accept connections from outside (default: 1 if no -proxy or -connect/-noconnect)</source>
+        <translation>Accetta connessioni dall'esterno (predefinito: 1 se -proxy o -connect non sono utilizzati)</translation>
+    </message>
+    <message>
         <source>If &lt;category&gt; is not supplied or if &lt;category&gt; = 1, output all debugging information.</source>
         <translation>Se &lt;category&gt; non è specificato oppure se &lt;category&gt; = 1, mostra tutte le informazioni di debug.</translation>
     </message>
@@ -2647,12 +2962,24 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>Il database dei blocchi contiene un blocco che sembra provenire dal futuro. Questo può essere dovuto alla data e ora del tuo computer impostate in modo scorretto. Ricostruisci il database dei blocchi se sei certo che la data e l'ora sul tuo computer siano corrette</translation>
     </message>
     <message>
+        <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
+        <translation>Questa versione è una compilazione pre-rilascio - usala a tuo rischio - non utilizzarla per la generazione o per applicazioni di commercio</translation>
+    </message>
+    <message>
         <source>Unable to rewind the database to a pre-fork state. You will need to redownload the blockchain</source>
         <translation>Impossibile riportare il database ad un livello pre-fork. Dovrai riscaricare tutta la blockchain</translation>
     </message>
     <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
         <translation>Utilizza UPnP per mappare la porta in ascolto (default: 1 quando in ascolto e -proxy non è specificato)</translation>
+    </message>
+    <message>
+        <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
+        <translation>Attenzione: La rete non sembra trovarsi in pieno consenso! Alcuni minatori sembrano riscontrare problemi.</translation>
+    </message>
+    <message>
+        <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
+        <translation>Attenzione: Sembra che non vi sia pieno consenso con i nostri peer! Un aggiornamento da parte tua o degli altri nodi potrebbe essere necessario.</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
@@ -3171,8 +3498,16 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>Emette informazioni di debug (predefinito: %u, fornire &lt;category&gt; è opzionale)</translation>
     </message>
     <message>
+        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect/-noconnect)</source>
+        <translation>Ottiene gli indirizzi dei peer attraverso interrogazioni DNS, in caso di scarsa disponibilità (predefinito: 1 a meno che -connect non sia specificato)</translation>
+    </message>
+    <message>
         <source>Support filtering of blocks and transaction with bloom filters (default: %u)</source>
         <translation>Supporta filtraggio di blocchi e transazioni con filtri bloom (default: %u)</translation>
+    </message>
+    <message>
+        <source>This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit %s and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard.</source>
+        <translation>Questo prodotto include software sviluppato dal progetto OpenSSL per l'uso del Toolkit OpenSSL %s, software crittografico scritto da Eric Young e software UPnP scritto da Thomas Bernard.</translation>
     </message>
     <message>
         <source>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</source>

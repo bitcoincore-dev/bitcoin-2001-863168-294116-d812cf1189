@@ -318,6 +318,10 @@
         <translation>Открыть &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Бумажник:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Кликните, чтобы запретить сетевую активность.</translation>
     </message>
@@ -851,16 +855,16 @@
         <translation>При первом запуске программы вы можете выбрать где %1 будет хранить свои данные.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 скачает и сохранит копию цепи блоков. Как минимум %2GB будут записаны в этот каталог, и со временем он будет расти. Бумажник также будет сохранен в этом каталоге.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Использовать каталог данных по умолчанию</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Использовать другой каталог данных:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -879,6 +883,9 @@
         <translation><numerusform>(из необходимых %n ГБ)</numerusform><numerusform>(из необходимых %n ГБ)</numerusform><numerusform>(из необходимых %n ГБ)</numerusform><numerusform>(из необходимых %n ГБ)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1166,6 +1173,10 @@
     <message>
         <source>none</source>
         <translation>ничего</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1543,6 +1554,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Использование памяти</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Бумажник: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -3320,6 +3335,10 @@
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>Расположение куки входы(по умолчанию: data dir)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Минимально байт на sigop в транзакциях, которые мы ретранслируем и добываем (по умолчанию: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>

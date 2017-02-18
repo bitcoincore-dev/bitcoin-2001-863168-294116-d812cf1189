@@ -206,6 +206,10 @@
         <translation>Sluit af</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Wys inligting oor %1</translation>
+    </message>
+    <message>
         <source>Show information about Qt</source>
         <translation>Wys inligting oor Qt</translation>
     </message>
@@ -214,12 +218,28 @@
         <translation>&amp;Opsies</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;Stuur adresse...</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;Ontvang adresse...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Beursie:</translation>
+    </message>
+    <message>
         <source>Bitcoin</source>
         <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Wallet</source>
         <translation>Beursie</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation type="unfinished">S&amp;tuur</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -325,15 +345,26 @@
 <context>
     <name>Intro</name>
     <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Fout</translation>
     </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Vorm</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">onbekend...</translation>
     </message>
     </context>
 <context>
@@ -382,12 +413,24 @@
         <source>&amp;Information</source>
         <translation>Informasie</translation>
     </message>
-    </context>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Beursie: </translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">onbekend</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
         <source>&amp;Amount:</source>
         <translation>&amp;Bedrag:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Etiket:</translation>
     </message>
     <message>
         <source>&amp;Message:</source>
@@ -400,6 +443,10 @@
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Kopie adres</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adres</translation>
@@ -455,6 +502,10 @@
         <translation>Transaksie fooi:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Kies...</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Stuur aan vele ontvangers op eens</translation>
     </message>
@@ -488,6 +539,10 @@
     <message>
         <source>A&amp;mount:</source>
         <translation>&amp;Bedrag:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Etiket:</translation>
     </message>
     <message>
         <source>Message:</source>

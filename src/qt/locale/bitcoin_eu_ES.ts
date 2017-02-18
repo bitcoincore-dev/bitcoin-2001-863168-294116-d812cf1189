@@ -172,6 +172,10 @@
         <translation>Zorroa enkriptatuta</translation>
     </message>
     <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 orain itxiko da enkriptazio prozezua amaitzeko. Gogoratu enkriptatzean zure diruzorroa ez duzula guztiz babesten zure Bitcoinak lapurretatik infektatzen zure ordenagailua Malwareekin.</translation>
+    </message>
+    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>GARRANTZITSUA: Aurreko seguritate-kopiak ordeztuko dire berriekin, enkriptatutak. Segurtasun arrazoigaitik, aurreko kopiak ezin dira erabili hasiko zarenean zure diruzorro enkriptatu berriarekin.</translation>
     </message>
@@ -244,6 +248,10 @@
     <message>
         <source>&amp;Options...</source>
         <translation>&amp;Aukerak...</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;Helbideak bidaltzen...</translation>
     </message>
     <message>
         <source>&amp;Receiving addresses...</source>
@@ -374,10 +382,17 @@
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Inprimakia</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">ezezaguna...</translation>
     </message>
     </context>
 <context>
@@ -418,7 +433,11 @@
     </context>
 <context>
     <name>RPCConsole</name>
-    </context>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">ezezaguna</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -489,6 +508,10 @@
     <message>
         <source>Amount:</source>
         <translation>Kopurua</translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Aukeratu...</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>

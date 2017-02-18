@@ -26,6 +26,10 @@
         <translation>&amp;அழி</translation>
     </message>
     <message>
+        <source>C&amp;hoose</source>
+        <translation>&amp;தேர்ந்தெடு</translation>
+    </message>
+    <message>
         <source>Sending addresses</source>
         <translation>முகவரிகள் அனுப்பப்படுகின்றன</translation>
     </message>
@@ -33,9 +37,21 @@
         <source>Receiving addresses</source>
         <translation>முகவரிகள் பெறப்படுகின்றன</translation>
     </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;முகவரியை நகலெடு</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;தொகு</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
+    <message>
+        <source>Label</source>
+        <translation>லேபிள்</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>முகவரி</translation>
@@ -43,6 +59,14 @@
     </context>
 <context>
     <name>AskPassphraseDialog</name>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>என்க்ரிப்ட் பணப்பை</translation>
+    </message>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>டிக்ரிப்ட் பணப்பை</translation>
+    </message>
     </context>
 <context>
     <name>BanTableModel</name>
@@ -82,8 +106,20 @@
         <translation>&amp;என்க்ரிப்ட் பணப்பை...</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;அனுப்பும் முகவரிகள்...</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation>&amp;பெறும் முகவரிகள்&gt;&gt;&gt;</translation>
+    </message>
+    <message>
         <source>Open &amp;URI...</source>
         <translation>&amp;URI-ஐ திற</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">பணப்பை:</translation>
     </message>
     <message>
         <source>&amp;Verify message...</source>
@@ -204,9 +240,33 @@
         <source>Confirmed</source>
         <translation>உறுதியாக</translation>
     </message>
+    <message>
+        <source>Copy address</source>
+        <translation>பிரதியை முகவரியை</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>நகலை தொகை</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>ஆம்</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>இல்லை</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;சிட்டை</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;&amp;விலாசம்</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -225,15 +285,26 @@
         <translation>நல்வரவு</translation>
     </message>
     <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>தவறு</translation>
     </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>படிவம்</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">அறியப்படாத...</translation>
     </message>
     <message>
         <source>Hide</source>
@@ -313,6 +384,10 @@
         <source>none</source>
         <translation>none</translation>
     </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin மையம்</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -377,6 +452,10 @@
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n மணி</numerusform><numerusform>%n மணி</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 மற்றும் %2</translation>
@@ -387,7 +466,23 @@
     </context>
 <context>
     <name>QRImageWidget</name>
-    </context>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;படத்தை சேமி...</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Image</source>
+        <translation>&amp;படத்தை</translation>
+    </message>
+    <message>
+        <source>Save QR Code</source>
+        <translation>QR குறியீடு காப்பாற்ற</translation>
+    </message>
+    <message>
+        <source>PNG Image (*.png)</source>
+        <translation>PNG படத்தை (*.png)</translation>
+    </message>
+</context>
 <context>
     <name>RPCConsole</name>
     <message>
@@ -417,6 +512,10 @@
     <message>
         <source>Memory usage</source>
         <translation>நினைவக பயன்பாடு</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">பணப்பை: </translation>
     </message>
     <message>
         <source>Sent</source>
@@ -549,7 +648,19 @@
         <source>Remove</source>
         <translation>நீக்கு</translation>
     </message>
-    </context>
+    <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">நகலை URI</translation>
+    </message>
+    <message>
+        <source>Copy message</source>
+        <translation>நகலை செய்தி</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>நகலை தொகை</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
@@ -569,15 +680,47 @@
         <translation>&amp;படத்தை சேமி...</translation>
     </message>
     <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>முகவரி</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>விலை</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>லேபிள்</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>செய்தி</translation>
     </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>தேதி</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>லேபிள்</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>செய்தி</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Inputs...</source>
+        <translation type="unfinished">உள்ளீடுகள்...</translation>
+    </message>
     <message>
         <source>Quantity:</source>
         <translation>அளவு</translation>
@@ -622,6 +765,14 @@
         <source>S&amp;end</source>
         <translation>&amp;அனுப்பு</translation>
     </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>நகலை தொகை</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>அல்லது</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>
@@ -648,7 +799,11 @@
     </context>
 <context>
     <name>SendConfirmationDialog</name>
-    </context>
+    <message>
+        <source>Yes</source>
+        <translation>ஆம்</translation>
+    </message>
+</context>
 <context>
     <name>ShutdownWindow</name>
     </context>
@@ -679,18 +834,158 @@
 </context>
 <context>
     <name>TransactionDesc</name>
-    </context>
+    <message>
+        <source>Status</source>
+        <translation>நிலை</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>தேதி</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>மூலம்</translation>
+    </message>
+    <message>
+        <source>Credit</source>
+        <translation>கடன்</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>பற்று</translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation>மொத்த பற்று</translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation>மொத்த கடன்</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>நிகர தொகை</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>செய்தி</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>கருத்து</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>பரிவர்த்தனை ID</translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation>வணிகர்</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>சரிசெய்வதற்கான தகவல்</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>பரிவர்த்தனை</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>உள்ளீடுகள்</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>விலை</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>உண்மை</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>தவறான</translation>
+    </message>
+</context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>தேதி</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>லேபிள்</translation>
+    </message>
+    <message>
+        <source>Offline</source>
+        <translation>ஆஃப்லைன்</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
     <message>
+        <source>All</source>
+        <translation>முழுவதும்</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>இன்று</translation>
+    </message>
+    <message>
+        <source>This week</source>
+        <translation>இந்த வாரம்</translation>
+    </message>
+    <message>
+        <source>This month</source>
+        <translation>இந்த மாதம்</translation>
+    </message>
+    <message>
+        <source>Last month</source>
+        <translation>கடந்த மாதம்</translation>
+    </message>
+    <message>
+        <source>This year</source>
+        <translation>இந்த வருடம்</translation>
+    </message>
+    <message>
+        <source>Range...</source>
+        <translation>எல்லை...</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>வேறு</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>பிரதியை முகவரியை</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>நகலை தொகை</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>உறுதியாக</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>தேதி</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>லேபிள்</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>முகவரி</translation>
+    </message>
+    <message>
+        <source>Range:</source>
+        <translation>எல்லை:</translation>
     </message>
     </context>
 <context>
@@ -704,9 +999,17 @@
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;ஏற்றுமதி</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation>விருப்பத்தேர்வு:</translation>
+    </message>
     <message>
         <source>Bitcoin Core</source>
         <translation>Bitcoin மையம்</translation>

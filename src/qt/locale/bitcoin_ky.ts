@@ -34,6 +34,10 @@
         <translation>&amp;Транзакциялар</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Капчык:</translation>
+    </message>
+    <message>
         <source>&amp;Verify message...</source>
         <translation>Билдирүүнү &amp;текшерүү...</translation>
     </message>
@@ -44,6 +48,10 @@
     <message>
         <source>Wallet</source>
         <translation>Капчык</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation type="unfinished">&amp;Жөнөтүү</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -101,9 +109,16 @@
 <context>
     <name>Intro</name>
     <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Ката</translation>
     </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -185,6 +200,10 @@
     <message>
         <source>Name</source>
         <translation>Аты</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Капчык: </translation>
     </message>
     <message>
         <source>&amp;Open</source>

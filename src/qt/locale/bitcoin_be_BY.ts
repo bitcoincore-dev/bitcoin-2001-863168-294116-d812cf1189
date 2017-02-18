@@ -180,6 +180,10 @@
         <translation>Гаманец зашыфраваны</translation>
     </message>
     <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 зараз будзе зачынены, каб фіналізаваць працэс шыфравання. Памятайце, што шыфраванне вашага гаманца не гарантуе абсалютную абарону ад магчымасці крадзяжу біткойнаў шкоднымі праграмамі, якія могуць інфікаваць ваш камп'ютар.</translation>
+    </message>
+    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>ВАЖНА: Усе папярэднія копіі гаманца варта замяніць новым зашыфраваным файлам. У мэтах бяспекі папярэднія копіі незашыфраванага файла-гаманца стануць неўжывальнымі, калі вы станеце карыстацца новым зашыфраваным гаманцом.</translation>
     </message>
@@ -258,6 +262,10 @@
         <translation>Выйсці з праграмы</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Паказаць інфармацыю аб %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Аб Qt</translation>
     </message>
@@ -292,6 +300,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Адчыниць &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Гаманец:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -389,6 +401,14 @@
         <source>&amp;Command-line options</source>
         <translation>Опцыі каманднага радка</translation>
     </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network</source>
+        <translation><numerusform>%n актыўнае злучэнне з сецівам Bitcoin</numerusform><numerusform>%n актыўных злучэнняў з сецівам Bitcoin</numerusform><numerusform>%n актыўных злучэнняў з сецівам Bitcoin</numerusform><numerusform>%n актыўных злучэнняў з сецівам Bitcoin</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation><numerusform>Апрацаваны %n блок гісторыі транзакцый.</numerusform><numerusform>Апрацавана %n блокі гісторыі транзакцый.</numerusform><numerusform>Апрацавана %n блокаў гісторыі транзакцый.</numerusform><numerusform>Апрацавана %n блокаў гісторыі транзакцый.</numerusform></translation>
+    </message>
     <message>
         <source>%1 behind</source>
         <translation>%1 таму</translation>
@@ -416,6 +436,10 @@
     <message>
         <source>Up to date</source>
         <translation>Сінхранізавана</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Паказваць даведку %1 каб атрымаць спіс магчымых опцый каманднага радка</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -675,15 +699,34 @@
         <translation>Вітаем</translation>
     </message>
     <message>
+        <source>Bitcoin</source>
+        <translation>Біткойн</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Памылка</translation>
     </message>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation><numerusform>%n Гб вольнага месца даступна</numerusform><numerusform>%n Гб вольнага месца даступна</numerusform><numerusform>%n Гб вольнага месца даступна</numerusform><numerusform>%n Гб вольнага месца даступна</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation><numerusform>(з %n Гб патрэбна)</numerusform><numerusform>(з %n Гб патрэбна)</numerusform><numerusform>(з %n Гб патрэбна)</numerusform><numerusform>(з %n Гб патрэбна)</numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Форма</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">невядома...</translation>
     </message>
     </context>
 <context>
@@ -707,6 +750,10 @@
         <source>W&amp;allet</source>
         <translation>Гаманец</translation>
     </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -727,9 +774,25 @@
         <source>Amount</source>
         <translation>Колькасць</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n гадзіна</numerusform><numerusform>%n гадзіны</numerusform><numerusform>%n гадзін</numerusform><numerusform>%n гадзін</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n дзень</numerusform><numerusform>%n дні</numerusform><numerusform>%n дзён</numerusform><numerusform>%n дзён</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n тыдзень</numerusform><numerusform>%n тыдні</numerusform><numerusform>%n тыдняў</numerusform><numerusform>%n тыдняў</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 і %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n год</numerusform><numerusform>%n гады</numerusform><numerusform>%n гадоў</numerusform><numerusform>%n гадоў</numerusform></translation>
     </message>
     </context>
 <context>
@@ -748,7 +811,15 @@
         <source>Debug window</source>
         <translation>Вакно адладкі</translation>
     </message>
-    </context>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Гаманец: </translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">невядома</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -758,6 +829,10 @@
     <message>
         <source>&amp;Label:</source>
         <translation>Метка:</translation>
+    </message>
+    <message>
+        <source>&amp;Message:</source>
+        <translation>&amp;Паведамленне:</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -841,6 +916,10 @@
         <translation>Пасля камісіі:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Выбраць...</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Даслаць адразу некалькім атрымальнікам</translation>
     </message>
@@ -855,6 +934,10 @@
     <message>
         <source>Confirm the send action</source>
         <translation>Пацвердзіць дасыланне</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">Даслаць</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -1237,6 +1320,10 @@
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Экспартаваць гэтыя звесткі у файл</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Стварыць копію гаманца</translation>
     </message>
     </context>
 <context>

@@ -318,6 +318,10 @@
         <translation>Ouvrir une &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Porte-monnaie:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Cliquer pour désactiver l'activité réseau.</translation>
     </message>
@@ -851,16 +855,16 @@
         <translation>Puisque c'est la première fois que le logiciel est lancé, vous pouvez choisir où %1 stockera ses données.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 téléchargera et stockera une copie de la chaîne de blocs de Bitcoin. Au moins %2 Go de données seront stockés dans ce répertoire et sa taille augmentera avec le temps. Le porte-monnaie sera également stocké dans ce répertoire.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Utiliser le répertoire de données par défaut</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Utiliser un répertoire de données personnalisé :</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -879,6 +883,9 @@
         <translation><numerusform>(sur %n Go requis)</numerusform><numerusform>(sur %n Go requis)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1166,6 +1173,10 @@
     <message>
         <source>none</source>
         <translation>aucune</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1543,6 +1554,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Utilisation de la mémoire</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Porte-monnaie: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -3320,6 +3335,10 @@
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>Emplacement du fichier témoin auth (par défaut : data dir)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Octets minimaux par sigop dans les transactions que nous relayons et minons (par défaut : %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>

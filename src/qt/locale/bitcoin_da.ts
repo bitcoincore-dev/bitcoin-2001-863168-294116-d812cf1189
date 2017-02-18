@@ -318,6 +318,10 @@
         <translation>&amp;Åbn URI…</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Tegnebog:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Klik for at deaktivere netværksaktivitet.</translation>
     </message>
@@ -851,16 +855,16 @@
         <translation>Siden dette er første gang, programmet startes, kan du vælge, hvor %1 skal gemme sin data.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 vil downloade og gemme et kopi af Bitcoin-blokkæden. Mindst %2 GB data vil blive gemt i denne mappe, og den vil vokse over tid. Tegnebogen vil også blive gemt i denne mappe.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Brug standardmappen for data</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Brug tilpasset mappe for data:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -879,6 +883,9 @@
         <translation><numerusform>(ud af %n GB nødvendig)</numerusform><numerusform>(ud af %n GB nødvendig)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1166,6 +1173,10 @@
     <message>
         <source>none</source>
         <translation>ingen</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1543,6 +1554,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Hukommelsesforbrug</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Tegnebog: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -3324,6 +3339,10 @@
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>Placering for autentificerings-cookie (standard: datamappe)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimum bytes pr. sigop i transaktioner, vi videresender og miner (standard: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
