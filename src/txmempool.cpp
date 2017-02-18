@@ -11,6 +11,7 @@
 #include "validation.h"
 #include "policy/policy.h"
 #include "policy/fees.h"
+#include "script/script.h"
 #include "streams.h"
 #include "timedata.h"
 #include "util.h"
@@ -74,6 +75,13 @@ void CTxMemPoolEntry::UpdateLockPoints(const LockPoints& lp)
 size_t CTxMemPoolEntry::GetTxSize() const
 {
     return GetVirtualTransactionSize(nTxWeight, sigOpCost);
+}
+
+uint160 ScriptHashkey(const CScript& script)
+{
+    uint160 hash;
+    CRIPEMD160().Write(script.data(), script.size()).Finalize(hash.begin());
+    return hash;
 }
 
 // Update the given tx for any in-mempool descendants.
@@ -447,11 +455,23 @@ bool CTxMemPool::addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry,
     vTxHashes.emplace_back(tx.GetWitnessHash(), newit);
     newit->vTxHashesIdx = vTxHashes.size() - 1;
 
+    for (auto& vSPK : entry.mapSPK) {
+        const uint160& SPKKey = vSPK.first;
+        const MemPool_SPK_State& claims = vSPK.second;
+        if (claims & MSS_CREATED) {
+            mapUsedSPK[SPKKey].first = &tx;
+        }
+        if (claims & MSS_SPENT) {
+            mapUsedSPK[SPKKey].second = &tx;
+        }
+    }
+
     return true;
 }
 
 void CTxMemPool::removeUnchecked(txiter it, MemPoolRemovalReason reason)
 {
+    const CTransaction& tx = it->GetTx();
     NotifyEntryRemoved(it->GetSharedTx(), reason);
     const uint256 hash = it->GetTx().GetHash();
     BOOST_FOREACH(const CTxIn& txin, it->GetTx().vin)
@@ -465,6 +485,20 @@ void CTxMemPool::removeUnchecked(txiter it, MemPoolRemovalReason reason)
             vTxHashes.shrink_to_fit();
     } else
         vTxHashes.clear();
+
+    for (auto& vSPK : it->mapSPK) {
+        const uint160& SPKKey = vSPK.first;
+        const MemPool_SPK_State& claims = vSPK.second;
+        if (mapUsedSPK[SPKKey].first == &tx) {
+            mapUsedSPK[SPKKey].first = NULL;
+        }
+        if (mapUsedSPK[SPKKey].second == &tx) {
+            mapUsedSPK[SPKKey].second = NULL;
+        }
+        if (!(mapUsedSPK[SPKKey].first || mapUsedSPK[SPKKey].second)) {
+            mapUsedSPK.erase(SPKKey);
+        }
+    }
 
     totalTxSize -= it->GetTxSize();
     cachedInnerUsage -= it->DynamicMemoryUsage();
@@ -627,6 +661,7 @@ void CTxMemPool::_clear()
     mapLinks.clear();
     mapTx.clear();
     mapNextTx.clear();
+    mapUsedSPK.clear();
     totalTxSize = 0;
     cachedInnerUsage = 0;
     lastRollingFeeUpdate = GetTime();
