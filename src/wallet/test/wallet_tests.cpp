@@ -419,7 +419,10 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
     // elided due to the nTimeFirstKey optimization.
     {
         CWallet wallet;
-        wallet.UpdateTimeFirstKey(newTip->GetBlockTime() + 7200 + 1);
+        {
+            LOCK(wallet.cs_wallet);
+            wallet.UpdateTimeFirstKey(newTip->GetBlockTime() + 7200 + 1);
+        }
         BOOST_CHECK_EQUAL(newTip, wallet.ScanForWalletTransactions(newTip));
     }
 }
