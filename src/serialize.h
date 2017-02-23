@@ -300,18 +300,20 @@ uint64_t ReadCompactSize(Stream& is)
 /**
  * Mode for encoding VarInts.
  *
- * Currently there is no support for signed types, aside from a broken legacy
- * mode that does not decode negative numbers properly. In the future, the
- * DEFAULT mode could be extended to support negative numbers in a backwards
- * compatible way, or new modes could be added to support different encodings.
+ * Currently there is no support for signed encodings. The default mode will not
+ * compile with signed values, and the legacy "nonnegative signed" mode will
+ * accept signed values, but improperly encode and decode them if they are
+ * negative. In the future, the DEFAULT mode could be extended to support
+ * negative numbers in a backwards compatible way, and additional modes could be
+ * added to support different varint formats (e.g. zigzag encoding).
  */
-enum class VarIntMode { DEFAULT, BROKEN_SIGNED };
+enum class VarIntMode { DEFAULT, NONNEGATIVE_SIGNED };
 
 template<VarIntMode Mode, typename I>
 constexpr void CheckVarIntMode()
 {
     static_assert(Mode != VarIntMode::DEFAULT || std::is_unsigned<I>::value, "Unsigned type required with mode DEFAULT.");
-    static_assert(Mode != VarIntMode::BROKEN_SIGNED || std::is_signed<I>::value, "Signed type required with mode BROKEN_SIGNED.");
+    static_assert(Mode != VarIntMode::NONNEGATIVE_SIGNED || std::is_signed<I>::value, "Signed type required with mode NONNEGATIVE_SIGNED.");
 }
 
 template<VarIntMode Mode, typename I>
