@@ -1673,8 +1673,8 @@ UniValue listsinceblock(const JSONRPCRequest& request)
         throw runtime_error(
             "listsinceblock ( \"blockhash\" target_confirmations include_watchonly include_removed )\n"
             "\nGet all transactions in blocks since block [blockhash], or all transactions if omitted.\n"
-            "If \"blockhash\" is no longer a part of the main chain, all transactions affecting the node wallet from blockhash back to the fork point are included in the \"removed\" array.\n"
-            "In addition, transactions from the fork point up to the tip of the active chain are included in \"transactions\".\n"
+            "If \"blockhash\" is no longer a part of the main chain, transactions from the fork point onward are included.\n"
+            "Additionally, if include_removed is set, transactions affecting the wallet which were removed are returned in the \"removed\" array.\n"
             "\nArguments:\n"
             "1. \"blockhash\"            (string, optional) The block hash to list transactions since\n"
             "2. target_confirmations:    (numeric, optional) The confirmations required, must be 1 or more\n"
