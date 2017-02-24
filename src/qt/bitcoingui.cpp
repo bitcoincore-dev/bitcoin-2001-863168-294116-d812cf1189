@@ -9,6 +9,7 @@
 #include <qt/guiconstants.h>
 #include <qt/guiutil.h>
 #include <qt/modaloverlay.h>
+#include <qt/netwatch.h>
 #include <qt/networkstyle.h>
 #include <qt/notificator.h>
 #include <qt/openuridialog.h>
@@ -220,6 +221,7 @@ BitcoinGUI::~BitcoinGUI()
     MacDockIconHandler::cleanup();
 #endif
 
+    delete NetWatch;
     delete rpcConsole;
 }
 
@@ -310,6 +312,9 @@ void BitcoinGUI::createActions()
     verifyMessageAction = new QAction(platformStyle->TextColorIcon(":/icons/verify"), tr("&Verify message..."), this);
     verifyMessageAction->setStatusTip(tr("Verify messages to ensure they were signed with specified Bitcoin addresses"));
 
+    m_show_netwatch_action = new QAction(QIcon(), tr("&Watch network activity"), this);
+    m_show_netwatch_action->setStatusTip(tr("Open p2p network watching window"));
+
     openRPCConsoleAction = new QAction(platformStyle->TextColorIcon(":/icons/debugwindow"), tr("&Debug window"), this);
     openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));
     // initially disable the debug window menu item
@@ -333,6 +338,7 @@ void BitcoinGUI::createActions()
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
     connect(toggleHideAction, SIGNAL(triggered()), this, SLOT(toggleHidden()));
     connect(showHelpMessageAction, SIGNAL(triggered()), this, SLOT(showHelpMessageClicked()));
+    connect(m_show_netwatch_action, SIGNAL(triggered()), this, SLOT(showNetWatch()));
     connect(openRPCConsoleAction, SIGNAL(triggered()), this, SLOT(showDebugWindow()));
     // prevents an open debug window from becoming stuck/unusable on client shutdown
     connect(quitAction, SIGNAL(triggered()), rpcConsole, SLOT(hide()));
@@ -390,6 +396,7 @@ void BitcoinGUI::createMenuBar()
     settings->addAction(optionsAction);
 
     QMenu *help = appMenuBar->addMenu(tr("&Help"));
+    help->addAction(m_show_netwatch_action);
     if(walletFrame)
     {
         help->addAction(openRPCConsoleAction);
@@ -460,6 +467,10 @@ void BitcoinGUI::setClientModel(ClientModel *_clientModel)
         // Show progress dialog
         connect(_clientModel, SIGNAL(showProgress(QString,int)), this, SLOT(showProgress(QString,int)));
 
+        if (NetWatch) {
+            NetWatch->setClientModel(_clientModel);
+        }
+
         rpcConsole->setClientModel(_clientModel);
 
         updateProxyIcon();
@@ -490,6 +501,9 @@ void BitcoinGUI::setClientModel(ClientModel *_clientModel)
             trayIconMenu->clear();
         }
         // Propagate cleared model to child objects
+        if (NetWatch) {
+            NetWatch->setClientModel(nullptr);
+        }
         rpcConsole->setClientModel(nullptr);
 #ifdef ENABLE_WALLET
         if (walletFrame)
@@ -651,6 +665,18 @@ void BitcoinGUI::aboutClicked()
 
     HelpMessageDialog dlg(m_node, this, true);
     dlg.exec();
+}
+
+void BitcoinGUI::showNetWatch()
+{
+    if (!NetWatch) {
+        NetWatch = new GuiNetWatch(platformStyle, netStyle);
+        NetWatch->setClientModel(clientModel);
+    }
+    NetWatch->showNormal();
+    NetWatch->show();
+    NetWatch->raise();
+    NetWatch->activateWindow();
 }
 
 void BitcoinGUI::showDebugWindow()
@@ -966,6 +992,9 @@ void BitcoinGUI::closeEvent(QCloseEvent *event)
     {
         if(!clientModel->getOptionsModel()->getMinimizeOnClose())
         {
+            if (NetWatch) {
+                NetWatch->close();
+            }
             // close rpcConsole in case it was open to make some space for the shutdown window
             rpcConsole->close();
 
@@ -1158,6 +1187,9 @@ void BitcoinGUI::detectShutdown()
 {
     if (m_node.shutdownRequested())
     {
+        if (NetWatch) {
+            NetWatch->hide();
+        }
         if(rpcConsole)
             rpcConsole->hide();
         qApp->quit();
