@@ -126,6 +126,7 @@ private:
     int spinnerFrame;
 
     const PlatformStyle *platformStyle;
+    const NetworkStyle *netStyle;
 
     /** Create the main UI actions. */
     void createActions();
