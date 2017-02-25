@@ -3970,9 +3970,9 @@ int CMerkleTx::GetBlocksToMaturity() const
 }
 
 
-bool CMerkleTx::AcceptToMemoryPool(const CAmount& nAbsurdFee, CValidationState& state)
+bool CMerkleTx::AcceptToMemoryPool(const CAmount& nAbsurdFee, CValidationState& state, const std::set<std::string>& setIgnoreRejects)
 {
-    return ::AcceptToMemoryPool(mempool, state, tx, true, NULL, NULL, false, nAbsurdFee);
+    return ::AcceptToMemoryPool(mempool, state, tx, true, NULL, NULL, nAbsurdFee, setIgnoreRejects);
 }
 
 bool GetWitnessKeyID(const CKeyStore* store, const CScriptID &scriptID, CKeyID &keyID)
