@@ -1797,6 +1797,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         std::list<CTransactionRef> lRemovedTxn;
 
         if (!AlreadyHave(inv) && AcceptToMemoryPool(mempool, state, ptx, true, &fMissingInputs, &lRemovedTxn)) {
+            GetMainSignals().AcceptedTransaction(ptx);
             mempool.check(pcoinsTip);
             RelayTransaction(tx, connman);
             for (unsigned int i = 0; i < tx.vout.size(); i++) {
