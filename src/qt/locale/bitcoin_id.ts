@@ -1,9 +1,13 @@
-<TS language="ms_MY" version="2.1">
+<TS language="id" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
+        <source>Right-click to edit address or label</source>
+        <translation>Klik kanan untuk mengubah alamat atau label</translation>
+    </message>
+    <message>
         <source>Create a new address</source>
-        <translation>Cipta alamat baru</translation>
+        <translation>Buat sebuah alamat baru</translation>
     </message>
     <message>
         <source>&amp;New</source>
@@ -11,56 +15,47 @@
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Salin alamat terpilih ke dalam sistem papan klip</translation>
+        <translation>Salin alamat yang dipilih ke dalam clipboard sistem</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
         <translation>&amp;Salin</translation>
     </message>
     <message>
+        <source>C&amp;lose</source>
+        <translation>&amp;Tutup</translation>
+    </message>
+    <message>
         <source>Delete the currently selected address from the list</source>
-        <translation>Padam alamat semasa yang dipilih dari senaraiyang dipilih dari senarai</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>
-Alihkan fail data ke dalam tab semasa</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Eksport</translation>
+        <translation>Hapus alamat yang dipilih dari daftar</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
-        <translation>&amp;Padam</translation>
+        <translation>&amp;Hapus</translation>
     </message>
     <message>
         <source>Choose the address to send coins to</source>
-        <translation>Pilih alamat untuk menghantar syiling</translation>
-    </message>
-    <message>
-        <source>Choose the address to receive coins with</source>
-        <translation>Pilih alamat untuk menerima syiling</translation>
+        <translation>Pilih alamat untuk mengirim koin kepada</translation>
     </message>
     <message>
         <source>C&amp;hoose</source>
-        <translation>&amp;Pilih</translation>
+        <translation>P&amp;ilih</translation>
+    </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation>Alamat mengirim</translation>
+    </message>
+    <message>
+        <source>Receiving addresses</source>
+        <translation>Alamat menerima</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Salin Alamat</translation>
     </message>
-    <message>
-        <source>Comma separated file (*.csv)</source>
-        <translation>Fail yang dipisahkan dengan koma</translation>
-    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
-    <message>
-        <source>Address</source>
-        <translation>Alamat</translation>
-    </message>
     </context>
 <context>
     <name>AskPassphraseDialog</name>
@@ -71,8 +66,12 @@ Alihkan fail data ke dalam tab semasa</translation>
 <context>
     <name>BitcoinGUI</name>
     <message>
-        <source>&amp;Options...</source>
-        <translation>Pilihan</translation>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;Alamat mengirim...</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;Alamat menerima...</translation>
     </message>
     </context>
 <context>
@@ -80,14 +79,6 @@ Alihkan fail data ke dalam tab semasa</translation>
     </context>
 <context>
     <name>EditAddressDialog</name>
-    <message>
-        <source>Edit Address</source>
-        <translation>Alamat</translation>
-    </message>
-    <message>
-        <source>&amp;Address</source>
-        <translation>Alamat</translation>
-    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -109,12 +100,7 @@ Alihkan fail data ke dalam tab semasa</translation>
     </context>
 <context>
     <name>NetWatchLogModel</name>
-    <message>
-        <source>Address</source>
-        <comment>NetWatch: Address header</comment>
-        <translation>Alamat</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -132,7 +118,12 @@ Alihkan fail data ke dalam tab semasa</translation>
     </context>
 <context>
     <name>QObject</name>
-    </context>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsi</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -149,11 +140,7 @@ Alihkan fail data ke dalam tab semasa</translation>
     <name>ReceiveRequestDialog</name>
     <message>
         <source>Copy &amp;Address</source>
-        <translation>&amp;Salin Alamat</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Alamat</translation>
+        <translation type="unfinished">&amp;Salin Alamat</translation>
     </message>
     </context>
 <context>
@@ -164,10 +151,6 @@ Alihkan fail data ke dalam tab semasa</translation>
     <message>
         <source>Choose...</source>
         <translation type="unfinished">Pilih...</translation>
-    </message>
-    <message>
-        <source>Balance:</source>
-        <translation>Baki</translation>
     </message>
     </context>
 <context>
@@ -199,14 +182,6 @@ Alihkan fail data ke dalam tab semasa</translation>
     </context>
 <context>
     <name>TransactionView</name>
-    <message>
-        <source>Comma separated file (*.csv)</source>
-        <translation>Fail yang dipisahkan dengan koma</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Alamat</translation>
-    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -219,15 +194,6 @@ Alihkan fail data ke dalam tab semasa</translation>
     </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Eksport</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>
-Alihkan fail data ke dalam tab semasa</translation>
-    </message>
     </context>
 <context>
     <name>bitcoin-core</name>

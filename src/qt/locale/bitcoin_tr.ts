@@ -318,6 +318,10 @@
         <translation>&amp;URI Aç...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Cüzdan:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Ağ etkinliğini devre dışı bırakmak için tıklayın.</translation>
     </message>
@@ -782,6 +786,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -851,16 +858,28 @@
         <translation>Bu programın ilk kez başlatılmasından dolayı %1 yazılımının verilerini nerede saklayacağını seçebilirsiniz.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1, Bitcoin blok zincirinin bir kopyasını indirecek ve saklayacaktır. Bu klasörde en az %2 GB veri saklanacak ve bu zamanla artacaktır. Cüzdan da bu klasörde saklanacaktır.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Varsayılan veri klasörünü kullan</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Özel bir veri klasörü kullan:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Bu klasörde en az %1 GB veri saklanacak ve bu zamanla artacaktır.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1, Bitcoin blok zincirinin bir kopyasını indirecek ve saklayacaktır.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>Cüzdan da bu klasörde saklanacaktır.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -879,6 +898,9 @@
         <translation><numerusform>(gereken %n GB alandan)</numerusform><numerusform>(gereken %n GB alandan)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -928,6 +950,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Bilinmeyen. Üstbilgiler Senkronize Ediliyor (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tür</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
     </message>
 </context>
 <context>
@@ -1166,6 +1201,10 @@
     <message>
         <source>none</source>
         <translation>boş</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Çekirdeği</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1443,6 +1482,11 @@
         <source>%1 didn't yet exit safely...</source>
         <translation>%1  henüz güvenli bir şekilde çıkış yapmamıştır...</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>İşlem</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1543,6 +1587,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Bellek kullanımı</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Cüzdan: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -2195,6 +2243,10 @@
     <message>
         <source>Pay only the required fee of %1</source>
         <translation>Sadece asgari ücret olan %1 tutarını öde</translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>Tahmini olarak %n blok içinde teyide başlanacaktır.</numerusform><numerusform>Tahmini olarak %n blok içinde teyide başlanacaktır.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -3320,6 +3372,10 @@
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>auth çerezinin konumu (varsayılan: veri klasörü)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Aktardığımız ve oluşturduğumuz muamelelerdeki sigop başına asgari bayt (varsayılan: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>

@@ -318,6 +318,10 @@
         <translation>Open &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portemonnee:</translation>
+    </message>
+    <message>
         <source>Reindexing blocks on disk...</source>
         <translation>Bezig met herindexeren van blokken op harde schijf...</translation>
     </message>
@@ -750,6 +754,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -819,16 +826,28 @@
         <translation>Omdat dit de eerste keer is dat het programma gestart is, kunt u nu kiezen waar %1 de data moet opslaan.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 zal een kopie van de Bitcoin blokketen downloaden en opslaan. Tenminste %2 GB aan data wordt opgeslagen in deze map en het zal groeien in de tijd. De portemonnee wordt ook in deze map opgeslagen.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Gebruik de standaard gegevensmap</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Gebruik een persoonlijke gegevensmap:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Tenminste %1 GB aan data wordt opgeslagen in deze map en het zal groeien in de tijd.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 zal een kopie van de Bitcoin blokketen downloaden en opslaan.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>De portemonnee wordt ook in deze map opgeslagen.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -848,10 +867,17 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Vorm</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Onbekend...</translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -862,6 +888,19 @@
         <translation>Verbergen</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -1100,6 +1139,10 @@
         <translation>geen</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Bevestig reset opties</translation>
     </message>
@@ -1335,11 +1378,32 @@
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n uur</numerusform><numerusform>%n uren</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n dag</numerusform><numerusform>%n dagen</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n week</numerusform><numerusform>%n weken</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 en %2</translation>
     </message>
-    </context>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n jaar</numerusform><numerusform>%n jaren</numerusform></translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -1427,6 +1491,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Geheugengebruik</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portemonnee: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1710,6 +1778,10 @@
     <message>
         <source>Remove</source>
         <translation>Verwijder</translation>
+    </message>
+    <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Kopieer URI</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -2040,6 +2112,10 @@
         <source>Pay only the required fee of %1</source>
         <translation>Betaal alleen de verplichte transactiekosten van %1</translation>
     </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>Schatting is dat bevestiging begint over %n blok.</numerusform><numerusform>Schatting is dat bevestiging begint over %n blokken.</numerusform></translation>
+    </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
         <translation>Waarschuwing: Ongeldig Bitcoinadres</translation>
@@ -2309,6 +2385,10 @@
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Open voor nog %n blok</numerusform><numerusform>Open voor nog %n blokken</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>Open tot %1</translation>
@@ -2353,6 +2433,10 @@
         <source>, has not been successfully broadcast yet</source>
         <translation>, is nog niet met succes uitgezonden</translation>
     </message>
+    <message numerus="yes">
+        <source>, broadcast through %n node(s)</source>
+        <translation><numerusform>, uitgezonden naar %n node</numerusform><numerusform>, uitgezonden naar %n nodes</numerusform></translation>
+    </message>
     <message>
         <source>Date</source>
         <translation>Datum</translation>
@@ -2392,6 +2476,10 @@
     <message>
         <source>Credit</source>
         <translation>Credit</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation><numerusform>komt tot wasdom na %n nieuw blok</numerusform><numerusform>komt tot wasdom na %n nieuwe blokken</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2490,6 +2578,10 @@
     <message>
         <source>Label</source>
         <translation>Label</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Open voor nog %n blok</numerusform><numerusform>Open voor nog %n blokken</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2822,6 +2914,10 @@
         <translation>Aanvaard opdrachtregel- en JSON-RPC-opdrachten</translation>
     </message>
     <message>
+        <source>Accept connections from outside (default: 1 if no -proxy or -connect/-noconnect)</source>
+        <translation>Accepteer verbindingen van buitenaf (standaard: 1 als geen -proxy of -connect is opgegeven)</translation>
+    </message>
+    <message>
         <source>If &lt;category&gt; is not supplied or if &lt;category&gt; = 1, output all debugging information.</source>
         <translation>Als er geen &lt;categorie&gt; is opgegeven of als de &lt;categorie&gt; 1 is, laat dan alle debugginginformatie zien.</translation>
     </message>
@@ -2922,12 +3018,24 @@
         <translation>De blokdatabase bevat een blok dat lijkt uit de toekomst te komen. Dit kan gebeuren omdat de datum en tijd van uw computer niet goed staat. Herbouw de blokdatabase pas nadat u de datum en tijd van uw computer correct heeft ingesteld.</translation>
     </message>
     <message>
+        <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
+        <translation>Dit is een prerelease testversie – gebruik op eigen risico! Gebruik deze niet voor mijnen of handelsdoeleinden</translation>
+    </message>
+    <message>
         <source>Unable to rewind the database to a pre-fork state. You will need to redownload the blockchain</source>
         <translation>Niet mogelijk om de databank terug te draaien naar een staat voor de vork. Je zal je blokketen opnieuw moeten downloaden</translation>
     </message>
     <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
         <translation>Gebruik UPnP om de luisterende poort te mappen (standaard: 1 als er geluisterd worden en geen -proxy is meegegeven)</translation>
+    </message>
+    <message>
+        <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
+        <translation>Waarschuwing: Het lijkt erop dat het netwerk geen consensus kan vinden! Sommige delvers lijken problemen te ondervinden.</translation>
+    </message>
+    <message>
+        <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
+        <translation>Waarschuwing: Het lijkt erop dat we geen consensus kunnen vinden met onze peers! Mogelijk dient u te upgraden, of andere nodes moeten wellicht upgraden.</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
@@ -3084,6 +3192,10 @@
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>Locatie van de auth cookie (standaard: data dir)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimum aantal bytes dat er per sigop in een transactie gerelayed en gemined worden (standaard: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3450,8 +3562,16 @@
         <translation>Output extra debugginginformatie (standaard: %u, het leveren van &lt;categorie&gt; is optioneel)</translation>
     </message>
     <message>
+        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect/-noconnect)</source>
+        <translation>Query voor peeradressen via DNS- lookup , als laag op adressen  (standaard: 1 unless -connect)</translation>
+    </message>
+    <message>
         <source>Support filtering of blocks and transaction with bloom filters (default: %u)</source>
         <translation>Ondersteun filtering van blokken en transacties met bloomfilters (standaard: %u)</translation>
+    </message>
+    <message>
+        <source>This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit %s and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard.</source>
+        <translation>Dit product bevat software dat ontwikkeld is door het OpenSSL Project voor gebruik in de OpenSSL Toolkit %s en cryptografische software geschreven door Eric Young en UPnP software geschreven door Thomas Bernard.</translation>
     </message>
     <message>
         <source>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</source>

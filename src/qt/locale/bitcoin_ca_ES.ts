@@ -318,6 +318,10 @@
         <translation>Obre un &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Moneder:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Feu clic per inhabilitar l'activitat de la xarxa.</translation>
     </message>
@@ -774,6 +778,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -843,16 +850,28 @@
         <translation>Com és la primera vegada que s'executa el programa, podeu triar on %1 emmagatzemarà les dades.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 baixarà i emmagatzemarà una còpia de la cadena de blocs de Bitcoin. Com a mínim %2GB de dades s'emmagatzemaran en aquest directori, i augmentarà al llarg del temps. El moneder també s'emmagatzemarà en aquest directori.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Utilitza el directori de dades per defecte</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Utilitza un directori de dades personalitzat:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Com a mínim %1GB de dades s'emmagatzemaran en aquest directori, i augmentarà al llarg del temps.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 baixarà i emmagatzemarà una còpia de la cadena de blocs de Bitcoin.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>El moneder també s'emmagatzemarà en aquest directori.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -872,10 +891,17 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Formulari</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Desconegut...</translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -900,6 +926,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Desconegut. Sincronització de les capçaleres (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipus</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adreça</translation>
     </message>
 </context>
 <context>
@@ -1140,6 +1179,10 @@
         <translation>cap</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Nucli de Bitcoin</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Confirmeu el reestabliment de les opcions</translation>
     </message>
@@ -1375,11 +1418,37 @@
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n hora</numerusform><numerusform>%n hores</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n dia</numerusform><numerusform>%n dies</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n setmana</numerusform><numerusform>%n setmanes</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 i %2</translation>
     </message>
-    </context>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n any</numerusform><numerusform>%n anys</numerusform></translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsó</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -1469,6 +1538,10 @@
         <translation>Us de memoria</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Moneder: </translation>
+    </message>
+    <message>
         <source>Received</source>
         <translation>Rebut</translation>
     </message>
@@ -1515,6 +1588,10 @@
     <message>
         <source>User Agent</source>
         <translation>Agent d'usuari</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Obre el fitxer de registre de depuració del %1 del directori de dades actual. Pot portar uns quants segons per a fitxers de registre grans.</translation>
     </message>
     <message>
         <source>Services</source>
@@ -1615,6 +1692,10 @@
     <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
         <translation>Escriviu &lt;b&gt;help&lt;\b&gt; per a obtenir un llistat de les ordres disponibles.</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>S'ha inhabilitat l'activitat de la xarxa.</translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1734,6 +1815,10 @@
     <message>
         <source>Remove</source>
         <translation>Esborra</translation>
+    </message>
+    <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Copia l'URI</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -2064,6 +2149,10 @@
         <source>Pay only the required fee of %1</source>
         <translation>Paga només la comissió necessària de %1</translation>
     </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>Estimat per començar la confirmació en %n bloc.</numerusform><numerusform>Estimat per començar la confirmació en %n blocs.</numerusform></translation>
+    </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
         <translation>Avís: adreça Bitcoin no vàlida</translation>
@@ -2329,6 +2418,10 @@
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Obre per %n bloc més</numerusform><numerusform>Obre per %n blocs més</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>Obert fins %1</translation>
@@ -2352,6 +2445,10 @@
     <message>
         <source>, has not been successfully broadcast yet</source>
         <translation>, encara no ha estat emès correctement</translation>
+    </message>
+    <message numerus="yes">
+        <source>, broadcast through %n node(s)</source>
+        <translation><numerusform>, difusió a través de %n node</numerusform><numerusform>, difusió a través de %n nodes</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2392,6 +2489,10 @@
     <message>
         <source>Credit</source>
         <translation>Crèdit</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation><numerusform>disponible en %n bloc més</numerusform><numerusform>disponibles en %n blocs més</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2482,6 +2583,10 @@
     <message>
         <source>Label</source>
         <translation>Etiqueta</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Obre per %n bloc més</numerusform><numerusform>Obre per %n blocs més</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2806,6 +2911,10 @@
         <translation>Accepta la línia d'ordres i ordres JSON-RPC </translation>
     </message>
     <message>
+        <source>Accept connections from outside (default: 1 if no -proxy or -connect/-noconnect)</source>
+        <translation>Accepta connexions de fora (per defecte: 1 si no -proxy o -connect)</translation>
+    </message>
+    <message>
         <source>If &lt;category&gt; is not supplied or if &lt;category&gt; = 1, output all debugging information.</source>
         <translation>Si no es proporciona &lt;category&gt; o si &lt;category&gt; = 1, treu a la sortida tota la informació de depuració.</translation>
     </message>
@@ -2850,6 +2959,10 @@
         <translation>Vincula a una adreça específica i sempre escolta-hi. Utilitza la notació [host]:port per IPv6</translation>
     </message>
     <message>
+        <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
+        <translation>No es pot obtenir un bloqueig del directori de dades %s. El %s probablement ja s'estigui executant.</translation>
+    </message>
+    <message>
         <source>Delete all wallet transactions and only recover those parts of the blockchain through -rescan on startup</source>
         <translation>Elimina totes les transaccions del moneder i només recupera aquelles de la cadena de blocs a través de -rescan a l'inici</translation>
     </message>
@@ -2858,8 +2971,32 @@
         <translation>Executa una ordre quan una transacció del moneder canviï (%s en cmd es canvia per TxID)</translation>
     </message>
     <message>
+        <source>Maximum total fees (in %s) to use in a single wallet transaction or raw transaction; setting this too low may abort large transactions (default: %s)</source>
+        <translation>Comissions totals màximes (en %s) per utilitzar en una única transacció de moneder; definir-ne una massa baixa pot interrompre les transaccions més grans (per defecte: %s)</translation>
+    </message>
+    <message>
+        <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
+        <translation>Comproveu que la data i hora de l'ordinador són correctes! Si el vostre rellotge no té l'hora correcta, el %s no funcionarà adequadament.</translation>
+    </message>
+    <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
         <translation>Defineix el nombre de fils de verificació d'scripts (%u a %d, 0 = auto, &lt;0 = deixa tants nuclis lliures, per defecte: %d)</translation>
+    </message>
+    <message>
+        <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
+        <translation>Aquesta és una versió de pre-llançament - utilitza-la sota la teva responsabilitat - No usar per a minería o aplicacions de compra-venda</translation>
+    </message>
+    <message>
+        <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
+        <translation>Avís: la xarxa no sembla que hi estigui plenament d'acord. Alguns miners sembla que estan experimentant problemes.</translation>
+    </message>
+    <message>
+        <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
+        <translation>Avís: sembla que no estem plenament d'acord amb els nostres iguals! Podria caler que actualitzar l'aplicació, o potser que ho facin altres nodes.</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
+        <translation>Cal que reconstruïu la base de dades fent servir -reindex-chainstate per canviar -txindex</translation>
     </message>
     <message>
         <source>&lt;category&gt; can be:</source>
@@ -2868,6 +3005,10 @@
     <message>
         <source>Block creation options:</source>
         <translation>Opcions de la creació de blocs:</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>No es pot resoldre l'adreça -%s: «%s»</translation>
     </message>
     <message>
         <source>Connection options:</source>
@@ -2952,6 +3093,10 @@
     <message>
         <source>Specify wallet file (within data directory)</source>
         <translation>Especifica un fitxer de moneder (dins del directori de dades)</translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer. %s is probably already running.</source>
+        <translation>No es pot enllaçar %s a aquest ordinador. El %s probablement ja estigui executant-s'hi.</translation>
     </message>
     <message>
         <source>Use UPnP to map the listening port (default: %u)</source>
@@ -3180,6 +3325,14 @@
     <message>
         <source>Output debugging information (default: %u, supplying &lt;category&gt; is optional)</source>
         <translation>Informació de sortida de la depuració (per defecte: %u, proporcionar &lt;category&gt; és opcional)</translation>
+    </message>
+    <message>
+        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect/-noconnect)</source>
+        <translation>Consulta a adreces d'iguals a través de DNS, si es troba baix en adreces (per defecte: 1 a menys que -connect)</translation>
+    </message>
+    <message>
+        <source>This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit %s and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard.</source>
+        <translation>Aquest producte inclou programari desenvolupat pel projecte OpenSSL per a ús a l'OpenSSL Toolkit %s i programari criptogràfic escrit per Eric Young i programari UPnP escrit per Thomas Bernard.</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>

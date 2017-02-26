@@ -318,6 +318,10 @@
         <translation>URI を開く (&amp;U)...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">ウォレット:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>クリックするとネットワーク活動を無効化します。</translation>
     </message>
@@ -782,6 +786,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -851,16 +858,28 @@
         <translation>これはプログラム最初の起動です。%1 がデータを保存する場所を選択して下さい。</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 は、ビットコインのブロックチェーンのコピーを、ダウンロードして保存します。少なくとも %2 ギガバイトのデータが、このディレクトリに保存されます。そしてそれは時間と共に増加します。またウォレットもこのディレクトリに保存されます。</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>初期値のデータ ディレクトリを使用</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>任意のデータ ディレクトリを使用:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>少なくとも %1 ギガバイトのデータが、このディレクトリに保存されます。そしてそれは時間と共に増加します。</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 は、ビットコインのブロックチェーンのコピーを、ダウンロードして保存します。</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>またウォレットもこのディレクトリに保存されます。</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -879,6 +898,9 @@
         <translation><numerusform>(%n GB必要)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -928,6 +950,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>未知。ヘッダを同期しています (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>タイプ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>アドレス</translation>
     </message>
 </context>
 <context>
@@ -1166,6 +1201,10 @@
     <message>
         <source>none</source>
         <translation>なし</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin のコア</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1443,6 +1482,16 @@
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 はまだ安全に終了していません...</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>ブロック</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>取引</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1543,6 +1592,10 @@
     <message>
         <source>Memory usage</source>
         <translation>メモリ使用量</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">ウォレット: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -3325,6 +3378,10 @@
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>認証クッキーの場所 (デフォルト: )</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>中継や採掘を行ってもよい、sigopあたりの最小バイト数 (デフォルト: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
