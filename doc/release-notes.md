@@ -168,7 +168,8 @@ Opt into RBF When Sending
 
 A new startup option, `-walletrbf`, has been added to allow users to have all
 transactions sent opt into RBF support. The default value for this option is
-currently `false`, so transactions will not opt into RBF by default.
+currently `false`, so transactions will not opt into RBF by default. The new
+`bumpfee` RPC can be used to replace transactions that opt into RBF.
 
 Sensitive Data Is No Longer Stored In Debug Console History
 -----------------------------------------------------------
@@ -246,6 +247,11 @@ Low-level RPC changes
    about the memory usage of Bitcoin Core. This was added in conjunction with
    optimizations to memory management. See [Pull #8753](https://github.com/bitcoin/bitcoin/pull/8753)
    for more information.
+
+ - A new RPC command `bumpfee` has been added which allows replacing unconfirmed
+   wallet transactions that signaled RBF (see `-walletrbf` startup option above)
+   with new transactions that pay higher fees, and should be more likely to get
+   confirmed quickly.
 
 HTTP REST Changes
 -----------------
