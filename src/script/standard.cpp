@@ -290,13 +290,23 @@ CScript GetScriptForRawPubKey(const CPubKey& pubKey)
     return CScript() << std::vector<unsigned char>(pubKey.begin(), pubKey.end()) << OP_CHECKSIG;
 }
 
-CScript GetScriptForMultisig(int nRequired, const std::vector<CPubKey>& keys)
+CScript GetScriptForMultisig(int nRequired, const std::vector<CPubKey>& keys, bool fSorted)
 {
-    CScript script;
+    std::vector<std::vector<unsigned char>> vEncoded;
+    vEncoded.reserve(keys.size());
+    BOOST_FOREACH(const CPubKey& key, keys) {
+        vEncoded.emplace_back(ToByteVector(key));
+    }
 
+    if (fSorted) {
+        std::sort(vEncoded.begin(), vEncoded.end());
+    }
+
+    CScript script;
     script << CScript::EncodeOP_N(nRequired);
-    BOOST_FOREACH(const CPubKey& key, keys)
-        script << ToByteVector(key);
+    BOOST_FOREACH(vector<unsigned char> bytes, vEncoded) {
+        script << bytes;
+    }
     script << CScript::EncodeOP_N(keys.size()) << OP_CHECKMULTISIG;
     return script;
 }
