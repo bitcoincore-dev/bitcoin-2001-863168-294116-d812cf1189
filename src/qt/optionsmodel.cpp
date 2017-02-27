@@ -152,6 +152,9 @@ void OptionsModel::Init(bool resetSettings)
     else if(!settings.value("fUseSeparateProxyTor").toBool() && !GetArg("-onion", "").empty())
         addOverriddenOption("-onion");
 
+    // rwconf settings that require a restart
+    f_peerbloomfilters = GetBoolArg("-peerbloomfilters", DEFAULT_PEERBLOOMFILTERS);
+
     // Display
     if (!settings.contains("language"))
         settings.setValue("language", "");
@@ -168,6 +171,9 @@ void OptionsModel::Reset()
     // Save the strDataDir setting
     QString dataDir = Intro::getDefaultDataDirectory();
     dataDir = settings.value("strDataDir", dataDir).toString();
+
+    // Remove rw config file
+    EraseRWConfigFile();
 
     // Remove all entries from our QSettings object
     settings.clear();
@@ -261,6 +267,10 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("nThreadsScriptVerif");
         case Listen:
             return settings.value("fListen");
+        case maxuploadtarget:
+            return qlonglong(g_connman->GetMaxOutboundTarget() / 1024 / 1024);
+        case peerbloomfilters:
+            return f_peerbloomfilters;
         default:
             return QVariant();
         }
@@ -422,6 +432,22 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
         case Listen:
             if (settings.value("fListen") != value) {
                 settings.setValue("fListen", value);
+                setRestartRequired(true);
+            }
+            break;
+        case maxuploadtarget:
+        {
+            qlonglong nv = value.toLongLong();
+            if (g_connman->GetMaxOutboundTarget() / 1024 / 1024 != uint64_t(nv)) {
+                ModifyRWConfigFile("maxuploadtarget", value.toString().toStdString());
+                g_connman->SetMaxOutboundTarget(nv * 1024 * 1024);
+            }
+            break;
+        }
+        case peerbloomfilters:
+            if (f_peerbloomfilters != value) {
+                ModifyRWConfigFile("peerbloomfilters", strprintf("%d", value.toBool()));
+                f_peerbloomfilters = value.toBool();
                 setRestartRequired(true);
             }
             break;
