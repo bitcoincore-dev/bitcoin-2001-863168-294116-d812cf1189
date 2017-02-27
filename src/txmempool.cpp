@@ -19,6 +19,8 @@
 #include "utiltime.h"
 #include "version.h"
 
+bool fPriorityAccurate = DEFAULT_PRIORITY_ACCURATE;
+
 CTxMemPoolEntry::CTxMemPoolEntry(const CTransactionRef& _tx, const CAmount& _nFee,
                                  int64_t _nTime, double _entryPriority, unsigned int _entryHeight,
                                  CAmount _inChainInputValue,
@@ -370,8 +372,10 @@ void CTxMemPoolEntry::UpdateCachedPriority(unsigned int currentHeight, CAmount v
     double deltaPriority = ((double)heightDiff*inChainInputValue)/nModSize;
     cachedPriority += deltaPriority;
     cachedHeight = currentHeight;
-    inChainInputValue += valueInCurrentBlock;
-    assert(MoneyRange(inChainInputValue));
+    if (fPriorityAccurate) {
+        inChainInputValue += valueInCurrentBlock;
+        assert(MoneyRange(inChainInputValue));
+    }
 }
 
 CTxMemPool::CTxMemPool(const CFeeRate& _minReasonableRelayFee) :
