@@ -64,6 +64,15 @@ def enable_coverage(dirname):
     global COVERAGE_DIR
     COVERAGE_DIR = dirname
 
+# Deserialize from a hex string representation (eg from RPC)
+def from_hex(obj, hex_string):
+    obj.deserialize(BytesIO(hex_str_to_bytes(hex_string)))
+    return obj
+
+# Convert a binary-serializable object to hex (eg for submission via RPC)
+def to_hex(obj):
+    return bytes_to_hex_str(obj.serialize())
+
 
 def get_rpc_proxy(url, node_number, timeout=None):
     """

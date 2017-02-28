@@ -32,6 +32,7 @@ from test_framework.mininode import (CBlock,
                                      NodeConn,
                                      NodeConnCB,
                                      bytes_to_hex_str,
+                                     hash160,
                                      hash256,
                                      hex_str_to_bytes,
                                      mininode_lock,
@@ -72,8 +73,7 @@ from test_framework.script import (CScript,
                                    SIGHASH_NONE,
                                    SIGHASH_SINGLE,
                                    SegwitVersion1SignatureHash,
-                                   SignatureHash,
-                                   hash160)
+                                   SignatureHash)
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (assert_equal,
                                  bytes_to_hex_str,

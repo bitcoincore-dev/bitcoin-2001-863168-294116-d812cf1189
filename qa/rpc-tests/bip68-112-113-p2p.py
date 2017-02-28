@@ -51,8 +51,7 @@ from test_framework.blocktools import (create_coinbase,
                                        create_block)
 from test_framework.comptool import (TestInstance,
                                      TestManager)
-from test_framework.mininode import (ToHex,
-                                     CTransaction,
+from test_framework.mininode import (CTransaction,
                                      NetworkThread)
 from test_framework.script import (CScript,
                                    OP_CHECKSEQUENCEVERIFY,
@@ -61,7 +60,8 @@ from test_framework.test_framework import ComparisonTestFramework
 from test_framework.util import (assert_equal,
                                  get_bip9_status,
                                  hex_str_to_bytes,
-                                 start_nodes)
+                                 start_nodes,
+                                 to_hex)
 
 base_relative_locktime = 10
 seq_disable_flag = 1<<31
@@ -121,7 +121,7 @@ class BIP68_112_113Test(ComparisonTestFramework):
 
     def send_generic_input_tx(self, node, coinbases):
         amount = Decimal("49.99")
-        return node.sendrawtransaction(ToHex(self.sign_transaction(node, self.create_transaction(node, node.getblock(coinbases.pop())['tx'][0], self.nodeaddress, amount))))
+        return node.sendrawtransaction(to_hex(self.sign_transaction(node, self.create_transaction(node, node.getblock(coinbases.pop())['tx'][0], self.nodeaddress, amount))))
 
     def create_transaction(self, node, txid, to_address, amount):
         inputs = [{ "txid" : txid, "vout" : 0}]
@@ -133,7 +133,7 @@ class BIP68_112_113Test(ComparisonTestFramework):
         return tx
 
     def sign_transaction(self, node, unsignedtx):
-        rawtx = ToHex(unsignedtx)
+        rawtx = to_hex(unsignedtx)
         signresult = node.signrawtransaction(rawtx)
         tx = CTransaction()
         f = BytesIO(hex_str_to_bytes(signresult['hex']))

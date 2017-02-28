@@ -12,18 +12,18 @@ from test_framework.mininode import (COIN,
                                      COutPoint,
                                      CTransaction,
                                      CTxIn,
-                                     CTxOut,
-                                     FromHex,
-                                     ToHex)
+                                     CTxOut)
 from test_framework.script import CScript
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (JSONRPCException,
                                  assert_equal,
                                  connect_nodes,
+                                 from_hex,
                                  get_bip9_status,
                                  satoshi_round,
                                  start_node,
-                                 sync_blocks)
+                                 sync_blocks,
+                                 to_hex)
 
 SEQUENCE_LOCKTIME_DISABLE_FLAG = (1<<31)
 SEQUENCE_LOCKTIME_TYPE_FLAG = (1<<22) # this means use time (0 means height)
@@ -96,7 +96,7 @@ class BIP68Test(BitcoinTestFramework):
         tx1.vin = [CTxIn(COutPoint(int(utxo["txid"], 16), utxo["vout"]), nSequence=sequence_value)] 
         tx1.vout = [CTxOut(value, CScript([b'a']))]
 
-        tx1_signed = self.nodes[0].signrawtransaction(ToHex(tx1))["hex"]
+        tx1_signed = self.nodes[0].signrawtransaction(to_hex(tx1))["hex"]
         tx1_id = self.nodes[0].sendrawtransaction(tx1_signed)
         tx1_id = int(tx1_id, 16)
 
@@ -110,7 +110,7 @@ class BIP68Test(BitcoinTestFramework):
         tx2.rehash()
 
         try:
-            self.nodes[0].sendrawtransaction(ToHex(tx2))
+            self.nodes[0].sendrawtransaction(to_hex(tx2))
         except JSONRPCException as exp:
             assert_equal(exp.error["message"], NOT_FINAL_ERROR)
         else:
@@ -120,7 +120,7 @@ class BIP68Test(BitcoinTestFramework):
         # so this should be accepted.
         tx2.nVersion = 1
 
-        self.nodes[0].sendrawtransaction(ToHex(tx2))
+        self.nodes[0].sendrawtransaction(to_hex(tx2))
 
     # Calculate the median time past of a prior block ("confirmations" before
     # the current tip).
@@ -205,9 +205,9 @@ class BIP68Test(BitcoinTestFramework):
                 tx.vin.append(CTxIn(COutPoint(int(utxos[j]["txid"], 16), utxos[j]["vout"]), nSequence=sequence_value))
                 value += utxos[j]["amount"]*COIN
             # Overestimate the size of the tx - signatures should be less than 120 bytes, and leave 50 for the output
-            tx_size = len(ToHex(tx))//2 + 120*num_inputs + 50
+            tx_size = len(to_hex(tx))//2 + 120*num_inputs + 50
             tx.vout.append(CTxOut(int(value-self.relayfee*tx_size*COIN/1000), CScript([b'a'])))
-            rawtx = self.nodes[0].signrawtransaction(ToHex(tx))["hex"]
+            rawtx = self.nodes[0].signrawtransaction(to_hex(tx))["hex"]
 
             try:
                 self.nodes[0].sendrawtransaction(rawtx)
@@ -229,7 +229,7 @@ class BIP68Test(BitcoinTestFramework):
 
         # Create a mempool tx.
         txid = self.nodes[0].sendtoaddress(self.nodes[0].getnewaddress(), 2)
-        tx1 = FromHex(CTransaction(), self.nodes[0].getrawtransaction(txid))
+        tx1 = from_hex(CTransaction(), self.nodes[0].getrawtransaction(txid))
         tx1.rehash()
 
         # Anyone-can-spend mempool tx.
@@ -238,8 +238,8 @@ class BIP68Test(BitcoinTestFramework):
         tx2.nVersion = 2
         tx2.vin = [CTxIn(COutPoint(tx1.sha256, 0), nSequence=0)]
         tx2.vout = [CTxOut(int(tx1.vout[0].nValue - self.relayfee*COIN), CScript([b'a']))]
-        tx2_raw = self.nodes[0].signrawtransaction(ToHex(tx2))["hex"]
-        tx2 = FromHex(tx2, tx2_raw)
+        tx2_raw = self.nodes[0].signrawtransaction(to_hex(tx2))["hex"]
+        tx2 = from_hex(tx2, tx2_raw)
         tx2.rehash()
 
         self.nodes[0].sendrawtransaction(tx2_raw)
@@ -259,7 +259,7 @@ class BIP68Test(BitcoinTestFramework):
             tx.rehash()
 
             try:
-                node.sendrawtransaction(ToHex(tx))
+                node.sendrawtransaction(to_hex(tx))
             except JSONRPCException as exp:
                 assert_equal(exp.error["message"], NOT_FINAL_ERROR)
                 assert(orig_tx.hash in node.getrawmempool())
@@ -312,7 +312,7 @@ class BIP68Test(BitcoinTestFramework):
         utxos = self.nodes[0].listunspent()
         tx5.vin.append(CTxIn(COutPoint(int(utxos[0]["txid"], 16), utxos[0]["vout"]), nSequence=1))
         tx5.vout[0].nValue += int(utxos[0]["amount"]*COIN)
-        raw_tx5 = self.nodes[0].signrawtransaction(ToHex(tx5))["hex"]
+        raw_tx5 = self.nodes[0].signrawtransaction(to_hex(tx5))["hex"]
 
         try:
             self.nodes[0].sendrawtransaction(raw_tx5)
@@ -347,7 +347,7 @@ class BIP68Test(BitcoinTestFramework):
             block.solve()
             tip = block.sha256
             height += 1
-            self.nodes[0].submitblock(ToHex(block))
+            self.nodes[0].submitblock(to_hex(block))
             cur_time += 1
 
         mempool = self.nodes[0].getrawmempool()
@@ -367,7 +367,7 @@ class BIP68Test(BitcoinTestFramework):
         assert(get_bip9_status(self.nodes[0], 'csv')['status'] != 'active')
         txid = self.nodes[0].sendtoaddress(self.nodes[0].getnewaddress(), 2)
 
-        tx1 = FromHex(CTransaction(), self.nodes[0].getrawtransaction(txid))
+        tx1 = from_hex(CTransaction(), self.nodes[0].getrawtransaction(txid))
         tx1.rehash()
 
         # Make an anyone-can-spend transaction
@@ -377,11 +377,11 @@ class BIP68Test(BitcoinTestFramework):
         tx2.vout = [CTxOut(int(tx1.vout[0].nValue - self.relayfee*COIN), CScript([b'a']))]
 
         # sign tx2
-        tx2_raw = self.nodes[0].signrawtransaction(ToHex(tx2))["hex"]
-        tx2 = FromHex(tx2, tx2_raw)
+        tx2_raw = self.nodes[0].signrawtransaction(to_hex(tx2))["hex"]
+        tx2 = from_hex(tx2, tx2_raw)
         tx2.rehash()
 
-        self.nodes[0].sendrawtransaction(ToHex(tx2))
+        self.nodes[0].sendrawtransaction(to_hex(tx2))
         
         # Now make an invalid spend of tx2 according to BIP68
         sequence_value = 100 # 100 block relative locktime
@@ -393,7 +393,7 @@ class BIP68Test(BitcoinTestFramework):
         tx3.rehash()
 
         try:
-            self.nodes[0].sendrawtransaction(ToHex(tx3))
+            self.nodes[0].sendrawtransaction(to_hex(tx3))
         except JSONRPCException as exp:
             assert_equal(exp.error["message"], NOT_FINAL_ERROR)
         else:
@@ -408,7 +408,7 @@ class BIP68Test(BitcoinTestFramework):
         block.rehash()
         block.solve()
 
-        self.nodes[0].submitblock(ToHex(block))
+        self.nodes[0].submitblock(to_hex(block))
         assert_equal(self.nodes[0].getbestblockhash(), block.hash)
 
     def activateCSV(self):
@@ -426,9 +426,9 @@ class BIP68Test(BitcoinTestFramework):
         outputs = { self.nodes[1].getnewaddress() : 1.0 }
         rawtx = self.nodes[1].createrawtransaction(inputs, outputs)
         rawtxfund = self.nodes[1].fundrawtransaction(rawtx)['hex']
-        tx = FromHex(CTransaction(), rawtxfund)
+        tx = from_hex(CTransaction(), rawtxfund)
         tx.nVersion = 2
-        tx_signed = self.nodes[1].signrawtransaction(ToHex(tx))["hex"]
+        tx_signed = self.nodes[1].signrawtransaction(to_hex(tx))["hex"]
         try:
             tx_id = self.nodes[1].sendrawtransaction(tx_signed)
             assert(before_activation == False)
