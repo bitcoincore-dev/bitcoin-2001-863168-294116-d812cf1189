@@ -10,8 +10,8 @@ filters are not enabled.
 
 from test_framework.mininode import (NetworkThread,
                                      NodeConn,
-                                     NodeConnCB,
-                                     msg_mempool,
+                                     NodeConnCB)
+from test_framework.mininode import (msg_mempool,
                                      msg_ping,
                                      msg_pong,
                                      wait_until)

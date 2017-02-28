@@ -12,7 +12,7 @@ from segwit import send_to_witness
 from test_framework.blocktools import (create_block,
                                        create_coinbase)
 from test_framework.test_framework import BitcoinTestFramework
-from test_framework.mininode import CTransaction
+from test_framework.primitives import CTransaction
 from test_framework.util import (JSONRPCException,
                                  assert_equal,
                                  assert_raises_message,

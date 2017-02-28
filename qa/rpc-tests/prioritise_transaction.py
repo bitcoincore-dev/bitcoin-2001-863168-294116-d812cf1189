@@ -4,8 +4,8 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the prioritisetransaction mining RPC."""
 
-from test_framework.mininode import (COIN,
-                                     MAX_BLOCK_BASE_SIZE)
+from test_framework.primitives import (COIN,
+                                       MAX_BLOCK_BASE_SIZE)
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (JSONRPCException,
                                  assert_equal,

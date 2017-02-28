@@ -4,12 +4,12 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the RBF code."""
 
-from test_framework.mininode import (COIN,
-                                     COutPoint,
-                                     CTransaction,
-                                     CTxIn,
-                                     CTxOut,
-                                     bytes_to_hex_str)
+from test_framework.primitives import (COIN,
+                                       COutPoint,
+                                       CTransaction,
+                                       CTxIn,
+                                       CTxOut,
+                                       bytes_to_hex_str)
 from test_framework.script import CScript
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (JSONRPCException,

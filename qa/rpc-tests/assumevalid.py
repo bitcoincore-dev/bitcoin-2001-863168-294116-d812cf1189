@@ -33,17 +33,17 @@ Start three nodes:
 from test_framework.blocktools import (create_block,
                                        create_coinbase)
 from test_framework.key import CECKey
-from test_framework.mininode import (CBlockHeader,
-                                     COutPoint,
-                                     CTransaction,
-                                     CTxIn,
-                                     CTxOut,
-                                     NetworkThread,
+from test_framework.mininode import (NetworkThread,
                                      NodeConn,
                                      SingleNodeConnCB,
-                                     msg_block,
-                                     msg_headers,
                                      wait_until)
+from test_framework.primitives import (CBlockHeader,
+                                       COutPoint,
+                                       CTransaction,
+                                       CTxIn,
+                                       CTxOut,
+                                       msg_block,
+                                       msg_headers)
 from test_framework.script import (CScript,
                                    OP_TRUE)
 from test_framework.test_framework import BitcoinTestFramework

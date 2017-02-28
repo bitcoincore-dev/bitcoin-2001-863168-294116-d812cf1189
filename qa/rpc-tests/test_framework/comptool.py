@@ -19,22 +19,23 @@ TestNode behaves as follows:
 
 from .blockstore import (BlockStore,
                          TxStore)
-from .mininode import (CBlock,
-                       CBlockHeader,
-                       CInv,
-                       CTransaction,
-                       MAX_INV_SZ,
-                       NodeConn,
+from .mininode import (NodeConn,
                        NodeConnCB,
                        mininode_lock,
-                       msg_block,
-                       msg_getheaders,
-                       msg_headers,
-                       msg_inv,
-                       msg_mempool,
-                       msg_ping,
                        wait_until)
+from .primitives import (CBlock,
+                         CBlockHeader,
+                         CInv,
+                         CTransaction,
+                         MAX_INV_SZ,
+                         msg_block,
+                         msg_getheaders,
+                         msg_headers,
+                         msg_inv,
+                         msg_mempool,
+                         msg_ping)
 from .util import p2p_port
+
 
 global mininode_lock
 

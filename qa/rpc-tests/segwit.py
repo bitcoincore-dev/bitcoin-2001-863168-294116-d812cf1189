@@ -9,13 +9,13 @@ from io import BytesIO
 
 from test_framework.address import (key_to_p2pkh,
                                     script_to_p2sh)
-from test_framework.mininode import (COutPoint,
-                                     CTransaction,
-                                     CTxIn,
-                                     CTxOut,
-                                     hash160,
-                                     ripemd160,
-                                     sha256)
+from test_framework.primitives import (COutPoint,
+                                       CTransaction,
+                                       CTxIn,
+                                       CTxOut,
+                                       hash160,
+                                       ripemd160,
+                                       sha256)
 from test_framework.script import (CScript,
                                    OP_0,
                                    OP_1,

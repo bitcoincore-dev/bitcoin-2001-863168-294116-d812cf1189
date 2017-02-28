@@ -4,9 +4,9 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Encode and decode BASE58, P2PKH and P2SH addresses."""
 
-from .mininode import (hash160,
-                       hash256,
-                       sha256)
+from .primitives import (hash160,
+                         hash256,
+                         sha256)
 from .script import (CScript,
                      OP_0)
 from .util import (bytes_to_hex_str,

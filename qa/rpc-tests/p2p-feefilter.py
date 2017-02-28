@@ -10,8 +10,8 @@ import time
 from test_framework.mininode import (NetworkThread,
                                      NodeConn,
                                      SingleNodeConnCB,
-                                     mininode_lock,
-                                     msg_feefilter)
+                                     mininode_lock)
+from test_framework.primitives import msg_feefilter
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (connect_nodes,
                                  p2p_port,

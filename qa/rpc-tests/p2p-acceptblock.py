@@ -53,17 +53,17 @@ import time
 
 from test_framework.blocktools import (create_block,
                                        create_coinbase)
-from test_framework.mininode import (CBlockHeader,
-                                     CInv,
-                                     NetworkThread,
+from test_framework.mininode import (NetworkThread,
                                      NodeConn,
                                      NodeConnCB,
-                                     mininode_lock,
-                                     msg_block,
-                                     msg_headers,
-                                     msg_inv,
-                                     msg_ping,
-                                     msg_pong)
+                                     mininode_lock)
+from test_framework.primitives import (CBlockHeader,
+                                       CInv,
+                                       msg_block,
+                                       msg_headers,
+                                       msg_inv,
+                                       msg_ping,
+                                       msg_pong)
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (assert_equal,
                                  p2p_port,

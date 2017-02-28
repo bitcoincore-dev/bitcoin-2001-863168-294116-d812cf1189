@@ -6,7 +6,7 @@
 
 from decimal import Decimal
 
-from test_framework.mininode import COIN
+from test_framework.primitives import COIN
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (JSONRPCException,
                                  assert_equal,

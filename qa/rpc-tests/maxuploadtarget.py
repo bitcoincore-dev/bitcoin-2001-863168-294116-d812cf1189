@@ -13,14 +13,14 @@ if uploadtarget has been reached.
 
 import time
 
-from test_framework.mininode import (CInv,
-                                     NetworkThread,
+from test_framework.mininode import (NetworkThread,
                                      NodeConn,
                                      NodeConnCB,
-                                     msg_getdata,
-                                     msg_ping,
-                                     msg_pong,
                                      wait_until)
+from test_framework.primitives import (CInv,
+                                       msg_getdata,
+                                       msg_ping,
+                                       msg_pong)
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (assert_equal,
                                  mine_large_block,

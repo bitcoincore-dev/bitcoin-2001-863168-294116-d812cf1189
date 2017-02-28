@@ -15,13 +15,13 @@ import os
 import random
 import time
 
-from test_framework.mininode import (CInv,
-                                     EarlyDisconnectError,
+from test_framework.mininode import (EarlyDisconnectError,
                                      NetworkThread,
                                      NodeConn,
                                      NodeConnCB,
-                                     mininode_lock,
-                                     msg_inv)
+                                     mininode_lock)
+from test_framework.primitives import (CInv,
+                                       msg_inv)
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (p2p_port,
                                  start_nodes)

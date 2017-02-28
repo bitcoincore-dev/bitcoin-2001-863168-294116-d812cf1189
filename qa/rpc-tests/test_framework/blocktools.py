@@ -4,17 +4,17 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Utilities for manipulating blocks and transactions."""
 
-from .mininode import (CBlock,
-                       COIN,
-                       COutPoint,
-                       CTransaction,
-                       CTxIn,
-                       CTxInWitness,
-                       CTxOut,
-                       hash256,
-                       ser_string,
-                       ser_uint256,
-                       uint256_from_str)
+from .primitives import (CBlock,
+                         COIN,
+                         COutPoint,
+                         CTransaction,
+                         CTxIn,
+                         CTxInWitness,
+                         CTxOut,
+                         hash256,
+                         ser_string,
+                         ser_uint256,
+                         uint256_from_str)
 from .script import (CScript,
                      OP_TRUE,
                      OP_CHECKSIG,
@@ -56,7 +56,6 @@ def add_witness_commitment(block, nonce=0):
     block.vtx[0].rehash()
     block.hashMerkleRoot = block.calc_merkle_root()
     block.rehash()
-
 
 def serialize_script_num(value):
     r = bytearray(0)

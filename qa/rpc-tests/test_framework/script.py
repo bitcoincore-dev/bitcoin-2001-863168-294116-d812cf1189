@@ -13,13 +13,13 @@ import struct
 import sys
 
 from .bignum import bn2vch
-from .mininode import (CTransaction,
-                       CTxOut,
-                       hash256,
-                       ser_string,
-                       ser_uint256,
-                       sha256,
-                       uint256_from_str)
+from .primitives import (CTransaction,
+                         CTxOut,
+                         hash256,
+                         ser_string,
+                         ser_uint256,
+                         sha256,
+                         uint256_from_str)
 
 bchr = chr
 bord = ord
@@ -33,8 +33,6 @@ MAX_SCRIPT_ELEMENT_SIZE = 520
 MAX_SCRIPT_OPCODES = 201
 
 OPCODE_NAMES = {}
-
-
 
 _opcode_instances = []
 class CScriptOp(int):

@@ -19,8 +19,8 @@ import time
 from test_framework.blocktools import (create_coinbase,
                                        create_block,
                                        add_witness_commitment)
-from test_framework.mininode import (CTransaction,
-                                     NetworkThread)
+from test_framework.mininode import NetworkThread
+from test_framework.primitives import CTransaction
 from test_framework.script import CScript
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (JSONRPCException,

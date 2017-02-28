@@ -17,8 +17,8 @@ from test_framework.blocktools import (create_block,
 from test_framework.mininode import (NetworkThread,
                                      NodeConn,
                                      NodeConnCB,
-                                     mininode_lock,
-                                     msg_block,
+                                     mininode_lock)
+from test_framework.mininode import (msg_block,
                                      msg_ping,
                                      msg_pong)
 from test_framework.test_framework import BitcoinTestFramework

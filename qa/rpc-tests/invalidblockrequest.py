@@ -20,8 +20,8 @@ from test_framework.blocktools import (create_block,
 from test_framework.comptool import (TestManager,
                                      TestInstance,
                                      RejectResult)
-from test_framework.mininode import (COIN,
-                                     NetworkThread)
+from test_framework.primitives import COIN
+from test_framework.mininode import NetworkThread
 from test_framework.test_framework import ComparisonTestFramework
 from test_framework.util import assert_equal 
 

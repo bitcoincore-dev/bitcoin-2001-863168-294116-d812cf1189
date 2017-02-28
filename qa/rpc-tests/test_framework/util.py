@@ -9,6 +9,7 @@ from base64 import b64encode
 from decimal import Decimal, ROUND_DOWN
 import errno
 import http.client
+from io import BytesIO
 import json
 import os
 import random
@@ -125,6 +126,21 @@ def hex_str_to_bytes(hex_str):
 
 def str_to_b64str(string):
     return b64encode(string.encode('utf-8')).decode('ascii')
+
+# Helper function
+def wait_until(predicate, *, attempts=float('inf'), timeout=float('inf')):
+    attempt = 0
+    elapsed = 0
+
+    while attempt < attempts and elapsed < timeout:
+        with mininode_lock:
+            if predicate():
+                return True
+        attempt += 1
+        elapsed += 0.05
+        time.sleep(0.05)
+
+    return False
 
 def sync_blocks(rpc_connections, *, wait=1, timeout=60):
     """

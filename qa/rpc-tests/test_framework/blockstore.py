@@ -8,13 +8,12 @@ import dbm.dumb as dbmd
 from io import BytesIO
 import sys
 
-from .mininode import (BytesIO,
-                       CBlock,
-                       CBlockHeader,
-                       CBlockLocator,
-                       CTransaction,
-                       msg_generic,
-                       msg_headers)
+from .primitives import (CBlock,
+                         CBlockHeader,
+                         CBlockLocator,
+                         CTransaction,
+                         msg_generic,
+                         msg_headers)
 
 class BlockStore(object):
     """BlockStore helper class.
