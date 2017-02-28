@@ -87,14 +87,14 @@ from test_framework.mininode import (CBlockHeader,
                                      msg_getheaders,
                                      msg_headers,
                                      msg_inv,
-                                     msg_sendheaders,
-                                     wait_until)
+                                     msg_sendheaders)
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (assert_equal,
                                  connect_nodes,
                                  p2p_port,
                                  start_nodes,
-                                 sync_blocks)
+                                 sync_blocks,
+                                 wait_until)
 
 direct_fetch_response_time = 0.05
 

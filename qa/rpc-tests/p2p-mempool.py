@@ -13,12 +13,12 @@ from test_framework.mininode import (NetworkThread,
                                      NodeConnCB,
                                      msg_mempool,
                                      msg_ping,
-                                     msg_pong,
-                                     wait_until)
+                                     msg_pong)
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (assert_equal,
                                  p2p_port,
-                                 start_node)
+                                 start_node,
+                                 wait_until)
 
 class TestNode(NodeConnCB):
     def __init__(self):

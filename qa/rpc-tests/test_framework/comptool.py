@@ -32,9 +32,10 @@ from .mininode import (CBlock,
                        msg_headers,
                        msg_inv,
                        msg_mempool,
-                       msg_ping,
-                       wait_until)
-from .util import p2p_port
+                       msg_ping)
+from .util import (p2p_port,
+                   wait_until)
+
 
 global mininode_lock
 

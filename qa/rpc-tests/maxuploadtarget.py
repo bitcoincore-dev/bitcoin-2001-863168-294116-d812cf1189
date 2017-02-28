@@ -19,14 +19,14 @@ from test_framework.mininode import (CInv,
                                      NodeConnCB,
                                      msg_getdata,
                                      msg_ping,
-                                     msg_pong,
-                                     wait_until)
+                                     msg_pong)
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (assert_equal,
                                  mine_large_block,
                                  p2p_port,
                                  start_node,
-                                 stop_node)
+                                 stop_node,
+                                 wait_until)
 
 # TestNode: bare-bones "peer".  Used mostly as a conduit for a test to sending
 # p2p messages to a node, generating the messages in the main testing logic.

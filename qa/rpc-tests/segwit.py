@@ -13,7 +13,7 @@ from test_framework.mininode import (COutPoint,
                                      CTransaction,
                                      CTxIn,
                                      CTxOut,
-                                     FromHex,
+                                     hash160,
                                      ripemd160,
                                      sha256)
 from test_framework.script import (CScript,
@@ -25,13 +25,13 @@ from test_framework.script import (CScript,
                                    OP_DUP,
                                    OP_EQUAL,
                                    OP_EQUALVERIFY,
-                                   OP_HASH160,
-                                   hash160)
+                                   OP_HASH160)
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (JSONRPCException,
                                  assert_equal,
                                  bytes_to_hex_str,
                                  connect_nodes,
+                                 from_hex,
                                  hex_str_to_bytes,
                                  start_node,
                                  sync_blocks)
@@ -244,7 +244,7 @@ class SegWitTest(BitcoinTestFramework):
         assert(self.nodes[2].getblock(block[0], False) !=  self.nodes[0].getblock(block[0], False))
         assert(self.nodes[1].getblock(block[0], False) ==  self.nodes[2].getblock(block[0], False))
         for i in range(len(segwit_tx_list)):
-            tx = FromHex(CTransaction(), self.nodes[2].gettransaction(segwit_tx_list[i])["hex"])
+            tx = from_hex(CTransaction(), self.nodes[2].gettransaction(segwit_tx_list[i])["hex"])
             assert(self.nodes[2].getrawtransaction(segwit_tx_list[i]) != self.nodes[0].getrawtransaction(segwit_tx_list[i]))
             assert(self.nodes[1].getrawtransaction(segwit_tx_list[i], 0) == self.nodes[2].getrawtransaction(segwit_tx_list[i]))
             assert(self.nodes[0].getrawtransaction(segwit_tx_list[i]) != self.nodes[2].gettransaction(segwit_tx_list[i])["hex"])

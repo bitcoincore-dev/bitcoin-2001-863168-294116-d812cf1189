@@ -24,7 +24,6 @@ from test_framework.mininode import (BlockTransactions,
                                      CTxIn,
                                      CTxInWitness,
                                      CTxOut,
-                                     FromHex,
                                      HeaderAndShortIDs,
                                      MSG_WITNESS_FLAG,
                                      NODE_NETWORK,
@@ -34,7 +33,6 @@ from test_framework.mininode import (BlockTransactions,
                                      P2PHeaderAndShortIDs,
                                      PrefilledTransaction,
                                      SingleNodeConnCB,
-                                     ToHex,
                                      calculate_shortid,
                                      mininode_lock,
                                      msg_block,
@@ -50,18 +48,20 @@ from test_framework.mininode import (BlockTransactions,
                                      msg_tx,
                                      msg_witness_block,
                                      msg_witness_blocktxn,
-                                     ser_uint256,
-                                     wait_until)
+                                     ser_uint256)
 from test_framework.script import (CScript,
                                    OP_TRUE)
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (assert_equal,
                                  connect_nodes,
+                                 from_hex,
                                  get_bip9_status,
                                  p2p_port,
                                  satoshi_round,
                                  start_nodes,
-                                 sync_blocks)
+                                 sync_blocks,
+                                 to_hex,
+                                 wait_until)
 
 # TestNode: A peer we use to send messages to bitcoind, and store responses.
 class TestNode(SingleNodeConnCB):
@@ -345,7 +345,7 @@ class CompactBlocksTest(BitcoinTestFramework):
         for i in range(num_transactions):
             txid = node.sendtoaddress(address, 0.1)
             hex_tx = node.gettransaction(txid)["hex"]
-            tx = FromHex(CTransaction(), hex_tx)
+            tx = from_hex(CTransaction(), hex_tx)
             if not tx.wit.is_null():
                 segwit_tx_generated = True
 
@@ -364,7 +364,7 @@ class CompactBlocksTest(BitcoinTestFramework):
         block_hash = int(node.generate(1)[0], 16)
 
         # Store the raw block in our internal format.
-        block = FromHex(CBlock(), node.getblock("%02x" % block_hash, False))
+        block = from_hex(CBlock(), node.getblock("%02x" % block_hash, False))
         [tx.calc_sha256() for tx in block.vtx]
         block.rehash()
 
@@ -664,7 +664,7 @@ class CompactBlocksTest(BitcoinTestFramework):
         current_height = chain_height
         while (current_height >= chain_height - MAX_GETBLOCKTXN_DEPTH):
             block_hash = node.getblockhash(current_height)
-            block = FromHex(CBlock(), node.getblock(block_hash, False))
+            block = from_hex(CBlock(), node.getblock(block_hash, False))
 
             msg = msg_getblocktxn()
             msg.block_txn_request = BlockTransactionsRequest(int(block_hash, 16), [])
@@ -774,7 +774,7 @@ class CompactBlocksTest(BitcoinTestFramework):
 
         # ToHex() won't serialize with witness, but this block has no witnesses
         # anyway. TODO: repeat this test with witness tx's to a segwit node.
-        node.submitblock(ToHex(block))
+        node.submitblock(to_hex(block))
 
         for l in listeners:
             wait_until(lambda: l.received_block_announcement(), timeout=30)

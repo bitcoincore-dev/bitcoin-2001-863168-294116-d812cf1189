@@ -42,14 +42,14 @@ from test_framework.mininode import (CBlockHeader,
                                      NodeConn,
                                      SingleNodeConnCB,
                                      msg_block,
-                                     msg_headers,
-                                     wait_until)
+                                     msg_headers)
 from test_framework.script import (CScript,
                                    OP_TRUE)
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (assert_equal,
                                  p2p_port,
-                                 start_node)
+                                 start_node,
+                                 wait_until)
 
 class BaseNode(SingleNodeConnCB):
     def __init__(self):

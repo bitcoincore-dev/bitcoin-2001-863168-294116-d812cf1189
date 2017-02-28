@@ -18,11 +18,11 @@ from test_framework.mininode import (NetworkThread,
                                      NodeConnCB,
                                      msg_getaddr,
                                      msg_ping,
-                                     msg_verack,
-                                     wait_until)
+                                     msg_verack)
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (p2p_port,
-                                 start_nodes)
+                                 start_nodes,
+                                 wait_until)
 
 banscore = 10
 

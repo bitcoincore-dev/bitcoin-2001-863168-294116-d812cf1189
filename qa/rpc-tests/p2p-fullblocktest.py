@@ -32,6 +32,7 @@ from test_framework.mininode import (CBlock,
                                      CTxOut,
                                      MAX_BLOCK_BASE_SIZE,
                                      NetworkThread,
+                                     hash160,
                                      ser_uint256,
                                      uint256_from_compact,
                                      uint256_from_str)
@@ -52,8 +53,7 @@ from test_framework.script import (CScript,
                                    OP_RETURN,
                                    OP_TRUE,
                                    SIGHASH_ALL,
-                                   SignatureHash,
-                                   hash160)
+                                   SignatureHash)
 from test_framework.test_framework import ComparisonTestFramework
 from test_framework.util import assert_equal
 

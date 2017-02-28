@@ -64,6 +64,15 @@ def enable_coverage(dirname):
     global COVERAGE_DIR
     COVERAGE_DIR = dirname
 
+# Deserialize from a hex string representation (eg from RPC)
+def from_hex(obj, hex_string):
+    obj.deserialize(BytesIO(hex_str_to_bytes(hex_string)))
+    return obj
+
+# Convert a binary-serializable object to hex (eg for submission via RPC)
+def to_hex(obj):
+    return bytes_to_hex_str(obj.serialize())
+
 
 def get_rpc_proxy(url, node_number, timeout=None):
     """
@@ -501,6 +510,20 @@ def random_transaction(nodes, amount, min_fee, fee_increment, fee_variants):
     txid = from_node.sendrawtransaction(signresult["hex"], True)
 
     return (txid, signresult["hex"], fee)
+
+def wait_until(predicate, *, attempts=float('inf'), timeout=float('inf')):
+    attempt = 0
+    elapsed = 0
+
+    while attempt < attempts and elapsed < timeout:
+        with mininode_lock:
+            if predicate():
+                return True
+        attempt += 1
+        elapsed += 0.05
+        time.sleep(0.05)
+
+    return False
 
 def assert_fee_amount(fee, tx_size, fee_per_kB):
     """Assert the fee was in range"""

@@ -36,7 +36,8 @@ import time
 
 from .siphash import siphash256
 from .util import (hex_str_to_bytes,
-                   bytes_to_hex_str)
+                   bytes_to_hex_str,
+                   wait_until)
 
 BIP0031_VERSION = 60000
 MY_VERSION = 70014  # past bip-31 for ping/pong
@@ -72,6 +73,9 @@ def sha256(s):
 
 def ripemd160(s):
     return hashlib.new('ripemd160', s).digest()
+
+def hash160(s):
+    return hashlib.new('ripemd160', sha256(s)).digest()
 
 def hash256(s):
     return sha256(sha256(s))
@@ -204,15 +208,6 @@ def ser_int_vector(l):
     for i in l:
         r += struct.pack("<i", i)
     return r
-
-# Deserialize from a hex string representation (eg from RPC)
-def FromHex(obj, hex_string):
-    obj.deserialize(BytesIO(hex_str_to_bytes(hex_string)))
-    return obj
-
-# Convert a binary-serializable object to hex (eg for submission via RPC)
-def ToHex(obj):
-    return bytes_to_hex_str(obj.serialize())
 
 # Objects that map to bitcoind objects, which can be serialized/deserialized
 
@@ -1353,21 +1348,6 @@ class msg_reject(object):
     def __repr__(self):
         return "msg_reject: %s %d %s [%064x]" \
             % (self.message, self.code, self.reason, self.data)
-
-# Helper function
-def wait_until(predicate, *, attempts=float('inf'), timeout=float('inf')):
-    attempt = 0
-    elapsed = 0
-
-    while attempt < attempts and elapsed < timeout:
-        with mininode_lock:
-            if predicate():
-                return True
-        attempt += 1
-        elapsed += 0.05
-        time.sleep(0.05)
-
-    return False
 
 class msg_feefilter(object):
     command = b"feefilter"
