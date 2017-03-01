@@ -489,6 +489,9 @@ BOOST_AUTO_TEST_CASE(ComputeTimeSmart)
     wtx = MakeTx(5, 600);
     wallet.AddToWallet(wtx);
     BOOST_CHECK_EQUAL(wallet.mapWallet[wtx.GetHash()].nTimeSmart, 300);
+
+    // Reset mock time for other tests.
+    SetMockTime(0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
