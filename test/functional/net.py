@@ -28,6 +28,7 @@ class NetTest(BitcoinTestFramework):
         self._test_getnetworkinginfo()
         self._test_getaddednodeinfo()
         self._test_getpeerinfo()
+        self._test_updatepeer()
 
     def _test_connection_count(self):
         # connect_nodes_bi connects each node to the other
@@ -101,6 +102,19 @@ class NetTest(BitcoinTestFramework):
 
         # Check that getpeerinfo fails for an invalid peer_id
         assert_raises_rpc_error(-8, "not found", self.nodes[0].getpeerinfo, 5000)
+
+
+    def _test_updatepeer(self):
+        self.log.info("Test updatepeer")
+
+        # whitelist should be false
+        peer_info = self.nodes[0].getpeerinfo()[0]
+        assert not peer_info['whitelisted']
+
+        # Update whitelist property and verify that it's changed
+        self.nodes[0].updatepeer(peer_info['id'], True)
+        peer_info = self.nodes[0].getpeerinfo()[0]
+        assert peer_info['whitelisted']
 
 if __name__ == '__main__':
     NetTest().main()
