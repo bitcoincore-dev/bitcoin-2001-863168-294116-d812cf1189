@@ -126,10 +126,12 @@ void NodeStatsToJSON(const CNodeStats& stats, UniValue& obj)
 
 UniValue getpeerinfo(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() != 0)
+    if (request.fHelp || request.params.size() >= 2)
         throw std::runtime_error(
             "getpeerinfo\n"
-            "\nReturns data about each connected network node as a json array of objects.\n"
+            "\nReturns data about connected network nodes as a json array of objects.\n"
+            "\nArguments:\n"
+            "1. \"node\"         (numeric, optional) Only return information about this specified node id\n"
             "\nResult:\n"
             "[\n"
             "  {\n"
@@ -180,16 +182,29 @@ UniValue getpeerinfo(const JSONRPCRequest& request)
     if(!g_connman)
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
 
-    std::vector<CNodeStats> vstats;
-    g_connman->GetNodeStats(vstats);
-
     UniValue ret(UniValue::VARR);
 
-    for (const CNodeStats& stats : vstats) {
+    if (!request.params[0].isNull()) {
         UniValue obj(UniValue::VOBJ);
-        NodeStatsToJSON(stats, obj);
+        CNodeStats stats;
 
-        ret.push_back(obj);
+        int node_id = request.params[0].get_int();
+        if (g_connman->GetNodeStats(node_id, stats)) {
+            NodeStatsToJSON(stats, obj);
+            ret.push_back(obj);
+        } else {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Node id %u not found", node_id));
+        }
+    } else {
+        std::vector<CNodeStats> vstats;
+        g_connman->GetNodeStats(vstats);
+
+        for (const CNodeStats& stats : vstats) {
+            UniValue obj(UniValue::VOBJ);
+            NodeStatsToJSON(stats, obj);
+
+            ret.push_back(obj);
+        }
     }
 
     return ret;
@@ -634,7 +649,7 @@ static const CRPCCommand commands[] =
   //  --------------------- ------------------------  -----------------------  ----------
     { "network",            "getconnectioncount",     &getconnectioncount,     {} },
     { "network",            "ping",                   &ping,                   {} },
-    { "network",            "getpeerinfo",            &getpeerinfo,            {} },
+    { "network",            "getpeerinfo",            &getpeerinfo,            {"node"} },
     { "network",            "addnode",                &addnode,                {"node","command"} },
     { "network",            "disconnectnode",         &disconnectnode,         {"address", "nodeid"} },
     { "network",            "getaddednodeinfo",       &getaddednodeinfo,       {"node"} },
