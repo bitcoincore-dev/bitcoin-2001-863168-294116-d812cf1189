@@ -1,34 +1,31 @@
 (note: this is a temporary file, to be added-to by anybody, and moved to
 release-notes at release time)
 
-Bitcoin Core version 0.14.0 is now available from:
+Bitcoin Knots version 0.14.0.knots20170307 is now available from:
 
-  <https://bitcoin.org/bin/bitcoin-core-0.14.0/>
+  <https://bitcoinknots.org/files/0.14.x/0.14.0.knots20170307/>
 
 This is a new major version release, including new features, various bugfixes
 and performance improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at github:
 
-  <https://github.com/bitcoin/bitcoin/issues>
-
-To receive security and update notifications, please subscribe to:
-
-  <https://bitcoincore.org/en/list/announcements/join/>
+  <https://github.com/bitcoinknots/bitcoin/issues>
 
 Compatibility
 ==============
 
-Bitcoin Core is extensively tested on multiple operating systems using
-the Linux kernel, macOS 10.8+, and Windows Vista and later.
+Bitcoin Knots officially supports multiple operating systems using the Linux
+kernel, macOS 10.8+, and Windows Vista and later.
 
 Microsoft ended support for Windows XP on [April 8th, 2014](https://www.microsoft.com/en-us/WindowsForBusiness/end-of-xp-support),
 No attempt is made to prevent installing or running the software on Windows XP, you
 can still do so at your own risk but be aware that there are known instabilities and issues.
 Please do not report issues about Windows XP to the issue tracker.
 
-Bitcoin Core should also work on most other Unix-like systems but is not
-frequently tested on them.
+Bitcoin Knots should also work on most other Unix-like systems but is not
+officially supported on them. If you encounter problems, however, please do
+feel free to report them.
 
 Notable changes
 ===============
@@ -41,27 +38,30 @@ improved, leading to much shorter sync and initial block download times.
 
 - The script signature cache has been reimplemented as a "cuckoo cache",
   allowing for more signatures to be cached and faster lookups.
-- Assumed-valid blocks have been introduced which allows script validation to
-  be skipped for ancestors of known-good blocks, without changing the security
-  model. See below for more details.
 - In some cases, compact blocks are now relayed before being fully validated as
   per BIP152.
 - P2P networking has been refactored with a focus on concurrency and
   throughput. Network operations are no longer bottlenecked by validation. As a
   result, block fetching is several times faster than previous releases in many
   cases.
-- The UTXO cache now claims unused mempool memory. This speeds up initial block
-  download as UTXO lookups are a major bottleneck there, and there is no use for
-  the mempool at that stage.
 
+RPC listsinceblock reorganization handling
+------------------------------------------
+
+Historically (and still in Core 0.14), listsinceblock has only returned
+information about new transactions, from the specified block's most recent
+ancestor in the current block chain going forward to the present best block.
+This notably omits information on transactions that have been removed by
+reorganizations of the block chain. Knots 0.14 will return information on
+these transactions in a new "removed" key in the result.
 
 Manual Pruning
 --------------
 
-Bitcoin Core has supported automatically pruning the blockchain since 0.11. Pruning
-the blockchain allows for significant storage space savings as the vast majority of
-the downloaded data can be discarded after processing so very little of it remains
-on the disk.
+Bitcoin Knots has supported automatically pruning the blockchain since 0.11.
+Pruning the blockchain allows for significant storage space savings as the vast
+majority of the downloaded data can be discarded after processing so very
+little of it remains on the disk.
 
 Manual block pruning can now be enabled by setting `-prune=1`. Once that is set,
 the RPC command `pruneblockchain` can be used to prune the blockchain up to the
@@ -102,42 +102,6 @@ due to various issues with ZMQ. These have been fixed upstream and
 now ZMQ can be used on Windows. Please see [this document](https://github.com/bitcoin/bitcoin/blob/master/doc/zmq.md) for
 help with using ZMQ in general.
 
-Nested RPC Commands in Debug Console
-------------------------------------
-
-The ability to nest RPC commands has been added to the debug console. This
-allows users to have the output of a command become the input to another
-command without running the commands separately.
-
-The nested RPC commands use bracket syntax (i.e. `getwalletinfo()`) and can
-be nested (i.e. `getblock(getblockhash(1))`). Simple queries can be
-done with square brackets where object values are accessed with either an 
-array index or a non-quoted string (i.e. `listunspent()[0][txid]`). Both
-commas and spaces can be used to separate parameters in both the bracket syntax
-and normal RPC command syntax.
-
-Network Activity Toggle
------------------------
-
-A RPC command and GUI toggle have been added to enable or disable all p2p
-network activity. The network status icon in the bottom right hand corner 
-is now the GUI toggle. Clicking the icon will either enable or disable all
-p2p network activity. If network activity is disabled, the icon will 
-be grayed out with an X on top of it.
-
-Additionally the `setnetworkactive` RPC command has been added which does
-the same thing as the GUI icon. The command takes one boolean parameter,
-`true` enables networking and `false` disables it.
-
-Out-of-sync Modal Info Layer
-----------------------------
-
-When Bitcoin Core is out-of-sync on startup, a semi-transparent information
-layer will be shown over top of the normal display. This layer contains
-details about the current sync progress and estimates the amount of time
-remaining to finish syncing. This layer can also be hidden and subsequently
-unhidden by clicking on the progress bar at the bottom of the window.
-
 Support for JSON-RPC Named Arguments
 ------------------------------------
 
@@ -163,36 +127,10 @@ expected to land in a later release.
 
 The RPC server remains fully backwards compatible with positional arguments.
 
-Opt into RBF When Sending
--------------------------
-
-A new startup option, `-walletrbf`, has been added to allow users to have all
-transactions sent opt into RBF support. The default value for this option is
-currently `false`, so transactions will not opt into RBF by default. The new
-`bumpfee` RPC can be used to replace transactions that opt into RBF.
-
-Sensitive Data Is No Longer Stored In Debug Console History
------------------------------------------------------------
-
-The debug console maintains a history of previously entered commands that can be
-accessed by pressing the Up-arrow key so that users can easily reuse previously
-entered commands. Commands which have sensitive information such as passphrases and
-private keys will now have a `(...)` in place of the parameters when accessed through
-the history.
-
-Retaining the Mempool Across Restarts
--------------------------------------
-
-The mempool will be saved to the data directory prior to shutdown
-to a `mempool.dat` file. This file preserves the mempool so that when the node
-restarts the mempool can be filled with transactions without waiting for new transactions
-to be created. This will also preserve any changes made to a transaction through
-commands such as `prioritisetransaction` so that those changes will not be lost.
-
 Final Alert
 -----------
 
-The Alert System was [disabled and deprecated](https://bitcoin.org/en/alert/2016-11-01-alert-retirement) in Bitcoin Core 0.12.1 and removed in 0.13.0. 
+The Alert System was [disabled and deprecated](https://bitcoin.org/en/alert/2016-11-01-alert-retirement) in Bitcoin Knots 0.12.1 and removed in 0.13.0. 
 The Alert System was retired with a maximum sequence final alert which causes any nodes
 supporting the Alert System to display a static hard-coded "Alert Key Compromised" message which also
 prevents any other alerts from overriding it. This final alert is hard-coded into this release
@@ -201,21 +139,16 @@ so that all old nodes receive the final alert.
 GUI Changes
 -----------
 
+ - A new network-watching tool has been added to the `Help` menu, displaying
+   a searchable real-time log of new blocks and transactions seen from the
+   peer-to-peer flood network.
+
  - After resetting the options by clicking the `Reset Options` button 
    in the options dialog or with the `-resetguioptions` startup option, 
    the user will be prompted to choose the data directory again. This 
    is to ensure that custom data directories will be kept after the 
    option reset which clears the custom data directory set via the choose 
    datadir dialog.
-
- - Multiple peers can now be selected in the list of peers in the debug 
-   window. This allows for users to ban or disconnect multiple peers 
-   simultaneously instead of banning them one at a time.
-
- - An indicator has been added to the bottom right hand corner of the main
-   window to indicate whether the wallet being used is a HD wallet. This
-   icon will be grayed out with an X on top of it if the wallet is not a
-   HD wallet.
 
 Low-level RPC changes
 ----------------------
@@ -230,36 +163,28 @@ Low-level RPC changes
  - RPC command `getmininginfo` loses the "testnet" field in favor of the more
    generic "chain" (which has been present for years).
 
- - A new RPC command `preciousblock` has been added which marks a block as
-   precious. A precious block will be treated as if it were received earlier
-   than a competing block.
-
- - A new RPC command `importmulti` has been added which receives an array of 
-   JSON objects representing the intention of importing a public key, a 
-   private key, an address and script/p2sh
+ - RPC command `importmulti` has been updated, and now requires explicitly
+   specifying a timestamp for all imports.
 
  - Use of `getrawtransaction` for retrieving confirmed transactions with unspent
    outputs has been deprecated. For now this will still work, but in the future
    it may change to only be able to retrieve information about transactions in
    the mempool or if `txindex` is enabled.
 
+ - `listreceivedbyaddress` now accepts a fourth argument to show the received
+    amount of only a single address.
+
+ - `createmultisig` and `addmultisigaddress` now accept an Object of options
+   (with a boolean "sort" key) instead of a direct boolean to sort keys using
+   BIP 67.
+
  - A new RPC command `getmemoryinfo` has been added which will return information
-   about the memory usage of Bitcoin Core. This was added in conjunction with
+   about the memory usage of Bitcoin Knots. This was added in conjunction with
    optimizations to memory management. See [Pull #8753](https://github.com/bitcoin/bitcoin/pull/8753)
    for more information.
 
- - A new RPC command `bumpfee` has been added which allows replacing an
-   unconfirmed wallet transaction that signaled RBF (see the `-walletrbf`
-   startup option above) with a new transaction that pays a higher fee, and
-   should be more likely to get confirmed quickly.
-
-HTTP REST Changes
------------------
-
- - UTXO set query (`GET /rest/getutxos/<checkmempool>/<txid>-<n>/<txid>-<n>
-   /.../<txid>-<n>.<bin|hex|json>`) responses were changed to return status 
-   code `HTTP_BAD_REQUEST` (400) instead of `HTTP_INTERNAL_SERVER_ERROR` (500)
-   when requests contain invalid parameters.
+ - `bumpfee` no longer accepts a change output number as a parameter. The
+   correct change output is always automatically detected.
 
 Minimum Fee Rate Policies
 -------------------------
@@ -270,6 +195,10 @@ Since the changes in 0.12 to automatically limit the size of the mempool and imp
 - minimum fee rate of a package of transactions to be included in a block created by the mining code. If miners wish to set this minimum they can use the new `-blockmintxfee` option.  (defaults to 1000 satoshis/kB)
 
 The `-minrelaytxfee` option continues to exist but is recommended to be left unset.
+
+Fee-less transactions have been long non-functional due to a high volume of
+fee-paying spam. As such, the default for the rate limit of priority
+transactions (`-limitfreerelay`) has been set to `0` kB/minute.
 
 Fee Estimation Changes
 ----------------------
@@ -292,11 +221,6 @@ Removal of Priority Estimation
   changed to no longer save these priority estimates. It will automatically be
   converted to the new format which is not readable by prior versions of the
   software.
-
-- Support for "priority" (coin age) transaction sorting for mining is
-  considered deprecated in Core and will be removed in the next major version.
-  This is not to be confused with the `prioritisetransaction` RPC which will remain
-  supported by Core for adding fee deltas to transactions.
 
 P2P connection management
 --------------------------
@@ -348,39 +272,25 @@ Fundrawtransaction change address reuse
 - Users should also consider using `getrawchangeaddress()` in conjunction
   with `fundrawtransaction`'s `changeAddress` option.
 
-Unused mempool memory used by coincache
-----------------------------------------
-
-- Before 0.14, memory reserved for mempool (using the `-maxmempool` option)
-  went unused during initial block download, or IBD. In 0.14, the UTXO DB cache
-  (controlled with the `-dbcache` option) borrows memory from the mempool
-  when there is extra memory available. This may result in an increase in
-  memory usage during IBD for those previously relying on only the `-dbcache`
-  option to limit memory during that time.
-
 0.14.0 Change log
 =================
 
 Detailed release notes follow. This overview includes changes that affect
 behavior, not code moves, minor refactors and string updates. For convenience
 in locating the code changes and accompanying discussion, both the pull request
-and git merge commit are mentioned.
+and git merge commit are mentioned. Changes specific to Bitcoin Knots (beyond
+Core) are flagged with an asterisk ('*') before the description.
 
 ### RPC and other APIs
 - #8421 `b77bb95` httpserver: drop boost dependency (theuni)
 - #8638 `f061415` rest.cpp: change `HTTP_INTERNAL_SERVER_ERROR` to `HTTP_BAD_REQUEST` (djpnewton)
 - #8272 `91990ee` Make the dummy argument to getaddednodeinfo optional (sipa)
 - #8722 `bb843ad` bitcoin-cli: More detailed error reporting (laanwj)
-- #6996 `7f71a3c` Add preciousblock RPC (sipa)
 - #8788 `97c7f73` Give RPC commands more information about the RPC request (jonasschnelli)
-- #7948 `5d2c8e5` Augment getblockchaininfo bip9\_softforks data (mruddy)
 - #8980 `0e22855` importmulti: Avoid using boost::variant::operator!=, which is only in newer boost versions (luke-jr)
-- #9025 `4d8558a` Getrawtransaction should take a bool for verbose (jnewbery)
 - #8811 `5754e03` Add support for JSON-RPC named arguments (laanwj)
 - #9520 `2456a83` Deprecate non-txindex getrawtransaction and better warning (sipa)
 - #9518 `a65ced1` Return height of last block pruned by pruneblockchain RPC (ryanofsky)
-- #9222 `7cb024e` Add 'subtractFeeFromAmount' option to 'fundrawtransaction' (dooglus)
-- #8456 `2ef52d3` Simplified `bumpfee` command (mrbandrews)
 - #9516 `727a798` Bug-fix: listsinceblock: use fork point as reference for blocks in reorg'd chains (kallewoof)
 - #9640 `7bfb770` Bumpfee: bugfixes for error handling and feerate calculation (sdaftuar)
 - #9673 `8d6447e` Set correct metadata on bumpfee wallet transactions (ryanofsky)
@@ -393,13 +303,22 @@ and git merge commit are mentioned.
 - #9474 `48d7e0d` Mark the minconf parameter to move as ignored (sipa)
 - #9619 `861cb0c` Bugfix: RPC/Mining: GBT should return 1 MB sizelimit before segwit activates (luke-jr)
 - #9773 `9072395` Return errors from importmulti if complete rescans are not successful (ryanofsky)
+- #9504 `342a564` *dumpmasterprivkey command (achow101)
+- #9524 `88883ae` *rpc: Don't FlushStateToDisk when pruneblockchain(0) (MarcoFalke)
+- #9622 `0a084dd` *listsinceblock: optionally find and list any transactions that were undone due to reorg when requesting a non-main chain block in a new 'removed' array. (Karl-Johan Alm)
+- #9672 `c781a04` *RPC/rawtransaction: createrawtransaction: Check opt_into_rbf when provided with either value (luke-jr)
+- n/a   `3d5d3eb` *RPC: Use options object rather than adding a "sort" boolean for multisig methods (luke-jr)
+- #9017 `ec5921c` *Enable dumpprivkey for p2sh-p2wpkh (instagibbs)
+- #9017 `cabb3ad` *Accept p2sh-p2wpkh addr in createmultisig_redeemScript (instagibbs)
+- #9503 `c60de5d` *Add address filtering to listreceivedbyaddress (JeremyRubin)
+- #9571 `9b9b685` *RPC: getblockchaininfo: BIP9 stats (Matthew Zipkin)
+- #9740 `192af7b` *Add friendly output to dumpwallet refs (aideca)
 
 ### Block and transaction handling
 - #8391 `37d83bb` Consensus: Remove ISM (NicolasDorier)
 - #8365 `618c9dd` Treat high-sigop transactions as larger rather than rejecting them (sipa)
 - #8814 `14b7b3f` wallet, policy: ParameterInteraction: Don't allow 0 fee (MarcoFalke)
 - #8515 `9bdf526` A few mempool removal optimizations (sipa)
-- #8448 `101c642` Store mempool and prioritization data to disk (sipa)
 - #7730 `3c03dc2` Remove priority estimation (morcos)
 - #9111 `fb15610` Remove unused variable `UNLIKELY_PCT` from fees.h (fanquake)
 - #9133 `434e683` Unset fImporting for loading mempool (morcos)
@@ -413,7 +332,6 @@ and git merge commit are mentioned.
 - #9395 `0fc1c31` Add test for `-walletrejectlongchains` (morcos)
 - #9107 `7dac1e5` Safer modify new coins (morcos)
 - #9312 `a72f76c` Increase mempool expiry time to 2 weeks (morcos)
-- #8610 `c252685` Share unused mempool memory with coincache (sipa)
 - #9138 `f646275` Improve fee estimation (morcos)
 - #9408 `46b249e` Allow shutdown during LoadMempool, dump only when necessary (jonasschnelli)
 - #9310 `8c87f17` Assert FRESH validity in CCoinsViewCache::BatchWrite (ryanofsky)
@@ -436,6 +354,7 @@ and git merge commit are mentioned.
 - #9283 `869781c` A few more CTransactionRef optimizations (sipa)
 - #9499 `9c9af5a` Use recent-rejects, orphans, and recently-replaced txn for compact-block-reconstruction (TheBlueMatt)
 - #9813 `3972a8e` Read/write mempool.dat as a binary (paveljanik)
+- #9749 `74db5a6` *If -spkreuse=0, ensure transactions in mempool always have unique scriptPubKeys (luke-jr)
 
 ### P2P protocol and network code
 - #8128 `1030fa7` Turn net structures into dumb storage classes (theuni)
@@ -448,7 +367,6 @@ and git merge commit are mentioned.
 - #8707 `f07424a` Fix maxuploadtarget setting (theuni)
 - #8661 `d2e4655` Do not set an addr time penalty when a peer advertises itself (gmaxwell)
 - #8822 `9bc6a6b` Consistent checksum handling (laanwj)
-- #8936 `1230890` Report NodeId in misbehaving debug (rebroad)
 - #8968 `3cf496d` Don't hold cs\_main when calling ProcessNewBlock from a cmpctblock (TheBlueMatt)
 - #9002 `e1d1f57` Make connect=0 disable automatic outbound connections (gmaxwell)
 - #9050 `fcf61b8` Make a few values immutable, and use deterministic randomness for the localnonce (theuni)
@@ -457,7 +375,6 @@ and git merge commit are mentioned.
 - #8709 `1e50d22` Allow filterclear messages for enabling TX relay only (rebroad)
 - #9045 `9f554e0` Hash P2P messages as they are received instead of at process-time (TheBlueMatt)
 - #9026 `dc6b940` Fix handling of invalid compact blocks (sdaftuar)
-- #8996 `ab914a6` Network activity toggle (luke-jr)
 - #9131 `62af164` fNetworkActive is not protected by a lock, use an atomic (jonasschnelli)
 - #8872 `0c577f2` Remove block-request logic from INV message processing (TheBlueMatt)
 - #8690 `791b58d` Do not fully sort all nodes for addr relay (sipa)
@@ -485,6 +402,7 @@ and git merge commit are mentioned.
 - #9075 `9346f84` Decouple peer-processing-logic from block-connection-logic (#3) (TheBlueMatt)
 - #8688 `047ded0` Move static global randomizer seeds into CConnman (sipa)
 - #9289 `d9ae1ce` net: drop boost::thread\_group (theuni)
+- #9549 `95543d8` *[net] Avoid possibility of NULL pointer dereference in MarkBlockAsInFlight(...) (practicalswift)
 
 ### Validation
 - #9014 `d04aeba` Fix block-connection performance regression (TheBlueMatt)
@@ -498,6 +416,8 @@ and git merge commit are mentioned.
 - #9779 `3c02b95` Update nMinimumChainWork and defaultAssumeValid (gmaxwell)
 - #8524 `19b0f33` Precompute sighashes (sipa)
 - #9791 `1825a03` Avoid VLA in hash.h (sipa)
+- #9495 `f5daff7` *Fix CCheckQueue IsIdle (potential) race condition and remove dangerous constructors. (JeremyRubin)
+- n/a   `07de932` *Add a new checkpoint at block 451,840 (luke-jr)
 
 ### Build system
 - #8238 `6caf3ee` ZeroMQ 4.1.5 && ZMQ on Windows (fanquake)
@@ -541,25 +461,16 @@ and git merge commit are mentioned.
 ### GUI
 - #8192 `c503863` Remove URLs from About dialog translations (fanquake)
 - #8540 `36404ae` Fix random segfault when closing "Choose data directory" dialog (laanwj)
-- #8517 `2468292` Show wallet HD state in statusbar (jonasschnelli)
 - #8463 `62a5a8a` Remove Priority from coincontrol dialog (MarcoFalke)
 - #7579 `0606f95` Show network/chain errors in the GUI (jonasschnelli)
-- #8583 `c19f8a4` Show XTHIN in GUI (rebroad)
-- #7783 `4335d5a` RPC-Console: support nested commands and simple value queries (jonasschnelli)
-- #8672 `6052d50` Show transaction size in transaction details window (Cocosoft)
 - #8777 `fec6af7` WalletModel: Expose disablewallet (MarcoFalke)
-- #8371 `24f72e9` Add out-of-sync modal info layer (jonasschnelli)
 - #8885 `b2fec4e` Fix ban from qt console (theuni)
 - #8821 `bf8e68a` sync-overlay: Don't block during reindex (MarcoFalke)
 - #8906 `088d1f4` sync-overlay: Don't show progress twice (MarcoFalke)
-- #8918 `47ace42` Add "Copy URI" to payment request context menu (luke-jr)
-- #8925 `f628d9a` Display minimum ping in debug window (rebroad)
-- #8774 `3e942a7` Qt refactors to better abstract wallet access (luke-jr)
 - #8985 `7b1bfa3` Use pindexBestHeader instead of setBlockIndexCandidates for NotifyHeaderTip() (jonasschnelli)
 - #8989 `d2143dc` Overhaul smart-fee slider, adjust default confirmation target (jonasschnelli)
 - #9043 `273bde3` Return useful error message on ATMP failure (MarcoFalke)
 - #9088 `4e57824` Reduce ambiguity of warning message (rebroad)
-- #8874 `e984730` Multiple Selection for peer and ban tables (achow101)
 - #9145 `924745d` Make network disabled icon 50% opaque (MarcoFalke)
 - #9130 `ac489b2` Mention the new network toggle functionality in the tooltip (paveljanik)
 - #9218 `4d955fc` Show progress overlay when clicking spinner icon (laanwj)
@@ -569,7 +480,6 @@ and git merge commit are mentioned.
 - #9255 `9851a84` layoutAboutToChange signal is called layoutAboutToBeChanged (laanwj)
 - #9330 `47e6a19` Console: add security warning (jonasschnelli)
 - #9329 `db45ad8` Console: allow empty arguments (jonasschnelli)
-- #8877 `6dc4c43` Qt RPC console: history sensitive-data filter, and saving input line when browsing history (luke-jr)
 - #9462 `649cf5f` Do not translate tilde character (MarcoFalke)
 - #9457 `123ea73` Select more files for translation (MarcoFalke)
 - #9413 `fd7d8c7` CoinControl: Allow non-wallet owned change addresses (jonasschnelli)
@@ -580,13 +490,26 @@ and git merge commit are mentioned.
 - #9735 `ec66d06` devtools: Handle Qt formatting characters edge-case in update-translations.py (laanwj)
 - #9755 `a441db0` Bugfix: Qt/Options: Restore persistent "restart required" notice (luke-jr)
 - #9817 `7d75a5a` Fix segfault crash when shutdown the GUI in disablewallet mode (jonasschnelli)
+- #9481 `c5adf8f` *[Qt] Show more significant warning if we fall back to the default fee (jonasschnelli)
+- #9500 `6d8fe35` *'help' rpc commands autocomplete (achow101)
+- #9592 `c4e4792` *[Qt] Add simple optin-RBF checkbox and confirmation info (jonasschnelli)
+- #9724 `50c5657` *Qt/Intro: Storage shouldn't grow significantly with pruning enabled (luke-jr)
+- #9724 `f6d18f5` *Qt/Intro: Explain a bit more what will happen first time (luke-jr)
+- #9849 `c282e7a` *Qt: Network Watch tool (luke-jr)
+- n/a   `dc4acc7` *Qt/Options: Configure walletrbf using rwconf (luke-jr)
+- n/a   `7deabd7` *Qt/Options: Configure blockreconstructionextratxn using rwconf (luke-jr)
+- n/a   `3a514ea` *Qt/Options: Configure incrementalrelayfee using rwconf (luke-jr)
+- n/a   `9a175a6` *Qt/Options: Configure dustrelayfee using rwconf (luke-jr)
+- n/a   `2a8d9c9` *Qt/Options: Configure blockmintxfee using rwconf (luke-jr)
+- n/a   `acac3e8` *Qt/Intro: Configure autoprune using rwconf (luke-jr)
+- n/a   `8331dc1` *Qt/Options: When resetting options, re-assign prune if it was configured via Intro (luke-jr)
+- n/a   `9196633` *Qt/Options: Configure spkreuse using rwconf (luke-jr)
 
 ### Wallet
 - #8152 `b9c1cd8` Remove `CWalletDB*` parameter from CWallet::AddToWallet (pstratem)
 - #8432 `c7e05b3` Make CWallet::fFileBacked private (pstratem)
 - #8445 `f916700` Move CWallet::setKeyPool to private section of CWallet (pstratem)
 - #8564 `0168019` Remove unused code/conditions in ReadAtCursor (jonasschnelli)
-- #8601 `37ac678` Add option to opt into full-RBF when sending funds (rebase, original by petertodd) (laanwj)
 - #8494 `a5b20ed` init, wallet: ParameterInteraction() iff wallet enabled (MarcoFalke)
 - #8760 `02ac669` init: Get rid of some `ENABLE_WALLET` (MarcoFalke)
 - #8696 `a1f8d3e` Wallet: Remove last external reference to CWalletDB (pstratem)
@@ -595,7 +518,6 @@ and git merge commit are mentioned.
 - #8851 `940748b` Move key derivation logic from GenerateNewKey to DeriveNewChildKey (pstratem)
 - #8287 `e10af96` Set fLimitFree = true (MarcoFalke)
 - #8928 `c587577` Fix init segfault where InitLoadWallet() calls ATMP before genesis (TheBlueMatt)
-- #7551 `f2d7056` Add importmulti RPC call (pedrobranco)
 - #9016 `0dcb888` Return useful error message on ATMP failure (instagibbs)
 - #8753 `f8723d2` Locked memory manager (laanwj)
 - #8828 `a4fd8df` Move CWalletDB::ReorderTransactions to CWallet (pstratem)
@@ -608,7 +530,6 @@ and git merge commit are mentioned.
 - #9311 `a336d13` Flush wallet after abandontransaction (morcos)
 - #8717 `38e4887` Addition of ImmatureCreditCached to MarkDirty() (spencerlievens)
 - #9446 `510c0d9` SetMerkleBranch: remove unused code, remove cs\_main lock requirement (jonasschnelli)
-- #8776 `2a524b8` Wallet refactoring leading up to multiwallet (luke-jr)
 - #9465 `a7d55c9` Do not perform ECDSA signing in the fee calculation inner loop (gmaxwell)
 - #9404 `12e3112` Smarter coordination of change and fee in CreateTransaction (morcos)
 - #9377 `fb75cd0` fundrawtransaction: Keep change-output keys by default, make it optional (jonasschnelli)
@@ -619,12 +540,12 @@ and git merge commit are mentioned.
 - #9316 `3097ea4` Disable free transactions when relay is disabled (MarcoFalke)
 - #9615 `d2c9e4d` Wallet incremental fee (morcos)
 - #9760 `40c754c` Remove importmulti always-true check (ryanofsky)
+- #8775 `6689b85` *Wallet: Sanitise -wallet parameter (luke-jr)
 
 ### Tests and QA
 - #8270 `6e5e5ab` Tests: Use portable #! in python scripts (/usr/bin/env) (ChoHag)
 - #8534,#8504 Remove java comparison tool (laanwj,MarcoFalke)
 - #8482 `740cff5` Use single cache dir for chains (MarcoFalke)
-- #8450 `21857d2` Replace `rpc_wallet_tests.cpp` with python RPC unit tests (pstratem)
 - #8671 `ddc3080` Minimal fix to slow prevector tests as stopgap measure (JeremyRubin)
 - #8680 `666eaf0` Address Travis spurious failures (theuni)
 - #8789 `e31a43c` pull-tester: Only print output when failed (MarcoFalke)
@@ -676,6 +597,11 @@ and git merge commit are mentioned.
 - #9824 `260c71c` qa: Check return code when stopping nodes (MarcoFalke)
 - #9875 `50953c2` tests: Fix dangling pwalletMain pointer in wallet tests (laanwj)
 - #9839 `eddaa6b` [qa] Make import-rescan.py watchonly check reliable (ryanofsky)
+- #9359 `d29538d` *Add test for CWalletTx::GetImmatureCredit() returning stale values. (ryanofsky)
+- #9497 `96c7f2c` *Add CheckQueue Tests (JeremyRubin)
+- #9622 `5127a06` *Testing: listsinceblock should display all transactions that were affected since the given block, including transactions that were removed due to a reorg. (Karl-Johan Alm)
+- #9503 `e6f053a` *Add tests of listreceivedbyaddress address filtering (JeremyRubin)
+- #9740 `48abaea` *Add dumpwallet output test (aideca)
 
 ### Documentation
 - #8332 `806b9e7` Clarify witness branches in transaction.h serialization (dcousens)
@@ -721,7 +647,6 @@ and git merge commit are mentioned.
 - #8291 `5cac8b1` util: CopyrightHolders: Check for untranslated substitution (MarcoFalke)
 - #8557 `44691f3` contrib: Rework verifybinaries (MarcoFalke)
 - #8621 `e8ed6eb` contrib: python: Don't use shell=True (MarcoFalke)
-- #8813 `fb24d7e` bitcoind: Daemonize using daemon(3) (laanwj)
 - #9004 `67728a3` Clarify `listenonion` (unsystemizer)
 - #8674 `bae81b8` tools for analyzing, updating and adding copyright headers in source files (isle2983)
 - #8976 `8c6218a` libconsensus: Add input validation of flags (laanwj)
@@ -765,6 +690,8 @@ and git merge commit are mentioned.
 - #8863,#8807 univalue: Pull subtree (MarcoFalke)
 - #9798 `e22c067` Fix Issue #9775 (Check returned value of fopen) (kirit93)
 - #9856 `69832aa` Terminate immediately when allocation fails (theuni)
+- #9672 `bc2e702` *bitcoin-tx: rbfoptin: Avoid touching nSequence if the value is already opting in (luke-jr)
+- #9422 `3b0ee5f` *Store mempool min fee state in mempool.dat (luke-jr)
 
 Credits
 =======
@@ -836,6 +763,7 @@ Thanks to everyone who directly contributed to this release:
 - Masahiko Hyuga
 - Matt Corallo
 - Matthew King
+- Matthew Zipkin
 - matthias
 - Micha
 - Michael Ford
