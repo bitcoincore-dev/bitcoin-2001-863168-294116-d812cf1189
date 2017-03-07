@@ -67,6 +67,7 @@
 #endif
 
 bool fFeeEstimatesInitialized = false;
+static const bool DEFAULT_COREPOLICY = false;
 static const bool DEFAULT_PROXYRANDOMIZE = true;
 static const bool DEFAULT_REST_ENABLE = false;
 static const bool DEFAULT_DISABLE_SAFEMODE = false;
@@ -340,6 +341,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage +=HelpMessageOpt("-assumevalid=<hex>", strprintf(_("If this block is in the chain assume that it and its ancestors are valid and potentially skip their script verification (0 to verify all, default: %s, testnet: %s)"), Params(CBaseChainParams::MAIN).GetConsensus().defaultAssumeValid.GetHex(), Params(CBaseChainParams::TESTNET).GetConsensus().defaultAssumeValid.GetHex()));
     strUsage += HelpMessageOpt("-conf=<file>", strprintf(_("Specify configuration file (default: %s)"), BITCOIN_CONF_FILENAME));
     strUsage += HelpMessageOpt("-confrw=<file>", strprintf(_("Specify read/write configuration file (default: %s)"), BITCOIN_RW_CONF_FILENAME));
+    strUsage += HelpMessageOpt("-corepolicy", strprintf(_("Use Bitcoin Core policy defaults (default: %s)"), DEFAULT_COREPOLICY));
     if (mode == HMM_BITCOIND)
     {
 #if HAVE_DECL_DAEMON
@@ -502,6 +504,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-blockmintxfee=<amt>", strprintf(_("Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)"), CURRENCY_UNIT, FormatMoney(DEFAULT_BLOCK_MIN_TX_FEE)));
     if (showDebug)
         strUsage += HelpMessageOpt("-blockversion=<n>", "Override block version to test forking scenarios");
+    strUsage += HelpMessageOpt("-priorityaccurate", strprintf(_("Update coin-age priority accurately when parent transactions are confirmed (default: %d)"), fPriorityAccurate));
 
 #ifdef USE_LIBEVENT
     strUsage += HelpMessageGroup(_("RPC server options:"));
@@ -739,6 +742,17 @@ bool AppInitServers(boost::thread_group& threadGroup)
 // Parameter interaction based on rules
 void InitParameterInteraction()
 {
+    if (GetBoolArg("-corepolicy", DEFAULT_COREPOLICY)) {
+        SoftSetArg("-bytespersigopstrict", "0");
+        SoftSetArg("-spamfilter", "0");
+        SoftSetArg("-permitbaremultisig", "1");
+        SoftSetArg("-datacarriersize", "83");
+
+        SoftSetArg("-blockprioritysize", "0");
+        SoftSetArg("-priorityaccurate", "0");
+        SoftSetArg("-blockmaxsize", "750000");
+    }
+
     // when specifying an explicit binding address, you want to listen on it
     // even when -connect or -proxy is specified
     if (IsArgSet("-bind")) {
@@ -937,6 +951,8 @@ bool AppInitParameterInteraction()
             fDebug = false;
     }
 
+    fPriorityAccurate = GetBoolArg("-priorityaccurate", fPriorityAccurate);
+
     // Check for -debugnet
     if (GetBoolArg("-debugnet", false))
         InitWarning(_("Unsupported argument -debugnet ignored, use -debug=net."));
@@ -971,10 +987,10 @@ bool AppInitParameterInteraction()
         LogPrintf("Validating signatures for all blocks.\n");
 
     // mempool limits
-    int64_t nMempoolSizeMax = GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000;
-    int64_t nMempoolSizeMin = GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT) * 1000 * 40;
-    if (nMempoolSizeMax < 0 || nMempoolSizeMax < nMempoolSizeMin)
-        return InitError(strprintf(_("-maxmempool must be at least %d MB"), std::ceil(nMempoolSizeMin / 1000000.0)));
+    int64_t nMempoolSizeMaxMB = GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE);
+    int64_t nMempoolSizeMinMB = maxmempoolMinimum(GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT));
+    if (nMempoolSizeMaxMB < 0 || nMempoolSizeMaxMB < nMempoolSizeMinMB)
+        return InitError(strprintf(_("-maxmempool must be at least %d MB"), nMempoolSizeMinMB));
     // incremental relay fee sets the minimimum feerate increase necessary for BIP 125 replacement in the mempool
     // and the amount the mempool min fee increases above the feerate of txs evicted due to mempool limiting.
     if (IsArgSet("-incrementalrelayfee"))

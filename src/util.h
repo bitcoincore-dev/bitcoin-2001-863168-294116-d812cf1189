@@ -110,6 +110,7 @@ void CreatePidFile(const boost::filesystem::path &path, pid_t pid);
 #endif
 void ReadConfigFile(const std::string& confPath);
 void ReadRWConfigFile();
+bool RWConfigHasPruneOption();
 void ModifyRWConfigFile(std::istream& streamIn, std::ostream& streamOut, const std::map<std::string, std::string>& mapChangeSettings);
 void ModifyRWConfigFile(const std::map<std::string, std::string>& mapChangeSettings);
 void ModifyRWConfigFile(const std::string& strArg, const std::string& strNewValue);
