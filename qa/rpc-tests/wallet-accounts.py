@@ -24,6 +24,25 @@ class WalletAccountsTest(BitcoinTestFramework):
         self.nodes = start_nodes(self.num_nodes, self.options.tmpdir, self.node_args)
         self.is_network_split = False
 
+    def test_sort_multisig(self, node):
+        node.importprivkey("cSJUMwramrFYHKPfY77FH94bv4Q5rwUCyfD6zX3kLro4ZcWsXFEM")
+        node.importprivkey("cSpQbSsdKRmxaSWJ3TckCFTrksXNPbh8tfeZESGNQekkVxMbQ77H")
+        node.importprivkey("cRNbfcJgnvk2QJEVbMsxzoprotm1cy3kVA2HoyjSs3ss5NY5mQqr")
+
+        addresses = [
+            "muRmfCwue81ZT9oc3NaepefPscUHtP5kyC",
+            "n12RzKwqWPPA4cWGzkiebiM7Gu6NXUnDW8",
+            "n2yWMtx8jVbo8wv9BK2eN1LdbaakgKL3Mt",
+        ]
+
+        sorted_default = node.addmultisigaddress(2, addresses)
+        sorted_false = node.addmultisigaddress(2, addresses, {"sort": False})
+        sorted_true = node.addmultisigaddress(2, addresses, {"sort": True})
+
+        assert_equal(sorted_default, sorted_false)
+        assert_equal("2N6dne8yzh13wsRJxCcMgCYNeN9fxKWNHt8", sorted_default)
+        assert_equal("2MsJ2YhGewgDPGEQk4vahGs4wRikJXpRRtU", sorted_true)
+
     def run_test (self):
         node = self.nodes[0]
         # Check that there's no UTXO on any of the nodes
@@ -89,6 +108,7 @@ class WalletAccountsTest(BitcoinTestFramework):
         
         for account in accounts:
             assert_equal(node.getbalance(account), 50)
+        self.test_sort_multisig(node)
 
 if __name__ == '__main__':
     WalletAccountsTest().main ()
