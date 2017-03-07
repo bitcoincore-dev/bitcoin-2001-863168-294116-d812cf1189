@@ -437,6 +437,7 @@ bool SoftSetArg(const std::string& strArg, const std::string& strValue)
     if (mapArgs.count(strArg))
         return false;
     mapArgs[strArg] = strValue;
+    _mapMultiArgs[strArg].push_back(strValue);
     return true;
 }
 
@@ -452,6 +453,8 @@ void ForceSetArg(const std::string& strArg, const std::string& strValue)
 {
     LOCK(cs_args);
     mapArgs[strArg] = strValue;
+    _mapMultiArgs[strArg].clear();
+    _mapMultiArgs[strArg].push_back(strValue);
 }
 
 
