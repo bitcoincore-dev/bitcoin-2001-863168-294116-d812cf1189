@@ -314,6 +314,10 @@
         <translation>افتح &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">محفظة:</translation>
+    </message>
+    <message>
         <source>Reindexing blocks on disk...</source>
         <translation>إعادة الفهرسة الكتل على القرص ...</translation>
     </message>
@@ -420,6 +424,10 @@
     <message>
         <source>Processing blocks on disk...</source>
         <translation>معالجة الكتل على القرص...</translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation><numerusform>لم يتم معالجة أي كتلة سجل المعاملات</numerusform><numerusform>تم معالجة كتلة واحدة سجل المعاملات</numerusform><numerusform>تم معالجة كتلتين سجل المعاملات</numerusform><numerusform>تم معالجة %n كتل سجل المعاملات</numerusform><numerusform>تم معالجة %n كتلة سجل المعاملات</numerusform><numerusform>تم معالجة %n كتلة سجل المعاملات</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -708,6 +716,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -781,6 +792,10 @@
         <translation>استخدام دليل بيانات مخصص:</translation>
     </message>
     <message>
+        <source>Bitcoin</source>
+        <translation>بت كوين</translation>
+    </message>
+    <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
         <translation>خطأ: لا يمكن تكوين دليل بيانات مخصص ل %1</translation>
     </message>
@@ -790,16 +805,36 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>نمودج</translation>
     </message>
     <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">غير معرف...</translation>
+    </message>
+    <message>
         <source>Hide</source>
         <translation>إخفاء</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>النوع</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>عنوان</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -809,6 +844,10 @@
     <message>
         <source>Open payment request from URI or file</source>
         <translation>حدد طلب الدفع من ملف او URI</translation>
+    </message>
+    <message>
+        <source>URI:</source>
+        <translation type="unfinished"> URI:</translation>
     </message>
     <message>
         <source>Select payment request file</source>
@@ -906,6 +945,10 @@
         <translation>لا شيء</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>جوهر البيت كوين</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>تأكيد استعادة الخيارات</translation>
     </message>
@@ -969,11 +1012,20 @@
         <source>N/A</source>
         <translation>غير معروف</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>0 ساعة</numerusform><numerusform>%n ساعة</numerusform><numerusform>%n ساعتين</numerusform><numerusform>%n ساعات</numerusform><numerusform>%n ساعة</numerusform><numerusform>%n ساعات</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 و %2</translation>
     </message>
-    </context>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>معاملة</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -1033,6 +1085,10 @@
     <message>
         <source>Number of connections</source>
         <translation>عدد الاتصالات</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">محفظة: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1182,6 +1238,10 @@
         <translation>ازل</translation>
     </message>
     <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">نسخ  URI</translation>
+    </message>
+    <message>
         <source>Copy label</source>
         <translation> انسخ التسمية</translation>
     </message>
@@ -1301,6 +1361,10 @@
     <message>
         <source>Transaction Fee:</source>
         <translation>رسوم المعاملة:</translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">اختر...</translation>
     </message>
     <message>
         <source>Hide</source>
@@ -1930,6 +1994,10 @@
     <message>
         <source>Specify data directory</source>
         <translation>حدد مجلد المعلومات</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside (default: 1 if no -proxy or -connect/-noconnect)</source>
+        <translation>قبول الاتصالات من خارج</translation>
     </message>
     <message>
         <source>Bitcoin Core</source>

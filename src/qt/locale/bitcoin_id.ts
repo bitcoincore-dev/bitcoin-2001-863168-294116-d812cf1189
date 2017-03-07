@@ -1,9 +1,57 @@
-<TS language="zh" version="2.1">
+<TS language="id" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
+        <source>Right-click to edit address or label</source>
+        <translation>Klik kanan untuk mengubah alamat atau label</translation>
+    </message>
+    <message>
+        <source>Create a new address</source>
+        <translation>Buat sebuah alamat baru</translation>
+    </message>
+    <message>
+        <source>&amp;New</source>
+        <translation>&amp;Baru</translation>
+    </message>
+    <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>Salin alamat yang dipilih ke dalam clipboard sistem</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Salin</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>&amp;Tutup</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>Hapus alamat yang dipilih dari daftar</translation>
+    </message>
+    <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Hapus</translation>
+    </message>
+    <message>
+        <source>Choose the address to send coins to</source>
+        <translation>Pilih alamat untuk mengirim koin kepada</translation>
+    </message>
+    <message>
         <source>C&amp;hoose</source>
-        <translation type="unfinished">&amp;选择</translation>
+        <translation>P&amp;ilih</translation>
+    </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation>Alamat mengirim</translation>
+    </message>
+    <message>
+        <source>Receiving addresses</source>
+        <translation>Alamat menerima</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;Salin Alamat</translation>
     </message>
     </context>
 <context>
@@ -18,20 +66,16 @@
 <context>
     <name>BitcoinGUI</name>
     <message>
-        <source>Error</source>
-        <translation>错误</translation>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;Alamat mengirim...</translation>
     </message>
     <message>
-        <source>Warning</source>
-        <translation>警告</translation>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;Alamat menerima...</translation>
     </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
-    <message>
-        <source>Date</source>
-        <translation>日期</translation>
-    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -47,10 +91,6 @@
     </context>
 <context>
     <name>Intro</name>
-    <message>
-        <source>Error</source>
-        <translation>错误</translation>
-    </message>
     </context>
 <context>
     <name>MempoolStats</name>
@@ -81,7 +121,7 @@
     <message>
         <source>Txn</source>
         <comment>Tx Watch: Transaction type abbreviation</comment>
-        <translation>转账</translation>
+        <translation>Tsi</translation>
     </message>
 </context>
 <context>
@@ -98,35 +138,19 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Salin Alamat</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
-    <message>
-        <source>Date</source>
-        <translation>日期</translation>
-    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
     <message>
-        <source>Insufficient funds!</source>
-        <translation>余额不足</translation>
-    </message>
-    <message>
         <source>Choose...</source>
-        <translation>选择...</translation>
-    </message>
-    <message>
-        <source>The recipient address is not valid. Please recheck.</source>
-        <translation>收款人地址无效，请再次确认。</translation>
-    </message>
-    <message>
-        <source>Pay only the required fee of %1</source>
-        <translation>仅支付全额的%1</translation>
-    </message>
-    <message>
-        <source>Warning: Invalid Bitcoin address</source>
-        <translation>警告：比特币地址无效</translation>
+        <translation type="unfinished">Pilih...</translation>
     </message>
     </context>
 <context>
@@ -149,27 +173,15 @@
     </context>
 <context>
     <name>TransactionDesc</name>
-    <message>
-        <source>Date</source>
-        <translation>日期</translation>
-    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
-    <message>
-        <source>Date</source>
-        <translation>日期</translation>
-    </message>
     </context>
 <context>
     <name>TransactionView</name>
-    <message>
-        <source>Date</source>
-        <translation>日期</translation>
-    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -185,41 +197,5 @@
     </context>
 <context>
     <name>bitcoin-core</name>
-    <message>
-        <source>Transaction too large for fee policy</source>
-        <translation>根据费率标准，本次转账超额</translation>
-    </message>
-    <message>
-        <source>Transaction too large</source>
-        <translation>超额转账</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>警告</translation>
-    </message>
-    <message>
-        <source>Loading addresses...</source>
-        <translation>正在载入地址...</translation>
-    </message>
-    <message>
-        <source>Insufficient funds</source>
-        <translation>余额不足</translation>
-    </message>
-    <message>
-        <source>Loading wallet...</source>
-        <translation>正在载入钱包...</translation>
-    </message>
-    <message>
-        <source>Rescanning...</source>
-        <translation>再次扫描...</translation>
-    </message>
-    <message>
-        <source>Done loading</source>
-        <translation>载入完成</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>错误</translation>
-    </message>
-</context>
+    </context>
 </TS>

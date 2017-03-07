@@ -41,6 +41,14 @@
         <source>&amp;Delete</source>
         <translation>Удалить</translation>
     </message>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation>Выбрать</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>Копировать адрес</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
@@ -57,6 +65,10 @@
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>Open &amp;URI...</source>
+        <translation type="unfinished">&amp;Открыть URI...</translation>
+    </message>
     <message>
         <source>Bitcoin</source>
         <translation>Bitcoin Core</translation>
@@ -92,6 +104,18 @@
         <source>Confirmed</source>
         <translation>Подтвержденные</translation>
     </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Копировать адрес</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>Да</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>Нет</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -102,6 +126,9 @@
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -121,12 +148,22 @@
 <context>
     <name>Intro</name>
     <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
+    </context>
+<context>
+    <name>NetWatchLogModel</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
@@ -141,6 +178,10 @@
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -153,7 +194,17 @@
     </context>
 <context>
     <name>QObject</name>
-    </context>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакция</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -172,12 +223,28 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Копировать адрес</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Выбрать...</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>
@@ -199,15 +266,35 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Copy address</source>
+        <translation>Копировать адрес</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Подтвержденные</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -223,6 +310,10 @@
     <message>
         <source>&amp;Export</source>
         <translation>Экспортировать</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Экспортировать данные текущей вкладки в файл</translation>
     </message>
     </context>
 <context>

@@ -41,6 +41,14 @@
         <source>&amp;Delete</source>
         <translation>&amp;amp;मेटाउनुहोस्</translation>
     </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation type="unfinished">amp;पठाउने ठेगानाहरू</translation>
+    </message>
+    <message>
+        <source>Receiving addresses</source>
+        <translation type="unfinished">amp;प्राप्त गर्ने ठेगानाहरू</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
@@ -189,6 +197,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount:</source>
+        <translation type="unfinished">रकम:</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>रकम</translation>
     </message>
@@ -200,19 +212,40 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">amp;बारेमा %1</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    </context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">URI amp;खोल्नुहोस्</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">amp;विकल्प</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -281,7 +314,17 @@
         <source>Amount</source>
         <translation>रकम</translation>
     </message>
-    </context>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>ब्लक</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>कारोबार</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -290,6 +333,10 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">amp;डिबग विन्डो</translation>
+    </message>
     <message>
         <source>User Agent</source>
         <translation>प्रयोगकर्ता एजेन्ट</translation>
@@ -301,18 +348,34 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;रकम:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount</source>
+        <translation>रकम</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Amount:</source>
+        <translation type="unfinished">रकम:</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;रकम:</translation>
+    </message>
     <message>
         <source>The fee will be deducted from the amount being sent. The recipient will receive less bitcoins than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
         <translation>पठाइँदै गरेको रकमबाट शुल्क कटौती गरिनेछ । प्राप्तकर्ताले तपाईंले रकम क्षेत्रमा प्रवेष गरेको भन्दा थोरै बिटकोइन प्राप्त गर्ने छन् । धेरै प्राप्तकर्ता चयन गरिएको छ भने समान रूपमा शुल्क विभाजित गरिनेछ ।</translation>
@@ -343,15 +406,35 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>watch-only</source>
+        <translation type="unfinished">हेर्ने-मात्र</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>कारोबार</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>रकम</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>watch-only</source>
+        <translation type="unfinished">हेर्ने-मात्र</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">हेर्ने-मात्र</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -364,12 +447,32 @@
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;निर्यात गर्नुहोस्</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>वर्तमान ट्याबको डाटालाई फाइलमा निर्यात गर्नुहोस् </translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">amp;वालेटलाई ब्याकअप गर्नुहोस्</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
     <message>
+        <source>Options:</source>
+        <translation type="unfinished">amp;विकल्प:</translation>
+    </message>
+    <message>
         <source>The block database contains a block which appears to be from the future. This may be due to your computer's date and time being set incorrectly. Only rebuild the block database if you are sure that your computer's date and time are correct</source>
         <translation>ब्लक डाटाबेसमा भविष्यबाट आए जस्तो देखिने एउटा ब्लक हुन्छ । तपाईंको कम्प्युटरको मिति र समय गलत तरिकाले सेट गरिएकाले यस्तो हुन सक्छ । तपाईं आफ्नो कम्प्युटरको मिति र समय सही छ भनेर पक्का हुनुहुन्छ भने मात्र ब्लक डाटाबेस पुनर्निर्माण गर्नुहोस् ।</translation>
+    </message>
+    <message>
+        <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
+        <translation>यो जारी गर्नु पूर्वको परीक्षण संस्करण हो - आफ्नै जोखिममा प्रयोग गर्नुहोस् - खनन वा व्यापारीक प्रयोगको लागि प्रयोग नगर्नुहोस</translation>
     </message>
     <message>
         <source>Unable to rewind the database to a pre-fork state. You will need to redownload the blockchain</source>
@@ -378,6 +481,14 @@
     <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
         <translation>UPnP प्रयोग गरेर सुन्ने पोर्टलाई म्याप गर्नुहोस् (सुन्दा र -प्रोक्सी नहुँदा डिफल्ट: 1)</translation>
+    </message>
+    <message>
+        <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
+        <translation>चेतावनी: नेटवर्क पूरै तरिकाले सहमत छैन जस्तो देखिन्छ! केही खननकर्ताहरूले समस्या भोगिरहेका छन् जस्तो देखिन्छ ।</translation>
+    </message>
+    <message>
+        <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
+        <translation>चेतावनी: हामी हाम्रा सहकर्मीहरूसँग पूर्णतया सहमत छैनौं जस्तो देखिन्छ! तपाईंले अपग्रेड गर्नु पर्ने हुनसक्छ वा अरू नोडहरूले अपग्रेड गर्नु पर्ने हुनसक्छ ।</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
@@ -550,6 +661,14 @@
     <message>
         <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
         <translation>तपाईंले काटछाँट नगरेको मोडमा जान पुनः सूचकांक प्रयोग गरेर डाटाबेस पुनर्निर्माण गर्नु पर्ने हुन्छ । यसले सम्पूर्ण ब्लकचेनलाई फेरि डाउनलोड गर्नेछ</translation>
+    </message>
+    <message>
+        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect/-noconnect)</source>
+        <translation>यदि ठेगाना कम भएमा, DNS लुकअप मार्फत सहकर्मी ठेगानाको जाँच गर्नुहोस  (डिफल्ट: 1 सिवाय -कनेक्ट)</translation>
+    </message>
+    <message>
+        <source>This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit %s and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard.</source>
+        <translation>यो उत्पादन ले OpenSSL टुलकिट %s को प्रयोगको लागि OpenSSL परियोजनाले विकास गरेको सफ्टवेयर, एरिक यंग द्वारा लिखित क्रिप्टोग्राफिक सफ्टवेयर र थमस बर्नार्डद्वारा लिखित UPnP सफ्टवेयरलाई समावेश गर्छ ।</translation>
     </message>
     </context>
 </TS>
