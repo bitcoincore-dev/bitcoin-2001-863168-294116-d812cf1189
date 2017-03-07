@@ -2390,9 +2390,9 @@ UniValue listunspent(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() > 4)
-        throw runtime_error(
-            "listunspent ( minconf maxconf  [\"addresses\",...] [include_unsafe] )\n"
+    if (request.fHelp || request.params.size() > 5)
+        throw std::runtime_error(
+            "listunspent ( minconf maxconf  [\"addresses\",...] [include_unsafe] [query_options])\n"
             "\nReturns array of unspent transaction outputs\n"
             "with between minconf and maxconf (inclusive) confirmations.\n"
             "Optionally filter to only include txouts paid to specified addresses.\n"
@@ -2408,12 +2408,12 @@ UniValue listunspent(const JSONRPCRequest& request)
             "                  because they come from unconfirmed untrusted transactions or unconfirmed\n"
             "                  replacement transactions (cases where we are less sure that a conflicting\n"
             "                  transaction won't be mined).\n"
-            "5. query options    (json, optional) JSON with query options\n"
+            "5. query_options    (json, optional) JSON with query options\n"
             "    {\n"
             "      \"minimumAmount\"    (numeric or string, default=0) Minimum value of each UTXO in " + CURRENCY_UNIT + "\n"
             "      \"maximumAmount\"    (numeric or string, default=unlimited) Maximum value of each UTXO in " + CURRENCY_UNIT + "\n"
             "      \"maximumCount\"     (numeric or string, default=unlimited) Maximum number of UTXOs\n"
-            "      \"minimumSumAmount\" (numeric or string, default=unlimited) Minimum sum value all UTXOs in " + CURRENCY_UNIT + "\n"
+            "      \"minimumSumAmount\" (numeric or string, default=unlimited) Minimum sum value of all UTXOs in " + CURRENCY_UNIT + "\n"
             "    }\n"
             "\nResult\n"
             "[                   (array of json object)\n"
@@ -2478,7 +2478,6 @@ UniValue listunspent(const JSONRPCRequest& request)
     CAmount nMinimumSumAmount = MAX_MONEY;
     uint64_t nMaximumCount = 0;
 
-
     if (request.params.size() > 4) {
         const UniValue& options = request.params[4].get_obj();
 
@@ -2496,12 +2495,11 @@ UniValue listunspent(const JSONRPCRequest& request)
     }
 
     UniValue results(UniValue::VARR);
-    vector<COutput> vecOutputs;
+    std::vector<COutput> vecOutputs;
     assert(pwalletMain != NULL);
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
     pwalletMain->AvailableCoins(vecOutputs, !include_unsafe, NULL, nMinimumAmount, nMaximumAmount, nMinimumSumAmount, nMaximumCount, nMinDepth, nMaxDepth);
-
     BOOST_FOREACH(const COutput& out, vecOutputs) {
         CTxDestination address;
         const CScript& scriptPubKey = out.tx->tx->vout[out.i].scriptPubKey;
@@ -3054,7 +3052,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "listreceivedbyaddress",    &listreceivedbyaddress,    false,  {"minconf","include_empty","include_watchonly"} },
     { "wallet",             "listsinceblock",           &listsinceblock,           false,  {"blockhash","target_confirmations","include_watchonly"} },
     { "wallet",             "listtransactions",         &listtransactions,         false,  {"account","count","skip","include_watchonly"} },
-    { "wallet",             "listunspent",              &listunspent,              false,  {"minconf","maxconf","addresses","include_unsafe"} },
+    { "wallet",             "listunspent",              &listunspent,              false,  {"minconf","maxconf","addresses","include_unsafe","query_options"} },
     { "wallet",             "lockunspent",              &lockunspent,              true,   {"unlock","transactions"} },
     { "wallet",             "move",                     &movecmd,                  false,  {"fromaccount","toaccount","amount","minconf","comment"} },
     { "wallet",             "sendfrom",                 &sendfrom,                 false,  {"fromaccount","toaddress","amount","minconf","comment","comment_to"} },
