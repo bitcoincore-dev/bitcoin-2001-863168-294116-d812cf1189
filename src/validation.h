@@ -323,13 +323,35 @@ void PruneBlockFilesManual(int nPruneUpToHeight);
 /** (try to) add transaction to memory pool
  * plTxnReplaced will be appended to with all transactions replaced from mempool **/
 bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransactionRef &tx, bool fLimitFree,
-                        bool* pfMissingInputs, std::list<CTransactionRef>* plTxnReplaced = NULL,
-                        bool fOverrideMempoolLimit=false, const CAmount nAbsurdFee=0);
+                        bool* pfMissingInputs, std::list<CTransactionRef>* plTxnReplaced,
+                        const CAmount nAbsurdFee, const std::set<std::string>& setIgnoreRejects);
+
+// Previously, the signature was ATMP(pool, state, tx, limitfree,
+// missinginputs, txnreplaced, overridemempoollimit, absurdfee) so calls could in theory
+// satisfy absurdfee with `true` which would be broken. To avoid the risk,
+// absurdfee is only optional if ignorerejects is also provided (which cannot
+// be cast implicitly from CAmount).
+static inline bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransactionRef &tx,
+                                      bool fLimitFree, bool* pfMissingInputs,
+                                      std::list<CTransactionRef>* plTxnReplaced = NULL) {
+    return AcceptToMemoryPool(pool, state, tx, fLimitFree, pfMissingInputs, plTxnReplaced, 0, std::set<std::string>());
+}
 
 /** (try to) add transaction to memory pool with a specified acceptance time **/
 bool AcceptToMemoryPoolWithTime(CTxMemPool& pool, CValidationState &state, const CTransactionRef &tx, bool fLimitFree,
-                        bool* pfMissingInputs, int64_t nAcceptTime, std::list<CTransactionRef>* plTxnReplaced = NULL,
-                        bool fOverrideMempoolLimit=false, const CAmount nAbsurdFee=0);
+                        bool* pfMissingInputs, int64_t nAcceptTime, std::list<CTransactionRef>* plTxnReplaced,
+                        const CAmount nAbsurdFee, const std::set<std::string>& setIgnoreRejects);
+
+static inline bool AcceptToMemoryPoolWithTime(CTxMemPool& pool, CValidationState &state, const CTransactionRef &tx,
+                                              bool fLimitFree, bool* pfMissingInputs, int64_t nAcceptTime,
+                                              std::list<CTransactionRef>* plTxnReplaced = NULL) {
+    return AcceptToMemoryPool(pool, state, tx, fLimitFree, pfMissingInputs, plTxnReplaced, 0, std::set<std::string>());
+}
+
+static const std::string strRejectMsg_AbsurdFee = "absurdly-high-fee";
+
+static const std::string setIgnoreRejects_mempool_full_[] = {"mempool full"};
+static const std::set<std::string> setIgnoreRejects_mempool_full(setIgnoreRejects_mempool_full_, setIgnoreRejects_mempool_full_ + (sizeof(setIgnoreRejects_mempool_full_)/sizeof(setIgnoreRejects_mempool_full_[0])));
 
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state);
