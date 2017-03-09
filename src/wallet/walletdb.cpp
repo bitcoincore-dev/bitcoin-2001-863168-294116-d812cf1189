@@ -24,8 +24,6 @@
 
 using namespace std;
 
-static uint64_t nAccountingEntryNumber = 0;
-
 static std::atomic<unsigned int> nWalletDBUpdateCounter;
 
 //
@@ -182,11 +180,6 @@ bool CWalletDB::WriteAccountingEntry(const uint64_t nAccEntryNum, const CAccount
     return WriteIC(std::make_pair(std::string("acentry"), std::make_pair(acentry.strAccount, nAccEntryNum)), acentry);
 }
 
-bool CWalletDB::WriteAccountingEntry_Backend(const CAccountingEntry& acentry)
-{
-    return WriteAccountingEntry(++nAccountingEntryNumber, acentry);
-}
-
 CAmount CWalletDB::GetAccountCreditDebit(const string& strAccount)
 {
     list<CAccountingEntry> entries;
@@ -323,8 +316,9 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             ssKey >> strAccount;
             uint64_t nNumber;
             ssKey >> nNumber;
-            if (nNumber > nAccountingEntryNumber)
-                nAccountingEntryNumber = nNumber;
+            if (nNumber > pwallet->nAccountingEntryNumber) {
+                pwallet->nAccountingEntryNumber = nNumber;
+            }
 
             if (!wss.fAnyUnordered)
             {
