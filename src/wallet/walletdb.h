@@ -115,6 +115,27 @@ public:
 /** Access to the wallet database */
 class CWalletDB : public CDB
 {
+private:
+    template <typename K, typename T>
+    bool WriteIC(const K& key, const T& value, bool fOverwrite = true)
+    {
+        if (!Write(key, value, fOverwrite)) {
+            return false;
+        }
+        IncrementUpdateCounter();
+        return true;
+    }
+
+    template <typename K>
+    bool EraseIC(const K& key)
+    {
+        if (!Erase(key)) {
+            return false;
+        }
+        IncrementUpdateCounter();
+        return true;
+    }
+
 public:
     CWalletDB(const std::string& strFilename, const char* pszMode = "r+", bool fFlushOnClose = true) : CDB(strFilename, pszMode, fFlushOnClose)
     {
