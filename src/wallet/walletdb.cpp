@@ -24,7 +24,18 @@
 
 using namespace std;
 
-static std::atomic<unsigned int> nWalletDBUpdateCounter;
+class CWalletDBStateInfo {
+public:
+    unsigned int UpdateCounter;
+    unsigned int LastSeen;
+    unsigned int LastFlushed;
+    int64_t LastWalletUpdate;
+
+    CWalletDBStateInfo() : UpdateCounter(0), LastSeen(0), LastFlushed(0), LastWalletUpdate(0) {}
+};
+
+static CCriticalSection cs_WalletDBStateInfos;
+static std::map<std::string, CWalletDBStateInfo> WalletDBStateInfos;
 
 //
 // CWalletDB
@@ -770,42 +781,48 @@ void ThreadFlushWalletDB()
     if (!GetBoolArg("-flushwallet", DEFAULT_FLUSHWALLET))
         return;
 
-    unsigned int nLastSeen = CWalletDB::GetUpdateCounter();
-    unsigned int nLastFlushed = CWalletDB::GetUpdateCounter();
-    int64_t nLastWalletUpdate = GetTime();
     while (true)
     {
         MilliSleep(500);
 
-        if (nLastSeen != CWalletDB::GetUpdateCounter())
-        {
-            nLastSeen = CWalletDB::GetUpdateCounter();
-            nLastWalletUpdate = GetTime();
-        }
+        for (CWalletRef pwallet : vpwallets) {
+            const std::string& strFile = pwallet->strWalletFile;
 
-        if (nLastFlushed != CWalletDB::GetUpdateCounter() && GetTime() - nLastWalletUpdate >= 2)
-        {
-            TRY_LOCK(bitdb.cs_db,lockDb);
-            if (lockDb)
+            CWalletDBStateInfo *sinfo;
+            unsigned int nUpdateCounter;
             {
-                // Don't do this if any databases are in use
-                int nRefCount = 0;
-                map<string, int>::iterator mi = bitdb.mapFileUseCount.begin();
-                while (mi != bitdb.mapFileUseCount.end())
-                {
-                    nRefCount += (*mi).second;
-                    mi++;
-                }
+                // We only need to lock to get the sinfo pointer and current update counter, since everything else is exclusive to this one-at-a-time function
+                LOCK(cs_WalletDBStateInfos);
+                sinfo = &WalletDBStateInfos[strFile];
+                nUpdateCounter = sinfo->UpdateCounter;
+            }
 
-                if (nRefCount == 0)
+            if (sinfo->LastSeen != nUpdateCounter) {
+                sinfo->LastSeen = nUpdateCounter;
+                sinfo->LastWalletUpdate = GetTime();
+            }
+
+            if (sinfo->LastFlushed != nUpdateCounter && GetTime() - sinfo->LastWalletUpdate >= 2) {
+                TRY_LOCK(bitdb.cs_db,lockDb);
+                if (lockDb)
                 {
-                    boost::this_thread::interruption_point();
-                    for (CWallet_ptr pwallet : vpwallets) {
-                        const std::string& strFile = pwallet->strWalletFile;
+                    // Don't do this if any databases are in use
+                    int nRefCount = 0;
+                    map<string, int>::iterator mi = bitdb.mapFileUseCount.begin();
+                    while (mi != bitdb.mapFileUseCount.end())
+                    {
+                        nRefCount += (*mi).second;
+                        mi++;
+                    }
+
+                    if (nRefCount == 0)
+                    {
+                        boost::this_thread::interruption_point();
                         map<string, int>::iterator _mi = bitdb.mapFileUseCount.find(strFile);
                         if (_mi != bitdb.mapFileUseCount.end())
                         {
                             LogPrint("db", "Flushing %s\n", strFile);
+                            sinfo->LastFlushed = nUpdateCounter;
                             int64_t nStart = GetTimeMillis();
 
                             // Flush wallet file so it's self contained
@@ -816,7 +833,6 @@ void ThreadFlushWalletDB()
                             LogPrint("db", "Flushed %s %dms\n", strFile, GetTimeMillis() - nStart);
                         }
                     }
-                    nLastFlushed = CWalletDB::GetUpdateCounter();
                 }
             }
         }
@@ -928,12 +944,24 @@ bool CWalletDB::WriteHDChain(const CHDChain& chain)
     return WriteIC(std::string("hdchain"), chain);
 }
 
+void CWalletDB::IncrementUpdateCounter(const std::string& strFilename)
+{
+    LOCK(cs_WalletDBStateInfos);
+    ++WalletDBStateInfos[strFilename].UpdateCounter;
+}
+
 void CWalletDB::IncrementUpdateCounter()
 {
-    nWalletDBUpdateCounter++;
+    IncrementUpdateCounter(strFile);
+}
+
+unsigned int CWalletDB::GetUpdateCounter(const std::string& strFilename)
+{
+    LOCK(cs_WalletDBStateInfos);
+    return WalletDBStateInfos[strFilename].UpdateCounter;
 }
 
 unsigned int CWalletDB::GetUpdateCounter()
 {
-    return nWalletDBUpdateCounter;
+    return GetUpdateCounter(strFile);
 }

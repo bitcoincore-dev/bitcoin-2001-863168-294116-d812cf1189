@@ -196,8 +196,10 @@ public:
     //! write the hdchain model (external chain child index counter)
     bool WriteHDChain(const CHDChain& chain);
 
-    static void IncrementUpdateCounter();
-    static unsigned int GetUpdateCounter();
+    static void IncrementUpdateCounter(const std::string& strFilename);
+    void IncrementUpdateCounter();
+    static unsigned int GetUpdateCounter(const std::string& strFilename);
+    unsigned int GetUpdateCounter();
 private:
     CWalletDB(const CWalletDB&);
     void operator=(const CWalletDB&);
