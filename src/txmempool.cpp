@@ -53,20 +53,6 @@ CTxMemPoolEntry::CTxMemPoolEntry(const CTxMemPoolEntry& other)
     *this = other;
 }
 
-double
-CTxMemPoolEntry::GetPriority(unsigned int currentHeight) const
-{
-    // This will only return accurate results when currentHeight >= the heights
-    // at which all the in-chain inputs of the tx were included in blocks.
-    // Typical usage of GetPriority with chainActive.Height() will ensure this.
-    int heightDiff = currentHeight - cachedHeight;
-    double deltaPriority = ((double)heightDiff*inChainInputValue)/nModSize;
-    double dResult = cachedPriority + deltaPriority;
-    if (dResult < 0) // This should only happen if it was called with an invalid height
-        dResult = 0;
-    return dResult;
-}
-
 void CTxMemPoolEntry::UpdateFeeDelta(int64_t newFeeDelta)
 {
     nModFeesWithDescendants += newFeeDelta - feeDelta;
@@ -356,16 +342,6 @@ void CTxMemPoolEntry::UpdateAncestorState(int64_t modifySize, CAmount modifyFee,
     assert(int(nSigOpCostWithAncestors) >= 0);
 }
 
-void CTxMemPoolEntry::UpdateCachedPriority(unsigned int currentHeight, CAmount valueInCurrentBlock)
-{
-    int heightDiff = currentHeight - cachedHeight;
-    double deltaPriority = ((double)heightDiff*inChainInputValue)/nModSize;
-    cachedPriority += deltaPriority;
-    cachedHeight = currentHeight;
-    inChainInputValue += valueInCurrentBlock;
-    assert(MoneyRange(inChainInputValue));
-}
-
 CTxMemPool::CTxMemPool() :
     nTransactionsUpdated(0)
 {
@@ -605,19 +581,6 @@ void CTxMemPool::removeConflicts(const CTransaction &tx)
                 removeRecursive(txConflict, MemPoolRemovalReason::CONFLICT);
             }
         }
-    }
-}
-
-void CTxMemPool::UpdateDependentPriorities(const CTransaction &tx, unsigned int nBlockHeight, bool addToChain)
-{
-    LOCK(cs);
-    for (unsigned int i = 0; i < tx.vout.size(); i++) {
-        auto it = mapNextTx.find(COutPoint(tx.GetHash(), i));
-        if (it == mapNextTx.end())
-            continue;
-        uint256 hash = it->second->GetHash();
-        txiter iter = mapTx.find(hash);
-        mapTx.modify(iter, update_priority(nBlockHeight, addToChain ? tx.vout[i].nValue : -tx.vout[i].nValue));
     }
 }
 

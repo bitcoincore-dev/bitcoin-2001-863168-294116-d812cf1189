@@ -197,20 +197,6 @@ private:
     int64_t feeDelta;
 };
 
-struct update_priority
-{
-    update_priority(unsigned int _height, CAmount _value) :
-        height(_height), value(_value)
-    {}
-
-    void operator() (CTxMemPoolEntry &e)
-    { e.UpdateCachedPriority(height, value); }
-
-    private:
-        unsigned int height;
-        CAmount value;
-};
-
 struct update_lock_points
 {
     update_lock_points(const LockPoints& _lp) : lp(_lp) { }
@@ -724,19 +710,6 @@ public:
     CCoinsViewMemPool(CCoinsView* baseIn, const CTxMemPool& mempoolIn);
     bool GetCoins(const uint256 &txid, CCoins &coins) const;
     bool HaveCoins(const uint256 &txid) const;
-};
-
-// We want to sort transactions by coin age priority
-typedef std::pair<double, CTxMemPool::txiter> TxCoinAgePriority;
-
-struct TxCoinAgePriorityCompare
-{
-    bool operator()(const TxCoinAgePriority& a, const TxCoinAgePriority& b)
-    {
-        if (a.first == b.first)
-            return CompareTxMemPoolEntryByScore()(*(b.second), *(a.second)); //Reverse order to make sort less than
-        return a.first < b.first;
-    }
 };
 
 #endif // BITCOIN_TXMEMPOOL_H
