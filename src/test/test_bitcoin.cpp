@@ -2,8 +2,6 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#define BOOST_TEST_MODULE Bitcoin Test Suite
-
 #include "test_bitcoin.h"
 
 #include "chainparams.h"
@@ -27,10 +25,8 @@
 #include <memory>
 
 #include <boost/filesystem.hpp>
-#include <boost/test/unit_test.hpp>
 #include <boost/thread.hpp>
 
-std::unique_ptr<CConnman> g_connman;
 FastRandomContext insecure_rand_ctx(true);
 
 extern bool fPrintToConsole;
@@ -73,7 +69,7 @@ TestingSetup::TestingSetup(const std::string& chainName) : BasicTestingSetup(cha
         {
             CValidationState state;
             bool ok = ActivateBestChain(state, chainparams);
-            BOOST_CHECK(ok);
+            assert(ok);
         }
         nScriptCheckThreads = 3;
         for (int i=0; i < nScriptCheckThreads-1; i++)
@@ -152,19 +148,4 @@ CTxMemPoolEntry TestMemPoolEntryHelper::FromTx(const CTransaction &txn, CTxMemPo
 
     return CTxMemPoolEntry(MakeTransactionRef(txn), nFee, nTime, dPriority, nHeight,
                            inChainValue, spendsCoinbase, sigOpCost, lp);
-}
-
-void Shutdown(void* parg)
-{
-  exit(0);
-}
-
-void StartShutdown()
-{
-  exit(0);
-}
-
-bool ShutdownRequested()
-{
-  return false;
 }
