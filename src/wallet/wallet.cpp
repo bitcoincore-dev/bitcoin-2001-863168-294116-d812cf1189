@@ -445,10 +445,19 @@ bool CWallet::Verify()
         return true;
 
     LogPrintf("Using BerkeleyDB version %s\n", DbEnv::version(0, 0, 0));
-    std::string walletFile = GetArg("-wallet", DEFAULT_WALLET_DAT);
 
-    LogPrintf("Using wallet %s\n", walletFile);
+    SoftSetArg("-wallet", DEFAULT_WALLET_DAT);
+
     uiInterface.InitMessage(_("Verifying wallet..."));
+
+    for (const std::string& walletFile : mapMultiArgs.at("-wallet")) {
+        LogPrintf("Using wallet %s\n", walletFile);
+
+        if (walletFile.find_first_of("/\\") != std::string::npos) {
+            return InitError(_("-wallet parameter must only specify a filename (not a path)"));
+        } else if (SanitizeString(walletFile, SAFE_CHARS_FILENAME) != walletFile) {
+            return InitError(_("Invalid characters in -wallet filename"));
+        }
 
     // Wallet file must be a plain filename without a directory
     if (walletFile != boost::filesystem::basename(walletFile) + boost::filesystem::extension(walletFile))
@@ -495,6 +504,8 @@ bool CWallet::Verify()
             return InitError(strprintf(_("%s corrupt, salvage failed"), walletFile));
     }
     
+    }
+
     return true;
 }
 
@@ -3762,15 +3773,7 @@ bool CWallet::InitLoadWallet()
         return true;
     }
 
-    SoftSetArg("-wallet", DEFAULT_WALLET_DAT);
-
     for (const std::string& walletFile : mapMultiArgs.at("-wallet")) {
-        if (walletFile.find_first_of("/\\") != std::string::npos) {
-            return InitError(_("-wallet parameter must only specify a filename (not a path)"));
-        } else if (SanitizeString(walletFile, SAFE_CHARS_FILENAME) != walletFile) {
-            return InitError(_("Invalid characters in -wallet filename"));
-        }
-
         CWallet * const pwallet = CreateWalletFromFile(walletFile);
         if (!pwallet) {
             return false;
