@@ -14,6 +14,7 @@
 #include "consensus/validation.h"
 #include "hash.h"
 #include "init.h"
+#include "policy/coin_age_priority.h"
 #include "policy/fees.h"
 #include "policy/policy.h"
 #include "pow.h"
@@ -725,7 +726,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
 
         CAmount inChainInputValue;
         // Since entries arrive *after* the tip's height, their priority is for the height+1
-        double dPriority = view.GetPriority(tx, chainActive.Height() + 1, inChainInputValue);
+        double dPriority = GetPriority(tx, view, chainActive.Height() + 1, inChainInputValue);
 
         // Keep track of transactions that spend a coinbase, which we re-scan
         // during reorgs to ensure COINBASE_MATURITY is still met.

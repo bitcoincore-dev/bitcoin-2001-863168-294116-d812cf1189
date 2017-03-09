@@ -9,6 +9,7 @@
 #include "consensus/consensus.h"
 #include "consensus/validation.h"
 #include "validation.h"
+#include "policy/coin_age_priority.h"
 #include "policy/policy.h"
 #include "policy/fees.h"
 #include "streams.h"
@@ -27,7 +28,7 @@ CTxMemPoolEntry::CTxMemPoolEntry(const CTransactionRef& _tx, const CAmount& _nFe
     spendsCoinbase(_spendsCoinbase), sigOpCost(_sigOpsCost), lockPoints(lp)
 {
     nTxWeight = GetTransactionWeight(*tx);
-    nModSize = tx->CalculateModifiedSize(GetTxSize());
+    nModSize = CalculateModifiedSize(*tx, GetTxSize());
     nUsageSize = RecursiveDynamicUsage(*tx) + memusage::DynamicUsage(tx);
 
     nCountWithDescendants = 1;
@@ -660,7 +661,7 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins, unsigned int nBlockHeight)
         unsigned int i = 0;
         checkTotal += it->GetTxSize();
         CAmount dummyValue;
-        double freshPriority = view.GetPriority(it->GetTx(), nBlockHeight + 1, dummyValue);
+        double freshPriority = GetPriority(it->GetTx(), view, nBlockHeight + 1, dummyValue);
         double cachePriority = it->GetPriority(nBlockHeight + 1);
         double priDiff = cachePriority > freshPriority ? cachePriority - freshPriority : freshPriority - cachePriority;
         // Verify that the difference between the on the fly calculation and a fresh calculation

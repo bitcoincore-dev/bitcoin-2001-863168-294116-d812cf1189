@@ -2,6 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include "policy/coin_age_priority.h"
+
 #include "coins.h"
 #include "miner.h"
 #include "policy/policy.h"
@@ -10,7 +12,7 @@
 #include "util.h"
 #include "validation.h"
 
-unsigned int CTransaction::CalculateModifiedSize(unsigned int nTxSize) const
+unsigned int CalculateModifiedSize(const CTransaction& tx, unsigned int nTxSize)
 {
     // In order to avoid disincentivizing cleaning up the UTXO set we don't count
     // the constant overhead for each txin and up to 110 bytes of scriptSig (which
@@ -18,8 +20,8 @@ unsigned int CTransaction::CalculateModifiedSize(unsigned int nTxSize) const
     // Providing any more cleanup incentive than making additional inputs free would
     // risk encouraging people to create junk outputs to redeem later.
     if (nTxSize == 0)
-        nTxSize = (GetTransactionWeight(*this) + WITNESS_SCALE_FACTOR - 1) / WITNESS_SCALE_FACTOR;
-    for (std::vector<CTxIn>::const_iterator it(vin.begin()); it != vin.end(); ++it)
+        nTxSize = (GetTransactionWeight(tx) + WITNESS_SCALE_FACTOR - 1) / WITNESS_SCALE_FACTOR;
+    for (std::vector<CTxIn>::const_iterator it(tx.vin.begin()); it != tx.vin.end(); ++it)
     {
         unsigned int offset = 41U + std::min(110U, (unsigned int)it->scriptSig.size());
         if (nTxSize > offset)
@@ -28,15 +30,15 @@ unsigned int CTransaction::CalculateModifiedSize(unsigned int nTxSize) const
     return nTxSize;
 }
 
-double CTransaction::ComputePriority(double dPriorityInputs, unsigned int nTxSize) const
+double ComputePriority(const CTransaction& tx, double dPriorityInputs, unsigned int nTxSize)
 {
-    nTxSize = CalculateModifiedSize(nTxSize);
+    nTxSize = CalculateModifiedSize(tx, nTxSize);
     if (nTxSize == 0) return 0.0;
 
     return dPriorityInputs / nTxSize;
 }
 
-double CCoinsViewCache::GetPriority(const CTransaction &tx, int nHeight, CAmount &inChainInputValue) const
+double GetPriority(const CTransaction &tx, const CCoinsViewCache& view, int nHeight, CAmount &inChainInputValue)
 {
     inChainInputValue = 0;
     if (tx.IsCoinBase())
@@ -44,7 +46,7 @@ double CCoinsViewCache::GetPriority(const CTransaction &tx, int nHeight, CAmount
     double dResult = 0.0;
     BOOST_FOREACH(const CTxIn& txin, tx.vin)
     {
-        const CCoins* coins = AccessCoins(txin.prevout.hash);
+        const CCoins* coins = view.AccessCoins(txin.prevout.hash);
         assert(coins);
         if (!coins->IsAvailable(txin.prevout.n)) continue;
         if (coins->nHeight <= nHeight) {
@@ -52,7 +54,7 @@ double CCoinsViewCache::GetPriority(const CTransaction &tx, int nHeight, CAmount
             inChainInputValue += coins->vout[txin.prevout.n].nValue;
         }
     }
-    return tx.ComputePriority(dResult);
+    return ComputePriority(tx, dResult);
 }
 
 void CTxMemPoolEntry::UpdateCachedPriority(unsigned int currentHeight, CAmount valueInCurrentBlock)

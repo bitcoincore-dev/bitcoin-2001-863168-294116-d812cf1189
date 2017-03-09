@@ -115,6 +115,7 @@ BITCOIN_CORE_H = \
   netbase.h \
   netmessagemaker.h \
   noui.h \
+  policy/coin_age_priority.h \
   policy/fees.h \
   policy/policy.h \
   policy/rbf.h \
