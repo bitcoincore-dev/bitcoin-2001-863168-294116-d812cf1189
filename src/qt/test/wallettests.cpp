@@ -75,8 +75,11 @@ void WalletTests::walletTests()
     CWallet wallet("wallet_test.dat");
     bool firstRun;
     wallet.LoadWallet(firstRun);
-    wallet.SetAddressBook(test.coinbaseKey.GetPubKey().GetID(), "", "receive");
-    wallet.AddKeyPubKey(test.coinbaseKey, test.coinbaseKey.GetPubKey());
+    {
+        LOCK(wallet.cs_wallet);
+        wallet.SetAddressBook(test.coinbaseKey.GetPubKey().GetID(), "", "receive");
+        wallet.AddKeyPubKey(test.coinbaseKey, test.coinbaseKey.GetPubKey());
+    }
     wallet.ScanForWalletTransactions(chainActive.Genesis(), true);
     wallet.SetBroadcastTransactions(true);
 
