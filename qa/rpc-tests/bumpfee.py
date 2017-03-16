@@ -188,10 +188,11 @@ def test_settxfee(rbf_node, dest_address):
     rbfid = spend_one_input(rbf_node, dest_address)
     rbftx = rbf_node.gettransaction(rbfid)
     feerate = Decimal("0.00025000")
+    epsilon = Decimal("0.00001000")
     rbf_node.settxfee(feerate)
     bumped_tx = rbf_node.bumpfee(rbfid)
-    bumped_len = len(rbf_node.getrawtransaction(bumped_tx["txid"])) // 2
-    assert_greater_than(Decimal("0.00001000"), abs(feerate - bumped_tx["fee"] * 1000 / bumped_len))
+    bumped_len = count_bytes(rbf_node.getrawtransaction(bumped_tx["txid"]))
+    assert_greater_than(epsilon, abs(feerate - bumped_tx["fee"] * 1000 / bumped_len))
     rbf_node.settxfee(Decimal("0.00000000"))  # unset paytxfee
 
 
