@@ -187,12 +187,13 @@ def test_settxfee(rbf_node, dest_address):
     # check that bumpfee reacts correctly to the use of settxfee (paytxfee)
     rbfid = spend_one_input(rbf_node, dest_address)
     rbftx = rbf_node.gettransaction(rbfid)
-    feerate = Decimal("0.00025000")
-    epsilon = Decimal("0.00001000")
-    rbf_node.settxfee(feerate)
+    requested_feerate = Decimal("0.00025000")
+    rbf_node.settxfee(requested_feerate)
     bumped_tx = rbf_node.bumpfee(rbfid)
-    bumped_len = count_bytes(rbf_node.getrawtransaction(bumped_tx["txid"]))
-    assert_greater_than(epsilon, abs(feerate - bumped_tx["fee"] * 1000 / bumped_len))
+    actual_feerate = bumped_tx["fee"] * 1000 / rbf_node.getrawtransaction(bumped_tx["txid"], True)["size"]
+    # Assert that the difference between the requested feerate and the actual
+    # feerate of the bumped transaction is small.
+    assert_greater_than(Decimal("0.00001000"), abs(requested_feerate - actual_feerate))
     rbf_node.settxfee(Decimal("0.00000000"))  # unset paytxfee
 
 
