@@ -16,6 +16,7 @@ For a description of arguments recognized by test scripts, see
 
 import argparse
 import configparser
+import itertools
 import os
 import time
 import shutil
@@ -186,10 +187,10 @@ def main():
         if enable_zmq:
             test_list += ZMQ_SCRIPTS
         if args.extended:
-            test_list += EXTENDED_SCRIPTS
-            # TODO: BASE_SCRIPTS and EXTENDED_SCRIPTS are sorted by runtime
-            # (for parallel running efficiency). This combined list will is no
-            # longer sorted.
+            # This 'zips' the lists together. The longest running tests are at
+            # the top of BASE_SCRIPTS and EXTENDED scripts, so we want to zip them
+            # together rather than concatenating them
+            test_list = [test for test in sum([list(x) for x in itertools.zip_longest(test_list, EXTENDED_SCRIPTS)],[]) if test]
 
     # Remove the test cases that the user has explicitly asked to exclude.
     if args.exclude:
