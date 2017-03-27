@@ -33,6 +33,7 @@
 
 #include "chainparams.h"
 #include "init.h"
+#include "ipc/interfaces.h"
 #include "ui_interface.h"
 #include "util.h"
 
@@ -78,9 +79,10 @@ const std::string BitcoinGUI::DEFAULT_UIPLATFORM =
  * collisions in the future with additional wallets */
 const QString BitcoinGUI::DEFAULT_WALLET = "~Default";
 
-BitcoinGUI::BitcoinGUI(const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget *parent) :
+BitcoinGUI::BitcoinGUI(ipc::Node& _ipcNode, const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget *parent) :
     QMainWindow(parent),
     enableWallet(false),
+    ipcNode(_ipcNode),
     clientModel(0),
     walletFrame(0),
     unitDisplayControl(0),
@@ -150,8 +152,8 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *_platformStyle, const NetworkStyle *
     setUnifiedTitleAndToolBarOnMac(true);
 #endif
 
-    rpcConsole = new RPCConsole(_platformStyle, 0);
-    helpMessageDialog = new HelpMessageDialog(this, false);
+    rpcConsole = new RPCConsole(ipcNode, _platformStyle, 0);
+    helpMessageDialog = new HelpMessageDialog(ipcNode, this, false);
 #ifdef ENABLE_WALLET
     if(enableWallet)
     {
@@ -479,7 +481,7 @@ void BitcoinGUI::setClientModel(ClientModel *_clientModel)
         connect(_clientModel, SIGNAL(networkActiveChanged(bool)), this, SLOT(setNetworkActive(bool)));
 
         modalOverlay->setKnownBestHeight(_clientModel->getHeaderTipHeight(), QDateTime::fromTime_t(_clientModel->getHeaderTipTime()));
-        setNumBlocks(_clientModel->getNumBlocks(), _clientModel->getLastBlockDate(), _clientModel->getVerificationProgress(NULL), false);
+        setNumBlocks(ipcNode.getNumBlocks(), QDateTime::fromTime_t(ipcNode.getLastBlockTime()), ipcNode.getVerificationProgress(), false);
         connect(_clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(setNumBlocks(int,QDateTime,double,bool)));
 
         // Receive and report messages from client model
@@ -644,7 +646,7 @@ void BitcoinGUI::aboutClicked()
     if(!clientModel)
         return;
 
-    HelpMessageDialog dlg(this, true);
+    HelpMessageDialog dlg(ipcNode, this, true);
     dlg.exec();
 }
 
@@ -727,7 +729,7 @@ void BitcoinGUI::updateNetworkState()
 
     QString tooltip;
 
-    if (clientModel->getNetworkActive()) {
+    if (ipcNode.getNetworkActive()) {
         tooltip = tr("%n active connection(s) to Bitcoin network", "", count) + QString(".<br>") + tr("Click to disable network activity.");
     } else {
         tooltip = tr("Network activity disabled.") + QString("<br>") + tr("Click to enable network activity again.");
@@ -1110,7 +1112,7 @@ void BitcoinGUI::toggleHidden()
 
 void BitcoinGUI::detectShutdown()
 {
-    if (ShutdownRequested())
+    if (ipcNode.shutdownRequested())
     {
         if(rpcConsole)
             rpcConsole->hide();
@@ -1175,22 +1177,20 @@ static bool ThreadSafeMessageBox(BitcoinGUI *gui, const std::string& message, co
 void BitcoinGUI::subscribeToCoreSignals()
 {
     // Connect signals to client
-    uiInterface.ThreadSafeMessageBox.connect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
-    uiInterface.ThreadSafeQuestion.connect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
+    handlerMessageBox = ipcNode.handleMessageBox(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
+    handlerQuestion = ipcNode.handleQuestion(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
 }
 
 void BitcoinGUI::unsubscribeFromCoreSignals()
 {
     // Disconnect signals from client
-    uiInterface.ThreadSafeMessageBox.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
-    uiInterface.ThreadSafeQuestion.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
+    handlerMessageBox->disconnect();
+    handlerQuestion->disconnect();
 }
 
 void BitcoinGUI::toggleNetworkActive()
 {
-    if (clientModel) {
-        clientModel->setNetworkActive(!clientModel->getNetworkActive());
-    }
+    ipcNode.setNetworkActive(!ipcNode.getNetworkActive());
 }
 
 UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *platformStyle) :
