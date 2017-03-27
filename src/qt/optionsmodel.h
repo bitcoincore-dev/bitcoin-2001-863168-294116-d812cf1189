@@ -9,6 +9,10 @@
 
 #include <QAbstractListModel>
 
+namespace ipc {
+class Node;
+}
+
 QT_BEGIN_NAMESPACE
 class QNetworkProxy;
 QT_END_NAMESPACE
@@ -24,7 +28,7 @@ class OptionsModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    explicit OptionsModel(QObject *parent = 0, bool resetSettings = false);
+    explicit OptionsModel(ipc::Node& ipc_node, QObject *parent = 0, bool resetSettings = false);
 
     enum OptionID {
         StartAtStartup,         // bool
@@ -72,7 +76,10 @@ public:
     void setRestartRequired(bool fRequired);
     bool isRestartRequired();
 
+    ipc::Node& getIpcNode() const { return m_ipc_node; }
+
 private:
+    ipc::Node& m_ipc_node;
     /* Qt-only settings */
     bool fHideTrayIcon;
     bool fMinimizeToTray;
