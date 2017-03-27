@@ -11,6 +11,7 @@
 
 #include "primitives/transaction.h"
 #include "init.h"
+#include "ipc/interfaces.h"
 #include "policy/policy.h"
 #include "protocol.h"
 #include "script/script.h"
@@ -253,7 +254,7 @@ bool isDust(const QString& address, const CAmount& amount)
     CTxDestination dest = CBitcoinAddress(address.toStdString()).Get();
     CScript script = GetScriptForDestination(dest);
     CTxOut txOut(amount, script);
-    return txOut.IsDust(dustRelayFee);
+    return txOut.IsDust(FIXME_IMPLEMENT_IPC_VALUE(dustRelayFee));
 }
 
 QString HtmlEscape(const QString& str, bool fMultiLine)
