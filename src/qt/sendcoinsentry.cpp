@@ -117,7 +117,7 @@ void SendCoinsEntry::deleteClicked()
     Q_EMIT removeEntry(this);
 }
 
-bool SendCoinsEntry::validate()
+bool SendCoinsEntry::validate(ipc::Node& ipcNode)
 {
     if (!model)
         return false;
@@ -148,7 +148,7 @@ bool SendCoinsEntry::validate()
     }
 
     // Reject dust outputs:
-    if (retval && GUIUtil::isDust(ui->payTo->text(), ui->payAmount->value())) {
+    if (retval && GUIUtil::isDust(ipcNode, ui->payTo->text(), ui->payAmount->value())) {
         ui->payAmount->setValid(false);
         retval = false;
     }
