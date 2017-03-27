@@ -4,6 +4,7 @@
 #include "addrdb.h" // For banmap_t
 #include "amount.h" // For CAmount
 #include "init.h"   // For HelpMessageMode
+#include "net.h"    // For CConnman::NumConnections
 
 #include <memory>
 #include <tuple>

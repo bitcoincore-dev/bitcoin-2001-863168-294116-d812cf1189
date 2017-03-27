@@ -27,6 +27,7 @@
 #endif
 
 #include "init.h"
+#include "ipc/client.h"
 #include "ipc/interfaces.h"
 #include "rpc/server.h"
 #include "scheduler.h"
@@ -542,7 +543,11 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(bitcoin_locale);
 
     std::unique_ptr<ipc::Node> ipcNode;
+#if ENABLE_IPC
+    ipcNode = ipc::StartClient();
+#else
     ipcNode = ipc::MakeNode();
+#endif
     ipcNode->parseParameters(argc, argv);
     BitcoinApplication app(*ipcNode, argc, argv);
 #if QT_VERSION > 0x050100
