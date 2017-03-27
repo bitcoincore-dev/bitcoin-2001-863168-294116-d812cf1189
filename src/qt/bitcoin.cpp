@@ -223,6 +223,9 @@ public:
     /// Get window identifier of QMainWindow (BitcoinGUI)
     WId getMainWinId() const;
 
+    /// Get Node IPC object
+    const ipc::Node& getIpcNode() const { return *ipcNode; }
+
 public Q_SLOTS:
     void initializeResult(bool success);
     void shutdownResult();
@@ -237,6 +240,7 @@ Q_SIGNALS:
 
 private:
     QThread *coreThread;
+    std::unique_ptr<ipc::Node> ipcNode;
     OptionsModel *optionsModel;
     ClientModel *clientModel;
     BitcoinGUI *window;
@@ -314,6 +318,7 @@ void BitcoinCore::shutdown()
 BitcoinApplication::BitcoinApplication(int &argc, char **argv):
     QApplication(argc, argv),
     coreThread(0),
+    ipcNode(ipc::StartClient()),
     optionsModel(0),
     clientModel(0),
     window(0),
@@ -373,7 +378,7 @@ void BitcoinApplication::createOptionsModel(bool resetSettings)
 
 void BitcoinApplication::createWindow(const NetworkStyle *networkStyle)
 {
-    window = new BitcoinGUI(platformStyle, networkStyle, 0);
+    window = new BitcoinGUI(getIpcNode(), platformStyle, networkStyle, 0);
 
     pollShutdownTimer = new QTimer(window);
     connect(pollShutdownTimer, SIGNAL(timeout()), window, SLOT(detectShutdown()));
@@ -465,7 +470,7 @@ void BitcoinApplication::initializeResult(bool success)
         paymentServer->setOptionsModel(optionsModel);
 #endif
 
-        clientModel = new ClientModel(optionsModel);
+        clientModel = new ClientModel(getIpcNode(), optionsModel);
         window->setClientModel(clientModel);
 
 #ifdef ENABLE_WALLET
@@ -591,7 +596,7 @@ int main(int argc, char *argv[])
     // but before showing splash screen.
     if (IsArgSet("-?") || IsArgSet("-h") || IsArgSet("-help") || IsArgSet("-version"))
     {
-        HelpMessageDialog help(NULL, IsArgSet("-version"));
+        HelpMessageDialog help(app.getIpcNode(), NULL, IsArgSet("-version"));
         help.showOrPrint();
         return EXIT_SUCCESS;
     }

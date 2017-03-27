@@ -17,6 +17,10 @@ class TransactionTableModel;
 class CWallet;
 class CBlockIndex;
 
+namespace ipc {
+class Node;
+}
+
 QT_BEGIN_NAMESPACE
 class QTimer;
 QT_END_NAMESPACE
@@ -41,9 +45,10 @@ class ClientModel : public QObject
     Q_OBJECT
 
 public:
-    explicit ClientModel(OptionsModel *optionsModel, QObject *parent = 0);
+    explicit ClientModel(const ipc::Node& ipcNode, OptionsModel *optionsModel, QObject *parent = 0);
     ~ClientModel();
 
+    const ipc::Node& getIpcNode() const { return ipcNode; }
     OptionsModel *getOptionsModel();
     PeerTableModel *getPeerTableModel();
     BanTableModel *getBanTableModel();
@@ -82,6 +87,7 @@ public:
     QString dataDir() const;
 
 private:
+    const ipc::Node& ipcNode;
     OptionsModel *optionsModel;
     PeerTableModel *peerTableModel;
     BanTableModel *banTableModel;
