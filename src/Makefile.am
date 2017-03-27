@@ -532,6 +532,13 @@ endif
 	@test -f $(PROTOC)
 	$(AM_V_GEN) $(PROTOC) --cpp_out=$(@D) --proto_path=$(<D) $<
 
+%.capnp:
+        @:
+
+%.capnp.c++ %.capnp.h: %.capnp
+	@test -f $(CAPNP_BIN)
+	$(AM_V_GEN) $(CAPNP_BIN) compile --output=c++ --import-path=$(<D) $<
+
 if EMBEDDED_LEVELDB
 include Makefile.leveldb.include
 endif
