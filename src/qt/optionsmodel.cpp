@@ -13,6 +13,7 @@
 
 #include "amount.h"
 #include "init.h"
+#include "ipc/client.h"
 #include "validation.h" // For DEFAULT_SCRIPTCHECK_THREADS
 #include "net.h"
 #include "netbase.h"
@@ -277,7 +278,7 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             break;
         case MapPortUPnP: // core option - can be changed on-the-fly
             settings.setValue("fUseUPnP", value.toBool());
-            MapPort(value.toBool());
+            FIXME_IMPLEMENT_IPC(MapPort(value.toBool()));
             break;
         case MinimizeOnClose:
             fMinimizeOnClose = value.toBool();

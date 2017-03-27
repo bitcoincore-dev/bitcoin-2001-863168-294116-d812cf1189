@@ -6,6 +6,7 @@
 
 #include "base58.h"
 #include "consensus/consensus.h"
+#include "ipc/client.h"
 #include "validation.h"
 #include "timedata.h"
 #include "wallet/wallet.h"
@@ -36,7 +37,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
 {
     QList<TransactionRecord> parts;
     int64_t nTime = wtx.GetTxTime();
-    CAmount nCredit = wtx.GetCredit(ISMINE_ALL);
+    CAmount nCredit = FIXME_IMPLEMENT_IPC_VALUE(wtx.GetCredit(ISMINE_ALL));
     CAmount nDebit = wtx.GetDebit(ISMINE_ALL);
     CAmount nNet = nCredit - nDebit;
     uint256 hash = wtx.GetHash();
@@ -170,13 +171,13 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
 
 void TransactionRecord::updateStatus(const CWalletTx &wtx)
 {
-    AssertLockHeld(cs_main);
+    AssertLockHeld(FIXME_IMPLEMENT_IPC_VALUE(cs_main));
     // Determine transaction status
 
     // Find the block the tx is in
     CBlockIndex* pindex = NULL;
-    BlockMap::iterator mi = mapBlockIndex.find(wtx.hashBlock);
-    if (mi != mapBlockIndex.end())
+    BlockMap::iterator mi = FIXME_IMPLEMENT_IPC_VALUE(mapBlockIndex).find(wtx.hashBlock);
+    if (mi != FIXME_IMPLEMENT_IPC_VALUE(mapBlockIndex).end())
         pindex = (*mi).second;
 
     // Sort order, unrecorded transactions sort to the top
@@ -185,16 +186,16 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
         (wtx.IsCoinBase() ? 1 : 0),
         wtx.nTimeReceived,
         idx);
-    status.countsForBalance = wtx.IsTrusted() && !(wtx.GetBlocksToMaturity() > 0);
+    status.countsForBalance = FIXME_IMPLEMENT_IPC_VALUE(wtx.IsTrusted()) && !(FIXME_IMPLEMENT_IPC_VALUE(wtx.GetBlocksToMaturity()) > 0);
     status.depth = wtx.GetDepthInMainChain();
-    status.cur_num_blocks = chainActive.Height();
+    status.cur_num_blocks = FIXME_IMPLEMENT_IPC_VALUE(chainActive).Height();
 
-    if (!CheckFinalTx(wtx))
+    if (!FIXME_IMPLEMENT_IPC_VALUE(CheckFinalTx(wtx)))
     {
         if (wtx.tx->nLockTime < LOCKTIME_THRESHOLD)
         {
             status.status = TransactionStatus::OpenUntilBlock;
-            status.open_for = wtx.tx->nLockTime - chainActive.Height();
+            status.open_for = wtx.tx->nLockTime - FIXME_IMPLEMENT_IPC_VALUE(chainActive).Height();
         }
         else
         {
@@ -205,16 +206,16 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
     // For generated transactions, determine maturity
     else if(type == TransactionRecord::Generated)
     {
-        if (wtx.GetBlocksToMaturity() > 0)
+        if (FIXME_IMPLEMENT_IPC_VALUE(wtx.GetBlocksToMaturity()) > 0)
         {
             status.status = TransactionStatus::Immature;
 
             if (wtx.IsInMainChain())
             {
-                status.matures_in = wtx.GetBlocksToMaturity();
+                status.matures_in = FIXME_IMPLEMENT_IPC_VALUE(wtx.GetBlocksToMaturity());
 
                 // Check if the block was requested by anyone
-                if (GetAdjustedTime() - wtx.nTimeReceived > 2 * 60 && wtx.GetRequestCount() == 0)
+                if (GetAdjustedTime() - wtx.nTimeReceived > 2 * 60 && FIXME_IMPLEMENT_IPC_VALUE(wtx.GetRequestCount()) == 0)
                     status.status = TransactionStatus::MaturesWarning;
             }
             else
@@ -233,7 +234,7 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
         {
             status.status = TransactionStatus::Conflicted;
         }
-        else if (GetAdjustedTime() - wtx.nTimeReceived > 2 * 60 && wtx.GetRequestCount() == 0)
+        else if (GetAdjustedTime() - wtx.nTimeReceived > 2 * 60 && FIXME_IMPLEMENT_IPC_VALUE(wtx.GetRequestCount()) == 0)
         {
             status.status = TransactionStatus::Offline;
         }
@@ -257,8 +258,8 @@ void TransactionRecord::updateStatus(const CWalletTx &wtx)
 
 bool TransactionRecord::statusUpdateNeeded()
 {
-    AssertLockHeld(cs_main);
-    return status.cur_num_blocks != chainActive.Height();
+    AssertLockHeld(FIXME_IMPLEMENT_IPC_VALUE(cs_main));
+    return status.cur_num_blocks != FIXME_IMPLEMENT_IPC_VALUE(chainActive).Height();
 }
 
 QString TransactionRecord::getTxID() const

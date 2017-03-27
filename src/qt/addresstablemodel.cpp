@@ -8,6 +8,7 @@
 #include "walletmodel.h"
 
 #include "base58.h"
+#include "ipc/client.h"
 #include "wallet/wallet.h"
 
 #include <boost/foreach.hpp>
@@ -370,7 +371,7 @@ QString AddressTableModel::addRow(const QString &type, const QString &label, con
     {
         // Generate a new address to associate with given label
         CPubKey newKey;
-        if(!wallet->GetKeyFromPool(newKey))
+        if(!FIXME_IMPLEMENT_IPC_VALUE(wallet->GetKeyFromPool(newKey)))
         {
             WalletModel::UnlockContext ctx(walletModel->requestUnlock());
             if(!ctx.isValid())
@@ -379,7 +380,7 @@ QString AddressTableModel::addRow(const QString &type, const QString &label, con
                 editStatus = WALLET_UNLOCK_FAILURE;
                 return QString();
             }
-            if(!wallet->GetKeyFromPool(newKey))
+            if(!FIXME_IMPLEMENT_IPC_VALUE(wallet->GetKeyFromPool(newKey)))
             {
                 editStatus = KEY_GENERATION_FAILURE;
                 return QString();

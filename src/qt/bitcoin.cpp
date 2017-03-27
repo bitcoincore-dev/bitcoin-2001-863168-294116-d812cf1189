@@ -26,6 +26,7 @@
 #endif
 
 #include "init.h"
+#include "ipc/client.h"
 #include "rpc/server.h"
 #include "scheduler.h"
 #include "ui_interface.h"
@@ -261,7 +262,7 @@ BitcoinCore::BitcoinCore():
 void BitcoinCore::handleRunawayException(const std::exception *e)
 {
     PrintExceptionContinue(e, "Runaway exception");
-    Q_EMIT runawayException(QString::fromStdString(GetWarnings("gui")));
+    Q_EMIT runawayException(QString::fromStdString(FIXME_IMPLEMENT_IPC_VALUE(GetWarnings("gui"))));
 }
 
 void BitcoinCore::initialize()
@@ -269,22 +270,22 @@ void BitcoinCore::initialize()
     try
     {
         qDebug() << __func__ << ": Running initialization in thread";
-        if (!AppInitBasicSetup())
+        if (!FIXME_IMPLEMENT_IPC_VALUE(AppInitBasicSetup()))
         {
             Q_EMIT initializeResult(false);
             return;
         }
-        if (!AppInitParameterInteraction())
+        if (!FIXME_IMPLEMENT_IPC_VALUE(AppInitParameterInteraction()))
         {
             Q_EMIT initializeResult(false);
             return;
         }
-        if (!AppInitSanityChecks())
+        if (!FIXME_IMPLEMENT_IPC_VALUE(AppInitSanityChecks()))
         {
             Q_EMIT initializeResult(false);
             return;
         }
-        bool rv = AppInitMain(threadGroup, scheduler);
+        bool rv = FIXME_IMPLEMENT_IPC_VALUE(AppInitMain(threadGroup, scheduler));
         Q_EMIT initializeResult(rv);
     } catch (const std::exception& e) {
         handleRunawayException(&e);
@@ -298,9 +299,9 @@ void BitcoinCore::shutdown()
     try
     {
         qDebug() << __func__ << ": Running Shutdown in thread";
-        Interrupt(threadGroup);
+        FIXME_IMPLEMENT_IPC(Interrupt(threadGroup));
         threadGroup.join_all();
-        Shutdown();
+        FIXME_IMPLEMENT_IPC(Shutdown());
         qDebug() << __func__ << ": Shutdown finished";
         Q_EMIT shutdownResult();
     } catch (const std::exception& e) {
@@ -412,8 +413,8 @@ void BitcoinApplication::startThread()
 
 void BitcoinApplication::parameterSetup()
 {
-    InitLogging();
-    InitParameterInteraction();
+    FIXME_IMPLEMENT_IPC(InitLogging());
+    FIXME_IMPLEMENT_IPC(InitParameterInteraction());
 }
 
 void BitcoinApplication::requestInitialize()
@@ -444,7 +445,7 @@ void BitcoinApplication::requestShutdown()
     delete clientModel;
     clientModel = 0;
 
-    StartShutdown();
+    FIXME_IMPLEMENT_IPC(StartShutdown());
 
     // Request shutdown from core thread
     Q_EMIT requestedShutdown();
@@ -468,9 +469,9 @@ void BitcoinApplication::initializeResult(bool success)
         window->setClientModel(clientModel);
 
 #ifdef ENABLE_WALLET
-        if(pwalletMain)
+        if(FIXME_IMPLEMENT_IPC_VALUE(pwalletMain))
         {
-            walletModel = new WalletModel(platformStyle, pwalletMain, optionsModel);
+            walletModel = new WalletModel(platformStyle, FIXME_IMPLEMENT_IPC_VALUE(pwalletMain), optionsModel);
 
             window->addWallet(BitcoinGUI::DEFAULT_WALLET, walletModel);
             window->setCurrentWallet(BitcoinGUI::DEFAULT_WALLET);
@@ -676,7 +677,7 @@ int main(int argc, char *argv[])
     app.createOptionsModel(IsArgSet("-resetguisettings"));
 
     // Subscribe to global signals from core
-    uiInterface.InitMessage.connect(InitMessage);
+    FIXME_IMPLEMENT_IPC_VALUE(uiInterface).InitMessage.connect(InitMessage);
 
     if (GetBoolArg("-splash", DEFAULT_SPLASHSCREEN) && !GetBoolArg("-min", false))
         app.createSplashScreen(networkStyle.data());
@@ -693,10 +694,10 @@ int main(int argc, char *argv[])
         app.exec();
     } catch (const std::exception& e) {
         PrintExceptionContinue(&e, "Runaway exception");
-        app.handleRunawayException(QString::fromStdString(GetWarnings("gui")));
+        app.handleRunawayException(QString::fromStdString(FIXME_IMPLEMENT_IPC_VALUE(GetWarnings("gui"))));
     } catch (...) {
         PrintExceptionContinue(NULL, "Runaway exception");
-        app.handleRunawayException(QString::fromStdString(GetWarnings("gui")));
+        app.handleRunawayException(QString::fromStdString(FIXME_IMPLEMENT_IPC_VALUE(GetWarnings("gui"))));
     }
     return app.getReturnValue();
 }

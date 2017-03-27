@@ -12,6 +12,7 @@
 
 #include "base58.h"
 #include "init.h"
+#include "ipc/client.h"
 #include "validation.h" // For strMessageMagic
 #include "wallet/wallet.h"
 
@@ -154,7 +155,7 @@ void SignVerifyMessageDialog::on_signMessageButton_SM_clicked()
     ss << ui->messageIn_SM->document()->toPlainText().toStdString();
 
     std::vector<unsigned char> vchSig;
-    if (!key.SignCompact(ss.GetHash(), vchSig))
+    if (!FIXME_IMPLEMENT_IPC_VALUE(key.SignCompact(ss.GetHash(), vchSig)))
     {
         ui->statusLabel_SM->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_SM->setText(QString("<nobr>") + tr("Message signing failed.") + QString("</nobr>"));

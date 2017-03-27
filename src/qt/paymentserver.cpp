@@ -10,6 +10,7 @@
 
 #include "base58.h"
 #include "chainparams.h"
+#include "ipc/client.h"
 #include "policy/policy.h"
 #include "ui_interface.h"
 #include "util.h"
@@ -580,7 +581,7 @@ bool PaymentServer::processPaymentRequest(const PaymentRequestPlus& request, Sen
 
         // Extract and check amounts
         CTxOut txOut(sendingTo.second, sendingTo.first);
-        if (txOut.IsDust(dustRelayFee)) {
+        if (txOut.IsDust(FIXME_IMPLEMENT_IPC_VALUE(dustRelayFee))) {
             Q_EMIT message(tr("Payment request error"), tr("Requested payment amount of %1 is too small (considered dust).")
                 .arg(BitcoinUnits::formatWithUnit(optionsModel->getDisplayUnit(), sendingTo.second)),
                 CClientUIInterface::MSG_ERROR);
@@ -646,7 +647,7 @@ void PaymentServer::fetchPaymentACK(CWallet* wallet, SendCoinsRecipient recipien
     }
     else {
         CPubKey newKey;
-        if (wallet->GetKeyFromPool(newKey)) {
+        if (FIXME_IMPLEMENT_IPC_VALUE(wallet->GetKeyFromPool(newKey))) {
             CKeyID keyID = newKey.GetID();
             wallet->SetAddressBook(keyID, strAccount, "refund");
 
