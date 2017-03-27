@@ -201,6 +201,12 @@ AC_ARG_ENABLE([zmq],
 
 AC_ARG_WITH([protoc-bindir],[AS_HELP_STRING([--with-protoc-bindir=BIN_DIR],[specify protoc bin path])], [protoc_bin_path=$withval], [])
 
+AC_ARG_WITH([capnp],
+  [AS_HELP_STRING([--with-capnp=PREFIX_DIR],
+  [specify Cap'n Proto install path (default: auto-detect)])],
+  [with_capnp=$withval],
+  [with_capnp=yes])
+
 AC_ARG_ENABLE(man,
     [AS_HELP_STRING([--disable-man],
                     [do not install man pages (default is to install)])],,
@@ -1027,6 +1033,42 @@ fi
 AM_CONDITIONAL([EMBEDDED_UNIVALUE],[test x$need_bundled_univalue = xyes])
 AC_SUBST(UNIVALUE_CFLAGS)
 AC_SUBST(UNIVALUE_LIBS)
+
+
+dnl Cap'n Proto check
+
+if test "x$with_capnp" != xyes ; then
+  if test ! -d "$with_capnp" ; then
+    AC_MSG_ERROR([--with-capnp value does not point to a directory])
+  fi
+  CAPNP_BIN="$with_capnp/bin/capnp"
+  AC_SUBST(CAPNP_BIN)
+  capnp_rpc_cflags="-I$with_capnp/include"
+  capnp_rpc_libs="-L$with_capnp/lib"
+  capnp_rpc_prefix="$with_capnp"
+else
+  AC_PATH_PROG(CAPNP_BIN, capnp)
+  if test x$use_pkgconfig = xyes; then
+    m4_ifdef([PKG_CHECK_MODULES],[PKG_CHECK_MODULES([CAPNP_RPC], [capnp-rpc], [
+      found_capnp=yes
+      capnp_rpc_prefix=`$PKG_CONFIG --variable=prefix capnp-rpc`
+    ], [AC_MSG_ERROR(capnp-rpc not found.)])])
+  fi
+fi
+
+if test "x$found_capnp" != xyes ; then
+  CAPNP_RPC_CFLAGS="$capnp_rpc_cflags"
+  CAPNP_RPC_LIBS="$capnp_rpc_libs -lcapnp-rpc -lkj-async -lcapnp -lkj"
+  AC_SUBST(CAPNP_RPC_CFLAGS)
+  AC_SUBST(CAPNP_RPC_LIBS)
+fi
+
+CAPNP_PARSER_CFLAGS="$CAPNP_RPC_CFLAGS"
+CAPNP_PARSER_LIBS="$CAPNP_RPC_LIBS -lcapnpc"
+CAPNP_PARSER_INCLUDE="$capnp_rpc_prefix/include"
+AC_SUBST(CAPNP_PARSER_CFLAGS)
+AC_SUBST(CAPNP_PARSER_LIBS)
+AC_SUBST(CAPNP_PARSER_INCLUDE)
 
 BITCOIN_QT_PATH_PROGS([PROTOC], [protoc],$protoc_bin_path)
 
