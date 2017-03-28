@@ -1,0 +1,15 @@
+These are the ipython commands to have an interactive bitcoind REPL:
+
+23/1: import test_framework.test_framework as btf; import os; import options; import test_framework.util; import test_framework.mininode; import shutil
+23/2: test = btf.BitcoinTestFramework(); test.num_nodes = 1; test.options = options; shutil.rmtree(options.tmpdir); os.makedirs(options.tmpdir, exist_ok=False); test_framework.util.PortSeed.n = options.portseed; test._start_logging(); test.setup_chain()
+23/3: test.network_thread = test_framework.mininode.NetworkThread(); test.network_thread.start(); test.network_thread.is_alive()
+23/4: test.network_thread.test_running = False
+23/5: test.network_thread.is_alive()
+24/1: import test_framework.test_framework as btf; import os; import options; import test_framework.util; import test_framework.mininode; import shutil
+24/2: test = btf.BitcoinTestFramework(); test.num_nodes = 1; test.options = options; shutil.rmtree(options.tmpdir); os.makedirs(options.tmpdir, exist_ok=False); test_framework.util.PortSeed.n = options.portseed; test._start_logging(); test.setup_chain()
+24/3: test.network_thread = test_framework.mininode.NetworkThread(); test.network_thread.start(); test.network_thread.is_alive()
+24/4: test.nodes[0].send_message(ping)
+24/5: test.nodes = test.start_nodes()
+24/6: ping = test_framework.mininode.msg_ping()
+24/7: test.nodes[0].send_message(ping)
+
