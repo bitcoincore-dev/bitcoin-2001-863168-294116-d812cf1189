@@ -111,6 +111,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "setban", 3, "absolute" },
     { "getpeerinfo", 0, "node" },
     { "updatepeer", 0, "node" },
+    { "updatepeer", 1, "disconnect" },
     { "updatepeer", 1, "whitelisted" },
     { "setnetworkactive", 0, "state" },
     { "getmempoolancestors", 1, "verbose" },

@@ -208,14 +208,15 @@ UniValue getpeerinfo(const JSONRPCRequest& request)
 
 UniValue updatepeer(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() > 2 || request.params.size() == 0)
+    if (request.fHelp || request.params.size() > 3 || request.params.size() == 0)
         throw std::runtime_error(
             "updatepeer\n"
             "\nUpdate settings for a network node.\n"
             "\nReturns updated information about the node. See getpeerinfo() for the format of the returned object."
             "\nArguments:\n"
             "1. \"node\"         (string, required) The node id (see getpeerinfo for a list of nodes with their ids)\n"
-            "2. \"whitelisted\"  (bool, optional) whether the node is whitelisted\n"
+            "2. \"disconnect\"   (bool, optional) whether to disconnect from the node\n"
+            "3. \"whitelisted\"  (bool, optional) whether the node is whitelisted\n"
             "\nExamples:\n"
             + HelpExampleCli("updatepeer", "0 true")
             + HelpExampleRpc("updatepeer", "0, true")
@@ -228,13 +229,18 @@ UniValue updatepeer(const JSONRPCRequest& request)
     LOCK(cs_main);
 
     RPCTypeCheckArgument(request.params[0], UniValue::VNUM);
-    int nodeid = request.params[0].get_int();
+    NodeId nodeid = request.params[0].get_int();
 
-    if (request.params.size() >= 2) {
-        RPCTypeCheckArgument(request.params[1], UniValue::VBOOL);
-        if (!g_connman->SetWhitelisted(nodeid, request.params[1].isTrue())) {
-            throw JSONRPCError(RPC_MISC_ERROR, "Failed to update node RelayTxes");
+    if (request.params.size() >= 2 && request.params[1].isTrue()) {
+        if (!g_connman->DisconnectNode(nodeid)) {
+            throw JSONRPCError(RPC_MISC_ERROR, "Failed to disconnect node");
         }
+    }
+
+    if (request.params.size() >= 3) {
+        RPCTypeCheckArgument(request.params[2], UniValue::VBOOL);
+        if (!g_connman->SetWhitelisted(nodeid, request.params[2].isTrue()))
+            throw JSONRPCError(RPC_MISC_ERROR, "Failed to update node RelayTxes");
     }
 
     UniValue entry(UniValue::VOBJ);
@@ -676,7 +682,7 @@ static const CRPCCommand commands[] =
     { "network",            "listbanned",             &listbanned,             true,  {} },
     { "network",            "clearbanned",            &clearbanned,            true,  {} },
     { "network",            "setnetworkactive",       &setnetworkactive,       true,  {"state"} },
-    { "hidden",             "updatepeer",             &updatepeer,             true,  {"node", "whitelisted"} },
+    { "hidden",             "updatepeer",             &updatepeer,             true,  {"node", "disconnect", "whitelisted"} },
 };
 
 void RegisterNetRPCCommands(CRPCTable &t)
