@@ -63,9 +63,7 @@ int ClientModel::getNumConnections(unsigned int flags) const
     else if (flags == CONNECTIONS_ALL)
         connections = CConnman::CONNECTIONS_ALL;
 
-    if(FIXME_IMPLEMENT_IPC_VALUE(g_connman))
-         return FIXME_IMPLEMENT_IPC_VALUE(g_connman)->GetNodeCount(connections);
-    return 0;
+    return ipcNode.getNodeCount(connections);
 }
 
 int ClientModel::getNumBlocks() const

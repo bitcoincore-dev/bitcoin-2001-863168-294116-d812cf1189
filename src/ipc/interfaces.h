@@ -108,6 +108,9 @@ public:
 
     //! Get ban map entries.
     virtual bool getBanned(banmap_t& banMap) = 0;
+
+    //! Get number of connections.
+    virtual size_t getNodeCount(CConnman::NumConnections flags) = 0;
 };
 
 //! Interface for accessing a wallet.

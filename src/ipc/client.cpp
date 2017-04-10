@@ -434,6 +434,16 @@ public:
         });
     }
 
+    size_t getNodeCount(CConnman::NumConnections flags) override
+    {
+        auto call = util::MakeCall(loop, [&]() {
+                auto request = client.getNodeCountRequest();
+                request.setFlags(flags);
+                return request;
+            });
+        return call.send([&](){ return call.response->getValue(); });
+    }
+
     util::EventLoop& loop;
     kj::Own<kj::AsyncIoStream> stream;
     capnp::TwoPartyVatNetwork network{*stream, capnp::rpc::twoparty::Side::CLIENT, capnp::ReaderOptions()};

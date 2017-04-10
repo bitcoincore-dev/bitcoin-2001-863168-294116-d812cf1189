@@ -26,6 +26,7 @@ interface Node {
     handleBannedListChanged @19 (callback: BannedListChangedCallback) -> (handler :Handler);
     getNodesStats @20 () -> (stats :List(NodeStats));
     getBanned @21 () -> (banMap :BanMap);
+    getNodeCount @22 (flags :UInt32) -> (value :Int32);
 }
 
 interface Wallet {

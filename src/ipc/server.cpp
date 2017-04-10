@@ -333,6 +333,12 @@ public:
         return kj::READY_NOW;
     }
 
+    kj::Promise<void> getNodeCount(GetNodeCountContext context) override
+    {
+        context.getResults().setValue(impl->getNodeCount(CConnman::NumConnections(context.getParams().getFlags())));
+        return kj::READY_NOW;
+    }
+
     util::EventLoop& loop;
     std::unique_ptr<Node> impl{MakeNode()};
 };

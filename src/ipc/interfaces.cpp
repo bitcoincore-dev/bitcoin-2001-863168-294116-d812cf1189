@@ -135,6 +135,13 @@ public:
         }
         return false;
     }
+    size_t getNodeCount(CConnman::NumConnections flags) override
+    {
+        if (g_connman) {
+            return g_connman->GetNodeCount(flags);
+        }
+        return 0;
+    }
 
     boost::thread_group threadGroup;
     ::CScheduler scheduler;
