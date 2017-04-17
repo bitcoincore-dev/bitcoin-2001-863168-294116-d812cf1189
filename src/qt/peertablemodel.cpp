@@ -8,6 +8,7 @@
 #include "guiconstants.h"
 #include "guiutil.h"
 
+#include "interface/node.h"
 #include "validation.h" // for cs_main
 #include "sync.h"
 
@@ -52,35 +53,23 @@ public:
     std::map<NodeId, int> mapNodeRows;
 
     /** Pull a full list of peers from vNodes into our cache */
-    void refreshPeers()
+    void refreshPeers(interface::Node& node)
     {
         {
             cachedNodeStats.clear();
-            std::vector<CNodeStats> vstats;
-            if(g_connman)
-                g_connman->GetNodeStats(vstats);
+
+            interface::Node::NodesStats nodes;
+            node.getNodesStats(nodes);
 #if QT_VERSION >= 0x040700
-            cachedNodeStats.reserve(vstats.size());
+            cachedNodeStats.reserve(nodes.size());
 #endif
-            for (const CNodeStats& nodestats : vstats)
+            for (auto& node : nodes)
             {
                 CNodeCombinedStats stats;
-                stats.nodeStateStats.nMisbehavior = 0;
-                stats.nodeStateStats.nSyncHeight = -1;
-                stats.nodeStateStats.nCommonHeight = -1;
-                stats.fNodeStateStatsAvailable = false;
-                stats.nodeStats = nodestats;
+                stats.nodeStats = std::get<0>(node);
+                stats.fNodeStateStatsAvailable = std::get<1>(node);
+                stats.nodeStateStats = std::get<2>(node);
                 cachedNodeStats.append(stats);
-            }
-        }
-
-        // Try to retrieve the CNodeStateStats for each node.
-        {
-            TRY_LOCK(cs_main, lockMain);
-            if (lockMain)
-            {
-                for (CNodeCombinedStats &stats : cachedNodeStats)
-                    stats.fNodeStateStatsAvailable = GetNodeStateStats(stats.nodeStats.nodeid, stats.nodeStateStats);
             }
         }
 
@@ -109,8 +98,9 @@ public:
     }
 };
 
-PeerTableModel::PeerTableModel(ClientModel *parent) :
+PeerTableModel::PeerTableModel(interface::Node& node, ClientModel *parent) :
     QAbstractTableModel(parent),
+    m_node(node),
     clientModel(parent),
     timer(0)
 {
@@ -221,7 +211,7 @@ const CNodeCombinedStats *PeerTableModel::getNodeStats(int idx)
 void PeerTableModel::refresh()
 {
     Q_EMIT layoutAboutToBeChanged();
-    priv->refreshPeers();
+    priv->refreshPeers(m_node);
     Q_EMIT layoutChanged();
 }
 
