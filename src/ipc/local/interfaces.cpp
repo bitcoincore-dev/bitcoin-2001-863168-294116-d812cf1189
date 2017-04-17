@@ -71,6 +71,34 @@ public:
     CReserveKey key;
 };
 
+//! Find earliest associated non-change output in wallet.
+const CTxOut& FindNonChangeOut(CWallet& wallet, const CTransaction* tx, int n)
+{
+    // TODO move this function into wallet code.
+    while (wallet.IsChange(tx->vout[n]) && tx->vin.size() > 0) {
+        const COutPoint& prevout = tx->vin[0].prevout;
+        auto it = wallet.mapWallet.find(prevout.hash);
+        if (it == wallet.mapWallet.end() || it->second.tx->vout.size() <= prevout.n ||
+            !wallet.IsMine(it->second.tx->vout[prevout.n])) {
+            break;
+        }
+        tx = it->second.tx.get();
+        n = prevout.n;
+    }
+    return tx->vout[n];
+}
+
+//! Construct wallet TxOut struct.
+WalletTxOut MakeWalletTxOut(CWallet& wallet, const CWalletTx& wtx, int n, int depth)
+{
+    WalletTxOut result;
+    result.txOut = wtx.tx->vout[n];
+    result.txTime = wtx.GetTxTime();
+    result.depthInMainChain = depth;
+    result.isSpent = wallet.IsSpent(wtx.GetHash(), n);
+    return result;
+}
+
 class WalletImpl : public Wallet
 {
 public:
@@ -224,6 +252,61 @@ public:
             }
         }
         return balance;
+    }
+    CoinsList listCoins() override
+    {
+        // TODO Move this code to wallet dir.
+        CoinsList result;
+
+        std::vector<COutput> availableCoins;
+        wallet.AvailableCoins(availableCoins);
+
+        LOCK2(cs_main, wallet.cs_wallet);
+        for (const auto& coin : availableCoins) {
+            CTxDestination address;
+            if (coin.fSpendable &&
+                ExtractDestination(FindNonChangeOut(wallet, coin.tx->tx.get(), coin.i).scriptPubKey, address)) {
+                result[address].emplace_back(
+                    COutPoint(coin.tx->GetHash(), coin.i), MakeWalletTxOut(wallet, *coin.tx, coin.i, coin.nDepth));
+            }
+        }
+
+        std::vector<COutPoint> lockedCoins;
+        wallet.ListLockedCoins(lockedCoins);
+        for (const auto& output : lockedCoins) {
+            auto it = wallet.mapWallet.find(output.hash);
+            if (it != wallet.mapWallet.end()) {
+                int depth = it->second.GetDepthInMainChain();
+                if (depth >= 0 && output.n < it->second.tx->vout.size() &&
+                    wallet.IsMine(it->second.tx->vout[output.n]) == ISMINE_SPENDABLE) {
+                    CTxDestination address;
+                    if (ExtractDestination(
+                            FindNonChangeOut(wallet, it->second.tx.get(), output.n).scriptPubKey, address)) {
+                        result[address].emplace_back(output, MakeWalletTxOut(wallet, it->second, output.n, depth));
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+    std::vector<WalletTxOut> getCoins(const std::vector<COutPoint>& outputs) override
+    {
+        // TODO Move this code to wallet dir.
+        LOCK2(cs_main, wallet.cs_wallet);
+        std::vector<WalletTxOut> result;
+        result.reserve(outputs.size());
+        for (const auto& output : outputs) {
+            result.emplace_back();
+            auto it = wallet.mapWallet.find(output.hash);
+            if (it != wallet.mapWallet.end()) {
+                int depth = it->second.GetDepthInMainChain();
+                if (depth >= 0) {
+                    result.back() = MakeWalletTxOut(wallet, it->second, output.n, depth);
+                }
+            }
+        }
+        return result;
     }
     bool hdEnabled() override { return wallet.IsHDEnabled(); }
     std::unique_ptr<Handler> handleShowProgress(ShowProgressFn fn) override
@@ -388,7 +471,18 @@ public:
     bool getNetworkActive() override { return g_connman && g_connman->GetNetworkActive(); }
     unsigned int getTxConfirmTarget() override { CHECK_WALLET(return ::nTxConfirmTarget); }
     bool getWalletRbf() override { CHECK_WALLET(return ::fWalletRbf); }
+    CAmount getRequiredFee(unsigned int txBytes) override { CHECK_WALLET(return CWallet::GetRequiredFee(txBytes)); }
+    CAmount getMinimumFee(unsigned int txBytes) override
+    {
+        CHECK_WALLET(return CWallet::GetMinimumFee(txBytes, ::nTxConfirmTarget, ::mempool));
+    }
     CAmount getMaxTxFee() override { return ::maxTxFee; }
+    CFeeRate estimateSmartFee(int nBlocks, int* answerFoundAtBlocks = nullptr) override
+    {
+        return mempool.estimateSmartFee(nBlocks, answerFoundAtBlocks);
+    }
+    CFeeRate getDustRelayFee() override { return ::dustRelayFee; }
+    CFeeRate getPayTxFee() override { CHECK_WALLET(return ::payTxFee); }
     UniValue executeRpc(const std::string& command, const UniValue& params) override
     {
         JSONRPCRequest req;
