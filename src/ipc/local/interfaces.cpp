@@ -10,6 +10,13 @@
 #include <util.h>
 #include <validation.h>
 
+#if defined(HAVE_CONFIG_H)
+#include "config/bitcoin-config.h"
+#endif
+#ifdef ENABLE_WALLET
+#include "wallet/wallet.h"
+#endif
+
 #include <boost/thread.hpp>
 
 namespace ipc {
@@ -24,6 +31,21 @@ public:
     void disconnect() override { connection.disconnect(); }
 
     boost::signals2::scoped_connection connection;
+};
+
+class WalletImpl : public Wallet
+{
+public:
+    WalletImpl(CWallet& wallet) : wallet(wallet) {}
+    std::unique_ptr<Handler> handleShowProgress(ShowProgressFn fn) override
+    {
+#ifdef ENABLE_WALLET
+        return MakeUnique<HandlerImpl>(wallet.ShowProgress.connect(fn));
+#endif
+        return {};
+    }
+
+    CWallet& wallet;
 };
 
 class NodeImpl : public Node
@@ -64,6 +86,15 @@ public:
     std::unique_ptr<Handler> handleQuestion(QuestionFn fn) override
     {
         return MakeUnique<HandlerImpl>(uiInterface.ThreadSafeQuestion.connect(fn));
+    }
+    std::unique_ptr<Handler> handleShowProgress(ShowProgressFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(uiInterface.ShowProgress.connect(fn));
+    }
+    std::unique_ptr<Handler> handleLoadWallet(LoadWalletFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(
+            uiInterface.LoadWallet.connect([fn](CWallet* wallet) { fn(MakeUnique<WalletImpl>(*wallet)); }));
     }
 
     boost::thread_group threadGroup;
