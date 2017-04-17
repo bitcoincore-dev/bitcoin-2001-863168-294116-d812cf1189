@@ -14,6 +14,7 @@
 #include "guiutil.h"
 #include "platformstyle.h"
 #include "chainparams.h"
+#include "ipc/interfaces.h"
 #include "netbase.h"
 #include "rpc/server.h"
 #include "rpc/client.h"
@@ -523,13 +524,14 @@ void RPCConsole::setClientModel(ClientModel *model)
         setNumConnections(model->getNumConnections());
         connect(model, SIGNAL(numConnectionsChanged(int)), this, SLOT(setNumConnections(int)));
 
-        setNumBlocks(model->getNumBlocks(), model->getLastBlockDate(), model->getVerificationProgress(NULL), false);
+        ipc::Node& ipc_node = clientModel->getIpcNode();
+        setNumBlocks(ipc_node.getNumBlocks(), QDateTime::fromTime_t(ipc_node.getLastBlockTime()), ipc_node.getVerificationProgress(), false);
         connect(model, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(setNumBlocks(int,QDateTime,double,bool)));
 
         updateNetworkState();
         connect(model, SIGNAL(networkActiveChanged(bool)), this, SLOT(setNetworkActive(bool)));
 
-        updateTrafficStats(model->getTotalBytesRecv(), model->getTotalBytesSent());
+        updateTrafficStats(ipc_node.getTotalBytesRecv(), ipc_node.getTotalBytesSent());
         connect(model, SIGNAL(bytesChanged(quint64,quint64)), this, SLOT(updateTrafficStats(quint64, quint64)));
 
         connect(model, SIGNAL(mempoolSizeChanged(long,size_t)), this, SLOT(setMempoolSize(long,size_t)));
@@ -773,7 +775,7 @@ void RPCConsole::updateNetworkState()
     connections += tr("In:") + " " + QString::number(clientModel->getNumConnections(CONNECTIONS_IN)) + " / ";
     connections += tr("Out:") + " " + QString::number(clientModel->getNumConnections(CONNECTIONS_OUT)) + ")";
 
-    if(!clientModel->getNetworkActive()) {
+    if(!clientModel->getIpcNode().getNetworkActive()) {
         connections += " (" + tr("Network activity disabled") + ")";
     }
 
