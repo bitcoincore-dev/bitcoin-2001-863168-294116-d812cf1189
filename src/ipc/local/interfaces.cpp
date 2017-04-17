@@ -6,6 +6,7 @@
 #include <net.h>
 #include <net_processing.h>
 #include <netbase.h>
+#include <rpc/server.h>
 #include <scheduler.h>
 #include <txmempool.h>
 #include <ui_interface.h>
@@ -20,6 +21,7 @@
 #endif
 
 #include <boost/thread.hpp>
+#include <univalue.h>
 
 namespace ipc {
 namespace local {
@@ -113,6 +115,29 @@ public:
         }
         return false;
     }
+    bool ban(const CNetAddr& netAddr, BanReason reason, int64_t bantimeoffset) override
+    {
+        if (g_connman) {
+            g_connman->Ban(netAddr, reason, bantimeoffset);
+            return true;
+        }
+        return false;
+    }
+    bool unban(const CSubNet& ip) override
+    {
+        if (g_connman) {
+            g_connman->Unban(ip);
+            return true;
+        }
+        return false;
+    }
+    bool disconnect(NodeId id) override
+    {
+        if (g_connman) {
+            return g_connman->DisconnectNode(id);
+        }
+        return false;
+    }
     int64_t getTotalBytesRecv() override { return g_connman ? g_connman->GetTotalBytesRecv() : 0; }
     int64_t getTotalBytesSent() override { return g_connman ? g_connman->GetTotalBytesSent() : 0; }
     size_t getMempoolSize() override { return mempool.size(); }
@@ -159,6 +184,16 @@ public:
         }
     }
     bool getNetworkActive() override { return g_connman && g_connman->GetNetworkActive(); }
+    UniValue executeRpc(const std::string& command, const UniValue& params) override
+    {
+        JSONRPCRequest req;
+        req.params = params;
+        req.strMethod = command;
+        return tableRPC.execute(req);
+    }
+    std::vector<std::string> listRpcCommands() override { return tableRPC.listCommands(); }
+    void rpcSetTimerInterfaceIfUnset(RPCTimerInterface* iface) override { ::RPCSetTimerInterfaceIfUnset(iface); }
+    void rpcUnsetTimerInterface(RPCTimerInterface* iface) override { ::RPCUnsetTimerInterface(iface); }
     std::unique_ptr<Handler> handleInitMessage(InitMessageFn fn) override
     {
         return MakeUnique<HandlerImpl>(uiInterface.InitMessage.connect(fn));
