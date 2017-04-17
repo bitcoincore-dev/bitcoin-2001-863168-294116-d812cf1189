@@ -9,12 +9,18 @@
 #include <QDateTime>
 
 #include <atomic>
+#include <memory>
 
 class BanTableModel;
 class OptionsModel;
 class PeerTableModel;
 
 class CBlockIndex;
+
+namespace ipc {
+class Handler;
+class Node;
+}
 
 QT_BEGIN_NAMESPACE
 class QTimer;
@@ -40,37 +46,21 @@ class ClientModel : public QObject
     Q_OBJECT
 
 public:
-    explicit ClientModel(OptionsModel *optionsModel, QObject *parent = 0);
+    explicit ClientModel(ipc::Node& ipcNode, OptionsModel *optionsModel, QObject *parent = 0);
     ~ClientModel();
 
+    ipc::Node& getIpcNode() const { return ipcNode; }
     OptionsModel *getOptionsModel();
     PeerTableModel *getPeerTableModel();
     BanTableModel *getBanTableModel();
 
     //! Return number of connections, default is in- and outbound (total)
     int getNumConnections(unsigned int flags = CONNECTIONS_ALL) const;
-    int getNumBlocks() const;
     int getHeaderTipHeight() const;
     int64_t getHeaderTipTime() const;
-    //! Return number of transactions in the mempool
-    long getMempoolSize() const;
-    //! Return the dynamic memory usage of the mempool
-    size_t getMempoolDynamicUsage() const;
-    
-    quint64 getTotalBytesRecv() const;
-    quint64 getTotalBytesSent() const;
 
-    double getVerificationProgress(const CBlockIndex *tip) const;
-    QDateTime getLastBlockDate() const;
-
-    //! Return true if core is doing initial block download
-    bool inInitialBlockDownload() const;
     //! Returns enum BlockSource of the current importing/syncing state
     enum BlockSource getBlockSource() const;
-    //! Return true if network activity in core is enabled
-    bool getNetworkActive() const;
-    //! Toggle network activity state in core
-    void setNetworkActive(bool active);
     //! Return warnings to be displayed in status bar
     QString getStatusBarWarnings() const;
 
@@ -85,6 +75,14 @@ public:
     mutable std::atomic<int64_t> cachedBestHeaderTime;
 
 private:
+    ipc::Node& ipcNode;
+    std::unique_ptr<ipc::Handler> handlerShowProgress;
+    std::unique_ptr<ipc::Handler> handlerNotifyNumConnectionsChanged;
+    std::unique_ptr<ipc::Handler> handlerNotifyNetworkActiveChanged;
+    std::unique_ptr<ipc::Handler> handlerNotifyAlertChanged;
+    std::unique_ptr<ipc::Handler> handlerBannedListChanged;
+    std::unique_ptr<ipc::Handler> handlerNotifyBlockTip;
+    std::unique_ptr<ipc::Handler> handlerNotifyHeaderTip;
     OptionsModel *optionsModel;
     PeerTableModel *peerTableModel;
     BanTableModel *banTableModel;
