@@ -41,11 +41,20 @@ class NodeImpl : public Node
         Shutdown();
     }
     void startShutdown() override { StartShutdown(); }
+    bool shutdownRequested() override { return ShutdownRequested(); }
     void mapPort(bool use_upnp) override { MapPort(use_upnp); }
     bool getProxy(Network net, proxyType& proxy_info) override { return GetProxy(net, proxy_info); }
     std::unique_ptr<Handler> handleInitMessage(InitMessageFn fn) override
     {
         return MakeHandler(::uiInterface.InitMessage.connect(fn));
+    }
+    std::unique_ptr<Handler> handleMessageBox(MessageBoxFn fn) override
+    {
+        return MakeHandler(::uiInterface.ThreadSafeMessageBox.connect(fn));
+    }
+    std::unique_ptr<Handler> handleQuestion(QuestionFn fn) override
+    {
+        return MakeHandler(::uiInterface.ThreadSafeQuestion.connect(fn));
     }
 };
 
