@@ -153,7 +153,7 @@ BitcoinGUI::BitcoinGUI(ipc::Node& _ipcNode, const PlatformStyle *_platformStyle,
 #endif
 
     rpcConsole = new RPCConsole(_platformStyle, 0);
-    helpMessageDialog = new HelpMessageDialog(this, false);
+    helpMessageDialog = new HelpMessageDialog(ipcNode, this, false);
 #ifdef ENABLE_WALLET
     if(enableWallet)
     {
@@ -646,7 +646,7 @@ void BitcoinGUI::aboutClicked()
     if(!clientModel)
         return;
 
-    HelpMessageDialog dlg(this, true);
+    HelpMessageDialog dlg(ipcNode, this, true);
     dlg.exec();
 }
 
