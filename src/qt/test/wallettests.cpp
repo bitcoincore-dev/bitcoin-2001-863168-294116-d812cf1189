@@ -1,5 +1,6 @@
 #include "wallettests.h"
 
+#include "ipc/interfaces.h"
 #include "qt/bitcoinamountfield.h"
 #include "qt/callback.h"
 #include "qt/optionsmodel.h"
@@ -153,7 +154,8 @@ void TestSendCoins()
     std::unique_ptr<const PlatformStyle> platformStyle(PlatformStyle::instantiate("other"));
     SendCoinsDialog sendCoinsDialog(platformStyle.get());
     TransactionView transactionView(platformStyle.get());
-    OptionsModel optionsModel;
+    auto ipcNode = ipc::MakeNode(ipc::LOCAL);
+    OptionsModel optionsModel(*ipcNode);
     WalletModel walletModel(platformStyle.get(), &wallet, &optionsModel);
     sendCoinsDialog.setModel(&walletModel);
     transactionView.setModel(&walletModel);
