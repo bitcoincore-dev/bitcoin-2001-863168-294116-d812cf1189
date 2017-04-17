@@ -51,11 +51,20 @@ public:
         ::Shutdown();
     }
     void startShutdown() override { ::StartShutdown(); }
+    bool shutdownRequested() override { return ::ShutdownRequested(); }
     void mapPort(bool use_upnp) override { ::MapPort(use_upnp); }
     bool getProxy(Network net, proxyType& proxy_info) override { return ::GetProxy(net, proxy_info); }
     std::unique_ptr<Handler> handleInitMessage(InitMessageFn fn) override
     {
         return MakeUnique<HandlerImpl>(::uiInterface.InitMessage.connect(fn));
+    }
+    std::unique_ptr<Handler> handleMessageBox(MessageBoxFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(::uiInterface.ThreadSafeMessageBox.connect(fn));
+    }
+    std::unique_ptr<Handler> handleQuestion(QuestionFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(::uiInterface.ThreadSafeQuestion.connect(fn));
     }
 
     boost::thread_group m_thread_group;
