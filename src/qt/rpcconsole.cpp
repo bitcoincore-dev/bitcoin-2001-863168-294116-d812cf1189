@@ -16,6 +16,7 @@
 #include "chainparams.h"
 #include "ipc/interfaces.h"
 #include "netbase.h"
+#include "ipc/interfaces.h"
 #include "rpc/server.h"
 #include "rpc/client.h"
 #include "util.h"
@@ -83,12 +84,17 @@ const QStringList historyFilter = QStringList()
 class RPCExecutor : public QObject
 {
     Q_OBJECT
+public:
+    RPCExecutor(ipc::Node& ipc_node) : m_ipc_node(ipc_node) {}
 
 public Q_SLOTS:
     void request(const QString &command);
 
 Q_SIGNALS:
     void reply(int category, const QString &command);
+
+private:
+    ipc::Node& m_ipc_node;
 };
 
 /** Class for handling RPC timers
@@ -140,13 +146,14 @@ public:
  *   - Within double quotes, only escape \c " and backslashes before a \c " or another backslash
  *   - Within single quotes, no escaping is possible and no special interpretation takes place
  *
+ * @param[in]    ipc_node    optional node to execute command on
  * @param[out]   result      stringified Result from the executed command(chain)
  * @param[in]    strCommand  Command line to split
  * @param[in]    fExecute    set true if you want the command to be executed
  * @param[out]   pstrFilteredOut  Command line, filtered to remove any sensitive data
  */
 
-bool RPCConsole::RPCParseCommandLine(std::string &strResult, const std::string &strCommand, const bool fExecute, std::string * const pstrFilteredOut)
+bool RPCConsole::RPCParseCommandLine(ipc::Node* ipc_node, std::string &strResult, const std::string &strCommand, const bool fExecute, std::string * const pstrFilteredOut)
 {
     std::vector< std::vector<std::string> > stack;
     stack.push_back(std::vector<std::string>());
@@ -300,18 +307,16 @@ bool RPCConsole::RPCParseCommandLine(std::string &strResult, const std::string &
                         if (fExecute) {
                             // Convert argument list to JSON objects in method-dependent way,
                             // and pass it along with the method name to the dispatcher.
-                            JSONRPCRequest req;
-                            req.params = RPCConvertValues(stack.back()[0], std::vector<std::string>(stack.back().begin() + 1, stack.back().end()));
-                            req.strMethod = stack.back()[0];
+                            std::string uri;
 #ifdef ENABLE_WALLET
                             // TODO: Move this logic to WalletModel
                             if (!vpwallets.empty()) {
                                 // in Qt, use always the wallet with index 0 when running with multiple wallets
                                 QByteArray encodedName = QUrl::toPercentEncoding(QString::fromStdString(vpwallets[0]->GetName()));
-                                req.URI = "/wallet/"+std::string(encodedName.constData(), encodedName.length());
+                                uri = "/wallet/"+std::string(encodedName.constData(), encodedName.length());
                             }
 #endif
-                            lastResult = tableRPC.execute(req);
+                            lastResult = ipc_node->executeRpc(stack.back()[0],RPCConvertValues(stack.back()[0], std::vector<std::string>(stack.back().begin() + 1, stack.back().end())), uri);
                         }
 
                         state = STATE_COMMAND_EXECUTED;
@@ -392,7 +397,7 @@ void RPCExecutor::request(const QString &command)
     {
         std::string result;
         std::string executableCommand = command.toStdString() + "\n";
-        if(!RPCConsole::RPCExecuteCommandLine(result, executableCommand))
+        if(!RPCConsole::RPCExecuteCommandLine(m_ipc_node, result, executableCommand))
         {
             Q_EMIT reply(RPCConsole::CMD_ERROR, QString("Parse error: unbalanced ' or \""));
             return;
@@ -418,8 +423,9 @@ void RPCExecutor::request(const QString &command)
     }
 }
 
-RPCConsole::RPCConsole(const PlatformStyle *_platformStyle, QWidget *parent) :
+RPCConsole::RPCConsole(ipc::Node& ipc_node, const PlatformStyle *_platformStyle, QWidget *parent) :
     QWidget(parent),
+    m_ipc_node(ipc_node),
     ui(new Ui::RPCConsole),
     clientModel(0),
     historyPtr(0),
@@ -460,7 +466,7 @@ RPCConsole::RPCConsole(const PlatformStyle *_platformStyle, QWidget *parent) :
     rpcTimerInterface = new QtRPCTimerInterface();
     // avoid accidentally overwriting an existing, non QTThread
     // based timer interface
-    RPCSetTimerInterfaceIfUnset(rpcTimerInterface);
+    m_ipc_node.rpcSetTimerInterfaceIfUnset(rpcTimerInterface);
 
     setTrafficGraphRange(INITIAL_TRAFFIC_GRAPH_MINS);
 
@@ -475,7 +481,7 @@ RPCConsole::RPCConsole(const PlatformStyle *_platformStyle, QWidget *parent) :
 RPCConsole::~RPCConsole()
 {
     GUIUtil::saveWindowGeometry("nRPCConsoleWindow", this);
-    RPCUnsetTimerInterface(rpcTimerInterface);
+    m_ipc_node.rpcUnsetTimerInterface(rpcTimerInterface);
     delete rpcTimerInterface;
     delete ui;
 }
@@ -635,7 +641,7 @@ void RPCConsole::setClientModel(ClientModel *model)
 
         //Setup autocomplete and attach it
         QStringList wordList;
-        std::vector<std::string> commandList = tableRPC.listCommands();
+        std::vector<std::string> commandList = m_ipc_node.listRpcCommands();
         for (size_t i = 0; i < commandList.size(); ++i)
         {
             wordList << commandList[i].c_str();
@@ -831,7 +837,7 @@ void RPCConsole::on_lineEdit_returnPressed()
         std::string strFilteredCmd;
         try {
             std::string dummy;
-            if (!RPCParseCommandLine(dummy, cmd.toStdString(), false, &strFilteredCmd)) {
+            if (!RPCParseCommandLine(nullptr, dummy, cmd.toStdString(), false, &strFilteredCmd)) {
                 // Failed to parse command, so we cannot even filter it for the history
                 throw std::runtime_error("Invalid command line");
             }
@@ -887,7 +893,7 @@ void RPCConsole::browseHistory(int offset)
 
 void RPCConsole::startExecutor()
 {
-    RPCExecutor *executor = new RPCExecutor();
+    RPCExecutor *executor = new RPCExecutor(m_ipc_node);
     executor->moveToThread(&thread);
 
     // Replies from executor object must go to this object
@@ -1125,9 +1131,6 @@ void RPCConsole::showBanTableContextMenu(const QPoint& point)
 
 void RPCConsole::disconnectSelectedNode()
 {
-    if(!g_connman)
-        return;
-    
     // Get selected peer addresses
     QList<QModelIndex> nodes = GUIUtil::getEntryData(ui->peerWidget, PeerTableModel::NetNodeId);
     for(int i = 0; i < nodes.count(); i++)
@@ -1135,14 +1138,14 @@ void RPCConsole::disconnectSelectedNode()
         // Get currently selected peer address
         NodeId id = nodes.at(i).data().toLongLong();
         // Find the node, disconnect it and clear the selected node
-        if(g_connman->DisconnectNode(id))
+        if(m_ipc_node.disconnect(id))
             clearSelectedNode();
     }
 }
 
 void RPCConsole::banSelectedNode(int bantime)
 {
-    if (!clientModel || !g_connman)
+    if (!clientModel)
         return;
     
     // Get selected peer addresses
@@ -1160,7 +1163,7 @@ void RPCConsole::banSelectedNode(int bantime)
 	// Find possible nodes, ban it and clear the selected node
 	const CNodeCombinedStats *stats = clientModel->getPeerTableModel()->getNodeStats(detailNodeRow);
 	if(stats) {
-	    g_connman->Ban(stats->nodeStats.addr, BanReasonManuallyAdded, bantime);
+            m_ipc_node.ban(stats->nodeStats.addr, BanReasonManuallyAdded, bantime);
 	}
     }
     clearSelectedNode();
@@ -1181,9 +1184,8 @@ void RPCConsole::unbanSelectedNode()
         CSubNet possibleSubnet;
 
         LookupSubNet(strNode.toStdString().c_str(), possibleSubnet);
-        if (possibleSubnet.IsValid() && g_connman)
+        if (possibleSubnet.IsValid() && m_ipc_node.unban(possibleSubnet))
         {
-            g_connman->Unban(possibleSubnet);
             clientModel->getBanTableModel()->refresh();
         }
     }
