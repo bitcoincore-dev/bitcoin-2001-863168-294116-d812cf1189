@@ -8,6 +8,7 @@
 #include "paymentrequestplus.h"
 #include "walletmodeltransaction.h"
 
+#include "ipc/interfaces.h"
 #include "support/allocators/secure.h"
 
 #include <map>
@@ -100,7 +101,7 @@ class WalletModel : public QObject
     Q_OBJECT
 
 public:
-    explicit WalletModel(const PlatformStyle *platformStyle, CWallet *wallet, OptionsModel *optionsModel, QObject *parent = 0);
+    explicit WalletModel(std::unique_ptr<ipc::Wallet> ipcWallet, ipc::Node& ipcNode, const PlatformStyle *platformStyle, CWallet *_wallet, OptionsModel *optionsModel, QObject *parent = 0);
     ~WalletModel();
 
     enum StatusCode // Returned by sendCoins
@@ -218,7 +219,18 @@ public:
 
     bool getDefaultWalletRbf() const;
 
+    ipc::Node& getIpcNode() const { return ipcNode; }
+
+    ipc::Wallet& getIpcWallet() const { return *ipcWallet; }
+
 private:
+    std::unique_ptr<ipc::Wallet> ipcWallet;
+    std::unique_ptr<ipc::Handler> handlerStatusChanged;
+    std::unique_ptr<ipc::Handler> handlerAddressBookChanged;
+    std::unique_ptr<ipc::Handler> handlerTransactionChanged;
+    std::unique_ptr<ipc::Handler> handlerShowProgress;
+    std::unique_ptr<ipc::Handler> handlerWatchonlyChanged;
+    ipc::Node& ipcNode;
     CWallet *wallet;
     bool fHaveWatchOnly;
     bool fForceCheckBalanceChanged;
@@ -232,12 +244,7 @@ private:
     RecentRequestsTableModel *recentRequestsTableModel;
 
     // Cache some values to be able to detect changes
-    CAmount cachedBalance;
-    CAmount cachedUnconfirmedBalance;
-    CAmount cachedImmatureBalance;
-    CAmount cachedWatchOnlyBalance;
-    CAmount cachedWatchUnconfBalance;
-    CAmount cachedWatchImmatureBalance;
+    ipc::WalletBalances cachedBalances;
     EncryptionStatus cachedEncryptionStatus;
     int cachedNumBlocks;
 
@@ -245,7 +252,7 @@ private:
 
     void subscribeToCoreSignals();
     void unsubscribeFromCoreSignals();
-    void checkBalanceChanged();
+    void checkBalanceChanged(const ipc::WalletBalances& newBalances);
 
 Q_SIGNALS:
     // Signal that balance in wallet changed
