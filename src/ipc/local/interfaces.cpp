@@ -6,6 +6,7 @@
 #include <net.h>
 #include <netbase.h>
 #include <scheduler.h>
+#include <txmempool.h>
 #include <ui_interface.h>
 #include <util.h>
 #include <validation.h>
@@ -96,6 +97,56 @@ public:
     std::string helpMessage(HelpMessageMode mode) override { return ::HelpMessage(mode); }
     void mapPort(bool use_upnp) override { ::MapPort(use_upnp); }
     bool getProxy(Network net, proxyType& proxy_info) override { return ::GetProxy(net, proxy_info); }
+    size_t getNodeCount(CConnman::NumConnections flags) override
+    {
+        return ::g_connman ? ::g_connman->GetNodeCount(flags) : 0;
+    }
+    int64_t getTotalBytesRecv() override { return ::g_connman ? ::g_connman->GetTotalBytesRecv() : 0; }
+    int64_t getTotalBytesSent() override { return ::g_connman ? ::g_connman->GetTotalBytesSent() : 0; }
+    size_t getMempoolSize() override { return ::mempool.size(); }
+    size_t getMempoolDynamicUsage() override { return ::mempool.DynamicMemoryUsage(); }
+    bool getHeaderTip(int& height, int64_t& block_time) override
+    {
+        LOCK(::cs_main);
+        if (::pindexBestHeader) {
+            height = ::pindexBestHeader->nHeight;
+            block_time = ::pindexBestHeader->GetBlockTime();
+            return true;
+        }
+        return false;
+    }
+    int getNumBlocks() override
+    {
+        LOCK(::cs_main);
+        return ::chainActive.Height();
+    }
+    int64_t getLastBlockTime() override
+    {
+        LOCK(::cs_main);
+        if (::chainActive.Tip()) {
+            return ::chainActive.Tip()->GetBlockTime();
+        }
+        return ::Params().GenesisBlock().GetBlockTime(); // Genesis block's time of current network
+    }
+    double getVerificationProgress() override
+    {
+        const CBlockIndex* tip;
+        {
+            LOCK(::cs_main);
+            tip = ::chainActive.Tip();
+        }
+        return ::GuessVerificationProgress(::Params().TxData(), tip);
+    }
+    bool isInitialBlockDownload() override { return ::IsInitialBlockDownload(); }
+    bool getReindex() override { return ::fReindex; }
+    bool getImporting() override { return ::fImporting; }
+    void setNetworkActive(bool active) override
+    {
+        if (::g_connman) {
+            ::g_connman->SetNetworkActive(active);
+        }
+    }
+    bool getNetworkActive() override { return ::g_connman && ::g_connman->GetNetworkActive(); }
     std::unique_ptr<Handler> handleInitMessage(InitMessageFn fn) override
     {
         return MakeUnique<HandlerImpl>(::uiInterface.InitMessage.connect(fn));
@@ -116,6 +167,38 @@ public:
     {
         CHECK_WALLET(return MakeUnique<HandlerImpl>(
             ::uiInterface.LoadWallet.connect([fn](CWallet* wallet) { fn(MakeUnique<WalletImpl>(*wallet)); })));
+    }
+    std::unique_ptr<Handler> handleNotifyNumConnectionsChanged(NotifyNumConnectionsChangedFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(::uiInterface.NotifyNumConnectionsChanged.connect(fn));
+    }
+    std::unique_ptr<Handler> handleNotifyNetworkActiveChanged(NotifyNetworkActiveChangedFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(::uiInterface.NotifyNetworkActiveChanged.connect(fn));
+    }
+    std::unique_ptr<Handler> handleNotifyAlertChanged(NotifyAlertChangedFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(::uiInterface.NotifyAlertChanged.connect(fn));
+    }
+    std::unique_ptr<Handler> handleBannedListChanged(BannedListChangedFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(::uiInterface.BannedListChanged.connect(fn));
+    }
+    std::unique_ptr<Handler> handleNotifyBlockTip(NotifyBlockTipFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(
+            ::uiInterface.NotifyBlockTip.connect([fn](bool initial_download, const CBlockIndex* block) {
+                fn(initial_download, block->nHeight, block->GetBlockTime(),
+                    ::GuessVerificationProgress(::Params().TxData(), block));
+            }));
+    }
+    std::unique_ptr<Handler> handleNotifyHeaderTip(NotifyHeaderTipFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(
+            ::uiInterface.NotifyHeaderTip.connect([fn](bool initial_download, const CBlockIndex* block) {
+                fn(initial_download, block->nHeight, block->GetBlockTime(),
+                    ::GuessVerificationProgress(::Params().TxData(), block));
+            }));
     }
 
     boost::thread_group m_thread_group;
