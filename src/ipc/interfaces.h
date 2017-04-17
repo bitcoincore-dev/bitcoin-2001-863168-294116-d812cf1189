@@ -23,6 +23,7 @@ class CValidationState;
 class RPCTimerInterface;
 class UniValue;
 class proxyType;
+enum class FeeReason;
 struct CNodeStateStats;
 struct CRecipient;
 
@@ -32,6 +33,7 @@ class Handler;
 class Wallet;
 class PendingWalletTx;
 struct WalletBalances;
+struct WalletTxOut;
 using WalletOrderForm = std::vector<std::pair<std::string, std::string>>;
 using WalletValueMap = std::map<std::string, std::string>;
 
@@ -156,8 +158,23 @@ public:
     //! Get wallet rbf.
     virtual bool getWalletRbf() = 0;
 
+    //! Get required fee.
+    virtual CAmount getRequiredFee(unsigned int tx_bytes) = 0;
+
+    //! Get minimum fee.
+    virtual CAmount getMinimumFee(unsigned int tx_bytes, const CCoinControl& coin_control, int* returned_target, FeeReason* reason) = 0;
+
     //! Get max tx fee.
     virtual CAmount getMaxTxFee() = 0;
+
+    //! Estimate smart fee.
+    virtual CFeeRate estimateSmartFee(int num_blocks, bool conservative, int* answer_found_at_blocks = nullptr) = 0;
+
+    //! Get dust relay fee.
+    virtual CFeeRate getDustRelayFee() = 0;
+
+    //! Get pay tx fee.
+    virtual CFeeRate getPayTxFee() = 0;
 
     //! Execute rpc command.
     virtual UniValue executeRpc(const std::string& command, const UniValue& params, const std::string& uri) = 0;
@@ -341,6 +358,14 @@ public:
     //! Get available balance.
     virtual CAmount getAvailableBalance(const CCoinControl& coin_control) = 0;
 
+    //! Return AvailableCoins + LockedCoins grouped by wallet address.
+    //! (put change in one group with wallet address)
+    using CoinsList = std::map<CTxDestination, std::vector<std::tuple<COutPoint, WalletTxOut>>>;
+    virtual CoinsList listCoins() = 0;
+
+    //! Return wallet transaction output information.
+    virtual std::vector<WalletTxOut> getCoins(const std::vector<COutPoint>& outputs) = 0;
+
     // Return whether HD enabled.
     virtual bool hdEnabled() = 0;
 
@@ -416,6 +441,15 @@ struct WalletBalances
                unconfirmed_watch_only_balance != prev.unconfirmed_watch_only_balance ||
                immature_watch_only_balance != prev.immature_watch_only_balance;
     }
+};
+
+//! Wallet transaction output.
+struct WalletTxOut
+{
+    CTxOut txout;
+    int64_t time;
+    int depth_in_main_chain = -1;
+    bool is_spent = false;
 };
 
 //! Protocol IPC interface should use to communicate with implementation.
