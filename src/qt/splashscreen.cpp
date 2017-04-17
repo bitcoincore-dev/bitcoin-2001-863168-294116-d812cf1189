@@ -12,13 +12,10 @@
 
 #include "clientversion.h"
 #include "init.h"
+#include "ipc/interfaces.h"
 #include "util.h"
 #include "ui_interface.h"
 #include "version.h"
-
-#ifdef ENABLE_WALLET
-#include "wallet/wallet.h"
-#endif
 
 #include <QApplication>
 #include <QCloseEvent>
@@ -26,8 +23,8 @@
 #include <QPainter>
 #include <QRadialGradient>
 
-SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) :
-    QWidget(0, f), curAlignment(0)
+SplashScreen::SplashScreen(ipc::Node& ipcNode, Qt::WindowFlags f, const NetworkStyle *networkStyle) :
+    QWidget(0, f), curAlignment(0), ipcNode(ipcNode)
 {
     // set reference point, paddings
     int paddingRight            = 50;
@@ -165,33 +162,33 @@ static void ShowProgress(SplashScreen *splash, const std::string &title, int nPr
 }
 
 #ifdef ENABLE_WALLET
-void SplashScreen::ConnectWallet(CWallet* wallet)
+void SplashScreen::ConnectWallet(std::unique_ptr<ipc::Wallet> wallet)
 {
-    wallet->ShowProgress.connect(boost::bind(ShowProgress, this, _1, _2));
-    connectedWallets.push_back(wallet);
+    connectedWalletHandlers.emplace_back(wallet->handleShowProgress(boost::bind(ShowProgress, this, _1, _2)));
+    connectedWallets.emplace_back(std::move(wallet));
 }
 #endif
 
 void SplashScreen::subscribeToCoreSignals()
 {
     // Connect signals to client
-    uiInterface.InitMessage.connect(boost::bind(InitMessage, this, _1));
-    uiInterface.ShowProgress.connect(boost::bind(ShowProgress, this, _1, _2));
+    handlerInitMessage = ipcNode.handleInitMessage(boost::bind(InitMessage, this, _1));
+    handlerShowProgress = ipcNode.handleShowProgress(boost::bind(ShowProgress, this, _1, _2));
 #ifdef ENABLE_WALLET
-    uiInterface.LoadWallet.connect(boost::bind(&SplashScreen::ConnectWallet, this, _1));
+    handlerLoadWallet = ipcNode.handleLoadWallet([this](std::unique_ptr<ipc::Wallet> wallet) { ConnectWallet(std::move(wallet)); });
 #endif
 }
 
 void SplashScreen::unsubscribeFromCoreSignals()
 {
     // Disconnect signals from client
-    uiInterface.InitMessage.disconnect(boost::bind(InitMessage, this, _1));
-    uiInterface.ShowProgress.disconnect(boost::bind(ShowProgress, this, _1, _2));
-#ifdef ENABLE_WALLET
-    Q_FOREACH(CWallet* const & pwallet, connectedWallets) {
-        pwallet->ShowProgress.disconnect(boost::bind(ShowProgress, this, _1, _2));
+    handlerInitMessage->disconnect();
+    handlerShowProgress->disconnect();
+    for (auto& handler : connectedWalletHandlers) {
+        handler->disconnect();
     }
-#endif
+    connectedWalletHandlers.clear();
+    connectedWallets.clear();
 }
 
 void SplashScreen::showMessage(const QString &message, int alignment, const QColor &color)
@@ -213,6 +210,6 @@ void SplashScreen::paintEvent(QPaintEvent *event)
 
 void SplashScreen::closeEvent(QCloseEvent *event)
 {
-    StartShutdown(); // allows an "emergency" shutdown during startup
+    ipcNode.startShutdown(); // allows an "emergency" shutdown during startup
     event->ignore();
 }
