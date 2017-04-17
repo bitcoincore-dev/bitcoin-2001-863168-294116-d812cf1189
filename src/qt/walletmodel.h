@@ -8,6 +8,7 @@
 #include "paymentrequestplus.h"
 #include "walletmodeltransaction.h"
 
+#include "ipc/interfaces.h"
 #include "support/allocators/secure.h"
 
 #include <map>
@@ -100,7 +101,7 @@ class WalletModel : public QObject
     Q_OBJECT
 
 public:
-    explicit WalletModel(const PlatformStyle *platformStyle, CWallet *wallet, OptionsModel *optionsModel, QObject *parent = 0);
+    explicit WalletModel(std::unique_ptr<ipc::Wallet> ipcWallet, ipc::Node& ipcNode, const PlatformStyle *platformStyle, CWallet *_wallet, OptionsModel *optionsModel, QObject *parent = 0);
     ~WalletModel();
 
     enum StatusCode // Returned by sendCoins
@@ -129,13 +130,6 @@ public:
     TransactionTableModel *getTransactionTableModel();
     RecentRequestsTableModel *getRecentRequestsTableModel();
 
-    CAmount getBalance(const CCoinControl *coinControl = NULL) const;
-    CAmount getUnconfirmedBalance() const;
-    CAmount getImmatureBalance() const;
-    bool haveWatchOnly() const;
-    CAmount getWatchBalance() const;
-    CAmount getWatchUnconfirmedBalance() const;
-    CAmount getWatchImmatureBalance() const;
     EncryptionStatus getEncryptionStatus() const;
 
     // Check address for validity
@@ -164,8 +158,6 @@ public:
     // Passphrase only needed when unlocking
     bool setWalletLocked(bool locked, const SecureString &passPhrase=SecureString());
     bool changePassphrase(const SecureString &oldPass, const SecureString &newPass);
-    // Wallet backup
-    bool backupWallet(const QString &filename);
 
     // RAI object for unlocking wallet, returned by requestUnlock()
     class UnlockContext
@@ -189,36 +181,30 @@ public:
 
     UnlockContext requestUnlock();
 
-    bool getPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const;
-    bool havePrivKey(const CKeyID &address) const;
-    bool getPrivKey(const CKeyID &address, CKey& vchPrivKeyOut) const;
     void getOutputs(const std::vector<COutPoint>& vOutpoints, std::vector<COutput>& vOutputs);
     bool isSpent(const COutPoint& outpoint) const;
     void listCoins(std::map<QString, std::vector<COutput> >& mapCoins) const;
 
-    bool isLockedCoin(uint256 hash, unsigned int n) const;
-    void lockCoin(COutPoint& output);
-    void unlockCoin(COutPoint& output);
-    void listLockedCoins(std::vector<COutPoint>& vOutpts);
-
     void loadReceiveRequests(std::vector<std::string>& vReceiveRequests);
     bool saveReceiveRequest(const std::string &sAddress, const int64_t nId, const std::string &sRequest);
-
-    bool transactionCanBeAbandoned(uint256 hash) const;
-    bool abandonTransaction(uint256 hash) const;
 
     bool transactionSignalsRBF(uint256 hash) const;
     bool bumpFee(uint256 hash);
 
     static bool isWalletEnabled();
 
-    bool hdEnabled() const;
+    ipc::Node& getIpcNode() const { return ipcNode; }
 
-    int getDefaultConfirmTarget() const;
-
-    bool getDefaultWalletRbf() const;
+    ipc::Wallet& getIpcWallet() const { return *ipcWallet; }
 
 private:
+    std::unique_ptr<ipc::Wallet> ipcWallet;
+    std::unique_ptr<ipc::Handler> handlerStatusChanged;
+    std::unique_ptr<ipc::Handler> handlerAddressBookChanged;
+    std::unique_ptr<ipc::Handler> handlerTransactionChanged;
+    std::unique_ptr<ipc::Handler> handlerShowProgress;
+    std::unique_ptr<ipc::Handler> handlerWatchonlyChanged;
+    ipc::Node& ipcNode;
     CWallet *wallet;
     bool fHaveWatchOnly;
     bool fForceCheckBalanceChanged;
@@ -232,12 +218,7 @@ private:
     RecentRequestsTableModel *recentRequestsTableModel;
 
     // Cache some values to be able to detect changes
-    CAmount cachedBalance;
-    CAmount cachedUnconfirmedBalance;
-    CAmount cachedImmatureBalance;
-    CAmount cachedWatchOnlyBalance;
-    CAmount cachedWatchUnconfBalance;
-    CAmount cachedWatchImmatureBalance;
+    ipc::WalletBalances cachedBalances;
     EncryptionStatus cachedEncryptionStatus;
     int cachedNumBlocks;
 
@@ -245,7 +226,7 @@ private:
 
     void subscribeToCoreSignals();
     void unsubscribeFromCoreSignals();
-    void checkBalanceChanged();
+    void checkBalanceChanged(const ipc::WalletBalances& newBalances);
 
 Q_SIGNALS:
     // Signal that balance in wallet changed
