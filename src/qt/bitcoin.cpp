@@ -372,7 +372,7 @@ void BitcoinApplication::createWindow(const NetworkStyle *networkStyle)
 
 void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
 {
-    SplashScreen *splash = new SplashScreen(0, networkStyle);
+    SplashScreen *splash = new SplashScreen(m_ipc_node, 0, networkStyle);
     // We don't hold a direct pointer to the splash screen after creation, but the splash
     // screen will take care of deleting itself when slotFinish happens.
     splash->show();
@@ -566,7 +566,6 @@ int main(int argc, char *argv[])
     //   Need to pass name here as CAmount is a typedef (see http://qt-project.org/doc/qt-5/qmetatype.html#qRegisterMetaType)
     //   IMPORTANT if it is no longer a typedef use the normal variant above
     qRegisterMetaType< CAmount >("CAmount");
-    qRegisterMetaType< std::function<void(void)> >("std::function<void(void)>");
 
     /// 3. Application identification
     // must be set before OptionsModel is initialized or translations are loaded,
@@ -672,7 +671,7 @@ int main(int argc, char *argv[])
     app.createOptionsModel(gArgs.IsArgSet("-resetguisettings"));
 
     // Subscribe to global signals from core
-    std::unique_ptr<ipc::Handler> handlerInitMessage = ipc_node->handleInitMessage(InitMessage);
+    std::unique_ptr<ipc::Handler> m_handler_init_message = ipc_node->handleInitMessage(InitMessage);
 
     if (gArgs.GetBoolArg("-splash", DEFAULT_SPLASHSCREEN) && !gArgs.GetBoolArg("-min", false))
         app.createSplashScreen(networkStyle.data());

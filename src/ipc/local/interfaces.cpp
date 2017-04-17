@@ -11,11 +11,24 @@
 #include <validation.h>
 #include <warnings.h>
 
+#if defined(HAVE_CONFIG_H)
+#include "config/bitcoin-config.h"
+#endif
+#ifdef ENABLE_WALLET
+#include "wallet/wallet.h"
+#endif
+
 #include <boost/thread.hpp>
 
 namespace ipc {
 namespace local {
 namespace {
+
+#ifdef ENABLE_WALLET
+#define CHECK_WALLET(x) x
+#else
+#define CHECK_WALLET(x) throw std::logic_error("Wallet function called in non-wallet build.")
+#endif
 
 class HandlerImpl : public Handler
 {
@@ -26,6 +39,21 @@ public:
 
     boost::signals2::scoped_connection m_connection;
 };
+
+#ifdef ENABLE_WALLET
+class WalletImpl : public Wallet
+{
+public:
+    WalletImpl(CWallet& wallet) : m_wallet(wallet) {}
+
+    std::unique_ptr<Handler> handleShowProgress(ShowProgressFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(m_wallet.ShowProgress.connect(fn));
+    }
+
+    CWallet& m_wallet;
+};
+#endif
 
 class NodeImpl : public Node
 {
@@ -52,6 +80,19 @@ public:
     }
     void startShutdown() override { ::StartShutdown(); }
     bool shutdownRequested() override { return ::ShutdownRequested(); }
+    bool interruptInit() override
+    {
+        std::function<void(void)> action;
+        {
+            LOCK(m_break_action_lock);
+            action = m_break_action;
+        }
+        if (action) {
+            action();
+            return true;
+        }
+        return false;
+    }
     std::string helpMessage(HelpMessageMode mode) override { return ::HelpMessage(mode); }
     void mapPort(bool use_upnp) override { ::MapPort(use_upnp); }
     bool getProxy(Network net, proxyType& proxy_info) override { return ::GetProxy(net, proxy_info); }
@@ -67,9 +108,25 @@ public:
     {
         return MakeUnique<HandlerImpl>(::uiInterface.ThreadSafeQuestion.connect(fn));
     }
+    std::unique_ptr<Handler> handleShowProgress(ShowProgressFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(::uiInterface.ShowProgress.connect(fn));
+    }
+    std::unique_ptr<Handler> handleLoadWallet(LoadWalletFn fn) override
+    {
+        CHECK_WALLET(return MakeUnique<HandlerImpl>(
+            ::uiInterface.LoadWallet.connect([fn](CWallet* wallet) { fn(MakeUnique<WalletImpl>(*wallet)); })));
+    }
 
     boost::thread_group m_thread_group;
     ::CScheduler m_scheduler;
+    std::function<void(void)> m_break_action;
+    CCriticalSection m_break_action_lock;
+    boost::signals2::scoped_connection m_break_action_connection{
+        ::uiInterface.SetProgressBreakAction.connect([this](std::function<void(void)> action) {
+            LOCK(m_break_action_lock);
+            m_break_action = std::move(action);
+        })};
 };
 
 } // namespace
