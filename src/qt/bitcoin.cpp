@@ -461,9 +461,9 @@ void BitcoinApplication::initializeResult(bool success)
 
 #ifdef ENABLE_WALLET
         // TODO: Expose secondary wallets
-        if (!vpwallets.empty())
+        if (auto walletMain = m_node.getWallet(0))
         {
-            walletModel = new WalletModel(platformStyle, vpwallets[0], optionsModel);
+            walletModel = new WalletModel(std::move(walletMain), m_node, platformStyle, vpwallets[0], optionsModel);
 
             window->addWallet(BitcoinGUI::DEFAULT_WALLET, walletModel);
             window->setCurrentWallet(BitcoinGUI::DEFAULT_WALLET);
