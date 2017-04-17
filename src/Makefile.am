@@ -106,6 +106,7 @@ BITCOIN_CORE_H = \
   interface/handler.h \
   interface/node.h \
   interface/util.h \
+  interface/wallet.h \
   key.h \
   keystore.h \
   dbwrapper.h \
@@ -351,6 +352,7 @@ libbitcoin_util_a_SOURCES = \
   fs.cpp \
   interface/handler.cpp \
   interface/node.cpp \
+  interface/wallet.cpp \
   random.cpp \
   rpc/protocol.cpp \
   support/cleanse.cpp \
@@ -392,6 +394,7 @@ bitcoind_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_WALLET) \
+  $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_ZMQ) \
   $(LIBBITCOIN_CONSENSUS) \
   $(LIBBITCOIN_CRYPTO) \

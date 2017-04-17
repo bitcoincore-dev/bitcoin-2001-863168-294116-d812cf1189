@@ -4,6 +4,7 @@
 #include <init.h>
 #include <interface/handler.h>
 #include <interface/util.h>
+#include <interface/wallet.h>
 #include <net.h>
 #include <netaddress.h>
 #include <netbase.h>
@@ -12,7 +13,18 @@
 #include <util.h>
 #include <warnings.h>
 
+#if defined(HAVE_CONFIG_H)
+#include <config/bitcoin-config.h>
+#endif
+#ifdef ENABLE_WALLET
+#define CHECK_WALLET(x) x
+#else
+#define CHECK_WALLET(x) throw std::logic_error("Wallet function called in non-wallet build.")
+#endif
+
 #include <boost/thread/thread.hpp>
+
+class CWallet;
 
 namespace interface {
 namespace {
@@ -57,6 +69,15 @@ public:
     std::unique_ptr<Handler> handleQuestion(QuestionFn fn) override
     {
         return MakeHandler(::uiInterface.ThreadSafeQuestion.connect(fn));
+    }
+    std::unique_ptr<Handler> handleShowProgress(ShowProgressFn fn) override
+    {
+        return MakeHandler(::uiInterface.ShowProgress.connect(fn));
+    }
+    std::unique_ptr<Handler> handleLoadWallet(LoadWalletFn fn) override
+    {
+        CHECK_WALLET(
+            return MakeHandler(::uiInterface.LoadWallet.connect([fn](CWallet* wallet) { fn(MakeWallet(*wallet)); })));
     }
 
     boost::thread_group m_thread_group;
