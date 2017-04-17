@@ -109,7 +109,7 @@ class NodeImpl : public Node
             LOCK(::cs_main);
             tip = ::chainActive.Tip();
         }
-        return GuessVerificationProgress(::Params().TxData(), tip);
+        return GuessVerificationProgress(Params().TxData(), tip);
     }
     bool isInitialBlockDownload() override { return IsInitialBlockDownload(); }
     bool getReindex() override { return ::fReindex; }
@@ -162,7 +162,7 @@ class NodeImpl : public Node
     {
         return MakeHandler(::uiInterface.NotifyBlockTip.connect([fn](bool initial_download, const CBlockIndex* block) {
             fn(initial_download, block->nHeight, block->GetBlockTime(),
-                GuessVerificationProgress(::Params().TxData(), block));
+                GuessVerificationProgress(Params().TxData(), block));
         }));
     }
     std::unique_ptr<Handler> handleNotifyHeaderTip(NotifyHeaderTipFn fn) override
@@ -170,7 +170,7 @@ class NodeImpl : public Node
         return MakeHandler(
             ::uiInterface.NotifyHeaderTip.connect([fn](bool initial_download, const CBlockIndex* block) {
                 fn(initial_download, block->nHeight, block->GetBlockTime(),
-                    GuessVerificationProgress(::Params().TxData(), block));
+                    GuessVerificationProgress(Params().TxData(), block));
             }));
     }
 };
