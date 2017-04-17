@@ -111,6 +111,14 @@ public:
         }
         return false;
     }
+    bool getBanned(banmap_t& banMap)
+    {
+        if (g_connman) {
+            g_connman->GetBanned(banMap);
+            return true;
+        }
+        return false;
+    }
     int64_t getTotalBytesRecv() override { return g_connman ? g_connman->GetTotalBytesRecv() : 0; }
     int64_t getTotalBytesSent() override { return g_connman ? g_connman->GetTotalBytesSent() : 0; }
     size_t getMempoolSize() override { return mempool.size(); }
