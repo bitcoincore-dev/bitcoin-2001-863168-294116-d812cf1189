@@ -8,6 +8,7 @@
 #include "paymentrequestdata.h"
 
 #include "amount.h"
+#include "ipc/interfaces.h"
 #include "random.h"
 #include "script/script.h"
 #include "script/standard.h"
@@ -65,7 +66,8 @@ static SendCoinsRecipient handleRequest(PaymentServer* server, std::vector<unsig
 void PaymentServerTests::paymentServerTests()
 {
     SelectParams(CBaseChainParams::MAIN);
-    OptionsModel optionsModel;
+    auto ipc_node = ipc::MakeNode(ipc::LOCAL);
+    OptionsModel optionsModel(*ipc_node);
     PaymentServer* server = new PaymentServer(NULL, false);
     X509_STORE* caStore = X509_STORE_new();
     X509_STORE_add_cert(caStore, parse_b64der_cert(caCert1_BASE64));
