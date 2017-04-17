@@ -33,6 +33,7 @@
 
 #include "chainparams.h"
 #include "init.h"
+#include "ipc/interfaces.h"
 #include "ui_interface.h"
 #include "util.h"
 
@@ -78,9 +79,10 @@ const std::string BitcoinGUI::DEFAULT_UIPLATFORM =
  * collisions in the future with additional wallets */
 const QString BitcoinGUI::DEFAULT_WALLET = "~Default";
 
-BitcoinGUI::BitcoinGUI(const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget *parent) :
+BitcoinGUI::BitcoinGUI(ipc::Node& _ipcNode, const PlatformStyle *_platformStyle, const NetworkStyle *networkStyle, QWidget *parent) :
     QMainWindow(parent),
     enableWallet(false),
+    ipcNode(_ipcNode),
     clientModel(0),
     walletFrame(0),
     unitDisplayControl(0),
@@ -1110,7 +1112,7 @@ void BitcoinGUI::toggleHidden()
 
 void BitcoinGUI::detectShutdown()
 {
-    if (ShutdownRequested())
+    if (ipcNode.shutdownRequested())
     {
         if(rpcConsole)
             rpcConsole->hide();
@@ -1175,15 +1177,15 @@ static bool ThreadSafeMessageBox(BitcoinGUI *gui, const std::string& message, co
 void BitcoinGUI::subscribeToCoreSignals()
 {
     // Connect signals to client
-    uiInterface.ThreadSafeMessageBox.connect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
-    uiInterface.ThreadSafeQuestion.connect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
+    handlerMessageBox = ipcNode.handleMessageBox(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
+    handlerQuestion = ipcNode.handleQuestion(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
 }
 
 void BitcoinGUI::unsubscribeFromCoreSignals()
 {
     // Disconnect signals from client
-    uiInterface.ThreadSafeMessageBox.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
-    uiInterface.ThreadSafeQuestion.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
+    handlerMessageBox->disconnect();
+    handlerQuestion->disconnect();
 }
 
 void BitcoinGUI::toggleNetworkActive()
