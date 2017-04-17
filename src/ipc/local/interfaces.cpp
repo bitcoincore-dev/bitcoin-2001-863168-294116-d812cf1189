@@ -50,6 +50,7 @@ public:
     }
     void startShutdown() override { ::StartShutdown(); }
     bool shutdownRequested() override { return ::ShutdownRequested(); }
+    std::string helpMessage(HelpMessageMode mode) override { return ::HelpMessage(mode); }
     void mapPort(bool useUPnP) override { ::MapPort(useUPnP); }
     bool getProxy(Network net, proxyType& proxyInfo) override { return ::GetProxy(net, proxyInfo); }
     std::unique_ptr<Handler> handleInitMessage(InitMessageFn fn) override
