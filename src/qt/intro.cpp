@@ -12,6 +12,7 @@
 
 #include "guiutil.h"
 
+#include "ipc/interfaces.h"
 #include "util.h"
 
 #include <QFileDialog>
@@ -186,7 +187,7 @@ QString Intro::getDefaultDataDirectory()
     return GUIUtil::boostPathToQString(GetDefaultDataDir());
 }
 
-bool Intro::pickDataDirectory()
+bool Intro::pickDataDirectory(ipc::Node& ipc_node)
 {
     QSettings settings;
     /* If data directory provided on command line, no need to look at settings
@@ -230,8 +231,9 @@ bool Intro::pickDataDirectory()
      * override -datadir in the bitcoin.conf file in the default data directory
      * (to be consistent with bitcoind behavior)
      */
-    if(dataDir != getDefaultDataDirectory())
-        gArgs.SoftSetArg("-datadir", GUIUtil::qstringToBoostPath(dataDir).string()); // use OS locale for path setting
+    if(dataDir != getDefaultDataDirectory()) {
+        ipc_node.softSetArg("-datadir", GUIUtil::qstringToBoostPath(dataDir).string()); // use OS locale for path setting
+    }
     return true;
 }
 
