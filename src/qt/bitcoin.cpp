@@ -372,7 +372,7 @@ void BitcoinApplication::createWindow(const NetworkStyle *networkStyle)
 
 void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
 {
-    SplashScreen *splash = new SplashScreen(0, networkStyle);
+    SplashScreen *splash = new SplashScreen(m_ipc_node, 0, networkStyle);
     // We don't hold a direct pointer to the splash screen after creation, but the splash
     // screen will take care of deleting itself when slotFinish happens.
     splash->show();
@@ -671,7 +671,7 @@ int main(int argc, char *argv[])
     app.createOptionsModel(IsArgSet("-resetguisettings"));
 
     // Subscribe to global signals from core
-    std::unique_ptr<ipc::Handler> handlerInitMessage = ipc_node->handleInitMessage(InitMessage);
+    std::unique_ptr<ipc::Handler> m_handler_init_message = ipc_node->handleInitMessage(InitMessage);
 
     if (GetBoolArg("-splash", DEFAULT_SPLASHSCREEN) && !GetBoolArg("-min", false))
         app.createSplashScreen(networkStyle.data());
