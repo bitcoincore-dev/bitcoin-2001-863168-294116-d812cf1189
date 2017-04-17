@@ -43,6 +43,7 @@ public:
     }
     void startShutdown() override { StartShutdown(); }
     bool shutdownRequested() override { return ShutdownRequested(); }
+    std::string helpMessage(HelpMessageMode mode) override { return HelpMessage(mode); }
     void mapPort(bool use_upnp) override { MapPort(use_upnp); }
     bool getProxy(Network net, proxyType& proxy_info) override { return GetProxy(net, proxy_info); }
     std::unique_ptr<Handler> handleInitMessage(InitMessageFn fn) override
