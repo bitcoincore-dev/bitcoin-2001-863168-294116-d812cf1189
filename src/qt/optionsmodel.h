@@ -76,6 +76,8 @@ public:
     void setRestartRequired(bool fRequired);
     bool isRestartRequired();
 
+    ipc::Node& getIpcNode() const { return ipcNode; }
+
 private:
     ipc::Node& ipcNode;
     /* Qt-only settings */
