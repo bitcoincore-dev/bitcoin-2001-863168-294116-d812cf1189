@@ -40,7 +40,7 @@ ClientModel::ClientModel(ipc::Node& _ipcNode, OptionsModel *_optionsModel, QObje
 {
     cachedBestHeaderHeight = -1;
     cachedBestHeaderTime = -1;
-    peerTableModel = new PeerTableModel(this);
+    peerTableModel = new PeerTableModel(m_ipc_node, this);
     banTableModel = new BanTableModel(this);
     pollTimer = new QTimer(this);
     connect(pollTimer, SIGNAL(timeout()), this, SLOT(updateTimer()));
