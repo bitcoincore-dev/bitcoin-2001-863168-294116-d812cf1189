@@ -1,5 +1,6 @@
 #include <interface/node.h>
 
+#include <addrdb.h>
 #include <chain.h>
 #include <chainparams.h>
 #include <init.h>
@@ -89,6 +90,14 @@ class NodeImpl : public Node
                         GetNodeStateStats(std::get<0>(node_stats).nodeid, std::get<2>(node_stats));
                 }
             }
+            return true;
+        }
+        return false;
+    }
+    bool getBanned(banmap_t& banmap) override
+    {
+        if (g_connman) {
+            g_connman->GetBanned(banmap);
             return true;
         }
         return false;
