@@ -1,10 +1,15 @@
 #ifndef BITCOIN_IPC_INTERFACES_H
 #define BITCOIN_IPC_INTERFACES_H
 
-#include "addrdb.h"     // For banmap_t
-#include "init.h"       // For HelpMessageMode
-#include "net.h"        // For CConnman::NumConnections
-#include "netaddress.h" // For Network
+#include "addrdb.h"                    // For banmap_t
+#include "init.h"                      // For HelpMessageMode
+#include "net.h"                       // For CConnman::NumConnections
+#include "netaddress.h"                // For Network
+#include "pubkey.h"                    // For CTxDestination (CKeyID and CScriptID)
+#include "script/ismine.h"             // isminefilter, isminetype
+#include "script/standard.h"           // For CTxDestination
+#include "support/allocators/secure.h" // For SecureString
+#include "ui_interface.h"              // For ChangeType
 
 #include <memory>
 #include <string>
@@ -12,15 +17,23 @@
 #include <vector>
 
 class proxyType;
+class CCoinControl;
+class CKey;
 class CNodeStats;
+class CValidationState;
 class RPCTimerInterface;
 class UniValue;
 struct CNodeStateStats;
+struct CRecipient;
 
 namespace ipc {
 
 class Handler;
 class Wallet;
+class PendingWalletTx;
+struct WalletBalances;
+using WalletOrderForm = std::vector<std::pair<std::string, std::string>>;
+using WalletValueMap = std::map<std::string, std::string>;
 
 //! Top-level interface for a bitcoin node (bitcoind process).
 class Node
@@ -131,6 +144,15 @@ public:
     //! Get network active.
     virtual bool getNetworkActive() = 0;
 
+    //! Get tx confirm target.
+    virtual unsigned int getTxConfirmTarget() = 0;
+
+    //! Get wallet rbf.
+    virtual bool getWalletRbf() = 0;
+
+    //! Get max tx fee.
+    virtual CAmount getMaxTxFee() = 0;
+
     //! Execute rpc command.
     virtual UniValue executeRpc(const std::string& command, const UniValue& params) = 0;
 
@@ -142,6 +164,9 @@ public:
 
     //! Unset RPC timer interface.
     virtual void rpcUnsetTimerInterface(RPCTimerInterface* iface) = 0;
+
+    //! Return interface for accessing the wallet.
+    virtual std::unique_ptr<Wallet> getWallet() = 0;
 
     //! Register handler for init messages.
     using InitMessageFn = std::function<void(const std::string& message)>;
@@ -200,9 +225,134 @@ class Wallet
 public:
     virtual ~Wallet() {}
 
+    //! Encrypt wallet.
+    virtual bool encryptWallet(const SecureString& walletPassphrase) = 0;
+
+    //! Return whether wallet is encrypted.
+    virtual bool isCrypted() = 0;
+
+    //! Lock wallet.
+    virtual bool lock() = 0;
+
+    //! Unlock wallet.
+    virtual bool unlock(const SecureString& walletPassphrase) = 0;
+
+    //! Return whether wallet is locked.
+    virtual bool isLocked() = 0;
+
+    //! Change wallet passphrase.
+    virtual bool changeWalletPassphrase(const SecureString& oldWalletPassphrase,
+        const SecureString& newWalletPassphrase) = 0;
+
+    //! Back up wallet.
+    virtual bool backupWallet(const std::string& filename) = 0;
+
+    //! Get public key.
+    virtual bool getPubKey(const CKeyID& address, CPubKey& pubKey) = 0;
+
+    //! Get key.
+    virtual bool getKey(const CKeyID& address, CKey& key) = 0;
+
+    //! Return whether wallet has key.
+    virtual bool haveKey(const CKeyID& address) = 0;
+
+    //! Return whether wallet has watch only keys.
+    virtual bool haveWatchOnly() = 0;
+
+    //! Add or update address.
+    virtual bool setAddressBook(const CTxDestination& dest, const std::string& name, const std::string& purpose) = 0;
+
+    //! Look up address in wallet, return whether exists.
+    virtual bool getAddress(const CTxDestination& dest, std::string* name = nullptr, isminetype* ismine = nullptr) = 0;
+
+    //! Add dest data.
+    virtual bool addDestData(const CTxDestination& dest, const std::string& key, const std::string& value) = 0;
+
+    //! Erase dest data.
+    virtual bool eraseDestData(const CTxDestination& dest, const std::string& key) = 0;
+
+    //! Get dest values with prefix.
+    virtual std::vector<std::string> getDestValues(const std::string& prefix) = 0;
+
+    //! Lock coin.
+    virtual void lockCoin(const COutPoint& output) = 0;
+
+    //! Unlock coin.
+    virtual void unlockCoin(const COutPoint& output) = 0;
+
+    //! Return whether coin is locked.
+    virtual bool isLockedCoin(const COutPoint& output) = 0;
+
+    //! List locked coins.
+    virtual void listLockedCoins(std::vector<COutPoint>& outputs) = 0;
+
+    //! Create transaction.
+    virtual std::unique_ptr<PendingWalletTx> createTransaction(const std::vector<CRecipient>& recipients,
+        const CCoinControl* coinControl,
+        bool sign,
+        int& changePos,
+        CAmount& fee,
+        std::string& failReason) = 0;
+
+    //! Return whether transaction can be abandoned.
+    virtual bool transactionCanBeAbandoned(const uint256& txHash) = 0;
+
+    //! Abandon transaction.
+    virtual bool abandonTransaction(const uint256& txHash) = 0;
+
+    //! Get balances.
+    virtual WalletBalances getBalances() = 0;
+
+    //! Get balances if possible without blocking.
+    virtual bool tryGetBalances(WalletBalances& balances, int& numBlocks) = 0;
+
+    //! Get balance.
+    virtual CAmount getBalance() = 0;
+
+    //! Get unconfirmed balance.
+    virtual CAmount getUnconfirmedBalance() = 0;
+
+    //! Get immature balance.
+    virtual CAmount getImmatureBalance() = 0;
+
+    //! Get watch only balance.
+    virtual CAmount getWatchOnlyBalance() = 0;
+
+    //! Get unconfirmed watch only balance.
+    virtual CAmount getUnconfirmedWatchOnlyBalance() = 0;
+
+    //! Get immature watch only balance.
+    virtual CAmount getImmatureWatchOnlyBalance() = 0;
+
+    //! Get available balance.
+    virtual CAmount getAvailableBalance(const CCoinControl& coinControl) = 0;
+
+    // Return whether HD enabled.
+    virtual bool hdEnabled() = 0;
+
     //! Register handler for show progress messages.
     using ShowProgressFn = std::function<void(const std::string& title, int progress)>;
     virtual std::unique_ptr<Handler> handleShowProgress(ShowProgressFn fn) = 0;
+
+    //! Register handler for status changed messages.
+    using StatusChangedFn = std::function<void()>;
+    virtual std::unique_ptr<Handler> handleStatusChanged(StatusChangedFn fn) = 0;
+
+    //! Register handler for address book changed messages.
+    using AddressBookChangedFn = std::function<void(const CTxDestination& address,
+        const std::string& label,
+        bool isMine,
+        const std::string& purpose,
+        ChangeType status)>;
+    virtual std::unique_ptr<Handler> handleAddressBookChanged(AddressBookChangedFn fn) = 0;
+
+    //! Register handler for transaction changed messages.
+    using TransactionChangedFn = std::function<void(const uint256& hashTx, ChangeType status)>;
+    virtual std::unique_ptr<Handler> handleTransactionChanged(TransactionChangedFn fn) = 0;
+
+    //! Register handler for watchonly changed messages.
+    using WatchonlyChangedFn = std::function<void(bool haveWatchOnly)>;
+    virtual std::unique_ptr<Handler> handleWatchonlyChanged(WatchonlyChangedFn fn) = 0;
 };
 
 //! Interface for managing a registered handler.
@@ -212,6 +362,45 @@ public:
     virtual ~Handler() {}
     //! Disconnect the handler.
     virtual void disconnect() = 0;
+};
+
+//! Tracking object returned by CreateTransaction and passed to CommitTransaction.
+class PendingWalletTx
+{
+public:
+    virtual ~PendingWalletTx() {}
+
+    //! Get transaction data.
+    virtual const CTransaction& get() = 0;
+
+    //! Get virtual transaction size.
+    virtual int64_t getVirtualSize() = 0;
+
+    //! Send pending transaction and commit to wallet.
+    virtual bool commit(WalletValueMap mapValue,
+        WalletOrderForm orderForm,
+        std::string fromAccount,
+        std::string& rejectReason) = 0;
+};
+
+//! Collection of wallet balances.
+struct WalletBalances
+{
+    CAmount balance = 0;
+    CAmount unconfirmedBalance = 0;
+    CAmount immatureBalance = 0;
+    bool haveWatchOnly = false;
+    CAmount watchOnlyBalance = 0;
+    CAmount unconfirmedWatchOnlyBalance = 0;
+    CAmount immatureWatchOnlyBalance = 0;
+
+    bool balanceChanged(const WalletBalances& prev) const
+    {
+        return balance != prev.balance || unconfirmedBalance != prev.unconfirmedBalance ||
+               immatureBalance != prev.immatureBalance || watchOnlyBalance != prev.watchOnlyBalance ||
+               unconfirmedWatchOnlyBalance != prev.unconfirmedWatchOnlyBalance ||
+               immatureWatchOnlyBalance != prev.immatureWatchOnlyBalance;
+    }
 };
 
 //! Protocol IPC interface should use to communicate with implementation.
