@@ -1,8 +1,12 @@
 #ifndef BITCOIN_IPC_INTERFACES_H
 #define BITCOIN_IPC_INTERFACES_H
 
+#include "netaddress.h" // For Network
+
 #include <memory>
 #include <string>
+
+class proxyType;
 
 namespace ipc {
 
@@ -16,6 +20,12 @@ public:
 
     //! Set command line arguments.
     virtual void parseParameters(int argc, const char* const argv[]) = 0;
+
+    //! Set a command line argument if it doesn't already have a value
+    virtual bool softSetArg(const std::string& arg, const std::string& value) = 0;
+
+    //! Set a command line boolean argument if it doesn't already have a value
+    virtual bool softSetBoolArg(const std::string& arg, bool value) = 0;
 
     //! Load settings from configuration file.
     virtual void readConfigFile(const std::string& conf_path) = 0;
@@ -43,6 +53,12 @@ public:
 
     //! Start shutdown.
     virtual void startShutdown() = 0;
+
+    //! Map port.
+    virtual void mapPort(bool use_upnp) = 0;
+
+    //! Get proxy.
+    virtual bool getProxy(Network net, proxyType& proxy_info) = 0;
 
     //! Register handler for init messages.
     using InitMessageFn = std::function<void(const std::string& message)>;
