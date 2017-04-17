@@ -10,6 +10,10 @@
 
 class BitcoinGUI;
 
+namespace ipc {
+    class Node;
+}
+
 namespace Ui {
     class HelpMessageDialog;
 }
@@ -20,7 +24,7 @@ class HelpMessageDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit HelpMessageDialog(QWidget *parent, bool about);
+    explicit HelpMessageDialog(ipc::Node& ipcNode, QWidget *parent, bool about);
     ~HelpMessageDialog();
 
     void printToConsole();
