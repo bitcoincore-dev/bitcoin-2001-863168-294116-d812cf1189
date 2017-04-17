@@ -18,6 +18,8 @@
 #include <QPoint>
 #include <QSystemTrayIcon>
 
+#include <memory>
+
 class ClientModel;
 class NetworkStyle;
 class Notificator;
@@ -31,7 +33,10 @@ class WalletModel;
 class HelpMessageDialog;
 class ModalOverlay;
 
-class CWallet;
+namespace ipc {
+class Handler;
+class Node;
+}
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -51,7 +56,7 @@ public:
     static const QString DEFAULT_WALLET;
     static const std::string DEFAULT_UIPLATFORM;
 
-    explicit BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent = 0);
+    explicit BitcoinGUI(ipc::Node& ipcNode, const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent = 0);
     ~BitcoinGUI();
 
     /** Set the client model.
@@ -79,6 +84,9 @@ protected:
     bool eventFilter(QObject *object, QEvent *event);
 
 private:
+    ipc::Node& ipcNode;
+    std::unique_ptr<ipc::Handler> handlerMessageBox;
+    std::unique_ptr<ipc::Handler> handlerQuestion;
     ClientModel *clientModel;
     WalletFrame *walletFrame;
 
