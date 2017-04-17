@@ -2041,7 +2041,7 @@ void CWallet::AvailableCoins(std::vector<COutput> &vCoins, bool fOnlyConfirmed, 
 
         CAmount nTotal = 0;
 
-        for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
+        for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
         {
             const uint256& wtxid = it->first;
             const CWalletTx* pcoin = &(*it).second;
