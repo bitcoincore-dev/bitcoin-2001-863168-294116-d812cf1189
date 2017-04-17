@@ -7,8 +7,15 @@
 
 #include <QSplashScreen>
 
-class CWallet;
+#include <memory>
+
 class NetworkStyle;
+
+namespace ipc {
+class Handler;
+class Node;
+class Wallet;
+};
 
 /** Class for the splashscreen with information of the running client.
  *
@@ -21,7 +28,7 @@ class SplashScreen : public QWidget
     Q_OBJECT
 
 public:
-    explicit SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle);
+    explicit SplashScreen(ipc::Node& ipcNode, Qt::WindowFlags f, const NetworkStyle *networkStyle);
     ~SplashScreen();
 
 protected:
@@ -41,14 +48,19 @@ private:
     /** Disconnect core signals to splash screen */
     void unsubscribeFromCoreSignals();
     /** Connect wallet signals to splash screen */
-    void ConnectWallet(CWallet*);
+    void ConnectWallet(std::unique_ptr<ipc::Wallet> wallet);
 
     QPixmap pixmap;
     QString curMessage;
     QColor curColor;
     int curAlignment;
 
-    QList<CWallet*> connectedWallets;
+    ipc::Node& ipcNode;
+    std::unique_ptr<ipc::Handler> handlerInitMessage;
+    std::unique_ptr<ipc::Handler> handlerShowProgress;
+    std::unique_ptr<ipc::Handler> handlerLoadWallet;
+    std::list<std::unique_ptr<ipc::Wallet>> connectedWallets;
+    std::list<std::unique_ptr<ipc::Handler>> connectedWalletHandlers;
 };
 
 #endif // BITCOIN_QT_SPLASHSCREEN_H
