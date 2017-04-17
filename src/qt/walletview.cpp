@@ -142,7 +142,7 @@ void WalletView::setWalletModel(WalletModel *_walletModel)
         updateEncryptionStatus();
 
         // update HD status
-        Q_EMIT hdEnabledStatusChanged(_walletModel->hdEnabled());
+        Q_EMIT hdEnabledStatusChanged(_walletModel->wallet().hdEnabled());
 
         // Balloon pop-up for new transaction
         connect(_walletModel->getTransactionTableModel(), SIGNAL(rowsInserted(QModelIndex,int,int)),
@@ -258,7 +258,7 @@ void WalletView::backupWallet()
     if (filename.isEmpty())
         return;
 
-    if (!walletModel->backupWallet(filename)) {
+    if (!walletModel->wallet().backupWallet(filename.toLocal8Bit().data())) {
         Q_EMIT message(tr("Backup Failed"), tr("There was an error trying to save the wallet data to %1.").arg(filename),
             CClientUIInterface::MSG_ERROR);
         }
