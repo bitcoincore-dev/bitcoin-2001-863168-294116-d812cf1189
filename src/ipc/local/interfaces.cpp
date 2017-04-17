@@ -7,6 +7,7 @@
 #include <net.h>
 #include <net_processing.h>
 #include <netbase.h>
+#include <policy/fees.h>
 #include <policy/policy.h>
 #include <policy/rbf.h>
 #include <rpc/server.h>
@@ -78,6 +79,17 @@ public:
     CWallet& wallet;
     CReserveKey key;
 };
+
+//! Construct wallet TxOut struct.
+WalletTxOut MakeWalletTxOut(CWallet& wallet, const CWalletTx& wtx, int n, int depth)
+{
+    WalletTxOut result;
+    result.txOut = wtx.tx->vout[n];
+    result.txTime = wtx.GetTxTime();
+    result.depthInMainChain = depth;
+    result.isSpent = wallet.IsSpent(wtx.GetHash(), n);
+    return result;
+}
 
 class WalletImpl : public Wallet
 {
@@ -223,6 +235,36 @@ public:
     CAmount getAvailableBalance(const CCoinControl& coinControl) override
     {
         return wallet.GetAvailableBalance(&coinControl);
+    }
+    CoinsList listCoins() override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        CoinsList result;
+        for (const auto& entry : wallet.ListCoins()) {
+            auto& group = result[entry.first];
+            for (const auto& coin : entry.second) {
+                group.emplace_back(
+                    COutPoint(coin.tx->GetHash(), coin.i), MakeWalletTxOut(wallet, *coin.tx, coin.i, coin.nDepth));
+            }
+        }
+        return result;
+    }
+    std::vector<WalletTxOut> getCoins(const std::vector<COutPoint>& outputs) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        std::vector<WalletTxOut> result;
+        result.reserve(outputs.size());
+        for (const auto& output : outputs) {
+            result.emplace_back();
+            auto it = wallet.mapWallet.find(output.hash);
+            if (it != wallet.mapWallet.end()) {
+                int depth = it->second.GetDepthInMainChain();
+                if (depth >= 0) {
+                    result.back() = MakeWalletTxOut(wallet, it->second, output.n, depth);
+                }
+            }
+        }
+        return result;
     }
     bool hdEnabled() override { return wallet.IsHDEnabled(); }
     std::unique_ptr<Handler> handleShowProgress(ShowProgressFn fn) override
@@ -387,7 +429,18 @@ public:
     bool getNetworkActive() override { return g_connman && g_connman->GetNetworkActive(); }
     unsigned int getTxConfirmTarget() override { CHECK_WALLET(return ::nTxConfirmTarget); }
     bool getWalletRbf() override { CHECK_WALLET(return ::fWalletRbf); }
+    CAmount getRequiredFee(unsigned int txBytes) override { CHECK_WALLET(return CWallet::GetRequiredFee(txBytes)); }
+    CAmount getMinimumFee(unsigned int txBytes) override
+    {
+        CHECK_WALLET(return CWallet::GetMinimumFee(txBytes, ::nTxConfirmTarget, ::mempool, ::feeEstimator));
+    }
     CAmount getMaxTxFee() override { return ::maxTxFee; }
+    CFeeRate estimateSmartFee(int nBlocks, int* answerFoundAtBlocks = nullptr) override
+    {
+        return ::feeEstimator.estimateSmartFee(nBlocks, answerFoundAtBlocks, ::mempool);
+    }
+    CFeeRate getDustRelayFee() override { return ::dustRelayFee; }
+    CFeeRate getPayTxFee() override { CHECK_WALLET(return ::payTxFee); }
     UniValue executeRpc(const std::string& command, const UniValue& params) override
     {
         JSONRPCRequest req;
