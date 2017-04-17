@@ -231,13 +231,15 @@ void OverviewPage::setWalletModel(WalletModel *model)
         ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
 
         // Keep up to date with wallet
-        setBalance(model->getBalance(), model->getUnconfirmedBalance(), model->getImmatureBalance(),
-                   model->getWatchBalance(), model->getWatchUnconfirmedBalance(), model->getWatchImmatureBalance());
+        ipc::Wallet& ipcWallet = model->getIpcWallet();
+        ipc::WalletBalances balances = ipcWallet.getBalances();
+        setBalance(balances.balance, balances.unconfirmedBalance, balances.immatureBalance,
+                   balances.watchOnlyBalance, balances.unconfirmedWatchOnlyBalance, balances.immatureWatchOnlyBalance);
         connect(model, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(setBalance(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)));
 
         connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
 
-        updateWatchOnlyLabels(model->haveWatchOnly());
+        updateWatchOnlyLabels(ipcWallet.haveWatchOnly());
         connect(model, SIGNAL(notifyWatchonlyChanged(bool)), this, SLOT(updateWatchOnlyLabels(bool)));
     }
 
