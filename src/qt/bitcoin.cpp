@@ -455,7 +455,7 @@ void BitcoinApplication::initializeResult(bool success)
         paymentServer->setOptionsModel(optionsModel);
 #endif
 
-        clientModel = new ClientModel(optionsModel);
+        clientModel = new ClientModel(ipcNode, optionsModel);
         window->setClientModel(clientModel);
 
 #ifdef ENABLE_WALLET
