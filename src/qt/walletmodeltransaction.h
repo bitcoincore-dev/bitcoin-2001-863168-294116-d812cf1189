@@ -11,9 +11,10 @@
 
 class SendCoinsRecipient;
 
-class CReserveKey;
-class CWallet;
-class CWalletTx;
+namespace ipc {
+class Node;
+class PendingWalletTx;
+}
 
 /** Data model for a walletmodel transaction. */
 class WalletModelTransaction
@@ -24,7 +25,7 @@ public:
 
     QList<SendCoinsRecipient> getRecipients();
 
-    CWalletTx *getTransaction();
+    std::unique_ptr<ipc::PendingWalletTx>& getWtx();
     unsigned int getTransactionSize();
 
     void setTransactionFee(const CAmount& newFee);
@@ -32,15 +33,11 @@ public:
 
     CAmount getTotalTransactionAmount();
 
-    void newPossibleKeyChange(CWallet *wallet);
-    CReserveKey *getPossibleKeyChange();
-
     void reassignAmounts(int nChangePosRet); // needed for the subtract-fee-from-amount feature
 
 private:
     QList<SendCoinsRecipient> recipients;
-    CWalletTx *walletTransaction;
-    CReserveKey *keyChange;
+    std::unique_ptr<ipc::PendingWalletTx> wtx;
     CAmount fee;
 };
 
