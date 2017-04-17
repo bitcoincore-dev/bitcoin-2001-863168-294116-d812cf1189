@@ -4,6 +4,7 @@
 #include <init.h>
 #include <ipc/util.h>
 #include <net.h>
+#include <net_processing.h>
 #include <netbase.h>
 #include <scheduler.h>
 #include <txmempool.h>
@@ -79,6 +80,30 @@ public:
     size_t getNodeCount(CConnman::NumConnections flags) override
     {
         return g_connman ? g_connman->GetNodeCount(flags) : 0;
+    }
+    bool getNodesStats(NodesStats& stats) override
+    {
+        stats.clear();
+
+        if (g_connman) {
+            std::vector<CNodeStats> statsTemp;
+            g_connman->GetNodeStats(statsTemp);
+
+            stats.reserve(statsTemp.size());
+            for (auto& nodeStatsTemp : statsTemp) {
+                stats.emplace_back(std::move(nodeStatsTemp), false, CNodeStateStats());
+            }
+
+            // Try to retrieve the CNodeStateStats for each node.
+            TRY_LOCK(cs_main, lockMain);
+            if (lockMain) {
+                for (auto& nodeStats : stats) {
+                    std::get<1>(nodeStats) = GetNodeStateStats(std::get<0>(nodeStats).nodeid, std::get<2>(nodeStats));
+                }
+            }
+            return true;
+        }
+        return false;
     }
     int64_t getTotalBytesRecv() override { return g_connman ? g_connman->GetTotalBytesRecv() : 0; }
     int64_t getTotalBytesSent() override { return g_connman ? g_connman->GetTotalBytesSent() : 0; }
