@@ -1,6 +1,7 @@
 #include <interface/node.h>
 
 #include <addrdb.h>
+#include <amount.h>
 #include <chain.h>
 #include <chainparams.h>
 #include <init.h>
@@ -25,6 +26,7 @@
 #include <config/bitcoin-config.h>
 #endif
 #ifdef ENABLE_WALLET
+#include <wallet/wallet.h>
 #define CHECK_WALLET(x) x
 #else
 #define CHECK_WALLET(x) throw std::logic_error("Wallet function called in non-wallet build.")
@@ -33,8 +35,6 @@
 #include <atomic>
 #include <boost/thread/thread.hpp>
 #include <univalue.h>
-
-class CWallet;
 
 namespace interface {
 namespace {
@@ -174,6 +174,9 @@ public:
         }
     }
     bool getNetworkActive() override { return g_connman && g_connman->GetNetworkActive(); }
+    unsigned int getTxConfirmTarget() override { CHECK_WALLET(return ::nTxConfirmTarget); }
+    bool getWalletRbf() override { CHECK_WALLET(return ::fWalletRbf); }
+    CAmount getMaxTxFee() override { return ::maxTxFee; }
     UniValue executeRpc(const std::string& command, const UniValue& params, const std::string& uri) override
     {
         JSONRPCRequest req;
@@ -185,6 +188,10 @@ public:
     std::vector<std::string> listRpcCommands() override { return ::tableRPC.listCommands(); }
     void rpcSetTimerInterfaceIfUnset(RPCTimerInterface* iface) override { RPCSetTimerInterfaceIfUnset(iface); }
     void rpcUnsetTimerInterface(RPCTimerInterface* iface) override { RPCUnsetTimerInterface(iface); }
+    std::unique_ptr<Wallet> getWallet(size_t index) override
+    {
+        CHECK_WALLET(return index < ::vpwallets.size() ? MakeWallet(*::vpwallets[index]) : nullptr);
+    }
     std::unique_ptr<Handler> handleInitMessage(InitMessageFn fn) override
     {
         return MakeHandler(::uiInterface.InitMessage.connect(fn));
