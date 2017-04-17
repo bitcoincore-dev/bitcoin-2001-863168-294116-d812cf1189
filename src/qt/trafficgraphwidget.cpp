@@ -4,6 +4,7 @@
 
 #include "trafficgraphwidget.h"
 #include "clientmodel.h"
+#include "ipc/interfaces.h"
 
 #include <QPainter>
 #include <QColor>
@@ -35,8 +36,8 @@ void TrafficGraphWidget::setClientModel(ClientModel *model)
 {
     clientModel = model;
     if(model) {
-        nLastBytesIn = model->getTotalBytesRecv();
-        nLastBytesOut = model->getTotalBytesSent();
+        nLastBytesIn = model->getIpcNode().getTotalBytesRecv();
+        nLastBytesOut = model->getIpcNode().getTotalBytesSent();
     }
 }
 
@@ -123,8 +124,8 @@ void TrafficGraphWidget::updateRates()
 {
     if(!clientModel) return;
 
-    quint64 bytesIn = clientModel->getTotalBytesRecv(),
-            bytesOut = clientModel->getTotalBytesSent();
+    quint64 bytesIn = clientModel->getIpcNode().getTotalBytesRecv(),
+            bytesOut = clientModel->getIpcNode().getTotalBytesSent();
     float inRate = (bytesIn - nLastBytesIn) / 1024.0f * 1000 / timer->interval();
     float outRate = (bytesOut - nLastBytesOut) / 1024.0f * 1000 / timer->interval();
     vSamplesIn.push_front(inRate);
@@ -169,8 +170,8 @@ void TrafficGraphWidget::clear()
     fMax = 0.0f;
 
     if(clientModel) {
-        nLastBytesIn = clientModel->getTotalBytesRecv();
-        nLastBytesOut = clientModel->getTotalBytesSent();
+        nLastBytesIn = clientModel->getIpcNode().getTotalBytesRecv();
+        nLastBytesOut = clientModel->getIpcNode().getTotalBytesSent();
     }
     timer->start();
 }
