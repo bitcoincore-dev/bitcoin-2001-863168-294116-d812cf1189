@@ -10,11 +10,24 @@
 #include <util.h>
 #include <validation.h>
 
+#if defined(HAVE_CONFIG_H)
+#include "config/bitcoin-config.h"
+#endif
+#ifdef ENABLE_WALLET
+#include "wallet/wallet.h"
+#endif
+
 #include <boost/thread.hpp>
 
 namespace ipc {
 namespace local {
 namespace {
+
+#ifdef ENABLE_WALLET
+#define CHECK_WALLET(x) x
+#else
+#define CHECK_WALLET(x) throw std::logic_error("Wallet function called in non-wallet build.")
+#endif
 
 class HandlerImpl : public Handler
 {
@@ -25,6 +38,21 @@ public:
 
     boost::signals2::scoped_connection connection;
 };
+
+#ifdef ENABLE_WALLET
+class WalletImpl : public Wallet
+{
+public:
+    WalletImpl(CWallet& wallet) : wallet(wallet) {}
+
+    std::unique_ptr<Handler> handleShowProgress(ShowProgressFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(wallet.ShowProgress.connect(fn));
+    }
+
+    CWallet& wallet;
+};
+#endif
 
 class NodeImpl : public Node
 {
@@ -64,6 +92,15 @@ public:
     std::unique_ptr<Handler> handleQuestion(QuestionFn fn) override
     {
         return MakeUnique<HandlerImpl>(uiInterface.ThreadSafeQuestion.connect(fn));
+    }
+    std::unique_ptr<Handler> handleShowProgress(ShowProgressFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(uiInterface.ShowProgress.connect(fn));
+    }
+    std::unique_ptr<Handler> handleLoadWallet(LoadWalletFn fn) override
+    {
+        CHECK_WALLET(return MakeUnique<HandlerImpl>(
+            uiInterface.LoadWallet.connect([fn](CWallet* wallet) { fn(MakeUnique<WalletImpl>(*wallet)); })));
     }
 
     boost::thread_group threadGroup;
