@@ -1,11 +1,13 @@
 #include <ipc/interfaces.h>
 
 #include <chainparams.h>
+#include <consensus/validation.h>
 #include <init.h>
 #include <ipc/util.h>
 #include <net.h>
 #include <net_processing.h>
 #include <netbase.h>
+#include <policy/policy.h>
 #include <rpc/server.h>
 #include <scheduler.h>
 #include <txmempool.h>
@@ -44,14 +46,214 @@ public:
 };
 
 #ifdef ENABLE_WALLET
+class PendingWalletTxImpl : public PendingWalletTx
+{
+public:
+    PendingWalletTxImpl(CWallet& wallet) : wallet(wallet), key(&wallet) {}
+
+    const CTransaction& get() override { return *wtx.tx; }
+
+    int64_t getVirtualSize() override { return ::GetVirtualTransactionSize(*wtx.tx); }
+
+    bool commit(WalletValueMap mapValue,
+        WalletOrderForm orderForm,
+        std::string fromAccount,
+        std::string& rejectReason) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        wtx.mapValue = std::move(mapValue);
+        wtx.vOrderForm = std::move(orderForm);
+        wtx.strFromAccount = std::move(fromAccount);
+        CValidationState state;
+        if (!wallet.CommitTransaction(wtx, key, ::g_connman.get(), state)) {
+            rejectReason = state.GetRejectReason();
+            return false;
+        }
+        return true;
+    }
+
+    CWalletTx wtx;
+    CWallet& wallet;
+    CReserveKey key;
+};
+
 class WalletImpl : public Wallet
 {
 public:
     WalletImpl(CWallet& wallet) : wallet(wallet) {}
 
+    bool encryptWallet(const SecureString& walletPassphrase) override
+    {
+        return wallet.EncryptWallet(walletPassphrase);
+    }
+    bool isCrypted() override { return wallet.IsCrypted(); }
+    bool lock() override { return wallet.Lock(); }
+    bool unlock(const SecureString& walletPassphrase) override { return wallet.Unlock(walletPassphrase); }
+    bool isLocked() override { return wallet.IsLocked(); }
+    bool changeWalletPassphrase(const SecureString& oldWalletPassphrase,
+        const SecureString& newWalletPassphrase) override
+    {
+        return wallet.ChangeWalletPassphrase(oldWalletPassphrase, newWalletPassphrase);
+    }
+    bool backupWallet(const std::string& filename) override { return wallet.BackupWallet(filename); }
+    bool getPubKey(const CKeyID& address, CPubKey& pubKey) override { return wallet.GetPubKey(address, pubKey); }
+    bool getKey(const CKeyID& address, CKey& key) override { return wallet.GetKey(address, key); }
+    bool haveKey(const CKeyID& address) override { return wallet.HaveKey(address); }
+    bool haveWatchOnly() override { return wallet.HaveWatchOnly(); };
+    bool setAddressBook(const CTxDestination& dest, const std::string& name, const std::string& purpose) override
+    {
+        LOCK(wallet.cs_wallet);
+        return wallet.SetAddressBook(dest, name, purpose);
+    }
+    bool getAddress(const CTxDestination& dest, std::string* name, isminetype* ismine) override
+    {
+        LOCK(wallet.cs_wallet);
+        auto it = wallet.mapAddressBook.find(dest);
+        if (it == wallet.mapAddressBook.end()) {
+            return false;
+        }
+        if (name) {
+            *name = it->second.name;
+        }
+        if (ismine) {
+            *ismine = ::IsMine(wallet, dest);
+        }
+        return true;
+    }
+    bool addDestData(const CTxDestination& dest, const std::string& key, const std::string& value) override
+    {
+        LOCK(wallet.cs_wallet);
+        return wallet.AddDestData(dest, key, value);
+    }
+    bool eraseDestData(const CTxDestination& dest, const std::string& key) override
+    {
+        LOCK(wallet.cs_wallet);
+        return wallet.EraseDestData(dest, key);
+    }
+    void getDestValues(const std::string& prefix, std::vector<std::string>& values) override
+    {
+        LOCK(wallet.cs_wallet);
+        for (const auto& address : wallet.mapAddressBook) {
+            for (const auto& data : address.second.destdata) {
+                if (!data.first.compare(0, prefix.size(), prefix)) {
+                    values.emplace_back(data.second);
+                }
+            }
+        }
+    }
+    void lockCoin(const COutPoint& output) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        return wallet.LockCoin(output);
+    }
+    void unlockCoin(const COutPoint& output) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        return wallet.UnlockCoin(output);
+    }
+    bool isLockedCoin(const COutPoint& output) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        return wallet.IsLockedCoin(output.hash, output.n);
+    }
+    void listLockedCoins(std::vector<COutPoint>& outputs) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        return wallet.ListLockedCoins(outputs);
+    }
+    std::unique_ptr<PendingWalletTx> createTransaction(const std::vector<CRecipient>& recipients,
+        const CCoinControl* coinControl,
+        bool sign,
+        int& changePos,
+        CAmount& fee,
+        std::string& failReason) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        auto pending = MakeUnique<PendingWalletTxImpl>(wallet);
+        if (!wallet.CreateTransaction(
+                recipients, pending->wtx, pending->key, fee, changePos, failReason, coinControl, sign)) {
+            return {};
+        }
+        return std::move(pending);
+    }
+    bool transactionCanBeAbandoned(const uint256& txHash) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        const CWalletTx* wtx = wallet.GetWalletTx(txHash);
+        return wtx && !wtx->isAbandoned() && wtx->GetDepthInMainChain() <= 0 && !wtx->InMempool();
+    }
+    bool abandonTransaction(const uint256& txHash) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        return wallet.AbandonTransaction(txHash);
+    }
+    WalletBalances getBalances() override
+    {
+        WalletBalances result;
+        result.balance = wallet.GetBalance();
+        result.unconfirmedBalance = wallet.GetUnconfirmedBalance();
+        result.immatureBalance = wallet.GetImmatureBalance();
+        result.haveWatchOnly = wallet.HaveWatchOnly();
+        if (result.haveWatchOnly) {
+            result.watchOnlyBalance = wallet.GetWatchOnlyBalance();
+            result.unconfirmedWatchOnlyBalance = wallet.GetUnconfirmedWatchOnlyBalance();
+            result.immatureWatchOnlyBalance = wallet.GetImmatureWatchOnlyBalance();
+        }
+        return result;
+    }
+    bool tryGetBalances(WalletBalances& balances, int& numBlocks) override
+    {
+        TRY_LOCK(cs_main, lockMain);
+        if (!lockMain) return false;
+        TRY_LOCK(wallet.cs_wallet, lockWallet);
+        if (!lockWallet) {
+            return false;
+        }
+        balances = getBalances();
+        numBlocks = chainActive.Height();
+        return true;
+    }
+    CAmount getBalance() override { return wallet.GetBalance(); }
+    CAmount getUnconfirmedBalance() override { return wallet.GetUnconfirmedBalance(); }
+    CAmount getImmatureBalance() override { return wallet.GetImmatureBalance(); }
+    CAmount getWatchOnlyBalance() override { return wallet.GetWatchOnlyBalance(); }
+    CAmount getUnconfirmedWatchOnlyBalance() override { return wallet.GetUnconfirmedWatchOnlyBalance(); }
+    CAmount getImmatureWatchOnlyBalance() override { return wallet.GetImmatureWatchOnlyBalance(); }
+    CAmount getAvailableBalance(const CCoinControl& coinControl) override
+    {
+        CAmount balance = 0;
+        std::vector<COutput> vCoins;
+        wallet.AvailableCoins(vCoins, true, &coinControl);
+        for (const COutput& out : vCoins) {
+            if (out.fSpendable) {
+                balance += out.tx->tx->vout[out.i].nValue;
+            }
+        }
+        return balance;
+    }
+    bool hdEnabled() override { return wallet.IsHDEnabled(); }
     std::unique_ptr<Handler> handleShowProgress(ShowProgressFn fn) override
     {
         return MakeUnique<HandlerImpl>(wallet.ShowProgress.connect(fn));
+    }
+    std::unique_ptr<Handler> handleStatusChanged(StatusChangedFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(wallet.NotifyStatusChanged.connect([fn](CCryptoKeyStore*) { fn(); }));
+    }
+    std::unique_ptr<Handler> handleAddressBookChanged(AddressBookChangedFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(wallet.NotifyAddressBookChanged.connect(
+            [fn](CWallet*, const CTxDestination& address, const std::string& label, bool isMine,
+                const std::string& purpose, ChangeType status) { fn(address, label, isMine, purpose, status); }));
+    }
+    std::unique_ptr<Handler> handleTransactionChanged(TransactionChangedFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(wallet.NotifyTransactionChanged.connect(
+            [fn, this](CWallet*, const uint256& hashTx, ChangeType status) { fn(hashTx, status); }));
+    }
+    std::unique_ptr<Handler> handleWatchonlyChanged(WatchonlyChangedFn fn) override
+    {
+        return MakeUnique<HandlerImpl>(wallet.NotifyWatchonlyChanged.connect(fn));
     }
 
     CWallet& wallet;
@@ -190,6 +392,9 @@ public:
         }
     }
     bool getNetworkActive() override { return g_connman && g_connman->GetNetworkActive(); }
+    unsigned int getTxConfirmTarget() override { CHECK_WALLET(return ::nTxConfirmTarget); }
+    bool getWalletRbf() override { CHECK_WALLET(return ::fWalletRbf); }
+    CAmount getMaxTxFee() override { return ::maxTxFee; }
     UniValue executeRpc(const std::string& command, const UniValue& params) override
     {
         JSONRPCRequest req;
@@ -200,6 +405,7 @@ public:
     std::vector<std::string> listRpcCommands() override { return tableRPC.listCommands(); }
     void rpcSetTimerInterfaceIfUnset(RPCTimerInterface* iface) override { ::RPCSetTimerInterfaceIfUnset(iface); }
     void rpcUnsetTimerInterface(RPCTimerInterface* iface) override { ::RPCUnsetTimerInterface(iface); }
+    std::unique_ptr<Wallet> getWallet() override { CHECK_WALLET(return MakeUnique<WalletImpl>(*pwalletMain)); }
     std::unique_ptr<Handler> handleInitMessage(InitMessageFn fn) override
     {
         return MakeUnique<HandlerImpl>(uiInterface.InitMessage.connect(fn));
