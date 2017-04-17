@@ -139,8 +139,9 @@ void SendCoinsDialog::setModel(WalletModel *_model)
             }
         }
 
-        setBalance(_model->getBalance(), _model->getUnconfirmedBalance(), _model->getImmatureBalance(),
-                   _model->getWatchBalance(), _model->getWatchUnconfirmedBalance(), _model->getWatchImmatureBalance());
+        ipc::WalletBalances balances = _model->getIpcWallet().getBalances();
+        setBalance(balances.balance, balances.unconfirmed_balance, balances.immature_balance,
+                   balances.watch_only_balance, balances.unconfirmed_watch_only_balance, balances.immature_watch_only_balance);
         connect(_model, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(setBalance(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)));
         connect(_model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
         updateDisplayUnit();
@@ -175,12 +176,12 @@ void SendCoinsDialog::setModel(WalletModel *_model)
         updateGlobalFeeVariables();
 
         // set default rbf checkbox state
-        ui->optInRBF->setCheckState(model->getDefaultWalletRbf() ? Qt::Checked : Qt::Unchecked);
+        ui->optInRBF->setCheckState(model->getIpcNode().getWalletRbf() ? Qt::Checked : Qt::Unchecked);
 
         // set the smartfee-sliders default value (wallets default conf.target or last stored value)
         QSettings settings;
         if (settings.value("nSmartFeeSliderPosition").toInt() == 0)
-            ui->sliderSmartFee->setValue(ui->sliderSmartFee->maximum() - model->getDefaultConfirmTarget() + 2);
+            ui->sliderSmartFee->setValue(ui->sliderSmartFee->maximum() - model->getIpcNode().getTxConfirmTarget() + 2);
         else
             ui->sliderSmartFee->setValue(settings.value("nSmartFeeSliderPosition").toInt());
     }
@@ -511,7 +512,7 @@ void SendCoinsDialog::setBalance(const CAmount& balance, const CAmount& unconfir
 
 void SendCoinsDialog::updateDisplayUnit()
 {
-    setBalance(model->getBalance(), 0, 0, 0, 0, 0);
+    setBalance(model->getIpcWallet().getBalance(), 0, 0, 0, 0, 0);
     ui->customFee->setDisplayUnit(model->getOptionsModel()->getDisplayUnit());
     updateMinFeeLabel();
     updateSmartFeeLabel();
@@ -782,7 +783,7 @@ void SendCoinsDialog::coinControlChangeEdited(const QString& text)
         {
             CKeyID keyid;
             addr.GetKeyID(keyid);
-            if (!model->havePrivKey(keyid)) // Unknown change address
+            if (!model->getIpcWallet().havePrivKey(keyid)) // Unknown change address
             {
                 ui->labelCoinControlChangeLabel->setText(tr("Warning: Unknown change address"));
 
@@ -828,7 +829,7 @@ void SendCoinsDialog::coinControlUpdateLabels()
     if (ui->radioSmartFee->isChecked()) {
         CoinControlDialog::coinControl->nConfirmTarget = ui->sliderSmartFee->maximum() - ui->sliderSmartFee->value() + 2;
     } else {
-        CoinControlDialog::coinControl->nConfirmTarget = model->getDefaultConfirmTarget();
+        CoinControlDialog::coinControl->nConfirmTarget = model->getIpcNode().getTxConfirmTarget();
     }
     CoinControlDialog::coinControl->signalRbf = ui->optInRBF->isChecked();
 
