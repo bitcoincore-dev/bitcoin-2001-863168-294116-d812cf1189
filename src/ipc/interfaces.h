@@ -7,8 +7,12 @@
 
 #include <memory>
 #include <string>
+#include <tuple>
+#include <vector>
 
+class CNodeStats;
 class proxyType;
+struct CNodeStateStats;
 
 namespace ipc {
 
@@ -68,6 +72,10 @@ public:
 
     //! Get number of connections.
     virtual size_t getNodeCount(CConnman::NumConnections flags) = 0;
+
+    //! Get stats for connected nodes.
+    using NodesStats = std::vector<std::tuple<CNodeStats, bool, CNodeStateStats>>;
+    virtual bool getNodesStats(NodesStats& stats) = 0;
 
     //! Get total bytes recv.
     virtual int64_t getTotalBytesRecv() = 0;
