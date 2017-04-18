@@ -72,16 +72,34 @@ class ReceivedByTest(BitcoinTestFramework):
         #Test Address filtering
         #Only on addr
         expected = {"address":addr, "account":"", "amount":Decimal("0.1"), "confirmations":10, "txids":[txid,]}
+        res = self.nodes[1].listreceivedbyaddress(minconf=0, include_empty=True, include_watchonly=True, only_address=addr)
+        assert_array_result(res, {"address":addr}, expected)
+        assert_equal(len(res), 1)
+        #Another address receive money
+        res = self.nodes[1].listreceivedbyaddress(0, True, True)
+        assert_equal(len(res), 3) #Right now 3 entries
+        other_addr = self.nodes[1].getnewaddress()
+        txid2 = self.nodes[0].sendtoaddress(other_addr, 0.1)
+        self.nodes[0].generate(1)
+        self.sync_all()
+        #Same test as above should still pass
+        expected = {"address":addr, "account":"", "amount":Decimal("0.1"), "confirmations":11, "txids":[txid,]}
         res = self.nodes[1].listreceivedbyaddress(0, True, True, addr)
         assert_array_result(res, {"address":addr}, expected)
-        if len(res) != 1:
-            raise AssertionError("listreceivedbyaddress expected only 1 result")
+        assert_equal(len(res), 1)
+        #Same test as above but with other_addr should still pass
+        expected = {"address":other_addr, "account":"", "amount":Decimal("0.1"), "confirmations":1, "txids":[txid2,]}
+        res = self.nodes[1].listreceivedbyaddress(0, True, True, other_addr)
+        assert_array_result(res, {"address":other_addr}, expected)
+        assert_equal(len(res), 1)
+        #Should be two entries though without filter
+        res = self.nodes[1].listreceivedbyaddress(0, True, True)
+        assert_equal(len(res), 4) #Became 4 entries
 
-        #Not on addr
+        #Not on random addr
         other_addr = self.nodes[0].getnewaddress() # note on node[0]! just a random addr
         res = self.nodes[1].listreceivedbyaddress(0, True, True, other_addr)
-        if res != []:
-            raise AssertionError("Should not have listed any transactions, got\n%s"%res)
+        assert_equal(len(res), 0)
 
         '''
             getreceivedbyaddress Test

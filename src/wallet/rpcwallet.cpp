@@ -1401,8 +1401,8 @@ UniValue ListReceived(const UniValue& params, bool fByAccounts)
 
     // Create mapAddressBook iterator
     // If we aren't filtering, go from begin() to end()
-    std::map<CTxDestination, CAddressBookData>::const_iterator start = pwalletMain->mapAddressBook.begin();
-    std::map<CTxDestination, CAddressBookData>::const_iterator end = pwalletMain->mapAddressBook.end();
+    auto start = pwalletMain->mapAddressBook.begin();
+    auto end = pwalletMain->mapAddressBook.end();
     // If we are filtering, find() the applicable entry
     if (fFilterAddress) {
         start = pwalletMain->mapAddressBook.find(filterAddress);
@@ -1411,11 +1411,11 @@ UniValue ListReceived(const UniValue& params, bool fByAccounts)
         }
     }
 
-    for(std::map<CTxDestination, CAddressBookData>::const_iterator item_it = start; item_it != end; ++item_it)
+    for(auto item_it = start; item_it != end; ++item_it)
     {
         const CBitcoinAddress& address = item_it->first;
-        const string& strAccount = item_it->second.name;
-        map<CBitcoinAddress, tallyitem>::iterator it = mapTally.find(address);
+        const std::string& strAccount = item_it->second.name;
+        auto it = mapTally.find(address);
         if (it == mapTally.end() && !fIncludeEmpty)
             continue;
 
@@ -1503,13 +1503,13 @@ UniValue listreceivedbyaddress(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() > 4)
         throw runtime_error(
-            "listreceivedbyaddress (minconf include_empty include_watchonly only_address)\n"
+            "listreceivedbyaddress ( minconf include_empty include_watchonly only_address )\n"
             "\nList balances by receiving address.\n"
             "\nArguments:\n"
             "1. minconf           (numeric, optional, default=1) The minimum number of confirmations before payments are included.\n"
             "2. include_empty     (bool, optional, default=false) Whether to include addresses that haven't received any payments.\n"
             "3. include_watchonly (bool, optional, default=false) Whether to include watch-only addresses (see 'importaddress').\n"
-            "4. only_address   (string, optional) If present, only return information on this address. Otherwise, return all information.\n"
+            "4. only_address      (string, optional) If present, only return information on this address. Otherwise, return all information.\n"
             "\nResult:\n"
             "[\n"
             "  {\n"
@@ -3356,7 +3356,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "listaddressgroupings",     &listaddressgroupings,     false,  {} },
     { "wallet",             "listlockunspent",          &listlockunspent,          false,  {} },
     { "wallet",             "listreceivedbyaccount",    &listreceivedbyaccount,    false,  {"minconf","include_empty","include_watchonly"} },
-    { "wallet",             "listreceivedbyaddress",    &listreceivedbyaddress,    false,  {"minconf","include_empty","include_watchonly", "only_address"} },
+    { "wallet",             "listreceivedbyaddress",    &listreceivedbyaddress,    false,  {"minconf","include_empty","include_watchonly","only_address"} },
     { "wallet",             "listsinceblock",           &listsinceblock,           false,  {"blockhash","target_confirmations","include_watchonly", "include_removed"} },
     { "wallet",             "listtransactions",         &listtransactions,         false,  {"account","count","skip","include_watchonly"} },
     { "wallet",             "listunspent",              &listunspent,              false,  {"minconf","maxconf","addresses","include_unsafe"} },
