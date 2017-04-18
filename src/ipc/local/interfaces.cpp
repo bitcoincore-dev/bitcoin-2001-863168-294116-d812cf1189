@@ -157,6 +157,10 @@ public:
         }
         return result;
     }
+    std::set<CTxDestination> getAccountAddresses(const std::string& account) override
+    {
+        return m_wallet.GetAccountAddresses(account);
+    }
     bool addDestData(const CTxDestination& dest, const std::string& key, const std::string& value) override
     {
         LOCK(m_wallet.cs_wallet);
@@ -326,6 +330,7 @@ public:
     bool softSetBoolArg(const std::string& arg, bool value) override { return ::SoftSetBoolArg(arg, value); }
     void readConfigFile(const std::string& conf_path) override { ::ReadConfigFile(conf_path); }
     void selectParams(const std::string& network) override { ::SelectParams(network); }
+    std::string getNetwork() override { return ::Params().NetworkIDString(); }
     void initLogging() override { ::InitLogging(); }
     void initParameterInteraction() override { ::InitParameterInteraction(); }
     std::string getWarnings(const std::string& type) override { return ::GetWarnings(type); }
