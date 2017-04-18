@@ -104,7 +104,7 @@ class WalletModel : public QObject
     Q_OBJECT
 
 public:
-    explicit WalletModel(std::unique_ptr<interface::Wallet> wallet, interface::Node& node, const PlatformStyle *platformStyle, CWallet *_wallet, OptionsModel *optionsModel, QObject *parent = 0);
+    explicit WalletModel(std::unique_ptr<interface::Wallet> wallet, interface::Node& node, const PlatformStyle *platformStyle, OptionsModel *optionsModel, QObject *parent = 0);
     ~WalletModel();
 
     enum StatusCode // Returned by sendCoins
@@ -203,7 +203,6 @@ private:
     std::unique_ptr<interface::Handler> m_handler_watch_only_changed;
     interface::Node& m_node;
 
-    CWallet *cwallet;
     bool fHaveWatchOnly;
     bool fForceCheckBalanceChanged;
 
