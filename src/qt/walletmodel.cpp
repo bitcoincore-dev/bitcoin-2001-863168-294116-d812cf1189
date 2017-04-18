@@ -32,8 +32,8 @@
 #include <QTimer>
 
 
-WalletModel::WalletModel(std::unique_ptr<ipc::Wallet> _ipcWallet, ipc::Node& _ipcNode, const PlatformStyle *platformStyle, CWallet *_wallet, OptionsModel *_optionsModel, QObject *parent) :
-    QObject(parent), m_ipc_wallet(std::move(_ipcWallet)), m_ipc_node(_ipcNode), wallet(_wallet), optionsModel(_optionsModel), addressTableModel(0),
+WalletModel::WalletModel(std::unique_ptr<ipc::Wallet> _ipcWallet, ipc::Node& _ipcNode, const PlatformStyle *platformStyle, OptionsModel *_optionsModel, QObject *parent) :
+    QObject(parent), m_ipc_wallet(std::move(_ipcWallet)), m_ipc_node(_ipcNode), optionsModel(_optionsModel), addressTableModel(0),
     transactionTableModel(0),
     recentRequestsTableModel(0),
     cachedEncryptionStatus(Unencrypted),
@@ -43,8 +43,8 @@ WalletModel::WalletModel(std::unique_ptr<ipc::Wallet> _ipcWallet, ipc::Node& _ip
     fForceCheckBalanceChanged = false;
 
     addressTableModel = new AddressTableModel(this);
-    transactionTableModel = new TransactionTableModel(platformStyle, wallet, this);
-    recentRequestsTableModel = new RecentRequestsTableModel(wallet, this);
+    transactionTableModel = new TransactionTableModel(platformStyle, this);
+    recentRequestsTableModel = new RecentRequestsTableModel(this);
 
     // This timer will be fired repeatedly to update the balance
     pollTimer = new QTimer(this);
