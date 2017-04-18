@@ -12,6 +12,7 @@
 #include "ui_interface.h"              // For ChangeType
 
 #include <memory>
+#include <set>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -57,6 +58,9 @@ public:
 
     //! Choose network parameters.
     virtual void selectParams(const std::string& network) = 0;
+
+    //! Get network name.
+    virtual std::string getNetwork() = 0;
 
     //! Init logging.
     virtual void initLogging() = 0;
@@ -295,6 +299,9 @@ public:
 
     //! Get wallet address list.
     virtual std::vector<WalletAddress> getAddresses() = 0;
+
+    // Get account addresses.
+    virtual std::set<CTxDestination> getAccountAddresses(const std::string& account) = 0;
 
     //! Add dest data.
     virtual bool addDestData(const CTxDestination& dest, const std::string& key, const std::string& value) = 0;
