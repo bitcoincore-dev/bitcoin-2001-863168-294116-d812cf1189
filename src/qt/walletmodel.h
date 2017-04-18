@@ -28,7 +28,6 @@ class CKeyID;
 class COutPoint;
 class COutput;
 class CPubKey;
-class CWallet;
 class uint256;
 
 QT_BEGIN_NAMESPACE
@@ -101,7 +100,7 @@ class WalletModel : public QObject
     Q_OBJECT
 
 public:
-    explicit WalletModel(std::unique_ptr<ipc::Wallet> ipcWallet, ipc::Node& ipcNode, const PlatformStyle *platformStyle, CWallet *_wallet, OptionsModel *optionsModel, QObject *parent = 0);
+    explicit WalletModel(std::unique_ptr<ipc::Wallet> ipcWallet, ipc::Node& ipcNode, const PlatformStyle *platformStyle, OptionsModel *optionsModel, QObject *parent = 0);
     ~WalletModel();
 
     enum StatusCode // Returned by sendCoins
@@ -201,7 +200,6 @@ private:
     std::unique_ptr<ipc::Handler> handlerShowProgress;
     std::unique_ptr<ipc::Handler> handlerWatchonlyChanged;
     ipc::Node& ipcNode;
-    CWallet *wallet;
     bool fHaveWatchOnly;
     bool fForceCheckBalanceChanged;
 

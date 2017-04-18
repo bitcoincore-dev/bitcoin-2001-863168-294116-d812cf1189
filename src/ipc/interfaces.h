@@ -19,6 +19,7 @@
 
 class proxyType;
 class CCoinControl;
+class CCoins;
 class CKey;
 class CNodeStats;
 class CValidationState;
@@ -34,7 +35,9 @@ class Wallet;
 class PendingWalletTx;
 struct WalletAddress;
 struct WalletBalances;
+struct WalletTx;
 struct WalletTxOut;
+struct WalletTxStatus;
 using WalletOrderForm = std::vector<std::pair<std::string, std::string>>;
 using WalletValueMap = std::map<std::string, std::string>;
 
@@ -70,6 +73,9 @@ public:
 
     //! Get warnings.
     virtual std::string getWarnings(const std::string& type) = 0;
+
+    // Get log flags.
+    virtual uint32_t getLogCategories() = 0;
 
     //! Start node.
     virtual bool appInit() = 0;
@@ -185,6 +191,9 @@ public:
 
     //! Unset RPC timer interface.
     virtual void rpcUnsetTimerInterface(RPCTimerInterface* iface) = 0;
+
+    //! Get unspent outputs associated with a transaction.
+    virtual bool getUnspentOutputs(const uint256& txHash, CCoins& coins) = 0;
 
     //! Return interface for accessing the wallet.
     virtual std::unique_ptr<Wallet> getWallet() = 0;
@@ -356,6 +365,29 @@ public:
         std::vector<std::string>& errors,
         uint256& bumpedTxHash) = 0;
 
+    //! Get a transaction.
+    virtual CTransactionRef getTx(const uint256& txHash) = 0;
+
+    //! Get transaction information.
+    virtual WalletTx getWalletTx(const uint256& txHash) = 0;
+
+    //! Get list of all wallet transactions.
+    virtual std::vector<WalletTx> getWalletTxs() = 0;
+
+    //! Try to get updated status for a particular transaction, if possible without blocking.
+    virtual bool tryGetTxStatus(const uint256& txHash,
+        WalletTxStatus& txStatus,
+        int& numBlocks,
+        int64_t& adjustedTime) = 0;
+
+    //! Get transaction details.
+    virtual WalletTx getWalletTxDetails(const uint256& txHash,
+        WalletTxStatus& txStatus,
+        WalletOrderForm& orderForm,
+        bool& inMempool,
+        int& numBlocks,
+        int64_t& adjustedTime) = 0;
+
     //! Get balances.
     virtual WalletBalances getBalances() = 0;
 
@@ -367,6 +399,18 @@ public:
 
     //! Get available balance.
     virtual CAmount getAvailableBalance(const CCoinControl& coinControl) = 0;
+
+    //! Return whether transaction input belongs to wallet.
+    virtual isminetype isMine(const CTxIn& txin) = 0;
+
+    //! Return whether transaction output belongs to wallet.
+    virtual isminetype isMine(const CTxOut& txout) = 0;
+
+    //! Return debit amount if transaction input belongs to wallet.
+    virtual CAmount getDebit(const CTxIn& txin, isminefilter filter) = 0;
+
+    //! Return credit amount if transaction input belongs to wallet.
+    virtual CAmount getCredit(const CTxOut& txout, isminefilter filter) = 0;
 
     //! Return AvailableCoins + LockedCoins grouped by wallet address.
     //! (put change in one group with wallet address)
@@ -459,6 +503,38 @@ struct WalletBalances
                unconfirmedWatchOnlyBalance != prev.unconfirmedWatchOnlyBalance ||
                immatureWatchOnlyBalance != prev.immatureWatchOnlyBalance;
     }
+};
+
+// Wallet transaction information.
+struct WalletTx
+{
+    CTransactionRef tx;
+    std::vector<isminetype> txInIsMine;
+    std::vector<isminetype> txOutIsMine;
+    std::vector<CTxDestination> txOutAddress;
+    std::vector<isminetype> txOutAddressIsMine;
+    CAmount credit;
+    CAmount debit;
+    CAmount change;
+    int64_t txTime;
+    std::map<std::string, std::string> mapValue;
+    bool isCoinBase;
+};
+
+//! Updated transaction status.
+struct WalletTxStatus
+{
+    int blockHeight;
+    int blocksToMaturity;
+    int depthInMainChain;
+    int requestCount;
+    unsigned int timeReceived;
+    uint32_t lockTime;
+    bool isFinal;
+    bool isTrusted;
+    bool isAbandoned;
+    bool isCoinBase;
+    bool isInMainChain;
 };
 
 //! Wallet transaction output.
