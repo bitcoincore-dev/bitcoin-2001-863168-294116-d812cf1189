@@ -34,10 +34,6 @@
 #include <util.h>
 #include <warnings.h>
 
-#ifdef ENABLE_WALLET
-#include <wallet/wallet.h>
-#endif
-
 #include <stdint.h>
 
 #include <boost/thread.hpp>
@@ -463,7 +459,7 @@ void BitcoinApplication::initializeResult(bool success)
         auto wallets = m_node.getWallets();
         if (!wallets.empty())
         {
-            walletModel = new WalletModel(std::move(wallets[0]), m_node, platformStyle, vpwallets[0], optionsModel);
+            walletModel = new WalletModel(std::move(wallets[0]), m_node, platformStyle, optionsModel);
 
             window->addWallet(BitcoinGUI::DEFAULT_WALLET, walletModel);
             window->setCurrentWallet(BitcoinGUI::DEFAULT_WALLET);
