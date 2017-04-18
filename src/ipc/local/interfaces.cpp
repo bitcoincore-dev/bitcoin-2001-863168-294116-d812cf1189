@@ -118,6 +118,7 @@ public:
         return wallet.ChangeWalletPassphrase(oldWalletPassphrase, newWalletPassphrase);
     }
     bool backupWallet(const std::string& filename) override { return wallet.BackupWallet(filename); }
+    bool getKeyFromPool(CPubKey& pubKey, bool internal) override { return wallet.GetKeyFromPool(pubKey, internal); }
     bool getPubKey(const CKeyID& address, CPubKey& pubKey) override { return wallet.GetPubKey(address, pubKey); }
     bool getKey(const CKeyID& address, CKey& key) override { return wallet.GetKey(address, key); }
     bool haveKey(const CKeyID& address) override { return wallet.HaveKey(address); }
@@ -126,6 +127,11 @@ public:
     {
         LOCK(wallet.cs_wallet);
         return wallet.SetAddressBook(dest, name, purpose);
+    }
+    bool delAddressBook(const CTxDestination& dest) override
+    {
+        LOCK(wallet.cs_wallet);
+        return wallet.DelAddressBook(dest);
     }
     bool getAddress(const CTxDestination& dest, std::string* name, isminetype* ismine) override
     {
@@ -141,6 +147,15 @@ public:
             *ismine = ::IsMine(wallet, dest);
         }
         return true;
+    }
+    std::vector<WalletAddress> getAddresses() override
+    {
+        LOCK(wallet.cs_wallet);
+        std::vector<WalletAddress> result;
+        for (const auto& item : wallet.mapAddressBook) {
+            result.emplace_back(item.first, ::IsMine(wallet, item.first), item.second.name, item.second.purpose);
+        }
+        return result;
     }
     bool addDestData(const CTxDestination& dest, const std::string& key, const std::string& value) override
     {
