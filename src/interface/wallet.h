@@ -11,6 +11,7 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <set>
 #include <stdint.h>
 #include <string>
 #include <tuple>
