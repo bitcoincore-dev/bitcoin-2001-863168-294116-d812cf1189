@@ -11,6 +11,7 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <set>
 #include <stdint.h>
 #include <string>
 #include <tuple>
@@ -89,6 +90,9 @@ public:
 
     //! Get wallet address list.
     virtual std::vector<WalletAddress> getAddresses() = 0;
+
+    // Get account addresses.
+    virtual std::set<CTxDestination> getAccountAddresses(const std::string& account) = 0;
 
     //! Add dest data.
     virtual bool addDestData(const CTxDestination& dest, const std::string& key, const std::string& value) = 0;
