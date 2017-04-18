@@ -12,6 +12,7 @@
 #include "fs.h"
 #include "primitives/transaction.h"
 #include "init.h"
+#include "interface/node.h"
 #include "policy/policy.h"
 #include "protocol.h"
 #include "script/script.h"
@@ -247,12 +248,12 @@ QString formatBitcoinURI(const SendCoinsRecipient &info)
     return ret;
 }
 
-bool isDust(const QString& address, const CAmount& amount)
+bool isDust(interface::Node& node, const QString& address, const CAmount& amount)
 {
     CTxDestination dest = DecodeDestination(address.toStdString());
     CScript script = GetScriptForDestination(dest);
     CTxOut txOut(amount, script);
-    return IsDust(txOut, ::dustRelayFee);
+    return IsDust(txOut, node.getDustRelayFee());
 }
 
 QString HtmlEscape(const QString& str, bool fMultiLine)
