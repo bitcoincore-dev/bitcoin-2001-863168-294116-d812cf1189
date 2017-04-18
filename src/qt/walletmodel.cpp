@@ -43,7 +43,7 @@ WalletModel::WalletModel(std::unique_ptr<ipc::Wallet> _ipcWallet, ipc::Node& _ip
     fHaveWatchOnly = m_ipc_wallet->haveWatchOnly();
     fForceCheckBalanceChanged = false;
 
-    addressTableModel = new AddressTableModel(wallet, this);
+    addressTableModel = new AddressTableModel(this);
     transactionTableModel = new TransactionTableModel(platformStyle, wallet, this);
     recentRequestsTableModel = new RecentRequestsTableModel(wallet, this);
 
