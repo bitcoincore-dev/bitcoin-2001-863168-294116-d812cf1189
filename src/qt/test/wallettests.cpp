@@ -168,7 +168,7 @@ void TestSendCoins()
     auto ipc_node = ipc::MakeNode(ipc::LOCAL);
     OptionsModel optionsModel(*ipc_node);
     vpwallets.insert(vpwallets.begin(), &wallet);
-    WalletModel walletModel(ipc_node->getWallet(0), *ipc_node, platformStyle.get(), &wallet, &optionsModel);
+    WalletModel walletModel(ipc_node->getWallet(0), *ipc_node, platformStyle.get(), &optionsModel);
     vpwallets.erase(vpwallets.begin());
     sendCoinsDialog.setModel(&walletModel);
     transactionView.setModel(&walletModel);
