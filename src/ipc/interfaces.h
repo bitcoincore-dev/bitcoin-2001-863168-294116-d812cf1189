@@ -31,6 +31,7 @@ namespace ipc {
 class Handler;
 class Wallet;
 class PendingWalletTx;
+struct WalletAddress;
 struct WalletBalances;
 struct WalletTxOut;
 using WalletOrderForm = std::vector<std::pair<std::string, std::string>>;
@@ -263,6 +264,9 @@ public:
     //! Back up wallet.
     virtual bool backupWallet(const std::string& filename) = 0;
 
+    // Get key from pool.
+    virtual bool getKeyFromPool(CPubKey& pubKey, bool internal = false) = 0;
+
     //! Get public key.
     virtual bool getPubKey(const CKeyID& address, CPubKey& pubKey) = 0;
 
@@ -278,8 +282,14 @@ public:
     //! Add or update address.
     virtual bool setAddressBook(const CTxDestination& dest, const std::string& name, const std::string& purpose) = 0;
 
+    // Remove address.
+    virtual bool delAddressBook(const CTxDestination& dest) = 0;
+
     //! Look up address in wallet, return whether exists.
     virtual bool getAddress(const CTxDestination& dest, std::string* name = nullptr, isminetype* ismine = nullptr) = 0;
+
+    //! Get wallet address list.
+    virtual std::vector<WalletAddress> getAddresses() = 0;
 
     //! Add dest data.
     virtual bool addDestData(const CTxDestination& dest, const std::string& key, const std::string& value) = 0;
@@ -428,6 +438,15 @@ public:
         WalletOrderForm orderForm,
         std::string fromAccount,
         std::string& rejectReason) = 0;
+};
+
+//! Information about one wallet address.
+struct WalletAddress
+{
+    CTxDestination dest;
+    isminetype isMine;
+    std::string name;
+    std::string purpose;
 };
 
 //! Collection of wallet balances.
