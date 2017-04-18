@@ -89,6 +89,54 @@ const CTxOut& FindNonChangeOut(CWallet& wallet, const CTransaction* tx, int n)
     return tx->vout[n];
 }
 
+//! Construct wallet tx struct.
+WalletTx MakeWalletTx(CWallet& wallet, const CWalletTx& wtx)
+{
+    WalletTx result;
+    result.tx = wtx.tx;
+    result.txInIsMine.reserve(wtx.tx->vin.size());
+    for (const auto& txin : wtx.tx->vin) {
+        result.txInIsMine.emplace_back(wallet.IsMine(txin));
+    }
+    result.txOutIsMine.reserve(wtx.tx->vout.size());
+    result.txOutAddress.reserve(wtx.tx->vout.size());
+    result.txOutAddressIsMine.reserve(wtx.tx->vout.size());
+    for (const auto& txout : wtx.tx->vout) {
+        result.txOutIsMine.emplace_back(wallet.IsMine(txout));
+        result.txOutAddress.emplace_back();
+        result.txOutAddressIsMine.emplace_back(ExtractDestination(txout.scriptPubKey, result.txOutAddress.back()) ?
+                                                   ::IsMine(wallet, result.txOutAddress.back()) :
+                                                   ISMINE_NO);
+    }
+    result.credit = wtx.GetCredit(ISMINE_ALL);
+    result.debit = wtx.GetDebit(ISMINE_ALL);
+    result.change = wtx.GetChange();
+    result.txTime = wtx.GetTxTime();
+    result.mapValue = wtx.mapValue;
+    result.isCoinBase = wtx.IsCoinBase();
+    return result;
+}
+
+//! Construct wallet tx status struct.
+WalletTxStatus MakeWalletTxStatus(const CWalletTx& wtx)
+{
+    WalletTxStatus result;
+    auto mi = mapBlockIndex.find(wtx.hashBlock);
+    CBlockIndex* pindex = mi != mapBlockIndex.end() ? mi->second : nullptr;
+    result.blockHeight = (pindex ? pindex->nHeight : std::numeric_limits<int>::max()),
+    result.blocksToMaturity = wtx.GetBlocksToMaturity();
+    result.depthInMainChain = wtx.GetDepthInMainChain();
+    result.requestCount = wtx.GetRequestCount();
+    result.timeReceived = wtx.nTimeReceived;
+    result.lockTime = wtx.tx->nLockTime;
+    result.isFinal = CheckFinalTx(*wtx.tx);
+    result.isTrusted = wtx.IsTrusted();
+    result.isAbandoned = wtx.isAbandoned();
+    result.isCoinBase = wtx.IsCoinBase();
+    result.isInMainChain = wtx.IsInMainChain();
+    return result;
+}
+
 //! Construct wallet TxOut struct.
 WalletTxOut MakeWalletTxOut(CWallet& wallet, const CWalletTx& wtx, int n, int depth)
 {
@@ -228,6 +276,75 @@ public:
         LOCK2(cs_main, wallet.cs_wallet);
         return wallet.AbandonTransaction(txHash);
     }
+    CTransactionRef getTx(const uint256& txHash) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        auto mi = wallet.mapWallet.find(txHash);
+        if (mi != wallet.mapWallet.end()) {
+            return mi->second.tx;
+        }
+        return {};
+    }
+    WalletTx getWalletTx(const uint256& txHash) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        auto mi = wallet.mapWallet.find(txHash);
+        if (mi != wallet.mapWallet.end()) {
+            return MakeWalletTx(wallet, mi->second);
+        }
+        return {};
+    }
+    std::vector<WalletTx> getWalletTxs() override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        std::vector<WalletTx> result;
+        result.reserve(wallet.mapWallet.size());
+        for (const auto& entry : wallet.mapWallet) {
+            result.emplace_back(MakeWalletTx(wallet, entry.second));
+        }
+        return result;
+    }
+    bool tryGetTxStatus(const uint256& txHash,
+        ipc::WalletTxStatus& txStatus,
+        int& numBlocks,
+        int64_t& adjustedTime) override
+    {
+        TRY_LOCK(cs_main, lockMain);
+        if (!lockMain) {
+            return false;
+        }
+        TRY_LOCK(wallet.cs_wallet, lockWallet);
+        if (!lockWallet) {
+            return false;
+        }
+        auto mi = wallet.mapWallet.find(txHash);
+        if (mi == wallet.mapWallet.end()) {
+            return false;
+        }
+        numBlocks = chainActive.Height();
+        adjustedTime = ::GetAdjustedTime();
+        txStatus = MakeWalletTxStatus(mi->second);
+        return true;
+    }
+    WalletTx getWalletTxDetails(const uint256& txHash,
+        WalletTxStatus& txStatus,
+        WalletOrderForm& orderForm,
+        bool& inMempool,
+        int& numBlocks,
+        int64_t& adjustedTime) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        auto mi = wallet.mapWallet.find(txHash);
+        if (mi != wallet.mapWallet.end()) {
+            numBlocks = chainActive.Height();
+            adjustedTime = ::GetAdjustedTime();
+            inMempool = mi->second.InMempool();
+            orderForm = mi->second.vOrderForm;
+            txStatus = MakeWalletTxStatus(mi->second);
+            return MakeWalletTx(wallet, mi->second);
+        }
+        return {};
+    }
     WalletBalances getBalances() override
     {
         WalletBalances result;
@@ -271,6 +388,26 @@ public:
             }
         }
         return balance;
+    }
+    isminetype isMine(const CTxIn& txin) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        return wallet.IsMine(txin);
+    }
+    isminetype isMine(const CTxOut& txout) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        return wallet.IsMine(txout);
+    }
+    CAmount getDebit(const CTxIn& txin, isminefilter filter) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        return wallet.GetDebit(txin, filter);
+    }
+    CAmount getCredit(const CTxOut& txout, isminefilter filter) override
+    {
+        LOCK2(cs_main, wallet.cs_wallet);
+        return wallet.GetCredit(txout, filter);
     }
     CoinsList listCoins() override
     {
@@ -368,6 +505,7 @@ public:
     void initLogging() override { ::InitLogging(); }
     void initParameterInteraction() override { ::InitParameterInteraction(); }
     std::string getWarnings(const std::string& type) override { return ::GetWarnings(type); }
+    uint32_t getLogCategories() override { return logCategories; }
     bool appInit() override
     {
         return ::AppInitBasicSetup() && ::AppInitParameterInteraction() && ::AppInitSanityChecks() &&
@@ -513,6 +651,11 @@ public:
     std::vector<std::string> listRpcCommands() override { return tableRPC.listCommands(); }
     void rpcSetTimerInterfaceIfUnset(RPCTimerInterface* iface) override { ::RPCSetTimerInterfaceIfUnset(iface); }
     void rpcUnsetTimerInterface(RPCTimerInterface* iface) override { ::RPCUnsetTimerInterface(iface); }
+    bool getUnspentOutputs(const uint256& txid, CCoins& coins) override
+    {
+        LOCK(cs_main);
+        return ::pcoinsTip->GetCoins(txid, coins);
+    }
     std::unique_ptr<Wallet> getWallet() override { CHECK_WALLET(return MakeUnique<WalletImpl>(*pwalletMain)); }
     std::unique_ptr<Handler> handleInitMessage(InitMessageFn fn) override
     {
