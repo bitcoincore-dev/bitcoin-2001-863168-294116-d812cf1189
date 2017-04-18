@@ -134,6 +134,10 @@ public:
         }
         return result;
     }
+    std::set<CTxDestination> getAccountAddresses(const std::string& account) override
+    {
+        return m_wallet.GetAccountAddresses(account);
+    }
     bool addDestData(const CTxDestination& dest, const std::string& key, const std::string& value) override
     {
         LOCK(m_wallet.cs_wallet);
