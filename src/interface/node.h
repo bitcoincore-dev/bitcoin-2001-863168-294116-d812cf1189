@@ -18,6 +18,7 @@
 class CCoinControl;
 class CFeeRate;
 class CNodeStats;
+class Coin;
 class RPCTimerInterface;
 class UniValue;
 class proxyType;
@@ -61,6 +62,9 @@ public:
 
     //! Get warnings.
     virtual std::string getWarnings(const std::string& type) = 0;
+
+    // Get log flags.
+    virtual uint32_t getLogCategories() = 0;
 
     //! Initialize app dependencies.
     virtual bool baseInitialize() = 0;
@@ -182,6 +186,9 @@ public:
 
     //! Unset RPC timer interface.
     virtual void rpcUnsetTimerInterface(RPCTimerInterface* iface) = 0;
+
+    //! Get unspent outputs associated with a transaction.
+    virtual bool getUnspentOutput(const COutPoint& output, Coin& coin) = 0;
 
     //! Return interface for accessing the wallet.
     virtual std::unique_ptr<Wallet> getWallet(size_t index) = 0;

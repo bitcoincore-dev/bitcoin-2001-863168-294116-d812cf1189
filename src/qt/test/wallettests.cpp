@@ -168,7 +168,7 @@ void TestSendCoins()
     auto node = interface::MakeNode();
     OptionsModel optionsModel(*node);
     vpwallets.insert(vpwallets.begin(), &wallet);
-    WalletModel walletModel(node->getWallet(0), *node, platformStyle.get(), &wallet, &optionsModel);
+    WalletModel walletModel(node->getWallet(0), *node, platformStyle.get(), &optionsModel);
     vpwallets.erase(vpwallets.begin());
     sendCoinsDialog.setModel(&walletModel);
     transactionView.setModel(&walletModel);
