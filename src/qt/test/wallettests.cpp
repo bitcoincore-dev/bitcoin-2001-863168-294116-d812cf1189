@@ -105,7 +105,7 @@ void WalletTests::walletTests()
     auto ipcNode = ipc::MakeNode(ipc::LOCAL);
     OptionsModel optionsModel(*ipcNode);
     pwalletMain = &wallet;
-    WalletModel walletModel(ipcNode->getWallet(), *ipcNode, platformStyle.get(), &wallet, &optionsModel);
+    WalletModel walletModel(ipcNode->getWallet(), *ipcNode, platformStyle.get(), &optionsModel);
     pwalletMain = nullptr;
     sendCoinsDialog.setModel(&walletModel);
 
