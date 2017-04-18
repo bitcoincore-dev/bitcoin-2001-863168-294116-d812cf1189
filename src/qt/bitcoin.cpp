@@ -34,10 +34,6 @@
 #include "util.h"
 #include "warnings.h"
 
-#ifdef ENABLE_WALLET
-#include "wallet/wallet.h"
-#endif
-
 #include <stdint.h>
 
 #include <boost/thread.hpp>
@@ -462,7 +458,7 @@ void BitcoinApplication::initializeResult(bool success)
         // TODO: Expose secondary wallets
         if (auto walletMain = ipcNode.getWallet(0))
         {
-            walletModel = new WalletModel(std::move(walletMain), ipcNode, platformStyle, vpwallets[0], optionsModel);
+            walletModel = new WalletModel(std::move(walletMain), ipcNode, platformStyle, optionsModel);
 
             window->addWallet(BitcoinGUI::DEFAULT_WALLET, walletModel);
             window->setCurrentWallet(BitcoinGUI::DEFAULT_WALLET);
