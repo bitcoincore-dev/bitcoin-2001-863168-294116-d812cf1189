@@ -12,6 +12,7 @@
 #include "fs.h"
 #include "primitives/transaction.h"
 #include "init.h"
+#include "ipc/interfaces.h"
 #include "policy/policy.h"
 #include "protocol.h"
 #include "script/script.h"
@@ -246,12 +247,12 @@ QString formatBitcoinURI(const SendCoinsRecipient &info)
     return ret;
 }
 
-bool isDust(const QString& address, const CAmount& amount)
+bool isDust(ipc::Node& ipcNode, const QString& address, const CAmount& amount)
 {
     CTxDestination dest = CBitcoinAddress(address.toStdString()).Get();
     CScript script = GetScriptForDestination(dest);
     CTxOut txOut(amount, script);
-    return txOut.IsDust(dustRelayFee);
+    return txOut.IsDust(ipcNode.getDustRelayFee());
 }
 
 QString HtmlEscape(const QString& str, bool fMultiLine)
