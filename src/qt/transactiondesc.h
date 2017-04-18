@@ -10,8 +10,12 @@
 
 class TransactionRecord;
 
-class CWallet;
-class CWalletTx;
+namespace ipc {
+class Node;
+class Wallet;
+class WalletTx;
+class WalletTxStatus;
+}
 
 /** Provide a human-readable extended HTML description of a transaction.
  */
@@ -20,12 +24,12 @@ class TransactionDesc: public QObject
     Q_OBJECT
 
 public:
-    static QString toHTML(CWallet *wallet, CWalletTx &wtx, TransactionRecord *rec, int unit);
+    static QString toHTML(ipc::Node& ipcNode, ipc::Wallet& ipcWallet, TransactionRecord *rec, int unit);
 
 private:
     TransactionDesc() {}
 
-    static QString FormatTxStatus(const CWalletTx& wtx);
+    static QString FormatTxStatus(const ipc::WalletTx& wtx, const ipc::WalletTxStatus& status, bool inMempool, int numBlocks, int64_t adjustedTime);
 };
 
 #endif // BITCOIN_QT_TRANSACTIONDESC_H
