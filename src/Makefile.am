@@ -103,8 +103,14 @@ BITCOIN_CORE_H = \
   httpserver.h \
   indirectmap.h \
   init.h \
+  ipc/capnp/interfaces.h \
+  ipc/capnp/messages.capnp.h \
+  ipc/capnp/serialize.h \
+  ipc/capnp/server.h \
+  ipc/capnp/util.h \
   ipc/interfaces.h \
   ipc/local/interfaces.h \
+  ipc/server.h \
   ipc/util.h \
   key.h \
   keystore.h \
@@ -178,7 +184,7 @@ obj/build.h: FORCE
 libbitcoin_util_a-clientversion.$(OBJEXT): obj/build.h
 
 # server: shared between bitcoind and bitcoin-qt
-libbitcoin_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
+libbitcoin_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) $(CAPNP_RPC_CFLAGS)
 libbitcoin_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_server_a_SOURCES = \
   addrman.cpp \
@@ -335,8 +341,15 @@ libbitcoin_util_a_SOURCES = \
   compat/glibcxx_sanity.cpp \
   compat/strnlen.cpp \
   fs.cpp \
+  ipc/capnp/interfaces.cpp \
+  ipc/capnp/messages.capnp \
+  ipc/capnp/messages.capnp.c++ \
+  ipc/capnp/serialize.cpp \
+  ipc/capnp/server.cpp \
+  ipc/capnp/util.cpp \
   ipc/interfaces.cpp \
   ipc/local/interfaces.cpp \
+  ipc/server.cpp \
   random.cpp \
   rpc/protocol.cpp \
   support/cleanse.cpp \
@@ -385,7 +398,7 @@ bitcoind_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-bitcoind_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
+bitcoind_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(CAPNP_RPC_LIBS)
 
 # bitcoin-cli binary #
 bitcoin_cli_SOURCES = bitcoin-cli.cpp
@@ -513,8 +526,8 @@ endif
         @:
 
 %.capnp.c++ %.capnp.h: %.capnp
-	@test -f $(CAPNP)
-	$(AM_V_GEN) $(CAPNP) compile --output=c++ --import-path=$(<D) $<
+	@test -f $(CAPNP_BIN)
+	$(AM_V_GEN) $(CAPNP_BIN) compile --output=c++ --import-path=$(<D) $<
 
 if EMBEDDED_LEVELDB
 include Makefile.leveldb.include
