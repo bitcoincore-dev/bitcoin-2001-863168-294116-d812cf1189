@@ -26,6 +26,9 @@ public:
     int nConfirmTarget;
     //! Signal BIP-125 replace by fee.
     bool signalRbf;
+    // Note: If you add fields to this struct, you should also update the IPC
+    // serialization code (in ipc/capnp/serialize.cpp and
+    // ipc/capnp/messages.capnp).
 
     CCoinControl()
     {
