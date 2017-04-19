@@ -519,7 +519,7 @@ int main(int argc, char *argv[])
     SetupEnvironment();
 
     std::unique_ptr<ipc::Node> ipcNode;
-    ipcNode = ipc::MakeNode(ipc::LOCAL);
+    ipcNode = ipc::MakeNode(ipc::CAPNP);
 
     /// 1. Parse command-line options. These take precedence over anything else.
     // Command-line options take precedence:

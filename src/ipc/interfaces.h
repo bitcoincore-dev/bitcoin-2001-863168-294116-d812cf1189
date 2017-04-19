@@ -552,6 +552,7 @@ struct WalletTxOut
 //! Protocol IPC interface should use to communicate with implementation.
 enum Protocol {
     LOCAL, //!< Call functions linked into current executable.
+    CAPNP, //!< Spawn external process and communicate with Cap'n Proto.
 };
 
 //! Create IPC node interface, communicating with requested protocol. Returns

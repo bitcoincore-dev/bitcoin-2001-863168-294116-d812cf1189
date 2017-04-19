@@ -21,7 +21,13 @@ Current Status
 * [`interfaces.h`](interfaces.h) currently contains interfaces (`ipc::Node` and
   `ipc::Wallet` allowing the bitcoin GUI to access bitcoin node and wallet
   functionality. More interfaces could be added in the future.
-* [`interfaces.h`](interfaces.h) currently only defines a `LOCAL` IPC protocol
-  for calling functionality already linked into the current process. The first
-  implementation of a remote protocol allowing real interprocess communication
-  is added in PR [#10102](https://github.com/bitcoin/bitcoin/pull/10102).
+* [`interfaces.h`](interfaces.h) currently defines a `LOCAL` IPC protocol for
+  calling functionality linked into the current process, and a `CAPNP` protocol
+  for calling functionality in a different process across a socket. Details
+  about the `CAPNP` implementation can be found in
+  [src/ipc/capnp/README.md](capnp/README.md). Support for other protocols
+  could be added in the future.
+* [`server.h`](server.h) implements a `StartServer` function that can listen
+  on a pre-exisiting socket and forward commands to an `ipc::Node` interface.
+  Support for accepting external TCP or unix socket connections could be added
+  in the future.
