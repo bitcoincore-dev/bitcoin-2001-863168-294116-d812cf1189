@@ -21,13 +21,49 @@ Current Status
 * [`interfaces.h`](interfaces.h) currently contains interfaces (`ipc::Node` and
   `ipc::Wallet` allowing the bitcoin GUI to access bitcoin node and wallet
   functionality. More interfaces could be added in the future.
-* [`interfaces.h`](interfaces.h) currently only defines a `LOCAL` IPC protocol
-  for calling functionality already linked into the current process. The first
-  implementation of a remote protocol allowing real interprocess communication
-  is added in PR [#10102](https://github.com/bitcoin/bitcoin/pull/10102).
+* [`interfaces.h`](interfaces.h) currently defines a `LOCAL` IPC protocol for
+  calling functionality linked into the current process, and a `CAPNP` protocol
+  for calling functionality in a different process across a socket. Details
+  about the `CAPNP` implementation can be found in
+  [src/ipc/capnp/README.md](capnp/README.md). Support for other protocols
+  could be added in the future.
+* [`server.h`](server.h) implements a `StartServer` function that can listen
+  on a pre-exisiting socket and forward commands to an `ipc::Node` interface.
+  Support for accepting external TCP or unix socket connections could be added
+  in the future.
 
 FAQ
 ---
+
+### Does `bitcoin-qt` / `bitcoind` process separation allow the GUI and daemon processes to be started and stopped independently, or run across the network on different machines, or allow the same daemon process to be controlled by multiple GUI processes?
+
+Not yet, but these are obvious next steps. To enable this, `bitcoind` needs a
+new configuration option that will tell it to create a listening socket and bind
+to a TCP or domain socket address, and `bitcoin-qt` will need a new option for
+connecting to an existing `bitcoind` instead of spawning its own.
+
+### How can IPC framework be used to implement Node / Wallet separation?
+
+The main change that needs to happen is porting [src/wallet/](../wallet) code to
+call an IPC interface instead of accessing bitcoin daemon global variable and
+functions directly. As with the Qt IPC port,
+[hide-globals.py](https://github.com/ryanofsky/home/blob/master/src/2017/hide-globals/hide-globals.py)
+and
+[replace-syms.py](https://github.com/ryanofsky/home/blob/master/src/2017/hide-globals/replace-syms.py)
+scripts could be used to identify the call locations that need to be updated
+(though they should be more obvious in wallet code than they were in Qt code
+because they are more concentrated). The wallet code could be given access to
+the existing [`ipc::Node`](interfaces.h) interface, but it would be better to
+define a new, more minimal interface (perhaps `ipc::BlockChain`) for the wallet
+to be able to query blockchain state and register for notifications without
+having access to other node functionality.
+
+Once wallet code is able to function over an IPC interface, different
+multiprocess arrangements are possible. For backwards compatibility, the
+`bitcoind` process could spawn one or more wallet processes on startup. Or it
+could listen on a TCP or unix domain socket address allowing new wallet
+processes to be started independently and connect. New `bitcoin-qt` options
+could be added for opening GUIs connected to independent wallet processes.
 
 ### Does having an IPC layer make Qt model classes redundant?
 
