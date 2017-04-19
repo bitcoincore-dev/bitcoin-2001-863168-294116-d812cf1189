@@ -49,6 +49,7 @@ public:
     {
         banmap_t banMap;
         if(g_connman)
+            g_connman->SweepBanned();
             g_connman->GetBanned(banMap);
 
         cachedBanlist.clear();
