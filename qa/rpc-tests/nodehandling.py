@@ -79,13 +79,29 @@ class NodeHandlingTest(BitcoinTestFramework):
         ###########################
         # RPC disconnectnode test #
         ###########################
+
+        # fail to disconnect when calling with address and nodeid
+        address1 = self.nodes[0].getpeerinfo()[0]['addr']
+        node1 = self.nodes[0].getpeerinfo()[0]['addr']
+        assert_raises_jsonrpc(-32602, "Only one of address and nodeid should be provided.", self.nodes[0].disconnectnode, address=address1, nodeid=node1)
+
+        # fail to disconnect when calling with junk address
+        assert_raises_jsonrpc(-29, "Node not found in connected nodes", self.nodes[0].disconnectnode, address="221B Baker Street")
+
         address1 = self.nodes[0].getpeerinfo()[0]['addr']
         self.nodes[0].disconnectnode(address=address1)
         wait_until(lambda: len(self.nodes[0].getpeerinfo()) == 1)
         assert not [node for node in self.nodes[0].getpeerinfo() if node['addr'] == address1]
 
         connect_nodes_bi(self.nodes, 0, 1)  # reconnect the node
+        assert_equal(len(self.nodes[0].getpeerinfo()), 2)
         assert [node for node in self.nodes[0].getpeerinfo() if node['addr'] == address1]
+
+        # successfully disconnect node by node id
+        id1 = self.nodes[0].getpeerinfo()[0]['id']
+        self.nodes[0].disconnectnode(nodeid=id1)
+        wait_until(lambda: len(self.nodes[0].getpeerinfo()) == 1)
+        assert not [node for node in self.nodes[0].getpeerinfo() if node['id'] == id1]
 
 if __name__ == '__main__':
     NodeHandlingTest().main()
