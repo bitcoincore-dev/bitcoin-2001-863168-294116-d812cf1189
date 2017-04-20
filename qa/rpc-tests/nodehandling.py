@@ -63,6 +63,7 @@ class NodeHandlingTest(BitcoinTestFramework):
         listBeforeShutdown = self.nodes[1].listbanned()
         assert_equal("192.168.0.1/32", listBeforeShutdown[2]['address'])
         wait_until(lambda: len(self.nodes[1].listbanned()) == 3)
+        assert_equal(len(self.nodes[1].listbanned()), 3)
 
         stop_node(self.nodes[1], 1)
 

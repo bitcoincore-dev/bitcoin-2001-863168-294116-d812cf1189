@@ -235,6 +235,7 @@ public:
     bool Unban(const CSubNet &ip);
     void GetBanned(banmap_t &banmap);
     void SetBanned(const banmap_t &banmap);
+    void SweepBanned();
 
     void AddOneShot(const std::string& strDest);
 
@@ -323,7 +324,6 @@ private:
     //!set the "dirty" flag for the banlist
     void SetBannedSetDirty(bool dirty=true);
     //!clean unused entries (if bantime has expired)
-    void SweepBanned();
     void DumpAddresses();
     void DumpData();
     void DumpBanlist();
