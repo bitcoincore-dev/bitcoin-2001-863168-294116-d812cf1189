@@ -6,6 +6,8 @@
 #ifndef BITCOIN_VALIDATIONINTERFACE_H
 #define BITCOIN_VALIDATIONINTERFACE_H
 
+#include "primitives/transaction.h"
+
 #include <boost/signals2/signal.hpp>
 #include <boost/shared_ptr.hpp>
 #include <memory>
@@ -54,6 +56,7 @@ struct CMainSignals {
      * included in connected blocks such as transactions removed from mempool,
      * accepted to mempool or appearing in disconnected blocks.*/
     static const int SYNC_TRANSACTION_NOT_IN_BLOCK = -1;
+    boost::signals2::signal<void (const CTransactionRef &)> AcceptedTransaction;
     /** Notifies listeners of updated transaction data (transaction, and
      * optionally the block it is found in). Called with block data when
      * transaction is included in a connected block, and without block data when
