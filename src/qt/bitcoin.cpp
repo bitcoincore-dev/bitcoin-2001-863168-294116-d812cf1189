@@ -471,7 +471,7 @@ void BitcoinApplication::initializeResult(int retval)
 
 #ifdef ENABLE_WALLET
         bool fFirstWallet = true;
-        for (CWallet_ptr pwallet : vpwallets) {
+        for (CWalletRef pwallet : vpwallets) {
             WalletModel * const walletModel = new WalletModel(platformStyle, pwallet, optionsModel);
 
             QString WalletName = QString::fromStdString(pwallet->strWalletFile);

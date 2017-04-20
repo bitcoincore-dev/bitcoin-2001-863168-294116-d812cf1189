@@ -201,7 +201,7 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
             jreq.wallet = NULL;
         } else {
             // Select specifically a named wallet
-            for (CWallet_ptr pwallet : vpwallets) {
+            for (CWalletRef pwallet : vpwallets) {
                 if (walletName == pwallet->strWalletFile) {
                     jreq.wallet = pwallet;
                 }

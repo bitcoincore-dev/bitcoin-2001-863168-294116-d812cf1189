@@ -304,7 +304,7 @@ bool RPCConsole::RPCParseCommandLine(std::string &strResult, const std::string &
                             req.params = RPCConvertValues(stack.back()[0], std::vector<std::string>(stack.back().begin() + 1, stack.back().end()));
                             req.strMethod = stack.back()[0];
 #ifdef ENABLE_WALLET
-                            CWallet_ptr * const ppwallet = (CWallet_ptr*)ppwallet_v;
+                            CWalletRef * const ppwallet = (CWalletRef*)ppwallet_v;
                             if (ppwallet) {
                                 req.wallet = *ppwallet;
                                 delete ppwallet;
@@ -475,7 +475,7 @@ RPCConsole::~RPCConsole()
 {
 #ifdef ENABLE_WALLET
     for (int i = ui->WalletSelector->count(); --i >= 1; ) {
-        CWallet_ptr * const ppwallet = (CWallet_ptr*)ui->WalletSelector->itemData(i).value<void*>();
+        CWalletRef * const ppwallet = (CWalletRef*)ui->WalletSelector->itemData(i).value<void*>();
         delete ppwallet;
     }
 #endif
@@ -662,7 +662,7 @@ void RPCConsole::setClientModel(ClientModel *model)
 #ifdef ENABLE_WALLET
 void RPCConsole::addWallet(const QString name, WalletModel * const walletModel)
 {
-    CWallet_ptr * const ppwallet = new CWallet_ptr(walletModel->getWallet());
+    CWalletRef * const ppwallet = new CWalletRef(walletModel->getWallet());
     ui->WalletSelector->addItem(name, QVariant::fromValue((void*)(ppwallet)));
     if (ui->WalletSelector->count() == 2 && !isVisible()) {
         // First wallet added, set to default so long as the window isn't presently visible (and potentially in use)
@@ -855,8 +855,8 @@ void RPCConsole::on_lineEdit_returnPressed()
 #ifdef ENABLE_WALLET
         const int wallet_index = ui->WalletSelector->currentIndex();
         if (wallet_index > 0) {
-            CWallet_ptr *ppwallet = (CWallet_ptr*)ui->WalletSelector->itemData(wallet_index).value<void*>();
-            ppwallet = new CWallet_ptr(*ppwallet);  // Refcount
+            CWalletRef *ppwallet = (CWalletRef*)ui->WalletSelector->itemData(wallet_index).value<void*>();
+            ppwallet = new CWalletRef(*ppwallet);  // Refcount
             ppwallet_v = (void*)ppwallet;
         }
 #endif

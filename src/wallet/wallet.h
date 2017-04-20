@@ -31,8 +31,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 
-typedef CWallet* CWallet_ptr;
-extern std::vector<CWallet_ptr> vpwallets;
+typedef CWallet* CWalletRef;
+extern std::vector<CWalletRef> vpwallets;
 
 /**
  * Settings
@@ -683,6 +683,7 @@ public:
         nMasterKeyMaxID = 0;
         pwalletdbEncryption = NULL;
         nOrderPosNext = 0;
+        nAccountingEntryNumber = 0;
         nNextResend = 0;
         nLastResend = 0;
         nTimeFirstKey = 0;
@@ -697,6 +698,7 @@ public:
     TxItems wtxOrdered;
 
     int64_t nOrderPosNext;
+    uint64_t nAccountingEntryNumber;
     std::map<uint256, int> mapRequestCount;
 
     std::map<CTxDestination, CAddressBookData> mapAddressBook;
