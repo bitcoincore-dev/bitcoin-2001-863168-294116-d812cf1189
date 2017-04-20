@@ -8,6 +8,8 @@
 #include <QObject>
 #include <QDateTime>
 
+#include <atomic>
+
 #include "stats/stats.h"
 
 class AddressTableModel;
@@ -84,6 +86,10 @@ public:
     QString dataDir() const;
 
     mempoolSamples_t getMempoolStatsInRange(QDateTime &from, QDateTime &to);
+
+    // caches for the best header
+    mutable std::atomic<int> cachedBestHeaderHeight;
+    mutable std::atomic<int64_t> cachedBestHeaderTime;
 
 private:
     OptionsModel *optionsModel;
