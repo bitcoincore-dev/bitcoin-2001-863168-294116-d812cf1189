@@ -783,7 +783,8 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
         pool.ApplyDeltas(hash, nPriorityDummy, nModifiedFees);
 
         CAmount inChainInputValue;
-        double dPriority = view.GetPriority(tx, chainActive.Height(), inChainInputValue);
+        // Since entries arrive *after* the tip's height, their priority is for the height+1
+        double dPriority = view.GetPriority(tx, chainActive.Height() + 1, inChainInputValue);
 
         // Keep track of transactions that spend a coinbase, which we re-scan
         // during reorgs to ensure COINBASE_MATURITY is still met.
@@ -2277,6 +2278,7 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
         std::vector<uint256> vHashUpdate;
         for (const auto& it : block.vtx) {
             const CTransaction& tx = *it;
+            mempool.UpdateDependentPriorities(tx, pindexDelete->nHeight, false);
             // ignore validation errors in resurrected transactions
             CValidationState stateDummy;
             if (tx.IsCoinBase() || !AcceptToMemoryPool(mempool, stateDummy, it, false, NULL, NULL, 0, setIgnoreRejects_mempool_full)) {
@@ -2517,7 +2519,7 @@ static bool ActivateBestChainStep(CValidationState& state, const CChainParams& c
         mempool.removeForReorg(pcoinsTip, chainActive.Tip()->nHeight + 1, STANDARD_LOCKTIME_VERIFY_FLAGS);
         LimitMempoolSize(mempool, GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000, GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY) * 60 * 60);
     }
-    mempool.check(pcoinsTip);
+    mempool.check(pcoinsTip, chainActive.Height());
 
     // Callbacks/notifications for a new best chain.
     if (fInvalidFound)
