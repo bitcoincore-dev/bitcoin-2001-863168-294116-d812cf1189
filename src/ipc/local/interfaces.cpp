@@ -611,10 +611,13 @@ public:
     unsigned int getTxConfirmTarget() override { CHECK_WALLET(return ::nTxConfirmTarget); }
     bool getWalletRbf() override { CHECK_WALLET(return ::fWalletRbf); }
     CAmount getRequiredFee(unsigned int tx_bytes) override { CHECK_WALLET(return CWallet::GetRequiredFee(tx_bytes)); }
-    CAmount getMinimumFee(unsigned int tx_bytes, const CCoinControl& coin_control) override
+    CAmount getMinimumFee(unsigned int tx_bytes, const CCoinControl& coin_control, int* returned_target, FeeReason* reason) override
     {
+        FeeCalculation fee_calc;
         CHECK_WALLET(return CWallet::GetMinimumFee(
-            tx_bytes, coin_control, ::mempool, ::feeEstimator, nullptr /* FeeCalculation */));
+            tx_bytes, coin_control, ::mempool, ::feeEstimator, &fee_calc));
+        if (returned_target) *returned_target = fee_calc.returnedTarget;
+        if (reason) *reason = fee_calc.reason;
     }
     CAmount getMaxTxFee() override { return ::maxTxFee; }
     CFeeRate estimateSmartFee(int num_blocks, bool conservative, int* answer_found_at_blocks = nullptr) override
@@ -627,7 +630,9 @@ public:
         return result;
     }
     CFeeRate getDustRelayFee() override { return ::dustRelayFee; }
+    CFeeRate getFallbackFee() override { CHECK_WALLET(return CWallet::fallbackFee); }
     CFeeRate getPayTxFee() override { CHECK_WALLET(return ::payTxFee); }
+    void setPayTxFee(CFeeRate rate) override { CHECK_WALLET(::payTxFee = rate); }
     UniValue executeRpc(const std::string& command, const UniValue& params) override
     {
         JSONRPCRequest req;

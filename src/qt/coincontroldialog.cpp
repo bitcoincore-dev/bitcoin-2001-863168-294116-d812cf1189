@@ -509,7 +509,7 @@ void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
                 nBytes -= 34;
 
         // Fee
-        nPayFee = model->getIpcNode().getMinimumFee(nBytes, *coinControl);
+        nPayFee = model->getIpcNode().getMinimumFee(nBytes, *coinControl, nullptr /* returned_target */, nullptr /* reason */);
 
         if (nPayAmount > 0)
         {
