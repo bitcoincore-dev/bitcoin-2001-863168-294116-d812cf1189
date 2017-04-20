@@ -1,31 +1,28 @@
-Bitcoin Core version 0.14.1 is now available from:
+Bitcoin Knots version 0.14.1.knots20170420 is now available from:
 
-  <https://bitcoin.org/bin/bitcoin-core-0.14.1/>
+  <https://bitcoinknots.org/files/0.14.x/0.14.1.knots20170420/>
 
-This is a new minor version release, including various bugfixes and
-performance improvements, as well as updated translations.
+This is a new minor version release, including new features, various bugfixes
+and performance improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at github:
 
-  <https://github.com/bitcoin/bitcoin/issues>
-
-To receive security and update notifications, please subscribe to:
-
-  <https://bitcoincore.org/en/list/announcements/join/>
+  <https://github.com/bitcoinknots/bitcoin/issues>
 
 Compatibility
 ==============
 
-Bitcoin Core is extensively tested on multiple operating systems using
-the Linux kernel, macOS 10.8+, and Windows Vista and later.
+Bitcoin Knots officially supports multiple operating systems using the Linux
+kernel, macOS 10.8+, and Windows Vista and later.
 
 Microsoft ended support for Windows XP on [April 8th, 2014](https://www.microsoft.com/en-us/WindowsForBusiness/end-of-xp-support),
 No attempt is made to prevent installing or running the software on Windows XP, you
 can still do so at your own risk but be aware that there are known instabilities and issues.
 Please do not report issues about Windows XP to the issue tracker.
 
-Bitcoin Core should also work on most other Unix-like systems but is not
-frequently tested on them.
+Bitcoin Knots should also work on most other Unix-like systems but is not
+officially supported on them. If you encounter problems, however, please do
+feel free to report them.
 
 Notable changes
 ===============
@@ -83,7 +80,8 @@ here:
 Detailed release notes follow. This overview includes changes that affect
 behavior, not code moves, refactors and string updates. For convenience in locating
 the code changes and accompanying discussion, both the pull request and
-git merge commit are mentioned.
+git merge commit are mentioned. Changes specific to Bitcoin Knots (beyond
+Core) are flagged with an asterisk ('*') before the description.
 
 ### RPC and other APIs
 - #10084 `142fbb2` Rename first named arg of createrawtransaction (MarcoFalke)
@@ -91,6 +89,8 @@ git merge commit are mentioned.
 - #10146 `2fea10a` Better error handling for submitblock (rawodb, gmaxwell)
 - #10144 `d947afc` Prioritisetransaction wasn't always updating ancestor fee (sdaftuar)
 - #10204 `3c79602` Rename disconnectnode argument (jnewbery)
+- #10143 `3a8ae05` *Allow disconnectnode() to be called with node id (jnewbery)
+- #10234 `408c686` *listbanned RPC and QT should show correct banned subnets (jnewbery)
 
 ### Block and transaction handling
 - #10126 `0b5e162` Compensate for memory peak at flush time (sipa)
@@ -106,10 +106,15 @@ git merge commit are mentioned.
 
 ### GUI
 - #10060 `ddc2dd1` Ensure an item exists on the rpcconsole stack before adding (achow101)
+- #10156 `6757870` *Fix for issues with startup and mutiple monitors on windows. (Allan Doensen)
+- #9890 `69e51bc` *Add a button to open the config file in a text editor (Eric Shaw Jr)
+- n/a   `aecd8f0` *When multiple wallets are used, include in notifications the name of the wallet involved (luke-jr)
+- #10231 `0e4a1ef` *Reduce a significant cs_main lock freeze (jonasschnelli)
 
 ### Mining
 - #9955/#10006 `569596c` Don't require segwit in getblocktemplate for segwit signalling or mining (sdaftuar)
 - #9959/#10127 `b5c3440` Prevent slowdown in CreateNewBlock on large mempools (sdaftuar)
+- #10196 `321992e` *Bugfix: PrioritiseTransaction updates the mempool tx counter (sdaftuar)
 
 ### Tests and QA
 - #10157 `55f641c` Fix the `mempool_packages.py` test (sdaftuar)
@@ -124,15 +129,23 @@ Credits
 
 Thanks to everyone who directly contributed to this release:
 
+- aideca
 - Alex Morcos
+- Allan Doensen
 - Andrew Chow
 - Awemany
 - Cory Fields
+- Eric Shaw Jr
 - Gregory Maxwell
 - James Evans
+- Jeremy Rubin
 - John Newbery
+- Jonas Schnelli
+- Karl-Johan Alm
+- Luke Dashjr
 - MarcoFalke
 - Matt Corallo
+- Pedro Branco
 - Pieter Wuille
 - practicalswift
 - rawodb
