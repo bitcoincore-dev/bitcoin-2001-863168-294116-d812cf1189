@@ -58,6 +58,15 @@ WalletModel::~WalletModel()
     unsubscribeFromCoreSignals();
 }
 
+QString WalletModel::getWalletName() const
+{
+    QString WalletName = QString::fromStdString(wallet->strWalletFile);
+    if (WalletName.endsWith(".dat")) {
+        WalletName.truncate(WalletName.size() - 4);
+    }
+    return WalletName;
+}
+
 CAmount WalletModel::getBalance(const CCoinControl *coinControl) const
 {
     if (coinControl)
