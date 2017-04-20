@@ -14,11 +14,16 @@
 #include "amount.h"
 #include "chainparams.h"
 #include "init.h"
-#include "validation.h" // For DEFAULT_SCRIPTCHECK_THREADS
+#include "policy/policy.h"
+#include "validation.h"
 #include "net.h"
+#include "net_processing.h"
 #include "netbase.h"
 #include "txdb.h" // for -dbcache defaults
+#include "txmempool.h" // for fPriorityAccurate
 #include "intro.h" 
+#include "utilmoneystr.h" // for FormatMoney
+#include "validation.h"  // for SpkReuseMode
 
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
@@ -28,6 +33,17 @@
 #include <QNetworkProxy>
 #include <QSettings>
 #include <QStringList>
+
+static QString CanonicalMempoolReplacement()
+{
+    if (!fEnableReplacement) {
+        return "never";
+    } else if (fReplacementHonourOptOut) {
+        return "fee,optin";
+    } else {
+        return "fee,-optin";
+    }
+}
 
 OptionsModel::OptionsModel(QObject *parent, bool resetSettings) :
     QAbstractListModel(parent)
@@ -154,6 +170,7 @@ void OptionsModel::Init(bool resetSettings)
 
     // rwconf settings that require a restart
     f_peerbloomfilters = GetBoolArg("-peerbloomfilters", DEFAULT_PEERBLOOMFILTERS);
+    f_rejectspkreuse = (SpkReuseMode != SRM_ALLOW);
 
     // Display
     if (!settings.contains("language"))
@@ -183,6 +200,11 @@ void OptionsModel::Reset()
 
     // Set strDataDir
     settings.setValue("strDataDir", dataDir);
+
+    // Set prune option iff it was initialised using Intro
+    if (RWConfigHasPruneOption()) {
+        ModifyRWConfigFile("prune", GetArg("prune", ""));
+    }
 
     // Set that this was reset
     settings.setValue("fReset", true);
@@ -262,6 +284,10 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return strThirdPartyTxUrls;
         case Language:
             return settings.value("language");
+#ifdef ENABLE_WALLET
+        case walletrbf:
+            return fWalletRbf;
+#endif
         case CoinControlFeatures:
             return fCoinControlFeatures;
         case DatabaseCache:
@@ -274,6 +300,60 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return qlonglong(g_connman->GetMaxOutboundTarget() / 1024 / 1024);
         case peerbloomfilters:
             return f_peerbloomfilters;
+        case blockreconstructionextratxn:
+            return qlonglong(GetArg("-blockreconstructionextratxn", DEFAULT_BLOCK_RECONSTRUCTION_EXTRA_TXN));
+        case mempoolreplacement:
+            return CanonicalMempoolReplacement();
+        case maxorphantx:
+            return qlonglong(GetArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS));
+        case maxmempool:
+            return qlonglong(GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE));
+        case incrementalrelayfee:
+            return qlonglong(incrementalRelayFee.GetFeePerK());
+        case mempoolexpiry:
+            return qlonglong(GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY));
+        case rejectunknownscripts:
+            return fRequireStandard;
+        case rejectspkreuse:
+            return f_rejectspkreuse;
+        case minrelaytxfee:
+            return qlonglong(::minRelayTxFee.GetFeePerK());
+        case bytespersigop:
+            return nBytesPerSigOp;
+        case bytespersigopstrict:
+            return nBytesPerSigOpStrict;
+        case limitancestorcount:
+            return qlonglong(GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT));
+        case limitancestorsize:
+            return qlonglong(GetArg("-limitancestorsize", DEFAULT_ANCESTOR_SIZE_LIMIT));
+        case limitdescendantcount:
+            return qlonglong(GetArg("-limitdescendantcount", DEFAULT_DESCENDANT_LIMIT));
+        case limitdescendantsize:
+            return qlonglong(GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT));
+        case spamfilter:
+            return bool(GetArg("-spamfilter", DEFAULT_SPAMFILTER));
+        case rejectbaremultisig:
+            return !fIsBareMultisigStd;
+        case datacarriersize:
+            return fAcceptDatacarrier ? qlonglong(nMaxDatacarrierBytes) : qlonglong(0);
+        case dustrelayfee:
+            return qlonglong(dustRelayFee.GetFeePerK());
+        case blockmintxfee:
+            if (IsArgSet("-blockmintxfee")) {
+                CAmount n = 0;
+                ParseMoney(GetArg("-blockmintxfee", ""), n);
+                return qlonglong(n);
+            } else {
+                return qlonglong(DEFAULT_BLOCK_MIN_TX_FEE);
+            }
+        case blockmaxsize:
+            return qlonglong(GetArg("-blockmaxsize", DEFAULT_BLOCK_MAX_SIZE) / 1000);
+        case blockprioritysize:
+            return qlonglong(GetArg("-blockprioritysize", DEFAULT_BLOCK_PRIORITY_SIZE) / 1000);
+        case blockmaxweight:
+            return qlonglong(GetArg("-blockmaxweight", DEFAULT_BLOCK_MAX_WEIGHT) / 1000);
+        case priorityaccurate:
+            return fPriorityAccurate;
         default:
             return QVariant();
         }
@@ -415,6 +495,17 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 setRestartRequired(true);
             }
             break;
+#ifdef ENABLE_WALLET
+        case walletrbf:
+        {
+            const bool fNewValue = value.toBool();
+            if (fNewValue != fWalletRbf) {
+                ModifyRWConfigFile("walletrbf", strprintf("%d", fNewValue));
+                fWalletRbf = fNewValue;
+            }
+            break;
+        }
+#endif
         case CoinControlFeatures:
             fCoinControlFeatures = value.toBool();
             settings.setValue("fCoinControlFeatures", fCoinControlFeatures);
@@ -453,6 +544,265 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 f_peerbloomfilters = value.toBool();
                 setRestartRequired(true);
             }
+            break;
+        case blockreconstructionextratxn:
+            if (value.toLongLong() != GetArg("-blockreconstructionextratxn", DEFAULT_BLOCK_RECONSTRUCTION_EXTRA_TXN)) {
+                std::string strNv = value.toString().toStdString();
+                SetArg("-blockreconstructionextratxn", strNv);
+                ModifyRWConfigFile("blockreconstructionextratxn", strNv);
+            }
+            break;
+        case mempoolreplacement:
+        {
+            QString nv = value.toString();
+            if (nv != CanonicalMempoolReplacement()) {
+                if (nv == "never") {
+                    fEnableReplacement = false;
+                    fReplacementHonourOptOut = true;
+                } else if (nv == "fee,optin") {
+                    fEnableReplacement = true;
+                    fReplacementHonourOptOut = true;
+                } else {  // "fee,-optin"
+                    fEnableReplacement = true;
+                    fReplacementHonourOptOut = false;
+                }
+                ModifyRWConfigFile("mempoolreplacement", nv.toStdString());
+            }
+            break;
+        }
+        case maxorphantx:
+        {
+            unsigned int nMaxOrphanTx = GetArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS);
+            unsigned int nNv = value.toLongLong();
+            if (nNv != nMaxOrphanTx) {
+                std::string strNv = value.toString().toStdString();
+                SetArg("-maxorphantx", strNv);
+                ModifyRWConfigFile("maxorphantx", strNv);
+                if (nNv < nMaxOrphanTx) {
+                    LOCK(cs_main);
+                    unsigned int nEvicted = LimitOrphanTxSize(nNv);
+                    if (nEvicted > 0) {
+                        LogPrint("mempool", "maxorphantx reduced from %d to %d, removed %u tx\n", nMaxOrphanTx, nNv, nEvicted);
+                    }
+                }
+            }
+            break;
+        }
+        case maxmempool:
+        {
+            long long nOldValue = GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                SetArg("-maxmempool", strNv);
+                ModifyRWConfigFile("maxmempool", strNv);
+                if (nNv < nOldValue) {
+                    LimitMempoolSize();
+                }
+            }
+            break;
+        }
+        case incrementalrelayfee:
+        {
+            CAmount nNv = value.toLongLong();
+            if (nNv != incrementalRelayFee.GetFeePerK()) {
+                ModifyRWConfigFile("incrementalrelayfee", FormatMoney(nNv));
+                incrementalRelayFee = CFeeRate(nNv);
+            }
+            break;
+        }
+        case mempoolexpiry:
+        {
+            long long nOldValue = GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                SetArg("-mempoolexpiry", strNv);
+                ModifyRWConfigFile("mempoolexpiry", strNv);
+                if (nNv < nOldValue) {
+                    LimitMempoolSize();
+                }
+            }
+            break;
+        }
+        case rejectunknownscripts:
+        {
+            const bool fNewValue = value.toBool();
+            if (fNewValue != fRequireStandard) {
+                fRequireStandard = fNewValue;
+                // This option is inverted in the config:
+                ModifyRWConfigFile("acceptnonstdtxn", strprintf("%d", ! fNewValue));
+            }
+            break;
+        }
+        case rejectspkreuse:
+        {
+            const bool fNewValue = value.toBool();
+            if (f_rejectspkreuse != fNewValue) {
+                ModifyRWConfigFile("spkreuse", fNewValue ? "conflict" : "allow");
+                f_rejectspkreuse = fNewValue;
+                setRestartRequired(true);
+            }
+            break;
+        }
+        case minrelaytxfee:
+        {
+            CAmount nNv = value.toLongLong();
+            if (nNv != ::minRelayTxFee.GetFeePerK()) {
+                ModifyRWConfigFile("minrelaytxfee", FormatMoney(nNv));
+                ::minRelayTxFee = CFeeRate(nNv);
+            }
+            break;
+        }
+        case bytespersigop:
+        {
+            unsigned int nNv = value.toLongLong();
+            if (nNv != nBytesPerSigOp) {
+                ModifyRWConfigFile("bytespersigop", value.toString().toStdString());
+                nBytesPerSigOp = nNv;
+            }
+            break;
+        }
+        case bytespersigopstrict:
+        {
+            unsigned int nNv = value.toLongLong();
+            if (nNv != nBytesPerSigOpStrict) {
+                ModifyRWConfigFile("bytespersigopstrict", value.toString().toStdString());
+                nBytesPerSigOpStrict = nNv;
+            }
+            break;
+        }
+        case limitancestorcount:
+        {
+            long long nOldValue = GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                SetArg("-limitancestorcount", strNv);
+                ModifyRWConfigFile("limitancestorcount", strNv);
+            }
+            break;
+        }
+        case limitancestorsize:
+        {
+            long long nOldValue = GetArg("-limitancestorsize", DEFAULT_ANCESTOR_SIZE_LIMIT);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                SetArg("-limitancestorsize", strNv);
+                ModifyRWConfigFile("limitancestorsize", strNv);
+            }
+            break;
+        }
+        case limitdescendantcount:
+        {
+            long long nOldValue = GetArg("-limitdescendantcount", DEFAULT_DESCENDANT_LIMIT);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                SetArg("-limitdescendantcount", strNv);
+                ModifyRWConfigFile("limitdescendantcount", strNv);
+            }
+            break;
+        }
+        case limitdescendantsize:
+        {
+            long long nOldValue = GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT);
+            long long nNv = value.toLongLong();
+            if (nNv != nOldValue) {
+                std::string strNv = value.toString().toStdString();
+                SetArg("-limitdescendantsize", strNv);
+                ModifyRWConfigFile("limitdescendantsize", strNv);
+            }
+            break;
+        }
+        case spamfilter:
+        {
+            bool fOldValue = GetArg("-spamfilter", DEFAULT_SPAMFILTER);
+            bool fNewValue = value.toBool();
+            if (fOldValue != fNewValue) {
+                std::string strNv = strprintf("%d", fNewValue);
+                SetArg("-spamfilter", strNv);
+                ModifyRWConfigFile("spamfilter", strNv);
+            }
+            break;
+        }
+        case rejectbaremultisig:
+        {
+            // The config and internal option is inverted
+            const bool fNewValue = ! value.toBool();
+            if (fNewValue != fIsBareMultisigStd) {
+                fIsBareMultisigStd = fNewValue;
+                ModifyRWConfigFile("permitbaremultisig", strprintf("%d", fNewValue));
+            }
+            break;
+        }
+        case datacarriersize:
+        {
+            const int nNewSize = value.toInt();
+            const bool fNewEn = (nNewSize > 0);
+            if (fNewEn && unsigned(nNewSize) != nMaxDatacarrierBytes) {
+                ModifyRWConfigFile("datacarriersize", value.toString().toStdString());
+                nMaxDatacarrierBytes = nNewSize;
+            }
+            if (fNewEn != fAcceptDatacarrier) {
+                ModifyRWConfigFile("datacarrier", strprintf("%d", fNewEn));
+                fAcceptDatacarrier = fNewEn;
+            }
+            break;
+        }
+        case dustrelayfee:
+        {
+            CAmount nNv = value.toLongLong();
+            if (nNv != dustRelayFee.GetFeePerK()) {
+                ModifyRWConfigFile("dustrelayfee", FormatMoney(nNv));
+                dustRelayFee = CFeeRate(nNv);
+            }
+            break;
+        }
+        case blockmintxfee:
+            if (value != data(index, role)) {
+                std::string strNv = FormatMoney(value.toLongLong());
+                SetArg("-blockmintxfee", strNv);
+                ModifyRWConfigFile("blockmintxfee", strNv);
+            }
+            break;
+        case blockmaxsize:
+        case blockprioritysize:
+        case blockmaxweight:
+        {
+            const int nNewValue_kB = value.toInt();
+            const int nOldValue_kB = data(index, role).toInt();
+            if (nNewValue_kB != nOldValue_kB) {
+                std::string strNv = strprintf("%d000", nNewValue_kB);
+                std::string strKey;
+                switch(index.row()) {
+                    case blockmaxsize:
+                        strKey = "blockmaxsize";
+                        break;
+                    case blockprioritysize:
+                        strKey = "blockprioritysize";
+                        break;
+                    case blockmaxweight:
+                        strKey = "blockmaxweight";
+                        break;
+                }
+                SetArg("-" + strKey, strNv);
+                ModifyRWConfigFile(strKey, strNv);
+            }
+            break;
+        }
+        case priorityaccurate:
+        {
+            const bool fNewValue = value.toBool();
+            if (fNewValue != fPriorityAccurate) {
+                fPriorityAccurate = fNewValue;
+                ModifyRWConfigFile("priorityaccurate", strprintf("%d", fNewValue));
+            }
+            break;
+        }
+        case corepolicy:
+            ModifyRWConfigFile("corepolicy", value.toString().toStdString());
             break;
         default:
             break;
