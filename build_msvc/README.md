@@ -7,7 +7,7 @@ Solution and project files to build Bitcoin Core with `msbuild` or Visual Studio
 
 To build Bitcoin Core from the command-line, it is sufficient to only install the Visual Studio Build Tools component.
 
-Building with Visual Studio is an alternative to the Linux based [cross-compiler build](../doc/build-windows.md).
+Building Knots with Visual Studio is NOT supported, and it is recommended to instead use the Linux based [cross-compiler build](../doc/build-windows.md).
 
 
 Prerequisites
