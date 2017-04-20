@@ -621,7 +621,9 @@ public:
         return ::feeEstimator.estimateSmartFee(nBlocks, answerFoundAtBlocks, ::mempool);
     }
     CFeeRate getDustRelayFee() override { return ::dustRelayFee; }
+    CFeeRate getFallbackFee() override { CHECK_WALLET(return CWallet::fallbackFee); }
     CFeeRate getPayTxFee() override { CHECK_WALLET(return ::payTxFee); }
+    void setPayTxFee(CFeeRate rate) override { CHECK_WALLET(::payTxFee = rate); }
     UniValue executeRpc(const std::string& command, const UniValue& params) override
     {
         JSONRPCRequest req;
