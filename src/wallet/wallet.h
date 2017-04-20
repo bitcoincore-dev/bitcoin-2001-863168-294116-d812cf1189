@@ -1086,4 +1086,8 @@ bool CWallet::DummySignTx(CMutableTransaction &txNew, const ContainerType &coins
     }
     return true;
 }
+
+// Retrieves the witness program keyhash from p2sh scriptID with help of keystore
+bool GetWitnessKeyID(const CKeyStore* store, const CScriptID &scriptID, CKeyID &keyID);
+
 #endif // BITCOIN_WALLET_WALLET_H

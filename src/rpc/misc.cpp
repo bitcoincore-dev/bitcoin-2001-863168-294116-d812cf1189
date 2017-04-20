@@ -135,6 +135,14 @@ public:
             int nRequired;
             ExtractDestinations(subscript, whichType, addresses, nRequired);
             obj.push_back(Pair("script", GetTxnOutputType(whichType)));
+            CKeyID keyID;
+            CPubKey pubkey;
+            if (GetWitnessKeyID(pwalletMain, scriptID, keyID) &&
+                pwalletMain->GetPubKey(keyID, pubkey)) {
+                // Wallet should only have compressed pubkeys for segwit
+                assert(pubkey.IsCompressed());
+                obj.push_back(Pair("pubkey", HexStr(pubkey)));
+            }
             obj.push_back(Pair("hex", HexStr(subscript.begin(), subscript.end())));
             UniValue a(UniValue::VARR);
             BOOST_FOREACH(const CTxDestination& addr, addresses)
@@ -207,7 +215,8 @@ UniValue validateaddress(const JSONRPCRequest& request)
         CKeyID keyID;
         if (pwalletMain) {
             const auto& meta = pwalletMain->mapKeyMetadata;
-            auto it = address.GetKeyID(keyID) ? meta.find(keyID) : meta.end();
+            CScriptID scriptID;
+            auto it = (address.GetKeyID(keyID) || (address.GetScriptID(scriptID) && GetWitnessKeyID(pwalletMain, scriptID, keyID))) ? meta.find(keyID) : meta.end();
             if (it == meta.end()) {
                 it = meta.find(CScriptID(scriptPubKey));
             }
@@ -252,7 +261,8 @@ CScript _createmultisig_redeemScript(const UniValue& params, bool fSorted)
         if (pwalletMain && address.IsValid())
         {
             CKeyID keyID;
-            if (!address.GetKeyID(keyID))
+            CScriptID scriptID;
+            if (!address.GetKeyID(keyID) && (!address.GetScriptID(scriptID) || !GetWitnessKeyID(pwalletMain, scriptID, keyID)))
                 throw runtime_error(
                     strprintf("%s does not refer to a key",ks));
             CPubKey vchPubKey;
