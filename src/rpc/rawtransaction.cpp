@@ -125,12 +125,15 @@ void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& entry)
 
 UniValue getrawtransaction(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 3)
         throw runtime_error(
-            "getrawtransaction \"txid\" ( verbose )\n"
+            "getrawtransaction \"txid\" ( verbose \"blockhash\" )\n"
 
             "\nNOTE: By default this function only works for mempool transactions. If the -txindex option is\n"
-            "enabled, it also works for blockchain transactions.\n"
+            "enabled, it also works for blockchain transactions. If the block which contains the transaction\n"
+            "is known, its hash can be provided even for nodes without -txindex. Note that if a blockhash is\n"
+            "provided, only that block will be searched and if the transaction is in the mempool or other\n"
+            "blocks, or if this node does not have the given block available, the transaction will not be found.\n"
             "DEPRECATED: for now, it also works for transactions with unspent outputs.\n"
 
             "\nReturn the raw transaction data.\n"
@@ -140,12 +143,14 @@ UniValue getrawtransaction(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. \"txid\"      (string, required) The transaction id\n"
             "2. verbose       (bool, optional, default=false) If false, return a string, otherwise return a json object\n"
+            "3. \"blockhash\" (string, optional) The block in which to look for the transaction\n"
 
             "\nResult (if verbose is not set or set to false):\n"
             "\"data\"      (string) The serialized, hex-encoded data for 'txid'\n"
 
             "\nResult (if verbose is set to true):\n"
             "{\n"
+            "  \"inMainChain\": b,     (bool) Whether specified block is in the main chain or not (only present with explicit \"blockhash\" argument)\n"
             "  \"hex\" : \"data\",       (string) The serialized, hex-encoded data for 'txid'\n"
             "  \"txid\" : \"id\",        (string) The transaction id (same as provided)\n"
             "  \"hash\" : \"id\",        (string) The transaction hash (differs from txid for witness transactions)\n"
@@ -193,11 +198,15 @@ UniValue getrawtransaction(const JSONRPCRequest& request)
             + HelpExampleCli("getrawtransaction", "\"mytxid\"")
             + HelpExampleCli("getrawtransaction", "\"mytxid\" true")
             + HelpExampleRpc("getrawtransaction", "\"mytxid\", true")
+            + HelpExampleCli("getrawtransaction", "\"mytxid\" false \"myblockhash\"")
+            + HelpExampleCli("getrawtransaction", "\"mytxid\" true \"myblockhash\"")
         );
 
     LOCK(cs_main);
 
+    bool inMainChain = true;
     uint256 hash = ParseHashV(request.params[0], "parameter 1");
+    CBlockIndex* blockIndex = NULL;
 
     // Accept either a bool (true) or a num (>=1) to indicate verbose output.
     bool fVerbose = false;
@@ -209,12 +218,31 @@ UniValue getrawtransaction(const JSONRPCRequest& request)
         }
     }
 
+    if (request.params.size() > 2 && !request.params[2].isNull()) {
+        uint256 blockHash = ParseHashV(request.params[2], "parameter 3");
+        if (!blockHash.IsNull()) {
+            BlockMap::iterator it = mapBlockIndex.find(blockHash);
+            if (it == mapBlockIndex.end()) {
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block hash not found");
+            }
+            blockIndex = it->second;
+            inMainChain = (chainActive[blockIndex->nHeight] == blockIndex);
+        }
+    }
+
     CTransactionRef tx;
     uint256 hashBlock;
-    if (!GetTransaction(hash, tx, Params().GetConsensus(), hashBlock, true))
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string(fTxIndex ? "No such mempool or blockchain transaction"
-            : "No such mempool transaction. Use -txindex to enable blockchain transaction queries") +
-            ". Use gettransaction for wallet transactions.");
+    if (!GetTransaction(hash, tx, Params().GetConsensus(), hashBlock, true, blockIndex)) {
+        std::string errmsg;
+        if (blockIndex) {
+            errmsg = "No such transaction found in the provided block";
+        } else {
+            errmsg = fTxIndex
+              ? "No such mempool or blockchain transaction"
+              : "No such mempool transaction. Use -txindex to enable blockchain transaction queries";
+        }
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, errmsg + ". Use gettransaction for wallet transactions.");
+    }
 
     string strHex = EncodeHexTx(*tx, RPCSerializationFlags());
 
@@ -223,6 +251,7 @@ UniValue getrawtransaction(const JSONRPCRequest& request)
 
     UniValue result(UniValue::VOBJ);
     result.push_back(Pair("hex", strHex));
+    if (blockIndex) result.push_back(Pair("inMainChain", inMainChain));
     TxToJSON(*tx, hashBlock, result);
     return result;
 }
@@ -923,7 +952,7 @@ UniValue sendrawtransaction(const JSONRPCRequest& request)
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         okSafeMode
   //  --------------------- ------------------------  -----------------------  ----------
-    { "rawtransactions",    "getrawtransaction",      &getrawtransaction,      true,  {"txid","verbose"} },
+    { "rawtransactions",    "getrawtransaction",      &getrawtransaction,      true,  {"txid","verbose","blockhash"} },
     { "rawtransactions",    "createrawtransaction",   &createrawtransaction,   true,  {"inputs","outputs","locktime"} },
     { "rawtransactions",    "decoderawtransaction",   &decoderawtransaction,   true,  {"hexstring"} },
     { "rawtransactions",    "decodescript",           &decodescript,           true,  {"hexstring"} },
