@@ -2548,6 +2548,9 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
         return false;
     }
 
+    int nStopAtHeight = GetArg("-stopatheight", DEFAULT_STOPATHEIGHT);
+    if (nStopAtHeight && pindexNewTip->nHeight >= nStopAtHeight) StartShutdown();
+
     return true;
 }
 
