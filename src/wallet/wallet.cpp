@@ -3576,6 +3576,17 @@ void CReserveKey::ReturnKey()
     vchPubKey = CPubKey();
 }
 
+void CWallet::CheckKeypoolMinSize() {
+    if (IsHDEnabled() && (setInternalKeyPool.size() < DEFAULT_KEYPOOL_MIN || (setExternalKeyPool.size() < DEFAULT_KEYPOOL_MIN))) {
+        // if the remaining keypool size is below the gap limit, shutdown
+        LogPrintf("%s: Keypool is too small. Shutting down\n", __func__);
+        const static std::string error_msg = "Keypool is too small. Shutting down";
+        uiInterface.ThreadSafeMessageBox(error_msg, "", CClientUIInterface::MSG_ERROR);
+        StartShutdown();
+        throw std::runtime_error(error_msg);
+    }
+}
+
 static void LoadReserveKeysToSet(std::set<CKeyID>& setAddress, const std::set<int64_t>& setKeyPool, CWalletDB& walletdb) {
     for (const int64_t& id : setKeyPool)
     {
@@ -3631,14 +3642,7 @@ void CWallet::MarkReserveKeysAsUsed(const CKeyID& keyId)
         LogPrintf("%s: Topping up keypool failed (locked wallet)\n", __func__);
     }
 
-    if (IsHDEnabled() && (setInternalKeyPool.size() < DEFAULT_KEYPOOL_MIN || (setExternalKeyPool.size() < DEFAULT_KEYPOOL_MIN))) {
-        // if the remaining keypool size is below the gap limit, shutdown
-        LogPrintf("%s: Keypool is too small. Shutting down\n", __func__);
-        const static std::string error_msg = "Keypool is too small. Shutting down";
-        uiInterface.ThreadSafeMessageBox(error_msg, "", CClientUIInterface::MSG_ERROR);
-        StartShutdown();
-        throw std::runtime_error(error_msg);
-    }
+    CheckKeypoolMinSize();
 }
 
 void CWallet::GetAllReserveKeys(std::set<CKeyID>& setAddress) const
@@ -4038,6 +4042,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             }
             walletInstance->TopUpKeyPool();
         }
+        walletInstance->CheckKeypoolMinSize();
     }
 
     CBlockIndex *pindexRescan = chainActive.Genesis();
