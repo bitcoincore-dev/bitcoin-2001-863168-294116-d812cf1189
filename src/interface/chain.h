@@ -193,6 +193,9 @@ public:
         uint64_t max_tries,
         bool keep_script) = 0;
 
+    //! Parse confirm target.
+    virtual unsigned int parseConfirmTarget(const UniValue& value) = 0;
+
     //! Chain notifications.
     class Notifications
     {
