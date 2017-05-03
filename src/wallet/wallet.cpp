@@ -3577,9 +3577,11 @@ void CReserveKey::ReturnKey()
 }
 
 void CWallet::CheckKeypoolMinSize() {
-    if (IsHDEnabled() && (setInternalKeyPool.size() < DEFAULT_KEYPOOL_MIN || (setExternalKeyPool.size() < DEFAULT_KEYPOOL_MIN))) {
+    unsigned int keypool_min = GetArg("-keypoolmin", DEFAULT_KEYPOOL_MIN);
+    if (IsHDEnabled() && (setInternalKeyPool.size() < keypool_min || (setExternalKeyPool.size() < keypool_min))) {
         // if the remaining keypool size is below the gap limit, shutdown
-        LogPrintf("%s: Keypool is too small. Shutting down\n", __func__);
+        LogPrintf("%s: Keypool is too small. Shutting down. internal keypool: %d, external keypool: %d, keypool minimum: %d\n",
+                  __func__, setInternalKeyPool.size(), setExternalKeyPool.size(), keypool_min);
         const static std::string error_msg = "Keypool is too small. Shutting down";
         uiInterface.ThreadSafeMessageBox(error_msg, "", CClientUIInterface::MSG_ERROR);
         StartShutdown();
@@ -3912,6 +3914,7 @@ std::string CWallet::GetWalletHelpString(bool showDebug)
 
         strUsage += HelpMessageOpt("-dblogsize=<n>", strprintf("Flush wallet database activity from memory to disk log every <n> megabytes (default: %u)", DEFAULT_WALLET_DBLOGSIZE));
         strUsage += HelpMessageOpt("-flushwallet", strprintf("Run a thread to flush wallet periodically (default: %u)", DEFAULT_FLUSHWALLET));
+        strUsage += HelpMessageOpt("-keypoolmin", strprintf(_("If the keypool drops below this number of keys and we are unable to generate new keys, shutdown (default: %u)"), DEFAULT_KEYPOOL_MIN));
         strUsage += HelpMessageOpt("-privdb", strprintf("Sets the DB_PRIVATE flag in the wallet db environment (default: %u)", DEFAULT_WALLET_PRIVDB));
         strUsage += HelpMessageOpt("-walletrejectlongchains", strprintf(_("Wallet will not create transactions that violate mempool chain limits (default: %u)"), DEFAULT_WALLET_REJECT_LONG_CHAINS));
     }
@@ -4034,10 +4037,16 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
     // Make sure we have enough keys in our keypool if HD is enabled
     if (walletInstance->IsHDEnabled()) {
+        unsigned int keypool_size = GetArg("-keypool", DEFAULT_KEYPOOL_SIZE);
+        unsigned int keypool_min = GetArg("-keypoolmin", DEFAULT_KEYPOOL_MIN);
         if (walletInstance->IsCrypted()) {
+            if (keypool_size < keypool_min) {
+                LogPrintf("Parameter Interaction: keypool size (%d) must be larger than keypool minimum size for encrypted wallets (%d)\n", keypool_size, keypool_min);
+                SoftSetArg("-keypool", std::to_string(keypool_min));
+            }
             InitWarning(_("You are using an encrypted HD wallet. You may miss incoming or outgoing transactions."));
         } else {
-            if (GetArg("-keypool", DEFAULT_KEYPOOL_SIZE) < DEFAULT_KEYPOOL_MIN) {
+            if (keypool_size < keypool_min && keypool_size < DEFAULT_KEYPOOL_MIN) {
                 InitWarning(_("Your keypool size is below the recommended limit for HD rescans. You may miss incoming or outgoing transactions."));
             }
             walletInstance->TopUpKeyPool();
