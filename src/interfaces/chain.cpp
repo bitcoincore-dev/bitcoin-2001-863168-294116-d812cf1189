@@ -14,6 +14,7 @@
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <protocol.h>
+#include <rpc/mining.h>
 #include <rpc/protocol.h>
 #include <rpc/server.h>
 #include <sync.h>
@@ -32,6 +33,8 @@
 #include <memory>
 #include <tuple>
 #include <utility>
+
+class CReserveScript;
 
 namespace interfaces {
 namespace {
@@ -324,6 +327,13 @@ public:
     void initMessage(const std::string& message) override { ::uiInterface.InitMessage(message); }
     void initWarning(const std::string& message) override { InitWarning(message); }
     void initError(const std::string& message) override { InitError(message); }
+    UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
+        int num_blocks,
+        uint64_t max_tries,
+        bool keep_script) override
+    {
+        return ::generateBlocks(coinbase_script, num_blocks, max_tries, keep_script);
+    }
     std::unique_ptr<Handler> handleNotifications(Notifications& notifications) override
     {
         return MakeUnique<HandlerImpl>(notifications);
