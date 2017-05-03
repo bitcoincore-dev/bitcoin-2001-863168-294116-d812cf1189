@@ -5,6 +5,7 @@
 #include <net.h>
 #include <policy/fees.h>
 #include <policy/policy.h>
+#include <rpc/mining.h>
 #include <rpc/server.h>
 #include <ui_interface.h>
 #include <validation.h>
@@ -242,6 +243,13 @@ public:
     void initMessage(const std::string& message) override { ::uiInterface.InitMessage(message); }
     void initWarning(const std::string& message) override { InitWarning(message); }
     bool initError(const std::string& message) override { return InitError(message); }
+    UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
+        int num_blocks,
+        uint64_t max_tries,
+        bool keep_script) override
+    {
+        return ::generateBlocks(coinbase_script, num_blocks, max_tries, keep_script);
+    }
     std::unique_ptr<Handler> handleNotifications(Notifications& notifications) override
     {
         return MakeUnique<HandlerImpl>(notifications);
