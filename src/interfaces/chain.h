@@ -13,7 +13,9 @@
 #include <vector>
 
 class CBlock;
+class CReserveScript;
 class CScheduler;
+class UniValue;
 class uint256;
 struct CBlockLocator;
 
@@ -127,6 +129,12 @@ public:
     //! Estimate fraction of total transactions verified if blocks up to
     //! the specified block hash are verified.
     virtual double guessVerificationProgress(const uint256& block_hash) = 0;
+
+    //! Generate blocks
+    virtual UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
+        int num_blocks,
+        uint64_t max_tries,
+        bool keep_script) = 0;
 };
 
 //! Interface to let node manage chain clients (wallets, or maybe tools for
