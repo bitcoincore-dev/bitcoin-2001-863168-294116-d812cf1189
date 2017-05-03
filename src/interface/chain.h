@@ -16,8 +16,10 @@
 class CBlock;
 class CCoinControl;
 class CRPCCommand;
+class CReserveScript;
 class CScheduler;
 class CValidationState;
+class UniValue;
 class uint256;
 struct CBlockLocator;
 struct FeeCalculation;
@@ -183,6 +185,12 @@ public:
 
     //! Send init error.
     virtual bool initError(const std::string& message) = 0;
+
+    //! Generate blocks
+    virtual UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
+        int num_blocks,
+        uint64_t max_tries,
+        bool keep_script) = 0;
 
     //! Chain notifications.
     class Notifications
