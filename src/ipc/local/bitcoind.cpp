@@ -250,6 +250,7 @@ public:
     {
         return ::generateBlocks(coinbase_script, num_blocks, max_tries, keep_script);
     }
+    unsigned int parseConfirmTarget(const UniValue& value) { return ParseConfirmTarget(value); }
     std::unique_ptr<Handler> handleNotifications(Notifications& notifications) override
     {
         return MakeUnique<HandlerImpl>(notifications);
