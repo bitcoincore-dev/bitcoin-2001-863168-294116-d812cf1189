@@ -81,7 +81,6 @@ QModelIndex FindTx(const QAbstractItemModel& model, const uint256& txid)
 //     src/qt/test/test_bitcoin-qt -platform cocoa    # macOS
 void TestSendCoins()
 {
-    return;
     // Set up wallet and chain with 101 blocks (1 mature block for spending).
     TestChain100Setup test;
     test.CreateAndProcessBlock({}, GetScriptForRawPubKey(test.coinbaseKey.GetPubKey()));
