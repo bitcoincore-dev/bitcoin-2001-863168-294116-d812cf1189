@@ -203,18 +203,10 @@ UniValue getrawtransaction(const JSONRPCRequest& request)
     bool fVerbose = false;
     if (request.params.size() > 1) {
         if (request.params[1].isNum()) {
-            if (request.params[1].get_int() != 0) {
-                fVerbose = true;
-            }
+            fVerbose = (request.params[1].get_int() != 0);
+        } else if (!request.params[1].isNull()) {
+            fVerbose = (request.params[1].get_bool());
         }
-        else if(request.params[1].isBool()) {
-            if(request.params[1].isTrue()) {
-                fVerbose = true;
-            }
-        }
-        else {
-            throw JSONRPCError(RPC_TYPE_ERROR, "Invalid type provided. Verbose parameter must be a boolean.");
-        } 
     }
 
     CTransactionRef tx;
