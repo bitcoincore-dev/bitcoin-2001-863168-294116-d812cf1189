@@ -622,7 +622,6 @@ void WalletModel::listLockedCoins(std::vector<COutPoint>& vOutpts)
 
 void WalletModel::loadReceiveRequests(std::vector<std::string>& vReceiveRequests)
 {
-    LOCK(wallet->cs_wallet);
     vReceiveRequests = wallet->GetDestValues("rr"); // receive request
 }
 
