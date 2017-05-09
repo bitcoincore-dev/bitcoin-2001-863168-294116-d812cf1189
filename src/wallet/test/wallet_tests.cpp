@@ -599,8 +599,10 @@ public:
         wallet.reset(new CWallet(std::unique_ptr<CWalletDBWrapper>(new CWalletDBWrapper(&bitdb, "wallet_test.dat"))));
         bool firstRun;
         wallet->LoadWallet(firstRun);
-        LOCK(wallet->cs_wallet);
-        wallet->AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey());
+        {
+            LOCK(wallet->cs_wallet);
+            wallet->AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey());
+        }
         wallet->ScanForWalletTransactions(chainActive.Genesis());
     }
 
@@ -634,6 +636,7 @@ public:
 BOOST_FIXTURE_TEST_CASE(ListCoins, ListCoinsTestingSetup)
 {
     std::string coinbaseAddress = coinbaseKey.GetPubKey().GetID().ToString();
+    LOCK(cs_main);
     LOCK(wallet->cs_wallet);
 
     // Confirm ListCoins initially returns 1 coin grouped under coinbaseKey
