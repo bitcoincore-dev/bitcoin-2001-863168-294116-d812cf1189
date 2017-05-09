@@ -241,6 +241,7 @@ public:
     }
     CoinsList listCoins() override
     {
+        LOCK2(cs_main, wallet.cs_wallet);
         CoinsList result;
         for (const auto& entry : wallet.ListCoins()) {
             auto& group = result[entry.first];
