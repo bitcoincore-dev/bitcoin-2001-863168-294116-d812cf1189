@@ -636,6 +636,7 @@ public:
 BOOST_FIXTURE_TEST_CASE(ListCoins, ListCoinsTestingSetup)
 {
     std::string coinbaseAddress = coinbaseKey.GetPubKey().GetID().ToString();
+    LOCK(cs_main);
     LOCK(wallet->cs_wallet);
 
     // Confirm ListCoins initially returns 1 coin grouped under coinbaseKey
