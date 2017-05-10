@@ -996,9 +996,9 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() < 2 || request.params.size() > 4)
+    if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
     {
-        std::string msg = "addmultisigaddress nrequired [\"key\",...] ( \"account\" ) ( sort )\n"
+        std::string msg = "addmultisigaddress nrequired [\"key\",...] ( \"account\" or options )\n"
             "\nAdd a nrequired-to-sign multisignature address to the wallet.\n"
             "Each key is a Bitcoin address or hex-encoded public key.\n"
             "If 'account' is specified (DEPRECATED), assign address to that account.\n"
@@ -1013,7 +1013,7 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
             "     ]\n"
             "3. options        (object, optional)\n"
             "   {\n"
-            "     \"sort\"         (bool, optional, default=false) Whether to sort public keys according to BIP67.\n"
+            "     \"sort\"       (bool, optional, default=false) Whether to sort public keys according to BIP67.\n"
             "   }\n"
 
             "\nResult:\n"
