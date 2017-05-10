@@ -19,6 +19,7 @@ import configparser
 import os
 import time
 import shutil
+import socket
 import sys
 import subprocess
 import tempfile
@@ -347,7 +348,7 @@ class TestHandler:
             # Add tests
             self.num_running += 1
             t = self.test_list.pop(0)
-            port_seed = ["--portseed={}".format(len(self.test_list) + self.portseed_offset)]
+            port_seed = self.get_port_seed()
             log_stdout = tempfile.SpooledTemporaryFile(max_size=2**16)
             log_stderr = tempfile.SpooledTemporaryFile(max_size=2**16)
             test_argv = t.split()
@@ -381,6 +382,39 @@ class TestHandler:
 
                     return TestResult(name, status, int(time.time() - time0)), stdout, stderr
             print('.', end='', flush=True)
+
+    def get_port_seed(self):
+        # These are copied from util.py
+        MAX_NODES = 8
+        PORT_MIN = 11000
+        PORT_RANGE = 5000
+
+        for i in range(625):
+            success = True
+            port_seed = len(self.test_list) + self.portseed_offset
+            ports = [PORT_MIN + n + (MAX_NODES * port_seed) % (PORT_RANGE - 1 - MAX_NODES) for n in range(8)] + \
+                    [PORT_MIN + PORT_RANGE + n + (MAX_NODES * port_seed) % (PORT_RANGE - 1 - MAX_NODES) for n in range(8)]
+
+            print("testing ports %s" % ports)
+
+            for port in ports:
+                try:
+                    s = socket.socket()
+                    s.bind(('127.0.0.1', port))
+                    s.close()
+                except socket.error:
+                    print("%sWARNING!%s Port %s already in use. Trying a different offset" % (BOLD[1], BOLD[0], port))
+                    success = False
+                    break
+
+            if success:
+                return ["--portseed={}".format(len(self.test_list) + self.portseed_offset)]
+            else:
+                self.portseed_offset = self.portseed_offset - 1 % 625
+                continue
+
+        raise AssertionError("No free port ranges!")
+
 
 class TestResult():
     def __init__(self, name, status, time):
