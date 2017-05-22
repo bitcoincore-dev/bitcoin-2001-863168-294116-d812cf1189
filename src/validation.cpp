@@ -19,6 +19,7 @@
 #include <hash.h>
 #include <index/txindex.h>
 #include <policy/fees.h>
+#include <policy/fees_input.h>
 #include <policy/policy.h>
 #include <policy/settings.h>
 #include <pow.h>
@@ -122,7 +123,8 @@ arith_uint256 nMinimumChainWork;
 CFeeRate minRelayTxFee = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE);
 
 CBlockPolicyEstimator feeEstimator;
-CTxMemPool mempool(&feeEstimator);
+FeeEstInput feeEstimatorInput(feeEstimator);
+CTxMemPool mempool(&feeEstimatorInput);
 
 /** Constant stuff for coinbase transactions we create: */
 CScript COINBASE_FLAGS;
