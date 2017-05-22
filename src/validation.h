@@ -41,6 +41,7 @@ class CScriptCheck;
 class CBlockPolicyEstimator;
 class CTxMemPool;
 class CValidationState;
+class FeeEstInput;
 struct ChainTxData;
 
 struct PrecomputedTransactionData;
@@ -143,6 +144,7 @@ struct BlockHasher
 
 extern CScript COINBASE_FLAGS;
 extern CCriticalSection cs_main;
+extern FeeEstInput feeEstimatorInput;
 extern CBlockPolicyEstimator feeEstimator;
 extern CTxMemPool mempool;
 extern std::atomic_bool g_is_mempool_loaded;
