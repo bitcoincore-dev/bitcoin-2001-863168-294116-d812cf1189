@@ -19,6 +19,7 @@
 #include "hash.h"
 #include "init.h"
 #include "policy/fees.h"
+#include "policy/fees_input.h"
 #include "policy/policy.h"
 #include "policy/rbf.h"
 #include "pow.h"
@@ -85,7 +86,8 @@ CFeeRate minRelayTxFee = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE);
 CAmount maxTxFee = DEFAULT_TRANSACTION_MAXFEE;
 
 CBlockPolicyEstimator feeEstimator;
-CTxMemPool mempool(&feeEstimator);
+CBlockPolicyInput feeEstimatorInput(feeEstimator);
+CTxMemPool mempool(&feeEstimatorInput);
 
 static void CheckBlockIndex(const Consensus::Params& consensusParams);
 

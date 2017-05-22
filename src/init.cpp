@@ -26,7 +26,7 @@
 #include "net.h"
 #include "net_processing.h"
 #include "policy/feerate.h"
-#include "policy/fees.h"
+#include "policy/fees_input.h"
 #include "policy/policy.h"
 #include "rpc/server.h"
 #include "rpc/register.h"
@@ -206,15 +206,13 @@ void Shutdown()
 
     if (fFeeEstimatesInitialized)
     {
-        ::feeEstimator.FlushUnconfirmed(::mempool);
+        ::feeEstimatorInput.flushUnconfirmed(::mempool);
         fs::path est_path = GetDataDir() / FEE_ESTIMATES_FILENAME;
-        CAutoFile est_fileout(fsbridge::fopen(est_path, "wb"), SER_DISK, CLIENT_VERSION);
-        if (!est_fileout.IsNull())
-            ::feeEstimator.Write(est_fileout);
-        else
-            LogPrintf("%s: Failed to write fee estimates to %s\n", __func__, est_path.string());
+        ::feeEstimatorInput.writeData(est_path);
         fFeeEstimatesInitialized = false;
     }
+
+    ::feeEstimatorInput.writeLog({});
 
     // FlushStateToDisk generates a SetBestChain callback, which we should avoid missing
     if (pcoinsTip != nullptr) {
@@ -453,6 +451,7 @@ std::string HelpMessage(HelpMessageMode mode)
         strUsage += HelpMessageOpt("-limitdescendantcount=<n>", strprintf("Do not accept transactions if any ancestor would have <n> or more in-mempool descendants (default: %u)", DEFAULT_DESCENDANT_LIMIT));
         strUsage += HelpMessageOpt("-limitdescendantsize=<n>", strprintf("Do not accept transactions if any ancestor would have more than <n> kilobytes of in-mempool descendants (default: %u).", DEFAULT_DESCENDANT_SIZE_LIMIT));
         strUsage += HelpMessageOpt("-vbparams=deployment:start:end", "Use given start/end times for specified version bits deployment (regtest-only)");
+        strUsage += HelpMessageOpt("-estlog=<est.log>", "Generate newline-delimited json file with fee estimation data. See test/fee_est/README.md for more information.");
     }
     strUsage += HelpMessageOpt("-debug=<category>", strprintf(_("Output debugging information (default: %u, supplying <category> is optional)"), 0) + ". " +
         _("If <category> is not supplied or if <category> = 1, output all debugging information.") + " " + _("<category> can be:") + " " + ListLogCategories() + ".");
@@ -1133,6 +1132,11 @@ bool AppInitParameterInteraction()
             }
         }
     }
+
+    if (!::feeEstimatorInput.writeLog(gArgs.GetArg("-estlog", ""))) {
+        return InitError("Could not open -estlog file for appending.");
+    }
+
     return true;
 }
 
@@ -1559,10 +1563,8 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     }
 
     fs::path est_path = GetDataDir() / FEE_ESTIMATES_FILENAME;
-    CAutoFile est_filein(fsbridge::fopen(est_path, "rb"), SER_DISK, CLIENT_VERSION);
     // Allowed to fail as this file IS missing on first startup.
-    if (!est_filein.IsNull())
-        ::feeEstimator.Read(est_filein);
+    ::feeEstimatorInput.readData(est_path);
     fFeeEstimatesInitialized = true;
 
     // ********************************************************* Step 8: load wallet
