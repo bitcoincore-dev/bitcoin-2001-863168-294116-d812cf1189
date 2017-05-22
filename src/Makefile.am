@@ -159,6 +159,7 @@ BITCOIN_CORE_H = \
   outputtype.h \
   policy/feerate.h \
   policy/fees.h \
+  policy/fees_input.h \
   policy/policy.h \
   policy/rbf.h \
   pow.h \
@@ -264,6 +265,7 @@ libbitcoin_server_a_SOURCES = \
   noui.cpp \
   outputtype.cpp \
   policy/fees.cpp \
+  policy/fees_input.cpp \
   policy/policy.cpp \
   policy/rbf.cpp \
   pow.cpp \
@@ -569,7 +571,8 @@ bitcoin_wallet_LDADD = \
   $(LIBLEVELDB) \
   $(LIBLEVELDB_SSE42) \
   $(LIBMEMENV) \
-  $(LIBSECP256K1)
+  $(LIBSECP256K1) \
+  $(LIBUNIVALUE)
 
 bitcoin_wallet_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
 #
