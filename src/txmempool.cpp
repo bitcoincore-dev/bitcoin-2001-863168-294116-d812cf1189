@@ -10,7 +10,7 @@
 #include "consensus/validation.h"
 #include "validation.h"
 #include "policy/policy.h"
-#include "policy/fees.h"
+#include "policy/fees_input.h"
 #include "streams.h"
 #include "timedata.h"
 #include "util.h"
@@ -332,7 +332,7 @@ void CTxMemPoolEntry::UpdateAncestorState(int64_t modifySize, CAmount modifyFee,
     assert(int(nSigOpCostWithAncestors) >= 0);
 }
 
-CTxMemPool::CTxMemPool(CBlockPolicyEstimator* estimator) :
+CTxMemPool::CTxMemPool(CBlockPolicyInput* estimator) :
     nTransactionsUpdated(0), minerPolicyEstimator(estimator)
 {
     _clear(); //lock free clear
@@ -412,7 +412,7 @@ bool CTxMemPool::addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry,
 
     nTransactionsUpdated++;
     totalTxSize += entry.GetTxSize();
-    if (minerPolicyEstimator) {minerPolicyEstimator->processTransaction(entry, validFeeEstimate);}
+    if (minerPolicyEstimator) {minerPolicyEstimator->processTx(entry, validFeeEstimate);}
 
     vTxHashes.emplace_back(tx.GetWitnessHash(), newit);
     newit->vTxHashesIdx = vTxHashes.size() - 1;
