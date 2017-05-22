@@ -290,7 +290,7 @@ struct entry_time {};
 struct mining_score {};
 struct ancestor_score {};
 
-class CBlockPolicyEstimator;
+class CBlockPolicyInput;
 
 /**
  * Information about a mempool transaction.
@@ -414,7 +414,7 @@ class CTxMemPool
 private:
     uint32_t nCheckFrequency; //!< Value n means that n times in 2^32 we check.
     unsigned int nTransactionsUpdated; //!< Used by getblocktemplate to trigger CreateNewBlock() invocation
-    CBlockPolicyEstimator* minerPolicyEstimator;
+    CBlockPolicyInput* minerPolicyEstimator;
 
     uint64_t totalTxSize;      //!< sum of all mempool tx's virtual sizes. Differs from serialized tx size since witness data is discounted. Defined in BIP 141.
     uint64_t cachedInnerUsage; //!< sum of dynamic memory usage of all the map elements (NOT the maps themselves)
@@ -498,7 +498,7 @@ public:
 
     /** Create a new CTxMemPool.
      */
-    explicit CTxMemPool(CBlockPolicyEstimator* estimator = nullptr);
+    explicit CTxMemPool(CBlockPolicyInput* estimator = nullptr);
 
     /**
      * If sanity-checking is turned on, check makes sure the pool is
