@@ -3,7 +3,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 TESTS += test/test_bitcoin
-bin_PROGRAMS += test/test_bitcoin
+bin_PROGRAMS += test/test_bitcoin test/fee_est/fee_est
 noinst_PROGRAMS += test/test_bitcoin_fuzzy
 TEST_SRCDIR = test
 TEST_BINARY=test/test_bitcoin$(EXEEXT)
@@ -108,7 +108,7 @@ test_test_bitcoin_LDADD += $(LIBBITCOIN_CONSENSUS) $(BDB_LIBS) $(SSL_LIBS) $(CRY
 test_test_bitcoin_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) -static
 
 if ENABLE_ZMQ
-test_test_bitcoin_LDADD += $(ZMQ_LIBS)
+test_test_bitcoin_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
 endif
 #
 
@@ -128,6 +128,38 @@ test_test_bitcoin_fuzzy_LDADD = \
   $(LIBSECP256K1)
 
 test_test_bitcoin_fuzzy_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+#
+
+# fee_est/fee_est binary #
+test_fee_est_fee_est_SOURCES = test/fee_est/fee_est.cpp
+test_fee_est_fee_est_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+test_fee_est_fee_est_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+test_fee_est_fee_est_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+test_fee_est_fee_est_LDADD = \
+  $(LIBBITCOIN_SERVER)
+
+if ENABLE_WALLET
+test_fee_est_fee_est_LDADD += \
+  $(LIBBITCOIN_WALLET)
+endif
+
+test_fee_est_fee_est_LDADD += \
+  $(LIBBITCOIN_COMMON) \
+  $(LIBBITCOIN_UTIL) \
+  $(LIBBITCOIN_CONSENSUS) \
+  $(LIBBITCOIN_CRYPTO) \
+  $(LIBLEVELDB) $(LIBLEVELDB_SSE42) $(LIBMEMENV) \
+  $(LIBSECP256K1) \
+  $(LIBUNIVALUE) \
+  $(BDB_LIBS) \
+  $(BOOST_LIBS) \
+  $(CRYPTO_LIBS) \
+  $(EVENT_LIBS) $(EVENT_PTHREADS_LIBS) \
+  $(MINIUPNPC_LIBS)
+
+if ENABLE_ZMQ
+test_fee_est_fee_est_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
+endif
 #
 
 nodist_test_test_bitcoin_SOURCES = $(GENERATED_TEST_FILES)
