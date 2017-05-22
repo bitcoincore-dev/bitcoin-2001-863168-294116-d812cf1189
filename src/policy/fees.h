@@ -190,16 +190,6 @@ public:
     CBlockPolicyEstimator();
     ~CBlockPolicyEstimator();
 
-    /** Process all the transactions that have been included in a block */
-    void processBlock(unsigned int nBlockHeight,
-                      std::vector<const CTxMemPoolEntry*>& entries);
-
-    /** Process a transaction accepted to the mempool*/
-    void processTransaction(const CTxMemPoolEntry& entry, bool validFeeEstimate);
-
-    /** Remove a transaction from the mempool tracking stats*/
-    bool removeTx(uint256 hash, bool inBlock);
-
     /** DEPRECATED. Return a feerate estimate */
     CFeeRate estimateFee(int confTarget) const;
 
@@ -216,14 +206,13 @@ public:
      */
     CFeeRate estimateRawFee(int confTarget, double successThreshold, FeeEstimateHorizon horizon, EstimationResult *result = nullptr) const;
 
-    /** Write estimation data to a file */
-    bool Write(CAutoFile& fileout) const;
+    /** Get highest target that reasonable estimate can be provided for. */
+    unsigned int getMaxTarget() const;
 
-    /** Read estimation data from a file */
-    bool Read(CAutoFile& filein);
-
-    /** Empty mempool transactions on shutdown to record failure to confirm for txs still in mempool */
-    void FlushUnconfirmed();
+    /** Get sorted list of targets the estimator can directly calculate feerates
+     *  for (without rounding up the nearest supported target).
+     */
+    static std::vector<unsigned int> getUniqueTargets();
 
     /** Calculation of highest target that estimates are tracked for */
     unsigned int HighestTargetTracked(FeeEstimateHorizon horizon) const;
@@ -257,9 +246,6 @@ private:
 
     mutable CCriticalSection cs_feeEstimator;
 
-    /** Process a transaction confirmed in a block*/
-    bool processBlockTx(unsigned int nBlockHeight, const CTxMemPoolEntry* entry);
-
     /** Helper for estimateSmartFee */
     double estimateCombinedFee(unsigned int confTarget, double successThreshold, bool checkShorterHorizon, EstimationResult *result) const;
     /** Helper for estimateSmartFee */
@@ -268,8 +254,15 @@ private:
     unsigned int BlockSpan() const;
     /** Number of blocks of recorded fee estimate data represented in saved data file */
     unsigned int HistoricalBlockSpan() const;
-    /** Calculation of highest target that reasonable estimate can be provided for */
-    unsigned int MaxUsableEstimate() const;
+
+    void processTx(const uint256& hash, unsigned int txHeight, CAmount txFee, size_t txSize, bool validFeeEstimate);
+    bool removeTx(uint256 hash, bool inBlock);
+    void processBlock(unsigned int nBlockHeight, const std::function<size_t(unsigned int& countedTxs)>& addEntries);
+    bool processBlockTx(const uint256& hash, unsigned int txHeight, CAmount txFee, size_t txSize, unsigned int nBlockHeight);
+    void flushUnconfirmed();
+    bool readData(CAutoFile& filein);
+    bool writeData(CAutoFile& fileout) const;
+    friend class CBlockPolicyInput;
 };
 
 class FeeFilterRounder
