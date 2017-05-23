@@ -1142,7 +1142,18 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
                 } else {
                     UniValue result = UniValue(UniValue::VOBJ);
                     result.pushKV("success", UniValue(false));
-                    result.pushKV("error", JSONRPCError(RPC_MISC_ERROR, strprintf("Failed to rescan before time %d, transactions may be missing.", scanFailed->GetBlockTimeMax() + 1)));
+                    result.pushKV(
+                        "error",
+                        JSONRPCError(
+                            RPC_MISC_ERROR,
+                            strprintf("Rescan failed for key with creation timestamp %d. There was an error reading a "
+                                      "block from time %d, which is after or within %d seconds of key creation, and "
+                                      "could contain transactions pertaining to the key. As a result, transactions "
+                                      "and coins using this key may not appear in the wallet. This error could be "
+                                      "caused by pruning or data corruption (see bitcoind log for details) and could "
+                                      "be dealt with by downloading and rescanning the relevant blocks (see -reindex "
+                                      "and -rescan options).",
+                                GetImportTimestamp(request, now), scanFailed->GetBlockTimeMax(), TIMESTAMP_WINDOW)));
                     response.push_back(std::move(result));
                 }
                 ++i;
