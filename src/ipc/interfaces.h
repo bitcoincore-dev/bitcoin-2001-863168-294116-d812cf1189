@@ -300,6 +300,29 @@ public:
     //! Abandon transaction.
     virtual bool abandonTransaction(const uint256& txHash) = 0;
 
+    //! Return whether transaction can be bumped.
+    virtual bool transactionCanBeBumped(const uint256& txHash) = 0;
+
+    //! Create bump transaction.
+    virtual bool createBumpTransaction(const uint256& txHash,
+        int confirmTarget,
+        bool ignoreUserSetFee,
+        CAmount totalFee,
+        bool replaceable,
+        std::vector<std::string>& errors,
+        CAmount& oldFee,
+        CAmount& newFee,
+        CMutableTransaction& mtx) = 0;
+
+    //! Sign bump transaction.
+    virtual bool signBumpTransaction(CMutableTransaction& mtx) = 0;
+
+    //! Commit bump transaction.
+    virtual bool commitBumpTransaction(const uint256& txHash,
+        CMutableTransaction&& mtx,
+        std::vector<std::string>& errors,
+        uint256& bumpedTxHash) = 0;
+
     //! Get balances.
     virtual WalletBalances getBalances() = 0;
 
