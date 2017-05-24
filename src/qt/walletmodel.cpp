@@ -19,11 +19,9 @@
 #include "keystore.h"
 #include "validation.h"
 #include "net.h" // for g_connman
-#include "policy/rbf.h"
 #include "sync.h"
 #include "ui_interface.h"
 #include "util.h" // for GetBoolArg
-#include "wallet/feebumper.h"
 #include "wallet/wallet.h"
 
 #include <stdint.h>
@@ -525,32 +523,21 @@ bool WalletModel::saveReceiveRequest(const std::string &sAddress, const int64_t 
         return ipcWallet->addDestData(dest, key, sRequest);
 }
 
-bool WalletModel::transactionCanBeBumped(uint256 hash) const
-{
-    LOCK2(cs_main, wallet->cs_wallet);
-    const CWalletTx *wtx = wallet->GetWalletTx(hash);
-    return wtx && SignalsOptInRBF(*wtx) && !wtx->mapValue.count("replaced_by_txid");
-}
-
 bool WalletModel::bumpFee(uint256 hash)
 {
-    std::unique_ptr<CFeeBumper> feeBump;
-    {
-        LOCK2(cs_main, wallet->cs_wallet);
-        feeBump.reset(new CFeeBumper(wallet, hash, nTxConfirmTarget, false, 0, true));
-    }
-    if (feeBump->getResult() != BumpFeeResult::OK)
-    {
+    std::vector<std::string> errors;
+    CAmount oldFee;
+    CAmount newFee;
+    CMutableTransaction mtx;
+    if (!ipcWallet->createBumpTransaction(hash, nTxConfirmTarget, false, 0, true, errors, oldFee, newFee, mtx)) {
         QMessageBox::critical(0, tr("Fee bump error"), tr("Increasing transaction fee failed") + "<br />(" +
-            (feeBump->getErrors().size() ? QString::fromStdString(feeBump->getErrors()[0]) : "") +")");
+            (errors.size() ? QString::fromStdString(errors[0]) : "") +")");
          return false;
     }
 
     // allow a user based fee verification
     QString questionString = tr("Do you want to increase the fee?");
     questionString.append("<br />");
-    CAmount oldFee = feeBump->getOldFee();
-    CAmount newFee = feeBump->getNewFee();
     questionString.append("<table style=\"text-align: left;\">");
     questionString.append("<tr><td>");
     questionString.append(tr("Current fee:"));
@@ -581,23 +568,15 @@ bool WalletModel::bumpFee(uint256 hash)
     }
 
     // sign bumped transaction
-    bool res = false;
-    {
-        LOCK2(cs_main, wallet->cs_wallet);
-        res = feeBump->signTransaction(wallet);
-    }
-    if (!res) {
+    if (!ipcWallet->signBumpTransaction(mtx)) {
         QMessageBox::critical(0, tr("Fee bump error"), tr("Can't sign transaction."));
         return false;
     }
     // commit the bumped transaction
-    {
-        LOCK2(cs_main, wallet->cs_wallet);
-        res = feeBump->commit(wallet);
-    }
-    if(!res) {
+    uint256 txid;
+    if(!ipcWallet->commitBumpTransaction(hash, std::move(mtx), errors, txid)) {
         QMessageBox::critical(0, tr("Fee bump error"), tr("Could not commit transaction") + "<br />(" +
-            QString::fromStdString(feeBump->getErrors()[0])+")");
+            QString::fromStdString(errors[0])+")");
          return false;
     }
     return true;
