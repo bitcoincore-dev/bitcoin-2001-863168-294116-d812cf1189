@@ -379,7 +379,7 @@ void TransactionView::contextualMenu(const QPoint &point)
     uint256 hash;
     hash.SetHex(selection.at(0).data(TransactionTableModel::TxHashRole).toString().toStdString());
     abandonAction->setEnabled(model->getIpcWallet().transactionCanBeAbandoned(hash));
-    bumpFeeAction->setEnabled(model->transactionCanBeBumped(hash));
+    bumpFeeAction->setEnabled(model->getIpcWallet().transactionCanBeBumped(hash));
 
     if(index.isValid())
     {
