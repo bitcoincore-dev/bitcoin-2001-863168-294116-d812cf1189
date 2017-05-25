@@ -2851,6 +2851,9 @@ UniValue bumpfee(const JSONRPCRequest& request)
         if (options.exists("confTarget") && options.exists("totalFee")) {
             throw JSONRPCError(RPC_INVALID_PARAMETER, "confTarget and totalFee options should not both be set. Please provide either a confirmation target for fee estimation or an explicit total fee for the transaction.");
         } else if (options.exists("confTarget")) {
+            // If the user has explicitly set a confTarget in this rpc call,
+            // then override the default logic that uses the global payTxFee
+            // instead of the confirmation target.
             ignoreGlobalPayTxFee = true;
             newConfirmTarget = options["confTarget"].get_int();
             if (newConfirmTarget <= 0) { // upper-bound will be checked by estimatefee/smartfee
