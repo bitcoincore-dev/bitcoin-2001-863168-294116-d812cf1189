@@ -7,6 +7,7 @@
 #include <amount.h>
 #include <chain.h>
 #include <consensus/validation.h>
+#include <interface/chain.h>
 #include <interface/handler.h>
 #include <net.h>
 #include <policy/policy.h>
@@ -18,11 +19,15 @@
 #include <timedata.h>
 #include <ui_interface.h>
 #include <uint256.h>
+#include <util.h>
 #include <validation.h>
 #include <wallet/feebumper.h>
 #include <wallet/wallet.h>
 
 #include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace interface {
 namespace {
@@ -434,8 +439,25 @@ public:
     CWallet& m_wallet;
 };
 
+class WalletClientImpl : public Chain::Client
+{
+public:
+    WalletClientImpl(Chain& chain, std::vector<std::string> wallet_filenames)
+        : m_chain(chain), m_wallet_filenames(std::move(wallet_filenames))
+    {
+    }
+
+    Chain& m_chain;
+    std::vector<std::string> m_wallet_filenames;
+};
+
 } // namespace
 
 std::unique_ptr<Wallet> MakeWallet(CWallet& wallet) { return MakeUnique<WalletImpl>(wallet); }
+
+std::unique_ptr<Chain::Client> MakeWalletClient(Chain& chain, std::vector<std::string> wallet_filenames)
+{
+    return MakeUnique<WalletClientImpl>(chain, std::move(wallet_filenames));
+}
 
 } // namespace interface
