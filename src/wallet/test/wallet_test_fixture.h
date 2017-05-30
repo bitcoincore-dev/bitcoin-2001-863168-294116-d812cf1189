@@ -5,13 +5,18 @@
 #ifndef BITCOIN_WALLET_TEST_FIXTURE_H
 #define BITCOIN_WALLET_TEST_FIXTURE_H
 
+#include "ipc/interfaces.h"
 #include "test/test_bitcoin.h"
+
+#include <memory>
 
 /** Testing setup and teardown for wallet.
  */
 struct WalletTestingSetup: public TestingSetup {
     WalletTestingSetup(const std::string& chainName = CBaseChainParams::MAIN);
     ~WalletTestingSetup();
+
+    std::unique_ptr<ipc::Chain> m_ipc_chain = ipc::MakeChain(ipc::LOCAL);
 };
 
 #endif
