@@ -13,6 +13,7 @@
 #include <consensus/validation.h>
 #include <rpc/server.h>
 #include <test/test_bitcoin.h>
+#include <util.h>
 #include <validation.h>
 #include <wallet/coincontrol.h>
 #include <wallet/test/wallet_test_fixture.h>
@@ -34,6 +35,9 @@ static void AddKey(CWallet& wallet, const CKey& key)
 
 BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
 {
+    auto chain = interfaces::MakeChain();
+    SetWalletChain(*chain);
+
     // Cap last block file size, and mine new block in a new block file.
     CBlockIndex* const nullBlock = nullptr;
     CBlockIndex* oldTip = chainActive.Tip();
@@ -115,6 +119,9 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
 // than or equal to key birthday.
 BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
 {
+    auto chain = interfaces::MakeChain();
+    SetWalletChain(*chain);
+
     // Create two blocks with same timestamp to verify that importwallet rescan
     // will pick up both blocks, not just the first.
     const int64_t BLOCK_TIME = chainActive.Tip()->GetBlockTimeMax() + 5;
@@ -178,6 +185,9 @@ BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
 // debit functions.
 BOOST_FIXTURE_TEST_CASE(coin_mark_dirty_immature_credit, TestChain100Setup)
 {
+    auto chain = interfaces::MakeChain();
+    SetWalletChain(*chain);
+
     CWallet wallet("dummy", WalletDatabase::CreateDummy());
     CWalletTx wtx(&wallet, m_coinbase_txns.back());
     LOCK2(cs_main, wallet.cs_wallet);
@@ -271,6 +281,7 @@ public:
     ListCoinsTestingSetup()
     {
         CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));
+        SetWalletChain(*m_chain);
         wallet = MakeUnique<CWallet>("mock", WalletDatabase::CreateMock());
         bool firstRun;
         wallet->LoadWallet(firstRun);
@@ -309,6 +320,7 @@ public:
         return it->second;
     }
 
+    std::unique_ptr<interfaces::Chain> m_chain = interfaces::MakeChain();
     std::unique_ptr<CWallet> wallet;
 };
 
