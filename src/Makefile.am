@@ -104,6 +104,7 @@ BITCOIN_CORE_H = \
   httpserver.h \
   indirectmap.h \
   init.h \
+  interface/chain.h \
   key.h \
   keystore.h \
   dbwrapper.h \
@@ -241,6 +242,7 @@ endif
 libbitcoin_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_wallet_a_SOURCES = \
+  interface/wallet.cpp \
   wallet/crypter.cpp \
   wallet/db.cpp \
   wallet/feebumper.cpp \
@@ -350,6 +352,7 @@ libbitcoin_util_a_SOURCES = \
   compat/glibcxx_sanity.cpp \
   compat/strnlen.cpp \
   fs.cpp \
+  interface/chain.cpp \
   random.cpp \
   rpc/protocol.cpp \
   support/cleanse.cpp \
