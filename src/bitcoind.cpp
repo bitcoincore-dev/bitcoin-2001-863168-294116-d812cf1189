@@ -11,6 +11,7 @@
 #include "clientversion.h"
 #include "compat.h"
 #include "fs.h"
+#include "ipc/interfaces.h"
 #include "rpc/server.h"
 #include "init.h"
 #include "noui.h"
@@ -62,6 +63,8 @@ void WaitForShutdown(boost::thread_group* threadGroup)
 //
 bool AppInit(int argc, char* argv[])
 {
+    auto ipc_chain = ipc::MakeChain(ipc::LOCAL);
+    ipc::Chain::Clients ipc_clients;
     boost::thread_group threadGroup;
     CScheduler scheduler;
 
@@ -134,7 +137,7 @@ bool AppInit(int argc, char* argv[])
             // InitError will have been called with detailed error, which ends up on console
             exit(EXIT_FAILURE);
         }
-        if (!AppInitParameterInteraction())
+        if (!AppInitParameterInteraction(*ipc_chain, ipc_clients))
         {
             // InitError will have been called with detailed error, which ends up on console
             exit(EXIT_FAILURE);
@@ -165,7 +168,7 @@ bool AppInit(int argc, char* argv[])
             // If locking the data directory failed, exit immediately
             exit(EXIT_FAILURE);
         }
-        fRet = AppInitMain(threadGroup, scheduler);
+        fRet = AppInitMain(*ipc_chain, ipc_clients, threadGroup, scheduler);
     }
     catch (const std::exception& e) {
         PrintExceptionContinue(&e, "AppInit()");
@@ -180,7 +183,7 @@ bool AppInit(int argc, char* argv[])
     } else {
         WaitForShutdown(&threadGroup);
     }
-    Shutdown();
+    Shutdown(ipc_clients);
 
     return fRet;
 }

@@ -7,6 +7,7 @@
 #define BITCOIN_WALLET_WALLET_H
 
 #include "amount.h"
+#include "ipc/interfaces.h"
 #include "policy/feerate.h"
 #include "streams.h"
 #include "tinyformat.h"
@@ -723,6 +724,10 @@ private:
      */
     bool AddWatchOnly(const CScript& dest) override;
 
+    /**
+     * IPC interface for accessing blockchain state.
+     */
+    ipc::Chain* m_ipc_chain = nullptr;
     std::unique_ptr<CWalletDBWrapper> dbw;
 
     /**
@@ -776,7 +781,7 @@ public:
     }
 
     // Create wallet with passed-in database handle
-    CWallet(std::unique_ptr<CWalletDBWrapper> dbw_in) : dbw(std::move(dbw_in))
+    CWallet(ipc::Chain* ipc_chain, std::unique_ptr<CWalletDBWrapper> dbw_in) : m_ipc_chain(ipc_chain), dbw(std::move(dbw_in))
     {
         SetNull();
     }
@@ -803,6 +808,11 @@ public:
         nRelockTime = 0;
         fAbortRescan = false;
         fScanningWallet = false;
+    }
+
+    ipc::Chain& ipc_chain() const {
+        assert(m_ipc_chain);
+        return *m_ipc_chain;
     }
 
     std::map<uint256, CWalletTx> mapWallet;
@@ -1117,8 +1127,8 @@ public:
     static std::string GetWalletHelpString(bool showDebug);
 
     /* Initializes the wallet, returns a new CWallet instance or a null pointer in case of an error */
-    static CWallet* CreateWalletFromFile(const std::string walletFile);
-    static bool InitLoadWallet();
+    static CWallet* CreateWalletFromFile(ipc::Chain& ipc_chain, const std::string walletFile);
+    static bool InitLoadWallet(ipc::Chain& ipc_chain);
 
     /**
      * Wallet post-init setup
