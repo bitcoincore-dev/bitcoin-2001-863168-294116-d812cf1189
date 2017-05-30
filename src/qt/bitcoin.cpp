@@ -178,7 +178,7 @@ class BitcoinCore: public QObject
 {
     Q_OBJECT
 public:
-    explicit BitcoinCore();
+    explicit BitcoinCore(InitInterfaces& interfaces);
     /** Basic initialization, before starting initialization/shutdown thread.
      * Return true on success.
      */
@@ -194,6 +194,7 @@ Q_SIGNALS:
     void runawayException(const QString &message);
 
 private:
+    InitInterfaces& m_interfaces;
 
     /// Pass fatal exception message to UI thread
     void handleRunawayException(const std::exception *e);
@@ -204,7 +205,7 @@ class BitcoinApplication: public QApplication
 {
     Q_OBJECT
 public:
-    explicit BitcoinApplication(int &argc, char **argv);
+    explicit BitcoinApplication(int &argc, char **argv, InitInterfaces& interfaces);
     ~BitcoinApplication();
 
 #ifdef ENABLE_WALLET
@@ -244,6 +245,7 @@ Q_SIGNALS:
     void splashFinished(QWidget *window);
 
 private:
+    InitInterfaces& m_interfaces;
     QThread *coreThread;
     OptionsModel *optionsModel;
     ClientModel *clientModel;
@@ -262,8 +264,8 @@ private:
 
 #include <qt/bitcoin.moc>
 
-BitcoinCore::BitcoinCore():
-    QObject()
+BitcoinCore::BitcoinCore(InitInterfaces& interfaces):
+    QObject(), m_interfaces(interfaces)
 {
 }
 
@@ -299,7 +301,7 @@ void BitcoinCore::initialize()
     try
     {
         qDebug() << __func__ << ": Running initialization in thread";
-        bool rv = AppInitMain();
+        bool rv = AppInitMain(m_interfaces);
         Q_EMIT initializeResult(rv);
     } catch (const std::exception& e) {
         handleRunawayException(&e);
@@ -314,7 +316,7 @@ void BitcoinCore::shutdown()
     {
         qDebug() << __func__ << ": Running Shutdown in thread";
         Interrupt();
-        Shutdown();
+        Shutdown(m_interfaces);
         qDebug() << __func__ << ": Shutdown finished";
         Q_EMIT shutdownResult();
     } catch (const std::exception& e) {
@@ -324,8 +326,9 @@ void BitcoinCore::shutdown()
     }
 }
 
-BitcoinApplication::BitcoinApplication(int &argc, char **argv):
+BitcoinApplication::BitcoinApplication(int &argc, char **argv, InitInterfaces& interfaces):
     QApplication(argc, argv),
+    m_interfaces(interfaces),
     coreThread(0),
     optionsModel(0),
     clientModel(0),
@@ -407,7 +410,7 @@ void BitcoinApplication::startThread()
     if(coreThread)
         return;
     coreThread = new QThread(this);
-    BitcoinCore *executor = new BitcoinCore();
+    BitcoinCore *executor = new BitcoinCore(m_interfaces);
     executor->moveToThread(coreThread);
 
     /*  communication to and from thread */
@@ -547,6 +550,9 @@ int main(int argc, char *argv[])
 {
     SetupEnvironment();
 
+    InitInterfaces interfaces;
+    interfaces.chain = interface::MakeChain();
+
     /// 1. Parse command-line options. These take precedence over anything else.
     // Command-line options take precedence:
     gArgs.ParseParameters(argc, argv);
@@ -563,7 +569,7 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(bitcoin);
     Q_INIT_RESOURCE(bitcoin_locale);
 
-    BitcoinApplication app(argc, argv);
+    BitcoinApplication app(argc, argv, interfaces);
 #if QT_VERSION > 0x050100
     // Generate high-dpi pixmaps
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);

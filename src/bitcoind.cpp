@@ -57,6 +57,8 @@ void WaitForShutdown()
 //
 bool AppInit(int argc, char* argv[])
 {
+    InitInterfaces interfaces;
+    interfaces.chain = interface::MakeChain();
     bool fRet = false;
 
     //
@@ -157,7 +159,7 @@ bool AppInit(int argc, char* argv[])
             // If locking the data directory failed, exit immediately
             return false;
         }
-        fRet = AppInitMain();
+        fRet = AppInitMain(interfaces);
     }
     catch (const std::exception& e) {
         PrintExceptionContinue(&e, "AppInit()");
@@ -171,7 +173,7 @@ bool AppInit(int argc, char* argv[])
     } else {
         WaitForShutdown();
     }
-    Shutdown();
+    Shutdown(interfaces);
 
     return fRet;
 }
