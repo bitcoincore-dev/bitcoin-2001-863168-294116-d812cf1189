@@ -62,6 +62,8 @@ void WaitForShutdown(boost::thread_group* threadGroup)
 //
 bool AppInit(int argc, char* argv[])
 {
+    InitInterfaces interfaces;
+    interfaces.chain = interface::MakeChain();
     boost::thread_group threadGroup;
     CScheduler scheduler;
 
@@ -165,7 +167,7 @@ bool AppInit(int argc, char* argv[])
             // If locking the data directory failed, exit immediately
             return false;
         }
-        fRet = AppInitMain(threadGroup, scheduler);
+        fRet = AppInitMain(interfaces, threadGroup, scheduler);
     }
     catch (const std::exception& e) {
         PrintExceptionContinue(&e, "AppInit()");
@@ -180,7 +182,7 @@ bool AppInit(int argc, char* argv[])
     } else {
         WaitForShutdown(&threadGroup);
     }
-    Shutdown();
+    Shutdown(interfaces);
 
     return fRet;
 }
