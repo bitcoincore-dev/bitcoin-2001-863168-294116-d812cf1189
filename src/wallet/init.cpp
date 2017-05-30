@@ -14,6 +14,8 @@
 #include <wallet/wallet.h>
 #include <wallet/walletutil.h>
 
+#include <init.h>  // For InitInterfaces
+
 std::string GetWalletHelpString(bool showDebug)
 {
     std::string strUsage = HelpMessageGroup(_("Wallet options:"));
@@ -259,7 +261,7 @@ bool VerifyWallets()
 
         if (gArgs.GetBoolArg("-salvagewallet", false)) {
             // Recover readable keypairs:
-            CWallet dummyWallet("dummy", CWalletDBWrapper::CreateDummy());
+            CWallet dummyWallet(nullptr, "dummy", CWalletDBWrapper::CreateDummy());
             std::string backup_filename;
             if (!CWalletDB::Recover(wallet_path, (void *)&dummyWallet, CWalletDB::RecoverKeysOnlyFilter, backup_filename)) {
                 return false;
@@ -280,7 +282,7 @@ bool VerifyWallets()
     return true;
 }
 
-bool OpenWallets()
+bool OpenWallets(InitInterfaces& interfaces)
 {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
         LogPrintf("Wallet disabled!\n");
@@ -288,7 +290,7 @@ bool OpenWallets()
     }
 
     for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
-        CWallet * const pwallet = CWallet::CreateWalletFromFile(walletFile, fs::absolute(walletFile, GetWalletDir()));
+        CWallet * const pwallet = CWallet::CreateWalletFromFile(*interfaces.chain, walletFile, fs::absolute(walletFile, GetWalletDir()));
         if (!pwallet) {
             return false;
         }

@@ -7,6 +7,7 @@
 #define BITCOIN_WALLET_WALLET_H
 
 #include <amount.h>
+#include <interface/chain.h>
 #include <policy/feerate.h>
 #include <streams.h>
 #include <tinyformat.h>
@@ -727,6 +728,11 @@ private:
     bool AddWatchOnly(const CScript& dest) override;
 
     /**
+     * Interface for accessing blockchain state.
+     */
+    interface::Chain* m_chain = nullptr;
+
+    /**
      * Wallet filename from wallet=<path> command line or config option.
      * Used in debug logs and to send RPCs to the right wallet instance when
      * more than one wallet is loaded.
@@ -780,7 +786,7 @@ public:
     unsigned int nMasterKeyMaxID;
 
     /** Construct wallet with specified name and database implementation. */
-    CWallet(std::string name, std::unique_ptr<CWalletDBWrapper> dbw) : m_name(std::move(name)), dbw(std::move(dbw))
+    CWallet(interface::Chain* chain, std::string name, std::unique_ptr<CWalletDBWrapper> dbw) : m_chain(chain), m_name(std::move(name)), dbw(std::move(dbw))
     {
         SetNull();
     }
@@ -807,6 +813,11 @@ public:
         nRelockTime = 0;
         fAbortRescan = false;
         fScanningWallet = false;
+    }
+
+    interface::Chain& chain() const {
+        assert(m_chain);
+        return *m_chain;
     }
 
     std::map<uint256, CWalletTx> mapWallet;
@@ -1100,7 +1111,7 @@ public:
     bool MarkReplaced(const uint256& originalHash, const uint256& newHash);
 
     /* Initializes the wallet, returns a new CWallet instance or a null pointer in case of an error */
-    static CWallet* CreateWalletFromFile(const std::string& name, const fs::path& path);
+    static CWallet* CreateWalletFromFile(interface::Chain& chain, const std::string& name, const fs::path& path);
 
     /**
      * Wallet post-init setup

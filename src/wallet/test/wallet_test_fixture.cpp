@@ -9,7 +9,7 @@
 #include <wallet/wallet.h>
 
 WalletTestingSetup::WalletTestingSetup(const std::string& chainName):
-    TestingSetup(chainName), m_wallet("mock", CWalletDBWrapper::CreateMock())
+    TestingSetup(chainName), m_wallet(m_chain.get(), "mock", CWalletDBWrapper::CreateMock())
 {
     bool fFirstRun;
     g_address_type = OUTPUT_TYPE_DEFAULT;
