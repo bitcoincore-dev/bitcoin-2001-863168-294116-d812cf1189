@@ -183,7 +183,7 @@ void Interrupt()
     }
 }
 
-void Shutdown()
+void Shutdown(InitInterfaces& interfaces)
 {
     LogPrintf("%s: In progress...\n", __func__);
     static CCriticalSection cs_Shutdown;
@@ -725,7 +725,7 @@ static bool InitSanityCheck(void)
     return true;
 }
 
-static bool AppInitServers()
+static bool AppInitServers(InitInterfaces& interfaces)
 {
     RPCServer::OnStarted(&OnRPCStarted);
     RPCServer::OnStopped(&OnRPCStopped);
@@ -1223,7 +1223,7 @@ bool AppInitLockDataDirectory()
     return true;
 }
 
-bool AppInitMain()
+bool AppInitMain(InitInterfaces& interfaces)
 {
     const CChainParams& chainparams = Params();
     // ********************************************************* Step 4a: application initialization
@@ -1291,7 +1291,7 @@ bool AppInitMain()
     if (gArgs.GetBoolArg("-server", false))
     {
         uiInterface.InitMessage.connect(SetRPCWarmupStatus);
-        if (!AppInitServers())
+        if (!AppInitServers(interfaces))
             return InitError(_("Unable to start HTTP server. See debug log for details."));
     }
 
@@ -1615,7 +1615,7 @@ bool AppInitMain()
     }
 
     // ********************************************************* Step 9: load wallet
-    if (!g_wallet_init_interface.Open()) return false;
+    if (!g_wallet_init_interface.Open(interfaces)) return false;
 
     // ********************************************************* Step 10: data directory maintenance
 

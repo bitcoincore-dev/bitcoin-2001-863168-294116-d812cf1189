@@ -6,6 +6,8 @@
 #ifndef BITCOIN_INIT_H
 #define BITCOIN_INIT_H
 
+#include <interfaces/chain.h>
+
 #include <memory>
 #include <string>
 #include <util.h>
@@ -21,9 +23,16 @@ namespace boost
 class thread_group;
 } // namespace boost
 
+//! Pointers to interfaces used during init and destroyed on shutdown.
+struct InitInterfaces
+{
+    std::unique_ptr<interfaces::Chain> chain;
+    std::vector<std::unique_ptr<interfaces::Chain::Client>> chain_clients;
+};
+
 /** Interrupt threads */
 void Interrupt();
-void Shutdown();
+void Shutdown(InitInterfaces& interfaces);
 //!Initialize the logging infrastructure
 void InitLogging();
 //!Parameter interaction: change current parameters depending on various rules
@@ -57,7 +66,7 @@ bool AppInitLockDataDirectory();
  * @note This should only be done after daemonization. Call Shutdown() if this function fails.
  * @pre Parameters should be parsed and config file should be read, AppInitLockDataDirectory should have been called.
  */
-bool AppInitMain();
+bool AppInitMain(InitInterfaces& interfaces);
 
 /**
  * Setup the arguments for gArgs
