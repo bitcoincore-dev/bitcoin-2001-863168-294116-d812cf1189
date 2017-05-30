@@ -6,6 +6,7 @@
 #include <util.h>
 
 #include <chainparamsbase.h>
+#include <interfaces/chain.h>
 #include <random.h>
 #include <serialize.h>
 #include <utilstrencodings.h>
@@ -86,6 +87,8 @@ const char * const BITCOIN_CONF_FILENAME = "bitcoin.conf";
 const char * const BITCOIN_PID_FILENAME = "bitcoind.pid";
 
 ArgsManager gArgs;
+
+Interfaces g_interfaces;
 
 CTranslationInterface translationInterface;
 

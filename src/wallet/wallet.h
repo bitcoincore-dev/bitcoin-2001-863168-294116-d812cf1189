@@ -33,6 +33,10 @@
 #include <utility>
 #include <vector>
 
+namespace interfaces {
+class Chain;
+} // namespace interfaces
+
 bool AddWallet(const std::shared_ptr<CWallet>& wallet);
 bool RemoveWallet(const std::shared_ptr<CWallet>& wallet);
 bool HasWallets();
@@ -812,6 +816,9 @@ public:
         delete encrypted_batch;
         encrypted_batch = nullptr;
     }
+
+    /** Interface for accessing blockchain state */
+    interfaces::Chain& chain() const;
 
     std::map<uint256, CWalletTx> mapWallet;
     std::list<CAccountingEntry> laccentries;

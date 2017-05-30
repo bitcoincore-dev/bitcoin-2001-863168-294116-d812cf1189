@@ -153,6 +153,11 @@ public:
     void operator()(const X &none) {}
 };
 
+interfaces::Chain& CWallet::chain() const {
+    assert(g_interfaces.chain.get());
+    return *g_interfaces.chain;
+}
+
 const CWalletTx* CWallet::GetWalletTx(const uint256& hash) const
 {
     LOCK(cs_wallet);

@@ -34,6 +34,11 @@
 #include <boost/signals2/signal.hpp>
 #include <boost/thread/condition_variable.hpp> // for boost::thread_interrupted
 
+namespace interfaces {
+class Chain;
+class ChainClient;
+} // namespace
+
 // Application startup time (used for uptime calculation)
 int64_t GetStartupTime();
 
@@ -285,6 +290,16 @@ public:
 };
 
 extern ArgsManager gArgs;
+
+//! Shared pointers to interfaces that need to be accessible globally, for
+//! example, from RPC methods.
+struct Interfaces
+{
+    std::unique_ptr<interfaces::Chain> chain;
+    std::vector<std::unique_ptr<interfaces::ChainClient>> chain_clients;
+};
+
+extern Interfaces g_interfaces;
 
 /**
  * @return true if help has been requested via a command-line arg
