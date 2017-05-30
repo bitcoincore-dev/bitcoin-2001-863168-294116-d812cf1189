@@ -6,6 +6,8 @@
 #ifndef BITCOIN_INIT_H
 #define BITCOIN_INIT_H
 
+#include "ipc/interfaces.h"
+
 #include <string>
 
 class CScheduler;
@@ -20,7 +22,7 @@ void StartShutdown();
 bool ShutdownRequested();
 /** Interrupt threads */
 void Interrupt(boost::thread_group& threadGroup);
-void Shutdown();
+void Shutdown(ipc::Chain::Clients& ipc_clients);
 //!Initialize the logging infrastructure
 void InitLogging();
 //!Parameter interaction: change current parameters depending on various rules
@@ -36,7 +38,7 @@ bool AppInitBasicSetup();
  * @note This can be done before daemonization. Do not call Shutdown() if this function fails.
  * @pre Parameters should be parsed and config file should be read, AppInitBasicSetup should have been called.
  */
-bool AppInitParameterInteraction();
+bool AppInitParameterInteraction(ipc::Chain& ipc_chain, ipc::Chain::Clients& ipc_clients);
 /**
  * Initialization sanity checks: ecc init, sanity checks, dir lock.
  * @note This can be done before daemonization. Do not call Shutdown() if this function fails.
@@ -54,7 +56,7 @@ bool AppInitLockDataDirectory();
  * @note This should only be done after daemonization. Call Shutdown() if this function fails.
  * @pre Parameters should be parsed and config file should be read, AppInitLockDataDirectory should have been called.
  */
-bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler);
+bool AppInitMain(ipc::Chain& ipc_chain, const ipc::Chain::Clients& ipc_clients, boost::thread_group& threadGroup, CScheduler& scheduler);
 
 /** The help message mode determines what help message to show */
 enum HelpMessageMode {

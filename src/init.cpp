@@ -19,6 +19,7 @@
 #include "fs.h"
 #include "httpserver.h"
 #include "httprpc.h"
+#include "ipc/interfaces.h"
 #include "key.h"
 #include "validation.h"
 #include "miner.h"
@@ -167,7 +168,7 @@ void Interrupt(boost::thread_group& threadGroup)
     threadGroup.interrupt_all();
 }
 
-void Shutdown()
+void Shutdown(ipc::Chain::Clients& ipc_clients)
 {
     LogPrintf("%s: In progress...\n", __func__);
     static CCriticalSection cs_Shutdown;
@@ -883,7 +884,7 @@ bool AppInitBasicSetup()
     return true;
 }
 
-bool AppInitParameterInteraction()
+bool AppInitParameterInteraction(ipc::Chain& ipc_chain, ipc::Chain::Clients& ipc_clients)
 {
     const CChainParams& chainparams = Params();
     // ********************************************************* Step 2: parameter interactions
@@ -1203,7 +1204,7 @@ bool AppInitLockDataDirectory()
     return true;
 }
 
-bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
+bool AppInitMain(ipc::Chain& ipc_chain, const ipc::Chain::Clients& ipc_clients, boost::thread_group& threadGroup, CScheduler& scheduler)
 {
     const CChainParams& chainparams = Params();
     // ********************************************************* Step 4a: application initialization
@@ -1578,7 +1579,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     // ********************************************************* Step 8: load wallet
 #ifdef ENABLE_WALLET
-    if (!OpenWallets())
+    if (!OpenWallets(ipc_chain))
         return false;
 #else
     LogPrintf("No wallet support compiled in!\n");

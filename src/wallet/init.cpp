@@ -235,15 +235,14 @@ bool VerifyWallets()
     return true;
 }
 
-bool OpenWallets()
-{
+bool OpenWallets(ipc::Chain& ipc_chain) {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
         LogPrintf("Wallet disabled!\n");
         return true;
     }
 
     for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
-        CWallet * const pwallet = CWallet::CreateWalletFromFile(walletFile);
+        CWallet * const pwallet = CWallet::CreateWalletFromFile(ipc_chain, walletFile);
         if (!pwallet) {
             return false;
         }
