@@ -9,6 +9,7 @@
 
 class CScheduler;
 class CRPCTable;
+class InitInterfaces;
 
 class WalletInitInterface {
 public:
@@ -21,7 +22,7 @@ public:
     /** Verify wallets */
     virtual bool Verify() = 0;
     /** Open wallets*/
-    virtual bool Open() = 0;
+    virtual bool Open(InitInterfaces& interfaces) = 0;
     /** Start wallets*/
     virtual void Start(CScheduler& scheduler) = 0;
     /** Flush Wallets*/
