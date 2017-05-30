@@ -103,6 +103,9 @@ BITCOIN_CORE_H = \
   httpserver.h \
   indirectmap.h \
   init.h \
+  ipc/interfaces.h \
+  ipc/local/interfaces.h \
+  ipc/util.h \
   key.h \
   keystore.h \
   dbwrapper.h \
@@ -346,6 +349,8 @@ libbitcoin_util_a_SOURCES = \
   compat/glibcxx_sanity.cpp \
   compat/strnlen.cpp \
   fs.cpp \
+  ipc/interfaces.cpp \
+  ipc/local/bitcoind.cpp \
   random.cpp \
   rpc/protocol.cpp \
   support/cleanse.cpp \
@@ -356,6 +361,10 @@ libbitcoin_util_a_SOURCES = \
   utilstrencodings.cpp \
   utiltime.cpp \
   $(BITCOIN_CORE_H)
+
+if ENABLE_WALLET
+libbitcoin_util_a_SOURCES += ipc/local/bitcoin-walletd.cpp
+endif
 
 if GLIBC_BACK_COMPAT
 libbitcoin_util_a_SOURCES += compat/glibc_compat.cpp
