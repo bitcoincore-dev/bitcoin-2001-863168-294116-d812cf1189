@@ -28,6 +28,7 @@ class proxyType;
 struct CNodeStateStats;
 
 namespace interfaces {
+class Chain;
 class Handler;
 class Wallet;
 
@@ -175,6 +176,10 @@ public:
 
     //! Return interfaces for accessing wallets (if any).
     virtual std::vector<std::unique_ptr<Wallet>> getWallets() = 0;
+
+    //! Return interface for accessing chain. Implementation by subclasses is
+    //! not required since this is only used for testing.
+    virtual Chain& chain() { throw std::logic_error("Node::chain not implemented"); }
 
     //! Register handler for init messages.
     using InitMessageFn = std::function<void(const std::string& message)>;

@@ -33,7 +33,7 @@ public:
     bool Verify() const override;
 
     //! Load wallet databases.
-    bool Open() const override;
+    bool Open(InitInterfaces& interfaces) const override;
 
     //! Complete startup of wallets.
     void Start(CScheduler& scheduler) const override;
@@ -218,12 +218,14 @@ bool WalletInit::Verify() const
     return true;
 }
 
-bool WalletInit::Open() const
+bool WalletInit::Open(InitInterfaces& interfaces) const
 {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
         LogPrintf("Wallet disabled!\n");
         return true;
     }
+
+    SetWalletChain(*interfaces.chain);
 
     for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
         CWallet * const pwallet = CWallet::CreateWalletFromFile(walletFile, fs::absolute(walletFile, GetWalletDir()));
