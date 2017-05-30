@@ -181,11 +181,11 @@ public:
     /** Basic initialization, before starting initialization/shutdown thread.
      * Return true on success.
      */
-    static bool baseInitialize();
+    static bool baseInitialize(InitInterfaces& interfaces);
 
 public Q_SLOTS:
-    void initialize();
-    void shutdown();
+    void initialize(InitInterfaces& interfaces);
+    void shutdown(InitInterfaces& interfaces);
 
 Q_SIGNALS:
     void initializeResult(bool success);
@@ -274,13 +274,13 @@ void BitcoinCore::handleRunawayException(const std::exception *e)
     Q_EMIT runawayException(QString::fromStdString(GetWarnings("gui")));
 }
 
-bool BitcoinCore::baseInitialize()
+bool BitcoinCore::baseInitialize(InitInterfaces& interfaces)
 {
     if (!AppInitBasicSetup())
     {
         return false;
     }
-    if (!AppInitParameterInteraction())
+    if (!AppInitParameterInteraction(interfaces))
     {
         return false;
     }
@@ -295,12 +295,12 @@ bool BitcoinCore::baseInitialize()
     return true;
 }
 
-void BitcoinCore::initialize()
+void BitcoinCore::initialize(InitInterfaces& interfaces)
 {
     try
     {
         qDebug() << __func__ << ": Running initialization in thread";
-        bool rv = AppInitMain(threadGroup, scheduler);
+        bool rv = AppInitMain(interfaces, threadGroup, scheduler);
         Q_EMIT initializeResult(rv);
     } catch (const std::exception& e) {
         handleRunawayException(&e);
@@ -309,14 +309,14 @@ void BitcoinCore::initialize()
     }
 }
 
-void BitcoinCore::shutdown()
+void BitcoinCore::shutdown(InitInterfaces& interfaces)
 {
     try
     {
         qDebug() << __func__ << ": Running Shutdown in thread";
         Interrupt(threadGroup);
         threadGroup.join_all();
-        Shutdown();
+        Shutdown(interfaces);
         qDebug() << __func__ << ": Shutdown finished";
         Q_EMIT shutdownResult();
     } catch (const std::exception& e) {
@@ -548,6 +548,9 @@ int main(int argc, char *argv[])
 {
     SetupEnvironment();
 
+    InitInterfaces interfaces;
+    interfaces.chain = interface::MakeChain();
+
     /// 1. Parse command-line options. These take precedence over anything else.
     // Command-line options take precedence:
     gArgs.ParseParameters(argc, argv);
@@ -706,7 +709,7 @@ int main(int argc, char *argv[])
         // Perform base initialization before spinning up initialization/shutdown thread
         // This is acceptable because this function only contains steps that are quick to execute,
         // so the GUI thread won't be held up.
-        if (BitcoinCore::baseInitialize()) {
+        if (BitcoinCore::baseInitialize(interfaces)) {
             app.requestInitialize();
 #if defined(Q_OS_WIN) && QT_VERSION >= 0x050000
             WinShutdownMonitor::registerShutdownBlockReason(QObject::tr("%1 didn't yet exit safely...").arg(QObject::tr(PACKAGE_NAME)), (HWND)app.getMainWinId());

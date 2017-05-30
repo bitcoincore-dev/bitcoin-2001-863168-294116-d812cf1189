@@ -1,5 +1,6 @@
 #include "wallettests.h"
 
+#include "interface/chain.h"
 #include "qt/bitcoinamountfield.h"
 #include "qt/callback.h"
 #include "qt/optionsmodel.h"
@@ -149,7 +150,8 @@ void TestSendCoins()
     }
     bitdb.MakeMock();
     std::unique_ptr<CWalletDBWrapper> dbw(new CWalletDBWrapper(&bitdb, "wallet_test.dat"));
-    CWallet wallet(std::move(dbw));
+    auto chain = interface::MakeChain();
+    CWallet wallet(chain.get(), std::move(dbw));
     bool firstRun;
     wallet.LoadWallet(firstRun);
     {

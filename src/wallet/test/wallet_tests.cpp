@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "consensus/validation.h"
+#include "interface/util.h"
 #include "rpc/server.h"
 #include "test/test_bitcoin.h"
 #include "validation.h"
@@ -38,7 +39,8 @@ typedef std::set<CInputCoin> CoinSet;
 
 BOOST_FIXTURE_TEST_SUITE(wallet_tests, WalletTestingSetup)
 
-static const CWallet testWallet;
+static auto testChain = interface::MakeChain();
+static const CWallet testWallet(testChain.get(), interface::MakeUnique<CWalletDBWrapper>());
 static std::vector<COutput> vCoins;
 
 static void add_coin(const CAmount& nValue, int nAge = 6*24, bool fIsFromMe = false, int nInput=0)
@@ -372,6 +374,7 @@ static void AddKey(CWallet& wallet, const CKey& key)
 
 BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
 {
+    auto chain = interface::MakeChain();
     LOCK(cs_main);
 
     // Cap last block file size, and mine new block in a new block file.
@@ -384,7 +387,7 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
     // Verify ScanForWalletTransactions picks up transactions in both the old
     // and new block files.
     {
-        CWallet wallet;
+        CWallet wallet(chain.get(), interface::MakeUnique<CWalletDBWrapper>());
         AddKey(wallet, coinbaseKey);
         BOOST_CHECK_EQUAL(nullBlock, wallet.ScanForWalletTransactions(oldTip));
         BOOST_CHECK_EQUAL(wallet.GetImmatureBalance(), 100 * COIN);
@@ -397,7 +400,7 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
     // Verify ScanForWalletTransactions only picks transactions in the new block
     // file.
     {
-        CWallet wallet;
+        CWallet wallet(chain.get(), interface::MakeUnique<CWalletDBWrapper>());
         AddKey(wallet, coinbaseKey);
         BOOST_CHECK_EQUAL(oldTip, wallet.ScanForWalletTransactions(oldTip));
         BOOST_CHECK_EQUAL(wallet.GetImmatureBalance(), 50 * COIN);
@@ -407,7 +410,7 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
     // before the missing block, and success for a key whose creation time is
     // after.
     {
-        CWallet wallet;
+        CWallet wallet(chain.get(), interface::MakeUnique<CWalletDBWrapper>());
         vpwallets.insert(vpwallets.begin(), &wallet);
         UniValue keys;
         keys.setArray();
@@ -449,6 +452,7 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
 // than or equal to key birthday.
 BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
 {
+    auto chain = interface::MakeChain();
     LOCK(cs_main);
 
     // Create two blocks with same timestamp to verify that importwallet rescan
@@ -466,7 +470,7 @@ BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
 
     // Import key into wallet and call dumpwallet to create backup file.
     {
-        CWallet wallet;
+        CWallet wallet(chain.get(), interface::MakeUnique<CWalletDBWrapper>());
         LOCK(wallet.cs_wallet);
         wallet.mapKeyMetadata[coinbaseKey.GetPubKey().GetID()].nCreateTime = KEY_TIME;
         wallet.AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey());
@@ -481,7 +485,7 @@ BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
     // Call importwallet RPC and verify all blocks with timestamps >= BLOCK_TIME
     // were scanned, and no prior blocks were scanned.
     {
-        CWallet wallet;
+        CWallet wallet(chain.get(), interface::MakeUnique<CWalletDBWrapper>());
 
         JSONRPCRequest request;
         request.params.setArray();
@@ -510,7 +514,8 @@ BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
 // debit functions.
 BOOST_FIXTURE_TEST_CASE(coin_mark_dirty_immature_credit, TestChain100Setup)
 {
-    CWallet wallet;
+    auto chain = interface::MakeChain();
+    CWallet wallet(chain.get(), interface::MakeUnique<CWalletDBWrapper>());
     CWalletTx wtx(&wallet, MakeTransactionRef(coinbaseTxns.back()));
     LOCK2(cs_main, wallet.cs_wallet);
     wtx.hashBlock = chainActive.Tip()->GetBlockHash();
@@ -554,7 +559,8 @@ static int64_t AddTx(CWallet& wallet, uint32_t lockTime, int64_t mockTime, int64
 // expanded to cover more corner cases of smart time logic.
 BOOST_AUTO_TEST_CASE(ComputeTimeSmart)
 {
-    CWallet wallet;
+    auto chain = interface::MakeChain();
+    CWallet wallet(chain.get(), interface::MakeUnique<CWalletDBWrapper>());
 
     // New transaction should use clock time if lower than block time.
     BOOST_CHECK_EQUAL(AddTx(wallet, 1, 100, 120), 100);
@@ -600,7 +606,7 @@ public:
     {
         CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));
         ::bitdb.MakeMock();
-        wallet.reset(new CWallet(std::unique_ptr<CWalletDBWrapper>(new CWalletDBWrapper(&bitdb, "wallet_test.dat"))));
+        wallet.reset(new CWallet(m_chain.get(), std::unique_ptr<CWalletDBWrapper>(new CWalletDBWrapper(&bitdb, "wallet_test.dat"))));
         bool firstRun;
         wallet->LoadWallet(firstRun);
         AddKey(*wallet, coinbaseKey);
@@ -632,6 +638,7 @@ public:
         return it->second;
     }
 
+    std::unique_ptr<interface::Chain> m_chain = interface::MakeChain();
     std::unique_ptr<CWallet> wallet;
 };
 
