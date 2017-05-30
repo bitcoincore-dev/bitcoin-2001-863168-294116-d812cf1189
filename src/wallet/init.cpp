@@ -32,7 +32,7 @@ public:
     bool Verify() const override;
 
     //! Load wallet databases.
-    bool Open() const override;
+    bool Open(InitInterfaces& interfaces) const override;
 
     //! Complete startup of wallets.
     void Start(CScheduler& scheduler) const override;
@@ -222,7 +222,7 @@ bool WalletInit::Verify() const
 
         if (gArgs.GetBoolArg("-salvagewallet", false)) {
             // Recover readable keypairs:
-            CWallet dummyWallet("dummy", WalletDatabase::CreateDummy());
+            CWallet dummyWallet(nullptr, "dummy", WalletDatabase::CreateDummy());
             std::string backup_filename;
             if (!WalletBatch::Recover(wallet_path, (void *)&dummyWallet, WalletBatch::RecoverKeysOnlyFilter, backup_filename)) {
                 return false;
@@ -243,7 +243,7 @@ bool WalletInit::Verify() const
     return true;
 }
 
-bool WalletInit::Open() const
+bool WalletInit::Open(InitInterfaces& interfaces) const
 {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
         LogPrintf("Wallet disabled!\n");
@@ -251,7 +251,7 @@ bool WalletInit::Open() const
     }
 
     for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
-        CWallet * const pwallet = CWallet::CreateWalletFromFile(walletFile, fs::absolute(walletFile, GetWalletDir()));
+        CWallet * const pwallet = CWallet::CreateWalletFromFile(*interfaces.chain, walletFile, fs::absolute(walletFile, GetWalletDir()));
         if (!pwallet) {
             return false;
         }

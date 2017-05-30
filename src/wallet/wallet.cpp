@@ -3990,7 +3990,7 @@ void CWallet::MarkPreSplitKeys()
     }
 }
 
-CWallet* CWallet::CreateWalletFromFile(const std::string& name, const fs::path& path)
+CWallet* CWallet::CreateWalletFromFile(interfaces::Chain& chain, const std::string& name, const fs::path& path)
 {
     const std::string& walletFile = name;
 
@@ -4000,7 +4000,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string& name, const fs::path& 
     if (gArgs.GetBoolArg("-zapwallettxes", false)) {
         uiInterface.InitMessage(_("Zapping all transactions from wallet..."));
 
-        std::unique_ptr<CWallet> tempWallet = MakeUnique<CWallet>(name, WalletDatabase::Create(path));
+        std::unique_ptr<CWallet> tempWallet = MakeUnique<CWallet>(&chain, name, WalletDatabase::Create(path));
         DBErrors nZapWalletRet = tempWallet->ZapWalletTx(vWtx);
         if (nZapWalletRet != DBErrors::LOAD_OK) {
             InitError(strprintf(_("Error loading %s: Wallet corrupted"), walletFile));
@@ -4012,7 +4012,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string& name, const fs::path& 
 
     int64_t nStart = GetTimeMillis();
     bool fFirstRun = true;
-    CWallet *walletInstance = new CWallet(name, WalletDatabase::Create(path));
+    CWallet *walletInstance = new CWallet(&chain, name, WalletDatabase::Create(path));
     DBErrors nLoadWalletRet = walletInstance->LoadWallet(fFirstRun);
     if (nLoadWalletRet != DBErrors::LOAD_OK)
     {
