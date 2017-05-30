@@ -9,6 +9,7 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <init.h>
+#include <interfaces/chain.h>
 #include <interfaces/handler.h>
 #include <interfaces/wallet.h>
 #include <net.h>
@@ -49,6 +50,8 @@ namespace {
 
 class NodeImpl : public Node
 {
+public:
+    NodeImpl() { m_interfaces.chain = MakeChain(); }
     bool parseParameters(int argc, const char* const argv[], std::string& error) override
     {
         return gArgs.ParseParameters(argc, argv, error);
@@ -67,11 +70,11 @@ class NodeImpl : public Node
         return AppInitBasicSetup() && AppInitParameterInteraction() && AppInitSanityChecks() &&
                AppInitLockDataDirectory();
     }
-    bool appInitMain() override { return AppInitMain(); }
+    bool appInitMain() override { return AppInitMain(m_interfaces); }
     void appShutdown() override
     {
         Interrupt();
-        Shutdown();
+        Shutdown(m_interfaces);
     }
     void startShutdown() override { StartShutdown(); }
     bool shutdownRequested() override { return ShutdownRequested(); }
@@ -283,6 +286,7 @@ class NodeImpl : public Node
                     GuessVerificationProgress(Params().TxData(), block));
             }));
     }
+    InitInterfaces m_interfaces;
 };
 
 } // namespace
