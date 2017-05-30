@@ -10,6 +10,7 @@
 
 class CRPCTable;
 class CScheduler;
+struct InitInterfaces;
 
 //! Return the wallets help message.
 std::string GetWalletHelpString(bool showDebug);
@@ -26,7 +27,7 @@ void RegisterWalletRPC(CRPCTable &tableRPC);
 bool VerifyWallets();
 
 //! Load wallet databases.
-bool OpenWallets();
+bool OpenWallets(InitInterfaces& interfaces);
 
 //! Complete startup of wallets.
 void StartWallets(CScheduler& scheduler);
