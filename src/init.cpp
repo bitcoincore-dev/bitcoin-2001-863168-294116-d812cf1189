@@ -32,6 +32,7 @@
 #include <rpc/server.h>
 #include <rpc/register.h>
 #include <rpc/blockchain.h>
+#include <rpc/util.h>
 #include <script/standard.h>
 #include <script/sigcache.h>
 #include <scheduler.h>
@@ -81,8 +82,8 @@ public:
     void AddWalletOptions() const override;
     bool ParameterInteraction() const override {return true;}
     void RegisterRPC(CRPCTable &) const override {}
-    bool Verify() const override {return true;}
-    bool Open() const override {LogPrintf("No wallet support compiled in!\n"); return true;}
+    bool Verify(interfaces::Chain& chain) const override {return true;}
+    bool Open(interfaces::Chain& chain) const override {LogPrintf("No wallet support compiled in!\n"); return true;}
     void Start(CScheduler& scheduler) const override {}
     void Flush() const override {}
     void Stop() const override {}
@@ -183,7 +184,7 @@ void Interrupt()
     }
 }
 
-void Shutdown()
+void Shutdown(InitInterfaces& interfaces)
 {
     LogPrintf("%s: In progress...\n", __func__);
     static CCriticalSection cs_Shutdown;
@@ -1221,7 +1222,7 @@ bool AppInitLockDataDirectory()
     return true;
 }
 
-bool AppInitMain()
+bool AppInitMain(InitInterfaces& interfaces)
 {
     const CChainParams& chainparams = Params();
     // ********************************************************* Step 4a: application initialization
@@ -1277,6 +1278,7 @@ bool AppInitMain()
      */
     RegisterAllCoreRPCCommands(tableRPC);
     g_wallet_init_interface.RegisterRPC(tableRPC);
+    g_rpc_interfaces = &interfaces;
 #if ENABLE_ZMQ
     RegisterZMQRPCCommands(tableRPC);
 #endif
@@ -1294,7 +1296,7 @@ bool AppInitMain()
     }
 
     // ********************************************************* Step 5: verify wallet database integrity
-    if (!g_wallet_init_interface.Verify()) return false;
+    if (!g_wallet_init_interface.Verify(*interfaces.chain)) return false;
 
     // ********************************************************* Step 6: network initialization
     // Note that we absolutely cannot open any actual connections
@@ -1613,7 +1615,7 @@ bool AppInitMain()
     }
 
     // ********************************************************* Step 9: load wallet
-    if (!g_wallet_init_interface.Open()) return false;
+    if (!g_wallet_init_interface.Open(*interfaces.chain)) return false;
 
     // ********************************************************* Step 10: data directory maintenance
 
