@@ -13,6 +13,8 @@
 #include <wallet/wallet.h>
 #include <wallet/walletutil.h>
 
+#include <init.h>  // For InitInterfaces
+
 std::string GetWalletHelpString(bool showDebug)
 {
     std::string strUsage = HelpMessageGroup(_("Wallet options:"));
@@ -272,7 +274,7 @@ bool VerifyWallets()
     return true;
 }
 
-bool OpenWallets()
+bool OpenWallets(InitInterfaces& interfaces)
 {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
         LogPrintf("Wallet disabled!\n");
@@ -280,7 +282,7 @@ bool OpenWallets()
     }
 
     for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
-        CWallet * const pwallet = CWallet::CreateWalletFromFile(walletFile);
+        CWallet * const pwallet = CWallet::CreateWalletFromFile(*interfaces.chain, walletFile);
         if (!pwallet) {
             return false;
         }
