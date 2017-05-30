@@ -37,6 +37,12 @@
 
 static CCriticalSection cs_wallets;
 static std::vector<std::shared_ptr<CWallet>> vpwallets GUARDED_BY(cs_wallets);
+static interfaces::Chain* g_wallet_chain = nullptr;
+
+void SetWalletChain(interfaces::Chain& chain)
+{
+    g_wallet_chain = &chain;
+}
 
 bool AddWallet(const std::shared_ptr<CWallet>& wallet)
 {
@@ -152,6 +158,11 @@ public:
     template<typename X>
     void operator()(const X &none) {}
 };
+
+interfaces::Chain& CWallet::chain() const {
+    assert(g_wallet_chain);
+    return *g_wallet_chain;
+}
 
 const CWalletTx* CWallet::GetWalletTx(const uint256& hash) const
 {
