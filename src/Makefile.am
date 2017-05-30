@@ -105,6 +105,7 @@ BITCOIN_CORE_H = \
   httpserver.h \
   indirectmap.h \
   init.h \
+  interface/chain.h \
   interface/handler.h \
   interface/node.h \
   interface/wallet.h \
@@ -362,6 +363,7 @@ libbitcoin_util_a_SOURCES = \
   compat/glibcxx_sanity.cpp \
   compat/strnlen.cpp \
   fs.cpp \
+  interface/chain.cpp \
   interface/handler.cpp \
   interface/node.cpp \
   random.cpp \
