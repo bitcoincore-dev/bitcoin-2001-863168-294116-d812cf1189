@@ -10,6 +10,8 @@
 WalletTestingSetup::WalletTestingSetup(const std::string& chainName):
     TestingSetup(chainName), m_wallet("mock", WalletDatabase::CreateMock())
 {
+    SetWalletChain(*m_chain);
+
     bool fFirstRun;
     m_wallet.LoadWallet(fFirstRun);
     RegisterValidationInterface(&m_wallet);
