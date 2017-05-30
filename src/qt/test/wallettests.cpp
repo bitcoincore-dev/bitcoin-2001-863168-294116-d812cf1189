@@ -1,5 +1,6 @@
 #include <qt/test/wallettests.h>
 
+#include <interface/chain.h>
 #include <qt/bitcoinamountfield.h>
 #include <qt/callback.h>
 #include <qt/optionsmodel.h>
@@ -158,7 +159,8 @@ void TestGUI()
     for (int i = 0; i < 5; ++i) {
         test.CreateAndProcessBlock({}, GetScriptForRawPubKey(test.coinbaseKey.GetPubKey()));
     }
-    CWallet wallet("mock", CWalletDBWrapper::CreateMock());
+    auto chain = interface::MakeChain();
+    CWallet wallet(chain.get(), "mock", CWalletDBWrapper::CreateMock());
     bool firstRun;
     wallet.LoadWallet(firstRun);
     {

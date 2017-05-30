@@ -27,7 +27,8 @@ std::vector<std::unique_ptr<CWalletTx>> wtxn;
 typedef std::set<CInputCoin> CoinSet;
 
 static std::vector<COutput> vCoins;
-static const CWallet testWallet("dummy", CWalletDBWrapper::CreateDummy());
+static auto testChain = interface::MakeChain();
+static const CWallet testWallet(testChain.get(), "dummy", CWalletDBWrapper::CreateDummy());
 static CAmount balance = 0;
 
 CoinEligibilityFilter filter_standard(1, 6, 0);
