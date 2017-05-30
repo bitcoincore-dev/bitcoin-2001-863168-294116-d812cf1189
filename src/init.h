@@ -6,6 +6,8 @@
 #ifndef BITCOIN_INIT_H
 #define BITCOIN_INIT_H
 
+#include <interface/chain.h>
+
 #include <string>
 
 class CScheduler;
@@ -16,11 +18,18 @@ namespace boost
 class thread_group;
 } // namespace boost
 
+//! Pointers to interfaces used during init and destroyed on shutdown.
+struct InitInterfaces
+{
+    std::unique_ptr<interface::Chain> chain;
+    std::vector<std::unique_ptr<interface::Chain::Client>> chain_clients;
+};
+
 void StartShutdown();
 bool ShutdownRequested();
 /** Interrupt threads */
 void Interrupt(boost::thread_group& threadGroup);
-void Shutdown();
+void Shutdown(InitInterfaces& interfaces);
 //!Initialize the logging infrastructure
 void InitLogging();
 //!Parameter interaction: change current parameters depending on various rules
@@ -54,7 +63,7 @@ bool AppInitLockDataDirectory();
  * @note This should only be done after daemonization. Call Shutdown() if this function fails.
  * @pre Parameters should be parsed and config file should be read, AppInitLockDataDirectory should have been called.
  */
-bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler);
+bool AppInitMain(InitInterfaces& interfaces, boost::thread_group& threadGroup, CScheduler& scheduler);
 
 /** The help message mode determines what help message to show */
 enum HelpMessageMode {
