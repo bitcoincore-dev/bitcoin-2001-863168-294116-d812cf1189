@@ -7,6 +7,7 @@
 #define BITCOIN_WALLET_WALLET_H
 
 #include <amount.h>
+#include <interface/chain.h>
 #include <policy/feerate.h>
 #include <streams.h>
 #include <tinyformat.h>
@@ -732,6 +733,10 @@ private:
      */
     bool AddWatchOnly(const CScript& dest) override;
 
+    /**
+     * Interface for accessing blockchain state.
+     */
+    interface::Chain* m_chain = nullptr;
     std::unique_ptr<CWalletDBWrapper> dbw;
 
     /**
@@ -791,7 +796,7 @@ public:
     }
 
     // Create wallet with passed-in database handle
-    explicit CWallet(std::unique_ptr<CWalletDBWrapper> dbw_in) : dbw(std::move(dbw_in))
+    explicit CWallet(interface::Chain* chain, std::unique_ptr<CWalletDBWrapper> dbw_in) : m_chain(chain), dbw(std::move(dbw_in))
     {
         SetNull();
     }
@@ -818,6 +823,11 @@ public:
         nRelockTime = 0;
         fAbortRescan = false;
         fScanningWallet = false;
+    }
+
+    interface::Chain& chain() const {
+        assert(m_chain);
+        return *m_chain;
     }
 
     std::map<uint256, CWalletTx> mapWallet;
@@ -1109,7 +1119,7 @@ public:
     bool MarkReplaced(const uint256& originalHash, const uint256& newHash);
 
     /* Initializes the wallet, returns a new CWallet instance or a null pointer in case of an error */
-    static CWallet* CreateWalletFromFile(const std::string walletFile);
+    static CWallet* CreateWalletFromFile(interface::Chain& chain, const std::string walletFile);
 
     /**
      * Wallet post-init setup
