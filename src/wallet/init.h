@@ -6,6 +6,7 @@
 #ifndef BITCOIN_WALLET_INIT_H
 #define BITCOIN_WALLET_INIT_H
 
+#include <ipc/interfaces.h>
 #include <string>
 
 //! Return the wallets help message.
@@ -20,6 +21,6 @@ bool WalletParameterInteraction();
 bool WalletVerify();
 
 //! Load wallet databases.
-bool InitLoadWallet();
+bool InitLoadWallet(ipc::Chain& ipc_chain);
 
 #endif // BITCOIN_WALLET_INIT_H
