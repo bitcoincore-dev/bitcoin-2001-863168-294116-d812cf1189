@@ -33,6 +33,10 @@
 #include <utility>
 #include <vector>
 
+namespace interfaces {
+class Chain;
+} // namespace interfaces
+
 bool AddWallet(const std::shared_ptr<CWallet>& wallet);
 bool RemoveWallet(const std::shared_ptr<CWallet>& wallet);
 bool HasWallets();
@@ -676,6 +680,9 @@ private:
      */
     bool AddWatchOnly(const CScript& dest) override EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
 
+    /** Interface for accessing chain state. */
+    interfaces::Chain& m_chain;
+
     /**
      * Wallet filename from wallet=<path> command line or config option.
      * Used in debug logs and to send RPCs to the right wallet instance when
@@ -739,7 +746,7 @@ public:
     unsigned int nMasterKeyMaxID = 0;
 
     /** Construct wallet with specified name and database implementation. */
-    CWallet(std::string name, std::unique_ptr<WalletDatabase> database) : m_name(std::move(name)), database(std::move(database))
+    CWallet(interfaces::Chain& chain, std::string name, std::unique_ptr<WalletDatabase> database) : m_chain(chain), m_name(std::move(name)), database(std::move(database))
     {
     }
 
@@ -760,6 +767,9 @@ public:
     std::map<CTxDestination, CAddressBookData> mapAddressBook;
 
     std::set<COutPoint> setLockedCoins GUARDED_BY(cs_wallet);
+
+    /** Interface for accessing chain state. */
+    interfaces::Chain& chain() const { return m_chain; }
 
     const CWalletTx* GetWalletTx(const uint256& hash) const;
 
@@ -1058,10 +1068,10 @@ public:
     bool MarkReplaced(const uint256& originalHash, const uint256& newHash);
 
     //! Verify wallet naming and perform salvage on the wallet if required
-    static bool Verify(std::string wallet_file, bool salvage_wallet, std::string& error_string, std::string& warning_string);
+    static bool Verify(interfaces::Chain& chain, std::string wallet_file, bool salvage_wallet, std::string& error_string, std::string& warning_string);
 
     /* Initializes the wallet, returns a new CWallet instance or a null pointer in case of an error */
-    static std::shared_ptr<CWallet> CreateWalletFromFile(const std::string& name, const fs::path& path, uint64_t wallet_creation_flags = 0);
+    static std::shared_ptr<CWallet> CreateWalletFromFile(interfaces::Chain& chain, const std::string& name, const fs::path& path, uint64_t wallet_creation_flags = 0);
 
     /**
      * Wallet post-init setup
