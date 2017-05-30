@@ -170,7 +170,7 @@ void Interrupt()
         g_connman->Interrupt();
 }
 
-void Shutdown()
+void Shutdown(InitInterfaces& interfaces)
 {
     LogPrintf("%s: In progress...\n", __func__);
     static CCriticalSection cs_Shutdown;
@@ -715,7 +715,7 @@ bool InitSanityCheck(void)
     return true;
 }
 
-bool AppInitServers()
+bool AppInitServers(InitInterfaces& interfaces)
 {
     RPCServer::OnStarted(&OnRPCStarted);
     RPCServer::OnStopped(&OnRPCStopped);
@@ -1200,7 +1200,7 @@ bool AppInitLockDataDirectory()
     return true;
 }
 
-bool AppInitMain()
+bool AppInitMain(InitInterfaces& interfaces)
 {
     const CChainParams& chainparams = Params();
     // ********************************************************* Step 4a: application initialization
@@ -1267,7 +1267,7 @@ bool AppInitMain()
     if (gArgs.GetBoolArg("-server", false))
     {
         uiInterface.InitMessage.connect(SetRPCWarmupStatus);
-        if (!AppInitServers())
+        if (!AppInitServers(interfaces))
             return InitError(_("Unable to start HTTP server. See debug log for details."));
     }
 
@@ -1596,7 +1596,7 @@ bool AppInitMain()
 
     // ********************************************************* Step 8: load wallet
 #ifdef ENABLE_WALLET
-    if (!OpenWallets())
+    if (!OpenWallets(interfaces))
         return false;
 #else
     LogPrintf("No wallet support compiled in!\n");
