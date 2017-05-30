@@ -6,6 +6,7 @@
 #include <wallet/init.h>
 
 #include <chainparams.h>
+#include <init.h>
 #include <net.h>
 #include <util.h>
 #include <utilmoneystr.h>
@@ -247,7 +248,7 @@ bool WalletInit::Verify()
 
         if (gArgs.GetBoolArg("-salvagewallet", false)) {
             // Recover readable keypairs:
-            CWallet dummyWallet("dummy", CWalletDBWrapper::CreateDummy());
+            CWallet dummyWallet(nullptr, "dummy", CWalletDBWrapper::CreateDummy());
             std::string backup_filename;
             if (!CWalletDB::Recover(wallet_path, (void *)&dummyWallet, CWalletDB::RecoverKeysOnlyFilter, backup_filename)) {
                 return false;
@@ -268,7 +269,7 @@ bool WalletInit::Verify()
     return true;
 }
 
-bool WalletInit::Open()
+bool WalletInit::Open(InitInterfaces& interfaces)
 {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
         LogPrintf("Wallet disabled!\n");
@@ -276,7 +277,7 @@ bool WalletInit::Open()
     }
 
     for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
-        CWallet * const pwallet = CWallet::CreateWalletFromFile(walletFile, fs::absolute(walletFile, GetWalletDir()));
+        CWallet * const pwallet = CWallet::CreateWalletFromFile(*interfaces.chain, walletFile, fs::absolute(walletFile, GetWalletDir()));
         if (!pwallet) {
             return false;
         }

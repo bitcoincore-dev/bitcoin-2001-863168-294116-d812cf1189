@@ -11,6 +11,7 @@
 
 class CRPCTable;
 class CScheduler;
+struct InitInterfaces;
 
 class WalletInit : public WalletInitInterface {
 public:
@@ -30,7 +31,7 @@ public:
     bool Verify() override;
 
     //! Load wallet databases.
-    bool Open() override;
+    bool Open(InitInterfaces& interfaces) override;
 
     //! Complete startup of wallets.
     void Start(CScheduler& scheduler) override;
