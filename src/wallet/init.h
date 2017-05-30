@@ -6,6 +6,7 @@
 #ifndef BITCOIN_WALLET_INIT_H
 #define BITCOIN_WALLET_INIT_H
 
+#include <ipc/interfaces.h>
 #include <string>
 
 class CRPCTable;
@@ -26,7 +27,7 @@ void RegisterWalletRPC(CRPCTable &tableRPC);
 bool VerifyWallets();
 
 //! Load wallet databases.
-bool OpenWallets();
+bool OpenWallets(ipc::Chain& ipc_chain);
 
 //! Complete startup of wallets.
 void StartWallets(CScheduler& scheduler);
