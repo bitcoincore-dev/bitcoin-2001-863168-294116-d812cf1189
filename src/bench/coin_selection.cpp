@@ -3,6 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <bench/bench.h>
+#include <interfaces/chain.h>
 #include <wallet/wallet.h>
 #include <wallet/coinselection.h>
 
@@ -33,6 +34,8 @@ static void addCoin(const CAmount& nValue, const CWallet& wallet, std::vector<CO
 // (https://github.com/bitcoin/bitcoin/issues/7883#issuecomment-224807484)
 static void CoinSelection(benchmark::State& state)
 {
+    auto chain = interfaces::MakeChain();
+    SetWalletChain(*chain);
     const CWallet wallet("dummy", WalletDatabase::CreateDummy());
     LOCK(wallet.cs_wallet);
 
