@@ -13,10 +13,10 @@ fi
 if test -z $with_qt_translationdir; then
   with_qt_translationdir=$depends_prefix/translations
 fi
-if test -z $with_qt_bindir; then
+if test -z $with_qt_bindir && test "x@host_pkg@" = x; then
   with_qt_bindir=$depends_prefix/native/bin
 fi
-if test -z $with_protoc_bindir; then
+if test -z $with_protoc_bindir && test "x@host_pkg@" = x; then
   with_protoc_bindir=$depends_prefix/native/bin
 fi
 
@@ -56,6 +56,11 @@ PKG_CONFIG="`which pkg-config` --static"
 
 export PKG_CONFIG_LIBDIR=$depends_prefix/lib/pkgconfig
 export PKG_CONFIG_PATH=$depends_prefix/share/pkgconfig
+
+if test "x@host_pkg@" != x; then
+  PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$PKG_CONFIG_LIBDIR"
+  unset PKG_CONFIG_LIBDIR
+fi
 
 CPPFLAGS="-I$depends_prefix/include/ $CPPFLAGS"
 LDFLAGS="-L$depends_prefix/lib $LDFLAGS"
