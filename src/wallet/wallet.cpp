@@ -485,20 +485,22 @@ bool CWallet::Verify()
     if (GetBoolArg("-salvagewallet", false))
     {
         // Recover readable keypairs:
-        if (!CWalletDB::Recover(bitdb, walletFile, true))
+        std::string backup_filename;
+        if (!CWalletDB::Recover(bitdb, walletFile, true, backup_filename))
             return false;
     }
     
     if (boost::filesystem::exists(GetDataDir() / walletFile))
     {
-        CDBEnv::VerifyResult r = bitdb.Verify(walletFile, CWalletDB::Recover);
+        std::string backup_filename;
+        CDBEnv::VerifyResult r = bitdb.Verify(walletFile, CWalletDB::Recover, backup_filename);
         if (r == CDBEnv::RECOVER_OK)
         {
             InitWarning(strprintf(_("Warning: Wallet file corrupt, data salvaged!"
                                          " Original %s saved as %s in %s; if"
                                          " your balance or transactions are incorrect you should"
                                          " restore from a backup."),
-                walletFile, "wallet.{timestamp}.bak", GetDataDir()));
+                walletFile, backup_filename, GetDataDir()));
         }
         if (r == CDBEnv::RECOVER_FAIL)
             return InitError(strprintf(_("%s corrupt, salvage failed"), walletFile));
