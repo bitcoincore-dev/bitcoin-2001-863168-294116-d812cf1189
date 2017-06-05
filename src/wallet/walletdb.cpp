@@ -845,14 +845,14 @@ void ThreadFlushWalletDB()
 bool CWalletDB::Recover(CDBEnv& dbenv, const std::string& filename, bool fOnlyKeys, std::string& newFilename)
 {
     // Recovery procedure:
-    // move wallet file to wallet.timestamp.bak
+    // move wallet file to walletfilename.timestamp.bak
     // Call Salvage with fAggressive=true to
     // get as much data as possible.
     // Rewrite salvaged data to fresh wallet file
     // Set -rescan so any missing transactions will be
     // found.
     int64_t now = GetTime();
-    newFilename = strprintf("wallet.%d.bak", now);
+    newFilename = strprintf("%s.%d.bak", filename, now);
 
     int result = dbenv.dbenv->dbrename(NULL, filename.c_str(), NULL,
                                        newFilename.c_str(), DB_AUTO_COMMIT);
