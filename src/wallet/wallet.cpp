@@ -446,8 +446,6 @@ bool CWallet::Verify()
 
     LogPrintf("Using BerkeleyDB version %s\n", DbEnv::version(0, 0, 0));
 
-    SoftSetArg("-wallet", DEFAULT_WALLET_DAT);
-
     uiInterface.InitMessage(_("Verifying wallet..."));
 
     for (const std::string& walletFile : mapMultiArgs.at("-wallet")) {
@@ -3802,6 +3800,9 @@ void CWallet::postInitProcess(boost::thread_group& threadGroup)
 
 bool CWallet::ParameterInteraction()
 {
+    SoftSetArg("-wallet", DEFAULT_WALLET_DAT);
+    const bool is_multiwallet = mapMultiArgs.at("-wallet").size() > 1;
+
     if (GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET))
         return true;
 
@@ -3810,13 +3811,25 @@ bool CWallet::ParameterInteraction()
     }
 
     if (GetBoolArg("-salvagewallet", false) && SoftSetBoolArg("-rescan", true)) {
+        if (is_multiwallet) {
+            return InitError(strprintf("%s is only allowed with a single wallet file", "-salvagewallet"));
+        }
         // Rewrite just private keys: rescan to find transactions
         LogPrintf("%s: parameter interaction: -salvagewallet=1 -> setting -rescan=1\n", __func__);
     }
 
     // -zapwallettx implies a rescan
     if (GetBoolArg("-zapwallettxes", false) && SoftSetBoolArg("-rescan", true)) {
+        if (is_multiwallet) {
+            return InitError(strprintf("%s is only allowed with a single wallet file", "-zapwallettxes"));
+        }
         LogPrintf("%s: parameter interaction: -zapwallettxes=<mode> -> setting -rescan=1\n", __func__);
+    }
+
+    if (is_multiwallet) {
+        if (GetBoolArg("-upgradewallet", false)) {
+            return InitError(strprintf("%s is only allowed with a single wallet file", "-upgradewallet"));
+        }
     }
 
     if (GetBoolArg("-sysperms", false))
