@@ -213,7 +213,7 @@ public:
     void SetBestBlock(const uint256 &hashBlock);
     bool BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlock);
     CCoinsViewCursor* Cursor() const override {
-        throw std::logic_error("CCCoinsViewCache cursor iteration not supported.");
+        throw std::logic_error("CCoinsViewCache cursor iteration not supported.");
     }
 
     /**
