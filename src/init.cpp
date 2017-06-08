@@ -441,13 +441,17 @@ void SetupServerArgs()
 #if ENABLE_ZMQ
     gArgs.AddArg("-zmqpubhashblock=<address>", "Enable publish hash block in <address>", false, OptionsCategory::ZMQ);
     gArgs.AddArg("-zmqpubhashtx=<address>", "Enable publish hash transaction in <address>", false, OptionsCategory::ZMQ);
+    gArgs.AddArg("-zmqpubhashwallettx=<address>", "Enable publish hash wallet transaction in <address>", false, OptionsCategory::ZMQ);
     gArgs.AddArg("-zmqpubrawblock=<address>", "Enable publish raw block in <address>", false, OptionsCategory::ZMQ);
     gArgs.AddArg("-zmqpubrawtx=<address>", "Enable publish raw transaction in <address>", false, OptionsCategory::ZMQ);
+    gArgs.AddArg("-zmqpubrawwallettx=<address>", "Enable publish raw wallet transaction in <address>", false, OptionsCategory::ZMQ);
 #else
     hidden_args.emplace_back("-zmqpubhashblock=<address>");
     hidden_args.emplace_back("-zmqpubhashtx=<address>");
+    hidden_args.emplace_back("-zmqpubhashwallettx=<address>");
     hidden_args.emplace_back("-zmqpubrawblock=<address>");
     hidden_args.emplace_back("-zmqpubrawtx=<address>");
+    hidden_args.emplace_back("-zmqpubrawwallettx=<address>");
 #endif
 
     gArgs.AddArg("-checkblocks=<n>", strprintf("How many blocks to check at startup (default: %u, 0 = all)", DEFAULT_CHECKBLOCKS), true, OptionsCategory::DEBUG_TEST);
