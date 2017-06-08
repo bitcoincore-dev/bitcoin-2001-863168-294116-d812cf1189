@@ -329,6 +329,7 @@ std::string HelpMessage(HelpMessageMode mode)
         strUsage += HelpMessageOpt("-blocksonly", strprintf(_("Whether to operate in a blocks only mode (default: %u)"), DEFAULT_BLOCKSONLY));
     strUsage +=HelpMessageOpt("-assumevalid=<hex>", strprintf(_("If this block is in the chain assume that it and its ancestors are valid and potentially skip their script verification (0 to verify all, default: %s, testnet: %s)"), Params(CBaseChainParams::MAIN).GetConsensus().defaultAssumeValid.GetHex(), Params(CBaseChainParams::TESTNET).GetConsensus().defaultAssumeValid.GetHex()));
     strUsage += HelpMessageOpt("-conf=<file>", strprintf(_("Specify configuration file (default: %s)"), BITCOIN_CONF_FILENAME));
+    strUsage += HelpMessageOpt("-confrw=<file>", strprintf(_("Specify read/write configuration file (default: %s)"), BITCOIN_RW_CONF_FILENAME));
     if (mode == HMM_BITCOIND)
     {
 #if HAVE_DECL_DAEMON
@@ -1163,6 +1164,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     LogPrintf("Default data directory %s\n", GetDefaultDataDir().string());
     LogPrintf("Using data directory %s\n", GetDataDir().string());
     LogPrintf("Using config file %s\n", GetConfigFile(GetArg("-conf", BITCOIN_CONF_FILENAME)).string());
+    LogPrintf("Using rw config file %s\n", GetRWConfigFile().string());
     LogPrintf("Using at most %i automatic connections (%i file descriptors available)\n", nMaxConnections, nFD);
 
     InitSignatureCache();
@@ -1317,7 +1319,31 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
             inaddr_any.s_addr = INADDR_ANY;
             fBound |= Bind(connman, CService(in6addr_any, GetListenPort()), BF_NONE);
             fBound |= Bind(connman, CService(inaddr_any, GetListenPort()), !fBound ? BF_REPORT_ERROR : BF_NONE);
+
+            if (!fBound) {
+                int defaultPort = Params().GetDefaultPort();
+                // If listening failed and another port than the standard port was specified,
+                // ask if the user wants to connect via the standard port for the network instead
+                if (GetListenPort() != defaultPort) {
+                    bool fRet = uiInterface.ThreadSafeQuestion(
+                        _("Do you want to use the standard network port for ") + _(PACKAGE_NAME) + " (port " + i64tostr(defaultPort) + ") instead?",
+                        _("Listen on port ") + i64tostr(GetListenPort()) + _(" failed."),
+                        "", CClientUIInterface::MSG_INFORMATION | CClientUIInterface::MODAL | CClientUIInterface::BTN_OK | CClientUIInterface::BTN_ABORT);
+
+                    if (!fRet)
+                        return false;
+                    else {
+                        SetArg("-port", defaultPort);
+                        // Attempt to use standard port
+                        struct in_addr inaddr_any;
+                        inaddr_any.s_addr = INADDR_ANY;
+                        fBound |= Bind(connman, CService(in6addr_any, defaultPort), BF_NONE);
+                        fBound |= Bind(connman, CService(inaddr_any, defaultPort), BF_NONE);
+                    }
+                }
+            }
         }
+
         if (!fBound)
             return InitError(_("Failed to listen on any port. Use -listen=0 if you want this."));
     }

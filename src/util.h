@@ -53,6 +53,7 @@ extern std::atomic<bool> fReopenDebugLog;
 extern CTranslationInterface translationInterface;
 
 extern const char * const BITCOIN_CONF_FILENAME;
+extern const char * const BITCOIN_RW_CONF_FILENAME;
 extern const char * const BITCOIN_PID_FILENAME;
 
 /**
@@ -102,11 +103,17 @@ boost::filesystem::path GetDefaultDataDir();
 const boost::filesystem::path &GetDataDir(bool fNetSpecific = true);
 void ClearDatadirCache();
 boost::filesystem::path GetConfigFile(const std::string& confPath);
+boost::filesystem::path GetRWConfigFile();
 #ifndef WIN32
 boost::filesystem::path GetPidFile();
 void CreatePidFile(const boost::filesystem::path &path, pid_t pid);
 #endif
 void ReadConfigFile(const std::string& confPath);
+void ReadRWConfigFile();
+void ModifyRWConfigFile(std::istream& streamIn, std::ostream& streamOut, const std::map<std::string, std::string>& mapChangeSettings);
+void ModifyRWConfigFile(const std::map<std::string, std::string>& mapChangeSettings);
+void ModifyRWConfigFile(const std::string& strArg, const std::string& strNewValue);
+void EraseRWConfigFile();
 #ifdef WIN32
 boost::filesystem::path GetSpecialFolderPath(int nFolder, bool fCreate = true);
 #endif
@@ -157,6 +164,30 @@ int64_t GetArg(const std::string& strArg, int64_t nDefault);
  * @return command-line argument or default value
  */
 bool GetBoolArg(const std::string& strArg, bool fDefault);
+
+/**
+ * Set a string argument (even if it does already have a value)
+ *
+ * @param strArg Argument to set (e.g. "-foo")
+ * @param strValue Value (e.g. "bar")
+*/
+void SetArg(const std::string& strArg, const std::string& strValue);
+
+/**
+ * Set an integer argument (even if it does already have a value)
+ *
+ * @param strArg Argument to set (e.g. "-foo")
+ * @param nValue Value (e.g. 1)
+*/
+void SetArg(const std::string& strArg, int64_t nValue);
+
+/**
+ * Set an boolean argument (even if it does already have a value)
+ *
+ * @param strArg Argument to set (e.g. "-foo")
+ * @param fValue Value (e.g. false)
+*/
+void SetBoolArg(const std::string& strArg, bool fValue);
 
 /**
  * Set an argument if it doesn't already have a value

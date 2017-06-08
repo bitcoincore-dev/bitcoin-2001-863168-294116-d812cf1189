@@ -636,6 +636,12 @@ int main(int argc, char *argv[])
     PaymentServer::ipcParseCommandLine(argc, argv);
 #endif
 
+    try {
+        ReadRWConfigFile();
+    } catch (const std::exception& e) {
+        // Ignore problems here, since we are responsible for this file
+    }
+
     if (IsThisSoftwareExpired(GetTime())) {
         QMessageBox::critical(0, QObject::tr("Software expired"), QObject::tr("This software is expired, and may be out of consensus. You must choose to upgrade or override this expiration."));
         return EXIT_FAILURE;
