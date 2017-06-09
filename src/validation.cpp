@@ -2477,6 +2477,7 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
 
     CBlockIndex *pindexMostWork = NULL;
     CBlockIndex *pindexNewTip = NULL;
+    int nStopAtHeight = GetArg("-stopatheight", DEFAULT_STOPATHEIGHT);
     do {
         boost::this_thread::interruption_point();
         if (ShutdownRequested())
@@ -2540,6 +2541,8 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
         if (pindexFork != pindexNewTip) {
             uiInterface.NotifyBlockTip(fInitialDownload, pindexNewTip);
         }
+
+        if (nStopAtHeight && pindexNewTip && pindexNewTip->nHeight >= nStopAtHeight) StartShutdown();
     } while (pindexNewTip != pindexMostWork);
     CheckBlockIndex(chainparams.GetConsensus());
 
@@ -2547,9 +2550,6 @@ bool ActivateBestChain(CValidationState &state, const CChainParams& chainparams,
     if (!FlushStateToDisk(state, FLUSH_STATE_PERIODIC)) {
         return false;
     }
-
-    int nStopAtHeight = GetArg("-stopatheight", DEFAULT_STOPATHEIGHT);
-    if (nStopAtHeight && pindexNewTip && pindexNewTip->nHeight >= nStopAtHeight) StartShutdown();
 
     return true;
 }
