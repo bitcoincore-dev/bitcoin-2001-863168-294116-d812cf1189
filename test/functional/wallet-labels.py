@@ -151,6 +151,11 @@ class WalletLabelsTest(BitcoinTestFramework):
         # which already has the same label, effectively performing a no-op.
         change_label(node, labels[2].addresses[0], labels[2], labels[2])
 
+        # Check that setlabel can safely overwrite the label of an address
+        # which already has the same label, and which is the default "label
+        # address" of that label, effectively performing a no-op.
+        change_label(node, labels[2].label_address, labels[2], labels[2])
+
 
 class Label:
     def __init__(self, name):
