@@ -1063,6 +1063,20 @@ void PeerManager::Misbehaving(const NodeId pnode, const int howmuch, const std::
     }
 }
 
+static void HandleBlockDoS(CConnman& connman, NodeId node_id, const int nDoS, const bool is_header) {
+    // We never actually DoS ban for invalid blocks, merely disconnect nodes if we're relying on them as a primary node
+    const std::string msg = strprintf("peer=%d got DoS score %d on invalid block%s", node_id, nDoS, is_header ? " header" : "");
+    connman.ForNode(node_id, [msg](CNode* node) {
+        if (node->PunishInvalidBlocks()) {
+            LogPrint(BCLog::NET, "%s; simply disconnecting\n", msg);
+            node->fDisconnect = true;
+        } else {
+            LogPrint(BCLog::NET, "%s; tolerating\n", msg);
+        }
+        return true;
+    });
+}
+
 bool PeerManager::MaybePunishNodeForBlock(NodeId nodeid, const BlockValidationState& state,
                                           bool via_compact_block, const std::string& message)
 {
@@ -1073,7 +1087,7 @@ bool PeerManager::MaybePunishNodeForBlock(NodeId nodeid, const BlockValidationSt
     case BlockValidationResult::BLOCK_CONSENSUS:
     case BlockValidationResult::BLOCK_MUTATED:
         if (!via_compact_block) {
-            Misbehaving(nodeid, 100, message);
+            HandleBlockDoS(m_connman, nodeid, 100, /*is_header=*/ false);
             return true;
         }
         break;
@@ -1088,7 +1102,7 @@ bool PeerManager::MaybePunishNodeForBlock(NodeId nodeid, const BlockValidationSt
             // Discourage outbound (but not inbound) peers if on an invalid chain.
             // Exempt HB compact block peers and manual connections.
             if (!via_compact_block && !node_state->m_is_inbound && !node_state->m_is_manual_connection) {
-                Misbehaving(nodeid, 100, message);
+                HandleBlockDoS(m_connman, nodeid, 100, /*is_header=*/ false);
                 return true;
             }
             break;
@@ -1096,12 +1110,12 @@ bool PeerManager::MaybePunishNodeForBlock(NodeId nodeid, const BlockValidationSt
     case BlockValidationResult::BLOCK_INVALID_HEADER:
     case BlockValidationResult::BLOCK_CHECKPOINT:
     case BlockValidationResult::BLOCK_INVALID_PREV:
-        Misbehaving(nodeid, 100, message);
+        HandleBlockDoS(m_connman, nodeid, 100, /*is_header=*/ true);
         return true;
     // Conflicting (but not necessarily invalid) data or different policy:
     case BlockValidationResult::BLOCK_MISSING_PREV:
         // TODO: Handle this much more gracefully (10 DoS points is super arbitrary)
-        Misbehaving(nodeid, 10, message);
+        HandleBlockDoS(m_connman, nodeid, 10, /*is_header=*/ true);
         return true;
     case BlockValidationResult::BLOCK_RECENT_CONSENSUS_CHANGE:
     case BlockValidationResult::BLOCK_TIME_FUTURE:
@@ -1830,6 +1844,9 @@ void PeerManager::ProcessHeadersMessage(CNode& pfrom, const std::vector<CBlockHe
             // we can use this peer to download.
             UpdateBlockAvailability(pfrom.GetId(), headers.back().GetHash());
 
+            if (pfrom.PunishInvalidBlocks()) {
+                pfrom.fDisconnect = true;
+            }
             return;
         }
 
