@@ -1928,6 +1928,9 @@ void CConnman::OpenNetworkConnection(const CAddress& addrConnect, bool fCountFai
         pnode->fFeeler = true;
     if (manual_connection)
         pnode->m_manual_connection = true;
+    if (IsWhitelistedRange(pnode->addr)) {
+        pnode->fWhitelisted = true;
+    }
 
     m_msgproc->InitializeNode(pnode);
     {
