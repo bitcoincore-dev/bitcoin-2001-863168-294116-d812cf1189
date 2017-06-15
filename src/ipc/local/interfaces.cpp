@@ -8,6 +8,7 @@
 #include <net_processing.h>
 #include <netbase.h>
 #include <policy/policy.h>
+#include <policy/rbf.h>
 #include <rpc/server.h>
 #include <scheduler.h>
 #include <txmempool.h>
@@ -19,6 +20,7 @@
 #include "config/bitcoin-config.h"
 #endif
 #ifdef ENABLE_WALLET
+#include "wallet/feebumper.h"
 #include "wallet/wallet.h"
 #endif
 
@@ -168,6 +170,29 @@ public:
     }
     bool transactionCanBeAbandoned(const uint256& txHash) override { return wallet.TransactionCanBeAbandoned(txHash); }
     bool abandonTransaction(const uint256& txHash) override { return wallet.AbandonTransaction(txHash); }
+    bool transactionCanBeBumped(const uint256& txHash) { return FeeBumper::TransactionCanBeBumped(&wallet, txHash); }
+    bool createBumpTransaction(const uint256& txHash,
+        int confirmTarget,
+        bool ignoreGlobalPayTxFee,
+        CAmount totalFee,
+        bool replaceable,
+        std::vector<std::string>& errors,
+        CAmount& oldFee,
+        CAmount& newFee,
+        CMutableTransaction& mtx)
+    {
+        return FeeBumper::CreateTransaction(&wallet, txHash, confirmTarget, ignoreGlobalPayTxFee, totalFee,
+                   replaceable, errors, oldFee, newFee, mtx) == BumpFeeResult::OK;
+    }
+    bool signBumpTransaction(CMutableTransaction& mtx) { return FeeBumper::SignTransaction(&wallet, mtx); }
+    bool commitBumpTransaction(const uint256& txHash,
+        CMutableTransaction&& mtx,
+        std::vector<std::string>& errors,
+        uint256& bumpedTxHash)
+    {
+        return FeeBumper::CommitTransaction(&wallet, txHash, std::move(mtx), errors, bumpedTxHash) ==
+               BumpFeeResult::OK;
+    }
     WalletBalances getBalances() override
     {
         WalletBalances result;

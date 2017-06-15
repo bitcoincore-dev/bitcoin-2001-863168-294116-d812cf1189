@@ -19,11 +19,9 @@
 #include "keystore.h"
 #include "validation.h"
 #include "net.h" // for g_connman
-#include "policy/rbf.h"
 #include "sync.h"
 #include "ui_interface.h"
 #include "util.h" // for GetBoolArg
-#include "wallet/feebumper.h"
 #include "wallet/wallet.h"
 
 #include <stdint.h>
@@ -525,18 +523,13 @@ bool WalletModel::saveReceiveRequest(const std::string &sAddress, const int64_t 
         return ipcWallet->addDestData(dest, key, sRequest);
 }
 
-bool WalletModel::transactionCanBeBumped(uint256 hash) const
-{
-    return FeeBumper::TransactionCanBeBumped(wallet, hash);
-}
-
 bool WalletModel::bumpFee(uint256 hash)
 {
     std::vector<std::string> errors;
     CAmount oldFee;
     CAmount newFee;
     CMutableTransaction mtx;
-    if (FeeBumper::CreateTransaction(wallet, hash, ::nTxConfirmTarget, false /* ignoreGlobalPayTxFee */, 0 /* totalFee */, true /* replaceable */, errors, oldFee, newFee, mtx) != BumpFeeResult::OK) {
+    if (!ipcWallet->createBumpTransaction(hash, ::nTxConfirmTarget, false /* ignoreGlobalPayTxFee */ , 0 /* totalFee */, true /* replaceable */, errors, oldFee, newFee, mtx)) {
         QMessageBox::critical(0, tr("Fee bump error"), tr("Increasing transaction fee failed") + "<br />(" +
             (errors.size() ? QString::fromStdString(errors[0]) : "") +")");
          return false;
@@ -575,13 +568,13 @@ bool WalletModel::bumpFee(uint256 hash)
     }
 
     // sign bumped transaction
-    if (!FeeBumper::SignTransaction(wallet, mtx)) {
+    if (!ipcWallet->signBumpTransaction(mtx)) {
         QMessageBox::critical(0, tr("Fee bump error"), tr("Can't sign transaction."));
         return false;
     }
     // commit the bumped transaction
     uint256 txid;
-    if(FeeBumper::CommitTransaction(wallet, hash, std::move(mtx), errors, txid) != BumpFeeResult::OK) {
+    if(!ipcWallet->commitBumpTransaction(hash, std::move(mtx), errors, txid)) {
         QMessageBox::critical(0, tr("Fee bump error"), tr("Could not commit transaction") + "<br />(" +
             QString::fromStdString(errors[0])+")");
          return false;
