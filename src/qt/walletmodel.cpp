@@ -658,30 +658,24 @@ bool WalletModel::abandonTransaction(uint256 hash) const
 
 bool WalletModel::transactionCanBeBumped(uint256 hash) const
 {
-    LOCK2(cs_main, wallet->cs_wallet);
-    const CWalletTx *wtx = wallet->GetWalletTx(hash);
-    return wtx && SignalsOptInRBF(*wtx) && !wtx->mapValue.count("replaced_by_txid");
+    return FeeBumper::TransactionCanBeBumped(wallet, hash);
 }
 
 bool WalletModel::bumpFee(uint256 hash)
 {
-    std::unique_ptr<CFeeBumper> feeBump;
-    {
-        LOCK2(cs_main, wallet->cs_wallet);
-        feeBump.reset(new CFeeBumper(wallet, hash, nTxConfirmTarget, false, 0, true));
-    }
-    if (feeBump->getResult() != BumpFeeResult::OK)
-    {
+    std::vector<std::string> errors;
+    CAmount oldFee;
+    CAmount newFee;
+    CMutableTransaction mtx;
+    if (FeeBumper::CreateTransaction(wallet, hash, ::nTxConfirmTarget, false /* ignoreignoreGlobalPayTxFee, */, 0 /* totalFee, */, true /* replaceable, */, errors, oldFee, newFee, mtx) != BumpFeeResult::OK) {
         QMessageBox::critical(0, tr("Fee bump error"), tr("Increasing transaction fee failed") + "<br />(" +
-            (feeBump->getErrors().size() ? QString::fromStdString(feeBump->getErrors()[0]) : "") +")");
+            (errors.size() ? QString::fromStdString(errors[0]) : "") +")");
          return false;
     }
 
     // allow a user based fee verification
     QString questionString = tr("Do you want to increase the fee?");
     questionString.append("<br />");
-    CAmount oldFee = feeBump->getOldFee();
-    CAmount newFee = feeBump->getNewFee();
     questionString.append("<table style=\"text-align: left;\">");
     questionString.append("<tr><td>");
     questionString.append(tr("Current fee:"));
@@ -712,23 +706,15 @@ bool WalletModel::bumpFee(uint256 hash)
     }
 
     // sign bumped transaction
-    bool res = false;
-    {
-        LOCK2(cs_main, wallet->cs_wallet);
-        res = feeBump->signTransaction(wallet);
-    }
-    if (!res) {
+    if (!FeeBumper::SignTransaction(wallet, mtx)) {
         QMessageBox::critical(0, tr("Fee bump error"), tr("Can't sign transaction."));
         return false;
     }
     // commit the bumped transaction
-    {
-        LOCK2(cs_main, wallet->cs_wallet);
-        res = feeBump->commit(wallet);
-    }
-    if(!res) {
+    uint256 txid;
+    if(FeeBumper::CommitTransaction(wallet, hash, std::move(mtx), errors, txid) != BumpFeeResult::OK) {
         QMessageBox::critical(0, tr("Fee bump error"), tr("Could not commit transaction") + "<br />(" +
-            QString::fromStdString(feeBump->getErrors()[0])+")");
+            QString::fromStdString(errors[0])+")");
          return false;
     }
     return true;
