@@ -842,17 +842,17 @@ void ThreadFlushWalletDB()
 //
 // Try to (very carefully!) recover wallet file if there is a problem.
 //
-bool CWalletDB::Recover(CDBEnv& dbenv, const std::string& filename, bool fOnlyKeys)
+bool CWalletDB::Recover(CDBEnv& dbenv, const std::string& filename, bool fOnlyKeys, std::string& newFilename)
 {
     // Recovery procedure:
-    // move wallet file to wallet.timestamp.bak
+    // move wallet file to walletfilename.timestamp.bak
     // Call Salvage with fAggressive=true to
     // get as much data as possible.
     // Rewrite salvaged data to fresh wallet file
     // Set -rescan so any missing transactions will be
     // found.
     int64_t now = GetTime();
-    std::string newFilename = strprintf("wallet.%d.bak", now);
+    newFilename = strprintf("%s.%d.bak", filename, now);
 
     int result = dbenv.dbenv->dbrename(NULL, filename.c_str(), NULL,
                                        newFilename.c_str(), DB_AUTO_COMMIT);
@@ -923,9 +923,9 @@ bool CWalletDB::Recover(CDBEnv& dbenv, const std::string& filename, bool fOnlyKe
     return fSuccess;
 }
 
-bool CWalletDB::Recover(CDBEnv& dbenv, const std::string& filename)
+bool CWalletDB::Recover(CDBEnv& dbenv, const std::string& filename, std::string& out_backup_filename)
 {
-    return CWalletDB::Recover(dbenv, filename, false);
+    return CWalletDB::Recover(dbenv, filename, false, out_backup_filename);
 }
 
 bool CWalletDB::WriteDestData(const std::string &address, const std::string &key, const std::string &value)
