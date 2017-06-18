@@ -318,6 +318,10 @@
         <translation>Open &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portemonnee:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Klik om de netwerkactiviteit te stoppen.</translation>
     </message>
@@ -782,6 +786,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -851,16 +858,28 @@
         <translation>Omdat dit de eerste keer is dat het programma gestart is, kunt u nu kiezen waar %1 de data moet opslaan.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 zal een kopie van de Bitcoin blokketen downloaden en opslaan. Tenminste %2 GB aan data wordt opgeslagen in deze map en het zal groeien in de tijd. De portemonnee wordt ook in deze map opgeslagen.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Gebruik de standaard gegevensmap</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Gebruik een persoonlijke gegevensmap:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Tenminste %1 GB aan data wordt opgeslagen in deze map en het zal groeien in de tijd.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 zal een kopie van de Bitcoin blokketen downloaden en opslaan.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>De portemonnee wordt ook in deze map opgeslagen.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -879,6 +898,9 @@
         <translation><numerusform>(van %n GB nodig)</numerusform><numerusform>(van %n GB nodig)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -928,6 +950,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Onbekend. Kopteksten synchroniseren (%1%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
     </message>
 </context>
 <context>
@@ -1168,6 +1203,10 @@
         <translation>geen</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Bevestig reset opties</translation>
     </message>
@@ -1178,6 +1217,10 @@
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
         <translation>Applicatie zal worden afgesloten. Wilt u doorgaan?</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Fout</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
@@ -1443,6 +1486,11 @@
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 sloot nog niet veilig af...</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1543,6 +1591,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Geheugengebruik</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portemonnee: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -2525,6 +2577,10 @@
         <source>, has not been successfully broadcast yet</source>
         <translation>, is nog niet met succes uitgezonden</translation>
     </message>
+    <message numerus="yes">
+        <source>, broadcast through %n node(s)</source>
+        <translation><numerusform>, uitgezonden naar %n node</numerusform><numerusform>, uitgezonden naar %n nodes</numerusform></translation>
+    </message>
     <message>
         <source>Date</source>
         <translation>Datum</translation>
@@ -3162,6 +3218,10 @@
         <translation>Waarschuwing: Het lijkt erop dat we geen consensus kunnen vinden met onze peers! Mogelijk dient u te upgraden, of andere nodes moeten wellicht upgraden.</translation>
     </message>
     <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Goedgekeurde peers die verbinden vanaf een bepaald IP adres (vb. 1.2.3.4) of CIDR genoteerd netwerk (vb. 1.2.3.0/24). Kan meerdere keren worden gespecificeerd.</translation>
+    </message>
+    <message>
         <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
         <translation>Om -txindex te kunnen veranderen dient u de database opnieuw te bouwen met gebruik van -reindex-chainstate.</translation>
     </message>
@@ -3320,6 +3380,10 @@
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>Locatie van de auth cookie (standaard: data dir)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimum aantal bytes dat er per sigop in een transactie gerelayed en gemined worden (standaard: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3732,10 +3796,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Waarschuwing: portomonee bestand is corrupt, data is veiliggesteld! Originele %s is opgeslagen als %s in %s; als uw balans of transacties incorrect zijn dient u een backup terug te zetten.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Goedgekeurde peers die verbinden vanaf een bepaald IP adres (vb. 1.2.3.4) of CIDR genoteerd netwerk (vb. 1.2.3.0/24). Kan meerdere keren worden gespecificeerd.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

@@ -318,6 +318,10 @@
         <translation>Otvoriť &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Peňaženka:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Kliknite pre zakázanie sieťovej aktivity.</translation>
     </message>
@@ -530,6 +534,14 @@
     <message>
         <source>Incoming transaction</source>
         <translation>Prijatá transakcia</translation>
+    </message>
+    <message>
+        <source>HD key generation is &lt;b&gt;enabled&lt;/b&gt;</source>
+        <translation>Generovanie HD kľúčov je &lt;b&gt;zapnuté&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>HD key generation is &lt;b&gt;disabled&lt;/b&gt;</source>
+        <translation>Generovanie HD kľúčov je &lt;b&gt;vypnuté&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
@@ -774,6 +786,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -843,16 +858,28 @@
         <translation>Keďže toto je prvé spustenie programu, môžete si vybrať, kam %1 bude ukladať vaše údaje.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 stiahne a uloží kópiu Bitcoin block chain. Minimálne %2GB dát bude uložených v tejto zložke, a bude sa zväčšovať postupom času. Peňaženka bude taktiež uložená v tejto zložke.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Použiť predvolený dátový adresár</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Použiť vlastný dátový adresár:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Minimálne %1GB dát bude uložených v tejto zložke, a bude sa zväčšovať postupom času.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 stiahne a uloží kópiu Bitcoin block chain.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>Peňaženka bude taktiež uložená v tejto zložke.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -871,6 +898,9 @@
         <translation><numerusform>(z %n GB potrebného)</numerusform><numerusform>(z %n GB potrebných)</numerusform><numerusform>(z %n GB potrebných)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -920,6 +950,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Neznámy. Synchronizujú sa hlavičky (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresa</translation>
     </message>
 </context>
 <context>
@@ -1160,6 +1203,10 @@
         <translation>žiadne</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Jadro Bitcoin</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Potvrdiť obnovenie možností</translation>
     </message>
@@ -1170,6 +1217,10 @@
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
         <translation>Klient bude vypnutý, chcete pokračovať?</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Chyba</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
@@ -1260,6 +1311,10 @@
     <message>
         <source>Payment request error</source>
         <translation>Chyba pri vyžiadaní platby</translation>
+    </message>
+    <message>
+        <source>Cannot start bitcoin: click-to-pay handler</source>
+        <translation>Nedá sa spustiť obslužný program bitcoin: click-to-pay zaplatiť kliknutím</translation>
     </message>
     <message>
         <source>URI handling</source>
@@ -1431,6 +1486,11 @@
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 ešte nebol bezpečne ukončený...</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1523,6 +1583,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Využitie pamäte</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Peňaženka: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -2458,6 +2522,10 @@
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Otvorené pre %n ďalší blok</numerusform><numerusform>Otvorené pre %n ďalšie bloky</numerusform><numerusform>Otvorené pre %n ďalších blokov</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>Otvorené do %1</translation>
@@ -2489,6 +2557,10 @@
     <message>
         <source>, has not been successfully broadcast yet</source>
         <translation>, ešte nebola úspešne odoslaná</translation>
+    </message>
+    <message numerus="yes">
+        <source>, broadcast through %n node(s)</source>
+        <translation><numerusform>, vysielať cez %n uzol</numerusform><numerusform>, vysielať cez %n uzle</numerusform><numerusform>, vysielať cez %n uzolov</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2627,6 +2699,10 @@
     <message>
         <source>Label</source>
         <translation>Popis</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Otvorené pre %n ďalší blok</numerusform><numerusform>Otvorené pre %n ďalšie bloky</numerusform><numerusform>Otvorené pre %n ďalších blokov</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2947,6 +3023,14 @@
         <translation>Prijímať príkazy z príkazového riadku a JSON-RPC</translation>
     </message>
     <message>
+        <source>Accept connections from outside (default: 1 if no -proxy or -connect/-noconnect)</source>
+        <translation>Prijať spojenia zvonku (predvolené: 1 ak žiadne -proxy alebo -connect)</translation>
+    </message>
+    <message>
+        <source>Distributed under the MIT software license, see the accompanying file %s or %s</source>
+        <translation>Distribuované pod softvérovou licenciou MIT, viď sprievodný súbor %s alebo %s</translation>
+    </message>
+    <message>
         <source>If &lt;category&gt; is not supplied or if &lt;category&gt; = 1, output all debugging information.</source>
         <translation>Pokiaľ &lt;category&gt; nie je nastavená, alebo &lt;category&gt; = 1, vypíš všetky informácie pre ladenie.</translation>
     </message>
@@ -3039,6 +3123,14 @@
         <translation>Varovanie: Zjavne sa úplne nezhodujeme s našimi peer-mi! Možno potrebujete prejsť na novšiu verziu alebo ostatné uzly potrebujú vyššiu verziu.</translation>
     </message>
     <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Povoliť partnerov pripájajúcich sa z danej IP adresy (napr. 1.2.3.4) alebo zo siete vo formáte CIDR (napr. 1.2.3.0/24). Môže byť zadané viackrát.</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
+        <translation>Potrebujete prebudovať databázu použitím -reindex-chainstate pre zmenu -txindex</translation>
+    </message>
+    <message>
         <source>%s corrupt, salvage failed</source>
         <translation>%s je poškodený, záchrana zlyhala</translation>
     </message>
@@ -3051,8 +3143,16 @@
         <translation>&lt;category&gt; môže byť:</translation>
     </message>
     <message>
+        <source>Attempt to recover private keys from a corrupt wallet on startup</source>
+        <translation>Pokúsiť sa o obnovenie privátnych kľúčov z poškodenej peňaženky pri spustení</translation>
+    </message>
+    <message>
         <source>Block creation options:</source>
         <translation>Voľby vytvorenia bloku:</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>Nedá sa vyriešiť -%s adresa: '%s'</translation>
     </message>
     <message>
         <source>Change index out of range</source>
@@ -3233,6 +3333,10 @@
     <message>
         <source>Use UPnP to map the listening port (default: %u)</source>
         <translation>Použiť UPnP pre mapovanie počúvajúceho portu (predvolené: %u)</translation>
+    </message>
+    <message>
+        <source>Use the test chain</source>
+        <translation>Použiť testovaciu sieť</translation>
     </message>
     <message>
         <source>Verifying blocks...</source>
@@ -3479,8 +3583,16 @@
         <translation>Výstupné ladiace informácie (predvolené: %u, dodanie &lt;category&gt; je voliteľné)</translation>
     </message>
     <message>
+        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect/-noconnect)</source>
+        <translation>Dotaz na partnerské adresy pomocou vyhľadávania DNS v prípade nedostatku adries (predvolené: 1, pokiaľ -connect)</translation>
+    </message>
+    <message>
         <source>This is the transaction fee you may pay when fee estimates are not available.</source>
         <translation>Toto je poplatok za transakciu keď odhad poplatkov ešte nie je k dispozícii.</translation>
+    </message>
+    <message>
+        <source>This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit %s and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard.</source>
+        <translation>Tento produkt obsahuje softvér vyvinutý projektom OpenSSL pre použitie sady nástrojov OpenSSL %s a kryptografického softvéru napísaného Eric Young a UPnP softvér napísaný Thomas Bernard.</translation>
     </message>
     <message>
         <source>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</source>
@@ -3509,10 +3621,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Varovanie: Peňaženka poškodená, dáta boli zachránené! Originálna %s ako %s v %s; ak váš zostatok alebo transakcie sú nesprávne, mali by ste obnoviť zálohu.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Povoliť partnerov pripájajúcich sa z danej IP adresy (napr. 1.2.3.4) alebo zo siete vo formáte CIDR (napr. 1.2.3.0/24). Môže byť zadané viackrát.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

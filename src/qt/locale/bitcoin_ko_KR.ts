@@ -318,6 +318,10 @@
         <translation>&amp;URI 열기...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">지갑:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>네트워크 활동을 중지하려면 클릭.</translation>
     </message>
@@ -782,6 +786,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -851,16 +858,28 @@
         <translation>프로그램이 처음으로 실행되고 있습니다. %1가 어디에 데이터를 저장할지 선택할 수 있습니다. </translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1가 블록체인의 복사본을 다운로드 저장합니다. 적어도 %2GB의 데이터가 이 폴더에 저장되며 시간이 경과할수록 점차 증가합니다. 그리고 지갑 또한 이 폴더에 저장됩니다. </translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>기본 데이터 폴더를 사용하기</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>커스텀 데이터 폴더 사용:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>비트코인</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>적어도 %1GB의 데이터가 이 폴더에 저장되며 시간이 경과할수록 점차 증가합니다.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1가 블럭체인의 복사본을 다운로드 저장합니다.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>그리고 지갑 또한 이 폴더에 저장됩니다.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -879,6 +898,9 @@
         <translation><numerusform>(%n GB가 필요)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -928,6 +950,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>알수없음. 헤더 동기화중 (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>형식</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>주소</translation>
     </message>
 </context>
 <context>
@@ -1168,6 +1203,10 @@
         <translation>없음</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>비트코인 코어</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>옵션 초기화를 확인</translation>
     </message>
@@ -1178,6 +1217,10 @@
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
         <translation>클라이언트가 종료됩니다, 계속 진행하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>오류</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
@@ -1425,7 +1468,7 @@
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation><numerusform>&amp;n 일</numerusform></translation>
+        <translation><numerusform>%n 일</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
@@ -1442,6 +1485,16 @@
     <message>
         <source>%1 didn't yet exit safely...</source>
         <translation>%1가 아직 안전하게 종료되지 않았습니다...</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>블럭</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>송금</translation>
     </message>
 </context>
 <context>
@@ -1543,6 +1596,10 @@
     <message>
         <source>Memory usage</source>
         <translation>메모리 사용량</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">지갑: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -3110,6 +3167,10 @@
         <translation>허용 된 최대 중간 피어 시간 오프셋 조정. 시간에 대한 지역적 전망치는 전방 또는 후방의 피어에 의해 영향을 받을 수 있습니다. (기본값: %u 초)</translation>
     </message>
     <message>
+        <source>Maximum total fees (in %s) to use in a single wallet transaction or raw transaction; setting this too low may abort large transactions (default: %s)</source>
+        <translation>하나의 지갑 트랜잭션에서의 총 수수료(%s)의 최대치; 너무 낮게 설정하면 큰 트랜잭션이 중지 됩니다 (기본값: %s)</translation>
+    </message>
+    <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
         <translation>컴퓨터의 날짜와 시간이 올바른지 확인하십시오! 시간이 잘못되면 %s은 제대로 동작하지 않습니다.</translation>
     </message>
@@ -3156,6 +3217,10 @@
     <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
         <translation>경고: 현재 비트코인 버전이 다른 네트워크 참여자들과 동일하지 않은 것 같습니다. 당신 또는 다른 참여자들이 동일한 비트코인 버전으로 업그레이드 할 필요가 있습니다.</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>설정된 IP주소 (보기 1.2.3.4) 혹은 CIDR로 작성된 네트워크 (보기 1.2.3.0/24)로 화이트리스트에 포함된 피어에 접속합니다. 이 설정은 복수로 지정 할 수 있습니다.</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
@@ -3316,6 +3381,10 @@
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>인증 쿠키의 위치 (기본값: data dir)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>중계 및 채굴을 할 때 트랜잭션에서의 sigop 당 데이터의 최소 크기 (기본값: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3728,10 +3797,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>경고 : 지갑파일이 손상되어 데이터가 복구되었습니다. 원래의 %s 파일은 %s 후에 %s 이름으로 저장됩니다. 잔액과 거래 내역이 정확하지 않다면 백업 파일로 부터 복원해야 합니다. </translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>설정된 IP주소 (보기 1.2.3.4) 혹은 CIDR로 작성된 네트워크 (보기 1.2.3.0/24)로 화이트리스트에 포함된 피어에 접속합니다. 이 설정은 복수로 지정 할 수 있습니다.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

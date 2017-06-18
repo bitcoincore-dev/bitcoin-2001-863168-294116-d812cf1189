@@ -318,6 +318,10 @@
         <translation>&amp;Åbn URI…</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Tegnebog:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Klik for at deaktivere netværksaktivitet.</translation>
     </message>
@@ -782,6 +786,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -851,16 +858,28 @@
         <translation>Siden dette er første gang, programmet startes, kan du vælge, hvor %1 skal gemme sin data.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 vil downloade og gemme et kopi af Bitcoin-blokkæden. Mindst %2 GB data vil blive gemt i denne mappe, og den vil vokse over tid. Tegnebogen vil også blive gemt i denne mappe.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Brug standardmappen for data</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Brug tilpasset mappe for data:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Mindst %1 GB data vil blive gemt i denne mappe, og den vil vokse over tid.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 vil downloade og gemme et kopi af Bitcoin-blokkæden.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>Tegnebogen vil også blive gemt i denne mappe.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -879,6 +898,9 @@
         <translation><numerusform>(ud af %n GB nødvendig)</numerusform><numerusform>(ud af %n GB nødvendig)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -928,6 +950,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Ukendt. Synkroniserer hoveder (%1)…</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
     </message>
 </context>
 <context>
@@ -1168,6 +1203,10 @@
         <translation>ingen</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Bekræft nulstilling af indstillinger</translation>
     </message>
@@ -1178,6 +1217,10 @@
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
         <translation>Klienten vil lukke ned. Vil du fortsætte?</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Fejl</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
@@ -1443,6 +1486,11 @@
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 har endnu ikke afsluttet på sikker vis…</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1543,6 +1591,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Hukommelsesforbrug</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Tegnebog: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -3166,6 +3218,10 @@
         <translation>Advarsel: Vi ser ikke ud til at være fuldt ud enige med andre knuder! Du kan være nødt til at opgradere, eller andre knuder kan være nødt til at opgradere.</translation>
     </message>
     <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Sæt knuder på hvidliste, som forbinder fra den givne IP-adresse (fx 1.2.3.4) eller CIDR-noteret netværk (fx 1.2.3.0/24). Kan angives flere gange.</translation>
+    </message>
+    <message>
         <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
         <translation>Du er nødt til at genopbygge databasen ved hjælp af -reindex-chainstate for at ændre -txindex</translation>
     </message>
@@ -3324,6 +3380,10 @@
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>Placering for autentificerings-cookie (standard: datamappe)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimum bytes pr. sigop i transaktioner, vi videresender og miner (standard: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3740,10 +3800,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Advarsel: Tegnebogsfil ødelagt, data reddet! Oprindelig %s gemt som %s i %s; hvis din saldo eller dine transaktioner er forkert, bør du genskabe fra en sikkerhedskopi.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Sæt knuder på hvidliste, som forbinder fra den givne IP-adresse (fx 1.2.3.4) eller CIDR-noteret netværk (fx 1.2.3.0/24). Kan angives flere gange.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

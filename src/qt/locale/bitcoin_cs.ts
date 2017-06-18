@@ -318,6 +318,10 @@
         <translation>Načíst &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Peněženka:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Kliknutím zařízneš spojení se sítí.</translation>
     </message>
@@ -782,6 +786,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -851,16 +858,28 @@
         <translation>Tohle je poprvé, co spouštíš %1, takže si můžeš zvolit, kam bude ukládat svá data.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 bude stahovat kopii řetězce bloků. Proto bude potřeba do tohoto adresáře uložit nejméně %2 GB dat – toto číslo bude navíc v průběhu času růst. Tvá peněženka bude rovněž uložena v tomto adresáři.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Použij výchozí adresář pro data</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Použij tento adresář pro data:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Proto bude potřeba do tohoto adresáře uložit nejméně %1 GB dat – toto číslo bude navíc v průběhu času růst.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 bude stahovat kopii řetězce bloků.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>Tvá peněženka bude rovněž uložena v tomto adresáři.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -879,6 +898,9 @@
         <translation><numerusform>(z potřebného %n GB)</numerusform><numerusform>(z potřebných %n GB)</numerusform><numerusform>(z potřebných %n GB)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -928,6 +950,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Neznámý. Synchronizuji záhlaví bloků (%1)…</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresa</translation>
     </message>
 </context>
 <context>
@@ -1168,6 +1203,10 @@
         <translation>žádné</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Potvrzení obnovení nastavení</translation>
     </message>
@@ -1178,6 +1217,10 @@
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
         <translation>Klient se vypne, chceš pokračovat?</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Chyba</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
@@ -1443,6 +1486,11 @@
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 ještě bezpečně neskončil…</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1543,6 +1591,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Obsazenost paměti</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Peněženka: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -3166,6 +3218,10 @@
         <translation>Upozornění: Nesouhlasím zcela se svými protějšky! Možná potřebuji aktualizovat nebo ostatní uzly potřebují aktualizovat.</translation>
     </message>
     <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Vždy vítat protějšky připojující se z dané IP adresy (např. 1.2.3.4) či podsítě (CIDR zápis, např. 1.2.3.0/24). Lze zadat i vícekrát.</translation>
+    </message>
+    <message>
         <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
         <translation>Je třeba přestavět databázi použitím -reindex-chainstate, aby bylo možné změnit -txindex</translation>
     </message>
@@ -3324,6 +3380,10 @@
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>Místo pro autentizační cookie (výchozí: adresář pro data)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimální počet bajtů na každý sigop v transakcích, které přeposíláme a těžíme (výchozí: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3742,10 +3802,6 @@
         <translation>Upozornění: soubor s peněženkou je poškozený, data jsou však zachráněna! Původní soubor %s je uložený jako %s v %s. Pokud nejsou stav tvého účtu nebo transakce v pořádku, zřejmě bys měl obnovit zálohu.</translation>
     </message>
     <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Vždy vítat protějšky připojující se z dané IP adresy (např. 1.2.3.4) či podsítě (CIDR zápis, např. 1.2.3.0/24). Lze zadat i vícekrát.</translation>
-    </message>
-    <message>
         <source>%s is set very high!</source>
         <translation>%s je nastaveno velmi vysoko!</translation>
     </message>
@@ -3832,6 +3888,10 @@
     <message>
         <source>Specify connection timeout in milliseconds (minimum: 1, default: %d)</source>
         <translation>Zadej časový limit spojení v milivteřinách (minimum: 1, výchozí: %d)</translation>
+    </message>
+    <message>
+        <source>Specify pid file (default: %s)</source>
+        <translation>PID soubor (výchozí: %s)</translation>
     </message>
     <message>
         <source>Spend unconfirmed change when sending transactions (default: %u)</source>

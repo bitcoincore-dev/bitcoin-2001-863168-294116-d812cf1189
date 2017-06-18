@@ -1,6 +1,10 @@
 <TS language="zh" version="2.1">
 <context>
     <name>AddressBookPage</name>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation type="unfinished">&amp;选择</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
@@ -36,6 +40,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
@@ -46,13 +53,23 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
+    </context>
+<context>
+    <name>NetWatchLogModel</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Error</source>
+        <translation>错误</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -65,7 +82,12 @@
     </context>
 <context>
     <name>QObject</name>
-    </context>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>转账</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>

@@ -11,7 +11,7 @@
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>&amp;amp;नयाँ</translation>
+        <translation>&amp;नयाँ</translation>
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
@@ -19,7 +19,7 @@
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation>&amp;amp;कपी गर्नुहोस्</translation>
+        <translation>&amp;कपी गर्नुहोस्</translation>
     </message>
     <message>
         <source>C&amp;lose</source>
@@ -35,11 +35,11 @@
     </message>
     <message>
         <source>&amp;Export</source>
-        <translation>&amp;amp;निर्यात गर्नुहोस्</translation>
+        <translation>&amp;निर्यात गर्नुहोस्</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
-        <translation>&amp;amp;मेटाउनुहोस्</translation>
+        <translation>&amp;मेटाउनुहोस्</translation>
     </message>
     <message>
         <source>C&amp;hoose</source>
@@ -96,7 +96,7 @@
     <name>BitcoinGUI</name>
     <message>
         <source>Sign &amp;message...</source>
-        <translation>सन्देशमा &amp;amp;हस्ताक्षर  गर्नुहोस्...</translation>
+        <translation>सन्देशमा &amp;हस्ताक्षर  गर्नुहोस्...</translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -116,7 +116,7 @@
     </message>
     <message>
         <source>&amp;Transactions</source>
-        <translation>&amp;amp;कारोबार</translation>
+        <translation>&amp;कारोबार</translation>
     </message>
     <message>
         <source>Browse transaction history</source>
@@ -132,7 +132,7 @@
     </message>
     <message>
         <source>&amp;About %1</source>
-        <translation>&amp;amp;बारेमा %1</translation>
+        <translation>&amp;बारेमा %1</translation>
     </message>
     <message>
         <source>Show information about %1</source>
@@ -140,7 +140,7 @@
     </message>
     <message>
         <source>About &amp;Qt</source>
-        <translation>&amp;amp;Qt</translation>
+        <translation>&amp;Qt</translation>
     </message>
     <message>
         <source>Show information about Qt</source>
@@ -148,7 +148,7 @@
     </message>
     <message>
         <source>&amp;Options...</source>
-        <translation>&amp;amp;विकल्प...</translation>
+        <translation>&amp;विकल्प...</translation>
     </message>
     <message>
         <source>Modify configuration options for %1</source>
@@ -156,27 +156,27 @@
     </message>
     <message>
         <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;amp;वालेटलाई इन्क्रिप्ट गर्नुहोस्...</translation>
+        <translation>&amp;वालेटलाई इन्क्रिप्ट गर्नुहोस्...</translation>
     </message>
     <message>
         <source>&amp;Backup Wallet...</source>
-        <translation>&amp;amp;वालेटलाई ब्याकअप गर्नुहोस्...</translation>
+        <translation>&amp;वालेटलाई ब्याकअप गर्नुहोस्...</translation>
     </message>
     <message>
         <source>&amp;Change Passphrase...</source>
-        <translation>&amp;amp;पासफ्रेज परिवर्तन गर्नुहोस्...</translation>
+        <translation>&amp;पासफ्रेज परिवर्तन गर्नुहोस्...</translation>
     </message>
     <message>
         <source>&amp;Sending addresses...</source>
-        <translation>&amp;amp;पठाउने ठेगानाहरू...</translation>
+        <translation>&amp;पठाउने ठेगानाहरू...</translation>
     </message>
     <message>
         <source>&amp;Receiving addresses...</source>
-        <translation>&amp;amp;प्राप्त गर्ने ठेगानाहरू...</translation>
+        <translation>&amp;प्राप्त गर्ने ठेगानाहरू...</translation>
     </message>
     <message>
         <source>Open &amp;URI...</source>
-        <translation>URI &amp;amp;खोल्नुहोस्...</translation>
+        <translation>URI &amp;खोल्नुहोस्...</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -196,7 +196,7 @@
     </message>
     <message>
         <source>&amp;Debug window</source>
-        <translation>&amp;amp;डिबग विन्डो</translation>
+        <translation>&amp;डिबग विन्डो</translation>
     </message>
     <message>
         <source>Open debugging and diagnostic console</source>
@@ -205,6 +205,10 @@
     </context>
 <context>
     <name>CoinControlDialog</name>
+    <message>
+        <source>Amount:</source>
+        <translation type="unfinished">रकम:</translation>
+    </message>
     <message>
         <source>Amount</source>
         <translation>रकम</translation>
@@ -222,23 +226,40 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">amp;बारेमा %1</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
-    <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 ले बिटकोइन ब्लक चेनको एउटा प्रतिलिपि डाउनलोड र भण्डारण गर्नेछ । यो निर्देशिकामा कम्तिमा पनि %2GB डाटा भण्डारण गरिनेछ, र यो समयसँगै बढ्नेछ । वालेटलाई पनि यो निर्देशिकामा भण्डारण गरिनेछ ।</translation>
-    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    </context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">URI amp;खोल्नुहोस्</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">amp;विकल्प</translation>
+    </message>
     <message>
         <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
         <translation>इन्टरफेसमा र सिक्का पठाउँदा देखिने डिफल्ट उपविभाजन एकाइ चयन गर्नुहोस् ।</translation>
@@ -315,7 +336,17 @@
         <source>Enter a Bitcoin address (e.g. %1)</source>
         <translation>कृपया बिटकोइन ठेगाना प्रवेश गर्नुहोस् (उदाहरण %1)</translation>
     </message>
-    </context>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>ब्लक</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>कारोबार</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -324,6 +355,10 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">amp;डिबग विन्डो</translation>
+    </message>
     <message>
         <source>User Agent</source>
         <translation>प्रयोगकर्ता एजेन्ट</translation>
@@ -335,9 +370,22 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;रकम:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">ठेगाना कपी गर्नुहोस्
+</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>रकम</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -345,12 +393,20 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Amount:</source>
+        <translation type="unfinished">रकम:</translation>
+    </message>
+    <message>
         <source>Choose...</source>
         <translation>छनौट गर्नुहोस्...</translation>
     </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;रकम:</translation>
+    </message>
     <message>
         <source>Choose previously used address</source>
         <translation>पहिला प्रयोग गरिएको ठेगाना प्रयोग गर्नुहोस्</translation>
@@ -401,12 +457,28 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>watch-only</source>
+        <translation type="unfinished">हेर्ने-मात्र</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>कारोबार</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>रकम</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>watch-only</source>
+        <translation type="unfinished">हेर्ने-मात्र</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
@@ -414,6 +486,10 @@
         <source>Copy address</source>
         <translation>ठेगाना कपी गर्नुहोस्
 </translation>
+    </message>
+    <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">हेर्ने-मात्र</translation>
     </message>
     </context>
 <context>
@@ -429,16 +505,24 @@
     <name>WalletView</name>
     <message>
         <source>&amp;Export</source>
-        <translation>&amp;amp;निर्यात गर्नुहोस्
+        <translation>&amp;निर्यात गर्नुहोस्
 </translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>वर्तमान ट्याबको डाटालाई फाइलमा निर्यात गर्नुहोस्</translation>
     </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">amp;वालेटलाई ब्याकअप गर्नुहोस्</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">amp;विकल्प:</translation>
+    </message>
     <message>
         <source>Delete all wallet transactions and only recover those parts of the blockchain through -rescan on startup</source>
         <translation>वालेटको सबै कारोबार मेटाउनुहोस् र -स्टार्टअपको पुनः स्क्यान मार्फत ब्लकचेनका ती भागहरूलाई मात्र पुनः प्राप्त गर्नुहोस्</translation>
@@ -448,12 +532,24 @@
         <translation>ब्लक डाटाबेसमा भविष्यबाट आए जस्तो देखिने एउटा ब्लक हुन्छ । तपाईंको कम्प्युटरको मिति र समय गलत तरिकाले सेट गरिएकाले यस्तो हुन सक्छ । तपाईं आफ्नो कम्प्युटरको मिति र समय सही छ भनेर पक्का हुनुहुन्छ भने मात्र ब्लक डाटाबेस पुनर्निर्माण गर्नुहोस् ।</translation>
     </message>
     <message>
+        <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
+        <translation>यो जारी गर्नु पूर्वको परीक्षण संस्करण हो - आफ्नै जोखिममा प्रयोग गर्नुहोस् - खनन वा व्यापारीक प्रयोगको लागि प्रयोग नगर्नुहोस</translation>
+    </message>
+    <message>
         <source>Unable to rewind the database to a pre-fork state. You will need to redownload the blockchain</source>
         <translation>प्रि-फर्क अवस्थामा डाटाबेस रिवाइन्ड गर्न सकिएन । तपाईंले फेरि ब्लकचेन डाउनलोड गर्नु पर्ने हुन्छ</translation>
     </message>
     <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
         <translation>UPnP प्रयोग गरेर सुन्ने पोर्टलाई म्याप गर्नुहोस् (सुन्दा र -प्रोक्सी नहुँदा डिफल्ट: 1)</translation>
+    </message>
+    <message>
+        <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
+        <translation>चेतावनी: नेटवर्क पूरै तरिकाले सहमत छैन जस्तो देखिन्छ! केही खननकर्ताहरूले समस्या भोगिरहेका छन् जस्तो देखिन्छ ।</translation>
+    </message>
+    <message>
+        <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
+        <translation>चेतावनी: हामी हाम्रा सहकर्मीहरूसँग पूर्णतया सहमत छैनौं जस्तो देखिन्छ! तपाईंले अपग्रेड गर्नु पर्ने हुनसक्छ वा अरू नोडहरूले अपग्रेड गर्नु पर्ने हुनसक्छ ।</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
@@ -626,6 +722,14 @@
     <message>
         <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
         <translation>तपाईंले काटछाँट नगरेको मोडमा जान पुनः सूचकांक प्रयोग गरेर डाटाबेस पुनर्निर्माण गर्नु पर्ने हुन्छ । यसले सम्पूर्ण ब्लकचेनलाई फेरि डाउनलोड गर्नेछ</translation>
+    </message>
+    <message>
+        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect/-noconnect)</source>
+        <translation>यदि ठेगाना कम भएमा, DNS लुकअप मार्फत सहकर्मी ठेगानाको जाँच गर्नुहोस  (डिफल्ट: 1 सिवाय -कनेक्ट)</translation>
+    </message>
+    <message>
+        <source>This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit %s and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard.</source>
+        <translation>यो उत्पादन ले OpenSSL टुलकिट %s को प्रयोगको लागि OpenSSL परियोजनाले विकास गरेको सफ्टवेयर, एरिक यंग द्वारा लिखित क्रिप्टोग्राफिक सफ्टवेयर र थमस बर्नार्डद्वारा लिखित UPnP सफ्टवेयरलाई समावेश गर्छ ।</translation>
     </message>
     </context>
 </TS>

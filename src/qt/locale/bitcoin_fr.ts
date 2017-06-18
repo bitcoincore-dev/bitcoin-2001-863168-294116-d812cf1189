@@ -318,6 +318,10 @@
         <translation>Ouvrir une &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Porte-monnaie:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Cliquer pour désactiver l'activité réseau.</translation>
     </message>
@@ -782,6 +786,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -851,16 +858,28 @@
         <translation>Puisque c'est la première fois que le logiciel est lancé, vous pouvez choisir où %1 stockera ses données.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 téléchargera et stockera une copie de la chaîne de blocs de Bitcoin. Au moins %2 Go de données seront stockés dans ce répertoire et sa taille augmentera avec le temps. Le porte-monnaie sera également stocké dans ce répertoire.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Utiliser le répertoire de données par défaut</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Utiliser un répertoire de données personnalisé :</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Au moins %1 Go de données seront stockés dans ce répertoire et sa taille augmentera avec le temps.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 téléchargera et stockera une copie de la chaîne de blocs de Bitcoin.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>Le porte-monnaie sera également stocké dans ce répertoire.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -879,6 +898,9 @@
         <translation><numerusform>(sur %n Go requis)</numerusform><numerusform>(sur %n Go requis)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -928,6 +950,14 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Inconnu. Synchronisation des en-têtes (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
     </message>
 </context>
 <context>
@@ -1168,6 +1198,10 @@
         <translation>aucune</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Confirmer la réinitialisation des options</translation>
     </message>
@@ -1178,6 +1212,10 @@
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
         <translation>Le client sera arrêté. Voulez-vous continuer ?</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Erreur</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
@@ -1443,6 +1481,16 @@
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 ne s'est pas encore arrêté en toute sécurité...</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1543,6 +1591,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Utilisation de la mémoire</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Porte-monnaie: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -3162,6 +3214,10 @@
         <translation>Avertissement : nous ne semblons pas être en accord complet avec nos pairs ! Une mise à niveau pourrait être nécessaire pour vous ou pour d'autres nœuds du réseau.</translation>
     </message>
     <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Pairs de la liste blanche se connectant à partir de l'adresse IP donnée (p. ex. 1.2.3.4) ou du réseau noté CIDR (p. ex. 1.2.3.0/24). Peut être spécifié plusieurs fois.</translation>
+    </message>
+    <message>
         <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
         <translation>Vous devez reconstruire la base de données avec -reindex-chainstate pour changer -txindex</translation>
     </message>
@@ -3320,6 +3376,10 @@
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>Emplacement du fichier témoin auth (par défaut : data dir)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Octets minimaux par sigop dans les transactions que nous relayons et minons (par défaut : %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3736,10 +3796,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Avertissement : le fichier du porte-monnaie est corrompu, les données ont été récupérées ! Le fichier %s original a été enregistré en tant que %s dans %s ; si votre solde ou vos transactions sont incorrects, vous devriez restaurer une sauvegarde.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Pairs de la liste blanche se connectant à partir de l'adresse IP donnée (p. ex. 1.2.3.4) ou du réseau noté CIDR (p. ex. 1.2.3.0/24). Peut être spécifié plusieurs fois.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

@@ -318,6 +318,10 @@
         <translation>Открыть &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Бумажник:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Кликните, чтобы запретить сетевую активность.</translation>
     </message>
@@ -782,6 +786,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -851,16 +858,28 @@
         <translation>При первом запуске программы вы можете выбрать где %1 будет хранить свои данные.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 скачает и сохранит копию цепи блоков. Как минимум %2GB будут записаны в этот каталог, и со временем он будет расти. Бумажник также будет сохранен в этом каталоге.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Использовать каталог данных по умолчанию</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Использовать другой каталог данных:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Как минимум %1GB будут записаны в этот каталог, и со временем он будет расти.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 скачает и сохранит копию цепи блоков.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>Бумажник также будет сохранен в этом каталоге.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -879,6 +898,9 @@
         <translation><numerusform>(из необходимых %n ГБ)</numerusform><numerusform>(из необходимых %n ГБ)</numerusform><numerusform>(из необходимых %n ГБ)</numerusform><numerusform>(из необходимых %n ГБ)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -928,6 +950,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Неизвестно. Синхронизация заголовков (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тип</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адрес</translation>
     </message>
 </context>
 <context>
@@ -1168,6 +1203,10 @@
         <translation>ничего</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Подтвердите сброс параметров</translation>
     </message>
@@ -1178,6 +1217,10 @@
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
         <translation>Клиент будет выключен. Желаете продолжить?</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Ошибка</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
@@ -1443,6 +1486,16 @@
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 ещё не завершился безопасно...</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакция</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1543,6 +1596,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Использование памяти</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Бумажник: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -3162,6 +3219,10 @@
         <translation>Внимание: мы не полностью согласны с подключенными участниками! Вам или другим участникам, возможно, следует обновиться.</translation>
     </message>
     <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Вносить в белый список участников, подключающихся с указанного IP (напр. 1.2.3.4) или CIDR-адреса сети (напр. 1.2.3.0/24). Можно использовать многократно.</translation>
+    </message>
+    <message>
         <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
         <translation>Вам необходимо пересобрать базы данных с помощью -reindex-chainstate, чтобы изменить -txindex</translation>
     </message>
@@ -3320,6 +3381,10 @@
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>Расположение куки входы(по умолчанию: data dir)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Минимально байт на sigop в транзакциях, которые мы ретранслируем и добываем (по умолчанию: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3736,10 +3801,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Внимание: Файл бумажника поврежден, данные восстановлены! Оригинальный %s сохранен как %s в %s; Если баланс или транзакции некорректны, вы должны восстановить файл из резервной копии.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Вносить в белый список участников, подключающихся с указанного IP (напр. 1.2.3.4) или CIDR-адреса сети (напр. 1.2.3.0/24). Можно использовать многократно.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

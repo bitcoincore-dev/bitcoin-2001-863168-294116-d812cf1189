@@ -41,10 +41,74 @@
         <source>&amp;Delete</source>
         <translation>Șterge</translation>
     </message>
+    <message>
+        <source>Choose the address to send coins to</source>
+        <translation>Indică adresa de expediere a monedelor</translation>
+    </message>
+    <message>
+        <source>Choose the address to receive coins with</source>
+        <translation>Indică adresa de a primi monedele</translation>
+    </message>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation>Selectează</translation>
+    </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation>Adresele de destinatie</translation>
+    </message>
+    <message>
+        <source>Receiving addresses</source>
+        <translation>Adresele de primire </translation>
+    </message>
+    <message>
+        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Acestea sunt adresele tale Bitcoin pentru a trimite platile. Întotdeauna verifica suma si adresa de primire înainte de a trimite monede.</translation>
+    </message>
+    <message>
+        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Acestea sunt adresele tale pentru a primi Bitcoin. Recomandăm sp folosești câte o nouă adresă pentru fiecare tranzacție.</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;Copiază Adresa</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Label</source>
+        <translation>Copiere&amp; Etichetare</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>Editare</translation>
+    </message>
+    <message>
+        <source>Export Address List</source>
+        <translation>Exporta lista de adrese</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Fisier text separat prin virgule (*.csv)</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Exportul a eșuat</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
-    </context>
+    <message>
+        <source>Label</source>
+        <translation>Etichetă</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adresă</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(fără etichetă)</translation>
+    </message>
+</context>
 <context>
     <name>AskPassphraseDialog</name>
     <message>
@@ -62,6 +126,22 @@
     <message>
         <source>Repeat new passphrase</source>
         <translation>Repetati noua parolă</translation>
+    </message>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>Parolează portofelul</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
+        <translation>Această operație cere parola portofelului pentru a deschide portofelul.</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Deblochează portofelul</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
+        <translation>Această operație cere parola portofelului pentru a deschide portofelul.</translation>
     </message>
     </context>
 <context>
@@ -106,6 +186,10 @@
         <translation>Părăsește aplicația</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Arată informații despre %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Despre &amp;Qt</translation>
     </message>
@@ -140,6 +224,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Deschide &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portofel:</translation>
     </message>
     <message>
         <source>Send coins to a Bitcoin address</source>
@@ -344,12 +432,20 @@
         <source>Confirmed</source>
         <translation>Confirmat</translation>
     </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(fără etichetă)</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
         <translation>Modifică adresa</translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Etichetă</translation>
     </message>
     <message>
         <source>&amp;Address</source>
@@ -366,6 +462,9 @@
         <source>Directory already exists. Add %1 if you intend to create a new directory here.</source>
         <translation>Directoriul există deja. Adaugă %1 dacă ai intenționat să creezi aici un directoriu nou.</translation>
     </message>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -393,6 +492,10 @@
         <translation>Folosește directoriul pentru date din modul implicit.</translation>
     </message>
     <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Eroare</translation>
     </message>
@@ -402,8 +505,23 @@
     </message>
     </context>
 <context>
-    <name>ModalOverlay</name>
+    <name>MempoolStats</name>
     </context>
+<context>
+    <name>ModalOverlay</name>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Necunoscut...</translation>
+    </message>
+    </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresă</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -444,6 +562,10 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Rețea</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Portofel</translation>
     </message>
     <message>
         <source>Expert</source>
@@ -494,6 +616,10 @@
         <translation>fără</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Confirmă resetarea opțiunilor</translation>
     </message>
@@ -504,6 +630,10 @@
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
         <translation>Clientul va fi oprit. Dorești sa continui?</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Eroare</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
@@ -541,12 +671,26 @@
         <source>%1 and %2</source>
         <translation>%1 și %2</translation>
     </message>
-    </context>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tze</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
 <context>
     <name>QRImageWidget</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Salvează imaginea...</translation>
+    </message>
     </context>
 <context>
     <name>RPCConsole</name>
@@ -577,6 +721,10 @@
     <message>
         <source>Number of connections</source>
         <translation>Numărul de conexiuni</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portofel: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -654,6 +802,14 @@
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Cantitate:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etichetă:</translation>
+    </message>
+    <message>
         <source>&amp;Message:</source>
         <translation>&amp;Mesaj:</translation>
     </message>
@@ -669,12 +825,52 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Copiază Adresa</translation>
+    </message>
+    <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;Salvează imaginea...</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adresă</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Cantitate</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Etichetă</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished">Mesaj</translation>
     </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Etichetă</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished">Mesaj</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(fără etichetă)</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
@@ -702,13 +898,41 @@
         <source>Change:</source>
         <translation>Schimbă:</translation>
     </message>
-    </context>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Selectează...</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Trimite</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(fără etichetă)</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Cantitate:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etichetă:</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished">Mesaj:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
-    </context>
+    <message>
+        <source>Yes</source>
+        <translation>Da</translation>
+    </message>
+</context>
 <context>
     <name>ShutdownWindow</name>
     </context>
@@ -723,15 +947,67 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished">Mesaj</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Tranzacţie</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Cantitate</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Etichetă</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(fără etichetă)</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Fisier text separat prin virgule (*.csv)</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Confirmat</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Etichetă</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adresă</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Exportul a eșuat</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -744,9 +1020,21 @@
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Exportă</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Exportă datele din tabul curent in fisier</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">Opțiuni:</translation>
+    </message>
     <message>
         <source>Bitcoin Core</source>
         <translation>Bitcoin Core</translation>

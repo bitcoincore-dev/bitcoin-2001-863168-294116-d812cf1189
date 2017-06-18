@@ -180,6 +180,10 @@
         <translation>Beursie gekodifiseer</translation>
     </message>
     <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 gaan nou toemaak om die kodifikasie af te handel. Onthou dat die kodifikasie van u beursie nie altyd u munte kan beskerm teen diefstal deur kwaadwillige sagteware op u rekenaar nie.</translation>
+    </message>
+    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>BELANGRIK:  Alle vorige kopieë en rugsteun-weergawes wat u tevore van die gemaak het, moet vervang word met die jongste weergawe van u nuutste gekodifiseerde beursie.  Alle vorige weergawes en rugsteun-kopieë van u beursie sal nutteloos raak die oomblik wat u die nuut-gekodifiseerde beursie begin gebruik.</translation>
     </message>
@@ -314,6 +318,10 @@
         <translation>Oop &amp; URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Beursie:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Kliek om netwerkaktiwiteit af te skakel.</translation>
     </message>
@@ -421,6 +429,10 @@
         <source>Processing blocks on disk...</source>
         <translation>Blokke op skyf word geprosesseer...</translation>
     </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation><numerusform>%n blok van transaksiegeskiedenis geprosesseer.</numerusform><numerusform>%n blokke van transaksiegeskiedenis geprosesseer.</numerusform></translation>
+    </message>
     <message>
         <source>%1 behind</source>
         <translation>%1 agter</translation>
@@ -523,6 +535,14 @@
         <source>Edit Address</source>
         <translation>Wysig Adres</translation>
     </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;Merk</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;Adres</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -530,6 +550,9 @@
         <source>name</source>
         <translation>naam</translation>
     </message>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -565,9 +588,16 @@
         <translation>Welkom by %1.</translation>
     </message>
     <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Fout</translation>
     </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -577,7 +607,19 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Oop  URI</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
@@ -602,6 +644,14 @@
         <translation>Alle kliëntopsies na verstek terugstel.</translation>
     </message>
     <message>
+        <source>&amp;Network</source>
+        <translation type="unfinished">&amp;Netwerk</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation>&amp;Beursie</translation>
+    </message>
+    <message>
         <source>Expert</source>
         <translation>Kenner</translation>
     </message>
@@ -622,12 +672,20 @@
         <translation>geen</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Kern</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Bevestig terugstel van opsies</translation>
     </message>
     <message>
         <source>Client restart required to activate changes.</source>
         <translation>Kliënt moet herbegin word om veranderinge te aktiveer.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Fout</translation>
     </message>
     </context>
 <context>
@@ -705,11 +763,32 @@
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n uur</numerusform><numerusform>%n ure</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n dag</numerusform><numerusform>%n dae</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n week</numerusform><numerusform>%n weke</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 en %2</translation>
     </message>
-    </context>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n jaar</numerusform><numerusform>%n jare</numerusform></translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -725,6 +804,14 @@
     <message>
         <source>Client version</source>
         <translation>Kliëntweergawe</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Inligting</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Ontfout venster</translation>
     </message>
     <message>
         <source>General</source>
@@ -749,6 +836,10 @@
     <message>
         <source>Current number of blocks</source>
         <translation>Huidige aantal blokke</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Beursie: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -778,12 +869,24 @@
         <source>User Agent</source>
         <translation>Gebruikeragent</translation>
     </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Netwerkaktiwiteit gedeaktiveer</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Merk:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Dupliseer Adres</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adres</translation>
@@ -810,6 +913,10 @@
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Insufficient funds!</source>
+        <translation>Onvoldoende fondse</translation>
+    </message>
     <message>
         <source>Bytes:</source>
         <translation>Grepe:</translation>
@@ -851,12 +958,20 @@
         <translation>Balans:</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Stuur</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(geen etiket)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Merk:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -878,6 +993,14 @@
     <message>
         <source>Date</source>
         <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Transaksiefooi</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Transaksie</translation>
     </message>
     </context>
 <context>
@@ -947,6 +1070,10 @@
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">Opsies:</translation>
+    </message>
     <message>
         <source>Bitcoin Core</source>
         <translation>Bitcoin Kern</translation>

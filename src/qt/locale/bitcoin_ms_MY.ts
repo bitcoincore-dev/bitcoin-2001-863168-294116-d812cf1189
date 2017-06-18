@@ -345,6 +345,10 @@ Alihkan fail data ke dalam tab semasa</translation>
         <translation>Alamat</translation>
     </message>
     <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;Label</translation>
+    </message>
+    <message>
         <source>&amp;Address</source>
         <translation>Alamat</translation>
     </message>
@@ -353,16 +357,38 @@ Alihkan fail data ke dalam tab semasa</translation>
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Mengenai%1</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Alamat</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Buka URI</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
@@ -390,6 +416,10 @@ Alihkan fail data ke dalam tab semasa</translation>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Label:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -420,6 +450,10 @@ Alihkan fail data ke dalam tab semasa</translation>
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Pilih...</translation>
+    </message>
+    <message>
         <source>Balance:</source>
         <translation>Baki</translation>
     </message>
@@ -430,6 +464,10 @@ Alihkan fail data ke dalam tab semasa</translation>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Label:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -494,9 +532,17 @@ Alihkan fail data ke dalam tab semasa</translation>
 <context>
     <name>WalletView</name>
     <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Eksport</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>
 Alihkan fail data ke dalam tab semasa</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Dompet Sandaran</translation>
     </message>
     </context>
 <context>
