@@ -133,7 +133,7 @@ static const int64_t DEFAULT_MAX_TIP_AGE = 24 * 60 * 60;
 static const int64_t MAX_FEE_ESTIMATION_TIP_AGE = 3 * 60 * 60;
 
 /** Default for -permitbaremultisig */
-static const bool DEFAULT_PERMIT_BAREMULTISIG = true;
+static const bool DEFAULT_PERMIT_BAREMULTISIG = false;
 static const bool DEFAULT_CHECKPOINTS_ENABLED = true;
 static const bool DEFAULT_TXINDEX = false;
 static const unsigned int DEFAULT_BANSCORE_THRESHOLD = 100;
@@ -332,6 +332,8 @@ void PruneAndFlush();
 /** Prune block files up to a given height */
 void PruneBlockFilesManual(int nPruneUpToHeight);
 
+void LimitMempoolSize();
+
 /** (try to) add transaction to memory pool
  * plTxnReplaced will be appended to with all transactions replaced from mempool **/
 bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransactionRef &tx, bool fLimitFree,
@@ -428,6 +430,8 @@ namespace Consensus {
 bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoinsViewCache& inputs, int nSpendHeight);
 
 } // namespace Consensus
+
+unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
 /**
  * Check if transaction is final and can be included in a block with the
