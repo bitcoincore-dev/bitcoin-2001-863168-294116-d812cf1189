@@ -26,6 +26,7 @@
 #include "utilstrencodings.h"
 #include "validationinterface.h"
 #ifdef ENABLE_WALLET
+#include "wallet/rpcwallet.h"
 #include "wallet/wallet.h"
 #endif
 
@@ -617,6 +618,10 @@ static void TxInErrorToJSON(const CTxIn& txin, UniValue& vErrorsRet, const std::
 
 UniValue signrawtransaction(const JSONRPCRequest& request)
 {
+#ifdef ENABLE_WALLET
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+#endif
+
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 4)
         throw runtime_error(
             "signrawtransaction \"hexstring\" ( [{\"txid\":\"id\",\"vout\":n,\"scriptPubKey\":\"hex\",\"redeemScript\":\"hex\"},...] [\"privatekey1\",...] sighashtype )\n"
@@ -626,7 +631,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             "The third optional argument (may be null) is an array of base58-encoded private\n"
             "keys that, if given, will be the only keys used to sign the transaction.\n"
 #ifdef ENABLE_WALLET
-            + HelpRequiringPassphrase() + "\n"
+            + HelpRequiringPassphrase(pwallet) + "\n"
 #endif
 
             "\nArguments:\n"
@@ -677,7 +682,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
         );
 
 #ifdef ENABLE_WALLET
-    LOCK2(cs_main, pwalletMain ? &pwalletMain->cs_wallet : NULL);
+    LOCK2(cs_main, pwallet ? &pwallet->cs_wallet : NULL);
 #else
     LOCK(cs_main);
 #endif
@@ -740,8 +745,9 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
         }
     }
 #ifdef ENABLE_WALLET
-    else if (pwalletMain)
-        EnsureWalletIsUnlocked();
+    else if (pwallet) {
+        EnsureWalletIsUnlocked(pwallet);
+    }
 #endif
 
     // Add previous txouts given in the RPC call:
@@ -808,7 +814,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
     }
 
 #ifdef ENABLE_WALLET
-    const CKeyStore& keystore = ((fGivenKeys || !pwalletMain) ? tempKeystore : *pwalletMain);
+    const CKeyStore& keystore = ((fGivenKeys || !pwallet) ? tempKeystore : *pwallet);
 #else
     const CKeyStore& keystore = tempKeystore;
 #endif
