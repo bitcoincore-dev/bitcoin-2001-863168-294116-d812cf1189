@@ -547,6 +547,48 @@ UniValue dumpprivkey(const JSONRPCRequest& request)
     return CBitcoinSecret(vchSecret).ToString();
 }
 
+UniValue dumpmasterprivkey(const JSONRPCRequest& request)
+{
+    if (!EnsureWalletIsAvailable(request.fHelp))
+        return NullUniValue;
+    
+    if (request.fHelp || request.params.size() != 0)
+        throw runtime_error(
+            "dumpmasterprivkey\n"
+            "\nReveals the current master private key.\n"
+            "\nResult:\n"
+            " \"key\"                 (string) The HD master private key\n"
+            "\nExamples:\n"
+            + HelpExampleCli("dumpmasterprivkey", "")
+        );
+
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+
+    EnsureWalletIsUnlocked();
+
+    CKeyID masterKeyID = pwalletMain->GetHDChain().masterKeyID;
+    if (!pwalletMain->IsHDEnabled())
+    {
+        throw JSONRPCError(RPC_WALLET_ERROR, "Wallet is not a HD wallet.");
+    }
+    CKey key;
+    if (pwalletMain->GetKey(masterKeyID, key))
+    {
+        CExtKey masterKey;
+        masterKey.SetMaster(key.begin(), key.size());
+
+        CBitcoinExtKey b58extkey;
+        b58extkey.SetKey(masterKey);
+
+        return b58extkey.ToString();
+    }
+    else 
+    {
+        throw JSONRPCError(RPC_WALLET_ERROR, "Unable to retrieve HD master private key");
+        return NullUniValue;
+    }
+}
+   
 
 UniValue dumpwallet(const JSONRPCRequest& request)
 {
