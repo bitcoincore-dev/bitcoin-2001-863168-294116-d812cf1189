@@ -10,6 +10,8 @@
 
 #include <atomic>
 
+#include "stats/stats.h"
+
 class AddressTableModel;
 class BanTableModel;
 class OptionsModel;
@@ -83,6 +85,8 @@ public:
     QString formatClientStartupTime() const;
     QString dataDir() const;
 
+    mempoolSamples_t getMempoolStatsInRange(QDateTime &from, QDateTime &to);
+
     // caches for the best header
     mutable std::atomic<int> cachedBestHeaderHeight;
     mutable std::atomic<int64_t> cachedBestHeaderTime;
@@ -111,12 +115,17 @@ Q_SIGNALS:
     // Show progress dialog e.g. for verifychain
     void showProgress(const QString &title, int nProgress);
 
+    void mempoolStatsDidUpdate();
+
 public Q_SLOTS:
     void updateTimer();
     void updateNumConnections(int numConnections);
     void updateNetworkActive(bool networkActive);
     void updateAlert();
     void updateBanlist();
+
+    /* stats stack */
+    void updateMempoolStats();
 };
 
 #endif // BITCOIN_QT_CLIENTMODEL_H
