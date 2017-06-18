@@ -129,6 +129,27 @@ public:
 /** Access to the wallet database */
 class CWalletDB : public CDB
 {
+private:
+    template <typename K, typename T>
+    bool WriteIC(const K& key, const T& value, bool fOverwrite = true)
+    {
+        if (!Write(key, value, fOverwrite)) {
+            return false;
+        }
+        IncrementUpdateCounter();
+        return true;
+    }
+
+    template <typename K>
+    bool EraseIC(const K& key)
+    {
+        if (!Erase(key)) {
+            return false;
+        }
+        IncrementUpdateCounter();
+        return true;
+    }
+
 public:
     CWalletDB(const std::string& strFilename, const char* pszMode = "r+", bool fFlushOnClose = true) : CDB(strFilename, pszMode, fFlushOnClose)
     {
@@ -168,7 +189,6 @@ public:
     /// This writes directly to the database, and will not update the CWallet's cached accounting entries!
     /// Use wallet.AddAccountingEntry instead, to write *and* update its caches.
     bool WriteAccountingEntry(const uint64_t nAccEntryNum, const CAccountingEntry& acentry);
-    bool WriteAccountingEntry_Backend(const CAccountingEntry& acentry);
     bool ReadAccount(const std::string& strAccount, CAccount& account);
     bool WriteAccount(const std::string& strAccount, const CAccount& account);
 
@@ -184,14 +204,16 @@ public:
     DBErrors FindWalletTx(CWallet* pwallet, std::vector<uint256>& vTxHash, std::vector<CWalletTx>& vWtx);
     DBErrors ZapWalletTx(CWallet* pwallet, std::vector<CWalletTx>& vWtx);
     DBErrors ZapSelectTx(CWallet* pwallet, std::vector<uint256>& vHashIn, std::vector<uint256>& vHashOut);
-    static bool Recover(CDBEnv& dbenv, const std::string& filename, bool fOnlyKeys);
-    static bool Recover(CDBEnv& dbenv, const std::string& filename);
+    static bool Recover(CDBEnv& dbenv, const std::string& filename, bool fOnlyKeys, std::string& out_backup_filename);
+    static bool Recover(CDBEnv& dbenv, const std::string& filename, std::string& out_backup_filename);
 
     //! write the hdchain model (external chain child index counter)
     bool WriteHDChain(const CHDChain& chain);
 
-    static void IncrementUpdateCounter();
-    static unsigned int GetUpdateCounter();
+    static void IncrementUpdateCounter(const std::string& strFilename);
+    void IncrementUpdateCounter();
+    static unsigned int GetUpdateCounter(const std::string& strFilename);
+    unsigned int GetUpdateCounter();
 private:
     CWalletDB(const CWalletDB&);
     void operator=(const CWalletDB&);
