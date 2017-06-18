@@ -127,7 +127,6 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "rescanblockchain", 0, "start_height" },
     { "rescanblockchain", 1, "stop_height" },
     { "bumpfee", 1, "options" },
-    { "disconnectnode", 1, "nodeid" },
     // Echo with conversion (For testing only)
     { "echojson", 0, "arg0" },
     { "echojson", 1, "arg1" },
