@@ -1553,15 +1553,22 @@ void CWalletTx::GetAccountAmounts(const string& strAccount, CAmount& nReceived,
  * from or to us. If fUpdate is true, found transactions that already
  * exist in the wallet will be updated.
  *
+ * If pindexStop is not a nullptr, the scan will stop at the block-index
+ * defined by pindexStop
+ *
  * Returns pointer to the first block in the last contiguous range that was
  * successfully scanned.
  *
  */
-CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate)
+CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, CBlockIndex* pindexStop, bool fUpdate)
 {
     CBlockIndex* ret = nullptr;
     int64_t nNow = GetTime();
     const CChainParams& chainParams = Params();
+
+    if (pindexStop && pindexStop->nHeight < pindexStart->nHeight) {
+        return nullptr;
+    }
 
     CBlockIndex* pindex = pindexStart;
     {
@@ -1594,6 +1601,9 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool f
                 }
             } else {
                 ret = nullptr;
+            }
+            if (pindex == pindexStop) {
+                break;
             }
             pindex = chainActive.Next(pindex);
         }
