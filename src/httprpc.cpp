@@ -17,6 +17,9 @@
 #include "crypto/hmac_sha256.h"
 #include <stdio.h>
 #include "utilstrencodings.h"
+#ifdef ENABLE_WALLET
+#include "wallet/wallet.h"
+#endif
 
 #include <boost/algorithm/string.hpp> // boost::trim
 #include <boost/foreach.hpp> //BOOST_FOREACH
@@ -85,7 +88,7 @@ static void JSONErrorReply(HTTPRequest* req, const UniValue& objError, const Uni
 
 //This function checks username and password against -rpcauth
 //entries from config file.
-static bool multiUserAuthorized(std::string strUserPass)
+static bool multiUserAuthorized(std::string strUserPass, std::string& walletNameOut)
 {    
     if (strUserPass.find(":") == std::string::npos) {
         return false;
@@ -99,7 +102,7 @@ static bool multiUserAuthorized(std::string strUserPass)
         {
             std::vector<std::string> vFields;
             boost::split(vFields, strRPCAuth, boost::is_any_of(":$"));
-            if (vFields.size() != 3) {
+            if (vFields.size() < 3 || vFields.size() > 4) {
                 //Incorrect formatting in config file
                 continue;
             }
@@ -120,6 +123,9 @@ static bool multiUserAuthorized(std::string strUserPass)
             std::string strHashFromPass = HexStr(hexvec);
 
             if (TimingResistantEqual(strHashFromPass, strHash)) {
+                if (vFields.size() > 3) {
+                    walletNameOut = vFields[3];
+                }
                 return true;
             }
         }
@@ -127,7 +133,7 @@ static bool multiUserAuthorized(std::string strUserPass)
     return false;
 }
 
-static bool RPCAuthorized(const std::string& strAuth, std::string& strAuthUsernameOut)
+static bool RPCAuthorized(const std::string& strAuth, std::string& strAuthUsernameOut, std::string& walletNameOut)
 {
     if (strRPCUserColonPass.empty()) // Belt-and-suspenders measure if InitRPCAuthentication was not called
         return false;
@@ -144,7 +150,7 @@ static bool RPCAuthorized(const std::string& strAuth, std::string& strAuthUserna
     if (TimingResistantEqual(strUserPass, strRPCUserColonPass)) {
         return true;
     }
-    return multiUserAuthorized(strUserPass);
+    return multiUserAuthorized(strUserPass, walletNameOut);
 }
 
 static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
@@ -163,7 +169,8 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
     }
 
     JSONRPCRequest jreq;
-    if (!RPCAuthorized(authHeader.second, jreq.authUser)) {
+    std::string walletName;
+    if (!RPCAuthorized(authHeader.second, jreq.authUser, walletName)) {
         LogPrintf("ThreadRPCServer incorrect password attempt from %s\n", req->GetPeer().ToString());
 
         /* Deter brute-forcing
@@ -184,6 +191,23 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
 
         // Set the URI
         jreq.URI = req->GetURI();
+
+#ifdef ENABLE_WALLET
+        if (walletName.empty()) {
+            // Any wallet is permitted, so just use the first
+            jreq.wallet = vpwallets.empty() ? NULL : vpwallets[0];
+        } else if (walletName == "-") {
+            // Block wallet access always
+            jreq.wallet = NULL;
+        } else {
+            // Select specifically a named wallet
+            for (CWalletRef pwallet : vpwallets) {
+                if (walletName == pwallet->strWalletFile) {
+                    jreq.wallet = pwallet;
+                }
+            }
+        }
+#endif
 
         std::string strReply;
         // singleton request
