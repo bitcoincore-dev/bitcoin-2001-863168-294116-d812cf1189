@@ -545,9 +545,6 @@ UniValue listbanned(const JSONRPCRequest& request)
     if(!g_connman)
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
 
-    // Sweep the ban list so we don't display expired ban entries
-    g_connman->SweepBanned();
-
     banmap_t banMap;
     g_connman->GetBanned(banMap);
 
