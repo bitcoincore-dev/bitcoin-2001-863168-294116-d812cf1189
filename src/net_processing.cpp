@@ -36,7 +36,7 @@
 # error "Bitcoin cannot be compiled without assertions."
 #endif
 
-int64_t nTimeBestReceived = 0; // Used only to inform the wallet of when we last received a block
+std::atomic<int64_t> nTimeBestReceived(0); // Used only to inform the wallet of when we last received a block
 
 struct IteratorComparator
 {
@@ -264,7 +264,7 @@ void PushNodeVersion(CNode *pnode, CConnman& connman, int64_t nTime)
 
 void InitializeNode(CNode *pnode, CConnman& connman) {
     CAddress addr = pnode->addr;
-    std::string addrName = pnode->addrName;
+    std::string addrName = pnode->GetAddrName();
     NodeId nodeid = pnode->GetId();
     {
         LOCK(cs_main);
@@ -863,7 +863,15 @@ void PeerLogicValidation::BlockChecked(const CBlock& block, const CValidationSta
                 Misbehaving(it->second.first, nDoS);
         }
     }
-    else if (state.IsValid() && !IsInitialBlockDownload() && mapBlocksInFlight.count(hash) == mapBlocksInFlight.size()) {
+    // Check that:
+    // 1. The block is valid
+    // 2. We're not in initial block download
+    // 3. This is currently the best block we're aware of. We haven't updated
+    //    the tip yet so we have no way to check this directly here. Instead we
+    //    just check that there are currently no other blocks in flight.
+    else if (state.IsValid() &&
+             !IsInitialBlockDownload() &&
+             mapBlocksInFlight.count(hash) == mapBlocksInFlight.size()) {
         if (it != mapBlockSource.end()) {
             MaybeSetPeerAsAnnouncingHeaderAndIDs(it->second.first, *connman);
         }
@@ -1182,8 +1190,31 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         }
     }
 
+    if (strCommand == NetMsgType::REJECT)
+    {
+        if (fDebug) {
+            try {
+                std::string strMsg; unsigned char ccode; std::string strReason;
+                vRecv >> LIMITED_STRING(strMsg, CMessageHeader::COMMAND_SIZE) >> ccode >> LIMITED_STRING(strReason, MAX_REJECT_MESSAGE_LENGTH);
 
-    if (strCommand == NetMsgType::VERSION)
+                std::ostringstream ss;
+                ss << strMsg << " code " << itostr(ccode) << ": " << strReason;
+
+                if (strMsg == NetMsgType::BLOCK || strMsg == NetMsgType::TX)
+                {
+                    uint256 hash;
+                    vRecv >> hash;
+                    ss << ": hash " << hash.ToString();
+                }
+                LogPrint("net", "Reject %s\n", SanitizeString(ss.str()));
+            } catch (const std::ios_base::failure&) {
+                // Avoid feedback loops by preventing reject messages from triggering a new reject message.
+                LogPrint("net", "Unparseable reject message received\n");
+            }
+        }
+    }
+
+    else if (strCommand == NetMsgType::VERSION)
     {
         // Each connection can only send one version message
         if (pfrom->nVersion != 0)
@@ -1203,6 +1234,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         int nVersion;
         int nSendVersion;
         std::string strSubVer;
+        std::string cleanSubVer;
         int nStartingHeight = -1;
         bool fRelay = true;
 
@@ -1238,6 +1270,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             vRecv >> addrFrom >> nNonce;
         if (!vRecv.empty()) {
             vRecv >> LIMITED_STRING(strSubVer, MAX_SUBVERSION_LENGTH);
+            cleanSubVer = SanitizeString(strSubVer);
         }
         if (!vRecv.empty()) {
             vRecv >> nStartingHeight;
@@ -1264,9 +1297,12 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::VERACK));
 
         pfrom->nServices = nServices;
-        pfrom->addrLocal = addrMe;
-        pfrom->strSubVer = strSubVer;
-        pfrom->cleanSubVer = SanitizeString(strSubVer);
+        pfrom->SetAddrLocal(addrMe);
+        {
+            LOCK(pfrom->cs_SubVer);
+            pfrom->strSubVer = strSubVer;
+            pfrom->cleanSubVer = cleanSubVer;
+        }
         pfrom->nStartingHeight = nStartingHeight;
         pfrom->fClient = !(nServices & NODE_NETWORK);
         {
@@ -1302,7 +1338,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     LogPrint("net", "ProcessMessages: advertising address %s\n", addr.ToString());
                     pfrom->PushAddress(addr, insecure_rand);
                 } else if (IsPeerAddrLocalGood(pfrom)) {
-                    addr.SetIP(pfrom->addrLocal);
+                    addr.SetIP(addrMe);
                     LogPrint("net", "ProcessMessages: advertising address %s\n", addr.ToString());
                     pfrom->PushAddress(addr, insecure_rand);
                 }
@@ -1322,7 +1358,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             remoteAddr = ", peeraddr=" + pfrom->addr.ToString();
 
         LogPrintf("receive version message: %s: version %d, blocks=%d, us=%s, peer=%d%s\n",
-                  pfrom->cleanSubVer, pfrom->nVersion,
+                  cleanSubVer, pfrom->nVersion,
                   pfrom->nStartingHeight, addrMe.ToString(), pfrom->id,
                   remoteAddr);
 
@@ -1389,6 +1425,13 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         pfrom->fSuccessfullyConnected = true;
     }
 
+    else if (!pfrom->fSuccessfullyConnected)
+    {
+        // Must have a verack message before anything else
+        LOCK(cs_main);
+        Misbehaving(pfrom->GetId(), 1);
+        return false;
+    }
 
     else if (strCommand == NetMsgType::ADDR)
     {
@@ -2442,7 +2485,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     if (pingUsecTime > 0) {
                         // Successful ping time measurement, replace previous
                         pfrom->nPingUsecTime = pingUsecTime;
-                        pfrom->nMinPingUsecTime = std::min(pfrom->nMinPingUsecTime, pingUsecTime);
+                        pfrom->nMinPingUsecTime = std::min(pfrom->nMinPingUsecTime.load(), pingUsecTime);
                     } else {
                         // This should never happen
                         sProblem = "Timing mishap";
@@ -2536,31 +2579,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         pfrom->fRelayTxes = true;
     }
 
-
-    else if (strCommand == NetMsgType::REJECT)
-    {
-        if (fDebug) {
-            try {
-                std::string strMsg; unsigned char ccode; std::string strReason;
-                vRecv >> LIMITED_STRING(strMsg, CMessageHeader::COMMAND_SIZE) >> ccode >> LIMITED_STRING(strReason, MAX_REJECT_MESSAGE_LENGTH);
-
-                std::ostringstream ss;
-                ss << strMsg << " code " << itostr(ccode) << ": " << strReason;
-
-                if (strMsg == NetMsgType::BLOCK || strMsg == NetMsgType::TX)
-                {
-                    uint256 hash;
-                    vRecv >> hash;
-                    ss << ": hash " << hash.ToString();
-                }
-                LogPrint("net", "Reject %s\n", SanitizeString(ss.str()));
-            } catch (const std::ios_base::failure&) {
-                // Avoid feedback loops by preventing reject messages from triggering a new reject message.
-                LogPrint("net", "Unparseable reject message received\n");
-            }
-        }
-    }
-
     else if (strCommand == NetMsgType::FEEFILTER) {
         CAmount newFeeFilter = 0;
         vRecv >> newFeeFilter;
@@ -2586,6 +2604,36 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
 
     return true;
+}
+
+static bool SendRejectsAndCheckIfBanned(CNode* pnode, CConnman& connman)
+{
+    AssertLockHeld(cs_main);
+    CNodeState &state = *State(pnode->GetId());
+
+    BOOST_FOREACH(const CBlockReject& reject, state.rejects) {
+        connman.PushMessage(pnode, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, (std::string)NetMsgType::BLOCK, reject.chRejectCode, reject.strRejectReason, reject.hashBlock));
+    }
+    state.rejects.clear();
+
+    if (state.fShouldBan) {
+        state.fShouldBan = false;
+        if (pnode->fWhitelisted)
+            LogPrintf("Warning: not punishing whitelisted peer %s!\n", pnode->addr.ToString());
+        else if (pnode->fAddnode)
+            LogPrintf("Warning: not punishing addnoded peer %s!\n", pnode->addr.ToString());
+        else {
+            pnode->fDisconnect = true;
+            if (pnode->addr.IsLocal())
+                LogPrintf("Warning: not banning local peer %s!\n", pnode->addr.ToString());
+            else
+            {
+                connman.Ban(pnode->addr, BanReasonNodeMisbehaving);
+            }
+        }
+        return true;
+    }
+    return false;
 }
 
 bool ProcessMessages(CNode* pfrom, CConnman& connman, const std::atomic<bool>& interruptMsgProc)
@@ -2698,8 +2746,12 @@ bool ProcessMessages(CNode* pfrom, CConnman& connman, const std::atomic<bool>& i
             PrintExceptionContinue(NULL, "ProcessMessages()");
         }
 
-        if (!fRet)
+        if (!fRet) {
             LogPrintf("%s(%s, %u bytes) FAILED peer=%d\n", __func__, SanitizeString(strCommand), nMessageSize, pfrom->id);
+        }
+
+        LOCK(cs_main);
+        SendRejectsAndCheckIfBanned(pfrom, connman);
 
     return fMoreWork;
 }
@@ -2765,29 +2817,9 @@ bool SendMessages(CNode* pto, CConnman& connman, const std::atomic<bool>& interr
         if (!lockMain)
             return true;
 
+        if (SendRejectsAndCheckIfBanned(pto, connman))
+            return true;
         CNodeState &state = *State(pto->GetId());
-
-        BOOST_FOREACH(const CBlockReject& reject, state.rejects)
-            connman.PushMessage(pto, msgMaker.Make(NetMsgType::REJECT, (std::string)NetMsgType::BLOCK, reject.chRejectCode, reject.strRejectReason, reject.hashBlock));
-        state.rejects.clear();
-
-        if (state.fShouldBan) {
-            state.fShouldBan = false;
-            if (pto->fWhitelisted)
-                LogPrintf("Warning: not punishing whitelisted peer %s!\n", pto->addr.ToString());
-            else if (pto->fAddnode)
-                LogPrintf("Warning: not punishing addnoded peer %s!\n", pto->addr.ToString());
-            else {
-                pto->fDisconnect = true;
-                if (pto->addr.IsLocal())
-                    LogPrintf("Warning: not banning local peer %s!\n", pto->addr.ToString());
-                else
-                {
-                    connman.Ban(pto->addr, BanReasonNodeMisbehaving);
-                }
-                return true;
-            }
-        }
 
         // Address refresh broadcast
         int64_t nNow = GetTimeMicros();
