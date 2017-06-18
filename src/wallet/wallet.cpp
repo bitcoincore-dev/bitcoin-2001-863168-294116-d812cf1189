@@ -26,6 +26,7 @@
 #include "util.h"
 #include "ui_interface.h"
 #include "utilmoneystr.h"
+#include "validationinterface.h"
 
 #include <assert.h>
 
@@ -4022,7 +4023,11 @@ int CMerkleTx::GetBlocksToMaturity() const
 
 bool CMerkleTx::AcceptToMemoryPool(const CAmount& nAbsurdFee, CValidationState& state, const std::set<std::string>& setIgnoreRejects)
 {
-    return ::AcceptToMemoryPool(mempool, state, tx, true, NULL, NULL, nAbsurdFee, setIgnoreRejects);
+    bool accepted = ::AcceptToMemoryPool(mempool, state, tx, true, NULL, NULL, nAbsurdFee, setIgnoreRejects);
+    if (accepted) {
+        GetMainSignals().AcceptedTransaction(tx);
+    }
+    return accepted;
 }
 
 bool GetWitnessKeyID(const CKeyStore* store, const CScriptID &scriptID, CKeyID &keyID)
