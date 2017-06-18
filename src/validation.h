@@ -508,6 +508,8 @@ bool WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHea
 bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus::Params& consensusParams, bool lowprio = false);
 bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus::Params& consensusParams, bool lowprio = false);
 
+bool IsThisSoftwareExpired(int64_t nTime);
+
 /** Functions for validating blocks and updating the block tree */
 
 /** Context-independent validity checks */

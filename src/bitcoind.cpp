@@ -18,6 +18,7 @@
 #include "httpserver.h"
 #include "httprpc.h"
 #include "utilstrencodings.h"
+#include "validation.h"
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
@@ -121,6 +122,11 @@ bool AppInit(int argc, char* argv[])
             ReadRWConfigFile();
         } catch (const std::exception& e) {
             // Ignore problems here, since we are responsible for this file
+        }
+
+        if (IsThisSoftwareExpired(GetTime())) {
+            fprintf(stderr, "This software is expired, and may be out of consensus. You must choose to upgrade or override this expiration.\n");
+            exit(EXIT_FAILURE);
         }
 
         // Command-line RPC
