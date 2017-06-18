@@ -932,6 +932,9 @@ QString formatServicesStr(quint64 mask)
             case NODE_XTHIN:
                 strList.append("XTHIN");
                 break;
+            case NODE_REPLACE_BY_FEE:
+                strList.append("REPLACE_BY_FEE?");
+                break;
             case NODE_BIP148:
                 strList.append("BIP148");
                 break;

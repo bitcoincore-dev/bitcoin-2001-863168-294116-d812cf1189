@@ -75,6 +75,7 @@ size_t nCoinCacheUsage = 5000 * 300;
 uint64_t nPruneTarget = 0;
 int64_t nMaxTipAge = DEFAULT_MAX_TIP_AGE;
 bool fEnableReplacement = DEFAULT_ENABLE_REPLACEMENT;
+bool fReplacementHonourOptOut = DEFAULT_REPLACEMENT_HONOUR_OPTOUT;
 
 uint256 hashAssumeValid;
 
@@ -635,6 +636,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
                 bool fReplacementOptOut = true;
                 if (fEnableReplacement)
                 {
+                  if (fReplacementHonourOptOut) {
                     BOOST_FOREACH(const CTxIn &_txin, ptxConflicting->vin)
                     {
                         if (_txin.nSequence < std::numeric_limits<unsigned int>::max()-1)
@@ -643,6 +645,9 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
                             break;
                         }
                     }
+                  } else {
+                        fReplacementOptOut = false;
+                  }
                 }
                 if (fReplacementOptOut)
                     return state.Invalid(false, REJECT_CONFLICT, "txn-mempool-conflict");
