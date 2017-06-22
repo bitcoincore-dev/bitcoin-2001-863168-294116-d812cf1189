@@ -1478,13 +1478,13 @@ int64_t CWallet::RescanFromTime(int64_t startTime, bool update)
     // Find starting block. May be null if nCreateTime is greater than the
     // highest blockchain timestamp, in which case there is nothing that needs
     // to be scanned.
-    CBlockIndex* const startBlock = chainActive.FindEarliestAtLeast(startTime);
+    CBlockIndex* const startBlock = chainActive.FindEarliestAtLeast(startTime - TIMESTAMP_WINDOW);
     LogPrintf("%s: Rescanning last %i blocks\n", __func__, startBlock ? chainActive.Height() - startBlock->nHeight + 1 : 0);
 
     if (startBlock) {
         const CBlockIndex* const failedBlock = ScanForWalletTransactions(startBlock, update);
         if (failedBlock) {
-            return failedBlock->GetBlockTimeMax() + 1;
+            return failedBlock->GetBlockTimeMax() + TIMESTAMP_WINDOW + 1;
         }
     }
     return startTime;
