@@ -243,7 +243,12 @@ bool static CheckMinimalPush(const valtype& data, opcodetype opcode) {
     return true;
 }
 
-bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptError* serror)
+ScriptExecution::ScriptExecution(StackType& stack_in, const CScript& script_in, unsigned int flags_in, const BaseSignatureChecker& checker_in, SigVersion sigversion_in) :
+    script(script_in), stack(stack_in), flags(flags_in), checker(checker_in), sigversion(sigversion_in)
+{
+}
+
+bool ScriptExecution::Eval(ScriptError* serror)
 {
     static const CScriptNum bnZero(0);
     static const CScriptNum bnOne(1);
