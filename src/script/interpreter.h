@@ -188,6 +188,8 @@ public:
 using TransactionSignatureChecker = GenericTransactionSignatureChecker<CTransaction>;
 using MutableTransactionSignatureChecker = GenericTransactionSignatureChecker<CMutableTransaction>;
 
+class ScriptExecutionDebugger;
+
 class ScriptExecution {
 public:
     typedef std::vector<unsigned char> StackElementType;
@@ -206,9 +208,21 @@ public:
     StackType altstack;
     int nOpCount;
 
+    ScriptExecutionDebugger *debugger;
+
     ScriptExecution(StackType& stack, const CScript&, unsigned int flags, const BaseSignatureChecker&, SigVersion);
 
     bool Eval(ScriptError* error = nullptr);
+};
+
+class ScriptExecutionDebugger {
+public:
+    void *userdata;
+
+protected:
+    virtual void ScriptPreStep(ScriptExecution&, const CScript::const_iterator&, opcodetype&, ScriptExecution::StackElementType&) {}
+
+    friend bool ScriptExecution::Eval(ScriptError* serror);
 };
 
 inline bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptError* error = nullptr)
