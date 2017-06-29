@@ -289,7 +289,8 @@ bool static CheckMinimalPush(const valtype& data, opcodetype opcode) {
 }
 
 ScriptExecution::ScriptExecution(StackType& stack_in, const CScript& script_in, unsigned int flags_in, const BaseSignatureChecker& checker_in, SigVersion sigversion_in) :
-    script(script_in), stack(stack_in), flags(flags_in), checker(checker_in), sigversion(sigversion_in), pc(script.begin()), pbegincodehash(script.begin()), nOpCount(0)
+    script(script_in), stack(stack_in), flags(flags_in), checker(checker_in), sigversion(sigversion_in), pc(script.begin()), pbegincodehash(script.begin()), nOpCount(0),
+    debugger(nullptr)
 {
 }
 
@@ -303,6 +304,7 @@ bool ScriptExecution::Eval(ScriptError* serror)
     // static const valtype vchZero(0);
     static const valtype vchTrue(1, 1);
 
+    CScript::const_iterator pcur = pc;
     const CScript::const_iterator pend = script.end();
     opcodetype opcode;
     valtype vchPushValue;
@@ -320,8 +322,14 @@ bool ScriptExecution::Eval(ScriptError* serror)
             //
             // Read instruction
             //
+            pcur = pc;
             if (!script.GetOp(pc, opcode, vchPushValue))
                 return set_error(serror, SCRIPT_ERR_BAD_OPCODE);
+
+            if (debugger) {
+                debugger->ScriptPreStep(*this, pcur, opcode, vchPushValue);
+            }
+
             if (vchPushValue.size() > MAX_SCRIPT_ELEMENT_SIZE)
                 return set_error(serror, SCRIPT_ERR_PUSH_SIZE);
 
