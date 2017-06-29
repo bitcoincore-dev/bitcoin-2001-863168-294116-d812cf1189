@@ -1090,6 +1090,10 @@ bool ScriptExecution::Eval(ScriptError* serror)
         return set_error(serror, SCRIPT_ERR_UNKNOWN_ERROR);
     }
 
+    if (debugger) {
+        debugger->ScriptEOF(*this, pc);
+    }
+
     if (!vfExec.empty())
         return set_error(serror, SCRIPT_ERR_UNBALANCED_CONDITIONAL);
 
