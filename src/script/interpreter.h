@@ -215,12 +215,14 @@ protected:
     friend bool ScriptExecution::Eval(ScriptError* serror);
 };
 
-inline bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptError* error = nullptr)
+inline bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptError* error = nullptr, ScriptExecutionDebugger * const debugger = nullptr)
 {
-    return ScriptExecution(stack, script, flags, checker, sigversion).Eval(error);
+    ScriptExecution executor(stack, script, flags, checker, sigversion);
+    executor.debugger = debugger;
+    return executor.Eval(error);
 }
 
-bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CScriptWitness* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror = nullptr);
+bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CScriptWitness* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror = nullptr, ScriptExecutionDebugger *debugger = nullptr);
 
 size_t CountWitnessSigOps(const CScript& scriptSig, const CScript& scriptPubKey, const CScriptWitness* witness, unsigned int flags);
 
