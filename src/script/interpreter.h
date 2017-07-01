@@ -216,6 +216,7 @@ public:
     void *userdata;
 
 protected:
+    virtual void ScriptBegin(ScriptExecution&) {}
     virtual void ScriptPreStep(ScriptExecution&, const CScript::const_iterator&, opcodetype&, ScriptExecution::StackElementType&) {}
     virtual void ScriptEOF(ScriptExecution&, const CScript::const_iterator&) {}
 

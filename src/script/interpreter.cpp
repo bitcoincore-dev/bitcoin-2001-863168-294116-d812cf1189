@@ -309,6 +309,10 @@ bool ScriptExecution::Eval(ScriptError* serror)
     opcodetype opcode;
     valtype vchPushValue;
 
+    if (debugger) {
+        debugger->ScriptBegin(*this);
+    }
+
     set_error(serror, SCRIPT_ERR_UNKNOWN_ERROR);
     if (script.size() > MAX_SCRIPT_SIZE)
         return set_error(serror, SCRIPT_ERR_SCRIPT_SIZE);
