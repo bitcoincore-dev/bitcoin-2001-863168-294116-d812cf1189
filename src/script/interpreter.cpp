@@ -324,8 +324,8 @@ int FindAndDelete(CScript& script, const CScript& b)
     return nFound;
 }
 
-ScriptExecution::ScriptExecution(StackType& stack_in, const CScript& script_in, unsigned int flags_in, const BaseSignatureChecker& checker_in, SigVersion sigversion_in) :
-    script(script_in), stack(stack_in), flags(flags_in), checker(checker_in), sigversion(sigversion_in), pc(script.begin()), pbegincodehash(script.begin()), nOpCount(0),
+ScriptExecution::ScriptExecution(ScriptExecution::Context context_in, StackType& stack_in, const CScript& script_in, unsigned int flags_in, const BaseSignatureChecker& checker_in, SigVersion sigversion_in) :
+    context(context_in), script(script_in), stack(stack_in), flags(flags_in), checker(checker_in), sigversion(sigversion_in), pc(script.begin()), pbegincodehash(script.begin()), nOpCount(0),
     debugger(nullptr)
 {
 }
@@ -344,6 +344,7 @@ bool ScriptExecution::Eval(ScriptError* serror)
     const CScript::const_iterator pend = script.end();
     opcodetype opcode;
     valtype vchPushValue;
+
     set_error(serror, SCRIPT_ERR_UNKNOWN_ERROR);
     if (script.size() > MAX_SCRIPT_SIZE)
         return set_error(serror, SCRIPT_ERR_SCRIPT_SIZE);
@@ -1515,7 +1516,7 @@ static bool VerifyWitnessProgram(const CScriptWitness& witness, int witversion, 
             return set_error(serror, SCRIPT_ERR_PUSH_SIZE);
     }
 
-    if (!EvalScript(stack, scriptPubKey, flags, checker, SigVersion::WITNESS_V0, serror, debugger)) {
+    if (!EvalScript(ScriptExecution::Context::Segwit, stack, scriptPubKey, flags, checker, SigVersion::WITNESS_V0, serror, debugger)) {
         return false;
     }
 
@@ -1542,12 +1543,12 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
     }
 
     std::vector<std::vector<unsigned char> > stack, stackCopy;
-    if (!EvalScript(stack, scriptSig, flags, checker, SigVersion::BASE, serror, debugger))
+    if (!EvalScript(ScriptExecution::Context::Sig, stack, scriptSig, flags, checker, SigVersion::BASE, serror, debugger))
         // serror is set
         return false;
     if (flags & SCRIPT_VERIFY_P2SH)
         stackCopy = stack;
-    if (!EvalScript(stack, scriptPubKey, flags, checker, SigVersion::BASE, serror, debugger))
+    if (!EvalScript(ScriptExecution::Context::PubKey, stack, scriptPubKey, flags, checker, SigVersion::BASE, serror, debugger))
         // serror is set
         return false;
     if (stack.empty())
@@ -1593,7 +1594,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
         CScript pubKey2(pubKeySerialized.begin(), pubKeySerialized.end());
         popstack(stack);
 
-        if (!EvalScript(stack, pubKey2, flags, checker, SigVersion::BASE, serror, debugger))
+        if (!EvalScript(ScriptExecution::Context::BIP16, stack, pubKey2, flags, checker, SigVersion::BASE, serror, debugger))
             // serror is set
             return false;
         if (stack.empty())
