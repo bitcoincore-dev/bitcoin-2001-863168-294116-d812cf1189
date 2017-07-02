@@ -28,7 +28,7 @@ enum
 };
 
 /** Script verification flags */
-enum
+enum CScriptFlag
 {
     SCRIPT_VERIFY_NONE      = 0,
 
@@ -107,6 +107,9 @@ enum
     //
     SCRIPT_VERIFY_WITNESS_PUBKEYTYPE = (1U << 15),
 };
+
+CScriptFlag ParseScriptFlag(const std::string flag_name);
+std::vector<std::string> ScriptFlagsToStrings(unsigned int flags);
 
 bool CheckSignatureEncoding(const std::vector<unsigned char> &vchSig, unsigned int flags, ScriptError* serror);
 
