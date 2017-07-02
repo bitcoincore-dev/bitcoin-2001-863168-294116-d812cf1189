@@ -153,6 +153,45 @@ CMutableTransaction BuildSpendingTransaction(const CScript& scriptSig, const CSc
     return txSpend;
 }
 
+extern "C" {
+    static void script_tests_debugger_ScriptBegin(void *userdata, struct bitcoinconsensus_script_execution*);
+    static void script_tests_debugger_ScriptPreStep(void *userdata, struct bitcoinconsensus_script_execution*, size_t pos, const uint8_t* opcode, const void* pushdata, size_t* pushdata_sz);
+    static void script_tests_debugger_ScriptEOF(void *userdata, struct bitcoinconsensus_script_execution*, size_t pos);
+}
+
+class script_tests_debugger {
+public:
+    size_t begin;
+    size_t prestep;
+    size_t eof;
+
+    script_tests_debugger() : begin(0), prestep(0), eof(0) {}
+};
+
+static void script_tests_debugger_ScriptBegin(void *userdata, struct bitcoinconsensus_script_execution*)
+{
+    auto data = (script_tests_debugger*)userdata;
+    ++data->begin;
+}
+
+static void script_tests_debugger_ScriptPreStep(void *userdata, struct bitcoinconsensus_script_execution*, size_t pos, const uint8_t* opcode, const void* pushdata, size_t* pushdata_sz)
+{
+    auto data = (script_tests_debugger*)userdata;
+    ++data->prestep;
+}
+
+static void script_tests_debugger_ScriptEOF(void *userdata, struct bitcoinconsensus_script_execution*, size_t pos)
+{
+    auto data = (script_tests_debugger*)userdata;
+    ++data->eof;
+}
+
+static const struct bitcoinconsensus_script_debugger_callbacks debugger_cbs = {
+    .ScriptBegin = script_tests_debugger_ScriptBegin,
+    .ScriptPreStep = script_tests_debugger_ScriptPreStep,
+    .ScriptEOF = script_tests_debugger_ScriptEOF,
+};
+
 void DoTest(const CScript& scriptPubKey, const CScript& scriptSig, const CScriptWitness& scriptWitness, int flags, const std::string& message, int scriptError, CAmount nValue = 0)
 {
     bool expect = (scriptError == SCRIPT_ERR_OK);
@@ -188,6 +227,13 @@ void DoTest(const CScript& scriptPubKey, const CScript& scriptSig, const CScript
             BOOST_CHECK_MESSAGE(bitcoinconsensus_verify_script_with_amount(scriptPubKey.data(), scriptPubKey.size(), 0, (const unsigned char*)&stream[0], stream.size(), 0, libconsensus_flags, nullptr) == expect, message);
             BOOST_CHECK_MESSAGE(bitcoinconsensus_verify_script(scriptPubKey.data(), scriptPubKey.size(), (const unsigned char*)&stream[0], stream.size(), 0, libconsensus_flags, nullptr) == expect,message);
         }
+
+        // Test debugging capabilities
+        script_tests_debugger dbgdata;
+        BOOST_CHECK_MESSAGE(bitcoinconsensus_trace_script(scriptPubKey.data(), scriptPubKey.size(), txCredit.vout[0].nValue, (const unsigned char*)&stream[0], stream.size(), 0, libconsensus_flags, NULL, &debugger_cbs, &dbgdata) == expect, message);
+        BOOST_CHECK_MESSAGE(dbgdata.begin > 0, message);
+        BOOST_CHECK_MESSAGE(dbgdata.prestep > 0, message);
+        BOOST_CHECK_MESSAGE(dbgdata.eof > 0, message);
     }
 #endif
 }
