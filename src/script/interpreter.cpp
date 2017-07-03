@@ -34,10 +34,18 @@ static const std::map<std::string, CScriptFlag> mapFlagNames = {
     {std::string("WITNESS_PUBKEYTYPE"), SCRIPT_VERIFY_WITNESS_PUBKEYTYPE},
 };
 
-CScriptFlag ParseScriptFlag(const std::string flag_name)
+unsigned int ParseScriptFlag(const std::string flag_name)
 {
     const auto it = mapFlagNames.find(flag_name);
     if (it == mapFlagNames.end()) {
+        if (flag_name == "ALL") {
+            unsigned int ret = 0;
+            auto it = mapFlagNames.begin();
+            while (it != mapFlagNames.end()) {
+                ret |= it->second;
+            }
+            return ret;
+        }
         throw std::runtime_error(std::string(__func__) + ": unknown verification flag '" + flag_name + "'");
     }
     return it->second;
