@@ -67,6 +67,17 @@ std::vector<std::string> ScriptFlagsToStrings(unsigned int flags)
     return ret;
 }
 
+std::string ScriptExecution::ContextString(const Context ctx)
+{
+    switch (ctx) {
+        case ScriptExecution::Context::Sig:    return "Sig";
+        case ScriptExecution::Context::PubKey: return "PubKey";
+        case ScriptExecution::Context::BIP16:  return "BIP16";
+        case ScriptExecution::Context::Segwit: return "Segwit";
+    }
+    return "(unknown)";
+}
+
 namespace {
 
 inline bool set_success(ScriptError* ret)
