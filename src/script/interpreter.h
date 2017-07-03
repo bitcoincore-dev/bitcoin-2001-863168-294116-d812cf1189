@@ -117,7 +117,7 @@ enum CScriptFlag
     SCRIPT_VERIFY_CONST_SCRIPTCODE = (1U << 16),
 };
 
-CScriptFlag ParseScriptFlag(const std::string flag_name);
+unsigned int ParseScriptFlag(const std::string flag_name);
 std::vector<std::string> ScriptFlagsToStrings(unsigned int flags);
 
 bool CheckSignatureEncoding(const std::vector<unsigned char> &vchSig, unsigned int flags, ScriptError* serror);
