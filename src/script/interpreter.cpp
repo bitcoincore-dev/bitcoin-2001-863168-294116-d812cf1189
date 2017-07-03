@@ -68,6 +68,15 @@ std::vector<std::string> ScriptFlagsToStrings(unsigned int flags)
     return ret;
 }
 
+std::string SigVersionString(const SigVersion sigver)
+{
+    switch (sigver) {
+        case SigVersion::BASE:       return "Base";
+        case SigVersion::WITNESS_V0: return "Witness_V0";
+    }
+    return "(unknown)";
+}
+
 std::string ScriptExecution::ContextString(const Context ctx)
 {
     switch (ctx) {
