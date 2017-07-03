@@ -190,6 +190,8 @@ public:
         Segwit,
     };
 
+    static std::string ContextString(Context);
+
     Context context;
     const CScript& script;
     StackType& stack;
