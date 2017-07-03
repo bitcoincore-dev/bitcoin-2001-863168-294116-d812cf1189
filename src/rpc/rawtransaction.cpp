@@ -580,6 +580,17 @@ static UniValue decoderawtransaction(const JSONRPCRequest& request)
     return result;
 }
 
+CScript ParseHexScript(const UniValue &v, std::string strName)
+{
+    if (v.get_str().size() > 0) {
+        std::vector<unsigned char> scriptData(ParseHexV(v, strName));
+        return CScript(scriptData.begin(), scriptData.end());
+    } else {
+        // Empty scripts are valid
+    }
+    return CScript();
+}
+
 static UniValue decodescript(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
@@ -608,13 +619,7 @@ static UniValue decodescript(const JSONRPCRequest& request)
     RPCTypeCheck(request.params, {UniValue::VSTR});
 
     UniValue r(UniValue::VOBJ);
-    CScript script;
-    if (request.params[0].get_str().size() > 0){
-        std::vector<unsigned char> scriptData(ParseHexV(request.params[0], "argument"));
-        script = CScript(scriptData.begin(), scriptData.end());
-    } else {
-        // Empty scripts are valid
-    }
+    CScript script = ParseHexScript(request.params[0], "argument");
     ScriptPubKeyToUniv(script, r, false);
 
     UniValue type;
