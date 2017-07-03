@@ -542,6 +542,89 @@ UniValue decodescript(const JSONRPCRequest& request)
     return r;
 }
 
+class verifyscript_ScriptExecutionDebugger final : public ScriptExecutionDebugger {
+private:
+    UniValue result;
+    UniValue current_script;
+    UniValue current_steps;
+
+    void CompleteScript() {
+        if (!current_script.isNull()) {
+            current_script.pushKV("steps", current_steps);
+            result.push_back(current_script);
+        }
+    }
+
+    static UniValue StackToUniValue(ScriptExecution::StackType& stack) {
+        UniValue rv(UniValue::VARR);
+        for (const auto elem : stack) {
+            rv.push_back(HexStr(elem.begin(), elem.end()));
+        }
+        return rv;
+    }
+
+    static UniValue vfExecToUniValue(std::vector<bool>& vfExec) {
+        UniValue rv(UniValue::VARR);
+        for (const auto elem : vfExec) {
+            bool elem_bool = elem;
+            rv.push_back(elem_bool);
+        }
+        return rv;
+    }
+
+    static void PushExInfo(UniValue& step_info, ScriptExecution& ex, const CScript::const_iterator& pos) {
+        step_info.pushKV("pos", (int64_t)(pos - ex.script.begin()));
+        step_info.pushKV("pos_codehash", (int64_t)(ex.pbegincodehash - ex.script.begin()));
+        step_info.pushKV("opcount", ex.nOpCount);
+        step_info.pushKV("stack", StackToUniValue(ex.stack));
+        step_info.pushKV("altstack", StackToUniValue(ex.altstack));
+        step_info.pushKV("exec", vfExecToUniValue(ex.vfExec));
+    }
+
+public:
+
+    verifyscript_ScriptExecutionDebugger() : result(UniValue::VARR) {}
+
+    void ScriptBegin(ScriptExecution& ex) {
+        CompleteScript();
+
+        current_script = UniValue(UniValue::VOBJ);
+
+        current_script.pushKV("context", ScriptExecution::ContextString(ex.context));
+
+        UniValue script_info(UniValue::VOBJ);
+        script_info.pushKV("asm", ScriptToAsmStr(ex.script));
+        script_info.pushKV("hex", HexStr(ex.script.begin(), ex.script.end()));
+        current_script.pushKV("script", script_info);
+
+        current_script.pushKV("sigversion", SigVersionString(ex.sigversion));
+    }
+
+    void ScriptPreStep(ScriptExecution& ex, const CScript::const_iterator& pos, opcodetype& opcode, ScriptExecution::StackElementType& pushelem) {
+        UniValue step_info(UniValue::VOBJ);
+        PushExInfo(step_info, ex, pos);
+
+        std::vector<uint8_t> opcode_arr;
+        opcode_arr.push_back(opcode);
+        step_info.pushKV("next_op", GetOpName(opcode));
+        step_info.pushKV("next_opcode", HexStr(opcode_arr.begin(), opcode_arr.end()));
+        step_info.pushKV("next_push", HexStr(pushelem.begin(), pushelem.end()));
+
+        current_steps.push_back(step_info);
+    }
+
+    void ScriptEOF(ScriptExecution& ex, const CScript::const_iterator& pos) {
+        UniValue step_info(UniValue::VOBJ);
+        PushExInfo(step_info, ex, pos);
+        current_steps.push_back(step_info);
+    }
+
+    const UniValue& GetResult() {
+        CompleteScript();
+        return result;
+    }
+};
+
 UniValue verifyscript(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
@@ -563,11 +646,41 @@ UniValue verifyscript(const JSONRPCRequest& request)
             "       \"NONE\",     Indicates explicitly that no flags should be enabled.\n"
             "       \"ALL\"       Indicates all supported flags should be enabled.\n"
             "     ]\n"
+            "     \"trace\": true|false,  (boolean) Whether to trace execution and return \"trace\" in the result.\n"
             "   }\n"
             "\nResult:\n"
             "{\n"
             "  \"result\": true|false,  (boolean) Whether the spend is allowed.\n"
             "  \"error\": \"code\",       (string) What error, if any, caused the script to fail.\n"
+            "  \"trace\": [\n"
+            "    {\n"
+            "      \"context\": \"Sig\"|\"PubKey\"|\"BIP16\"|\"Segwit\",  (string) Context the script is being executed in.\n"
+            "      \"script\": {                                  (object) Script being executed.\n"
+            "         \"asm\": \"asm\",  (string) asm\n"
+            "         \"hex\": \"hex\"   (string) hex\n"
+            "      },"
+            "      \"sigversion\": \"Base\"|\"Witness_V0\",           (string) Signature hashing algorithm.\n"
+            "      \"steps\": [\n"
+            "        {\n"
+            "          \"pos\": n,              (numeric) Execution position into script, in bytes.\n"
+            "          \"pos_codehash\": n,     (numeric) Code hashing start position into script, in bytes.\n"
+            "          \"opcount\": n,          (numeric) Number of sigops executed so far.\n"
+            "          \"stack\": [             (array) Items on the stack.\n"
+            "            \"hex\", ...           (string) Hex encoded data on the stack.\n"
+            "          ],\n"
+            "          \"altstack\": [          (array) Items on the alternate stack.\n"
+            "            \"hex\", ...           (string) Hex encoded data on the stack.\n"
+            "          ],\n"
+            "          \"exec\": [              (array) State of active conditionals.\n"
+            "            true|false, ...      (boolean) If any of these are false, the next instruction will be skipped.\n"
+            "          ],\n"
+            "          \"next_op\": \"asm\",      (string) Opcode to be processed next, as a single asm instruction.\n"
+            "          \"next_opcode\": \"hex\",  (string) Hex encoded opcode to be processed next.\n"
+            "          \"next_push\": \"hex\",    (string) Hex encoded data to be pushed with opcode.\n"
+            "        }, ...\n"
+            "      ]\n"
+            "    }, ...\n"
+            "  ]\n"
             "}\n"
         );
 
@@ -638,15 +751,22 @@ UniValue verifyscript(const JSONRPCRequest& request)
     }
     unsigned int vout = vout_uv.get_int64();
 
+    const bool do_trace = find_value(options, "trace").isTrue();
+    verifyscript_ScriptExecutionDebugger debugger;
+
     PrecomputedTransactionData txdata(*tx);
     ScriptError err;
-    const bool rv = VerifyScript(tx->vin[vout].scriptSig, scriptPubKey, &tx->vin[vout].scriptWitness, flags, TransactionSignatureChecker(&*tx, vout, amount, txdata), &err);
+    const bool rv = VerifyScript(tx->vin[vout].scriptSig, scriptPubKey, &tx->vin[vout].scriptWitness, flags, TransactionSignatureChecker(&*tx, vout, amount, txdata), &err, (do_trace ? &debugger : nullptr));
 
     UniValue result(UniValue::VOBJ);
     result.push_back(Pair("result", rv));
 
     if (!rv) {
         result.push_back(Pair("error", std::string(ScriptErrorString(err))));
+    }
+
+    if (do_trace) {
+        result.pushKV("trace", debugger.GetResult());
     }
 
     return result;
