@@ -542,6 +542,116 @@ UniValue decodescript(const JSONRPCRequest& request)
     return r;
 }
 
+UniValue verifyscript(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "verifyscript options\n"
+            "\nExecute a script and return the result.\n"
+            "\nArguments:\n"
+            "1. options      (object, required)\n"
+            "   {\n"
+            "     \"input\": {  (object, required) Information on the input being spent.\n"
+            "       \"scriptPubKey\": \"hex\",  (string, required) Hex encoded pubkey script.\n"
+            "       \"amount\": value,        (numeric, optional) The amount spent. Required for VERIFY_WITNESS flag.\n"
+            "       \"txid\": \"id\",           (string, this or \"transaction\" required) The input's transaction id.\n"
+            "       \"transaction\": \"hex\",   (string, this or \"txid\" required) The input's raw transaction.\n"
+            "       \"vout\": n               (numeric, required) The output number.\n"
+            "     }\n"
+            "     \"flags\": [  (array, optional) Zero or more of:"
+            "       \"BIP16\", \"STRICTENC\", \"DERSIR\", \"LOW_S\", \"SIGPUSHONLY\", \"MINIMALDATA\", \"NULLDUMMY\",\"DISCOURAGE_UPGRADABLE_NOPS\", \"CLEANSTACK\", \"MINIMALIF\", \"NULLFAIL\", \"CHECKLOCKTIMEVERIFY\", \"CHECKSEQUENCEVERIFY\", \"WITNESS\", \"DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM\", \"WITNESS_PUBKEYTYPE\",\n"
+            "       \"NONE\",     Indicates explicitly that no flags should be enabled.\n"
+            "       \"ALL\"       Indicates all supported flags should be enabled.\n"
+            "     ]\n"
+            "   }\n"
+            "\nResult:\n"
+            "{\n"
+            "  \"result\": true|false,  (boolean) Whether the spend is allowed.\n"
+            "  \"error\": \"code\",       (string) What error, if any, caused the script to fail.\n"
+            "}\n"
+        );
+
+    RPCTypeCheck(request.params, {UniValue::VOBJ});
+
+    const UniValue & options = request.params[0];
+
+    const UniValue & flags_uv = find_value(options, "flags");
+    unsigned int flags = 0;
+    if (flags_uv.isArray()) {
+        for (unsigned int i = flags_uv.size(); i-- > 0; ) {
+            const UniValue & flag_uv = flags_uv[i];
+            flags |= ParseScriptFlag(flag_uv.get_str());
+        }
+    } else if (!flags_uv.isNull()) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "expected array for \"flags\"");
+    }
+
+    const UniValue & input_uv = find_value(options, "input");
+    if (!input_uv.isObject()) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "expected object for \"input\"");
+    }
+    const UniValue & sPK_uv = find_value(input_uv, "scriptPubKey");
+    if (!sPK_uv.isStr()) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "expected string for \"input\" \"scriptPubKey\"");
+    }
+    const CScript scriptPubKey = ParseHexScript(sPK_uv, "scriptPubKey");
+    const UniValue & amount_uv = find_value(input_uv, "amount");
+    CAmount amount = 0;
+    if (amount_uv.isNum()) {
+        amount = amount_uv.get_int64();
+    } else if (amount_uv.isNull()) {
+        if (flags & SCRIPT_VERIFY_WITNESS) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "\"input\" \"amount\" is required for VERIFY_WITNESS flag");
+        }
+    } else {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "expected number for \"input\" \"amount\"");
+    }
+
+    const UniValue & txid_uv = find_value(input_uv, "txid");
+    const UniValue & rawtx_uv = find_value(input_uv, "transaction");
+    CMutableTransaction mtx;
+    CTransactionRef tx;
+    if (rawtx_uv.isStr()) {
+        if (!DecodeHexTx(mtx, rawtx_uv.get_str(), true)) {
+            throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
+        }
+        if (txid_uv.isStr()) {
+            const uint256 txid = ParseHashV(txid_uv, "txid");
+            if (mtx.GetHash() != txid) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "\"input\" \"txid\" and \"transaction\" strings contradict");
+            }
+        }
+        tx = MakeTransactionRef(std::move(mtx));
+    } else if (txid_uv.isStr()) {
+        const uint256 txid = ParseHashV(txid_uv, "txid");
+        uint256 hashBlock;
+        if (!GetTransaction(txid, tx, Params().GetConsensus(), hashBlock, true)) {
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Cannot find transaction specified by \"txid\"");
+        }
+    } else {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "expected \"input\" with either \"txid\" or \"transaction\" string");
+    }
+
+    const UniValue & vout_uv = find_value(input_uv, "vout");
+    if (!vout_uv.isNum()) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "expected number for \"input\" \"vout\"");
+    }
+    unsigned int vout = vout_uv.get_int64();
+
+    PrecomputedTransactionData txdata(*tx);
+    ScriptError err;
+    const bool rv = VerifyScript(tx->vin[vout].scriptSig, scriptPubKey, &tx->vin[vout].scriptWitness, flags, TransactionSignatureChecker(&*tx, vout, amount, txdata), &err);
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair("result", rv));
+
+    if (!rv) {
+        result.push_back(Pair("error", std::string(ScriptErrorString(err))));
+    }
+
+    return result;
+}
+
 /** Pushes a JSON object for script verification or signing errors to vErrorsRet. */
 static void TxInErrorToJSON(const CTxIn& txin, UniValue& vErrorsRet, const std::string& strMessage)
 {
@@ -973,6 +1083,7 @@ static const CRPCCommand commands[] =
     { "rawtransactions",    "createrawtransaction",   &createrawtransaction,   true,  {"inputs","outputs","locktime","replaceable"} },
     { "rawtransactions",    "decoderawtransaction",   &decoderawtransaction,   true,  {"hexstring"} },
     { "rawtransactions",    "decodescript",           &decodescript,           true,  {"hexstring"} },
+    { "rawtransactions",    "verifyscript",           &verifyscript,           true,  {"options"} },
     { "rawtransactions",    "sendrawtransaction",     &sendrawtransaction,     false, {"hexstring","allowhighfees"} },
     { "rawtransactions",    "combinerawtransaction",  &combinerawtransaction,  true,  {"txs"} },
     { "rawtransactions",    "signrawtransaction",     &signrawtransaction,     false, {"hexstring","prevtxs","privkeys","sighashtype"} }, /* uses wallet if enabled */
