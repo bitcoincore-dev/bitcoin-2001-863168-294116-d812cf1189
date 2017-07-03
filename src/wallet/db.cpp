@@ -560,6 +560,16 @@ bool CDB::Rewrite(CWalletDBWrapper& dbw, const char* pszSkip)
     }
 }
 
+void CDBEnv::Shutdown()
+{
+    char** listp;
+    if (mapFileUseCount.empty()) {
+        dbenv->log_archive(&listp, DB_ARCH_REMOVE);
+        Close();
+        if (!fMockDb)
+            fs::remove_all(fs::path(strPath) / "database");
+    }
+}
 
 void CDBEnv::Flush(bool fShutdown)
 {
@@ -589,15 +599,7 @@ void CDBEnv::Flush(bool fShutdown)
                 mi++;
         }
         LogPrint(BCLog::DB, "CDBEnv::Flush: Flush(%s)%s took %15dms\n", fShutdown ? "true" : "false", fDbEnvInit ? "" : " database not started", GetTimeMillis() - nStart);
-        if (fShutdown) {
-            char** listp;
-            if (mapFileUseCount.empty()) {
-                dbenv->log_archive(&listp, DB_ARCH_REMOVE);
-                Close();
-                if (!fMockDb)
-                    fs::remove_all(fs::path(strPath) / "database");
-            }
-        }
+        if (fShutdown) Shutdown();
     }
 }
 

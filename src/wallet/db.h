@@ -71,6 +71,7 @@ public:
     bool Open(const fs::path& path);
     void Close();
     void Flush(bool fShutdown);
+    void Shutdown();
     void CheckpointLSN(const std::string& strFile);
 
     void CloseDb(const std::string& strFile);
