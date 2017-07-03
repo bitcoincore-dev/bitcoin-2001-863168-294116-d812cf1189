@@ -184,7 +184,8 @@ void TestSendCoins()
     BumpFee(transactionView, txid2, false /* expect disabled */, {} /* expected error */, false /* cancel */);
     BumpFee(transactionView, txid2, true /* expect disabled */, "already bumped" /* expected error */, false /* cancel */);
 
-    bitdb.Flush(true);
+    bitdb.Flush("wallet_test.dat");
+    bitdb.Shutdown();
     bitdb.Reset();
 }
 

@@ -70,7 +70,7 @@ public:
 
     bool Open(const fs::path& path);
     void Close();
-    void Flush(bool fShutdown);
+    void Flush(std::string strFile);
     void Shutdown();
     void CheckpointLSN(const std::string& strFile);
 
@@ -120,7 +120,7 @@ public:
 
     /** Make sure all changes are flushed to disk.
      */
-    void Flush(bool shutdown);
+    void Flush();
 
     void IncrementUpdateCounter();
 

@@ -30,6 +30,7 @@ WalletTestingSetup::~WalletTestingSetup()
     delete pwalletMain;
     pwalletMain = nullptr;
 
-    bitdb.Flush(true);
+    bitdb.Flush("wallet_test.dat");
+    bitdb.Shutdown();
     bitdb.Reset();
 }

@@ -571,21 +571,21 @@ void CDBEnv::Shutdown()
     }
 }
 
-void CDBEnv::Flush(bool fShutdown)
+void CDBEnv::Flush(std::string strFile)
 {
     int64_t nStart = GetTimeMillis();
     // Flush log data to the actual data file on all files that are not in use
-    LogPrint(BCLog::DB, "CDBEnv::Flush: Flush(%s)%s\n", fShutdown ? "true" : "false", fDbEnvInit ? "" : " database not started");
+    LogPrint(BCLog::DB, "CDBEnv::Flush: Flush%s\n", fDbEnvInit ? "" : " database not started");
     if (!fDbEnvInit)
         return;
     {
         LOCK(cs_db);
         std::map<std::string, int>::iterator mi = mapFileUseCount.begin();
         while (mi != mapFileUseCount.end()) {
-            std::string strFile = (*mi).first;
+            std::string foundStrFile = (*mi).first;
             int nRefCount = (*mi).second;
-            LogPrint(BCLog::DB, "CDBEnv::Flush: Flushing %s (refcount = %d)...\n", strFile, nRefCount);
-            if (nRefCount == 0) {
+            if (foundStrFile == strFile && nRefCount == 0) {
+                LogPrint(BCLog::DB, "CDBEnv::Flush: Flushing %s (refcount = %d)...\n", strFile, nRefCount);
                 // Move log data to the dat file
                 CloseDb(strFile);
                 LogPrint(BCLog::DB, "CDBEnv::Flush: %s checkpoint\n", strFile);
@@ -598,8 +598,7 @@ void CDBEnv::Flush(bool fShutdown)
             } else
                 mi++;
         }
-        LogPrint(BCLog::DB, "CDBEnv::Flush: Flush(%s)%s took %15dms\n", fShutdown ? "true" : "false", fDbEnvInit ? "" : " database not started", GetTimeMillis() - nStart);
-        if (fShutdown) Shutdown();
+        LogPrint(BCLog::DB, "CDBEnv::Flush: Flush took %15dms\n", GetTimeMillis() - nStart);
     }
 }
 
@@ -687,9 +686,9 @@ bool CWalletDBWrapper::Backup(const std::string& strDest)
     }
 }
 
-void CWalletDBWrapper::Flush(bool shutdown)
+void CWalletDBWrapper::Flush()
 {
     if (!IsDummy()) {
-        env->Flush(shutdown);
+        env->Flush(strFile);
     }
 }

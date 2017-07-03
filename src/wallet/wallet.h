@@ -1042,7 +1042,7 @@ public:
     bool HasWalletSpend(const uint256& txid) const;
 
     //! Flush wallet (bitdb flush)
-    void Flush(bool shutdown=false);
+    void Flush();
 
     /** 
      * Address book entry changed.

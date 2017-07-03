@@ -610,7 +610,8 @@ public:
     ~ListCoinsTestingSetup()
     {
         wallet.reset();
-        ::bitdb.Flush(true);
+        ::bitdb.Flush("wallet_test.dat");
+        ::bitdb.Shutdown();
         ::bitdb.Reset();
     }
 

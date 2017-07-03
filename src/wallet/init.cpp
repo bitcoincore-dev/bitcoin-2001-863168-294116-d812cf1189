@@ -232,14 +232,14 @@ void StartWallets(CScheduler& scheduler) {
 
 void FlushWallets() {
     for (CWalletRef pwallet : vpwallets) {
-        pwallet->Flush(false);
+        pwallet->Flush();
     }
 }
 
 void StopWallets() {
-    for (CWalletRef pwallet : vpwallets) {
-        pwallet->Flush(true);
-    }
+    if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) return;
+    FlushWallets();
+    bitdb.Shutdown();
 }
 
 void CloseWallets() {

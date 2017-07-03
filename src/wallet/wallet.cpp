@@ -490,9 +490,9 @@ bool CWallet::HasWalletSpend(const uint256& txid) const
     return (iter != mapTxSpends.end() && iter->first.hash == txid);
 }
 
-void CWallet::Flush(bool shutdown)
+void CWallet::Flush()
 {
-    dbw->Flush(shutdown);
+    dbw->Flush();
 }
 
 void CWallet::SyncMetaData(std::pair<TxSpends::iterator, TxSpends::iterator> range)
