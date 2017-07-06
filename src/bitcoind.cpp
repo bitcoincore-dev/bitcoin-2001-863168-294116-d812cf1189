@@ -19,6 +19,10 @@
 #include "httpserver.h"
 #include "httprpc.h"
 #include "utilstrencodings.h"
+#if ENABLE_WALLET
+#include "walletinitinterface.h"
+#include "wallet/init.h"
+#endif
 
 #include <boost/thread.hpp>
 
@@ -66,6 +70,12 @@ bool AppInit(int argc, char* argv[])
     CScheduler scheduler;
 
     bool fRet = false;
+
+#if ENABLE_WALLET
+    // Register wallet initialization callbacks
+    WalletInit wallet_init;
+    RegisterWalletInitInterface(&wallet_init);
+#endif
 
     //
     // Parameters

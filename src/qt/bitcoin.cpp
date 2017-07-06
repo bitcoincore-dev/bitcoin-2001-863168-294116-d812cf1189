@@ -34,6 +34,8 @@
 #include "warnings.h"
 
 #ifdef ENABLE_WALLET
+#include "walletinitinterface.h"
+#include "wallet/init.h"
 #include "wallet/wallet.h"
 #endif
 
@@ -672,6 +674,10 @@ int main(int argc, char *argv[])
     // Start up the payment server early, too, so impatient users that click on
     // bitcoin: links repeatedly have their payment requests routed to this process:
     app.createPaymentServer();
+
+    // Register wallet initialization callbacks
+    WalletInit wallet_init;
+    RegisterWalletInitInterface(&wallet_init);
 #endif
 
     /// 9. Main GUI initialization

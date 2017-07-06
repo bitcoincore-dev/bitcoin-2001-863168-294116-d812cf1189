@@ -6,40 +6,43 @@
 #ifndef BITCOIN_WALLET_INIT_H
 #define BITCOIN_WALLET_INIT_H
 
+#include "walletinitinterface.h"
+
 #include <string>
 
 class CRPCTable;
 class CScheduler;
 
-class WalletInit {
-public:
+class WalletInit : public WalletInitInterface
+{
+protected:
 
     //! Return the wallets help message.
-    static std::string GetWalletHelpString(bool showDebug);
+    std::string GetWalletHelpString(bool showDebug);
 
     //! Wallets parameter interaction
-    static bool WalletParameterInteraction();
+    bool WalletParameterInteraction();
 
     //! Register wallet RPCs.
-    static void RegisterWalletRPC(CRPCTable &tableRPC);
+    void RegisterWalletRPC(CRPCTable &tableRPC);
 
     //! Responsible for reading and validating the -wallet arguments and verifying the wallet database.
-    static bool VerifyWallets();
+    bool VerifyWallets();
 
     //! Load wallet databases.
-    static bool OpenWallets();
+    bool OpenWallets();
 
     //! Complete startup of wallets.
-    static void StartWallets(CScheduler& scheduler);
+    void StartWallets(CScheduler& scheduler);
 
     //! Flush all wallets in preparation for shutdown.
-    static void FlushWallets();
+    void FlushWallets();
 
     //! Stop all wallets. Wallets will be flushed first.
-    static void StopWallets();
+    void StopWallets();
 
     //! Close all wallets.
-    static void CloseWallets();
+    void CloseWallets();
 };
 
 #endif // BITCOIN_WALLET_INIT_H
