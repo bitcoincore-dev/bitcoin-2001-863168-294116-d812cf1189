@@ -187,7 +187,7 @@ void Shutdown()
     StopRPC();
     StopHTTPServer();
 #ifdef ENABLE_WALLET
-    FlushWallets();
+    WalletInit::FlushWallets();
 #endif
     MapPort(false);
 
@@ -245,7 +245,7 @@ void Shutdown()
         pblocktree = nullptr;
     }
 #ifdef ENABLE_WALLET
-    StopWallets();
+    WalletInit::StopWallets();
 #endif
 
 #if ENABLE_ZMQ
@@ -266,7 +266,7 @@ void Shutdown()
     UnregisterAllValidationInterfaces();
     GetMainSignals().UnregisterBackgroundSignalScheduler();
 #ifdef ENABLE_WALLET
-    CloseWallets();
+    WalletInit::CloseWallets();
 #endif
     globalVerifyHandle.reset();
     ECC_Stop();
@@ -409,7 +409,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-maxuploadtarget=<n>", strprintf(_("Tries to keep outbound traffic under the given target (in MiB per 24h), 0 = no limit (default: %d)"), DEFAULT_MAX_UPLOAD_TARGET));
 
 #ifdef ENABLE_WALLET
-    strUsage += GetWalletHelpString(showDebug);
+    strUsage += WalletInit::GetWalletHelpString(showDebug);
 #endif
 
 #if ENABLE_ZMQ
@@ -1034,7 +1034,7 @@ bool AppInitParameterInteraction()
 
     RegisterAllCoreRPCCommands(tableRPC);
 #ifdef ENABLE_WALLET
-    RegisterWalletRPC(tableRPC);
+    WalletInit::RegisterWalletRPC(tableRPC);
 #endif
 
     nConnectTimeout = gArgs.GetArg("-timeout", DEFAULT_CONNECT_TIMEOUT);
@@ -1079,8 +1079,7 @@ bool AppInitParameterInteraction()
     nBytesPerSigOp = gArgs.GetArg("-bytespersigop", nBytesPerSigOp);
 
 #ifdef ENABLE_WALLET
-    if (!WalletParameterInteraction())
-        return false;
+    if (!WalletInit::WalletParameterInteraction()) return false;
 #endif
 
     fIsBareMultisigStd = gArgs.GetBoolArg("-permitbaremultisig", DEFAULT_PERMIT_BAREMULTISIG);
@@ -1256,8 +1255,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     // ********************************************************* Step 5: verify wallet database integrity
 #ifdef ENABLE_WALLET
-    if (!VerifyWallets())
-        return false;
+    if (!WalletInit::VerifyWallets()) return false;
 #endif
     // ********************************************************* Step 6: network initialization
     // Note that we absolutely cannot open any actual connections
@@ -1576,8 +1574,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     // ********************************************************* Step 8: load wallet
 #ifdef ENABLE_WALLET
-    if (!OpenWallets())
-        return false;
+    if (!WalletInit::OpenWallets()) return false;
 #else
     LogPrintf("No wallet support compiled in!\n");
 #endif
@@ -1715,7 +1712,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     uiInterface.InitMessage(_("Done loading"));
 
 #ifdef ENABLE_WALLET
-    StartWallets(scheduler);
+    WalletInit::StartWallets(scheduler);
 #endif
 
     return !fRequestShutdown;

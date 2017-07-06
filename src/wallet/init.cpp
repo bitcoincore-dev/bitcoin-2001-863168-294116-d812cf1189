@@ -12,7 +12,7 @@
 #include "wallet/wallet.h"
 #include "wallet/rpcwallet.h"
 
-std::string GetWalletHelpString(bool showDebug)
+std::string WalletInit::GetWalletHelpString(bool showDebug)
 {
     std::string strUsage = HelpMessageGroup(_("Wallet options:"));
     strUsage += HelpMessageOpt("-disablewallet", _("Do not load the wallet and disable wallet RPC calls"));
@@ -51,7 +51,7 @@ std::string GetWalletHelpString(bool showDebug)
     return strUsage;
 }
 
-bool WalletParameterInteraction()
+bool WalletInit::WalletParameterInteraction()
 {
     gArgs.SoftSetArg("-wallet", DEFAULT_WALLET_DAT);
     const bool is_multiwallet = gArgs.GetArgs("-wallet").size() > 1;
@@ -171,14 +171,14 @@ bool WalletParameterInteraction()
     return true;
 }
 
-void RegisterWalletRPC(CRPCTable &t)
+void WalletInit::RegisterWalletRPC(CRPCTable &t)
 {
     if (gArgs.GetBoolArg("-disablewallet", false)) return;
 
     RegisterWalletRPCCommands(t);
 }
 
-bool VerifyWallets()
+bool WalletInit::VerifyWallets()
 {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET))
         return true;
@@ -206,7 +206,7 @@ bool VerifyWallets()
     return true;
 }
 
-bool OpenWallets()
+bool WalletInit::OpenWallets()
 {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
         LogPrintf("Wallet disabled!\n");
@@ -224,25 +224,27 @@ bool OpenWallets()
     return true;
 }
 
-void StartWallets(CScheduler& scheduler) {
+void WalletInit::StartWallets(CScheduler& scheduler)
+{
     for (CWalletRef pwallet : vpwallets) {
         pwallet->postInitProcess(scheduler);
     }
 }
 
-void FlushWallets() {
+void WalletInit::FlushWallets()
+{
     for (CWalletRef pwallet : vpwallets) {
         pwallet->Flush();
     }
 }
 
-void StopWallets() {
+void WalletInit::StopWallets() {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) return;
     FlushWallets();
     bitdb.Shutdown();
 }
 
-void CloseWallets() {
+void WalletInit::CloseWallets() {
     for (CWalletRef pwallet : vpwallets) {
         delete pwallet;
     }
