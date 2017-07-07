@@ -167,6 +167,26 @@ enum
         SerializationOp(s, CSerActionUnserialize());                  \
     }
 
+/**
+ * Implement the Serialize and Unserialize methods by delegating to a single templated
+ * static method that takes the to-be-(de)serialized object as a parameter. This approach
+ * has the advantage that the constness of the object becomes a template parameter, and
+ * thus allows a single implementation that sees the object as const for serializing
+ * and non-const for deserializing, without casts.
+ */
+#define SERIALIZE_METHODS(obj)                                                      \
+    template<typename Stream>                                                       \
+    void Serialize(Stream& s) const {                                               \
+        SerializationOps(*this, s, CSerActionSerialize());                          \
+    }                                                                               \
+    template<typename Stream>                                                       \
+    void Unserialize(Stream& s) {                                                   \
+        SerializationOps(*this, s, CSerActionUnserialize());                        \
+    }                                                                               \
+    template<typename Stream, typename Type, typename Operation>                    \
+    static inline void SerializationOps(Type& obj, Stream& s, Operation ser_action) \
+
+
 template<typename Stream> inline void Serialize(Stream& s, char a    ) { ser_writedata8(s, a); } // TODO Get rid of bare char
 template<typename Stream> inline void Serialize(Stream& s, int8_t a  ) { ser_writedata8(s, a); }
 template<typename Stream> inline void Serialize(Stream& s, uint8_t a ) { ser_writedata8(s, a); }
