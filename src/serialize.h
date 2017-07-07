@@ -148,8 +148,20 @@ enum
     SER_GETHASH         = (1 << 2),
 };
 
+// Convert the reference base type to X, without changing constness or reference type.
+template<typename X> X& AsBaseType(X& x) { return x; }
+template<typename X> const X& AsBaseType(const X& x) { return x; }
+template<typename X> X&& AsBaseType(X&& x) { return std::move(x); }
+template<typename X> const X&& AsBaseType(const X&& x) { return std::move(x); }
+
 #define READWRITE(obj)      (::SerReadWrite(s, (obj), ser_action))
 #define READWRITEMANY(...)      (::SerReadWriteMany(s, ser_action, __VA_ARGS__))
+
+/** Serialize/deserialize the given object after converting it to a reference of
+ *  type `typ`, while preserving reference type and constness. Use this instead
+ *  of casting manually, as it will not inadvertently remove constness.
+ */
+#define READWRITEAS(obj, typ) (::SerReadWrite(s, AsBaseType<typ>(obj), ser_action))
 
 /** 
  * Implement three methods for serializable objects. These are actually wrappers over
