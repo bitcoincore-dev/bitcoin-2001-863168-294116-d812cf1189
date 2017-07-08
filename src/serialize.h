@@ -154,14 +154,13 @@ template<typename X> const X& AsBaseType(const X& x) { return x; }
 template<typename X> X&& AsBaseType(X&& x) { return std::move(x); }
 template<typename X> const X&& AsBaseType(const X&& x) { return std::move(x); }
 
-#define READWRITE(obj)      (::SerReadWrite(s, (obj), ser_action))
-#define READWRITEMANY(...)      (::SerReadWriteMany(s, ser_action, __VA_ARGS__))
+#define READWRITE(...) (::SerReadWriteMany(s, ser_action, __VA_ARGS__))
 
 /** Serialize/deserialize the given object after converting it to a reference of
  *  type `typ`, while preserving reference type and constness. Use this instead
  *  of casting manually, as it will not inadvertently remove constness.
  */
-#define READWRITEAS(obj, typ) (::SerReadWrite(s, AsBaseType<typ>(obj), ser_action))
+#define READWRITEAS(obj, typ) (::SerReadWriteMany(s, ser_action, AsBaseType<typ>(obj)))
 
 /** 
  * Implement three methods for serializable objects. These are actually wrappers over
@@ -856,18 +855,6 @@ struct CSerActionUnserialize
 {
     constexpr bool ForRead() const { return true; }
 };
-
-template<typename Stream, typename T>
-inline void SerReadWrite(Stream& s, const T& obj, CSerActionSerialize ser_action)
-{
-    ::Serialize(s, obj);
-}
-
-template<typename Stream, typename T>
-inline void SerReadWrite(Stream& s, T&& obj, CSerActionUnserialize ser_action)
-{
-    ::Unserialize(s, obj);
-}
 
 
 
