@@ -405,7 +405,6 @@ I ReadVarInt(Stream& is)
 }
 
 #define FLATDATA(obj) REF(CFlatData((char*)&(obj), (char*)&(obj) + sizeof(obj)))
-#define VARINT(obj) REF(WrapVarInt(REF(obj)))
 #define LIMITED_STRING(obj,n) REF(LimitedString< n >(REF(obj)))
 
 /** 
@@ -448,17 +447,18 @@ public:
     }
 };
 
+/** Serialization wrapper class for integers in VarInt format. */
 template<typename I>
-class CVarInt
+class VarIntWrapper
 {
 protected:
     I &n;
 public:
-    explicit CVarInt(I& nIn) : n(nIn) { }
+    explicit VarIntWrapper(I& nIn) : n(nIn) { }
 
     template<typename Stream>
     void Serialize(Stream &s) const {
-        WriteVarInt<Stream,I>(s, n);
+        WriteVarInt(s, n);
     }
 
     template<typename Stream>
@@ -466,6 +466,8 @@ public:
         n = ReadVarInt<Stream,I>(s);
     }
 };
+//! Automatically construct a VarInt wrapper around the argument.
+template<typename I> static inline VarIntWrapper<typename std::remove_reference<I>::type> VARINT(I&& i) { return VarIntWrapper<typename std::remove_reference<I>::type>(i); }
 
 /** Serialization wrapper class for integers in CompactSize format. */
 template<typename I>
@@ -551,9 +553,6 @@ public:
 };
 //! Automatically construct a BigEndianWrapper around the argument.
 template<typename I> static inline BigEndianWrapper<I,sizeof(I)> BigEndian(I& i) { return BigEndianWrapper<I,sizeof(I)>(i); }
-
-template<typename I>
-CVarInt<I> WrapVarInt(I& n) { return CVarInt<I>(n); }
 
 /**
  * Forward declarations
