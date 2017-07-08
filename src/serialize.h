@@ -72,9 +72,19 @@ template<typename Stream> inline void ser_writedata16(Stream &s, uint16_t obj)
     obj = htole16(obj);
     s.write((char*)&obj, 2);
 }
+template<typename Stream> inline void ser_writedata16be(Stream &s, uint16_t obj)
+{
+    obj = htobe16(obj);
+    s.write((char*)&obj, 2);
+}
 template<typename Stream> inline void ser_writedata32(Stream &s, uint32_t obj)
 {
     obj = htole32(obj);
+    s.write((char*)&obj, 4);
+}
+template<typename Stream> inline void ser_writedata32be(Stream &s, uint32_t obj)
+{
+    obj = htobe32(obj);
     s.write((char*)&obj, 4);
 }
 template<typename Stream> inline void ser_writedata64(Stream &s, uint64_t obj)
@@ -94,11 +104,23 @@ template<typename Stream> inline uint16_t ser_readdata16(Stream &s)
     s.read((char*)&obj, 2);
     return le16toh(obj);
 }
+template<typename Stream> inline uint16_t ser_readdata16be(Stream &s)
+{
+    uint16_t obj;
+    s.read((char*)&obj, 2);
+    return be16toh(obj);
+}
 template<typename Stream> inline uint32_t ser_readdata32(Stream &s)
 {
     uint32_t obj;
     s.read((char*)&obj, 4);
     return le32toh(obj);
+}
+template<typename Stream> inline uint32_t ser_readdata32be(Stream &s)
+{
+    uint32_t obj;
+    s.read((char*)&obj, 4);
+    return be32toh(obj);
 }
 template<typename Stream> inline uint64_t ser_readdata64(Stream &s)
 {
@@ -493,8 +515,43 @@ public:
     }
 };
 
+/** Serialization wrapper class for big-endian integers.
+ *
+ * Use this wrapper around integer types that are stored in memory in native
+ * byte order, but serialized in big endian notation.
+ *
+ * Onlyy 16-bit types are supported for now.
+ */
+template<typename I, size_t S> class BigEndianWrapper
+{
+protected:
+    I& m_val;
+public:
+    explicit BigEndianWrapper(I& val) : m_val(val)
+    {
+        static_assert(S == 2 || S == 4, "Unsupported BigEndian size");
+    }
+
+    template<typename Stream>
+    void Serialize(Stream& s) const
+    {
+        if (S == 2) ser_writedata16be(s, m_val);
+        if (S == 4) ser_writedata32be(s, m_val);
+    }
+
+    template<typename Stream>
+    void Unserialize(Stream& s)
+    {
+        if (S == 2) m_val = ser_readdata16be(s);
+        if (S == 4) m_val = ser_readdata32be(s);
+    }
+};
+//! Automatically construct a BigEndianWrapper around the argument.
+template<typename I> static inline BigEndianWrapper<I,sizeof(I)> BigEndian(I& i) { return BigEndianWrapper<I,sizeof(I)>(i); }
+
 template<typename I>
 CVarInt<I> WrapVarInt(I& n) { return CVarInt<I>(n); }
+
 
 /**
  * Forward declarations
