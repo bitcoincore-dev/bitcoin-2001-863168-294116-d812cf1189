@@ -406,7 +406,6 @@ I ReadVarInt(Stream& is)
 
 #define FLATDATA(obj) REF(CFlatData((char*)&(obj), (char*)&(obj) + sizeof(obj)))
 #define VARINT(obj) REF(WrapVarInt(REF(obj)))
-#define COMPACTSIZE(obj) REF(CCompactSize(REF(obj)))
 #define LIMITED_STRING(obj,n) REF(LimitedString< n >(REF(obj)))
 
 /** 
@@ -468,23 +467,27 @@ public:
     }
 };
 
-class CCompactSize
+/** Serialization wrapper class for integers in CompactSize format. */
+template<typename I>
+class CompactSizeWrapper
 {
 protected:
-    uint64_t &n;
+    I &n;
 public:
-    explicit CCompactSize(uint64_t& nIn) : n(nIn) { }
-
-    template<typename Stream>
-    void Serialize(Stream &s) const {
-        WriteCompactSize<Stream>(s, n);
-    }
+    explicit CompactSizeWrapper(I& nIn) : n(nIn) { }
 
     template<typename Stream>
     void Unserialize(Stream& s) {
         n = ReadCompactSize<Stream>(s);
     }
+
+    template<typename Stream>
+    void Serialize(Stream& s) const {
+        WriteCompactSize<Stream>(s, n);
+    }
 };
+//! Automatically construct a CompactSize wrapper around the argument.
+template<typename I> static inline CompactSizeWrapper<I> COMPACTSIZE(I& i) { return CompactSizeWrapper<I>(i); }
 
 template<size_t Limit>
 class LimitedString
@@ -551,7 +554,6 @@ template<typename I> static inline BigEndianWrapper<I,sizeof(I)> BigEndian(I& i)
 
 template<typename I>
 CVarInt<I> WrapVarInt(I& n) { return CVarInt<I>(n); }
-
 
 /**
  * Forward declarations
