@@ -59,12 +59,12 @@ public:
     void Serialize(Stream &s) const {
         std::vector<unsigned char> compr;
         if (Compress(compr)) {
-            s << CFlatData(compr);
+            s << FlatVector(compr);
             return;
         }
         unsigned int nSize = script.size() + nSpecialScripts;
         s << VARINT(nSize);
-        s << CFlatData(script);
+        s << FlatVector(script);
     }
 
     template<typename Stream>
@@ -73,7 +73,7 @@ public:
         s >> VARINT(nSize);
         if (nSize < nSpecialScripts) {
             std::vector<unsigned char> vch(GetSpecialSize(nSize), 0x00);
-            s >> REF(CFlatData(vch));
+            s >> FlatVector(vch);
             Decompress(nSize, vch);
             return;
         }
@@ -84,7 +84,7 @@ public:
             s.ignore(nSize);
         } else {
             script.resize(nSize);
-            s >> REF(CFlatData(script));
+            s >> FlatVector(script);
         }
     }
 };

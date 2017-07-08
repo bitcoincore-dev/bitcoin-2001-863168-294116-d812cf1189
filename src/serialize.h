@@ -404,35 +404,17 @@ I ReadVarInt(Stream& is)
     }
 }
 
-#define FLATDATA(obj) REF(CFlatData((char*)&(obj), (char*)&(obj) + sizeof(obj)))
 #define LIMITED_STRING(obj,n) REF(LimitedString< n >(REF(obj)))
 
-/** 
- * Wrapper for serializing arrays and POD.
- */
-class CFlatData
+/** Wrapper for serializing arrays and POD. */
+template<typename C>
+class FlatRangeWrapper
 {
 protected:
-    char* pbegin;
-    char* pend;
+    C* pbegin;
+    C* pend;
 public:
-    CFlatData(void* pbeginIn, void* pendIn) : pbegin((char*)pbeginIn), pend((char*)pendIn) { }
-    template <class T, class TAl>
-    explicit CFlatData(std::vector<T,TAl> &v)
-    {
-        pbegin = (char*)v.data();
-        pend = (char*)(v.data() + v.size());
-    }
-    template <unsigned int N, typename T, typename S, typename D>
-    explicit CFlatData(prevector<N, T, S, D> &v)
-    {
-        pbegin = (char*)v.data();
-        pend = (char*)(v.data() + v.size());
-    }
-    char* begin() { return pbegin; }
-    const char* begin() const { return pbegin; }
-    char* end() { return pend; }
-    const char* end() const { return pend; }
+    FlatRangeWrapper(C* pbeginIn, C* pendIn) : pbegin(pbeginIn), pend(pendIn) { }
 
     template<typename Stream>
     void Serialize(Stream& s) const
@@ -446,6 +428,16 @@ public:
         s.read(pbegin, pend - pbegin);
     }
 };
+//! Construct a FlatRange wrapper around a const vector.
+template<typename T> static inline const FlatRangeWrapper<const char> FlatVector(const T& t) { return FlatRangeWrapper<const char>((const char*)t.data(), (const char*)(t.data() + t.size())); }
+//! Construct a FlatRange wrapper around a non-const vector.
+template<typename T> static inline FlatRangeWrapper<char> FlatVector(T& t) { return FlatRangeWrapper<char>((char*)t.data(), (char*)(t.data() + t.size())); }
+//! Construct a FlatRange wrapper around a const POD and array types.
+template<typename T> static inline const FlatRangeWrapper<const char> FlatDataInner(const T* t, size_t len) { return FlatRangeWrapper<const char>((const char*)t, ((const char*)t) + len); }
+//! Construct a FlatRange wrapper around a non-const POD and array types.
+template<typename T> static inline FlatRangeWrapper<char> FlatDataInner(T* t, size_t len) { return FlatRangeWrapper<char>((char*)t, ((char*)t) + len); }
+//! Helper macro to easily serialize POD types.
+#define FLATDATA(x) FlatDataInner(&(x), sizeof(x))
 
 /** Serialization wrapper class for integers in VarInt format. */
 template<typename I>
