@@ -103,8 +103,15 @@ BITCOIN_CORE_H = \
   httpserver.h \
   indirectmap.h \
   init.h \
+  ipc/capnp/interfaces.h \
+  ipc/capnp/messages.capnp.h \
+  ipc/capnp/messages.capnp.proxy.h \
+  ipc/capnp/types.h \
+  ipc/capnp/server.h \
+  ipc/capnp/util.h \
   ipc/interfaces.h \
   ipc/local/interfaces.h \
+  ipc/server.h \
   ipc/util.h \
   key.h \
   keystore.h \
@@ -184,7 +191,7 @@ obj/build.h: FORCE
 libbitcoin_util_a-clientversion.$(OBJEXT): obj/build.h
 
 # server: shared between bitcoind and bitcoin-qt
-libbitcoin_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
+libbitcoin_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS) $(CAPNP_RPC_CFLAGS)
 libbitcoin_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_server_a_SOURCES = \
   addrdb.cpp \
@@ -349,8 +356,14 @@ libbitcoin_util_a_SOURCES = \
   compat/glibcxx_sanity.cpp \
   compat/strnlen.cpp \
   fs.cpp \
+  ipc/capnp/interfaces.cpp \
+  ipc/capnp/messages.capnp \
+  ipc/capnp/types.cpp \
+  ipc/capnp/server.cpp \
+  ipc/capnp/util.cpp \
   ipc/interfaces.cpp \
   ipc/local/interfaces.cpp \
+  ipc/server.cpp \
   random.cpp \
   rpc/protocol.cpp \
   support/cleanse.cpp \
@@ -373,7 +386,9 @@ libbitcoin_cli_a_SOURCES = \
   rpc/client.cpp \
   $(BITCOIN_CORE_H)
 
-nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h
+nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h \
+  ipc/capnp/messages.capnp.c++ \
+  ipc/capnp/messages.capnp.proxy.c++
 #
 
 # bitcoind binary #
@@ -400,7 +415,7 @@ bitcoind_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-bitcoind_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
+bitcoind_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(CAPNP_RPC_LIBS)
 
 # bitcoin-cli binary #
 bitcoin_cli_SOURCES = bitcoin-cli.cpp
@@ -530,6 +545,15 @@ endif
 %.capnp.c++ %.capnp.h: %.capnp
 	@test -f $(CAPNP_BIN)
 	$(AM_V_GEN) $(CAPNP_BIN) compile --output=c++ --import-path=$(<D) $<
+
+noinst_PROGRAMS += ipc/capnp/proxy
+ipc_capnp_proxy_SOURCES = ipc/capnp/proxy.cpp ipc/capnp/proxy.capnp.h ipc/capnp/proxy.capnp.c++
+ipc_capnp_proxy_CPPFLAGS = $(AM_CPPFLAGS)
+ipc_capnp_proxy_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(CAPNP_PARSER_CFLAGS)
+ipc_capnp_proxy_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(CAPNP_PARSER_LIBS)
+
+%.capnp.proxy.c++ %.capnp.proxy.h: %.capnp %.capnp.c++ ipc/capnp/proxy$(EXEEXT) ipc/capnp/proxy.capnp.h
+	$(AM_V_GEN) ipc/capnp/proxy$(EXEEXT) $< $(CAPNP_PARSER_INCLUDE) $<
 
 if EMBEDDED_LEVELDB
 include Makefile.leveldb.include
