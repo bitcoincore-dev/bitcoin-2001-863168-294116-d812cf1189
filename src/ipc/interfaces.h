@@ -1,15 +1,15 @@
 #ifndef BITCOIN_IPC_INTERFACES_H
 #define BITCOIN_IPC_INTERFACES_H
 
-#include "addrdb.h"                    // For banmap_t
-#include "init.h"                      // For HelpMessageMode
-#include "net.h"                       // For CConnman::NumConnections
-#include "netaddress.h"                // For Network
-#include "pubkey.h"                    // For CTxDestination (CKeyID and CScriptID)
-#include "script/ismine.h"             // isminefilter, isminetype
-#include "script/standard.h"           // For CTxDestination
-#include "support/allocators/secure.h" // For SecureString
-#include "ui_interface.h"              // For ChangeType
+#include <addrdb.h>                    // For banmap_t
+#include <init.h>                      // For HelpMessageMode
+#include <net.h>                       // For CConnman::NumConnections
+#include <netaddress.h>                // For Network
+#include <pubkey.h>                    // For CTxDestination (CKeyID and CScriptID)
+#include <script/ismine.h>             // isminefilter, isminetype
+#include <script/standard.h>           // For CTxDestination
+#include <support/allocators/secure.h> // For SecureString
+#include <ui_interface.h>              // For ChangeType
 
 #include <memory>
 #include <set>
@@ -179,7 +179,7 @@ public:
     virtual CAmount getMaxTxFee() = 0;
 
     //! Estimate smart fee.
-    virtual CFeeRate estimateSmartFee(int num_blocks, bool conservative, int* answer_found_at_blocks = nullptr) = 0;
+    virtual CFeeRate estimateSmartFee(int num_blocks, bool conservative, int* returned_target = nullptr) = 0;
 
     //! Get dust relay fee.
     virtual CFeeRate getDustRelayFee() = 0;
@@ -490,6 +490,24 @@ public:
         std::string& reject_reason) = 0;
 };
 
+//! Caching PendingWalletTx implementation. FIXME: move to capnp types.
+class RemotePendingWalletTx : public PendingWalletTx
+{
+public:
+    const CTransaction& get() override
+    {
+        if (!m_tx) {
+            m_tx = getRemote();
+        }
+        return *m_tx;
+    }
+
+    virtual CTransactionRef getRemote() = 0;
+
+private:
+    CTransactionRef m_tx;
+};
+
 //! Information about one wallet address.
 struct WalletAddress
 {
@@ -563,12 +581,26 @@ struct WalletTxOut
 //! Protocol IPC interface should use to communicate with implementation.
 enum Protocol {
     LOCAL, //!< Call functions linked into current executable.
+    CAPNP, //!< Spawn external process and communicate with Cap'n Proto.
+};
+
+//! IPC protocol options.
+struct ProtocolOptions
+{
+    ProtocolOptions(Protocol protocol) : protocol(protocol) {}
+
+    //! Which protocol to use.
+    Protocol protocol;
+
+    //! Path used to invoke current executable according to argv[0]. This is
+    //! used to help spawn new subprocesses.
+    const char* exe_path = nullptr;
 };
 
 //! Create IPC node interface, communicating with requested protocol. Returns
 //! null if protocol isn't implemented or is not available in the current build
 //! configuation.
-std::unique_ptr<Node> MakeNode(Protocol protocol);
+std::unique_ptr<Node> MakeNode(const ProtocolOptions& options);
 
 } // namespace ipc
 

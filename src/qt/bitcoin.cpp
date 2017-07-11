@@ -519,8 +519,9 @@ int main(int argc, char *argv[])
 {
     SetupEnvironment();
 
-    std::unique_ptr<ipc::Node> ipc_node;
-    ipc_node = ipc::MakeNode(ipc::LOCAL);
+    ipc::ProtocolOptions options(ipc::CAPNP);
+    options.exe_path = argc > 0 ? argv[0] : nullptr;
+    std::unique_ptr<ipc::Node> ipc_node = ipc::MakeNode(options);
 
     /// 1. Parse command-line options. These take precedence over anything else.
     // Command-line options take precedence:
