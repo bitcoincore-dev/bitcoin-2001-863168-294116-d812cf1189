@@ -182,7 +182,7 @@ public:
     virtual CAmount getMaxTxFee() = 0;
 
     //! Estimate smart fee.
-    virtual CFeeRate estimateSmartFee(int num_blocks, bool conservative, int* answer_found_at_blocks = nullptr) = 0;
+    virtual CFeeRate estimateSmartFee(int num_blocks, bool conservative, int* returned_target = nullptr) = 0;
 
     //! Get dust relay fee.
     virtual CFeeRate getDustRelayFee() = 0;
@@ -566,12 +566,26 @@ struct WalletTxOut
 //! Protocol IPC interface should use to communicate with implementation.
 enum Protocol {
     LOCAL, //!< Call functions linked into current executable.
+    CAPNP, //!< Spawn external process and communicate with Cap'n Proto.
+};
+
+//! IPC protocol options.
+struct ProtocolOptions
+{
+    ProtocolOptions(Protocol protocol) : protocol(protocol) {}
+
+    //! Which protocol to use.
+    Protocol protocol;
+
+    //! Path used to invoke current executable according to argv[0]. This is
+    //! used to help spawn new subprocesses.
+    const char* exe_path = nullptr;
 };
 
 //! Create IPC node interface, communicating with requested protocol. Returns
 //! null if protocol isn't implemented or is not available in the current build
 //! configuation.
-std::unique_ptr<Node> MakeNode(Protocol protocol);
+std::unique_ptr<Node> MakeNode(const ProtocolOptions& options);
 
 } // namespace ipc
 
