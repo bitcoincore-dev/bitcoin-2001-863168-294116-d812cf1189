@@ -3954,6 +3954,18 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
     RegisterValidationInterface(walletInstance);
 
+    // Make sure we have enough keys in our keypool if HD is enabled
+    if (walletInstance->IsHDEnabled()) {
+        if (walletInstance->IsCrypted()) {
+            InitWarning(_("You are using an encrypted HD wallet. You may miss incoming or outgoing transactions."));
+        } else {
+            if (GetArg("-keypool", DEFAULT_KEYPOOL_SIZE) < DEFAULT_KEYPOOL_MIN) {
+                InitWarning(_("Your keypool size is below the recommended limit for HD rescans. You may miss incoming or outgoing transactions."));
+            }
+            walletInstance->TopUpKeyPool();
+        }
+    }
+
     CBlockIndex *pindexRescan = chainActive.Genesis();
     if (!GetBoolArg("-rescan", false))
     {
