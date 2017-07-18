@@ -1036,6 +1036,26 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
         if (fExisted && !fUpdate) return false;
         if (fExisted || IsMine(tx) || IsFromMe(tx))
         {
+            /* Check if any keys in the wallet keypool that were supposed to be unused
+             * have appeared in a new transaction. If so, remove those keys from the keypool.
+             * This can happen when restoring an old wallet backup that does not contain
+             * the mostly recently created transactions from newer versions of the wallet.
+             */
+            std::set<CKeyID> keyPool;
+            GetAllReserveKeys(keyPool);
+            // loop though all outputs
+            for(const CTxOut& txout: tx.vout) {
+                // extract addresses and check if they match with an unused keypool key
+                std::vector<CKeyID> vAffected;
+                CAffectedKeysVisitor(*this, vAffected).Process(txout.scriptPubKey);
+                for (const CKeyID &keyid : vAffected) {
+                    if (keyPool.count(keyid)) {
+                        LogPrintf("%s: Detected a used keypool key, mark all keypool key up to this key as used\n", __func__);
+                        MarkReserveKeysAsUsed(keyid);
+                    }
+                }
+            }
+
             CWalletTx wtx(this, ptx);
 
             // Get merkle branch if transaction was found in a block
@@ -3564,6 +3584,50 @@ static void LoadReserveKeysToSet(std::set<CKeyID>& setAddress, const std::set<in
         assert(keypool.vchPubKey.IsValid());
         CKeyID keyID = keypool.vchPubKey.GetID();
         setAddress.insert(keyID);
+    }
+}
+
+void CWallet::MarkReserveKeysAsUsed(const CKeyID& keyId)
+{
+    AssertLockHeld(cs_wallet);
+    CWalletDB walletdb(*dbw);
+    for (std::set<int64_t> *setKeyPool : {&setInternalKeyPool, &setExternalKeyPool}) {
+        int64_t foundIndex = -1;
+        for (const int64_t& id : *setKeyPool) {
+            CKeyPool keypool;
+            if (!walletdb.ReadPool(id, keypool)) {
+                throw std::runtime_error(std::string(__func__) + ": read failed");
+            }
+
+            if (keypool.vchPubKey.GetID() == keyId) {
+                foundIndex = id;
+                if (!keypool.fInternal) {
+                    SetAddressBook(keyId, "", "receive");
+                }
+                break;
+            }
+        }
+
+        auto it = std::begin(*setKeyPool);
+        // mark all keys up to the found key as used
+        if (foundIndex >= 0) {
+            while (it != std::end(*setKeyPool)) {
+                const int64_t& id = *(it);
+                if (id > foundIndex) break; // set*KeyPool is ordered
+
+                CKeyPool keypool;
+                if (!walletdb.ReadPool(id, keypool)) {
+                    throw std::runtime_error(std::string(__func__) + ": read failed");
+                }
+
+                KeepKey(id);
+                it = setKeyPool->erase(it);
+            }
+        }
+    }
+
+    if (IsHDEnabled() && !TopUpKeyPool()) {
+        LogPrintf("%s: Topping up keypool failed (locked wallet)\n", __func__);
     }
 }
 
