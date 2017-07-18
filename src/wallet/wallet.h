@@ -41,7 +41,7 @@ extern bool bSpendZeroConfChange;
 extern bool fWalletRbf;
 
 static const unsigned int DEFAULT_KEYPOOL_SIZE = 1000;
-//! Warn if the keypool goes below this size
+//! Shut down if the keypool goes below this size
 static const unsigned int DEFAULT_KEYPOOL_MIN = 500;
 //! -paytxfee default
 static const CAmount DEFAULT_TRANSACTION_FEE = 0;

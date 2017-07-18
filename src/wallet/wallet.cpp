@@ -12,6 +12,7 @@
 #include "consensus/consensus.h"
 #include "consensus/validation.h"
 #include "fs.h"
+#include "init.h"
 #include "key.h"
 #include "keystore.h"
 #include "validation.h"
@@ -3628,6 +3629,15 @@ void CWallet::MarkReserveKeysAsUsed(const CKeyID& keyId)
 
     if (IsHDEnabled() && !TopUpKeyPool()) {
         LogPrintf("%s: Topping up keypool failed (locked wallet)\n", __func__);
+    }
+
+    if (IsHDEnabled() && (setInternalKeyPool.size() < DEFAULT_KEYPOOL_MIN || (setExternalKeyPool.size() < DEFAULT_KEYPOOL_MIN))) {
+        // if the remaining keypool size is below the gap limit, shutdown
+        LogPrintf("%s: Keypool is too small. Shutting down\n", __func__);
+        const static std::string error_msg = "Keypool is too small. Shutting down";
+        uiInterface.ThreadSafeMessageBox(error_msg, "", CClientUIInterface::MSG_ERROR);
+        StartShutdown();
+        throw std::runtime_error(error_msg);
     }
 }
 
