@@ -4,6 +4,8 @@
 #include <memory>
 #include <vector>
 
+class CScheduler;
+
 namespace ipc {
 
 //! Interface for giving wallet processes access to blockchain state.
@@ -18,6 +20,22 @@ public:
     {
     public:
         virtual ~Client() {}
+
+        //! Register rpcs.
+        virtual void registerRpcs() = 0;
+
+        //! Prepare for execution, loading any needed state.
+        virtual bool prepare() = 0;
+
+        //! Start client execution and provide a scheduler. (Scheduler is
+        //! ignored if client is out-of-process).
+        virtual void start(CScheduler& scheduler) = 0;
+
+        //! Stop client execution and prepare for shutdown.
+        virtual void stop() = 0;
+
+        //! Shut down client.
+        virtual void shutdown() = 0;
     };
 
     //! List of clients.
@@ -42,12 +60,24 @@ struct ChainClientOptions
     //! (tools for monitoring, analysis, fee estimation, etc).
     enum Type { WALLET = 0 };
     Type type;
+
+    //! For WALLET client, wallet filenames to load.
+    std::vector<std::string> wallet_filenames;
 };
 
 //! Create chain client interface, communicating with requested protocol.
 //! Returns null if protocol or client type aren't implemented or available in
 //! the current build configuration.
 std::unique_ptr<Chain::Client> MakeChainClient(Protocol protocol, Chain& chain, ChainClientOptions options);
+
+//! Convenience function to return options object for wallet clients.
+inline ChainClientOptions WalletOptions(std::vector<std::string> wallet_filenames = {})
+{
+    ChainClientOptions options;
+    options.type = ChainClientOptions::WALLET;
+    options.wallet_filenames = std::move(wallet_filenames);
+    return options;
+}
 
 } // namespace ipc
 
