@@ -53,7 +53,6 @@ std::string GetWalletHelpString(bool showDebug)
 
 bool WalletParameterInteraction()
 {
-    gArgs.SoftSetArg("-wallet", DEFAULT_WALLET_DAT);
     const bool is_multiwallet = gArgs.GetArgs("-wallet").size() > 1;
 
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET))
@@ -235,13 +234,18 @@ bool VerifyWallets()
     return true;
 }
 
-bool OpenWallets(ipc::Chain& ipc_chain) {
+void MakeWalletClients(ipc::Chain& ipc_chain, ipc::Chain::Clients& ipc_clients)
+{
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
         LogPrintf("Wallet disabled!\n");
-        return true;
+        return;
     }
+    gArgs.SoftSetArg("-wallet", DEFAULT_WALLET_DAT);
+    ipc_clients.emplace_back(ipc::MakeChainClient(ipc::LOCAL, ipc_chain, ipc::WalletOptions(gArgs.GetArgs("-wallet"))));
+}
 
-    for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
+bool OpenWallets(ipc::Chain& ipc_chain, ipc::Chain::Client& ipc_client, const std::vector<std::string>& wallet_filenames) {
+    for (const std::string& walletFile : wallet_filenames) {
         CWallet * const pwallet = CWallet::CreateWalletFromFile(ipc_chain, walletFile);
         if (!pwallet) {
             return false;

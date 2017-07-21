@@ -26,8 +26,11 @@ void RegisterWalletRPC(CRPCTable &tableRPC);
 //  being loaded (WalletParameterInteraction forbids -salvagewallet, -zapwallettxes or -upgradewallet with multiwallet).
 bool VerifyWallets();
 
+//! Create wallet IPC clients.
+void MakeWalletClients(ipc::Chain& ipc_chain, ipc::Chain::Clients& ipc_clients);
+
 //! Load wallet databases.
-bool OpenWallets(ipc::Chain& ipc_chain);
+bool OpenWallets(ipc::Chain& ipc_chain, ipc::Chain::Client& ipc_client, const std::vector<std::string>& wallet_filenames);
 
 //! Complete startup of wallets.
 void StartWallets(CScheduler& scheduler);
