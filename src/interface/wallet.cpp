@@ -1,10 +1,15 @@
 #include <interface/chain.h>
 #include <interface/util.h>
+#include <rpc/server.h>
+#include <wallet/init.h>
+#include <wallet/wallet.h>
 
 #include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
+
+class CScheduler;
 
 namespace interface {
 namespace {
@@ -16,6 +21,17 @@ public:
         : m_chain(chain), m_wallet_filenames(std::move(wallet_filenames))
     {
     }
+    void registerRpcs() override { RegisterWalletRPC(::tableRPC); }
+    bool prepare() override { return LoadWallets(m_chain, *this, m_wallet_filenames); }
+    void start(CScheduler& scheduler) override { StartWallets(scheduler); }
+    void stop() override { FlushWallets(); }
+    void shutdown() override
+    {
+        for (CWalletRef wallet : ::vpwallets) {
+            wallet->Flush(true /* shutdown */);
+        }
+    }
+    ~WalletClientImpl() override { CloseWallets(); }
 
     Chain& m_chain;
     std::vector<std::string> m_wallet_filenames;
