@@ -1120,9 +1120,12 @@ public:
     /* Returns the wallets help message */
     static std::string GetWalletHelpString(bool showDebug);
 
+    /** Create wallet IPC clients. */
+    static void MakeClients(ipc::Chain& ipc_chain, ipc::Chain::Clients& ipc_clients);
+
     /* Initializes the wallet, returns a new CWallet instance or a null pointer in case of an error */
     static CWallet* CreateWalletFromFile(ipc::Chain& ipc_chain, const std::string walletFile);
-    static bool InitLoadWallet(ipc::Chain& ipc_chain);
+    static bool InitLoadWallet(ipc::Chain& ipc_chain, ipc::Chain::Client& ipc_client, const std::vector<std::string>& wallet_filenames);
 
     /**
      * Wallet post-init setup
