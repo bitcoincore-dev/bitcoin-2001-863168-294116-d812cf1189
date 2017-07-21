@@ -186,9 +186,9 @@ void Shutdown(InitInterfaces& interfaces)
     StopREST();
     StopRPC();
     StopHTTPServer();
-#ifdef ENABLE_WALLET
-    FlushWallets();
-#endif
+    for (const auto& client : interfaces.chain_clients) {
+        client->stop();
+    }
     MapPort(false);
 
     // Because these depend on each-other, we make sure that neither can be
@@ -244,9 +244,9 @@ void Shutdown(InitInterfaces& interfaces)
         delete pblocktree;
         pblocktree = nullptr;
     }
-#ifdef ENABLE_WALLET
-    StopWallets();
-#endif
+    for (const auto& client : interfaces.chain_clients) {
+        client->shutdown();
+    }
 
 #if ENABLE_ZMQ
     if (pzmqNotificationInterface) {
@@ -266,9 +266,7 @@ void Shutdown(InitInterfaces& interfaces)
     UnregisterAllValidationInterfaces();
     GetMainSignals().UnregisterBackgroundSignalScheduler();
     GetMainSignals().UnregisterWithMempoolSignals(mempool);
-#ifdef ENABLE_WALLET
-    CloseWallets();
-#endif
+    interfaces.chain_clients.clear();
     globalVerifyHandle.reset();
     ECC_Stop();
     LogPrintf("%s: done\n", __func__);
@@ -1034,10 +1032,16 @@ bool AppInitParameterInteraction(InitInterfaces& interfaces)
         fPruneMode = true;
     }
 
-    RegisterAllCoreRPCCommands(tableRPC);
 #ifdef ENABLE_WALLET
-    RegisterWalletRPC(tableRPC);
+    OpenWallets(interfaces);
+#else
+    LogPrintf("No wallet support compiled in!\n");
 #endif
+
+    RegisterAllCoreRPCCommands(tableRPC);
+    for (const auto& client : interfaces.chain_clients) {
+        client->registerRpcs();
+    }
 
     nConnectTimeout = gArgs.GetArg("-timeout", DEFAULT_CONNECT_TIMEOUT);
     if (nConnectTimeout <= 0)
@@ -1578,12 +1582,11 @@ bool AppInitMain(InitInterfaces& interfaces, boost::thread_group& threadGroup, C
     fFeeEstimatesInitialized = true;
 
     // ********************************************************* Step 8: load wallet
-#ifdef ENABLE_WALLET
-    if (!OpenWallets(interfaces))
-        return false;
-#else
-    LogPrintf("No wallet support compiled in!\n");
-#endif
+    for (const auto& client : interfaces.chain_clients) {
+        if (!client->prepare()) {
+            return false;
+        }
+    }
 
     // ********************************************************* Step 9: data directory maintenance
 
@@ -1717,9 +1720,9 @@ bool AppInitMain(InitInterfaces& interfaces, boost::thread_group& threadGroup, C
     SetRPCWarmupFinished();
     uiInterface.InitMessage(_("Done loading"));
 
-#ifdef ENABLE_WALLET
-    StartWallets(scheduler);
-#endif
+    for (const auto& client : interfaces.chain_clients) {
+        client->start(scheduler);
+    }
 
     return !fRequestShutdown;
 }
