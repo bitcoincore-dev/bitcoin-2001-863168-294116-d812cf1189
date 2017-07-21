@@ -187,9 +187,9 @@ void Shutdown(ipc::Chain::Clients& ipc_clients)
     StopREST();
     StopRPC();
     StopHTTPServer();
-#ifdef ENABLE_WALLET
-    FlushWallets();
-#endif
+    for (const auto& client : ipc_clients) {
+        client->stop();
+    }
     MapPort(false);
 
     // Because these depend on each-other, we make sure that neither can be
@@ -245,9 +245,9 @@ void Shutdown(ipc::Chain::Clients& ipc_clients)
         delete pblocktree;
         pblocktree = nullptr;
     }
-#ifdef ENABLE_WALLET
-    StopWallets();
-#endif
+    for (const auto& client : ipc_clients) {
+        client->shutdown();
+    }
 
 #if ENABLE_ZMQ
     if (pzmqNotificationInterface) {
@@ -267,9 +267,7 @@ void Shutdown(ipc::Chain::Clients& ipc_clients)
     UnregisterAllValidationInterfaces();
     GetMainSignals().UnregisterBackgroundSignalScheduler();
     GetMainSignals().UnregisterWithMempoolSignals(mempool);
-#ifdef ENABLE_WALLET
-    CloseWallets();
-#endif
+    ipc_clients.clear();
     globalVerifyHandle.reset();
     ECC_Stop();
     LogPrintf("%s: done\n", __func__);
@@ -1034,10 +1032,16 @@ bool AppInitParameterInteraction(ipc::Chain& ipc_chain, ipc::Chain::Clients& ipc
         fPruneMode = true;
     }
 
-    RegisterAllCoreRPCCommands(tableRPC);
 #ifdef ENABLE_WALLET
-    RegisterWalletRPC(tableRPC);
+    MakeWalletClients(ipc_chain, ipc_clients);
+#else
+    LogPrintf("No wallet support compiled in!\n");
 #endif
+
+    RegisterAllCoreRPCCommands(tableRPC);
+    for (const auto& client : ipc_clients) {
+        client->registerRpcs();
+    }
 
     nConnectTimeout = gArgs.GetArg("-timeout", DEFAULT_CONNECT_TIMEOUT);
     if (nConnectTimeout <= 0)
@@ -1578,12 +1582,11 @@ bool AppInitMain(ipc::Chain& ipc_chain, const ipc::Chain::Clients& ipc_clients, 
     fFeeEstimatesInitialized = true;
 
     // ********************************************************* Step 8: load wallet
-#ifdef ENABLE_WALLET
-    if (!OpenWallets(ipc_chain))
-        return false;
-#else
-    LogPrintf("No wallet support compiled in!\n");
-#endif
+    for (const auto& client : ipc_clients) {
+        if (!client->prepare()) {
+            return false;
+        }
+    }
 
     // ********************************************************* Step 9: data directory maintenance
 
@@ -1717,9 +1720,9 @@ bool AppInitMain(ipc::Chain& ipc_chain, const ipc::Chain::Clients& ipc_clients, 
     SetRPCWarmupFinished();
     uiInterface.InitMessage(_("Done loading"));
 
-#ifdef ENABLE_WALLET
-    StartWallets(scheduler);
-#endif
+    for (const auto& client : ipc_clients) {
+        client->start(scheduler);
+    }
 
     return !fRequestShutdown;
 }
