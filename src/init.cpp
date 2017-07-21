@@ -189,11 +189,9 @@ void Shutdown(ipc::Chain::Clients& ipc_clients)
     StopREST();
     StopRPC();
     StopHTTPServer();
-#ifdef ENABLE_WALLET
-    for (CWalletRef pwallet : vpwallets) {
-        pwallet->Flush(false);
+    for (const auto& client : ipc_clients) {
+        client->stop();
     }
-#endif
     MapPort(false);
     UnregisterValidationInterface(peerLogic.get());
     peerLogic.reset();
@@ -246,11 +244,9 @@ void Shutdown(ipc::Chain::Clients& ipc_clients)
         delete pblocktree;
         pblocktree = nullptr;
     }
-#ifdef ENABLE_WALLET
-    for (CWalletRef pwallet : vpwallets) {
-        pwallet->Flush(true);
+    for (const auto& client : ipc_clients) {
+        client->shutdown();
     }
-#endif
 
 #if ENABLE_ZMQ
     if (pzmqNotificationInterface) {
@@ -270,12 +266,7 @@ void Shutdown(ipc::Chain::Clients& ipc_clients)
     UnregisterAllValidationInterfaces();
     GetMainSignals().UnregisterBackgroundSignalScheduler();
     GetMainSignals().UnregisterWithMempoolSignals(mempool);
-#ifdef ENABLE_WALLET
-    for (CWalletRef pwallet : vpwallets) {
-        delete pwallet;
-    }
-    vpwallets.clear();
-#endif
+    ipc_clients.clear();
     globalVerifyHandle.reset();
     ECC_Stop();
     LogPrintf("%s: done\n", __func__);
@@ -1024,10 +1015,16 @@ bool AppInitParameterInteraction(ipc::Chain& ipc_chain, ipc::Chain::Clients& ipc
         fPruneMode = true;
     }
 
-    RegisterAllCoreRPCCommands(tableRPC);
 #ifdef ENABLE_WALLET
-    RegisterWalletRPCCommands(tableRPC);
+    MakeWalletClients(ipc_chain, ipc_clients);
+#else
+    LogPrintf("No wallet support compiled in!\n");
 #endif
+
+    RegisterAllCoreRPCCommands(tableRPC);
+    for (const auto& client : ipc_clients) {
+        client->registerRpcs();
+    }
 
     nConnectTimeout = gArgs.GetArg("-timeout", DEFAULT_CONNECT_TIMEOUT);
     if (nConnectTimeout <= 0)
@@ -1569,12 +1566,11 @@ bool AppInitMain(ipc::Chain& ipc_chain, const ipc::Chain::Clients& ipc_clients, 
     fFeeEstimatesInitialized = true;
 
     // ********************************************************* Step 8: load wallet
-#ifdef ENABLE_WALLET
-    if (!InitLoadWallet(ipc_chain))
-        return false;
-#else
-    LogPrintf("No wallet support compiled in!\n");
-#endif
+    for (const auto& client : ipc_clients) {
+        if (!client->prepare()) {
+            return false;
+        }
+    }
 
     // ********************************************************* Step 9: data directory maintenance
 
@@ -1700,11 +1696,9 @@ bool AppInitMain(ipc::Chain& ipc_chain, const ipc::Chain::Clients& ipc_clients, 
     SetRPCWarmupFinished();
     uiInterface.InitMessage(_("Done loading"));
 
-#ifdef ENABLE_WALLET
-    for (CWalletRef pwallet : vpwallets) {
-        pwallet->postInitProcess(scheduler);
+    for (const auto& client : ipc_clients) {
+        client->start(scheduler);
     }
-#endif
 
     return !fRequestShutdown;
 }

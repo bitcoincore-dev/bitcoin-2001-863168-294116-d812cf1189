@@ -20,7 +20,10 @@ bool WalletParameterInteraction();
 //  being loaded (CWallet::ParameterInteraction forbids -salvagewallet, -zapwallettxes or -upgradewallet with multiwallet).
 bool WalletVerify();
 
+//! Create wallet IPC clients.
+void MakeWalletClients(ipc::Chain& ipc_chain, ipc::Chain::Clients& ipc_clients);
+
 //! Load wallet databases.
-bool InitLoadWallet(ipc::Chain& ipc_chain);
+bool InitLoadWallet(ipc::Chain& ipc_chain, ipc::Chain::Client& ipc_client, const std::vector<std::string>& wallet_filenames);
 
 #endif // BITCOIN_WALLET_INIT_H
