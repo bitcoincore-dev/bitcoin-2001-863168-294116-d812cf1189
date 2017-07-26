@@ -1,6 +1,7 @@
 #include <qt/test/wallettests.h>
 #include <qt/test/util.h>
 
+#include <interfaces/chain.h>
 #include <interfaces/node.h>
 #include <qt/bitcoinamountfield.h>
 #include <qt/callback.h>
@@ -155,7 +156,7 @@ void TestGUI()
         wallet.AddKeyPubKey(test.coinbaseKey, test.coinbaseKey.GetPubKey());
     }
     {
-        LOCK(cs_main);
+        auto locked_chain = wallet.chain().lock();
         WalletRescanReserver reserver(&wallet);
         reserver.reserve();
         wallet.ScanForWalletTransactions(chainActive.Genesis(), nullptr, reserver, true);
