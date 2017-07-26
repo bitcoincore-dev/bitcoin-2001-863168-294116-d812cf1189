@@ -172,7 +172,7 @@ void TestGUI()
         wallet.AddKeyPubKey(test.coinbaseKey, test.coinbaseKey.GetPubKey());
     }
     {
-        LOCK(cs_main);
+        auto locked_chain = chain->lock();
         WalletRescanReserver reserver(&wallet);
         reserver.reserve();
         wallet.ScanForWalletTransactions(chainActive.Genesis(), nullptr, reserver, true);
