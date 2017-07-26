@@ -126,6 +126,12 @@ TestingSetup::~TestingSetup()
         pblocktree.reset();
 }
 
+interfaces::Chain& TestingSetup::chain() const
+{
+    assert(g_interfaces.chain.get());
+    return *g_interfaces.chain;
+}
+
 TestChain100Setup::TestChain100Setup() : TestingSetup(CBaseChainParams::REGTEST)
 {
     // CreateAndProcessBlock() does not support building SegWit blocks, so don't activate in these tests.
