@@ -375,7 +375,7 @@ static void AddKey(CWallet& wallet, const CKey& key)
 BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
 {
     auto ipc_chain = ipc::MakeChain(ipc::LOCAL);
-    LOCK(cs_main);
+    auto ipc_locked = ipc_chain->lockState();
 
     // Cap last block file size, and mine new block in a new block file.
     CBlockIndex* const nullBlock = nullptr;
@@ -453,7 +453,7 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
 BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
 {
     auto ipc_chain = ipc::MakeChain(ipc::LOCAL);
-    LOCK(cs_main);
+    auto ipc_locked = ipc_chain->lockState();
 
     // Create two blocks with same timestamp to verify that importwallet rescan
     // will pick up both blocks, not just the first.
@@ -517,7 +517,8 @@ BOOST_FIXTURE_TEST_CASE(coin_mark_dirty_immature_credit, TestChain100Setup)
     auto ipc_chain = ipc::MakeChain(ipc::LOCAL);
     CWallet wallet(ipc_chain.get(), ipc::MakeUnique<CWalletDBWrapper>());
     CWalletTx wtx(&wallet, MakeTransactionRef(coinbaseTxns.back()));
-    LOCK2(cs_main, wallet.cs_wallet);
+    auto ipc_locked = ipc_chain->lockState();
+    LOCK(wallet.cs_wallet);
     wtx.hashBlock = chainActive.Tip()->GetBlockHash();
     wtx.nIndex = 0;
 
@@ -639,6 +640,7 @@ public:
     }
 
     std::unique_ptr<ipc::Chain> m_ipc_chain = ipc::MakeChain(ipc::LOCAL);
+    std::unique_ptr<ipc::Chain::LockedState> m_ipc_locked = m_ipc_chain->assumeLocked();  // Temporary. Removed in upcoming lock cleanup
     std::unique_ptr<CWallet> wallet;
 };
 
