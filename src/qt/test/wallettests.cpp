@@ -159,6 +159,7 @@ void TestSendCoins()
         wallet.SetAddressBook(test.coinbaseKey.GetPubKey().GetID(), "", "receive");
         wallet.AddKeyPubKey(test.coinbaseKey, test.coinbaseKey.GetPubKey());
     }
+    auto locked_chain = chain->assumeLocked();  // Temporary. Removed in upcoming lock cleanup
     wallet.ScanForWalletTransactions(chainActive.Genesis(), true);
     wallet.SetBroadcastTransactions(true);
 
