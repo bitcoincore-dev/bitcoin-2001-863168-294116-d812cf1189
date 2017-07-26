@@ -266,7 +266,8 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
     }
 
     {
-        LOCK2(cs_main, wallet->cs_wallet);
+        auto ipc_locked = wallet->ipc_chain().lockState();
+        LOCK(wallet->cs_wallet);
 
         transaction.newPossibleKeyChange(wallet);
 
@@ -573,7 +574,8 @@ bool WalletModel::getPrivKey(const CKeyID &address, CKey& vchPrivKeyOut) const
 // returns a list of COutputs from COutPoints
 void WalletModel::getOutputs(const std::vector<COutPoint>& vOutpoints, std::vector<COutput>& vOutputs)
 {
-    LOCK2(cs_main, wallet->cs_wallet);
+    auto ipc_locked = wallet->ipc_chain().lockState();
+    LOCK(wallet->cs_wallet);
     for (const COutPoint& outpoint : vOutpoints)
     {
         auto it = wallet->mapWallet.find(outpoint.hash);
@@ -587,7 +589,8 @@ void WalletModel::getOutputs(const std::vector<COutPoint>& vOutpoints, std::vect
 
 bool WalletModel::isSpent(const COutPoint& outpoint) const
 {
-    LOCK2(cs_main, wallet->cs_wallet);
+    auto ipc_locked = wallet->ipc_chain().lockState();
+    LOCK(wallet->cs_wallet);
     return wallet->IsSpent(outpoint.hash, outpoint.n);
 }
 
@@ -653,7 +656,8 @@ bool WalletModel::transactionCanBeAbandoned(uint256 hash) const
 
 bool WalletModel::abandonTransaction(uint256 hash) const
 {
-    LOCK2(cs_main, wallet->cs_wallet);
+    auto ipc_locked = wallet->ipc_chain().lockState();
+    LOCK(wallet->cs_wallet);
     return wallet->AbandonTransaction(hash);
 }
 
@@ -670,7 +674,8 @@ bool WalletModel::bumpFee(uint256 hash)
     {
         CCoinControl coin_control;
         coin_control.signalRbf = true;
-        LOCK2(cs_main, wallet->cs_wallet);
+        auto ipc_locked = wallet->ipc_chain().lockState();
+        LOCK(wallet->cs_wallet);
         feeBump.reset(new CFeeBumper(wallet, hash, coin_control, 0));
     }
     if (feeBump->getResult() != BumpFeeResult::OK)
@@ -726,7 +731,8 @@ bool WalletModel::bumpFee(uint256 hash)
     }
     // commit the bumped transaction
     {
-        LOCK2(cs_main, wallet->cs_wallet);
+        auto ipc_locked = wallet->ipc_chain().lockState();
+        LOCK(wallet->cs_wallet);
         res = feeBump->commit(wallet);
     }
     if(!res) {
