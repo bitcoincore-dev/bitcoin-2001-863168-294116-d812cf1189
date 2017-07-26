@@ -266,7 +266,8 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
     }
 
     {
-        LOCK2(cs_main, wallet->cs_wallet);
+        auto locked_chain = wallet->chain().lock();
+        LOCK(wallet->cs_wallet);
 
         transaction.newPossibleKeyChange(wallet);
 
@@ -573,7 +574,8 @@ bool WalletModel::getPrivKey(const CKeyID &address, CKey& vchPrivKeyOut) const
 // returns a list of COutputs from COutPoints
 void WalletModel::getOutputs(const std::vector<COutPoint>& vOutpoints, std::vector<COutput>& vOutputs)
 {
-    LOCK2(cs_main, wallet->cs_wallet);
+    auto locked_chain = wallet->chain().lock();
+    LOCK(wallet->cs_wallet);
     for (const COutPoint& outpoint : vOutpoints)
     {
         auto it = wallet->mapWallet.find(outpoint.hash);
@@ -587,13 +589,15 @@ void WalletModel::getOutputs(const std::vector<COutPoint>& vOutpoints, std::vect
 
 bool WalletModel::isSpent(const COutPoint& outpoint) const
 {
-    LOCK2(cs_main, wallet->cs_wallet);
+    auto locked_chain = wallet->chain().lock();
+    LOCK(wallet->cs_wallet);
     return wallet->IsSpent(outpoint.hash, outpoint.n);
 }
 
 // AvailableCoins + LockedCoins grouped by wallet address (put change in one group with wallet address)
 void WalletModel::listCoins(std::map<QString, std::vector<COutput> >& mapCoins) const
 {
+    auto locked_chain = wallet->chain().assumeLocked();  // Removed in upcoming lock cleanup
     for (auto& group : wallet->ListCoins()) {
         auto& resultGroup = mapCoins[QString::fromStdString(EncodeDestination(group.first))];
         for (auto& coin : group.second) {
@@ -653,7 +657,8 @@ bool WalletModel::transactionCanBeAbandoned(uint256 hash) const
 
 bool WalletModel::abandonTransaction(uint256 hash) const
 {
-    LOCK2(cs_main, wallet->cs_wallet);
+    auto locked_chain = wallet->chain().lock();
+    LOCK(wallet->cs_wallet);
     return wallet->AbandonTransaction(hash);
 }
 
