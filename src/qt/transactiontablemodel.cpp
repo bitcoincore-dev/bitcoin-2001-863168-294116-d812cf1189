@@ -79,7 +79,8 @@ public:
         qDebug() << "TransactionTablePriv::refreshWallet";
         cachedWallet.clear();
         {
-            LOCK2(cs_main, wallet->cs_wallet);
+            auto locked_chain = wallet->chain().lock();
+            LOCK(wallet->cs_wallet);
             for (const auto& entry : wallet->mapWallet)
             {
                 if (TransactionRecord::showTransaction(entry.second))
@@ -128,7 +129,8 @@ public:
             }
             if(showTransaction)
             {
-                LOCK2(cs_main, wallet->cs_wallet);
+                auto locked_chain = wallet->chain().lock();
+                LOCK(wallet->cs_wallet);
                 // Find transaction in wallet
                 std::map<uint256, CWalletTx>::iterator mi = wallet->mapWallet.find(hash);
                 if(mi == wallet->mapWallet.end())
@@ -192,8 +194,7 @@ public:
             // If a status update is needed (blocks came in since last check),
             //  update the status of this transaction from the wallet. Otherwise,
             // simply re-use the cached status.
-            TRY_LOCK(cs_main, lockMain);
-            if(lockMain)
+            if (auto locked_chain = wallet->chain().lock(true /* try_lock */))
             {
                 TRY_LOCK(wallet->cs_wallet, lockWallet);
                 if(lockWallet && rec->statusUpdateNeeded())
