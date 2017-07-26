@@ -61,7 +61,8 @@ bool EnsureWalletIsAvailable(CWallet * const pwallet, bool avoidException)
     if (avoidException) return false;
     if (::vpwallets.empty()) {
         // Wallet RPC methods are disabled if no wallets are loaded.
-        throw JSONRPCError(RPC_METHOD_NOT_FOUND, "Method not found (disabled)");
+        throw JSONRPCError(
+            RPC_METHOD_NOT_FOUND, "Method not found (wallet method is disabled because no wallet is loaded)");
     }
     throw JSONRPCError(RPC_WALLET_NOT_SPECIFIED, "Wallet file not specified (please provide bitcoin-cli "
                                                  "\"-rpcwallet=<filename>\" option or request RPC through "
