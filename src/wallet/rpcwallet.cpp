@@ -1575,6 +1575,7 @@ static UniValue listsinceblock(const JSONRPCRequest& request)
 
     const CBlockIndex* pindex = nullptr;    // Block index of the specified block or the common ancestor, if the block provided was in a deactivated chain.
     const CBlockIndex* paltindex = nullptr; // Block index of the specified block, even if it's in a deactivated chain.
+    Optional<int> height;    // Height of the specified block or the common ancestor, if the block provided was in a deactivated chain.
     int target_confirms = 1;
     isminefilter filter = ISMINE_SPENDABLE;
 
@@ -1607,7 +1608,8 @@ static UniValue listsinceblock(const JSONRPCRequest& request)
 
     bool include_removed = (request.params[3].isNull() || request.params[3].get_bool());
 
-    int depth = pindex ? (1 + chainActive.Height() - pindex->nHeight) : -1;
+    const Optional<int> tip_height = locked_chain->getHeight();
+    int depth = tip_height && pindex ? (1 + *tip_height - pindex->nHeight) : -1;
 
     UniValue transactions(UniValue::VARR);
 
@@ -1638,8 +1640,8 @@ static UniValue listsinceblock(const JSONRPCRequest& request)
         paltindex = paltindex->pprev;
     }
 
-    CBlockIndex *pblockLast = chainActive[chainActive.Height() + 1 - target_confirms];
-    uint256 lastblock = pblockLast ? pblockLast->GetBlockHash() : uint256();
+    int last_height = tip_height ? *tip_height + 1 - target_confirms : -1;
+    uint256 lastblock = last_height >= 0 ? locked_chain->getBlockHash(last_height) : uint256();
 
     UniValue ret(UniValue::VOBJ);
     ret.pushKV("transactions", transactions);
