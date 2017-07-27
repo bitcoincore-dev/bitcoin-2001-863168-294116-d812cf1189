@@ -68,9 +68,8 @@ bool EnsureWalletIsAvailable(CWallet * const pwallet, bool avoidException)
         throw JSONRPCError(
             RPC_METHOD_NOT_FOUND, "Method not found (wallet method is disabled because no wallet is loaded)");
     }
-    throw JSONRPCError(RPC_WALLET_NOT_SPECIFIED, "Wallet file not specified (please provide bitcoin-cli "
-                                                 "\"-rpcwallet=<filename>\" option or request RPC through "
-                                                 "/wallet/<filename> uri-path).");
+    throw JSONRPCError(RPC_WALLET_NOT_SPECIFIED,
+        "Wallet file not specified (must request wallet RPC through /wallet/<filename> uri-path).");
 }
 
 void EnsureWalletIsUnlocked(CWallet * const pwallet)
