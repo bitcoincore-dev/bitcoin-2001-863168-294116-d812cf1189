@@ -38,7 +38,6 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
     auto chain = interfaces::MakeChain();
 
     // Cap last block file size, and mine new block in a new block file.
-    CBlockIndex* const nullBlock = nullptr;
     CBlockIndex* oldTip = chainActive.Tip();
     GetBlockFileInfo(oldTip->GetBlockPos().nFile)->nSize = MAX_BLOCKFILE_SIZE;
     CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));
@@ -53,7 +52,7 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
         AddKey(wallet, coinbaseKey);
         WalletRescanReserver reserver(&wallet);
         reserver.reserve();
-        BOOST_CHECK_EQUAL(nullBlock, wallet.ScanForWalletTransactions(oldTip, nullptr, reserver));
+        BOOST_CHECK(wallet.ScanForWalletTransactions(oldTip->GetBlockHash(), {} /* stop block */, reserver, false /* update */).IsNull());
         BOOST_CHECK_EQUAL(wallet.GetImmatureBalance(), 100 * COIN);
     }
 
@@ -68,7 +67,7 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
         AddKey(wallet, coinbaseKey);
         WalletRescanReserver reserver(&wallet);
         reserver.reserve();
-        BOOST_CHECK_EQUAL(oldTip, wallet.ScanForWalletTransactions(oldTip, nullptr, reserver));
+        BOOST_CHECK(oldTip->GetBlockHash() == wallet.ScanForWalletTransactions(oldTip->GetBlockHash(), {} /* stop block */, reserver, false /* update */));
         BOOST_CHECK_EQUAL(wallet.GetImmatureBalance(), 50 * COIN);
     }
 
@@ -219,7 +218,7 @@ static int64_t AddTx(CWallet& wallet, uint32_t lockTime, int64_t mockTime, int64
 
     CWalletTx wtx(&wallet, MakeTransactionRef(tx));
     if (block) {
-        wtx.SetMerkleBranch(block, 0);
+        wtx.SetMerkleBranch(block->GetBlockHash(), 0);
     }
     {
         LOCK(cs_main);
@@ -283,7 +282,7 @@ public:
         AddKey(*wallet, coinbaseKey);
         WalletRescanReserver reserver(wallet.get());
         reserver.reserve();
-        wallet->ScanForWalletTransactions(chainActive.Genesis(), nullptr, reserver);
+        wallet->ScanForWalletTransactions(chainActive.Genesis()->GetBlockHash(), {} /* stop block */, reserver, false /* update */);
     }
 
     ~ListCoinsTestingSetup()
@@ -311,7 +310,7 @@ public:
         LOCK(wallet->cs_wallet);
         auto it = wallet->mapWallet.find(tx->GetHash());
         BOOST_CHECK(it != wallet->mapWallet.end());
-        it->second.SetMerkleBranch(chainActive.Tip(), 1);
+        it->second.SetMerkleBranch(chainActive.Tip()->GetBlockHash(), 1);
         return it->second;
     }
 
