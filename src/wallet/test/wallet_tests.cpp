@@ -372,7 +372,6 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
     auto ipc_locked = ipc_chain->lockState();
 
     // Cap last block file size, and mine new block in a new block file.
-    CBlockIndex* const nullBlock = nullptr;
     CBlockIndex* oldTip = chainActive.Tip();
     GetBlockFileInfo(oldTip->GetBlockPos().nFile)->nSize = MAX_BLOCKFILE_SIZE;
     CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));
@@ -384,7 +383,7 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
         CWallet wallet(ipc_chain.get(), ipc::MakeUnique<CWalletDBWrapper>());
         LOCK(wallet.cs_wallet);
         wallet.AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey());
-        BOOST_CHECK_EQUAL(nullBlock, wallet.ScanForWalletTransactions(*ipc_locked, oldTip));
+        BOOST_CHECK_EQUAL(-1, wallet.ScanForWalletTransactions(*ipc_locked, oldTip->nHeight));
         BOOST_CHECK_EQUAL(wallet.GetImmatureBalance(), 100 * COIN);
     }
 
@@ -398,7 +397,7 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
         CWallet wallet(ipc_chain.get(), ipc::MakeUnique<CWalletDBWrapper>());
         LOCK(wallet.cs_wallet);
         wallet.AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey());
-        BOOST_CHECK_EQUAL(oldTip, wallet.ScanForWalletTransactions(*ipc_locked, oldTip));
+        BOOST_CHECK_EQUAL(oldTip->nHeight, wallet.ScanForWalletTransactions(*ipc_locked, oldTip->nHeight));
         BOOST_CHECK_EQUAL(wallet.GetImmatureBalance(), 50 * COIN);
     }
 
@@ -546,7 +545,7 @@ static int64_t AddTx(CWallet& wallet, uint32_t lockTime, int64_t mockTime, int64
 
     CWalletTx wtx(&wallet, MakeTransactionRef(tx));
     if (block) {
-        wtx.SetMerkleBranch(block, 0);
+        wtx.SetMerkleBranch(block->GetBlockHash(), 0);
     }
     wallet.AddToWallet(wtx);
     return wallet.mapWallet.at(wtx.GetHash()).nTimeSmart;
@@ -608,7 +607,7 @@ public:
         wallet->LoadWallet(firstRun);
         LOCK(wallet->cs_wallet);
         wallet->AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey());
-        wallet->ScanForWalletTransactions(*m_ipc_locked, chainActive.Genesis());
+        wallet->ScanForWalletTransactions(*m_ipc_locked, 0 /* start_height */);
     }
 
     ~ListCoinsTestingSetup()
@@ -632,7 +631,7 @@ public:
         auto it = wallet->mapWallet.find(wtx.GetHash());
         BOOST_CHECK(it != wallet->mapWallet.end());
         CreateAndProcessBlock({CMutableTransaction(*it->second.tx)}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));
-        it->second.SetMerkleBranch(chainActive.Tip(), 1);
+        it->second.SetMerkleBranch(chainActive.Tip()->GetBlockHash(), 1);
         return it->second;
     }
 
