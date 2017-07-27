@@ -241,7 +241,7 @@ public:
         READWRITE(nIndex);
     }
 
-    void SetMerkleBranch(const CBlockIndex* pIndex, int posInBlock);
+    void SetMerkleBranch(const uint256& block_hash, int posInBlock);
 
     /**
      * Return depth of transaction in blockchain:
@@ -249,9 +249,8 @@ public:
      *  0  : in memory pool, waiting to be included in a block
      * >=1 : this many blocks deep in the main chain
      */
-    int GetDepthInMainChain(ipc::Chain::LockedState& ipc_locked, const CBlockIndex* &pindexRet) const;
-    int GetDepthInMainChain(ipc::Chain::LockedState& ipc_locked) const { const CBlockIndex *pindexRet; return GetDepthInMainChain(ipc_locked, pindexRet); }
-    bool IsInMainChain(ipc::Chain::LockedState& ipc_locked) const { const CBlockIndex *pindexRet; return GetDepthInMainChain(ipc_locked, pindexRet) > 0; }
+    int GetDepthInMainChain(ipc::Chain::LockedState& ipc_locked) const;
+    bool IsInMainChain(ipc::Chain::LockedState& ipc_locked) const { return GetDepthInMainChain(ipc_locked) > 0; }
     int GetBlocksToMaturity(ipc::Chain::LockedState& ipc_locked) const;
     bool hashUnset() const { return (hashBlock.IsNull() || hashBlock == ABANDON_HASH); }
     bool isAbandoned() const { return (hashBlock == ABANDON_HASH); }
@@ -698,7 +697,7 @@ private:
 
     /* Used by TransactionAddedToMemorypool/BlockConnected/Disconnected.
      * Should be called with pindexBlock and posInBlock if this is for a transaction that is included in a block. */
-    void SyncTransaction(ipc::Chain::LockedState& ipc_locked, const CTransactionRef& tx, const CBlockIndex *pindex = nullptr, int posInBlock = 0);
+    void SyncTransaction(ipc::Chain::LockedState& ipc_locked, const CTransactionRef& ptx, const uint256& block_hash, int posInBlock);
 
     /* the HD chain data model (external chain counters) */
     CHDChain hdChain;
@@ -736,7 +735,7 @@ private:
      *
      * Protected by cs_main
      */
-    const CBlockIndex* m_last_block_processed;
+    uint256 m_last_block_processed;
 
 public:
     /*
@@ -940,9 +939,9 @@ public:
     void TransactionAddedToMempool(const CTransactionRef& tx) override;
     void BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex *pindex, const std::vector<CTransactionRef>& vtxConflicted) override;
     void BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) override;
-    bool AddToWalletIfInvolvingMe(ipc::Chain::LockedState& ipc_locked, const CTransactionRef& tx, const CBlockIndex* pIndex, int posInBlock, bool fUpdate);
+    bool AddToWalletIfInvolvingMe(ipc::Chain::LockedState& ipc_locked, const CTransactionRef& tx, const uint256& block_hash, int posInBlock, bool fUpdate);
     int64_t RescanFromTime(ipc::Chain::LockedState& ipc_locked, int64_t startTime, bool update);
-    CBlockIndex* ScanForWalletTransactions(ipc::Chain::LockedState& ipc_locked, CBlockIndex* pindexStart, bool fUpdate = false);
+    int ScanForWalletTransactions(ipc::Chain::LockedState& ipc_locked, int start_height, bool fUpdate = false);
     void TransactionRemovedFromMempool(const CTransactionRef &ptx) override;
     void ReacceptWalletTransactions();
     void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman) override;
