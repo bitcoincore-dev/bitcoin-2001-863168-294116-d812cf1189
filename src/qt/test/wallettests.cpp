@@ -168,7 +168,7 @@ void TestGUI()
     }
     {
         auto locked_chain = chain->lock();
-        wallet.ScanForWalletTransactions(*locked_chain, chainActive.Genesis(), nullptr, true);
+        wallet.ScanForWalletTransactions(*locked_chain, 0 /* start_height */, nullopt /* stop_height */, true /* update */);
     }
     wallet.SetBroadcastTransactions(true);
 
