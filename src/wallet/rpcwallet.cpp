@@ -89,7 +89,10 @@ void WalletTxToJSON(ipc::Chain& ipc_chain, ipc::Chain::LockedState& ipc_locked, 
     {
         entry.push_back(Pair("blockhash", wtx.hashBlock.GetHex()));
         entry.push_back(Pair("blockindex", wtx.nIndex));
-        entry.push_back(Pair("blocktime", mapBlockIndex[wtx.hashBlock]->GetBlockTime()));
+        int64_t block_time;
+        bool found = ipc_chain.findBlock(wtx.hashBlock, nullptr /* CBlock */, &block_time);
+        assert(found);
+        entry.push_back(Pair("blocktime", block_time));
     } else {
         entry.push_back(Pair("trusted", wtx.IsTrusted(ipc_locked)));
     }
@@ -1892,25 +1895,15 @@ UniValue listsinceblock(const JSONRPCRequest& request)
     auto ipc_locked = pwallet->ipc_chain().lockState();
     LOCK(pwallet->cs_wallet);
 
-    const CBlockIndex* pindex = nullptr;    // Block index of the specified block or the common ancestor, if the block provided was in a deactivated chain.
-    const CBlockIndex* paltindex = nullptr; // Block index of the specified block, even if it's in a deactivated chain.
+    int height = -1;    // Height of the specified block or the common ancestor, if the block provided was in a deactivated chain.
+    int altheight = -1; // Height of the specified block, even if it's in a deactivated chain.
     int target_confirms = 1;
     isminefilter filter = ISMINE_SPENDABLE;
 
+    uint256 blockId;
     if (!request.params[0].isNull()) {
-        uint256 blockId;
-
         blockId.SetHex(request.params[0].get_str());
-        BlockMap::iterator it = mapBlockIndex.find(blockId);
-        if (it != mapBlockIndex.end()) {
-            paltindex = pindex = it->second;
-            if (chainActive[pindex->nHeight] != pindex) {
-                // the block being asked for is a part of a deactivated chain;
-                // we don't want to depend on its perceived height in the block
-                // chain, we want to instead use the last common ancestor
-                pindex = chainActive.FindFork(pindex);
-            }
-        }
+        height = ipc_locked->findFork(blockId, &altheight);
     }
 
     if (!request.params[1].isNull()) {
@@ -1927,7 +1920,8 @@ UniValue listsinceblock(const JSONRPCRequest& request)
 
     bool include_removed = (request.params[3].isNull() || request.params[3].get_bool());
 
-    int depth = pindex ? (1 + chainActive.Height() - pindex->nHeight) : -1;
+    const int tip_height = ipc_locked->getHeight();
+    int depth = height >= 0 ? (1 + tip_height - height) : -1;
 
     UniValue transactions(UniValue::VARR);
 
@@ -1942,9 +1936,9 @@ UniValue listsinceblock(const JSONRPCRequest& request)
     // when a reorg'd block is requested, we also list any relevant transactions
     // in the blocks of the chain that was detached
     UniValue removed(UniValue::VARR);
-    while (include_removed && paltindex && paltindex != pindex) {
+    while (include_removed && altheight >= 0 && altheight > height) {
         CBlock block;
-        if (!ReadBlockFromDisk(block, paltindex, Params().GetConsensus())) {
+        if (!pwallet->ipc_chain().findBlock(blockId, &block) || block.IsNull()) {
             throw JSONRPCError(RPC_INTERNAL_ERROR, "Can't read block from disk");
         }
         for (const CTransactionRef& tx : block.vtx) {
@@ -1954,11 +1948,12 @@ UniValue listsinceblock(const JSONRPCRequest& request)
                 ListTransactions(*ipc_locked, pwallet, pwallet->mapWallet[tx->GetHash()], "*", -100000000, true, removed, filter);
             }
         }
-        paltindex = paltindex->pprev;
+        blockId = block.hashPrevBlock;
+        --altheight;
     }
 
-    CBlockIndex *pblockLast = chainActive[chainActive.Height() + 1 - target_confirms];
-    uint256 lastblock = pblockLast ? pblockLast->GetBlockHash() : uint256();
+    int last_height = tip_height + 1 - target_confirms;
+    uint256 lastblock = 0 <= last_height && last_height <= tip_height ? ipc_locked->getBlockHash(last_height) : uint256();
 
     UniValue ret(UniValue::VOBJ);
     ret.push_back(Pair("transactions", transactions));
