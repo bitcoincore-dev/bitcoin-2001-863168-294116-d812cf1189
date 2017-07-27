@@ -247,7 +247,7 @@ public:
         READWRITE(nIndex);
     }
 
-    void SetMerkleBranch(const CBlockIndex* pIndex, int posInBlock);
+    void SetMerkleBranch(const uint256& block_hash, int posInBlock);
 
     /**
      * Return depth of transaction in blockchain:
@@ -255,9 +255,8 @@ public:
      *  0  : in memory pool, waiting to be included in a block
      * >=1 : this many blocks deep in the main chain
      */
-    int GetDepthInMainChain(interface::Chain::Lock& locked_chain, const CBlockIndex* &pindexRet) const;
-    int GetDepthInMainChain(interface::Chain::Lock& locked_chain) const { const CBlockIndex *pindexRet; return GetDepthInMainChain(locked_chain, pindexRet); }
-    bool IsInMainChain(interface::Chain::Lock& locked_chain) const { const CBlockIndex *pindexRet; return GetDepthInMainChain(locked_chain, pindexRet) > 0; }
+    int GetDepthInMainChain(interface::Chain::Lock& locked_chain) const;
+    bool IsInMainChain(interface::Chain::Lock& locked_chain) const { return GetDepthInMainChain(locked_chain) > 0; }
     int GetBlocksToMaturity(interface::Chain::Lock& locked_chain) const;
     bool hashUnset() const { return (hashBlock.IsNull() || hashBlock == ABANDON_HASH); }
     bool isAbandoned() const { return (hashBlock == ABANDON_HASH); }
@@ -706,7 +705,7 @@ private:
 
     /* Used by TransactionAddedToMemorypool/BlockConnected/Disconnected.
      * Should be called with pindexBlock and posInBlock if this is for a transaction that is included in a block. */
-    void SyncTransaction(interface::Chain::Lock& locked_chain, const CTransactionRef& tx, const CBlockIndex *pindex = nullptr, int posInBlock = 0);
+    void SyncTransaction(interface::Chain::Lock& locked_chain, const CTransactionRef& ptx, const uint256& block_hash, int posInBlock);
 
     /* the HD chain data model (external chain counters) */
     CHDChain hdChain;
@@ -757,7 +756,7 @@ private:
      *
      * Protected by cs_main (see BlockUntilSyncedToCurrentChain)
      */
-    const CBlockIndex* m_last_block_processed;
+    uint256 m_last_block_processed;
 
 public:
     /*
@@ -950,9 +949,9 @@ public:
     void TransactionAddedToMempool(const CTransactionRef& tx) override;
     void BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex *pindex, const std::vector<CTransactionRef>& vtxConflicted) override;
     void BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) override;
-    bool AddToWalletIfInvolvingMe(interface::Chain::Lock& locked_chain, const CTransactionRef& tx, const CBlockIndex* pIndex, int posInBlock, bool fUpdate);
+    bool AddToWalletIfInvolvingMe(interface::Chain::Lock& locked_chain, const CTransactionRef& tx, const uint256& block_hash, int posInBlock, bool fUpdate);
     int64_t RescanFromTime(int64_t startTime, const WalletRescanReserver& reserver, bool update);
-    CBlockIndex* ScanForWalletTransactions(CBlockIndex* pindexStart, CBlockIndex* pindexStop, const WalletRescanReserver& reserver, bool fUpdate = false);
+    uint256 ScanForWalletTransactions(const uint256& start_block, const uint256& stop_block, const WalletRescanReserver &reserver, bool fUpdate);
     void TransactionRemovedFromMempool(const CTransactionRef &ptx) override;
     void ReacceptWalletTransactions();
     void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman) override;
