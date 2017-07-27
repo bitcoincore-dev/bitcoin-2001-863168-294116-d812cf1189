@@ -4,11 +4,14 @@
 
 #include <interfaces/chain.h>
 
+#include <chain.h>
 #include <sync.h>
+#include <uint256.h>
 #include <util/system.h>
 #include <validation.h>
 
 #include <memory>
+#include <unordered_map>
 #include <utility>
 
 namespace interfaces {
@@ -16,6 +19,34 @@ namespace {
 
 class LockImpl : public Chain::Lock
 {
+    Optional<int> getHeight() override
+    {
+        int height = ::chainActive.Height();
+        if (height >= 0) {
+            return height;
+        }
+        return nullopt;
+    }
+    Optional<int> getBlockHeight(const uint256& hash) override
+    {
+        auto it = ::mapBlockIndex.find(hash);
+        if (it != ::mapBlockIndex.end() && it->second && ::chainActive.Contains(it->second)) {
+            return it->second->nHeight;
+        }
+        return nullopt;
+    }
+    int getBlockDepth(const uint256& hash) override
+    {
+        const Optional<int> tip_height = getHeight();
+        const Optional<int> height = getBlockHeight(hash);
+        return tip_height && height ? *tip_height - *height + 1 : 0;
+    }
+    uint256 getBlockHash(int height) override
+    {
+        CBlockIndex* block = ::chainActive[height];
+        assert(block != nullptr);
+        return block->GetBlockHash();
+    }
 };
 
 class LockingStateImpl : public LockImpl, public UniqueLock<CCriticalSection>
