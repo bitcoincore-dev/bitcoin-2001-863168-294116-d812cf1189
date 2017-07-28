@@ -194,6 +194,10 @@ public:
         }
         return false;
     }
+    bool transactionWithinChainLimit(const uint256& txid, size_t chain_limit) override
+    {
+        return ::mempool.TransactionWithinChainLimit(txid, chain_limit);
+    }
 };
 
 } // namespace
