@@ -470,7 +470,7 @@ public:
     int64_t GetTxTime() const;
     int GetRequestCount() const;
 
-    bool RelayWalletTransaction(ipc::Chain::LockedState& ipc_locked, CConnman* connman);
+    bool RelayWalletTransaction(ipc::Chain::LockedState& ipc_locked);
 
     /** Pass this transaction to the mempool. Fails if absolute fee exceeds absurd fee. */
     bool AcceptToMemoryPool(ipc::Chain::LockedState& ipc_locked, CValidationState& state);
@@ -958,7 +958,7 @@ public:
     void TransactionRemovedFromMempool(const CTransactionRef &ptx) override;
     void ReacceptWalletTransactions();
     void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman) override;
-    std::vector<uint256> ResendWalletTransactionsBefore(ipc::Chain::LockedState& ipc_locked, int64_t nTime, CConnman* connman);
+    std::vector<uint256> ResendWalletTransactionsBefore(ipc::Chain::LockedState& ipc_locked, int64_t nTime);
     CAmount GetBalance() const;
     CAmount GetUnconfirmedBalance() const;
     CAmount GetImmatureBalance() const;
@@ -982,7 +982,7 @@ public:
      */
     bool CreateTransaction(ipc::Chain::LockedState& ipc_locked, const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet, int& nChangePosInOut,
                            std::string& strFailReason, const CCoinControl& coin_control, bool sign = true);
-    bool CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, CConnman* connman, CValidationState& state);
+    bool CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, CValidationState& state);
 
     void ListAccountCreditDebit(const std::string& strAccount, std::list<CAccountingEntry>& entries);
     bool AddAccountingEntry(const CAccountingEntry&);
