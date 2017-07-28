@@ -51,9 +51,7 @@ bool CFeeBumper::preconditionChecks(interface::Chain::Lock& locked_chain, const 
     }
 
     {
-        LOCK(mempool.cs);
-        auto it_mp = mempool.mapTx.find(wtx.GetHash());
-        if (it_mp != mempool.mapTx.end() && it_mp->GetCountWithDescendants() > 1) {
+        if (pWallet->chain().hasDescendantsInMempool(txid)) {
             vErrors.push_back("Transaction has descendants in the mempool");
             currentResult = BumpFeeResult::INVALID_PARAMETER;
             return false;
