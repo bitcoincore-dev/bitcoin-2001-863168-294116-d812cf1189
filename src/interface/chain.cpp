@@ -12,6 +12,7 @@
 #include <sync.h>
 #include <txmempool.h>
 #include <uint256.h>
+#include <util.h>
 #include <validation.h>
 
 #include <unordered_map>
@@ -156,6 +157,22 @@ public:
     bool transactionWithinChainLimit(const uint256& txid, size_t chain_limit) override
     {
         return ::mempool.TransactionWithinChainLimit(txid, chain_limit);
+    }
+    bool checkChainLimits(CTransactionRef tx) override
+    {
+        LockPoints lp;
+        CTxMemPoolEntry entry(tx, 0, 0, 0, false, 0, lp);
+        CTxMemPool::setEntries setAncestors;
+        size_t nLimitAncestors = gArgs.GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT);
+        size_t nLimitAncestorSize = gArgs.GetArg("-limitancestorsize", DEFAULT_ANCESTOR_SIZE_LIMIT) * 1000;
+        size_t nLimitDescendants = gArgs.GetArg("-limitdescendantcount", DEFAULT_DESCENDANT_LIMIT);
+        size_t nLimitDescendantSize = gArgs.GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT) * 1000;
+        std::string errString;
+        if (!::mempool.CalculateMemPoolAncestors(entry, setAncestors, nLimitAncestors, nLimitAncestorSize,
+                nLimitDescendants, nLimitDescendantSize, errString)) {
+            return false;
+        }
+        return true;
     }
 };
 
