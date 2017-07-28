@@ -2423,7 +2423,7 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMin
         if (output.nDepth < (pcoin->IsFromMe(ISMINE_ALL) ? nConfMine : nConfTheirs))
             continue;
 
-        if (!mempool.TransactionWithinChainLimit(pcoin->GetHash(), nMaxAncestors))
+        if (!m_ipc_chain->transactionWithinChainLimit(pcoin->GetHash(), nMaxAncestors))
             continue;
 
         int i = output.i;
