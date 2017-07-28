@@ -135,6 +135,9 @@ public:
     //! Estimate fraction of total transactions verified if blocks up to
     //! the specified block hash are verified.
     virtual double guessVerificationProgress(const uint256& block_hash) = 0;
+
+    //! Get virtual transaction size.
+    virtual int64_t getVirtualTransactionSize(const CTransaction& tx) = 0;
 };
 
 //! Interface to let node manage chain clients (wallets, or maybe tools for
