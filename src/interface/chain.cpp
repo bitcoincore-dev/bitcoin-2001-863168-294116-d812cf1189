@@ -3,10 +3,12 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <interface/util.h>
+#include <net.h>
 #include <policy/policy.h>
 #include <policy/rbf.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
+#include <protocol.h>
 #include <sync.h>
 #include <txmempool.h>
 #include <uint256.h>
@@ -141,6 +143,15 @@ public:
         LOCK(::mempool.cs);
         auto it_mp = ::mempool.mapTx.find(txid);
         return it_mp != ::mempool.mapTx.end() && it_mp->GetCountWithDescendants() > 1;
+    }
+    bool relayTransaction(const uint256& txid) override
+    {
+        if (g_connman) {
+            CInv inv(MSG_TX, txid);
+            g_connman->ForEachNode([&inv](CNode* node) { node->PushInventory(inv); });
+            return true;
+        }
+        return false;
     }
 };
 
