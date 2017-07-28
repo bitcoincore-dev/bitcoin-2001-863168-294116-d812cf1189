@@ -1,6 +1,8 @@
 #ifndef BITCOIN_IPC_INTERFACES_H
 #define BITCOIN_IPC_INTERFACES_H
 
+#include "primitives/transaction.h"
+
 #include <memory>
 #include <vector>
 
@@ -88,6 +90,9 @@ public:
 
         //! Return height of block on the chain using locator.
         virtual int findLocatorFork(const CBlockLocator& locator) = 0;
+
+        //! Check if transaction will be final given chain height current time.
+        virtual bool checkFinalTx(const CTransaction& tx) = 0;
     };
 
     //! Return LockedState interface. Chain is locked when this is called, and
