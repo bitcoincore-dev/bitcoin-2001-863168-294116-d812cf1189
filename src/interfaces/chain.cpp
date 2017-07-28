@@ -212,6 +212,10 @@ public:
         CInv inv(MSG_TX, txid);
         g_connman->ForEachNode([&inv](CNode* node) { node->PushInventory(inv); });
     }
+    void getTransactionAncestry(const uint256& txid, size_t& ancestors, size_t& descendants) override
+    {
+        ::mempool.GetTransactionAncestry(txid, ancestors, descendants);
+    }
     CAmount maxTxFee() override { return ::maxTxFee; }
     bool p2pEnabled() override { return g_connman != nullptr; }
 };
