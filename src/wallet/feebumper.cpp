@@ -40,7 +40,7 @@ int64_t CalculateMaximumSignedTxSize(const CTransaction &tx, const CWallet *pWal
         // implies that we can sign for every input.
         return -1;
     }
-    return GetVirtualTransactionSize(txNew);
+    return pWallet->ipc_chain().getVirtualTransactionSize(txNew);
 }
 
 bool CFeeBumper::preconditionChecks(ipc::Chain::LockedState& ipc_locked, const CWallet *pWallet, const CWalletTx& wtx) {
@@ -129,7 +129,7 @@ CFeeBumper::CFeeBumper(ipc::Chain::LockedState& ipc_locked, const CWallet *pWall
     }
 
     // Calculate the expected size of the new transaction.
-    int64_t txSize = GetVirtualTransactionSize(*(wtx.tx));
+    int64_t txSize = pWallet->ipc_chain().getVirtualTransactionSize(*(wtx.tx));
     const int64_t maxNewTxSize = CalculateMaximumSignedTxSize(*wtx.tx, pWallet);
     if (maxNewTxSize < 0) {
         vErrors.push_back("Transaction contains inputs that cannot be signed");
