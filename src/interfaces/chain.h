@@ -10,6 +10,7 @@
 #include <primitives/transaction.h> // For CTransactionRef
 
 #include <memory>
+#include <stddef.h>
 #include <stdint.h>
 #include <string>
 #include <vector>
@@ -149,6 +150,9 @@ public:
 
     //! Relay transaction.
     virtual void relayTransaction(const uint256& txid) = 0;
+
+    //! Calculate mempool ancestor and descendant counts for the given transaction.
+    virtual void getTransactionAncestry(const uint256& txid, size_t& ancestors, size_t& descendants) = 0;
 
     //! Get node max tx fee setting (-maxtxfee).
     //! This could be replaced by a per-wallet max fee, as proposed at
