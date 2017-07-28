@@ -1,6 +1,7 @@
 #ifndef BITCOIN_IPC_INTERFACES_H
 #define BITCOIN_IPC_INTERFACES_H
 
+#include "policy/rbf.h" // For RBFTransactionState
 #include "primitives/transaction.h"
 
 #include <memory>
@@ -116,6 +117,9 @@ public:
 
     //! Get virtual transaction size.
     virtual int64_t getVirtualTransactionSize(const CTransaction& tx) = 0;
+
+    //! Check if transaction is RBF opt in.
+    virtual RBFTransactionState isRBFOptIn(const CTransaction& tx) = 0;
 
     //! Interface to let node manage chain clients (wallets, or maybe tools for
     //! monitoring and analysis in the future).
