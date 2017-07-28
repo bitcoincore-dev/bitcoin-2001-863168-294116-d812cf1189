@@ -206,6 +206,20 @@ public:
     {
         ::mempool.GetTransactionAncestry(txid, ancestors, descendants);
     }
+    bool checkChainLimits(CTransactionRef tx) override
+    {
+        LockPoints lp;
+        CTxMemPoolEntry entry(tx, 0, 0, 0, false, 0, lp);
+        CTxMemPool::setEntries setAncestors;
+        auto nLimitAncestors = gArgs.GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT);
+        auto nLimitAncestorSize = gArgs.GetArg("-limitancestorsize", DEFAULT_ANCESTOR_SIZE_LIMIT) * 1000;
+        auto nLimitDescendants = gArgs.GetArg("-limitdescendantcount", DEFAULT_DESCENDANT_LIMIT);
+        auto nLimitDescendantSize = gArgs.GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT) * 1000;
+        std::string errString;
+        LOCK(::mempool.cs);
+        return ::mempool.CalculateMemPoolAncestors(entry, setAncestors, nLimitAncestors, nLimitAncestorSize,
+            nLimitDescendants, nLimitDescendantSize, errString);
+    }
 };
 
 } // namespace
