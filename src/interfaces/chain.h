@@ -137,6 +137,9 @@ public:
     //! the specified block hash are verified.
     virtual double guessVerificationProgress(const uint256& block_hash) = 0;
 
+    //! Get virtual transaction size.
+    virtual int64_t getVirtualTransactionSize(const CTransaction& tx) = 0;
+
     //! Get node max tx fee setting (-maxtxfee).
     //! This could be replaced by a per-wallet max fee, as proposed at
     //! https://github.com/bitcoin/bitcoin/issues/15355
