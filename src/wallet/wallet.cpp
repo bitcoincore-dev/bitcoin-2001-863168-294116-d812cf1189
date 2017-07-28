@@ -2828,7 +2828,7 @@ bool CWallet::CreateTransaction(ipc::Chain::LockedState& ipc_locked, const std::
                     return false;
                 }
 
-                nBytes = GetVirtualTransactionSize(txNew);
+                nBytes = m_ipc_chain->getVirtualTransactionSize(txNew);
 
                 // Remove scriptSigs to eliminate the fee calculation dummy signatures
                 for (auto& vin : txNew.vin) {

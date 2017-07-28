@@ -114,6 +114,9 @@ public:
     //! Return whether node has the block and optionally return block metadata or contents.
     virtual bool findBlock(const uint256& hash, CBlock* block = nullptr, int64_t* time = nullptr) = 0;
 
+    //! Get virtual transaction size.
+    virtual int64_t getVirtualTransactionSize(const CTransaction& tx) = 0;
+
     //! Interface to let node manage chain clients (wallets, or maybe tools for
     //! monitoring and analysis in the future).
     class Client
