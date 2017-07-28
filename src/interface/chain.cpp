@@ -3,6 +3,7 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <interface/util.h>
+#include <policy/policy.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <sync.h>
@@ -127,6 +128,7 @@ public:
         }
         return true;
     }
+    int64_t getVirtualTransactionSize(const CTransaction& tx) override { return GetVirtualTransactionSize(tx); }
 };
 
 } // namespace
