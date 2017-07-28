@@ -5,7 +5,8 @@
 #ifndef BITCOIN_INTERFACES_CHAIN_H
 #define BITCOIN_INTERFACES_CHAIN_H
 
-#include <optional.h>
+#include <optional.h>               // For Optional and nullopt
+#include <policy/rbf.h>             // For RBFTransactionState
 
 #include <memory>
 #include <stdint.h>
@@ -136,6 +137,9 @@ public:
 
     //! Get virtual transaction size.
     virtual int64_t getVirtualTransactionSize(const CTransaction& tx) = 0;
+
+    //! Check if transaction is RBF opt in.
+    virtual RBFTransactionState isRBFOptIn(const CTransaction& tx) = 0;
 
     //! Generate blocks
     virtual UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,

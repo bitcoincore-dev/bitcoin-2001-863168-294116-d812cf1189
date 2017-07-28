@@ -7,10 +7,12 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <policy/policy.h>
+#include <policy/rbf.h>
 #include <primitives/block.h>
 #include <rpc/mining.h>
 #include <sync.h>
 #include <threadsafety.h>
+#include <txmempool.h>
 #include <uint256.h>
 #include <util/system.h>
 #include <validation.h>
@@ -188,6 +190,11 @@ public:
         return GuessVerificationProgress(Params().TxData(), LookupBlockIndex(block_hash));
     }
     int64_t getVirtualTransactionSize(const CTransaction& tx) override { return GetVirtualTransactionSize(tx); }
+    RBFTransactionState isRBFOptIn(const CTransaction& tx) override
+    {
+        LOCK(::mempool.cs);
+        return IsRBFOptIn(tx, ::mempool);
+    }
     UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
         int num_blocks,
         uint64_t max_tries,
