@@ -6,10 +6,12 @@
 
 #include <chain.h>
 #include <chainparams.h>
+#include <net.h>
 #include <policy/policy.h>
 #include <policy/rbf.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
+#include <protocol.h>
 #include <sync.h>
 #include <threadsafety.h>
 #include <txmempool.h>
@@ -204,6 +206,11 @@ public:
         LOCK(::mempool.cs);
         auto it_mp = ::mempool.mapTx.find(txid);
         return it_mp != ::mempool.mapTx.end() && it_mp->GetCountWithDescendants() > 1;
+    }
+    void relayTransaction(const uint256& txid) override
+    {
+        CInv inv(MSG_TX, txid);
+        g_connman->ForEachNode([&inv](CNode* node) { node->PushInventory(inv); });
     }
     CAmount maxTxFee() override { return ::maxTxFee; }
     bool p2pEnabled() override { return g_connman != nullptr; }
