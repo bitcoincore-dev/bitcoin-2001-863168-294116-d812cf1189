@@ -110,8 +110,7 @@ void WalletTxToJSON(interfaces::Chain& chain, interfaces::Chain::Lock& locked_ch
     // Add opt-in RBF status
     std::string rbfStatus = "no";
     if (confirms <= 0) {
-        LOCK(mempool.cs);
-        RBFTransactionState rbfState = IsRBFOptIn(*wtx.tx, mempool);
+        RBFTransactionState rbfState = chain.isRBFOptIn(*wtx.tx);
         if (rbfState == RBFTransactionState::UNKNOWN)
             rbfStatus = "unknown";
         else if (rbfState == RBFTransactionState::REPLACEABLE_BIP125)
