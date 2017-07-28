@@ -99,8 +99,6 @@ WalletTx MakeWalletTx(interfaces::Chain::Lock& locked_chain, CWallet& wallet, co
 //! Construct wallet tx status struct.
 WalletTxStatus MakeWalletTxStatus(interfaces::Chain::Lock& locked_chain, const CWalletTx& wtx)
 {
-    LockAnnotation lock(::cs_main); // Temporary, for CheckFinalTx below. Removed in upcoming commit.
-
     WalletTxStatus result;
     auto mi = ::mapBlockIndex.find(wtx.hashBlock);
     CBlockIndex* block = mi != ::mapBlockIndex.end() ? mi->second : nullptr;
@@ -109,7 +107,7 @@ WalletTxStatus MakeWalletTxStatus(interfaces::Chain::Lock& locked_chain, const C
     result.depth_in_main_chain = wtx.GetDepthInMainChain(locked_chain);
     result.time_received = wtx.nTimeReceived;
     result.lock_time = wtx.tx->nLockTime;
-    result.is_final = CheckFinalTx(*wtx.tx);
+    result.is_final = locked_chain.checkFinalTx(*wtx.tx);
     result.is_trusted = wtx.IsTrusted(locked_chain);
     result.is_abandoned = wtx.isAbandoned();
     result.is_coinbase = wtx.IsCoinBase();
