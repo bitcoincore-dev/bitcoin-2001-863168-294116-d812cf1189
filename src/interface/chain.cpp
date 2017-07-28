@@ -116,6 +116,7 @@ class LockImpl : public Chain::Lock
         return nullopt;
     }
     bool checkFinalTx(const CTransaction& tx) override { return CheckFinalTx(tx); }
+    bool isWitnessEnabled() override { return ::IsWitnessEnabled(::chainActive.Tip(), Params().GetConsensus()); }
 };
 
 class LockingStateImpl : public LockImpl, public CCriticalBlock
