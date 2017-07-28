@@ -86,6 +86,7 @@ public:
         CBlockIndex* fork = FindForkInGlobalIndex(::chainActive, locator);
         return fork ? fork->nHeight : -1;
     }
+    bool checkFinalTx(const CTransaction& tx) override { return CheckFinalTx(tx); }
 };
 
 class LockingStateImpl : public LockImpl, public CCriticalBlock
