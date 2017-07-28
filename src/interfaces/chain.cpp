@@ -203,6 +203,10 @@ public:
         }
         return false;
     }
+    void getTransactionAncestry(const uint256& txid, size_t& ancestors, size_t& descendants) override
+    {
+        ::mempool.GetTransactionAncestry(txid, ancestors, descendants);
+    }
 };
 
 } // namespace
