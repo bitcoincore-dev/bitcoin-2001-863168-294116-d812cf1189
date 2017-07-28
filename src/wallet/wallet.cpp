@@ -2875,7 +2875,7 @@ bool CWallet::CreateTransaction(interface::Chain::Lock& locked_chain, const std:
                     return false;
                 }
 
-                nBytes = GetVirtualTransactionSize(txNew);
+                nBytes = m_chain->getVirtualTransactionSize(txNew);
 
                 // Remove scriptSigs to eliminate the fee calculation dummy signatures
                 for (auto& vin : txNew.vin) {
