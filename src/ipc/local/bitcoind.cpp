@@ -2,6 +2,7 @@
 
 #include <chainparams.h>
 #include <ipc/util.h>
+#include <policy/policy.h>
 #include <validation.h>
 
 namespace ipc {
@@ -122,6 +123,7 @@ public:
         }
         return true;
     }
+    int64_t getVirtualTransactionSize(const CTransaction& tx) override { return GetVirtualTransactionSize(tx); }
 };
 
 } // namespace
