@@ -4,6 +4,7 @@
 #include <chainparams.h>
 #include <primitives/block.h>
 #include <sync.h>
+#include <threadsafety.h>
 #include <uint256.h>
 #include <util.h>
 #include <validation.h>
@@ -112,6 +113,11 @@ class LockImpl : public Chain::Lock
             return fork->nHeight;
         }
         return nullopt;
+    }
+    bool checkFinalTx(const CTransaction& tx) override
+    {
+        LockAnnotation lock(::cs_main);
+        return CheckFinalTx(tx);
     }
 };
 
