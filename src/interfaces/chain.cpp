@@ -6,6 +6,7 @@
 
 #include <chain.h>
 #include <chainparams.h>
+#include <policy/policy.h>
 #include <primitives/block.h>
 #include <rpc/mining.h>
 #include <sync.h>
@@ -186,6 +187,7 @@ public:
         LOCK(cs_main);
         return GuessVerificationProgress(Params().TxData(), LookupBlockIndex(block_hash));
     }
+    int64_t getVirtualTransactionSize(const CTransaction& tx) override { return GetVirtualTransactionSize(tx); }
     UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
         int num_blocks,
         uint64_t max_tries,

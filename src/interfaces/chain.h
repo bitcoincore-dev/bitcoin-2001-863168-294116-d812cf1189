@@ -134,6 +134,9 @@ public:
     //! the specified block hash are verified.
     virtual double guessVerificationProgress(const uint256& block_hash) = 0;
 
+    //! Get virtual transaction size.
+    virtual int64_t getVirtualTransactionSize(const CTransaction& tx) = 0;
+
     //! Generate blocks
     virtual UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
         int num_blocks,
