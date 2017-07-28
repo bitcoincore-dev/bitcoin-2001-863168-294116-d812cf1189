@@ -124,6 +124,7 @@ class LockImpl : public Chain::Lock
         }
         return nullopt;
     }
+    bool checkFinalTx(const CTransaction& tx) override { return CheckFinalTx(tx); }
 };
 
 class LockingStateImpl : public LockImpl, public CCriticalBlock
