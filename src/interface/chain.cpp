@@ -3,9 +3,11 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <policy/policy.h>
+#include <policy/rbf.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <sync.h>
+#include <txmempool.h>
 #include <uint256.h>
 #include <util.h>
 #include <validation.h>
@@ -172,6 +174,11 @@ public:
         return GuessVerificationProgress(Params().TxData(), it != ::mapBlockIndex.end() ? it->second : nullptr);
     }
     int64_t getVirtualTransactionSize(const CTransaction& tx) override { return GetVirtualTransactionSize(tx); }
+    RBFTransactionState isRBFOptIn(const CTransaction& tx) override
+    {
+        LOCK(::mempool.cs);
+        return IsRBFOptIn(tx, ::mempool);
+    }
 };
 
 } // namespace
