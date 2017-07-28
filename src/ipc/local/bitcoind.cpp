@@ -124,6 +124,11 @@ public:
         return true;
     }
     int64_t getVirtualTransactionSize(const CTransaction& tx) override { return GetVirtualTransactionSize(tx); }
+    RBFTransactionState isRBFOptIn(const CTransaction& tx) override
+    {
+        LOCK(::mempool.cs);
+        return IsRBFOptIn(tx, ::mempool);
+    }
 };
 
 } // namespace
