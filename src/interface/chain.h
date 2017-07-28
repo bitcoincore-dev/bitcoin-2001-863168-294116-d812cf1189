@@ -125,6 +125,9 @@ public:
     //! Check if transaction has descendants in mempool.
     virtual bool hasDescendantsInMempool(const uint256& txid) = 0;
 
+    //! Relay transaction.
+    virtual bool relayTransaction(const uint256& txid) = 0;
+
     //! Interface to let node manage chain clients (wallets, or maybe tools for
     //! monitoring and analysis in the future).
     class Client
