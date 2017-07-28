@@ -195,6 +195,12 @@ public:
         LOCK(::mempool.cs);
         return IsRBFOptIn(tx, ::mempool);
     }
+    bool hasDescendantsInMempool(const uint256& txid) override
+    {
+        LOCK(::mempool.cs);
+        auto it_mp = ::mempool.mapTx.find(txid);
+        return it_mp != ::mempool.mapTx.end() && it_mp->GetCountWithDescendants() > 1;
+    }
     UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
         int num_blocks,
         uint64_t max_tries,

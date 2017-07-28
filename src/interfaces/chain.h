@@ -141,6 +141,9 @@ public:
     //! Check if transaction is RBF opt in.
     virtual RBFTransactionState isRBFOptIn(const CTransaction& tx) = 0;
 
+    //! Check if transaction has descendants in mempool.
+    virtual bool hasDescendantsInMempool(const uint256& txid) = 0;
+
     //! Generate blocks
     virtual UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
         int num_blocks,
