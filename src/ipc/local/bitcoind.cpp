@@ -2,6 +2,7 @@
 
 #include <chainparams.h>
 #include <ipc/util.h>
+#include <net.h>
 #include <policy/policy.h>
 #include <validation.h>
 
@@ -132,6 +133,15 @@ public:
         LOCK(::mempool.cs);
         auto it_mp = ::mempool.mapTx.find(txid);
         return it_mp != ::mempool.mapTx.end() && it_mp->GetCountWithDescendants() > 1;
+    }
+    bool relayTransaction(const uint256& txid) override
+    {
+        if (g_connman) {
+            CInv inv(MSG_TX, txid);
+            g_connman->ForEachNode([&inv](CNode* node) { node->PushInventory(inv); });
+            return true;
+        }
+        return false;
     }
 };
 
