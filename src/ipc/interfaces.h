@@ -127,6 +127,9 @@ public:
     //! Relay transaction.
     virtual bool relayTransaction(const uint256& txid) = 0;
 
+    //! Check if transaction is within chain limit.
+    virtual bool transactionWithinChainLimit(const uint256& txid, size_t chain_limit) = 0;
+
     //! Interface to let node manage chain clients (wallets, or maybe tools for
     //! monitoring and analysis in the future).
     class Client
