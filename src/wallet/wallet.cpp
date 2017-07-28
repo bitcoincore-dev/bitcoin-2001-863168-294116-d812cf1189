@@ -1875,7 +1875,7 @@ bool CWalletTx::InMempool() const
 bool CWalletTx::IsTrusted(ipc::Chain::LockedState& ipc_locked) const
 {
     // Quick answer in most cases
-    if (!CheckFinalTx(*this))
+    if (!ipc_locked.checkFinalTx(*this))
         return false;
     int nDepth = GetDepthInMainChain(ipc_locked);
     if (nDepth >= 1)
@@ -2082,7 +2082,7 @@ CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth, cons
     for (const auto& entry : mapWallet) {
         const CWalletTx& wtx = entry.second;
         const int depth = wtx.GetDepthInMainChain(*ipc_locked);
-        if (depth < 0 || !CheckFinalTx(*wtx.tx) || wtx.GetBlocksToMaturity(*ipc_locked) > 0) {
+        if (depth < 0 || !ipc_locked->checkFinalTx(*wtx.tx) || wtx.GetBlocksToMaturity(*ipc_locked) > 0) {
             continue;
         }
 
@@ -2142,7 +2142,7 @@ void CWallet::AvailableCoins(ipc::Chain::LockedState& ipc_locked, std::vector<CO
             const uint256& wtxid = it->first;
             const CWalletTx* pcoin = &(*it).second;
 
-            if (!CheckFinalTx(*pcoin))
+            if (!ipc_locked.checkFinalTx(*pcoin))
                 continue;
 
             if (pcoin->IsCoinBase() && pcoin->GetBlocksToMaturity(ipc_locked) > 0)
