@@ -1737,7 +1737,7 @@ void CWallet::ReacceptWalletTransactions()
     }
 }
 
-bool CWalletTx::RelayWalletTransaction(ipc::Chain::LockedState& ipc_locked, CConnman* connman)
+bool CWalletTx::RelayWalletTransaction(ipc::Chain::LockedState& ipc_locked)
 {
     assert(pwallet->GetBroadcastTransactions());
     if (!IsCoinBase() && !isAbandoned() && GetDepthInMainChain(ipc_locked) == 0)
@@ -1746,12 +1746,7 @@ bool CWalletTx::RelayWalletTransaction(ipc::Chain::LockedState& ipc_locked, CCon
         /* GetDepthInMainChain already catches known conflicts. */
         if (InMempool() || AcceptToMemoryPool(ipc_locked, state)) {
             LogPrintf("Relaying wtx %s\n", GetHash().ToString());
-            if (connman) {
-                CInv inv(MSG_TX, GetHash());
-                connman->ForEachNode([&inv](CNode* pnode)
-                {
-                    pnode->PushInventory(inv);
-                });
+            if (pwallet->ipc_chain().relayTransaction(GetHash())) {
                 return true;
             }
         }
@@ -1976,7 +1971,7 @@ bool CWalletTx::IsEquivalentTo(const CWalletTx& _tx) const
         return CTransaction(tx1) == CTransaction(tx2);
 }
 
-std::vector<uint256> CWallet::ResendWalletTransactionsBefore(ipc::Chain::LockedState& ipc_locked, int64_t nTime, CConnman* connman)
+std::vector<uint256> CWallet::ResendWalletTransactionsBefore(ipc::Chain::LockedState& ipc_locked, int64_t nTime)
 {
     std::vector<uint256> result;
 
@@ -1995,7 +1990,7 @@ std::vector<uint256> CWallet::ResendWalletTransactionsBefore(ipc::Chain::LockedS
     for (std::pair<const unsigned int, CWalletTx*>& item : mapSorted)
     {
         CWalletTx& wtx = *item.second;
-        if (wtx.RelayWalletTransaction(ipc_locked, connman))
+        if (wtx.RelayWalletTransaction(ipc_locked))
             result.push_back(wtx.GetHash());
     }
     return result;
@@ -2020,7 +2015,7 @@ void CWallet::ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman
     // Rebroadcast unconfirmed txes older than 5 minutes before the last
     // block was found:
     auto ipc_locked = m_ipc_chain->assumeLocked();  // Temporary. Removed in upcoming lock cleanup
-    std::vector<uint256> relayed = ResendWalletTransactionsBefore(*ipc_locked, nBestBlockTime-5*60, connman);
+    std::vector<uint256> relayed = ResendWalletTransactionsBefore(*ipc_locked, nBestBlockTime-5*60);
     if (!relayed.empty())
         LogPrintf("%s: rebroadcast %u unconfirmed transactions\n", __func__, relayed.size());
 }
@@ -3037,7 +3032,7 @@ bool CWallet::CreateTransaction(ipc::Chain::LockedState& ipc_locked, const std::
 /**
  * Call after CreateTransaction unless you want to abort
  */
-bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, CConnman* connman, CValidationState& state)
+bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, CValidationState& state)
 {
     {
         auto ipc_locked = m_ipc_chain->lockState();
@@ -3074,7 +3069,7 @@ bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, CCon
                 LogPrintf("CommitTransaction(): Transaction cannot be broadcast immediately, %s\n", state.GetRejectReason());
                 // TODO: if we expect the failure to be long term or permanent, instead delete wtx from the wallet and return failure.
             } else {
-                wtx.RelayWalletTransaction(*ipc_locked, connman);
+                wtx.RelayWalletTransaction(*ipc_locked);
             }
         }
     }
