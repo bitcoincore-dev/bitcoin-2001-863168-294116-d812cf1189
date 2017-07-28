@@ -2,6 +2,7 @@
 
 #include <chain.h>
 #include <chainparams.h>
+#include <policy/policy.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <sync.h>
@@ -170,6 +171,7 @@ public:
         auto it = ::mapBlockIndex.find(block_hash);
         return GuessVerificationProgress(Params().TxData(), it != ::mapBlockIndex.end() ? it->second : nullptr);
     }
+    int64_t getVirtualTransactionSize(const CTransaction& tx) override { return GetVirtualTransactionSize(tx); }
 };
 
 } // namespace
