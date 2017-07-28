@@ -2484,7 +2484,7 @@ bool CWallet::OutputEligibleForSpending(const COutput& output, const CoinEligibi
         return false;
 
     size_t ancestors, descendants;
-    mempool.GetTransactionAncestry(output.tx->GetHash(), ancestors, descendants);
+    chain().getTransactionAncestry(output.tx->GetHash(), ancestors, descendants);
     if (ancestors > eligibility_filter.max_ancestors || descendants > eligibility_filter.max_descendants) {
         return false;
     }
