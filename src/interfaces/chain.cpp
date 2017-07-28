@@ -6,6 +6,7 @@
 
 #include <chain.h>
 #include <chainparams.h>
+#include <policy/policy.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <sync.h>
@@ -190,6 +191,7 @@ public:
         LOCK(cs_main);
         return GuessVerificationProgress(Params().TxData(), LookupBlockIndex(block_hash));
     }
+    int64_t getVirtualTransactionSize(const CTransaction& tx) override { return GetVirtualTransactionSize(tx); }
     CAmount maxTxFee() override { return ::maxTxFee; }
 };
 
