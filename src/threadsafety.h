@@ -54,4 +54,15 @@
 #define ASSERT_EXCLUSIVE_LOCK(...)
 #endif // __GNUC__
 
+// Utility class to indicate mutex is locked for thread analysis when it can't
+// be determined otherwise.
+struct SCOPED_LOCKABLE LockAnnotation
+{
+    template <typename Mutex>
+    LockAnnotation(Mutex& mutex) EXCLUSIVE_LOCK_FUNCTION(mutex)
+    {
+    }
+    ~LockAnnotation() UNLOCK_FUNCTION() {}
+};
+
 #endif // BITCOIN_THREADSAFETY_H
