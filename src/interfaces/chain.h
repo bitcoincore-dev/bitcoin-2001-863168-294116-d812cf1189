@@ -9,6 +9,7 @@
 #include <policy/rbf.h>             // For RBFTransactionState
 
 #include <memory>
+#include <stddef.h>
 #include <stdint.h>
 #include <string>
 #include <vector>
@@ -143,6 +144,9 @@ public:
 
     //! Check if transaction has descendants in mempool.
     virtual bool hasDescendantsInMempool(const uint256& txid) = 0;
+
+    //! Calculate mempool ancestor and descendant counts for the given transaction.
+    virtual void getTransactionAncestry(const uint256& txid, size_t& ancestors, size_t& descendants) = 0;
 
     //! Generate blocks
     virtual UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
