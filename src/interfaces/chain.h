@@ -154,6 +154,9 @@ public:
     //! Calculate mempool ancestor and descendant counts for the given transaction.
     virtual void getTransactionAncestry(const uint256& txid, size_t& ancestors, size_t& descendants) = 0;
 
+    //! Check chain limits.
+    virtual bool checkChainLimits(CTransactionRef tx) = 0;
+
     //! Get node max tx fee setting (-maxtxfee).
     //! This could be replaced by a per-wallet max fee, as proposed at
     //! https://github.com/bitcoin/bitcoin/issues/15355
