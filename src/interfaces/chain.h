@@ -6,6 +6,7 @@
 #include <primitives/transaction.h> // For CTransactionRef
 
 #include <memory>
+#include <stddef.h>
 #include <stdint.h>
 #include <string>
 #include <vector>
@@ -132,6 +133,9 @@ public:
 
     //! Relay transaction.
     virtual bool relayTransaction(const uint256& txid) = 0;
+
+    //! Calculate mempool ancestor and descendant counts for the given transaction.
+    virtual void getTransactionAncestry(const uint256& txid, size_t& ancestors, size_t& descendants) = 0;
 };
 
 //! Interface to let node manage chain clients (wallets, or maybe tools for
