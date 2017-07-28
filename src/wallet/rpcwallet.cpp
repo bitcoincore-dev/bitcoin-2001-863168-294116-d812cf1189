@@ -1307,7 +1307,7 @@ UniValue addwitnessaddress(const JSONRPCRequest& request)
 
     {
         auto locked_chain = pwallet->chain().lock();
-        if (!IsWitnessEnabled(chainActive.Tip(), Params().GetConsensus()) && !gArgs.GetBoolArg("-walletprematurewitness", false)) {
+        if (!locked_chain->isWitnessEnabled() && !gArgs.GetBoolArg("-walletprematurewitness", false)) {
             throw JSONRPCError(RPC_WALLET_ERROR, "Segregated witness not enabled on network");
         }
     }
