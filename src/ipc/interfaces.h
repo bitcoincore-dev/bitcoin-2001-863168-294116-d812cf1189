@@ -93,6 +93,9 @@ public:
 
         //! Check if transaction will be final given chain height current time.
         virtual bool checkFinalTx(const CTransaction& tx) = 0;
+
+        //! Check whether segregated witness is enabled on the network.
+        virtual bool isWitnessEnabled() = 0;
     };
 
     //! Return LockedState interface. Chain is locked when this is called, and
