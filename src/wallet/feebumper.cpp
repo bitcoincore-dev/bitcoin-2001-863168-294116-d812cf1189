@@ -53,9 +53,7 @@ static feebumper::Result PreconditionChecks(interface::Chain::Lock& locked_chain
     }
 
     {
-        LOCK(mempool.cs);
-        auto it_mp = mempool.mapTx.find(wtx.GetHash());
-        if (it_mp != mempool.mapTx.end() && it_mp->GetCountWithDescendants() > 1) {
+        if (wallet->chain().hasDescendantsInMempool(wtx.GetHash())) {
             errors.push_back("Transaction has descendants in the mempool");
             return feebumper::Result::INVALID_PARAMETER;
         }
