@@ -2056,7 +2056,7 @@ bool CWalletTx::InMempool() const
 bool CWalletTx::IsTrusted(interfaces::Chain::Lock& locked_chain) const
 {
     // Quick answer in most cases
-    if (!CheckFinalTx(*tx))
+    if (!locked_chain.checkFinalTx(*tx))
         return false;
     int nDepth = GetDepthInMainChain(locked_chain);
     if (nDepth >= 1)
@@ -2264,7 +2264,7 @@ CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth, cons
     for (const auto& entry : mapWallet) {
         const CWalletTx& wtx = entry.second;
         const int depth = wtx.GetDepthInMainChain(*locked_chain);
-        if (depth < 0 || !CheckFinalTx(*wtx.tx) || wtx.GetBlocksToMaturity(*locked_chain) > 0) {
+        if (depth < 0 || !locked_chain->checkFinalTx(*wtx.tx) || wtx.GetBlocksToMaturity(*locked_chain) > 0) {
             continue;
         }
 
