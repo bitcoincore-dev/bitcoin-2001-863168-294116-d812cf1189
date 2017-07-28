@@ -130,6 +130,9 @@ public:
     //! Check if transaction is within chain limit.
     virtual bool transactionWithinChainLimit(const uint256& txid, size_t chain_limit) = 0;
 
+    //! Check chain limits.
+    virtual bool checkChainLimits(CTransactionRef tx) = 0;
+
     //! Interface to let node manage chain clients (wallets, or maybe tools for
     //! monitoring and analysis in the future).
     class Client
