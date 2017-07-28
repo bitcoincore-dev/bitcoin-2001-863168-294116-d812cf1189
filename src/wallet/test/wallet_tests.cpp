@@ -630,7 +630,7 @@ public:
         CCoinControl dummy;
         BOOST_CHECK(wallet->CreateTransaction(*m_locked_chain, {recipient}, wtx, reservekey, fee, changePos, error, dummy));
         CValidationState state;
-        BOOST_CHECK(wallet->CommitTransaction(wtx, reservekey, nullptr, state));
+        BOOST_CHECK(wallet->CommitTransaction(wtx, reservekey, state));
         auto it = wallet->mapWallet.find(wtx.GetHash());
         BOOST_CHECK(it != wallet->mapWallet.end());
         CreateAndProcessBlock({CMutableTransaction(*it->second.tx)}, GetScriptForRawPubKey(coinbaseKey.GetPubKey()));
