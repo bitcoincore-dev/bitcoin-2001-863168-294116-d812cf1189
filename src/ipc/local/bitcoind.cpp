@@ -194,6 +194,7 @@ public:
     {
         CHECK_WALLET(return GetRequiredFee(tx_bytes));
     }
+    bool getPruneMode() override { return ::fPruneMode; }
 };
 
 } // namespace
