@@ -226,6 +226,7 @@ public:
     {
         return ::mempool.GetMinFee(gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000);
     }
+    bool getPruneMode() override { return ::fPruneMode; }
 };
 
 } // namespace
