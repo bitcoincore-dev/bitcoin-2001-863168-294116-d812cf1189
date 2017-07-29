@@ -11,6 +11,7 @@
 #include <protocol.h>
 #include <sync.h>
 #include <threadsafety.h>
+#include <timedata.h>
 #include <txmempool.h>
 #include <uint256.h>
 #include <util.h>
@@ -232,6 +233,7 @@ public:
     }
     bool getPruneMode() override { return ::fPruneMode; }
     bool p2pEnabled() override { return g_connman != nullptr; }
+    int64_t getAdjustedTime() override { return GetAdjustedTime(); }
 };
 
 } // namespace
