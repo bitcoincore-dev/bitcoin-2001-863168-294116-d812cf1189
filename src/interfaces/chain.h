@@ -20,6 +20,7 @@ class CScheduler;
 class CValidationState;
 class uint256;
 struct CBlockLocator;
+struct FeeCalculation;
 
 namespace interfaces {
 
@@ -156,6 +157,15 @@ public:
 
     //! Check chain limits.
     virtual bool checkChainLimits(CTransactionRef tx) = 0;
+
+    //! Estimate smart fee.
+    virtual CFeeRate estimateSmartFee(int num_blocks, bool conservative, FeeCalculation* calc = nullptr) = 0;
+
+    //! Fee estimator max target.
+    virtual unsigned int estimateMaxBlocks() = 0;
+
+    //! Pool min fee.
+    virtual CFeeRate mempoolMinFee() = 0;
 
     //! Get node max tx fee setting (-maxtxfee).
     //! This could be replaced by a per-wallet max fee, as proposed at
