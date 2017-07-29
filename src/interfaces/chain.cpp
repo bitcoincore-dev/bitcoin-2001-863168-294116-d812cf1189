@@ -7,6 +7,7 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <net.h>
+#include <policy/fees.h>
 #include <policy/policy.h>
 #include <policy/rbf.h>
 #include <primitives/block.h>
@@ -229,6 +230,18 @@ public:
         LOCK(::mempool.cs);
         return ::mempool.CalculateMemPoolAncestors(entry, ancestors, limit_ancestor_count, limit_ancestor_size,
             limit_descendant_count, limit_descendant_size, unused_error_string);
+    }
+    CFeeRate estimateSmartFee(int num_blocks, bool conservative, FeeCalculation* calc) override
+    {
+        return ::feeEstimator.estimateSmartFee(num_blocks, calc, conservative);
+    }
+    unsigned int estimateMaxBlocks() override
+    {
+        return ::feeEstimator.HighestTargetTracked(FeeEstimateHorizon::LONG_HALFLIFE);
+    }
+    CFeeRate mempoolMinFee() override
+    {
+        return ::mempool.GetMinFee(gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000);
     }
     CAmount maxTxFee() override { return ::maxTxFee; }
     bool p2pEnabled() override { return g_connman != nullptr; }
