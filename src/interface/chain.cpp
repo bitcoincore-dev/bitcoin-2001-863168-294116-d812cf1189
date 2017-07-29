@@ -244,6 +244,7 @@ public:
     }
     CAmount getRequiredTxFee(unsigned int tx_bytes) override { CHECK_WALLET(return GetRequiredFee(tx_bytes)); }
     bool getPruneMode() override { return ::fPruneMode; }
+    bool p2pEnabled() override { return g_connman != nullptr; }
 };
 
 } // namespace
