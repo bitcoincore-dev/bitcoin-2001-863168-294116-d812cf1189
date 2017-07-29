@@ -16,6 +16,7 @@ class CScheduler;
 class CValidationState;
 class uint256;
 struct CBlockLocator;
+struct FeeCalculation;
 
 namespace interfaces {
 
@@ -142,6 +143,15 @@ public:
 
     //! Check chain limits.
     virtual bool checkChainLimits(CTransactionRef tx) = 0;
+
+    //! Estimate smart fee.
+    virtual CFeeRate estimateSmartFee(int num_blocks, bool conservative, FeeCalculation* calc = nullptr) = 0;
+
+    //! Fee estimator max target.
+    virtual int estimateMaxBlocks() = 0;
+
+    //! Pool min fee.
+    virtual CFeeRate poolMinFee() = 0;
 
     //! Interface to let node manage chain clients (wallets, or maybe tools for
     //! monitoring and analysis in the future).
