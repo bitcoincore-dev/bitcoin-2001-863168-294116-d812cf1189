@@ -5,7 +5,6 @@
 #include <consensus/validation.h>
 #include <wallet/coincontrol.h>
 #include <wallet/feebumper.h>
-#include <wallet/fees.h>
 #include <wallet/wallet.h>
 #include <policy/fees.h>
 #include <policy/policy.h>
@@ -122,19 +121,17 @@ Result CreateTransaction(const CWallet* wallet, const uint256& txid, const CCoin
     // The wallet uses a conservative WALLET_INCREMENTAL_RELAY_FEE value to
     // future proof against changes to network wide policy for incremental relay
     // fee that our node may not be aware of.
-    CFeeRate walletIncrementalRelayFee = CFeeRate(WALLET_INCREMENTAL_RELAY_FEE);
-    if (::incrementalRelayFee > walletIncrementalRelayFee) {
-        walletIncrementalRelayFee = ::incrementalRelayFee;
-    }
+    const CFeeRate incremental_relay_fee_rate = wallet->chain().getIncrementalRelayFeeRate();
+    CFeeRate walletIncrementalRelayFee = std::max(CFeeRate(WALLET_INCREMENTAL_RELAY_FEE), incremental_relay_fee_rate);
 
     if (total_fee > 0) {
-        CAmount minTotalFee = nOldFeeRate.GetFee(maxNewTxSize) + ::incrementalRelayFee.GetFee(maxNewTxSize);
+        CAmount minTotalFee = nOldFeeRate.GetFee(maxNewTxSize) + incremental_relay_fee_rate.GetFee(maxNewTxSize);
         if (total_fee < minTotalFee) {
             errors.push_back(strprintf("Insufficient totalFee, must be at least %s (oldFee %s + incrementalFee %s)",
-                                                                FormatMoney(minTotalFee), FormatMoney(nOldFeeRate.GetFee(maxNewTxSize)), FormatMoney(::incrementalRelayFee.GetFee(maxNewTxSize))));
+                                                                FormatMoney(minTotalFee), FormatMoney(nOldFeeRate.GetFee(maxNewTxSize)), FormatMoney(incremental_relay_fee_rate.GetFee(maxNewTxSize))));
             return Result::INVALID_PARAMETER;
         }
-        CAmount requiredFee = GetRequiredFee(maxNewTxSize);
+        CAmount requiredFee = wallet->chain().getRequiredTxFee(maxNewTxSize);
         if (total_fee < requiredFee) {
             errors.push_back(strprintf("Insufficient totalFee (cannot be less than required fee %s)",
                                                                 FormatMoney(requiredFee)));
@@ -143,7 +140,7 @@ Result CreateTransaction(const CWallet* wallet, const uint256& txid, const CCoin
         new_fee = total_fee;
         nNewFeeRate = CFeeRate(total_fee, maxNewTxSize);
     } else {
-        new_fee = GetMinimumFee(maxNewTxSize, coin_control, mempool, ::feeEstimator, nullptr /* FeeCalculation */);
+        new_fee = wallet->chain().getMinTxFee(maxNewTxSize, coin_control, nullptr /* FeeCalculation */);
         nNewFeeRate = CFeeRate(new_fee, maxNewTxSize);
 
         // New fee rate must be at least old rate + minimum incremental relay rate
@@ -158,9 +155,10 @@ Result CreateTransaction(const CWallet* wallet, const uint256& txid, const CCoin
     }
 
     // Check that in all cases the new fee doesn't violate maxTxFee
-     if (new_fee > maxTxFee) {
+    const CAmount max_tx_fee = wallet->chain().getMaxTxFee();
+    if (new_fee > max_tx_fee) {
          errors.push_back(strprintf("Specified or calculated fee %s is too high (cannot be higher than maxTxFee %s)",
-                               FormatMoney(new_fee), FormatMoney(maxTxFee)));
+                               FormatMoney(new_fee), FormatMoney(max_tx_fee)));
          return Result::WALLET_ERROR;
      }
 
@@ -169,7 +167,7 @@ Result CreateTransaction(const CWallet* wallet, const uint256& txid, const CCoin
     // This may occur if the user set TotalFee or paytxfee too low, if fallbackfee is too low, or, perhaps,
     // in a rare situation where the mempool minimum fee increased significantly since the fee estimation just a
     // moment earlier. In this case, we report an error to the user, who may use total_fee to make an adjustment.
-    CFeeRate minMempoolFeeRate = mempool.GetMinFee(gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000);
+    CFeeRate minMempoolFeeRate = wallet->chain().getMinPoolFeeRate();
     if (nNewFeeRate.GetFeePerK() < minMempoolFeeRate.GetFeePerK()) {
         errors.push_back(strprintf(
             "New fee rate (%s) is lower than the minimum fee rate (%s) to get into the mempool -- "
@@ -194,7 +192,7 @@ Result CreateTransaction(const CWallet* wallet, const uint256& txid, const CCoin
 
     // If the output would become dust, discard it (converting the dust to fee)
     poutput->nValue -= nDelta;
-    if (poutput->nValue <= GetDustThreshold(*poutput, ::dustRelayFee)) {
+    if (poutput->nValue <= GetDustThreshold(*poutput, wallet->chain().getDustRelayFeeRate())) {
         LogPrint(BCLog::RPC, "Bumping fee and discarding dust output\n");
         new_fee += poutput->nValue;
         mtx.vout.erase(mtx.vout.begin() + nOutput);

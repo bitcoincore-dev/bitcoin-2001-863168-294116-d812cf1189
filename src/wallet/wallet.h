@@ -1180,6 +1180,8 @@ public:
     bool OutputEligibleForSpending(const COutput& output, const CoinEligibilityFilter& eligibilty_filter) const;
 };
 
+CFeeRate GetDiscardRate(const CBlockPolicyEstimator& estimator);
+
 /** A key allocated from the key pool. */
 class CReserveKey final : public CReserveScript
 {
