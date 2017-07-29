@@ -1137,6 +1137,8 @@ public:
     void BlockUntilSyncedToCurrentChain();
 };
 
+CFeeRate GetDiscardRate(const CBlockPolicyEstimator& estimator);
+
 /** A key allocated from the key pool. */
 class CReserveKey final : public CReserveScript
 {
