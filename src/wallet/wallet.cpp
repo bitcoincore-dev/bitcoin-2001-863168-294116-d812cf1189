@@ -4065,7 +4065,7 @@ CWallet* CWallet::CreateWalletFromFile(ipc::Chain& ipc_chain, const std::string 
         //We can't rescan beyond non-pruned blocks, stop and throw an error
         //this might happen if a user uses an old wallet within a pruned node
         // or if he ran -disablewallet for a longer time, then decided to re-enable
-        if (fPruneMode)
+        if (ipc_chain.getPruneMode())
         {
             int block = tip_height;
             while (block > 0 && ipc_locked->blockHasTransactions(block - 1) && index_rescan != block) {
