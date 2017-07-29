@@ -173,6 +173,9 @@ public:
     //! But for the time being, wallets call this to access the node setting.
     virtual CAmount maxTxFee() = 0;
 
+    //! Check if pruning is enabled.
+    virtual bool getPruneMode() = 0;
+
     //! Check if p2p enabled.
     virtual bool p2pEnabled() = 0;
 };
