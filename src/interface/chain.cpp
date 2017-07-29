@@ -247,6 +247,7 @@ public:
     {
         CHECK_WALLET(return GetMinimumFee(tx_bytes, coin_control, ::mempool, ::feeEstimator, calc));
     }
+    bool getPruneMode() override { return ::fPruneMode; }
 };
 
 } // namespace
