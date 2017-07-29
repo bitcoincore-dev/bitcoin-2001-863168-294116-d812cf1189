@@ -173,6 +173,15 @@ public:
     //! Get adjusted time.
     virtual int64_t getAdjustedTime() = 0;
 
+    //! Send init message.
+    virtual void initMessage(const std::string& message) = 0;
+
+    //! Send init warning.
+    virtual void initWarning(const std::string& message) = 0;
+
+    //! Send init error.
+    virtual void initError(const std::string& message) = 0;
+
     //! Generate blocks
     virtual UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
         int num_blocks,
