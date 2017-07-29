@@ -1175,6 +1175,8 @@ public:
     CTxDestination AddAndGetDestinationForScript(const CScript& script, OutputType);
 };
 
+CFeeRate GetDiscardRate(const CBlockPolicyEstimator& estimator);
+
 /** A key allocated from the key pool. */
 class CReserveKey final : public CReserveScript
 {
