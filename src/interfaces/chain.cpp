@@ -206,6 +206,7 @@ public:
         return it_mp != ::mempool.mapTx.end() && it_mp->GetCountWithDescendants() > 1;
     }
     CAmount maxTxFee() override { return ::maxTxFee; }
+    bool p2pEnabled() override { return g_connman != nullptr; }
 };
 
 } // namespace
