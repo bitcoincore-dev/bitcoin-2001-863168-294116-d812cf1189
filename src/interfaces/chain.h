@@ -164,6 +164,9 @@ public:
     //! Check if pruning is enabled.
     virtual bool getPruneMode() = 0;
 
+    //! Check if p2p enabled.
+    virtual bool p2pEnabled() = 0;
+
     //! Generate blocks
     virtual UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
         int num_blocks,
