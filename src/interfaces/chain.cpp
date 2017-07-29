@@ -244,6 +244,7 @@ public:
         return ::mempool.GetMinFee(gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000);
     }
     CAmount maxTxFee() override { return ::maxTxFee; }
+    bool getPruneMode() override { return ::fPruneMode; }
     bool p2pEnabled() override { return g_connman != nullptr; }
 };
 
