@@ -141,20 +141,18 @@ CFeeBumper::CFeeBumper(ipc::Chain::LockedState& ipc_locked, const CWallet *pWall
     // The wallet uses a conservative WALLET_INCREMENTAL_RELAY_FEE value to
     // future proof against changes to network wide policy for incremental relay
     // fee that our node may not be aware of.
-    CFeeRate walletIncrementalRelayFee = CFeeRate(WALLET_INCREMENTAL_RELAY_FEE);
-    if (::incrementalRelayFee > walletIncrementalRelayFee) {
-        walletIncrementalRelayFee = ::incrementalRelayFee;
-    }
+    const CFeeRate incremental_relay_fee_rate = pWallet->ipc_chain().getIncrementalRelayFeeRate();
+    CFeeRate walletIncrementalRelayFee = std::max(CFeeRate(WALLET_INCREMENTAL_RELAY_FEE), incremental_relay_fee_rate);
 
     if (totalFee > 0) {
-        CAmount minTotalFee = nOldFeeRate.GetFee(maxNewTxSize) + ::incrementalRelayFee.GetFee(maxNewTxSize);
+        CAmount minTotalFee = nOldFeeRate.GetFee(maxNewTxSize) + incremental_relay_fee_rate.GetFee(maxNewTxSize);
         if (totalFee < minTotalFee) {
             vErrors.push_back(strprintf("Insufficient totalFee, must be at least %s (oldFee %s + incrementalFee %s)",
-                                                                FormatMoney(minTotalFee), FormatMoney(nOldFeeRate.GetFee(maxNewTxSize)), FormatMoney(::incrementalRelayFee.GetFee(maxNewTxSize))));
+                                                                FormatMoney(minTotalFee), FormatMoney(nOldFeeRate.GetFee(maxNewTxSize)), FormatMoney(incremental_relay_fee_rate.GetFee(maxNewTxSize))));
             currentResult = BumpFeeResult::INVALID_PARAMETER;
             return;
         }
-        CAmount requiredFee = CWallet::GetRequiredFee(maxNewTxSize);
+        CAmount requiredFee = pWallet->ipc_chain().getRequiredTxFee(maxNewTxSize);
         if (totalFee < requiredFee) {
             vErrors.push_back(strprintf("Insufficient totalFee (cannot be less than required fee %s)",
                                                                 FormatMoney(requiredFee)));
@@ -164,7 +162,7 @@ CFeeBumper::CFeeBumper(ipc::Chain::LockedState& ipc_locked, const CWallet *pWall
         nNewFee = totalFee;
         nNewFeeRate = CFeeRate(totalFee, maxNewTxSize);
     } else {
-        nNewFee = CWallet::GetMinimumFee(maxNewTxSize, coin_control, mempool, ::feeEstimator, nullptr /* FeeCalculation */);
+        nNewFee = pWallet->ipc_chain().getMinTxFee(maxNewTxSize, coin_control, nullptr /* FeeCalculation */);
         nNewFeeRate = CFeeRate(nNewFee, maxNewTxSize);
 
         // New fee rate must be at least old rate + minimum incremental relay rate
@@ -179,9 +177,9 @@ CFeeBumper::CFeeBumper(ipc::Chain::LockedState& ipc_locked, const CWallet *pWall
     }
 
     // Check that in all cases the new fee doesn't violate maxTxFee
-     if (nNewFee > maxTxFee) {
+    if (nNewFee > pWallet->ipc_chain().getMaxTxFee()) {
          vErrors.push_back(strprintf("Specified or calculated fee %s is too high (cannot be higher than maxTxFee %s)",
-                               FormatMoney(nNewFee), FormatMoney(maxTxFee)));
+                               FormatMoney(nNewFee), FormatMoney(pWallet->ipc_chain().getMaxTxFee())));
          currentResult = BumpFeeResult::WALLET_ERROR;
          return;
      }
@@ -191,7 +189,7 @@ CFeeBumper::CFeeBumper(ipc::Chain::LockedState& ipc_locked, const CWallet *pWall
     // This may occur if the user set TotalFee or paytxfee too low, if fallbackfee is too low, or, perhaps,
     // in a rare situation where the mempool minimum fee increased significantly since the fee estimation just a
     // moment earlier. In this case, we report an error to the user, who may use totalFee to make an adjustment.
-    CFeeRate minMempoolFeeRate = mempool.GetMinFee(gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000);
+    CFeeRate minMempoolFeeRate = pWallet->ipc_chain().getMinPoolFeeRate();
     if (nNewFeeRate.GetFeePerK() < minMempoolFeeRate.GetFeePerK()) {
         vErrors.push_back(strprintf("New fee rate (%s) is less than the minimum fee rate (%s) to get into the mempool. totalFee value should to be at least %s or settxfee value should be at least %s to add transaction.", FormatMoney(nNewFeeRate.GetFeePerK()), FormatMoney(minMempoolFeeRate.GetFeePerK()), FormatMoney(minMempoolFeeRate.GetFee(maxNewTxSize)), FormatMoney(minMempoolFeeRate.GetFeePerK())));
         currentResult = BumpFeeResult::WALLET_ERROR;
@@ -212,7 +210,7 @@ CFeeBumper::CFeeBumper(ipc::Chain::LockedState& ipc_locked, const CWallet *pWall
 
     // If the output would become dust, discard it (converting the dust to fee)
     poutput->nValue -= nDelta;
-    if (poutput->nValue <= GetDustThreshold(*poutput, ::dustRelayFee)) {
+    if (poutput->nValue <= GetDustThreshold(*poutput, pWallet->ipc_chain().getDustRelayFeeRate())) {
         LogPrint(BCLog::RPC, "Bumping fee and discarding dust output\n");
         nNewFee += poutput->nValue;
         mtx.vout.erase(mtx.vout.begin() + nOutput);
