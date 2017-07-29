@@ -2653,7 +2653,7 @@ bool CWallet::FundTransaction(ipc::Chain::LockedState& ipc_locked, CMutableTrans
     return true;
 }
 
-static CFeeRate GetDiscardRate(const CBlockPolicyEstimator& estimator)
+CFeeRate GetDiscardRate(const CBlockPolicyEstimator& estimator)
 {
     unsigned int highest_target = estimator.HighestTargetTracked(FeeEstimateHorizon::LONG_HALFLIFE);
     CFeeRate discard_rate = estimator.estimateSmartFee(highest_target, nullptr /* FeeCalculation */, false /* conservative */);
@@ -2765,7 +2765,7 @@ bool CWallet::CreateTransaction(ipc::Chain::LockedState& ipc_locked, const std::
             CTxOut change_prototype_txout(0, scriptChange);
             size_t change_prototype_size = GetSerializeSize(change_prototype_txout, SER_DISK, 0);
 
-            CFeeRate discard_rate = GetDiscardRate(::feeEstimator);
+            CFeeRate discard_rate = m_ipc_chain->getMaxDiscardFeeRate();
             nFeeRet = 0;
             bool pick_new_inputs = true;
             CAmount nValueIn = 0;
@@ -2797,7 +2797,7 @@ bool CWallet::CreateTransaction(ipc::Chain::LockedState& ipc_locked, const std::
                         }
                     }
 
-                    if (IsDust(txout, ::dustRelayFee))
+                    if (IsDust(txout, m_ipc_chain->getDustRelayFeeRate()))
                     {
                         if (recipient.fSubtractFeeFromAmount && nFeeRet > 0)
                         {
@@ -2887,11 +2887,11 @@ bool CWallet::CreateTransaction(ipc::Chain::LockedState& ipc_locked, const std::
                     vin.scriptWitness.SetNull();
                 }
 
-                CAmount nFeeNeeded = GetMinimumFee(nBytes, coin_control, ::mempool, ::feeEstimator, &feeCalc);
+                CAmount nFeeNeeded = m_ipc_chain->getMinTxFee(nBytes, coin_control, &feeCalc);
 
                 // If we made it here and we aren't even able to meet the relay fee on the next pass, give up
                 // because we must be at the maximum allowed fee.
-                if (nFeeNeeded < ::minRelayTxFee.GetFee(nBytes))
+                if (nFeeNeeded < m_ipc_chain->getMinRelayFeeRate().GetFee(nBytes))
                 {
                     strFailReason = _("Transaction too large for fee policy");
                     return false;
@@ -2908,7 +2908,7 @@ bool CWallet::CreateTransaction(ipc::Chain::LockedState& ipc_locked, const std::
                     // new inputs. We now know we only need the smaller fee
                     // (because of reduced tx size) and so we should add a
                     // change output. Only try this once.
-                    CAmount fee_needed_for_change = GetMinimumFee(change_prototype_size, coin_control, ::mempool, ::feeEstimator, nullptr);
+                    CAmount fee_needed_for_change = m_ipc_chain->getMinTxFee(change_prototype_size, coin_control, nullptr);
                     CAmount minimum_value_for_change = GetDustThreshold(change_prototype_txout, discard_rate);
                     CAmount max_excess_fee = fee_needed_for_change + minimum_value_for_change;
                     if (nFeeRet > nFeeNeeded + max_excess_fee && nChangePosInOut == -1 && nSubtractFeeFromAmount == 0 && pick_new_inputs) {
