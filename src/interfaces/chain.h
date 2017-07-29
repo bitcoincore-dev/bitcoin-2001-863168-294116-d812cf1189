@@ -170,6 +170,9 @@ public:
     //! Check if p2p enabled.
     virtual bool p2pEnabled() = 0;
 
+    //! Get adjusted time.
+    virtual int64_t getAdjustedTime() = 0;
+
     //! Generate blocks
     virtual UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
         int num_blocks,
