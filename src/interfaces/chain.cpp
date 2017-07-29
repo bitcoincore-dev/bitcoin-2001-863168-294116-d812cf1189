@@ -232,6 +232,7 @@ public:
     {
         return ::mempool.GetMinFee(gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000);
     }
+    bool getPruneMode() override { return ::fPruneMode; }
     UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
         int num_blocks,
         uint64_t max_tries,

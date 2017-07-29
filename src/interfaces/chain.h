@@ -161,6 +161,9 @@ public:
     //! Pool min fee.
     virtual CFeeRate mempoolMinFee() = 0;
 
+    //! Check if pruning is enabled.
+    virtual bool getPruneMode() = 0;
+
     //! Generate blocks
     virtual UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
         int num_blocks,
