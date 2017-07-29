@@ -795,7 +795,7 @@ bool CWallet::AccountMove(std::string strFrom, std::string strTo, CAmount nAmoun
     if (!walletdb.TxnBegin())
         return false;
 
-    int64_t nNow = GetAdjustedTime();
+    int64_t nNow = m_chain->getAdjustedTime();
 
     // Debit
     CAccountingEntry debit;
@@ -916,7 +916,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
     bool fInsertedNew = ret.second;
     if (fInsertedNew)
     {
-        wtx.nTimeReceived = GetAdjustedTime();
+        wtx.nTimeReceived = m_chain->getAdjustedTime();
         wtx.nOrderPos = IncOrderPosNext(&walletdb);
         wtxOrdered.insert(std::make_pair(wtx.nOrderPos, TxPair(&wtx, nullptr)));
         wtx.nTimeSmart = ComputeTimeSmart(wtx);
