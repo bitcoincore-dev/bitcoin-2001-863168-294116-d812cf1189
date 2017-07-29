@@ -3,8 +3,20 @@
 #include <chainparams.h>
 #include <ipc/util.h>
 #include <net.h>
+#include <policy/fees.h>
 #include <policy/policy.h>
 #include <validation.h>
+
+#if defined(HAVE_CONFIG_H)
+#include <config/bitcoin-config.h>
+#endif
+#ifdef ENABLE_WALLET
+#include <wallet/fees.h>
+#include <wallet/wallet.h>
+#define CHECK_WALLET(x) x
+#else
+#define CHECK_WALLET(x) throw std::logic_error("Wallet function called in non-wallet build.")
+#endif
 
 namespace ipc {
 namespace local {
@@ -164,6 +176,23 @@ public:
             return false;
         }
         return true;
+    }
+    CFeeRate getMinPoolFeeRate() override
+    {
+        return ::mempool.GetMinFee(gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000);
+    }
+    CFeeRate getMinRelayFeeRate() override { return ::minRelayTxFee; }
+    CFeeRate getIncrementalRelayFeeRate() override { return ::incrementalRelayFee; }
+    CFeeRate getDustRelayFeeRate() override { return ::dustRelayFee; }
+    CFeeRate getMaxDiscardFeeRate() override { CHECK_WALLET(return GetDiscardRate(::feeEstimator)); }
+    CAmount getMaxTxFee() override { return ::maxTxFee; }
+    CAmount getMinTxFee(unsigned int tx_bytes, const CCoinControl& coin_control, FeeCalculation* calc) override
+    {
+        CHECK_WALLET(return GetMinimumFee(tx_bytes, coin_control, ::mempool, ::feeEstimator, calc));
+    }
+    CAmount getRequiredTxFee(unsigned int tx_bytes) override
+    {
+        CHECK_WALLET(return GetRequiredFee(tx_bytes));
     }
 };
 
