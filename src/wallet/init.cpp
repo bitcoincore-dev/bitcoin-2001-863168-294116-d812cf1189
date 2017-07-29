@@ -147,11 +147,14 @@ bool VerifyWallets(interfaces::Chain& chain, const std::vector<std::string>& wal
     if (gArgs.IsArgSet("-walletdir")) {
         fs::path wallet_dir = gArgs.GetArg("-walletdir", "");
         if (!fs::exists(wallet_dir)) {
-            return InitError(strprintf(_("Specified -walletdir \"%s\" does not exist"), wallet_dir.string()));
+            chain.initError(strprintf(_("Specified -walletdir \"%s\" does not exist"), wallet_dir.string()));
+            return false;
         } else if (!fs::is_directory(wallet_dir)) {
-            return InitError(strprintf(_("Specified -walletdir \"%s\" is not a directory"), wallet_dir.string()));
+            chain.initError(strprintf(_("Specified -walletdir \"%s\" is not a directory"), wallet_dir.string()));
+            return false;
         } else if (!wallet_dir.is_absolute()) {
-            return InitError(strprintf(_("Specified -walletdir \"%s\" is a relative path"), wallet_dir.string()));
+            chain.initError(strprintf(_("Specified -walletdir \"%s\" is a relative path"), wallet_dir.string()));
+            return false;
         }
     }
 
@@ -171,14 +174,15 @@ bool VerifyWallets(interfaces::Chain& chain, const std::vector<std::string>& wal
         fs::path wallet_path = fs::absolute(wallet_file, GetWalletDir());
 
         if (!wallet_paths.insert(wallet_path).second) {
-            return InitError(strprintf(_("Error loading wallet %s. Duplicate -wallet filename specified."), wallet_file));
+            chain.initError(strprintf(_("Error loading wallet %s. Duplicate -wallet filename specified."), wallet_file));
+            return false;
         }
 
         std::string error_string;
         std::string warning_string;
         bool verify_success = CWallet::Verify(chain, wallet_file, salvage_wallet, error_string, warning_string);
-        if (!error_string.empty()) InitError(error_string);
-        if (!warning_string.empty()) InitWarning(warning_string);
+        if (!error_string.empty()) chain.initError(error_string);
+        if (!warning_string.empty()) chain.initWarning(warning_string);
         if (!verify_success) return false;
     }
 
