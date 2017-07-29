@@ -191,6 +191,7 @@ public:
         CHECK_WALLET(return GetMinimumFee(tx_bytes, coin_control, ::mempool, ::feeEstimator, calc));
     }
     CAmount getRequiredTxFee(unsigned int tx_bytes) override { CHECK_WALLET(return GetRequiredFee(tx_bytes)); }
+    bool getPruneMode() override { return ::fPruneMode; }
 };
 
 } // namespace
