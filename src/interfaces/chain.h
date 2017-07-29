@@ -150,6 +150,9 @@ public:
     //! Pool min fee.
     virtual CFeeRate poolMinFee() = 0;
 
+    //! Check if pruning is enabled.
+    virtual bool getPruneMode() = 0;
+
     //! Interface to let node manage chain clients (wallets, or maybe tools for
     //! monitoring and analysis in the future).
     class Client
