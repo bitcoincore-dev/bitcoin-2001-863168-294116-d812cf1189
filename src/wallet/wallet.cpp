@@ -3933,13 +3933,13 @@ CWallet* CWallet::CreateWalletFromFile(ipc::Chain& ipc_chain, const std::string 
     std::vector<CWalletTx> vWtx;
 
     if (GetBoolArg("-zapwallettxes", false)) {
-        uiInterface.InitMessage(_("Zapping all transactions from wallet..."));
+        ipc_chain.initMessage(_("Zapping all transactions from wallet..."));
 
         std::unique_ptr<CWalletDBWrapper> dbw(new CWalletDBWrapper(&bitdb, walletFile));
         CWallet *tempWallet = new CWallet(&ipc_chain, std::move(dbw));
         DBErrors nZapWalletRet = tempWallet->ZapWalletTx(vWtx);
         if (nZapWalletRet != DB_LOAD_OK) {
-            InitError(strprintf(_("Error loading %s: Wallet corrupted"), walletFile));
+            ipc_chain.initError(strprintf(_("Error loading %s: Wallet corrupted"), walletFile));
             return NULL;
         }
 
@@ -3947,7 +3947,7 @@ CWallet* CWallet::CreateWalletFromFile(ipc::Chain& ipc_chain, const std::string 
         tempWallet = NULL;
     }
 
-    uiInterface.InitMessage(_("Loading wallet..."));
+    ipc_chain.initMessage(_("Loading wallet..."));
 
     int64_t nStart = GetTimeMillis();
     bool fFirstRun = true;
@@ -3957,26 +3957,26 @@ CWallet* CWallet::CreateWalletFromFile(ipc::Chain& ipc_chain, const std::string 
     if (nLoadWalletRet != DB_LOAD_OK)
     {
         if (nLoadWalletRet == DB_CORRUPT) {
-            InitError(strprintf(_("Error loading %s: Wallet corrupted"), walletFile));
+            ipc_chain.initError(strprintf(_("Error loading %s: Wallet corrupted"), walletFile));
             return NULL;
         }
         else if (nLoadWalletRet == DB_NONCRITICAL_ERROR)
         {
-            InitWarning(strprintf(_("Error reading %s! All keys read correctly, but transaction data"
+            ipc_chain.initWarning(strprintf(_("Error reading %s! All keys read correctly, but transaction data"
                                          " or address book entries might be missing or incorrect."),
                 walletFile));
         }
         else if (nLoadWalletRet == DB_TOO_NEW) {
-            InitError(strprintf(_("Error loading %s: Wallet requires newer version of %s"), walletFile, _(PACKAGE_NAME)));
+            ipc_chain.initError(strprintf(_("Error loading %s: Wallet requires newer version of %s"), walletFile, _(PACKAGE_NAME)));
             return NULL;
         }
         else if (nLoadWalletRet == DB_NEED_REWRITE)
         {
-            InitError(strprintf(_("Wallet needed to be rewritten: restart %s to complete"), _(PACKAGE_NAME)));
+            ipc_chain.initError(strprintf(_("Wallet needed to be rewritten: restart %s to complete"), _(PACKAGE_NAME)));
             return NULL;
         }
         else {
-            InitError(strprintf(_("Error loading %s"), walletFile));
+            ipc_chain.initError(strprintf(_("Error loading %s"), walletFile));
             return NULL;
         }
     }
@@ -3994,7 +3994,7 @@ CWallet* CWallet::CreateWalletFromFile(ipc::Chain& ipc_chain, const std::string 
             LogPrintf("Allowing wallet upgrade up to %i\n", nMaxVersion);
         if (nMaxVersion < walletInstance->GetVersion())
         {
-            InitError(_("Cannot downgrade wallet"));
+            ipc_chain.initError(_("Cannot downgrade wallet"));
             return NULL;
         }
         walletInstance->SetMaxVersion(nMaxVersion);
@@ -4018,7 +4018,7 @@ CWallet* CWallet::CreateWalletFromFile(ipc::Chain& ipc_chain, const std::string 
         if (walletInstance->GetKeyFromPool(newDefaultKey, false)) {
             walletInstance->SetDefaultKey(newDefaultKey);
             if (!walletInstance->SetAddressBook(walletInstance->vchDefaultKey.GetID(), "", "receive")) {
-                InitError(_("Cannot write default address") += "\n");
+                ipc_chain.initError(_("Cannot write default address") += "\n");
                 return NULL;
             }
         }
@@ -4028,11 +4028,11 @@ CWallet* CWallet::CreateWalletFromFile(ipc::Chain& ipc_chain, const std::string 
     else if (IsArgSet("-usehd")) {
         bool useHD = GetBoolArg("-usehd", DEFAULT_USE_HD_WALLET);
         if (walletInstance->IsHDEnabled() && !useHD) {
-            InitError(strprintf(_("Error loading %s: You can't disable HD on an already existing HD wallet"), walletFile));
+            ipc_chain.initError(strprintf(_("Error loading %s: You can't disable HD on an already existing HD wallet"), walletFile));
             return NULL;
         }
         if (!walletInstance->IsHDEnabled() && useHD) {
-            InitError(strprintf(_("Error loading %s: You can't enable HD on an already existing non-HD wallet"), walletFile));
+            ipc_chain.initError(strprintf(_("Error loading %s: You can't enable HD on an already existing non-HD wallet"), walletFile));
             return NULL;
         }
     }
@@ -4074,12 +4074,12 @@ CWallet* CWallet::CreateWalletFromFile(ipc::Chain& ipc_chain, const std::string 
             }
 
             if (index_rescan != block) {
-                InitError(_("Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of pruned node)"));
+                ipc_chain.initError(_("Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of pruned node)"));
                 return NULL;
             }
         }
 
-        uiInterface.InitMessage(_("Rescanning..."));
+        ipc_chain.initMessage(_("Rescanning..."));
         LogPrintf("Rescanning last %i blocks (from block %i)...\n", tip_height - index_rescan, index_rescan);
 
         // No need to read and scan block if block was created before
