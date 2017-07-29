@@ -460,7 +460,7 @@ static CTransactionRef SendMoney(interfaces::Chain::Lock& locked_chain, CWallet 
     if (nValue > curBalance)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient funds");
 
-    if (pwallet->GetBroadcastTransactions() && !g_connman) {
+    if (pwallet->GetBroadcastTransactions() && !pwallet->chain().p2pEnabled()) {
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
     }
 
@@ -1172,7 +1172,7 @@ UniValue sendmany(const JSONRPCRequest& request)
     auto locked_chain = pwallet->chain().lock();
     LOCK(pwallet->cs_wallet);
 
-    if (pwallet->GetBroadcastTransactions() && !g_connman) {
+    if (pwallet->GetBroadcastTransactions() && !pwallet->chain().p2pEnabled()) {
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
     }
 
@@ -3038,7 +3038,7 @@ UniValue resendwallettransactions(const JSONRPCRequest& request)
             "Returns array of transaction ids that were re-broadcast.\n"
             );
 
-    if (!g_connman)
+    if (!pwallet->chain().p2pEnabled())
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
 
     auto locked_chain = pwallet->chain().lock();
