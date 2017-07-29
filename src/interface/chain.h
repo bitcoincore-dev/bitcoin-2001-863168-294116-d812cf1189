@@ -1,6 +1,8 @@
 #ifndef BITCOIN_INTERFACE_CHAIN_H
 #define BITCOIN_INTERFACE_CHAIN_H
 
+#include <amount.h>                 // For CAmount
+#include <policy/feerate.h>         // For CFeeRate
 #include <policy/rbf.h>             // For RBFTransactionState
 #include <primitives/transaction.h> // For CTransactionRef
 
@@ -11,10 +13,12 @@
 #include <vector>
 
 class CBlock;
+class CCoinControl;
 class CScheduler;
 class CValidationState;
 class uint256;
 struct CBlockLocator;
+struct FeeCalculation;
 
 namespace interface {
 
@@ -135,6 +139,30 @@ public:
 
     //! Check chain limits.
     virtual bool checkChainLimits(CTransactionRef tx) = 0;
+
+    //! Get min pool feerate.
+    virtual CFeeRate getMinPoolFeeRate() = 0;
+
+    //! Get min relay feerate (-minrelaytxfee / -incrementalrelayfee).
+    virtual CFeeRate getMinRelayFeeRate() = 0;
+
+    //! Get incremental relay feerate (-incrementalrelayfee).
+    virtual CFeeRate getIncrementalRelayFeeRate() = 0;
+
+    //! Get dust relay feerate (-dustrelayfee).
+    virtual CFeeRate getDustRelayFeeRate() = 0;
+
+    //! Get max discard feerate (-discardfee).
+    virtual CFeeRate getMaxDiscardFeeRate() = 0;
+
+    //! Get max tx fee (-maxtxfee).
+    virtual CAmount getMaxTxFee() = 0;
+
+    //! Get min tx fee.
+    virtual CAmount getMinTxFee(unsigned int tx_bytes, const CCoinControl& coin_control, FeeCalculation* calc) = 0;
+
+    //! Get required tx fee (-mintxfee / -minrelaytxfee / -incrementalrelayfee)
+    virtual CAmount getRequiredTxFee(unsigned int tx_bytes) = 0;
 
     //! Interface to let node manage chain clients (wallets, or maybe tools for
     //! monitoring and analysis in the future).
