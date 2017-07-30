@@ -15,12 +15,12 @@ WalletTestingSetup::WalletTestingSetup(const std::string& chainName):
     g_address_type = OUTPUT_TYPE_DEFAULT;
     g_change_type = OUTPUT_TYPE_DEFAULT;
     m_wallet.LoadWallet(fFirstRun);
-    RegisterValidationInterface(&m_wallet);
+    m_wallet.m_handler = m_chain->handleNotifications(m_wallet);
 
     RegisterWalletRPCCommands(tableRPC);
 }
 
 WalletTestingSetup::~WalletTestingSetup()
 {
-    UnregisterValidationInterface(&m_wallet);
+    m_wallet.m_handler->disconnect();
 }
