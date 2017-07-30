@@ -7,6 +7,7 @@
 #include <policy/policy.h>
 #include <ui_interface.h>
 #include <validation.h>
+#include <validationinterface.h>
 
 #if defined(HAVE_CONFIG_H)
 #include <config/bitcoin-config.h>
@@ -17,6 +18,8 @@
 #else
 #define CHECK_WALLET(x) throw std::logic_error("Wallet function called in non-wallet build.")
 #endif
+
+#include <future>
 
 namespace ipc {
 namespace local {
@@ -105,6 +108,48 @@ public:
 class LockingStateImpl : public LockedStateImpl, public CCriticalBlock
 {
     using CCriticalBlock::CCriticalBlock;
+};
+
+class HandlerImpl : public Handler, private CValidationInterface
+{
+public:
+    HandlerImpl(Chain::Notifications& notifications) : m_notifications(notifications)
+    {
+        RegisterValidationInterface(this);
+    }
+    ~HandlerImpl() override
+    {
+        // Don't call UnregisterValidationInterface here because it would try to
+        // access virtual methods on this object which can't be accessed during
+        // destruction. Also UnregisterAllValidationInterfaces is already called
+        // at this point, so unregistering this object would be redundant.
+    }
+    void disconnect() override { UnregisterValidationInterface(this); }
+    void TransactionAddedToMempool(const CTransactionRef& tx) override
+    {
+        m_notifications.TransactionAddedToMempool(tx);
+    }
+    void TransactionRemovedFromMempool(const CTransactionRef& tx) override
+    {
+        m_notifications.TransactionRemovedFromMempool(tx);
+    }
+    void BlockConnected(const std::shared_ptr<const CBlock>& block,
+        const CBlockIndex* index,
+        const std::vector<CTransactionRef>& tx_conflicted) override
+    {
+        m_notifications.BlockConnected(index->nHeight, index->GetBlockHash(), *block, tx_conflicted);
+    }
+    void BlockDisconnected(const std::shared_ptr<const CBlock>& block) override
+    {
+        m_notifications.BlockDisconnected(*block);
+    }
+    void SetBestChain(const CBlockLocator& locator) override { m_notifications.SetBestChain(locator); }
+    void Inventory(const uint256& hash) override { m_notifications.Inventory(hash); }
+    void ResendWalletTransactions(int64_t best_block_time, CConnman* connman) override
+    {
+        m_notifications.ResendWalletTransactions(best_block_time);
+    }
+    Chain::Notifications& m_notifications;
 };
 
 class ChainImpl : public Chain
@@ -198,6 +243,16 @@ public:
     void initMessage(const std::string& message) override { ::uiInterface.InitMessage(message); }
     void initWarning(const std::string& message) override { InitWarning(message); }
     bool initError(const std::string& message) override { return InitError(message); }
+    std::unique_ptr<Handler> handleNotifications(Notifications& notifications) override
+    {
+        return MakeUnique<HandlerImpl>(notifications);
+    }
+    void waitForNotifications() override
+    {
+        std::promise<void> promise;
+        CallFunctionInValidationInterfaceQueue([&promise] { promise.set_value(); });
+        promise.get_future().wait();
+    }
 };
 
 } // namespace

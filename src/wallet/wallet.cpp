@@ -1192,7 +1192,7 @@ void CWallet::TransactionRemovedFromMempool(const CTransactionRef &ptx) {
     }
 }
 
-void CWallet::BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex *pindex, const std::vector<CTransactionRef>& vtxConflicted) {
+void CWallet::BlockConnected(int block_height, const uint256& block_hash, const CBlock& block, const std::vector<CTransactionRef>& vtxConflicted) {
     auto ipc_locked = m_ipc_chain->lockState();
     LOCK(cs_wallet);
     // TODO: Temporarily ensure that mempool removals are notified before
@@ -1207,19 +1207,19 @@ void CWallet::BlockConnected(const std::shared_ptr<const CBlock>& pblock, const 
         SyncTransaction(*ipc_locked, ptx, -1 /* height */, 0 /* position in block */);
         TransactionRemovedFromMempool(ptx);
     }
-    for (size_t i = 0; i < pblock->vtx.size(); i++) {
-        SyncTransaction(*ipc_locked, pblock->vtx[i], pindex->nHeight, i);
-        TransactionRemovedFromMempool(pblock->vtx[i]);
+    for (size_t i = 0; i < block.vtx.size(); i++) {
+        SyncTransaction(*ipc_locked, block.vtx[i], block_height, i);
+        TransactionRemovedFromMempool(block.vtx[i]);
     }
 
-    m_last_block_processed = pindex->GetBlockHash();
+    m_last_block_processed = block_hash;
 }
 
-void CWallet::BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) {
+void CWallet::BlockDisconnected(const CBlock& block) {
     auto ipc_locked = m_ipc_chain->lockState();
     LOCK(cs_wallet);
 
-    for (const CTransactionRef& ptx : pblock->vtx) {
+    for (const CTransactionRef& ptx : block.vtx) {
         SyncTransaction(*ipc_locked, ptx, -1 /* height */, 0 /* position in block */);
     }
 }
@@ -1239,11 +1239,7 @@ void CWallet::BlockUntilSyncedToCurrentChain() {
         }
     }
 
-    std::promise<void> promise;
-    CallFunctionInValidationInterfaceQueue([&promise] {
-        promise.set_value();
-    });
-    promise.get_future().wait();
+    m_ipc_chain->waitForNotifications();
 }
 
 
@@ -1930,7 +1926,7 @@ std::vector<uint256> CWallet::ResendWalletTransactionsBefore(ipc::Chain::LockedS
     return result;
 }
 
-void CWallet::ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman)
+void CWallet::ResendWalletTransactions(int64_t nBestBlockTime)
 {
     // Do this infrequently and randomly to avoid giving away
     // that these are our transactions.
@@ -4059,7 +4055,7 @@ CWallet* CWallet::CreateWalletFromFile(ipc::Chain& ipc_chain, const std::string 
         walletInstance->m_last_block_processed.SetNull();
     }
 
-    RegisterValidationInterface(walletInstance);
+    walletInstance->m_ipc_handler = ipc_chain.handleNotifications(*walletInstance);
 
     if (tip_height >= 0 && tip_height != index_rescan)
     {

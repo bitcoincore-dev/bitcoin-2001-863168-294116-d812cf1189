@@ -17,6 +17,8 @@ struct CBlockLocator;
 
 namespace ipc {
 
+class Handler;
+
 //! Interface for giving wallet processes access to blockchain state.
 class Chain
 {
@@ -177,6 +179,31 @@ public:
     //! Send init error.
     virtual bool initError(const std::string& message) = 0;
 
+    //! Chain notifications.
+    class Notifications
+    {
+    public:
+        virtual ~Notifications() {}
+        virtual void TransactionAddedToMempool(const CTransactionRef& tx) {}
+        virtual void TransactionRemovedFromMempool(const CTransactionRef& ptx) {}
+        virtual void BlockConnected(int block_height,
+            const uint256& block_hash,
+            const CBlock& block,
+            const std::vector<CTransactionRef>& tx_conflicted)
+        {
+        }
+        virtual void BlockDisconnected(const CBlock& block) {}
+        virtual void SetBestChain(const CBlockLocator& locator) {}
+        virtual void Inventory(const uint256& hash) {}
+        virtual void ResendWalletTransactions(int64_t best_block_time) {}
+    };
+
+    //! Register handler for notifications.
+    virtual std::unique_ptr<Handler> handleNotifications(Notifications& notifications) = 0;
+
+    //! Wait for pending notifications to be handled.
+    virtual void waitForNotifications() = 0;
+
     //! Interface to let node manage chain clients (wallets, or maybe tools for
     //! monitoring and analysis in the future).
     class Client
@@ -203,6 +230,16 @@ public:
 
     //! List of clients.
     using Clients = std::vector<std::unique_ptr<Client>>;
+};
+
+//! Interface for managing a registered handler.
+class Handler
+{
+public:
+    virtual ~Handler() {}
+
+    //! Disconnect the handler.
+    virtual void disconnect() = 0;
 };
 
 //! Protocol IPC interface should use to communicate with implementation.
