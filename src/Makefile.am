@@ -106,6 +106,7 @@ BITCOIN_CORE_H = \
   indirectmap.h \
   init.h \
   interface/chain.h \
+  interface/handler.h \
   key.h \
   key_io.h \
   keystore.h \
