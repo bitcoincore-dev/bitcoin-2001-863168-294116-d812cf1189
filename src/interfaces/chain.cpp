@@ -6,6 +6,7 @@
 
 #include <chain.h>
 #include <chainparams.h>
+#include <interfaces/handler.h>
 #include <interfaces/wallet.h>
 #include <net.h>
 #include <policy/fees.h>
@@ -23,6 +24,7 @@
 #include <uint256.h>
 #include <util/system.h>
 #include <validation.h>
+#include <validationinterface.h>
 
 #include <memory>
 #include <utility>
@@ -164,6 +166,64 @@ class LockingStateImpl : public LockImpl, public UniqueLock<CCriticalSection>
     using UniqueLock::UniqueLock;
 };
 
+class HandlerImpl : public Handler
+{
+public:
+    explicit HandlerImpl(Chain::Notifications& notifications) : m_forwarder(notifications) {}
+    ~HandlerImpl() override
+    {
+        // It is important to disconnect here in the HandlerImpl destructor,
+        // instead of in the HandleImpl::Forwarder destructor, because
+        // UnregisterAllValidationInterfaces() internally accesses Forwarder
+        // virtual methods which are no longer available after Forwarder object
+        // has begun to be being destroyed.
+        m_forwarder.disconnect();
+    }
+    void disconnect() override { m_forwarder.disconnect(); }
+
+    struct Forwarder : CValidationInterface
+    {
+        explicit Forwarder(Chain::Notifications& notifications) : m_notifications(&notifications)
+        {
+            RegisterValidationInterface(this);
+        }
+        void disconnect()
+        {
+            if (m_notifications) {
+                m_notifications = nullptr;
+                UnregisterValidationInterface(this);
+            }
+        }
+        void TransactionAddedToMempool(const CTransactionRef& tx) override
+        {
+            m_notifications->TransactionAddedToMempool(tx);
+        }
+        void TransactionRemovedFromMempool(const CTransactionRef& tx) override
+        {
+            m_notifications->TransactionRemovedFromMempool(tx);
+        }
+        void BlockConnected(const std::shared_ptr<const CBlock>& block,
+            const CBlockIndex* index,
+            const std::vector<CTransactionRef>& tx_conflicted) override
+        {
+            m_notifications->BlockConnected(*block, index->GetBlockHash(), tx_conflicted);
+        }
+        void BlockDisconnected(const std::shared_ptr<const CBlock>& block) override
+        {
+            m_notifications->BlockDisconnected(*block);
+        }
+        void ChainStateFlushed(const CBlockLocator& locator) override { m_notifications->ChainStateFlushed(locator); }
+        void ResendWalletTransactions(int64_t best_block_time, CConnman*) override
+        {
+            m_notifications->ResendWalletTransactions(best_block_time);
+        }
+
+        Chain::Notifications* m_notifications;
+    };
+
+    Forwarder m_forwarder;
+};
+
 class ChainImpl : public Chain
 {
 public:
@@ -268,6 +328,11 @@ public:
     {
         return ::generateBlocks(coinbase_script, num_blocks, max_tries, keep_script);
     }
+    std::unique_ptr<Handler> handleNotifications(Notifications& notifications) override
+    {
+        return MakeUnique<HandlerImpl>(notifications);
+    }
+    void waitForNotifications() override { SyncWithValidationInterfaceQueue(); }
 };
 
 } // namespace
