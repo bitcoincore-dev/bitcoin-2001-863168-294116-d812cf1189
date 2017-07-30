@@ -12,12 +12,11 @@ WalletTestingSetup::WalletTestingSetup(const std::string& chainName):
 {
     bool fFirstRun;
     m_wallet.LoadWallet(fFirstRun);
-    RegisterValidationInterface(&m_wallet);
+    m_wallet.m_handler = chain().handleNotifications(m_wallet);
 
     RegisterWalletRPCCommands(tableRPC);
 }
 
 WalletTestingSetup::~WalletTestingSetup()
 {
-    UnregisterValidationInterface(&m_wallet);
 }
