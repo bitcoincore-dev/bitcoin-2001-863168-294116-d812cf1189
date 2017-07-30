@@ -26,6 +26,7 @@ struct FeeCalculation;
 
 namespace interfaces {
 
+class Handler;
 class Wallet;
 
 //! Interface for giving wallet processes access to blockchain state.
@@ -206,6 +207,29 @@ public:
         int num_blocks,
         uint64_t max_tries,
         bool keep_script) = 0;
+
+    //! Chain notifications.
+    class Notifications
+    {
+    public:
+        virtual ~Notifications() {}
+        virtual void TransactionAddedToMempool(const CTransactionRef& tx) {}
+        virtual void TransactionRemovedFromMempool(const CTransactionRef& ptx) {}
+        virtual void BlockConnected(const CBlock& block,
+            const uint256& block_hash,
+            const std::vector<CTransactionRef>& tx_conflicted)
+        {
+        }
+        virtual void BlockDisconnected(const CBlock& block) {}
+        virtual void ChainStateFlushed(const CBlockLocator& locator) {}
+        virtual void ResendWalletTransactions(int64_t best_block_time) {}
+    };
+
+    //! Register handler for notifications.
+    virtual std::unique_ptr<Handler> handleNotifications(Notifications& notifications) = 0;
+
+    //! Wait for pending notifications to be handled.
+    virtual void waitForNotifications() = 0;
 };
 
 //! Interface to let node manage chain clients (wallets, or maybe tools for
