@@ -20,14 +20,14 @@ WalletTestingSetup::WalletTestingSetup(const std::string& chainName):
     std::unique_ptr<CWalletDBWrapper> dbw(new CWalletDBWrapper(&bitdb, "wallet_test.dat"));
     pwalletMain = new CWallet(m_ipc_chain.get(), std::move(dbw));
     pwalletMain->LoadWallet(fFirstRun);
-    RegisterValidationInterface(pwalletMain);
+    pwalletMain->m_ipc_handler = m_ipc_chain->handleNotifications(*pwalletMain);
 
     RegisterWalletRPCCommands(tableRPC);
 }
 
 WalletTestingSetup::~WalletTestingSetup()
 {
-    UnregisterValidationInterface(pwalletMain);
+    pwalletMain->m_ipc_handler->disconnect();
     delete pwalletMain;
     pwalletMain = nullptr;
 
