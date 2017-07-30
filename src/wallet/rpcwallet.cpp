@@ -2648,7 +2648,7 @@ static UniValue unloadwallet(const JSONRPCRequest& request)
     if (!RemoveWallet(wallet)) {
         throw JSONRPCError(RPC_MISC_ERROR, "Requested wallet already unloaded");
     }
-    UnregisterValidationInterface(wallet.get());
+    wallet->m_handler.reset();
 
     // The wallet can be in use so it's not possible to explicitly unload here.
     // Just notify the unload intent so that all shared pointers are released.
