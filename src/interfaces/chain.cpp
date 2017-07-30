@@ -2,6 +2,7 @@
 
 #include <chain.h>
 #include <chainparams.h>
+#include <interfaces/handler.h>
 #include <net.h>
 #include <policy/fees.h>
 #include <policy/policy.h>
@@ -16,6 +17,7 @@
 #include <uint256.h>
 #include <util.h>
 #include <validation.h>
+#include <validationinterface.h>
 
 #include <memory>
 #include <unordered_map>
@@ -138,6 +140,48 @@ class LockingStateImpl : public LockImpl, public CCriticalBlock
     using CCriticalBlock::CCriticalBlock;
 };
 
+class HandlerImpl : public Handler, private CValidationInterface
+{
+public:
+    HandlerImpl(Chain::Notifications& notifications) : m_notifications(notifications)
+    {
+        RegisterValidationInterface(this);
+    }
+    ~HandlerImpl() override
+    {
+        // Don't call UnregisterValidationInterface here because it would try to
+        // access virtual methods on this object which can't be accessed during
+        // destruction. Also UnregisterAllValidationInterfaces is already called
+        // at this point, so unregistering this object would be redundant.
+    }
+    void disconnect() override { UnregisterValidationInterface(this); }
+    void TransactionAddedToMempool(const CTransactionRef& tx) override
+    {
+        m_notifications.TransactionAddedToMempool(tx);
+    }
+    void TransactionRemovedFromMempool(const CTransactionRef& tx) override
+    {
+        m_notifications.TransactionRemovedFromMempool(tx);
+    }
+    void BlockConnected(const std::shared_ptr<const CBlock>& block,
+        const CBlockIndex* index,
+        const std::vector<CTransactionRef>& tx_conflicted) override
+    {
+        m_notifications.BlockConnected(*block, index->GetBlockHash(), tx_conflicted);
+    }
+    void BlockDisconnected(const std::shared_ptr<const CBlock>& block) override
+    {
+        m_notifications.BlockDisconnected(*block);
+    }
+    void ChainStateFlushed(const CBlockLocator& locator) override { m_notifications.ChainStateFlushed(locator); }
+    void Inventory(const uint256& hash) override { m_notifications.Inventory(hash); }
+    void ResendWalletTransactions(int64_t best_block_time, CConnman* connman) override
+    {
+        m_notifications.ResendWalletTransactions(best_block_time);
+    }
+    Chain::Notifications& m_notifications;
+};
+
 class ChainImpl : public Chain
 {
 public:
@@ -237,6 +281,11 @@ public:
     void initMessage(const std::string& message) override { ::uiInterface.InitMessage(message); }
     void initWarning(const std::string& message) override { InitWarning(message); }
     void initError(const std::string& message) override { InitError(message); }
+    std::unique_ptr<Handler> handleNotifications(Notifications& notifications) override
+    {
+        return MakeUnique<HandlerImpl>(notifications);
+    }
+    void waitForNotifications() override { SyncWithValidationInterfaceQueue(); }
 };
 
 } // namespace
