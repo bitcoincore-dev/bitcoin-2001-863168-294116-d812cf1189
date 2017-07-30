@@ -8,6 +8,7 @@
 
 #include <amount.h>
 #include <interface/chain.h>
+#include <interface/handler.h>
 #include <policy/feerate.h>
 #include <streams.h>
 #include <tinyformat.h>
@@ -666,7 +667,7 @@ class WalletRescanReserver; //forward declarations for ScanForWalletTransactions
  * A CWallet is an extension of a keystore, which also maintains a set of transactions and balances,
  * and provides the ability to create new transactions.
  */
-class CWallet final : public CCryptoKeyStore, public CValidationInterface
+class CWallet final : public CCryptoKeyStore, private interface::Chain::Notifications
 {
 private:
     static std::atomic<bool> fFlushScheduled;
@@ -742,6 +743,7 @@ private:
      * Interface for accessing blockchain state.
      */
     interface::Chain* m_chain = nullptr;
+    std::unique_ptr<interface::Handler> m_handler;
     std::unique_ptr<CWalletDBWrapper> dbw;
 
     /**
@@ -957,14 +959,14 @@ public:
     bool AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose=true);
     bool LoadToWallet(const CWalletTx& wtxIn);
     void TransactionAddedToMempool(const CTransactionRef& tx) override;
-    void BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex *pindex, const std::vector<CTransactionRef>& vtxConflicted) override;
-    void BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) override;
+    void BlockConnected(const CBlock& block, const uint256& block_hash, const std::vector<CTransactionRef>& vtxConflicted) override;
+    void BlockDisconnected(const CBlock& block) override;
     bool AddToWalletIfInvolvingMe(interface::Chain::Lock& locked_chain, const CTransactionRef& tx, const uint256& block_hash, int posInBlock, bool fUpdate);
     int64_t RescanFromTime(int64_t startTime, const WalletRescanReserver& reserver, bool update);
     uint256 ScanForWalletTransactions(const uint256& start_block, const uint256& stop_block, const WalletRescanReserver &reserver, bool fUpdate);
     void TransactionRemovedFromMempool(const CTransactionRef &ptx) override;
     void ReacceptWalletTransactions();
-    void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman) override;
+    void ResendWalletTransactions(int64_t nBestBlockTime) override;
     // ResendWalletTransactionsBefore may only be called if fBroadcastTransactions!
     std::vector<uint256> ResendWalletTransactionsBefore(interface::Chain::Lock& locked_chain, int64_t nTime);
     CAmount GetBalance() const;
@@ -1179,6 +1181,8 @@ public:
      * This function will automatically add the necessary scripts to the wallet.
      */
     CTxDestination AddAndGetDestinationForScript(const CScript& script, OutputType);
+
+    friend struct WalletTestingSetup;
 };
 
 CFeeRate GetDiscardRate(const CBlockPolicyEstimator& estimator);
