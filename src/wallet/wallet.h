@@ -654,7 +654,7 @@ private:
  * A CWallet is an extension of a keystore, which also maintains a set of transactions and balances,
  * and provides the ability to create new transactions.
  */
-class CWallet : public CCryptoKeyStore, public CValidationInterface
+class CWallet : public CCryptoKeyStore, private ipc::Chain::Notifications
 {
 private:
     static std::atomic<bool> fFlushScheduled;
@@ -727,6 +727,7 @@ private:
      * IPC interface for accessing blockchain state.
      */
     ipc::Chain* m_ipc_chain = nullptr;
+    std::unique_ptr<ipc::Handler> m_ipc_handler;
     std::unique_ptr<CWalletDBWrapper> dbw;
 
     /**
@@ -937,14 +938,14 @@ public:
     bool AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose=true);
     bool LoadToWallet(const CWalletTx& wtxIn);
     void TransactionAddedToMempool(const CTransactionRef& tx) override;
-    void BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex *pindex, const std::vector<CTransactionRef>& vtxConflicted) override;
-    void BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) override;
+    void BlockConnected(const CBlock& block, const uint256& block_hash, const std::vector<CTransactionRef>& vtxConflicted) override;
+    void BlockDisconnected(const CBlock& block) override;
     bool AddToWalletIfInvolvingMe(ipc::Chain::LockedState& ipc_locked, const CTransactionRef& tx, const uint256& block_hash, int posInBlock, bool fUpdate);
     int64_t RescanFromTime(ipc::Chain::LockedState& ipc_locked, int64_t startTime, bool update);
     int ScanForWalletTransactions(ipc::Chain::LockedState& ipc_locked, int start_height, bool fUpdate = false);
     void TransactionRemovedFromMempool(const CTransactionRef &ptx) override;
     void ReacceptWalletTransactions();
-    void ResendWalletTransactions(int64_t nBestBlockTime, CConnman* connman) override;
+    void ResendWalletTransactions(int64_t nBestBlockTime) override;
     // ResendWalletTransactionsBefore may only be called if fBroadcastTransactions!
     std::vector<uint256> ResendWalletTransactionsBefore(ipc::Chain::LockedState& ipc_locked, int64_t nTime);
     CAmount GetBalance() const;
@@ -1166,6 +1167,8 @@ public:
      * deadlock
      */
     void BlockUntilSyncedToCurrentChain();
+
+    friend class WalletTestingSetup;
 };
 
 CFeeRate GetDiscardRate(const CBlockPolicyEstimator& estimator);
