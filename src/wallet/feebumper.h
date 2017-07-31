@@ -26,7 +26,7 @@ enum class BumpFeeResult
 class CFeeBumper
 {
 public:
-    CFeeBumper(const CWallet *pWalletIn, const uint256 txidIn, const CCoinControl& coin_control, CAmount totalFee);
+    CFeeBumper(ipc::Chain::LockedState& ipc_locked, const CWallet *pWalletIn, const uint256 txidIn, const CCoinControl& coin_control, CAmount totalFee);
     BumpFeeResult getResult() const { return currentResult; }
     const std::vector<std::string>& getErrors() const { return vErrors; }
     CAmount getOldFee() const { return nOldFee; }
@@ -44,10 +44,10 @@ public:
      * but, eventually sets vErrors if the tx could not be added to the mempool (will try later)
      * or if the old transaction could not be marked as replaced
      */
-    bool commit(CWallet *pWalletNonConst);
+    bool commit(ipc::Chain::LockedState& ipc_locked, CWallet *pWalletNonConst);
 
 private:
-    bool preconditionChecks(const CWallet *pWallet, const CWalletTx& wtx);
+    bool preconditionChecks(ipc::Chain::LockedState& ipc_locked, const CWallet *pWallet, const CWalletTx& wtx);
 
     const uint256 txid;
     uint256 bumpedTxid;

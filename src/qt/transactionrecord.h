@@ -6,6 +6,7 @@
 #define BITCOIN_QT_TRANSACTIONRECORD_H
 
 #include "amount.h"
+#include "ipc/interfaces.h"
 #include "uint256.h"
 
 #include <QList>
@@ -107,7 +108,7 @@ public:
     /** Decompose CWallet transaction to model transaction records.
      */
     static bool showTransaction(const CWalletTx &wtx);
-    static QList<TransactionRecord> decomposeTransaction(const CWallet *wallet, const CWalletTx &wtx);
+    static QList<TransactionRecord> decomposeTransaction(ipc::Chain::LockedState& ipc_locked, const CWallet *wallet, const CWalletTx &wtx);
 
     /** @name Immutable transaction attributes
       @{*/
@@ -136,7 +137,7 @@ public:
 
     /** Update status from core wallet tx.
      */
-    void updateStatus(const CWalletTx &wtx);
+    void updateStatus(ipc::Chain::LockedState& ipc_locked, const CWalletTx &wtx);
 
     /** Return whether a status update is needed.
      */
