@@ -278,7 +278,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
 
         CWalletTx *newTx = transaction.getTransaction();
         CReserveKey *keyChange = transaction.getPossibleKeyChange();
-        bool fCreated = wallet->CreateTransaction(vecSend, *newTx, *keyChange, nFeeRequired, nChangePosRet, strFailReason, coinControl);
+        bool fCreated = wallet->CreateTransaction(*ipc_locked, vecSend, *newTx, *keyChange, nFeeRequired, nChangePosRet, strFailReason, coinControl);
         transaction.setTransactionFee(nFeeRequired);
         if (fSubtractFeeFromAmount && fCreated)
             transaction.reassignAmounts(nChangePosRet);
@@ -580,7 +580,7 @@ void WalletModel::getOutputs(const std::vector<COutPoint>& vOutpoints, std::vect
     for (const COutPoint& outpoint : vOutpoints)
     {
         if (!wallet->mapWallet.count(outpoint.hash)) continue;
-        int nDepth = wallet->mapWallet[outpoint.hash].GetDepthInMainChain();
+        int nDepth = wallet->mapWallet[outpoint.hash].GetDepthInMainChain(*ipc_locked);
         if (nDepth < 0) continue;
         COutput out(&wallet->mapWallet[outpoint.hash], outpoint.n, nDepth, true /* spendable */, true /* solvable */, true /* safe */);
         vOutputs.push_back(out);
@@ -591,13 +591,14 @@ bool WalletModel::isSpent(const COutPoint& outpoint) const
 {
     auto ipc_locked = wallet->ipc_chain().lockState();
     LOCK(wallet->cs_wallet);
-    return wallet->IsSpent(outpoint.hash, outpoint.n);
+    return wallet->IsSpent(*ipc_locked, outpoint.hash, outpoint.n);
 }
 
 // AvailableCoins + LockedCoins grouped by wallet address (put change in one group with wallet address)
 void WalletModel::listCoins(std::map<QString, std::vector<COutput> >& mapCoins) const
 {
-    for (auto& group : wallet->ListCoins()) {
+    auto ipc_locked = wallet->ipc_chain().assumeLocked();
+    for (auto& group : wallet->ListCoins(*ipc_locked)) {
         auto& resultGroup = mapCoins[QString::fromStdString(CBitcoinAddress(group.first).ToString())];
         for (auto& coin : group.second) {
             resultGroup.emplace_back(std::move(coin));
@@ -658,7 +659,7 @@ bool WalletModel::abandonTransaction(uint256 hash) const
 {
     auto ipc_locked = wallet->ipc_chain().lockState();
     LOCK(wallet->cs_wallet);
-    return wallet->AbandonTransaction(hash);
+    return wallet->AbandonTransaction(*ipc_locked, hash);
 }
 
 bool WalletModel::transactionCanBeBumped(uint256 hash) const
@@ -676,7 +677,7 @@ bool WalletModel::bumpFee(uint256 hash)
         coin_control.signalRbf = true;
         auto ipc_locked = wallet->ipc_chain().lockState();
         LOCK(wallet->cs_wallet);
-        feeBump.reset(new CFeeBumper(wallet, hash, coin_control, 0));
+        feeBump.reset(new CFeeBumper(*ipc_locked, wallet, hash, coin_control, 0));
     }
     if (feeBump->getResult() != BumpFeeResult::OK)
     {
@@ -733,7 +734,7 @@ bool WalletModel::bumpFee(uint256 hash)
     {
         auto ipc_locked = wallet->ipc_chain().lockState();
         LOCK(wallet->cs_wallet);
-        res = feeBump->commit(wallet);
+        res = feeBump->commit(*ipc_locked, wallet);
     }
     if(!res) {
         QMessageBox::critical(0, tr("Fee bump error"), tr("Could not commit transaction") + "<br />(" +
