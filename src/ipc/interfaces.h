@@ -9,6 +9,7 @@
 
 class CBlock;
 class CCoinControl;
+class CRPCCommand;
 class CScheduler;
 class CValidationState;
 class FeeCalculation;
@@ -229,6 +230,10 @@ public:
 
     //! List of clients.
     using Clients = std::vector<std::unique_ptr<Client>>;
+
+    //! Register handler for RPC. Command is not copied, so reference
+    //! needs to remain valid until Handler is disconnected.
+    virtual std::unique_ptr<Handler> handleRpc(const CRPCCommand& command) = 0;
 };
 
 //! Interface for managing a registered handler.
