@@ -21,7 +21,7 @@
 #include <stdint.h>
 #include <string>
 
-QString TransactionDesc::FormatTxStatus(const CWalletTx& wtx)
+QString TransactionDesc::FormatTxStatus(ipc::Chain::LockedState& ipc_locked, const CWalletTx& wtx)
 {
     AssertLockHeld(cs_main);
     if (!CheckFinalTx(wtx))
@@ -33,7 +33,7 @@ QString TransactionDesc::FormatTxStatus(const CWalletTx& wtx)
     }
     else
     {
-        int nDepth = wtx.GetDepthInMainChain();
+        int nDepth = wtx.GetDepthInMainChain(ipc_locked);
         if (nDepth < 0)
             return tr("conflicted with a transaction with %1 confirmations").arg(-nDepth);
         else if (GetAdjustedTime() - wtx.nTimeReceived > 2 * 60 && wtx.GetRequestCount() == 0)
@@ -57,11 +57,11 @@ QString TransactionDesc::toHTML(CWallet *wallet, CWalletTx &wtx, TransactionReco
     strHTML += "<html><font face='verdana, arial, helvetica, sans-serif'>";
 
     int64_t nTime = wtx.GetTxTime();
-    CAmount nCredit = wtx.GetCredit(ISMINE_ALL);
+    CAmount nCredit = wtx.GetCredit(*ipc_locked, ISMINE_ALL);
     CAmount nDebit = wtx.GetDebit(ISMINE_ALL);
     CAmount nNet = nCredit - nDebit;
 
-    strHTML += "<b>" + tr("Status") + ":</b> " + FormatTxStatus(wtx);
+    strHTML += "<b>" + tr("Status") + ":</b> " + FormatTxStatus(*ipc_locked, wtx);
     int nRequests = wtx.GetRequestCount();
     if (nRequests != -1)
     {
@@ -137,8 +137,8 @@ QString TransactionDesc::toHTML(CWallet *wallet, CWalletTx &wtx, TransactionReco
         for (const CTxOut& txout : wtx.tx->vout)
             nUnmatured += wallet->GetCredit(txout, ISMINE_ALL);
         strHTML += "<b>" + tr("Credit") + ":</b> ";
-        if (wtx.IsInMainChain())
-            strHTML += BitcoinUnits::formatHtmlWithUnit(unit, nUnmatured)+ " (" + tr("matures in %n more block(s)", "", wtx.GetBlocksToMaturity()) + ")";
+        if (wtx.IsInMainChain(*ipc_locked))
+            strHTML += BitcoinUnits::formatHtmlWithUnit(unit, nUnmatured)+ " (" + tr("matures in %n more block(s)", "", wtx.GetBlocksToMaturity(*ipc_locked)) + ")";
         else
             strHTML += "(" + tr("not accepted") + ")";
         strHTML += "<br>";
