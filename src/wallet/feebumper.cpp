@@ -18,7 +18,7 @@
 
 //! Check whether transaction has descendant in wallet or mempool, or has been
 //! mined, or conflicts with a mined transaction. Return a feebumper::Result.
-static feebumper::Result PreconditionChecks(const CWallet* wallet, const CWalletTx& wtx, std::vector<std::string>& errors)
+static feebumper::Result PreconditionChecks(interface::Chain::Lock& locked_chain, const CWallet* wallet, const CWalletTx& wtx, std::vector<std::string>& errors)
 {
     if (wallet->HasWalletSpend(wtx.GetHash())) {
         errors.push_back("Transaction has descendants in the wallet");
@@ -34,7 +34,7 @@ static feebumper::Result PreconditionChecks(const CWallet* wallet, const CWallet
         }
     }
 
-    if (wtx.GetDepthInMainChain() != 0) {
+    if (wtx.GetDepthInMainChain(locked_chain) != 0) {
         errors.push_back("Transaction has been mined, or is conflicted with a mined transaction");
         return feebumper::Result::WALLET_ERROR;
     }
@@ -70,7 +70,7 @@ bool TransactionCanBeBumped(const CWallet* wallet, const uint256& txid)
     if (wtx == nullptr) return false;
 
     std::vector<std::string> errors_dummy;
-    feebumper::Result res = PreconditionChecks(wallet, *wtx, errors_dummy);
+    feebumper::Result res = PreconditionChecks(*locked_chain, wallet, *wtx, errors_dummy);
     return res == feebumper::Result::OK;
 }
 
@@ -87,7 +87,7 @@ Result CreateTransaction(const CWallet* wallet, const uint256& txid, const CCoin
     }
     const CWalletTx& wtx = it->second;
 
-    Result result = PreconditionChecks(wallet, wtx, errors);
+    Result result = PreconditionChecks(*locked_chain, wallet, wtx, errors);
     if (result != Result::OK) {
         return result;
     }
@@ -234,7 +234,7 @@ Result CommitTransaction(CWallet* wallet, const uint256& txid, CMutableTransacti
     CWalletTx& oldWtx = it->second;
 
     // make sure the transaction still has no descendants and hasn't been mined in the meantime
-    Result result = PreconditionChecks(wallet, oldWtx, errors);
+    Result result = PreconditionChecks(*locked_chain, wallet, oldWtx, errors);
     if (result != Result::OK) {
         return result;
     }
