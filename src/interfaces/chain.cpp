@@ -7,6 +7,7 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <primitives/block.h>
+#include <primitives/transaction.h>
 #include <sync.h>
 #include <threadsafety.h>
 #include <uint256.h>
@@ -138,6 +139,12 @@ class LockImpl : public Chain::Lock
         LockAnnotation lock(::cs_main);
         return CheckFinalTx(tx);
     }
+    bool submitToMemoryPool(CTransactionRef tx, CAmount absurd_fee, CValidationState& state) override
+    {
+        LockAnnotation lock(::cs_main);
+        return AcceptToMemoryPool(::mempool, state, tx, nullptr /* missing inputs */, nullptr /* txn replaced */,
+            false /* bypass limits */, absurd_fee);
+    }
 };
 
 class LockingStateImpl : public LockImpl, public UniqueLock<CCriticalSection>
@@ -183,6 +190,7 @@ public:
         LOCK(cs_main);
         return GuessVerificationProgress(Params().TxData(), LookupBlockIndex(block_hash));
     }
+    CAmount maxTxFee() override { return ::maxTxFee; }
 };
 
 } // namespace
