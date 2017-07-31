@@ -131,11 +131,34 @@ typedef UniValue(*rpcfn_type)(const JSONRPCRequest& jsonRequest);
 class CRPCCommand
 {
 public:
+    using Actor = std::function<UniValue(const JSONRPCRequest& jsonRequest)>;
+
+    CRPCCommand(const char* category,
+        const char* name,
+        Actor actor,
+        bool ok_safe_mode,
+        std::initializer_list<const char*> args,
+        intptr_t unique_id)
+        : category(category), name(name), actor(std::move(actor)), okSafeMode(ok_safe_mode),
+          argNames(args.begin(), args.end()), unique_id(unique_id)
+    {
+    }
+
+    CRPCCommand(const char* category,
+        const char* name,
+        rpcfn_type fn,
+        bool ok_safe_mode,
+        std::initializer_list<const char*> args)
+        : CRPCCommand(category, name, fn, ok_safe_mode, args, intptr_t(fn))
+    {
+    }
+
     std::string category;
     std::string name;
-    rpcfn_type actor;
+    Actor actor;
     bool okSafeMode;
     std::vector<std::string> argNames;
+    intptr_t unique_id;
 };
 
 /**

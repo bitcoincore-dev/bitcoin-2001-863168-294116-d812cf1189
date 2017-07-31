@@ -26,9 +26,9 @@ UniValue CallRPC(std::string args)
     request.params = RPCConvertValues(strMethod, vArgs);
     request.fHelp = false;
     BOOST_CHECK(tableRPC[strMethod]);
-    rpcfn_type method = tableRPC[strMethod]->actor;
+    const auto& command = *tableRPC[strMethod];
     try {
-        UniValue result = (*method)(request);
+        UniValue result = command.actor(request);
         return result;
     }
     catch (const UniValue& objError) {
