@@ -7,6 +7,7 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <primitives/block.h>
+#include <primitives/transaction.h>
 #include <sync.h>
 #include <threadsafety.h>
 #include <uint256.h>
@@ -122,6 +123,12 @@ class LockImpl : public Chain::Lock
     {
         LockAnnotation lock(::cs_main);
         return CheckFinalTx(tx);
+    }
+    bool acceptToMemoryPool(CTransactionRef tx, CValidationState& state) override
+    {
+        LockAnnotation lock(::cs_main);
+        return AcceptToMemoryPool(::mempool, state, tx, nullptr /* missing inputs */, nullptr /* txn replaced */,
+            false /* bypass limits */, ::maxTxFee /* absurd fee */);
     }
 };
 
