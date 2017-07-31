@@ -3,6 +3,7 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <primitives/block.h>
+#include <primitives/transaction.h>
 #include <sync.h>
 #include <uint256.h>
 #include <util.h>
@@ -126,6 +127,11 @@ class LockImpl : public Chain::Lock
     }
     bool checkFinalTx(const CTransaction& tx) override { return CheckFinalTx(tx); }
     bool isWitnessEnabled() override { return ::IsWitnessEnabled(::chainActive.Tip(), Params().GetConsensus()); }
+    bool acceptToMemoryPool(CTransactionRef tx, CValidationState& state) override
+    {
+        return AcceptToMemoryPool(::mempool, state, tx, nullptr /* missing inputs */, nullptr /* txn replaced */,
+            false /* bypass limits */, ::maxTxFee /* absurd fee */);
+    }
 };
 
 class LockingStateImpl : public LockImpl, public CCriticalBlock
