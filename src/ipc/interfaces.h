@@ -8,6 +8,7 @@
 
 class CBlock;
 class CScheduler;
+class CValidationState;
 class uint256;
 struct CBlockLocator;
 
@@ -96,6 +97,9 @@ public:
 
         //! Check whether segregated witness is enabled on the network.
         virtual bool isWitnessEnabled() = 0;
+
+        //! Add transaction to memory pool.
+        virtual bool acceptToMemoryPool(CTransactionRef tx, CValidationState& state) = 0;
     };
 
     //! Return LockedState interface. Chain is locked when this is called, and
