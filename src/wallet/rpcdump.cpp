@@ -149,7 +149,7 @@ UniValue importprivkey(const JSONRPCRequest& request)
         pwallet->UpdateTimeFirstKey(1);
 
         if (fRescan) {
-            pwallet->RescanFromTime(TIMESTAMP_MIN, true /* update */);
+            pwallet->RescanFromTime(*locked_chain, TIMESTAMP_MIN, true /* update */);
         }
     }
 
@@ -282,7 +282,7 @@ UniValue importaddress(const JSONRPCRequest& request)
 
     if (fRescan)
     {
-        pwallet->RescanFromTime(TIMESTAMP_MIN, true /* update */);
+        pwallet->RescanFromTime(*locked_chain, TIMESTAMP_MIN, true /* update */);
         pwallet->ReacceptWalletTransactions();
     }
 
@@ -443,7 +443,7 @@ UniValue importpubkey(const JSONRPCRequest& request)
 
     if (fRescan)
     {
-        pwallet->RescanFromTime(TIMESTAMP_MIN, true /* update */);
+        pwallet->RescanFromTime(*locked_chain, TIMESTAMP_MIN, true /* update */);
         pwallet->ReacceptWalletTransactions();
     }
 
@@ -544,7 +544,7 @@ UniValue importwallet(const JSONRPCRequest& request)
     file.close();
     pwallet->ShowProgress("", 100); // hide progress dialog in GUI
     pwallet->UpdateTimeFirstKey(nTimeBegin);
-    pwallet->RescanFromTime(nTimeBegin, false /* update */);
+    pwallet->RescanFromTime(*locked_chain, nTimeBegin, false /* update */);
     pwallet->MarkDirty();
 
     if (!fGood)
@@ -646,7 +646,7 @@ UniValue dumpwallet(const JSONRPCRequest& request)
 
     std::map<CTxDestination, int64_t> mapKeyBirth;
     const std::map<CKeyID, int64_t>& mapKeyPool = pwallet->GetAllReserveKeys();
-    pwallet->GetKeyBirthTimes(mapKeyBirth);
+    pwallet->GetKeyBirthTimes(*locked_chain, mapKeyBirth);
 
     // sort time/key pairs
     std::vector<std::pair<int64_t, CKeyID> > vKeyBirth;
@@ -1143,7 +1143,7 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
     }
 
     if (fRescan && fRunScan && requests.size()) {
-        int64_t scannedTime = pwallet->RescanFromTime(nLowestTimestamp, true /* update */);
+        int64_t scannedTime = pwallet->RescanFromTime(*locked_chain, nLowestTimestamp, true /* update */);
         pwallet->ReacceptWalletTransactions();
 
         if (scannedTime > nLowestTimestamp) {
