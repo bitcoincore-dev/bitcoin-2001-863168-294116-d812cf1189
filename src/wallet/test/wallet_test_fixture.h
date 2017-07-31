@@ -16,6 +16,7 @@ struct WalletTestingSetup: public TestingSetup {
     ~WalletTestingSetup();
 
     std::unique_ptr<interface::Chain> m_chain = interface::MakeChain();
+    std::unique_ptr<interface::Chain::Client> m_chain_client = interface::MakeWalletClient(*m_chain, {});
     std::unique_ptr<CWallet> pwalletMain;
 };
 

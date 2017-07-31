@@ -18,7 +18,7 @@ WalletTestingSetup::WalletTestingSetup(const std::string& chainName):
     pwalletMain->LoadWallet(fFirstRun);
     pwalletMain->m_handler = m_chain->handleNotifications(*pwalletMain);
 
-    RegisterWalletRPCCommands(tableRPC);
+    m_chain_client->registerRpcs();
 }
 
 WalletTestingSetup::~WalletTestingSetup()
