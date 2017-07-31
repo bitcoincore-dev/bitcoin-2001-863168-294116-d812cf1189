@@ -5,13 +5,20 @@
 #ifndef BITCOIN_WALLET_RPCWALLET_H
 #define BITCOIN_WALLET_RPCWALLET_H
 
+#include <memory>
 #include <string>
+#include <vector>
 
 class CRPCTable;
 class CWallet;
 class JSONRPCRequest;
 
-void RegisterWalletRPCCommands(CRPCTable &t);
+namespace interface {
+class Chain;
+class Handler;
+}
+
+void RegisterWalletRPCCommands(interface::Chain& chain, std::vector<std::unique_ptr<interface::Handler>>& handlers);
 
 /**
  * Figures out what wallet, if any, to use for a JSONRPCRequest.
