@@ -3316,8 +3316,8 @@ static const CRPCCommand commands[] =
     { "generating",         "generate",                 &generate,                 true,   {"nblocks","maxtries"} },
 };
 
-void RegisterWalletRPCCommands(CRPCTable &t)
+void RegisterWalletRPCCommands(ipc::Chain& ipc_chain, std::vector<std::unique_ptr<ipc::Handler>>& handlers)
 {
     for (unsigned int vcidx = 0; vcidx < ARRAYLEN(commands); vcidx++)
-        t.appendCommand(commands[vcidx].name, &commands[vcidx]);
+        handlers.emplace_back(ipc_chain.handleRpc(commands[vcidx]));
 }
