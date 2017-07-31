@@ -160,7 +160,7 @@ void TestSendCoins()
         wallet.AddKeyPubKey(test.coinbaseKey, test.coinbaseKey.GetPubKey());
     }
     auto locked_chain = chain->assumeLocked();  // Temporary. Removed in upcoming lock cleanup
-    wallet.ScanForWalletTransactions(chainActive.Genesis(), true);
+    wallet.ScanForWalletTransactions(*locked_chain, chainActive.Genesis(), true);
     wallet.SetBroadcastTransactions(true);
 
     // Create widgets for sending coins and listing transactions.
