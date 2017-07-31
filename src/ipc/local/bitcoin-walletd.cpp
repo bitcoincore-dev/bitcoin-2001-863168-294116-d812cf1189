@@ -1,7 +1,6 @@
 #include <ipc/interfaces.h>
 
 #include <ipc/util.h>
-#include <rpc/server.h>
 #include <wallet/wallet.h>
 
 namespace ipc {
@@ -15,7 +14,7 @@ public:
         : m_chain(chain), m_wallet_filenames(std::move(wallet_filenames))
     {
     }
-    void registerRpcs() override { RegisterWalletRPCCommands(::tableRPC); }
+    void registerRpcs() override { RegisterWalletRPCCommands(m_chain, m_rpc_handlers); }
     bool prepare() override { return CWallet::InitLoadWallet(m_chain, *this, m_wallet_filenames); }
     void start(CScheduler& scheduler) override
     {
@@ -45,6 +44,7 @@ public:
 
     Chain& m_chain;
     std::vector<std::string> m_wallet_filenames;
+    std::vector<std::unique_ptr<Handler>> m_rpc_handlers;
 };
 
 } // namespace

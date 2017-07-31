@@ -17,6 +17,7 @@ struct WalletTestingSetup: public TestingSetup {
     ~WalletTestingSetup();
 
     std::unique_ptr<ipc::Chain> m_ipc_chain = ipc::MakeChain(ipc::LOCAL);
+    std::unique_ptr<ipc::Chain::Client> m_ipc_client = ipc::MakeChainClient(ipc::LOCAL, *m_ipc_chain, ipc::WalletOptions());
 };
 
 #endif
