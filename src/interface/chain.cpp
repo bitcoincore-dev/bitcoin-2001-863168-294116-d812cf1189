@@ -11,11 +11,14 @@
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <protocol.h>
+#include <rpc/protocol.h>
+#include <rpc/server.h>
 #include <sync.h>
 #include <timedata.h>
 #include <txmempool.h>
 #include <ui_interface.h>
 #include <uint256.h>
+#include <univalue.h>
 #include <util.h>
 #include <validation.h>
 #include <validationinterface.h>
@@ -31,13 +34,25 @@
 #define CHECK_WALLET(x) throw std::logic_error("Wallet function called in non-wallet build.")
 #endif
 
+#include <algorithm>
 #include <future>
+#include <map>
 #include <memory>
+#include <tuple>
 #include <unordered_map>
 #include <utility>
 
 namespace interface {
 namespace {
+
+//! Extension of std::reference_wrapper with operator< for use as map key.
+template <typename T>
+class Ref : public std::reference_wrapper<T>
+{
+public:
+    using std::reference_wrapper<T>::reference_wrapper;
+    bool operator<(const Ref<T>& other) const { return this->get() < other.get(); }
+};
 
 class LockImpl : public Chain::Lock
 {
@@ -297,7 +312,105 @@ public:
         return MakeUnique<HandlerImpl>(notifications);
     }
     void waitForNotifications() override { SyncWithValidationInterfaceQueue(); }
+    std::unique_ptr<Handler> handleRpc(const CRPCCommand& command) override;
+
+    //! Map of RPC method name to forwarder. If multiple clients provide
+    //! implementations of the same RPC method, the RPC forwarder can dispatch
+    //! between them.
+    class RpcForwarder;
+    std::map<Ref<const std::string>, RpcForwarder> m_rpc_forwarders;
 };
+
+//! Forwarder for one RPC method.
+class ChainImpl::RpcForwarder
+{
+public:
+    RpcForwarder(const CRPCCommand& command) : m_command(command)
+    {
+        m_command.actor = [this](const JSONRPCRequest& request) { return forwardRequest(request); };
+    }
+
+    bool registerForwarder() { return ::tableRPC.appendCommand(m_command.name, &m_command); }
+
+    void addCommand(const CRPCCommand& command) { m_commands.emplace_back(&command); }
+
+    void removeCommand(const CRPCCommand& command)
+    {
+        m_commands.erase(std::remove(m_commands.begin(), m_commands.end(), &command));
+    }
+
+    UniValue forwardRequest(const JSONRPCRequest& request) const
+    {
+        // Simple forwarding of RPC requests. This just sends the request to the
+        // first client that registered a handler for the RPC method. If the
+        // handler throws a wallet not found exception, this will retry
+        // forwarding to the next handler (if any).
+        //
+        // This forwarding mechanism could be made more efficient (peeking
+        // inside the RPC request for wallet name and sending it directly to the
+        // right handler), but right now all wallets are in-process so there is
+        // only ever a single handler, and in the future it isn't clear if we
+        // will want we want to keep forwarding RPCs at all (clients could just
+        // listen for their own RPCs).
+        for (auto it = m_commands.begin(); it != m_commands.end();) {
+            const CRPCCommand& command = **it++;
+            try {
+                return command.actor(request);
+            } catch (const UniValue& e) {
+                if (it != m_commands.end()) {
+                    const UniValue& code = e["code"];
+                    if (code.isNum() && code.get_int() == RPC_WALLET_NOT_FOUND) {
+                        continue;
+                    }
+                }
+                throw;
+            }
+        }
+
+        // This will only be reached if m_commands is empty. (Because the RPC
+        // server provides an appendCommand, but no removeCommand method, it
+        // will keep sending requests here even if there are no clients left to
+        // forward to.)
+        throw JSONRPCError(RPC_METHOD_NOT_FOUND, "Method not found");
+    };
+
+    CRPCCommand m_command;
+    std::vector<const CRPCCommand*> m_commands;
+};
+
+class RpcHandler : public Handler
+{
+public:
+    RpcHandler(ChainImpl::RpcForwarder& forwarder, const CRPCCommand& command)
+        : m_forwarder(&forwarder), m_command(command)
+    {
+        m_forwarder->addCommand(m_command);
+    }
+
+    void disconnect() override
+    {
+        if (m_forwarder) {
+            m_forwarder->removeCommand(m_command);
+            m_forwarder = nullptr;
+        }
+    }
+
+    ~RpcHandler() { disconnect(); }
+
+    ChainImpl::RpcForwarder* m_forwarder;
+    const CRPCCommand& m_command;
+};
+
+std::unique_ptr<Handler> ChainImpl::handleRpc(const CRPCCommand& command)
+{
+    auto inserted = m_rpc_forwarders.emplace(
+        std::piecewise_construct, std::forward_as_tuple(command.name), std::forward_as_tuple(command));
+    if (inserted.second && !inserted.first->second.registerForwarder()) {
+        m_rpc_forwarders.erase(inserted.first);
+        return {};
+    }
+    return MakeUnique<RpcHandler>(inserted.first->second, command);
+}
 
 } // namespace
 
