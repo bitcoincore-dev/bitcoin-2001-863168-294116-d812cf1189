@@ -5,6 +5,8 @@
 #ifndef BITCOIN_QT_TRANSACTIONDESC_H
 #define BITCOIN_QT_TRANSACTIONDESC_H
 
+#include "ipc/interfaces.h"
+
 #include <QObject>
 #include <QString>
 
@@ -25,7 +27,7 @@ public:
 private:
     TransactionDesc() {}
 
-    static QString FormatTxStatus(const CWalletTx& wtx);
+    static QString FormatTxStatus(ipc::Chain::LockedState& ipc_locked, const CWalletTx& wtx);
 };
 
 #endif // BITCOIN_QT_TRANSACTIONDESC_H
