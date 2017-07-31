@@ -193,15 +193,6 @@ bool WalletParameterInteraction()
     return true;
 }
 
-void RegisterWalletRPC(CRPCTable &t)
-{
-    if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
-        return;
-    }
-
-    RegisterWalletRPCCommands(t);
-}
-
 bool VerifyWallets()
 {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
