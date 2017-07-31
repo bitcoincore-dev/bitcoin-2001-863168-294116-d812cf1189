@@ -157,7 +157,7 @@ std::string CRPCTable::help(const std::string& strCommand, const JSONRPCRequest&
 {
     std::string strRet;
     std::string category;
-    std::set<rpcfn_type> setDone;
+    std::set<intptr_t> setDone;
     std::vector<std::pair<std::string, const CRPCCommand*> > vCommands;
 
     for (const auto& entry : mapCommands)
@@ -177,9 +177,8 @@ std::string CRPCTable::help(const std::string& strCommand, const JSONRPCRequest&
         jreq.strMethod = strMethod;
         try
         {
-            rpcfn_type pfn = pcmd->actor;
-            if (setDone.insert(pfn).second)
-                (*pfn)(jreq);
+            if (setDone.insert(pcmd->unique_id).second)
+                pcmd->actor(jreq);
         }
         catch (const std::exception& e)
         {
