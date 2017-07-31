@@ -56,7 +56,9 @@ void EditAddressAndSubmit(
 void TestAddAddressesToSendBook()
 {
     TestChain100Setup test;
-    CWallet wallet("mock", WalletDatabase::CreateMock());
+    auto node = interfaces::MakeNode();
+    node->parseParameters(0, nullptr);
+    CWallet wallet(&node->getChain(), "mock", WalletDatabase::CreateMock());
     bool firstRun;
     wallet.LoadWallet(firstRun);
 
@@ -101,7 +103,6 @@ void TestAddAddressesToSendBook()
 
     // Initialize relevant QT models.
     std::unique_ptr<const PlatformStyle> platformStyle(PlatformStyle::instantiate("other"));
-    auto node = interfaces::MakeNode();
     OptionsModel optionsModel(*node);
     AddWallet(&wallet);
     WalletModel walletModel(std::move(node->getWallets()[0]), *node, platformStyle.get(), &optionsModel);
