@@ -1667,9 +1667,8 @@ void CWallet::ReacceptWalletTransactions()
     {
         CWalletTx& wtx = *(item.second);
 
-        LOCK(mempool.cs);
         CValidationState state;
-        wtx.AcceptToMemoryPool(*ipc_locked, maxTxFee, state);
+        wtx.AcceptToMemoryPool(*ipc_locked, state);
     }
 }
 
@@ -1680,7 +1679,7 @@ bool CWalletTx::RelayWalletTransaction(ipc::Chain::LockedState& ipc_locked, CCon
     {
         CValidationState state;
         /* GetDepthInMainChain already catches known conflicts. */
-        if (InMempool() || AcceptToMemoryPool(ipc_locked, maxTxFee, state)) {
+        if (InMempool() || AcceptToMemoryPool(ipc_locked, state)) {
             LogPrintf("Relaying wtx %s\n", GetHash().ToString());
             if (connman) {
                 CInv inv(MSG_TX, GetHash());
@@ -3001,7 +3000,7 @@ bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, CCon
         if (fBroadcastTransactions)
         {
             // Broadcast
-            if (!wtx.AcceptToMemoryPool(*ipc_locked, maxTxFee, state)) {
+            if (!wtx.AcceptToMemoryPool(*ipc_locked, state)) {
                 LogPrintf("CommitTransaction(): Transaction cannot be broadcast immediately, %s\n", state.GetRejectReason());
                 // TODO: if we expect the failure to be long term or permanent, instead delete wtx from the wallet and return failure.
             } else {
@@ -4350,14 +4349,14 @@ int CMerkleTx::GetBlocksToMaturity(ipc::Chain::LockedState& ipc_locked) const
     return std::max(0, (COINBASE_MATURITY+1) - GetDepthInMainChain(ipc_locked));
 }
 
-bool CWalletTx::AcceptToMemoryPool(ipc::Chain::LockedState& ipc_locked, const CAmount& nAbsurdFee, CValidationState& state)
+bool CWalletTx::AcceptToMemoryPool(ipc::Chain::LockedState& ipc_locked, CValidationState& state)
 {
     // We must set fInMempool here - while it will be re-set to true by the
     // entered-mempool callback, if we did not there would be a race where a
     // user could call sendmoney in a loop and hit spurious out of funds errors
     // because we think that the transaction they just generated's change is
     // unavailable as we're not yet aware its in mempool.
-    bool ret = ::AcceptToMemoryPool(mempool, state, tx, true, NULL, NULL, false, nAbsurdFee);
+    bool ret = ipc_locked.acceptToMemoryPool(tx, state);
     fInMempool = ret;
     return ret;
 }

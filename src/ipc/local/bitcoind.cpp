@@ -82,6 +82,10 @@ public:
     }
     bool checkFinalTx(const CTransaction& tx) override { return CheckFinalTx(tx); }
     bool isWitnessEnabled() override { return ::IsWitnessEnabled(::chainActive.Tip(), ::Params().GetConsensus()); }
+    bool acceptToMemoryPool(CTransactionRef tx, CValidationState& state) override
+    {
+        return AcceptToMemoryPool(::mempool, state, tx, true, NULL, NULL, false, ::maxTxFee);
+    }
 };
 
 class LockingStateImpl : public LockedStateImpl, public CCriticalBlock
