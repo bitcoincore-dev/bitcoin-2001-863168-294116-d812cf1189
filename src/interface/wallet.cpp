@@ -1,7 +1,8 @@
 #include <interface/chain.h>
+#include <interface/handler.h>
 #include <interface/util.h>
-#include <rpc/server.h>
 #include <wallet/init.h>
+#include <wallet/rpcwallet.h>
 #include <wallet/wallet.h>
 
 #include <algorithm>
@@ -21,7 +22,7 @@ public:
         : m_chain(chain), m_wallet_filenames(std::move(wallet_filenames))
     {
     }
-    void registerRpcs() override { RegisterWalletRPC(::tableRPC); }
+    void registerRpcs() override { RegisterWalletRPCCommands(m_chain, m_rpc_handlers); }
     bool prepare() override { return LoadWallets(m_chain, *this, m_wallet_filenames); }
     void start(CScheduler& scheduler) override { StartWallets(scheduler); }
     void stop() override { FlushWallets(); }
@@ -35,6 +36,7 @@ public:
 
     Chain& m_chain;
     std::vector<std::string> m_wallet_filenames;
+    std::vector<std::unique_ptr<Handler>> m_rpc_handlers;
 };
 
 } // namespace
