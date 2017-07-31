@@ -15,6 +15,7 @@
 
 class CBlock;
 class CCoinControl;
+class CRPCCommand;
 class CScheduler;
 class CValidationState;
 class uint256;
@@ -230,6 +231,10 @@ public:
         //! Shut down client.
         virtual void shutdown() = 0;
     };
+
+    //! Register handler for RPC. Command is not copied, so reference
+    //! needs to remain valid until Handler is disconnected.
+    virtual std::unique_ptr<Handler> handleRpc(const CRPCCommand& command) = 0;
 };
 
 //! Return implementation of Chain interface.
