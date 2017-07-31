@@ -532,13 +532,13 @@ BOOST_FIXTURE_TEST_CASE(coin_mark_dirty_immature_credit, TestChain100Setup)
 
     // Call GetImmatureCredit() once before adding the key to the wallet to
     // cache the current immature credit amount, which is 0.
-    BOOST_CHECK_EQUAL(wtx.GetImmatureCredit(), 0);
+    BOOST_CHECK_EQUAL(wtx.GetImmatureCredit(*locked_chain), 0);
 
     // Invalidate the cached value, add the key, and make sure a new immature
     // credit amount is calculated.
     wtx.MarkDirty();
     wallet.AddKeyPubKey(coinbaseKey, coinbaseKey.GetPubKey());
-    BOOST_CHECK_EQUAL(wtx.GetImmatureCredit(), 50*COIN);
+    BOOST_CHECK_EQUAL(wtx.GetImmatureCredit(*locked_chain), 50*COIN);
 }
 
 static int64_t AddTx(CWallet& wallet, uint32_t lockTime, int64_t mockTime, int64_t blockTime)
@@ -638,7 +638,7 @@ public:
         int changePos = -1;
         std::string error;
         CCoinControl dummy;
-        BOOST_CHECK(wallet->CreateTransaction({recipient}, wtx, reservekey, fee, changePos, error, dummy));
+        BOOST_CHECK(wallet->CreateTransaction(*m_locked_chain, {recipient}, wtx, reservekey, fee, changePos, error, dummy));
         CValidationState state;
         BOOST_CHECK(wallet->CommitTransaction(wtx, reservekey, nullptr, state));
         CMutableTransaction blocktx;
@@ -665,7 +665,7 @@ BOOST_FIXTURE_TEST_CASE(ListCoins, ListCoinsTestingSetup)
 
     // Confirm ListCoins initially returns 1 coin grouped under coinbaseKey
     // address.
-    auto list = wallet->ListCoins();
+    auto list = wallet->ListCoins(*m_locked_chain);
     BOOST_CHECK_EQUAL(list.size(), 1);
     BOOST_CHECK_EQUAL(boost::get<CKeyID>(list.begin()->first).ToString(), coinbaseAddress);
     BOOST_CHECK_EQUAL(list.begin()->second.size(), 1);
@@ -678,7 +678,7 @@ BOOST_FIXTURE_TEST_CASE(ListCoins, ListCoinsTestingSetup)
     // coinbaseKey pubkey, even though the change address has a different
     // pubkey.
     AddTx(CRecipient{GetScriptForRawPubKey({}), 1 * COIN, false /* subtract fee */});
-    list = wallet->ListCoins();
+    list = wallet->ListCoins(*m_locked_chain);
     BOOST_CHECK_EQUAL(list.size(), 1);
     BOOST_CHECK_EQUAL(boost::get<CKeyID>(list.begin()->first).ToString(), coinbaseAddress);
     BOOST_CHECK_EQUAL(list.begin()->second.size(), 2);
@@ -687,7 +687,7 @@ BOOST_FIXTURE_TEST_CASE(ListCoins, ListCoinsTestingSetup)
     {
         LOCK2(cs_main, wallet->cs_wallet);
         std::vector<COutput> available;
-        wallet->AvailableCoins(available);
+        wallet->AvailableCoins(*m_locked_chain, available);
         BOOST_CHECK_EQUAL(available.size(), 2);
     }
     for (const auto& group : list) {
@@ -699,12 +699,12 @@ BOOST_FIXTURE_TEST_CASE(ListCoins, ListCoinsTestingSetup)
     {
         LOCK2(cs_main, wallet->cs_wallet);
         std::vector<COutput> available;
-        wallet->AvailableCoins(available);
+        wallet->AvailableCoins(*m_locked_chain, available);
         BOOST_CHECK_EQUAL(available.size(), 0);
     }
     // Confirm ListCoins still returns same result as before, despite coins
     // being locked.
-    list = wallet->ListCoins();
+    list = wallet->ListCoins(*m_locked_chain);
     BOOST_CHECK_EQUAL(list.size(), 1);
     BOOST_CHECK_EQUAL(boost::get<CKeyID>(list.begin()->first).ToString(), coinbaseAddress);
     BOOST_CHECK_EQUAL(list.begin()->second.size(), 2);
