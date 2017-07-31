@@ -84,7 +84,7 @@ public:
             for (const auto& entry : wallet->mapWallet)
             {
                 if (TransactionRecord::showTransaction(entry.second))
-                    cachedWallet.append(TransactionRecord::decomposeTransaction(wallet, entry.second));
+                    cachedWallet.append(TransactionRecord::decomposeTransaction(*locked_chain, wallet, entry.second));
             }
         }
     }
@@ -140,7 +140,7 @@ public:
                 }
                 // Added -- insert at the right position
                 QList<TransactionRecord> toInsert =
-                        TransactionRecord::decomposeTransaction(wallet, mi->second);
+                        TransactionRecord::decomposeTransaction(*locked_chain, wallet, mi->second);
                 if(!toInsert.isEmpty()) /* only if something to insert */
                 {
                     parent->beginInsertRows(QModelIndex(), lowerIndex, lowerIndex+toInsert.size()-1);
@@ -203,7 +203,7 @@ public:
 
                     if(mi != wallet->mapWallet.end())
                     {
-                        rec->updateStatus(mi->second);
+                        rec->updateStatus(*locked_chain, mi->second);
                     }
                 }
             }
