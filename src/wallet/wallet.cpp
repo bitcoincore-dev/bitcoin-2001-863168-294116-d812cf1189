@@ -1765,7 +1765,7 @@ void CWallet::ReacceptWalletTransactions()
     for (std::pair<const int64_t, CWalletTx*>& item : mapSorted) {
         CWalletTx& wtx = *(item.second);
         CValidationState state;
-        wtx.AcceptToMemoryPool(*locked_chain, maxTxFee, state);
+        wtx.AcceptToMemoryPool(*locked_chain, state);
     }
 }
 
@@ -1776,7 +1776,7 @@ bool CWalletTx::RelayWalletTransaction(interface::Chain::Lock& locked_chain, CCo
     {
         CValidationState state;
         /* GetDepthInMainChain already catches known conflicts. */
-        if (InMempool() || AcceptToMemoryPool(locked_chain, maxTxFee, state)) {
+        if (InMempool() || AcceptToMemoryPool(locked_chain, state)) {
             LogPrintf("Relaying wtx %s\n", GetHash().ToString());
             if (connman) {
                 CInv inv(MSG_TX, GetHash());
@@ -3124,7 +3124,7 @@ bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, CCon
         if (fBroadcastTransactions)
         {
             // Broadcast
-            if (!wtx.AcceptToMemoryPool(*locked_chain, maxTxFee, state)) {
+            if (!wtx.AcceptToMemoryPool(*locked_chain, state)) {
                 LogPrintf("CommitTransaction(): Transaction cannot be broadcast immediately, %s\n", FormatStateMessage(state));
                 // TODO: if we expect the failure to be long term or permanent, instead delete wtx from the wallet and return failure.
             } else {
@@ -4213,15 +4213,14 @@ int CMerkleTx::GetBlocksToMaturity(interface::Chain::Lock& locked_chain) const
     return std::max(0, (COINBASE_MATURITY+1) - GetDepthInMainChain(locked_chain));
 }
 
-bool CWalletTx::AcceptToMemoryPool(interface::Chain::Lock& locked_chain, const CAmount& nAbsurdFee, CValidationState& state)
+bool CWalletTx::AcceptToMemoryPool(interface::Chain::Lock& locked_chain, CValidationState& state)
 {
     // We must set fInMempool here - while it will be re-set to true by the
     // entered-mempool callback, if we did not there would be a race where a
     // user could call sendmoney in a loop and hit spurious out of funds errors
     // because we think that the transaction they just generated's change is
     // unavailable as we're not yet aware its in mempool.
-    bool ret = ::AcceptToMemoryPool(mempool, state, tx, nullptr /* pfMissingInputs */,
-                                nullptr /* plTxnReplaced */, false /* bypass_limits */, nAbsurdFee);
+    bool ret = locked_chain.acceptToMemoryPool(tx, state);
     fInMempool |= ret;
     return ret;
 }
