@@ -22,7 +22,7 @@ WalletTestingSetup::WalletTestingSetup(const std::string& chainName):
     pwalletMain->LoadWallet(fFirstRun);
     pwalletMain->m_ipc_handler = m_ipc_chain->handleNotifications(*pwalletMain);
 
-    RegisterWalletRPCCommands(tableRPC);
+    m_ipc_client->registerRpcs();
 }
 
 WalletTestingSetup::~WalletTestingSetup()
