@@ -277,7 +277,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
 
         CWalletTx *newTx = transaction.getTransaction();
         CReserveKey *keyChange = transaction.getPossibleKeyChange();
-        bool fCreated = wallet->CreateTransaction(vecSend, *newTx, *keyChange, nFeeRequired, nChangePosRet, strFailReason, coinControl);
+        bool fCreated = wallet->CreateTransaction(*locked_chain, vecSend, *newTx, *keyChange, nFeeRequired, nChangePosRet, strFailReason, coinControl);
         transaction.setTransactionFee(nFeeRequired);
         if (fSubtractFeeFromAmount && fCreated)
             transaction.reassignAmounts(nChangePosRet);
@@ -580,7 +580,7 @@ void WalletModel::getOutputs(const std::vector<COutPoint>& vOutpoints, std::vect
     {
         auto it = wallet->mapWallet.find(outpoint.hash);
         if (it == wallet->mapWallet.end()) continue;
-        int nDepth = it->second.GetDepthInMainChain();
+        int nDepth = it->second.GetDepthInMainChain(*locked_chain);
         if (nDepth < 0) continue;
         COutput out(&it->second, outpoint.n, nDepth, true /* spendable */, true /* solvable */, true /* safe */);
         vOutputs.push_back(out);
@@ -591,14 +591,14 @@ bool WalletModel::isSpent(const COutPoint& outpoint) const
 {
     auto locked_chain = wallet->chain().lock();
     LOCK(wallet->cs_wallet);
-    return wallet->IsSpent(outpoint.hash, outpoint.n);
+    return wallet->IsSpent(*locked_chain, outpoint.hash, outpoint.n);
 }
 
 // AvailableCoins + LockedCoins grouped by wallet address (put change in one group with wallet address)
 void WalletModel::listCoins(std::map<QString, std::vector<COutput> >& mapCoins) const
 {
     auto locked_chain = wallet->chain().assumeLocked();  // Removed in upcoming lock cleanup
-    for (auto& group : wallet->ListCoins()) {
+    for (auto& group : wallet->ListCoins(*locked_chain)) {
         auto& resultGroup = mapCoins[QString::fromStdString(EncodeDestination(group.first))];
         for (auto& coin : group.second) {
             resultGroup.emplace_back(std::move(coin));
@@ -659,7 +659,7 @@ bool WalletModel::abandonTransaction(uint256 hash) const
 {
     auto locked_chain = wallet->chain().lock();
     LOCK(wallet->cs_wallet);
-    return wallet->AbandonTransaction(hash);
+    return wallet->AbandonTransaction(*locked_chain, hash);
 }
 
 bool WalletModel::transactionCanBeBumped(uint256 hash) const
