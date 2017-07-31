@@ -42,7 +42,7 @@ int64_t CalculateMaximumSignedTxSize(const CTransaction &tx, const CWallet *pWal
     return GetVirtualTransactionSize(txNew);
 }
 
-bool CFeeBumper::preconditionChecks(const CWallet *pWallet, const CWalletTx& wtx) {
+bool CFeeBumper::preconditionChecks(ipc::Chain::LockedState& ipc_locked, const CWallet *pWallet, const CWalletTx& wtx) {
     if (pWallet->HasWalletSpend(wtx.GetHash())) {
         vErrors.push_back("Transaction has descendants in the wallet");
         currentResult = BumpFeeResult::INVALID_PARAMETER;
@@ -59,7 +59,7 @@ bool CFeeBumper::preconditionChecks(const CWallet *pWallet, const CWalletTx& wtx
         }
     }
 
-    if (wtx.GetDepthInMainChain() != 0) {
+    if (wtx.GetDepthInMainChain(ipc_locked) != 0) {
         vErrors.push_back("Transaction has been mined, or is conflicted with a mined transaction");
         currentResult = BumpFeeResult::WALLET_ERROR;
         return false;
@@ -67,7 +67,7 @@ bool CFeeBumper::preconditionChecks(const CWallet *pWallet, const CWalletTx& wtx
     return true;
 }
 
-CFeeBumper::CFeeBumper(const CWallet *pWallet, const uint256 txidIn, const CCoinControl& coin_control, CAmount totalFee)
+CFeeBumper::CFeeBumper(ipc::Chain::LockedState& ipc_locked, const CWallet *pWallet, const uint256 txidIn, const CCoinControl& coin_control, CAmount totalFee)
     :
     txid(std::move(txidIn)),
     nOldFee(0),
@@ -84,7 +84,7 @@ CFeeBumper::CFeeBumper(const CWallet *pWallet, const uint256 txidIn, const CCoin
     auto it = pWallet->mapWallet.find(txid);
     const CWalletTx& wtx = it->second;
 
-    if (!preconditionChecks(pWallet, wtx)) {
+    if (!preconditionChecks(ipc_locked, pWallet, wtx)) {
         return;
     }
 
@@ -235,7 +235,7 @@ bool CFeeBumper::signTransaction(CWallet *pWallet)
      return pWallet->SignTransaction(mtx);
 }
 
-bool CFeeBumper::commit(CWallet *pWallet)
+bool CFeeBumper::commit(ipc::Chain::LockedState& ipc_locked, CWallet *pWallet)
 {
     AssertLockHeld(pWallet->cs_wallet);
     if (!vErrors.empty() || currentResult != BumpFeeResult::OK) {
@@ -249,7 +249,7 @@ bool CFeeBumper::commit(CWallet *pWallet)
     CWalletTx& oldWtx = pWallet->mapWallet[txid];
 
     // make sure the transaction still has no descendants and hasn't been mined in the meantime
-    if (!preconditionChecks(pWallet, oldWtx)) {
+    if (!preconditionChecks(ipc_locked, pWallet, oldWtx)) {
         return false;
     }
 
