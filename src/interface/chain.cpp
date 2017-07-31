@@ -4,6 +4,7 @@
 #include <chainparams.h>
 #include <interface/util.h>
 #include <primitives/block.h>
+#include <primitives/transaction.h>
 #include <sync.h>
 #include <uint256.h>
 #include <validation.h>
@@ -88,6 +89,10 @@ public:
     }
     bool checkFinalTx(const CTransaction& tx) override { return CheckFinalTx(tx); }
     bool isWitnessEnabled() override { return ::IsWitnessEnabled(::chainActive.Tip(), Params().GetConsensus()); }
+    bool acceptToMemoryPool(CTransactionRef tx, CValidationState& state) override
+    {
+        return AcceptToMemoryPool(::mempool, state, tx, true, nullptr, nullptr, false, ::maxTxFee);
+    }
 };
 
 class LockingStateImpl : public LockImpl, public CCriticalBlock

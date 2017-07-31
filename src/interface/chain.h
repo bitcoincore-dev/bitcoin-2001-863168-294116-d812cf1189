@@ -1,6 +1,8 @@
 #ifndef BITCOIN_INTERFACE_CHAIN_H
 #define BITCOIN_INTERFACE_CHAIN_H
 
+#include <primitives/transaction.h> // For CTransactionRef
+
 #include <memory>
 #include <stdint.h>
 #include <string>
@@ -8,7 +10,7 @@
 
 class CBlock;
 class CScheduler;
-class CTransaction;
+class CValidationState;
 class uint256;
 struct CBlockLocator;
 
@@ -97,6 +99,9 @@ public:
 
         //! Check whether segregated witness is enabled on the network.
         virtual bool isWitnessEnabled() = 0;
+
+        //! Add transaction to memory pool.
+        virtual bool acceptToMemoryPool(CTransactionRef tx, CValidationState& state) = 0;
     };
 
     //! Return Lock interface. Chain is locked when this is called, and

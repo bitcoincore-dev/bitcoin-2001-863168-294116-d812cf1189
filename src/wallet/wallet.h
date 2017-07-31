@@ -474,7 +474,7 @@ public:
     bool RelayWalletTransaction(interface::Chain::Lock& locked_chain, CConnman* connman);
 
     /** Pass this transaction to the mempool. Fails if absolute fee exceeds absurd fee. */
-    bool AcceptToMemoryPool(interface::Chain::Lock& locked_chain, const CAmount& nAbsurdFee, CValidationState& state);
+    bool AcceptToMemoryPool(interface::Chain::Lock& locked_chain, CValidationState& state);
 
     std::set<uint256> GetConflicts() const;
 };
