@@ -161,7 +161,7 @@ public:
     {
         auto result = MakeUnique<LockingStateImpl>(::cs_main, "cs_main", __FILE__, __LINE__, try_lock);
         if (try_lock && result && !*result) return {};
-        return result;
+        return std::move(result);
     }
     std::unique_ptr<Chain::LockedState> assumeLocked() override { return MakeUnique<LockedStateImpl>(); }
     bool findBlock(const uint256& hash, CBlock* block, int64_t* time) override
