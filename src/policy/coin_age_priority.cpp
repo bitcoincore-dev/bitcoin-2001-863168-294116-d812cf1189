@@ -170,7 +170,7 @@ bool BlockAssembler::TestForBlock(CTxMemPool::txiter iter)
     return true;
 }
 
-void BlockAssembler::addPriorityTxs()
+void BlockAssembler::addPriorityTxs(int &nPackagesSelected)
 {
     // How much of the block should be dedicated to high-priority transactions,
     // included regardless of the fees they pay
@@ -229,6 +229,8 @@ void BlockAssembler::addPriorityTxs()
         // If this tx fits in the block add it, otherwise keep looping
         if (TestForBlock(iter)) {
             AddToBlock(iter);
+
+            ++nPackagesSelected;
 
             // If now that this txs is added we've surpassed our desired priority size
             // or have dropped below the minimum priority threshold, then we're done adding priority txs
