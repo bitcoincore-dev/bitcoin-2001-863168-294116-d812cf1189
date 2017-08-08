@@ -111,28 +111,28 @@ class PrioritiseTransactionTest(BitcoinTestFramework):
         outputs = {}
         outputs[self.nodes[0].getnewaddress()] = utxo["amount"] - self.relayfee
         raw_tx2 = self.nodes[0].createrawtransaction(inputs, outputs)
-        tx2_hex = self.nodes[0].signrawtransaction(raw_tx2)["hex"]
-        tx2_id = self.nodes[0].decoderawtransaction(tx2_hex)["txid"]
+        tx_hex = self.nodes[0].signrawtransaction(raw_tx2)["hex"]
+        tx_id = self.nodes[0].decoderawtransaction(tx_hex)["txid"]
 
         # This will raise an exception due to min relay fee not being met
-        assert_raises_jsonrpc(-26, "66: min relay fee not met", self.nodes[0].sendrawtransaction, tx2_hex)
-        assert(tx2_id not in self.nodes[0].getrawmempool())
+        assert_raises_jsonrpc(-26, "66: min relay fee not met", self.nodes[0].sendrawtransaction, tx_hex)
+        assert(tx_id not in self.nodes[0].getrawmempool())
 
         # This is a less than 1000-byte transaction, so just set the fee
         # to be the minimum for a 1000 byte transaction and check that it is
         # accepted.
-        self.nodes[0].prioritisetransaction(txid=tx2_id, fee_delta=int(self.relayfee*COIN))
+        self.nodes[0].prioritisetransaction(txid=tx_id, fee_delta=int(self.relayfee*COIN))
 
         self.log.info("Assert that prioritised free transaction is accepted to mempool")
-        assert_equal(self.nodes[0].sendrawtransaction(tx2_hex), tx2_id)
-        assert(tx2_id in self.nodes[0].getrawmempool())
+        assert_equal(self.nodes[0].sendrawtransaction(tx_hex), tx_id)
+        assert(tx_id in self.nodes[0].getrawmempool())
 
         # Test that calling prioritisetransaction is sufficient to trigger
         # getblocktemplate to (eventually) return a new block.
         mock_time = int(time.time())
         self.nodes[0].setmocktime(mock_time)
         template = self.nodes[0].getblocktemplate()
-        self.nodes[0].prioritisetransaction(txid=tx2_id, fee_delta=-int(self.relayfee*COIN))
+        self.nodes[0].prioritisetransaction(txid=tx_id, fee_delta=-int(self.relayfee*COIN))
         self.nodes[0].setmocktime(mock_time+10)
         new_template = self.nodes[0].getblocktemplate()
 
