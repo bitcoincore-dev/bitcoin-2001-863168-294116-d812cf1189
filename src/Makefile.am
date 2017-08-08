@@ -117,6 +117,7 @@ BITCOIN_CORE_H = \
   netbase.h \
   netmessagemaker.h \
   noui.h \
+  policy/coin_age_priority.h \
   policy/feerate.h \
   policy/fees.h \
   policy/policy.h \
@@ -198,6 +199,7 @@ libbitcoin_server_a_SOURCES = \
   net.cpp \
   net_processing.cpp \
   noui.cpp \
+  policy/coin_age_priority.cpp \
   policy/fees.cpp \
   policy/policy.cpp \
   policy/rbf.cpp \

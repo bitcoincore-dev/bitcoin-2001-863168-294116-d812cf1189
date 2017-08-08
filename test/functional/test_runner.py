@@ -83,6 +83,8 @@ BASE_SCRIPTS= [
     'mempool_resurrect_test.py',
     'txn_doublespend.py --mineblock',
     'txn_clone.py',
+    'txn_priority.py',
+    'txn_priority.py --gbt',
     'getchaintips.py',
     'rest.py',
     'mempool_spendcoinbase.py',
