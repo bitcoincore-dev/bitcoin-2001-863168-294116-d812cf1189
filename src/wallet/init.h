@@ -19,7 +19,7 @@ bool WalletParameterInteraction();
 //  being loaded (CWallet::ParameterInteraction forbids -salvagewallet, -zapwallettxes or -upgradewallet with multiwallet).
 bool WalletVerify();
 
-//! Load wallet databases
+//! Load wallet databases.
 bool InitLoadWallet();
 
 #endif // BITCOIN_WALLET_INIT_H
