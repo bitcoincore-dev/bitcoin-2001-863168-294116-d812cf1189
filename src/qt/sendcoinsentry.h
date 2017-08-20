@@ -37,6 +37,7 @@ public:
 
     void setValue(const SendCoinsRecipient &value);
     void setAddress(const QString &address);
+    void setAmount(const CAmount &amount);
 
     /** Set up the tab chain manually, as Qt messes up the tab chain by default in some cases
      *  (issue https://bugreports.qt-project.org/browse/QTBUG-10907).
@@ -47,14 +48,17 @@ public:
 
 public slots:
     void clear();
+    void checkSubtractFeeFromAmount();
 
 signals:
     void removeEntry(SendCoinsEntry *entry);
+    void useAvailableBalance(SendCoinsEntry* entry);
     void payAmountChanged();
     void subtractFeeFromAmountChanged();
 
 private slots:
     void deleteClicked();
+    void useAvailableBalanceClicked();
     void on_payTo_textChanged(const QString &address);
     void on_addressBookButton_clicked();
     void on_pasteButton_clicked();
