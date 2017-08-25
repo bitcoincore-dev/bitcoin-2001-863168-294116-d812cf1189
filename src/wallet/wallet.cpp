@@ -3115,7 +3115,6 @@ DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
     {
         if (dbw->Rewrite("\x04pool"))
         {
-            LOCK(cs_wallet);
             setInternalKeyPool.clear();
             setExternalKeyPool.clear();
             m_pool_key_to_index.clear();
