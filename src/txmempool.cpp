@@ -623,7 +623,7 @@ void CTxMemPool::clear()
     _clear();
 }
 
-void CTxMemPool::check(const CCoinsViewCache *pcoins, unsigned int nBlockHeight) const
+void CTxMemPool::check(const CCoinsViewCache *pcoins) const
 {
     if (nCheckFrequency == 0)
         return;
@@ -640,6 +640,7 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins, unsigned int nBlockHeight)
     const int64_t nSpendHeight = GetSpendHeight(mempoolDuplicate);
 
     LOCK(cs);
+    const unsigned int nBlockHeight = chainActive.Height();
     CCoinsViewMemPool viewMemPool(pcoinsTip, *this);
     CCoinsViewCache view(&viewMemPool);
     std::list<const CTxMemPoolEntry*> waitingOnDependants;
