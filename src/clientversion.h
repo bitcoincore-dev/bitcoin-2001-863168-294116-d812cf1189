@@ -46,6 +46,12 @@ std::string CopyrightHolders(const std::string& strPrefix);
 /** Returns licensing information (for -version) */
 std::string LicenseInfo();
 
+static const int64_t SECONDS_PER_YEAR = 31558060;
+static const int POSIX_EPOCH_YEAR = 1970;
+static const int64_t DEFAULT_SOFTWARE_EXPIRY = ((COPYRIGHT_YEAR - POSIX_EPOCH_YEAR) * SECONDS_PER_YEAR) + (SECONDS_PER_YEAR * 2);
+
+bool IsThisSoftwareExpired(int64_t nTime);
+
 #endif // WINDRES_PREPROC
 
 #endif // BITCOIN_CLIENTVERSION_H
