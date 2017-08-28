@@ -1080,6 +1080,9 @@ public:
     /** Mark a transaction as replaced by another transaction (e.g., BIP 125). */
     bool MarkReplaced(const uint256& originalHash, const uint256& newHash);
 
+    //! Verify wallet naming and perform salvage on the wallet if required
+    static bool VerifyWallet(std::string walletFile, bool salvage_wallet);
+
     /* Initializes the wallet, returns a new CWallet instance or a null pointer in case of an error */
     static CWallet* CreateWalletFromFile(const std::string walletFile);
 

@@ -185,51 +185,22 @@ bool VerifyWallets()
 
     uiInterface.InitMessage(_("Verifying wallet(s)..."));
 
+    std::vector<std::string> wallet_files = gArgs.GetArgs("-wallet");
+
+    // -salvagewallet can only be used when loading a single wallet
+    bool salvage_wallet = gArgs.GetBoolArg("-salvagewallet", false) && wallet_files.size() <= 1;
+
     // Keep track of each wallet absolute path to detect duplicates.
     std::set<fs::path> wallet_paths;
 
-    for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
-        if (boost::filesystem::path(walletFile).filename() != walletFile) {
-            return InitError(strprintf(_("Error loading wallet %s. -wallet parameter must only specify a filename (not a path)."), walletFile));
-        }
-
-        if (SanitizeString(walletFile, SAFE_CHARS_FILENAME) != walletFile) {
-            return InitError(strprintf(_("Error loading wallet %s. Invalid characters in -wallet filename."), walletFile));
-        }
-
+    for (const std::string& walletFile : wallet_files) {
         fs::path wallet_path = fs::absolute(walletFile, GetDataDir());
 
-        if (fs::exists(wallet_path) && (!fs::is_regular_file(wallet_path) || fs::is_symlink(wallet_path))) {
-            return InitError(strprintf(_("Error loading wallet %s. -wallet filename must be a regular file."), walletFile));
-        }
-
         if (!wallet_paths.insert(wallet_path).second) {
-            return InitError(strprintf(_("Error loading wallet %s. Duplicate -wallet filename specified."), walletFile));
+            return InitError(strprintf(_("Error loading wallet %s. Duplicate wallet filename specified."), walletFile));
         }
 
-        std::string strError;
-        if (!CWalletDB::VerifyEnvironment(walletFile, GetDataDir().string(), strError)) {
-            return InitError(strError);
-        }
-
-        if (gArgs.GetBoolArg("-salvagewallet", false)) {
-            // Recover readable keypairs:
-            CWallet dummyWallet;
-            std::string backup_filename;
-            if (!CWalletDB::Recover(walletFile, (void *)&dummyWallet, CWalletDB::RecoverKeysOnlyFilter, backup_filename)) {
-                return false;
-            }
-        }
-
-        std::string strWarning;
-        bool dbV = CWalletDB::VerifyDatabaseFile(walletFile, GetDataDir().string(), strWarning, strError);
-        if (!strWarning.empty()) {
-            InitWarning(strWarning);
-        }
-        if (!dbV) {
-            InitError(strError);
-            return false;
-        }
+        if (!CWallet::VerifyWallet(walletFile, salvage_wallet)) return false;
     }
 
     return true;

@@ -3754,6 +3754,55 @@ std::vector<std::string> CWallet::GetDestValues(const std::string& prefix) const
     return values;
 }
 
+bool CWallet::VerifyWallet(std::string walletFile, bool salvage_wallet)
+{
+    if (boost::filesystem::path(walletFile).filename() != walletFile) {
+        return InitError(strprintf(_("Error loading wallet %s. wallet parameter must only specify a filename (not a path)."), walletFile));
+    }
+
+    if (SanitizeString(walletFile, SAFE_CHARS_FILENAME) != walletFile) {
+        return InitError(strprintf(_("Error loading wallet %s. Invalid characters in wallet filename."), walletFile));
+    }
+
+    fs::path wallet_path = fs::absolute(walletFile, GetDataDir());
+
+    if (fs::exists(wallet_path) && (!fs::is_regular_file(wallet_path) || fs::is_symlink(wallet_path))) {
+        return InitError(strprintf(_("Error loading wallet %s. wallet filename must be a regular file."), walletFile));
+    }
+
+    for (CWalletRef wallet : vpwallets) {
+        if (walletFile.compare(wallet->GetName()) == 0) {
+            return InitError(strprintf(_("Error loading wallet %s. Duplicate wallet filename specified."), walletFile));
+        }
+    }
+
+    std::string strError;
+    if (!CWalletDB::VerifyEnvironment(walletFile, GetDataDir().string(), strError)) {
+        return InitError(strError);
+    }
+
+    if (salvage_wallet) {
+        // Recover readable keypairs:
+        CWallet dummyWallet;
+        std::string backup_filename;
+        if (!CWalletDB::Recover(walletFile, (void *)&dummyWallet, CWalletDB::RecoverKeysOnlyFilter, backup_filename)) {
+            return false;
+        }
+    }
+
+    std::string strWarning;
+    bool dbV = CWalletDB::VerifyDatabaseFile(walletFile, GetDataDir().string(), strWarning, strError);
+    if (!strWarning.empty()) {
+        InitWarning(strWarning);
+    }
+    if (!dbV) {
+        InitError(strError);
+        return false;
+    }
+
+    return true;
+}
+
 CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 {
     // needed to restore wallet transaction meta data after -zapwallettxes
