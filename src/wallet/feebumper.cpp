@@ -68,14 +68,14 @@ BumpFeeResult PreconditionChecks(const CWallet* pWallet, const CWalletTx& wtx, s
 }
 } // namespace
 
-bool FeeBumper::TransactionCanBeBumped(CWallet* pWallet, const uint256& txid)
+bool TransactionCanBeBumped(CWallet* pWallet, const uint256& txid)
 {
     LOCK2(cs_main, pWallet->cs_wallet);
     const CWalletTx* wtx = pWallet->GetWalletTx(txid);
     return wtx && SignalsOptInRBF(*wtx) && !wtx->mapValue.count("replaced_by_txid");
 }
 
-BumpFeeResult FeeBumper::CreateTransaction(const CWallet* pWallet,
+BumpFeeResult CreateBumpFeeTransaction(const CWallet* pWallet,
     const uint256& txid,
     const CCoinControl& coin_control,
     CAmount totalFee,
@@ -229,12 +229,12 @@ BumpFeeResult FeeBumper::CreateTransaction(const CWallet* pWallet,
     return BumpFeeResult::OK;
 }
 
-bool FeeBumper::SignTransaction(CWallet* pWallet, CMutableTransaction& mtx) {
+bool SignBumpFeeTransaction(CWallet* pWallet, CMutableTransaction& mtx) {
     LOCK2(cs_main, pWallet->cs_wallet);
     return pWallet->SignTransaction(mtx);
 }
 
-BumpFeeResult FeeBumper::CommitTransaction(CWallet* pWallet,
+BumpFeeResult CommitBumpFeeTransaction(CWallet* pWallet,
     const uint256& txid,
     CMutableTransaction&& mtx,
     std::vector<std::string>& vErrors,

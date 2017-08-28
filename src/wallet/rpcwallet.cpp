@@ -3063,7 +3063,7 @@ UniValue bumpfee(const JSONRPCRequest& request)
     CAmount oldFee;
     CAmount newFee;
     CMutableTransaction mtx;
-    BumpFeeResult res = FeeBumper::CreateTransaction(pwallet, hash, coin_control, totalFee, errors, oldFee, newFee, mtx);
+    BumpFeeResult res = CreateBumpFeeTransaction(pwallet, hash, coin_control, totalFee, errors, oldFee, newFee, mtx);
     if (res != BumpFeeResult::OK)
     {
         switch(res) {
@@ -3086,12 +3086,12 @@ UniValue bumpfee(const JSONRPCRequest& request)
     }
 
     // sign bumped transaction
-    if (!FeeBumper::SignTransaction(pwallet, mtx)) {
+    if (!SignBumpFeeTransaction(pwallet, mtx)) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Can't sign transaction.");
     }
     // commit the bumped transaction
     uint256 txid;
-    if (FeeBumper::CommitTransaction(pwallet, hash, std::move(mtx), errors, txid) != BumpFeeResult::OK) {
+    if (CommitBumpFeeTransaction(pwallet, hash, std::move(mtx), errors, txid) != BumpFeeResult::OK) {
         throw JSONRPCError(RPC_WALLET_ERROR, errors[0]);
     }
     UniValue result(UniValue::VOBJ);

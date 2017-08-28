@@ -23,38 +23,34 @@ enum class BumpFeeResult
     MISC_ERROR,
 };
 
-class FeeBumper
-{
-public:
-    /* return whether transaction can be bumped */
-    static bool TransactionCanBeBumped(CWallet* pWallet, const uint256& txid);
+/* return whether transaction can be bumped */
+bool TransactionCanBeBumped(CWallet* pWallet, const uint256& txid);
 
-    /* create bumpfee transaction */
-    static BumpFeeResult CreateTransaction(const CWallet* pWallet,
-        const uint256& txid,
-        const CCoinControl& coin_control,
-        CAmount totalFee,
-        std::vector<std::string>& vErrors,
-        CAmount& nOldFee,
-        CAmount& nNewFee,
-        CMutableTransaction& mtx);
+/* create bumpfee transaction */
+BumpFeeResult CreateBumpFeeTransaction(const CWallet* pWallet,
+    const uint256& txid,
+    const CCoinControl& coin_control,
+    CAmount totalFee,
+    std::vector<std::string>& vErrors,
+    CAmount& nOldFee,
+    CAmount& nNewFee,
+    CMutableTransaction& mtx);
 
-    /* signs the new transaction,
-     * returns false if the tx couldn't be found or if it was
-     * impossible to create the signature(s)
-     */
-    static bool SignTransaction(CWallet* pWallet, CMutableTransaction& mtx);
+/* signs the new transaction,
+ * returns false if the tx couldn't be found or if it was
+ * impossible to create the signature(s)
+ */
+bool SignBumpFeeTransaction(CWallet* pWallet, CMutableTransaction& mtx);
 
-    /* commits the fee bump,
-     * returns true, in case of CWallet::CommitTransaction was successful
-     * but, eventually sets vErrors if the tx could not be added to the mempool (will try later)
-     * or if the old transaction could not be marked as replaced
-     */
-    static BumpFeeResult CommitTransaction(CWallet* pWallet,
-        const uint256& txid,
-        CMutableTransaction&& mtx,
-        std::vector<std::string>& vErrors,
-        uint256& bumpedTxid);
-};
+/* commits the fee bump,
+ * returns true, in case of CWallet::CommitTransaction was successful
+ * but, eventually sets vErrors if the tx could not be added to the mempool (will try later)
+ * or if the old transaction could not be marked as replaced
+ */
+BumpFeeResult CommitBumpFeeTransaction(CWallet* pWallet,
+    const uint256& txid,
+    CMutableTransaction&& mtx,
+    std::vector<std::string>& vErrors,
+    uint256& bumpedTxid);
 
 #endif // BITCOIN_WALLET_FEEBUMPER_H
