@@ -8,13 +8,11 @@
 #include <primitives/transaction.h>
 
 class CWallet;
-class CWalletTx;
 class uint256;
 class CCoinControl;
 enum class FeeEstimateMode;
 
-enum class BumpFeeResult
-{
+enum class BumpFeeResult {
     OK,
     INVALID_ADDRESS_OR_KEY,
     INVALID_REQUEST,
@@ -23,34 +21,32 @@ enum class BumpFeeResult
     MISC_ERROR,
 };
 
-/* return whether transaction can be bumped */
-bool TransactionCanBeBumped(CWallet* pWallet, const uint256& txid);
+//! Return whether transaction can be bumped.
+bool TransactionCanBeBumped(CWallet* wallet, const uint256& txid);
 
-/* create bumpfee transaction */
-BumpFeeResult CreateBumpFeeTransaction(const CWallet* pWallet,
+//! Create bumpfee transaction.
+BumpFeeResult CreateBumpFeeTransaction(const CWallet* wallet,
     const uint256& txid,
     const CCoinControl& coin_control,
-    CAmount totalFee,
-    std::vector<std::string>& vErrors,
-    CAmount& nOldFee,
-    CAmount& nNewFee,
+    CAmount total_fee,
+    std::vector<std::string>& errors,
+    CAmount& old_fee,
+    CAmount& new_fee,
     CMutableTransaction& mtx);
 
-/* signs the new transaction,
- * returns false if the tx couldn't be found or if it was
- * impossible to create the signature(s)
- */
-bool SignBumpFeeTransaction(CWallet* pWallet, CMutableTransaction& mtx);
+//! Sign the new transaction,
+//! @return false if the tx couldn't be found or if it was
+//! impossible to create the signature(s)
+bool SignBumpFeeTransaction(CWallet* wallet, CMutableTransaction& mtx);
 
-/* commits the fee bump,
- * returns true, in case of CWallet::CommitTransaction was successful
- * but, eventually sets vErrors if the tx could not be added to the mempool (will try later)
- * or if the old transaction could not be marked as replaced
- */
-BumpFeeResult CommitBumpFeeTransaction(CWallet* pWallet,
+//! Commit the bumpfee transaction.
+//! @return success in case of CWallet::CommitTransaction was successful,
+//! but sets errors if the tx could not be added to the mempool (will try later)
+//! or if the old transaction could not be marked as replaced.
+BumpFeeResult CommitBumpFeeTransaction(CWallet* wallet,
     const uint256& txid,
     CMutableTransaction&& mtx,
-    std::vector<std::string>& vErrors,
-    uint256& bumpedTxid);
+    std::vector<std::string>& errors,
+    uint256& bumped_txid);
 
 #endif // BITCOIN_WALLET_FEEBUMPER_H
