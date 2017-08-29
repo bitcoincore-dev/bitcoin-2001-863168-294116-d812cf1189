@@ -70,7 +70,7 @@ BumpFeeResult PreconditionChecks(const CWallet* pWallet, const CWalletTx& wtx, s
 
 bool TransactionCanBeBumped(CWallet* pWallet, const uint256& txid)
 {
-    LOCK2(cs_main, pWallet->cs_wallet);
+    LOCK(pWallet->cs_wallet);
     const CWalletTx* wtx = pWallet->GetWalletTx(txid);
     return wtx && SignalsOptInRBF(*wtx) && !wtx->mapValue.count("replaced_by_txid");
 }
