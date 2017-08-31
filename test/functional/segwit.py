@@ -285,6 +285,9 @@ class SegWitTest(BitcoinTestFramework):
         # Check that hash is properly reported in mempool entry
         assert_equal(int(self.nodes[0].getmempoolentry(txid3)["hash"], 16), tx.calc_sha256(True))
 
+        # Check that wtxid is properly reported in mempool entry
+        assert_equal(int(self.nodes[0].getmempoolentry(txid3)["wtxid"], 16), tx.calc_sha256(True))
+
         # Mine a block to clear the gbt cache again.
         self.nodes[0].generate(1)
 
