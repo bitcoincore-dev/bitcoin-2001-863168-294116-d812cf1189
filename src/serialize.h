@@ -428,16 +428,23 @@ public:
         s.read(pbegin, pend - pbegin);
     }
 };
-//! Construct a FlatRange wrapper around a const vector.
-template<typename T> static inline const FlatRangeWrapper<const char> FlatVector(const T& t) { return FlatRangeWrapper<const char>((const char*)t.data(), (const char*)(t.data() + t.size())); }
-//! Construct a FlatRange wrapper around a non-const vector.
-template<typename T> static inline FlatRangeWrapper<char> FlatVector(T& t) { return FlatRangeWrapper<char>((char*)t.data(), (char*)(t.data() + t.size())); }
-//! Construct a FlatRange wrapper around a const POD and array types.
-template<typename T> static inline const FlatRangeWrapper<const char> FlatDataInner(const T* t, size_t len) { return FlatRangeWrapper<const char>((const char*)t, ((const char*)t) + len); }
-//! Construct a FlatRange wrapper around a non-const POD and array types.
-template<typename T> static inline FlatRangeWrapper<char> FlatDataInner(T* t, size_t len) { return FlatRangeWrapper<char>((char*)t, ((char*)t) + len); }
-//! Helper macro to easily serialize POD types.
-#define FLATDATA(x) FlatDataInner(&(x), sizeof(x))
+
+//! Safely convert odd char pointer types to standard ones.
+static inline char* char_cast(char* c) { return c; }
+static inline char* char_cast(unsigned char* c) { return (char*)c; }
+static inline const char* char_cast(const char* c) { return c; }
+static inline const char* char_cast(const unsigned char* c) { return (const char*)c; }
+
+//! Construct a FlatRange wrapper around a const char vector.
+template<typename T> static inline const FlatRangeWrapper<const char> FlatVector(const T& t) { return FlatRangeWrapper<const char>(char_cast(t.data()), char_cast(t.data() + t.size())); }
+//! Construct a FlatRange wrapper around a non-const char vector.
+template<typename T> static inline FlatRangeWrapper<char> FlatVector(T& t) { return FlatRangeWrapper<char>(char_cast(t.data()), char_cast(t.data() + t.size())); }
+//! Construct a FlatRange wrapper around a const char array.
+template<typename T> static inline const FlatRangeWrapper<const char> FlatDataInner(const T* begin, const T* end) { return FlatRangeWrapper<const char>(char_cast(begin), char_cast(end)); }
+//! Construct a FlatRange wrapper around a non-const char array.
+template<typename T> static inline FlatRangeWrapper<char> FlatDataInner(T* begin, T* end) { return FlatRangeWrapper<char>(char_cast(begin), char_cast(end)); }
+//! Helper macro to easily serialize char arrays.
+#define FLATDATA(x) FlatDataInner(std::begin(x), std::end(x))
 
 /** Serialization wrapper class for integers in VarInt format. */
 template<typename I>
