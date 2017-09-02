@@ -178,10 +178,10 @@ AC_ARG_ENABLE([glibc-back-compat],
   [use_glibc_compat=no])
 
 AC_ARG_ENABLE([experimental-asm],
-  [AS_HELP_STRING([--enable-experimental-asm],
-  [Enable experimental assembly routines (default is no)])],
+  [AS_HELP_STRING([--disable-experimental-asm],
+  [Disable experimental assembly routines (default is yes)])],
   [experimental_asm=$enableval],
-  [experimental_asm=no])
+  [experimental_asm=yes])
 
 if test "x$experimental_asm" = xyes; then
   AC_DEFINE(EXPERIMENTAL_ASM, 1, [Define this symbol to build in experimental assembly routines])
