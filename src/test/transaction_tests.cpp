@@ -47,6 +47,9 @@ unsigned int ParseScriptFlags(std::string strFlags)
 
     for (std::string word : words)
     {
+        if (word == "P2SH") {
+            word = "BIP16";
+        }
         flags |= ParseScriptFlag(word);
     }
 
@@ -55,7 +58,14 @@ unsigned int ParseScriptFlags(std::string strFlags)
 
 std::string FormatScriptFlags(unsigned int flags)
 {
-    return boost::algorithm::join(ScriptFlagsToStrings(flags), ",");
+    std::vector<std::string> flag_strings = ScriptFlagsToStrings(flags);
+    for (auto& flag_string : flag_strings) {
+        if (flag_string == "BIP16") {
+            flag_string = "P2SH";
+        }
+    }
+    std::sort(flag_strings.begin(), flag_strings.end());
+    return boost::algorithm::join(flag_strings, ",");
 }
 
 BOOST_FIXTURE_TEST_SUITE(transaction_tests, BasicTestingSetup)
