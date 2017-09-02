@@ -103,6 +103,12 @@ AC_ARG_ENABLE([wallet],
   [enable_wallet=$enableval],
   [enable_wallet=yes])
 
+AC_ARG_WITH([libevent],
+  [AS_HELP_STRING([--without-libevent],
+  [build RPC server using libevent (default is yes if libevent is found)])],
+  [use_libevent=$withval],
+  [use_libevent=auto])
+
 AC_ARG_WITH([miniupnpc],
   [AS_HELP_STRING([--with-miniupnpc],
   [enable UPNP (default is yes if libminiupnpc is found)])],
@@ -292,8 +298,30 @@ CPPFLAGS="$CPPFLAGS -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS"
 AC_ARG_WITH([utils],
   [AS_HELP_STRING([--with-utils],
   [build bitcoin-cli bitcoin-tx (default=yes)])],
-  [build_bitcoin_utils=$withval],
-  [build_bitcoin_utils=yes])
+  [
+    build_bitcoin_tx=$withval
+    build_bitcoin_cli=$withval
+  ],
+  [
+    build_bitcoin_tx=yes
+    if test x$use_libevent = xno; then
+      build_bitcoin_cli=no
+    else
+      build_bitcoin_cli=yes
+    fi
+  ])
+
+AC_ARG_ENABLE([util-cli],
+  [AS_HELP_STRING([--enable-util-cli],
+  [build bitcoin-cli])],
+  [build_bitcoin_cli=$enableval],
+  [])
+
+AC_ARG_ENABLE([util-tx],
+  [AS_HELP_STRING([--enable-util-tx],
+  [build bitcoin-tx])],
+  [build_bitcoin_tx=$enableval],
+  [])
 
 AC_ARG_WITH([libs],
   [AS_HELP_STRING([--with-libs],
@@ -305,7 +333,13 @@ AC_ARG_WITH([daemon],
   [AS_HELP_STRING([--with-daemon],
   [build bitcoind daemon (default=yes)])],
   [build_bitcoind=$withval],
-  [build_bitcoind=yes])
+  [
+    if test x$use_libevent = xno; then
+      build_bitcoind=no
+    else
+      build_bitcoind=yes
+    fi
+  ])
 
 use_pkgconfig=yes
 case $host in
@@ -724,7 +758,7 @@ BITCOIN_QT_INIT
 dnl sets $bitcoin_enable_qt, $bitcoin_enable_qt_test, $bitcoin_enable_qt_dbus
 BITCOIN_QT_CONFIGURE([$use_pkgconfig], [qt5])
 
-if test x$build_bitcoin_utils$build_bitcoind$bitcoin_enable_qt$use_tests$use_bench = xnonononono; then
+if test x$build_bitcoin_cli$build_bitcoin_tx$build_bitcoind$bitcoin_enable_qt$use_tests$use_bench = xnononononono; then
     use_boost=no
 else
     use_boost=yes
@@ -910,12 +944,6 @@ if test x$use_pkgconfig = xyes; then
       if test x$use_qr != xno; then
         BITCOIN_QT_CHECK([PKG_CHECK_MODULES([QR], [libqrencode], [have_qrencode=yes], [have_qrencode=no])])
       fi
-      if test x$build_bitcoin_utils$build_bitcoind$bitcoin_enable_qt$use_tests != xnononono; then
-        PKG_CHECK_MODULES([EVENT], [libevent],, [AC_MSG_ERROR(libevent not found.)])
-        if test x$TARGET_OS != xwindows; then
-          PKG_CHECK_MODULES([EVENT_PTHREADS], [libevent_pthreads],, [AC_MSG_ERROR(libevent_pthreads not found.)])
-        fi
-      fi
 
       if test "x$use_zmq" = "xyes"; then
         PKG_CHECK_MODULES([ZMQ],[libzmq >= 4],
@@ -934,14 +962,6 @@ else
 
   AC_CHECK_HEADER([openssl/ssl.h],, AC_MSG_ERROR(libssl headers missing),)
   AC_CHECK_LIB([ssl],         [main],SSL_LIBS=-lssl, AC_MSG_ERROR(libssl missing))
-
-  if test x$build_bitcoin_utils$build_bitcoind$bitcoin_enable_qt$use_tests != xnononono; then
-    AC_CHECK_HEADER([event2/event.h],, AC_MSG_ERROR(libevent headers missing),)
-    AC_CHECK_LIB([event],[main],EVENT_LIBS=-levent,AC_MSG_ERROR(libevent missing))
-    if test x$TARGET_OS != xwindows; then
-      AC_CHECK_LIB([event_pthreads],[main],EVENT_PTHREADS_LIBS=-levent_pthreads,AC_MSG_ERROR(libevent_pthreads missing))
-    fi
-  fi
 
   if test "x$use_zmq" = "xyes"; then
      AC_CHECK_HEADER([zmq.h],
@@ -980,11 +1000,81 @@ AC_CHECK_DECLS([EVP_MD_CTX_new],,,[AC_INCLUDES_DEFAULT
 ])
 CXXFLAGS="${save_CXXFLAGS}"
 
+dnl libevent check
+
+if test x$use_libevent$build_bitcoind$build_bitcoin_cli$bitcoin_enable_qt = xyesnonono; then
+  AC_MSG_WARN([It doesn't make sense to use --with-libevent but not building bitcoind, bitcoin-cli, or bitcoin-qt; disabling])
+  use_libevent=no
+elif test x$build_bitcoind$build_bitcoin_cli != xnono; then
+  # Mandatory to build bitcoind or bitcoin-cli
+  if test x$use_libevent = xno; then
+    AC_MSG_ERROR([Cannot build bitcoind or bitcoin-cli without libevent.])
+  fi
+  use_libevent=yes
+fi
+
+found_libevent=no
+libevent_error='libevent not found'
+if test x$use_libevent != xno; then
+  if test x$use_pkgconfig = xyes; then
+    : #NOP
+    m4_ifdef(
+      [PKG_CHECK_MODULES],
+      [
+        PKG_CHECK_MODULES([EVENT],[libevent],[
+          if test x$TARGET_OS != xwindows; then
+            PKG_CHECK_MODULES([EVENT_PTHREADS],[libevent_pthreads],[
+              found_libevent=yes
+            ],[
+              libevent_error='libevent_pthreads not found'
+            ])
+          else
+            found_libevent=yes
+          fi
+        ],[])
+      ]
+    )
+  else
+    AC_CHECK_HEADER([event2/event.h],[
+      AC_CHECK_LIB([event],[main],[
+        EVENT_LIBS='-levent'
+        if test x$TARGET_OS != xwindows; then
+          AC_CHECK_LIB([event_pthreads],[main],[
+            EVENT_PTHREADS_LIBS='-levent_pthreads'
+            found_libevent=yes
+          ],[
+            libevent_error='libevent_pthreads not found'
+          ])
+        else
+          found_libevent=yes
+        fi
+      ],[])
+    ],[
+      libevent_error='libevent headers missing'
+    ])
+  fi
+fi
+
+if test x$use_libevent = xauto; then
+  use_libevent=yes
+elif test x$use_libevent$found_libevent = xyesno; then
+  AC_MSG_ERROR($libevent_error)
+fi
+
+if test x$use_libevent = xyes; then
+  AC_DEFINE([USE_LIBEVENT],[1],[Define if libevent support should be compiled in])
+else
+  EVENT_LIBS=
+  EVENT_CFLAGS=
+  EVENT_PTHREADS_LIBS=
+  EVENT_PTHREADS_CFLAGS=
+fi
+
 dnl univalue check
 
 need_bundled_univalue=yes
 
-if test x$build_bitcoin_utils$build_bitcoind$bitcoin_enable_qt$use_tests$use_bench = xnonononono; then
+if test x$build_bitcoin_cli$build_bitcoin_tx$build_bitcoind$bitcoin_enable_qt$use_tests$use_bench = xnononononono; then
   need_bundled_univalue=no
 else
 
@@ -1034,9 +1124,13 @@ AC_MSG_CHECKING([whether to build bitcoind])
 AM_CONDITIONAL([BUILD_BITCOIND], [test x$build_bitcoind = xyes])
 AC_MSG_RESULT($build_bitcoind)
 
-AC_MSG_CHECKING([whether to build utils (bitcoin-cli bitcoin-tx)])
-AM_CONDITIONAL([BUILD_BITCOIN_UTILS], [test x$build_bitcoin_utils = xyes])
-AC_MSG_RESULT($build_bitcoin_utils)
+AC_MSG_CHECKING([whether to build bitcoin-cli])
+AM_CONDITIONAL([BUILD_BITCOIN_CLI], [test x$build_bitcoin_cli = xyes])
+AC_MSG_RESULT($build_bitcoin_cli)
+
+AC_MSG_CHECKING([whether to build bitcoin-tx])
+AM_CONDITIONAL([BUILD_BITCOIN_TX], [test x$build_bitcoin_tx = xyes])
+AC_MSG_RESULT($build_bitcoin_tx)
 
 AC_MSG_CHECKING([whether to build libraries])
 AM_CONDITIONAL([BUILD_BITCOIN_LIBS], [test x$build_bitcoin_libs = xyes])
@@ -1162,7 +1256,7 @@ else
   AC_MSG_RESULT([no])
 fi
 
-if test x$build_bitcoin_utils$build_bitcoin_libs$build_bitcoind$bitcoin_enable_qt$use_bench$use_tests = xnononononono; then
+if test x$build_bitcoin_cli$build_bitcoin_tx$build_bitcoin_libs$build_bitcoind$bitcoin_enable_qt$use_bench$use_tests = xnonononononono; then
   AC_MSG_ERROR([No targets! Please specify at least one of: --with-utils --with-libs --with-daemon --with-gui --enable-bench or --enable-tests])
 fi
 
@@ -1175,6 +1269,7 @@ AM_CONDITIONAL([ENABLE_QT],[test x$bitcoin_enable_qt = xyes])
 AM_CONDITIONAL([ENABLE_QT_TESTS],[test x$BUILD_TEST_QT = xyes])
 AM_CONDITIONAL([ENABLE_BENCH],[test x$use_bench = xyes])
 AM_CONDITIONAL([USE_QRCODE], [test x$use_qr = xyes])
+AM_CONDITIONAL([USE_LIBEVENT], [test x$use_libevent = xyes])
 AM_CONDITIONAL([USE_LCOV],[test x$use_lcov = xyes])
 AM_CONDITIONAL([GLIBC_BACK_COMPAT],[test x$use_glibc_compat = xyes])
 AM_CONDITIONAL([HARDEN],[test x$use_hardening = xyes])
@@ -1216,6 +1311,7 @@ AC_SUBST(SSE42_CXXFLAGS)
 AC_SUBST(LIBTOOL_APP_LDFLAGS)
 AC_SUBST(USE_UPNP)
 AC_SUBST(USE_QRCODE)
+AC_SUBST(USE_LIBEVENT)
 AC_SUBST(BOOST_LIBS)
 AC_SUBST(TESTDEFS)
 AC_SUBST(LEVELDB_TARGET_FLAGS)
