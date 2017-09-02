@@ -454,6 +454,7 @@ void BitcoinGUI::createToolBars()
     {
         QToolBar *toolbar = addToolBar(tr("Tabs toolbar"));
         appToolBar = toolbar;
+        toolbar->setContextMenuPolicy(Qt::PreventContextMenu);
         toolbar->setMovable(false);
         toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         toolbar->addAction(overviewAction);
