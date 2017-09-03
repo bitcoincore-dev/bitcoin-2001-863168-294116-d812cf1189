@@ -213,7 +213,7 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs,
             }
             std::vector<std::vector<unsigned char> > stack;
             // convert the scriptSig into a stack, so we can inspect the redeemScript
-            if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(), SIGVERSION_BASE)) {
+            if (!EvalScript(ScriptExecution::Context::Sig, stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(), SIGVERSION_BASE)) {
                 // This case is also invalid or a bug
                 out_reason = reason_prefix + "scriptsig-failure";
                 return false;
@@ -255,8 +255,7 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs,
             // If the scriptPubKey is P2SH, we try to extract the redeemScript casually by converting the scriptSig
             // into a stack. We do not check IsPushOnly nor compare the hash as these will be done later anyway.
             // If the check fails at this stage, we know that this txid must be a bad one.
-            if (!EvalScript(stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(), SIGVERSION_BASE))
-            {
+            if (!EvalScript(ScriptExecution::Context::Sig, stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(), SIGVERSION_BASE)) {
                 out_reason = reason_prefix + "scriptsig-failure";
                 return false;
             }
