@@ -94,6 +94,21 @@ class WalletHDTest(BitcoinTestFramework):
         self.nodes[1] = self.start_node(1, self.options.tmpdir, self.extra_args[1] + ['-rescan'])
         assert_equal(self.nodes[1].getbalance(), num_hd_adds + 1)
 
+        # Try a RPC based rescan
+        self.stop_node(1)
+        shutil.rmtree(tmpdir + "/node1/regtest/blocks")
+        shutil.rmtree(tmpdir + "/node1/regtest/chainstate")
+        shutil.copyfile(tmpdir + "/hd.bak", tmpdir + "/node1/regtest/wallet.dat")
+        self.nodes[1] = self.start_node(1, self.options.tmpdir, self.extra_args[1])
+        connect_nodes_bi(self.nodes, 0, 1)
+        self.sync_all()
+        out = self.nodes[1].rescanblockchain(0,1)
+        assert_equal(out['startheight'], 0)
+        assert_equal(out['stopheight'], 1)
+        out = self.nodes[1].rescanblockchain()
+        assert_equal(out['startheight'], 0)
+        assert_equal(self.nodes[1].getbalance(), num_hd_adds + 1)
+
         # send a tx and make sure its using the internal chain for the changeoutput
         txid = self.nodes[1].sendtoaddress(self.nodes[0].getnewaddress(), 1)
         outs = self.nodes[1].decoderawtransaction(self.nodes[1].gettransaction(txid)['hex'])['vout']
