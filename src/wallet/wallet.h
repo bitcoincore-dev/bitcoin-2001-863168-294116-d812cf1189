@@ -809,6 +809,9 @@ public:
 
     std::set<COutPoint> setLockedCoins;
 
+    //! Return a const pointer to wallet transaction. Caller should acquire
+    //! cs_wallet lock before calling this, and hold it while using the pointer
+    //! to prevent another thread from changing the transaction.
     const CWalletTx* GetWalletTx(const uint256& hash) const;
 
     //! check whether we are allowed to upgrade (or already support) to the named feature
