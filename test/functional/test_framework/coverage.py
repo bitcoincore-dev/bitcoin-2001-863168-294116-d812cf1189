@@ -31,10 +31,10 @@ class AuthServiceProxyWrapper(object):
         self.auth_service_proxy_instance = auth_service_proxy_instance
         self.coverage_logfile = coverage_logfile
 
-    def __getattr__(self, *args, **kwargs):
-        return_val = self.auth_service_proxy_instance.__getattr__(
-            *args, **kwargs)
-
+    def __getattr__(self, name):
+        return_val = getattr(self.auth_service_proxy_instance, name)
+        if hasattr(self.auth_service_proxy_instance, name):
+            return return_val
         return AuthServiceProxyWrapper(return_val, self.coverage_logfile)
 
     def __call__(self, *args, **kwargs):
