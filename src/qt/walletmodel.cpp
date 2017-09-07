@@ -660,7 +660,7 @@ bool WalletModel::abandonTransaction(uint256 hash) const
 
 bool WalletModel::transactionCanBeBumped(uint256 hash) const
 {
-    return TransactionCanBeBumped(wallet, hash);
+    return feebumper::TransactionCanBeBumped(wallet, hash);
 }
 
 bool WalletModel::bumpFee(uint256 hash)
@@ -671,7 +671,7 @@ bool WalletModel::bumpFee(uint256 hash)
     CAmount oldFee;
     CAmount newFee;
     CMutableTransaction mtx;
-    if (CreateBumpFeeTransaction(wallet, hash, coin_control, 0 /* totalFee */, errors, oldFee, newFee, mtx) != BumpFeeResult::OK) {
+    if (feebumper::CreateTransaction(wallet, hash, coin_control, 0 /* totalFee */, errors, oldFee, newFee, mtx) != feebumper::Result::OK) {
         QMessageBox::critical(0, tr("Fee bump error"), tr("Increasing transaction fee failed") + "<br />(" +
             (errors.size() ? QString::fromStdString(errors[0]) : "") +")");
          return false;
@@ -710,13 +710,13 @@ bool WalletModel::bumpFee(uint256 hash)
     }
 
     // sign bumped transaction
-    if (!SignBumpFeeTransaction(wallet, mtx)) {
+    if (!feebumper::SignTransaction(wallet, mtx)) {
         QMessageBox::critical(0, tr("Fee bump error"), tr("Can't sign transaction."));
         return false;
     }
     // commit the bumped transaction
     uint256 txid;
-    if(CommitBumpFeeTransaction(wallet, hash, std::move(mtx), errors, txid) != BumpFeeResult::OK) {
+    if (feebumper::CommitTransaction(wallet, hash, std::move(mtx), errors, txid) != feebumper::Result::OK) {
         QMessageBox::critical(0, tr("Fee bump error"), tr("Could not commit transaction") + "<br />(" +
             QString::fromStdString(errors[0])+")");
          return false;

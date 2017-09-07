@@ -3063,20 +3063,20 @@ UniValue bumpfee(const JSONRPCRequest& request)
     CAmount oldFee;
     CAmount newFee;
     CMutableTransaction mtx;
-    BumpFeeResult res = CreateBumpFeeTransaction(pwallet, hash, coin_control, totalFee, errors, oldFee, newFee, mtx);
-    if (res != BumpFeeResult::OK)
+    feebumper::Result res = feebumper::CreateTransaction(pwallet, hash, coin_control, totalFee, errors, oldFee, newFee, mtx);
+    if (res != feebumper::Result::OK)
     {
         switch(res) {
-            case BumpFeeResult::INVALID_ADDRESS_OR_KEY:
+            case feebumper::Result::INVALID_ADDRESS_OR_KEY:
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, errors[0]);
                 break;
-            case BumpFeeResult::INVALID_REQUEST:
+            case feebumper::Result::INVALID_REQUEST:
                 throw JSONRPCError(RPC_INVALID_REQUEST, errors[0]);
                 break;
-            case BumpFeeResult::INVALID_PARAMETER:
+            case feebumper::Result::INVALID_PARAMETER:
                 throw JSONRPCError(RPC_INVALID_PARAMETER, errors[0]);
                 break;
-            case BumpFeeResult::WALLET_ERROR:
+            case feebumper::Result::WALLET_ERROR:
                 throw JSONRPCError(RPC_WALLET_ERROR, errors[0]);
                 break;
             default:
@@ -3086,12 +3086,12 @@ UniValue bumpfee(const JSONRPCRequest& request)
     }
 
     // sign bumped transaction
-    if (!SignBumpFeeTransaction(pwallet, mtx)) {
+    if (!feebumper::SignTransaction(pwallet, mtx)) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Can't sign transaction.");
     }
     // commit the bumped transaction
     uint256 txid;
-    if (CommitBumpFeeTransaction(pwallet, hash, std::move(mtx), errors, txid) != BumpFeeResult::OK) {
+    if (feebumper::CommitTransaction(pwallet, hash, std::move(mtx), errors, txid) != feebumper::Result::OK) {
         throw JSONRPCError(RPC_WALLET_ERROR, errors[0]);
     }
     UniValue result(UniValue::VOBJ);
