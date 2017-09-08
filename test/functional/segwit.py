@@ -252,6 +252,9 @@ class SegWitTest(BitcoinTestFramework):
         hex_tx = self.nodes[0].gettransaction(txid1)['hex']
         tx = FromHex(CTransaction(), hex_tx)
 
+        # Check that wtxid is properly reported in mempool entry (txid1)
+        assert_equal(int(self.nodes[0].getmempoolentry(txid1)["wtxid"], 16), tx.calc_sha256(True))
+
         # Check that weight and sizei (actually vsize) are properly reported in mempool entry (txid1)
         assert_equal(self.nodes[0].getmempoolentry(txid1)["size"], (self.nodes[0].getmempoolentry(txid1)["weight"] + 3) // 4)
         assert_equal(self.nodes[0].getmempoolentry(txid1)["weight"], len(tx.serialize())*3 + len(tx.serialize_with_witness()))
@@ -264,6 +267,9 @@ class SegWitTest(BitcoinTestFramework):
         txid2 = self.nodes[0].sendrawtransaction(tx2_hex)
         tx = FromHex(CTransaction(), tx2_hex)
         assert(not tx.wit.is_null())
+
+        # Check that wtxid is properly reported in mempool entry (txid2)
+        assert_equal(int(self.nodes[0].getmempoolentry(txid2)["wtxid"], 16), tx.calc_sha256(True))
 
         # Check that weight and size (actually vsize) are properly reported in mempool entry (txid2)
         assert_equal(self.nodes[0].getmempoolentry(txid2)["size"], (self.nodes[0].getmempoolentry(txid2)["weight"] + 3) // 4)
@@ -296,7 +302,7 @@ class SegWitTest(BitcoinTestFramework):
         # Check that hash is properly reported in mempool entry
         assert_equal(int(self.nodes[0].getmempoolentry(txid3)["hash"], 16), tx.calc_sha256(True))
 
-        # Check that wtxid is properly reported in mempool entry
+        # Check that wtxid is properly reported in mempool entry (txid3)
         assert_equal(int(self.nodes[0].getmempoolentry(txid3)["wtxid"], 16), tx.calc_sha256(True))
 
         # Check that weight and size (actually vsize) are properly reported in mempool entry (txid3)
