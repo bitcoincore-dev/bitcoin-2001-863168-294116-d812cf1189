@@ -525,6 +525,7 @@ endif
 
 RES_RENDERED_ICON_SRC = \
   qt/res/src/chart.svg \
+  qt/res/src/nsis-header.svg \
   qt/res/src/bitcoin.svg
 
 RES_RENDERED_ICONS = \
