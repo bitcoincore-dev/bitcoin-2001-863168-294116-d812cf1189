@@ -1196,8 +1196,12 @@ UniValue rescanblockchain(const JSONRPCRequest& request)
 
     if (!request.params[1].isNull()) {
         pindexStop = chainActive[request.params[1].get_int()];
-        if (!pindexStop || pindexStop->nHeight < pindexStart->nHeight) {
+        if (!pindexStop) {
             throw JSONRPCError(RPC_WALLET_ERROR, "Invalid stopheight");
+        }
+        if (pindexStop->nHeight < pindexStart->nHeight) {
+            // Flip the parameters to the expected order
+            std::swap(pindexStart, pindexStop);
         }
     }
 
