@@ -15,6 +15,10 @@
 #include "utilstrencodings.h"
 #include "ui_interface.h"
 #include "crypto/hmac_sha256.h"
+#ifdef ENABLE_WALLET
+#include "wallet/wallet.h"
+#endif
+
 #include <stdio.h>
 
 #include <boost/algorithm/string.hpp> // boost::trim
@@ -83,7 +87,7 @@ static void JSONErrorReply(HTTPRequest* req, const UniValue& objError, const Uni
 
 //This function checks username and password against -rpcauth
 //entries from config file.
-static bool multiUserAuthorized(std::string strUserPass)
+static bool multiUserAuthorized(std::string strUserPass, std::string& out_wallet_name)
 {    
     if (strUserPass.find(":") == std::string::npos) {
         return false;
@@ -95,7 +99,7 @@ static bool multiUserAuthorized(std::string strUserPass)
         //Search for multi-user login/pass "rpcauth" from config
         std::vector<std::string> vFields;
         boost::split(vFields, strRPCAuth, boost::is_any_of(":$"));
-        if (vFields.size() != 3) {
+        if (vFields.size() < 3 || vFields.size() > 4) {
             //Incorrect formatting in config file
             continue;
         }
@@ -116,13 +120,16 @@ static bool multiUserAuthorized(std::string strUserPass)
         std::string strHashFromPass = HexStr(hexvec);
 
         if (TimingResistantEqual(strHashFromPass, strHash)) {
+            if (vFields.size() > 3) {
+                out_wallet_name = vFields[3];
+            }
             return true;
         }
     }
     return false;
 }
 
-static bool RPCAuthorized(const std::string& strAuth, std::string& strAuthUsernameOut)
+static bool RPCAuthorized(const std::string& strAuth, std::string& strAuthUsernameOut, std::string& out_wallet_name)
 {
     if (strRPCUserColonPass.empty()) // Belt-and-suspenders measure if InitRPCAuthentication was not called
         return false;
@@ -139,7 +146,7 @@ static bool RPCAuthorized(const std::string& strAuth, std::string& strAuthUserna
     if (TimingResistantEqual(strUserPass, strRPCUserColonPass)) {
         return true;
     }
-    return multiUserAuthorized(strUserPass);
+    return multiUserAuthorized(strUserPass, out_wallet_name);
 }
 
 static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
@@ -158,7 +165,8 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
     }
 
     JSONRPCRequest jreq;
-    if (!RPCAuthorized(authHeader.second, jreq.authUser)) {
+    std::string authorized_wallet_name;
+    if (!RPCAuthorized(authHeader.second, jreq.authUser, authorized_wallet_name)) {
         LogPrintf("ThreadRPCServer incorrect password attempt from %s\n", req->GetPeer().ToString());
 
         /* Deter brute-forcing
@@ -179,6 +187,49 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
 
         // Set the URI
         jreq.URI = req->GetURI();
+
+#ifdef ENABLE_WALLET
+        static const std::string WALLET_ENDPOINT_BASE = "/wallet/";
+
+        jreq.wallet = nullptr;
+        std::string requestedWallet;
+        if (jreq.URI.substr(0, WALLET_ENDPOINT_BASE.size()) == WALLET_ENDPOINT_BASE) {
+            // wallet endpoint was used
+            requestedWallet = urlDecode(jreq.URI.substr(WALLET_ENDPOINT_BASE.size()));
+        }
+
+        if (authorized_wallet_name.empty()) {
+            // Any wallet is permitted; select by endpoint, or use the sole wallet
+            jreq.wallet = nullptr;
+            if (!requestedWallet.empty()) {
+                for (CWalletRef pwallet : ::vpwallets) {
+                    if (pwallet->GetName() == requestedWallet) {
+                        jreq.wallet = pwallet;
+                    }
+                }
+                if (!jreq.wallet) {
+                    throw JSONRPCError(RPC_WALLET_NOT_FOUND, "Requested wallet does not exist or is not loaded");
+                }
+            } else if (::vpwallets.size() == 1) {
+                jreq.wallet = ::vpwallets[0];
+            }
+        } else if (authorized_wallet_name == "-") {
+            // Block wallet access always
+            if (!requestedWallet.empty()) {
+                throw JSONRPCError(RPC_WALLET_NOT_FOUND, "Requested wallet does not exist or is not loaded");
+            }
+        } else {
+            // Select specifically a named wallet
+            if (!(requestedWallet.empty() || requestedWallet == authorized_wallet_name)) {
+                throw JSONRPCError(RPC_WALLET_NOT_FOUND, "Requested wallet does not exist or is not loaded");
+            }
+            for (CWalletRef pwallet : vpwallets) {
+                if (authorized_wallet_name == pwallet->GetName()) {
+                    jreq.wallet = pwallet;
+                }
+            }
+        }
+#endif
 
         std::string strReply;
         // singleton request
