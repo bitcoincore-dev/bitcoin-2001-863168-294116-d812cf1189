@@ -144,6 +144,7 @@ BITCOIN_CORE_H = \
   script/sign.h \
   script/standard.h \
   script/ismine.h \
+  stats/stats.h \
   streams.h \
   support/allocators/secure.h \
   support/allocators/zeroafterfree.h \
@@ -215,6 +216,8 @@ libbitcoin_server_a_SOURCES = \
   rpc/server.cpp \
   script/sigcache.cpp \
   script/ismine.cpp \
+  stats/rpc_stats.cpp \
+  stats/stats.cpp \
   timedata.cpp \
   txdb.cpp \
   txmempool.cpp \
