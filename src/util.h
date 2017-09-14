@@ -206,12 +206,16 @@ protected:
 private:
     std::unordered_set<std::string> args_assigned_by_conf;
     fs::path rwconf_path;
+    bool rwconf_had_prune_option;
 
     void ReadConfigFile(fs::ifstream& streamConfig, std::unordered_set<std::string>* setAllowOverride, std::unordered_set<std::string>* setInitiallyAssigned);
 public:
+    ArgsManager() : rwconf_had_prune_option(false) { }
+
     void ParseParameters(int argc, const char*const argv[]);
     void ReadConfigFile(const std::string& confPath);
     void ReadRWConfigFile(const std::string& confPath);
+    bool RWConfigHasPruneOption() const { return rwconf_had_prune_option; }
     void ModifyRWConfigFile(const std::map<std::string, std::string>& mapChangeSettings);
     void ModifyRWConfigFile(const std::string& strArg, const std::string& strNewValue);
     void EraseRWConfigFile();
