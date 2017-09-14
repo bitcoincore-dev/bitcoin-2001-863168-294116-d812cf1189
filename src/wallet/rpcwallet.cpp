@@ -1184,7 +1184,7 @@ UniValue sweepprivkeys(const JSONRPCRequest& request)
     bool rv;
     {
         LOCK(cs_main);
-        rv = AcceptToMemoryPool(mempool, state, final_tx, true, NULL, NULL, false, maxTxFee);
+        rv = AcceptToMemoryPool(mempool, state, final_tx, NULL, NULL, maxTxFee);
     }
     if (!rv) {
         pwallet->DelAddressBook(keyID);
