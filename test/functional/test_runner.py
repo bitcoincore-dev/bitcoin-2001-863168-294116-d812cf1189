@@ -82,6 +82,7 @@ BASE_SCRIPTS= [
     'keypool-topup.py',
     'zmq_test.py',
     'mempool_resurrect_test.py',
+    'sweepprivkeys.py',
     'txn_doublespend.py --mineblock',
     'txn_clone.py',
     'getchaintips.py',
