@@ -34,6 +34,10 @@
         <translation>&amp;Транзакциялар</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Капчык:</translation>
+    </message>
+    <message>
         <source>&amp;Verify message...</source>
         <translation>Билдирүүнү &amp;текшерүү...</translation>
     </message>
@@ -44,6 +48,10 @@
     <message>
         <source>Wallet</source>
         <translation>Капчык</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation type="unfinished">&amp;Жөнөтүү</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -92,6 +100,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -101,13 +112,28 @@
 <context>
     <name>Intro</name>
     <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Ката</translation>
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Дарек</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -149,6 +175,10 @@
         <source>none</source>
         <translation>жок</translation>
     </message>
+    <message>
+        <source>Error</source>
+        <translation>Ката</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -161,7 +191,12 @@
     </context>
 <context>
     <name>QObject</name>
-    </context>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>транзакция</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -185,6 +220,10 @@
     <message>
         <source>Name</source>
         <translation>Аты</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Капчык: </translation>
     </message>
     <message>
         <source>&amp;Open</source>
@@ -294,6 +333,10 @@
     <message>
         <source>Message</source>
         <translation>Билдирүү</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>транзакция</translation>
     </message>
     </context>
 <context>

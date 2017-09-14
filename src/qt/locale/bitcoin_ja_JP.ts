@@ -318,6 +318,10 @@
         <translation>オープン&amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">財布:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>ネットワーク処理を無効にするためにクリックする</translation>
     </message>
@@ -774,6 +778,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -851,6 +858,10 @@
         <translation>カスタムデータ辞書を使用</translation>
     </message>
     <message>
+        <source>Bitcoin</source>
+        <translation>ビットコイン</translation>
+    </message>
+    <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
         <translation>エラー: 特定の辞書%1の作成に失敗しました。</translation>
     </message>
@@ -858,6 +869,9 @@
         <source>Error</source>
         <translation>エラー</translation>
     </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -908,6 +922,14 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>不明. ヘッダーの同期中 (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>アドレス</translation>
     </message>
 </context>
 <context>
@@ -974,6 +996,14 @@
     <message>
         <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
         <translation>IP プロキシのアドレス (例 IPv4: 127.0.0.1 / IPv6: ::1)</translation>
+    </message>
+    <message>
+        <source>Hide the icon from the system tray.</source>
+        <translation type="unfinished">システムトレイのアイコンを非表示.</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;トレイアイコンを非表示</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
@@ -1084,14 +1114,6 @@
         <translation>&amp;画面</translation>
     </message>
     <message>
-        <source>&amp;Hide the icon from the system tray.</source>
-        <translation>&amp;システムトレイのアイコンを非表示.</translation>
-    </message>
-    <message>
-        <source>Hide tray icon</source>
-        <translation>トレイアイコンを非表示</translation>
-    </message>
-    <message>
         <source>Show only a tray icon after minimizing the window.</source>
         <translation>画面最小化時にトレイアイコンを表示する。</translation>
     </message>
@@ -1154,6 +1176,10 @@
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
         <translation>クライアントは停止します。継続してもよろしいでしょうか？</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>エラー</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
@@ -1395,7 +1421,7 @@
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 は安全に終了できませんでした...</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject::QObject</name>
     <message>
@@ -1495,6 +1521,10 @@
     <message>
         <source>Memory usage</source>
         <translation>メモリ使用量</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">財布: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -2530,6 +2560,14 @@
         <translation>商人</translation>
     </message>
     <message>
+        <source>Transaction</source>
+        <translation>処理</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation type="unfinished">入力</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>残高</translation>
     </message>
@@ -2587,6 +2625,10 @@
         <translation>確認済み</translation>
     </message>
     <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">読み取り専用</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>日付</translation>
     </message>
@@ -2615,7 +2657,7 @@
         <source>Send Coins</source>
         <translation>コイン送付</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletView</name>
     <message>
@@ -2626,9 +2668,17 @@
         <source>Export the data in the current tab to a file</source>
         <translation>ファイルの現在のタブを出力します</translation>
     </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">財布のバックアップ</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">オプション:</translation>
+    </message>
     <message>
         <source>Information</source>
         <translation>情報</translation>
@@ -2636,6 +2686,14 @@
     <message>
         <source>Warning</source>
         <translation>警告</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
+        <translation>Tor匿名サービスを経由して到達ピアへ、区切られたSOCKS5 プロキシを使用 (default: %s)</translation>
+    </message>
+    <message>
+        <source>Insufficient funds</source>
+        <translation>残高不十分</translation>
     </message>
     <message>
         <source>Error</source>

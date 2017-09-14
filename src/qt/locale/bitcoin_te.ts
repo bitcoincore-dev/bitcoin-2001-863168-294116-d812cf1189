@@ -106,6 +106,14 @@
 <context>
     <name>BitcoinGUI</name>
     <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;పంపించే చిరునామాలు...</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;అందుకునే చిరునామాలు...</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>లోపం</translation>
     </message>
@@ -139,9 +147,16 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;ఉల్లాకు</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -154,13 +169,23 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
+    </context>
+<context>
+    <name>NetWatchLogModel</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Error</source>
+        <translation>లోపం</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -182,9 +207,17 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;వర్తమానము</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ఉల్లాకు:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -209,6 +242,10 @@
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ఉల్లాకు:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>

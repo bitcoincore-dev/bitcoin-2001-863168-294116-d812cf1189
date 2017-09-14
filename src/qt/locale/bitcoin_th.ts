@@ -14,12 +14,24 @@
         <translation>ใหม่</translation>
     </message>
     <message>
+        <source>Copy the currently selected address to the system clipboard</source>
+        <translation>คัดลอกที่อยู่ที่เลือกอยู่ไปยังคลิบบอร์ดของระบบ</translation>
+    </message>
+    <message>
         <source>&amp;Copy</source>
         <translation>คัดลอก</translation>
     </message>
     <message>
         <source>C&amp;lose</source>
         <translation>ปิด</translation>
+    </message>
+    <message>
+        <source>Delete the currently selected address from the list</source>
+        <translation>ลบที่อยู่ที่เลือกไว้ออกจากรายการ</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>ส่งออกข้อมูลที่อยู่ในแถบนี้ไปในไฟล์</translation>
     </message>
     <message>
         <source>&amp;Export</source>
@@ -81,15 +93,30 @@
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;ที่อยู่ในการส่ง...</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;ที่อยู่ในการรับ...</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;ที่อยู่</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -98,8 +125,19 @@
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>ที่อยู่</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -133,6 +171,10 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">คัดลอกที่อยู่</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>ที่อยู่</translation>
     </message>
@@ -142,6 +184,10 @@
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">เลือก...</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>
@@ -195,6 +241,10 @@
     <message>
         <source>&amp;Export</source>
         <translation>ส่งออก</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>ส่งออกข้อมูลที่อยู่ในแถบนี้ไปในไฟล์</translation>
     </message>
     </context>
 <context>
