@@ -45,8 +45,10 @@ class PrioritiseTransactionTest(BitcoinTestFramework):
             assert(sizes[i] > MAX_BLOCK_BASE_SIZE) # Fail => raise utxo_count
 
         # add a fee delta to something in the cheapest bucket and make sure it gets mined
-        # also check that a different entry in the cheapest bucket is NOT mined
+        # also check that a different entry in the cheapest bucket is NOT mined (lower
+        # the priority to ensure its not mined due to priority)
         self.nodes[0].prioritisetransaction(txid=txids[0][0], fee_delta=int(3*base_fee*COIN))
+        self.nodes[0].prioritisetransaction(txid=txids[0][1], priority_delta=-1e15)
 
         self.nodes[0].generate(1)
 
@@ -65,7 +67,7 @@ class PrioritiseTransactionTest(BitcoinTestFramework):
 
         # Add a prioritisation before a tx is in the mempool (de-prioritising a
         # high-fee transaction so that it's now low fee).
-        self.nodes[0].prioritisetransaction(txid=high_fee_tx, fee_delta=-int(2*base_fee*COIN))
+        self.nodes[0].prioritisetransaction(txid=high_fee_tx, priority_delta=-1e15, fee_delta=-int(2*base_fee*COIN))
 
         # Add everything back to mempool
         self.nodes[0].invalidateblock(self.nodes[0].getbestblockhash())
@@ -97,9 +99,19 @@ class PrioritiseTransactionTest(BitcoinTestFramework):
         inputs = []
         outputs = {}
         inputs.append({"txid" : utxo["txid"], "vout" : utxo["vout"]})
-        outputs[self.nodes[0].getnewaddress()] = utxo["amount"]
+        outputs[self.nodes[0].getnewaddress()] = utxo["amount"] - self.relayfee
         raw_tx = self.nodes[0].createrawtransaction(inputs, outputs)
         tx_hex = self.nodes[0].signrawtransaction(raw_tx)["hex"]
+        txid = self.nodes[0].sendrawtransaction(tx_hex)
+
+        # A tx that spends an in-mempool tx has 0 priority, so we can use it to
+        # test the effect of using prioritise transaction for mempool acceptance
+        inputs = []
+        inputs.append({"txid": txid, "vout": 0})
+        outputs = {}
+        outputs[self.nodes[0].getnewaddress()] = utxo["amount"] - self.relayfee
+        raw_tx2 = self.nodes[0].createrawtransaction(inputs, outputs)
+        tx_hex = self.nodes[0].signrawtransaction(raw_tx2)["hex"]
         tx_id = self.nodes[0].decoderawtransaction(tx_hex)["txid"]
 
         # This will raise an exception due to min relay fee not being met

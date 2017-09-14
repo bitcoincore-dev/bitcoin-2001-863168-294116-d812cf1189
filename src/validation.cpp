@@ -18,6 +18,7 @@
 #include "fs.h"
 #include "hash.h"
 #include "init.h"
+#include "policy/coin_age_priority.h"
 #include "policy/fees.h"
 #include "policy/policy.h"
 #include "policy/rbf.h"
@@ -615,7 +616,12 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         CAmount nFees = nValueIn-nValueOut;
         // nModifiedFees includes any fee deltas from PrioritiseTransaction
         CAmount nModifiedFees = nFees;
-        pool.ApplyDelta(hash, nModifiedFees);
+        double nPriorityDummy = 0;
+        pool.ApplyDeltas(hash, nPriorityDummy, nModifiedFees);
+
+        CAmount inChainInputValue;
+        // Since entries arrive *after* the tip's height, their priority is for the height+1
+        double dPriority = GetPriority(tx, view, chainActive.Height() + 1, inChainInputValue);
 
         // Keep track of transactions that spend a coinbase, which we re-scan
         // during reorgs to ensure COINBASE_MATURITY is still met.
@@ -628,8 +634,8 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
             }
         }
 
-        CTxMemPoolEntry entry(ptx, nFees, nAcceptTime, chainActive.Height(),
-                              fSpendsCoinbase, nSigOpsCost, lp);
+        CTxMemPoolEntry entry(ptx, nFees, nAcceptTime, dPriority, chainActive.Height(),
+                              inChainInputValue, fSpendsCoinbase, nSigOpsCost, lp);
         unsigned int nSize = entry.GetTxSize();
 
         // Check that the transaction doesn't have an excessive number of
@@ -2129,6 +2135,7 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
     if (disconnectpool) {
         // Save transactions to re-add to mempool at end of reorg
         for (auto it = block.vtx.rbegin(); it != block.vtx.rend(); ++it) {
+            mempool.UpdateDependentPriorities(*(*it), pindexDelete->nHeight, false);
             disconnectpool->addTransaction(*it);
         }
         while (disconnectpool->DynamicMemoryUsage() > MAX_DISCONNECTED_TX_POOL_SIZE * 1000) {
@@ -4350,14 +4357,8 @@ bool LoadMempool(void)
         if (it != mapData.end()) {
             try {
                 CDataStream ss(it->second, SER_DISK, CLIENT_VERSION);
-                std::map<uint256, std::pair<double, CAmount>> mapDeltas;
-                ss >> mapDeltas;
                 LOCK(mempool.cs);
-                for (const auto& it : mapDeltas) {
-                    const uint256& txid = it.first;
-                    const CAmount& amountdelta = it.second.second;
-                    mempool.PrioritiseTransaction(txid, amountdelta);
-                }
+                ss >> mempool.mapDeltas;
             } catch (const std::exception& e) {
                 LogPrintf("Failed to deserialize mempool %s from disk: %s. Continuing anyway.\n", "deltas", e.what());
             }
@@ -4431,9 +4432,7 @@ bool DumpMempool(void)
 
     {
         LOCK(mempool.cs);
-        for (const auto &i : mempool.mapDeltas) {
-            mapDeltas[i.first] = std::make_pair(0.0, i.second);
-        }
+        mapDeltas = mempool.mapDeltas;
         vinfo = mempool.infoAll();
     }
 
