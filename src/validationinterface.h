@@ -67,10 +67,10 @@ protected:
      */
     virtual void BlockConnected(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex, const std::vector<CTransactionRef> &txnConflicted) {}
     /**
-	 * Notifies listeners of a block being disconnected
+     * Notifies listeners of a block being disconnected
      *
      * Called on a background thread.
-	 */
+     */
     virtual void BlockDisconnected(const std::shared_ptr<const CBlock> &block) {}
     /**
      * Notifies listeners of the new active block chain on-disk.
