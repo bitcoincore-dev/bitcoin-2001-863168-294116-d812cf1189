@@ -1581,11 +1581,12 @@ int64_t CWallet::RescanFromTime(interface::Chain::Lock& locked_chain, int64_t st
     // Find starting block. May be null if nCreateTime is greater than the
     // highest blockchain timestamp, in which case there is nothing that needs
     // to be scanned.
-    int start_block = locked_chain.findEarliestAtLeast(startTime - TIMESTAMP_WINDOW);
-    LogPrintf("%s: Rescanning last %i blocks\n", __func__, start_block >= 0 ? locked_chain.getHeight() - start_block + 1 : 0);
+    const auto tip_height = locked_chain.getHeight();
+    const auto start_block = locked_chain.findEarliestAtLeast(startTime - TIMESTAMP_WINDOW);
+    LogPrintf("%s: Rescanning last %i blocks\n", __func__, tip_height && start_block ? *tip_height - *start_block + 1 : 0);
 
-    if (start_block >= 0) {
-        int failed_block = ScanForWalletTransactions(locked_chain, start_block, update);
+    if (start_block) {
+        int failed_block = ScanForWalletTransactions(locked_chain, *start_block, update);
         if (failed_block >= 0) {
             return locked_chain.getBlockTimeMax(failed_block) + TIMESTAMP_WINDOW + 1;
         }
@@ -1615,10 +1616,10 @@ int CWallet::ScanForWalletTransactions(interface::Chain::Lock& locked_chain, int
         fScanningWallet = true;
 
         ShowProgress(_("Rescanning..."), 0); // show rescan progress in GUI as dialog or on splashscreen, if -rescan on startup
-        const int tip_height = locked_chain.getHeight();
+        const auto tip_height = locked_chain.getHeight();
         double dProgressStart = locked_chain.guessVerificationProgress(index);
-        double dProgressTip = locked_chain.guessVerificationProgress(tip_height);
-        while (index <= tip_height && !fAbortRescan)
+        double dProgressTip = locked_chain.guessVerificationProgress(tip_height ? *tip_height : -1);
+        while (tip_height && index <= *tip_height && !fAbortRescan)
         {
             if (index % 100 == 0 && dProgressTip - dProgressStart > 0.0)
                 ShowProgress(_("Rescanning..."), std::max(1, std::min(99, (int)((locked_chain.guessVerificationProgress(index) - dProgressStart) / (dProgressTip - dProgressStart) * 100))));
@@ -1638,7 +1639,7 @@ int CWallet::ScanForWalletTransactions(interface::Chain::Lock& locked_chain, int
             }
             ++index;
         }
-        if (index <= tip_height && fAbortRescan) {
+        if (tip_height && index <= *tip_height && fAbortRescan) {
             LogPrintf("Rescan aborted at block %d. Progress=%f\n", index, locked_chain.guessVerificationProgress(index));
         }
         ShowProgress(_("Rescanning..."), 100); // hide progress dialog in GUI
@@ -2660,8 +2661,8 @@ bool CWallet::CreateTransaction(interface::Chain::Lock& locked_chain, const std:
     // enough, that fee sniping isn't a problem yet, but by implementing a fix
     // now we ensure code won't be written that makes assumptions about
     // nLockTime that preclude a fix later.
-    const int tip_height = locked_chain.getHeight();
-    txNew.nLockTime = tip_height >= 0 ? tip_height : std::numeric_limits<uint32_t>::max();
+    const auto tip_height = locked_chain.getHeight();
+    txNew.nLockTime = tip_height ? *tip_height : std::numeric_limits<uint32_t>::max();
 
     // Secondly occasionally randomly pick a nLockTime even further back, so
     // that transactions that are delayed after signing for whatever reason,
@@ -2670,7 +2671,7 @@ bool CWallet::CreateTransaction(interface::Chain::Lock& locked_chain, const std:
     if (GetRandInt(10) == 0)
         txNew.nLockTime = std::max(0, (int)txNew.nLockTime - GetRandInt(100));
 
-    assert(txNew.nLockTime <= (unsigned int)tip_height);
+    assert(!tip_height || txNew.nLockTime <= (uint32_t)*tip_height);
     assert(txNew.nLockTime < LOCKTIME_THRESHOLD);
     FeeCalculation feeCalc;
     CAmount nFeeNeeded;
@@ -3657,8 +3658,8 @@ void CWallet::GetKeyBirthTimes(interface::Chain::Lock& locked_chain, std::map<CT
     }
 
     // map in which we'll infer heights of other keys
-    const int tip_height = locked_chain.getHeight();
-    const int pindexMax = std::max(0, tip_height - 144); // the tip can be reorganized; use a 144-block safety margin
+    const auto tip_height = locked_chain.getHeight();
+    const int pindexMax = tip_height && *tip_height > 144 ? *tip_height - 144 : 0; // the tip can be reorganized; use a 144-block safety margin
     std::map<CKeyID, int> mapKeyFirstBlock;
     for (const CKeyID &keyid : GetKeys()) {
         if (mapKeyBirth.count(keyid) == 0)
@@ -3674,8 +3675,8 @@ void CWallet::GetKeyBirthTimes(interface::Chain::Lock& locked_chain, std::map<CT
     for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); it++) {
         // iterate over all wallet transactions...
         const CWalletTx &wtx = (*it).second;
-        int nHeight = locked_chain.getBlockHeight(wtx.hashBlock);
-        if (nHeight >= 0) {
+        const auto nHeight = locked_chain.getBlockHeight(wtx.hashBlock);
+        if (nHeight) {
             // ... which are already in a block
             for (const CTxOut &txout : wtx.tx->vout) {
                 // iterate over all their outputs
@@ -3683,8 +3684,8 @@ void CWallet::GetKeyBirthTimes(interface::Chain::Lock& locked_chain, std::map<CT
                 for (const CKeyID &keyid : vAffected) {
                     // ... and all their affected keys
                     std::map<CKeyID, int>::iterator rit = mapKeyFirstBlock.find(keyid);
-                    if (rit != mapKeyFirstBlock.end() && nHeight < rit->second)
-                        rit->second = nHeight;
+                    if (rit != mapKeyFirstBlock.end() && *nHeight < rit->second)
+                        rit->second = *nHeight;
                 }
                 vAffected.clear();
             }
@@ -3929,16 +3930,15 @@ CWallet* CWallet::CreateWalletFromFile(interface::Chain& chain, const std::strin
         CWalletDB walletdb(*walletInstance->dbw);
         CBlockLocator locator;
         if (walletdb.ReadBestBlock(locator)) {
-            int fork_block = locked_chain->findLocatorFork(locator);
-            if (fork_block >= 0) {
-                index_rescan = fork_block;
+            if (const auto fork_height = locked_chain->findLocatorFork(locator)) {
+                index_rescan = *fork_height;
             }
         }
     }
 
     //We must set m_last_block_processed prior to registering the wallet as a validation interface
-    const int tip_height = locked_chain->getHeight();
-    if (tip_height >= 0) {
+    const auto tip_height = locked_chain->getHeight();
+    if (tip_height) {
         walletInstance->m_last_block_processed = locked_chain->getBlockHash(index_rescan);
     } else {
         walletInstance->m_last_block_processed.SetNull();
@@ -3946,14 +3946,14 @@ CWallet* CWallet::CreateWalletFromFile(interface::Chain& chain, const std::strin
 
     walletInstance->m_handler = chain.handleNotifications(*walletInstance);
 
-    if (tip_height >= 0 && tip_height != index_rescan)
+    if (tip_height && tip_height != index_rescan)
     {
         //We can't rescan beyond non-pruned blocks, stop and throw an error
         //this might happen if a user uses an old wallet within a pruned node
         // or if he ran -disablewallet for a longer time, then decided to re-enable
         if (chain.getPruneMode())
         {
-            int block = tip_height;
+            int block = *tip_height;
             while (block > 0 && locked_chain->blockHasTransactions(block - 1) && index_rescan != block) {
                 --block;
             }
@@ -3965,14 +3965,13 @@ CWallet* CWallet::CreateWalletFromFile(interface::Chain& chain, const std::strin
         }
 
         chain.initMessage(_("Rescanning..."));
-        LogPrintf("Rescanning last %i blocks (from block %i)...\n", tip_height - index_rescan, index_rescan);
+        LogPrintf("Rescanning last %i blocks (from block %i)...\n", *tip_height - index_rescan, index_rescan);
 
         // No need to read and scan block if block was created before
         // our wallet birthday (as adjusted for block time variability)
         if (walletInstance->nTimeFirstKey) {
-            int last_older_block = locked_chain->findLastBefore(walletInstance->nTimeFirstKey - TIMESTAMP_WINDOW, index_rescan);
-            if (last_older_block >= 0) {
-                index_rescan = last_older_block;
+            if (const auto last_older_block = locked_chain->findLastBefore(walletInstance->nTimeFirstKey - TIMESTAMP_WINDOW, index_rescan)) {
+                index_rescan = *last_older_block;
             }
         }
 

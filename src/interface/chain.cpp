@@ -51,8 +51,15 @@ namespace {
 class LockImpl : public Chain::Lock
 {
 public:
-    int getHeight() override { return ::chainActive.Height(); }
-    int getBlockHeight(const uint256& hash) override
+    boost::optional<int> getHeight() override
+    {
+        int height = ::chainActive.Height();
+        if (height >= 0) {
+            return height;
+        }
+        return {};
+    }
+    boost::optional<int> getBlockHeight(const uint256& hash) override
     {
         auto it = ::mapBlockIndex.find(hash);
         if (it != ::mapBlockIndex.end() && it->second) {
@@ -60,12 +67,13 @@ public:
                 return it->second->nHeight;
             }
         }
-        return -1;
+        return {};
     }
     int getBlockDepth(const uint256& hash) override
     {
-        int height = getBlockHeight(hash);
-        return height < 0 ? 0 : ::chainActive.Height() - height + 1;
+        const auto tip_height = getHeight();
+        const auto height = getBlockHeight(hash);
+        return tip_height && height ? *tip_height - *height + 1 : 0;
     }
     uint256 getBlockHash(int height) override { return ::chainActive[height]->GetBlockHash(); }
     int64_t getBlockTime(int height) override { return ::chainActive[height]->GetBlockTime(); }
@@ -84,18 +92,24 @@ public:
     {
         return GuessVerificationProgress(Params().TxData(), ::chainActive[height]);
     }
-    int findEarliestAtLeast(int64_t time) override
+    boost::optional<int> findEarliestAtLeast(int64_t time) override
     {
         CBlockIndex* block = ::chainActive.FindEarliestAtLeast(time);
-        return block ? block->nHeight : -1;
+        if (block) {
+            return block->nHeight;
+        }
+        return {};
     }
-    int findLastBefore(int64_t time, int start_height) override
+    boost::optional<int> findLastBefore(int64_t time, int start_height) override
     {
         CBlockIndex* block = ::chainActive[start_height];
         while (block && block->GetBlockTime() < time) {
             block = ::chainActive.Next(block);
         }
-        return block ? block->nHeight : -1;
+        if (block) {
+            return block->nHeight;
+        }
+        return {};
     }
     bool isPotentialTip(const uint256& hash) override
     {
@@ -103,7 +117,7 @@ public:
         auto it = ::mapBlockIndex.find(hash);
         return it != ::mapBlockIndex.end() && it->second->GetAncestor(::chainActive.Height()) == ::chainActive.Tip();
     }
-    int findFork(const uint256& hash, int* height) override
+    boost::optional<int> findFork(const uint256& hash, boost::optional<int>* height) override
     {
         const CBlockIndex *block{nullptr}, *fork{nullptr};
         auto it = ::mapBlockIndex.find(hash);
@@ -111,14 +125,25 @@ public:
             block = it->second;
             fork = ::chainActive.FindFork(block);
         }
-        if (height) *height = block ? block->nHeight : -1;
-        return fork ? fork->nHeight : -1;
+        if (height) {
+            if (block) {
+                *height = block->nHeight;
+            } else {
+                height->reset();
+            }
+        }
+        if (fork) {
+            return fork->nHeight;
+        }
+        return {};
     }
     CBlockLocator getLocator() override { return ::chainActive.GetLocator(); }
-    int findLocatorFork(const CBlockLocator& locator) override
+    boost::optional<int> findLocatorFork(const CBlockLocator& locator) override
     {
-        CBlockIndex* fork = FindForkInGlobalIndex(::chainActive, locator);
-        return fork ? fork->nHeight : -1;
+        if (CBlockIndex* fork = FindForkInGlobalIndex(::chainActive, locator)) {
+            return fork->nHeight;
+        }
+        return {};
     }
     bool checkFinalTx(const CTransaction& tx) override { return CheckFinalTx(tx); }
     bool isWitnessEnabled() override { return ::IsWitnessEnabled(::chainActive.Tip(), Params().GetConsensus()); }

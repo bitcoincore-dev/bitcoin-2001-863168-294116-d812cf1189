@@ -1940,8 +1940,8 @@ UniValue listsinceblock(const JSONRPCRequest& request)
     auto locked_chain = pwallet->chain().lock();
     LOCK(pwallet->cs_wallet);
 
-    int height = -1;    // Height of the specified block or the common ancestor, if the block provided was in a deactivated chain.
-    int altheight = -1; // Height of the specified block, even if it's in a deactivated chain.
+    boost::optional<int> height;    // Height of the specified block or the common ancestor, if the block provided was in a deactivated chain.
+    boost::optional<int> altheight; // Height of the specified block, even if it's in a deactivated chain.
     int target_confirms = 1;
     isminefilter filter = ISMINE_SPENDABLE;
 
@@ -1965,8 +1965,8 @@ UniValue listsinceblock(const JSONRPCRequest& request)
 
     bool include_removed = (request.params[3].isNull() || request.params[3].get_bool());
 
-    const int tip_height = locked_chain->getHeight();
-    int depth = height >= 0 ? (1 + tip_height - height) : -1;
+    const auto tip_height = locked_chain->getHeight();
+    int depth = tip_height && height ? (1 + *tip_height - *height) : -1;
 
     UniValue transactions(UniValue::VARR);
 
@@ -1981,7 +1981,7 @@ UniValue listsinceblock(const JSONRPCRequest& request)
     // when a reorg'd block is requested, we also list any relevant transactions
     // in the blocks of the chain that was detached
     UniValue removed(UniValue::VARR);
-    while (include_removed && altheight >= 0 && altheight > height) {
+    while (include_removed && altheight && *altheight > (height ? *height : -1)) {
         CBlock block;
         if (!pwallet->chain().findBlock(blockId, &block) || block.IsNull()) {
             throw JSONRPCError(RPC_INTERNAL_ERROR, "Can't read block from disk");
@@ -1995,10 +1995,10 @@ UniValue listsinceblock(const JSONRPCRequest& request)
             }
         }
         blockId = block.hashPrevBlock;
-        --altheight;
+        --*altheight;
     }
 
-    int last_height = tip_height + 1 - target_confirms;
+    int last_height = tip_height ? *tip_height + 1 - target_confirms : -1;
     uint256 lastblock = last_height >= 0 ? locked_chain->getBlockHash(last_height) : uint256();
 
     UniValue ret(UniValue::VOBJ);

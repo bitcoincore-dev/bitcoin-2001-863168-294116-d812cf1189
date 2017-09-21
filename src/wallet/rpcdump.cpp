@@ -485,8 +485,8 @@ UniValue importwallet(const JSONRPCRequest& request)
     if (!file.is_open())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
 
-    const int tip_height = locked_chain->getHeight();
-    int64_t nTimeBegin = tip_height >= 0 ? locked_chain->getBlockTime(locked_chain->getHeight()) : 0;
+    const auto tip_height = locked_chain->getHeight();
+    int64_t nTimeBegin = tip_height ? locked_chain->getBlockTime(*tip_height) : 0;
 
     bool fGood = true;
 
@@ -648,9 +648,9 @@ UniValue dumpwallet(const JSONRPCRequest& request)
     // produce output
     file << strprintf("# Wallet dump created by Bitcoin %s\n", CLIENT_BUILD);
     file << strprintf("# * Created on %s\n", EncodeDumpTime(GetTime()));
-    const int tip_height = locked_chain->getHeight();
-    file << strprintf("# * Best block at time of backup was %i (%s),\n", tip_height, tip_height >= 0 ? locked_chain->getBlockHash(tip_height).ToString() : "(missing block hash)");
-    file << strprintf("#   mined on %s\n", tip_height ? EncodeDumpTime(locked_chain->getBlockTime(tip_height)) : "(missing block time)");
+    const auto tip_height = locked_chain->getHeight();
+    file << strprintf("# * Best block at time of backup was %i (%s),\n", tip_height ? *tip_height : -1, tip_height ? locked_chain->getBlockHash(*tip_height).ToString() : "(missing block hash)");
+    file << strprintf("#   mined on %s\n", tip_height ? EncodeDumpTime(locked_chain->getBlockTime(*tip_height)) : "(missing block time)");
     file << "\n";
 
     // add the base58check encoded extended master if the wallet uses HD 
@@ -1093,8 +1093,8 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
     EnsureWalletIsUnlocked(pwallet);
 
     // Verify all timestamps are present before importing any keys.
-    const int tip_height = locked_chain->getHeight();
-    const int64_t now = tip_height >= 0 ? locked_chain->getBlockMedianTimePast(tip_height) : 0;
+    const auto tip_height = locked_chain->getHeight();
+    const int64_t now = tip_height ? locked_chain->getBlockMedianTimePast(*tip_height) : 0;
     for (const UniValue& data : requests.getValues()) {
         GetImportTimestamp(data, now);
     }
@@ -1103,8 +1103,8 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
     const int64_t minimumTimestamp = 1;
     int64_t nLowestTimestamp = 0;
 
-    if (fRescan && tip_height >= 0) {
-        nLowestTimestamp = locked_chain->getBlockTime(tip_height);
+    if (fRescan && tip_height) {
+        nLowestTimestamp = locked_chain->getBlockTime(*tip_height);
     } else {
         fRescan = false;
     }
