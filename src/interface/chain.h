@@ -6,6 +6,7 @@
 #include <policy/rbf.h>             // For RBFTransactionState
 #include <primitives/transaction.h> // For CTransactionRef
 
+#include <boost/optional/optional.hpp>
 #include <memory>
 #include <stddef.h>
 #include <stdint.h>
@@ -46,12 +47,12 @@ public:
         //! Get current chain height, not including genesis block (returns 0 if
         //! chain only contains genesis block, -1 if chain does not contain any
         //! blocks).
-        virtual int getHeight() = 0;
+        virtual boost::optional<int> getHeight() = 0;
 
         //! Get block height above genesis block. Returns 0 for genesis block, 1 for
         //! following block, and so on. Returns -1 for a block not included in the
         //! current chain.
-        virtual int getBlockHeight(const uint256& hash) = 0;
+        virtual boost::optional<int> getBlockHeight(const uint256& hash) = 0;
 
         //! Get block depth. Returns 1 for chain tip, 2 for preceding block, and
         //! so on. Returns 0 for a block not included in the current chain.
@@ -80,19 +81,19 @@ public:
         virtual double guessVerificationProgress(int height) = 0;
 
         //! Return height of earliest block in chain with timestamp equal or
-        //! greater than the given time, or -1 if there is no block with a high
-        //! enough timestamp.
-        virtual int findEarliestAtLeast(int64_t time) = 0;
+        //! greater than the given time, or nothing if there is no block with a
+        //! high enough timestamp.
+        virtual boost::optional<int> findEarliestAtLeast(int64_t time) = 0;
 
-        //! Return height of last block in chain with timestamp less than the given,
-        //! and height less than or equal to the given, or -1 if there is no such
-        //! block.
-        virtual int findLastBefore(int64_t time, int start_height) = 0;
+        //! Return height of last block in chain with timestamp less than the
+        //! given, and height less than or equal to the given, or nothing if
+        //! there is no such block.
+        virtual boost::optional<int> findLastBefore(int64_t time, int start_height) = 0;
 
         //! Return height of the highest block on the chain that is an ancestor
         //! of the specified block. Also, optionally return the height of the
         //! specified block.
-        virtual int findFork(const uint256& hash, int* height) = 0;
+        virtual boost::optional<int> findFork(const uint256& hash, boost::optional<int>* height) = 0;
 
         //! Return true if block hash points to the current chain tip, or to a
         //! possible descendant of the current chain tip that isn't currently
@@ -103,7 +104,7 @@ public:
         virtual CBlockLocator getLocator() = 0;
 
         //! Return height of block on the chain using locator.
-        virtual int findLocatorFork(const CBlockLocator& locator) = 0;
+        virtual boost::optional<int> findLocatorFork(const CBlockLocator& locator) = 0;
 
         //! Check if transaction will be final given chain height current time.
         virtual bool checkFinalTx(const CTransaction& tx) = 0;
