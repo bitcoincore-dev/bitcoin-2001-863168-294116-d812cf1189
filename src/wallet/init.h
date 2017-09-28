@@ -6,6 +6,7 @@
 #ifndef BITCOIN_WALLET_INIT_H
 #define BITCOIN_WALLET_INIT_H
 
+#include <interface/chain.h>
 #include <walletinitinterface.h>
 #include <string>
 
@@ -22,28 +23,13 @@ public:
     //! Wallets parameter interaction
     bool ParameterInteraction() override;
 
-    //! Register wallet RPCs.
-    void RegisterRPC(CRPCTable &tableRPC) override;
-
     //! Responsible for reading and validating the -wallet arguments and verifying the wallet database.
     //  This function will perform salvage on the wallet if requested, as long as only one wallet is
     //  being loaded (WalletParameterInteraction forbids -salvagewallet, -zapwallettxes or -upgradewallet with multiwallet).
     bool Verify() override;
 
-    //! Load wallet databases.
-    bool Open(InitInterfaces& interfaces) override;
-
-    //! Complete startup of wallets.
-    void Start(CScheduler& scheduler) override;
-
-    //! Flush all wallets in preparation for shutdown.
-    void Flush() override;
-
-    //! Stop all wallets. Wallets will be flushed first.
-    void Stop() override;
-
-    //! Close all wallets.
-    void Close() override;
+    //! Add wallets that should be opened to list of init interfaces.
+    void Construct(InitInterfaces& interfaces) override;
 };
 
 #endif // BITCOIN_WALLET_INIT_H
