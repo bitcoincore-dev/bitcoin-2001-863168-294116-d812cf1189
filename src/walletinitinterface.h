@@ -17,20 +17,10 @@ public:
     virtual std::string GetHelpString(bool showDebug) = 0;
     /** Check wallet parameter interaction */
     virtual bool ParameterInteraction() = 0;
-    /** Register wallet RPC*/
-    virtual void RegisterRPC(CRPCTable &) = 0;
     /** Verify wallets */
     virtual bool Verify() = 0;
-    /** Open wallets*/
-    virtual bool Open(InitInterfaces& interfaces) = 0;
-    /** Start wallets*/
-    virtual void Start(CScheduler& scheduler) = 0;
-    /** Flush Wallets*/
-    virtual void Flush() = 0;
-    /** Stop Wallets*/
-    virtual void Stop() = 0;
-    /** Close wallets */
-    virtual void Close() = 0;
+    /** Construct wallets*/
+    virtual void Construct(InitInterfaces& interfaces) = 0;
 
     virtual ~WalletInitInterface() {}
 };
@@ -40,13 +30,8 @@ public:
 
     std::string GetHelpString(bool showDebug) override {return std::string{};}
     bool ParameterInteraction() override {return true;}
-    void RegisterRPC(CRPCTable &) override {}
     bool Verify() override {return true;}
-    bool Open(InitInterfaces& interfaces) override {return true;}
-    void Start(CScheduler& scheduler) override {}
-    void Flush() override {}
-    void Stop() override {}
-    void Close() override {}
+    void Construct(InitInterfaces& interfaces) override {}
 };
 
 #endif // WALLETINITINTERFACE_H
