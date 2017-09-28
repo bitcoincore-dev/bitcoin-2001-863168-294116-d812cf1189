@@ -6,6 +6,8 @@
 #ifndef BITCOIN_WALLET_INIT_H
 #define BITCOIN_WALLET_INIT_H
 
+#include <interface/chain.h>
+
 #include <string>
 
 class CRPCTable;
@@ -26,8 +28,11 @@ void RegisterWalletRPC(CRPCTable &tableRPC);
 //  being loaded (WalletParameterInteraction forbids -salvagewallet, -zapwallettxes or -upgradewallet with multiwallet).
 bool VerifyWallets();
 
+//! Add wallets that should be opened to list of init interfaces.
+void AddWallets(InitInterfaces& interfaces);
+
 //! Load wallet databases.
-bool OpenWallets(InitInterfaces& interfaces);
+bool OpenWallets(interface::Chain& chain, interface::Chain::Client& chain_client, const std::vector<std::string>& wallet_filenames);
 
 //! Complete startup of wallets.
 void StartWallets(CScheduler& scheduler);
