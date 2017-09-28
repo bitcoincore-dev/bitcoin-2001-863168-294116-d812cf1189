@@ -7,6 +7,7 @@
 #include <amount.h>
 #include <chain.h>
 #include <consensus/validation.h>
+#include <init.h>
 #include <interfaces/chain.h>
 #include <interfaces/handler.h>
 #include <net.h>
@@ -14,6 +15,7 @@
 #include <policy/fees.h>
 #include <policy/policy.h>
 #include <primitives/transaction.h>
+#include <rpc/server.h>
 #include <script/ismine.h>
 #include <script/standard.h>
 #include <support/allocators/secure.h>
@@ -26,11 +28,14 @@
 #include <wallet/feebumper.h>
 #include <wallet/fees.h>
 #include <wallet/wallet.h>
+#include <wallet/walletutil.h>
 
 #include <memory>
 #include <string>
 #include <utility>
 #include <vector>
+
+class CScheduler;
 
 namespace interfaces {
 namespace {
@@ -469,6 +474,41 @@ public:
     WalletClientImpl(Chain& chain, std::vector<std::string> wallet_filenames)
         : m_chain(chain), m_wallet_filenames(std::move(wallet_filenames))
     {
+    }
+    void registerRpcs() override { RegisterWalletRPCCommands(::tableRPC); }
+    bool prepare() override
+    {
+        for (const std::string& filename : m_wallet_filenames) {
+            CWallet* wallet =
+                CWallet::CreateWalletFromFile(m_chain, filename, fs::absolute(filename, GetWalletDir()));
+            if (!wallet) return false;
+            AddWallet(wallet);
+        }
+        return true;
+    }
+    void start(CScheduler& scheduler) override
+    {
+        for (CWallet* wallet : GetWallets()) {
+            wallet->postInitProcess(scheduler);
+        }
+    }
+    void stop() override
+    {
+        for (CWallet* wallet : GetWallets()) {
+            wallet->Flush(false);
+        }
+    }
+    void shutdown() override
+    {
+        for (CWallet* wallet : GetWallets()) {
+            wallet->Flush(true);
+        }
+    }
+    ~WalletClientImpl() override
+    {
+        for (CWallet* wallet : GetWallets()) {
+            RemoveWallet(wallet);
+        }
     }
 
     Chain& m_chain;
