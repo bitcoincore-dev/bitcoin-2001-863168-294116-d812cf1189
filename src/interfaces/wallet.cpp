@@ -7,6 +7,7 @@
 #include <amount.h>
 #include <chain.h>
 #include <consensus/validation.h>
+#include <init.h>
 #include <interfaces/chain.h>
 #include <interfaces/handler.h>
 #include <net.h>
@@ -14,6 +15,8 @@
 #include <policy/fees.h>
 #include <policy/policy.h>
 #include <primitives/transaction.h>
+#include <rpc/server.h>
+#include <scheduler.h>
 #include <script/ismine.h>
 #include <script/standard.h>
 #include <support/allocators/secure.h>
@@ -26,6 +29,7 @@
 #include <wallet/feebumper.h>
 #include <wallet/fees.h>
 #include <wallet/wallet.h>
+#include <wallet/walletutil.h>
 
 #include <memory>
 #include <string>
@@ -474,6 +478,13 @@ public:
         : m_chain(chain), m_wallet_filenames(std::move(wallet_filenames))
     {
     }
+    void registerRpcs() override { RegisterWalletRPCCommands(::tableRPC); }
+    bool verify() override { return VerifyWallets(m_chain, m_wallet_filenames); }
+    bool load() override { return LoadWallets(m_chain, m_wallet_filenames); }
+    void start(CScheduler& scheduler) override { StartWallets(scheduler); }
+    void flush() override { FlushWallets(); }
+    void stop() override { StopWallets(); }
+    ~WalletClientImpl() override { UnloadWallets(); }
 
     Chain& m_chain;
     std::vector<std::string> m_wallet_filenames;
