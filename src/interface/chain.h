@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+class CScheduler;
+
 namespace interface {
 
 //! Interface for giving wallet processes access to blockchain state.
@@ -19,6 +21,22 @@ public:
     {
     public:
         virtual ~Client() {}
+
+        //! Register rpcs.
+        virtual void registerRpcs() = 0;
+
+        //! Prepare for execution, loading any needed state.
+        virtual bool prepare() = 0;
+
+        //! Start client execution and provide a scheduler. (Scheduler is
+        //! ignored if client is out-of-process).
+        virtual void start(CScheduler& scheduler) = 0;
+
+        //! Stop client execution and prepare for shutdown.
+        virtual void stop() = 0;
+
+        //! Shut down client.
+        virtual void shutdown() = 0;
     };
 };
 
