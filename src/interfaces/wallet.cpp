@@ -7,6 +7,7 @@
 #include <amount.h>
 #include <chain.h>
 #include <consensus/validation.h>
+#include <init.h>
 #include <interfaces/chain.h>
 #include <interfaces/handler.h>
 #include <net.h>
@@ -14,6 +15,8 @@
 #include <policy/fees.h>
 #include <policy/policy.h>
 #include <primitives/transaction.h>
+#include <rpc/server.h>
+#include <scheduler.h>
 #include <script/ismine.h>
 #include <script/standard.h>
 #include <support/allocators/secure.h>
@@ -26,6 +29,7 @@
 #include <wallet/feebumper.h>
 #include <wallet/fees.h>
 #include <wallet/wallet.h>
+#include <wallet/walletutil.h>
 
 #include <memory>
 #include <string>
@@ -474,6 +478,44 @@ public:
     WalletClientImpl(Chain& chain, std::vector<std::string> wallet_filenames)
         : m_chain(chain), m_wallet_filenames(std::move(wallet_filenames))
     {
+    }
+    void registerRpcs() override { RegisterWalletRPCCommands(::tableRPC); }
+    bool prepare() override
+    {
+        SetWalletChain(m_chain);
+        for (const std::string& filename : m_wallet_filenames) {
+            auto wallet = CWallet::CreateWalletFromFile(filename, fs::absolute(filename, GetWalletDir()));
+            if (!wallet) return false;
+            AddWallet(std::move(wallet));
+        }
+        return true;
+    }
+    void start(CScheduler& scheduler) override
+    {
+        for (const auto& wallet : GetWallets()) {
+            wallet->postInitProcess();
+        }
+
+        // Run a thread to flush wallet periodically
+        scheduler.scheduleEvery(MaybeCompactWalletDB, 500);
+    }
+    void stop() override
+    {
+        for (const auto& wallet : GetWallets()) {
+            wallet->Flush(false);
+        }
+    }
+    void shutdown() override
+    {
+        for (const auto& wallet : GetWallets()) {
+            wallet->Flush(true);
+        }
+    }
+    ~WalletClientImpl() override
+    {
+        for (const auto& wallet : GetWallets()) {
+            RemoveWallet(wallet);
+        }
     }
 
     Chain& m_chain;
