@@ -78,13 +78,8 @@ public:
 
     std::string GetHelpString(bool showDebug) override {return std::string{};}
     bool ParameterInteraction() override {return true;}
-    void RegisterRPC(CRPCTable &) override {}
     bool Verify() override {return true;}
-    bool Open() override {LogPrintf("No wallet support compiled in!\n"); return true;}
-    void Start(CScheduler& scheduler) override {}
-    void Flush() override {}
-    void Stop() override {}
-    void Close() override {}
+    void Construct(InitInterfaces& interfaces) override {LogPrintf("No wallet support compiled in!\n");}
 };
 
 static DummyWalletInit g_dummy_wallet_init;
@@ -204,7 +199,9 @@ void Shutdown(InitInterfaces& interfaces)
     StopREST();
     StopRPC();
     StopHTTPServer();
-    g_wallet_init_interface->Flush();
+    for (const auto& client : interfaces.chain_clients) {
+        client->stop();
+    }
     StopMapPort();
 
     // Because these depend on each-other, we make sure that neither can be
@@ -262,7 +259,9 @@ void Shutdown(InitInterfaces& interfaces)
         pcoinsdbview.reset();
         pblocktree.reset();
     }
-    g_wallet_init_interface->Stop();
+    for (const auto& client : interfaces.chain_clients) {
+        client->shutdown();
+    }
 
 #if ENABLE_ZMQ
     if (pzmqNotificationInterface) {
@@ -282,7 +281,7 @@ void Shutdown(InitInterfaces& interfaces)
     UnregisterAllValidationInterfaces();
     GetMainSignals().UnregisterBackgroundSignalScheduler();
     GetMainSignals().UnregisterWithMempoolSignals(mempool);
-    g_wallet_init_interface->Close();
+    interfaces.chain_clients.clear();
     globalVerifyHandle.reset();
     ECC_Stop();
     LogPrintf("%s: done\n", __func__);
@@ -1255,11 +1254,19 @@ bool AppInitMain(InitInterfaces& interfaces)
     GetMainSignals().RegisterBackgroundSignalScheduler(scheduler);
     GetMainSignals().RegisterWithMempoolSignals(mempool);
 
+    // Create client interfaces for wallets that are supposed to be loaded
+    // according to -wallet and -disablewallet options. Note this only creates
+    // the interface pointers. Wallets get actually loaded by the client
+    // registerRpcs(), prepare(), and start() calls below.
+    g_wallet_init_interface->Construct(interfaces);
+
     /* Register RPC commands regardless of -server setting so they will be
      * available in the GUI RPC console even if external calls are disabled.
      */
     RegisterAllCoreRPCCommands(tableRPC);
-    g_wallet_init_interface->RegisterRPC(tableRPC);
+    for (const auto& client : interfaces.chain_clients) {
+        client->registerRpcs();
+    }
 
     /* Start the RPC server already.  It will be started in "warmup" mode
      * and not really process calls already (but it will signify connections
@@ -1595,7 +1602,11 @@ bool AppInitMain(InitInterfaces& interfaces)
     fFeeEstimatesInitialized = true;
 
     // ********************************************************* Step 8: load wallet
-    if (!g_wallet_init_interface->Open(interfaces)) return false;
+    for (const auto& client : interfaces.chain_clients) {
+        if (!client->prepare()) {
+            return false;
+        }
+    }
 
     // ********************************************************* Step 9: data directory maintenance
 
@@ -1741,7 +1752,9 @@ bool AppInitMain(InitInterfaces& interfaces)
     SetRPCWarmupFinished();
     uiInterface.InitMessage(_("Done loading"));
 
-    g_wallet_init_interface->Start(scheduler);
+    for (const auto& client : interfaces.chain_clients) {
+        client->start(scheduler);
+    }
 
     return true;
 }
