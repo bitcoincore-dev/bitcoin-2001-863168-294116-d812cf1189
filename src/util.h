@@ -207,6 +207,7 @@ private:
     std::unordered_set<std::string> args_assigned_by_conf;
     fs::path rwconf_path;
     bool rwconf_had_prune_option;
+    std::map<std::string, std::string> rwconf_queued_writes;
 
     void ReadConfigFile(fs::ifstream& streamConfig, std::unordered_set<std::string>* setAllowOverride, std::unordered_set<std::string>* setInitiallyAssigned);
 public:
