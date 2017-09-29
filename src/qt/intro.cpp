@@ -182,6 +182,7 @@ void Intro::UpdateText()
         storageRequiresMsg.arg(requiredSpace) + " " +
         tr("The wallet will also be stored in this directory.")
     );
+    Q_EMIT requestCheck();
 }
 
 Intro::~Intro()
