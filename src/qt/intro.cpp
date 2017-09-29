@@ -240,6 +240,8 @@ bool Intro::pickDataDirectory()
 
     if(!fs::exists(GUIUtil::qstringToBoostPath(dataDir)) || gArgs.GetBoolArg("-choosedatadir", DEFAULT_CHOOSE_DATADIR) || settings.value("fReset", false).toBool() || gArgs.GetBoolArg("-resetguisettings", false))
     {
+        int64_t introPrune;
+
         /* If current default data directory does not exist, let the user choose one */
         Intro intro;
         intro.setDataDirectory(dataDir);
@@ -252,6 +254,7 @@ bool Intro::pickDataDirectory()
                 /* Cancel clicked */
                 return false;
             }
+            introPrune = intro.getPrune();
             dataDir = intro.getDataDirectory();
             try {
                 TryCreateDirectories(GUIUtil::qstringToBoostPath(dataDir));
@@ -261,18 +264,17 @@ bool Intro::pickDataDirectory()
                     tr("Error: Specified data directory \"%1\" cannot be created.").arg(dataDir));
                 /* fall through, back to choosing screen */
             }
-
-            int64_t introPrune = intro.getPrune();
-            if (introPrune || gArgs.GetArg("-prune", 0) > 1) {
-                // Initialise specified prune setting
-                std::string strPrune = strprintf("%d", introPrune);
-                gArgs.ForceSetArg("-prune", strPrune);
-                gArgs.ModifyRWConfigFile("prune", strPrune);
-            }
         }
 
         settings.setValue("strDataDir", dataDir);
         settings.setValue("fReset", false);
+
+        if (introPrune || gArgs.GetArg("-prune", 0) > 1) {
+            // Initialise specified prune setting
+            std::string strPrune = strprintf("%d", introPrune);
+            gArgs.ForceSetArg("-prune", strPrune);
+            gArgs.ModifyRWConfigFile("prune", strPrune);
+        }
     }
     /* Only override -datadir if different from the default, to make it possible to
      * override -datadir in the bitcoin.conf file in the default data directory
