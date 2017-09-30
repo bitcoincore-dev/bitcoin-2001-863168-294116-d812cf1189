@@ -51,6 +51,23 @@ class WalletAccountsTest(BitcoinTestFramework):
 
         assert_raises_rpc_error(-1, "address_type provided in both options and 4th parameter", node.addmultisigaddress, 2, addresses, {"address_type": 'legacy'}, 'bech32')
 
+    def test_sort_multisig_with_uncompressed_hash160(self, node):
+        node.importpubkey("02632b12f4ac5b1d1b72b2a3b508c19172de44f6f46bcee50ba33f3f9291e47ed0")
+        node.importpubkey("04dd4fe618a8ad14732f8172fe7c9c5e76dd18c2cc501ef7f86e0f4e285ca8b8b32d93df2f4323ebb02640fa6b975b2e63ab3c9d6979bc291193841332442cc6ad")
+        address = "2MxvEpFdXeEDbnz8MbRwS23kDZC8tzQ9NjK"
+
+        addresses = [
+            "msDoRfEfZQFaQNfAEWyqf69H99yntZoBbG",
+            "myrfasv56W7579LpepuRy7KFhVhaWsJYS8",
+        ]
+        default = self.nodes[0].addmultisigaddress(2, addresses, {'address_type': 'legacy'})
+        assert_equal(address, default['address'])
+
+        unsorted = self.nodes[0].addmultisigaddress(2, addresses, {'address_type': 'legacy', "sort": False})
+        assert_equal(address, unsorted['address'])
+
+        assert_raises_rpc_error(-1, "Compressed key required for BIP67: myrfasv56W7579LpepuRy7KFhVhaWsJYS8", node.addmultisigaddress, 2, addresses, {"sort": True})
+
     def run_test (self):
         node = self.nodes[0]
         # Check that there's no UTXO on any of the nodes
@@ -182,6 +199,7 @@ class WalletAccountsTest(BitcoinTestFramework):
         change_account(node, accounts[2].receive_address, accounts[2], accounts[2])
 
         self.test_sort_multisig(node)
+        self.test_sort_multisig_with_uncompressed_hash160(node)
 
 class Account:
     def __init__(self, name):
