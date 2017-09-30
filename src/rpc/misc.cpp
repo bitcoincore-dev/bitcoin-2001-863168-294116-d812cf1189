@@ -317,6 +317,9 @@ UniValue createmultisig(const JSONRPCRequest& request)
     for (unsigned int i = 0; i < keys.size(); ++i) {
         if (IsHex(keys[i].get_str()) && (keys[i].get_str().length() == 66 || keys[i].get_str().length() == 130)) {
             pubkeys.push_back(HexToPubKey(keys[i].get_str()));
+            if (fSorted && !pubkeys.back().IsCompressed()) {
+                throw std::runtime_error(strprintf("Compressed key required for BIP67: %s", keys[i].get_str()));
+            }
         } else {
 #ifdef ENABLE_WALLET
             CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
