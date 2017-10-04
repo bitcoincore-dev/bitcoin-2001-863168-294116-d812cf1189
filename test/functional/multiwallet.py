@@ -76,7 +76,7 @@ class MultiWalletTest(BitcoinTestFramework):
         assert_equal(w2.getbalance(), 1)
         assert_equal(w3.getbalance(), 2)
 
-        batch = w1._batch([w1.getblockchaininfo._get_request(), w1.getwalletinfo._get_request()])
+        batch = w1 << [w1.getblockchaininfo % (), w1.getwalletinfo % ()]
         assert_equal(batch[0]["result"]["chain"], "regtest")
         assert_equal(batch[1]["result"]["walletname"], "w1")
 

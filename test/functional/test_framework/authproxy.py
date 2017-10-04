@@ -197,3 +197,13 @@ class AuthServiceProxy(object):
 
     def __truediv__(self, relative_uri):
         return AuthServiceProxy("{}/{}".format(self.__service_url, relative_uri), self._service_name, connection=self.__conn)
+
+    def __mod__(self, args):
+        if isinstance(args, tuple):
+            return self._get_request(*args)
+        if isinstance(args, dict):
+            return self._get_request(**args)
+        raise TypeError
+
+    def __lshift__(self, rpc_call_list):
+        return self._batch(rpc_call_list)
