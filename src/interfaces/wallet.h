@@ -335,6 +335,7 @@ struct WalletTx
     std::vector<isminetype> txout_is_mine;
     std::vector<CTxDestination> txout_address;
     std::vector<isminetype> txout_address_is_mine;
+    std::vector<bool> txout_is_change;
     CAmount credit;
     CAmount debit;
     CAmount change;

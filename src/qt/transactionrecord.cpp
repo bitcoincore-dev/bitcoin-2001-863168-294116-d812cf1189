@@ -92,10 +92,23 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const interface
 
         if (fAllFromMe && fAllToMe)
         {
+            std::string address;
+            if (wtx.txout_address.size() == 2)
+            {
+                for (size_t i = 0; i < wtx.txout_address.size(); i++)
+                {
+                    if (wtx.txout_is_change[i]) continue;
+
+                    const CTxDestination& destination = wtx.txout_address[i];
+                    if (!boost::get<CNoDestination>(&destination))
+                    {
+                        address = EncodeDestination(wtx.txout_address[i]);
+                    }
+                }
+            }
             // Payment to self
             CAmount nChange = wtx.change;
-
-            parts.append(TransactionRecord(hash, nTime, TransactionRecord::SendToSelf, "",
+            parts.append(TransactionRecord(hash, nTime, TransactionRecord::SendToSelf, address,
                             -(nDebit - nChange), nCredit - nChange));
             parts.last().involvesWatchAddress = involvesWatchAddress;   // maybe pass to TransactionRecord as constructor argument
         }
