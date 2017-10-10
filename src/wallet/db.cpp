@@ -401,12 +401,48 @@ CDB::CDB(CWalletDBWrapper& dbw, const char* pszMode, bool fFlushOnCloseIn) : pdb
                             nFlags,                             // Flags
                             0);
 
+            std::string error;
             if (ret != 0) {
+                error = strprintf("CDB: Error %d, can't open database %s", ret, strFilename);
+            }
+
+            u_int8_t fileid[DB_FILE_ID_LEN];
+            if (error.empty()) {
+                ret = pdb->get_mpf()->get_fileid(fileid);
+                if (ret != 0) {
+                    error = strprintf("CDB: Can't open database %s (get_fileid failed with %d)", strFilename, ret);
+                }
+            }
+
+            if (error.empty()) {
+                // Make sure database has a unique fileid. If it doesn't, throw
+                // an error. BDB caches do not work properly when more than one
+                // open database has the same fileid (values written to one
+                // database may show up in reads to other databases).
+                //
+                // Bitcoin will never create different databases with the same
+                // fileid, but this error can be triggered if users manually
+                // copy database files.
+                for (const auto& item : env->mapDb) {
+                    u_int8_t item_fileid[DB_FILE_ID_LEN];
+                    if (item.second && item.second->get_mpf()->get_fileid(item_fileid) == 0 &&
+                        memcmp(fileid, item_fileid, sizeof(fileid)) == 0) {
+                        const char* item_filename = nullptr;
+                        item.second->get_dbname(&item_filename, nullptr);
+                        error = strprintf("CDB: Can't open database %s (duplicates fileid %s from %s)", strFilename,
+                            HexStr(std::begin(item_fileid), std::end(item_fileid)),
+                            item_filename ? item_filename : "(unknown database)");
+                        break;
+                    }
+                }
+            }
+
+            if (!error.empty()) {
                 delete pdb;
                 pdb = nullptr;
                 --env->mapFileUseCount[strFile];
                 strFile = "";
-                throw std::runtime_error(strprintf("CDB: Error %d, can't open database %s", ret, strFilename));
+                throw std::runtime_error(error);
             }
 
             if (fCreate && !Exists(std::string("version"))) {
