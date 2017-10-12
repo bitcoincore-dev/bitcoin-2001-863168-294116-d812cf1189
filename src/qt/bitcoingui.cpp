@@ -536,10 +536,11 @@ void BitcoinGUI::setClientModel(ClientModel *_clientModel)
 }
 
 #ifdef ENABLE_WALLET
-bool BitcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
+bool BitcoinGUI::addWallet(WalletModel *walletModel)
 {
     if(!walletFrame)
         return false;
+    const QString name = walletModel->getWalletName();
     setWalletActionsEnabled(true);
     WalletSelector->addItem(name);
     if (WalletSelector->count() == 2) {
@@ -549,8 +550,8 @@ bool BitcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
         appToolBar->addWidget(WalletSelectorLabel);
         appToolBar->addWidget(WalletSelector);
     }
-    rpcConsole->addWallet(name, walletModel);
-    return walletFrame->addWallet(name, walletModel);
+    rpcConsole->addWallet(walletModel);
+    return walletFrame->addWallet(walletModel);
 }
 
 bool BitcoinGUI::setCurrentWallet(const QString& name)
