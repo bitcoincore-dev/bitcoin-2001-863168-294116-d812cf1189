@@ -63,6 +63,15 @@ RPC changes
 
 - The `createrawtransaction` RPC will now accept an array or dictionary (kept for compatibility) for the `outputs` parameter. This means the order of transaction outputs can be specified by the client.
 - The `fundrawtransaction` RPC will reject the previously deprecated `reserveChangeKey` option.
+- Wallet `getnewaddress` and `addmultisigaddress` RPC `account` named
+  parameters have been renamed to `label` with no change in behavior.
+- Wallet `getlabeladdress`, `getreceivedbylabel`, `listreceivedbylabel`, and
+  `setlabel` RPCs have been added to replace to be deprecated
+  `getaccountaddress`, `getreceivedbyaccount`, `listreceivedbyaccount`, and
+  `setaccount` RPCs with no differences in behavior.
+- Wallet `listreceivedbylabel`, `listreceivedbyaccount` and `listunspent` RPCs
+  add `label` fields to returned JSON objects that previously only had
+  `account` fields.
 
 External wallet files
 ---------------------
