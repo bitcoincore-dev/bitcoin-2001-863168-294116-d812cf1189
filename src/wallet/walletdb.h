@@ -34,7 +34,7 @@
 
 static const bool DEFAULT_FLUSHWALLET = true;
 
-class CAccount;
+class CLabel;
 class CAccountingEntry;
 struct CBlockLocator;
 class CKeyPool;
@@ -202,8 +202,8 @@ public:
     /// This writes directly to the database, and will not update the CWallet's cached accounting entries!
     /// Use wallet.AddAccountingEntry instead, to write *and* update its caches.
     bool WriteAccountingEntry(const uint64_t nAccEntryNum, const CAccountingEntry& acentry);
-    bool ReadAccount(const std::string& strAccount, CAccount& account);
-    bool WriteAccount(const std::string& strAccount, const CAccount& account);
+    bool ReadLabel(const std::string& label_name, CLabel& label);
+    bool WriteLabel(const std::string& label_name, const CLabel& label);
 
     /// Write destination data key,value tuple to database
     bool WriteDestData(const std::string &address, const std::string &key, const std::string &value);

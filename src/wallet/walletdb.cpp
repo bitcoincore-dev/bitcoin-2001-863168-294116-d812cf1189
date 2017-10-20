@@ -150,15 +150,15 @@ bool CWalletDB::WriteMinVersion(int nVersion)
     return WriteIC(std::string("minversion"), nVersion);
 }
 
-bool CWalletDB::ReadAccount(const std::string& strAccount, CAccount& account)
+bool CWalletDB::ReadLabel(const std::string& label_name, CLabel& label)
 {
-    account.SetNull();
-    return batch.Read(std::make_pair(std::string("acc"), strAccount), account);
+    label.SetNull();
+    return batch.Read(std::make_pair(std::string("acc"), label_name), label);
 }
 
-bool CWalletDB::WriteAccount(const std::string& strAccount, const CAccount& account)
+bool CWalletDB::WriteLabel(const std::string& label_name, const CLabel& label)
 {
-    return WriteIC(std::make_pair(std::string("acc"), strAccount), account);
+    return WriteIC(std::make_pair(std::string("acc"), label_name), label);
 }
 
 bool CWalletDB::WriteAccountingEntry(const uint64_t nAccEntryNum, const CAccountingEntry& acentry)
