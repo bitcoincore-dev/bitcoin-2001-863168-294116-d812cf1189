@@ -46,11 +46,11 @@ class ReceivedByTest(BitcoinTestFramework):
         self.sync_all()
         assert_array_result(self.nodes[1].listreceivedbyaddress(),
                            {"address":addr},
-                           {"address":addr, "account":"", "amount":Decimal("0.1"), "confirmations":10, "txids":[txid,]})
+                           {"address":addr, "label":"", "amount":Decimal("0.1"), "confirmations":10, "txids":[txid,]})
         #With min confidence < 10
         assert_array_result(self.nodes[1].listreceivedbyaddress(5),
                            {"address":addr},
-                           {"address":addr, "account":"", "amount":Decimal("0.1"), "confirmations":10, "txids":[txid,]})
+                           {"address":addr, "label":"", "amount":Decimal("0.1"), "confirmations":10, "txids":[txid,]})
         #With min confidence > 10, should not find Tx
         assert_array_result(self.nodes[1].listreceivedbyaddress(11),{"address":addr},{ },True)
 
@@ -58,7 +58,7 @@ class ReceivedByTest(BitcoinTestFramework):
         addr = self.nodes[1].getnewaddress()
         assert_array_result(self.nodes[1].listreceivedbyaddress(0,True),
                            {"address":addr},
-                           {"address":addr, "account":"", "amount":0, "confirmations":0, "txids":[]})
+                           {"address":addr, "label":"", "amount":0, "confirmations":0, "txids":[]})
 
         '''
             getreceivedbyaddress Test
@@ -86,55 +86,55 @@ class ReceivedByTest(BitcoinTestFramework):
             raise AssertionError("Wrong balance returned by getreceivedbyaddress, %0.2f"%(balance))
 
         '''
-            listreceivedbyaccount + getreceivedbyaccount Test
+            listreceivedbylabel + getreceivedbylabel Test
         '''
         #set pre-state
         addrArr = self.nodes[1].getnewaddress()
-        account = self.nodes[1].getaccount(addrArr)
-        received_by_account_json = get_sub_array_from_array(self.nodes[1].listreceivedbyaccount(),{"account":account})
-        if len(received_by_account_json) == 0:
-            raise AssertionError("No accounts found in node")
-        balance_by_account = self.nodes[1].getreceivedbyaccount(account)
+        label = self.nodes[1].getaccount(addrArr)
+        received_by_label_json = get_sub_array_from_array(self.nodes[1].listreceivedbylabel(),{"label":label})
+        if len(received_by_label_json) == 0:
+            raise AssertionError("No labels found in node")
+        balance_by_label = self.nodes[1].getreceivedbylabel(label)
 
         txid = self.nodes[0].sendtoaddress(addr, 0.1)
         self.sync_all()
 
-        # listreceivedbyaccount should return received_by_account_json because of 0 confirmations
-        assert_array_result(self.nodes[1].listreceivedbyaccount(),
-                           {"account":account},
-                           received_by_account_json)
+        # listreceivedbylabel should return received_by_label_json because of 0 confirmations
+        assert_array_result(self.nodes[1].listreceivedbylabel(),
+                           {"label":label},
+                           received_by_label_json)
 
         # getreceivedbyaddress should return same balance because of 0 confirmations
-        balance = self.nodes[1].getreceivedbyaccount(account)
-        if balance != balance_by_account:
-            raise AssertionError("Wrong balance returned by getreceivedbyaccount, %0.2f"%(balance))
+        balance = self.nodes[1].getreceivedbylabel(label)
+        if balance != balance_by_label:
+            raise AssertionError("Wrong balance returned by getreceivedbylabel, %0.2f"%(balance))
 
         self.nodes[1].generate(10)
         self.sync_all()
-        # listreceivedbyaccount should return updated account balance
-        assert_array_result(self.nodes[1].listreceivedbyaccount(),
-                           {"account":account},
-                           {"account":received_by_account_json["account"], "amount":(received_by_account_json["amount"] + Decimal("0.1"))})
+        # listreceivedbylabel should return updated label balance
+        assert_array_result(self.nodes[1].listreceivedbylabel(),
+                           {"label":label},
+                           {"label":received_by_label_json["label"], "amount":(received_by_label_json["amount"] + Decimal("0.1"))})
 
         # getreceivedbyaddress should return updates balance
-        balance = self.nodes[1].getreceivedbyaccount(account)
-        if balance != balance_by_account + Decimal("0.1"):
-            raise AssertionError("Wrong balance returned by getreceivedbyaccount, %0.2f"%(balance))
+        balance = self.nodes[1].getreceivedbylabel(label)
+        if balance != balance_by_label + Decimal("0.1"):
+            raise AssertionError("Wrong balance returned by getreceivedbylabel, %0.2f"%(balance))
 
-        #Create a new account named "mynewaccount" that has a 0 balance
-        self.nodes[1].getaccountaddress("mynewaccount")
-        received_by_account_json = get_sub_array_from_array(self.nodes[1].listreceivedbyaccount(0,True),{"account":"mynewaccount"})
-        if len(received_by_account_json) == 0:
-            raise AssertionError("No accounts found in node")
+        #Create a new label named "mynewlabel" that has a 0 balance
+        self.nodes[1].getlabeladdress("mynewlabel")
+        received_by_label_json = get_sub_array_from_array(self.nodes[1].listreceivedbylabel(0,True),{"label":"mynewlabel"})
+        if len(received_by_label_json) == 0:
+            raise AssertionError("No labels found in node")
 
-        # Test includeempty of listreceivedbyaccount
-        if received_by_account_json["amount"] != Decimal("0.0"):
-            raise AssertionError("Wrong balance returned by listreceivedbyaccount, %0.2f"%(received_by_account_json["amount"]))
+        # Test includeempty of listreceivedbylabel
+        if received_by_label_json["amount"] != Decimal("0.0"):
+            raise AssertionError("Wrong balance returned by listreceivedbylabel, %0.2f"%(received_by_label_json["amount"]))
 
-        # Test getreceivedbyaccount for 0 amount accounts
-        balance = self.nodes[1].getreceivedbyaccount("mynewaccount")
+        # Test getreceivedbylabel for 0 amount labels
+        balance = self.nodes[1].getreceivedbylabel("mynewlabel")
         if balance != Decimal("0.0"):
-            raise AssertionError("Wrong balance returned by getreceivedbyaccount, %0.2f"%(balance))
+            raise AssertionError("Wrong balance returned by getreceivedbylabel, %0.2f"%(balance))
 
 if __name__ == '__main__':
     ReceivedByTest().main()
