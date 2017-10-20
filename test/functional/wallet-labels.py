@@ -2,13 +2,13 @@
 # Copyright (c) 2016 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-"""Test account RPCs.
+"""Test label RPCs.
 
 RPCs tested are:
-    - getaccountaddress
+    - getlabeladdress
     - getaddressesbyaccount
     - listaddressgroupings
-    - setaccount
+    - setlabel
     - sendfrom (with account arguments)
     - move (with account arguments)
 """
@@ -16,7 +16,7 @@ RPCs tested are:
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import assert_equal
 
-class WalletAccountsTest(BitcoinTestFramework):
+class WalletLabelsTest(BitcoinTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 1
@@ -68,66 +68,66 @@ class WalletAccountsTest(BitcoinTestFramework):
 
         node.generate(1)
 
-        # we want to reset so that the "" account has what's expected.
+        # we want to reset so that the "" label has what's expected.
         # otherwise we're off by exactly the fee amount as that's mined
         # and matures in the next 100 blocks
         node.sendfrom("", common_address, fee)
-        accounts = ["a", "b", "c", "d", "e"]
+        labels = ["a", "b", "c", "d", "e"]
         amount_to_send = 1.0
-        account_addresses = dict()
-        for account in accounts:
-            address = node.getaccountaddress(account)
-            account_addresses[account] = address
+        label_addresses = dict()
+        for label in labels:
+            address = node.getlabeladdress(label)
+            label_addresses[label] = address
             
-            node.getnewaddress(account)
-            assert_equal(node.getaccount(address), account)
-            assert(address in node.getaddressesbyaccount(account))
+            node.getnewaddress(label)
+            assert_equal(node.getaccount(address), label)
+            assert(address in node.getaddressesbyaccount(label))
             
             node.sendfrom("", address, amount_to_send)
         
         node.generate(1)
         
-        for i in range(len(accounts)):
-            from_account = accounts[i]
-            to_account = accounts[(i+1) % len(accounts)]
-            to_address = account_addresses[to_account]
+        for i in range(len(labels)):
+            from_account = labels[i]
+            to_label = labels[(i+1) % len(labels)]
+            to_address = label_addresses[to_label]
             node.sendfrom(from_account, to_address, amount_to_send)
         
         node.generate(1)
         
-        for account in accounts:
-            address = node.getaccountaddress(account)
-            assert(address != account_addresses[account])
-            assert_equal(node.getreceivedbyaccount(account), 2)
-            node.move(account, "", node.getbalance(account))
+        for label in labels:
+            address = node.getlabeladdress(label)
+            assert(address != label_addresses[label])
+            assert_equal(node.getreceivedbylabel(label), 2)
+            node.move(label, "", node.getbalance(label))
 
         node.generate(101)
         
         expected_account_balances = {"": 5200}
-        for account in accounts:
+        for account in labels:
             expected_account_balances[account] = 0
         
         assert_equal(node.listaccounts(), expected_account_balances)
         
         assert_equal(node.getbalance(""), 5200)
         
-        for account in accounts:
-            address = node.getaccountaddress("")
-            node.setaccount(address, account)
-            assert(address in node.getaddressesbyaccount(account))
+        for label in labels:
+            address = node.getlabeladdress("")
+            node.setlabel(address, label)
+            assert(address in node.getaddressesbyaccount(label))
             assert(address not in node.getaddressesbyaccount(""))
         
-        for account in accounts:
+        for label in labels:
             addresses = []
             for x in range(10):
                 addresses.append(node.getnewaddress())
-            multisig_address = node.addmultisigaddress(5, addresses, account)
+            multisig_address = node.addmultisigaddress(5, addresses, label)
             node.sendfrom("", multisig_address, 50)
         
         node.generate(101)
         
-        for account in accounts:
+        for account in labels:
             assert_equal(node.getbalance(account), 50)
 
 if __name__ == '__main__':
-    WalletAccountsTest().main()
+    WalletLabelsTest().main()
