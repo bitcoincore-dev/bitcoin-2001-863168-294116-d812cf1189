@@ -82,9 +82,17 @@ Low-level RPC changes
   * `getnetworkinfo`
   * `getwalletinfo`
   * `getmininginfo`
-
 - `dumpwallet` no longer allows overwriting files. This is a security measure
   as well as prevents dangerous user mistakes.
+- `getnewaddress` and `addmultisigaddress` RPC `account` named parameters have
+  been renamed to `label` with no change in behavior.
+- `getlabeladdress`, `getreceivedbylabel`, `listreceivedbylabel`, and
+  `setlabel` RPCs have been added to replace to be deprecated
+  `getaccountaddress`, `getreceivedbyaccount`, `listreceivedbyaccount`, and
+  `setaccount` RPCs with no differences in behavior.
+- `listreceivedbylabel`, `listreceivedbyaccount` and `listunspent` RPCs add
+  `label` fields to returned JSON objects that previously only had `account`
+  fields.
 
 Credits
 =======
