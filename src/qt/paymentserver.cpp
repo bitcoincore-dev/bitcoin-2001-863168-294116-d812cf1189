@@ -635,9 +635,8 @@ void PaymentServer::fetchPaymentACK(CWallet* wallet, const SendCoinsRecipient& r
     payment.add_transactions(transaction.data(), transaction.size());
 
     // Create a new refund address, or re-use:
-    QString label = tr("Refund from %1").arg(recipient.authenticatedMerchant);
-    std::string strLabel = label.toStdString();
-    std::set<CTxDestination> refundAddresses = wallet->GetLabelAddresses(strLabel);
+    std::string label = tr("Refund from %1").arg(recipient.authenticatedMerchant).toStdString();
+    std::set<CTxDestination> refundAddresses = wallet->GetLabelAddresses(label);
     if (!refundAddresses.empty()) {
         CScript s = GetScriptForDestination(*refundAddresses.begin());
         payments::Output* refund_to = payment.add_refund_to();
@@ -647,7 +646,7 @@ void PaymentServer::fetchPaymentACK(CWallet* wallet, const SendCoinsRecipient& r
         CPubKey newKey;
         if (wallet->GetKeyFromPool(newKey)) {
             CKeyID keyID = newKey.GetID();
-            wallet->SetAddressBook(keyID, strLabel, "refund");
+            wallet->SetAddressBook(keyID, label, "refund");
 
             CScript s = GetScriptForDestination(keyID);
             payments::Output* refund_to = payment.add_refund_to();
