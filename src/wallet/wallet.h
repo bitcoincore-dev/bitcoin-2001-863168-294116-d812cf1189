@@ -1141,15 +1141,15 @@ public:
 
 
 /** 
- * Label information.
- * Stored in wallet with key "acc"+string label name.
+ * Account information.
+ * Stored in wallet with key "acc"+string account name.
  */
-class CLabel
+class CAccount
 {
 public:
     CPubKey vchPubKey;
 
-    CLabel()
+    CAccount()
     {
         SetNull();
     }

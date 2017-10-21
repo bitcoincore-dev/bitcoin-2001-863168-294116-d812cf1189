@@ -811,21 +811,21 @@ bool CWallet::AccountMove(std::string strFrom, std::string strTo, CAmount nAmoun
     return true;
 }
 
-bool CWallet::GetLabelPubkey(CPubKey &pubKey, std::string label_name, bool bForceNew)
+bool CWallet::GetLabelPubkey(CPubKey &pubKey, std::string label, bool bForceNew)
 {
     CWalletDB walletdb(*dbw);
 
-    CLabel label;
-    walletdb.ReadLabel(label_name, label);
+    CAccount account;
+    walletdb.ReadAccount(label, account);
 
     if (!bForceNew) {
-        if (!label.vchPubKey.IsValid())
+        if (!account.vchPubKey.IsValid())
             bForceNew = true;
         else {
             // Check if the current key has been used
-            CScript scriptPubKey = GetScriptForDestination(label.vchPubKey.GetID());
+            CScript scriptPubKey = GetScriptForDestination(account.vchPubKey.GetID());
             for (std::map<uint256, CWalletTx>::iterator it = mapWallet.begin();
-                 it != mapWallet.end() && label.vchPubKey.IsValid();
+                 it != mapWallet.end() && account.vchPubKey.IsValid();
                  ++it)
                 for (const CTxOut& txout : (*it).second.tx->vout)
                     if (txout.scriptPubKey == scriptPubKey) {
@@ -837,14 +837,14 @@ bool CWallet::GetLabelPubkey(CPubKey &pubKey, std::string label_name, bool bForc
 
     // Generate a new key
     if (bForceNew) {
-        if (!GetKeyFromPool(label.vchPubKey, false))
+        if (!GetKeyFromPool(account.vchPubKey, false))
             return false;
 
-        SetAddressBook(label.vchPubKey.GetID(), label_name, "receive");
-        walletdb.WriteLabel(label_name, label);
+        SetAddressBook(account.vchPubKey.GetID(), label, "receive");
+        walletdb.WriteAccount(label, account);
     }
 
-    pubKey = label.vchPubKey;
+    pubKey = account.vchPubKey;
 
     return true;
 }
