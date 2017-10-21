@@ -87,7 +87,7 @@ Low-level RPC changes
 - `getnewaddress` and `addmultisigaddress` RPC `account` named parameters have
   been renamed to `label` with no change in behavior.
 - `getlabeladdress`, `getlabel`, `getaddressesbylabel`, `getreceivedbylabel`,
-  `listreceivedbylabel`, and `setlabel` RPCs have been added to replace
+  `listreceivedbylabel`, and `setlabel` RPCs have been added to replace to be
   deprecated `getaccountaddress`, `getaccount`, `getaddressesbyaccount`,
   `getreceivedbyaccount`, `listreceivedbyaccount`, and `setaccount`
   RPCs with no differences in behavior.
