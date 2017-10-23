@@ -64,7 +64,6 @@ BASE_SCRIPTS= [
     # vv Tests less than 2m vv
     'wallet.py',
     'wallet-accounts.py',
-    'wallet-labels.py',
     'p2p-segwit.py',
     'wallet-dump.py',
     'listtransactions.py',
