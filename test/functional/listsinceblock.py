@@ -5,7 +5,7 @@
 """Test the listsincelast RPC."""
 
 from test_framework.test_framework import BitcoinTestFramework
-from test_framework.util import assert_equal
+from test_framework.util import assert_equal, assert_raises_rpc_error
 
 class ListSinceBlockTest (BitcoinTestFramework):
     def set_test_params(self):
@@ -19,6 +19,7 @@ class ListSinceBlockTest (BitcoinTestFramework):
         self.test_reorg()
         self.test_double_spend()
         self.test_double_send()
+        self.test_unknown_block()
 
     def test_reorg(self):
         '''
@@ -242,6 +243,9 @@ class ListSinceBlockTest (BitcoinTestFramework):
         for tx in lsbres['removed']:
             if tx['txid'] == txid1:
                 assert_equal(tx['confirmations'], 2)
+
+    def test_unknown_block(self):
+        assert_raises_rpc_error(-5, "Block not found", self.nodes[0].listsinceblock, "42759cde25462784395a337460bde75f58e73d3f08bd31fdc3507cbac856a2c4")
 
 if __name__ == '__main__':
     ListSinceBlockTest().main()
