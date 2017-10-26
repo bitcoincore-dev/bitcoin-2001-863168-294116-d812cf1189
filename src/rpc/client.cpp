@@ -125,6 +125,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "getpeerinfo", 0, "node" },
     { "updatepeer", 0, "node" },
     { "updatepeer", 1, "whitelisted" },
+    { "updatepeer", 2, "manual_connection" },
     { "setnetworkactive", 0, "state" },
     { "getmempoolancestors", 1, "verbose" },
     { "getmempooldescendants", 1, "verbose" },

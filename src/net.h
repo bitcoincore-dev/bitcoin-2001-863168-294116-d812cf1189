@@ -264,6 +264,7 @@ public:
     bool DisconnectNode(NodeId id);
 
     bool SetWhitelisted(NodeId id, bool fWhitelisted);
+    bool SetManualConnection(NodeId id, bool manual);
 
     ServiceFlags GetLocalServices() const;
 

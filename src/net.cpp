@@ -2577,6 +2577,18 @@ bool CConnman::SetWhitelisted(NodeId id, bool fWhitelisted)
     return false;
 }
 
+bool CConnman::SetManualConnection(NodeId id, bool manual)
+{
+    LOCK(cs_vNodes);
+    for(CNode* pnode : vNodes) {
+        if (id == pnode->id) {
+            pnode->m_manual_connection = manual;
+            return true;
+        }
+    }
+    return false;
+}
+
 void CConnman::RecordBytesRecv(uint64_t bytes)
 {
     LOCK(cs_totalBytesRecv);

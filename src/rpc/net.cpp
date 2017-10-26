@@ -212,14 +212,15 @@ UniValue getpeerinfo(const JSONRPCRequest& request)
 
 UniValue updatepeer(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() > 2 || request.params.size() == 0)
+    if (request.fHelp || request.params.size() > 3 || request.params.size() == 0)
         throw std::runtime_error(
             "updatepeer\n"
             "\nUpdate settings for a network node (debug method).\n"
             "\nReturns updated information about the node. See getpeerinfo() for the format of the returned object."
             "\nArguments:\n"
-            "1. \"node\"         (string, required) The node id (see getpeerinfo for a list of nodes with their ids)\n"
-            "2. \"whitelisted\"  (bool, optional) whether the node is whitelisted\n"
+            "1. \"node\"              (string, required) The node id (see getpeerinfo for a list of nodes with their ids)\n"
+            "2. \"whitelisted\"       (bool, optional) whether the node is whitelisted\n"
+            "3. \"manual_connection\" (bool, optional) whether the node was manually added\n"
             "\nExamples:\n"
             + HelpExampleCli("updatepeer", "0 true")
             + HelpExampleRpc("updatepeer", "0, true")
@@ -241,13 +242,20 @@ UniValue updatepeer(const JSONRPCRequest& request)
         }
     }
 
-    UniValue entry(UniValue::VOBJ);
-    CNodeStats stats;
-
-    if (g_connman->GetNodeStats(nodeid, stats)) {
-        NodeStatsToJSON(stats, entry);
+    if (!request.params[2].isNull()) {
+        RPCTypeCheckArgument(request.params[2], UniValue::VBOOL);
+        if (!g_connman->SetManualConnection(nodeid, request.params[2].isTrue())) {
+            throw JSONRPCError(RPC_MISC_ERROR, "Failed to update node manual_connection");
+        }
     }
 
+    CNodeStats stats;
+    if (!g_connman->GetNodeStats(nodeid, stats)) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Node id %u not found", nodeid));
+    }
+
+    UniValue entry(UniValue::VOBJ);
+    NodeStatsToJSON(stats, entry);
     return entry;
 }
 
@@ -700,7 +708,7 @@ static const CRPCCommand commands[] =
     { "network",            "listbanned",             &listbanned,             {} },
     { "network",            "clearbanned",            &clearbanned,            {} },
     { "network",            "setnetworkactive",       &setnetworkactive,       {"state"} },
-    { "hidden",             "updatepeer",             &updatepeer,             {"node", "whitelisted"} },
+    { "hidden",             "updatepeer",             &updatepeer,             {"node", "whitelisted", "manual_connection"} },
 };
 
 void RegisterNetRPCCommands(CRPCTable &t)
