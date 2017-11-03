@@ -99,10 +99,7 @@ public:
 };
 
 /** Wrapped mutex: supports waiting but not recursive locking */
-typedef AnnotatedMixin<std::mutex> CWaitableCriticalSection;
-
-/** Just a typedef for std::condition_variable, can be wrapped later if desired */
-typedef std::condition_variable CConditionVariable;
+typedef AnnotatedMixin<std::mutex> Mutex;
 
 /** Just a typedef for std::unique_lock, can be wrapped later if desired */
 typedef std::unique_lock<std::mutex> Lock;
@@ -112,7 +109,7 @@ void PrintLockContention(const char* pszName, const char* pszFile, int nLine);
 #endif
 
 /** Wrapper around std::unique_lock<CCriticalSection> */
-class SCOPED_LOCKABLE CCriticalBlock
+class SCOPED_LOCKABLE CCriticalLock
 {
 private:
     std::unique_lock<CCriticalSection> lock;
@@ -140,7 +137,7 @@ private:
     }
 
 public:
-    CCriticalBlock(CCriticalSection& mutexIn, const char* pszName, const char* pszFile, int nLine, bool fTry = false) EXCLUSIVE_LOCK_FUNCTION(mutexIn) : lock(mutexIn, std::defer_lock)
+    CCriticalLock(CCriticalSection& mutexIn, const char* pszName, const char* pszFile, int nLine, bool fTry = false) EXCLUSIVE_LOCK_FUNCTION(mutexIn) : lock(mutexIn, std::defer_lock)
     {
         if (fTry)
             TryEnter(pszName, pszFile, nLine);
@@ -148,7 +145,7 @@ public:
             Enter(pszName, pszFile, nLine);
     }
 
-    CCriticalBlock(CCriticalSection* pmutexIn, const char* pszName, const char* pszFile, int nLine, bool fTry = false) EXCLUSIVE_LOCK_FUNCTION(pmutexIn)
+    CCriticalLock(CCriticalSection* pmutexIn, const char* pszName, const char* pszFile, int nLine, bool fTry = false) EXCLUSIVE_LOCK_FUNCTION(pmutexIn)
     {
         if (!pmutexIn) return;
 
@@ -159,7 +156,7 @@ public:
             Enter(pszName, pszFile, nLine);
     }
 
-    ~CCriticalBlock() UNLOCK_FUNCTION()
+    ~CCriticalLock() UNLOCK_FUNCTION()
     {
         if (lock.owns_lock())
             LeaveCritical();
@@ -174,9 +171,9 @@ public:
 #define PASTE(x, y) x ## y
 #define PASTE2(x, y) PASTE(x, y)
 
-#define LOCK(cs) CCriticalBlock PASTE2(criticalblock, __COUNTER__)(cs, #cs, __FILE__, __LINE__)
-#define LOCK2(cs1, cs2) CCriticalBlock criticalblock1(cs1, #cs1, __FILE__, __LINE__), criticalblock2(cs2, #cs2, __FILE__, __LINE__)
-#define TRY_LOCK(cs, name) CCriticalBlock name(cs, #cs, __FILE__, __LINE__, true)
+#define LOCK(cs) CCriticalLock PASTE2(criticalblock, __COUNTER__)(cs, #cs, __FILE__, __LINE__)
+#define LOCK2(cs1, cs2) CCriticalLock criticalblock1(cs1, #cs1, __FILE__, __LINE__), criticalblock2(cs2, #cs2, __FILE__, __LINE__)
+#define TRY_LOCK(cs, name) CCriticalLock name(cs, #cs, __FILE__, __LINE__, true)
 
 #define ENTER_CRITICAL_SECTION(cs)                            \
     {                                                         \

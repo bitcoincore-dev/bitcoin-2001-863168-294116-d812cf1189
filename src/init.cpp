@@ -308,7 +308,7 @@ void OnRPCStopped()
 {
     uiInterface.NotifyBlockTip.disconnect(&RPCNotifyBlockChange);
     RPCNotifyBlockChange(false, nullptr);
-    cvBlockChange.notify_all();
+    g_best_block_cv.notify_all();
     LogPrint(BCLog::RPC, "RPC stopped.\n");
 }
 
@@ -544,17 +544,17 @@ static void BlockNotifyCallback(bool initialSync, const CBlockIndex *pBlockIndex
 }
 
 static bool fHaveGenesis = false;
-static CWaitableCriticalSection cs_GenesisWait;
-static CConditionVariable condvar_GenesisWait;
+static Mutex g_genesis_wait_mutex;
+static std::condition_variable g_genesis_wait_cv;
 
 static void BlockNotifyGenesisWait(bool, const CBlockIndex *pBlockIndex)
 {
     if (pBlockIndex != nullptr) {
         {
-            Lock lock_GenesisWait(cs_GenesisWait);
+            Lock lock_GenesisWait(g_genesis_wait_mutex);
             fHaveGenesis = true;
         }
-        condvar_GenesisWait.notify_all();
+        g_genesis_wait_cv.notify_all();
     }
 }
 
@@ -1634,9 +1634,9 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     // Wait for genesis block to be processed
     {
-        Lock lock(cs_GenesisWait);
+        Lock lock(g_genesis_wait_mutex);
         while (!fHaveGenesis) {
-            condvar_GenesisWait.wait(lock);
+            g_genesis_wait_cv.wait(lock);
         }
         uiInterface.NotifyBlockTip.disconnect(BlockNotifyGenesisWait);
     }
