@@ -7,7 +7,7 @@
     </message>
     <message>
         <source>Create a new address</source>
-        <translation>Criar novo endereço</translation>
+        <translation>Criar um novo endereço</translation>
     </message>
     <message>
         <source>&amp;New</source>
@@ -23,7 +23,7 @@
     </message>
     <message>
         <source>C&amp;lose</source>
-        <translation>Fechar</translation>
+        <translation>&amp;Fechar</translation>
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
@@ -39,7 +39,7 @@
     </message>
     <message>
         <source>&amp;Delete</source>
-        <translation>&amp;Excluir</translation>
+        <translation>E&amp;xcluir</translation>
     </message>
     <message>
         <source>Choose the address to send coins to</source>
@@ -51,7 +51,7 @@
     </message>
     <message>
         <source>C&amp;hoose</source>
-        <translation>Escol&amp;ha</translation>
+        <translation>E&amp;scolha</translation>
     </message>
     <message>
         <source>Sending addresses</source>
@@ -75,7 +75,7 @@
     </message>
     <message>
         <source>Copy &amp;Label</source>
-        <translation>Copiar rótu&amp;lo</translation>
+        <translation>Copiar &amp;rótulo</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
@@ -87,7 +87,7 @@
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
-        <translation>Comma separated file (*.csv)</translation>
+        <translation>Arquivo separado por virgula (*.csv)</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -102,7 +102,7 @@
     <name>AddressTableModel</name>
     <message>
         <source>Label</source>
-        <translation>Rótuo</translation>
+        <translation>Rótulo</translation>
     </message>
     <message>
         <source>Address</source>
@@ -110,7 +110,7 @@
     </message>
     <message>
         <source>(no label)</source>
-        <translation>(sem rótuo)</translation>
+        <translation>(sem rótulo)</translation>
     </message>
 </context>
 <context>
@@ -231,7 +231,7 @@
     <name>BitcoinGUI</name>
     <message>
         <source>Sign &amp;message...</source>
-        <translation>&amp;Assinar mensagem...</translation>
+        <translation>Assinar &amp;mensagem...</translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -327,7 +327,7 @@
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
-        <translation>Sincronizando cabeçahos (%1%)...</translation>
+        <translation>Sincronizando cabeçalhos (%1%)...</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -375,7 +375,7 @@
     </message>
     <message>
         <source>&amp;Show / Hide</source>
-        <translation>&amp;Exibir/Ocultar</translation>
+        <translation>&amp;Exibir / Ocultar</translation>
     </message>
     <message>
         <source>Show or hide the main Window</source>
@@ -479,7 +479,7 @@
     </message>
     <message>
         <source>%1 client</source>
-        <translation>%1</translation>
+        <translation>%1 cliente</translation>
     </message>
     <message>
         <source>Connecting to peers...</source>
@@ -688,7 +688,7 @@
     </message>
     <message>
         <source>(no label)</source>
-        <translation>(sem rótuo)</translation>
+        <translation>(sem rótulo)</translation>
     </message>
     <message>
         <source>change from %1 (%2)</source>
@@ -923,7 +923,7 @@
     </message>
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
-        <translation>Desconhecido. Sincroniando cabeçahos (%1)...</translation>
+        <translation>Desconhecido. Sincronizando cabeçalhos (%1)...</translation>
     </message>
 </context>
 <context>
@@ -1359,6 +1359,10 @@
     <message>
         <source>Node/Service</source>
         <translation>Nó/Serviço</translation>
+    </message>
+    <message>
+        <source>NodeId</source>
+        <translation>ID do nó</translation>
     </message>
     <message>
         <source>Ping</source>
@@ -1900,7 +1904,7 @@
     </message>
     <message>
         <source>Label</source>
-        <translation>Rótuo</translation>
+        <translation>Rótulo</translation>
     </message>
     <message>
         <source>Message</source>
@@ -1923,7 +1927,7 @@
     </message>
     <message>
         <source>Label</source>
-        <translation>Rótuo</translation>
+        <translation>Rótulo</translation>
     </message>
     <message>
         <source>Message</source>
@@ -1931,7 +1935,7 @@
     </message>
     <message>
         <source>(no label)</source>
-        <translation>(sem rótuo)</translation>
+        <translation>(sem rótulo)</translation>
     </message>
     <message>
         <source>(no message)</source>
@@ -2210,7 +2214,7 @@
     </message>
     <message>
         <source>(no label)</source>
-        <translation>(sem rótuo)</translation>
+        <translation>(sem rótulo)</translation>
     </message>
 </context>
 <context>
@@ -2665,7 +2669,7 @@
     </message>
     <message>
         <source>Label</source>
-        <translation>Rótuo</translation>
+        <translation>Rótulo</translation>
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
@@ -2741,7 +2745,7 @@
     </message>
     <message>
         <source>(no label)</source>
-        <translation>(sem rótuo)</translation>
+        <translation>(sem rótulo)</translation>
     </message>
     <message>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
@@ -2888,7 +2892,7 @@
     </message>
     <message>
         <source>Label</source>
-        <translation>Rótuo</translation>
+        <translation>Rótulo</translation>
     </message>
     <message>
         <source>Address</source>
@@ -3798,6 +3802,10 @@
         <translation>Retransmitir P2SH não multisig (padrão: %u)</translation>
     </message>
     <message>
+        <source>Send transactions with full-RBF opt-in enabled (default: %u)</source>
+        <translation>Ativar opção full-RBF nas transações enviadas (padrão: %u)</translation>
+    </message>
+    <message>
         <source>Set key pool size to &lt;n&gt; (default: %u)</source>
         <translation>Defina o tamanho da chave para piscina&lt;n&gt; (padrão: %u)</translation>
     </message>
@@ -3819,7 +3827,7 @@
     </message>
     <message>
         <source>Specify pid file (default: %s)</source>
-        <translation>Especificar aqrquivo pid (padrão: %s)</translation>
+        <translation>Especificar arquivo pid (padrão: %s)</translation>
     </message>
     <message>
         <source>Spend unconfirmed change when sending transactions (default: %u)</source>
@@ -3827,7 +3835,7 @@
     </message>
     <message>
         <source>Starting network threads...</source>
-        <translation>Iniciando análise da rede...</translation>
+        <translation>Iniciando atividades da rede...</translation>
     </message>
     <message>
         <source>The wallet will avoid paying less than the minimum relay fee.</source>
@@ -3847,11 +3855,11 @@
     </message>
     <message>
         <source>Transaction amounts must not be negative</source>
-        <translation>As quantidades das transações devem ser positivas.</translation>
+        <translation>As quantidades das transações não podem serem negativas</translation>
     </message>
     <message>
         <source>Transaction has too long of a mempool chain</source>
-        <translation>A transação demorou muito na memória</translation>
+        <translation>A transação demorou muito para ser confirmada na mempool chain</translation>
     </message>
     <message>
         <source>Transaction must have at least one recipient</source>
@@ -3871,7 +3879,7 @@
     </message>
     <message>
         <source>Add a node to connect to and attempt to keep the connection open</source>
-        <translation>Adicionar um cliente para se conectar e tentar manter a conexão ativa</translation>
+        <translation>Adicionar um nódulo para se conectar e tentar manter a conexão ativa</translation>
     </message>
     <message>
         <source>Loading wallet...</source>

@@ -197,7 +197,7 @@
     </message>
     <message>
         <source>The supplied passphrases do not match.</source>
-        <translation>提供的密码不yi'zhi。</translation>
+        <translation>提供的密码不一致。</translation>
     </message>
     <message>
         <source>Wallet unlock failed</source>
@@ -328,6 +328,10 @@
     <message>
         <source>Click to enable network activity again.</source>
         <translation>点击重新开启网络活动。</translation>
+    </message>
+    <message>
+        <source>Syncing Headers (%1%)...</source>
+        <translation>同步区块头 (%1%)...</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -482,6 +486,10 @@
         <translation>%1 客戶</translation>
     </message>
     <message>
+        <source>Connecting to peers...</source>
+        <translation>正在连接到节点……</translation>
+    </message>
+    <message>
         <source>Catching up...</source>
         <translation>更新中...</translation>
     </message>
@@ -522,6 +530,14 @@
     <message>
         <source>Incoming transaction</source>
         <translation>流入交易</translation>
+    </message>
+    <message>
+        <source>HD key generation is &lt;b&gt;enabled&lt;/b&gt;</source>
+        <translation>HD密钥生成&lt;b&gt;启用&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>HD key generation is &lt;b&gt;disabled&lt;/b&gt;</source>
+        <translation>HD密钥生成&lt;b&gt;禁用&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
@@ -910,7 +926,11 @@
         <source>Hide</source>
         <translation>隐藏</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown. Syncing Headers (%1)...</source>
+        <translation>未知状态。同步区块头（%1）</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -1927,7 +1947,11 @@
         <source>(no amount requested)</source>
         <translation>（无请求金额）</translation>
     </message>
-    </context>
+    <message>
+        <source>Requested</source>
+        <translation>总额</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsDialog</name>
     <message>
@@ -2055,6 +2079,10 @@
         <translation>小额：</translation>
     </message>
     <message>
+        <source>Confirmation time target:</source>
+        <translation>确认时间目标：</translation>
+    </message>
+    <message>
         <source>Clear &amp;All</source>
         <translation>清除所有(&amp;A)</translation>
     </message>
@@ -2177,6 +2205,10 @@
     <message>
         <source>Warning: Unknown change address</source>
         <translation>警告：未知的更改地址</translation>
+    </message>
+    <message>
+        <source>The address you selected for change is not part of this wallet. Any or all funds in your wallet may be sent to this address. Are you sure?</source>
+        <translation>你选择的找零地址未被包含在本钱包中，你钱包中的部分或全部金额将被发送至该地址。你确定要这样做吗？</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -2460,6 +2492,14 @@
         <translation>0/未确认，%1</translation>
     </message>
     <message>
+        <source>in memory pool</source>
+        <translation>在内存池中</translation>
+    </message>
+    <message>
+        <source>not in memory pool</source>
+        <translation>不在内存池中</translation>
+    </message>
+    <message>
         <source>abandoned</source>
         <translation>已抛弃</translation>
     </message>
@@ -2610,7 +2650,11 @@
         <source>This pane shows a detailed description of the transaction</source>
         <translation>当前面板显示了交易的详细信息</translation>
     </message>
-    </context>
+    <message>
+        <source>Details for %1</source>
+        <translation>%1 详情</translation>
+    </message>
+</context>
 <context>
     <name>TransactionTableModel</name>
     <message>
@@ -2636,6 +2680,10 @@
     <message>
         <source>Unconfirmed</source>
         <translation>未确认的 </translation>
+    </message>
+    <message>
+        <source>Abandoned</source>
+        <translation>已丢弃</translation>
     </message>
     <message>
         <source>Confirming (%1 of %2 recommended confirmations)</source>
@@ -2955,6 +3003,10 @@
 </translation>
     </message>
     <message>
+        <source>Distributed under the MIT software license, see the accompanying file %s or %s</source>
+        <translation>在MIT协议下分发，参见附带的 %s 文件或 %s</translation>
+    </message>
+    <message>
         <source>If &lt;category&gt; is not supplied or if &lt;category&gt; = 1, output all debugging information.</source>
         <translation>如果&lt;category&gt;未提供或&lt;category&gt; = 1，输出所有调试信息。</translation>
     </message>
@@ -3013,12 +3065,32 @@
         <translation>绑定指定的IP地址开始监听。IPv6地址请使用[host]:port 格式</translation>
     </message>
     <message>
+        <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
+        <translation>无法给数据目录 %s 上锁。%s 可能已经在运行。</translation>
+    </message>
+    <message>
         <source>Delete all wallet transactions and only recover those parts of the blockchain through -rescan on startup</source>
         <translation>删除钱包的所有交易记录，且只有用 -rescan参数启动客户端才能重新取回交易记录 </translation>
     </message>
     <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
+        <translation>读取 %s 时发生错误！所有的密钥都可以正确读取，但是交易记录或地址簿数据可能已经丢失或出错。</translation>
+    </message>
+    <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
         <translation>当最佳区块变化时执行命令 (命令行中的 %s 会被替换成区块哈希值)</translation>
+    </message>
+    <message>
+        <source>Maximum total fees (in %s) to use in a single wallet transaction or raw transaction; setting this too low may abort large transactions (default: %s)</source>
+        <translation>最大的单次钱包或原始转账费用（%s），设置太低可能导致大尺寸交易失败（默认：%s）</translation>
+    </message>
+    <message>
+        <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
+        <translation>请检查电脑的日期时间设置是否正确！时间错误可能会导致 %s 运行异常。</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful. Visit %s for further information about the software.</source>
+        <translation>如果你认为%s对你比较有用的话，请对我们进行一些捐赠支持。请访问%s网站来获取有关这个软件的更多信息。</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3033,6 +3105,10 @@
         <translation>使用UPnP暴露本机监听端口（默认：1 当正在监听且不使用代理）</translation>
     </message>
     <message>
+        <source>%s corrupt, salvage failed</source>
+        <translation>%s 已损坏，抢救备份失败</translation>
+    </message>
+    <message>
         <source>-maxmempool must be at least %d MB</source>
         <translation>-maxmempool 最小为%d MB</translation>
     </message>
@@ -3045,12 +3121,20 @@
         <translation>为用户代理字符串附加说明</translation>
     </message>
     <message>
+        <source>Attempt to recover private keys from a corrupt wallet on startup</source>
+        <translation>启动时尝试从已损坏的钱包文件中恢复私钥</translation>
+    </message>
+    <message>
         <source>Block creation options:</source>
         <translation>数据块创建选项：</translation>
     </message>
     <message>
         <source>Cannot resolve -%s address: '%s'</source>
         <translation>无法解析 - %s 地址： '%s'</translation>
+    </message>
+    <message>
+        <source>Chain selection options:</source>
+        <translation>区块链选择选项:</translation>
     </message>
     <message>
         <source>Connection options:</source>
@@ -3109,6 +3193,14 @@
         <translation>载入 %s 时发生错误</translation>
     </message>
     <message>
+        <source>Error loading %s: Wallet corrupted</source>
+        <translation>%s 加载出错：钱包损坏</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet requires newer version of %s</source>
+        <translation>%s 加载错误：请升级到最新版 %s</translation>
+    </message>
+    <message>
         <source>Error loading block database</source>
         <translation>导入数据块数据库出错</translation>
     </message>
@@ -3137,12 +3229,20 @@
         <translation>无效的 -onion 地址：“%s”</translation>
     </message>
     <message>
+        <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>
+        <translation>非法金额 -%s=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
         <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
         <translation>-fallbackfee 的无效数额=&lt;amount&gt;: '%s'</translation>
     </message>
     <message>
         <source>Keep the transaction memory pool below &lt;n&gt; megabytes (default: %u)</source>
         <translation>保持交易内存池大小低于&lt;n&gt;MB（默认：%u）</translation>
+    </message>
+    <message>
+        <source>Loading banlist...</source>
+        <translation>加载黑名单</translation>
     </message>
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
@@ -3157,6 +3257,10 @@
         <translation>只连接 &lt;net&gt;网络中的节点 (ipv4, ipv6 或 onion) </translation>
     </message>
     <message>
+        <source>Print this help message and exit</source>
+        <translation>打印出这段帮助信息并退出</translation>
+    </message>
+    <message>
         <source>Print version and exit</source>
         <translation>打印版本信息并退出</translation>
     </message>
@@ -3167,6 +3271,10 @@
     <message>
         <source>Prune mode is incompatible with -txindex.</source>
         <translation>修剪模式与 -txindex 不兼容。</translation>
+    </message>
+    <message>
+        <source>Rebuild chain state from the currently indexed blocks</source>
+        <translation>从当前索引的区块中重建链状态</translation>
     </message>
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
@@ -3185,6 +3293,10 @@
         <translation>源代码可以在 %s 获得。</translation>
     </message>
     <message>
+        <source>Unable to bind to %s on this computer. %s is probably already running.</source>
+        <translation>无法在本机绑定 %s 端口。%s 可能已经在运行。</translation>
+    </message>
+    <message>
         <source>Unsupported argument -benchmark ignored, use -debug=bench.</source>
         <translation>忽略不支持的选项 -benchmark，使用 -debug=bench</translation>
     </message>
@@ -3201,6 +3313,10 @@
         <translation>使用UPnp映射监听端口 (默认: %u) </translation>
     </message>
     <message>
+        <source>Use the test chain</source>
+        <translation>使用测试链</translation>
+    </message>
+    <message>
         <source>User Agent comment (%s) contains unsafe characters.</source>
         <translation>用户代理评论(%s)包含不安全的字符。</translation>
     </message>
@@ -3215,6 +3331,10 @@
     <message>
         <source>Wallet %s resides outside data directory %s</source>
         <translation>钱包 %s 在外部的数据目录 %s</translation>
+    </message>
+    <message>
+        <source>Wallet debugging/testing options:</source>
+        <translation>钱包调试/测试选项：</translation>
     </message>
     <message>
         <source>Wallet options:</source>
@@ -3478,6 +3598,10 @@
         <translation>支持用 Bloom 过滤器来过滤区块和交易(默认值: %u)</translation>
     </message>
     <message>
+        <source>This is the transaction fee you may pay when fee estimates are not available.</source>
+        <translation>这是在费用估计不可用时你可能会支付的交易费。</translation>
+    </message>
+    <message>
         <source>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</source>
         <translation>网络版本字符串的总长度 (%i) 超过最大长度 (%i) 了。请减少 uacomment 参数的数目或长度。</translation>
     </message>
@@ -3500,6 +3624,10 @@
     <message>
         <source>Warning: Unknown block versions being mined! It's possible unknown rules are in effect</source>
         <translation>警告: 未知的区块版本被挖掘！未知规则可能已生效</translation>
+    </message>
+    <message>
+        <source>%s is set very high!</source>
+        <translation>%s非常高！</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -3562,6 +3690,10 @@
         <translation>设置私钥池大小为 &lt;n&gt; (默认：%u) </translation>
     </message>
     <message>
+        <source>Set maximum BIP141 block weight (default: %d)</source>
+        <translation>设置BIP141最大区块权重 (默认: %d)</translation>
+    </message>
+    <message>
         <source>Set the number of threads to service RPC calls (default: %d)</source>
         <translation>设置RPC服务线程数 (默认: %d) </translation>
     </message>
@@ -3586,8 +3718,20 @@
         <translation>正在启动网络线程...</translation>
     </message>
     <message>
+        <source>This is the transaction fee you will pay if you send a transaction.</source>
+        <translation>如果发送交易，这是你交易付款时所要付的手续费。</translation>
+    </message>
+    <message>
         <source>Threshold for disconnecting misbehaving peers (default: %u)</source>
         <translation>断开 非礼节点的阀值 (默认: %u) </translation>
+    </message>
+    <message>
+        <source>Transaction amounts must not be negative</source>
+        <translation>交易金额不不可为负数</translation>
+    </message>
+    <message>
+        <source>Transaction must have at least one recipient</source>
+        <translation>交易必须包含至少一个接收人</translation>
     </message>
     <message>
         <source>Unknown network specified in -onlynet: '%s'</source>
