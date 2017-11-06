@@ -3,6 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "walletframe.h"
+#include "walletmodel.h"
 
 #include "bitcoingui.h"
 #include "walletview.h"
@@ -38,10 +39,16 @@ void WalletFrame::setClientModel(ClientModel *_clientModel)
     this->clientModel = _clientModel;
 }
 
-bool WalletFrame::addWallet(const QString& name, WalletModel *walletModel)
+bool WalletFrame::addWallet(WalletModel *walletModel)
 {
-    if (!gui || !clientModel || !walletModel || mapWalletViews.count(name) > 0)
+    if (!gui || !clientModel || !walletModel) {
         return false;
+    }
+
+    const QString name = walletModel->getWalletName();
+    if (mapWalletViews.count(name) > 0) {
+        return false;
+    }
 
     WalletView *walletView = new WalletView(platformStyle, this);
     walletView->setBitcoinGUI(gui);
