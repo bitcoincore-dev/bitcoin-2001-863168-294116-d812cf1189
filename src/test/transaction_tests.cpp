@@ -27,7 +27,6 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/foreach.hpp>
 
 #include <univalue.h>
 
@@ -693,7 +692,7 @@ BOOST_AUTO_TEST_CASE(test_IsStandard)
     BOOST_CHECK(IsStandardTx(t, reason));
 
     // Check dust with default relay fee:
-    CAmount nDustThreshold = 182 * dustRelayFee.GetFeePerK()/1000 * 3;
+    CAmount nDustThreshold = 182 * dustRelayFee.GetFeePerK()/1000;
     BOOST_CHECK_EQUAL(nDustThreshold, 546);
     // dust:
     t.vout[0].nValue = nDustThreshold - 1;
@@ -703,13 +702,13 @@ BOOST_AUTO_TEST_CASE(test_IsStandard)
     BOOST_CHECK(IsStandardTx(t, reason));
 
     // Check dust with odd relay fee to verify rounding:
-    // nDustThreshold = 182 * 1234 / 1000 * 3
-    dustRelayFee = CFeeRate(1234);
+    // nDustThreshold = 182 * 3702 / 1000
+    dustRelayFee = CFeeRate(3702);
     // dust:
-    t.vout[0].nValue = 672 - 1;
+    t.vout[0].nValue = 673 - 1;
     BOOST_CHECK(!IsStandardTx(t, reason));
     // not dust:
-    t.vout[0].nValue = 672;
+    t.vout[0].nValue = 673;
     BOOST_CHECK(IsStandardTx(t, reason));
     dustRelayFee = CFeeRate(DUST_RELAY_TX_FEE);
 

@@ -11,7 +11,6 @@
 #include "script/standard.h"
 #include "script/sign.h"
 
-#include <boost/foreach.hpp>
 
 typedef std::vector<unsigned char> valtype;
 
@@ -47,6 +46,8 @@ isminetype IsMine(const CKeyStore &keystore, const CTxDestination& dest, bool& i
 
 isminetype IsMine(const CKeyStore &keystore, const CScript& scriptPubKey, bool& isInvalid, SigVersion sigversion)
 {
+    isInvalid = false;
+
     std::vector<valtype> vSolutions;
     txnouttype whichType;
     if (!Solver(scriptPubKey, whichType, vSolutions)) {

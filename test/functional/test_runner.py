@@ -20,6 +20,7 @@ import datetime
 import os
 import time
 import shutil
+import signal
 import sys
 import subprocess
 import tempfile
@@ -78,7 +79,9 @@ BASE_SCRIPTS= [
     'rawtransactions.py',
     'reindex.py',
     # vv Tests less than 30s vv
-    "zmq_test.py",
+    'keypool-topup.py',
+    'zmq_test.py',
+    'bitcoin_cli.py',
     'mempool_resurrect_test.py',
     'txn_doublespend.py --mineblock',
     'txn_clone.py',
@@ -87,6 +90,7 @@ BASE_SCRIPTS= [
     'mempool_spendcoinbase.py',
     'mempool_reorg.py',
     'mempool_persist.py',
+    'multiwallet.py',
     'httpbasics.py',
     'multi_rpc.py',
     'proxy_test.py',
@@ -107,11 +111,18 @@ BASE_SCRIPTS= [
     'signmessages.py',
     'nulldummy.py',
     'import-rescan.py',
+    'mining.py',
     'bumpfee.py',
     'rpcnamedargs.py',
     'listsinceblock.py',
     'p2p-leaktests.py',
     'wallet-encryption.py',
+    'bipdersig-p2p.py',
+    'bip65-cltv-p2p.py',
+    'uptime.py',
+    'resendwallettransactions.py',
+    'minchainwork.py',
+    'p2p-acceptblock.py',
 ]
 
 EXTENDED_SCRIPTS = [
@@ -123,6 +134,7 @@ EXTENDED_SCRIPTS = [
     # vv Tests less than 5m vv
     'maxuploadtarget.py',
     'mempool_packages.py',
+    'dbcrash.py',
     # vv Tests less than 2m vv
     'bip68-sequence.py',
     'getblocktemplate_longpoll.py',
@@ -133,16 +145,11 @@ EXTENDED_SCRIPTS = [
     'rpcbind_test.py',
     # vv Tests less than 30s vv
     'assumevalid.py',
-    'bip65-cltv.py',
-    'bip65-cltv-p2p.py',
-    'bipdersig-p2p.py',
-    'bipdersig.py',
-    'getblocktemplate_proposals.py',
+    'example_test.py',
     'txn_doublespend.py',
     'txn_clone.py --mineblock',
     'forknotify.py',
     'invalidateblock.py',
-    'p2p-acceptblock.py',
     'replace-by-fee.py',
 ]
 
@@ -274,6 +281,7 @@ def run_tests(test_list, src_dir, build_dir, exeext, tmpdir, jobs=1, enable_cove
     #Set env vars
     if "BITCOIND" not in os.environ:
         os.environ["BITCOIND"] = build_dir + '/src/bitcoind' + exeext
+        os.environ["BITCOINCLI"] = build_dir + '/src/bitcoin-cli' + exeext
 
     tests_dir = src_dir + '/test/functional/'
 
@@ -390,6 +398,10 @@ class TestHandler:
             time.sleep(.5)
             for j in self.jobs:
                 (name, time0, proc, log_out, log_err) = j
+                if os.getenv('TRAVIS') == 'true' and int(time.time() - time0) > 20 * 60:
+                    # In travis, timeout individual tests after 20 minutes (to stop tests hanging and not
+                    # providing useful output.
+                    proc.send_signal(signal.SIGINT)
                 if proc.poll() is not None:
                     log_out.seek(0), log_err.seek(0)
                     [stdout, stderr] = [l.read().decode('utf-8') for l in (log_out, log_err)]

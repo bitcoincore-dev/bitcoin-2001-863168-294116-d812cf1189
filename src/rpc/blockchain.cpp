@@ -48,9 +48,9 @@ extern void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& 
 
 double GetDifficulty(const CBlockIndex* blockindex)
 {
-    if (blockindex == NULL)
+    if (blockindex == nullptr)
     {
-        if (chainActive.Tip() == NULL)
+        if (chainActive.Tip() == nullptr)
             return 1.0;
         else
             blockindex = chainActive.Tip();
@@ -125,7 +125,7 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
         if(txDetails)
         {
             UniValue objTx(UniValue::VOBJ);
-            TxToUniv(*tx, uint256(), objTx);
+            TxToUniv(*tx, uint256(), objTx, true, RPCSerializationFlags());
             txs.push_back(objTx);
         }
         else
@@ -210,7 +210,7 @@ UniValue waitfornewblock(const JSONRPCRequest& request)
             + HelpExampleRpc("waitfornewblock", "1000")
         );
     int timeout = 0;
-    if (request.params.size() > 0)
+    if (!request.params[0].isNull())
         timeout = request.params[0].get_int();
 
     CUpdatedBlock block;
@@ -252,7 +252,7 @@ UniValue waitforblock(const JSONRPCRequest& request)
 
     uint256 hash = uint256S(request.params[0].get_str());
 
-    if (request.params.size() > 1)
+    if (!request.params[1].isNull())
         timeout = request.params[1].get_int();
 
     CUpdatedBlock block;
@@ -295,7 +295,7 @@ UniValue waitforblockheight(const JSONRPCRequest& request)
 
     int height = request.params[0].get_int();
 
-    if (request.params.size() > 1)
+    if (!request.params[1].isNull())
         timeout = request.params[1].get_int();
 
     CUpdatedBlock block;
@@ -434,7 +434,7 @@ UniValue getrawmempool(const JSONRPCRequest& request)
         );
 
     bool fVerbose = false;
-    if (request.params.size() > 0)
+    if (!request.params[0].isNull())
         fVerbose = request.params[0].get_bool();
 
     return mempoolToJSON(fVerbose);
@@ -467,7 +467,7 @@ UniValue getmempoolancestors(const JSONRPCRequest& request)
     }
 
     bool fVerbose = false;
-    if (request.params.size() > 1)
+    if (!request.params[1].isNull())
         fVerbose = request.params[1].get_bool();
 
     uint256 hash = ParseHashV(request.params[0], "parameter 1");
@@ -531,7 +531,7 @@ UniValue getmempooldescendants(const JSONRPCRequest& request)
     }
 
     bool fVerbose = false;
-    if (request.params.size() > 1)
+    if (!request.params[1].isNull())
         fVerbose = request.params[1].get_bool();
 
     uint256 hash = ParseHashV(request.params[0], "parameter 1");
@@ -666,7 +666,7 @@ UniValue getblockheader(const JSONRPCRequest& request)
     uint256 hash(uint256S(strHash));
 
     bool fVerbose = true;
-    if (request.params.size() > 1)
+    if (!request.params[1].isNull())
         fVerbose = request.params[1].get_bool();
 
     if (mapBlockIndex.count(hash) == 0)
@@ -741,7 +741,7 @@ UniValue getblock(const JSONRPCRequest& request)
     uint256 hash(uint256S(strHash));
 
     int verbosity = 1;
-    if (request.params.size() > 1) {
+    if (!request.params[1].isNull()) {
         if(request.params[1].isNum())
             verbosity = request.params[1].get_int();
         else
@@ -798,7 +798,7 @@ static void ApplyStats(CCoinsStats &stats, CHashWriter& ss, const uint256& hash,
     stats.nTransactions++;
     for (const auto output : outputs) {
         ss << VARINT(output.first + 1);
-        ss << *(const CScriptBase*)(&output.second.out.scriptPubKey);
+        ss << output.second.out.scriptPubKey;
         ss << VARINT(output.second.out.nValue);
         stats.nTransactionOutputs++;
         stats.nTotalAmount += output.second.out.nValue;
@@ -944,9 +944,10 @@ UniValue gettxout(const JSONRPCRequest& request)
             "gettxout \"txid\" n ( include_mempool )\n"
             "\nReturns details about an unspent transaction output.\n"
             "\nArguments:\n"
-            "1. \"txid\"       (string, required) The transaction id\n"
-            "2. n              (numeric, required) vout number\n"
-            "3. include_mempool  (boolean, optional) Whether to include the mempool\n"
+            "1. \"txid\"             (string, required) The transaction id\n"
+            "2. \"n\"                (numeric, required) vout number\n"
+            "3. \"include_mempool\"  (boolean, optional) Whether to include the mempool. Default: true."
+            "     Note that an unspent output that is spent in the mempool won't appear.\n"
             "\nResult:\n"
             "{\n"
             "  \"bestblock\" : \"hash\",    (string) the block hash\n"
@@ -962,7 +963,6 @@ UniValue gettxout(const JSONRPCRequest& request)
             "        ,...\n"
             "     ]\n"
             "  },\n"
-            "  \"version\" : n,            (numeric) The version\n"
             "  \"coinbase\" : true|false   (boolean) Coinbase or not\n"
             "}\n"
 
@@ -984,14 +984,14 @@ UniValue gettxout(const JSONRPCRequest& request)
     int n = request.params[1].get_int();
     COutPoint out(hash, n);
     bool fMempool = true;
-    if (request.params.size() > 2)
+    if (!request.params[2].isNull())
         fMempool = request.params[2].get_bool();
 
     Coin coin;
     if (fMempool) {
         LOCK(mempool.cs);
         CCoinsViewMemPool view(pcoinsTip, mempool);
-        if (!view.GetCoin(out, coin) || mempool.isSpent(out)) { // TODO: filtering spent coins should be done by the CCoinsViewMemPool
+        if (!view.GetCoin(out, coin) || mempool.isSpent(out)) {
             return NullUniValue;
         }
     } else {
@@ -1019,8 +1019,8 @@ UniValue gettxout(const JSONRPCRequest& request)
 
 UniValue verifychain(const JSONRPCRequest& request)
 {
-    int nCheckLevel = GetArg("-checklevel", DEFAULT_CHECKLEVEL);
-    int nCheckDepth = GetArg("-checkblocks", DEFAULT_CHECKBLOCKS);
+    int nCheckLevel = gArgs.GetArg("-checklevel", DEFAULT_CHECKLEVEL);
+    int nCheckDepth = gArgs.GetArg("-checkblocks", DEFAULT_CHECKBLOCKS);
     if (request.fHelp || request.params.size() > 2)
         throw std::runtime_error(
             "verifychain ( checklevel nblocks )\n"
@@ -1037,9 +1037,9 @@ UniValue verifychain(const JSONRPCRequest& request)
 
     LOCK(cs_main);
 
-    if (request.params.size() > 0)
+    if (!request.params[0].isNull())
         nCheckLevel = request.params[0].get_int();
-    if (request.params.size() > 1)
+    if (!request.params[1].isNull())
         nCheckDepth = request.params[1].get_int();
 
     return CVerifyDB().VerifyDB(Params(), pcoinsTip, nCheckLevel, nCheckDepth);
@@ -1325,7 +1325,7 @@ UniValue mempoolInfoToJSON()
     ret.push_back(Pair("size", (int64_t) mempool.size()));
     ret.push_back(Pair("bytes", (int64_t) mempool.GetTotalTxSize()));
     ret.push_back(Pair("usage", (int64_t) mempool.DynamicMemoryUsage()));
-    size_t maxmempool = GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000;
+    size_t maxmempool = gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000;
     ret.push_back(Pair("maxmempool", (int64_t) maxmempool));
     ret.push_back(Pair("mempoolminfee", ValueFromAmount(mempool.GetMinFee(maxmempool).GetFeePerK())));
 

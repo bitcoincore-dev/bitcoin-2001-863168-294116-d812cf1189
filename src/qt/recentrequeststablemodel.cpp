@@ -11,7 +11,6 @@
 #include "clientversion.h"
 #include "streams.h"
 
-#include <boost/foreach.hpp>
 
 RecentRequestsTableModel::RecentRequestsTableModel(CWallet *wallet, WalletModel *parent) :
     QAbstractTableModel(parent), walletModel(parent)
@@ -124,7 +123,7 @@ void RecentRequestsTableModel::updateAmountColumnTitle()
 /** Gets title for amount column including current display unit if optionsModel reference available. */
 QString RecentRequestsTableModel::getAmountTitle()
 {
-    return (this->walletModel->getOptionsModel() != NULL) ? tr("Requested") + " ("+BitcoinUnits::name(this->walletModel->getOptionsModel()->getDisplayUnit()) + ")" : "";
+    return (this->walletModel->getOptionsModel() != nullptr) ? tr("Requested") + " ("+BitcoinUnits::name(this->walletModel->getOptionsModel()->getDisplayUnit()) + ")" : "";
 }
 
 QModelIndex RecentRequestsTableModel::index(int row, int column, const QModelIndex &parent) const

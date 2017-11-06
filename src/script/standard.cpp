@@ -10,7 +10,6 @@
 #include "util.h"
 #include "utilstrencodings.h"
 
-#include <boost/foreach.hpp>
 
 typedef std::vector<unsigned char> valtype;
 
@@ -32,7 +31,7 @@ const char* GetTxnOutputType(txnouttype t)
     case TX_WITNESS_V0_KEYHASH: return "witness_v0_keyhash";
     case TX_WITNESS_V0_SCRIPTHASH: return "witness_v0_scripthash";
     }
-    return NULL;
+    return nullptr;
 }
 
 /**
@@ -273,7 +272,7 @@ public:
         return true;
     }
 };
-}
+} // namespace
 
 CScript GetScriptForDestination(const CTxDestination& dest)
 {

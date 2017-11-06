@@ -132,7 +132,7 @@ public:
         typedef const T* pointer;
         typedef const T& reference;
         typedef std::bidirectional_iterator_tag iterator_category;
-        const_reverse_iterator(T* ptr_) : ptr(ptr_) {}
+        const_reverse_iterator(const T* ptr_) : ptr(ptr_) {}
         const_reverse_iterator(reverse_iterator x) : ptr(&(*x)) {}
         const T& operator*() const { return *ptr; }
         const T* operator->() const { return ptr; }
@@ -220,7 +220,7 @@ public:
         }
     }
 
-    prevector() : _size(0) {}
+    prevector() : _size(0), _union{{}} {}
 
     explicit prevector(size_type n) : _size(0) {
         resize(n);
@@ -448,7 +448,7 @@ public:
         }
         if (!is_direct()) {
             free(_union.indirect);
-            _union.indirect = NULL;
+            _union.indirect = nullptr;
         }
     }
 

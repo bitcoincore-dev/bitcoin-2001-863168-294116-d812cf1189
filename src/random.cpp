@@ -27,14 +27,21 @@
 #include <sys/syscall.h>
 #include <linux/random.h>
 #endif
-#ifdef HAVE_GETENTROPY
+#if defined(HAVE_GETENTROPY) || (defined(HAVE_GETENTROPY_RAND) && defined(MAC_OSX))
 #include <unistd.h>
+#endif
+#if defined(HAVE_GETENTROPY_RAND) && defined(MAC_OSX)
+#include <sys/random.h>
 #endif
 #ifdef HAVE_SYSCTL_ARND
 #include <sys/sysctl.h>
 #endif
 
 #include <mutex>
+
+#if defined(__x86_64__) || defined(__amd64__) || defined(__i386__)
+#include <cpuid.h>
+#endif
 
 #include <openssl/err.h>
 #include <openssl/rand.h>
@@ -72,12 +79,9 @@ static bool rdrand_supported = false;
 static constexpr uint32_t CPUID_F1_ECX_RDRAND = 0x40000000;
 static void RDRandInit()
 {
-    //! When calling cpuid function #1, ecx register will have this set if RDRAND is available.
-    // Avoid clobbering ebx, as that is used for PIC on x86.
-    uint32_t eax, tmp, ecx, edx;
-    __asm__ ("mov %%ebx, %1; cpuid; mov %1, %%ebx": "=a"(eax), "=g"(tmp), "=c"(ecx), "=d"(edx) : "a"(1));
-    if (ecx & CPUID_F1_ECX_RDRAND) {
-        LogPrintf("Using RdRand as entropy source\n");
+    uint32_t eax, ebx, ecx, edx;
+    if (__get_cpuid(1, &eax, &ebx, &ecx, &edx) && (ecx & CPUID_F1_ECX_RDRAND)) {
+        LogPrintf("Using RdRand as an additional entropy source\n");
         rdrand_supported = true;
     }
     hwrand_initialized.store(true);
@@ -151,7 +155,7 @@ static void RandAddSeedPerfmon()
     const size_t nMaxSize = 10000000; // Bail out at more than 10MB of performance data
     while (true) {
         nSize = vData.size();
-        ret = RegQueryValueExA(HKEY_PERFORMANCE_DATA, "Global", NULL, NULL, vData.data(), &nSize);
+        ret = RegQueryValueExA(HKEY_PERFORMANCE_DATA, "Global", nullptr, nullptr, vData.data(), &nSize);
         if (ret != ERROR_MORE_DATA || vData.size() >= nMaxSize)
             break;
         vData.resize(std::max((vData.size() * 3) / 2, nMaxSize)); // Grow size of buffer exponentially
@@ -185,6 +189,7 @@ void GetDevURandom(unsigned char *ent32)
     do {
         ssize_t n = read(f, ent32 + have, NUM_OS_RANDOM_BYTES - have);
         if (n <= 0 || n + have > NUM_OS_RANDOM_BYTES) {
+            close(f);
             RandFailure();
         }
         have += n;
@@ -198,7 +203,7 @@ void GetOSRand(unsigned char *ent32)
 {
 #if defined(WIN32)
     HCRYPTPROV hProvider;
-    int ret = CryptAcquireContextW(&hProvider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);
+    int ret = CryptAcquireContextW(&hProvider, nullptr, nullptr, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);
     if (!ret) {
         RandFailure();
     }
@@ -225,13 +230,24 @@ void GetOSRand(unsigned char *ent32)
             RandFailure();
         }
     }
-#elif defined(HAVE_GETENTROPY)
+#elif defined(HAVE_GETENTROPY) && defined(__OpenBSD__)
     /* On OpenBSD this can return up to 256 bytes of entropy, will return an
      * error if more are requested.
      * The call cannot return less than the requested number of bytes.
+       getentropy is explicitly limited to openbsd here, as a similar (but not
+       the same) function may exist on other platforms via glibc.
      */
     if (getentropy(ent32, NUM_OS_RANDOM_BYTES) != 0) {
         RandFailure();
+    }
+#elif defined(HAVE_GETENTROPY_RAND) && defined(MAC_OSX)
+    // We need a fallback for OSX < 10.12
+    if (&getentropy != NULL) {
+        if (getentropy(ent32, NUM_OS_RANDOM_BYTES) != 0) {
+            RandFailure();
+        }
+    } else {
+        GetDevURandom(ent32);
     }
 #elif defined(HAVE_SYSCTL_ARND)
     /* FreeBSD and similar. It is possible for the call to return less
@@ -241,7 +257,7 @@ void GetOSRand(unsigned char *ent32)
     int have = 0;
     do {
         size_t len = NUM_OS_RANDOM_BYTES - have;
-        if (sysctl(name, ARRAYLEN(name), ent32 + have, &len, NULL, 0) != 0) {
+        if (sysctl(name, ARRAYLEN(name), ent32 + have, &len, nullptr, 0) != 0) {
             RandFailure();
         }
         have += len;

@@ -124,9 +124,11 @@ BITCOIN_CORE_H = \
   pow.h \
   protocol.h \
   random.h \
+  reverse_iterator.h \
   reverselock.h \
   rpc/blockchain.h \
   rpc/client.h \
+  rpc/mining.h \
   rpc/protocol.h \
   rpc/server.h \
   rpc/register.h \
@@ -264,6 +266,10 @@ crypto_libbitcoin_crypto_a_SOURCES = \
   crypto/sha256.h \
   crypto/sha512.cpp \
   crypto/sha512.h
+
+if EXPERIMENTAL_ASM
+crypto_libbitcoin_crypto_a_SOURCES += crypto/sha256_sse4.cpp
+endif
 
 # consensus: shared between all executables that validate any consensus rules.
 libbitcoin_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)

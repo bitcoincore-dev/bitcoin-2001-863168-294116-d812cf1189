@@ -8,6 +8,7 @@
 
 #include "crypto/common.h"
 #include "prevector.h"
+#include "serialize.h"
 
 #include <assert.h>
 #include <climits>
@@ -404,6 +405,13 @@ public:
     CScript(std::vector<unsigned char>::const_iterator pbegin, std::vector<unsigned char>::const_iterator pend) : CScriptBase(pbegin, pend) { }
     CScript(const unsigned char* pbegin, const unsigned char* pend) : CScriptBase(pbegin, pend) { }
 
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(static_cast<CScriptBase&>(*this));
+    }
+
     CScript& operator+=(const CScript& b)
     {
         insert(end(), b.begin(), b.end());
@@ -490,7 +498,7 @@ public:
     bool GetOp(iterator& pc, opcodetype& opcodeRet)
     {
          const_iterator pc2 = pc;
-         bool fRet = GetOp2(pc2, opcodeRet, NULL);
+         bool fRet = GetOp2(pc2, opcodeRet, nullptr);
          pc = begin() + (pc2 - begin());
          return fRet;
     }
@@ -502,7 +510,7 @@ public:
 
     bool GetOp(const_iterator& pc, opcodetype& opcodeRet) const
     {
-        return GetOp2(pc, opcodeRet, NULL);
+        return GetOp2(pc, opcodeRet, nullptr);
     }
 
     bool GetOp2(const_iterator& pc, opcodetype& opcodeRet, std::vector<unsigned char>* pvchRet) const

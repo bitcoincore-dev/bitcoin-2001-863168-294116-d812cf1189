@@ -19,10 +19,12 @@
 #include "keystore.h"
 #include "validation.h"
 #include "net.h" // for g_connman
+#include "policy/fees.h"
 #include "policy/rbf.h"
 #include "sync.h"
 #include "ui_interface.h"
 #include "util.h" // for GetBoolArg
+#include "wallet/coincontrol.h"
 #include "wallet/feebumper.h"
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h" // for BackupWallet
@@ -34,7 +36,6 @@
 #include <QSet>
 #include <QTimer>
 
-#include <boost/foreach.hpp>
 
 WalletModel::WalletModel(const PlatformStyle *platformStyle, CWallet *_wallet, OptionsModel *_optionsModel, QObject *parent) :
     QObject(parent), wallet(_wallet), optionsModel(_optionsModel), addressTableModel(0),
@@ -191,7 +192,7 @@ bool WalletModel::validateAddress(const QString &address)
     return addressParsed.IsValid();
 }
 
-WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransaction &transaction, const CCoinControl *coinControl)
+WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransaction &transaction, const CCoinControl& coinControl)
 {
     CAmount total = 0;
     bool fSubtractFeeFromAmount = false;
@@ -258,7 +259,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
         return DuplicateAddress;
     }
 
-    CAmount nBalance = getBalance(coinControl);
+    CAmount nBalance = getBalance(&coinControl);
 
     if(total > nBalance)
     {
@@ -339,7 +340,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
         transaction_array.append(&(ssTx[0]), ssTx.size());
     }
 
-    // Add addresses / update labels that we've sent to to the address book,
+    // Add addresses / update labels that we've sent to the address book,
     // and emit coinsSent signal for each recipient
     for (const SendCoinsRecipient &rcp : transaction.getRecipients())
     {
@@ -560,9 +561,9 @@ bool WalletModel::getPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const
     return wallet->GetPubKey(address, vchPubKeyOut);
 }
 
-bool WalletModel::havePrivKey(const CKeyID &address) const
+bool WalletModel::IsSpendable(const CTxDestination& dest) const
 {
-    return wallet->HaveKey(address);
+    return IsMine(*wallet, dest) & ISMINE_SPENDABLE;
 }
 
 bool WalletModel::getPrivKey(const CKeyID &address, CKey& vchPrivKeyOut) const
@@ -667,8 +668,10 @@ bool WalletModel::bumpFee(uint256 hash)
 {
     std::unique_ptr<CFeeBumper> feeBump;
     {
+        CCoinControl coin_control;
+        coin_control.signalRbf = true;
         LOCK2(cs_main, wallet->cs_wallet);
-        feeBump.reset(new CFeeBumper(wallet, hash, nTxConfirmTarget, false, 0, true));
+        feeBump.reset(new CFeeBumper(wallet, hash, coin_control, 0));
     }
     if (feeBump->getResult() != BumpFeeResult::OK)
     {
@@ -736,7 +739,7 @@ bool WalletModel::bumpFee(uint256 hash)
 
 bool WalletModel::isWalletEnabled()
 {
-   return !GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET);
+   return !gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET);
 }
 
 bool WalletModel::hdEnabled() const

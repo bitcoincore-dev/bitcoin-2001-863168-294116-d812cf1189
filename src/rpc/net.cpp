@@ -6,6 +6,7 @@
 
 #include "chainparams.h"
 #include "clientversion.h"
+#include "core_io.h"
 #include "validation.h"
 #include "net.h"
 #include "net_processing.h"
@@ -18,8 +19,7 @@
 #include "util.h"
 #include "utilstrencodings.h"
 #include "version.h"
-
-#include <boost/foreach.hpp>
+#include "warnings.h"
 
 #include <univalue.h>
 
@@ -75,7 +75,7 @@ UniValue getpeerinfo(const JSONRPCRequest& request)
             "[\n"
             "  {\n"
             "    \"id\": n,                   (numeric) Peer index\n"
-            "    \"addr\":\"host:port\",      (string) The ip address and port of the peer\n"
+            "    \"addr\":\"host:port\",      (string) The IP address and port of the peer\n"
             "    \"addrbind\":\"ip:port\",    (string) Bind address of the connection to the peer\n"
             "    \"addrlocal\":\"ip:port\",   (string) Local address as reported by the peer\n"
             "    \"services\":\"xxxxxxxxxxxxxxxx\",   (string) The services offered\n"
@@ -156,7 +156,7 @@ UniValue getpeerinfo(const JSONRPCRequest& request)
         // their ver message.
         obj.push_back(Pair("subver", stats.cleanSubVer));
         obj.push_back(Pair("inbound", stats.fInbound));
-        obj.push_back(Pair("addnode", stats.fAddnode));
+        obj.push_back(Pair("addnode", stats.m_manual_connection));
         obj.push_back(Pair("startingheight", stats.nStartingHeight));
         if (fStateStats) {
             obj.push_back(Pair("banscore", statestats.nMisbehavior));
@@ -199,7 +199,7 @@ UniValue addnode(const JSONRPCRequest& request)
         (strCommand != "onetry" && strCommand != "add" && strCommand != "remove"))
         throw std::runtime_error(
             "addnode \"node\" \"add|remove|onetry\"\n"
-            "\nAttempts add or remove a node from the addnode list.\n"
+            "\nAttempts to add or remove a node from the addnode list.\n"
             "Or try a connection to a node once.\n"
             "\nArguments:\n"
             "1. \"node\"     (string, required) The node (see getpeerinfo for nodes)\n"
@@ -217,7 +217,7 @@ UniValue addnode(const JSONRPCRequest& request)
     if (strCommand == "onetry")
     {
         CAddress addr;
-        g_connman->OpenNetworkConnection(addr, false, NULL, strNode.c_str());
+        g_connman->OpenNetworkConnection(addr, false, nullptr, strNode.c_str());
         return NullUniValue;
     }
 
@@ -290,7 +290,7 @@ UniValue getaddednodeinfo(const JSONRPCRequest& request)
             "\nResult:\n"
             "[\n"
             "  {\n"
-            "    \"addednode\" : \"192.168.0.201\",   (string) The node ip address or name (as provided to addnode)\n"
+            "    \"addednode\" : \"192.168.0.201\",   (string) The node IP address or name (as provided to addnode)\n"
             "    \"connected\" : true|false,          (boolean) If connected\n"
             "    \"addresses\" : [                    (list of objects) Only when connected = true\n"
             "       {\n"
@@ -302,9 +302,8 @@ UniValue getaddednodeinfo(const JSONRPCRequest& request)
             "  ,...\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("getaddednodeinfo", "true")
-            + HelpExampleCli("getaddednodeinfo", "true \"192.168.0.201\"")
-            + HelpExampleRpc("getaddednodeinfo", "true, \"192.168.0.201\"")
+            + HelpExampleCli("getaddednodeinfo", "\"192.168.0.201\"")
+            + HelpExampleRpc("getaddednodeinfo", "\"192.168.0.201\"")
         );
 
     if(!g_connman)
@@ -312,7 +311,7 @@ UniValue getaddednodeinfo(const JSONRPCRequest& request)
 
     std::vector<AddedNodeInfo> vInfo = g_connman->GetAddedNodeInfo();
 
-    if (request.params.size() == 1) {
+    if (request.params.size() == 1 && !request.params[0].isNull()) {
         bool found = false;
         for (const AddedNodeInfo& info : vInfo) {
             if (info.strAddedNode == request.params[0].get_str()) {
@@ -397,7 +396,7 @@ static UniValue GetNetworksInfo()
     for(int n=0; n<NET_MAX; ++n)
     {
         enum Network network = static_cast<enum Network>(n);
-        if(network == NET_UNROUTABLE)
+        if(network == NET_UNROUTABLE || network == NET_INTERNAL)
             continue;
         proxyType proxy;
         UniValue obj(UniValue::VOBJ);
@@ -497,12 +496,12 @@ UniValue setban(const JSONRPCRequest& request)
         (strCommand != "add" && strCommand != "remove"))
         throw std::runtime_error(
                             "setban \"subnet\" \"add|remove\" (bantime) (absolute)\n"
-                            "\nAttempts add or remove a IP/Subnet from the banned list.\n"
+                            "\nAttempts to add or remove an IP/Subnet from the banned list.\n"
                             "\nArguments:\n"
-                            "1. \"subnet\"       (string, required) The IP/Subnet (see getpeerinfo for nodes ip) with a optional netmask (default is /32 = single ip)\n"
-                            "2. \"command\"      (string, required) 'add' to add a IP/Subnet to the list, 'remove' to remove a IP/Subnet from the list\n"
-                            "3. \"bantime\"      (numeric, optional) time in seconds how long (or until when if [absolute] is set) the ip is banned (0 or empty means using the default time of 24h which can also be overwritten by the -bantime startup argument)\n"
-                            "4. \"absolute\"     (boolean, optional) If set, the bantime must be a absolute timestamp in seconds since epoch (Jan 1 1970 GMT)\n"
+                            "1. \"subnet\"       (string, required) The IP/Subnet (see getpeerinfo for nodes IP) with an optional netmask (default is /32 = single IP)\n"
+                            "2. \"command\"      (string, required) 'add' to add an IP/Subnet to the list, 'remove' to remove an IP/Subnet from the list\n"
+                            "3. \"bantime\"      (numeric, optional) time in seconds how long (or until when if [absolute] is set) the IP is banned (0 or empty means using the default time of 24h which can also be overwritten by the -bantime startup argument)\n"
+                            "4. \"absolute\"     (boolean, optional) If set, the bantime must be an absolute timestamp in seconds since epoch (Jan 1 1970 GMT)\n"
                             "\nExamples:\n"
                             + HelpExampleCli("setban", "\"192.168.0.6\" \"add\" 86400")
                             + HelpExampleCli("setban", "\"192.168.0.0/24\" \"add\"")

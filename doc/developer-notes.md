@@ -28,12 +28,12 @@ tool to clean up patches automatically before submission.
 required when doing so would need changes to significant pieces of existing
 code.
   - Variable and namespace names are all lowercase, and may use `_` to
-    separate words.
+    separate words (snake_case).
     - Class member variables have a `m_` prefix.
     - Global variables have a `g_` prefix.
   - Constant names are all uppercase, and use `_` to separate words.
-  - Class names, function names and method names are CamelCase. Do not prefix
-    class names with `C`.
+  - Class names, function names and method names are UpperCamelCase
+    (PascalCase). Do not prefix class names with `C`.
 
 - **Miscellaneous**
   - `++i` is preferred over `i++`.
@@ -68,7 +68,7 @@ public:
         return true;
     }
 }
-}
+} // namespace foo
 ```
 
 Doxygen comments
@@ -287,7 +287,7 @@ General C++
 
 - Assertions should not have side-effects
 
-  - *Rationale*: Even though the source code is set to to refuse to compile
+  - *Rationale*: Even though the source code is set to refuse to compile
     with assertions disabled, having side-effects in assertions is unexpected and
     makes the code harder to understand
 
@@ -438,6 +438,21 @@ Source code organization
 
   - *Rationale*: Avoids symbol conflicts
 
+- Terminate namespaces with a comment (`// namespace mynamespace`). The comment
+  should be placed on the same line as the brace closing the namespace, e.g.
+
+```c++
+namespace mynamespace {
+    ...
+} // namespace mynamespace
+
+namespace {
+    ...
+} // namespace
+```
+
+  - *Rationale*: Avoids confusion about the namespace context
+
 GUI
 -----
 
@@ -546,10 +561,10 @@ A few guidelines for introducing and reviewing new RPC interfaces:
     which is error prone, and it is easy to get things such as escaping wrong.
     JSON already supports nested data structures, no need to re-invent the wheel.
 
-  - *Exception*: AmountToValue can parse amounts as string. This was introduced because many JSON
+  - *Exception*: AmountFromValue can parse amounts as string. This was introduced because many JSON
     parsers and formatters hard-code handling decimal numbers as floating point
     values, resulting in potential loss of precision. This is unacceptable for
-    monetary values. **Always** use `AmountToValue` and `ValueToAmount` when
+    monetary values. **Always** use `AmountFromValue` and `ValueFromAmount` when
     inputting or outputting monetary values. The only exceptions to this are
     `prioritisetransaction` and `getblocktemplate` because their interface
     is specified as-is in BIP22.
