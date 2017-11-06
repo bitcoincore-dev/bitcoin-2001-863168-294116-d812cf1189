@@ -3206,6 +3206,8 @@ UniValue rescanblockchain(const JSONRPCRequest& request)
     UniValue response(UniValue::VOBJ);
     response.pushKV("start_height", pindexStart->nHeight);
     response.pushKV("stop_height", stopBlock->nHeight);
+    response.pushKV("startheight", pindexStart->nHeight);
+    response.pushKV("stopheight", stopBlock->nHeight);
     return response;
 }
 
@@ -3274,7 +3276,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "walletpassphrasechange",   &walletpassphrasechange,   true,   {"oldpassphrase","newpassphrase"} },
     { "wallet",             "walletpassphrase",         &walletpassphrase,         true,   {"passphrase","timeout"} },
     { "wallet",             "removeprunedfunds",        &removeprunedfunds,        true,   {"txid"} },
-    { "wallet",             "rescanblockchain",         &rescanblockchain,         true,   {"start_height", "stop_height"} },
+    { "wallet",             "rescanblockchain",         &rescanblockchain,         true,   {"start_height|startheight", "stop_height|stopheight"} },
 
     { "generating",         "generate",                 &generate,                 true,   {"nblocks","maxtries"} },
 };
