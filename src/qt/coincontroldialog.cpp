@@ -2,6 +2,10 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#if defined(HAVE_CONFIG_H)
+#include <config/bitcoin-config.h>
+#endif
+
 #include <qt/coincontroldialog.h>
 #include <qt/forms/ui_coincontroldialog.h>
 
@@ -13,6 +17,7 @@
 #include <txmempool.h>
 #include <qt/walletmodel.h>
 
+#include <base58.h>
 #include <wallet/coincontrol.h>
 #include <init.h>
 #include <policy/fees.h>
