@@ -9,6 +9,8 @@
 
 #include <memory>
 
+#include <amount.h>
+
 #include <QObject>
 
 class SendCoinsRecipient;

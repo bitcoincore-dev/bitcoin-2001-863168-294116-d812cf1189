@@ -442,8 +442,10 @@ void BitcoinApplication::addWallet(WalletModel* walletModel)
         window->setCurrentWallet(walletModel->getWalletName());
     }
 
+#ifdef ENABLE_BIP70
     connect(walletModel, SIGNAL(coinsSent(WalletModel*, SendCoinsRecipient, QByteArray)),
         paymentServer, SLOT(fetchPaymentACK(WalletModel*, const SendCoinsRecipient&, QByteArray)));
+#endif // ENABLE_BIP70
     connect(walletModel, SIGNAL(unload()), this, SLOT(removeWallet()));
 
     m_wallet_models.push_back(walletModel);
@@ -470,7 +472,9 @@ void BitcoinApplication::initializeResult(bool success)
         // Log this only after AppInitMain finishes, as then logging setup is guaranteed complete
         qWarning() << "Platform customization:" << platformStyle->getName();
 #ifdef ENABLE_WALLET
+#ifdef ENABLE_BIP70
         PaymentServer::LoadRootCAs();
+#endif
         paymentServer->setOptionsModel(optionsModel);
 #endif
 
@@ -488,7 +492,7 @@ void BitcoinApplication::initializeResult(bool success)
         for (auto& wallet : m_node.getWallets()) {
             addWallet(new WalletModel(std::move(wallet), m_node, platformStyle, optionsModel));
         }
-#endif
+#endif // ENABLE_WALLET
 
         // If -min option passed, start window minimized.
         if(gArgs.GetBoolArg("-min", false))
@@ -541,7 +545,9 @@ WId BitcoinApplication::getMainWinId() const
 static void SetupUIArgs()
 {
 #ifdef ENABLE_WALLET
+#ifdef ENABLE_BIP70
     gArgs.AddArg("-allowselfsignedrootcertificates", strprintf("Allow self signed root certificates (default: %u)", DEFAULT_SELFSIGNED_ROOTCERTS), true, OptionsCategory::GUI);
+#endif
 #endif
     gArgs.AddArg("-choosedatadir", strprintf("Choose data directory on startup (default: %u)", DEFAULT_CHOOSE_DATADIR), false, OptionsCategory::GUI);
     gArgs.AddArg("-lang=<lang>", "Set language, for example \"de_DE\" (default: system locale)", false, OptionsCategory::GUI);
