@@ -126,6 +126,10 @@ bool ShutdownRequested()
 {
     return fRequestShutdown;
 }
+void ResetShutdownRequested()
+{
+    fRequestShutdown = false;
+}
 
 /**
  * This is a minimally invasive approach to shutdown on LevelDB read errors from the
