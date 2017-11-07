@@ -93,7 +93,7 @@ class MempoolPersistTest(BitcoinTestFramework):
 
         self.log.debug("Make node1 use mempool.dat from node0. Verify it has 5 transactions")
         os.rename(mempooldat0, mempooldat1)
-        self.nodes.append(self.start_node(1, self.options.tmpdir))
+        self.start_node(1, extra_args=[])
         wait_until(lambda: len(self.nodes[1].getrawmempool()) == 5)
 
         self.log.debug("Prevent bitcoind from writing mempool.dat to disk. Verify that `savemempool` fails")
@@ -102,7 +102,7 @@ class MempoolPersistTest(BitcoinTestFramework):
         mempooldotnew1 = mempooldat1 + '.new'
         with os.fdopen(os.open(mempooldotnew1, os.O_CREAT, 0o000), 'w'):
             pass
-        assert_raises_jsonrpc(-1, "Unable to dump mempool to disk", self.nodes[1].savemempool)
+        assert_raises_rpc_error(-1, "Unable to dump mempool to disk", self.nodes[1].savemempool)
         os.remove(mempooldotnew1)
 
 if __name__ == '__main__':
