@@ -272,6 +272,11 @@ void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
     connect(this, SIGNAL(requestedShutdown()), splash, SLOT(close()));
 }
 
+bool BitcoinApplication::baseInitialize()
+{
+    return m_node.baseInitialize();
+}
+
 void BitcoinApplication::startThread()
 {
     if(coreThread)
@@ -377,7 +382,7 @@ void BitcoinApplication::initializeResult(bool success)
         qWarning() << "Platform customization:" << platformStyle->getName();
 #ifdef ENABLE_WALLET
         PaymentServer::LoadRootCAs();
-        paymentServer->setOptionsModel(optionsModel);
+        if (paymentServer) paymentServer->setOptionsModel(optionsModel);
 #endif
 
         clientModel = new ClientModel(m_node, optionsModel);
@@ -406,6 +411,7 @@ void BitcoinApplication::initializeResult(bool success)
             window->show();
         }
         Q_EMIT splashFinished(window);
+        Q_EMIT windowShown(window);
 
 #ifdef ENABLE_WALLET
         // Now that initialization/startup is done, process any command-line
@@ -459,7 +465,7 @@ static void SetupUIArgs()
 }
 
 #ifndef BITCOIN_QT_TEST
-int main(int argc, char *argv[])
+int GuiMain(int argc, char* argv[])
 {
     SetupEnvironment();
 
@@ -621,7 +627,7 @@ int main(int argc, char *argv[])
         // Perform base initialization before spinning up initialization/shutdown thread
         // This is acceptable because this function only contains steps that are quick to execute,
         // so the GUI thread won't be held up.
-        if (node->baseInitialize()) {
+        if (app.baseInitialize()) {
             app.requestInitialize();
 #if defined(Q_OS_WIN)
             WinShutdownMonitor::registerShutdownBlockReason(QObject::tr("%1 didn't yet exit safely...").arg(QObject::tr(PACKAGE_NAME)), (HWND)app.getMainWinId());
