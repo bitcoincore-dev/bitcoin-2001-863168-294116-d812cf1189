@@ -40,8 +40,6 @@ void RPCNestedTests::rpcNestedTests()
 
     TestingSetup test;
 
-    SetRPCWarmupFinished();
-
     std::string result;
     std::string result2;
     std::string filtered;
