@@ -164,6 +164,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *_platformStyle, const NetworkStyle *
          * the central widget is the rpc console.
          */
         setCentralWidget(rpcConsole);
+        Q_EMIT consoleShown(rpcConsole);
     }
 
     // Accept D&D of URIs
@@ -363,6 +364,7 @@ void BitcoinGUI::createActions()
     openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));
     // initially disable the debug window menu item
     openRPCConsoleAction->setEnabled(false);
+    openRPCConsoleAction->setObjectName("openRPCConsoleAction");
 
     usedSendingAddressesAction = new QAction(platformStyle->TextColorIcon(":/icons/address-book"), tr("&Sending addresses..."), this);
     usedSendingAddressesAction->setStatusTip(tr("Show the list of used sending addresses and labels"));
@@ -593,11 +595,13 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
 void BitcoinGUI::createTrayIcon(const NetworkStyle *networkStyle)
 {
 #ifndef Q_OS_MAC
-    trayIcon = new QSystemTrayIcon(this);
-    QString toolTip = tr("%1 client").arg(tr(PACKAGE_NAME)) + " " + networkStyle->getTitleAddText();
-    trayIcon->setToolTip(toolTip);
-    trayIcon->setIcon(networkStyle->getTrayAndWindowIcon());
-    trayIcon->hide();
+    if (QSystemTrayIcon::isSystemTrayAvailable()) {
+        trayIcon = new QSystemTrayIcon(this);
+        QString toolTip = tr("%1 client").arg(tr(PACKAGE_NAME)) + " " + networkStyle->getTitleAddText();
+        trayIcon->setToolTip(toolTip);
+        trayIcon->setIcon(networkStyle->getTrayAndWindowIcon());
+        trayIcon->hide();
+    }
 #endif
 
     notificator = new Notificator(QApplication::applicationName(), trayIcon, this);
@@ -675,6 +679,7 @@ void BitcoinGUI::showDebugWindow()
     rpcConsole->show();
     rpcConsole->raise();
     rpcConsole->activateWindow();
+    Q_EMIT consoleShown(rpcConsole);
 }
 
 void BitcoinGUI::showDebugWindowActivateConsole()
