@@ -382,7 +382,7 @@ void BitcoinApplication::initializeResult(bool success)
         qWarning() << "Platform customization:" << platformStyle->getName();
 #ifdef ENABLE_WALLET
         PaymentServer::LoadRootCAs();
-        paymentServer->setOptionsModel(optionsModel);
+        if (paymentServer) paymentServer->setOptionsModel(optionsModel);
 #endif
 
         clientModel = new ClientModel(optionsModel);
@@ -412,6 +412,7 @@ void BitcoinApplication::initializeResult(bool success)
             window->show();
         }
         Q_EMIT splashFinished(window);
+        Q_EMIT windowShown(window);
 
 #ifdef ENABLE_WALLET
         // Now that initialization/startup is done, process any command-line
@@ -451,7 +452,7 @@ WId BitcoinApplication::getMainWinId() const
 }
 
 #ifndef BITCOIN_QT_TEST
-int main(int argc, char *argv[])
+int GuiMain(int argc, char* argv[])
 {
     SetupEnvironment();
 
