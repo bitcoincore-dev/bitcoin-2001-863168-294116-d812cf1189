@@ -71,6 +71,8 @@ public:
     void createWindow(const NetworkStyle *networkStyle);
     /// Create splash screen
     void createSplashScreen(const NetworkStyle *networkStyle);
+    /// Basic initialization, before starting initialization/shutdown thread. Return true on success.
+    bool baseInitialize();
 
     /// Request core initialization
     void requestInitialize();
@@ -98,6 +100,7 @@ Q_SIGNALS:
     void requestedShutdown();
     void stopThread();
     void splashFinished(QWidget *window);
+    void windowShown(BitcoinGUI* window);
 
 private:
     QThread *coreThread;
@@ -117,5 +120,7 @@ private:
 
     void startThread();
 };
+
+int GuiMain(int argc, char* argv[]);
 
 #endif // BITCOIN_QT_BITCOIN_H
