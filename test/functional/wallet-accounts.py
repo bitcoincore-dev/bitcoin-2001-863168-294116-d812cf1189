@@ -14,7 +14,7 @@ RPCs tested are:
 """
 
 from test_framework.test_framework import BitcoinTestFramework
-from test_framework.util import assert_equal, assert_raises_jsonrpc
+from test_framework.util import assert_equal, assert_raises_rpc_error
 
 class WalletAccountsTest(BitcoinTestFramework):
     def set_test_params(self):
@@ -56,7 +56,7 @@ class WalletAccountsTest(BitcoinTestFramework):
         unsorted = self.nodes[0].addmultisigaddress(2, addresses, {"sort": False})
         assert_equal(address, unsorted)
 
-        assert_raises_jsonrpc(-1, "Compressed key required for BIP67: myrfasv56W7579LpepuRy7KFhVhaWsJYS8", node.addmultisigaddress, 2, addresses, {"sort": True})
+        assert_raises_rpc_error(-1, "Compressed key required for BIP67: myrfasv56W7579LpepuRy7KFhVhaWsJYS8", node.addmultisigaddress, 2, addresses, {"sort": True})
 
     def run_test (self):
         node = self.nodes[0]
