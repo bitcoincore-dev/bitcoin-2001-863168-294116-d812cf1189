@@ -95,7 +95,7 @@ static void potential_deadlock_detected(const std::pair<void*, void*>& mismatch,
         }
         LogPrintf(" %s\n", i.second.ToString());
     }
-    assert(false);
+    throw std::logic_error("potential deadlock detected");
 }
 
 static void push_lock(void* c, const CLockLocation& locklocation)
