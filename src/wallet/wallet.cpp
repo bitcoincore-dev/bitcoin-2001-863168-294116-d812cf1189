@@ -1806,6 +1806,7 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache) const
 
     CAmount nCredit = 0;
     uint256 hashTx = GetHash();
+    LOCK(pwallet->cs_wallet);
     for (unsigned int i = 0; i < tx->vout.size(); i++)
     {
         if (!pwallet->IsSpent(hashTx, i))
@@ -3116,7 +3117,11 @@ DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
 
     if (nLoadWalletRet != DB_LOAD_OK)
         return nLoadWalletRet;
-    fFirstRunRet = !vchDefaultKey.IsValid();
+
+    {
+        LOCK(cs_KeyStore);
+        fFirstRunRet = !vchDefaultKey.IsValid();
+    }
 
     uiInterface.LoadWallet(this);
 
@@ -4074,8 +4079,11 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
         // No need to read and scan block if block was created before
         // our wallet birthday (as adjusted for block time variability)
-        while (pindexRescan && walletInstance->nTimeFirstKey && (pindexRescan->GetBlockTime() < (walletInstance->nTimeFirstKey - TIMESTAMP_WINDOW))) {
-            pindexRescan = chainActive.Next(pindexRescan);
+        {
+            LOCK(walletInstance->cs_wallet);
+            while (pindexRescan && walletInstance->nTimeFirstKey && (pindexRescan->GetBlockTime() < (walletInstance->nTimeFirstKey - TIMESTAMP_WINDOW))) {
+                pindexRescan = chainActive.Next(pindexRescan);
+            }
         }
 
         nStart = GetTimeMillis();
@@ -4087,6 +4095,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         // Restore wallet transaction metadata after -zapwallettxes=1
         if (gArgs.GetBoolArg("-zapwallettxes", false) && gArgs.GetArg("-zapwallettxes", "1") != "2")
         {
+            LOCK(walletInstance->cs_wallet);
             CWalletDB walletdb(*walletInstance->dbw);
 
             for (const CWalletTx& wtxOld : vWtx)
