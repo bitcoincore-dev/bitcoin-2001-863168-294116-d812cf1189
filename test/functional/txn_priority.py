@@ -40,8 +40,7 @@ BTC = Decimal('100000000')
 
 class PriorityTest(BitcoinTestFramework):
 
-    def __init__(self):
-        super().__init__()
+    def set_test_params(self):
         self.num_nodes = 4
         self.testmsg_num = 0
 
@@ -54,12 +53,14 @@ class PriorityTest(BitcoinTestFramework):
         if self.options.test_gbt:
             ppopt.append('-printpriority')
 
-        nodes = []
-        nodes.append(self.start_node(0, self.options.tmpdir, ['-blockmaxsize=0']))
-        nodes.append(self.start_node(1, self.options.tmpdir, ['-blockprioritysize=1000000', '-blockmaxsize=1000000'] + ppopt))
-        nodes.append(self.start_node(2, self.options.tmpdir, ['-blockmaxsize=0']))
-        nodes.append(self.start_node(3, self.options.tmpdir, ['-blockmaxsize=0']))
-        self.nodes = nodes
+        self.extra_args = [
+            ['-blockmaxsize=0'],
+            ['-blockprioritysize=1000000', '-blockmaxsize=1000000'] + ppopt,
+            ['-blockmaxsize=0'],
+            ['-blockmaxsize=0'],
+        ]
+
+        super().setup_nodes()
 
     def assert_prio(self, txid, starting, current):
         node = self.nodes[1]
