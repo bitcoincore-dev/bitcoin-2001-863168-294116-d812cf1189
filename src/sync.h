@@ -111,11 +111,12 @@ typedef std::unique_lock<std::mutex> WaitableLock;
 void PrintLockContention(const char* pszName, const char* pszFile, int nLine);
 #endif
 
-/** Wrapper around std::unique_lock<CCriticalSection> */
+/** Wrapper around std::unique_lock<Mutex> */
+template <typename Mutex>
 class SCOPED_LOCKABLE CCriticalBlock
 {
 private:
-    std::unique_lock<CCriticalSection> lock;
+    std::unique_lock<Mutex> lock;
 
     void Enter(const char* pszName, const char* pszFile, int nLine)
     {
@@ -140,7 +141,7 @@ private:
     }
 
 public:
-    CCriticalBlock(CCriticalSection& mutexIn, const char* pszName, const char* pszFile, int nLine, bool fTry = false) EXCLUSIVE_LOCK_FUNCTION(mutexIn) : lock(mutexIn, std::defer_lock)
+    CCriticalBlock(Mutex& mutexIn, const char* pszName, const char* pszFile, int nLine, bool fTry = false) EXCLUSIVE_LOCK_FUNCTION(mutexIn) : lock(mutexIn, std::defer_lock)
     {
         if (fTry)
             TryEnter(pszName, pszFile, nLine);
@@ -148,11 +149,11 @@ public:
             Enter(pszName, pszFile, nLine);
     }
 
-    CCriticalBlock(CCriticalSection* pmutexIn, const char* pszName, const char* pszFile, int nLine, bool fTry = false) EXCLUSIVE_LOCK_FUNCTION(pmutexIn)
+    CCriticalBlock(Mutex* pmutexIn, const char* pszName, const char* pszFile, int nLine, bool fTry = false) EXCLUSIVE_LOCK_FUNCTION(pmutexIn)
     {
         if (!pmutexIn) return;
 
-        lock = std::unique_lock<CCriticalSection>(*pmutexIn, std::defer_lock);
+        lock = std::unique_lock<Mutex>(*pmutexIn, std::defer_lock);
         if (fTry)
             TryEnter(pszName, pszFile, nLine);
         else
@@ -171,12 +172,22 @@ public:
     }
 };
 
+template <typename MutexArg, typename... Args>
+CCriticalBlock<typename std::remove_reference<typename std::remove_pointer<MutexArg>::type>::type> DebugLock(
+    MutexArg&& mutex,
+    Args&&... args)
+{
+    return {std::forward<MutexArg>(mutex), std::forward<Args>(args)...};
+}
+
 #define PASTE(x, y) x ## y
 #define PASTE2(x, y) PASTE(x, y)
 
-#define LOCK(cs) CCriticalBlock PASTE2(criticalblock, __COUNTER__)(cs, #cs, __FILE__, __LINE__)
-#define LOCK2(cs1, cs2) CCriticalBlock criticalblock1(cs1, #cs1, __FILE__, __LINE__), criticalblock2(cs2, #cs2, __FILE__, __LINE__)
-#define TRY_LOCK(cs, name) CCriticalBlock name(cs, #cs, __FILE__, __LINE__, true)
+#define LOCK(cs) auto&& PASTE2(criticalblock, __COUNTER__) = DebugLock(cs, #cs, __FILE__, __LINE__)
+#define LOCK2(cs1, cs2)                                               \
+    auto&& criticalblock1 = DebugLock(cs1, #cs1, __FILE__, __LINE__); \
+    auto&& criticalblock2 = DebugLock(cs2, #cs2, __FILE__, __LINE__);
+#define TRY_LOCK(cs, name) auto&& name = DebugLock(cs, #cs, __FILE__, __LINE__, true)
 
 #define ENTER_CRITICAL_SECTION(cs)                            \
     {                                                         \
