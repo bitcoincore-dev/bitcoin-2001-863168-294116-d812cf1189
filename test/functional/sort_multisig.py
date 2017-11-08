@@ -71,7 +71,7 @@ class SortMultisigTest(BitcoinTestFramework):
         assert_equal(default["address"], unsorted["address"])
         assert_equal(default["redeemScript"], unsorted["redeemScript"])
 
-        assert_raises_jsonrpc(-1, "Compressed key required for BIP67: 04823336da95f0b4cf745839dff26992cef239ad2f08f494e5b57c209e4f3602d5526bc251d480e3284d129f736441560e17f3a7eb7ed665fdf0158f44550b926c", self.nodes[0].createmultisig, 2, pubs, {"sort": True})
+        assert_raises_rpc_error(-1, "Compressed key required for BIP67: 04823336da95f0b4cf745839dff26992cef239ad2f08f494e5b57c209e4f3602d5526bc251d480e3284d129f736441560e17f3a7eb7ed665fdf0158f44550b926c", self.nodes[0].createmultisig, 2, pubs, {"sort": True})
 
     def run_test(self):
         self.run_simple_test()
