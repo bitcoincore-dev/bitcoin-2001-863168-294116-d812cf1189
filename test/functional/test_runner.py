@@ -123,6 +123,7 @@ BASE_SCRIPTS= [
     'resendwallettransactions.py',
     'minchainwork.py',
     'p2p-acceptblock.py',
+    'getsignaturehash.py',
 ]
 
 EXTENDED_SCRIPTS = [
