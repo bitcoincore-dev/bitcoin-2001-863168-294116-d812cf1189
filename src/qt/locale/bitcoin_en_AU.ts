@@ -7,6 +7,10 @@
     </context>
 <context>
     <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>Passphrase Dialogue</translation>
+    </message>
     </context>
 <context>
     <name>BanTableModel</name>
@@ -16,6 +20,10 @@
     <message>
         <source>Synchronizing with network...</source>
         <translation>Synchronising with network...</translation>
+    </message>
+    <message>
+        <source>Reindexing blocks on disk...</source>
+        <translation>Reindexing blocks on disk...</translation>
     </message>
     </context>
 <context>
@@ -28,6 +36,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>Start minimized</source>
@@ -38,11 +49,17 @@
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
         <translation>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronising with the bitcoin network, as detailed below.</translation>
     </message>
+    </context>
+<context>
+    <name>NetWatchLogModel</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
@@ -170,6 +187,10 @@
     <message>
         <source>Randomize credentials for every proxy connection. This enables Tor stream isolation (default: %u)</source>
         <translation>Randomise credentials for every proxy connection. This enables Tor stream isolation (default: %u)</translation>
+    </message>
+    <message>
+        <source>Sets the serialization of raw transaction or block hex returned in non-verbose mode, non-segwit(0) or segwit(1) (default: %d)</source>
+        <translation>Sets the serialisation of raw transaction or block hex returned in non-verbose mode, non-segwit(0) or segwit(1) (default: %d)</translation>
     </message>
     </context>
 </TS>

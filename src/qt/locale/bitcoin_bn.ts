@@ -35,9 +35,16 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;ঠিকানা </translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -46,8 +53,19 @@
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>ঠিকানা </translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -160,6 +178,10 @@
         <translation>আপনি কি পুনরায় ব্লক ডাটাবেইজ এখনই তৈরি করতে চান?</translation>
     </message>
     <message>
+        <source>Loading P2P addresses...</source>
+        <translation>ঠিকানাগুলো লোডিং হচ্ছে...</translation>
+    </message>
+    <message>
         <source>RPC server options:</source>
         <translation>আরপিসি সার্ভার অপশন:</translation>
     </message>
@@ -178,10 +200,6 @@
     <message>
         <source>Warning</source>
         <translation>সতর্কতা</translation>
-    </message>
-    <message>
-        <source>Loading addresses...</source>
-        <translation>ঠিকানাগুলো লোডিং হচ্ছে...</translation>
     </message>
     </context>
 </TS>

@@ -318,6 +318,10 @@
         <translation>Åpne &amp;URI</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Lommebok:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Klikk for å slå av nettverksaktivitet.</translation>
     </message>
@@ -413,6 +417,108 @@
         <source>Tabs toolbar</source>
         <translation>Hjelpelinje for fliker</translation>
     </message>
+    <message>
+        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
+        <translation>Be om betalinger (genererer QR-koder og bitcoin-URIer)</translation>
+    </message>
+    <message>
+        <source>Show the list of used sending addresses and labels</source>
+        <translation>Vis lista over brukte sendeadresser og merkelapper</translation>
+    </message>
+    <message>
+        <source>Show the list of used receiving addresses and labels</source>
+        <translation>Vis lista over brukte mottakeradresser og merkelapper</translation>
+    </message>
+    <message>
+        <source>Open a bitcoin: URI or payment request</source>
+        <translation>Åpne en bitcoin: URI eller betalingsforespørsel</translation>
+    </message>
+    <message>
+        <source>&amp;Command-line options</source>
+        <translation>&amp;Kommandolinjealternativer</translation>
+    </message>
+    <message>
+        <source>Processing blocks on disk...</source>
+        <translation>Behandler blokker på disken…</translation>
+    </message>
+    <message>
+        <source>%1 behind</source>
+        <translation>%1 bak</translation>
+    </message>
+    <message>
+        <source>Last received block was generated %1 ago.</source>
+        <translation>Siste mottatte blokk ble generert for %1 siden.</translation>
+    </message>
+    <message>
+        <source>Transactions after this will not yet be visible.</source>
+        <translation>Transaksjoner etter dette vil ikke være synlige ennå.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Feilmelding</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Advarsel</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>Informasjon</translation>
+    </message>
+    <message>
+        <source>Up to date</source>
+        <translation>Oppdatert</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Vis %1-hjelpemeldingen for å få en liste over mulige Bitcoin-kommandolinjealternativer</translation>
+    </message>
+    <message>
+        <source>%1 client</source>
+        <translation>%1-klient</translation>
+    </message>
+    <message>
+        <source>Catching up...</source>
+        <translation>Tar igjen…</translation>
+    </message>
+    <message>
+        <source>Date: %1
+</source>
+        <translation>Dato: %1
+</translation>
+    </message>
+    <message>
+        <source>Amount: %1
+</source>
+        <translation>Mengde: %1
+</translation>
+    </message>
+    <message>
+        <source>Type: %1
+</source>
+        <translation>Type: %1
+</translation>
+    </message>
+    <message>
+        <source>Label: %1
+</source>
+        <translation>Merkelapp: %1
+</translation>
+    </message>
+    <message>
+        <source>Address: %1
+</source>
+        <translation>Adresse: %1
+</translation>
+    </message>
+    <message>
+        <source>Sent transaction</source>
+        <translation>Sendt transaksjon</translation>
+    </message>
+    <message>
+        <source>Incoming transaction</source>
+        <translation>Innkommende transaksjon</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -423,24 +529,74 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;Beskrivelse</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;Adresse</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Om %1</translation>
+    </message>
+    <message>
+        <source>Command-line options</source>
+        <translation type="unfinished">Kommandolinjealternativer</translation>
+    </message>
+    <message>
+        <source>command-line options</source>
+        <translation type="unfinished">Kommandolinjealternativer</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Feilmelding</translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Lommebok</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Feilmelding</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -462,12 +618,36 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Informasjon</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Feilsøkingsvindu</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Lommebok: </translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Nettverksaktivitet er slått av</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Beskrivelse:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Kopier adresse</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adresse</translation>
@@ -491,12 +671,24 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Velg...</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Sende</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(ingen beskrivelse)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Beskrivelse:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -515,6 +707,10 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Transaction</source>
+        <translation>Transaksjon</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -571,5 +767,17 @@
     </context>
 <context>
     <name>bitcoin-core</name>
-    </context>
+    <message>
+        <source>Information</source>
+        <translation>Informasjon</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Advarsel</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Feilmelding</translation>
+    </message>
+</context>
 </TS>

@@ -180,6 +180,10 @@
         <translation>Rahakott krüpteeritud</translation>
     </message>
     <message>
+        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
+        <translation>TÄHTIS: Kõik varasemad rahakoti varundfailid tuleks üle kirjutada äsja loodud krüpteeritud rahakoti failiga. Turvakaalutlustel tühistatakse krüpteerimata rahakoti failid alates uue, krüpteeritud rahakoti, kasutusele võtust.</translation>
+    </message>
+    <message>
         <source>Wallet encryption failed</source>
         <translation>Rahakoti krüpteerimine ebaõnnestus</translation>
     </message>
@@ -258,6 +262,10 @@
         <translation>&amp;Teave %1</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Kuva %1 kohta käiv info</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Teave &amp;Qt kohta</translation>
     </message>
@@ -282,8 +290,20 @@
         <translation>&amp;Salafraasi muutmine</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;Saatvad aadressid...</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;Vastuvõtvad aadressid...</translation>
+    </message>
+    <message>
         <source>Open &amp;URI...</source>
         <translation>Ava &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Rahakott:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -650,10 +670,17 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
         <translation>versioon</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Teave %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -683,15 +710,26 @@
         <translation>Teretulemast</translation>
     </message>
     <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Tõrge</translation>
     </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Vorm</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Teadmata...</translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -702,6 +740,19 @@
         <translation>Peida</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tüüp</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Aadress</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -734,6 +785,10 @@
     <message>
         <source>MB</source>
         <translation>MB</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Peida tegumiriba ikoon</translation>
     </message>
     <message>
         <source>Reset all client options to default.</source>
@@ -792,10 +847,6 @@
         <translation>&amp;Aken</translation>
     </message>
     <message>
-        <source>Hide tray icon</source>
-        <translation>Peida tegumiriba ikoon</translation>
-    </message>
-    <message>
         <source>Show only a tray icon after minimizing the window.</source>
         <translation>Minimeeri systray alale.</translation>
     </message>
@@ -840,8 +891,16 @@
         <translation>puudub</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoini tuumik</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Kinnita valikute algseadistamine</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Tõrge</translation>
     </message>
     <message>
         <source>The supplied proxy address is invalid.</source>
@@ -886,6 +945,14 @@
         <translation>Maksepäringu tõrge</translation>
     </message>
     <message>
+        <source>Cannot start bitcoin: click-to-pay handler</source>
+        <translation>Bitcoin ei käivitu: vajuta-maksa toiming</translation>
+    </message>
+    <message>
+        <source>URI handling</source>
+        <translation>URI käsitsemine</translation>
+    </message>
+    <message>
         <source>Payment request rejected</source>
         <translation>Maksepäring tagasi lükatud</translation>
     </message>
@@ -900,7 +967,15 @@
     </context>
 <context>
     <name>PeerTableModel</name>
-    </context>
+    <message>
+        <source>Sent</source>
+        <translation>Saadetud</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Vastuvõetud</translation>
+    </message>
+</context>
 <context>
     <name>QObject</name>
     <message>
@@ -935,7 +1010,21 @@
         <source>%n year(s)</source>
         <translation><numerusform>%n aasta</numerusform><numerusform>%n aastat</numerusform></translation>
     </message>
-    </context>
+    <message>
+        <source>unknown</source>
+        <translation>tundmatu</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Plk</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Thg</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -1001,6 +1090,10 @@
         <translation>Mälu kasutus</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Rahakott: </translation>
+    </message>
+    <message>
         <source>Received</source>
         <translation>Vastuvõetud</translation>
     </message>
@@ -1047,10 +1140,6 @@
     <message>
         <source>Clear console</source>
         <translation>Puhasta konsool</translation>
-    </message>
-    <message>
-        <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
-        <translation>Ajaloo sirvimiseks kasuta üles ja alla nooli, ekraani puhastamiseks &lt;b&gt;Ctrl-L&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
@@ -1147,6 +1236,10 @@
         <translation>Makse Informatsioon</translation>
     </message>
     <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>Aadress</translation>
     </message>
@@ -1166,7 +1259,11 @@
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
         <translation>URI liiga pikk, proovi vähendada märke / sõnumi pikkust.</translation>
     </message>
-    </context>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Tõrge URI'st QR koodi loomisel</translation>
+    </message>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
@@ -1253,14 +1350,6 @@
         <translation>Soovitatud:</translation>
     </message>
     <message>
-        <source>normal</source>
-        <translation>normaalne</translation>
-    </message>
-    <message>
-        <source>fast</source>
-        <translation>kiire</translation>
-    </message>
-    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Saatmine mitmele korraga</translation>
     </message>
@@ -1329,8 +1418,24 @@
         <translation>või</translation>
     </message>
     <message>
+        <source>Confirm send coins</source>
+        <translation>Müntide saatmise kinnitamine</translation>
+    </message>
+    <message>
         <source>The recipient address is not valid. Please recheck.</source>
         <translation>Saaja aadress ei ole korrektne. Palun kontrolli üle.</translation>
+    </message>
+    <message>
+        <source>The amount to pay must be larger than 0.</source>
+        <translation>Makstav summa peab olema suurem kui 0.</translation>
+    </message>
+    <message>
+        <source>The amount exceeds your balance.</source>
+        <translation>Summa ületab jäägi.</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %1 transaction fee is included.</source>
+        <translation>Summa koos tehingu tasuga %1 ületab sinu jääki.</translation>
     </message>
     <message>
         <source>Payment request expired.</source>
@@ -1387,7 +1492,11 @@
         <source>Pay To:</source>
         <translation>Maksa :</translation>
     </message>
-    </context>
+    <message>
+        <source>Enter a label for this address to add it to your address book</source>
+        <translation>Aadressiraamatusse sisestamiseks märgista aadress</translation>
+    </message>
+</context>
 <context>
     <name>SendConfirmationDialog</name>
     <message>
@@ -1497,6 +1606,10 @@
         <translation>Palun kontrolli aadressi ja proovi uuesti.</translation>
     </message>
     <message>
+        <source>The entered address does not refer to a key.</source>
+        <translation>Sisestatud aadress ei viita võtmele.</translation>
+    </message>
+    <message>
         <source>Wallet unlock was cancelled.</source>
         <translation>Rahakoti lahtilukustamine on katkestatud.</translation>
     </message>
@@ -1550,6 +1663,14 @@
 <context>
     <name>TransactionDesc</name>
     <message>
+        <source>Open until %1</source>
+        <translation>Avatud kuni %1</translation>
+    </message>
+    <message>
+        <source>%1/offline</source>
+        <translation>%1/offline'is</translation>
+    </message>
+    <message>
         <source>%1/unconfirmed</source>
         <translation>%1/kinnitamata</translation>
     </message>
@@ -1562,24 +1683,60 @@
         <translation>Olek</translation>
     </message>
     <message>
+        <source>, has not been successfully broadcast yet</source>
+        <translation>, veel esitlemata</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>Kuupäev</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>Allikas</translation>
     </message>
     <message>
         <source>Generated</source>
         <translation>Genereeritud</translation>
     </message>
     <message>
+        <source>From</source>
+        <translation>Saatja</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>tundmatu</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Saaja</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation>oma aadress</translation>
+    </message>
+    <message>
         <source>label</source>
         <translation>märgis</translation>
+    </message>
+    <message>
+        <source>Credit</source>
+        <translation>Krediit</translation>
     </message>
     <message>
         <source>not accepted</source>
         <translation>pole vastu võetud</translation>
     </message>
     <message>
+        <source>Debit</source>
+        <translation>Deebet</translation>
+    </message>
+    <message>
         <source>Transaction fee</source>
         <translation>Tehingutasu</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>Neto summa</translation>
     </message>
     <message>
         <source>Message</source>
@@ -1590,8 +1747,20 @@
         <translation>Kommentaar</translation>
     </message>
     <message>
+        <source>Transaction ID</source>
+        <translation>Tehingu ID</translation>
+    </message>
+    <message>
         <source>Merchant</source>
         <translation>Kaupleja</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>Debug'imise info</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Tehing</translation>
     </message>
     <message>
         <source>Inputs</source>
@@ -1632,14 +1801,66 @@
         <translation>Silt</translation>
     </message>
     <message>
+        <source>Open until %1</source>
+        <translation>Avatud kuni %1</translation>
+    </message>
+    <message>
         <source>Unconfirmed</source>
         <translation>Kinnitamata</translation>
+    </message>
+    <message>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation>Kinnitatud (%1 kinnitust)</translation>
+    </message>
+    <message>
+        <source>This block was not received by any other nodes and will probably not be accepted!</source>
+        <translation>Antud klotsi pole saanud ükski osapool ning tõenäoliselt seda ei aktsepteerita!</translation>
+    </message>
+    <message>
+        <source>Generated but not accepted</source>
+        <translation>Loodud, kuid aktsepteerimata</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>Saadud koos</translation>
+    </message>
+    <message>
+        <source>Received from</source>
+        <translation>Kellelt saadud</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>Saadetud</translation>
+    </message>
+    <message>
+        <source>Payment to yourself</source>
+        <translation>Makse iseendale</translation>
+    </message>
+    <message>
+        <source>Mined</source>
+        <translation>Mine'itud</translation>
     </message>
     <message>
         <source>(no label)</source>
         <translation>(silt puudub)</translation>
     </message>
-    </context>
+    <message>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation>Tehingu staatus. Kinnituste arvu kuvamiseks liigu hiire noolega selle peale.</translation>
+    </message>
+    <message>
+        <source>Date and time that the transaction was received.</source>
+        <translation>Tehingu saamise kuupäev ning kellaaeg.</translation>
+    </message>
+    <message>
+        <source>Type of transaction.</source>
+        <translation>Tehingu tüüp.</translation>
+    </message>
+    <message>
+        <source>Amount removed from or added to balance.</source>
+        <translation>Jäägile lisatud või eemaldatud summa.</translation>
+    </message>
+</context>
 <context>
     <name>TransactionView</name>
     <message>
@@ -1671,6 +1892,26 @@
         <translation>Vahemik...</translation>
     </message>
     <message>
+        <source>Received with</source>
+        <translation>Saadud koos</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>Saadetud</translation>
+    </message>
+    <message>
+        <source>To yourself</source>
+        <translation>Iseendale</translation>
+    </message>
+    <message>
+        <source>Mined</source>
+        <translation>Mine'itud</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>Muu</translation>
+    </message>
+    <message>
         <source>Min amount</source>
         <translation>Minimaalne summa</translation>
     </message>
@@ -1691,8 +1932,20 @@
         <translation>Kopeeri tehingu ID</translation>
     </message>
     <message>
+        <source>Edit label</source>
+        <translation>Märgise muutmine</translation>
+    </message>
+    <message>
+        <source>Show transaction details</source>
+        <translation>Kuva tehingu detailid</translation>
+    </message>
+    <message>
         <source>Comma separated file (*.csv)</source>
         <translation>Komadega eraldatud väärtuste fail (*.csv)</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Kinnitatud</translation>
     </message>
     <message>
         <source>Date</source>
@@ -1718,7 +1971,15 @@
         <source>Exporting Failed</source>
         <translation>Eksport ebaõnnestus.</translation>
     </message>
-    </context>
+    <message>
+        <source>Range:</source>
+        <translation>Ulatus:</translation>
+    </message>
+    <message>
+        <source>to</source>
+        <translation>saaja</translation>
+    </message>
+</context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
     </context>
@@ -1727,9 +1988,37 @@
     </context>
 <context>
     <name>WalletModel</name>
+    <message>
+        <source>Send Coins</source>
+        <translation>Müntide saatmine</translation>
+    </message>
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Ekspordi</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Ekspordi kuvatava vahelehe sisu faili</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation>Varundatud Rahakott</translation>
+    </message>
+    <message>
+        <source>Wallet Data (*.dat)</source>
+        <translation>Rahakoti andmed (*.dat)</translation>
+    </message>
+    <message>
+        <source>Backup Failed</source>
+        <translation>Varundamine nurjus</translation>
+    </message>
+    <message>
+        <source>Backup Successful</source>
+        <translation>Varundamine õnnestus</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
@@ -1770,8 +2059,20 @@
         <translation>Käivita käsklus, kui rahakoti tehing muutub (%s cmd's muudetakse TxID'ks)</translation>
     </message>
     <message>
+        <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
+        <translation>See on test-versioon - kasutamine omal riisikol - ära kasuta mining'uks ega kaupmeeste programmides</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside (default: 1 if no -proxy or -connect)</source>
+        <translation>Luba välisühendusi (vaikeväärtus: 1 kui puudub -proxy või -connect)</translation>
+    </message>
+    <message>
         <source>Block creation options:</source>
         <translation>Blokeeri loomise valikud:</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>Tundmatu -%s aadress: '%s'</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
@@ -1806,12 +2107,12 @@
         <translation>Pordi kuulamine nurjus. Soovikorral kasuta -listen=0.</translation>
     </message>
     <message>
-        <source>Verifying blocks...</source>
-        <translation>Kontrollin blokke...</translation>
+        <source>Loading P2P addresses...</source>
+        <translation>Aadresside p2p laadimine...</translation>
     </message>
     <message>
-        <source>Verifying wallet...</source>
-        <translation>Kontrollin rahakotti...</translation>
+        <source>Verifying blocks...</source>
+        <translation>Kontrollin blokke...</translation>
     </message>
     <message>
         <source>Wallet options:</source>
@@ -1858,6 +2159,10 @@
         <translation>JSON-RPC ühenduste kasutajatunnus</translation>
     </message>
     <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Kontrollin rahakotti...</translation>
+    </message>
+    <message>
         <source>Warning</source>
         <translation>Hoiatus</translation>
     </message>
@@ -1874,16 +2179,8 @@
         <translation>-addnode, -seednode ja -connect tohivad kasutada DNS lookup'i</translation>
     </message>
     <message>
-        <source>Loading addresses...</source>
-        <translation>Aadresside laadimine...</translation>
-    </message>
-    <message>
         <source>(default: %s)</source>
         <translation>(vaikimisi: %s)</translation>
-    </message>
-    <message>
-        <source>Invalid -proxy address: '%s'</source>
-        <translation>Vigane -proxi aadress: '%s'</translation>
     </message>
     <message>
         <source>Unknown network specified in -onlynet: '%s'</source>

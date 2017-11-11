@@ -318,6 +318,10 @@
         <translation>&amp;Åbn URI…</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Tegnebog:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Klik for at deaktivere netværksaktivitet.</translation>
     </message>
@@ -782,6 +786,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -851,16 +858,28 @@
         <translation>Siden dette er første gang, programmet startes, kan du vælge, hvor %1 skal gemme sin data.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 vil downloade og gemme et kopi af Bitcoin-blokkæden. Mindst %2 GB data vil blive gemt i denne mappe, og den vil vokse over tid. Tegnebogen vil også blive gemt i denne mappe.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Brug standardmappen for data</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Brug tilpasset mappe for data:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Mindst %1 GB data vil blive gemt i denne mappe, og den vil vokse over tid.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 vil downloade og gemme et kopi af Bitcoin-blokkæden.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>Tegnebogen vil også blive gemt i denne mappe.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -879,6 +898,9 @@
         <translation><numerusform>(ud af %n GB nødvendig)</numerusform><numerusform>(ud af %n GB nødvendig)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -928,6 +950,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Ukendt. Synkroniserer hoveder (%1)…</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
     </message>
 </context>
 <context>
@@ -994,6 +1029,18 @@
     <message>
         <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
         <translation>IP-adresse for proxyen (fx IPv4: 127.0.0.1 / IPv6: ::1)</translation>
+    </message>
+    <message>
+        <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
+        <translation>Viser om den angivne standard-SOCKS5-proxy bruges til at nå knuder via denne netværkstype.</translation>
+    </message>
+    <message>
+        <source>Hide the icon from the system tray.</source>
+        <translation type="unfinished">Skjul ikonet fra statusbaren.</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Skjul statusikon</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
@@ -1080,10 +1127,6 @@
         <translation>Bruges til at nå knuder via:</translation>
     </message>
     <message>
-        <source>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
-        <translation>Viser om den angivne standard-SOCKS5-proxy bruges til at nå knuder via denne netværkstype.</translation>
-    </message>
-    <message>
         <source>IPv4</source>
         <translation>IPv4</translation>
     </message>
@@ -1106,14 +1149,6 @@
     <message>
         <source>&amp;Window</source>
         <translation>&amp;Vindue</translation>
-    </message>
-    <message>
-        <source>&amp;Hide the icon from the system tray.</source>
-        <translation>&amp;Skjul ikonet fra statusbaren.</translation>
-    </message>
-    <message>
-        <source>Hide tray icon</source>
-        <translation>Skjul statusikon</translation>
     </message>
     <message>
         <source>Show only a tray icon after minimizing the window.</source>
@@ -1168,6 +1203,10 @@
         <translation>ingen</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Bekræft nulstilling af indstillinger</translation>
     </message>
@@ -1178,6 +1217,10 @@
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
         <translation>Klienten vil lukke ned. Vil du fortsætte?</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Fejl</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
@@ -1372,6 +1415,14 @@
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
+    <message>
+        <source>Sent</source>
+        <translation>Sendt</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Modtaget</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -1442,6 +1493,15 @@
     <message>
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 har endnu ikke afsluttet på sikker vis…</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>ukendt</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -1543,6 +1603,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Hukommelsesforbrug</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Tegnebog: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1661,10 +1725,6 @@
         <translation>&amp;Netværkstrafik</translation>
     </message>
     <message>
-        <source>&amp;Clear</source>
-        <translation>&amp;Ryd</translation>
-    </message>
-    <message>
         <source>Totals</source>
         <translation>Totaler</translation>
     </message>
@@ -1717,15 +1777,11 @@
         <translation>Velkommen til %1s RPC-konsol.</translation>
     </message>
     <message>
-        <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
-        <translation>Brug op- og ned-piletasterne til at navigere i historikken og &lt;b&gt;Ctrl-L&lt;/b&gt; til at rydde skærmen.</translation>
-    </message>
-    <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
         <translation>Tast &lt;b&gt;help&lt;/b&gt; for en oversigt over de tilgængelige kommandoer.</translation>
     </message>
     <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.</source>
         <translation>ADVARSEL: Svindlere har tidligere forsøgt at få folk til at indtaste kommandoer her og derved stjæle indholdet af deres tegnebog. Brug ikke denne konsol uden fuldt ud at forstå følgerne for en kommando.</translation>
     </message>
     <message>
@@ -2033,10 +2089,6 @@
         <translation>Skjul</translation>
     </message>
     <message>
-        <source>total at least</source>
-        <translation>total mindst</translation>
-    </message>
-    <message>
         <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
         <translation>Det er helt fint kun at betale det minimale gebyr, så længe den totale transaktionsvolumen er mindre end den plads, der er tilgængelig i blokkene. Men vær opmærksom på, at dette kan ende ud i transaktioner, der aldrig bliver bekræftet, når der bliver større forespørgsel efter bitcoin-transaktioner, end hvad netværket kan bearbejde.</translation>
     </message>
@@ -2055,14 +2107,6 @@
     <message>
         <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
         <translation>(Smart-gebyr er ikke initialiseret endnu. Dette tager typisk nogle få blokke…)</translation>
-    </message>
-    <message>
-        <source>normal</source>
-        <translation>normal</translation>
-    </message>
-    <message>
-        <source>fast</source>
-        <translation>hurtig</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -2187,10 +2231,6 @@
     <message>
         <source>Payment request expired.</source>
         <translation>Betalingsanmodning er udløbet.</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n block(s)</source>
-        <translation><numerusform>%n blok</numerusform><numerusform>%n blokke</numerusform></translation>
     </message>
     <message>
         <source>Pay only the required fee of %1</source>
@@ -2827,10 +2867,6 @@
         <translation>Andet</translation>
     </message>
     <message>
-        <source>Enter address or label to search</source>
-        <translation>Indtast adresse eller mærkat for at søge</translation>
-    </message>
-    <message>
         <source>Min amount</source>
         <translation>Minimumsbeløb</translation>
     </message>
@@ -2951,7 +2987,7 @@
         <source>Send Coins</source>
         <translation>Send bitcoins</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletView</name>
     <message>
@@ -3008,14 +3044,6 @@
     <message>
         <source>Accept command line and JSON-RPC commands</source>
         <translation>Acceptér kommandolinje- og JSON-RPC-kommandoer</translation>
-    </message>
-    <message>
-        <source>Accept connections from outside (default: 1 if no -proxy or -connect/-noconnect)</source>
-        <translation>Acceptér forbindelser udefra (standard: 1 hvis ingen -proxy eller -connect/-noconnect)</translation>
-    </message>
-    <message>
-        <source>Connect only to the specified node(s); -noconnect or -connect=0 alone to disable automatic connections</source>
-        <translation>Forbind kun til de specificerede knuder; -noconnect eller -connect=0 alene for at deaktivere automatiske forbindelser</translation>
     </message>
     <message>
         <source>Distributed under the MIT software license, see the accompanying file %s or %s</source>
@@ -3086,10 +3114,6 @@
         <translation>Slet alle transaktioner i tegnebogen og genskab kun disse dele af blokkæden gennem -rescan under opstart</translation>
     </message>
     <message>
-        <source>Error loading %s: You can't enable HD on a already existing non-HD wallet</source>
-        <translation>Fejl under indlæsning af %s: Du kan ikke aktivere HD på en allerede eksisterende ikke-HD-tegnebog</translation>
-    </message>
-    <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>Fejl under læsning af %s! Alle nøgler blev læst korrekt, men transaktionsdata eller indgange i adressebogen kan mangle eller være ukorrekte.</translation>
     </message>
@@ -3130,6 +3154,10 @@
         <translation>Sæt den laveste gebyrrate (i %s/kB) for transaktioner, der skal inkluderes i blokoprettelse. (standard: %s)</translation>
     </message>
     <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Sæt maksimumstørrelse for højprioritet/lavgebyr-transaktioner i byte (standard: %d)</translation>
+    </message>
+    <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
         <translation>Sæt antallet af scriptverificeringstråde (%u til %d, 0 = auto, &lt;0 = efterlad det antal kernet fri, standard: %d)</translation>
     </message>
@@ -3166,8 +3194,8 @@
         <translation>Advarsel: Vi ser ikke ud til at være fuldt ud enige med andre knuder! Du kan være nødt til at opgradere, eller andre knuder kan være nødt til at opgradere.</translation>
     </message>
     <message>
-        <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
-        <translation>Du er nødt til at genopbygge databasen ved hjælp af -reindex-chainstate for at ændre -txindex</translation>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Sæt knuder på hvidliste, som forbinder fra den givne IP-adresse (fx 1.2.3.4) eller CIDR-noteret netværk (fx 1.2.3.0/24). Kan angives flere gange.</translation>
     </message>
     <message>
         <source>%s corrupt, salvage failed</source>
@@ -3180,6 +3208,10 @@
     <message>
         <source>&lt;category&gt; can be:</source>
         <translation>&lt;kategori&gt; kan være:</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside (default: 1 if no -proxy or -connect)</source>
+        <translation>Acceptér forbindelser udefra (standard: 1 hvis hverken -proxy eller -connect)</translation>
     </message>
     <message>
         <source>Append comment to the user agent string</source>
@@ -3270,10 +3302,6 @@
         <translation>Fejl under indlæsning af %s: Tegnebog kræver nyere version af %s</translation>
     </message>
     <message>
-        <source>Error loading %s: You can't disable HD on a already existing HD wallet</source>
-        <translation>Fejl under indlæsning af %s: Du kan ikke deaktivere HD på en allerede eksisterende HD-tegnebog</translation>
-    </message>
-    <message>
         <source>Error loading block database</source>
         <translation>Indlæsning af blokdatabase mislykkedes</translation>
     </message>
@@ -3302,10 +3330,6 @@
         <translation>Klargøring af sundhedstjek mislykkedes. %s lukker ned.</translation>
     </message>
     <message>
-        <source>Invalid -onion address: '%s'</source>
-        <translation>Ugyldig -onion adresse: “%s”</translation>
-    </message>
-    <message>
         <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>
         <translation>Ugyldigt beløb for -%s=&lt;beløb&gt;: “%s”</translation>
     </message>
@@ -3318,12 +3342,20 @@
         <translation>Hold hukommelsespuljen med transaktioner under &lt;n&gt; megabyte (standard: %u)</translation>
     </message>
     <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Indlæser adresser…</translation>
+    </message>
+    <message>
         <source>Loading banlist...</source>
         <translation>Indlæser bandlysningsliste…</translation>
     </message>
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>Placering for autentificerings-cookie (standard: datamappe)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimum bytes pr. sigop i transaktioner, vi videresender og miner (standard: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3410,10 +3442,6 @@
         <translation>Verificerer blokke…</translation>
     </message>
     <message>
-        <source>Verifying wallet...</source>
-        <translation>Verificerer tegnebog…</translation>
-    </message>
-    <message>
         <source>Wallet %s resides outside data directory %s</source>
         <translation>Tegnebog %s findes uden for datamappe %s</translation>
     </message>
@@ -3436,10 +3464,6 @@
     <message>
         <source>Bind to given address and whitelist peers connecting to it. Use [host]:port notation for IPv6</source>
         <translation>Tildel given adresse og sæt andre knuder, der forbinder til den, på hvidliste. Brug [vært]:port notation for IPv6</translation>
-    </message>
-    <message>
-        <source>Bind to given address to listen for JSON-RPC connections. Use [host]:port notation for IPv6. This option can be specified multiple times (default: bind to all interfaces)</source>
-        <translation>Tildel til den givne adresse for at lytte efter JSON-RPC-forbindelser. Brug [vært]:port-notation for IPv6. Denne valgmulighed kan angives flere gange (standard: tildel til alle grænseflader)</translation>
     </message>
     <message>
         <source>Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)</source>
@@ -3478,10 +3502,6 @@
         <translation>Brug tilfældige akkreditiver for hver proxy-forbindelse. Dette aktiverer strømisolation med Tor (standard: %u)</translation>
     </message>
     <message>
-        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
-        <translation>Sæt maksimumstørrelse for højprioritet/lavgebyr-transaktioner i byte (standard: %d)</translation>
-    </message>
-    <message>
         <source>The transaction amount is too small to send after the fee has been deducted</source>
         <translation>Transaktionsbeløbet er for lille til at sende, når gebyret er trukket fra</translation>
     </message>
@@ -3512,6 +3532,10 @@
     <message>
         <source>Connect through SOCKS5 proxy</source>
         <translation>Forbind gennem SOCKS5-proxy</translation>
+    </message>
+    <message>
+        <source>Error loading %s: You can't disable HD on an already existing HD wallet</source>
+        <translation>Fejl under indlæsning af %s: Du kan ikke deaktivere HD på en allerede eksisterende HD-tegnebog</translation>
     </message>
     <message>
         <source>Error reading from database, shutting down.</source>
@@ -3560,10 +3584,6 @@
     <message>
         <source>Send trace/debug info to console instead of debug.log file</source>
         <translation>Send sporings-/fejlsøgningsinformation til konsollen i stedet for debug.log filen</translation>
-    </message>
-    <message>
-        <source>Send transactions as zero-fee transactions if possible (default: %u)</source>
-        <translation>Send transaktioner som nul-gebyr-transaktioner hvis muligt (standard: %u)</translation>
     </message>
     <message>
         <source>Show all debugging options (usage: --help -help-debug)</source>
@@ -3618,6 +3638,10 @@
         <translation>Brugernavn til JSON-RPC-forbindelser</translation>
     </message>
     <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Verificerer tegnebog…</translation>
+    </message>
+    <message>
         <source>Warning</source>
         <translation>Advarsel</translation>
     </message>
@@ -3628,6 +3652,10 @@
     <message>
         <source>Whether to operate in a blocks only mode (default: %u)</source>
         <translation>Hvorvidt der skal arbejdes i kun-blokke-tilstand (standard: %u)</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to change -txindex</source>
+        <translation>Du er nødt til at genopbygge databasen ved hjælp af -reindex for at ændre -txindex</translation>
     </message>
     <message>
         <source>Zapping all transactions from wallet...</source>
@@ -3650,10 +3678,6 @@
         <translation>Tillad DNS-opslag for -addnode, -seednode og -connect</translation>
     </message>
     <message>
-        <source>Loading addresses...</source>
-        <translation>Indlæser adresser…</translation>
-    </message>
-    <message>
         <source>(1 = keep tx meta data e.g. account owner and payment request information, 2 = drop tx meta data)</source>
         <translation>(1 = behold metadata for transaktion, fx kontoindehaver og information om betalingsanmodning, 2 = drop metadata for transaktion)</translation>
     </message>
@@ -3668,6 +3692,10 @@
     <message>
         <source>Equivalent bytes per sigop in transactions for relay and mining (default: %u)</source>
         <translation>Tilsvarende bytes pr. sigop i transaktioner, som videresendes og mines (standard: %u)</translation>
+    </message>
+    <message>
+        <source>Error loading %s: You can't enable HD on an already existing non-HD wallet</source>
+        <translation>Fejl under indlæsning af %s: Du kan ikke aktivere HD på en allerede eksisterende ikke-HD-tegnebog</translation>
     </message>
     <message>
         <source>Fees (in %s/kB) smaller than this are considered zero fee for transaction creation (default: %s)</source>
@@ -3692,10 +3720,6 @@
     <message>
         <source>Output debugging information (default: %u, supplying &lt;category&gt; is optional)</source>
         <translation>Udskriv fejlsøgningsinformation (standard: %u, angivelse af &lt;kategori&gt; er valgfri)</translation>
-    </message>
-    <message>
-        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect/-noconnect)</source>
-        <translation>Forespørg knudeadresser via DNS-opslag hvis antallet af adresser er lavt (standard: 1 med mindre -connect/-noconnect)</translation>
     </message>
     <message>
         <source>Sets the serialization of raw transaction or block hex returned in non-verbose mode, non-segwit(0) or segwit(1) (default: %d)</source>
@@ -3742,10 +3766,6 @@
         <translation>Advarsel: Tegnebogsfil ødelagt, data reddet! Oprindelig %s gemt som %s i %s; hvis din saldo eller dine transaktioner er forkert, bør du genskabe fra en sikkerhedskopi.</translation>
     </message>
     <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Sæt knuder på hvidliste, som forbinder fra den givne IP-adresse (fx 1.2.3.4) eller CIDR-noteret netværk (fx 1.2.3.0/24). Kan angives flere gange.</translation>
-    </message>
-    <message>
         <source>%s is set very high!</source>
         <translation>%s er meget højt sat!</translation>
     </message>
@@ -3764,10 +3784,6 @@
     <message>
         <source>Include IP addresses in debug output (default: %u)</source>
         <translation>Inkludér IP-adresser i fejlretningsoutput (standard: %u)</translation>
-    </message>
-    <message>
-        <source>Invalid -proxy address: '%s'</source>
-        <translation>Ugyldig -proxy adresse: “%s”</translation>
     </message>
     <message>
         <source>Keypool ran out, please call keypoolrefill first</source>

@@ -206,6 +206,10 @@
         <translation>Sluit af</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Wys inligting oor %1</translation>
+    </message>
+    <message>
         <source>Show information about Qt</source>
         <translation>Wys inligting oor Qt</translation>
     </message>
@@ -214,12 +218,28 @@
         <translation>&amp;Opsies</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;Stuur adresse...</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;Ontvang adresse...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Beursie:</translation>
+    </message>
+    <message>
         <source>Bitcoin</source>
         <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Wallet</source>
         <translation>Beursie</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation type="unfinished">S&amp;tuur</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -316,6 +336,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>Usage:</source>
@@ -325,9 +348,16 @@
 <context>
     <name>Intro</name>
     <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Fout</translation>
     </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -335,7 +365,24 @@
         <source>Form</source>
         <translation>Vorm</translation>
     </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">onbekend...</translation>
+    </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipe</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -348,6 +395,10 @@
     <message>
         <source>W&amp;allet</source>
         <translation>&amp;Beursie</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Fout</translation>
     </message>
     </context>
 <context>
@@ -369,7 +420,16 @@
         <source>Amount</source>
         <translation>Bedrag</translation>
     </message>
-    </context>
+    <message>
+        <source>unknown</source>
+        <translation>onbekend</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -382,12 +442,24 @@
         <source>&amp;Information</source>
         <translation>Informasie</translation>
     </message>
-    </context>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Beursie: </translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">onbekend</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
         <source>&amp;Amount:</source>
         <translation>&amp;Bedrag:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Etiket:</translation>
     </message>
     <message>
         <source>&amp;Message:</source>
@@ -400,6 +472,10 @@
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Kopie adres</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adres</translation>
@@ -455,6 +531,10 @@
         <translation>Transaksie fooi:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Kies...</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Stuur aan vele ontvangers op eens</translation>
     </message>
@@ -488,6 +568,10 @@
     <message>
         <source>A&amp;mount:</source>
         <translation>&amp;Bedrag:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Etiket:</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -757,7 +841,7 @@
         <source>Send Coins</source>
         <translation>Stuur Munstukke</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletView</name>
     <message>
@@ -780,12 +864,12 @@
         <translation>Fout: Hardeskyf spasie is baie laag!</translation>
     </message>
     <message>
-        <source>Information</source>
-        <translation>Informasie</translation>
+        <source>Loading P2P addresses...</source>
+        <translation>Laai p2p adresse...</translation>
     </message>
     <message>
-        <source>Loading addresses...</source>
-        <translation>Laai adresse...</translation>
+        <source>Information</source>
+        <translation>Informasie</translation>
     </message>
     <message>
         <source>Insufficient funds</source>

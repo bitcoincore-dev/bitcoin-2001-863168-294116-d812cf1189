@@ -62,6 +62,14 @@
         <translation>收款地址</translation>
     </message>
     <message>
+        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>這些是你要付款過去的 Bitcoin 位址。在付款之前，務必要檢查金額和收款位址是否正確。</translation>
+    </message>
+    <message>
+        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>這些是你用來收款的 Bitcoin 位址。建議在每次交易時，都使用一個新的收款位址。</translation>
+    </message>
+    <message>
         <source>&amp;Copy Address</source>
         <translation>複製地址 &amp;C</translation>
     </message>
@@ -122,6 +130,10 @@
     <message>
         <source>Repeat new passphrase</source>
         <translation>重複新密碼</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>輸入錢包的新密碼。&lt;br/&gt;密碼請用&lt;b&gt;10 個或以上的隨機字元&lt;/b&gt;，或是&lt;b&gt;8 個或以上的字詞&lt;/b&gt;。</translation>
     </message>
     <message>
         <source>Encrypt wallet</source>
@@ -306,6 +318,10 @@
         <translation>開啓網址... &amp;U</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">錢包:</translation>
+    </message>
+    <message>
         <source>Reindexing blocks on disk...</source>
         <translation>正在為磁碟區塊重建索引...</translation>
     </message>
@@ -405,28 +421,66 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;標記</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;位址</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">關於 %1 A</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
     <message>
         <source>Error</source>
         <translation>錯誤</translation>
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>地址</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>W&amp;allet</source>
+        <translation>&amp;錢包</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>錯誤</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -436,7 +490,15 @@
     </context>
 <context>
     <name>PeerTableModel</name>
-    </context>
+    <message>
+        <source>Sent</source>
+        <translation>已送出</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>已接收</translation>
+    </message>
+</context>
 <context>
     <name>QObject</name>
     <message>
@@ -499,7 +561,17 @@
         <source>%n year(s)</source>
         <translation><numerusform>%n 年</numerusform></translation>
     </message>
-    </context>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>塊</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>交易</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -533,6 +605,10 @@
         <translation>一般</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">錢包: </translation>
+    </message>
+    <message>
         <source>Received</source>
         <translation>已接收</translation>
     </message>
@@ -547,9 +623,17 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;標記:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>複製位址 &amp;C</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>地址</translation>
@@ -573,12 +657,24 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">選取 h...</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">付款 &amp;S</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(無標記)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;標記:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -600,6 +696,10 @@
     <message>
         <source>Open until %1</source>
         <translation>開放至 %1</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>交易</translation>
     </message>
     </context>
 <context>

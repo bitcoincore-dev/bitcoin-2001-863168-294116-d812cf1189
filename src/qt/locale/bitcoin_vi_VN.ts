@@ -61,10 +61,46 @@
         <source>Receiving addresses</source>
         <translation>Địa chỉ nhận</translation>
     </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;Chép Địa chỉ</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Label</source>
+        <translation>Chép &amp;Nhãn</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;Sửa</translation>
+    </message>
+    <message>
+        <source>Export Address List</source>
+        <translation>Xuất Danh sách Địa chỉ</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Các tệp tác nhau bằng đấu phẩy (* .csv)</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Xuất không thành công</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
-    </context>
+    <message>
+        <source>Label</source>
+        <translation>Nhãn</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Địa chỉ</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(không nhãn)</translation>
+    </message>
+</context>
 <context>
     <name>AskPassphraseDialog</name>
     <message>
@@ -83,7 +119,84 @@
         <source>Repeat new passphrase</source>
         <translation>Điền lại passphrase</translation>
     </message>
-    </context>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>Mã hóa ví</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
+        <translation>Thao tác này cần cụm từ mật khẩu để mở khóa ví.</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Mở khóa ví</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
+        <translation>Thao tác này cần cụm mật khẩu ví của bạn để giải mã ví.</translation>
+    </message>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>Giải mã ví</translation>
+    </message>
+    <message>
+        <source>Change passphrase</source>
+        <translation>Đổi cụm mật khẩu</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase to the wallet.</source>
+        <translation>Nhập cụm từ mật khẩu cũ và cụm mật khẩu mới vào ví.</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>Xác nhận mã hóa ví</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to encrypt your wallet?</source>
+        <translation>Bạn có chắc chắn muốn mã hóa ví của bạn?</translation>
+    </message>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>Ví đã được mã hóa</translation>
+    </message>
+    <message>
+        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
+        <translation>QUAN TRỌNG: Bất kỳ bản sao lưu trước nào bạn đã làm từ tệp ví tiền của bạn phải được thay thế bằng tệp ví tiền mới được tạo và mã hóa. Vì lý do bảo mật, các bản sao lưu trước đó của tệp ví tiền không được mã hóa sẽ trở nên vô dụng ngay khi bạn bắt đầu sử dụng ví đã được mã hóa.</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed</source>
+        <translation>Mã hóa ví không thành công</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
+        <translation>Mã hóa ví không thành công do có lỗi bên trong.
+Ví của bạn chưa được mã hóa.</translation>
+    </message>
+    <message>
+        <source>The supplied passphrases do not match.</source>
+        <translation>Cụm mật khẩu được cung cấp không khớp.</translation>
+    </message>
+    <message>
+        <source>Wallet unlock failed</source>
+        <translation>Mở khóa ví không thành công</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>Cụm từ mật mã nhập vào không đúng</translation>
+    </message>
+    <message>
+        <source>Wallet decryption failed</source>
+        <translation>Giải mã ví không thành công</translation>
+    </message>
+    <message>
+        <source>Wallet passphrase was successfully changed.</source>
+        <translation>Cụm từ mật khẩu mã hóa của ví đã được thay đổi.</translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Chú ý: Caps Lock đang được bật!</translation>
+    </message>
+</context>
 <context>
     <name>BanTableModel</name>
     <message>
@@ -182,6 +295,26 @@
         <translation>Mở &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Ví:</translation>
+    </message>
+    <message>
+        <source>Click to disable network activity.</source>
+        <translation>Nhấp để vô hiệu quá hoạt động mạng.</translation>
+    </message>
+    <message>
+        <source>Network activity disabled.</source>
+        <translation>Kết nối mạng đã bị ngắt</translation>
+    </message>
+    <message>
+        <source>Click to enable network activity again.</source>
+        <translation>Nhấp để kết nối lại mạng.</translation>
+    </message>
+    <message>
+        <source>Syncing Headers (%1%)...</source>
+        <translation>Đồng bộ hóa các Headers (%1%)...</translation>
+    </message>
+    <message>
         <source>Reindexing blocks on disk...</source>
         <translation>Đánh chỉ số (indexing) lại các khối (blocks) trên ổ đĩa ...</translation>
     </message>
@@ -200,6 +333,10 @@
     <message>
         <source>&amp;Debug window</source>
         <translation>&amp;Cửa sổ xử lý lỗi (debug)</translation>
+    </message>
+    <message>
+        <source>Open debugging and diagnostic console</source>
+        <translation>Mở trình gỡ lỗi và bảng lệnh chuẩn đoán</translation>
     </message>
     <message>
         <source>&amp;Verify message...</source>
@@ -278,6 +415,14 @@
         <translation>7Tùy chọn dòng lệnh</translation>
     </message>
     <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Đang lập chỉ mục khối trên ổ đĩa</translation>
+    </message>
+    <message>
+        <source>Processing blocks on disk...</source>
+        <translation>Đang xử lý các khối trên ổ đĩa...</translation>
+    </message>
+    <message>
         <source>%1 behind</source>
         <translation>%1 chậm trễ</translation>
     </message>
@@ -304,6 +449,14 @@
     <message>
         <source>Up to date</source>
         <translation>Đã cập nhật</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Hiển thị %1 tin nhắn trợ giúp bằng Bitcoin command-line</translation>
+    </message>
+    <message>
+        <source>Connecting to peers...</source>
+        <translation>Kết nối với các máy ngang hàng...</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -410,6 +563,30 @@
         <source>Confirmed</source>
         <translation>Đã xác nhận</translation>
     </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Copy địa chỉ</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Copy nhãn</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Lượng copy</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>có</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>không</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(không nhãn)</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -434,6 +611,9 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -442,6 +622,10 @@
     <message>
         <source>(%1-bit)</source>
         <translation>(%1-bit)</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Thông tin về %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -475,9 +659,16 @@
         <translation>Sử dụng vị trí dữ liệu mặc định</translation>
     </message>
     <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Lỗi</translation>
     </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -490,6 +681,14 @@
         <translation>Ẩn</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Địa chỉ</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -583,6 +782,14 @@
         <source>none</source>
         <translation>Trống</translation>
     </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Lỗi</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -612,6 +819,10 @@
         <source>User Agent</source>
         <translation>User Agent</translation>
     </message>
+    <message>
+        <source>Sent</source>
+        <translation>Đã gửi</translation>
+    </message>
     </context>
 <context>
     <name>QObject</name>
@@ -619,11 +830,37 @@
         <source>Amount</source>
         <translation>Lượng</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n giờ</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n ngày</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n tuần</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 và %2</translation>
     </message>
-    </context>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n năm</numerusform></translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Khối</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Gdh</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -641,6 +878,10 @@
         <translation>Thông tin</translation>
     </message>
     <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Cửa sổ xử lý lỗi (debug)</translation>
+    </message>
+    <message>
         <source>General</source>
         <translation>Nhìn Chung</translation>
     </message>
@@ -651,6 +892,10 @@
     <message>
         <source>Block chain</source>
         <translation>Block chain</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Ví: </translation>
     </message>
     <message>
         <source>Sent</source>
@@ -677,12 +922,12 @@
         <translation>1&amp;năm</translation>
     </message>
     <message>
-        <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
-        <translation>Sử dụng phím lên và xuống để di chuyển lịch sử, và &lt;b&gt;Ctrl-L&lt;/b&gt; để xóa màn hình</translation>
-    </message>
-    <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
         <translation>Gõ &lt;b&gt;help&lt;/b&gt; để xem nhưng câu lệnh có sẵn</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Kết nối mạng đã bị ngắt</translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -760,10 +1005,22 @@
         <translation>Xóa</translation>
     </message>
     <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Copy URI</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Copy nhãn</translation>
+    </message>
+    <message>
         <source>Copy message</source>
         <translation>Copy tin nhắn</translation>
     </message>
-    </context>
+    <message>
+        <source>Copy amount</source>
+        <translation>Lượng copy</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
@@ -795,8 +1052,16 @@
         <translation>URI</translation>
     </message>
     <message>
+        <source>Address</source>
+        <translation>Địa chỉ</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>Lượng</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Nhãn</translation>
     </message>
     <message>
         <source>Message</source>
@@ -810,8 +1075,20 @@
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
+        <source>Date</source>
+        <translation>Ngày tháng</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Nhãn</translation>
+    </message>
+    <message>
         <source>Message</source>
         <translation>Tin nhắn</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(không nhãn)</translation>
     </message>
     <message>
         <source>(no message)</source>
@@ -885,20 +1162,8 @@
         <translation>Ẩn</translation>
     </message>
     <message>
-        <source>total at least</source>
-        <translation>Tổng cộng ít nhất</translation>
-    </message>
-    <message>
         <source>(read the tooltip)</source>
         <translation>(Đọc hướng dẫn)</translation>
-    </message>
-    <message>
-        <source>normal</source>
-        <translation>Bình thường</translation>
-    </message>
-    <message>
-        <source>fast</source>
-        <translation>Nhanh</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -925,6 +1190,14 @@
         <translation>Xác nhận sự gửi</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Gửi</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Lượng copy</translation>
+    </message>
+    <message>
         <source>%1 to %2</source>
         <translation>%1 đến %2</translation>
     </message>
@@ -940,7 +1213,11 @@
         <source>Confirm send coins</source>
         <translation>Xác nhận gửi coins</translation>
     </message>
-    </context>
+    <message>
+        <source>(no label)</source>
+        <translation>(không nhãn)</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsEntry</name>
     <message>
@@ -950,6 +1227,10 @@
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Nhãn</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished">Tin nhắn:</translation>
     </message>
     </context>
 <context>
@@ -978,8 +1259,24 @@
 <context>
     <name>TransactionDesc</name>
     <message>
+        <source>Date</source>
+        <translation>Ngày tháng</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Phí giao dịch</translation>
+    </message>
+    <message>
         <source>Message</source>
         <translation>Tin nhắn</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Giao dịch</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation type="unfinished">Nhập</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -991,9 +1288,57 @@
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Ngày tháng</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Nhãn</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(không nhãn)</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Copy address</source>
+        <translation>Copy địa chỉ</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Copy nhãn</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Lượng copy</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Các tệp tác nhau bằng đấu phẩy (* .csv)</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Đã xác nhận</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Ngày tháng</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Nhãn</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Địa chỉ</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Xuất không thành công</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -1007,9 +1352,21 @@
         <source>Send Coins</source>
         <translation>Gửi Coins</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Xuất</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Xuất dữ liệu trong mục hiện tại ra file</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Sao lưu ví tiền</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
@@ -1020,6 +1377,10 @@
     <message>
         <source>Bitcoin Core</source>
         <translation>Bitcoin Core</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Đang đọc các địa chỉ...</translation>
     </message>
     <message>
         <source>(default: %u)</source>
@@ -1036,10 +1397,6 @@
     <message>
         <source>Warning</source>
         <translation>Chú ý</translation>
-    </message>
-    <message>
-        <source>Loading addresses...</source>
-        <translation>Đang đọc các địa chỉ...</translation>
     </message>
     <message>
         <source>(default: %s)</source>

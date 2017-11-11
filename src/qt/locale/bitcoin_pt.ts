@@ -1,85 +1,101 @@
-<TS language="es_419" version="2.1">
+<TS language="pt" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation>Haga clic para editar la dirección o etiqueta</translation>
+        <translation>Clique Esquerdo para editar o endereço ou etiqueta </translation>
     </message>
     <message>
         <source>Create a new address</source>
-        <translation>Crear una nueva dirección</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <translation>&amp;New</translation>
+        <translation>Criar novo endereço</translation>
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Copia la dirección seleccionada al portapapeles del sistema</translation>
+        <translation>Copiar o endereço selecionado para a clipboard do sistema</translation>
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
-        <translation>Borrar la dirección que esta seleccionada en la lista</translation>
+        <translation>Deletar o endereço selecionado da lista</translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
-        <translation>Exportar los datos de la actual tabla hacia un archivo</translation>
-    </message>
-    <message>
-        <source>Choose the address to send coins to</source>
-        <translation>Seleccione la dirección a la que enviará las monedas</translation>
-    </message>
-    <message>
-        <source>Choose the address to receive coins with</source>
-        <translation>Seleccione la dirección con la que recibirá las monedas</translation>
+        <translation>Exportar as informações da aba para um arquivo</translation>
     </message>
     <message>
         <source>Sending addresses</source>
-        <translation>Enviando direcciones</translation>
+        <translation>Enviando informações</translation>
     </message>
     <message>
         <source>Receiving addresses</source>
-        <translation>Recibiendo direcciones</translation>
+        <translation>Recebendo informações</translation>
     </message>
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Estas son sus direcciones de Bitcoin para enviar sus pagos. Siempre revise el monto y la dirección recibida antes de enviar monedas.</translation>
+        <translation>Estas são suas informações para o envio de pagamentos por Bitcoins. Sempre cheque a quantia enviada e as informações do destinatário, antes de enviar os Bitcoins.</translation>
     </message>
     <message>
-        <source>Export Address List</source>
-        <translation>Exportar Lista de Direcciones</translation>
+        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Estas são suas informações para o recebimento de pagamentos por Bitcoins. É recomendado que seja feito o uso de um novo conjunto de informações para cada transação.</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Falha na Exportação</translation>
     </message>
     </context>
 <context>
     <name>AddressTableModel</name>
-    <message>
-        <source>Address</source>
-        <translation>Direccion</translation>
-    </message>
     </context>
 <context>
     <name>AskPassphraseDialog</name>
     <message>
+        <source>Enter passphrase</source>
+        <translation>Insira a senha</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>Nova senha</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Digite a senha novamente</translation>
+    </message>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>Criptografar wallet</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
+        <translation>Para esta operação se faz necessário o uso da sua senha da wallet para desbloquear a mesma.</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Desbloquear a wallet</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
+        <translation>Para esta operação se faz necessário o uso de sua senha wallet para descriptografar a mesma</translation>
+    </message>
+    <message>
         <source>Decrypt wallet</source>
-        <translation>Desencriptar Monedero</translation>
+        <translation>Descriptografar wallet</translation>
     </message>
     <message>
-        <source>Confirm wallet encryption</source>
-        <translation>Confirmar Encriptacion de Monedero</translation>
+        <source>Change passphrase</source>
+        <translation>Trocar senha</translation>
     </message>
     <message>
-        <source>Wallet encrypted</source>
-        <translation>Monedero ha sido encriptado</translation>
+        <source>Enter the old passphrase and new passphrase to the wallet.</source>
+        <translation>Insira a antiga e nova senha na wallet, respectivamente.</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to encrypt your wallet?</source>
+        <translation>Você tem certeza que deseja criptografar a sua wallet?</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
-        <translation>La encriptacion del monedero ha fallado</translation>
+        <translation>Falha ao criptografar a wallet</translation>
     </message>
-    <message>
-        <source>Warning: The Caps Lock key is on!</source>
-        <translation>Advertencia: La Tecla Caps Lock esta habilitada!</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>BanTableModel</name>
     </context>
@@ -87,11 +103,11 @@
     <name>BitcoinGUI</name>
     <message>
         <source>&amp;Sending addresses...</source>
-        <translation type="unfinished">&amp;Enviando direcciones...</translation>
+        <translation type="unfinished">&amp;Enviando informações...</translation>
     </message>
     <message>
         <source>&amp;Receiving addresses...</source>
-        <translation type="unfinished">&amp;Recibiendo direcciones...</translation>
+        <translation type="unfinished">&amp;Recebendo informações...</translation>
     </message>
     </context>
 <context>
@@ -99,10 +115,6 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
-    <message>
-        <source>&amp;Address</source>
-        <translation>&amp;Direccion</translation>
-    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -124,12 +136,7 @@
     </context>
 <context>
     <name>NetWatchLogModel</name>
-    <message>
-        <source>Address</source>
-        <comment>NetWatch: Address header</comment>
-        <translation>Direccion</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -162,10 +169,6 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Address</source>
-        <translation>Direccion</translation>
-    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -203,8 +206,8 @@
 <context>
     <name>TransactionView</name>
     <message>
-        <source>Address</source>
-        <translation>Direccion</translation>
+        <source>Exporting Failed</source>
+        <translation>Falha na Exportação</translation>
     </message>
     </context>
 <context>
@@ -220,7 +223,7 @@
     <name>WalletView</name>
     <message>
         <source>Export the data in the current tab to a file</source>
-        <translation>Exportar los datos de la actual tabla hacia un archivo</translation>
+        <translation>Exportar as informações da aba para um arquivo</translation>
     </message>
     </context>
 <context>

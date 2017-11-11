@@ -206,8 +206,16 @@
         <translation>&amp;Opsione</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;Duke derguar adresen...</translation>
+    </message>
+    <message>
         <source>&amp;Receiving addresses...</source>
         <translation>Duke marr adresen</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portofol:</translation>
     </message>
     <message>
         <source>Change the passphrase used for wallet encryption</source>
@@ -372,6 +380,9 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -385,9 +396,16 @@
         <translation>Miresevini</translation>
     </message>
     <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Problem</translation>
     </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -395,7 +413,24 @@
         <source>Form</source>
         <translation>Formilarë</translation>
     </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">i/e panjohur...</translation>
+    </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Lloji</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresë</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -408,6 +443,14 @@
     <message>
         <source>W&amp;allet</source>
         <translation>Portofol</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Berthama Bitcoin</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Problem</translation>
     </message>
     </context>
 <context>
@@ -433,7 +476,16 @@
         <source>%1 and %2</source>
         <translation>%1 dhe %2</translation>
     </message>
-    </context>
+    <message>
+        <source>unknown</source>
+        <translation>i/e panjohur</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>tst</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -447,12 +499,12 @@
         <translation>Informacion</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Hap</translation>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portofol: </translation>
     </message>
     <message>
-        <source>&amp;Clear</source>
-        <translation>&amp;Pastro</translation>
+        <source>&amp;Open</source>
+        <translation>&amp;Hap</translation>
     </message>
     <message>
         <source>never</source>
@@ -537,6 +589,10 @@
     <message>
         <source>Confirm the send action</source>
         <translation>Konfirmo veprimin e dërgimit</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Dergo</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -769,7 +825,7 @@
         <source>Send Coins</source>
         <translation>Dërgo Monedha</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletView</name>
     <message>

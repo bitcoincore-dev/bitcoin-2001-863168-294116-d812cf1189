@@ -62,6 +62,14 @@
         <translation>ที่อยู่ในการรับ</translation>
     </message>
     <message>
+        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>ที่อยู่ Bitcoin ของคุณสำหรับการส่งการชำระเงิน โปรดตรวจสอบจำนวนเงินและที่อยู่รับก่อนที่จะส่งเหรียญ</translation>
+    </message>
+    <message>
+        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>ที่อยู่ Bitcoin ของคุณสำหรับการรับเงิน แนะนำให้ใช้ที่อยู่รับใหม่สำหรับแต่ละธุรกรรม</translation>
+    </message>
+    <message>
         <source>&amp;Copy Address</source>
         <translation>คัดลอกที่อยู่</translation>
     </message>
@@ -74,6 +82,14 @@
         <translation>แก้ไข</translation>
     </message>
     <message>
+        <source>Export Address List</source>
+        <translation>ส่งออกรายการที่อยู่</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>ไฟล์ที่คั่นด้วยจุลภาค (* .csv)</translation>
+    </message>
+    <message>
         <source>Exporting Failed</source>
         <translation>การส่งออกล้มเหลว</translation>
     </message>
@@ -81,27 +97,98 @@
 <context>
     <name>AddressTableModel</name>
     <message>
+        <source>Label</source>
+        <translation>ฉลาก, ป้าย,</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>ที่อยู่</translation>
     </message>
-    </context>
+    <message>
+        <source>(no label)</source>
+        <translation>(ไม่มีฉลาก)</translation>
+    </message>
+</context>
 <context>
     <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>กล่องโต้ตอบวลีรหัสผ่าน</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>ป้อนวลีรหัสผ่าน</translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>วลีรหัสผ่านใหม่</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>ทำซ้ำข้อความรหัสใหม่</translation>
+    </message>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>กระเป๋าสตางค์ เข้ารหัส</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
+        <translation>การดำเนินการนี้ต้องการกระเป๋าสตางค์กระเป๋าสตางค์ของคุณเพื่อปลดล็อกกระเป๋าสตางค์</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>ปลดล็อค กระเป๋าสตางค์ </translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
+        <translation>การดำเนินการนี้ ต้องการ รหัสผ่าน กระเป๋าสตางค์ ของคุณ เพื่อ ถอดรหัส กระเป๋าสตางค์</translation>
+    </message>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>ถอดรหัส กระเป๋าสตางค์</translation>
+    </message>
+    <message>
+        <source>Change passphrase</source>
+        <translation>เปลี่ยน ข้อความรหัสผ่าน</translation>
+    </message>
     </context>
 <context>
     <name>BanTableModel</name>
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;ที่อยู่ในการส่ง...</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;ที่อยู่ในการรับ...</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
+    <message>
+        <source>(no label)</source>
+        <translation>(ไม่มีฉลาก)</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;ฉลาก, ป้าย,</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;ที่อยู่</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -110,8 +197,19 @@
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>ที่อยู่</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -141,22 +239,54 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ฉลาก, ป้าย,:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">คัดลอกที่อยู่</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>ที่อยู่</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>ฉลาก, ป้าย,</translation>
     </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Label</source>
+        <translation>ฉลาก, ป้าย,</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(ไม่มีฉลาก)</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
-    </context>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">เลือก...</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(ไม่มีฉลาก)</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ฉลาก, ป้าย,:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -181,9 +311,25 @@
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Label</source>
+        <translation>ฉลาก, ป้าย,</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(ไม่มีฉลาก)</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>ไฟล์ที่คั่นด้วยจุลภาค (* .csv)</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>ฉลาก, ป้าย,</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>ที่อยู่</translation>

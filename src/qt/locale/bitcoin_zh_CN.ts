@@ -318,6 +318,10 @@
         <translation>打开 &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">钱包:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>点击禁用网络活动。</translation>
     </message>
@@ -782,6 +786,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -852,16 +859,28 @@
         <translation>由于这是第一次启动此程序，您可以选择%1的数据所存储的位置</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 会下载并存储一份比特币区块链的副本。至少有 %2GB 的数据会存储到这个目录中，并且还会持续增长。另外钱包资料也会储存在这个目录。</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>使用默认的数据目录</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>使用自定义的数据目录：</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>比特币</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>至少有 %1GB 的数据会存储到这个目录中，并且还会持续增长。</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 会下载并存储一份比特币区块链的副本。</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>另外钱包资料也会储存在这个目录。</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -880,6 +899,9 @@
         <translation><numerusform>(需要%n GB空间)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -929,6 +951,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>未知状态。同步区块头（%1）</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>种类</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>地址</translation>
     </message>
 </context>
 <context>
@@ -995,6 +1030,18 @@
     <message>
         <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
         <translation>代理的 IP 地址 (例如 IPv4: 127.0.0.1 / IPv6: ::1)</translation>
+    </message>
+    <message>
+        <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
+        <translation>如果默认的SOCKS5代理被用于在该网络下连接同伴，则显示</translation>
+    </message>
+    <message>
+        <source>Hide the icon from the system tray.</source>
+        <translation type="unfinished">不在通知区显示图标</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;不显示通知区图标</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
@@ -1081,10 +1128,6 @@
         <translation>连接到同伴的方式：</translation>
     </message>
     <message>
-        <source>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
-        <translation>如果默认的SOCKS5代理被用于在该网络下连接同伴，则显示</translation>
-    </message>
-    <message>
         <source>IPv4</source>
         <translation>IPv4</translation>
     </message>
@@ -1107,14 +1150,6 @@
     <message>
         <source>&amp;Window</source>
         <translation>窗口(&amp;W)</translation>
-    </message>
-    <message>
-        <source>&amp;Hide the icon from the system tray.</source>
-        <translation>不在通知区显示图标</translation>
-    </message>
-    <message>
-        <source>Hide tray icon</source>
-        <translation>不显示通知区图标</translation>
     </message>
     <message>
         <source>Show only a tray icon after minimizing the window.</source>
@@ -1169,6 +1204,10 @@
         <translation>无</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>比特币核心</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>确认恢复缺省设置</translation>
     </message>
@@ -1179,6 +1218,10 @@
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
         <translation>客户端即将关闭，您想继续吗？</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>错误</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
@@ -1374,6 +1417,14 @@
         <source>Ping</source>
         <translation> </translation>
     </message>
+    <message>
+        <source>Sent</source>
+        <translation>发送</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>收到</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -1444,6 +1495,20 @@
     <message>
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 尚未安全退出</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>未知</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>块</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>交易</translation>
     </message>
 </context>
 <context>
@@ -1547,6 +1612,10 @@
         <translation>内存使用</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">钱包: </translation>
+    </message>
+    <message>
         <source>Received</source>
         <translation>收到</translation>
     </message>
@@ -1593,6 +1662,10 @@
     <message>
         <source>User Agent</source>
         <translation>用户代理</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>从当前的数据目录打开%1调试日志文件。对于较大的日志文件，这可能需要几秒钟。</translation>
     </message>
     <message>
         <source>Decrease font size</source>
@@ -1659,10 +1732,6 @@
         <translation>网络流量(&amp;N)</translation>
     </message>
     <message>
-        <source>&amp;Clear</source>
-        <translation>清除(&amp;C)</translation>
-    </message>
-    <message>
         <source>Totals</source>
         <translation>总数</translation>
     </message>
@@ -1715,15 +1784,11 @@
         <translation>欢迎使用 %1 的 RPC 控制台。</translation>
     </message>
     <message>
-        <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
-        <translation>使用上下方向键浏览历史,  &lt;b&gt;Ctrl-L&lt;/b&gt;清除屏幕。</translation>
-    </message>
-    <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
         <translation>使用 &lt;b&gt;help&lt;/b&gt; 命令显示帮助信息。</translation>
     </message>
     <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.</source>
         <translation>警告： 已有骗子通过要求用户在此输入指令以盗取钱包。不要在没有完全理解命令规范时使用控制台。</translation>
     </message>
     <message>
@@ -2031,10 +2096,6 @@
         <translation>隐藏</translation>
     </message>
     <message>
-        <source>total at least</source>
-        <translation>最小额 </translation>
-    </message>
-    <message>
         <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
         <translation>交易量小时只支付最小交易费是可以的。但是请注意，当交易量大到超出网络可处理时您的交易可能永远无法确认。</translation>
     </message>
@@ -2053,14 +2114,6 @@
     <message>
         <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
         <translation>(智能交易费用 尚未初始化。 需要再下载一些数据块...)</translation>
-    </message>
-    <message>
-        <source>normal</source>
-        <translation>一般</translation>
-    </message>
-    <message>
-        <source>fast</source>
-        <translation>快速</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -2186,10 +2239,6 @@
         <source>Payment request expired.</source>
         <translation>付款请求已过期。</translation>
     </message>
-    <message numerus="yes">
-        <source>%n block(s)</source>
-        <translation><numerusform>%n 个区块</numerusform></translation>
-    </message>
     <message>
         <source>Pay only the required fee of %1</source>
         <translation>只支付必要费用 %1</translation>
@@ -2205,6 +2254,10 @@
     <message>
         <source>Warning: Unknown change address</source>
         <translation>警告：未知的更改地址</translation>
+    </message>
+    <message>
+        <source>Confirm custom change address</source>
+        <translation>确认用户找零地址</translation>
     </message>
     <message>
         <source>The address you selected for change is not part of this wallet. Any or all funds in your wallet may be sent to this address. Are you sure?</source>
@@ -2669,6 +2722,10 @@
         <source>Label</source>
         <translation>标签</translation>
     </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>再打开 %n 个数据块</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>至 %1 个数据块时开启</translation>
@@ -2817,10 +2874,6 @@
         <translation>其它</translation>
     </message>
     <message>
-        <source>Enter address or label to search</source>
-        <translation>输入地址或标签进行搜索</translation>
-    </message>
-    <message>
         <source>Min amount</source>
         <translation>最小金额</translation>
     </message>
@@ -2941,7 +2994,7 @@
         <source>Send Coins</source>
         <translation>发送比特币</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletView</name>
     <message>
@@ -3093,6 +3146,14 @@
         <translation>如果你认为%s对你比较有用的话，请对我们进行一些捐赠支持。请访问%s网站来获取有关这个软件的更多信息。</translation>
     </message>
     <message>
+        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect used)</source>
+        <translation>通过DNS查询每个地址，如果短地址 (默认值: 1 除非 -连接)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>设置 高优先级/低交易费 交易的最大字节  (缺省: %d)</translation>
+    </message>
+    <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
         <translation>设置脚本验证的程序 (%u 到 %d, 0 = 自动, &lt;0 = 保留自由的核心, 默认值: %d)</translation>
     </message>
@@ -3101,8 +3162,20 @@
         <translation>区块数据库包含未来的交易，这可能是由本机错误的日期时间引起。若确认本机日期时间正确，请重新建立区块数据库。</translation>
     </message>
     <message>
+        <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
+        <translation>这是测试用的预发布版本 - 请谨慎使用 - 不要用来挖矿，或者在正式商用环境下使用</translation>
+    </message>
+    <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
         <translation>使用UPnP暴露本机监听端口（默认：1 当正在监听且不使用代理）</translation>
+    </message>
+    <message>
+        <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
+        <translation>警告：网络似乎并不完全同意！有些矿工似乎遇到了问题。</translation>
+    </message>
+    <message>
+        <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
+        <translation>警告：我们的同行似乎不完全同意！您可能需要升级，或者其他节点可能需要升级。</translation>
     </message>
     <message>
         <source>%s corrupt, salvage failed</source>
@@ -3115,6 +3188,10 @@
     <message>
         <source>&lt;category&gt; can be:</source>
         <translation>&lt;category&gt; 可能是：</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside (default: 1 if no -proxy or -connect)</source>
+        <translation>接受来自外部的连接 (缺省: 如果不带 -proxy or -connect 参数设置为1)</translation>
     </message>
     <message>
         <source>Append comment to the user agent string</source>
@@ -3135,6 +3212,10 @@
     <message>
         <source>Chain selection options:</source>
         <translation>区块链选择选项:</translation>
+    </message>
+    <message>
+        <source>Change index out of range</source>
+        <translation>修改索引超过范围</translation>
     </message>
     <message>
         <source>Connection options:</source>
@@ -3225,10 +3306,6 @@
         <translation>不正确或没有找到起源区块。网络错误？</translation>
     </message>
     <message>
-        <source>Invalid -onion address: '%s'</source>
-        <translation>无效的 -onion 地址：“%s”</translation>
-    </message>
-    <message>
         <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>
         <translation>非法金额 -%s=&lt;amount&gt;: '%s'</translation>
     </message>
@@ -3241,12 +3318,20 @@
         <translation>保持交易内存池大小低于&lt;n&gt;MB（默认：%u）</translation>
     </message>
     <message>
+        <source>Loading P2P addresses...</source>
+        <translation>正在加载地址簿...</translation>
+    </message>
+    <message>
         <source>Loading banlist...</source>
         <translation>加载黑名单</translation>
     </message>
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>认证Cookie的位置 (默认: data目录)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>我们关联和挖掘的每sigop的最低交易字节(默认: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3275,6 +3360,10 @@
     <message>
         <source>Rebuild chain state from the currently indexed blocks</source>
         <translation>从当前索引的区块中重建链状态</translation>
+    </message>
+    <message>
+        <source>Rewinding blocks...</source>
+        <translation>回退区块</translation>
     </message>
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
@@ -3325,10 +3414,6 @@
         <translation>正在验证区块...</translation>
     </message>
     <message>
-        <source>Verifying wallet...</source>
-        <translation>正在验证钱包...</translation>
-    </message>
-    <message>
         <source>Wallet %s resides outside data directory %s</source>
         <translation>钱包 %s 在外部的数据目录 %s</translation>
     </message>
@@ -3347,10 +3432,6 @@
     <message>
         <source>Bind to given address and whitelist peers connecting to it. Use [host]:port notation for IPv6</source>
         <translation>绑定到指定地址和连接的白名单节点。 IPv6使用  [主机]:端口 格式 </translation>
-    </message>
-    <message>
-        <source>Bind to given address to listen for JSON-RPC connections. Use [host]:port notation for IPv6. This option can be specified multiple times (default: bind to all interfaces)</source>
-        <translation>绑定到指定地址监听 JSON-RPC连接。 IPv6使用[主机]:端口 格式。该选项可多次指定 (默认: 绑定到所有接口) </translation>
     </message>
     <message>
         <source>Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)</source>
@@ -3387,10 +3468,6 @@
     <message>
         <source>Randomize credentials for every proxy connection. This enables Tor stream isolation (default: %u)</source>
         <translation>为每个代理连接随机化凭据。这将启用 Tor 流隔离 (默认: %u)</translation>
-    </message>
-    <message>
-        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
-        <translation>设置 高优先级/低交易费 交易的最大字节  (缺省: %d)</translation>
     </message>
     <message>
         <source>The transaction amount is too small to send after the fee has been deducted</source>
@@ -3469,10 +3546,6 @@
         <translation>跟踪/调试信息输出到控制台，不输出到 debug.log 文件</translation>
     </message>
     <message>
-        <source>Send transactions as zero-fee transactions if possible (default: %u)</source>
-        <translation>发送时尽可能 不支付交易费用 (默认: %u) </translation>
-    </message>
-    <message>
         <source>Show all debugging options (usage: --help -help-debug)</source>
         <translation>显示所有调试选项 (用法: --帮助 -帮助调试)</translation>
     </message>
@@ -3525,6 +3598,10 @@
         <translation>JSON-RPC 连接用户名</translation>
     </message>
     <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>正在验证钱包...</translation>
+    </message>
+    <message>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
@@ -3535,6 +3612,10 @@
     <message>
         <source>Whether to operate in a blocks only mode (default: %u)</source>
         <translation>是否用块方进行 (%u)</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to change -txindex</source>
+        <translation>您需要将 -reindex 改为 -txindex 以重建数据库</translation>
     </message>
     <message>
         <source>Zapping all transactions from wallet...</source>
@@ -3558,10 +3639,6 @@
         <translation>使用 -addnode, -seednode 和 -connect 选项时允许查询DNS</translation>
     </message>
     <message>
-        <source>Loading addresses...</source>
-        <translation>正在加载地址簿...</translation>
-    </message>
-    <message>
         <source>(1 = keep tx meta data e.g. account owner and payment request information, 2 = drop tx meta data)</source>
         <translation>(1 = 保留 tx meta data , 如 account owner 和 payment request information, 2 = 不保留 tx meta data) </translation>
     </message>
@@ -3576,6 +3653,10 @@
     <message>
         <source>Fees (in %s/kB) smaller than this are considered zero fee for transaction creation (default: %s)</source>
         <translation>当产生交易时，如果每千字节 (kB) 的手续费比这个值 (单位是 %s) 低，就视为没支付手续费 (默认值: %s)</translation>
+    </message>
+    <message>
+        <source>Force relay of transactions from whitelisted peers even if they violate local relay policy (default: %d)</source>
+        <translation>强制关联来自白名单同行的交易即使他们违反本地关联政策(默认: %d)</translation>
     </message>
     <message>
         <source>How thorough the block verification of -checkblocks is (0-4, default: %u)</source>
@@ -3646,10 +3727,6 @@
         <translation>在调试输出中包含IP地址 (默认: %u)</translation>
     </message>
     <message>
-        <source>Invalid -proxy address: '%s'</source>
-        <translation>无效的代理地址：%s</translation>
-    </message>
-    <message>
         <source>Listen for JSON-RPC connections on &lt;port&gt; (default: %u or testnet: %u)</source>
         <translation>使用 &lt;port&gt;端口监听 JSON-RPC 连接 (默认: %u ; testnet: %u) </translation>
     </message>
@@ -3716,6 +3793,10 @@
     <message>
         <source>Starting network threads...</source>
         <translation>正在启动网络线程...</translation>
+    </message>
+    <message>
+        <source>The wallet will avoid paying less than the minimum relay fee.</source>
+        <translation>钱包避免低于最小交易费的支付</translation>
     </message>
     <message>
         <source>This is the transaction fee you will pay if you send a transaction.</source>

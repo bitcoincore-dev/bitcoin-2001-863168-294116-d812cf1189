@@ -314,6 +314,10 @@
         <translation>Отвори &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Портфейл:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Натиснете за деактивиране на мрежата</translation>
     </message>
@@ -425,6 +429,10 @@
         <source>&amp;Command-line options</source>
         <translation>&amp;Налични команди</translation>
     </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network</source>
+        <translation><numerusform>%n активна връзка към Биткойн мрежата</numerusform><numerusform>%n активни връзки към Биткойн мрежата</numerusform></translation>
+    </message>
     <message>
         <source>Indexing blocks on disk...</source>
         <translation>Индексиране на блокове на диска...</translation>
@@ -432,6 +440,10 @@
     <message>
         <source>Processing blocks on disk...</source>
         <translation>Обработване на блокове на диска...</translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation><numerusform>Преработен %n блок от историята с транзакции.</numerusform><numerusform>Преработени %n блокове от историята с транзакции.</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -746,6 +758,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -823,15 +838,34 @@
         <translation>Използване на директория ръчно</translation>
     </message>
     <message>
+        <source>Bitcoin</source>
+        <translation>Биткоин</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Грешка</translation>
     </message>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation><numerusform>%n GB свободно пространство на разположение</numerusform><numerusform>%n GB свободно пространство на разположение</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation><numerusform>(%n GB е нужен)</numerusform><numerusform>(%n GB са нужни)</numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Формуляр</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Неизвестен...</translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -846,6 +880,19 @@
         <translation>Скрий</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тип</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адрес</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -1008,12 +1055,20 @@
         <translation>нищо</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Биткойн ядро</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Потвърдете отмяната на настройките.</translation>
     </message>
     <message>
         <source>Client restart required to activate changes.</source>
         <translation>Изисква се рестартиране на клиента за активиране на извършените промени.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Грешка</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
@@ -1152,7 +1207,15 @@
         <source>User Agent</source>
         <translation>Клиент на потребителя</translation>
     </message>
-    </context>
+    <message>
+        <source>Sent</source>
+        <translation>Изпратени</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Получени</translation>
+    </message>
+</context>
 <context>
     <name>QObject</name>
     <message>
@@ -1191,11 +1254,41 @@
         <source>%1 ms</source>
         <translation>%1 милисекунда</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n час</numerusform><numerusform>%n часа</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n ден</numerusform><numerusform>%n дни</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n седмица</numerusform><numerusform>%n седмици</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 и %2</translation>
     </message>
-    </context>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n година</numerusform><numerusform>%n години</numerusform></translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>неизвестен</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакция</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -1265,6 +1358,10 @@
         <translation>Текущ брой блокове</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Портфейл: </translation>
+    </message>
+    <message>
         <source>Received</source>
         <translation>Получени</translation>
     </message>
@@ -1329,10 +1426,6 @@
         <translation>&amp;Мрежов Трафик</translation>
     </message>
     <message>
-        <source>&amp;Clear</source>
-        <translation>&amp;Изчисти</translation>
-    </message>
-    <message>
         <source>Totals</source>
         <translation>Общо:</translation>
     </message>
@@ -1353,12 +1446,12 @@
         <translation>Изчисти конзолата</translation>
     </message>
     <message>
-        <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
-        <translation>Използвайте стрелки надолу и нагореза разглеждане на историятаот команди и &lt;b&gt;Ctrl-L&lt;/b&gt; за изчистване на конзолата.</translation>
-    </message>
-    <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
         <translation>Въведeте &lt;/b&gt;помощ&lt;/b&gt; за да видите наличните команди.</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Мрежата деактивирана</translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1452,6 +1545,10 @@
         <translation>Премахване</translation>
     </message>
     <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Копиране на URI</translation>
+    </message>
+    <message>
         <source>Copy label</source>
         <translation>Копирай име</translation>
     </message>
@@ -1489,6 +1586,10 @@
     <message>
         <source>Payment information</source>
         <translation>Данни за плащането</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
     </message>
     <message>
         <source>Address</source>
@@ -1597,24 +1698,12 @@
         <translation>Скрий</translation>
     </message>
     <message>
-        <source>total at least</source>
-        <translation>Крайна сума поне</translation>
-    </message>
-    <message>
         <source>Recommended:</source>
         <translation>Препоръчителна:</translation>
     </message>
     <message>
         <source>Custom:</source>
         <translation>По избор:</translation>
-    </message>
-    <message>
-        <source>normal</source>
-        <translation>нормален</translation>
-    </message>
-    <message>
-        <source>fast</source>
-        <translation>бърз</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -2211,10 +2300,6 @@
         <translation>Други</translation>
     </message>
     <message>
-        <source>Enter address or label to search</source>
-        <translation>Търсене по адрес или име</translation>
-    </message>
-    <message>
         <source>Min amount</source>
         <translation>Минимална сума</translation>
     </message>
@@ -2315,7 +2400,7 @@
         <source>Send Coins</source>
         <translation>Изпращане</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletView</name>
     <message>
@@ -2378,6 +2463,10 @@
         <translation>&lt;category&gt; може да бъде:</translation>
     </message>
     <message>
+        <source>Accept connections from outside (default: 1 if no -proxy or -connect)</source>
+        <translation>Приемайте връзки отвън.(по подразбиране:1 в противен случай -proxy или -connect)</translation>
+    </message>
+    <message>
         <source>Connection options:</source>
         <translation>Настройки на връзката:</translation>
     </message>
@@ -2402,12 +2491,12 @@
         <translation>Внасяне...</translation>
     </message>
     <message>
-        <source>Verifying blocks...</source>
-        <translation>Проверка на блоковете...</translation>
+        <source>Loading P2P addresses...</source>
+        <translation>Зареждане на адреси...</translation>
     </message>
     <message>
-        <source>Verifying wallet...</source>
-        <translation>Проверка на портфейла...</translation>
+        <source>Verifying blocks...</source>
+        <translation>Проверка на блоковете...</translation>
     </message>
     <message>
         <source>Wallet options:</source>
@@ -2442,20 +2531,16 @@
         <translation>Потребителско име за JSON-RPC връзките</translation>
     </message>
     <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Проверка на портфейла...</translation>
+    </message>
+    <message>
         <source>Warning</source>
         <translation>Предупреждение</translation>
     </message>
     <message>
         <source>Password for JSON-RPC connections</source>
         <translation>Парола за  JSON-RPC връзките</translation>
-    </message>
-    <message>
-        <source>Loading addresses...</source>
-        <translation>Зареждане на адреси...</translation>
-    </message>
-    <message>
-        <source>Invalid -proxy address: '%s'</source>
-        <translation>Невалиден -proxy address: '%s'</translation>
     </message>
     <message>
         <source>Specify configuration file (default: %s)</source>

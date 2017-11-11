@@ -318,6 +318,10 @@
         <translation>Open &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portemonnee:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Klik om de netwerkactiviteit te stoppen.</translation>
     </message>
@@ -782,6 +786,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -851,16 +858,28 @@
         <translation>Omdat dit de eerste keer is dat het programma gestart is, kunt u nu kiezen waar %1 de data moet opslaan.</translation>
     </message>
     <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>%1 zal een kopie van de Bitcoin blokketen downloaden en opslaan. Tenminste %2 GB aan data wordt opgeslagen in deze map en het zal groeien in de tijd. De portemonnee wordt ook in deze map opgeslagen.</translation>
-    </message>
-    <message>
         <source>Use the default data directory</source>
         <translation>Gebruik de standaard gegevensmap</translation>
     </message>
     <message>
         <source>Use a custom data directory:</source>
         <translation>Gebruik een persoonlijke gegevensmap:</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Tenminste %1 GB aan data wordt opgeslagen in deze map en het zal groeien in de tijd.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 zal een kopie van de Bitcoin blokketen downloaden en opslaan.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>De portemonnee wordt ook in deze map opgeslagen.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -879,6 +898,9 @@
         <translation><numerusform>(van %n GB nodig)</numerusform><numerusform>(van %n GB nodig)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -928,6 +950,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Onbekend. Kopteksten synchroniseren (%1%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
     </message>
 </context>
 <context>
@@ -994,6 +1029,18 @@
     <message>
         <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
         <translation>IP-adres van de proxy (bijv. IPv4: 127.0.0.1 / IPv6: ::1)</translation>
+    </message>
+    <message>
+        <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
+        <translation>Vertoningen, als de opgegeven standaard SOCKS5-proxy is gebruikt om peers te benaderen via dit type netwerk.</translation>
+    </message>
+    <message>
+        <source>Hide the icon from the system tray.</source>
+        <translation type="unfinished">Verberg het icoon van de systeembalk.</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Verberg systeembalk icoon</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
@@ -1080,10 +1127,6 @@
         <translation>Gebruikt om peers te bereiken via:</translation>
     </message>
     <message>
-        <source>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
-        <translation>Vertoningen, als de opgegeven standaard SOCKS5-proxy is gebruikt om peers te benaderen via dit type netwerk.</translation>
-    </message>
-    <message>
         <source>IPv4</source>
         <translation>IPv4</translation>
     </message>
@@ -1106,14 +1149,6 @@
     <message>
         <source>&amp;Window</source>
         <translation>&amp;Scherm</translation>
-    </message>
-    <message>
-        <source>&amp;Hide the icon from the system tray.</source>
-        <translation>&amp;Verberg het icoon van de systeembalk.</translation>
-    </message>
-    <message>
-        <source>Hide tray icon</source>
-        <translation>Verberg systeembalk icoon</translation>
     </message>
     <message>
         <source>Show only a tray icon after minimizing the window.</source>
@@ -1168,6 +1203,10 @@
         <translation>geen</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Bevestig reset opties</translation>
     </message>
@@ -1178,6 +1217,10 @@
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
         <translation>Applicatie zal worden afgesloten. Wilt u doorgaan?</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Fout</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
@@ -1372,6 +1415,14 @@
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
+    <message>
+        <source>Sent</source>
+        <translation>Verstuurd</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Ontvangen</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -1442,6 +1493,15 @@
     <message>
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 sloot nog niet veilig af...</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>onbekend</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
     </message>
 </context>
 <context>
@@ -1543,6 +1603,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Geheugengebruik</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portemonnee: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1661,10 +1725,6 @@
         <translation>&amp;Netwerkverkeer</translation>
     </message>
     <message>
-        <source>&amp;Clear</source>
-        <translation>&amp;Wissen</translation>
-    </message>
-    <message>
         <source>Totals</source>
         <translation>Totalen</translation>
     </message>
@@ -1717,15 +1777,11 @@
         <translation>Welkom bij de %1 RPC-console.</translation>
     </message>
     <message>
-        <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
-        <translation>Gebruik de pijltjestoetsen om door de geschiedenis te navigeren, en &lt;b&gt;Ctrl-L&lt;/b&gt; om het scherm leeg te maken.</translation>
-    </message>
-    <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
         <translation>Typ &lt;b&gt;help&lt;/b&gt; voor een overzicht van de beschikbare opdrachten.</translation>
     </message>
     <message>
-        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.</source>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.</source>
         <translation>WAARSCHUWING: Er zijn Scammers actief geweest, die gebruikers vragen om hier commando's te typen, waardoor de inhoud van hun portefeuille werd gestolen. Gebruik deze console niet zonder de toedracht van een opdracht volledig te begrijpen.</translation>
     </message>
     <message>
@@ -2033,10 +2089,6 @@
         <translation>Verbergen</translation>
     </message>
     <message>
-        <source>total at least</source>
-        <translation>totaal ten minste</translation>
-    </message>
-    <message>
         <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
         <translation>De minimale toeslag betalen is prima mits het transactievolume kleiner is dan de ruimte in de blokken. Let wel op dat dit tot gevolg kan hebben dat een transactie nooit wordt bevestigd als er meer vraag is naar bitcointransacties dan het netwerk kan verwerken.</translation>
     </message>
@@ -2055,14 +2107,6 @@
     <message>
         <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
         <translation>(Slimme transactiekosten is nog niet geïnitialiseerd. Dit duurt meestal een paar blokken...)</translation>
-    </message>
-    <message>
-        <source>normal</source>
-        <translation>normaal</translation>
-    </message>
-    <message>
-        <source>fast</source>
-        <translation>snel</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -2187,10 +2231,6 @@
     <message>
         <source>Payment request expired.</source>
         <translation>Betalingsverzoek verlopen.</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n block(s)</source>
-        <translation><numerusform>%n blok</numerusform><numerusform>%n blokken</numerusform></translation>
     </message>
     <message>
         <source>Pay only the required fee of %1</source>
@@ -2525,6 +2565,10 @@
         <source>, has not been successfully broadcast yet</source>
         <translation>, is nog niet met succes uitgezonden</translation>
     </message>
+    <message numerus="yes">
+        <source>, broadcast through %n node(s)</source>
+        <translation><numerusform>, uitgezonden naar %n node</numerusform><numerusform>, uitgezonden naar %n nodes</numerusform></translation>
+    </message>
     <message>
         <source>Date</source>
         <translation>Datum</translation>
@@ -2823,10 +2867,6 @@
         <translation>Anders</translation>
     </message>
     <message>
-        <source>Enter address or label to search</source>
-        <translation>Vul adres of label in om te zoeken</translation>
-    </message>
-    <message>
         <source>Min amount</source>
         <translation>Min. bedrag</translation>
     </message>
@@ -2947,7 +2987,7 @@
         <source>Send Coins</source>
         <translation>Verstuur munten</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletView</name>
     <message>
@@ -3004,14 +3044,6 @@
     <message>
         <source>Accept command line and JSON-RPC commands</source>
         <translation>Aanvaard opdrachtregel- en JSON-RPC-opdrachten</translation>
-    </message>
-    <message>
-        <source>Accept connections from outside (default: 1 if no -proxy or -connect/-noconnect)</source>
-        <translation>Accepteer verbindingen van buitenaf (standaard: 1 indien geen -proxy of -connect/-noconnect werd opgegeven)</translation>
-    </message>
-    <message>
-        <source>Connect only to the specified node(s); -noconnect or -connect=0 alone to disable automatic connections</source>
-        <translation>Verbind enkel met de opgegeven knooppunt(en); -noconnect of -connect = 0 alleen om automatische verbindingen uit te schakelen</translation>
     </message>
     <message>
         <source>Distributed under the MIT software license, see the accompanying file %s or %s</source>
@@ -3082,10 +3114,6 @@
         <translation>Verwijder alle transacties van de portemonnee en herstel alleen de delen van de blokketen door -rescan tijdens het opstarten</translation>
     </message>
     <message>
-        <source>Error loading %s: You can't enable HD on a already existing non-HD wallet</source>
-        <translation>Fout bij het laden van %s: Je kan HD niet activeren voor een reeds bestaande niet-HD portemonnee</translation>
-    </message>
-    <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>Waarschuwing: Fout bij het lezen van %s! Alle sleutels zijn in goede orde uitgelezen, maar transactiedata of adresboeklemma's zouden kunnen ontbreken of fouten bevatten.</translation>
     </message>
@@ -3118,12 +3146,20 @@
         <translation>Gelieve bij te dragen als je %s nuttig vindt. Bezoek %s voor meer informatie over de software.</translation>
     </message>
     <message>
+        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect used)</source>
+        <translation>Query voor peeradressen via DNS- lookup , als laag op adressen  (standaard: 1 unless -connect)</translation>
+    </message>
+    <message>
         <source>Reduce storage requirements by enabling pruning (deleting) of old blocks. This allows the pruneblockchain RPC to be called to delete specific blocks, and enables automatic pruning of old blocks if a target size in MiB is provided. This mode is incompatible with -txindex and -rescan. Warning: Reverting this setting requires re-downloading the entire blockchain. (default: 0 = disable pruning blocks, 1 = allow manual pruning via RPC, &gt;%u = automatically prune block files to stay under the specified target size in MiB)</source>
         <translation>Beperk benodigde opslag door trimmen (verwijderen) van oude blokken in te schakelen. Dit maakt het mogelijk om de pruneblockchain RPC aan te roepen om specifieke blokken te verwijderen, en maakt het automatische trimmen van oude blokken mogelijk wanneer een doelgrootte in MiB is voorzien. Deze modus is niet compatibele met -txindex en -rescan. Waarschuwing: Terugzetten van deze instellingen vereist het opnieuw downloaden van gehele de blokketen. (standaard:0 = uitzetten trimmodus, 1 = manueel trimmen via RPC toestaan, &gt;%u = automatisch blokbestanden trimmen om beneden de gespecificeerde doelgrootte in MiB te blijven)</translation>
     </message>
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>Specificeer het laagste tarief (in %s/kB) voor transacties die bij het maken van een blok moeten worden in rekening worden gebracht (standaard: %s)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Stel maximumgrootte in bytes in voor hoge-prioriteits-/lage-transactiekosten-transacties (standaard: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3162,8 +3198,8 @@
         <translation>Waarschuwing: Het lijkt erop dat we geen consensus kunnen vinden met onze peers! Mogelijk dient u te upgraden, of andere nodes moeten wellicht upgraden.</translation>
     </message>
     <message>
-        <source>You need to rebuild the database using -reindex-chainstate to change -txindex</source>
-        <translation>Om -txindex te kunnen veranderen dient u de database opnieuw te bouwen met gebruik van -reindex-chainstate.</translation>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Goedgekeurde peers die verbinden vanaf een bepaald IP adres (vb. 1.2.3.4) of CIDR genoteerd netwerk (vb. 1.2.3.0/24). Kan meerdere keren worden gespecificeerd.</translation>
     </message>
     <message>
         <source>%s corrupt, salvage failed</source>
@@ -3176,6 +3212,10 @@
     <message>
         <source>&lt;category&gt; can be:</source>
         <translation>&lt;categorie&gt; kan zijn:</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside (default: 1 if no -proxy or -connect)</source>
+        <translation>Accepteer verbindingen van buitenaf (standaard: 1 als geen -proxy of -connect is opgegeven)</translation>
     </message>
     <message>
         <source>Append comment to the user agent string</source>
@@ -3266,10 +3306,6 @@
         <translation>Fout bij laden %s: Portemonnee vereist een nieuwere versie van %s</translation>
     </message>
     <message>
-        <source>Error loading %s: You can't disable HD on a already existing HD wallet</source>
-        <translation>Fout bij het laden van %s: Je kan HD niet deactiveren voor een reeds bestaande HD portemonnee</translation>
-    </message>
-    <message>
         <source>Error loading block database</source>
         <translation>Fout bij het laden van blokkendatabase</translation>
     </message>
@@ -3298,10 +3334,6 @@
         <translation>Initialisatie sanity check mislukt. %s is aan het afsluiten.</translation>
     </message>
     <message>
-        <source>Invalid -onion address: '%s'</source>
-        <translation>Ongeldig -onion adres '%s'</translation>
-    </message>
-    <message>
         <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>
         <translation>Ongeldig bedrag voor -%s=&lt;bedrag&gt;: '%s'</translation>
     </message>
@@ -3314,12 +3346,20 @@
         <translation>De transactiegeheugenpool moet onder de &lt;n&gt; megabytes blijven (standaard: %u)</translation>
     </message>
     <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Adressen aan het laden...</translation>
+    </message>
+    <message>
         <source>Loading banlist...</source>
         <translation>Verbanningslijst aan het laden...</translation>
     </message>
     <message>
         <source>Location of the auth cookie (default: data dir)</source>
         <translation>Locatie van de auth cookie (standaard: data dir)</translation>
+    </message>
+    <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimum aantal bytes dat er per sigop in een transactie gerelayed en gemined worden (standaard: %u)</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3406,10 +3446,6 @@
         <translation>Blokken aan het controleren...</translation>
     </message>
     <message>
-        <source>Verifying wallet...</source>
-        <translation>Portemonnee aan het controleren...</translation>
-    </message>
-    <message>
         <source>Wallet %s resides outside data directory %s</source>
         <translation>Portemonnee %s bevindt zich buiten de gegevensmap %s</translation>
     </message>
@@ -3432,10 +3468,6 @@
     <message>
         <source>Bind to given address and whitelist peers connecting to it. Use [host]:port notation for IPv6</source>
         <translation>Bind aan opgegeven adres en keur peers die ermee verbinden goed. Gebruik [host]:poort notatie voor IPv6</translation>
-    </message>
-    <message>
-        <source>Bind to given address to listen for JSON-RPC connections. Use [host]:port notation for IPv6. This option can be specified multiple times (default: bind to all interfaces)</source>
-        <translation>Bind aan gegeven adres om te luisteren voor JSON-RPC verbindingen. Gebruik [host]:poort notatie voor IPv6. Deze optie kan meerdere keren gespecificeerd worden (standaard: bind aan alle interfaces.</translation>
     </message>
     <message>
         <source>Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)</source>
@@ -3474,10 +3506,6 @@
         <translation>Gebruik willekeurige inloggegevens voor elke proxyverbinding. Dit maakt streamislatie voor Tor mogelijk (standaard: %u)</translation>
     </message>
     <message>
-        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
-        <translation>Stel maximumgrootte in bytes in voor hoge-prioriteits-/lage-transactiekosten-transacties (standaard: %d)</translation>
-    </message>
-    <message>
         <source>The transaction amount is too small to send after the fee has been deducted</source>
         <translation>Het transactiebedrag is te klein om te versturen nadat de transactiekosten in mindering zijn gebracht</translation>
     </message>
@@ -3508,6 +3536,10 @@
     <message>
         <source>Connect through SOCKS5 proxy</source>
         <translation>Verbind door SOCKS5 proxy</translation>
+    </message>
+    <message>
+        <source>Error loading %s: You can't disable HD on an already existing HD wallet</source>
+        <translation>Fout bij het laden van %s: Je kan HD niet deactiveren voor een reeds bestaande HD portemonnee</translation>
     </message>
     <message>
         <source>Error reading from database, shutting down.</source>
@@ -3556,10 +3588,6 @@
     <message>
         <source>Send trace/debug info to console instead of debug.log file</source>
         <translation>Verzend trace/debug-info naar de console in plaats van het debug.log-bestand</translation>
-    </message>
-    <message>
-        <source>Send transactions as zero-fee transactions if possible (default: %u)</source>
-        <translation>Indien mogelijk, verstuur zonder transactiekosten (standaard: %u)</translation>
     </message>
     <message>
         <source>Show all debugging options (usage: --help -help-debug)</source>
@@ -3614,6 +3642,10 @@
         <translation>Gebruikersnaam voor JSON-RPC-verbindingen</translation>
     </message>
     <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Portemonnee aan het controleren...</translation>
+    </message>
+    <message>
         <source>Warning</source>
         <translation>Waarschuwing</translation>
     </message>
@@ -3624,6 +3656,10 @@
     <message>
         <source>Whether to operate in a blocks only mode (default: %u)</source>
         <translation>Om in alleen een blokmodus te opereren (standaard: %u)</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to change -txindex</source>
+        <translation>Om -txindex te kunnen veranderen dient u de database herbouwen met gebruik van -reindex.</translation>
     </message>
     <message>
         <source>Zapping all transactions from wallet...</source>
@@ -3646,10 +3682,6 @@
         <translation>Sta DNS-naslag toe voor -addnode, -seednode en -connect</translation>
     </message>
     <message>
-        <source>Loading addresses...</source>
-        <translation>Adressen aan het laden...</translation>
-    </message>
-    <message>
         <source>(1 = keep tx meta data e.g. account owner and payment request information, 2 = drop tx meta data)</source>
         <translation>(1 = behoudt tx meta data bijv. account eigenaar en betalingsverzoek informatie, 2. sla tx meta data niet op)</translation>
     </message>
@@ -3664,6 +3696,10 @@
     <message>
         <source>Equivalent bytes per sigop in transactions for relay and mining (default: %u)</source>
         <translation>Equivalente bytes per sigop in transacties voor doorsturen en delven (standaard: %u)</translation>
+    </message>
+    <message>
+        <source>Error loading %s: You can't enable HD on an already existing non-HD wallet</source>
+        <translation>Fout bij het laden van %s: Je kan HD niet activeren voor een reeds bestaande niet-HD portemonnee</translation>
     </message>
     <message>
         <source>Fees (in %s/kB) smaller than this are considered zero fee for transaction creation (default: %s)</source>
@@ -3688,10 +3724,6 @@
     <message>
         <source>Output debugging information (default: %u, supplying &lt;category&gt; is optional)</source>
         <translation>Output extra debugginginformatie (standaard: %u, het leveren van &lt;categorie&gt; is optioneel)</translation>
-    </message>
-    <message>
-        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect/-noconnect)</source>
-        <translation>Query voor peer-adressen via DNS-lookup , indien laag aan adressen  (default: 1 unless -connect/-noconnect)</translation>
     </message>
     <message>
         <source>Support filtering of blocks and transaction with bloom filters (default: %u)</source>
@@ -3734,10 +3766,6 @@
         <translation>Waarschuwing: portomonee bestand is corrupt, data is veiliggesteld! Originele %s is opgeslagen als %s in %s; als uw balans of transacties incorrect zijn dient u een backup terug te zetten.</translation>
     </message>
     <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Goedgekeurde peers die verbinden vanaf een bepaald IP adres (vb. 1.2.3.4) of CIDR genoteerd netwerk (vb. 1.2.3.0/24). Kan meerdere keren worden gespecificeerd.</translation>
-    </message>
-    <message>
         <source>%s is set very high!</source>
         <translation>%s is zeer hoog ingesteld!</translation>
     </message>
@@ -3756,10 +3784,6 @@
     <message>
         <source>Include IP addresses in debug output (default: %u)</source>
         <translation>IP-adressen toevoegen in de debuguitvoer (standaard: %u)</translation>
-    </message>
-    <message>
-        <source>Invalid -proxy address: '%s'</source>
-        <translation>Ongeldig -proxy adres: '%s'</translation>
     </message>
     <message>
         <source>Keypool ran out, please call keypoolrefill first</source>

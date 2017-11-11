@@ -133,6 +133,10 @@
         <translation>Brieftasche entriegeln</translation>
     </message>
     <message>
+        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
+        <translation>Diese Aktion benötigt ihr Passwort zum entsperren der Wallet.</translation>
+    </message>
+    <message>
         <source>Decrypt wallet</source>
         <translation>Brieftasche entschlüsseln</translation>
     </message>
@@ -237,6 +241,10 @@
     <message>
         <source>&amp;Receiving addresses...</source>
         <translation>&amp;Adressen empfangen...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Brieftasche:</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -365,6 +373,9 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -383,6 +394,9 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -394,10 +408,30 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Einstellungen</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Brieftasche</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Fehler</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -423,9 +457,25 @@
     </context>
 <context>
     <name>RPCConsole</name>
-    </context>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Information</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Brieftasche: </translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">Unbekannt</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etikett:</translation>
+    </message>
     <message>
         <source>Copy label</source>
         <translation>Etikett kopieren</translation>
@@ -437,6 +487,10 @@
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Kopiere Adresse</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adresse</translation>
@@ -464,6 +518,19 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Insufficient funds!</source>
+        <translation>Ungenügendes Guthaben</translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Dies sind deine Bitcoin Adressen zum Senden von Zahlungsmitteln.
+Überprüfe immer die Menge, sowie die Empfänger-Adresse vor dem Senden von Coins....</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Senden</translation>
+    </message>
+    <message>
         <source>Copy amount</source>
         <translation>Betrag kopieren</translation>
     </message>
@@ -474,6 +541,10 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etikett:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -577,9 +648,17 @@
         <source>Export the data in the current tab to a file</source>
         <translation>Daten des aktiven Fensters exportieren</translation>
     </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Sicherungskopie der Brieftasche</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">Einstellungen:</translation>
+    </message>
     <message>
         <source>Information</source>
         <translation>Information</translation>
