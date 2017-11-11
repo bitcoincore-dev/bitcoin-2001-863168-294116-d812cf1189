@@ -125,8 +125,9 @@ Q_SIGNALS:
     void stopExecutor();
     void cmdRequest(const QString &command, void *ppwallet);
 
-private:
+public:
     static QString FormatBytes(quint64 bytes);
+private:
     void startExecutor();
     void setTrafficGraphRange(int mins);
     /** show detailed information on ui about selected node */
