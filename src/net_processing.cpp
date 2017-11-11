@@ -1092,7 +1092,7 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                     } else {
                         // Send block from disk
                         std::shared_ptr<CBlock> pblockRead = std::make_shared<CBlock>();
-                        if (!ReadBlockFromDisk(*pblockRead, (*mi).second, consensusParams))
+                        if (!ReadBlockFromDisk(*pblockRead, (*mi).second, consensusParams, true))
                             assert(!"cannot load block from disk");
                         pblock = pblockRead;
                     }
