@@ -34,6 +34,7 @@
 #include "script/standard.h"
 #include "script/sigcache.h"
 #include "scheduler.h"
+#include "stats/stats.h"
 #include "timedata.h"
 #include "txdb.h"
 #include "txmempool.h"
@@ -536,6 +537,7 @@ std::string HelpMessage(HelpMessageMode mode)
     }
 #endif
 
+    strUsage += CStats::getHelpString(showDebug);
     return strUsage;
 }
 
@@ -1170,6 +1172,10 @@ bool AppInitParameterInteraction()
             }
         }
     }
+
+    if (!CStats::parameterInteraction())
+        return false;
+
     return true;
 }
 
