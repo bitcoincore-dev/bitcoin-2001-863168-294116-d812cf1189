@@ -83,6 +83,7 @@ BASE_SCRIPTS= [
     'zmq_test.py',
     'bitcoin_cli.py',
     'mempool_resurrect_test.py',
+    'sweepprivkeys.py',
     'txn_doublespend.py --mineblock',
     'txn_clone.py',
     'getchaintips.py',
