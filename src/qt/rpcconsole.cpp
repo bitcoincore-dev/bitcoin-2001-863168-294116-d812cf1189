@@ -13,6 +13,7 @@
 #include "clientmodel.h"
 #include "guiutil.h"
 #include "platformstyle.h"
+#include "walletmodel.h"
 #include "chainparams.h"
 #include "netbase.h"
 #include "rpc/server.h"
@@ -86,7 +87,7 @@ class RPCExecutor : public QObject
     Q_OBJECT
 
 public Q_SLOTS:
-    void request(const QString &command);
+    void request(const QString &command, void *ppwallet);
 
 Q_SIGNALS:
     void reply(int category, const QString &command);
@@ -147,7 +148,7 @@ public:
  * @param[out]   pstrFilteredOut  Command line, filtered to remove any sensitive data
  */
 
-bool RPCConsole::RPCParseCommandLine(std::string &strResult, const std::string &strCommand, const bool fExecute, std::string * const pstrFilteredOut)
+bool RPCConsole::RPCParseCommandLine(std::string &strResult, const std::string &strCommand, const bool fExecute, std::string * const pstrFilteredOut, void * const ppwallet_v)
 {
     std::vector< std::vector<std::string> > stack;
     stack.push_back(std::vector<std::string>());
@@ -305,8 +306,11 @@ bool RPCConsole::RPCParseCommandLine(std::string &strResult, const std::string &
                             req.params = RPCConvertValues(stack.back()[0], std::vector<std::string>(stack.back().begin() + 1, stack.back().end()));
                             req.strMethod = stack.back()[0];
 #ifdef ENABLE_WALLET
-                            // TODO: Some way to access secondary wallets
-                            req.wallet = vpwallets.empty() ? nullptr : vpwallets[0];
+                            CWalletRef * const ppwallet = (CWalletRef*)ppwallet_v;
+                            if (ppwallet) {
+                                req.wallet = *ppwallet;
+                                delete ppwallet;
+                            }
 #endif
                             lastResult = tableRPC.execute(req);
                         }
@@ -383,13 +387,13 @@ bool RPCConsole::RPCParseCommandLine(std::string &strResult, const std::string &
     }
 }
 
-void RPCExecutor::request(const QString &command)
+void RPCExecutor::request(const QString &command, void * const ppwallet_v)
 {
     try
     {
         std::string result;
         std::string executableCommand = command.toStdString() + "\n";
-        if(!RPCConsole::RPCExecuteCommandLine(result, executableCommand))
+        if(!RPCConsole::RPCExecuteCommandLine(result, executableCommand, nullptr, ppwallet_v))
         {
             Q_EMIT reply(RPCConsole::CMD_ERROR, QString("Parse error: unbalanced ' or \""));
             return;
@@ -474,6 +478,12 @@ RPCConsole::RPCConsole(const PlatformStyle *_platformStyle, QWidget *parent) :
 
 RPCConsole::~RPCConsole()
 {
+#ifdef ENABLE_WALLET
+    for (int i = ui->WalletSelector->count(); --i >= 1; ) {
+        CWalletRef * const ppwallet = (CWalletRef*)ui->WalletSelector->itemData(i).value<void*>();
+        delete ppwallet;
+    }
+#endif
     QSettings settings;
     settings.setValue("RPCConsoleWindowGeometry", saveGeometry());
     RPCUnsetTimerInterface(rpcTimerInterface);
@@ -657,6 +667,19 @@ void RPCConsole::setClientModel(ClientModel *model)
         thread.wait();
     }
 }
+
+#ifdef ENABLE_WALLET
+void RPCConsole::addWallet(WalletModel * const walletModel)
+{
+    const QString name = walletModel->getWalletName();
+    CWalletRef * const ppwallet = new CWalletRef(walletModel->getWallet());
+    ui->WalletSelector->addItem(name, QVariant::fromValue((void*)(ppwallet)));
+    if (ui->WalletSelector->count() == 2 && !isVisible()) {
+        // First wallet added, set to default so long as the window isn't presently visible (and potentially in use)
+        ui->WalletSelector->setCurrentIndex(1);
+    }
+}
+#endif
 
 static QString categoryClass(int category)
 {
@@ -844,8 +867,18 @@ void RPCConsole::on_lineEdit_returnPressed()
 
         cmdBeforeBrowsing = QString();
 
+        void *ppwallet_v = nullptr;
+#ifdef ENABLE_WALLET
+        const int wallet_index = ui->WalletSelector->currentIndex();
+        if (wallet_index > 0) {
+            CWalletRef *ppwallet = (CWalletRef*)ui->WalletSelector->itemData(wallet_index).value<void*>();
+            ppwallet = new CWalletRef(*ppwallet);  // Refcount
+            ppwallet_v = (void*)ppwallet;
+        }
+#endif
+
         message(CMD_REQUEST, QString::fromStdString(strFilteredCmd));
-        Q_EMIT cmdRequest(cmd);
+        Q_EMIT cmdRequest(cmd, ppwallet_v);
 
         cmd = QString::fromStdString(strFilteredCmd);
 
@@ -893,7 +926,7 @@ void RPCConsole::startExecutor()
     // Replies from executor object must go to this object
     connect(executor, SIGNAL(reply(int,QString)), this, SLOT(message(int,QString)));
     // Requests from this object must go to executor
-    connect(this, SIGNAL(cmdRequest(QString)), executor, SLOT(request(QString)));
+    connect(this, SIGNAL(cmdRequest(QString, void*)), executor, SLOT(request(QString, void*)));
 
     // On stopExecutor signal
     // - quit the Qt event loop in the execution thread
