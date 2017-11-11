@@ -4370,9 +4370,9 @@ int CMerkleTx::GetBlocksToMaturity() const
 }
 
 
-bool CMerkleTx::AcceptToMemoryPool(const CAmount& nAbsurdFee, CValidationState& state)
+bool CMerkleTx::AcceptToMemoryPool(const CAmount& nAbsurdFee, CValidationState& state, const ignore_rejects_type& ignore_rejects)
 {
-    return ::AcceptToMemoryPool(mempool, state, tx, true, nullptr, nullptr, false, nAbsurdFee);
+    return ::AcceptToMemoryPool(mempool, state, tx, nullptr, nullptr, nAbsurdFee, ignore_rejects);
 }
 
 bool GetWitnessKeyID(const CKeyStore* const store, const CScriptID &scriptID, CKeyID &keyID)
