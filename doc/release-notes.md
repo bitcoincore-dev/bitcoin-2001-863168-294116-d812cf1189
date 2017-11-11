@@ -1,21 +1,13 @@
-Bitcoin Core version *0.15.1* is now available from:
+Bitcoin Knots version *0.15.1.knots20171111* is now available from:
 
-  <https://bitcoincore.org/bin/bitcoin-core-0.15.1/>
-
-or
-
-  <https://bitcoin.org/bin/bitcoin-core-0.15.1/>
+  <https://bitcoinknots.org/files/0.15.x/0.15.1.knots20171111/>
 
 This is a new minor version release, including various bugfixes and
 performance improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at GitHub:
 
-  <https://github.com/bitcoin/bitcoin/issues>
-
-To receive security and update notifications, please subscribe to:
-
-  <https://bitcoincore.org/en/list/announcements/join/>
+  <https://github.com/bitcoinknots/bitcoin/issues>
 
 How to Upgrade
 ==============
@@ -52,10 +44,10 @@ processing the entire blockchain.
 Compatibility
 ==============
 
-Bitcoin Core is extensively tested on multiple operating systems using
-the Linux kernel, macOS 10.8+, and Windows Vista and later. Windows XP is not supported.
+Bitcoin Knots is supported on multiple operating systems using the Linux kernel,
+macOS 10.8+, and Windows Vista and later. Windows XP is not supported.
 
-Bitcoin Core should also work on most other Unix-like systems but is not
+Bitcoin Knots should also work on most other Unix-like systems but is not
 frequently tested on them.
 
 
@@ -65,7 +57,7 @@ Notable changes
 Network fork safety enhancements
 --------------------------------
 
-A number of changes to the way Bitcoin Core deals with peer connections and invalid blocks
+A number of changes to the way Bitcoin Knots deals with peer connections and invalid blocks
 have been made, as a safety precaution against blockchain forks and misbehaving peers.
 
 - Unrequested blocks with less work than the minimum-chain-work are now no longer processed even
@@ -94,17 +86,23 @@ invalid) are now tracked and used to check if new headers build on an invalid ch
 descends from an invalid block is marked as such.
 
 
-Miner block size limiting deprecated
-------------------------------------
+Faster initial blockchain sync for pruned nodes
+-----------------------------------------------
 
-Though blockmaxweight has been preferred for limiting the size of blocks returned by
-getblocktemplate since 0.13.0, blockmaxsize remained as an option for those who wished
-to limit their block size directly. Using this option resulted in a few UI issues as
-well as non-optimal fee selection and ever-so-slightly worse performance, and has thus
-now been deprecated. Further, the blockmaxsize option is now used only to calculate an
-implied blockmaxweight, instead of limiting block size directly. Any miners who wish
-to limit their blocks by size, instead of by weight, will have to do so manually by
-removing transactions from their block template directly.
+When performing the initial sync, pruning will more aggressively get rid of old data to avoid having to prune too often. This can result in a significant performance improvement.
+
+
+Various GUI improvements
+------------------------
+
+- Send tab has a button to send your entire available balance.
+
+- Transaction search now understands transaction ids.
+
+- Transaction list now shows labels and/or addresses, for send-to-self entries.
+
+- The debug window peer list now has columns for data sent and received from
+  each peer.
 
 
 GUI settings backed up on reset
@@ -132,7 +130,8 @@ when validating a chain.
 Low-level RPC changes
 ----------------------
 
-- The "currentblocksize" value in getmininginfo has been removed.
+- `addmultisigaddress` and `createmultisig` will no longer permit uncompressed
+  keys to be used when sorting, since BIP 67 forbids this.
 
 - `dumpwallet` no longer allows overwriting files. This is a security measure
   as well as prevents dangerous user mistakes.
@@ -140,15 +139,38 @@ Low-level RPC changes
 - `backupwallet` will now fail when attempting to backup to source file, rather than
   destroying the wallet.
 
+- `getblockchaininfo` now includes `initialblockdownload` to indicate the node
+  sync state, as well as the blockchain `size_on_disk`, `prune_target_size`,
+  and whether `automatic_pruning` is enabled.
+
+- `getmempoolancestors`, `getmempooldescendants`, `getmempoolentry`, and (in
+  verbose mode) `getrawmempool` now include the wtxid and weight of mempool
+  entries.
+
+- An experimental utility `getsignaturehash` RPC is introduced, for external
+  signing tools.
+
 - `listsinceblock` will now throw an error if an unknown `blockhash` argument
   value is passed, instead of returning a list of all wallet transactions since
   the genesis block. The behaviour is unchanged when an empty string is provided.
 
+- The named parameters and results for `rescanblockchain` have been renamed to
+  include an underscore (eg, `start_height`). This release preserves
+  compatibility with the deprecated names, but they will be removed in the
+  future.
+
+- `signrawtransaction` and `verifyscript` can in some cases return human-
+  readable error messages. This now correctly identifies CLEANSTACK violation
+  errors.
+
 0.15.1 Change log
 =================
 
-### Mining
-- #11100 `7871a7d` Fix confusing blockmax{size,weight} options, dont default to throwing away money (TheBlueMatt)
+Detailed release notes follow. This overview includes changes that affect
+behavior, not code moves, refactors and string updates. For convenience in locating
+the code changes and accompanying discussion, both the pull request and
+git merge commit are mentioned. Changes specific to Bitcoin Knots (beyond
+Core) are flagged with an asterisk ('*') before the description.
 
 ### RPC and other APIs
 - #10859 `2a5d099` gettxout: Slightly improve doc and tests (jtimon)
@@ -159,6 +181,17 @@ Low-level RPC changes
 - #11131 `b278a43` Write authcookie atomically (laanwj)
 - #11565 `7d4546f` Make listsinceblock refuse unknown block hash (ryanofsky)
 - #11593 `8195cb0` Work-around an upstream libevent bug (theuni)
+- #11418 `ba34fc0` *Add error string for CLEANSTACK script violation (Mark Friedenbach)
+- #11596 `ef936e9` *Add missing cs_main locks when accessing chainActive (practicalswift)
+- #11529 `5f80fcb` *Avoid slow transaction search with txindex enabled (João Barbosa)
+- #7061 `3855eed` *Update: [Wallet] add rescanblockchain <start_height> <stop_height> RPC command (jonasschnelli)
+- #8751 `48517f9` *Ensure whilst sorting only compressed public keys are used (Thomas Kerin)
+- #11203 `290aea2` *add wtxid to mempool entry output (sdaftuar)
+- #11256 `2a88c1e` *add weight to mempool entry output (Daniel Edgecumbe)
+- #11258 `4007c82` *Add initialblockdownload to getblockchaininfo (John Newbery)
+- #11367 `fec3a14` *getblockchaininfo: add size_on_disk, prune_target_size, automatic_pruning (Daniel Edgecumbe)
+- #11626 `31ba1a6` *Make logging RPC public (laanwj)
+- #11653 `4ac2c48` *Add utility getsignaturehash (NicolasDorier)
 
 ### P2P protocol and network code
 - #11397 `27e861a` Improve and document SOCKS code (laanwj)
@@ -175,19 +208,29 @@ Low-level RPC changes
 ### Validation
 - #10357 `da4908c` Allow setting nMinimumChainWork on command line (sdaftuar)
 - #11458 `2df65ee` Don't process unrequested, low-work blocks (sdaftuar)
+- #11658 `ac51a26` *During IBD, when doing pruning, prune 10% extra to avoid pruning again soon after (luke-jr)
 
 ### Build system
 - #11440 `b6c0209` Fix validationinterface build on super old boost/clang (TheBlueMatt)
 - #11530 `265bb21` Add share/rpcuser to dist. source code archive (MarcoFalke)
+- #11622 `e488a54` *Add --disable-bip70 configure option (laanwj)
 
 ### GUI
 - #11334 `19d63e8` Remove custom fee radio group and remove nCustomFeeRadio setting (achow101)
-- #11198 `7310f1f` Fix display of package name on 'open config file' tooltip (esotericnonsense)
 - #11015 `6642558` Add delay before filtering transactions (lclc)
 - #11338 `6a62c74` Backup former GUI settings on `-resetguisettings` (laanwj)
 - #11335 `8d13b42` Replace save|restoreWindowGeometry with Qt functions (MeshCollider)
 - #11237 `2e31b1d` Fixing division by zero in time remaining (MeshCollider)
 - #11247 `47c02a8` Use IsMine to validate custom change address (MarcoFalke)
+- n/a    `754f888` *ArgsManager: Queue early ModifyRWConfigFile changes until rwconf file is loaded (luke-jr)
+- n/a    `5509259` *Bugfix: Intro: Actually set and write the prune option to rwconf (luke-jr)
+- n/a    `a07333b` *Bugfix: Intro: Recheck free space when changing space required (luke-jr)
+- #11383 `42ca0f5` *Get wallet name from WalletModel rather than passing it around (luke-jr)
+- #11316 `6fc77f3` *Add use available balance in send coins dialog (CryptAxe)
+- #11395 `bf267b6` *Avoid invalidating the search filter, when it doesn't really change (luke-jr)
+- #11395 `3affa84` *Enable searching by transaction id (luke-jr)
+- #11471 `d0856b0` *Optimize SendToSelf rendering with a single non-change output (jonasschnelli)
+- #11499 `5af4fbb` *Add Sent and Received information to the debug menu peer list (Aaron Golliver)
 
 ### Wallet
 - #11017 `9e8aae3` Close DB on error (kallewoof)
@@ -197,6 +240,7 @@ Low-level RPC changes
 - #11492 `de7053f` Fix leak in CDB constructor (promag)
 - #11376 `fd79ed6` Ensure backupwallet fails when attempting to backup to source file (tomasvdw)
 - #11326 `d570aa4` Fix crash on shutdown with invalid wallet (MeshCollider)
+- #11634 `a6b3c63` *Add missing cs_wallet/cs_KeyStore locks to wallet (practicalswift)
 
 ### Tests and QA
 - #11399 `a825d4a` Fix bip68-sequence rpc test (jl2012)
@@ -230,14 +274,21 @@ Low-level RPC changes
 - #11472 `4108879` Make tmpdir option an absolute path, misc cleanup (MarcoFalke)
 - #10853 `5b728c8` Fix RPC failure testing (again) (jnewbery)
 - #11310 `b6468d3` Test listwallets RPC (mess110)
+- #8751 `6ddf8de` *Add more tests to sort_multisigs.py / wallet-accounts.py (Thomas Kerin)
+- #10554 `e26209d` *ZMQ: Check for rawwallettx (Doron Somech)
+- #10593 `04ff5ec` *Mininode: Support node-to-test connections (luke-jr)
+- #11203 `2ba6ba0` *rpc test for wtxid in mempool entry (sdaftuar)
+- #11256 `812bf31` *Add RPC tests for weight in mempool entry (Daniel Edgecumbe)
+- #11370 `b2194eb` *Add restart_node to BitcoinTestFramework (João Barbosa)
+- #11370 `2bb5a01` *Add getblockchaininfo functional test (João Barbosa)
 
 ### Miscellaneous
 - #11377 `75997c3` Disallow uncompressed pubkeys in bitcoin-tx [multisig] output adds (TheBlueMatt)
 - #11437 `dea3b87` [Docs] Update Windows build instructions for using WSL and Ubuntu 17.04 (fanquake)
 - #11318 `8b61aee` Put back inadvertently removed copyright notices (gmaxwell)
 - #11442 `cf18f42` [Docs] Update OpenBSD Build Instructions for OpenBSD 6.2 (fanquake)
-- #10957 `50bd3f6` Avoid returning a BIP9Stats object with uninitialized values (practicalswift)
 - #11539 `01223a0` [verify-commits] Allow revoked keys to expire (TheBlueMatt)
+- #11662 `f455bfd` *Sanity-check script sizes in bitcoin-tx (TheBlueMatt)
 
 
 Credits
@@ -245,13 +296,16 @@ Credits
 
 Thanks to everyone who directly contributed to this release:
 
+- Aaron Golliver
 - Andreas Schildbach
 - Andrew Chow
 - Chris Moore
 - Cory Fields
 - Cristian Mircea Messel
+- CryptAxe
 - Daniel Edgecumbe
 - Donal OConnor
+- Doron Somech
 - Dusty Williams
 - fanquake
 - Gregory Sanders
@@ -259,11 +313,15 @@ Thanks to everyone who directly contributed to this release:
 - John Newbery
 - Johnson Lau
 - João Barbosa
+- Jonas Schnelli
 - Jorge Timón
 - Karl-Johan Alm
 - Lucas Betschart
+- Luke Dashjr
 - MarcoFalke
+- Mark Friedenbach
 - Matt Corallo
+- Nicolas Dorier
 - Paul Berg
 - Pedro Branco
 - Pieter Wuille
@@ -271,6 +329,7 @@ Thanks to everyone who directly contributed to this release:
 - Russell Yanofsky
 - Samuel Dobson
 - Suhas Daftuar
+- Thomas Kerin
 - Tomas van der Wansem
 - Wladimir J. van der Laan
 
