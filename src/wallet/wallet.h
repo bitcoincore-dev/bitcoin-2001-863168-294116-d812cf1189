@@ -92,12 +92,13 @@ enum WalletFeature
 
     FEATURE_WALLETCRYPT = 40000, // wallet encryption
     FEATURE_COMPRPUBKEY = 60000, // compressed public keys
+    FEATURE_KEYFLAGS    = 70000, // key metadata flags for storing informations like key origin
 
     FEATURE_HD = 130000, // Hierarchical key derivation after BIP32 (HD Wallet)
 
     FEATURE_HD_SPLIT = 139900, // Wallet with HD chain split (change outputs will use m/0'/1'/k)
 
-    FEATURE_LATEST = FEATURE_COMPRPUBKEY // HD is optional, use FEATURE_COMPRPUBKEY as latest version
+    FEATURE_LATEST = FEATURE_KEYFLAGS // HD is optional, use FEATURE_KEYFLAGS as latest version
 };
 
 
@@ -815,7 +816,14 @@ public:
     const CWalletTx* GetWalletTx(const uint256& hash) const;
 
     //! check whether we are allowed to upgrade (or already support) to the named feature
-    bool CanSupportFeature(enum WalletFeature wf) const { AssertLockHeld(cs_wallet); return nWalletMaxVersion >= wf; }
+    bool CanSupportFeature(enum WalletFeature wf) const {
+        AssertLockHeld(cs_wallet);
+        if (wf == FEATURE_KEYFLAGS && nWalletVersion >= FEATURE_HD) {
+            // HD wallets are incompatible with keyflags
+            return false;
+        }
+        return nWalletMaxVersion >= wf;
+    }
 
     /**
      * populate vCoins with vector of available COutputs.
