@@ -8,6 +8,8 @@ from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
     connect_nodes_bi,
+    assert_raises_rpc_error,
+    JSONRPCException,
 )
 import shutil
 import os
@@ -36,11 +38,18 @@ class WalletHDTest(BitcoinTestFramework):
         change_addrV= self.nodes[1].validateaddress(change_addr)
         assert_equal(change_addrV["hdkeypath"], "m/0'/1'/0'") #first internal child key
 
+        # Check that the exported master private key begins with tprv
+        xprv = self.nodes[1].dumpmasterprivkey()
+        assert_equal(xprv[0:4], "tprv")
+
+        # Exporting the master private key should fail on a non-HD wallet
+        assert_raises_rpc_error(-4, "Wallet is not a HD wallet.", self.nodes[0].dumpmasterprivkey)
+
         # Import a non-HD private key in the HD wallet
         non_hd_add = self.nodes[0].getnewaddress()
         self.nodes[1].importprivkey(self.nodes[0].dumpprivkey(non_hd_add))
 
-        # This should be enough to keep the master key and the non-HD key 
+        # This should be enough to keep the master key and the non-HD key
         self.nodes[1].backupwallet(tmpdir + "/hd.bak")
         #self.nodes[1].dumpwallet(tmpdir + "/hd.dump")
 
@@ -125,7 +134,7 @@ class WalletHDTest(BitcoinTestFramework):
         for out in outs:
             if out['value'] != 1:
                 keypath = self.nodes[1].validateaddress(out['scriptPubKey']['addresses'][0])['hdkeypath']
-        
+
         assert_equal(keypath[0:7], "m/0'/1'")
 
 if __name__ == '__main__':
