@@ -9,6 +9,8 @@
 #include "qvalidatedlineedit.h"
 #include "walletmodel.h"
 
+#include "base58.h"
+#include "chainparams.h"
 #include "fs.h"
 #include "primitives/transaction.h"
 #include "init.h"
