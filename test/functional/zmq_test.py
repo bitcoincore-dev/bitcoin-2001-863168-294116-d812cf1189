@@ -9,6 +9,7 @@ import struct
 
 from test_framework.test_framework import BitcoinTestFramework, SkipTest
 from test_framework.util import (assert_equal,
+                                 assert_not_equal,
                                  bytes_to_hex_str,
                                  hash256,
                                 )
@@ -40,10 +41,16 @@ class ZMQTest (BitcoinTestFramework):
         self.zmqSubSocket.setsockopt(zmq.SUBSCRIBE, b"hashtx")
         self.zmqSubSocket.setsockopt(zmq.SUBSCRIBE, b"rawblock")
         self.zmqSubSocket.setsockopt(zmq.SUBSCRIBE, b"rawtx")
+        self.zmqSubSocket.setsockopt(zmq.SUBSCRIBE, b"hashwallettx")
+        self.zmqSubSocket.setsockopt(zmq.SUBSCRIBE, b"rawwallettx")
         ip_address = "tcp://127.0.0.1:28332"
         self.zmqSubSocket.connect(ip_address)
-        self.extra_args = [['-zmqpubhashblock=%s' % ip_address, '-zmqpubhashtx=%s' % ip_address,
-                       '-zmqpubrawblock=%s' % ip_address, '-zmqpubrawtx=%s' % ip_address], []]
+        self.extra_args = [['-zmqpubhashblock=%s' % ip_address,
+                       '-zmqpubhashtx=%s' % ip_address,
+                       '-zmqpubrawblock=%s' % ip_address,
+                       '-zmqpubrawtx=%s' % ip_address,
+                       '-zmqpubhashwallettx=%s' % ip_address,
+                       '-zmqpubrawwallettx=%s' % ip_address], []]
         self.add_nodes(self.num_nodes, self.extra_args)
         self.start_nodes()
 
@@ -74,6 +81,25 @@ class ZMQTest (BitcoinTestFramework):
         body = msg[1]
         msgSequence = struct.unpack('<I', msg[-1])[-1]
         assert_equal(msgSequence, 0) # must be sequence 0 on rawtx
+
+        # Check that the rawtx hashes to the hashtx
+        assert_equal(hash256(body), txhash)
+
+        self.log.info("Wait for wallet tx")
+        msg = self.zmqSubSocket.recv_multipart()
+        topic = msg[0]
+        assert_equal(topic, b"hashwallettx-block")
+        txhash = msg[1]
+        msgSequence = struct.unpack('<I', msg[-1])[-1]
+        assert_equal(msgSequence, 0) #must be sequence 0 on hashwallettx
+
+        # rawtx
+        msg = self.zmqSubSocket.recv_multipart()
+        topic = msg[0]
+        assert_equal(topic, b"rawwallettx-block")
+        body = msg[1]
+        msgSequence = struct.unpack('<I', msg[-1])[-1]
+        assert_equal(msgSequence, 0) #must be sequence 0 on hashwallettx
 
         # Check that the rawtx hashes to the hashtx
         assert_equal(hash256(body), txhash)
@@ -110,6 +136,10 @@ class ZMQTest (BitcoinTestFramework):
         for x in range(n * 4):
             msg = self.zmqSubSocket.recv_multipart()
             topic = msg[0]
+            assert_not_equal(topic, b"hashwallettx-block") # as originated from another node must not belong to node0 wallet
+            assert_not_equal(topic, b"hashwallettx-mempool")
+            assert_not_equal(topic, b"rawwallettx-block")
+            assert_not_equal(topic, b"rawwallettx-mempool")
             body = msg[1]
             if topic == b"hashblock":
                 zmqHashes.append(bytes_to_hex_str(body))
@@ -147,6 +177,25 @@ class ZMQTest (BitcoinTestFramework):
         msgSequence = struct.unpack('<I', msg[-1])[-1]
         assert_equal(msgSequence, blockcount+1)
         assert_equal(hashRPC, hashZMQ)  # txid from sendtoaddress must be equal to the hash received over zmq
+        assert_equal(hashRPC, hashedZMQ)
+
+        msg = self.zmqSubSocket.recv_multipart()
+        topic = msg[0]
+        assert_equal(topic, b"hashwallettx-mempool")
+        body = msg[1]
+        hashZMQ = bytes_to_hex_str(body)
+        msgSequence = struct.unpack('<I', msg[-1])[-1]
+        assert_equal(msgSequence, 1)
+        assert_equal(hashRPC, hashZMQ)
+
+        msg = self.zmqSubSocket.recv_multipart()
+        topic = msg[0]
+        assert_equal(topic, b"rawwallettx-mempool")
+        body = msg[1]
+        hashedZMQ = bytes_to_hex_str(hash256(body))
+        msgSequence = struct.unpack('<I', msg[-1])[-1]
+        assert_equal(msgSequence, 1)
+        assert_equal(hashRPC, hashZMQ)
         assert_equal(hashRPC, hashedZMQ)
 
 if __name__ == '__main__':
