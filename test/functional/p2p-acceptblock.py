@@ -82,7 +82,7 @@ class AcceptBlockTest(BitcoinTestFramework):
         min_work_node = NodeConnCB()  # connects to node1
 
         connections = []
-        connections.append(NodeConn('127.0.0.1', p2p_port(0), self.nodes[0], test_node))
+        connections.append(NodeConn('127.0.0.1', p2p_port(0), self.nodes[0], test_node, node_outgoing=True))
         connections.append(NodeConn('127.0.0.1', p2p_port(1), self.nodes[1], min_work_node))
         test_node.add_connection(connections[0])
         min_work_node.add_connection(connections[1])
@@ -213,7 +213,7 @@ class AcceptBlockTest(BitcoinTestFramework):
         test_node.wait_for_disconnect()
 
         test_node = NodeConnCB()   # connects to node (not whitelisted)
-        connections[0] = NodeConn('127.0.0.1', p2p_port(0), self.nodes[0], test_node)
+        connections[0] = NodeConn('127.0.0.1', p2p_port(0), self.nodes[0], test_node, node_outgoing=True)
         test_node.add_connection(connections[0])
 
         test_node.wait_for_verack()
@@ -299,7 +299,7 @@ class AcceptBlockTest(BitcoinTestFramework):
             test_node.wait_for_disconnect()
 
             test_node = NodeConnCB()   # connects to node (not whitelisted)
-            connections[0] = NodeConn('127.0.0.1', p2p_port(0), self.nodes[0], test_node)
+            connections[0] = NodeConn('127.0.0.1', p2p_port(0), self.nodes[0], test_node, node_outgoing=True)
             test_node.add_connection(connections[0])
 
             NetworkThread().start() # Start up network handling in another thread

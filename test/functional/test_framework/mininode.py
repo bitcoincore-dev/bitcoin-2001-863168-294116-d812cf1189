@@ -1656,11 +1656,11 @@ class NodeConn(asyncore.dispatcher):
         "regtest": b"\xfa\xbf\xb5\xda",   # regtest
     }
 
-    def __init__(self, dstaddr, dstport, rpc, callback, net="regtest", services=NODE_NETWORK, send_version=True):
+    def __init__(self, dstaddr, dstport, rpc, callback, net="regtest", services=NODE_NETWORK, send_version=True, node_outgoing=False):
         asyncore.dispatcher.__init__(self, map=mininode_socket_map)
         self.dstaddr = dstaddr
         self.dstport = dstport
-        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.rpc = rpc
         self.sendbuf = b""
         self.recvbuf = b""
         self.ver_send = 209
@@ -1671,6 +1671,7 @@ class NodeConn(asyncore.dispatcher):
         self.cb = callback
         self.disconnect = False
         self.nServices = 0
+        self.node_outgoing = node_outgoing
 
         if send_version:
             # stuff version msg into sendbuf
@@ -1682,13 +1683,34 @@ class NodeConn(asyncore.dispatcher):
             vt.addrFrom.port = 0
             self.send_message(vt, True)
 
-        logger.info('Connecting to Bitcoin Node: %s:%d' % (self.dstaddr, self.dstport))
-
         try:
-            self.connect((dstaddr, dstport))
+            self.do_connect()
         except:
             self.handle_close()
-        self.rpc = rpc
+
+    def do_connect(self):
+        if not self.node_outgoing:
+            logger.info('Connecting to Bitcoin Node: %s:%d' % (self.dstaddr, self.dstport))
+            self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.connect((self.dstaddr, self.dstport))
+            return
+
+        logger.info('Connecting from Bitcoin Node: %s:%d' % (self.dstaddr, self.dstport))
+
+        listen_sock = socket.socket()
+        listen_sock.bind(('127.0.0.1', 0))
+        listen_sock.listen(1)
+        listen_port = listen_sock.getsockname()[1]
+        self.rpc.addnode('127.0.0.1:%u' % (listen_port,), 'onetry')
+        (sock, addr) = listen_sock.accept()
+        assert sock
+        listen_sock.close()
+
+        sock.setblocking(0)
+        self.set_socket(sock)
+        self.connected = True
+        self.addr = addr
+        self.handle_connect_event()
 
     def handle_connect(self):
         if self.state != "connected":
