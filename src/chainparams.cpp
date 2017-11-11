@@ -101,10 +101,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1510704000; // November 15th, 2017.
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000723d3581fe1bd55373540a");
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000007fac388af71e904c63c599");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0000000000000000003b9ce759c2a087d52abc4266f8f4ebd6d768b89defa50a"); //477890
+        consensus.defaultAssumeValid = uint256S("0x0000000000000000001c8018d9cb3b742ef25114f27563e3fc4a1902167f9893"); //481824
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -158,15 +158,21 @@ public:
                 {250000, uint256S("0x000000000000003887df1f29024b06fc2200b55f8af8f35453d7be294df2d214")},
                 {279000, uint256S("0x0000000000000001ae8c72a0b0c301f67e3afca10e819efa9041e458e9bd7e40")},
                 {295000, uint256S("0x00000000000000004d9b4ef50f0f9d686fd69db2e03af35a100370c64632a983")},
+                {393216, uint256S("0x00000000000000000390df7d2bdc06b9fcb260b39e3fb15b4bc9f62572553924")},
+                {421888, uint256S("0x000000000000000004b232ad9492d0729d7f9d6737399ffcdaac1c8160db5ef6")},
+                {438784, uint256S("0x0000000000000000040d6ef667d7a52caf93d8e0d1e40fd7155c787b42667179")},
+                {451840, uint256S("0x0000000000000000029103c8ade7786e7379623465c72d71d84624eb9c159bea")},
+                {469766, uint256S("0x000000000000000000130b2bd812c6a7ae9c02a74fc111806b1dd11e8975da45")},
+                {481824, uint256S("0x0000000000000000001c8018d9cb3b742ef25114f27563e3fc4a1902167f9893")},
             }
         };
 
         chainTxData = ChainTxData{
             // Data as of block 000000000000000000d97e53664d17967bd4ee50b23abb92e54a34eb222d15ae (height 478913).
-            1501801925, // * UNIX timestamp of last known number of transactions
-            243756039,  // * total number of transactions between genesis and that timestamp
+            1503795286, // * UNIX timestamp of last known number of transactions
+            249668966,  // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
-            3.1         // * estimated number of transactions per second after that timestamp
+            3.6         // * estimated number of transactions per second after that timestamp
         };
     }
 };
