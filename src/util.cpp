@@ -471,6 +471,11 @@ void ArgsManager::ForceSetArg(const std::string& strArg, const std::string& strV
     mapMultiArgs[strArg].push_back(strValue);
 }
 
+void ArgsManager::ForceSetArg(const std::string& strArg, int64_t nValue)
+{
+    ForceSetArg(strArg, i64tostr(nValue));
+}
+
 
 
 static const int screenWidth = 79;
