@@ -148,6 +148,9 @@ void OptionsModel::Init(bool resetSettings)
     else if(!settings.value("fUseSeparateProxyTor").toBool() && !gArgs.GetArg("-onion", "").empty())
         addOverriddenOption("-onion");
 
+    // rwconf settings that require a restart
+    f_peerbloomfilters = gArgs.GetBoolArg("-peerbloomfilters", DEFAULT_PEERBLOOMFILTERS);
+
     // Display
     if (!settings.contains("language"))
         settings.setValue("language", "");
@@ -283,6 +286,10 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("nThreadsScriptVerif");
         case Listen:
             return settings.value("fListen");
+        case maxuploadtarget:
+            return qlonglong(g_connman->GetMaxOutboundTarget() / 1024 / 1024);
+        case peerbloomfilters:
+            return f_peerbloomfilters;
         default:
             return QVariant();
         }
@@ -440,6 +447,22 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
         case Listen:
             if (settings.value("fListen") != value) {
                 settings.setValue("fListen", value);
+                setRestartRequired(true);
+            }
+            break;
+        case maxuploadtarget:
+        {
+            qlonglong nv = value.toLongLong();
+            if (g_connman->GetMaxOutboundTarget() / 1024 / 1024 != uint64_t(nv)) {
+                gArgs.ModifyRWConfigFile("maxuploadtarget", value.toString().toStdString());
+                g_connman->SetMaxOutboundTarget(nv * 1024 * 1024);
+            }
+            break;
+        }
+        case peerbloomfilters:
+            if (f_peerbloomfilters != value) {
+                gArgs.ModifyRWConfigFile("peerbloomfilters", strprintf("%d", value.toBool()));
+                f_peerbloomfilters = value.toBool();
                 setRestartRequired(true);
             }
             break;
