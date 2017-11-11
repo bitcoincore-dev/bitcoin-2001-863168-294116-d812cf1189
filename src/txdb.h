@@ -63,7 +63,9 @@ struct CDiskTxPos : public CDiskBlockPos
     }
 };
 
-/** CCoinsView backed by the coin database (chainstate/) */
+/** CCoinsView backed by the coin database (chainstate/)
+ * Cursor requires FlushStateToDisk for consistency.
+ */
 class CCoinsViewDB : public CCoinsView
 {
 protected:

@@ -178,6 +178,24 @@ std::vector<unsigned char> ParseHexO(const UniValue& o, std::string strKey)
     return ParseHexV(find_value(o, strKey), strKey);
 }
 
+void ParseWIFPrivKey(const std::string wif_secret, CKey& key, CPubKey* pubkey)
+{
+    CBitcoinSecret secret;
+    if (!secret.SetString(wif_secret)) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid private key encoding");
+    }
+
+    key = secret.GetKey();
+    if (!key.IsValid()) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Private key outside allowed range");
+    }
+
+    if (pubkey) {
+        *pubkey = key.GetPubKey();
+        assert(key.VerifyPubKey(*pubkey));
+    }
+}
+
 /**
  * Note: This interface may still be subject to change.
  */
