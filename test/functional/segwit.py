@@ -75,9 +75,7 @@ def find_unspent(node, min_value):
             return utxo
 
 class SegWitTest(BitcoinTestFramework):
-
-    def __init__(self):
-        super().__init__()
+    def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 3
         self.extra_args = [["-walletprematurewitness", "-rpcserialversion=0"],
@@ -102,11 +100,11 @@ class SegWitTest(BitcoinTestFramework):
         sync_blocks(self.nodes)
 
     def fail_accept(self, node, error_msg, txid, sign, redeem_script=""):
-        assert_raises_jsonrpc(-26, error_msg, send_to_witness, 1, node, getutxo(txid), self.pubkey[0], False, Decimal("49.998"), sign, redeem_script)
+        assert_raises_rpc_error(-26, error_msg, send_to_witness, 1, node, getutxo(txid), self.pubkey[0], False, Decimal("49.998"), sign, redeem_script)
 
     def fail_mine(self, node, txid, sign, redeem_script=""):
         send_to_witness(1, node, getutxo(txid), self.pubkey[0], False, Decimal("49.998"), sign, redeem_script)
-        assert_raises_jsonrpc(-1, "CreateNewBlock: TestBlockValidity failed", node.generate, 1)
+        assert_raises_rpc_error(-1, "CreateNewBlock: TestBlockValidity failed", node.generate, 1)
         sync_blocks(self.nodes)
 
     def run_test(self):
@@ -243,28 +241,45 @@ class SegWitTest(BitcoinTestFramework):
         #                      tx2 (segwit input, paying to a non-segwit output) ->
         #                      tx3 (non-segwit input, paying to a non-segwit output).
         # tx1 is allowed to appear in the block, but no others.
-        txid1 = send_to_witness(1, self.nodes[0], find_unspent(self.nodes[0], 50), self.pubkey[0], False, Decimal("49.996"))
-        hex_tx = self.nodes[0].gettransaction(txid)['hex']
-        tx = FromHex(CTransaction(), hex_tx)
+        tx_hex = self.nodes[0].gettransaction(txid)['hex']
+        tx = FromHex(CTransaction(), tx_hex)
         assert(tx.wit.is_null()) # This should not be a segwit input
+
+        txid1 = send_to_witness(1, self.nodes[0], find_unspent(self.nodes[0], 50), self.pubkey[0], False, Decimal("49.996"))
         assert(txid1 in self.nodes[0].getrawmempool())
+        tx1_hex = self.nodes[0].gettransaction(txid1)['hex']
+        tx1 = FromHex(CTransaction(), tx1_hex)
+
+        # Check that wtxid is properly reported in mempool entry (txid1)
+        assert_equal(int(self.nodes[0].getmempoolentry(txid1)["wtxid"], 16), tx1.calc_sha256(True))
+
+        # Check that weight and sizei (actually vsize) are properly reported in mempool entry (txid1)
+        assert_equal(self.nodes[0].getmempoolentry(txid1)["size"], (self.nodes[0].getmempoolentry(txid1)["weight"] + 3) // 4)
+        assert_equal(self.nodes[0].getmempoolentry(txid1)["weight"], len(tx1.serialize())*3 + len(tx1.serialize_with_witness()))
 
         # Now create tx2, which will spend from txid1.
-        tx = CTransaction()
-        tx.vin.append(CTxIn(COutPoint(int(txid1, 16), 0), b''))
-        tx.vout.append(CTxOut(int(49.99*COIN), CScript([OP_TRUE])))
-        tx2_hex = self.nodes[0].signrawtransaction(ToHex(tx))['hex']
+        tx2 = CTransaction()
+        tx2.vin.append(CTxIn(COutPoint(int(txid1, 16), 0), b''))
+        tx2.vout.append(CTxOut(int(49.99*COIN), CScript([OP_TRUE])))
+        tx2_hex = self.nodes[0].signrawtransaction(ToHex(tx2))['hex']
         txid2 = self.nodes[0].sendrawtransaction(tx2_hex)
-        tx = FromHex(CTransaction(), tx2_hex)
-        assert(not tx.wit.is_null())
+        tx2 = FromHex(CTransaction(), tx2_hex)
+        assert(not tx2.wit.is_null())
+
+        # Check that wtxid is properly reported in mempool entry (txid2)
+        assert_equal(int(self.nodes[0].getmempoolentry(txid2)["wtxid"], 16), tx2.calc_sha256(True))
+
+        # Check that weight and size (actually vsize) are properly reported in mempool entry (txid2)
+        assert_equal(self.nodes[0].getmempoolentry(txid2)["size"], (self.nodes[0].getmempoolentry(txid2)["weight"] + 3) // 4)
+        assert_equal(self.nodes[0].getmempoolentry(txid2)["weight"], len(tx2.serialize())*3 + len(tx2.serialize_with_witness()))
 
         # Now create tx3, which will spend from txid2
-        tx = CTransaction()
-        tx.vin.append(CTxIn(COutPoint(int(txid2, 16), 0), b""))
-        tx.vout.append(CTxOut(int(49.95*COIN), CScript([OP_TRUE]))) # Huge fee
-        tx.calc_sha256()
-        txid3 = self.nodes[0].sendrawtransaction(ToHex(tx))
-        assert(tx.wit.is_null())
+        tx3 = CTransaction()
+        tx3.vin.append(CTxIn(COutPoint(int(txid2, 16), 0), b""))
+        tx3.vout.append(CTxOut(int(49.95*COIN), CScript([OP_TRUE]))) # Huge fee
+        tx3.calc_sha256()
+        txid3 = self.nodes[0].sendrawtransaction(ToHex(tx3))
+        assert(tx3.wit.is_null())
         assert(txid3 in self.nodes[0].getrawmempool())
 
         # Now try calling getblocktemplate() without segwit support.
@@ -289,8 +304,15 @@ class SegWitTest(BitcoinTestFramework):
         assert(txid2 in template_txids)
         assert(txid3 in template_txids)
 
-        # Check that hash is properly reported in mempool entry
-        assert_equal(int(self.nodes[0].getmempoolentry(txid3)["hash"], 16), tx.calc_sha256(True))
+        # Check that hash is properly reported in mempool entry (txid3)
+        assert_equal(int(self.nodes[0].getmempoolentry(txid3)["hash"], 16), tx3.calc_sha256(True))
+
+        # Check that wtxid is properly reported in mempool entry (txid3)
+        assert_equal(int(self.nodes[0].getmempoolentry(txid3)["wtxid"], 16), tx3.calc_sha256(True))
+
+        # Check that weight and size (actually vsize) are properly reported in mempool entry (txid3)
+        assert_equal(self.nodes[0].getmempoolentry(txid3)["size"], (self.nodes[0].getmempoolentry(txid3)["weight"] + 3) // 4)
+        assert_equal(self.nodes[0].getmempoolentry(txid3)["weight"], len(tx3.serialize())*3 + len(tx3.serialize_with_witness()))
 
         # Mine a block to clear the gbt cache again.
         self.nodes[0].generate(1)
@@ -455,11 +477,7 @@ class SegWitTest(BitcoinTestFramework):
         for i in importlist:
             # import all generated addresses. The wallet already has the private keys for some of these, so catch JSON RPC
             # exceptions and continue.
-            try:
-                self.nodes[0].importaddress(i,"",False,True)
-            except JSONRPCException as exp:
-                assert_equal(exp.error["message"], "The wallet already contains the private key for this address or script")
-                assert_equal(exp.error["code"], -4)
+            try_rpc(-4, "The wallet already contains the private key for this address or script", self.nodes[0].importaddress, i, "", False, True)
 
         self.nodes[0].importaddress(script_to_p2sh(op0)) # import OP_0 as address only
         self.nodes[0].importaddress(multisig_without_privkey_address) # Test multisig_without_privkey
@@ -472,7 +490,7 @@ class SegWitTest(BitcoinTestFramework):
         # addwitnessaddress should refuse to return a witness address if an uncompressed key is used
         # note that no witness address should be returned by unsolvable addresses
         for i in uncompressed_spendable_address + uncompressed_solvable_address + unknown_address + unsolvable_address:
-            assert_raises_jsonrpc(-4, "Public key or redeemscript not known to wallet, or the key is uncompressed", self.nodes[0].addwitnessaddress, i)
+            assert_raises_rpc_error(-4, "Public key or redeemscript not known to wallet, or the key is uncompressed", self.nodes[0].addwitnessaddress, i)
 
         # addwitnessaddress should return a witness addresses even if keys are not in the wallet
         self.nodes[0].addwitnessaddress(multisig_without_privkey_address)
@@ -555,7 +573,7 @@ class SegWitTest(BitcoinTestFramework):
         # premature_witaddress are not accepted until the script is added with addwitnessaddress first
         for i in uncompressed_spendable_address + uncompressed_solvable_address + premature_witaddress:
             # This will raise an exception
-            assert_raises_jsonrpc(-4, "Public key or redeemscript not known to wallet, or the key is uncompressed", self.nodes[0].addwitnessaddress, i)
+            assert_raises_rpc_error(-4, "Public key or redeemscript not known to wallet, or the key is uncompressed", self.nodes[0].addwitnessaddress, i)
 
         # after importaddress it should pass addwitnessaddress
         v = self.nodes[0].validateaddress(compressed_solvable_address[1])

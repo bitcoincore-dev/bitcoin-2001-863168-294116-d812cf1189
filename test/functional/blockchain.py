@@ -5,6 +5,7 @@
 """Test RPCs related to blockchainstate.
 
 Test the following RPCs:
+    - getblockchaininfo
     - gettxoutsetinfo
     - getdifficulty
     - getbestblockhash
@@ -21,25 +22,24 @@ from decimal import Decimal
 import http.client
 import subprocess
 
-from test_framework.test_framework import (BitcoinTestFramework, BITCOIND_PROC_WAIT_TIMEOUT)
+from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
+    assert_greater_than,
+    assert_greater_than_or_equal,
     assert_raises,
-    assert_raises_jsonrpc,
+    assert_raises_rpc_error,
     assert_is_hex_string,
     assert_is_hash_string,
 )
 
-
 class BlockchainTest(BitcoinTestFramework):
-
-    def __init__(self):
-        super().__init__()
-        self.setup_clean_chain = False
+    def set_test_params(self):
         self.num_nodes = 1
-        self.extra_args = [['-stopatheight=207']]
+        self.extra_args = [['-stopatheight=207', '-prune=1']]
 
     def run_test(self):
+        self._test_getblockchaininfo()
         self._test_getchaintxstats()
         self._test_gettxoutsetinfo()
         self._test_getblockheader()
@@ -47,6 +47,56 @@ class BlockchainTest(BitcoinTestFramework):
         self._test_getnetworkhashps()
         self._test_stopatheight()
         assert self.nodes[0].verifychain(4, 0)
+
+    def _test_getblockchaininfo(self):
+        self.log.info("Test getblockchaininfo")
+
+        keys = [
+            'bestblockhash',
+            'bip9_softforks',
+            'blocks',
+            'chain',
+            'chainwork',
+            'difficulty',
+            'headers',
+            'initialblockdownload',
+            'mediantime',
+            'pruned',
+            'size_on_disk',
+            'softforks',
+            'verificationprogress',
+        ]
+        res = self.nodes[0].getblockchaininfo()
+
+        # result should have these additional pruning keys if manual pruning is enabled
+        assert_equal(sorted(res.keys()), sorted(['pruneheight', 'automatic_pruning'] + keys))
+
+        # size_on_disk should be > 0
+        assert_greater_than(res['size_on_disk'], 0)
+
+        # pruneheight should be greater or equal to 0
+        assert_greater_than_or_equal(res['pruneheight'], 0)
+
+        # check other pruning fields given that prune=1
+        assert res['pruned']
+        assert not res['automatic_pruning']
+
+        self.restart_node(0, ['-stopatheight=207'])
+        res = self.nodes[0].getblockchaininfo()
+        # should have exact keys
+        assert_equal(sorted(res.keys()), keys)
+
+        self.restart_node(0, ['-stopatheight=207', '-prune=550'])
+        res = self.nodes[0].getblockchaininfo()
+        # result should have these additional pruning keys if prune=550
+        assert_equal(sorted(res.keys()), sorted(['pruneheight', 'automatic_pruning', 'prune_target_size'] + keys))
+
+        # check related fields
+        assert res['pruned']
+        assert_equal(res['pruneheight'], 0)
+        assert res['automatic_pruning']
+        assert_equal(res['prune_target_size'], 576716800)
+        assert_greater_than(res['size_on_disk'], 0)
 
     def _test_getchaintxstats(self):
         chaintxstats = self.nodes[0].getchaintxstats(1)
@@ -100,7 +150,7 @@ class BlockchainTest(BitcoinTestFramework):
     def _test_getblockheader(self):
         node = self.nodes[0]
 
-        assert_raises_jsonrpc(-5, "Block not found",
+        assert_raises_rpc_error(-5, "Block not found",
                               node.getblockheader, "nonsense")
 
         besthash = node.getbestblockhash()
@@ -139,14 +189,14 @@ class BlockchainTest(BitcoinTestFramework):
         self.nodes[0].generate(6)
         assert_equal(self.nodes[0].getblockcount(), 206)
         self.log.debug('Node should not stop at this height')
-        assert_raises(subprocess.TimeoutExpired, lambda: self.bitcoind_processes[0].wait(timeout=3))
+        assert_raises(subprocess.TimeoutExpired, lambda: self.nodes[0].process.wait(timeout=3))
         try:
             self.nodes[0].generate(1)
         except (ConnectionError, http.client.BadStatusLine):
             pass  # The node already shut down before response
         self.log.debug('Node should stop at this height...')
-        self.bitcoind_processes[0].wait(timeout=BITCOIND_PROC_WAIT_TIMEOUT)
-        self.nodes[0] = self.start_node(0, self.options.tmpdir)
+        self.nodes[0].wait_until_stopped()
+        self.start_node(0)
         assert_equal(self.nodes[0].getblockcount(), 207)
 
 

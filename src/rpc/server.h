@@ -196,6 +196,7 @@ extern std::vector<unsigned char> ParseHexO(const UniValue& o, std::string strKe
 class CKey;
 class CPubKey;
 
+extern int ParseSigHash(const std::string& sigHash, const std::string& parameterName);
 extern CAmount AmountFromValue(const UniValue& value);
 void ParseWIFPrivKey(const std::string wif_secret, CKey&, CPubKey*);
 

@@ -8,16 +8,14 @@ from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
     connect_nodes_bi,
-    assert_raises_message,
+    assert_raises_rpc_error,
     JSONRPCException,
 )
 import shutil
-
+import os
 
 class WalletHDTest(BitcoinTestFramework):
-
-    def __init__(self):
-        super().__init__()
+    def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 2
         self.extra_args = [['-usehd=0'], ['-usehd=1', '-keypool=0']]
@@ -27,8 +25,8 @@ class WalletHDTest(BitcoinTestFramework):
 
         # Make sure can't switch off usehd after wallet creation
         self.stop_node(1)
-        self.assert_start_raises_init_error(1, self.options.tmpdir, ['-usehd=0'], 'already existing HD wallet')
-        self.nodes[1] = self.start_node(1, self.options.tmpdir, self.extra_args[1])
+        self.assert_start_raises_init_error(1, ['-usehd=0'], 'already existing HD wallet')
+        self.start_node(1)
         connect_nodes_bi(self.nodes, 0, 1)
 
         # Make sure we use hd, keep masterkeyid
@@ -45,7 +43,7 @@ class WalletHDTest(BitcoinTestFramework):
         assert_equal(xprv[0:4], "tprv")
 
         # Exporting the master private key should fail on a non-HD wallet
-        assert_raises_message(JSONRPCException, "Wallet is not a HD wallet.", self.nodes[0].dumpmasterprivkey)
+        assert_raises_rpc_error(-4, "Wallet is not a HD wallet.", self.nodes[0].dumpmasterprivkey)
 
         # Import a non-HD private key in the HD wallet
         non_hd_add = self.nodes[0].getnewaddress()
@@ -82,10 +80,10 @@ class WalletHDTest(BitcoinTestFramework):
         self.stop_node(1)
         # we need to delete the complete regtest directory
         # otherwise node1 would auto-recover all funds in flag the keypool keys as used
-        shutil.rmtree(tmpdir + "/node1/regtest/blocks")
-        shutil.rmtree(tmpdir + "/node1/regtest/chainstate")
-        shutil.copyfile(tmpdir + "/hd.bak", tmpdir + "/node1/regtest/wallet.dat")
-        self.nodes[1] = self.start_node(1, self.options.tmpdir, self.extra_args[1])
+        shutil.rmtree(os.path.join(tmpdir, "node1/regtest/blocks"))
+        shutil.rmtree(os.path.join(tmpdir, "node1/regtest/chainstate"))
+        shutil.copyfile(os.path.join(tmpdir, "hd.bak"), os.path.join(tmpdir, "node1/regtest/wallet.dat"))
+        self.start_node(1)
 
         # Assert that derivation is deterministic
         hd_add_2 = None
@@ -100,22 +98,33 @@ class WalletHDTest(BitcoinTestFramework):
 
         # Needs rescan
         self.stop_node(1)
-        self.nodes[1] = self.start_node(1, self.options.tmpdir, self.extra_args[1] + ['-rescan'])
+        self.start_node(1, extra_args=self.extra_args[1] + ['-rescan'])
         assert_equal(self.nodes[1].getbalance(), num_hd_adds + 1)
 
         # Try a RPC based rescan
         self.stop_node(1)
-        shutil.rmtree(tmpdir + "/node1/regtest/blocks")
-        shutil.rmtree(tmpdir + "/node1/regtest/chainstate")
-        shutil.copyfile(tmpdir + "/hd.bak", tmpdir + "/node1/regtest/wallet.dat")
-        self.nodes[1] = self.start_node(1, self.options.tmpdir, self.extra_args[1])
+        shutil.rmtree(os.path.join(tmpdir, "node1/regtest/blocks"))
+        shutil.rmtree(os.path.join(tmpdir, "node1/regtest/chainstate"))
+        shutil.copyfile(os.path.join(tmpdir, "hd.bak"), os.path.join(tmpdir, "node1/regtest/wallet.dat"))
+        self.start_node(1)
         connect_nodes_bi(self.nodes, 0, 1)
         self.sync_all()
-        out = self.nodes[1].rescanblockchain(0,1)
+        out = self.nodes[1].rescanblockchain(0, 1)
+        assert_equal(out['start_height'], 0)
+        assert_equal(out['stop_height'], 1)
+        assert_equal(out['startheight'], 0)
+        assert_equal(out['stopheight'], 1)
+        out = self.nodes[1].rescanblockchain(start_height=0, stop_height=1)
+        assert_equal(out['start_height'], 0)
+        assert_equal(out['stop_height'], 1)
+        out = self.nodes[1].rescanblockchain(startheight=0, stopheight=1)
         assert_equal(out['startheight'], 0)
         assert_equal(out['stopheight'], 1)
         out = self.nodes[1].rescanblockchain()
+        assert_equal(out['start_height'], 0)
+        assert_equal(out['stop_height'], self.nodes[1].getblockcount())
         assert_equal(out['startheight'], 0)
+        assert_equal(out['stopheight'], self.nodes[1].getblockcount())
         assert_equal(self.nodes[1].getbalance(), num_hd_adds + 1)
 
         # send a tx and make sure its using the internal chain for the changeoutput

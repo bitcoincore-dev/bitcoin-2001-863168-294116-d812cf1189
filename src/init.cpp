@@ -202,14 +202,17 @@ void Shutdown()
     }
 #endif
     MapPort(false);
+
+    // Because these depend on each-other, we make sure that neither can be
+    // using the other before destroying them.
     UnregisterValidationInterface(peerLogic.get());
+    if(g_connman) g_connman->Stop();
     peerLogic.reset();
     g_connman.reset();
 
 #ifdef USE_LIBEVENT
     StopTorControl();
 #endif
-    UnregisterNodeSignals(GetNodeSignals());
     if (fDumpMempoolLater && gArgs.GetArg("-persistmempool", DEFAULT_PERSIST_MEMPOOL)) {
         DumpMempool();
     }
@@ -375,6 +378,9 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-maxorphantx=<n>", strprintf(_("Keep at most <n> unconnectable transactions in memory (default: %u)"), DEFAULT_MAX_ORPHAN_TRANSACTIONS));
     strUsage += HelpMessageOpt("-maxmempool=<n>", strprintf(_("Keep the transaction memory pool below <n> megabytes (default: %u)"), DEFAULT_MAX_MEMPOOL_SIZE));
     strUsage += HelpMessageOpt("-mempoolexpiry=<n>", strprintf(_("Do not keep transactions in the mempool longer than <n> hours (default: %u)"), DEFAULT_MEMPOOL_EXPIRY));
+    if (showDebug) {
+        strUsage += HelpMessageOpt("-minimumchainwork=<hex>", strprintf("Minimum work assumed to exist on a valid chain in hex (default: %s, testnet: %s)", defaultChainParams->GetConsensus().nMinimumChainWork.GetHex(), testnetChainParams->GetConsensus().nMinimumChainWork.GetHex()));
+    }
     strUsage += HelpMessageOpt("-persistmempool", strprintf(_("Whether to save the mempool on shutdown and load on restart (default: %u)"), DEFAULT_PERSIST_MEMPOOL));
     strUsage += HelpMessageOpt("-blockreconstructionextratxn=<n>", strprintf(_("Extra transactions to keep in memory for compact block reconstructions (default: %u)"), DEFAULT_BLOCK_RECONSTRUCTION_EXTRA_TXN));
     if (showDebug) {
@@ -776,7 +782,8 @@ void InitParameterInteraction()
 
         gArgs.SoftSetArg("-spkreuse", "0");
         gArgs.SoftSetArg("-blockprioritysize", "0");
-        gArgs.SoftSetArg("-blockmaxsize", "750000");
+        gArgs.SoftSetArg("-blockmaxsize", "4000000");
+        gArgs.SoftSetArg("-blockmaxweight", "3996000");
     }
 
     // when specifying an explicit binding address, you want to listen on it
@@ -1020,6 +1027,20 @@ bool AppInitParameterInteraction()
         LogPrintf("Assuming ancestors of block %s have valid signatures.\n", hashAssumeValid.GetHex());
     else
         LogPrintf("Validating signatures for all blocks.\n");
+
+    if (gArgs.IsArgSet("-minimumchainwork")) {
+        const std::string minChainWorkStr = gArgs.GetArg("-minimumchainwork", "");
+        if (!IsHexNumber(minChainWorkStr)) {
+            return InitError(strprintf("Invalid non-hex (%s) minimum chain work value specified", minChainWorkStr));
+        }
+        nMinimumChainWork = UintToArith256(uint256S(minChainWorkStr));
+    } else {
+        nMinimumChainWork = UintToArith256(chainparams.GetConsensus().nMinimumChainWork);
+    }
+    LogPrintf("Setting nMinimumChainWork=%s\n", nMinimumChainWork.GetHex());
+    if (nMinimumChainWork < UintToArith256(chainparams.GetConsensus().nMinimumChainWork)) {
+        LogPrintf("Warning: nMinimumChainWork set below default value of %s\n", chainparams.GetConsensus().nMinimumChainWork.GetHex());
+    }
 
     // mempool limits
     int64_t nMempoolSizeMax = gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000;
@@ -1323,9 +1344,8 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     g_connman = std::unique_ptr<CConnman>(new CConnman(GetRand(std::numeric_limits<uint64_t>::max()), GetRand(std::numeric_limits<uint64_t>::max())));
     CConnman& connman = *g_connman;
 
-    peerLogic.reset(new PeerLogicValidation(&connman));
+    peerLogic.reset(new PeerLogicValidation(&connman, scheduler));
     RegisterValidationInterface(peerLogic.get());
-    RegisterNodeSignals(GetNodeSignals());
 
     // sanitize comments per BIP-0014, format user agent and check total size
     std::vector<std::string> uacomments;
@@ -1718,6 +1738,7 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     connOptions.nMaxFeeler = 1;
     connOptions.nBestHeight = chainActive.Height();
     connOptions.uiInterface = &uiInterface;
+    connOptions.m_msgproc = peerLogic.get();
     connOptions.nSendBufferMaxSize = 1000*gArgs.GetArg("-maxsendbuffer", DEFAULT_MAXSENDBUFFER);
     connOptions.nReceiveFloodSize = 1000*gArgs.GetArg("-maxreceivebuffer", DEFAULT_MAXRECEIVEBUFFER);
 

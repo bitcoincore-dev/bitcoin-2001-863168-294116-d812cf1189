@@ -2,6 +2,10 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#if defined(HAVE_CONFIG_H)
+#include "config/bitcoin-config.h"
+#endif
+
 #include "sendcoinsentry.h"
 #include "ui_sendcoinsentry.h"
 
@@ -48,6 +52,7 @@ SendCoinsEntry::SendCoinsEntry(const PlatformStyle *_platformStyle, QWidget *par
     connect(ui->deleteButton, SIGNAL(clicked()), this, SLOT(deleteClicked()));
     connect(ui->deleteButton_is, SIGNAL(clicked()), this, SLOT(deleteClicked()));
     connect(ui->deleteButton_s, SIGNAL(clicked()), this, SLOT(deleteClicked()));
+    connect(ui->useAvailableBalanceButton, SIGNAL(clicked()), this, SLOT(useAvailableBalanceClicked()));
 }
 
 SendCoinsEntry::~SendCoinsEntry()
@@ -112,9 +117,19 @@ void SendCoinsEntry::clear()
     updateDisplayUnit();
 }
 
+void SendCoinsEntry::checkSubtractFeeFromAmount()
+{
+    ui->checkboxSubtractFeeFromAmount->setChecked(true);
+}
+
 void SendCoinsEntry::deleteClicked()
 {
     Q_EMIT removeEntry(this);
+}
+
+void SendCoinsEntry::useAvailableBalanceClicked()
+{
+    Q_EMIT useAvailableBalance(this);
 }
 
 bool SendCoinsEntry::validate()
@@ -125,9 +140,11 @@ bool SendCoinsEntry::validate()
     // Check input validity
     bool retval = true;
 
+#ifdef ENABLE_BIP70
     // Skip checks for payment request
     if (recipient.paymentRequest.IsInitialized())
         return retval;
+#endif
 
     if (!model->validateAddress(ui->payTo->text()))
     {
@@ -158,9 +175,11 @@ bool SendCoinsEntry::validate()
 
 SendCoinsRecipient SendCoinsEntry::getValue()
 {
+#ifdef ENABLE_BIP70
     // Payment request
     if (recipient.paymentRequest.IsInitialized())
         return recipient;
+#endif
 
     // Normal payment
     recipient.address = ui->payTo->text();
@@ -188,6 +207,7 @@ void SendCoinsEntry::setValue(const SendCoinsRecipient &value)
 {
     recipient = value;
 
+#ifdef ENABLE_BIP70
     if (recipient.paymentRequest.IsInitialized()) // payment request
     {
         if (recipient.authenticatedMerchant.isEmpty()) // unauthenticated
@@ -208,6 +228,7 @@ void SendCoinsEntry::setValue(const SendCoinsRecipient &value)
         }
     }
     else // normal payment
+#endif
     {
         // message
         ui->messageTextLabel->setText(recipient.message);
@@ -226,6 +247,11 @@ void SendCoinsEntry::setAddress(const QString &address)
 {
     ui->payTo->setText(address);
     ui->payAmount->setFocus();
+}
+
+void SendCoinsEntry::setAmount(const CAmount &amount)
+{
+    ui->payAmount->setValue(amount);
 }
 
 bool SendCoinsEntry::isClear()

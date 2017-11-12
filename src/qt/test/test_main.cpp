@@ -13,7 +13,9 @@
 #include "compattests.h"
 
 #ifdef ENABLE_WALLET
+#ifdef ENABLE_BIP70
 #include "paymentservertests.h"
+#endif // ENABLE_BIP70
 #include "wallettests.h"
 #endif
 
@@ -53,6 +55,10 @@ int main(int argc, char *argv[])
     SetupNetworking();
     SelectParams(CBaseChainParams::MAIN);
     noui_connect();
+    ClearDatadirCache();
+    fs::path pathTemp = fs::temp_directory_path() / strprintf("test_bitcoin-qt_%lu_%i", (unsigned long)GetTime(), (int)GetRand(100000));
+    fs::create_directories(pathTemp);
+    gArgs.ForceSetArg("-datadir", pathTemp.string());
 
     bool fInvalid = false;
 
@@ -76,7 +82,7 @@ int main(int argc, char *argv[])
     if (QTest::qExec(&test1) != 0) {
         fInvalid = true;
     }
-#ifdef ENABLE_WALLET
+#if defined(ENABLE_WALLET) && defined(ENABLE_BIP70)
     PaymentServerTests test2;
     if (QTest::qExec(&test2) != 0) {
         fInvalid = true;
@@ -96,6 +102,8 @@ int main(int argc, char *argv[])
         fInvalid = true;
     }
 #endif
+
+    fs::remove_all(pathTemp);
 
     return fInvalid;
 }

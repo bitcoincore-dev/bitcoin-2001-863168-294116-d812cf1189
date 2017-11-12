@@ -333,6 +333,7 @@ UniValue getdifficulty(const JSONRPCRequest& request)
 std::string EntryDescriptionString()
 {
     return "    \"size\" : n,             (numeric) virtual transaction size as defined in BIP 141. This is different from actual serialized size for witness transactions as witness data is discounted.\n"
+           "    \"weight\" : n,           (numeric) transaction weight as defined in BIP 141.\n"
            "    \"fee\" : n,              (numeric) transaction fee in " + CURRENCY_UNIT + "\n"
            "    \"modifiedfee\" : n,      (numeric) transaction fee with fee deltas used for mining priority\n"
            "    \"time\" : n,             (numeric) local time transaction entered pool in seconds since 1 Jan 1970 GMT\n"
@@ -345,6 +346,7 @@ std::string EntryDescriptionString()
            "    \"ancestorcount\" : n,    (numeric) number of in-mempool ancestor transactions (including this one)\n"
            "    \"ancestorsize\" : n,     (numeric) virtual transaction size of in-mempool ancestors (including this one)\n"
            "    \"ancestorfees\" : n,     (numeric) modified fees (see above) of in-mempool ancestors (including this one)\n"
+           "    \"wtxid\" : hash,         (string) hash of serialized transaction, including witness data\n"
            "    \"hash\" : hash,          (string) hash of entire serialized transaction\n"
            "    \"depends\" : [           (array) unconfirmed transactions used as inputs for this transaction\n"
            "        \"transactionid\",    (string) parent transaction id\n"
@@ -356,6 +358,7 @@ void entryToJSON(UniValue &info, const CTxMemPoolEntry &e)
     AssertLockHeld(mempool.cs);
 
     info.push_back(Pair("size", (int)e.GetTxSize()));
+    info.push_back(Pair("weight", (int)e.GetTxWeight()));
     info.push_back(Pair("fee", ValueFromAmount(e.GetFee())));
     info.push_back(Pair("modifiedfee", ValueFromAmount(e.GetModifiedFee())));
     info.push_back(Pair("time", e.GetTime()));
@@ -368,7 +371,8 @@ void entryToJSON(UniValue &info, const CTxMemPoolEntry &e)
     info.push_back(Pair("ancestorcount", e.GetCountWithAncestors()));
     info.push_back(Pair("ancestorsize", e.GetSizeWithAncestors()));
     info.push_back(Pair("ancestorfees", e.GetModFeesWithAncestors()));
-    info.push_back(Pair("hash", mempool.vTxHashes[e.vTxHashesIdx].first.ToString()));
+    info.push_back(Pair("wtxid", mempool.vTxHashes[e.vTxHashesIdx].first.ToString()));
+    info.push_back(Pair("hash", info["wtxid"]));
     const CTransaction& tx = e.GetTx();
     std::set<std::string> setDepends;
     for (const CTxIn& txin : tx.vin)
@@ -954,9 +958,10 @@ UniValue gettxout(const JSONRPCRequest& request)
             "gettxout \"txid\" n ( include_mempool )\n"
             "\nReturns details about an unspent transaction output.\n"
             "\nArguments:\n"
-            "1. \"txid\"       (string, required) The transaction id\n"
-            "2. n              (numeric, required) vout number\n"
-            "3. include_mempool  (boolean, optional) Whether to include the mempool\n"
+            "1. \"txid\"             (string, required) The transaction id\n"
+            "2. \"n\"                (numeric, required) vout number\n"
+            "3. \"include_mempool\"  (boolean, optional) Whether to include the mempool. Default: true."
+            "     Note that an unspent output that is spent in the mempool won't appear.\n"
             "\nResult:\n"
             "{\n"
             "  \"bestblock\" : \"hash\",    (string) the block hash\n"
@@ -1140,9 +1145,13 @@ UniValue getblockchaininfo(const JSONRPCRequest& request)
             "  \"difficulty\": xxxxxx,     (numeric) the current difficulty\n"
             "  \"mediantime\": xxxxxx,     (numeric) median time for the current best block\n"
             "  \"verificationprogress\": xxxx, (numeric) estimate of verification progress [0..1]\n"
+            "  \"initialblockdownload\": xxxx, (bool) (debug information) estimate of whether this node is in Initial Block Download mode.\n"
             "  \"chainwork\": \"xxxx\"     (string) total amount of work in active chain, in hexadecimal\n"
+            "  \"size_on_disk\": xxxxxx,   (numeric) the estimated size of the block and undo files on disk\n"
             "  \"pruned\": xx,             (boolean) if the blocks are subject to pruning\n"
-            "  \"pruneheight\": xxxxxx,    (numeric) lowest-height complete block stored\n"
+            "  \"pruneheight\": xxxxxx,    (numeric) lowest-height complete block stored (only present if pruning is enabled)\n"
+            "  \"automatic_pruning\": xx,  (boolean) whether automatic pruning is enabled (only present if pruning is enabled)\n"
+            "  \"prune_target_size\": xxxxxx,  (numeric) the target size used by pruning (only present if automatic pruning is enabled)\n"
             "  \"softforks\": [            (array) status of softforks in progress\n"
             "     {\n"
             "        \"id\": \"xxxx\",        (string) name of softfork\n"
@@ -1184,8 +1193,26 @@ UniValue getblockchaininfo(const JSONRPCRequest& request)
     obj.push_back(Pair("difficulty",            (double)GetDifficulty()));
     obj.push_back(Pair("mediantime",            (int64_t)chainActive.Tip()->GetMedianTimePast()));
     obj.push_back(Pair("verificationprogress",  GuessVerificationProgress(Params().TxData(), chainActive.Tip())));
+    obj.push_back(Pair("initialblockdownload",  IsInitialBlockDownload()));
     obj.push_back(Pair("chainwork",             chainActive.Tip()->nChainWork.GetHex()));
+    obj.push_back(Pair("size_on_disk",          CalculateCurrentUsage()));
     obj.push_back(Pair("pruned",                fPruneMode));
+    if (fPruneMode) {
+        CBlockIndex* block = chainActive.Tip();
+        assert(block);
+        while (block->pprev && (block->pprev->nStatus & BLOCK_HAVE_DATA)) {
+            block = block->pprev;
+        }
+
+        obj.push_back(Pair("pruneheight",        block->nHeight));
+
+        // if 0, execution bypasses the whole if block.
+        bool automatic_pruning = (gArgs.GetArg("-prune", 0) != 1);
+        obj.push_back(Pair("automatic_pruning",  automatic_pruning));
+        if (automatic_pruning) {
+            obj.push_back(Pair("prune_target_size",  nPruneTarget));
+        }
+    }
 
     const Consensus::Params& consensusParams = Params().GetConsensus();
     CBlockIndex* tip = chainActive.Tip();
@@ -1199,14 +1226,6 @@ UniValue getblockchaininfo(const JSONRPCRequest& request)
     obj.push_back(Pair("softforks",             softforks));
     obj.push_back(Pair("bip9_softforks", bip9_softforks));
 
-    if (fPruneMode)
-    {
-        CBlockIndex *block = chainActive.Tip();
-        while (block && block->pprev && (block->pprev->nStatus & BLOCK_HAVE_DATA))
-            block = block->pprev;
-
-        obj.push_back(Pair("pruneheight",        block->nHeight));
-    }
     return obj;
 }
 

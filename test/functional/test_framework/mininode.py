@@ -35,7 +35,7 @@ import time
 from threading import RLock, Thread
 
 from test_framework.siphash import siphash256
-from test_framework.util import hex_str_to_bytes, bytes_to_hex_str
+from test_framework.util import hex_str_to_bytes, bytes_to_hex_str, wait_until
 
 BIP0031_VERSION = 60000
 MY_VERSION = 70014  # past bip-31 for ping/pong
@@ -1358,23 +1358,6 @@ class msg_reject(object):
         return "msg_reject: %s %d %s [%064x]" \
             % (self.message, self.code, self.reason, self.data)
 
-# Helper function
-def wait_until(predicate, *, attempts=float('inf'), timeout=float('inf')):
-    if attempts == float('inf') and timeout == float('inf'):
-        timeout = 60
-    attempt = 0
-    elapsed = 0
-
-    while attempt < attempts and elapsed < timeout:
-        with mininode_lock:
-            if predicate():
-                return True
-        attempt += 1
-        elapsed += 0.05
-        time.sleep(0.05)
-
-    return False
-
 class msg_feefilter(object):
     command = b"feefilter"
 
@@ -1522,6 +1505,7 @@ class NodeConnCB(object):
             except:
                 print("ERROR delivering %s (%s)" % (repr(message),
                                                     sys.exc_info()[0]))
+                raise
 
     def set_deliver_sleep_time(self, value):
         with mininode_lock:
@@ -1591,21 +1575,21 @@ class NodeConnCB(object):
 
     def wait_for_disconnect(self, timeout=60):
         test_function = lambda: not self.connected
-        assert wait_until(test_function, timeout=timeout)
+        wait_until(test_function, timeout=timeout, lock=mininode_lock)
 
     # Message receiving helper methods
 
     def wait_for_block(self, blockhash, timeout=60):
         test_function = lambda: self.last_message.get("block") and self.last_message["block"].block.rehash() == blockhash
-        assert wait_until(test_function, timeout=timeout)
+        wait_until(test_function, timeout=timeout, lock=mininode_lock)
 
     def wait_for_getdata(self, timeout=60):
         test_function = lambda: self.last_message.get("getdata")
-        assert wait_until(test_function, timeout=timeout)
+        wait_until(test_function, timeout=timeout, lock=mininode_lock)
 
     def wait_for_getheaders(self, timeout=60):
         test_function = lambda: self.last_message.get("getheaders")
-        assert wait_until(test_function, timeout=timeout)
+        wait_until(test_function, timeout=timeout, lock=mininode_lock)
 
     def wait_for_inv(self, expected_inv, timeout=60):
         """Waits for an INV message and checks that the first inv object in the message was as expected."""
@@ -1614,11 +1598,11 @@ class NodeConnCB(object):
         test_function = lambda: self.last_message.get("inv") and \
                                 self.last_message["inv"].inv[0].type == expected_inv[0].type and \
                                 self.last_message["inv"].inv[0].hash == expected_inv[0].hash
-        assert wait_until(test_function, timeout=timeout)
+        wait_until(test_function, timeout=timeout, lock=mininode_lock)
 
     def wait_for_verack(self, timeout=60):
         test_function = lambda: self.message_count["verack"]
-        assert wait_until(test_function, timeout=timeout)
+        wait_until(test_function, timeout=timeout, lock=mininode_lock)
 
     # Message sending helper functions
 
@@ -1636,9 +1620,8 @@ class NodeConnCB(object):
     def sync_with_ping(self, timeout=60):
         self.send_message(msg_ping(nonce=self.ping_counter))
         test_function = lambda: self.last_message.get("pong") and self.last_message["pong"].nonce == self.ping_counter
-        assert wait_until(test_function, timeout=timeout)
+        wait_until(test_function, timeout=timeout, lock=mininode_lock)
         self.ping_counter += 1
-        return True
 
 # The actual NodeConn class
 # This class provides an interface for a p2p connection to a specified node
@@ -1673,11 +1656,11 @@ class NodeConn(asyncore.dispatcher):
         "regtest": b"\xfa\xbf\xb5\xda",   # regtest
     }
 
-    def __init__(self, dstaddr, dstport, rpc, callback, net="regtest", services=NODE_NETWORK, send_version=True):
+    def __init__(self, dstaddr, dstport, rpc, callback, net="regtest", services=NODE_NETWORK, send_version=True, node_outgoing=False):
         asyncore.dispatcher.__init__(self, map=mininode_socket_map)
         self.dstaddr = dstaddr
         self.dstport = dstport
-        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.rpc = rpc
         self.sendbuf = b""
         self.recvbuf = b""
         self.ver_send = 209
@@ -1688,6 +1671,7 @@ class NodeConn(asyncore.dispatcher):
         self.cb = callback
         self.disconnect = False
         self.nServices = 0
+        self.node_outgoing = node_outgoing
 
         if send_version:
             # stuff version msg into sendbuf
@@ -1699,13 +1683,34 @@ class NodeConn(asyncore.dispatcher):
             vt.addrFrom.port = 0
             self.send_message(vt, True)
 
-        logger.info('Connecting to Bitcoin Node: %s:%d' % (self.dstaddr, self.dstport))
-
         try:
-            self.connect((dstaddr, dstport))
+            self.do_connect()
         except:
             self.handle_close()
-        self.rpc = rpc
+
+    def do_connect(self):
+        if not self.node_outgoing:
+            logger.info('Connecting to Bitcoin Node: %s:%d' % (self.dstaddr, self.dstport))
+            self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.connect((self.dstaddr, self.dstport))
+            return
+
+        logger.info('Connecting from Bitcoin Node: %s:%d' % (self.dstaddr, self.dstport))
+
+        listen_sock = socket.socket()
+        listen_sock.bind(('127.0.0.1', 0))
+        listen_sock.listen(1)
+        listen_port = listen_sock.getsockname()[1]
+        self.rpc.addnode('127.0.0.1:%u' % (listen_port,), 'onetry')
+        (sock, addr) = listen_sock.accept()
+        assert sock
+        listen_sock.close()
+
+        sock.setblocking(0)
+        self.set_socket(sock)
+        self.connected = True
+        self.addr = addr
+        self.handle_connect_event()
 
     def handle_connect(self):
         if self.state != "connected":
@@ -1725,13 +1730,10 @@ class NodeConn(asyncore.dispatcher):
         self.cb.on_close(self)
 
     def handle_read(self):
-        try:
-            t = self.recv(8192)
-            if len(t) > 0:
-                self.recvbuf += t
-                self.got_data()
-        except:
-            pass
+        t = self.recv(8192)
+        if len(t) > 0:
+            self.recvbuf += t
+            self.got_data()
 
     def readable(self):
         return True
@@ -1797,8 +1799,10 @@ class NodeConn(asyncore.dispatcher):
                     self.got_message(t)
                 else:
                     logger.warning("Received unknown command from %s:%d: '%s' %s" % (self.dstaddr, self.dstport, command, repr(msg)))
+                    raise ValueError("Unknown command: '%s'" % (command))
         except Exception as e:
             logger.exception('got_data:', repr(e))
+            raise
 
     def send_message(self, message, pushbuf=False):
         if self.state != "connected" and not pushbuf:
@@ -1854,6 +1858,7 @@ class NetworkThread(Thread):
                     disconnected.append(obj)
             [ obj.handle_close() for obj in disconnected ]
             asyncore.loop(0.1, use_poll=True, map=mininode_socket_map, count=1)
+        logger.debug("Network thread closing")
 
 
 # An exception we can raise if we detect a potential disconnect

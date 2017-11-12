@@ -79,10 +79,10 @@ UniValue importprivkey(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 3)
         throw std::runtime_error(
-            "importprivkey \"bitcoinprivkey\" ( \"label\" ) ( rescan )\n"
+            "importprivkey \"privkey\" ( \"label\" ) ( rescan )\n"
             "\nAdds a private key (as returned by dumpprivkey) to your wallet.\n"
             "\nArguments:\n"
-            "1. \"bitcoinprivkey\"   (string, required) The private key (see dumpprivkey)\n"
+            "1. \"privkey\"          (string, required) The private key (see dumpprivkey)\n"
             "2. \"label\"            (string, optional, default=\"\") An optional label\n"
             "3. rescan               (boolean, optional, default=true) Rescan the wallet for transactions\n"
             "\nNote: This call can take minutes to complete if rescan is true.\n"
@@ -637,7 +637,7 @@ UniValue dumpwallet(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
             "dumpwallet \"filename\"\n"
-            "\nDumps all wallet keys in a human-readable format.\n"
+            "\nDumps all wallet keys in a human-readable format to a server-side file. This does not allow overwriting existing files.\n"
             "\nArguments:\n"
             "1. \"filename\"    (string, required) The filename with path (either absolute or relative to bitcoind)\n"
             "\nResult:\n"
@@ -653,9 +653,19 @@ UniValue dumpwallet(const JSONRPCRequest& request)
 
     EnsureWalletIsUnlocked(pwallet);
 
-    std::ofstream file;
     boost::filesystem::path filepath = request.params[0].get_str();
     filepath = boost::filesystem::absolute(filepath);
+
+    /* Prevent arbitrary files from being overwritten. There have been reports
+     * that users have overwritten wallet files this way:
+     * https://github.com/bitcoin/bitcoin/issues/9934
+     * It may also avoid other security issues.
+     */
+    if (boost::filesystem::exists(filepath)) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, filepath.string() + " already exists. If you are sure this is what you want, move it out of the way first");
+    }
+
+    std::ofstream file;
     file.open(filepath.string().c_str());
     if (!file.is_open())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
@@ -968,7 +978,7 @@ UniValue ProcessImport(CWallet * const pwallet, const UniValue& data, const int6
                 pwallet->SetAddressBook(vchAddress, label, "receive");
 
                 if (pwallet->HaveKey(vchAddress)) {
-                    return false;
+                    throw JSONRPCError(RPC_WALLET_ERROR, "The wallet already contains the private key for this address or script");
                 }
 
                 pwallet->mapKeyMetadata[vchAddress].nCreateTime = timestamp;
@@ -1175,79 +1185,5 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
         }
     }
 
-    return response;
-}
-
-UniValue rescanblockchain(const JSONRPCRequest& request)
-{
-    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
-    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
-        return NullUniValue;
-    }
-
-    if (request.fHelp || request.params.size() > 2) {
-        throw std::runtime_error(
-            "rescanblockchain (\"startheight\") (\"stopheight\")\n"
-            "\nRescan the local blockchain for wallet related transactions.\n"
-            "\nArguments:\n"
-            "1. \"startheight\"    (number, optional) blockheight where the rescan should start\n"
-            "2. \"stopheight\"     (number, optional) blockheight where the rescan should stop\n"
-            "\nExamples:\n"
-            + HelpExampleCli("rescanblockchain", "\"100000 120000\"")
-            + HelpExampleRpc("rescanblockchain", "\"100000 120000\"")
-            );
-    }
-
-    LOCK2(cs_main, pwallet->cs_wallet);
-
-    CBlockIndex *pindexStart = nullptr;
-    CBlockIndex *pindexStop = nullptr;
-    if (!request.params[0].isNull()) {
-        pindexStart = chainActive[request.params[0].get_int()];
-        if (!pindexStart) {
-            throw JSONRPCError(RPC_WALLET_ERROR, "Invalid startheight");
-        }
-    }
-    if (!pindexStart) {
-        pindexStart = chainActive.Genesis();
-    }
-
-    if (!request.params[1].isNull()) {
-        pindexStop = chainActive[request.params[1].get_int()];
-        if (!pindexStop) {
-            throw JSONRPCError(RPC_WALLET_ERROR, "Invalid stopheight");
-        }
-        if (pindexStop->nHeight < pindexStart->nHeight) {
-            // Flip the parameters to the expected order
-            std::swap(pindexStart, pindexStop);
-        }
-    }
-
-    // We can't rescan beyond non-pruned blocks, stop and throw an error
-    if (fPruneMode) {
-        CBlockIndex *block = pindexStop ? pindexStop : chainActive.Tip();
-        while (block) {
-            if (block->nHeight <= pindexStart->nHeight) {
-                break;
-            }
-            if (!(block->nStatus & BLOCK_HAVE_DATA)) {
-                throw JSONRPCError(RPC_WALLET_ERROR, "Can't rescan beyond pruned data. Use RPC call getblockchaininfo to determine your pruned height.");
-            }
-            block = block->pprev;
-        }
-    }
-
-    CBlockIndex *stopBlock = nullptr;
-    if (pwallet) {
-        stopBlock = pwallet->ScanForWalletTransactions(pindexStart, pindexStop, true);
-        if (!stopBlock) {
-            // if we got a nullptr returned, ScanForWalletTransactions did rescan up to the requested stopindex
-            stopBlock = pindexStop ? pindexStop : chainActive.Tip();
-        }
-    }
-
-    UniValue response(UniValue::VOBJ);
-    response.pushKV("startheight", pindexStart->nHeight);
-    response.pushKV("stopheight", stopBlock->nHeight);
     return response;
 }

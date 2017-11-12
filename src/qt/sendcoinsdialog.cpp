@@ -2,6 +2,10 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#if defined(HAVE_CONFIG_H)
+#include "config/bitcoin-config.h"
+#endif
+
 #include "sendcoinsdialog.h"
 #include "ui_sendcoinsdialog.h"
 
@@ -114,10 +118,6 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *_platformStyle, QWidget *p
         settings.setValue("nFeeRadio", 1); // custom
     if (!settings.contains("nFeeRadio"))
         settings.setValue("nFeeRadio", 0); // recommended
-    if (!settings.contains("nCustomFeeRadio") && settings.contains("nTransactionFee") && settings.value("nTransactionFee").toLongLong() > 0) // compatibility
-        settings.setValue("nCustomFeeRadio", 1); // total at least
-    if (!settings.contains("nCustomFeeRadio"))
-        settings.setValue("nCustomFeeRadio", 0); // per kilobyte
     if (!settings.contains("nSmartFeeSliderPosition"))
         settings.setValue("nSmartFeeSliderPosition", 0);
     if (!settings.contains("nTransactionFee"))
@@ -127,8 +127,6 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *_platformStyle, QWidget *p
     ui->groupFee->setId(ui->radioSmartFee, 0);
     ui->groupFee->setId(ui->radioCustomFee, 1);
     ui->groupFee->button((int)std::max(0, std::min(1, settings.value("nFeeRadio").toInt())))->setChecked(true);
-    ui->groupCustomFee->setId(ui->radioCustomPerKilobyte, 0);
-    ui->groupCustomFee->button(0)->setChecked(true);
     ui->customFee->setValue(settings.value("nTransactionFee").toLongLong());
     ui->checkBoxMinimumFee->setChecked(settings.value("fPayOnlyMinFee").toBool());
     minimizeFeeSection(settings.value("fFeeSectionMinimized").toBool());
@@ -178,7 +176,6 @@ void SendCoinsDialog::setModel(WalletModel *_model)
         connect(ui->confTargetSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(coinControlUpdateLabels()));
         connect(ui->groupFee, SIGNAL(buttonClicked(int)), this, SLOT(updateFeeSectionControls()));
         connect(ui->groupFee, SIGNAL(buttonClicked(int)), this, SLOT(coinControlUpdateLabels()));
-        connect(ui->groupCustomFee, SIGNAL(buttonClicked(int)), this, SLOT(coinControlUpdateLabels()));
         connect(ui->customFee, SIGNAL(valueChanged()), this, SLOT(coinControlUpdateLabels()));
         connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(setMinimumFee()));
         connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(updateFeeSectionControls()));
@@ -214,7 +211,6 @@ SendCoinsDialog::~SendCoinsDialog()
     QSettings settings;
     settings.setValue("fFeeSectionMinimized", fFeeMinimized);
     settings.setValue("nFeeRadio", ui->groupFee->checkedId());
-    settings.setValue("nCustomFeeRadio", ui->groupCustomFee->checkedId());
     settings.setValue("nConfTarget", getConfTargetForIndex(ui->confTargetSelector->currentIndex()));
     settings.setValue("nTransactionFee", (qint64)ui->customFee->value());
     settings.setValue("fPayOnlyMinFee", ui->checkBoxMinimumFee->isChecked());
@@ -297,7 +293,9 @@ void SendCoinsDialog::on_sendButton_clicked()
 
         QString recipientElement;
 
+#ifdef ENABLE_BIP70
         if (!rcp.paymentRequest.IsInitialized()) // normal payment
+#endif
         {
             if(rcp.label.length() > 0) // label with address
             {
@@ -309,6 +307,7 @@ void SendCoinsDialog::on_sendButton_clicked()
                 recipientElement = tr("%1 to %2").arg(amount, address);
             }
         }
+#ifdef ENABLE_BIP70
         else if(!rcp.authenticatedMerchant.isEmpty()) // authenticated payment request
         {
             recipientElement = tr("%1 to %2").arg(amount, GUIUtil::HtmlEscape(rcp.authenticatedMerchant));
@@ -317,6 +316,7 @@ void SendCoinsDialog::on_sendButton_clicked()
         {
             recipientElement = tr("%1 to %2").arg(amount, address);
         }
+#endif
 
         formatted.append(recipientElement);
     }
@@ -410,6 +410,7 @@ SendCoinsEntry *SendCoinsDialog::addEntry()
     entry->setModel(model);
     ui->entries->addWidget(entry);
     connect(entry, SIGNAL(removeEntry(SendCoinsEntry*)), this, SLOT(removeEntry(SendCoinsEntry*)));
+    connect(entry, SIGNAL(useAvailableBalance(SendCoinsEntry*)), this, SLOT(useAvailableBalance(SendCoinsEntry*)));
     connect(entry, SIGNAL(payAmountChanged()), this, SLOT(coinControlUpdateLabels()));
     connect(entry, SIGNAL(subtractFeeFromAmountChanged()), this, SLOT(coinControlUpdateLabels()));
 
@@ -607,9 +608,33 @@ void SendCoinsDialog::on_buttonMinimizeFee_clicked()
     minimizeFeeSection(true);
 }
 
+void SendCoinsDialog::useAvailableBalance(SendCoinsEntry* entry)
+{
+    // Get CCoinControl instance if CoinControl is enabled or create a new one.
+    CCoinControl coin_control;
+    if (model->getOptionsModel()->getCoinControlFeatures()) {
+        coin_control = *CoinControlDialog::coinControl;
+    }
+
+    // Calculate available amount to send.
+    CAmount amount = model->getBalance(&coin_control);
+    for (int i = 0; i < ui->entries->count(); ++i) {
+        SendCoinsEntry* e = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());
+        if (e && !e->isHidden() && e != entry) {
+            amount -= e->getValue().amount;
+        }
+    }
+
+    if (amount > 0) {
+      entry->checkSubtractFeeFromAmount();
+      entry->setAmount(amount);
+    } else {
+      entry->setAmount(0);
+    }
+}
+
 void SendCoinsDialog::setMinimumFee()
 {
-    ui->radioCustomPerKilobyte->setChecked(true);
     ui->customFee->setValue(CWallet::GetRequiredFee(1000));
 }
 
@@ -622,7 +647,7 @@ void SendCoinsDialog::updateFeeSectionControls()
     ui->labelFeeEstimation      ->setEnabled(ui->radioSmartFee->isChecked());
     ui->checkBoxMinimumFee      ->setEnabled(ui->radioCustomFee->isChecked());
     ui->labelMinFeeWarning      ->setEnabled(ui->radioCustomFee->isChecked());
-    ui->radioCustomPerKilobyte  ->setEnabled(ui->radioCustomFee->isChecked() && !ui->checkBoxMinimumFee->isChecked());
+    ui->labelCustomPerKilobyte  ->setEnabled(ui->radioCustomFee->isChecked() && !ui->checkBoxMinimumFee->isChecked());
     ui->customFee               ->setEnabled(ui->radioCustomFee->isChecked() && !ui->checkBoxMinimumFee->isChecked());
 }
 
@@ -634,8 +659,7 @@ void SendCoinsDialog::updateFeeMinimizedLabel()
     if (ui->radioSmartFee->isChecked())
         ui->labelFeeMinimized->setText(ui->labelSmartFee->text());
     else {
-        ui->labelFeeMinimized->setText(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), ui->customFee->value()) +
-            ((ui->radioCustomPerKilobyte->isChecked()) ? "/kB" : ""));
+        ui->labelFeeMinimized->setText(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), ui->customFee->value()) + "/kB");
     }
 }
 
@@ -789,10 +813,8 @@ void SendCoinsDialog::coinControlChangeEdited(const QString& text)
         }
         else // Valid address
         {
-            CKeyID keyid;
-            addr.GetKeyID(keyid);
-            if (!model->havePrivKey(keyid)) // Unknown change address
-            {
+            const CTxDestination dest = addr.Get();
+            if (!model->IsSpendable(dest)) {
                 ui->labelCoinControlChangeLabel->setText(tr("Warning: Unknown change address"));
 
                 // confirmation dialog
@@ -800,7 +822,7 @@ void SendCoinsDialog::coinControlChangeEdited(const QString& text)
                     QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 
                 if(btnRetVal == QMessageBox::Yes)
-                    CoinControlDialog::coinControl->destChange = addr.Get();
+                    CoinControlDialog::coinControl->destChange = dest;
                 else
                 {
                     ui->lineEditCoinControlChange->setText("");
@@ -819,7 +841,7 @@ void SendCoinsDialog::coinControlChangeEdited(const QString& text)
                 else
                     ui->labelCoinControlChangeLabel->setText(tr("(no label)"));
 
-                CoinControlDialog::coinControl->destChange = addr.Get();
+                CoinControlDialog::coinControl->destChange = dest;
             }
         }
     }

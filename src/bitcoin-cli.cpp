@@ -38,7 +38,7 @@ std::string HelpMessageCli()
     strUsage += HelpMessageOpt("-conf=<file>", strprintf(_("Specify configuration file (default: %s)"), BITCOIN_CONF_FILENAME));
     strUsage += HelpMessageOpt("-confrw=<file>", strprintf(_("Specify read/write configuration file (default: %s)"), BITCOIN_RW_CONF_FILENAME));
     strUsage += HelpMessageOpt("-datadir=<dir>", _("Specify data directory"));
-    strUsage += HelpMessageOpt("-getinfo", _("Get general information from the remote server"));
+    strUsage += HelpMessageOpt("-getinfo", _("Get general information from the remote server. Note that unlike server-side RPC calls, the results of -getinfo is the result of multiple non-atomic requests. Some entries in the result may represent results from different states (e.g. wallet balance may be as of a different block from the chain state reported)"));
     AppendParamsHelpMessages(strUsage);
     strUsage += HelpMessageOpt("-named", strprintf(_("Pass named instead of positional arguments (default: %s)"), DEFAULT_NAMED));
     strUsage += HelpMessageOpt("-rpcconnect=<ip>", strprintf(_("Send commands to node running on <ip> (default: %s)"), DEFAULT_RPCCONNECT));
@@ -204,7 +204,7 @@ static void http_error_cb(enum evhttp_request_error err, void *ctx)
 class BaseRequestHandler
 {
 public:
-    virtual UniValue PrepareRequest(const std::string& strMethod, const std::vector<std::string>& args) = 0;
+    virtual UniValue PrepareRequest(const std::string& method, const std::vector<std::string>& args) = 0;
     virtual UniValue ProcessReply(const UniValue &batch_in) = 0;
 };
 
@@ -217,7 +217,7 @@ public:
     const int ID_WALLETINFO = 2;
 
     /** Create a simulated `getinfo` request. */
-    UniValue PrepareRequest(const std::string& strMethod, const std::vector<std::string>& args) override
+    UniValue PrepareRequest(const std::string& method, const std::vector<std::string>& args) override
     {
         UniValue result(UniValue::VARR);
         result.push_back(JSONRPCRequestObj("getnetworkinfo", NullUniValue, ID_NETWORKINFO));

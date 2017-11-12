@@ -979,6 +979,15 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
             wtx.fFromMe = wtxIn.fFromMe;
             fUpdated = true;
         }
+        // If we have a witness-stripped version of this transaction, and we
+        // see a new version with a witness, then we must be upgrading a pre-segwit
+        // wallet.  Store the new version of the transaction with the witness,
+        // as the stripped-version must be invalid.
+        // TODO: Store all versions of the transaction, instead of just one.
+        if (wtxIn.tx->HasWitness() && !wtx.tx->HasWitness()) {
+            wtx.SetTx(wtxIn.tx);
+            fUpdated = true;
+        }
     }
 
     //// debug print
@@ -1624,8 +1633,8 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, CBlock
     int64_t nNow = GetTime();
     const CChainParams& chainParams = Params();
 
-    if (pindexStop && pindexStop->nHeight < pindexStart->nHeight) {
-        return nullptr;
+    if (pindexStop) {
+        assert(pindexStop->nHeight >= pindexStart->nHeight);
     }
 
     CBlockIndex* pindex = pindexStart;
@@ -1829,6 +1838,7 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache) const
 
     CAmount nCredit = 0;
     uint256 hashTx = GetHash();
+    LOCK(pwallet->cs_wallet);
     for (unsigned int i = 0; i < tx->vout.size(); i++)
     {
         if (!pwallet->IsSpent(hashTx, i))
@@ -2681,7 +2691,10 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CWalletT
     // enough, that fee sniping isn't a problem yet, but by implementing a fix
     // now we ensure code won't be written that makes assumptions about
     // nLockTime that preclude a fix later.
-    txNew.nLockTime = chainActive.Height();
+    {
+        LOCK(cs_main);
+        txNew.nLockTime = chainActive.Height();
+    }
 
     // Secondly occasionally randomly pick a nLockTime even further back, so
     // that transactions that are delayed after signing for whatever reason,
@@ -2690,7 +2703,6 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CWalletT
     if (GetRandInt(10) == 0)
         txNew.nLockTime = std::max(0, (int)txNew.nLockTime - GetRandInt(100));
 
-    assert(txNew.nLockTime <= (unsigned int)chainActive.Height());
     assert(txNew.nLockTime < LOCKTIME_THRESHOLD);
     FeeCalculation feeCalc;
     CAmount nFeeNeeded;
@@ -3124,13 +3136,14 @@ CAmount CWallet::GetMinimumFee(unsigned int nTxBytes, const CCoinControl& coin_c
 
 DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
 {
+    LOCK2(cs_main, cs_wallet);
+
     fFirstRunRet = false;
     DBErrors nLoadWalletRet = CWalletDB(*dbw,"cr+").LoadWallet(this);
     if (nLoadWalletRet == DB_NEED_REWRITE)
     {
         if (dbw->Rewrite("\x04pool"))
         {
-            LOCK(cs_wallet);
             setInternalKeyPool.clear();
             setExternalKeyPool.clear();
             m_pool_key_to_index.clear();
@@ -3142,7 +3155,11 @@ DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
 
     if (nLoadWalletRet != DB_LOAD_OK)
         return nLoadWalletRet;
-    fFirstRunRet = !vchDefaultKey.IsValid();
+
+    {
+        LOCK(cs_KeyStore);
+        fFirstRunRet = !vchDefaultKey.IsValid();
+    }
 
     uiInterface.LoadWallet(this);
 
@@ -4096,8 +4113,11 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
         // No need to read and scan block if block was created before
         // our wallet birthday (as adjusted for block time variability)
-        while (pindexRescan && walletInstance->nTimeFirstKey && (pindexRescan->GetBlockTime() < (walletInstance->nTimeFirstKey - TIMESTAMP_WINDOW))) {
-            pindexRescan = chainActive.Next(pindexRescan);
+        {
+            LOCK(walletInstance->cs_wallet);
+            while (pindexRescan && walletInstance->nTimeFirstKey && (pindexRescan->GetBlockTime() < (walletInstance->nTimeFirstKey - TIMESTAMP_WINDOW))) {
+                pindexRescan = chainActive.Next(pindexRescan);
+            }
         }
 
         nStart = GetTimeMillis();
@@ -4109,6 +4129,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         // Restore wallet transaction metadata after -zapwallettxes=1
         if (gArgs.GetBoolArg("-zapwallettxes", false) && gArgs.GetArg("-zapwallettxes", "1") != "2")
         {
+            LOCK(walletInstance->cs_wallet);
             CWalletDB walletdb(*walletInstance->dbw);
 
             for (const CWalletTx& wtxOld : vWtx)

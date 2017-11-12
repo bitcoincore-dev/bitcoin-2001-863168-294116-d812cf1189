@@ -129,7 +129,11 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *_platformStyle, const NetworkStyle *
     platformStyle(_platformStyle),
     netStyle(networkStyle)
 {
-    GUIUtil::restoreWindowGeometry("nWindow", QSize(850, 550), this);
+    QSettings settings;
+    if (!restoreGeometry(settings.value("MainWindowGeometry").toByteArray())) {
+        // Restore failed (perhaps missing setting), center the window
+        move(QApplication::desktop()->availableGeometry().center() - frameGeometry().center());
+    }
 
     QString windowTitle = tr(PACKAGE_NAME) + " - ";
 #ifdef ENABLE_WALLET
@@ -267,7 +271,8 @@ BitcoinGUI::~BitcoinGUI()
     // Unsubscribe from notifications from core
     unsubscribeFromCoreSignals();
 
-    GUIUtil::saveWindowGeometry("nWindow", this);
+    QSettings settings;
+    settings.setValue("MainWindowGeometry", saveGeometry());
     if(trayIcon) // Hide tray icon, as deleting will let it linger until quit (on Ubuntu)
         trayIcon->hide();
 #ifdef Q_OS_MAC
@@ -565,10 +570,11 @@ void BitcoinGUI::setClientModel(ClientModel *_clientModel)
 }
 
 #ifdef ENABLE_WALLET
-bool BitcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
+bool BitcoinGUI::addWallet(WalletModel *walletModel)
 {
     if(!walletFrame)
         return false;
+    const QString name = walletModel->getWalletName();
     setWalletActionsEnabled(true);
     WalletSelector->addItem(name);
     if (WalletSelector->count() == 2) {
@@ -578,8 +584,8 @@ bool BitcoinGUI::addWallet(const QString& name, WalletModel *walletModel)
         appToolBar->addWidget(WalletSelectorLabel);
         appToolBar->addWidget(WalletSelector);
     }
-    rpcConsole->addWallet(name, walletModel);
-    return walletFrame->addWallet(name, walletModel);
+    rpcConsole->addWallet(walletModel);
+    return walletFrame->addWallet(walletModel);
 }
 
 bool BitcoinGUI::setCurrentWallet(const QString& name)

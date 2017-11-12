@@ -11,8 +11,7 @@ from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import assert_equal, assert_fee_amount
 
 class SweepPrivKeysTest(BitcoinTestFramework):
-    def __init__(self):
-        super().__init__()
+    def set_test_params(self):
         self.num_nodes = 2
 
     def check_balance(self, delta, txid):

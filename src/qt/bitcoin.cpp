@@ -253,7 +253,7 @@ private:
     QTimer *pollShutdownTimer;
 #ifdef ENABLE_WALLET
     PaymentServer* paymentServer;
-    std::vector<WalletModel*> walletModels;
+    std::vector<WalletModel*> m_wallet_models;
 #endif
     int returnValue;
     const PlatformStyle *platformStyle;
@@ -336,7 +336,7 @@ BitcoinApplication::BitcoinApplication(int &argc, char **argv):
     pollShutdownTimer(0),
 #ifdef ENABLE_WALLET
     paymentServer(0),
-    walletModels(),
+    m_wallet_models(),
 #endif
     returnValue(0)
 {
@@ -455,10 +455,10 @@ void BitcoinApplication::requestShutdown()
 
 #ifdef ENABLE_WALLET
     window->removeAllWallets();
-    for (WalletModel *walletModel : walletModels) {
+    for (WalletModel *walletModel : m_wallet_models) {
         delete walletModel;
     }
-    walletModels.clear();
+    m_wallet_models.clear();
 #endif
     delete clientModel;
     clientModel = 0;
@@ -479,7 +479,9 @@ void BitcoinApplication::initializeResult(bool success)
         // Log this only after AppInitMain finishes, as then logging setup is guaranteed complete
         qWarning() << "Platform customization:" << platformStyle->getName();
 #ifdef ENABLE_WALLET
+#ifdef ENABLE_BIP70
         PaymentServer::LoadRootCAs();
+#endif
         paymentServer->setOptionsModel(optionsModel);
 #endif
 
@@ -491,21 +493,18 @@ void BitcoinApplication::initializeResult(bool success)
         for (CWalletRef pwallet : vpwallets) {
             WalletModel * const walletModel = new WalletModel(platformStyle, pwallet, optionsModel);
 
-            QString WalletName = QString::fromStdString(pwallet->GetName());
-            if (WalletName.endsWith(".dat")) {
-                WalletName.truncate(WalletName.size() - 4);
-            }
-
-            window->addWallet(WalletName, walletModel);
+            window->addWallet(walletModel);
             if (fFirstWallet) {
-                window->setCurrentWallet(WalletName);
+                window->setCurrentWallet(walletModel->getWalletName());
                 fFirstWallet = false;
             }
 
+#ifdef ENABLE_BIP70
             connect(walletModel, SIGNAL(coinsSent(CWallet*,SendCoinsRecipient,QByteArray)),
                              paymentServer, SLOT(fetchPaymentACK(CWallet*,const SendCoinsRecipient&,QByteArray)));
+#endif // ENABLE_BIP70
 
-            walletModels.push_back(walletModel);
+            m_wallet_models.push_back(walletModel);
         }
 #endif
 
