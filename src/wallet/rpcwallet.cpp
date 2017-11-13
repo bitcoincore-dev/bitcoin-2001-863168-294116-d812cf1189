@@ -1052,11 +1052,13 @@ UniValue sendmany(const JSONRPCRequest& request)
             "      ,...\n"
             "    ]\n"
             "6. replaceable            (boolean, optional) Allow this transaction to be replaced by a transaction with higher fees via BIP 125\n"
-            "7. conf_target            (numeric, optional) Confirmation target (in blocks)\n"
+            "                             Defaults to false unless explicit estimate mode is used, in which case it defaults to true\n"
+            "7. conf_target            (numeric, optional) Confirmation target (in blocks), or fee rate (sat/kb) if explicit estimate mode is used\n"
             "8. \"estimate_mode\"      (string, optional, default=UNSET) The fee estimate mode, must be one of:\n"
             "       \"UNSET\"\n"
             "       \"ECONOMICAL\"\n"
             "       \"CONSERVATIVE\"\n"
+            "       \"EXPLICIT\"\n"
              "\nResult:\n"
             "\"txid\"                   (string) The transaction id for the send. Only 1 transaction is created regardless of \n"
             "                                    the number of addresses.\n"
@@ -1103,13 +1105,19 @@ UniValue sendmany(const JSONRPCRequest& request)
         coin_control.signalRbf = request.params[5].get_bool();
     }
 
-    if (!request.params[6].isNull()) {
-        coin_control.m_confirm_target = ParseConfirmTarget(request.params[6]);
-    }
-
     if (!request.params[7].isNull()) {
         if (!FeeModeFromString(request.params[7].get_str(), coin_control.m_fee_mode)) {
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid estimate_mode parameter");
+        }
+    }
+
+    if (!request.params[6].isNull()) {
+        if (coin_control.m_fee_mode != FeeEstimateMode::EXPLICIT) {
+            coin_control.m_confirm_target = ParseConfirmTarget(request.params[6]);
+        } else {
+            coin_control.m_feerate = CFeeRate(request.params[6].get_int());
+            // default RBF to true for explicit fee rate mode
+            coin_control.signalRbf |= request.params[5].isNull();
         }
     }
 
