@@ -35,12 +35,12 @@ private:
     void EnvShutdown();
 
 public:
-    mutable CCriticalSection cs_db;
+    CCriticalSection& cs_db;
     std::unique_ptr<DbEnv> dbenv;
     std::map<std::string, int> mapFileUseCount;
     std::map<std::string, Db*> mapDb;
 
-    CDBEnv();
+    CDBEnv(CCriticalSection& cs_db, const fs::path& dir_path);
     ~CDBEnv();
     void Reset();
 
@@ -56,7 +56,7 @@ public:
     enum VerifyResult { VERIFY_OK,
                         RECOVER_OK,
                         RECOVER_FAIL };
-    typedef bool (*recoverFunc_type)(const std::string& strFile, std::string& out_backup_filename);
+    typedef bool (*recoverFunc_type)(const fs::path& file_path, std::string& out_backup_filename);
     VerifyResult Verify(const std::string& strFile, recoverFunc_type recoverFunc, std::string& out_backup_filename);
     /**
      * Salvage data from a file that Verify says is bad.
@@ -68,7 +68,7 @@ public:
     typedef std::pair<std::vector<unsigned char>, std::vector<unsigned char> > KeyValPair;
     bool Salvage(const std::string& strFile, bool fAggressive, std::vector<KeyValPair>& vResult);
 
-    bool Open(const fs::path& path);
+    bool Open();
     void Close();
     void Flush(bool fShutdown);
     void CheckpointLSN(const std::string& strFile);
@@ -85,7 +85,24 @@ public:
     }
 };
 
-extern CDBEnv bitdb;
+class CDBEnvs
+{
+public:
+    CCriticalSection cs_db;
+    std::map<std::string, CDBEnv> m_envs;
+
+    CDBEnv& GetEnv(const fs::path& file_path, bool mock = false)
+    {
+        LOCK(cs_db);
+        const fs::path& dir_path = file_path.parent_path();
+        auto inserted = m_envs.emplace(std::piecewise_construct, std::forward_as_tuple(dir_path.string()),
+            std::forward_as_tuple(cs_db, dir_path));
+        if (mock && inserted.second) inserted.first->second.MakeMock();
+        return inserted.first->second;
+    }
+};
+
+extern CDBEnvs bitdb;
 
 /** An instance of this class represents one database.
  * For BerkeleyDB this is just a (env, strFile) tuple.
@@ -100,8 +117,9 @@ public:
     }
 
     /** Create DB handle to real database */
-    CWalletDBWrapper(CDBEnv *env_in, const std::string &strFile_in) :
-        nUpdateCounter(0), nLastSeen(0), nLastFlushed(0), nLastWalletUpdate(0), env(env_in), strFile(strFile_in)
+    CWalletDBWrapper(const fs::path& wallet_path, bool mock = false)
+        : nUpdateCounter(0), nLastSeen(0), nLastFlushed(0), nLastWalletUpdate(0),
+          env(&::bitdb.GetEnv(wallet_path, mock)), strFile(wallet_path.filename().string())
     {
     }
 
@@ -112,10 +130,6 @@ public:
     /** Back up the entire database to a file.
      */
     bool Backup(const std::string& strDest);
-
-    /** Get a name for this database, for debugging etc.
-     */
-    std::string GetName() const { return strFile; }
 
     /** Make sure all changes are flushed to disk.
      */
@@ -161,15 +175,15 @@ public:
 
     void Flush();
     void Close();
-    static bool Recover(const std::string& filename, void *callbackDataIn, bool (*recoverKVcallback)(void* callbackData, CDataStream ssKey, CDataStream ssValue), std::string& out_backup_filename);
+    static bool Recover(const fs::path& file_path, void *callbackDataIn, bool (*recoverKVcallback)(void* callbackData, CDataStream ssKey, CDataStream ssValue), std::string& out_backup_filename);
 
     /* flush the wallet passively (TRY_LOCK)
        ideal to be called periodically */
     static bool PeriodicFlush(CWalletDBWrapper& dbw);
     /* verifies the database environment */
-    static bool VerifyEnvironment(const std::string& walletFile, const fs::path& dataDir, std::string& errorStr);
+    static bool VerifyEnvironment(const fs::path& file_path, std::string& errorStr);
     /* verifies the database file */
-    static bool VerifyDatabaseFile(const std::string& walletFile, const fs::path& dataDir, std::string& warningStr, std::string& errorStr, CDBEnv::recoverFunc_type recoverFunc);
+    static bool VerifyDatabaseFile(const fs::path& file_path, std::string& warningStr, std::string& errorStr, CDBEnv::recoverFunc_type recoverFunc);
 
 public:
     template <typename K, typename T>
@@ -329,7 +343,7 @@ public:
     {
         if (!pdb || activeTxn)
             return false;
-        DbTxn* ptxn = bitdb.TxnBegin();
+        DbTxn* ptxn = env->TxnBegin();
         if (!ptxn)
             return false;
         activeTxn = ptxn;
