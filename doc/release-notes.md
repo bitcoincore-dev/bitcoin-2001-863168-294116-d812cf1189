@@ -62,19 +62,35 @@ Due to a backward-incompatible change in the wallet database, wallets created
 with version 0.16.0 will be rejected by previous versions. Also, version 0.16.0
 will only create hierarchical deterministic (HD) wallets.
 
-Custom wallet directories
----------------------
-The ability to specify a directory other than the default data directory in which to store
-wallets has been added. An existing directory can be specified using the `-walletdir=<dir>`
-argument. Wallets loaded via `-wallet` arguments must be in this wallet directory. Care should be taken
-when choosing a wallet directory location, as if  it becomes unavailable during operation,
-funds may be lost.
-
 Default wallet directory change
 --------------------------
 On new installations (if the data directory doesn't exist), wallets will now be stored in a
 new `wallets/` subdirectory inside the data directory. If this `wallets/` subdirectory
 doesn't exist (i.e. on existing nodes), the current datadir root is used instead, as it was.
+The location of the wallets directory can be overridden by specifying a `-walletdir=<path>`
+option.
+
+External wallet files
+---------------------
+
+The `-wallet=<path>` option now accepts full paths instead of requiring wallets
+to be located in the bitcoin data directory. The new `-walletdir=<path>` option
+accepts both full paths and relative paths.
+
+These changes are backwards compatible when used with old bitcoin data
+directories, because `-walletdir` will default to the `-datadir` directory as
+long it does not contain a `wallets` subdirectory. So if the `-walletdir`
+option is not specified, a relative `-wallet` path will open a wallet located
+at `<datadir path>/<wallet path>` as was the case in previous releases.
+
+On brand new bitcoin installations, when bitcoin first creates the `-datadir`
+directory, it now will create a `wallets/` subdirectory in `-datadir`. In this
+case, if a `-walletdir` option is not specified it will default to
+`<datadir path>/wallets/`, and a relative `-wallet` option will open a wallet
+located at `<datadir path>/wallets/<wallet path>`.
+
+Care should be taken when choosing wallet locations on external storage, since
+funds may be lost if a wallet database becomes unavailable during operation.
 
 Low-level RPC changes
 ----------------------
@@ -84,7 +100,6 @@ Low-level RPC changes
   * `getwalletinfo`
   * `getmininginfo`
 - The wallet RPC `getreceivedbyaddress` will return an error if called with an address not in the wallet.
-
 
 Credits
 =======
