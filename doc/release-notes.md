@@ -93,8 +93,17 @@ bitcoin data directory. The behavior is now:
   `-walletdir=<path>` option where `<path>` can be an absolute path to a
   directory or directory symlink.
 
-Care should be taken when choosing the wallets directory location, as if it
-becomes unavailable during operation, funds may be lost.
+Care should be taken when choosing wallet locations on external storage, since
+funds may be lost if a wallet database becomes unavailable during operation.
+
+External wallet files
+---------------------
+
+The `-wallet=<path>` option now accepts full paths instead of requiring wallets
+to be located in the -walletdir directory. When wallets are located in
+different directories, wallet data will be stored independently, so data from
+every wallet is not mixed into the same <walletdir>/database/log.??????????
+files.
 
 Low-level RPC changes
 ----------------------
