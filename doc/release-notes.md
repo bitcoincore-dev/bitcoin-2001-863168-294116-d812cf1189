@@ -56,6 +56,15 @@ frequently tested on them.
 Notable changes
 ===============
 
+External wallet files
+---------------------
+
+The `-wallet=<path>` option now accepts full paths instead of requiring wallets
+to be located in the -walletdir directory. When wallets are located in
+different directories, wallet data will be stored independently, so data from
+every wallet is not mixed into the same <walletdir>/database/log.??????????
+files.
+
 Credits
 =======
 
