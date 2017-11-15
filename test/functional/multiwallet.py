@@ -26,8 +26,14 @@ class MultiWalletTest(BitcoinTestFramework):
         self.stop_node(0)
         assert_equal(os.path.isfile(wallet_dir("wallet.dat")), True)
 
+        # rename wallet.dat to make sure bitcoin can open two wallets in the
+        # same directory
+        os.rename(wallet_dir("wallet.dat"), wallet_dir("other_wallet.dat"))
+
         # restart node with a mix of wallet arguments
-        wallet_names = ['w1', 'w2', 'w3', 'sub/w4', os.path.join(self.options.tmpdir, "extern/w5", "wallet.dat")]
+        os.mkdir(wallet_dir("w6"))
+        os.symlink("w6", wallet_dir("w6_symlink"))
+        wallet_names = ['w1', 'w2', 'w3', 'sub/w4', os.path.join(self.options.tmpdir, "extern/w5"), "w6_symlink", "", "other_wallet.dat"]
         extra_args = ['-wallet={}'.format(n) for n in wallet_names]
         self.start_node(0, extra_args)
         assert_equal(set(self.nodes[0].listwallets()), set(wallet_names))
@@ -35,7 +41,10 @@ class MultiWalletTest(BitcoinTestFramework):
         # check that all requested wallets were created
         self.stop_node(0)
         for wallet_name in wallet_names:
-            assert_equal(os.path.isfile(wallet_dir(wallet_name)), True)
+            if os.path.isdir(wallet_dir(wallet_name)):
+                assert_equal(os.path.isfile(wallet_dir(wallet_name, "wallet.dat")), True)
+            else:
+                assert_equal(os.path.isfile(wallet_dir(wallet_name)), True)
 
         # should not initialize if wallet path can't be created
         self.assert_start_raises_init_error(0, ['-wallet=wallet.dat/bad'], 'Not a directory')
@@ -43,17 +52,13 @@ class MultiWalletTest(BitcoinTestFramework):
         # should not initialize if there are duplicate wallets
         self.assert_start_raises_init_error(0, ['-wallet=w1', '-wallet=w1'], 'Error loading wallet w1. Duplicate -wallet filename specified.')
 
-        # should not initialize if wallet file is a directory
-        os.mkdir(wallet_dir('w11'))
-        self.assert_start_raises_init_error(0, ['-wallet=w11'], 'Error loading wallet w11. -wallet filename must be a regular file.')
-
         # should not initialize if one wallet is a copy of another
-        shutil.copyfile(wallet_dir('w2'), wallet_dir('w22.dat'))
-        self.assert_start_raises_init_error(0, ['-wallet=w2', '-wallet=w22.dat'], 'duplicates fileid')
+        shutil.copyfile(wallet_dir('wallet.dat'), wallet_dir('wallet_copy.dat'))
+        self.assert_start_raises_init_error(0, ['-wallet=wallet.dat', '-wallet=wallet_copy.dat'], 'duplicates fileid')
 
         # should not initialize if wallet file is a symlink
-        os.symlink("w1", wallet_dir("w12"))
-        self.assert_start_raises_init_error(0, ['-wallet=w12'], 'wallet filename must be a regular file')
+        os.symlink("wallet.dat", wallet_dir("wallet_symlink.dat"))
+        self.assert_start_raises_init_error(0, ['-wallet=wallet_symlink.dat'], 'wallet path cannot be a symlink to a file')
 
         # should not initialize if the specified walletdir does not exist
         self.assert_start_raises_init_error(0, ['-walletdir=bad'], 'Error: Specified wallet directory "bad" does not exist.')
