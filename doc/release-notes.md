@@ -90,6 +90,21 @@ bitcoin installations, the `wallets` subdirectory will be created when
 Care should be taken when choosing wallet locations on external storage, since
 funds may be lost if a wallet database becomes unavailable during operation.
 
+Newly created wallet format
+---------------------------
+
+If `-wallet=<path>` is specified with a path that does not exist, it will now
+create a wallet directory at the specified location (containing a wallet.dat
+data file, a db.log file, and database/log.?????????? files) instead of just
+creating a data file at the path and storing log files in the parent
+directory. This should make backing up wallets more straightforward than
+before because the specified wallet path can just be directly archived without
+having to look in the parent directory for transaction log files.
+
+For backwards compatibility, wallet paths that are names of existing data files
+in the `-walletdir` directory will continue to be accepted and interpreted the
+same as before.
+
 Low-level RPC changes
 ----------------------
 - The deprecated RPC `getinfo` was removed. It is recommended that the more specific RPCs are used:
