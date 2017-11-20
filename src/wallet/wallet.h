@@ -929,7 +929,7 @@ public:
     void MarkDirty();
     typedef std::function<bool(CWalletTx& wtx, bool new_tx)> UpdateWalletTxFn;
     bool AddToWallet(CTransactionRef tx, UpdateWalletTxFn update_wtx, bool fFlushOnClose=true);
-    bool LoadToWallet(const CWalletTx& wtxIn);
+    bool LoadToWallet(const uint256& hash, UpdateWalletTxFn update_wtx);
     void TransactionAddedToMempool(const CTransactionRef& tx) override;
     void BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex *pindex, const std::vector<CTransactionRef>& vtxConflicted) override;
     void BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) override;
