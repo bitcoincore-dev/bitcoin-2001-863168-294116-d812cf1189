@@ -1156,23 +1156,24 @@ bool CWallet::AddToWallet(CTransactionRef tx, const CWalletTx::Confirmation& con
     return true;
 }
 
-void CWallet::LoadToWallet(CWalletTx& wtxIn)
+bool CWallet::LoadToWallet(const uint256& hash, const UpdateWalletTxFn& update_wtx)
 {
+    const auto& ins = mapWallet.emplace(std::piecewise_construct, std::forward_as_tuple(hash), std::forward_as_tuple(this, nullptr));
+    CWalletTx& wtx = ins.first->second;
+    if (!update_wtx(wtx, ins.second)) {
+        return false;
+    }
     // If wallet doesn't have a chain (e.g wallet-tool), lock can't be taken.
     auto locked_chain = LockChain();
     // If tx hasn't been reorged out of chain while wallet being shutdown
     // change tx status to UNCONFIRMED and reset hashBlock/nIndex.
-    if (!wtxIn.m_confirm.hashBlock.IsNull()) {
-        if (locked_chain && !locked_chain->getBlockHeight(wtxIn.m_confirm.hashBlock)) {
-            wtxIn.setUnconfirmed();
-            wtxIn.m_confirm.hashBlock = uint256();
-            wtxIn.m_confirm.nIndex = 0;
+    if (!wtx.m_confirm.hashBlock.IsNull()) {
+        if (locked_chain && !locked_chain->getBlockHeight(wtx.m_confirm.hashBlock)) {
+            wtx.setUnconfirmed();
+            wtx.m_confirm.hashBlock = uint256();
+            wtx.m_confirm.nIndex = 0;
         }
     }
-    uint256 hash = wtxIn.GetHash();
-    const auto& ins = mapWallet.emplace(hash, wtxIn);
-    CWalletTx& wtx = ins.first->second;
-    wtx.BindWallet(this);
     if (/* insertion took place */ ins.second) {
         wtx.m_it_wtxOrdered = wtxOrdered.insert(std::make_pair(wtx.nOrderPos, &wtx));
     }
@@ -1186,6 +1187,7 @@ void CWallet::LoadToWallet(CWalletTx& wtxIn)
             }
         }
     }
+    return true;
 }
 
 bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, CWalletTx::Status status, const uint256& block_hash, int posInBlock, bool fUpdate)
