@@ -976,12 +976,13 @@ bool CWallet::AddToWallet(CTransactionRef tx, UpdateWalletTxFn update_wtx, bool 
     return true;
 }
 
-void CWallet::LoadToWallet(const CWalletTx& wtxIn)
+bool CWallet::LoadToWallet(const uint256& hash, UpdateWalletTxFn update_wtx)
 {
-    uint256 hash = wtxIn.GetHash();
-    const auto& ins = mapWallet.emplace(hash, wtxIn);
+    auto ins = mapWallet.emplace(std::piecewise_construct, std::forward_as_tuple(hash), std::forward_as_tuple(this, nullptr));
     CWalletTx& wtx = ins.first->second;
-    wtx.BindWallet(this);
+    if (!update_wtx(wtx, ins.second)) {
+        return false;
+    }
     if (/* insertion took place */ ins.second) {
         wtx.m_it_wtxOrdered = wtxOrdered.insert(std::make_pair(wtx.nOrderPos, TxPair(&wtx, nullptr)));
     }
@@ -995,6 +996,7 @@ void CWallet::LoadToWallet(const CWalletTx& wtxIn)
             }
         }
     }
+    return true;
 }
 
 bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockIndex* pIndex, int posInBlock, bool fUpdate)
