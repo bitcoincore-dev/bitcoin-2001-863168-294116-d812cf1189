@@ -959,11 +959,13 @@ bool CWallet::AddToWallet(CTransactionRef tx, UpdateWalletTxFn update_wtx, bool 
     return true;
 }
 
-bool CWallet::LoadToWallet(const CWalletTx& wtxIn)
+bool CWallet::LoadToWallet(const uint256& hash, UpdateWalletTxFn update_wtx)
 {
-    uint256 hash = wtxIn.GetHash();
-    CWalletTx& wtx = mapWallet.emplace(hash, wtxIn).first->second;
-    wtx.BindWallet(this);
+    auto inserted = mapWallet.emplace(std::piecewise_construct, std::forward_as_tuple(hash), std::forward_as_tuple(this, nullptr));
+    CWalletTx& wtx = inserted.first->second;
+    if (!update_wtx(wtx, inserted.second)) {
+        return false;
+    }
     wtxOrdered.insert(std::make_pair(wtx.nOrderPos, TxPair(&wtx, nullptr)));
     AddToSpends(hash);
     for (const CTxIn& txin : wtx.tx->vin) {
