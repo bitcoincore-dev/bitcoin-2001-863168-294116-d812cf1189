@@ -335,14 +335,13 @@ public:
     mutable CAmount nAvailableWatchCreditCached;
     mutable CAmount nChangeCached;
 
-    CWalletTx(const CWallet* pwalletIn, CTransactionRef arg) : CMerkleTx(std::move(arg))
+    CWalletTx(const CWallet* wallet, CTransactionRef arg) : CMerkleTx(std::move(arg)), pwallet(wallet)
     {
-        Init(pwalletIn);
+        Init();
     }
 
-    void Init(const CWallet* pwalletIn)
+    void Init()
     {
-        pwallet = pwalletIn;
         mapValue.clear();
         vOrderForm.clear();
         fTimeReceivedIsTxTime = false;
@@ -377,7 +376,7 @@ public:
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
         if (ser_action.ForRead())
-            Init(nullptr);
+            Init();
         char fSpent = false;
 
         if (!ser_action.ForRead())
@@ -920,7 +919,7 @@ public:
     void MarkDirty();
     typedef std::function<bool(CWalletTx& wtx, bool new_tx)> UpdateWalletTxFn;
     bool AddToWallet(CTransactionRef tx, UpdateWalletTxFn update_wtx, bool fFlushOnClose=true);
-    bool LoadToWallet(const CWalletTx& wtxIn);
+    bool LoadToWallet(const uint256& hash, UpdateWalletTxFn update_wtx);
     void TransactionAddedToMempool(const CTransactionRef& tx) override;
     void BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex *pindex, const std::vector<CTransactionRef>& vtxConflicted) override;
     void BlockDisconnected(const std::shared_ptr<const CBlock>& pblock) override;
