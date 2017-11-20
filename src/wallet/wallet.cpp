@@ -3027,7 +3027,7 @@ bool CWallet::CommitTransaction(CTransactionRef tx, mapValue_t mapValue, std::ve
             for (const CTxIn& txin : wtx_new->tx->vin)
             {
                 CWalletTx &coin = mapWallet.at(txin.prevout.hash);
-                coin.BindWallet(this);
+                coin.MarkDirty();
                 NotifyTransactionChanged(this, coin.GetHash(), CT_UPDATED);
             }
         }
