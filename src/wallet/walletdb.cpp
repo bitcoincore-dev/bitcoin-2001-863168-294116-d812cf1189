@@ -265,36 +265,41 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
         {
             uint256 hash;
             ssKey >> hash;
-            CWalletTx wtx(nullptr /* pwallet */, MakeTransactionRef());
-            ssValue >> wtx;
-            CValidationState state;
-            if (!(CheckTransaction(*wtx.tx, state) && (wtx.GetHash() == hash) && state.IsValid()))
+
+            auto update_wtx = [&](CWalletTx& wtx, bool new_tx) {
+                ssValue >> wtx;
+                CValidationState state;
+                if (!(CheckTransaction(*wtx.tx, state) && (wtx.GetHash() == hash) && state.IsValid()))
+                    return false;
+
+                // Undo serialize changes in 31600
+                if (31404 <= wtx.fTimeReceivedIsTxTime && wtx.fTimeReceivedIsTxTime <= 31703)
+                {
+                    if (!ssValue.empty())
+                    {
+                        char fTmp;
+                        char fUnused;
+                        ssValue >> fTmp >> fUnused >> wtx.strFromAccount;
+                        strErr = strprintf("LoadWallet() upgrading tx ver=%d %d '%s' %s",
+                                           wtx.fTimeReceivedIsTxTime, fTmp, wtx.strFromAccount, hash.ToString());
+                        wtx.fTimeReceivedIsTxTime = fTmp;
+                    }
+                    else
+                    {
+                        strErr = strprintf("LoadWallet() repairing tx ver=%d %s", wtx.fTimeReceivedIsTxTime, hash.ToString());
+                        wtx.fTimeReceivedIsTxTime = 0;
+                    }
+                    wss.vWalletUpgrade.push_back(hash);
+                }
+
+                if (wtx.nOrderPos == -1)
+                    wss.fAnyUnordered = true;
+
+                return true;
+            };
+            if (!pwallet->LoadToWallet(hash, update_wtx)) {
                 return false;
-
-            // Undo serialize changes in 31600
-            if (31404 <= wtx.fTimeReceivedIsTxTime && wtx.fTimeReceivedIsTxTime <= 31703)
-            {
-                if (!ssValue.empty())
-                {
-                    char fTmp;
-                    char fUnused;
-                    ssValue >> fTmp >> fUnused >> wtx.strFromAccount;
-                    strErr = strprintf("LoadWallet() upgrading tx ver=%d %d '%s' %s",
-                                       wtx.fTimeReceivedIsTxTime, fTmp, wtx.strFromAccount, hash.ToString());
-                    wtx.fTimeReceivedIsTxTime = fTmp;
-                }
-                else
-                {
-                    strErr = strprintf("LoadWallet() repairing tx ver=%d %s", wtx.fTimeReceivedIsTxTime, hash.ToString());
-                    wtx.fTimeReceivedIsTxTime = 0;
-                }
-                wss.vWalletUpgrade.push_back(hash);
             }
-
-            if (wtx.nOrderPos == -1)
-                wss.fAnyUnordered = true;
-
-            pwallet->LoadToWallet(wtx);
         }
         else if (strType == "acentry")
         {
