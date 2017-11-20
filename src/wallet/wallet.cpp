@@ -3143,7 +3143,7 @@ DBErrors CWallet::ZapSelectTx(std::vector<uint256>& vHashIn, std::vector<uint256
 
 }
 
-DBErrors CWallet::ZapWalletTx(std::vector<CWalletTx>& vWtx)
+DBErrors CWallet::ZapWalletTx(std::list<CWalletTx>& vWtx)
 {
     DBErrors nZapWalletTxRet = WalletBatch(*database,"cr+").ZapWalletTx(vWtx);
     if (nZapWalletTxRet == DBErrors::NEED_REWRITE)
@@ -3949,7 +3949,7 @@ std::shared_ptr<CWallet> CWallet::CreateWalletFromFile(interfaces::Chain& chain,
     const std::string& walletFile = location.GetName();
 
     // needed to restore wallet transaction meta data after -zapwallettxes
-    std::vector<CWalletTx> vWtx;
+    std::list<CWalletTx> vWtx;
 
     if (gArgs.GetBoolArg("-zapwallettxes", false)) {
         uiInterface.InitMessage(_("Zapping all transactions from wallet..."));
