@@ -62,19 +62,43 @@ Due to a backward-incompatible change in the wallet database, wallets created
 with version 0.16.0 will be rejected by previous versions. Also, version 0.16.0
 will only create hierarchical deterministic (HD) wallets.
 
-Custom wallet directories
----------------------
-The ability to specify a directory other than the default data directory in which to store
-wallets has been added. An existing directory can be specified using the `-walletdir=<dir>`
-argument. Wallets loaded via `-wallet` arguments must be in this wallet directory. Care should be taken
-when choosing a wallet directory location, as if  it becomes unavailable during operation,
-funds may be lost.
-
 Default wallet directory change
 --------------------------
 On new installations (if the data directory doesn't exist), wallets will now be stored in a
 new `wallets/` subdirectory inside the data directory. If this `wallets/` subdirectory
 doesn't exist (i.e. on existing nodes), the current datadir root is used instead, as it was.
+The location of the wallets directory can be overridden by specifying a `-walletdir=<path>`
+option.
+
+External wallet files
+---------------------
+
+The `-wallet=<path>` option now accepts full paths instead of requiring wallets
+to be located in the bitcoin data directory. The new `-walletdir=<path>` option
+also accepts both full paths and relative paths.
+
+For backwards compatibility, `<walletdir>` defaults to `<datadir>` instead of
+`<datadir>/wallets` if the `wallets` subdirectory does not exist. On new
+bitcoin installations, the `wallets` subdirectory will be created when
+`<datadir>` is initialized.
+
+Care should be taken when choosing wallet locations on external storage, since
+funds may be lost if a wallet database becomes unavailable during operation.
+
+Newly created wallet format
+---------------------------
+
+If `-wallet=<path>` is specified with a path that does not exist, it will now
+create a wallet directory at the specified location (containing a wallet.dat
+data file, a db.log file, and database/log.?????????? files) instead of just
+creating a data file at the path and storing log files in the parent
+directory. This should make backing up wallets more straightforward than
+before because the specified wallet path can just be directly archived without
+having to look in the parent directory for transaction log files.
+
+For backwards compatibility, wallet paths that are names of existing data files
+in the `-walletdir` directory will continue to be accepted and interpreted the
+same as before.
 
 Low-level RPC changes
 ----------------------
