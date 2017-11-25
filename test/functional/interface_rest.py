@@ -23,6 +23,7 @@ from test_framework.util import (
 )
 
 class ReqType(Enum):
+    NONE = 0
     JSON = 1
     BIN = 2
     HEX = 3
@@ -219,6 +220,25 @@ class RESTTest (BitcoinTestFramework):
         assert_equal(int(response_hash_hex.getheader('content-length')), 65)
         response_hash_hex_str = response_hash_hex.read()
         assert_equal(binascii.hexlify(response_hash_str)[0:64], response_hash_hex_str[0:64])
+
+        # Check invalid requests
+        # Must be a 404 because it's missing the trailing slash and height parameter
+        response = self.test_rest_request("/blockhash", req_type=ReqType.NONE, status=404, ret_type=RetType.OBJ)
+
+        # Must be a 400 because no height parameter was passed
+        response = self.test_rest_request("/blockhash/", req_type=ReqType.JSON, status=400, ret_type=RetType.OBJ)
+
+        # Must be a 404 because no output format was passed
+        response = self.test_rest_request("/blockhash/0", req_type=ReqType.NONE, status=404, ret_type=RetType.OBJ)
+
+        # Must be a 400 because a non-numeric height parameter was passed
+        response = self.test_rest_request("/blockhash/a0", req_type=ReqType.JSON, status=400, ret_type=RetType.OBJ)
+
+        # Must be a 400 because a negative height parameter was passed
+        response = self.test_rest_request("/blockhash/-1", req_type=ReqType.JSON, status=400, ret_type=RetType.OBJ)
+
+        # Must be a 400 because the height parameter is greater than the chain height
+        response = self.test_rest_request("/blockhash/1000", req_type=ReqType.JSON, status=400, ret_type=RetType.OBJ)
 
 
         self.log.info("Test the /block and /headers URIs")
