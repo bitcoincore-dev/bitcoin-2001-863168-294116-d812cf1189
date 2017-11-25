@@ -40,8 +40,8 @@ def filter_output_indices_by_value(vouts, value):
 class RESTTest (BitcoinTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
-        self.num_nodes = 2
-        self.extra_args = [["-rest"], []]
+        self.num_nodes = 3
+        self.extra_args = [["-rest"], [], []]
 
     def test_rest_request(self, uri, http_method='GET', req_type=ReqType.JSON, body='', status=200, ret_type=RetType.JSON):
         rest_uri = '/rest' + uri
@@ -295,6 +295,20 @@ class RESTTest (BitcoinTestFramework):
 
         json_obj = self.test_rest_request("/chaininfo")
         assert_equal(json_obj['bestblockhash'], bb_hash)
+
+        self.log.info("Test the /fee URI")
+
+        # Prepare for Fee estimation
+        for i in range(18):
+            self.nodes[0].sendtoaddress(self.nodes[1].getnewaddress(), 0.1)
+            self.sync_all()
+            self.nodes[2].generate(1)
+        self.sync_all()
+
+        json_obj = self.test_rest_request('/fee/conservative/1')
+        assert_greater_than(float(json_obj["feerate"]), 0)
+        assert_greater_than(int(json_obj["blocks"]), 0)
+
 
 if __name__ == '__main__':
     RESTTest().main()
