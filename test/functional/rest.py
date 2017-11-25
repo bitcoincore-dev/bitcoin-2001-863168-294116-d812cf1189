@@ -227,6 +227,25 @@ class RESTTest (BitcoinTestFramework):
         response_hash_hex_str = response_hash_hex.read()
         assert_equal(encode(response_hash_str, "hex_codec")[0:64], response_hash_hex_str[0:64])
 
+        # check invalid requests
+        response = http_get_call(url.hostname, url.port, '/rest/blockhash', True)
+        assert_equal(response.status, 404) # must be a 404 because it's missing the trailing slash and height parameter
+
+        response = http_get_call(url.hostname, url.port, '/rest/blockhash/'+self.FORMAT_SEPARATOR+'json', True)
+        assert_equal(response.status, 400) # must be a 400 because no height parameter was passed
+
+        response = http_get_call(url.hostname, url.port, '/rest/blockhash/0', True)
+        assert_equal(response.status, 404) # must be a 404 because no output format was passed
+
+        response = http_get_call(url.hostname, url.port, '/rest/blockhash/a0'+self.FORMAT_SEPARATOR+'json', True)
+        assert_equal(response.status, 400) # must be a 400 because a non-numeric height parameter was passed
+
+        response = http_get_call(url.hostname, url.port, '/rest/blockhash/-1'+self.FORMAT_SEPARATOR+'json', True)
+        assert_equal(response.status, 400) # must be a 400 because a negative height parameter was passed
+
+        response = http_get_call(url.hostname, url.port, '/rest/blockhash/1000'+self.FORMAT_SEPARATOR+'json', True)
+        assert_equal(response.status, 400) # must be a 400 because the height parameter is greater than the chain height
+
 
         ################
         # /rest/block/ #
