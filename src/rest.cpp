@@ -314,7 +314,7 @@ static bool rest_blockhash(HTTPRequest* req, const std::string& strURIPart)
         return true;
     }
     default: {
-        return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: json)");
+        return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: " + AvailableDataFormatsString() + ")");
     }
     }
 }
