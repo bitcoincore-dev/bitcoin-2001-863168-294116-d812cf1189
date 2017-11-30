@@ -787,6 +787,9 @@ UniValue dumpwallet(const JSONRPCRequest& request)
             }
             if (!meta.hdKeypath.empty()) {
                 file << " hdkeypath=" + meta.hdKeypath;
+                if (!(meta.hd_seed_id.IsNull() || (meta.hdKeypath == "s" && meta.hd_seed_id == keyid))) {
+                    file << " hdmasterkeyid=" + EncodeDestination(meta.hd_seed_id);
+                }
             }
             file << strprintf(" # addr=%s\n", strAddr);
         }
