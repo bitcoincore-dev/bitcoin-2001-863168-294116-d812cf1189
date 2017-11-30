@@ -801,6 +801,9 @@ RPCHelpMan dumpwallet()
             }
             if (metadata.has_key_origin) {
                 file << " hdkeypath=" + WriteHDKeypath(metadata.key_origin.path);
+                if (!(metadata.hd_seed_id.IsNull() || (metadata.hdKeypath == "s" && metadata.hd_seed_id == keyid))) {
+                    file << " hdseedid=" + metadata.hd_seed_id.GetHex();
+                }
             }
             file << strprintf(" # addr=%s\n", strAddr);
         }
