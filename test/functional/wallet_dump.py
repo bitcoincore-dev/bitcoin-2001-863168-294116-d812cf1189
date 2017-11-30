@@ -30,28 +30,29 @@ def read_dump(file_name, addrs, script_addrs, hd_master_addr_old):
             if line[0] != "#" and len(line) > 10:
                 # split out some data
                 key_date_label, comment = line.split("#")
-                key_date_label = key_date_label.split(" ")
+                key_date_label = key_date_label.rstrip().split(" ")
                 # key = key_date_label[0]
                 date = key_date_label[1]
-                keytype = key_date_label[2]
+                key_params = dict(map(lambda x: x.split('=', 1), key_date_label[2:]))
                 if not len(comment) or date.startswith('1970'):
                     continue
 
-                addr_keypath = comment.split(" addr=")[1]
-                addr = addr_keypath.split(" ")[0]
+                comment_params = dict(map(lambda x: x.split('=', 1), comment.strip().split(" ")))
+                addr = comment_params['addr']
                 keypath = None
-                if keytype == "inactivehdseed=1":
+                if key_params.get('inactivehdseed'):
                     # ensure the old master is still available
-                    assert (hd_master_addr_old == addr)
-                elif keytype == "hdseed=1":
+                    assert(hd_master_addr_old == addr)
+                elif key_params.get('hdseed'):
                     # ensure we have generated a new hd master key
-                    assert (hd_master_addr_old != addr)
+                    assert(hd_master_addr_old != addr)
                     hd_master_addr_ret = addr
-                elif keytype == "script=1":
+                elif key_params.get('script'):
                     # scripts don't have keypaths
                     keypath = None
                 else:
-                    keypath = addr_keypath.rstrip().split("hdkeypath=")[1]
+                    keypath = key_params['hdkeypath']
+                keytype = key_date_label[2]
 
                 # count key types
                 for addrObj in addrs:
@@ -65,16 +66,16 @@ def read_dump(file_name, addrs, script_addrs, hd_master_addr_old):
                             witness_addr_ret = addr_list[1]
                         found_addr += 1
                         break
-                    elif keytype == "change=1":
+                    elif key_params.get('change'):
                         found_addr_chg += 1
                         break
-                    elif keytype == "reserve=1":
+                    elif key_params.get('reserve'):
                         found_addr_rsv += 1
                         break
 
                 # count scripts
                 for script_addr in script_addrs:
-                    if script_addr == addr.rstrip() and keytype == "script=1":
+                    if script_addr == addr.rstrip() and key_params.get('script'):
                         found_script_addr += 1
                         break
 
