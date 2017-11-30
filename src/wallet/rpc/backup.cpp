@@ -799,7 +799,10 @@ RPCHelpMan dumpwallet()
             } else {
                 file << "change=1";
             }
-            file << strprintf(" # addr=%s%s\n", strAddr, (metadata.has_key_origin ? " hdkeypath="+WriteHDKeypath(metadata.key_origin.path) : ""));
+            if (metadata.has_key_origin) {
+                file << " hdkeypath=" + WriteHDKeypath(metadata.key_origin.path);
+            }
+            file << strprintf(" # addr=%s\n", strAddr);
         }
     }
     file << "\n";
