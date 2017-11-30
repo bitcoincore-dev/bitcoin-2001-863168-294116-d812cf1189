@@ -766,6 +766,13 @@ UniValue dumpwallet(const JSONRPCRequest& request)
         std::string strLabel;
         CKey key;
         if (pwallet->GetKey(keyid, key)) {
+            CKeyMetadata meta;
+            {
+                const auto meta_it = pwallet->mapKeyMetadata.find(keyid);
+                if (meta_it != pwallet->mapKeyMetadata.end()) {
+                    meta = meta_it->second;
+                }
+            }
             file << strprintf("%s %s ", EncodeSecret(key), strTime);
             if (GetWalletAddressesForKey(pwallet, keyid, strAddr, strLabel)) {
                file << strprintf("label=%s", strLabel);
@@ -773,12 +780,12 @@ UniValue dumpwallet(const JSONRPCRequest& request)
                 file << "hdseed=1";
             } else if (mapKeyPool.count(keyid)) {
                 file << "reserve=1";
-            } else if (pwallet->mapKeyMetadata[keyid].hdKeypath == "s") {
+            } else if (meta.hdKeypath == "s") {
                 file << "inactivehdseed=1";
             } else {
                 file << "change=1";
             }
-            file << strprintf(" # addr=%s%s\n", strAddr, (pwallet->mapKeyMetadata[keyid].hdKeypath.size() > 0 ? " hdkeypath="+pwallet->mapKeyMetadata[keyid].hdKeypath : ""));
+            file << strprintf(" # addr=%s%s\n", strAddr, (meta.hdKeypath.empty() ? "" : (" hdkeypath=" + meta.hdKeypath)));
         }
     }
     file << "\n";
