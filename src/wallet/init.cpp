@@ -219,7 +219,7 @@ bool VerifyWallets()
             return InitError(strprintf(
                 _("Invalid -wallet path '%s'. -wallet path should point to a directory where wallet.dat and "
                   "database/log.?????????? files can be stored, a location where such a directory could be created, "
-                  "or (for backwards compatibility) the name of an existing data file in the default -walletdir (%s)"),
+                  "or (for backwards compatibility) the name of an existing data file in -walletdir (%s)"),
                 walletFile, GetWalletDir()));
         }
 
