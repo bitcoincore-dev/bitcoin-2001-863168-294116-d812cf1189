@@ -751,7 +751,10 @@ UniValue dumpwallet(const JSONRPCRequest& request)
             } else {
                 file << "change=1";
             }
-            file << strprintf(" # addr=%s%s\n", strAddr, (meta.hdKeypath.empty() ? "" : (" hdkeypath=" + meta.hdKeypath)));
+            if (!meta.hdKeypath.empty()) {
+                file << " hdkeypath=" + meta.hdKeypath;
+            }
+            file << strprintf(" # addr=%s\n", strAddr);
         }
     }
     file << "\n";
