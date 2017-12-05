@@ -87,7 +87,8 @@ bool GetWalletAddressesForKey(CWallet * const pwallet, const CKeyID &keyid, std:
         }
     }
     if (!fLabelFound) {
-        strAddr = EncodeDestination(GetDestinationForKey(key.GetPubKey(), g_address_type));
+        OutputType default_address_type = pwallet->chain().getDefaultAddressType();
+        strAddr = EncodeDestination(GetDestinationForKey(key.GetPubKey(), default_address_type));
     }
     return fLabelFound;
 }

@@ -12,8 +12,11 @@
 #include <boost/signals2/last_value.hpp>
 #include <boost/signals2/signal.hpp>
 
-class CWallet;
 class CBlockIndex;
+
+namespace interface {
+class Wallet;
+} // namespace interface
 
 /** General change type (added, updated, removed). */
 enum ChangeType
@@ -92,7 +95,7 @@ public:
     boost::signals2::signal<void ()> NotifyAlertChanged;
 
     /** A wallet has been loaded. */
-    boost::signals2::signal<void (CWallet* wallet)> LoadWallet;
+    boost::signals2::signal<void (std::unique_ptr<interface::Wallet>& wallet)> LoadWallet;
 
     /**
      * Show progress e.g. for verifychain.

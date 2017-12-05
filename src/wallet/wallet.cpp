@@ -12,6 +12,7 @@
 #include <consensus/validation.h>
 #include <fs.h>
 #include <wallet/init.h>
+#include <interface/wallet.h>
 #include <key.h>
 #include <key_io.h>
 #include <keystore.h>
@@ -831,7 +832,8 @@ bool CWallet::GetAccountDestination(CTxDestination &dest, std::string strAccount
             bForceNew = true;
         else {
             // Check if the current key has been used (TODO: check other addresses with the same key)
-            CScript scriptPubKey = GetScriptForDestination(GetDestinationForKey(account.vchPubKey, g_address_type));
+            OutputType default_address_type = m_chain->getDefaultAddressType();
+            CScript scriptPubKey = GetScriptForDestination(GetDestinationForKey(account.vchPubKey, default_address_type));
             for (std::map<uint256, CWalletTx>::iterator it = mapWallet.begin();
                  it != mapWallet.end() && account.vchPubKey.IsValid();
                  ++it)
@@ -844,16 +846,17 @@ bool CWallet::GetAccountDestination(CTxDestination &dest, std::string strAccount
     }
 
     // Generate a new key
+    OutputType default_address_type = m_chain->getDefaultAddressType();
     if (bForceNew) {
         if (!GetKeyFromPool(account.vchPubKey, false))
             return false;
 
-        LearnRelatedScripts(account.vchPubKey, g_address_type);
-        dest = GetDestinationForKey(account.vchPubKey, g_address_type);
+        LearnRelatedScripts(account.vchPubKey, default_address_type);
+        dest = GetDestinationForKey(account.vchPubKey, default_address_type);
         SetAddressBook(dest, strAccount, "receive");
         walletdb.WriteAccount(strAccount, account);
     } else {
-        dest = GetDestinationForKey(account.vchPubKey, g_address_type);
+        dest = GetDestinationForKey(account.vchPubKey, default_address_type);
     }
 
     return true;
@@ -1969,7 +1972,7 @@ bool CWalletTx::IsTrusted(interface::Chain::Lock& locked_chain) const
         return true;
     if (nDepth < 0)
         return false;
-    if (!bSpendZeroConfChange || !IsFromMe(ISMINE_ALL)) // using wtx's cached debit
+    if (!pwallet->chain().getSpendZeroConfChange() || !IsFromMe(ISMINE_ALL)) // using wtx's cached debit
         return false;
 
     // Don't trust unconfirmed transactions from us unless they are in the mempool.
@@ -2217,7 +2220,6 @@ CAmount CWallet::GetAvailableBalance(const CCoinControl* coinControl) const
 
 void CWallet::AvailableCoins(interface::Chain::Lock& locked_chain, std::vector<COutput> &vCoins, bool fOnlySafe, const CCoinControl *coinControl, const CAmount &nMinimumAmount, const CAmount &nMaximumAmount, const CAmount &nMinimumSumAmount, const uint64_t nMaximumCount, const int nMinDepth, const int nMaxDepth) const
 {
-    AssertLockHeld(cs_main);
     AssertLockHeld(cs_wallet);
 
     vCoins.clear();
@@ -2594,11 +2596,11 @@ bool CWallet::SelectCoins(const std::vector<COutput>& vAvailableCoins, const CAm
     bool res = nTargetValue <= nValueFromPresetInputs ||
         SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 1, 6, 0, vCoins, setCoinsRet, nValueRet) ||
         SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 1, 1, 0, vCoins, setCoinsRet, nValueRet) ||
-        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, 2, vCoins, setCoinsRet, nValueRet)) ||
-        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, std::min((size_t)4, nMaxChainLength/3), vCoins, setCoinsRet, nValueRet)) ||
-        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, nMaxChainLength/2, vCoins, setCoinsRet, nValueRet)) ||
-        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, nMaxChainLength, vCoins, setCoinsRet, nValueRet)) ||
-        (bSpendZeroConfChange && !fRejectLongChains && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, std::numeric_limits<uint64_t>::max(), vCoins, setCoinsRet, nValueRet));
+        (m_chain->getSpendZeroConfChange() && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, 2, vCoins, setCoinsRet, nValueRet)) ||
+        (m_chain->getSpendZeroConfChange() && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, std::min((size_t)4, nMaxChainLength/3), vCoins, setCoinsRet, nValueRet)) ||
+        (m_chain->getSpendZeroConfChange() && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, nMaxChainLength/2, vCoins, setCoinsRet, nValueRet)) ||
+        (m_chain->getSpendZeroConfChange() && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, nMaxChainLength, vCoins, setCoinsRet, nValueRet)) ||
+        (m_chain->getSpendZeroConfChange() && !fRejectLongChains && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, std::numeric_limits<uint64_t>::max(), vCoins, setCoinsRet, nValueRet));
 
     // because SelectCoinsMinConf clears the setCoinsRet, we now add the possible inputs to the coinset
     setCoinsRet.insert(setPresetCoins.begin(), setPresetCoins.end());
@@ -2695,9 +2697,10 @@ OutputType CWallet::TransactionChangeType(OutputType change_type, const std::vec
         return change_type;
     }
 
-    // if g_address_type is legacy, use legacy address as change (even
+    // if default address type is legacy, use legacy address as change (even
     // if some of the outputs are P2WPKH or P2WSH).
-    if (g_address_type == OUTPUT_TYPE_LEGACY) {
+    OutputType default_address_type = m_chain->getDefaultAddressType();
+    if (default_address_type == OUTPUT_TYPE_LEGACY) {
         return OUTPUT_TYPE_LEGACY;
     }
 
@@ -2712,8 +2715,8 @@ OutputType CWallet::TransactionChangeType(OutputType change_type, const std::vec
         }
     }
 
-    // else use g_address_type for change
-    return g_address_type;
+    // else use default address type for change
+    return default_address_type;
 }
 
 bool CWallet::CreateTransaction(interface::Chain::Lock& locked_chain, const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet,
@@ -2813,7 +2816,7 @@ bool CWallet::CreateTransaction(interface::Chain::Lock& locked_chain, const std:
                     return false;
                 }
 
-                const OutputType change_type = TransactionChangeType(coin_control.change_type, vecSend);
+                const OutputType change_type = TransactionChangeType(coin_control.m_change_type ? *coin_control.m_change_type : m_chain->getDefaultChangeType(), vecSend);
 
                 LearnRelatedScripts(vchPubKey, change_type);
                 scriptChange = GetScriptForDestination(GetDestinationForKey(vchPubKey, change_type));
@@ -2925,7 +2928,8 @@ bool CWallet::CreateTransaction(interface::Chain::Lock& locked_chain, const std:
                 // to avoid conflicting with other possible uses of nSequence,
                 // and in the spirit of "smallest possible change from prior
                 // behavior."
-                const uint32_t nSequence = coin_control.signalRbf ? MAX_BIP125_RBF_SEQUENCE : (CTxIn::SEQUENCE_FINAL - 1);
+                const bool signal_rbf = coin_control.m_signal_rbf ? *coin_control.m_signal_rbf : chain().getDefaultRbf();
+                const uint32_t nSequence = signal_rbf ? MAX_BIP125_RBF_SEQUENCE : (CTxIn::SEQUENCE_FINAL - 1);
                 for (const auto& coin : setCoins)
                     txNew.vin.push_back(CTxIn(coin.outpoint,CScript(),
                                               nSequence));
@@ -3174,7 +3178,7 @@ DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
     if (nLoadWalletRet != DB_LOAD_OK)
         return nLoadWalletRet;
 
-    uiInterface.LoadWallet(this);
+    m_chain->loadWallet(interface::MakeWallet(*this));
 
     return DB_LOAD_OK;
 }
@@ -4188,8 +4192,6 @@ int CMerkleTx::GetDepthInMainChain(interface::Chain::Lock& locked_chain) const
 {
     if (hashUnset())
         return 0;
-
-    AssertLockHeld(cs_main);
 
     return locked_chain.getBlockDepth(hashBlock) * (nIndex == -1 ? -1 : 1);
 }
