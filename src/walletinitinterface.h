@@ -5,7 +5,9 @@
 #ifndef BITCOIN_WALLETINITINTERFACE_H
 #define BITCOIN_WALLETINITINTERFACE_H
 
-struct InitInterfaces;
+namespace interfaces {
+class LocalInit;
+} // namespace interfaces
 
 class WalletInitInterface {
 public:
@@ -16,7 +18,7 @@ public:
     /** Check wallet parameter interaction */
     virtual bool ParameterInteraction() const = 0;
     /** Add wallets that should be opened to list of init interfaces. */
-    virtual void Construct(InitInterfaces& interfaces) const = 0;
+    virtual void Construct(interfaces::LocalInit& init) const = 0;
 
     virtual ~WalletInitInterface() {}
 };

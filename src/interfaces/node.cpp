@@ -12,6 +12,7 @@
 #include <init.h>
 #include <interfaces/chain.h>
 #include <interfaces/handler.h>
+#include <interfaces/init.h>
 #include <interfaces/wallet.h>
 #include <net.h>
 #include <net_processing.h>
@@ -55,7 +56,7 @@ namespace {
 class NodeImpl : public Node
 {
 public:
-    explicit NodeImpl(InitInterfaces& interfaces) : m_interfaces(interfaces) {}
+    explicit NodeImpl(LocalInit& init) : m_init(init) {}
     void initError(const std::string& message) override { InitError(message); }
     bool parseParameters(int argc, const char* const argv[], std::string& error) override
     {
@@ -80,13 +81,13 @@ public:
     }
     bool appInitMain() override
     {
-        m_interfaces.chain = MakeChain();
-        return AppInitMain(m_interfaces);
+        m_interfaces.chain = m_init.makeChain();
+        return AppInitMain(m_init);
     }
     void appShutdown() override
     {
         Interrupt();
-        Shutdown(m_interfaces);
+        Shutdown(*m_init.interfaces());
     }
     void startShutdown() override { StartShutdown(); }
     bool shutdownRequested() override { return ShutdownRequested(); }
@@ -266,12 +267,16 @@ public:
     {
         return MakeWallet(LoadWallet(*m_interfaces.chain, name, error, warning));
     }
-    WalletCreationStatus createWallet(const SecureString& passphrase, uint64_t wallet_creation_flags, const std::string& name, std::string& error, std::string& warning, std::unique_ptr<Wallet>& result) override
+    std::unique_ptr<Wallet> createWallet(const SecureString& passphrase,
+        uint64_t wallet_creation_flags,
+        const std::string& name,
+        std::string& error,
+        std::string& warning,
+        WalletCreationStatus& status) override
     {
         std::shared_ptr<CWallet> wallet;
-        WalletCreationStatus status = CreateWallet(*m_interfaces.chain, passphrase, wallet_creation_flags, name, error, warning, wallet);
-        result = MakeWallet(wallet);
-        return status;
+        status = CreateWallet(*m_interfaces.chain, passphrase, wallet_creation_flags, name, error, warning, wallet);
+        return MakeWallet(wallet);
     }
     std::unique_ptr<Handler> handleInitMessage(InitMessageFn fn) override
     {
@@ -324,11 +329,12 @@ public:
                     GuessVerificationProgress(Params().TxData(), block));
             }));
     }
-    InitInterfaces& m_interfaces;
+    LocalInit& m_init;
+    InitInterfaces& m_interfaces = *m_init.interfaces();
 };
 
 } // namespace
 
-std::unique_ptr<Node> MakeNode(InitInterfaces& interfaces) { return MakeUnique<NodeImpl>(interfaces); }
+std::unique_ptr<Node> MakeNode(LocalInit& init) { return MakeUnique<NodeImpl>(init); }
 
 } // namespace interfaces
