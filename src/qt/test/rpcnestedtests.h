@@ -8,8 +8,16 @@
 #include <QObject>
 #include <QTest>
 
+namespace interfaces {
+class Init;
+} // namespace interfaces
+
 class RPCNestedTests : public QObject
 {
+public:
+    RPCNestedTests(interfaces::Init& init) : m_init(init) {}
+    interfaces::Init& m_init;
+
     Q_OBJECT
 
     private Q_SLOTS:
