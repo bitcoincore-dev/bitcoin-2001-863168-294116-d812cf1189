@@ -4,7 +4,10 @@
 src/bitcoin
 src/bitcoind
 src/bitcoin-cli
+src/bitcoin-gui
+src/bitcoin-node
 src/bitcoin-tx
+src/bitcoin-wallet
 src/test/test_bitcoin
 src/test/test_bitcoin_fuzzy
 src/qt/test/test_bitcoin-qt
@@ -36,6 +39,7 @@ src/config/stamp-h1
 share/setup.nsi
 share/qt/Info.plist
 
+src/interfaces/capnp/proxy-codegen
 src/univalue/gen
 
 src/qt/*.moc
@@ -83,6 +87,13 @@ Makefile
 bitcoin-qt
 Bitcoin-Qt.app
 background.tiff*
+
+# capnp generated files
+*.capnp.c++
+*.capnp.h
+*.capnp.proxy-impl.h
+*.capnp.proxy.c++
+*.capnp.proxy.h
 
 # Unit-tests
 Makefile.test

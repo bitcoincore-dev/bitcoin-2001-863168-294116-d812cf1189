@@ -6,6 +6,7 @@
 #include <chainparams.h>
 #include <init.h>
 #include <interfaces/chain.h>
+#include <interfaces/init.h>
 #include <net.h>
 #include <scheduler.h>
 #include <outputtype.h>
@@ -30,7 +31,7 @@ public:
     bool ParameterInteraction() const override;
 
     //! Add wallets that should be opened to list of init interfaces.
-    void Construct(InitInterfaces& interfaces) const override;
+    void Construct(interfaces::Init& init, InitInterfaces& interfaces) const override;
 };
 
 const WalletInitInterface& g_wallet_init_interface = WalletInit();
@@ -197,14 +198,14 @@ bool VerifyWallets(interfaces::Chain& chain, const std::vector<std::string>& wal
     return true;
 }
 
-void WalletInit::Construct(InitInterfaces& interfaces) const
+void WalletInit::Construct(interfaces::Init& init, InitInterfaces& interfaces) const
 {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
         LogPrintf("Wallet disabled!\n");
         return;
     }
     gArgs.SoftSetArg("-wallet", "");
-    interfaces.chain_clients.emplace_back(interfaces::MakeWalletClient(*interfaces.chain, gArgs.GetArgs("-wallet")));
+    interfaces.chain_clients.emplace_back(init.makeWalletClient(*interfaces.chain, gArgs.GetArgs("-wallet")));
 }
 
 bool LoadWallets(interfaces::Chain& chain, const std::vector<std::string>& wallet_files)

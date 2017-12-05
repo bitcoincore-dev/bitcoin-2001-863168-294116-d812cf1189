@@ -11,6 +11,8 @@
 #include <chainparams.h>
 #include <qt/clientmodel.h>
 #include <fs.h>
+#include <interfaces/config.h>
+#include <interfaces/init.h>
 #include <qt/guiconstants.h>
 #include <qt/guiutil.h>
 #include <qt/intro.h>
@@ -559,9 +561,12 @@ int main(int argc, char *argv[])
     util::WinCmdLineArgs winArgs;
     std::tie(argc, argv) = winArgs.get();
 #endif
+
+    auto init = interfaces::MakeInit(argc, argv, interfaces::g_config);
+
     SetupEnvironment();
 
-    std::unique_ptr<interfaces::Node> node = interfaces::MakeNode();
+    auto node = init->makeNode();
 
     // Do not refer to data directory yet, this can be overridden by Intro::pickDataDirectory
 

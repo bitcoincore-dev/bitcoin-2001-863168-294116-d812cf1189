@@ -7,6 +7,8 @@
 #include <clientversion.h>
 #include <core_io.h>
 #include <crypto/ripemd160.h>
+#include <init.h>
+#include <interfaces/chain.h>
 #include <key_io.h>
 #include <validation.h>
 #include <httpserver.h>
@@ -255,7 +257,13 @@ static UniValue setmocktime(const JSONRPCRequest& request)
     LOCK(cs_main);
 
     RPCTypeCheck(request.params, {UniValue::VNUM});
-    SetMockTime(request.params[0].get_int64());
+    int64_t time = request.params[0].get_int64();
+    SetMockTime(time);
+    if (g_rpc_interfaces) {
+        for (const auto& chain_client : g_rpc_interfaces->chain_clients) {
+            chain_client->setMockTime(time);
+        }
+    }
 
     return NullUniValue;
 }

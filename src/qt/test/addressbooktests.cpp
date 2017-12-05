@@ -54,7 +54,7 @@ void EditAddressAndSubmit(
  * In each case, verify the resulting state of the address book and optionally
  * the warning message presented to the user.
  */
-void TestAddAddressesToSendBook()
+void TestAddAddressesToSendBook(interfaces::Init& init)
 {
     TestChain100Setup test;
     auto chain = interfaces::MakeChain();
@@ -103,10 +103,9 @@ void TestAddAddressesToSendBook()
 
     // Initialize relevant QT models.
     std::unique_ptr<const PlatformStyle> platformStyle(PlatformStyle::instantiate("other"));
-    auto node = interfaces::MakeNode();
+    auto node = interfaces::MakeNode(init);
     OptionsModel optionsModel(*node);
-    AddWallet(wallet);
-    WalletModel walletModel(std::move(node->getWallets()[0]), *node, platformStyle.get(), &optionsModel);
+    WalletModel walletModel(interfaces::MakeWallet(wallet), *node, platformStyle.get(), &optionsModel);
     RemoveWallet(wallet);
     EditAddressDialog editAddressDialog(EditAddressDialog::NewSendingAddress);
     editAddressDialog.setModel(walletModel.getAddressTableModel());
@@ -152,5 +151,5 @@ void AddressBookTests::addressBookTests()
         return;
     }
 #endif
-    TestAddAddressesToSendBook();
+    TestAddAddressesToSendBook(m_init);
 }

@@ -52,7 +52,7 @@ namespace {
 class NodeImpl : public Node
 {
 public:
-    NodeImpl() { m_interfaces.chain = MakeChain(); }
+    NodeImpl(Init& init) : m_init(init) { m_interfaces.chain = MakeChain(); }
     bool parseParameters(int argc, const char* const argv[], std::string& error) override
     {
         return gArgs.ParseParameters(argc, argv, error);
@@ -62,6 +62,10 @@ public:
     bool softSetBoolArg(const std::string& arg, bool value) override { return gArgs.SoftSetBoolArg(arg, value); }
     void selectParams(const std::string& network) override { SelectParams(network); }
     std::string getNetwork() override { return Params().NetworkIDString(); }
+    std::string getArg(const std::string& arg, const std::string& default_value) override
+    {
+        return gArgs.GetArg(arg, default_value);
+    }
     void initLogging() override { InitLogging(); }
     void initParameterInteraction() override { InitParameterInteraction(); }
     std::string getWarnings(const std::string& type) override { return GetWarnings(type); }
@@ -71,7 +75,7 @@ public:
         return AppInitBasicSetup() && AppInitParameterInteraction() && AppInitSanityChecks() &&
                AppInitLockDataDirectory();
     }
-    bool appInitMain() override { return AppInitMain(m_interfaces); }
+    bool appInitMain() override { return AppInitMain(m_init, m_interfaces); }
     void appShutdown() override
     {
         Interrupt();
@@ -238,8 +242,9 @@ public:
     std::vector<std::unique_ptr<Wallet>> getWallets() override
     {
         std::vector<std::unique_ptr<Wallet>> wallets;
-        for (const std::shared_ptr<CWallet>& wallet : GetWallets()) {
-            wallets.emplace_back(MakeWallet(wallet));
+        for (auto& client : m_interfaces.chain_clients) {
+            auto client_wallets = client->getWallets();
+            std::move(client_wallets.begin(), client_wallets.end(), std::back_inserter(wallets));
         }
         return wallets;
     }
@@ -295,11 +300,12 @@ public:
                     GuessVerificationProgress(Params().TxData(), block));
             }));
     }
+    Init& m_init;
     InitInterfaces m_interfaces;
 };
 
 } // namespace
 
-std::unique_ptr<Node> MakeNode() { return MakeUnique<NodeImpl>(); }
+std::unique_ptr<Node> MakeNode(Init& init) { return MakeUnique<NodeImpl>(init); }
 
 } // namespace interfaces
