@@ -565,6 +565,10 @@ public:
     CAddress addr;
     // Bind address of our side of the connection
     CAddress addrBind;
+    // Note: If you add fields to this class, you should also consider updating
+    // the CNode::copyStats() method, the getpeerinfo RPC (in rpc/net.cpp), and
+    // the IPC serialization code (in interfaces/capnp/messages.cpp and
+    // interfaces/capnp/messages.capnp).
 };
 
 
