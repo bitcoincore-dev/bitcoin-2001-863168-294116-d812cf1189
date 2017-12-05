@@ -7,6 +7,7 @@
 #define BITCOIN_INIT_H
 
 #include <interface/chain.h>
+#include <interface/init.h>
 
 #include <string>
 
@@ -21,6 +22,7 @@ class thread_group;
 //! Pointers to interfaces used during init and destroyed on shutdown.
 struct InitInterfaces
 {
+    std::unique_ptr<interface::Init> init;
     std::unique_ptr<interface::Chain> chain;
     std::vector<std::unique_ptr<interface::Chain::Client>> chain_clients;
 };

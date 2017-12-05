@@ -13,6 +13,7 @@
 #include <consensus/validation.h>
 #include <fs.h>
 #include <wallet/init.h>
+#include <interface/wallet.h>
 #include <key.h>
 #include <keystore.h>
 #include <validation.h>
@@ -3173,7 +3174,7 @@ DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
     if (nLoadWalletRet != DB_LOAD_OK)
         return nLoadWalletRet;
 
-    uiInterface.LoadWallet(this);
+    m_chain->loadWallet(interface::MakeWallet(*this));
 
     return DB_LOAD_OK;
 }
