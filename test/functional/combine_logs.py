@@ -55,6 +55,10 @@ def read_logs(tmp_dir):
             break
         files.append(("node%d" % i, logfile))
 
+        wallet_logfile = "{}/node{}/regtest/debug.log.wallet".format(tmp_dir, i)
+        if os.path.isfile(wallet_logfile):
+            files.append(("wall%d" % i, wallet_logfile))
+
     return heapq.merge(*[get_log_events(source, f) for source, f in files])
 
 def get_log_events(source, logfile):
@@ -101,6 +105,10 @@ def print_logs(log_events, color=False, html=False):
             colors["node1"] = "\033[0;32m"  # GREEN
             colors["node2"] = "\033[0;31m"  # RED
             colors["node3"] = "\033[0;33m"  # YELLOW
+            colors["wall0"] = "\033[0;34;1m"  # BLUE
+            colors["wall1"] = "\033[0;32;1m"  # GREEN
+            colors["wall2"] = "\033[0;31;1m"  # RED
+            colors["wall3"] = "\033[0;33;1m"  # YELLOW
             colors["reset"] = "\033[0m"     # Reset font color
 
         for event in log_events:
