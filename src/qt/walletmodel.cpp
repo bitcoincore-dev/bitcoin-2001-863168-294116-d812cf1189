@@ -22,7 +22,6 @@
 #include <ui_interface.h>
 #include <util/system.h> // for GetBoolArg
 #include <wallet/coincontrol.h>
-#include <wallet/wallet.h>
 
 #include <stdint.h>
 
@@ -579,16 +578,6 @@ bool WalletModel::bumpFee(uint256 hash, uint256& new_hash)
 bool WalletModel::isWalletEnabled()
 {
    return !gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET);
-}
-
-bool WalletModel::privateKeysDisabled() const
-{
-    return m_wallet->IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS);
-}
-
-bool WalletModel::canGetAddresses() const
-{
-    return m_wallet->canGetAddresses();
 }
 
 QString WalletModel::getWalletName() const
