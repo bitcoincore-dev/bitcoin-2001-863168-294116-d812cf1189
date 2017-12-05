@@ -9,6 +9,8 @@
 #include <chainparams.h>
 #include <chainparamsbase.h>
 #include <consensus/consensus.h>
+#include <interfaces/config.h>
+#include <interfaces/init.h>
 #include <logging.h>
 #include <util/system.h>
 #include <util/strencodings.h>
@@ -72,6 +74,17 @@ int main(int argc, char* argv[])
     util::WinCmdLineArgs winArgs;
     std::tie(argc, argv) = winArgs.get();
 #endif
+
+    auto init = interfaces::MakeInit(argc, argv, interfaces::g_config);
+
+    // Check if bitcoind is being invoked as an IPC server. If so, then bypass
+    // normal execution and just respond to requests over the IPC channel.
+    auto* process = init->getProcess();
+    int exit_status;
+    if (process && process->serve(exit_status)) {
+        return exit_status;
+    }
+
     SetupEnvironment();
     RandomInit();
     try {

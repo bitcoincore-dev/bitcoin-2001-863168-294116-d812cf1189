@@ -12,6 +12,8 @@
 #include <chainparams.h>
 #include <qt/clientmodel.h>
 #include <fs.h>
+#include <interfaces/config.h>
+#include <interfaces/init.h>
 #include <qt/guiconstants.h>
 #include <qt/guiutil.h>
 #include <qt/intro.h>
@@ -424,10 +426,13 @@ int GuiMain(int argc, char* argv[])
     util::WinCmdLineArgs winArgs;
     std::tie(argc, argv) = winArgs.get();
 #endif
+
+    auto init = interfaces::MakeInit(argc, argv, interfaces::g_config);
+
     SetupEnvironment();
     util::ThreadRename("main");
 
-    std::unique_ptr<interfaces::Node> node = interfaces::MakeNode();
+    auto node = init->makeNode();
 
     // Subscribe to global signals from core
     std::unique_ptr<interfaces::Handler> handler_message_box = node->handleMessageBox(noui_ThreadSafeMessageBox);
