@@ -532,7 +532,8 @@ int main(int argc, char *argv[])
 {
     SetupEnvironment();
 
-    std::unique_ptr<interfaces::Node> node = interfaces::MakeNode();
+    std::unique_ptr<interfaces::Init> init = interfaces::MakeInit(argc > 0 ? argv[0] : "");
+    std::unique_ptr<interfaces::Node> node = init->makeNode();
 
     /// 1. Parse command-line options. These take precedence over anything else.
     // Command-line options take precedence:
