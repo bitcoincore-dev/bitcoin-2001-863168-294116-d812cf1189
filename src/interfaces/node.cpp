@@ -55,7 +55,7 @@ namespace {
 class NodeImpl : public Node
 {
 public:
-    NodeImpl() { m_interfaces.chain = MakeChain(); }
+    explicit NodeImpl(InitInterfaces& interfaces) : m_interfaces(interfaces) {}
     void initError(const std::string& message) override { InitError(message); }
     bool parseParameters(int argc, const char* const argv[], std::string& error) override
     {
@@ -78,7 +78,11 @@ public:
         return AppInitBasicSetup() && AppInitParameterInteraction() && AppInitSanityChecks() &&
                AppInitLockDataDirectory();
     }
-    bool appInitMain() override { return AppInitMain(m_interfaces); }
+    bool appInitMain() override
+    {
+        m_interfaces.chain = MakeChain();
+        return AppInitMain(m_interfaces);
+    }
     void appShutdown() override
     {
         Interrupt();
@@ -320,11 +324,11 @@ public:
                     GuessVerificationProgress(Params().TxData(), block));
             }));
     }
-    InitInterfaces m_interfaces;
+    InitInterfaces& m_interfaces;
 };
 
 } // namespace
 
-std::unique_ptr<Node> MakeNode() { return MakeUnique<NodeImpl>(); }
+std::unique_ptr<Node> MakeNode(InitInterfaces& interfaces) { return MakeUnique<NodeImpl>(interfaces); }
 
 } // namespace interfaces

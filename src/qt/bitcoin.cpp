@@ -11,6 +11,7 @@
 
 #include <chainparams.h>
 #include <fs.h>
+#include <init.h>
 #include <qt/clientmodel.h>
 #include <qt/guiconstants.h>
 #include <qt/guiutil.h>
@@ -28,6 +29,7 @@
 #include <qt/walletmodel.h>
 #endif // ENABLE_WALLET
 
+#include <interfaces/chain.h>
 #include <interfaces/handler.h>
 #include <interfaces/node.h>
 #include <noui.h>
@@ -415,10 +417,12 @@ int GuiMain(int argc, char* argv[])
     util::WinCmdLineArgs winArgs;
     std::tie(argc, argv) = winArgs.get();
 #endif
+
+    InitInterfaces interfaces;
+    std::unique_ptr<interfaces::Node> node = interfaces::MakeNode(interfaces);
+
     SetupEnvironment();
     util::ThreadRename("main");
-
-    std::unique_ptr<interfaces::Node> node = interfaces::MakeNode();
 
     // Subscribe to global signals from core
     std::unique_ptr<interfaces::Handler> handler_message_box = node->handleMessageBox(noui_ThreadSafeMessageBox);

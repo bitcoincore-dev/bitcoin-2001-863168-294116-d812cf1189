@@ -30,6 +30,7 @@ class RPCTimerInterface;
 class UniValue;
 class proxyType;
 struct CNodeStateStats;
+struct InitInterfaces;
 enum class WalletCreationStatus;
 
 namespace interfaces {
@@ -262,7 +263,7 @@ public:
 };
 
 //! Return implementation of Node interface.
-std::unique_ptr<Node> MakeNode();
+std::unique_ptr<Node> MakeNode(InitInterfaces& interfaces);
 
 } // namespace interfaces
 
