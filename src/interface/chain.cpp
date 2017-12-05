@@ -314,6 +314,7 @@ public:
     void initMessage(const std::string& message) override { ::uiInterface.InitMessage(message); }
     void initWarning(const std::string& message) override { InitWarning(message); }
     bool initError(const std::string& message) override { return InitError(message); }
+    void loadWallet(std::unique_ptr<Wallet> wallet) override { ::uiInterface.LoadWallet(wallet); }
     UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
         int num_blocks,
         uint64_t max_tries,
@@ -322,6 +323,10 @@ public:
         return ::generateBlocks(coinbase_script, num_blocks, max_tries, keep_script);
     }
     unsigned int parseConfirmTarget(const UniValue& value) override { return ParseConfirmTarget(value); }
+    bool getSpendZeroConfChange() override { CHECK_WALLET(return ::bSpendZeroConfChange); }
+    bool getDefaultRbf() override { CHECK_WALLET(return ::fWalletRbf); }
+    OutputType getDefaultAddressType() override { CHECK_WALLET(return g_address_type); }
+    OutputType getDefaultChangeType() override { CHECK_WALLET(return g_change_type); }
     std::unique_ptr<Handler> handleNotifications(Notifications& notifications) override
     {
         return MakeUnique<HandlerImpl>(notifications);
