@@ -229,6 +229,12 @@ AC_ARG_WITH([capnp],
   [with_capnp=$withval],
   [with_capnp=auto])
 
+AC_ARG_ENABLE([multiprocess],
+  [AS_HELP_STRING([--enable-multiprocess],
+  [build multiprocess bitcoin-node, bitcoin-wallet, and bitcoin-gui executables in addition to monolithic bitcoind and bitcoin-qt executables (default is yes if capnp is found)])],
+  [enable_multiprocess=$enableval],
+  [enable_multiprocess=auto])
+
 AC_ARG_ENABLE(man,
     [AS_HELP_STRING([--disable-man],
                     [do not install man pages (default is to install)])],,
@@ -1305,6 +1311,23 @@ AC_SUBST(CAPNP_PARSER_CFLAGS)
 AC_SUBST(CAPNP_PARSER_LIBS)
 AC_SUBST(CAPNP_PARSER_INCLUDE)
 
+dnl Multiprocess check
+
+if test "x$enable_multiprocess" = xyes; then
+  if test "x$capnp_found" != xyes; then
+    AC_MSG_ERROR([capnp-rpc library not found (required for --enable-multiprocess)])
+  fi
+  build_multiprocess=yes
+elif test "x$enable_multiprocess" = xauto; then
+  build_multiprocess=$capnp_found
+else
+  build_multiprocess=no
+fi
+
+AM_CONDITIONAL([BUILD_MULTIPROCESS],[test "x$build_multiprocess" = xyes])
+AM_CONDITIONAL([BUILD_BITCOIN_NODE], [test "x$build_multiprocess" = xyes])
+AM_CONDITIONAL([BUILD_BITCOIN_GUI], [test "x$build_multiprocess" = xyes])
+
 if test x$have_protobuf != xno &&
    test x$enable_bip70 != xno; then
   BITCOIN_QT_PATH_PROGS([PROTOC], [protoc],$protoc_bin_path)
@@ -1612,6 +1635,7 @@ esac
 
 echo
 echo "Options used to compile and link:"
+echo "  multiprocess  = $build_multiprocess"
 echo "  with wallet   = $enable_wallet"
 echo "  with gui / qt = $bitcoin_enable_qt"
 if test x$bitcoin_enable_qt != xno; then
