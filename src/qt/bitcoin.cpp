@@ -12,6 +12,8 @@
 #include <chainparams.h>
 #include <qt/clientmodel.h>
 #include <fs.h>
+#include <interfaces/config.h>
+#include <interfaces/init.h>
 #include <qt/guiconstants.h>
 #include <qt/guiutil.h>
 #include <qt/intro.h>
@@ -336,8 +338,12 @@ void BitcoinApplication::initializeResult(bool success)
     {
         // Log this only after AppInitMain finishes, as then logging setup is guaranteed complete
         qWarning() << "Platform customization:" << platformStyle->getName();
+
+        clientModel = new ClientModel(m_node, optionsModel);
+        window->setClientModel(clientModel);
+
 #ifdef ENABLE_WALLET
-        m_wallet_controller = new WalletController(m_node, platformStyle, optionsModel, this);
+        m_wallet_controller = new WalletController(m_node, platformStyle, optionsModel, clientModel, this);
 #ifdef ENABLE_BIP70
         PaymentServer::LoadRootCAs();
 #endif
@@ -347,11 +353,6 @@ void BitcoinApplication::initializeResult(bool success)
             connect(m_wallet_controller, &WalletController::coinsSent, paymentServer, &PaymentServer::fetchPaymentACK);
 #endif
         }
-#endif
-
-        clientModel = new ClientModel(m_node, optionsModel);
-        window->setClientModel(clientModel);
-#ifdef ENABLE_WALLET
         window->setWalletController(m_wallet_controller);
 #endif
 
@@ -425,9 +426,12 @@ int GuiMain(int argc, char* argv[])
     util::WinCmdLineArgs winArgs;
     std::tie(argc, argv) = winArgs.get();
 #endif
+
+    auto init = interfaces::MakeInit(argc, argv, interfaces::g_config);
+
     SetupEnvironment();
 
-    std::unique_ptr<interfaces::Node> node = interfaces::MakeNode();
+    auto node = init->makeNode();
 
     // Subscribe to global signals from core
     std::unique_ptr<interfaces::Handler> handler_message_box = node->handleMessageBox(noui_ThreadSafeMessageBox);

@@ -29,6 +29,13 @@ BCLog::Logger& LogInstance()
     return *g_logger;
 }
 
+struct FFFF {
+    FFFF() {
+        LogInstance().m_print_to_console = true;
+    }
+};
+FFFF ffff;
+
 bool fLogIPs = DEFAULT_LOGIPS;
 
 static int FileWriteStr(const std::string &str, FILE *fp)
@@ -86,6 +93,7 @@ bool BCLog::Logger::DisableCategory(const std::string& str)
 
 bool BCLog::Logger::WillLogCategory(BCLog::LogFlags category) const
 {
+    return true;
     return (m_categories.load(std::memory_order_relaxed) & category) != 0;
 }
 
