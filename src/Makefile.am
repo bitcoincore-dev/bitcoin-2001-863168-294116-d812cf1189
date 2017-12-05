@@ -9,6 +9,7 @@ AM_CXXFLAGS = $(DEBUG_CXXFLAGS) $(HARDENED_CXXFLAGS) $(WARN_CXXFLAGS) $(NOWARN_C
 AM_CPPFLAGS = $(DEBUG_CPPFLAGS) $(HARDENED_CPPFLAGS)
 AM_LIBTOOLFLAGS = --preserve-dup-deps
 EXTRA_LIBRARIES =
+EXTRA_PROGRAMS =
 
 if EMBEDDED_UNIVALUE
 LIBUNIVALUE = univalue/libunivalue.la
@@ -85,6 +86,10 @@ if BUILD_BITCOIND
   bin_PROGRAMS += bitcoind
 endif
 
+if BUILD_BITCOIN_NODE
+  bin_PROGRAMS += bitcoin-node
+endif
+
 if BUILD_BITCOIN_CLI
   bin_PROGRAMS += bitcoin-cli
 endif
@@ -137,8 +142,11 @@ BITCOIN_CORE_H = \
   index/txindex.h \
   indirectmap.h \
   init.h \
+  interfaces/base.h \
   interfaces/chain.h \
+  interfaces/config.h \
   interfaces/handler.h \
+  interfaces/init.h \
   interfaces/node.h \
   interfaces/wallet.h \
   key.h \
@@ -265,7 +273,9 @@ libbitcoin_server_a_SOURCES = \
   index/base.cpp \
   index/blockfilterindex.cpp \
   index/txindex.cpp \
+  interfaces/base.cpp \
   interfaces/chain.cpp \
+  interfaces/init.cpp \
   interfaces/node.cpp \
   init.cpp \
   dbwrapper.cpp \
@@ -464,6 +474,8 @@ libbitcoin_common_a_SOURCES = \
   versionbitsinfo.cpp \
   warnings.cpp \
   $(BITCOIN_CORE_H)
+libbitcoin_common_a_LIBADD =
+EXTRA_libbitcoin_common_a_DEPENDENCIES =
 
 # util: shared between all executables.
 # This library *must* be included to make sure that the glibc
@@ -514,25 +526,24 @@ libbitcoin_cli_a_SOURCES = \
 nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
-# bitcoind binary #
-bitcoind_SOURCES = bitcoind.cpp
-bitcoind_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-bitcoind_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-bitcoind_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# bitcoind, bitcoin-wallet, bitcoin-node binaries #
+bitcoind_common_sources = bitcoind.cpp
+bitcoind_common_cppflags = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+bitcoind_common_cxxflags = $(AM_CXXFLAGS) $(PIE_FLAGS)
+bitcoind_common_ldflags = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-bitcoind_SOURCES += bitcoind-res.rc
+bitcoind_common_sources += bitcoind-res.rc
 endif
 
 # Libraries below may be listed more than once to resolve circular dependencies (see
 # https://eli.thegreenplace.net/2013/07/09/library-order-in-static-linking#circular-dependency)
-bitcoind_LDADD = \
+bitcoind_common_ldadd = \
   $(LIBBITCOIN_SERVER) \
   $(LIBBITCOIN_WALLET) \
-  $(LIBBITCOIN_SERVER) \
   $(LIBBITCOIN_COMMON) \
-  $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
+  $(LIBUNIVALUE) \
   $(LIBBITCOIN_ZMQ) \
   $(LIBBITCOIN_CONSENSUS) \
   $(LIBBITCOIN_CRYPTO) \
@@ -541,7 +552,19 @@ bitcoind_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-bitcoind_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
+bitcoind_common_ldadd += $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(CAPNP_RPC_LIBS)
+
+bitcoind_SOURCES = $(bitcoind_common_sources) interfaces/config_bitcoind.cpp
+bitcoind_CPPFLAGS = $(bitcoind_common_cppflags)
+bitcoind_CXXFLAGS = $(bitcoind_common_cxxflags)
+bitcoind_LDFLAGS = $(bitcoind_common_ldflags)
+bitcoind_LDADD = $(bitcoind_common_ldadd)
+
+bitcoin_node_SOURCES = $(bitcoind_common_sources) interfaces/config_bitcoin-node.cpp
+bitcoin_node_CPPFLAGS = $(bitcoind_common_cppflags)
+bitcoin_node_CXXFLAGS = $(bitcoind_common_cxxflags)
+bitcoin_node_LDFLAGS = $(bitcoind_common_ldflags)
+bitcoin_node_LDADD = $(bitcoind_common_ldadd) libconfig_node.a $(LIBBITCOIN_COMMON)
 
 # bitcoin-cli binary #
 bitcoin_cli_SOURCES = bitcoin-cli.cpp
@@ -585,29 +608,20 @@ bitcoin_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 
 # bitcoin-wallet binary #
 bitcoin_wallet_SOURCES = bitcoin-wallet.cpp
-bitcoin_wallet_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-bitcoin_wallet_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-bitcoin_wallet_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+bitcoin_wallet_LDADD = $(LIBBITCOIN_WALLET_TOOL) $(bitcoind_common_ldadd)
+if BUILD_MULTIPROCESS
+bitcoin_wallet_SOURCES += interfaces/config_bitcoin-wallet.cpp
+bitcoin_wallet_LDADD += libconfig_wallet.a $(LIBBITCOIN_COMMON)
+else
+bitcoin_wallet_SOURCES += interfaces/config_null.cpp
+else
+endif
+bitcoin_wallet_CPPFLAGS = $(bitcoind_common_cppflags)
+bitcoin_wallet_CXXFLAGS = $(bitcoind_common_cxxflags)
 
 if TARGET_WINDOWS
 bitcoin_wallet_SOURCES += bitcoin-wallet-res.rc
 endif
-
-bitcoin_wallet_LDADD = \
-  $(LIBBITCOIN_WALLET_TOOL) \
-  $(LIBBITCOIN_WALLET) \
-  $(LIBBITCOIN_COMMON) \
-  $(LIBBITCOIN_CONSENSUS) \
-  $(LIBBITCOIN_UTIL) \
-  $(LIBBITCOIN_CRYPTO) \
-  $(LIBBITCOIN_ZMQ) \
-  $(LIBLEVELDB) \
-  $(LIBLEVELDB_SSE42) \
-  $(LIBMEMENV) \
-  $(LIBSECP256K1) \
-  $(LIBUNIVALUE)
-
-bitcoin_wallet_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTO_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(MINIUPNPC_LIBS) $(ZMQ_LIBS)
 #
 
 # bitcoinconsensus library #
@@ -633,7 +647,7 @@ CTAES_DIST += crypto/ctaes/ctaes.h
 CTAES_DIST += crypto/ctaes/README.md
 CTAES_DIST += crypto/ctaes/test.c
 
-CLEANFILES = $(EXTRA_LIBRARIES)
+CLEANFILES = $(EXTRA_LIBRARIES) $(EXTRA_PROGRAMS)
 
 CLEANFILES += *.gcda *.gcno
 CLEANFILES += compat/*.gcda compat/*.gcno
@@ -694,7 +708,143 @@ endif
 
 %.capnp.c++ %.capnp.h: %.capnp
 	@test -f $(CAPNP_BIN)
-	$(AM_V_GEN) $(CAPNP_BIN) compile --output=c++ --import-path=$(<D) $<
+	$(AM_V_GEN) $(CAPNP_BIN) compile --output=c++:$(<D) --import-path=$(<D) $<
+
+%.capnp.proxy-client.c++ %.capnp.proxy-types.h %.capnp.proxy-server.c++ %.capnp.proxy-types.c++  %.capnp.proxy.h: %.capnp %.capnp.c++ interfaces/capnp/proxy-codegen$(EXEEXT) interfaces/capnp/proxy.capnp.h
+	$(AM_V_GEN) interfaces/capnp/proxy-codegen$(EXEEXT) $< $(CAPNP_PARSER_INCLUDE) $*
+
+EXTRA_PROGRAMS += interfaces/capnp/proxy-codegen
+interfaces_capnp_proxy_codegen_SOURCES = interfaces/capnp/proxy-codegen.cpp
+interfaces_capnp_proxy_codegen_CPPFLAGS = $(AM_CPPFLAGS)
+interfaces_capnp_proxy_codegen_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(CAPNP_PARSER_CFLAGS)
+interfaces_capnp_proxy_codegen_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(CAPNP_PARSER_LIBS)
+interfaces_capnp_proxy_codegen_LDADD = libproxy_capnp.a
+$(interfaces_capnp_proxy_codegen_OBJECTS) : $(nodist_libproxy_capnp_a_SOURCES)
+
+EXTRA_LIBRARIES += libproxy_capnp.a
+libproxy_capnp_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+libproxy_capnp_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(CAPNP_RPC_CFLAGS)
+libproxy_capnp_a_SOURCES = \
+  interfaces/capnp/proxy.capnp
+nodist_libproxy_capnp_a_SOURCES = \
+  interfaces/capnp/proxy.capnp.c++ \
+  interfaces/capnp/proxy.capnp.h
+CLEANFILES += $(nodist_libproxy_capnp_a_SOURCES)
+
+EXTRA_LIBRARIES += libtypes_capnp.a
+libtypes_capnp_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+libtypes_capnp_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(CAPNP_RPC_CFLAGS)
+libtypes_capnp_a_SOURCES = \
+  interfaces/capnp/chain.capnp \
+  interfaces/capnp/common.capnp \
+  interfaces/capnp/handler.capnp \
+  interfaces/capnp/init.capnp \
+  interfaces/capnp/node.capnp \
+  interfaces/capnp/wallet.capnp
+nodist_libtypes_capnp_a_SOURCES = \
+  interfaces/capnp/chain.capnp.c++ \
+  interfaces/capnp/chain.capnp.h \
+  interfaces/capnp/chain.capnp.proxy-client.c++ \
+  interfaces/capnp/chain.capnp.proxy-types.h \
+  interfaces/capnp/chain.capnp.proxy-server.c++ \
+  interfaces/capnp/chain.capnp.proxy-types.c++ \
+  interfaces/capnp/chain.capnp.proxy.h \
+  interfaces/capnp/common.capnp.c++ \
+  interfaces/capnp/common.capnp.h \
+  interfaces/capnp/common.capnp.proxy-client.c++ \
+  interfaces/capnp/common.capnp.proxy-types.h \
+  interfaces/capnp/common.capnp.proxy-server.c++ \
+  interfaces/capnp/common.capnp.proxy-types.c++ \
+  interfaces/capnp/common.capnp.proxy.h \
+  interfaces/capnp/handler.capnp.c++ \
+  interfaces/capnp/handler.capnp.h \
+  interfaces/capnp/handler.capnp.proxy-client.c++ \
+  interfaces/capnp/handler.capnp.proxy-types.h \
+  interfaces/capnp/handler.capnp.proxy-server.c++ \
+  interfaces/capnp/handler.capnp.proxy-types.c++ \
+  interfaces/capnp/handler.capnp.proxy.h \
+  interfaces/capnp/init.capnp.c++ \
+  interfaces/capnp/init.capnp.h \
+  interfaces/capnp/init.capnp.proxy-client.c++ \
+  interfaces/capnp/init.capnp.proxy-types.h \
+  interfaces/capnp/init.capnp.proxy-server.c++ \
+  interfaces/capnp/init.capnp.proxy-types.c++ \
+  interfaces/capnp/init.capnp.proxy.h \
+  interfaces/capnp/node.capnp.c++ \
+  interfaces/capnp/node.capnp.h \
+  interfaces/capnp/node.capnp.proxy-client.c++ \
+  interfaces/capnp/node.capnp.proxy-types.h \
+  interfaces/capnp/node.capnp.proxy-server.c++ \
+  interfaces/capnp/node.capnp.proxy-types.c++ \
+  interfaces/capnp/node.capnp.proxy.h \
+  interfaces/capnp/wallet.capnp.c++ \
+  interfaces/capnp/wallet.capnp.h \
+  interfaces/capnp/wallet.capnp.proxy-client.c++ \
+  interfaces/capnp/wallet.capnp.proxy-types.h \
+  interfaces/capnp/wallet.capnp.proxy-server.c++ \
+  interfaces/capnp/wallet.capnp.proxy-types.c++ \
+  interfaces/capnp/wallet.capnp.proxy.h
+CLEANFILES += $(nodist_libtypes_capnp_a_SOURCES)
+$(libtypes_capnp_a_OBJECTS) : $(nodist_libproxy_capnp_a_SOURCES)
+
+if BUILD_MULTIPROCESS
+EXTRA_LIBRARIES += libinterfaces_capnp.a
+libinterfaces_capnp_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+libinterfaces_capnp_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(CAPNP_RPC_CFLAGS)
+libinterfaces_capnp_a_SOURCES = \
+  interfaces/capnp/ipc.cpp \
+  interfaces/capnp/ipc.h \
+  interfaces/capnp/chain-types.h \
+  interfaces/capnp/chain.cpp \
+  interfaces/capnp/chain.h \
+  interfaces/capnp/common-types.h \
+  interfaces/capnp/common.cpp \
+  interfaces/capnp/common.h \
+  interfaces/capnp/handler-types.h \
+  interfaces/capnp/handler.cpp \
+  interfaces/capnp/handler.h \
+  interfaces/capnp/init-types.h \
+  interfaces/capnp/init.cpp \
+  interfaces/capnp/init.h \
+  interfaces/capnp/common-types.h \
+  interfaces/capnp/node-types.h \
+  interfaces/capnp/node.cpp \
+  interfaces/capnp/node.h \
+  interfaces/capnp/wallet-types.h \
+  interfaces/capnp/wallet.cpp \
+  interfaces/capnp/wallet.h \
+  interfaces/capnp/proxy-types.h \
+  interfaces/capnp/proxy.cpp \
+  interfaces/capnp/proxy.h \
+  interfaces/capnp/util.cpp \
+  interfaces/capnp/util.h \
+  interfaces/ipc.cpp \
+  interfaces/ipc.h
+libbitcoin_common_a_LIBADD += \
+  $(libinterfaces_capnp_a_OBJECTS) \
+  $(libproxy_capnp_a_OBJECTS) \
+  $(libtypes_capnp_a_OBJECTS)
+EXTRA_libbitcoin_common_a_DEPENDENCIES += \
+  $(libinterfaces_capnp_a_OBJECTS) \
+  $(libproxy_capnp_a_OBJECTS) \
+  $(libtypes_capnp_a_OBJECTS)
+$(libbitcoin_common_a_OBJECTS) : $(nodist_libtypes_capnp_a_SOURCES)
+
+EXTRA_LIBRARIES += libconfig_node.a
+libconfig_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+libconfig_node_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(CAPNP_RPC_CFLAGS)
+libconfig_node_a_SOURCES = interfaces/capnp/config_bitcoin-node.cpp
+
+EXTRA_LIBRARIES += libconfig_wallet.a
+libconfig_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+libconfig_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(CAPNP_RPC_CFLAGS)
+libconfig_wallet_a_SOURCES = interfaces/capnp/config_bitcoin-wallet.cpp
+
+EXTRA_LIBRARIES += libconfig_gui.a
+libconfig_gui_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+libconfig_gui_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(CAPNP_RPC_CFLAGS)
+libconfig_gui_a_SOURCES = interfaces/capnp/config_bitcoin-gui.cpp
+endif
 
 if EMBEDDED_LEVELDB
 include Makefile.leveldb.include
