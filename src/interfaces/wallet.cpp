@@ -465,7 +465,7 @@ public:
     unsigned int getConfirmTarget() override { return m_wallet->m_confirm_target; }
     bool hdEnabled() override { return m_wallet->IsHDEnabled(); }
     bool canGetAddresses() override { return m_wallet->CanGetAddresses(); }
-    bool IsWalletFlagSet(uint64_t flag) override { return m_wallet->IsWalletFlagSet(flag); }
+    bool privateKeysDisabled() override { return m_wallet->IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS); }
     OutputType getDefaultAddressType() override { return m_wallet->m_default_address_type; }
     OutputType getDefaultChangeType() override { return m_wallet->m_default_change_type; }
     void remove() override
@@ -520,6 +520,15 @@ public:
     void start(CScheduler& scheduler) override { return StartWallets(scheduler); }
     void flush() override { return FlushWallets(); }
     void stop() override { return StopWallets(); }
+    void setMockTime(int64_t time) override { return SetMockTime(time); }
+    std::vector<std::unique_ptr<Wallet>> getWallets() override
+    {
+        std::vector<std::unique_ptr<Wallet>> wallets;
+        for (const auto& wallet : GetWallets()) {
+            wallets.emplace_back(MakeWallet(wallet));
+        }
+        return wallets;
+    }
     ~WalletClientImpl() override { UnloadWallets(); }
 
     Chain& m_chain;
