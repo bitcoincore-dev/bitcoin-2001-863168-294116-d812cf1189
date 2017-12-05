@@ -275,7 +275,7 @@ void AddWallets(InitInterfaces& interfaces)
         return;
     }
     gArgs.SoftSetArg("-wallet", DEFAULT_WALLET_DAT);
-    interfaces.chain_clients.emplace_back(interface::MakeWalletClient(*interfaces.chain, gArgs.GetArgs("-wallet")));
+    interfaces.chain_clients.emplace_back(interfaces.init->makeWalletClient(*interfaces.chain, gArgs.GetArgs("-wallet")));
 }
 
 bool OpenWallets(interface::Chain& chain, interface::Chain::Client& chain_client, const std::vector<std::string>& wallet_filenames) {

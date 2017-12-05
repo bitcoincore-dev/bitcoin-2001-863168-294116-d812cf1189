@@ -226,7 +226,8 @@ Result CreateTransaction(const CWallet* wallet, const uint256& txid, const CCoin
     }
 
     // Mark new tx not replaceable, if requested.
-    if (!coin_control.signalRbf) {
+    const bool signal_rbf = coin_control.m_signal_rbf ? *coin_control.m_signal_rbf : wallet->chain().getDefaultRbf();
+    if (!signal_rbf) {
         for (auto& input : mtx.vin) {
             if (input.nSequence < 0xfffffffe) input.nSequence = 0xfffffffe;
         }
