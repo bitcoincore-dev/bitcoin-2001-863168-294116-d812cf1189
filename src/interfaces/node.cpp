@@ -150,14 +150,14 @@ public:
         }
         return false;
     }
-    bool disconnect(const CNetAddr& net_addr) override
+    bool disconnectByAddress(const CNetAddr& net_addr) override
     {
         if (g_connman) {
             return g_connman->DisconnectNode(net_addr);
         }
         return false;
     }
-    bool disconnect(NodeId id) override
+    bool disconnectById(NodeId id) override
     {
         if (g_connman) {
             return g_connman->DisconnectNode(id);
