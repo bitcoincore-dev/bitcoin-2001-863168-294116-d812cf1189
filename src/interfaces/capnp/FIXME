@@ -1,0 +1,61 @@
+- [ ] BA rename X.name to X.client or (X.impl/X.classMethod/X.callsMethod/X.wraps/X.serverName) and change X.name modifier to affect both client & server declarations instead of just server to remove ChainNotifications client overloads
+- [ ] BB Get rid of FunctionTraits::Fields, ProxyMethodTraits::Fields move to ClientInvoke
+- [ ] BC unify readfield forms. can have single ReadDest class with ReadDest::Return typedef, with ReadField taking ReadDest, RestDestArg... arguments and returning ReadDest::Construct(constructor arg, ReadDestArg...) and Return type either being real destination type or a proxy that emplaces into a vector, or a proxy that updates an existing variable
+   - could have ReadDest::Update(lambda) where lambda takes reference argument to object, this allows reading & updating for object types that can't be initialized by constructor. e.g. maps, sets, structs without unserializing constructors
+   - designgoal is just to have one ReadField per type, not confusing mix of readfieldupdate/emplace and maze of overloads to fall back to one when another isn't available
+   - other goal is to support return types. however i think this may be only useful for client side return values. server side value initialization in PassField could potentially use it to get rid of boost::optional, but this relies of type having move / copy constructor, even if it would be elided, and no guarantee of this for parameters
+   - call sequence: readfield pair calls readfield a, calls destfirst::construct, calls readfield b, calls destsecond::construct, calls destpair::construct, calls emplace/emplace/back whatever passed to original readfield
+   - class ReadDest
+     {
+         constexpr bool exists; // can be used to overload readfield more optimally, avoid constructing a temporary when assigning to existing objects for types that can be efficiently deserialized by poth construction or update. should always favor constructing unless this is true
+         using Return = ...
+         Return Construct(...) or using Construct = ...
+         Return Update(Callback) { callback(m_ref); or callback(Construct(); }
+
+     }
+
+     Dest::Return ReadField(...Dest...) {
+       return Dest::Update([&](obj) { Stream stream; stream >> obj; } )
+     }
+
+     Dest::Return ReadField(...Dest...) {
+       return Dest::Construct(unserialize, stream); )
+     }
+   - Should switch from ReadFieldUpdate to Dest::Return form in:
+     - HandleRpcParam server invoke for CRPCCommand::Actor and std::vector<std::string>
+- [ ] CA Avoid stream copies with 12254 VectorReader
+- [ ] CB Get rid of codegen client return variables, use ReplaceVoid
+- [ ] CC Wipe SecureString copies, need RequestHook, ResponseHook, CallContextHook?
+  - hint https://github.com/capnproto/capnproto/issues/543
+- [ ] add readfield message type params
+- [ ] get rid of unnecessary interface *.h includes that could be replaced by forward enum declarations, and forward typedef declarations
+- [ ] get rid of g_address_type and g_change_type references from qt
+- [ ] capnp/proxy-codegen.cpp: remove "error" "rpcError" special cases
+- [ ] capnp/proxy-impl.h: get rid of MainServer unique_ptr hack
+- [ ] base.h: move method bodies to base.cpp
+- [ ] capnp/proxy-codegen.cpp: return directly from client invoke to remove return variable declarations
+- [ ] capnp/init.cpp: add onDisconnect handler in Connect()
+- [ ] capnp/proxy-impl.h: fix std::move in BuildField for optional<> and pointer types, BuildPrimitive for interfaces
+- [ ] capnp/proxy-impl.h: fix std::move in ServerField and ServerFieldRet
+- [ ] capnp/proxy-impl.h: dedup map/set/vector BuildField
+- [ ] capnp/proxy-impl.h: call releaseParams in serverInvoke
+- [ ] capnp/proxy.h: get rid of proxycallback specializations, move to -impl.h
+- [ ] cannp/proxy.h: get rid of horrific buildParams/invokeMethod overloads
+- [ ] capnp/proxy.h: clean up functiontraits, pull out Fields crap, get rid of underscores
+- [ ] capnp/proxy.h: move out Priority<> class, CapSetterMethodTraits, ListElemBuilder
+- [ ] capnp/test/capnp_tests.cpp: connect code duplication
+old
+- [ ] rename -impl to -inl
+- [ ] contact https://eklitzke.org/multiprocess-bitcoin
+- [ ] link ENABLE_WALLET issue 7965
+- [ ] get basic ipc startup work working
+  BITCOIND=src/bitcoin-node test/functional/rpcnamedargs.py
+- [ ] link to filed gcc bug https://gcc.gnu.org/bugzilla/show_bug.cgi?id=83249
+- [ ] readConfigFile catch exception
+- [ ] executeRpc catch exception
+- [ ] capnp forward executeRpc uri
+- [ ] remove vpwalelt access executeRpc
+- [ ] dedup readfield/buildfield overloads
+- [ ] add readfield/buildfield accessor to reduce number of arguments
+- [ ] fix ipc branch qt debug window generate command wallet not specified error
+  - [ ] remove ENABLE_WALLET vpwallets access from RPCConsole::RPCParseCommandLine

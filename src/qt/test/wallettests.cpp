@@ -128,7 +128,7 @@ void BumpFee(TransactionView& view, const uint256& txid, bool expectDisabled, st
 //     src/qt/test/test_bitcoin-qt -platform xcb      # Linux
 //     src/qt/test/test_bitcoin-qt -platform windows  # Windows
 //     src/qt/test/test_bitcoin-qt -platform cocoa    # macOS
-void TestGUI()
+void TestGUI(interfaces::Init& init)
 {
     // Set up wallet and chain with 105 blocks (5 mature blocks for spending).
     TestChain100Setup test;
@@ -156,10 +156,9 @@ void TestGUI()
     std::unique_ptr<const PlatformStyle> platformStyle(PlatformStyle::instantiate("other"));
     SendCoinsDialog sendCoinsDialog(platformStyle.get());
     TransactionView transactionView(platformStyle.get());
-    auto node = interfaces::MakeNode();
+    auto node = interfaces::MakeNode(init);
     OptionsModel optionsModel(*node);
-    AddWallet(wallet);
-    WalletModel walletModel(std::move(node->getWallets().back()), *node, platformStyle.get(), &optionsModel);
+    WalletModel walletModel(interfaces::MakeWallet(wallet), *node, platformStyle.get(), &optionsModel);
     RemoveWallet(wallet);
     sendCoinsDialog.setModel(&walletModel);
     transactionView.setModel(&walletModel);
@@ -246,5 +245,5 @@ void TestGUI()
 
 void WalletTests::walletTests()
 {
-    TestGUI();
+    TestGUI(m_init);
 }
