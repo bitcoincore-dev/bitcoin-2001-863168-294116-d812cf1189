@@ -11,6 +11,10 @@ class CScheduler;
 class CRPCTable;
 struct InitInterfaces;
 
+namespace interfaces {
+class Init;
+} // namespace interfaces
+
 class WalletInitInterface {
 public:
     /** Is the wallet component enabled */
@@ -20,7 +24,7 @@ public:
     /** Check wallet parameter interaction */
     virtual bool ParameterInteraction() const = 0;
     /** Add wallets that should be opened to list of init interfaces. */
-    virtual void Construct(InitInterfaces& interfaces) const = 0;
+    virtual void Construct(interfaces::Init& init, InitInterfaces& interfaces) const = 0;
 
     virtual ~WalletInitInterface() {}
 };

@@ -52,6 +52,7 @@ EXPECTED_BOOST_INCLUDES=(
     boost/algorithm/string/split.hpp
     boost/chrono/chrono.hpp
     boost/date_time/posix_time/posix_time.hpp
+    boost/exception/diagnostic_information.hpp
     boost/filesystem.hpp
     boost/filesystem/fstream.hpp
     boost/multi_index/hashed_index.hpp
