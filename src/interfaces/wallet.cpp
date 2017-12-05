@@ -532,6 +532,15 @@ public:
             wallet->Flush(true);
         }
     }
+    void setMockTime(int64_t time) override { SetMockTime(time); }
+    std::vector<std::unique_ptr<Wallet>> getWallets() override
+    {
+        std::vector<std::unique_ptr<Wallet>> wallets;
+        for (const auto& wallet : GetWallets()) {
+            wallets.emplace_back(MakeWallet(wallet));
+        }
+        return wallets;
+    }
     ~WalletClientImpl() override
     {
         for (const auto& wallet : GetWallets()) {

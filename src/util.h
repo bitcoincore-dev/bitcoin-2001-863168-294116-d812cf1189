@@ -37,6 +37,7 @@
 namespace interfaces {
 class Chain;
 class ChainClient;
+class Init;
 } // namespace
 
 // Application startup time (used for uptime calculation)
@@ -295,6 +296,7 @@ extern ArgsManager gArgs;
 //! example, from RPC methods.
 struct Interfaces
 {
+    std::unique_ptr<interfaces::Init> init;
     std::unique_ptr<interfaces::Chain> chain;
     std::vector<std::unique_ptr<interfaces::ChainClient>> chain_clients;
 };

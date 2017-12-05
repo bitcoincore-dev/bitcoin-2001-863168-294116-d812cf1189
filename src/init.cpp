@@ -21,6 +21,7 @@
 #include <httprpc.h>
 #include <interfaces/chain.h>
 #include <index/txindex.h>
+#include <interfaces/config.h>
 #include <key.h>
 #include <validation.h>
 #include <miner.h>
@@ -826,6 +827,9 @@ void InitLogging()
 {
     g_logger->m_print_to_file = !gArgs.IsArgNegated("-debuglogfile");
     g_logger->m_file_path = AbsPathForConfigVal(gArgs.GetArg("-debuglogfile", DEFAULT_DEBUGLOGFILE));
+    if (interfaces::g_config.log_suffix) {
+        g_logger->m_file_path += interfaces::g_config.log_suffix;
+    }
 
     // Add newlines to the logfile to distinguish this execution from the last
     // one; called before console logging is set up, so this is only sent to
@@ -1188,7 +1192,7 @@ static bool LockDataDirectory(bool probeOnly)
     return true;
 }
 
-bool AppInitSanityChecks()
+bool AppInitSanityChecks(bool lock_data_dir)
 {
     // ********************************************************* Step 4: sanity checks
 
@@ -1206,7 +1210,7 @@ bool AppInitSanityChecks()
     // Probe the data directory lock to give an early error message, if possible
     // We cannot hold the data directory lock here, as the forking for daemon() hasn't yet happened,
     // and a fork will cause weird behavior to it.
-    return LockDataDirectory(true);
+    return !lock_data_dir || LockDataDirectory(true);
 }
 
 bool AppInitLockDataDirectory()

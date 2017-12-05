@@ -12,6 +12,8 @@
 #include <compat.h>
 #include <fs.h>
 #include <interfaces/chain.h>
+#include <interfaces/config.h>
+#include <interfaces/init.h>
 #include <rpc/server.h>
 #include <init.h>
 #include <noui.h>
@@ -57,6 +59,7 @@ static void WaitForShutdown()
 //
 static bool AppInit(int argc, char* argv[])
 {
+    g_interfaces.init = interfaces::MakeInit(argc > 0 ? argv[0] : "");
     g_interfaces.chain = interfaces::MakeChain();
     bool fRet = false;
 
@@ -187,6 +190,13 @@ static bool AppInit(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
+    // Check if bitcoind is being invoked as an IPC server. If so, then bypass
+    // normal execution and just respond to requests from the IPC channel.
+    int exitStatus;
+    if (interfaces::StartServer(argc, argv, exitStatus)) {
+        return exitStatus;
+    }
+
     SetupEnvironment();
 
     // Connect bitcoind signal handlers

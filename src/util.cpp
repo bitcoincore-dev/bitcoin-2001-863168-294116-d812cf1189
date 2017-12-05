@@ -7,6 +7,7 @@
 
 #include <chainparamsbase.h>
 #include <interfaces/chain.h>
+#include <interfaces/init.h>
 #include <random.h>
 #include <serialize.h>
 #include <utilstrencodings.h>

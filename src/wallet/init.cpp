@@ -6,6 +6,7 @@
 #include <chainparams.h>
 #include <init.h>
 #include <interfaces/chain.h>
+#include <interfaces/init.h>
 #include <net.h>
 #include <scheduler.h>
 #include <outputtype.h>
@@ -202,5 +203,5 @@ void WalletInit::Construct() const
         return;
     }
     gArgs.SoftSetArg("-wallet", "");
-    g_interfaces.chain_clients.emplace_back(interfaces::MakeWalletClient(*g_interfaces.chain, gArgs.GetArgs("-wallet")));
+    g_interfaces.chain_clients.emplace_back(g_interfaces.init->makeWalletClient(*g_interfaces.chain, gArgs.GetArgs("-wallet")));
 }

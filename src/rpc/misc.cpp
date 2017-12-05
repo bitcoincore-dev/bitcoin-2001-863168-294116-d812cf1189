@@ -272,7 +272,11 @@ static UniValue setmocktime(const JSONRPCRequest& request)
     LOCK(cs_main);
 
     RPCTypeCheck(request.params, {UniValue::VNUM});
-    SetMockTime(request.params[0].get_int64());
+    int64_t time = request.params[0].get_int64();
+    SetMockTime(time);
+    for (const auto& chain_client : g_interfaces.chain_clients) {
+        chain_client->setMockTime(time);
+    }
 
     return NullUniValue;
 }
