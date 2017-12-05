@@ -286,5 +286,5 @@ void WalletInit::Construct(InitInterfaces& interfaces)
         return;
     }
     gArgs.SoftSetArg("-wallet", "");
-    interfaces.chain_clients.emplace_back(interfaces::MakeWalletClient(*interfaces.chain, gArgs.GetArgs("-wallet")));
+    interfaces.chain_clients.emplace_back(interfaces.init->makeWalletClient(*interfaces.chain, gArgs.GetArgs("-wallet")));
 }
