@@ -12,6 +12,8 @@
 #include <compat.h>
 #include <fs.h>
 #include <interfaces/chain.h>
+#include <interfaces/config.h>
+#include <interfaces/init.h>
 #include <rpc/server.h>
 #include <init.h>
 #include <noui.h>
@@ -57,7 +59,7 @@ static void WaitForShutdown()
 //
 // Start
 //
-static bool AppInit(int argc, char* argv[])
+static bool AppInit(interfaces::Init& init, int argc, char* argv[])
 {
     InitInterfaces interfaces;
     interfaces.chain = interfaces::MakeChain();
@@ -168,7 +170,7 @@ static bool AppInit(int argc, char* argv[])
             // If locking the data directory failed, exit immediately
             return false;
         }
-        fRet = AppInitMain(interfaces);
+        fRet = AppInitMain(init, interfaces);
     }
     catch (const std::exception& e) {
         PrintExceptionContinue(&e, "AppInit()");
@@ -193,10 +195,21 @@ int main(int argc, char* argv[])
     util::WinCmdLineArgs winArgs;
     std::tie(argc, argv) = winArgs.get();
 #endif
+
+    auto init = interfaces::MakeInit(argc, argv, interfaces::g_config);
+
+    // Check if bitcoind is being invoked as an IPC server. If so, then bypass
+    // normal execution and just respond to requests over the IPC channel.
+    auto* process = init->getProcess();
+    int exit_status;
+    if (process && process->serve(exit_status)) {
+        return exit_status;
+    }
+
     SetupEnvironment();
 
     // Connect bitcoind signal handlers
     noui_connect();
 
-    return (AppInit(argc, argv) ? EXIT_SUCCESS : EXIT_FAILURE);
+    return (AppInit(*init, argc, argv) ? EXIT_SUCCESS : EXIT_FAILURE);
 }

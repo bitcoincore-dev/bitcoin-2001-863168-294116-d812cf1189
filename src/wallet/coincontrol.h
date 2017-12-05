@@ -36,6 +36,9 @@ public:
     bool m_avoid_partial_spends;
     //! Fee estimation mode to control arguments to estimateSmartFee
     FeeEstimateMode m_fee_mode;
+    // Note: If you add fields to this struct, you should also update the IPC
+    // serialization code (in interfaces/capnp/messages.cpp and
+    // interfaces/capnp/messages.capnp).
 
     CCoinControl()
     {

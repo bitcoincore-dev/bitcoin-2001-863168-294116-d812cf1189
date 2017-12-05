@@ -1633,7 +1633,7 @@ int64_t CWallet::RescanFromTime(int64_t startTime, const WalletRescanReserver& r
  * If stop_block is not null, the scan will stop at the block-index
  * defined by stop_block
  *
- * Caller needs to make sure stop_block (and the optional start_block) are on
+ * Caller needs to make sure start_block (and the optional stop_block) are on
  * the main chain after to the addition of any new keys you want to detect
  * transactions for.
  */
