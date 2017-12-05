@@ -38,6 +38,9 @@ public:
     FeeEstimateMode m_fee_mode;
     //! Minimum chain depth value for coin availability
     int m_min_depth{0};
+    // Note: If you add fields to this struct, you should also update the IPC
+    // serialization code (in interfaces/capnp/common-types.cpp and
+    // interfaces/capnp/common.capnp).
 
     CCoinControl()
     {
