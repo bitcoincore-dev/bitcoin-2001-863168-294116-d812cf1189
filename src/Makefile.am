@@ -702,6 +702,16 @@ if ENABLE_BIP70
 	$(AM_V_GEN) $(PROTOC) --cpp_out=$(@D) --proto_path=$(<D) $<
 endif
 
+libtypes_input = \
+  interfaces/capnp/chain.capnp \
+  interfaces/capnp/common.capnp \
+  interfaces/capnp/handler.capnp \
+  interfaces/capnp/init.capnp \
+  interfaces/capnp/node.capnp \
+  interfaces/capnp/wallet.capnp
+EXTRA_DIST += $(libtypes_input)
+%.capnp:
+
 if EMBEDDED_LEVELDB
 include Makefile.leveldb.include
 endif
