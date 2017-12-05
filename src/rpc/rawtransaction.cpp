@@ -11,6 +11,7 @@
 #include <index/txindex.h>
 #include <init.h>
 #include <interfaces/chain.h>
+#include <interfaces/config.h>
 #include <keystore.h>
 #include <validation.h>
 #include <validationinterface.h>
@@ -1006,7 +1007,15 @@ static UniValue signrawtransactionwithkey(const JSONRPCRequest& request)
 UniValue signrawtransaction(const JSONRPCRequest& request)
 {
 #ifdef ENABLE_WALLET
-    std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
+    std::shared_ptr<CWallet> wallet;
+    // Avoid triggering WALLET_NOT_FOUND exception if a wallet name is specified
+    // in the request, but wallet code is executing in a separate wallet
+    // process. This allows the help and signrawtransactionwithkey functionality
+    // to work, although the (deprecated) forwarding to
+    // signrawtransactionwithwallet functionality will not will.
+    if (interfaces::g_config.make_wallet_client) {
+        wallet = GetWalletForJSONRPCRequest(request);
+    }
     CWallet* const pwallet = wallet.get();
 #endif
 

@@ -20,6 +20,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\interfaces\config_null.cpp" />
     <ClCompile Include="..\..\src\test\*_tests.cpp" />
     <ClCompile Include="..\..\src\wallet\test\*_tests.cpp" />
     <ClCompile Include="..\..\src\test\test_bitcoin.cpp" />
