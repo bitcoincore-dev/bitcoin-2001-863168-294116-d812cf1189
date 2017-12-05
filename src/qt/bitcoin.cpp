@@ -11,7 +11,7 @@
 
 #include <chainparams.h>
 #include <fs.h>
-#include <init.h>
+#include <interfaces/init.h>
 #include <qt/clientmodel.h>
 #include <qt/guiconstants.h>
 #include <qt/guiutil.h>
@@ -29,7 +29,6 @@
 #include <qt/walletmodel.h>
 #endif // ENABLE_WALLET
 
-#include <interfaces/chain.h>
 #include <interfaces/handler.h>
 #include <interfaces/node.h>
 #include <noui.h>
@@ -418,8 +417,8 @@ int GuiMain(int argc, char* argv[])
     std::tie(argc, argv) = winArgs.get();
 #endif
 
-    InitInterfaces interfaces;
-    std::unique_ptr<interfaces::Node> node = interfaces::MakeNode(interfaces);
+    std::unique_ptr<interfaces::Init> init = interfaces::MakeInit(argc, argv);
+    std::unique_ptr<interfaces::Node> node = init->makeNode();
 
     SetupEnvironment();
     util::ThreadRename("main");

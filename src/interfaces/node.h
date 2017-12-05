@@ -7,10 +7,10 @@
 
 #include <interfaces/base.h>
 
-#include <addrdb.h>     // For banmap_t
-#include <amount.h>     // For CAmount
-#include <net.h>        // For CConnman::NumConnections
-#include <netaddress.h> // For Network
+#include <addrdb.h>                    // For banmap_t
+#include <amount.h>                    // For CAmount
+#include <net.h>                       // For CConnman::NumConnections
+#include <netaddress.h>                // For Network
 #include <support/allocators/secure.h> // For SecureString
 
 #include <functional>
@@ -35,6 +35,7 @@ enum class WalletCreationStatus;
 
 namespace interfaces {
 class Handler;
+class LocalInit;
 class Wallet;
 
 //! Top-level interface for a bitcoin node (bitcoind process).
@@ -209,7 +210,12 @@ public:
     virtual std::unique_ptr<Wallet> loadWallet(const std::string& name, std::string& error, std::string& warning) = 0;
 
     //! Create a wallet from file
-    virtual WalletCreationStatus createWallet(const SecureString& passphrase, uint64_t wallet_creation_flags, const std::string& name, std::string& error, std::string& warning, std::unique_ptr<Wallet>& result) = 0;
+    virtual std::unique_ptr<Wallet> createWallet(const SecureString& passphrase,
+        uint64_t wallet_creation_flags,
+        const std::string& name,
+        std::string& error,
+        std::string& warning,
+        WalletCreationStatus& status) = 0;
 
     //! Register handler for init messages.
     using InitMessageFn = std::function<void(const std::string& message)>;
@@ -263,7 +269,7 @@ public:
 };
 
 //! Return implementation of Node interface.
-std::unique_ptr<Node> MakeNode(InitInterfaces& interfaces);
+std::unique_ptr<Node> MakeNode(LocalInit& init);
 
 } // namespace interfaces
 
