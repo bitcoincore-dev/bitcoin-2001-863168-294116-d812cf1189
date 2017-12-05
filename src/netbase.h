@@ -35,6 +35,9 @@ public:
 
     CService proxy;
     bool randomize_credentials;
+    // Note: If you add fields to this class, you should also update the IPC
+    // serialization code (in interfaces/capnp/messages.cpp and
+    // interfaces/capnp/messages.capnp).
 };
 
 enum Network ParseNetwork(std::string net);

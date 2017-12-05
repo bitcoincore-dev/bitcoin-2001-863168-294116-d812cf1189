@@ -16,6 +16,7 @@ class CWallet;
 namespace interfaces {
 class Chain;
 class ChainClient;
+class Init;
 } // namespace interfaces
 
 //! Pointers to interfaces used during init and destroyed on shutdown.
@@ -57,7 +58,7 @@ bool AppInitParameterInteraction();
  * @note This can be done before daemonization. Do not call Shutdown() if this function fails.
  * @pre Parameters should be parsed and config file should be read, AppInitParameterInteraction should have been called.
  */
-bool AppInitSanityChecks();
+bool AppInitSanityChecks(bool lock_data_dir=false);
 /**
  * Lock bitcoin core data directory.
  * @note This should only be done after daemonization. Do not call Shutdown() if this function fails.
@@ -69,7 +70,7 @@ bool AppInitLockDataDirectory();
  * @note This should only be done after daemonization. Call Shutdown() if this function fails.
  * @pre Parameters should be parsed and config file should be read, AppInitLockDataDirectory should have been called.
  */
-bool AppInitMain(InitInterfaces& interfaces);
+bool AppInitMain(interfaces::Init& init, InitInterfaces& interfaces);
 
 /**
  * Setup the arguments for gArgs

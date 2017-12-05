@@ -79,6 +79,9 @@ struct CNodeStateStats {
     int nSyncHeight = -1;
     int nCommonHeight = -1;
     std::vector<int> vHeightInFlight;
+    // Note: If you add fields to this struct, you should also consider updating
+    // the getpeerinfo RPC (in rpc/net.cpp), and the IPC serialization code (in
+    // interfaces/capnp/messages.cpp and interfaces/capnp/messages.capnp).
 };
 
 /** Get statistics from node state */

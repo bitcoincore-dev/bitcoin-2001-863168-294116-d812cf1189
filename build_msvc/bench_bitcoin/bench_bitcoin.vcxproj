@@ -35,6 +35,7 @@
     <ClCompile Include="..\..\src\bench\merkle_root.cpp" />
     <ClCompile Include="..\..\src\bench\rollingbloom.cpp" />
     <ClCompile Include="..\..\src\bench\verify_script.cpp" />
+    <ClCompile Include="..\..\src\interfaces\config_null.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libbitcoinconsensus\libbitcoinconsensus.vcxproj">
