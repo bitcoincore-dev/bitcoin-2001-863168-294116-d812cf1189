@@ -59,6 +59,10 @@ def main():
         colors["node1"] = "\033[0;32m"  # GREEN
         colors["node2"] = "\033[0;31m"  # RED
         colors["node3"] = "\033[0;33m"  # YELLOW
+        colors["wall0"] = "\033[0;34;1m"  # BLUE
+        colors["wall1"] = "\033[0;32;1m"  # GREEN
+        colors["wall2"] = "\033[0;31;1m"  # RED
+        colors["wall3"] = "\033[0;33;1m"  # YELLOW
         colors["reset"] = "\033[0m"  # Reset font color
 
     log_events = read_logs(testdir)
@@ -82,6 +86,10 @@ def read_logs(tmp_dir):
         if not os.path.isfile(logfile):
             break
         files.append(("node%d" % i, logfile))
+
+        wallet_logfile = "{}/node{}/regtest/debug.log.wallet".format(tmp_dir, i)
+        if os.path.isfile(wallet_logfile):
+            files.append(("wall%d" % i, wallet_logfile))
 
     return heapq.merge(*[get_log_events(source, f) for source, f in files])
 
@@ -134,7 +142,7 @@ def get_log_events(source, logfile):
     Log events may be split over multiple lines. We use the timestamp
     regex match as the marker for a new log event."""
     try:
-        with open(logfile, 'r', encoding='utf-8') as infile:
+        with open(logfile, 'r', encoding='utf-8', errors="surrogateescape") as infile:
             event = ''
             timestamp = ''
             for line in infile:
@@ -167,7 +175,11 @@ def print_logs_plain(log_events, colors):
         """Renders the iterator of log events into text."""
         for event in log_events:
             lines = event.event.splitlines()
-            print("{0} {1: <5} {2} {3}".format(colors[event.source.rstrip()], event.source, lines[0], colors["reset"]))
+            try:
+                print("{0} {1: <5} {2} {3}".format(colors[event.source.rstrip()], event.source, lines[0], colors["reset"]))
+            except UnicodeEncodeError:
+                print(f"Log garbage {event.source} {lines!r}")
+
             if len(lines) > 1:
                 for line in lines[1:]:
                     print("{0}{1}{2}".format(colors[event.source.rstrip()], line, colors["reset"]))
