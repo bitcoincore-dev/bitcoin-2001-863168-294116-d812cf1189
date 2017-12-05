@@ -212,6 +212,12 @@ AC_ARG_WITH([capnp],
   [with_capnp=$withval],
   [with_capnp=auto])
 
+AC_ARG_ENABLE([multiprocess],
+  [AS_HELP_STRING([--enable-multiprocess],
+  [build multiprocess bitcoin-node, bitcoin-wallet, and bitcoin-gui executables in addition to monolithic bitcoind and bitcoin-qt executables (default is yes if capnp is found)])],
+  [enable_multiprocess=$enableval],
+  [enable_multiprocess=auto])
+
 AC_ARG_ENABLE(man,
     [AS_HELP_STRING([--disable-man],
                     [do not install man pages (default is to install)])],,
@@ -1127,6 +1133,24 @@ AC_SUBST(CAPNP_PARSER_CFLAGS)
 AC_SUBST(CAPNP_PARSER_LIBS)
 AC_SUBST(CAPNP_PARSER_INCLUDE)
 
+dnl Multiprocess check
+
+if test "x$enable_multiprocess" = xyes; then
+  if test "x$capnp_found" != xyes; then
+    AC_MSG_ERROR([capnp-rpc library not found (required for --enable-multiprocess)])
+  fi
+  build_multiprocess=yes
+elif test "x$enable_multiprocess" = xauto; then
+  build_multiprocess=$capnp_found
+else
+  build_multiprocess=no
+fi
+
+AM_CONDITIONAL([BUILD_MULTIPROCESS],[test x$build_multiprocess = xyes])
+AM_CONDITIONAL([BUILD_BITCOIN_NODE], [test "x$build_multiprocess" = xyes])
+AM_CONDITIONAL([BUILD_BITCOIN_WALLET], [test "x$build_multiprocess$enable_wallet" = xyesyes])
+AM_CONDITIONAL([BUILD_BITCOIN_GUI], [test "x$build_multiprocess" = xyes])
+
 BITCOIN_QT_PATH_PROGS([PROTOC], [protoc],$protoc_bin_path)
 
 AC_MSG_CHECKING([whether to build bitcoind])
@@ -1280,6 +1304,7 @@ AM_CONDITIONAL([HARDEN],[test x$use_hardening = xyes])
 AM_CONDITIONAL([ENABLE_HWCRC32],[test x$enable_hwcrc32 = xyes])
 AM_CONDITIONAL([USE_ASM],[test x$use_asm = xyes])
 
+AC_DEFINE_UNQUOTED(BITCOIN_DAEMON_NAME, "$BITCOIN_DAEMON_NAME", [Base name of bitcoind executable])
 AC_DEFINE(CLIENT_VERSION_MAJOR, _CLIENT_VERSION_MAJOR, [Major version])
 AC_DEFINE(CLIENT_VERSION_MINOR, _CLIENT_VERSION_MINOR, [Minor version])
 AC_DEFINE(CLIENT_VERSION_REVISION, _CLIENT_VERSION_REVISION, [Build revision])
@@ -1389,6 +1414,7 @@ esac
 
 echo
 echo "Options used to compile and link:"
+echo "  multiprocess  = $build_multiprocess"
 echo "  with wallet   = $enable_wallet"
 echo "  with gui / qt = $bitcoin_enable_qt"
 if test x$bitcoin_enable_qt != xno; then

@@ -1,6 +1,7 @@
 #ifndef BITCOIN_INTERFACE_CHAIN_H
 #define BITCOIN_INTERFACE_CHAIN_H
 
+#include <interface/base.h>
 #include <interface/wallet.h>
 
 #include <amount.h>                 // For CAmount
@@ -31,7 +32,7 @@ namespace interface {
 class Handler;
 
 //! Interface for giving wallet processes access to blockchain state.
-class Chain
+class Chain : public Base
 {
 public:
     virtual ~Chain() {}
@@ -122,7 +123,10 @@ public:
     virtual std::unique_ptr<Lock> assumeLocked() = 0;
 
     //! Return whether node has the block and optionally return block metadata or contents.
-    virtual bool findBlock(const uint256& hash, CBlock* block = nullptr, int64_t* time = nullptr, int64_t* max_time = nullptr) = 0;
+    virtual bool findBlock(const uint256& hash,
+        CBlock* block = nullptr,
+        int64_t* time = nullptr,
+        int64_t* max_time = nullptr) = 0;
 
     //! Estimate fraction of total transactions verified if blocks up to
     //! given height are verified.
@@ -188,6 +192,9 @@ public:
     //! Send init error.
     virtual bool initError(const std::string& message) = 0;
 
+    //! Send wallet load notification.
+    virtual void loadWallet(std::unique_ptr<Wallet> wallet) = 0;
+
     //! Generate blocks
     virtual UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
         int num_blocks,
@@ -196,6 +203,18 @@ public:
 
     //! Parse confirm target.
     virtual unsigned int parseConfirmTarget(const UniValue& value) = 0;
+
+    //! Whether to spend unconfirmed change when sending transactions.
+    virtual bool getSpendZeroConfChange() = 0;
+
+    //! Whether to create transactions with RBF by default.
+    virtual bool getDefaultRbf() = 0;
+
+    //! Address type to generate by default.
+    virtual OutputType getDefaultAddressType() = 0;
+
+    //! Change type to generate by default.
+    virtual OutputType getDefaultChangeType() = 0;
 
     //! Chain notifications.
     class Notifications
@@ -223,7 +242,7 @@ public:
 
     //! Interface to let node manage chain clients (wallets, or maybe tools for
     //! monitoring and analysis in the future).
-    class Client
+    class Client : public Base
     {
     public:
         virtual ~Client() {}
@@ -264,7 +283,8 @@ std::unique_ptr<Chain> MakeChain();
 //! analysis, or fee estimation. These clients need to expose their own
 //! MakeXXXClient functions returning their implementations of the Chain::Client
 //! interface.
-std::unique_ptr<Chain::Client> MakeWalletClient(Chain& chain, std::vector<std::string> wallet_filenames);
+using MakeWalletClientFn = std::unique_ptr<Chain::Client>(Chain& chain, std::vector<std::string> wallet_filenames);
+MakeWalletClientFn MakeWalletClient;
 
 } // namespace interface
 

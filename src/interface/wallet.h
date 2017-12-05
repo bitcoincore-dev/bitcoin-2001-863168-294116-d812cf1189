@@ -1,6 +1,8 @@
 #ifndef BITCOIN_INTERFACE_INTERFACES_H
 #define BITCOIN_INTERFACE_INTERFACES_H
 
+#include <interface/base.h>
+
 #include <amount.h>                    // For CAmount
 #include <pubkey.h>                    // For CTxDestination (CKeyID and CScriptID)
 #include <script/ismine.h>             // For isminefilter, isminetype
@@ -37,7 +39,7 @@ using WalletOrderForm = std::vector<std::pair<std::string, std::string>>;
 using WalletValueMap = std::map<std::string, std::string>;
 
 //! Interface for accessing a wallet.
-class Wallet
+class Wallet : public Base
 {
 public:
     virtual ~Wallet() {}
@@ -211,9 +213,6 @@ public:
     // Return whether HD enabled.
     virtual bool hdEnabled() = 0;
 
-    // Get default address type.
-    virtual OutputType getDefaultAddressType() = 0;
-
     //! Register handler for show progress messages.
     using ShowProgressFn = std::function<void(const std::string& title, int progress)>;
     virtual std::unique_ptr<Handler> handleShowProgress(ShowProgressFn fn) = 0;
@@ -240,7 +239,7 @@ public:
 };
 
 //! Tracking object returned by CreateTransaction and passed to CommitTransaction.
-class PendingWalletTx
+class PendingWalletTx : public Base
 {
 public:
     virtual ~PendingWalletTx() {}

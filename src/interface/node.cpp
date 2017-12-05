@@ -233,6 +233,7 @@ class NodeImpl : public Node
         LOCK(::cs_main);
         return ::pcoinsTip->GetCoin(output, coin);
     }
+    OutputType getDefaultAddressType() override { CHECK_WALLET(return g_address_type); }
     std::vector<std::unique_ptr<Wallet>> getWallets() override
     {
         std::vector<std::unique_ptr<Wallet>> wallets;
@@ -265,8 +266,8 @@ class NodeImpl : public Node
     }
     std::unique_ptr<Handler> handleLoadWallet(LoadWalletFn fn) override
     {
-        CHECK_WALLET(
-            return MakeHandler(::uiInterface.LoadWallet.connect([fn](CWallet* wallet) { fn(MakeWallet(*wallet)); })));
+        CHECK_WALLET(return MakeHandler(
+            ::uiInterface.LoadWallet.connect([fn](std::unique_ptr<Wallet>& wallet) { fn(std::move(wallet)); })));
     }
     std::unique_ptr<Handler> handleNotifyNumConnectionsChanged(NotifyNumConnectionsChangedFn fn) override
     {
