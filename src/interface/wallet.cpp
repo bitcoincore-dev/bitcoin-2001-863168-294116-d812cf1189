@@ -10,7 +10,6 @@
 #include <init.h>
 #include <interface/chain.h>
 #include <interface/handler.h>
-#include <net.h>
 #include <policy/policy.h>
 #include <primitives/transaction.h>
 #include <rpc/server.h>
@@ -32,8 +31,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-
-class CScheduler;
 
 namespace interface {
 namespace {
@@ -108,7 +105,7 @@ WalletTxStatus MakeWalletTxStatus(interface::Chain::Lock& locked_chain, const CW
     result.request_count = wtx.GetRequestCount();
     result.time_received = wtx.nTimeReceived;
     result.lock_time = wtx.tx->nLockTime;
-    result.is_final = CheckFinalTx(*wtx.tx);
+    result.is_final = locked_chain.checkFinalTx(*wtx.tx);
     result.is_trusted = wtx.IsTrusted(locked_chain);
     result.is_abandoned = wtx.isAbandoned();
     result.is_coinbase = wtx.IsCoinBase();
@@ -502,6 +499,14 @@ public:
         for (CWalletRef wallet : ::vpwallets) {
             wallet->Flush(true);
         }
+    }
+    std::vector<std::unique_ptr<Wallet>> getWallets() override
+    {
+        std::vector<std::unique_ptr<Wallet>> wallets;
+        for (CWalletRef wallet : ::vpwallets) {
+            wallets.emplace_back(MakeWallet(*wallet));
+        }
+        return wallets;
     }
     ~WalletClientImpl() override
     {

@@ -239,15 +239,12 @@ class NodeImpl : public Node
     }
     std::vector<std::unique_ptr<Wallet>> getWallets() override
     {
-#ifdef ENABLE_WALLET
         std::vector<std::unique_ptr<Wallet>> wallets;
-        for (CWalletRef wallet : ::vpwallets) {
-            wallets.emplace_back(MakeWallet(*wallet));
+        for (auto& client : m_interfaces.chain_clients) {
+            auto client_wallets = client->getWallets();
+            std::move(client_wallets.begin(), client_wallets.end(), std::back_inserter(wallets));
         }
         return wallets;
-#else
-        throw std::logic_error("Node::getWallets() called in non-wallet build.");
-#endif
     }
     Chain& getChain() override { return *m_interfaces.chain; }
     std::unique_ptr<Handler> handleInitMessage(InitMessageFn fn) override
@@ -268,8 +265,8 @@ class NodeImpl : public Node
     }
     std::unique_ptr<Handler> handleLoadWallet(LoadWalletFn fn) override
     {
-        CHECK_WALLET(
-            return MakeHandler(::uiInterface.LoadWallet.connect([fn](CWallet* wallet) { fn(MakeWallet(*wallet)); })));
+        CHECK_WALLET(return MakeHandler(
+            ::uiInterface.LoadWallet.connect([fn](std::unique_ptr<Wallet>& wallet) { fn(std::move(wallet)); })));
     }
     std::unique_ptr<Handler> handleNotifyNumConnectionsChanged(NotifyNumConnectionsChangedFn fn) override
     {

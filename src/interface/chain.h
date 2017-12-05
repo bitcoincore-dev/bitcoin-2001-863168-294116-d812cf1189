@@ -1,6 +1,9 @@
 #ifndef BITCOIN_INTERFACE_CHAIN_H
 #define BITCOIN_INTERFACE_CHAIN_H
 
+#include <interface/base.h>
+#include <interface/wallet.h>
+
 #include <amount.h>                 // For CAmount
 #include <optional.h>               // For Optional and nullopt
 #include <policy/feerate.h>         // For CFeeRate
@@ -29,7 +32,7 @@ namespace interface {
 class Handler;
 
 //! Interface for giving wallet processes access to blockchain state.
-class Chain
+class Chain : public Base
 {
 public:
     virtual ~Chain() {}
@@ -192,6 +195,9 @@ public:
     //! Send init error.
     virtual void initError(const std::string& message) = 0;
 
+    //! Send wallet load notification.
+    virtual void loadWallet(std::unique_ptr<Wallet> wallet) = 0;
+
     //! Generate blocks
     virtual UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
         int num_blocks,
@@ -200,6 +206,12 @@ public:
 
     //! Parse confirm target.
     virtual unsigned int parseConfirmTarget(const UniValue& value) = 0;
+
+    //! Whether to spend unconfirmed change when sending transactions.
+    virtual bool getSpendZeroConfChange() = 0;
+
+    //! Whether to create transactions with RBF by default.
+    virtual bool getDefaultRbf() = 0;
 
     //! Chain notifications.
     class Notifications
@@ -227,7 +239,7 @@ public:
 
     //! Interface to let node manage chain clients (wallets, or maybe tools for
     //! monitoring and analysis in the future).
-    class Client
+    class Client : public Base
     {
     public:
         virtual ~Client() {}
@@ -247,6 +259,9 @@ public:
 
         //! Shut down client.
         virtual void shutdown() = 0;
+
+        //! Return interfaces for accessing wallets (if any).
+        virtual std::vector<std::unique_ptr<Wallet>> getWallets() { return {}; }
     };
 
     //! Register handler for RPC. Command is not copied, so reference
@@ -265,7 +280,8 @@ std::unique_ptr<Chain> MakeChain();
 //! analysis, or fee estimation. These clients need to expose their own
 //! MakeXXXClient functions returning their implementations of the Chain::Client
 //! interface.
-std::unique_ptr<Chain::Client> MakeWalletClient(Chain& chain, std::vector<std::string> wallet_filenames);
+using MakeWalletClientFn = std::unique_ptr<Chain::Client>(Chain& chain, std::vector<std::string> wallet_filenames);
+MakeWalletClientFn MakeWalletClient;
 
 } // namespace interface
 
