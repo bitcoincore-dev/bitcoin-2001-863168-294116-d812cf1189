@@ -59,6 +59,7 @@ void WaitForShutdown()
 bool AppInit(int argc, char* argv[])
 {
     InitInterfaces interfaces;
+    interfaces.init = interfaces::MakeInit(argc > 0 ? argv[0] : "");
     interfaces.chain = interfaces::MakeChain();
     bool fRet = false;
 
@@ -180,6 +181,13 @@ bool AppInit(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
+    // Check if bitcoind is being invoked as an IPC server. If so, then bypass
+    // normal execution and just respond to requests from the IPC channel.
+    int exitStatus;
+    if (interfaces::StartServer(argc, argv, exitStatus)) {
+        return exitStatus;
+    }
+
     SetupEnvironment();
 
     // Connect bitcoind signal handlers
