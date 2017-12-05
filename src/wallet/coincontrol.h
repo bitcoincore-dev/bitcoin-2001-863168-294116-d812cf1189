@@ -18,8 +18,8 @@ class CCoinControl
 public:
     //! Custom change destination, if not set an address is generated
     CTxDestination destChange;
-    //! Custom change type, ignored if destChange is set, defaults to g_change_type
-    OutputType change_type;
+    //! Override the default change type if set, ignored if destChange is set
+    boost::optional<OutputType> m_change_type;
     //! If false, allows unselected inputs, but requires all selected inputs be used
     bool fAllowOtherInputs;
     //! Includes watch only addresses which match the ISMINE_WATCH_SOLVABLE criteria
@@ -31,9 +31,12 @@ public:
     //! Override the default confirmation target if set
     boost::optional<unsigned int> m_confirm_target;
     //! Signal BIP-125 replace by fee.
-    bool signalRbf;
+    boost::optional<bool> m_signal_rbf;
     //! Fee estimation mode to control arguments to estimateSmartFee
     FeeEstimateMode m_fee_mode;
+    // Note: If you add fields to this struct, you should also update the IPC
+    // serialization code (in interface/capnp/messages.cpp and
+    // interface/capnp/messages.capnp).
 
     CCoinControl()
     {
@@ -43,14 +46,14 @@ public:
     void SetNull()
     {
         destChange = CNoDestination();
-        change_type = g_change_type;
+        m_change_type.reset();
         fAllowOtherInputs = false;
         fAllowWatchOnly = false;
         setSelected.clear();
         m_feerate.reset();
         fOverrideFeeRate = false;
         m_confirm_target.reset();
-        signalRbf = fWalletRbf;
+        m_signal_rbf.reset();
         m_fee_mode = FeeEstimateMode::UNSET;
     }
 

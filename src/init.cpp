@@ -1169,7 +1169,7 @@ static bool LockDataDirectory(bool probeOnly)
     return true;
 }
 
-bool AppInitSanityChecks()
+bool AppInitSanityChecks(bool lock_data_dir)
 {
     // ********************************************************* Step 4: sanity checks
 
@@ -1187,7 +1187,7 @@ bool AppInitSanityChecks()
     // Probe the data directory lock to give an early error message, if possible
     // We cannot hold the data directory lock here, as the forking for daemon() hasn't yet happened,
     // and a fork will cause weird behavior to it.
-    return LockDataDirectory(true);
+    return !lock_data_dir || LockDataDirectory(true);
 }
 
 bool AppInitLockDataDirectory()
