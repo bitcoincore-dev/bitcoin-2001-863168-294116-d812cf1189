@@ -73,6 +73,18 @@ int main(int argc, char* argv[])
     util::WinCmdLineArgs winArgs;
     std::tie(argc, argv) = winArgs.get();
 #endif
+
+    std::unique_ptr<interfaces::Init> init = interfaces::MakeInit(argc, argv, interfaces::g_config);
+
+    // Check if bitcoin-wallet is being invoked as an IPC server. If so, then
+    // bypass normal execution and just respond to requests over the IPC
+    // channel.
+    interfaces::IpcProcess* process = init->getProcess();
+    int exit_status;
+    if (process && process->serve(exit_status)) {
+        return exit_status;
+    }
+
     SetupEnvironment();
     RandomInit();
     try {
