@@ -103,7 +103,7 @@ bool CDBEnv::Open(const fs::path& pathIn, bool retry)
     boost::this_thread::interruption_point();
 
     strPath = pathIn.string();
-    if (!LockDirectory(pathIn, ".walletlock")) {
+    if (0 /* FIXME */ && !LockDirectory(pathIn, ".walletlock")) {
         LogPrintf("Cannot obtain a lock on wallet directory %s. Another instance of bitcoin may be using it.\n", strPath);
         return false;
     }

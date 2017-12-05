@@ -314,6 +314,7 @@ public:
     void initMessage(const std::string& message) override { ::uiInterface.InitMessage(message); }
     void initWarning(const std::string& message) override { InitWarning(message); }
     bool initError(const std::string& message) override { return InitError(message); }
+    void loadWallet(std::unique_ptr<Wallet> wallet) override { ::uiInterface.LoadWallet(wallet); }
     UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbase_script,
         int num_blocks,
         uint64_t max_tries,
