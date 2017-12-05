@@ -5,6 +5,9 @@
 #ifndef BITCOIN_INTERFACES_CHAIN_H
 #define BITCOIN_INTERFACES_CHAIN_H
 
+#include <interfaces/base.h>
+#include <interfaces/wallet.h>
+
 #include <optional.h>               // For Optional and nullopt
 #include <primitives/transaction.h> // For CTransactionRef
 
@@ -51,7 +54,7 @@ class Wallet;
 //!   notifications to the GUI should go away when GUI and wallet can directly
 //!   communicate with each other without going through the node
 //!   (https://github.com/bitcoin/bitcoin/pull/15288#discussion_r253321096).
-class Chain
+class Chain : public Base
 {
 public:
     virtual ~Chain() {}
@@ -61,7 +64,7 @@ public:
     //! the Lock interface and instead call higher-level Chain methods
     //! that return more information so the chain doesn't need to stay locked
     //! between calls.
-    class Lock
+    class Lock : public Base
     {
     public:
         virtual ~Lock() {}
@@ -225,7 +228,7 @@ public:
     virtual void loadWallet(std::unique_ptr<Wallet> wallet) = 0;
 
     //! Chain notifications.
-    class Notifications
+    class Notifications : public Base
     {
     public:
         virtual ~Notifications() {}
@@ -254,7 +257,7 @@ public:
 
 //! Interface to let node manage chain clients (wallets, or maybe tools for
 //! monitoring and analysis in the future).
-class ChainClient
+class ChainClient : public Base
 {
 public:
     virtual ~ChainClient() {}
@@ -268,7 +271,8 @@ public:
     //! Load saved state.
     virtual bool load() = 0;
 
-    //! Start client execution and provide a scheduler.
+    //! Start client execution and provide a scheduler. (Scheduler is
+    //! ignored if client is out-of-process).
     virtual void start(CScheduler& scheduler) = 0;
 
     //! Save state to disk.
@@ -276,6 +280,12 @@ public:
 
     //! Shut down client.
     virtual void stop() = 0;
+
+    //! Set mock time.
+    virtual void setMockTime(int64_t time) = 0;
+
+    //! Return interfaces for accessing wallets (if any).
+    virtual std::vector<std::unique_ptr<Wallet>> getWallets() { return {}; }
 };
 
 //! Return implementation of Chain interface.
@@ -289,7 +299,8 @@ std::unique_ptr<Chain> MakeChain();
 //! analysis, or fee estimation. These clients need to expose their own
 //! MakeXXXClient functions returning their implementations of the ChainClient
 //! interface.
-std::unique_ptr<ChainClient> MakeWalletClient(Chain& chain, std::vector<std::string> wallet_filenames);
+using MakeWalletClientFn = std::unique_ptr<ChainClient>(Chain& chain, std::vector<std::string> wallet_filenames);
+MakeWalletClientFn MakeWalletClient;
 
 } // namespace interfaces
 

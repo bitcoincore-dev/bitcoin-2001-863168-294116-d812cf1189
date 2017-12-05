@@ -51,9 +51,13 @@ EXPECTED_BOOST_INCLUDES=(
     boost/algorithm/string/replace.hpp
     boost/algorithm/string/split.hpp
     boost/chrono/chrono.hpp
+    boost/core/explicit_operator_bool.hpp
+    boost/core/underlying_type.hpp
     boost/date_time/posix_time/posix_time.hpp
+    boost/exception/diagnostic_information.hpp
     boost/filesystem.hpp
     boost/filesystem/fstream.hpp
+    boost/move/utility_core.hpp
     boost/multi_index/hashed_index.hpp
     boost/multi_index/ordered_index.hpp
     boost/multi_index/sequenced_index.hpp
@@ -71,6 +75,7 @@ EXPECTED_BOOST_INCLUDES=(
     boost/thread/thread.hpp
     boost/variant.hpp
     boost/variant/apply_visitor.hpp
+    boost/variant/get.hpp
     boost/variant/static_visitor.hpp
 )
 
