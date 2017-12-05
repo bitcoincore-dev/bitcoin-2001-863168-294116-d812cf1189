@@ -13,6 +13,7 @@
 namespace interfaces {
 class Chain;
 class ChainClient;
+class Init;
 } // namespace interfaces
 
 //! Pointers to interfaces used during init and destroyed on shutdown.
@@ -63,7 +64,7 @@ bool AppInitLockDataDirectory();
  * @note This should only be done after daemonization. Call Shutdown() if this function fails.
  * @pre Parameters should be parsed and config file should be read, AppInitLockDataDirectory should have been called.
  */
-bool AppInitMain(InitInterfaces& interfaces);
+bool AppInitMain(interfaces::Init& init, InitInterfaces& interfaces);
 
 /**
  * Setup the arguments for gArgs
