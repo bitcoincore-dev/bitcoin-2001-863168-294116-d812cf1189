@@ -1,0 +1,56 @@
+- [ ] implement buildfield/readfield for GlobalArgs message type to fix bitcoin-wallet startup error
+- [ ] add readfield message type params
+- [ ] renames
+  - ReadField -> ReadMessage
+  - BuildField -> BuildMessage
+  - ReaderReader -> MessageInput
+  - FieldReader -> FieldInput
+  - FieldBuilder -> FieldOutput
+  - ListElemBuilder -> ListOutput
+  - MakeReader -> MakeMessageInput
+  - ReaderTraits -> GetterTraits
+  - GetBuilds -> BuilderTraits
+  - Param -> LocalType, LocalTypes
+  - FUCK -> MessageType, MessageTypes
+- [ ] get rid of unnecessary interface *.h includes that could be replaced by forward enum declarations, and forward typedef declarations
+- [ ] get rid of g_address_type and g_change_type references from qt
+- [ ] capnp/proxy-codegen.cpp: remove "error" "rpcError" special cases
+- [ ] capnp/proxy-impl.h: get rid of MainServer unique_ptr hack
+- [ ] base.h: move method bodies to base.cpp
+- [ ] capnp/proxy-codegen.cpp: return directly from client invoke to remove return variable declarations
+- [ ] capnp/init.cpp: add onDisconnect handler in Connect()
+- [ ] capnp/proxy-impl.h: FieldReader add can_get static assert or compile check
+capnp/proxy-impl.h:601:    typename std::enable_if<!Plain<Reader>::can_get>::type // FIXME: Plain around Reader necessary?
+- [ ] capnp/proxy-impl.h: fix std::move in BuildField for optional<> and pointer types, BuildPrimitive for interfaces
+- [ ] capnp/proxy-impl.h: fix std::move in ServerField and ServerFieldRet
+- [ ] capnp/proxy-impl.h: dedup map/set/vector BuildField
+- [ ] capnp/proxy-impl.h: call releaseParams in serverInvoke
+- [ ] capnp/proxy.h: rename Impl -> Class everywhere
+- [ ] capnp/proxy.h: get rid of proxycallback specializations, move to -impl.h
+- [ ] cannp/proxy.h: get rid of horrific buildParams/invokeMethod overloads
+- [ ] capnp/proxy.h: clean up functiontraits, pull out Fields crap, get rid of underscores
+- [ ] capnp/proxy.h: move out Priority<> class, SetterTraits, ListElemBuilder
+- [ ] capnp/proxy.h: get rid of CallMethod
+- [ ] capnp/test/capnp_tests.cpp: connect code duplication
+old
+- [ ] rename -impl to -inl
+- [ ] contact https://eklitzke.org/multiprocess-bitcoin
+- [ ] link ENABLE_WALLET issue 7965
+- [ ] get basic ipc startup work working
+  BITCOIND=src/bitcoin-node test/functional/rpcnamedargs.py
+- [ ] link to filed gcc bug https://gcc.gnu.org/bugzilla/show_bug.cgi?id=83249
+- [ ] get rid of all annotations except count and name
+- [ ] add ProxyClient<> ProxyServer<> specializable templates to get rid of server/client interface annotations
+  ProxyServer<Interface> : Interface::Server, ProxyServerBase
+  ProxyClient<Class> : Class, ProxyClientBase
+- [ ] get rid of client/server renaming annotations & figure out whatever specialization substitutions needed to replace
+- [ ] get rid of server m_impl generated and move to superclass members
+- [ ] get rid of generated std::function support and handle through specialization
+- [ ] readConfigFile catch exception
+- [ ] executeRpc catch exception
+- [ ] capnp forward executeRpc uri
+- [ ] remove vpwalelt access executeRpc
+- [ ] dedup readfield/buildfield overloads
+- [ ] add readfield/buildfield accessor to reduce number of arguments
+- [ ] fix ipc branch qt debug window generate command wallet not specified error
+  - [ ] remove ENABLE_WALLET vpwallets access from RPCConsole::RPCParseCommandLine

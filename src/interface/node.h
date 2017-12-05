@@ -1,6 +1,8 @@
 #ifndef BITCOIN_INTERFACE_NODE_H
 #define BITCOIN_INTERFACE_NODE_H
 
+#include <interface/base.h>
+
 #include <addrdb.h>     // For banmap_t
 #include <amount.h>     // For CAmount
 #include <init.h>       // For HelpMessageMode
@@ -31,7 +33,7 @@ class Handler;
 class Wallet;
 
 //! Top-level interface for a bitcoin node (bitcoind process).
-class Node
+class Node : public Base
 {
 public:
     virtual ~Node() {}
@@ -259,7 +261,8 @@ public:
 };
 
 //! Return implementation of Node interface.
-std::unique_ptr<Node> MakeNode();
+using MakeNodeFn = std::unique_ptr<Node>();
+MakeNodeFn MakeNode;
 
 } // namespace interface
 
