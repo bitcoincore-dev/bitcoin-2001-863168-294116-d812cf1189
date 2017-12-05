@@ -180,6 +180,24 @@
     <ClCompile Include="..\..\src\compat\glibc_sanity.cpp" />
     <ClCompile Include="..\..\src\compat\strnlen.cpp" />
     <ClCompile Include="..\..\src\fs.cpp" />
+    <ClCompile Include="..\..\src\interfaces\base.cpp">
+      <ObjectFileName>$(IntDir)interfaces_base.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\interfaces\chain.cpp">
+      <ObjectFileName>$(IntDir)interfaces_chain.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\interfaces\handler.cpp">
+      <ObjectFileName>$(IntDir)interfaces_handler.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\interfaces\init.cpp">
+      <ObjectFileName>$(IntDir)interfaces_init.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\interfaces\node.cpp">
+      <ObjectFileName>$(IntDir)interfaces_node.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\interfaces\wallet.cpp">
+      <ObjectFileName>$(IntDir)interfaces_wallet.obj</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\logging.cpp" />
     <ClCompile Include="..\..\src\random.cpp" />
     <ClCompile Include="..\..\src\rpc\protocol.cpp" />
