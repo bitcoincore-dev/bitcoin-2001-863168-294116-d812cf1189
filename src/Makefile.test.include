@@ -96,18 +96,42 @@ BITCOIN_TESTS += \
   wallet/test/crypto_tests.cpp
 endif
 
-test_test_bitcoin_SOURCES = $(BITCOIN_TESTS) $(JSON_TEST_FILES) $(RAW_TEST_FILES)
+EXTRA_LIBRARIES += test/libfoo_capnp.a
+test_libfoo_capnp_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+test_libfoo_capnp_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+test_libfoo_capnp_a_SOURCES = \
+  interface/capnp/test/foo.capnp
+nodist_test_libfoo_capnp_a_SOURCES = \
+  interface/capnp/test/foo.capnp.c++ \
+  interface/capnp/test/foo.capnp.h \
+  interface/capnp/test/foo.capnp.proxy.c++ \
+  interface/capnp/test/foo.capnp.proxy.h \
+  interface/capnp/test/foo.capnp.proxy-impl.h
+$(test_libfoo_capnp_a_OBJECTS) : $(nodist_libproxy_capnp_a_SOURCES)
+
+if BUILD_MULTIPROCESS
+CAPNP_TEST_FILES = \
+  interface/capnp/test/foo.h \
+  interface/capnp/test/foo-impl.h \
+  interface/capnp/test/foo.cpp \
+  interface/capnp/test/capnp_tests.cpp \
+  $(test_libfoo_capnp_a_SOURCES)
+CAPNP_GENERATED_TEST_FILES = $(nodist_test_libfoo_capnp_a_SOURCES)
+endif
+
+test_test_bitcoin_SOURCES = $(BITCOIN_TESTS) $(JSON_TEST_FILES) $(RAW_TEST_FILES) $(CAPNP_TEST_FILES)
 test_test_bitcoin_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(TESTDEFS) $(EVENT_CFLAGS)
 test_test_bitcoin_LDADD =
 if ENABLE_WALLET
 test_test_bitcoin_LDADD += $(LIBBITCOIN_SERVER) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_WALLET)
 endif
 test_test_bitcoin_LDADD += $(LIBBITCOIN_SERVER) $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CONSENSUS) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) \
-  $(LIBLEVELDB) $(LIBLEVELDB_SSE42) $(LIBMEMENV) $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(LIBSECP256K1) $(EVENT_LIBS) $(EVENT_PTHREADS_LIBS)
+  $(LIBLEVELDB) $(LIBLEVELDB_SSE42) $(LIBMEMENV) $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(LIBSECP256K1) $(EVENT_LIBS) $(EVENT_PTHREADS_LIBS) $(CAPNP_RPC_LIBS)
 test_test_bitcoin_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
 test_test_bitcoin_LDADD += $(LIBBITCOIN_CONSENSUS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
 test_test_bitcoin_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) -static
+$(test_test_bitcoin_OBJECTS) : $(CAPNP_GENERATED_TEST_FILES)
 
 if ENABLE_ZMQ
 test_test_bitcoin_LDADD += $(ZMQ_LIBS)
@@ -132,11 +156,11 @@ test_test_bitcoin_fuzzy_LDADD = \
 test_test_bitcoin_fuzzy_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
-nodist_test_test_bitcoin_SOURCES = $(GENERATED_TEST_FILES)
+nodist_test_test_bitcoin_SOURCES = $(GENERATED_TEST_FILES) $(CAPNP_GENERATED_TEST_FILES)
 
 $(BITCOIN_TESTS): $(GENERATED_TEST_FILES)
 
-CLEAN_BITCOIN_TEST = test/*.gcda test/*.gcno $(GENERATED_TEST_FILES)
+CLEAN_BITCOIN_TEST = test/*.gcda test/*.gcno $(GENERATED_TEST_FILES) $(CAPNP_GENERATED_TEST_FILES)
 
 CLEANFILES += $(CLEAN_BITCOIN_TEST)
 

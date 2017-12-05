@@ -13,6 +13,7 @@
 #include <consensus/validation.h>
 #include <fs.h>
 #include <wallet/init.h>
+#include <interface/wallet.h>
 #include <key.h>
 #include <keystore.h>
 #include <validation.h>
@@ -2221,7 +2222,6 @@ CAmount CWallet::GetAvailableBalance(const CCoinControl* coinControl) const
 
 void CWallet::AvailableCoins(interface::Chain::Lock& locked_chain, std::vector<COutput> &vCoins, bool fOnlySafe, const CCoinControl *coinControl, const CAmount &nMinimumAmount, const CAmount &nMaximumAmount, const CAmount &nMinimumSumAmount, const uint64_t nMaximumCount, const int nMinDepth, const int nMaxDepth) const
 {
-    AssertLockHeld(cs_main);
     AssertLockHeld(cs_wallet);
 
     vCoins.clear();
@@ -3173,7 +3173,7 @@ DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
     if (nLoadWalletRet != DB_LOAD_OK)
         return nLoadWalletRet;
 
-    uiInterface.LoadWallet(this);
+    m_chain->loadWallet(interface::MakeWallet(*this));
 
     return DB_LOAD_OK;
 }
