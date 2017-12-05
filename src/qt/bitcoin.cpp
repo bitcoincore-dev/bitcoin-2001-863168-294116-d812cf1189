@@ -11,6 +11,7 @@
 #include <chainparams.h>
 #include <qt/clientmodel.h>
 #include <fs.h>
+#include <interfaces/init.h>
 #include <qt/guiconstants.h>
 #include <qt/guiutil.h>
 #include <qt/intro.h>
@@ -555,9 +556,11 @@ static void SetupUIArgs()
 #ifndef BITCOIN_QT_TEST
 int main(int argc, char *argv[])
 {
+    auto init = interfaces::MakeInit(argc > 0 ? argv[0] : "");
+
     SetupEnvironment();
 
-    std::unique_ptr<interfaces::Node> node = interfaces::MakeNode();
+    auto node = init->makeNode();
 
     // Do not refer to data directory yet, this can be overridden by Intro::pickDataDirectory
 
