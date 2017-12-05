@@ -6,6 +6,8 @@
 #include <config/bitcoin-config.h>
 #endif
 
+#include <interfaces/config.h>
+#include <interfaces/init.h>
 #include <interfaces/node.h>
 #include <qt/bitcoin.h>
 #include <qt/test/apptests.h>
@@ -53,7 +55,8 @@ int main(int argc, char *argv[])
         BasicTestingSetup dummy{CBaseChainParams::REGTEST};
     }
 
-    auto node = interfaces::MakeNode();
+    std::unique_ptr<interfaces::Init> init = interfaces::MakeInit(argc, argv, interfaces::g_config);
+    std::unique_ptr<interfaces::Node> node = interfaces::MakeNode(*init);
 
     bool fInvalid = false;
 
@@ -80,12 +83,12 @@ int main(int argc, char *argv[])
         fInvalid = true;
     }
 #if defined(ENABLE_WALLET) && defined(ENABLE_BIP70)
-    PaymentServerTests test2;
+    PaymentServerTests test2(*init);
     if (QTest::qExec(&test2) != 0) {
         fInvalid = true;
     }
 #endif
-    RPCNestedTests test3;
+    RPCNestedTests test3(*init);
     if (QTest::qExec(&test3) != 0) {
         fInvalid = true;
     }
@@ -94,11 +97,11 @@ int main(int argc, char *argv[])
         fInvalid = true;
     }
 #ifdef ENABLE_WALLET
-    WalletTests test5;
+    WalletTests test5(*init);
     if (QTest::qExec(&test5) != 0) {
         fInvalid = true;
     }
-    AddressBookTests test6;
+    AddressBookTests test6(*init);
     if (QTest::qExec(&test6) != 0) {
         fInvalid = true;
     }

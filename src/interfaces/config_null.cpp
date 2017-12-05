@@ -2,6 +2,6 @@
 
 namespace interfaces {
 
-const Config g_config = {nullptr, nullptr};
+const Config g_config = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
 } // namespace interfaces

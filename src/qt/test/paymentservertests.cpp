@@ -69,7 +69,7 @@ void PaymentServerTests::paymentServerTests()
 {
     SSL_library_init();
     BasicTestingSetup testing_setup(CBaseChainParams::MAIN);
-    auto node = interfaces::MakeNode();
+    std::unique_ptr<interfaces::Node> node = interfaces::MakeNode(m_init);
     OptionsModel optionsModel(*node);
     PaymentServer* server = new PaymentServer(nullptr, false);
     X509_STORE* caStore = X509_STORE_new();
