@@ -47,7 +47,8 @@ public:
         auto locked_chain = m_wallet.chain().lock();
         LOCK(m_wallet.cs_wallet);
         CValidationState state;
-        if (!m_wallet.CommitTransaction(m_tx, std::move(value_map), std::move(order_form), std::move(from_account), m_key, state)) {
+        if (!m_wallet.CommitTransaction(
+                m_tx, std::move(value_map), std::move(order_form), std::move(from_account), m_key, state)) {
             reject_reason = state.GetRejectReason();
             return false;
         }
@@ -153,10 +154,7 @@ public:
     {
         return m_wallet.SetAddressBook(dest, name, purpose);
     }
-    bool delAddressBook(const CTxDestination& dest) override
-    {
-        return m_wallet.DelAddressBook(dest);
-    }
+    bool delAddressBook(const CTxDestination& dest) override { return m_wallet.DelAddressBook(dest); }
     bool getAddress(const CTxDestination& dest, std::string* name, isminetype* is_mine) override
     {
         LOCK(m_wallet.cs_wallet);

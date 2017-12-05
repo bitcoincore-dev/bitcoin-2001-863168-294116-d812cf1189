@@ -1,6 +1,8 @@
 #ifndef BITCOIN_INTERFACE_INTERFACES_H
 #define BITCOIN_INTERFACE_INTERFACES_H
 
+#include <interface/base.h>
+
 #include <amount.h>                    // For CAmount
 #include <pubkey.h>                    // For CTxDestination (CKeyID and CScriptID)
 #include <script/ismine.h>             // For isminefilter, isminetype
@@ -37,7 +39,7 @@ using WalletOrderForm = std::vector<std::pair<std::string, std::string>>;
 using WalletValueMap = std::map<std::string, std::string>;
 
 //! Interface for accessing a wallet.
-class Wallet
+class Wallet : public Base
 {
 public:
     virtual ~Wallet() {}
@@ -243,7 +245,7 @@ public:
 };
 
 //! Tracking object returned by CreateTransaction and passed to CommitTransaction.
-class PendingWalletTx
+class PendingWalletTx : public Base
 {
 public:
     virtual ~PendingWalletTx() {}
@@ -268,6 +270,8 @@ struct WalletAddress
     isminetype is_mine;
     std::string name;
     std::string purpose;
+
+    WalletAddress() = default;
 
     WalletAddress(CTxDestination dest, isminetype is_mine, std::string name, std::string purpose)
         : dest(std::move(dest)), is_mine(is_mine), name(std::move(name)), purpose(std::move(purpose))

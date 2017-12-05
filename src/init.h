@@ -7,6 +7,7 @@
 #define BITCOIN_INIT_H
 
 #include <interface/chain.h>
+#include <interface/init.h>
 
 #include <string>
 
@@ -21,6 +22,7 @@ class thread_group;
 //! Pointers to interfaces used during init and destroyed on shutdown.
 struct InitInterfaces
 {
+    std::unique_ptr<interface::Init> init;
     std::unique_ptr<interface::Chain> chain;
     std::vector<std::unique_ptr<interface::Chain::Client>> chain_clients;
 };
@@ -51,7 +53,7 @@ bool AppInitParameterInteraction();
  * @note This can be done before daemonization. Do not call Shutdown() if this function fails.
  * @pre Parameters should be parsed and config file should be read, AppInitParameterInteraction should have been called.
  */
-bool AppInitSanityChecks();
+bool AppInitSanityChecks(bool lock_data_dir=false);
 /**
  * Lock bitcoin core data directory.
  * @note This should only be done after daemonization. Do not call Shutdown() if this function fails.
