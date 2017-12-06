@@ -58,7 +58,7 @@ CCriticalSection cs_db;
 std::map<std::string, CDBEnv> g_dbenvs; //!< Map from directory name to open db environment.
 } // namespace
 
-void GetWalletEnv(const fs::path& wallet_path, CDBEnv*& env, std::string& database_filename)
+CDBEnv* GetWalletEnv(const fs::path& wallet_path, std::string& database_filename)
 {
     fs::path env_directory;
     if (fs::is_regular_file(wallet_path)) {
@@ -74,19 +74,30 @@ void GetWalletEnv(const fs::path& wallet_path, CDBEnv*& env, std::string& databa
         database_filename = "wallet.dat";
     }
     LOCK(cs_db);
-    env = &g_dbenvs.emplace(std::piecewise_construct, std::forward_as_tuple(env_directory.string()), std::forward_as_tuple(env_directory)).first->second;
+    return &g_dbenvs.emplace(std::piecewise_construct, std::forward_as_tuple(env_directory.string()), std::forward_as_tuple(env_directory)).first->second;
 }
 
 //
 // CDB
 //
 
-void CDBEnv::EnvShutdown()
+void CDBEnv::Close()
 {
     if (!fDbEnvInit)
         return;
 
     fDbEnvInit = false;
+
+    for (auto& db : mapDb) {
+        auto count = mapFileUseCount.find(db.first);
+        assert(count == mapFileUseCount.end() || count->second == 0);
+        if (db.second) {
+            db.second->close(0);
+            delete db.second;
+            db.second = nullptr;
+        }
+    }
+
     int ret = dbenv->close(0);
     if (ret != 0)
         LogPrintf("CDBEnv::EnvShutdown: Error %d shutting down database environment: %s\n", ret, DbEnv::strerror(ret));
@@ -109,20 +120,6 @@ CDBEnv::CDBEnv(const fs::path& dir_path) : strPath(dir_path.string())
 CDBEnv::~CDBEnv()
 {
     Close();
-}
-
-void CDBEnv::Close()
-{
-    for (auto& db : mapDb) {
-        auto count = mapFileUseCount.find(db.first);
-        assert(count == mapFileUseCount.end() || count->second == 0);
-        if (db.second) {
-            db.second->close(0);
-            delete db.second;
-            db.second = nullptr;
-        }
-    }
-    EnvShutdown();
 }
 
 bool CDBEnv::Open()
@@ -223,9 +220,8 @@ CDBEnv::VerifyResult CDBEnv::Verify(const std::string& strFile, recoverFunc_type
 
 bool CDB::Recover(const fs::path& file_path, void *callbackDataIn, bool (*recoverKVcallback)(void* callbackData, CDataStream ssKey, CDataStream ssValue), std::string& newFilename)
 {
-    CDBEnv* env;
     std::string filename;
-    GetWalletEnv(file_path, env, filename);
+    CDBEnv* env = GetWalletEnv(file_path, filename);
 
     // Recovery procedure:
     // move wallet file to walletfilename.timestamp.bak
@@ -293,9 +289,8 @@ bool CDB::Recover(const fs::path& file_path, void *callbackDataIn, bool (*recove
 
 bool CDB::VerifyEnvironment(const fs::path& file_path, std::string& errorStr)
 {
-    CDBEnv* env;
     std::string walletFile;
-    GetWalletEnv(file_path, env, walletFile);
+    CDBEnv* env = GetWalletEnv(file_path, walletFile);
     fs::path walletDir = env->Directory();
 
     LogPrintf("Using BerkeleyDB version %s\n", DbEnv::version(0, 0, 0));
@@ -332,9 +327,8 @@ bool CDB::VerifyEnvironment(const fs::path& file_path, std::string& errorStr)
 
 bool CDB::VerifyDatabaseFile(const fs::path& file_path, std::string& warningStr, std::string& errorStr, CDBEnv::recoverFunc_type recoverFunc)
 {
-    CDBEnv* env;
     std::string walletFile;
-    GetWalletEnv(file_path, env, walletFile);
+    CDBEnv* env = GetWalletEnv(file_path, walletFile);
     fs::path walletDir = env->Directory();
 
     if (fs::exists(walletDir / walletFile))
@@ -478,6 +472,22 @@ CDB::CDB(CWalletDBWrapper& dbw, const char* pszMode, bool fFlushOnCloseIn) : pdb
             if (ret != 0) {
                 throw std::runtime_error(strprintf("CDB: Error %d, can't open database %s", ret, strFilename));
             }
+
+            // Call CheckUniqueFileid on the containing BDB environment to
+            // avoid BDB data consistency bugs that happen when different data
+            // files in the same environment have the same fileid.
+            //
+            // Also call CheckUniqueFileid on all the other g_dbenvs to prevent
+            // bitcoin from opening the same data file through another
+            // environment when the file is referenced through equivalent but
+            // not obviously identical symlinked or hard linked or bind mounted
+            // paths. In the future a more relaxed check for equal inode and
+            // device ids could be done instead, which would allow opening
+            // different backup copies of a wallet at the same time. Maybe even
+            // more ideally, an exclusive lock for accessing the database could
+            // be implemented, so no equality checks are needed at all. (Newer
+            // versions of BDB have an set_lk_exclusive method for this
+            // purpose, but the older version we use does not.)
             for (auto& env : g_dbenvs) {
                 CheckUniqueFileid(env.second, strFilename, *pdb_temp);
             }

@@ -32,8 +32,6 @@ private:
     // shutdown problems/crashes caused by a static initialized internal pointer.
     std::string strPath;
 
-    void EnvShutdown();
-
 public:
     std::unique_ptr<DbEnv> dbenv;
     std::map<std::string, int> mapFileUseCount;
@@ -87,7 +85,7 @@ public:
 };
 
 /** Get CDBEnv and database filename given a wallet path. */
-void GetWalletEnv(const fs::path& wallet_path, CDBEnv*& env, std::string& database_filename);
+CDBEnv* GetWalletEnv(const fs::path& wallet_path, std::string& database_filename);
 
 /** An instance of this class represents one database.
  * For BerkeleyDB this is just a (env, strFile) tuple.
@@ -105,7 +103,7 @@ public:
     CWalletDBWrapper(const fs::path& wallet_path, bool mock = false) :
         nUpdateCounter(0), nLastSeen(0), nLastFlushed(0), nLastWalletUpdate(0)
     {
-        GetWalletEnv(wallet_path, env, strFile);
+        env = GetWalletEnv(wallet_path, strFile);
         if (mock) {
             env->Close();
             env->Reset();
