@@ -95,7 +95,10 @@ static void potential_deadlock_detected(const std::pair<void*, void*>& mismatch,
         }
         LogPrintf(" %s\n", i.second.ToString());
     }
-    if (g_debug_lockorder_abort) abort();
+    if (g_debug_lockorder_abort) {
+        fprintf(stderr, "Assertion failed: detected inconsistent lock order at %s:%i, details in debug log.\n", __FILE__, __LINE__);
+        abort();
+    }
     throw std::logic_error("potential deadlock detected");
 }
 

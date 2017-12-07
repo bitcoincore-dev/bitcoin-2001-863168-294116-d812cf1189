@@ -83,10 +83,10 @@ void DeleteLock(void* cs);
 
 /**
  * Call abort() if a potential lock order deadlock bug is detected, instead of
- * just logging information and throwing a logic_error. Defaults to true.
+ * just logging information and throwing a logic_error. Defaults to true, and
+ * set to false in DEBUG_LOCKORDER unit tests.
  */
 extern bool g_debug_lockorder_abort;
-
 #else
 void static inline EnterCritical(const char* pszName, const char* pszFile, int nLine, void* cs, bool fTry = false) {}
 void static inline LeaveCritical() {}
