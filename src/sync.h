@@ -48,32 +48,6 @@ LEAVE_CRITICAL_SECTION(mutex); // no RAII
 //                           //
 ///////////////////////////////
 
-/**
- * Template mixin that adds -Wthread-safety locking
- * annotations to a subset of the mutex API.
- */
-template <typename PARENT>
-class LOCKABLE AnnotatedMixin : public PARENT
-{
-public:
-    void lock() EXCLUSIVE_LOCK_FUNCTION()
-    {
-        PARENT::lock();
-    }
-
-    void unlock() UNLOCK_FUNCTION()
-    {
-        PARENT::unlock();
-    }
-
-    bool try_lock() EXCLUSIVE_TRYLOCK_FUNCTION(true)
-    {
-        return PARENT::try_lock();
-    }
-
-    using UniqueLock = std::unique_lock<PARENT>;
-};
-
 #ifdef DEBUG_LOCKORDER
 void EnterCritical(const char* pszName, const char* pszFile, int nLine, void* cs, bool fTry = false);
 void LeaveCritical();
@@ -95,23 +69,44 @@ void static inline DeleteLock(void* cs) {}
 #endif
 #define AssertLockHeld(cs) AssertLockHeldInternal(#cs, __FILE__, __LINE__, &cs)
 
-template <typename Mutex>
-class LockOrderMixin : public Mutex
+/**
+ * Template mixin that adds -Wthread-safety locking annotations and lock order
+ * checking to a subset of the mutex API.
+ */
+template <typename PARENT>
+class LOCKABLE AnnotatedMixin : public PARENT
 {
 public:
-    ~LockOrderMixin() {
+    ~AnnotatedMixin() {
         DeleteLock((void*)this);
     }
+
+    void lock() EXCLUSIVE_LOCK_FUNCTION()
+    {
+        PARENT::lock();
+    }
+
+    void unlock() UNLOCK_FUNCTION()
+    {
+        PARENT::unlock();
+    }
+
+    bool try_lock() EXCLUSIVE_TRYLOCK_FUNCTION(true)
+    {
+        return PARENT::try_lock();
+    }
+
+    using UniqueLock = std::unique_lock<PARENT>;
 };
 
 /**
  * Wrapped mutex: supports recursive locking, but no waiting
  * TODO: We should move away from using the recursive lock by default.
  */
-typedef LockOrderMixin<AnnotatedMixin<std::recursive_mutex>> CCriticalSection;
+typedef AnnotatedMixin<std::recursive_mutex> CCriticalSection;
 
 /** Wrapped mutex: supports waiting but not recursive locking */
-typedef LockOrderMixin<AnnotatedMixin<std::mutex>> CWaitableCriticalSection;
+typedef AnnotatedMixin<std::mutex> CWaitableCriticalSection;
 
 /** Just a typedef for std::condition_variable, can be wrapped later if desired */
 typedef std::condition_variable CConditionVariable;
