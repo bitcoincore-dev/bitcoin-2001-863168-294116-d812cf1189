@@ -20,15 +20,15 @@
 /**
  * Overview of wallet database classes:
  *
- * - CDBEnv is an environment in which the database exists (has no analog in dbwrapper.h)
- * - CWalletDBWrapper represents a wallet database (similar to CDBWrapper in dbwrapper.h)
- * - CDB is a low-level database transaction (similar to CDBBatch in dbwrapper.h)
- * - CWalletDB is a modifier object for the wallet, and encapsulates a database
+ * - BerkeleyEnvironment is an environment in which the database exists (has no analog in dbwrapper.h)
+ * - BerkeleyDatabase represents a wallet database (similar to CDBWrapper in dbwrapper.h)
+ * - BerkeleyCheckpoint is a low-level database transaction (similar to CDBBatch in dbwrapper.h)
+ * - WalletCheckpoint is a modifier object for the wallet, and encapsulates a database
  *   transaction as well as methods to act on the database (no analog in
  *   dbwrapper.h)
  *
- * The latter two are named confusingly, in contrast to what the names CDB
- * and CWalletDB suggest they are transient transaction objects and don't
+ * The latter two are named confusingly, in contrast to what the names BerkeleyCheckpoint
+ * and WalletCheckpoint suggest they are transient transaction objects and don't
  * represent the database itself.
  */
 
@@ -40,7 +40,7 @@ struct CBlockLocator;
 class CKeyPool;
 class CMasterKey;
 class CScript;
-class CWallet;
+class Wallet;
 class CWalletTx;
 class uint160;
 class uint256;
@@ -138,7 +138,7 @@ public:
  * database. It will be committed when the object goes out of scope.
  * Optionally (on by default) it will flush to disk as well.
  */
-class CWalletDB
+class WalletCheckpoint
 {
 private:
     template <typename K, typename T>
@@ -162,13 +162,13 @@ private:
     }
 
 public:
-    explicit CWalletDB(CWalletDBWrapper& dbw, const char* pszMode = "r+", bool _fFlushOnClose = true) :
+    explicit WalletCheckpoint(BerkeleyDatabase& dbw, const char* pszMode = "r+", bool _fFlushOnClose = true) :
         batch(dbw, pszMode, _fFlushOnClose),
         m_dbw(dbw)
     {
     }
-    CWalletDB(const CWalletDB&) = delete;
-    CWalletDB& operator=(const CWalletDB&) = delete;
+    WalletCheckpoint(const WalletCheckpoint&) = delete;
+    WalletCheckpoint& operator=(const WalletCheckpoint&) = delete;
 
     bool WriteName(const std::string& strAddress, const std::string& strName);
     bool EraseName(const std::string& strAddress);
@@ -199,7 +199,7 @@ public:
 
     bool WriteMinVersion(int nVersion);
 
-    /// This writes directly to the database, and will not update the CWallet's cached accounting entries!
+    /// This writes directly to the database, and will not update the Wallet's cached accounting entries!
     /// Use wallet.AddAccountingEntry instead, to write *and* update its caches.
     bool WriteAccountingEntry(const uint64_t nAccEntryNum, const CAccountingEntry& acentry);
     bool ReadAccount(const std::string& strAccount, CAccount& account);
@@ -213,7 +213,7 @@ public:
     CAmount GetAccountCreditDebit(const std::string& strAccount);
     void ListAccountCreditDebit(const std::string& strAccount, std::list<CAccountingEntry>& acentries);
 
-    DBErrors LoadWallet(CWallet* pwallet);
+    DBErrors LoadWallet(Wallet* pwallet);
     DBErrors FindWalletTx(std::vector<uint256>& vTxHash, std::vector<CWalletTx>& vWtx);
     DBErrors ZapWalletTx(std::vector<CWalletTx>& vWtx);
     DBErrors ZapSelectTx(std::vector<uint256>& vHashIn, std::vector<uint256>& vHashOut);
@@ -244,8 +244,8 @@ public:
     //! Write wallet version
     bool WriteVersion(int nVersion);
 private:
-    CDB batch;
-    CWalletDBWrapper& m_dbw;
+    BerkeleyCheckpoint batch;
+    BerkeleyDatabase& m_dbw;
 };
 
 //! Compacts BDB state so that wallet.dat is self-contained (if there are changes)

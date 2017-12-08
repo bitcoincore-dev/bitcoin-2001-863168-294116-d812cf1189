@@ -68,11 +68,11 @@ static AddressTableEntry::Type translateTransactionType(const QString &strPurpos
 class AddressTablePriv
 {
 public:
-    CWallet *wallet;
+    Wallet *wallet;
     QList<AddressTableEntry> cachedAddressTable;
     AddressTableModel *parent;
 
-    AddressTablePriv(CWallet *_wallet, AddressTableModel *_parent):
+    AddressTablePriv(Wallet *_wallet, AddressTableModel *_parent):
         wallet(_wallet), parent(_parent) {}
 
     void refreshAddressTable()
@@ -163,7 +163,7 @@ public:
     }
 };
 
-AddressTableModel::AddressTableModel(CWallet *_wallet, WalletModel *parent) :
+AddressTableModel::AddressTableModel(Wallet *_wallet, WalletModel *parent) :
     QAbstractTableModel(parent),walletModel(parent),wallet(_wallet),priv(0)
 {
     columns << tr("Label") << tr("Address");

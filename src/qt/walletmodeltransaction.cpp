@@ -87,7 +87,7 @@ CAmount WalletModelTransaction::getTotalTransactionAmount() const
     return totalTransactionAmount;
 }
 
-void WalletModelTransaction::newPossibleKeyChange(CWallet *wallet)
+void WalletModelTransaction::newPossibleKeyChange(Wallet *wallet)
 {
     keyChange.reset(new CReserveKey(wallet));
 }

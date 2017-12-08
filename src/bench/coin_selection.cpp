@@ -7,7 +7,7 @@
 
 #include <set>
 
-static void addCoin(const CAmount& nValue, const CWallet& wallet, std::vector<COutput>& vCoins)
+static void addCoin(const CAmount& nValue, const Wallet& wallet, std::vector<COutput>& vCoins)
 {
     int nInput = 0;
 
@@ -32,7 +32,7 @@ static void addCoin(const CAmount& nValue, const CWallet& wallet, std::vector<CO
 // (https://github.com/bitcoin/bitcoin/issues/7883#issuecomment-224807484)
 static void CoinSelection(benchmark::State& state)
 {
-    const CWallet wallet;
+    const Wallet wallet;
     std::vector<COutput> vCoins;
     LOCK(wallet.cs_wallet);
 

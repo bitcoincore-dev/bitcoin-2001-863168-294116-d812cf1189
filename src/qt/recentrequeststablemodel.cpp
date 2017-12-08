@@ -12,7 +12,7 @@
 #include <streams.h>
 
 
-RecentRequestsTableModel::RecentRequestsTableModel(CWallet *wallet, WalletModel *parent) :
+RecentRequestsTableModel::RecentRequestsTableModel(Wallet *wallet, WalletModel *parent) :
     QAbstractTableModel(parent), walletModel(parent)
 {
     Q_UNUSED(wallet);

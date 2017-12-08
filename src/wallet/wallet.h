@@ -29,7 +29,7 @@
 #include <utility>
 #include <vector>
 
-typedef CWallet* CWalletRef;
+typedef Wallet* CWalletRef;
 extern std::vector<CWalletRef> vpwallets;
 
 /**
@@ -263,7 +263,7 @@ public:
 class CWalletTx : public CMerkleTx
 {
 private:
-    const CWallet* pwallet;
+    const Wallet* pwallet;
 
 public:
     /**
@@ -302,7 +302,7 @@ public:
      * transaction was received if it wasn't part of a block, with the timestamp
      * adjusted in both cases so timestamp order matches the order transactions
      * were added to the wallet. More details can be found in
-     * CWallet::ComputeTimeSmart().
+     * Wallet::ComputeTimeSmart().
      */
     unsigned int nTimeSmart;
     /**
@@ -340,12 +340,12 @@ public:
         Init(nullptr);
     }
 
-    CWalletTx(const CWallet* pwalletIn, CTransactionRef arg) : CMerkleTx(std::move(arg))
+    CWalletTx(const Wallet* pwalletIn, CTransactionRef arg) : CMerkleTx(std::move(arg))
     {
         Init(pwalletIn);
     }
 
-    void Init(const CWallet* pwalletIn)
+    void Init(const Wallet* pwalletIn)
     {
         pwallet = pwalletIn;
         mapValue.clear();
@@ -434,7 +434,7 @@ public:
         fChangeCached = false;
     }
 
-    void BindWallet(CWallet *pwalletIn)
+    void BindWallet(Wallet *pwalletIn)
     {
         pwallet = pwalletIn;
         MarkDirty();
@@ -647,10 +647,10 @@ private:
 
 
 /** 
- * A CWallet is an extension of a keystore, which also maintains a set of transactions and balances,
+ * A Wallet is an extension of a keystore, which also maintains a set of transactions and balances,
  * and provides the ability to create new transactions.
  */
-class CWallet final : public CCryptoKeyStore, public CValidationInterface
+class Wallet final : public CCryptoKeyStore, public CValidationInterface
 {
 private:
     static std::atomic<bool> fFlushScheduled;
@@ -664,7 +664,7 @@ private:
      */
     bool SelectCoins(const std::vector<COutput>& vAvailableCoins, const CAmount& nTargetValue, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet, const CCoinControl *coinControl = nullptr) const;
 
-    CWalletDB *pwalletdbEncryption;
+    WalletCheckpoint *pwalletdbEncryption;
 
     //! the current wallet version: clients below this version are not able to load the wallet
     int nWalletVersion;
@@ -699,7 +699,7 @@ private:
     CHDChain hdChain;
 
     /* HD derive new child key (on internal or external chain) */
-    void DeriveNewChildKey(CWalletDB &walletdb, CKeyMetadata& metadata, CKey& secret, bool internal = false);
+    void DeriveNewChildKey(WalletCheckpoint &walletdb, CKeyMetadata& metadata, CKey& secret, bool internal = false);
 
     std::set<int64_t> setInternalKeyPool;
     std::set<int64_t> setExternalKeyPool;
@@ -719,7 +719,7 @@ private:
      */
     bool AddWatchOnly(const CScript& dest) override;
 
-    std::unique_ptr<CWalletDBWrapper> dbw;
+    std::unique_ptr<BerkeleyDatabase> dbw;
 
     /**
      * The following is used to keep track of how far behind the wallet is
@@ -736,14 +736,14 @@ private:
 public:
     /*
      * Main wallet lock.
-     * This lock protects all the fields added by CWallet.
+     * This lock protects all the fields added by Wallet.
      */
     mutable CCriticalSection cs_wallet;
 
     /** Get database handle used by this wallet. Ideally this function would
      * not be necessary.
      */
-    CWalletDBWrapper& GetDBHandle()
+    BerkeleyDatabase& GetDBHandle()
     {
         return *dbw;
     }
@@ -770,18 +770,18 @@ public:
     unsigned int nMasterKeyMaxID;
 
     // Create wallet with dummy database handle
-    CWallet(): dbw(new CWalletDBWrapper())
+    Wallet(): dbw(new BerkeleyDatabase())
     {
         SetNull();
     }
 
     // Create wallet with passed-in database handle
-    explicit CWallet(std::unique_ptr<CWalletDBWrapper> dbw_in) : dbw(std::move(dbw_in))
+    explicit Wallet(std::unique_ptr<BerkeleyDatabase> dbw_in) : dbw(std::move(dbw_in))
     {
         SetNull();
     }
 
-    ~CWallet()
+    ~Wallet()
     {
         delete pwalletdbEncryption;
         pwalletdbEncryption = nullptr;
@@ -867,10 +867,10 @@ public:
      * keystore implementation
      * Generate a new key
      */
-    CPubKey GenerateNewKey(CWalletDB& walletdb, bool internal = false);
+    CPubKey GenerateNewKey(WalletCheckpoint& walletdb, bool internal = false);
     //! Adds a key to the store, and saves it to disk.
     bool AddKeyPubKey(const CKey& key, const CPubKey &pubkey) override;
-    bool AddKeyPubKeyWithDB(CWalletDB &walletdb,const CKey& key, const CPubKey &pubkey);
+    bool AddKeyPubKeyWithDB(WalletCheckpoint &walletdb,const CKey& key, const CPubKey &pubkey);
     //! Adds a key to the store, without saving it to disk (used by LoadWallet)
     bool LoadKey(const CKey& key, const CPubKey &pubkey) { return CCryptoKeyStore::AddKeyPubKey(key, pubkey); }
     //! Load metadata (used by LoadWallet)
@@ -917,7 +917,7 @@ public:
      * Increment the next transaction order id
      * @return next transaction order id
      */
-    int64_t IncOrderPosNext(CWalletDB *pwalletdb = nullptr);
+    int64_t IncOrderPosNext(WalletCheckpoint *pwalletdb = nullptr);
     DBErrors ReorderTransactions();
     bool AccountMove(std::string strFrom, std::string strTo, CAmount nAmount, std::string strComment = "");
     bool GetAccountPubkey(CPubKey &pubKey, std::string strAccount, bool bForceNew = false);
@@ -963,7 +963,7 @@ public:
 
     void ListAccountCreditDebit(const std::string& strAccount, std::list<CAccountingEntry>& entries);
     bool AddAccountingEntry(const CAccountingEntry&);
-    bool AddAccountingEntry(const CAccountingEntry&, CWalletDB *pwalletdb);
+    bool AddAccountingEntry(const CAccountingEntry&, WalletCheckpoint *pwalletdb);
     template <typename ContainerType>
     bool DummySignTx(CMutableTransaction &txNew, const ContainerType &coins) const;
 
@@ -1039,7 +1039,7 @@ public:
     }
 
     //! signify that a particular wallet feature is now used. this may change nWalletVersion and nWalletMaxVersion if those are lower
-    bool SetMinVersion(enum WalletFeature, CWalletDB* pwalletdbIn = nullptr, bool fExplicit = false);
+    bool SetMinVersion(enum WalletFeature, WalletCheckpoint* pwalletdbIn = nullptr, bool fExplicit = false);
 
     //! change which version we're allowed to upgrade to (note that this does not immediately imply upgrading to that format)
     bool SetMaxVersion(int nVersion);
@@ -1060,7 +1060,7 @@ public:
      * Address book entry changed.
      * @note called with lock cs_wallet held.
      */
-    boost::signals2::signal<void (CWallet *wallet, const CTxDestination
+    boost::signals2::signal<void (Wallet *wallet, const CTxDestination
             &address, const std::string &label, bool isMine,
             const std::string &purpose,
             ChangeType status)> NotifyAddressBookChanged;
@@ -1069,7 +1069,7 @@ public:
      * Wallet transaction added, removed or updated.
      * @note called with lock cs_wallet held.
      */
-    boost::signals2::signal<void (CWallet *wallet, const uint256 &hashTx,
+    boost::signals2::signal<void (Wallet *wallet, const uint256 &hashTx,
             ChangeType status)> NotifyTransactionChanged;
 
     /** Show progress e.g. for rescan */
@@ -1092,8 +1092,8 @@ public:
     /** Mark a transaction as replaced by another transaction (e.g., BIP 125). */
     bool MarkReplaced(const uint256& originalHash, const uint256& newHash);
 
-    /* Initializes the wallet, returns a new CWallet instance or a null pointer in case of an error */
-    static CWallet* CreateWalletFromFile(const std::string walletFile);
+    /* Initializes the wallet, returns a new Wallet instance or a null pointer in case of an error */
+    static Wallet* CreateWalletFromFile(const std::string walletFile);
 
     /**
      * Wallet post-init setup
@@ -1132,12 +1132,12 @@ public:
 class CReserveKey final : public CReserveScript
 {
 protected:
-    CWallet* pwallet;
+    Wallet* pwallet;
     int64_t nIndex;
     CPubKey vchPubKey;
     bool fInternal;
 public:
-    explicit CReserveKey(CWallet* pwalletIn)
+    explicit CReserveKey(Wallet* pwalletIn)
     {
         nIndex = -1;
         pwallet = pwalletIn;
@@ -1194,7 +1194,7 @@ public:
 // ContainerType is meant to hold pair<CWalletTx *, int>, and be iterable
 // so that each entry corresponds to each vIn, in order.
 template <typename ContainerType>
-bool CWallet::DummySignTx(CMutableTransaction &txNew, const ContainerType &coins) const
+bool Wallet::DummySignTx(CMutableTransaction &txNew, const ContainerType &coins) const
 {
     // Fill in dummy signatures for fee calculation.
     int nIn = 0;

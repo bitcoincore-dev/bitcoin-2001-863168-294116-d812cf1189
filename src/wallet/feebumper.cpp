@@ -18,12 +18,12 @@
 
 // Calculate the size of the transaction assuming all signatures are max size
 // Use DummySignatureCreator, which inserts 72 byte signatures everywhere.
-// TODO: re-use this in CWallet::CreateTransaction (right now
+// TODO: re-use this in Wallet::CreateTransaction (right now
 // CreateTransaction uses the constructed dummy-signed tx to do a priority
 // calculation, but we should be able to refactor after priority is removed).
 // NOTE: this requires that all inputs must be in mapWallet (eg the tx should
 // be IsAllFromMe).
-static int64_t CalculateMaximumSignedTxSize(const CTransaction &tx, const CWallet *wallet)
+static int64_t CalculateMaximumSignedTxSize(const CTransaction &tx, const Wallet *wallet)
 {
     CMutableTransaction txNew(tx);
     std::vector<CInputCoin> vCoins;
@@ -45,7 +45,7 @@ static int64_t CalculateMaximumSignedTxSize(const CTransaction &tx, const CWalle
 
 //! Check whether transaction has descendant in wallet or mempool, or has been
 //! mined, or conflicts with a mined transaction. Return a feebumper::Result.
-static feebumper::Result PreconditionChecks(const CWallet* wallet, const CWalletTx& wtx, std::vector<std::string>& errors)
+static feebumper::Result PreconditionChecks(const Wallet* wallet, const CWalletTx& wtx, std::vector<std::string>& errors)
 {
     if (wallet->HasWalletSpend(wtx.GetHash())) {
         errors.push_back("Transaction has descendants in the wallet");
@@ -70,14 +70,14 @@ static feebumper::Result PreconditionChecks(const CWallet* wallet, const CWallet
 
 namespace feebumper {
 
-bool TransactionCanBeBumped(CWallet* wallet, const uint256& txid)
+bool TransactionCanBeBumped(Wallet* wallet, const uint256& txid)
 {
     LOCK2(cs_main, wallet->cs_wallet);
     const CWalletTx* wtx = wallet->GetWalletTx(txid);
     return wtx && SignalsOptInRBF(*wtx->tx) && !wtx->mapValue.count("replaced_by_txid");
 }
 
-Result CreateTransaction(const CWallet* wallet, const uint256& txid, const CCoinControl& coin_control, CAmount total_fee, std::vector<std::string>& errors,
+Result CreateTransaction(const Wallet* wallet, const uint256& txid, const CCoinControl& coin_control, CAmount total_fee, std::vector<std::string>& errors,
                          CAmount& old_fee, CAmount& new_fee, CMutableTransaction& mtx)
 {
     LOCK2(cs_main, wallet->cs_wallet);
@@ -231,12 +231,12 @@ Result CreateTransaction(const CWallet* wallet, const uint256& txid, const CCoin
     return Result::OK;
 }
 
-bool SignTransaction(CWallet* wallet, CMutableTransaction& mtx) {
+bool SignTransaction(Wallet* wallet, CMutableTransaction& mtx) {
     LOCK2(cs_main, wallet->cs_wallet);
     return wallet->SignTransaction(mtx);
 }
 
-Result CommitTransaction(CWallet* wallet, const uint256& txid, CMutableTransaction&& mtx, std::vector<std::string>& errors, uint256& bumped_txid)
+Result CommitTransaction(Wallet* wallet, const uint256& txid, CMutableTransaction&& mtx, std::vector<std::string>& errors, uint256& bumped_txid)
 {
     LOCK2(cs_main, wallet->cs_wallet);
     if (!errors.empty()) {

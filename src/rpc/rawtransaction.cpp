@@ -664,7 +664,7 @@ UniValue combinerawtransaction(const JSONRPCRequest& request)
 UniValue signrawtransaction(const JSONRPCRequest& request)
 {
 #ifdef ENABLE_WALLET
-    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    Wallet * const pwallet = GetWalletForJSONRPCRequest(request);
 #endif
 
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 4)

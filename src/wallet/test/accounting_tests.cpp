@@ -13,7 +13,7 @@
 BOOST_FIXTURE_TEST_SUITE(accounting_tests, WalletTestingSetup)
 
 static void
-GetResults(CWallet *wallet, std::map<CAmount, CAccountingEntry>& results)
+GetResults(Wallet *wallet, std::map<CAmount, CAccountingEntry>& results)
 {
     std::list<CAccountingEntry> aes;
 

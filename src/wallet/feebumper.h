@@ -7,7 +7,7 @@
 
 #include <primitives/transaction.h>
 
-class CWallet;
+class Wallet;
 class CWalletTx;
 class uint256;
 class CCoinControl;
@@ -26,10 +26,10 @@ enum class Result
 };
 
 //! Return whether transaction can be bumped.
-bool TransactionCanBeBumped(CWallet* wallet, const uint256& txid);
+bool TransactionCanBeBumped(Wallet* wallet, const uint256& txid);
 
 //! Create bumpfee transaction.
-Result CreateTransaction(const CWallet* wallet,
+Result CreateTransaction(const Wallet* wallet,
                          const uint256& txid,
                          const CCoinControl& coin_control,
                          CAmount total_fee,
@@ -41,13 +41,13 @@ Result CreateTransaction(const CWallet* wallet,
 //! Sign the new transaction,
 //! @return false if the tx couldn't be found or if it was
 //! impossible to create the signature(s)
-bool SignTransaction(CWallet* wallet, CMutableTransaction& mtx);
+bool SignTransaction(Wallet* wallet, CMutableTransaction& mtx);
 
 //! Commit the bumpfee transaction.
-//! @return success in case of CWallet::CommitTransaction was successful,
+//! @return success in case of Wallet::CommitTransaction was successful,
 //! but sets errors if the tx could not be added to the mempool (will try later)
 //! or if the old transaction could not be marked as replaced.
-Result CommitTransaction(CWallet* wallet,
+Result CommitTransaction(Wallet* wallet,
                          const uint256& txid,
                          CMutableTransaction&& mtx,
                          std::vector<std::string>& errors,

@@ -15,7 +15,7 @@ class TransactionRecord;
 class TransactionTablePriv;
 class WalletModel;
 
-class CWallet;
+class Wallet;
 
 /** UI model for the transaction table of a wallet.
  */
@@ -24,7 +24,7 @@ class TransactionTableModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    explicit TransactionTableModel(const PlatformStyle *platformStyle, CWallet* wallet, WalletModel *parent = 0);
+    explicit TransactionTableModel(const PlatformStyle *platformStyle, Wallet* wallet, WalletModel *parent = 0);
     ~TransactionTableModel();
 
     enum ColumnIndex {
@@ -82,7 +82,7 @@ public:
     bool processingQueuedTransactions() const { return fProcessingQueuedTransactions; }
 
 private:
-    CWallet* wallet;
+    Wallet* wallet;
     WalletModel *walletModel;
     QStringList columns;
     TransactionTablePriv *priv;

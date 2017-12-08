@@ -12,7 +12,7 @@
 class SendCoinsRecipient;
 
 class CReserveKey;
-class CWallet;
+class Wallet;
 class CWalletTx;
 
 /** Data model for a walletmodel transaction. */
@@ -32,7 +32,7 @@ public:
 
     CAmount getTotalTransactionAmount() const;
 
-    void newPossibleKeyChange(CWallet *wallet);
+    void newPossibleKeyChange(Wallet *wallet);
     CReserveKey *getPossibleKeyChange();
 
     void reassignAmounts(int nChangePosRet); // needed for the subtract-fee-from-amount feature

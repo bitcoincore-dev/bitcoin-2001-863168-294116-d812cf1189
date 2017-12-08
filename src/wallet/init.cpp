@@ -119,7 +119,7 @@ bool WalletParameterInteraction()
         if (n > HIGH_TX_FEE_PER_KB)
             InitWarning(AmountHighWarn("-mintxfee") + " " +
                         _("This is the minimum transaction fee you pay on every transaction."));
-        CWallet::minTxFee = CFeeRate(n);
+        Wallet::minTxFee = CFeeRate(n);
     }
     if (gArgs.IsArgSet("-fallbackfee"))
     {
@@ -129,7 +129,7 @@ bool WalletParameterInteraction()
         if (nFeePerK > HIGH_TX_FEE_PER_KB)
             InitWarning(AmountHighWarn("-fallbackfee") + " " +
                         _("This is the transaction fee you may pay when fee estimates are not available."));
-        CWallet::fallbackFee = CFeeRate(nFeePerK);
+        Wallet::fallbackFee = CFeeRate(nFeePerK);
     }
     if (gArgs.IsArgSet("-discardfee"))
     {
@@ -139,7 +139,7 @@ bool WalletParameterInteraction()
         if (nFeePerK > HIGH_TX_FEE_PER_KB)
             InitWarning(AmountHighWarn("-discardfee") + " " +
                         _("This is the transaction fee you may discard if change is smaller than dust at this level"));
-        CWallet::m_discard_rate = CFeeRate(nFeePerK);
+        Wallet::m_discard_rate = CFeeRate(nFeePerK);
     }
     if (gArgs.IsArgSet("-paytxfee"))
     {
@@ -224,21 +224,21 @@ bool VerifyWallets()
         }
 
         std::string strError;
-        if (!CWalletDB::VerifyEnvironment(walletFile, GetWalletDir().string(), strError)) {
+        if (!WalletCheckpoint::VerifyEnvironment(walletFile, GetWalletDir().string(), strError)) {
             return InitError(strError);
         }
 
         if (gArgs.GetBoolArg("-salvagewallet", false)) {
             // Recover readable keypairs:
-            CWallet dummyWallet;
+            Wallet dummyWallet;
             std::string backup_filename;
-            if (!CWalletDB::Recover(walletFile, (void *)&dummyWallet, CWalletDB::RecoverKeysOnlyFilter, backup_filename)) {
+            if (!WalletCheckpoint::Recover(walletFile, (void *)&dummyWallet, WalletCheckpoint::RecoverKeysOnlyFilter, backup_filename)) {
                 return false;
             }
         }
 
         std::string strWarning;
-        bool dbV = CWalletDB::VerifyDatabaseFile(walletFile, GetWalletDir().string(), strWarning, strError);
+        bool dbV = WalletCheckpoint::VerifyDatabaseFile(walletFile, GetWalletDir().string(), strWarning, strError);
         if (!strWarning.empty()) {
             InitWarning(strWarning);
         }
@@ -259,7 +259,7 @@ bool OpenWallets()
     }
 
     for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
-        CWallet * const pwallet = CWallet::CreateWalletFromFile(walletFile);
+        Wallet * const pwallet = Wallet::CreateWalletFromFile(walletFile);
         if (!pwallet) {
             return false;
         }

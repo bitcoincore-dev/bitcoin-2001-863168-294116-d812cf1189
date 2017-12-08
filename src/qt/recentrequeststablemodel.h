@@ -11,7 +11,7 @@
 #include <QStringList>
 #include <QDateTime>
 
-class CWallet;
+class Wallet;
 
 class RecentRequestEntry
 {
@@ -60,7 +60,7 @@ class RecentRequestsTableModel: public QAbstractTableModel
     Q_OBJECT
 
 public:
-    explicit RecentRequestsTableModel(CWallet *wallet, WalletModel *parent);
+    explicit RecentRequestsTableModel(Wallet *wallet, WalletModel *parent);
     ~RecentRequestsTableModel();
 
     enum ColumnIndex {

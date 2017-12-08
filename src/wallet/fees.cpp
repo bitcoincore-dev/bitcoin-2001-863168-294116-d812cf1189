@@ -15,7 +15,7 @@
 
 CAmount GetRequiredFee(unsigned int nTxBytes)
 {
-    return std::max(CWallet::minTxFee.GetFee(nTxBytes), ::minRelayTxFee.GetFee(nTxBytes));
+    return std::max(Wallet::minTxFee.GetFee(nTxBytes), ::minRelayTxFee.GetFee(nTxBytes));
 }
 
 
@@ -51,7 +51,7 @@ CAmount GetMinimumFee(unsigned int nTxBytes, const CCoinControl& coin_control, c
         fee_needed = estimator.estimateSmartFee(target, feeCalc, conservative_estimate).GetFee(nTxBytes);
         if (fee_needed == 0) {
             // if we don't have enough data for estimateSmartFee, then use fallbackFee
-            fee_needed = CWallet::fallbackFee.GetFee(nTxBytes);
+            fee_needed = Wallet::fallbackFee.GetFee(nTxBytes);
             if (feeCalc) feeCalc->reason = FeeReason::FALLBACK;
         }
         // Obey mempool min fee when using smart fee estimation
@@ -82,7 +82,7 @@ CFeeRate GetDiscardRate(const CBlockPolicyEstimator& estimator)
     unsigned int highest_target = estimator.HighestTargetTracked(FeeEstimateHorizon::LONG_HALFLIFE);
     CFeeRate discard_rate = estimator.estimateSmartFee(highest_target, nullptr /* FeeCalculation */, false /* conservative */);
     // Don't let discard_rate be greater than longest possible fee estimate if we get a valid fee estimate
-    discard_rate = (discard_rate == CFeeRate(0)) ? CWallet::m_discard_rate : std::min(discard_rate, CWallet::m_discard_rate);
+    discard_rate = (discard_rate == CFeeRate(0)) ? Wallet::m_discard_rate : std::min(discard_rate, Wallet::m_discard_rate);
     // Discard rate must be at least dustRelayFee
     discard_rate = std::max(discard_rate, ::dustRelayFee);
     return discard_rate;

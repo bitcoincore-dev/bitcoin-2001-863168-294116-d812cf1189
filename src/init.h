@@ -9,7 +9,7 @@
 #include <string>
 
 class CScheduler;
-class CWallet;
+class Wallet;
 
 namespace boost
 {

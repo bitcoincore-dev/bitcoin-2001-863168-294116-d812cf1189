@@ -57,17 +57,17 @@ struct TxLessThan
 class TransactionTablePriv
 {
 public:
-    TransactionTablePriv(CWallet *_wallet, TransactionTableModel *_parent) :
+    TransactionTablePriv(Wallet *_wallet, TransactionTableModel *_parent) :
         wallet(_wallet),
         parent(_parent)
     {
     }
 
-    CWallet *wallet;
+    Wallet *wallet;
     TransactionTableModel *parent;
 
     /* Local cache of wallet.
-     * As it is in the same order as the CWallet, by definition
+     * As it is in the same order as the Wallet, by definition
      * this is sorted by sha256.
      */
     QList<TransactionRecord> cachedWallet;
@@ -237,7 +237,7 @@ public:
     }
 };
 
-TransactionTableModel::TransactionTableModel(const PlatformStyle *_platformStyle, CWallet* _wallet, WalletModel *parent):
+TransactionTableModel::TransactionTableModel(const PlatformStyle *_platformStyle, Wallet* _wallet, WalletModel *parent):
         QAbstractTableModel(parent),
         wallet(_wallet),
         walletModel(parent),
@@ -737,7 +737,7 @@ private:
 static bool fQueueNotifications = false;
 static std::vector< TransactionNotification > vQueueNotifications;
 
-static void NotifyTransactionChanged(TransactionTableModel *ttm, CWallet *wallet, const uint256 &hash, ChangeType status)
+static void NotifyTransactionChanged(TransactionTableModel *ttm, Wallet *wallet, const uint256 &hash, ChangeType status)
 {
     // Find transaction in wallet
     std::map<uint256, CWalletTx>::iterator mi = wallet->mapWallet.find(hash);
