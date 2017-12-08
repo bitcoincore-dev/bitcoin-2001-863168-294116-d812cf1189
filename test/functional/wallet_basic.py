@@ -12,7 +12,6 @@ from test_framework.util import (
     assert_fee_amount,
     assert_raises_rpc_error,
     connect_nodes_bi,
-    count_bytes,
     sync_blocks,
     sync_mempools,
 )
@@ -203,6 +202,22 @@ class WalletTest(BitcoinTestFramework):
         assert_equal(self.nodes[2].getbalance(), node_2_bal)
         node_0_bal = self.check_fee_amount(self.nodes[0].getbalance(), node_0_bal + Decimal('10'), fee_per_byte, self.get_vsize(self.nodes[2].getrawtransaction(txid)))
 
+        # Sendmany with explicit fee
+        fee_per_kb = 2500
+        explicit_fee_per_byte = Decimal(fee_per_kb) / 1000 / 100000000 # sat/kb -> btc/b
+        txid = self.nodes[2].sendmany(
+            fromaccount='from1',
+            amounts={ address: 10 },
+            conf_target=fee_per_kb,
+            estimate_mode='EXPLICIT',
+        )
+        self.nodes[2].generate(1)
+        self.sync_all([self.nodes[0:3]])
+        node_2_bal = self.check_fee_amount(self.nodes[2].getbalance(), node_2_bal - Decimal('10'), explicit_fee_per_byte, self.get_vsize(self.nodes[2].getrawtransaction(txid)))
+        assert_equal(self.nodes[2].getbalance(), node_2_bal)
+        node_0_bal += Decimal('10')
+        assert_equal(self.nodes[0].getbalance(), node_0_bal)
+
         # Test ResendWalletTransactions:
         # Create a couple of transactions, then start up a fourth
         # node (nodes[3]) and ask nodes[0] to rebroadcast.
@@ -328,7 +343,7 @@ class WalletTest(BitcoinTestFramework):
             conf_target=2500,
             estimate_mode='EXPLICIT',
         )
-        tx_size = count_bytes(self.nodes[2].getrawtransaction(txid))
+        tx_size = self.get_vsize(self.nodes[2].getrawtransaction(txid))
         self.sync_all([self.nodes[0:3]])
         self.nodes[0].generate(1)
         postbalance = self.nodes[2].getbalance()
