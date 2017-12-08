@@ -26,10 +26,6 @@
  * - WalletCheckpoint is a modifier object for the wallet, and encapsulates a database
  *   transaction as well as methods to act on the database (no analog in
  *   dbwrapper.h)
- *
- * The latter two are named confusingly, in contrast to what the names BerkeleyCheckpoint
- * and WalletCheckpoint suggest they are transient transaction objects and don't
- * represent the database itself.
  */
 
 static const bool DEFAULT_FLUSHWALLET = true;
