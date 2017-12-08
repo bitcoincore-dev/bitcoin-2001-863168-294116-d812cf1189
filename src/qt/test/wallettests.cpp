@@ -160,8 +160,8 @@ void TestGUI()
     bitdb.MakeMock();
     g_wallet_allow_fallback_fee = true;
 
-    std::unique_ptr<CWalletDBWrapper> dbw(new CWalletDBWrapper(&bitdb, "wallet_test.dat"));
-    CWallet wallet(std::move(dbw));
+    std::unique_ptr<WalletDatabase> database(new WalletDatabase(&bitdb, "wallet_test.dat"));
+    CWallet wallet(std::move(database));
     bool firstRun;
     wallet.LoadWallet(firstRun);
     {

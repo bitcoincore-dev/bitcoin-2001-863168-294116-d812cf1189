@@ -683,7 +683,7 @@ private:
      */
     bool SelectCoins(const std::vector<COutput>& vAvailableCoins, const CAmount& nTargetValue, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet, const CCoinControl *coinControl = nullptr) const;
 
-    CWalletDB *pwalletdbEncryption;
+    WalletBatch *pwalletdbEncryption;
 
     //! the current wallet version: clients below this version are not able to load the wallet
     int nWalletVersion;
@@ -718,7 +718,7 @@ private:
     CHDChain hdChain;
 
     /* HD derive new child key (on internal or external chain) */
-    void DeriveNewChildKey(CWalletDB &walletdb, CKeyMetadata& metadata, CKey& secret, bool internal = false);
+    void DeriveNewChildKey(WalletBatch &batch, CKeyMetadata& metadata, CKey& secret, bool internal = false);
 
     std::set<int64_t> setInternalKeyPool;
     std::set<int64_t> setExternalKeyPool;
@@ -738,7 +738,7 @@ private:
      */
     bool AddWatchOnly(const CScript& dest) override;
 
-    std::unique_ptr<CWalletDBWrapper> dbw;
+    std::unique_ptr<WalletDatabase> database;
 
     /**
      * The following is used to keep track of how far behind the wallet is
@@ -762,17 +762,17 @@ public:
     /** Get database handle used by this wallet. Ideally this function would
      * not be necessary.
      */
-    CWalletDBWrapper& GetDBHandle()
+    WalletDatabase& GetDBHandle()
     {
-        return *dbw;
+        return *database;
     }
 
     /** Get a name for this wallet for logging/debugging purposes.
      */
     std::string GetName() const
     {
-        if (dbw) {
-            return dbw->GetName();
+        if (database) {
+            return database->GetName();
         } else {
             return "dummy";
         }
@@ -791,13 +791,13 @@ public:
     unsigned int nMasterKeyMaxID;
 
     // Create wallet with dummy database handle
-    CWallet(): dbw(new CWalletDBWrapper())
+    CWallet(): database(new WalletDatabase())
     {
         SetNull();
     }
 
     // Create wallet with passed-in database handle
-    explicit CWallet(std::unique_ptr<CWalletDBWrapper> dbw_in) : dbw(std::move(dbw_in))
+    explicit CWallet(std::unique_ptr<WalletDatabase> database_in) : database(std::move(database_in))
     {
         SetNull();
     }
@@ -888,10 +888,10 @@ public:
      * keystore implementation
      * Generate a new key
      */
-    CPubKey GenerateNewKey(CWalletDB& walletdb, bool internal = false);
+    CPubKey GenerateNewKey(WalletBatch& batch, bool internal = false);
     //! Adds a key to the store, and saves it to disk.
     bool AddKeyPubKey(const CKey& key, const CPubKey &pubkey) override;
-    bool AddKeyPubKeyWithDB(CWalletDB &walletdb,const CKey& key, const CPubKey &pubkey);
+    bool AddKeyPubKeyWithDB(WalletBatch &batch,const CKey& key, const CPubKey &pubkey);
     //! Adds a key to the store, without saving it to disk (used by LoadWallet)
     bool LoadKey(const CKey& key, const CPubKey &pubkey) { return CCryptoKeyStore::AddKeyPubKey(key, pubkey); }
     //! Load metadata (used by LoadWallet)
@@ -939,7 +939,7 @@ public:
      * Increment the next transaction order id
      * @return next transaction order id
      */
-    int64_t IncOrderPosNext(CWalletDB *pwalletdb = nullptr);
+    int64_t IncOrderPosNext(WalletBatch *batch = nullptr);
     DBErrors ReorderTransactions();
     bool AccountMove(std::string strFrom, std::string strTo, CAmount nAmount, std::string strComment = "");
     bool GetAccountDestination(CTxDestination &dest, std::string strAccount, bool bForceNew = false);
@@ -987,7 +987,7 @@ public:
 
     void ListAccountCreditDebit(const std::string& strAccount, std::list<CAccountingEntry>& entries);
     bool AddAccountingEntry(const CAccountingEntry&);
-    bool AddAccountingEntry(const CAccountingEntry&, CWalletDB *pwalletdb);
+    bool AddAccountingEntry(const CAccountingEntry&, WalletBatch *batch);
     template <typename ContainerType>
     bool DummySignTx(CMutableTransaction &txNew, const ContainerType &coins) const;
 
@@ -1063,7 +1063,7 @@ public:
     }
 
     //! signify that a particular wallet feature is now used. this may change nWalletVersion and nWalletMaxVersion if those are lower
-    bool SetMinVersion(enum WalletFeature, CWalletDB* pwalletdbIn = nullptr, bool fExplicit = false);
+    bool SetMinVersion(enum WalletFeature, WalletBatch* batch_in = nullptr, bool fExplicit = false);
 
     //! change which version we're allowed to upgrade to (note that this does not immediately imply upgrading to that format)
     bool SetMaxVersion(int nVersion);
