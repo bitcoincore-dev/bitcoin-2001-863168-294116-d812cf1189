@@ -155,8 +155,8 @@ void TestGUI()
         test.CreateAndProcessBlock({}, GetScriptForRawPubKey(test.coinbaseKey.GetPubKey()));
     }
     bitdb.MakeMock();
-    std::unique_ptr<CWalletDBWrapper> dbw(new CWalletDBWrapper(&bitdb, "wallet_test.dat"));
-    CWallet wallet(std::move(dbw));
+    std::unique_ptr<BerkeleyDatabase> database(new BerkeleyDatabase(&bitdb, "wallet_test.dat"));
+    CWallet wallet(std::move(database));
     bool firstRun;
     wallet.LoadWallet(firstRun);
     {
