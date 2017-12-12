@@ -234,7 +234,7 @@ bool VerifyWallets()
 
         if (gArgs.GetBoolArg("-salvagewallet", false)) {
             // Recover readable keypairs:
-            CWallet dummyWallet{CWallet::Dummy{}};
+            CWallet dummyWallet("dummy", CWalletDBWrapper::CreateDummy());
             std::string backup_filename;
             if (!CWalletDB::Recover(wallet_path, (void *)&dummyWallet, CWalletDB::RecoverKeysOnlyFilter, backup_filename)) {
                 return false;

@@ -740,12 +740,6 @@ private:
      */
     const CBlockIndex* m_last_block_processed;
 
-    /** Private constructor */
-    CWallet(std::string name, std::unique_ptr<CWalletDBWrapper> dbw) : m_name(std::move(name)), dbw(std::move(dbw))
-    {
-        SetNull();
-    }
-
 public:
     /*
      * Main wallet lock.
@@ -775,16 +769,11 @@ public:
     MasterKeyMap mapMasterKeys;
     unsigned int nMasterKeyMaxID;
 
-    /** Construct wallet with specified name and path. */
-    CWallet(std::string name, const fs::path& path) : CWallet(std::move(name), MakeUnique<CWalletDBWrapper>(path)) {}
-
-    /** Construct dummy wallet for testing with no underlying database. */
-    struct Dummy{};
-    CWallet(Dummy) : CWallet("wallet_dummy.dat", MakeUnique<CWalletDBWrapper>()) {}
-
-    /** Construct mock wallet for testing with temporary in-memory database. */
-    struct Mock{};
-    CWallet(Mock) : CWallet("wallet_mock.dat", MakeUnique<CWalletDBWrapper>("", true /* mock */)) {}
+    /** Construct wallet with specified name and database implementation. */
+    CWallet(std::string name, std::unique_ptr<CWalletDBWrapper> dbw) : m_name(std::move(name)), dbw(std::move(dbw))
+    {
+        SetNull();
+    }
 
     ~CWallet()
     {

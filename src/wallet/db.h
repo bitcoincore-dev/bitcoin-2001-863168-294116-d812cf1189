@@ -11,6 +11,7 @@
 #include <serialize.h>
 #include <streams.h>
 #include <sync.h>
+#include <util.h>
 #include <version.h>
 
 #include <atomic>
@@ -109,6 +110,24 @@ public:
             env->Reset();
             env->MakeMock();
         }
+    }
+
+    /** Return object for accessing database at specified path. */
+    static std::unique_ptr<CWalletDBWrapper> Create(const fs::path& path)
+    {
+        return MakeUnique<CWalletDBWrapper>(path);
+    }
+
+    /** Return object for accessing dummy database with no read/write capabilities. */
+    static std::unique_ptr<CWalletDBWrapper> CreateDummy()
+    {
+        return MakeUnique<CWalletDBWrapper>();
+    }
+
+    /** Return object for accessing temporary in-memory database. */
+    static std::unique_ptr<CWalletDBWrapper> CreateMock()
+    {
+        return MakeUnique<CWalletDBWrapper>("", true /* mock */);
     }
 
     /** Rewrite the entire database on disk, with the exception of key pszSkip if non-zero
