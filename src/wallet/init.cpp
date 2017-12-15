@@ -276,6 +276,9 @@ bool WalletInit::Verify()
             return InitError(strprintf(_("Error loading wallet %s. Duplicate -wallet filename specified."), walletFile));
         }
 
+        // Keep same database environment instance across Verify/Recover calls below.
+        std::unique_ptr<WalletDatabase> database = WalletDatabase::Create(wallet_path);
+
         std::string strError;
         if (!WalletBatch::VerifyEnvironment(wallet_path, strError)) {
             return InitError(strError);
