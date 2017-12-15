@@ -55,10 +55,10 @@ void CheckUniqueFileid(const CDBEnv& env, const std::string& filename, Db& db)
 }
 
 CCriticalSection cs_db;
-std::map<std::string, CDBEnv> g_dbenvs; //!< Map from directory name to open db environment.
+std::map<std::string, std::weak_ptr<CDBEnv>> g_dbenvs; //!< Map from directory name to open db environment.
 } // namespace
 
-CDBEnv* GetWalletEnv(const fs::path& wallet_path, std::string& database_filename)
+std::shared_ptr<CDBEnv> GetWalletEnv(const fs::path& wallet_path, std::string& database_filename)
 {
     fs::path env_directory;
     if (fs::is_regular_file(wallet_path)) {
@@ -74,7 +74,14 @@ CDBEnv* GetWalletEnv(const fs::path& wallet_path, std::string& database_filename
         database_filename = "wallet.dat";
     }
     LOCK(cs_db);
-    return &g_dbenvs.emplace(std::piecewise_construct, std::forward_as_tuple(env_directory.string()), std::forward_as_tuple(env_directory)).first->second;
+    auto inserted = g_dbenvs.emplace(env_directory.string(), std::weak_ptr<CDBEnv>());
+    if (inserted.second) {
+        auto env = std::make_shared<CDBEnv>(env_directory.string());
+        inserted.first->second = env;
+        return env;
+    } else {
+        return inserted.first->second.lock();
+    }
 }
 
 //
@@ -119,6 +126,7 @@ CDBEnv::CDBEnv(const fs::path& dir_path) : strPath(dir_path.string())
 
 CDBEnv::~CDBEnv()
 {
+    g_dbenvs.erase(strPath);
     Close();
 }
 
@@ -169,10 +177,9 @@ bool CDBEnv::Open()
     return true;
 }
 
-void CDBEnv::MakeMock()
+CDBEnv::CDBEnv()
 {
-    if (fDbEnvInit)
-        throw std::runtime_error("CDBEnv::MakeMock: Already initialized");
+    Reset();
 
     boost::this_thread::interruption_point();
 
@@ -221,7 +228,7 @@ CDBEnv::VerifyResult CDBEnv::Verify(const std::string& strFile, recoverFunc_type
 bool CDB::Recover(const fs::path& file_path, void *callbackDataIn, bool (*recoverKVcallback)(void* callbackData, CDataStream ssKey, CDataStream ssValue), std::string& newFilename)
 {
     std::string filename;
-    CDBEnv* env = GetWalletEnv(file_path, filename);
+    std::shared_ptr<CDBEnv> env = GetWalletEnv(file_path, filename);
 
     // Recovery procedure:
     // move wallet file to walletfilename.timestamp.bak
@@ -290,7 +297,7 @@ bool CDB::Recover(const fs::path& file_path, void *callbackDataIn, bool (*recove
 bool CDB::VerifyEnvironment(const fs::path& file_path, std::string& errorStr)
 {
     std::string walletFile;
-    CDBEnv* env = GetWalletEnv(file_path, walletFile);
+    std::shared_ptr<CDBEnv> env = GetWalletEnv(file_path, walletFile);
     fs::path walletDir = env->Directory();
 
     LogPrintf("Using BerkeleyDB version %s\n", DbEnv::version(0, 0, 0));
@@ -328,7 +335,7 @@ bool CDB::VerifyEnvironment(const fs::path& file_path, std::string& errorStr)
 bool CDB::VerifyDatabaseFile(const fs::path& file_path, std::string& warningStr, std::string& errorStr, CDBEnv::recoverFunc_type recoverFunc)
 {
     std::string walletFile;
-    CDBEnv* env = GetWalletEnv(file_path, walletFile);
+    std::shared_ptr<CDBEnv> env = GetWalletEnv(file_path, walletFile);
     fs::path walletDir = env->Directory();
 
     if (fs::exists(walletDir / walletFile))
@@ -432,7 +439,7 @@ CDB::CDB(CWalletDBWrapper& dbw, const char* pszMode, bool fFlushOnCloseIn) : pdb
 {
     fReadOnly = (!strchr(pszMode, '+') && !strchr(pszMode, 'w'));
     fFlushOnClose = fFlushOnCloseIn;
-    env = dbw.env;
+    env = dbw.env.get();
     if (dbw.IsDummy()) {
         return;
     }
@@ -489,7 +496,7 @@ CDB::CDB(CWalletDBWrapper& dbw, const char* pszMode, bool fFlushOnCloseIn) : pdb
             // versions of BDB have an set_lk_exclusive method for this
             // purpose, but the older version we use does not.)
             for (auto& env : g_dbenvs) {
-                CheckUniqueFileid(env.second, strFilename, *pdb_temp);
+                CheckUniqueFileid(*env.second.lock().get(), strFilename, *pdb_temp);
             }
 
             pdb = pdb_temp.release();
@@ -562,7 +569,7 @@ bool CDB::Rewrite(CWalletDBWrapper& dbw, const char* pszSkip)
     if (dbw.IsDummy()) {
         return true;
     }
-    CDBEnv *env = dbw.env;
+    CDBEnv *env = dbw.env.get();
     const std::string& strFile = dbw.strFile;
     while (true) {
         {
@@ -692,7 +699,7 @@ bool CDB::PeriodicFlush(CWalletDBWrapper& dbw)
         return true;
     }
     bool ret = false;
-    CDBEnv *env = dbw.env;
+    CDBEnv *env = dbw.env.get();
     const std::string& strFile = dbw.strFile;
     TRY_LOCK(cs_db, lockDb);
     if (lockDb)
