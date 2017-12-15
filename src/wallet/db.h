@@ -16,6 +16,7 @@
 
 #include <atomic>
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -39,10 +40,10 @@ public:
     std::map<std::string, Db*> mapDb;
 
     CDBEnv(const fs::path& env_directory);
+    CDBEnv();
     ~CDBEnv();
     void Reset();
 
-    void MakeMock();
     bool IsMock() const { return fMockDb; }
     bool IsInitialized() const { return fDbEnvInit; }
     fs::path Directory() const { return strPath; }
@@ -86,7 +87,7 @@ public:
 };
 
 /** Get CDBEnv and database filename given a wallet path. */
-CDBEnv* GetWalletEnv(const fs::path& wallet_path, std::string& database_filename);
+std::shared_ptr<CDBEnv> GetWalletEnv(const fs::path& wallet_path, std::string& database_filename);
 
 /** An instance of this class represents one database.
  * For BerkeleyDB this is just a (env, strFile) tuple.
@@ -101,21 +102,16 @@ public:
     }
 
     /** Create DB handle to real database */
-    CWalletDBWrapper(const fs::path& wallet_path, bool mock = false) :
-        nUpdateCounter(0), nLastSeen(0), nLastFlushed(0), nLastWalletUpdate(0)
+    CWalletDBWrapper(std::shared_ptr<CDBEnv> env, std::string filename) :
+        nUpdateCounter(0), nLastSeen(0), nLastFlushed(0), nLastWalletUpdate(0), env(std::move(env)), strFile(std::move(filename))
     {
-        env = GetWalletEnv(wallet_path, strFile);
-        if (mock) {
-            env->Close();
-            env->Reset();
-            env->MakeMock();
-        }
     }
 
     /** Return object for accessing database at specified path. */
     static std::unique_ptr<CWalletDBWrapper> Create(const fs::path& path)
     {
-        return MakeUnique<CWalletDBWrapper>(path);
+        std::string filename;
+        return MakeUnique<CWalletDBWrapper>(GetWalletEnv(path, filename), std::move(filename));
     }
 
     /** Return object for accessing dummy database with no read/write capabilities. */
@@ -127,7 +123,7 @@ public:
     /** Return object for accessing temporary in-memory database. */
     static std::unique_ptr<CWalletDBWrapper> CreateMock()
     {
-        return MakeUnique<CWalletDBWrapper>("", true /* mock */);
+        return MakeUnique<CWalletDBWrapper>(std::make_shared<CDBEnv>(), "");
     }
 
     /** Rewrite the entire database on disk, with the exception of key pszSkip if non-zero
@@ -151,7 +147,7 @@ public:
 
 private:
     /** BerkeleyDB specific */
-    CDBEnv *env;
+    std::shared_ptr<CDBEnv> env;
     std::string strFile;
 
     /** Return whether this database handle is a dummy for testing.
