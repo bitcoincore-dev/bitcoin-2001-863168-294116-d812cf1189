@@ -129,9 +129,14 @@ class MultiWalletTest(BitcoinTestFramework):
         assert_equal(w3.getbalance(), 2)
         assert_equal(w4.getbalance(), 3)
 
+        # Make sure batch calls to wallet endpoint work
         batch = w1.batch([w1.getblockchaininfo.get_request(), w1.getwalletinfo.get_request()])
         assert_equal(batch[0]["result"]["chain"], "regtest")
         assert_equal(batch[1]["result"]["walletname"], "w1")
+
+        # Make sure cli calls to wallet endpoints work
+        for wallet_name in wallet_names:
+            assert_equal(wallet_name, self.nodes[0].cli("--rpcwallet={}".format(wallet_name)).getwalletinfo()["walletname"])
 
 if __name__ == '__main__':
     MultiWalletTest().main()
