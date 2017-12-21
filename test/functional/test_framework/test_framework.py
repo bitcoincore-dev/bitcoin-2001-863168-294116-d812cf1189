@@ -60,7 +60,7 @@ class BitcoinTestFramework():
     def __init__(self):
         """Sets test framework defaults. Do not override this method. Instead, override the set_test_params() method"""
         self.setup_clean_chain = False
-        self.nodes = []
+        self.variants = [None]
         self.mocktime = 0
         self.set_test_params()
 
@@ -108,6 +108,22 @@ class BitcoinTestFramework():
             os.makedirs(self.options.tmpdir, exist_ok=False)
         else:
             self.options.tmpdir = tempfile.mkdtemp(prefix="test")
+
+        exit_code = TEST_EXIT_PASSED
+        for variant in self.variants:
+            self.variant = variant
+            self.tmpdir = self.options.tmpdir
+            if variant:
+                self.tmpdir = os.path.join(self.options.tmpdir, variant)
+                os.mkdir(self.tmpdir)
+            success = self.run_variant()
+            if success == TestStatus.SKIPPED and exit_code == TEST_EXIT_PASSED:
+               exit_code = TEST_EXIT_SKIPPED
+            elif success != TestStatus.PASSED:
+               exit_code = TEST_EXIT_FAILED
+        sys.exit(exit_code)
+
+    def run_variant(self):
         self._start_logging()
 
         success = TestStatus.FAILED
@@ -144,22 +160,19 @@ class BitcoinTestFramework():
 
         if not self.options.nocleanup and not self.options.noshutdown and success != TestStatus.FAILED:
             self.log.info("Cleaning up")
-            shutil.rmtree(self.options.tmpdir)
+            shutil.rmtree(self.tmpdir)
         else:
-            self.log.warning("Not cleaning up dir %s" % self.options.tmpdir)
+            self.log.warning("Not cleaning up dir %s" % self.tmpdir)
 
         if success == TestStatus.PASSED:
             self.log.info("Tests successful")
-            exit_code = TEST_EXIT_PASSED
         elif success == TestStatus.SKIPPED:
             self.log.info("Test skipped")
-            exit_code = TEST_EXIT_SKIPPED
         else:
-            self.log.error("Test failed. Test logging available at %s/test_framework.log", self.options.tmpdir)
-            self.log.error("Hint: Call {} '{}' to consolidate all logs".format(os.path.normpath(os.path.dirname(os.path.realpath(__file__)) + "/../combine_logs.py"), self.options.tmpdir))
-            exit_code = TEST_EXIT_FAILED
-        logging.shutdown()
-        sys.exit(exit_code)
+            self.log.error("Test failed. Test logging available at %s/test_framework.log", self.tmpdir)
+            self.log.error("Hint: Call {} '{}' to consolidate all logs".format(os.path.normpath(os.path.dirname(os.path.realpath(__file__)) + "/../combine_logs.py"), self.tmpdir))
+        self._stop_logging()
+        return success
 
     # Methods to override in subclass test scripts.
     def set_test_params(self):
@@ -172,7 +185,7 @@ class BitcoinTestFramework():
 
     def setup_chain(self):
         """Override this method to customize blockchain setup"""
-        self.log.info("Initializing test directory " + self.options.tmpdir)
+        self.log.info("Initializing test directory " + self.tmpdir)
         if self.setup_clean_chain:
             self._initialize_chain_clean()
         else:
@@ -213,7 +226,7 @@ class BitcoinTestFramework():
         assert_equal(len(extra_args), num_nodes)
         assert_equal(len(binary), num_nodes)
         for i in range(num_nodes):
-            self.nodes.append(TestNode(i, self.options.tmpdir, extra_args[i], rpchost, timewait=timewait, binary=binary[i], stderr=None, mocktime=self.mocktime, coverage_dir=self.options.coveragedir))
+            self.nodes.append(TestNode(i, self.tmpdir, extra_args[i], rpchost, timewait=timewait, binary=binary[i], stderr=None, mocktime=self.mocktime, coverage_dir=self.options.coveragedir))
 
     def start_node(self, i, extra_args=None, stderr=None):
         """Start a bitcoind"""
@@ -335,7 +348,7 @@ class BitcoinTestFramework():
         self.log = logging.getLogger('TestFramework')
         self.log.setLevel(logging.DEBUG)
         # Create file handler to log all messages
-        fh = logging.FileHandler(self.options.tmpdir + '/test_framework.log')
+        fh = logging.FileHandler(self.tmpdir + '/test_framework.log')
         fh.setLevel(logging.DEBUG)
         # Create console handler to log messages to stderr. By default this logs only error messages, but can be configured with --loglevel.
         ch = logging.StreamHandler(sys.stdout)
@@ -348,15 +361,24 @@ class BitcoinTestFramework():
         fh.setFormatter(formatter)
         ch.setFormatter(formatter)
         # add the handlers to the logger
-        self.log.addHandler(fh)
-        self.log.addHandler(ch)
+        self.log_handlers = []
+        self.log_handlers.append((self.log, fh))
+        self.log_handlers.append((self.log, ch))
 
         if self.options.trace_rpc:
             rpc_logger = logging.getLogger("BitcoinRPC")
             rpc_logger.setLevel(logging.DEBUG)
             rpc_handler = logging.StreamHandler(sys.stdout)
             rpc_handler.setLevel(logging.DEBUG)
-            rpc_logger.addHandler(rpc_handler)
+            self.log_handlers.append((rpc_logger, rpc_handler))
+
+        for logger, handler in self.log_handlers:
+            logger.addHandler(handler)
+
+    def _stop_logging(self):
+        for logger, handler in reversed(self.log_handlers):
+           handler.flush()
+           logger.removeHandler(handler)
 
     def _initialize_chain(self):
         """Initialize a pre-mined blockchain for use by the test.
@@ -364,6 +386,7 @@ class BitcoinTestFramework():
         Create a cache of a 200-block-long chain (with wallet) for MAX_NODES
         Afterward, create num_nodes copies from the cache."""
 
+        self.nodes = []
         assert self.num_nodes <= MAX_NODES
         create_cache = False
         for i in range(MAX_NODES):
@@ -423,17 +446,18 @@ class BitcoinTestFramework():
 
         for i in range(self.num_nodes):
             from_dir = os.path.join(self.options.cachedir, "node" + str(i))
-            to_dir = os.path.join(self.options.tmpdir, "node" + str(i))
+            to_dir = os.path.join(self.tmpdir, "node" + str(i))
             shutil.copytree(from_dir, to_dir)
-            initialize_datadir(self.options.tmpdir, i)  # Overwrite port/rpcport in bitcoin.conf
+            initialize_datadir(self.tmpdir, i)  # Overwrite port/rpcport in bitcoin.conf
 
     def _initialize_chain_clean(self):
         """Initialize empty blockchain for use by the test.
 
         Create an empty blockchain and num_nodes wallets.
         Useful if a test case wants complete control over initialization."""
+        self.nodes = []
         for i in range(self.num_nodes):
-            initialize_datadir(self.options.tmpdir, i)
+            initialize_datadir(self.tmpdir, i)
 
 class ComparisonTestFramework(BitcoinTestFramework):
     """Test framework for doing p2p comparison testing
