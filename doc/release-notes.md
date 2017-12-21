@@ -113,6 +113,11 @@ Low-level RPC changes
   * `getwalletinfo`
   * `getmininginfo`
 - The wallet RPC `getreceivedbyaddress` will return an error if called with an address not in the wallet.
+- When bitcoin is not started with any `-wallet=<path>` options, the name of
+  the default wallet returned by `getwalletinfo` and `listwallets` RPCs is
+  now the empty string `""` instead of `"wallet.dat"`. If bitcoin is started
+  with any `-wallet=<path>` options, there is no change in behavior, and the
+  name of any wallet is just its `<path>` string.
 
 Changed command-line options
 -----------------------------
