@@ -94,9 +94,7 @@ class MultiWalletTest(BitcoinTestFramework):
         w5_info = w5.getwalletinfo()
         assert_equal(w5_info['immature_balance'], 50)
 
-        self.stop_node(0)
-
-        self.start_node(0, extra_args)
+        self.restart_node(0, extra_args)
 
         wallets = [self.nodes[0].get_wallet_rpc(w) for w in wallet_names]
         wallet_bad = self.nodes[0].get_wallet_rpc("bad")

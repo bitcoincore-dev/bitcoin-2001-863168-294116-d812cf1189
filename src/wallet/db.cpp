@@ -73,6 +73,10 @@ CDBEnv* GetWalletEnv(const fs::path& wallet_path, std::string& database_filename
         database_filename = "wallet.dat";
     }
     LOCK(cs_db);
+    // Note: An ununsed temporary CDBEnv object may be created inside the
+    // emplace function if the key already exists. This is a little inefficient,
+    // but not a big concern since the map will be changed in the future to hold
+    // pointers instead of objects, anyway.
     return &g_dbenvs.emplace(std::piecewise_construct, std::forward_as_tuple(env_directory.string()), std::forward_as_tuple(env_directory)).first->second;
 }
 
