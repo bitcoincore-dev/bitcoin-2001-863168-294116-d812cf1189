@@ -52,6 +52,7 @@ class SegWitTest(BitcoinTestFramework):
                 "-vbparams=segwit:0:999999999999",
                 "-addresstype=legacy",
                 "-deprecatedrpc=addwitnessaddress",
+                "-walletimplicitsegwit",
             ],
             [
                 "-blockversion=4",
