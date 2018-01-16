@@ -6,6 +6,7 @@
 #include <rpc/blockchain.h>
 
 #include <amount.h>
+#include <base58.h>
 #include <chain.h>
 #include <chainparams.h>
 #include <checkpoints.h>
@@ -13,6 +14,7 @@
 #include <consensus/validation.h>
 #include <validation.h>
 #include <core_io.h>
+#include <keystore.h>
 #include <policy/feerate.h>
 #include <policy/policy.h>
 #include <primitives/transaction.h>
@@ -1613,6 +1615,248 @@ UniValue savemempool(const JSONRPCRequest& request)
     return NullUniValue;
 }
 
+/** RAII object to prevent concurrency issue when scanning the txout set */
+static std::mutex g_utxosetscan;
+static std::atomic<int> g_scan_progress;
+static std::atomic<bool> g_scan_in_progress;
+static std::atomic<bool> g_should_abort_scan;
+class CoinsViewScanReserver
+{
+private:
+    bool m_could_reserve;
+public:
+    explicit CoinsViewScanReserver() : m_could_reserve(false) {}
+
+    bool reserve() {
+        assert (!m_could_reserve);
+        std::lock_guard<std::mutex> lock(g_utxosetscan);
+        if (g_scan_in_progress) {
+            return false;
+        }
+        g_scan_in_progress = true;
+        m_could_reserve = true;
+        return true;
+    }
+
+    ~CoinsViewScanReserver() {
+        if (m_could_reserve) {
+            std::lock_guard<std::mutex> lock(g_utxosetscan);
+            g_scan_in_progress = false;
+        }
+    }
+};
+
+UniValue scantxoutset(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
+        throw std::runtime_error(
+            "scantxoutset <action> {\"pubkeys\": [\"pubkey\",...], \"xpubs\":[{\"xpub\": \"<xpub>\"}]}\n"
+            "\nScans the unspent transaction output set for possible entries that matches common scripts of given public keys.\n"
+            "\nArguments:\n"
+            "1. \"action\"                       (string, required) The action to execute\n"
+            "                                          \"start\" for starting a scan\n"
+            "                                          \"abort\" for aborting the current scan (returns true when abort was successful)\n"
+            "                                          \"status\" for progress report (in %) of the current scan\n"
+            "2. \"options\"                      (object, optional)\n"
+            "      \"pubkeys\":[\"pubkey\",...]    (array of strings, optional) An array of HEX encoded public keys\n"
+            "      \"addresses\":[\"address\",...] (array of strings, optional) An array of bitcoin addresses\n"
+            "      \"xpubs\":                    (array of xpub objects that will be used to derive child keys with the given lookup window after m/0/k and m/1/k scheme)\n"
+            "           [\n"
+            "               {\n"
+            "                \"xpub\":\"<xpub>\",  (base58check encoded extended public key (xpub)\n"
+            "                \"lookupwindow\": [<startindex>, <stopindex>] (An array with two integers that does define the range of keys that will be deriven for the given xpubs, default is 0 to 1000)\n"
+            "                }\n"
+            "           ]\n"
+            "\nResult:\n"
+            "{\n"
+            "  \"unspents\": [\n"
+            "    {\n"
+            "    \"txid\" : \"transactionid\",     (string) The transaction id\n"
+            "    \"vout\": n,                    (numeric) the vout value\n"
+            "    \"scriptPubKey\" : \"script\",    (string) the script key\n"
+            "    \"amount\" : x.xxx,             (numeric) The total amount in " + CURRENCY_UNIT + " received by the address\n"
+            "    \"height\" : n,                 (numeric) Height of the unspent transaction output\n"
+            "   }\n"
+            "   ,...], \n"
+            " \"total_amount\" : x.xxx,          (numeric) The total amount of all found unspent outputs in " + CURRENCY_UNIT + "\n"
+            "]\n"
+        );
+
+    RPCTypeCheck(request.params, {UniValue::VSTR, UniValue::VOBJ});
+
+    UniValue result(UniValue::VOBJ);
+    if (request.params[0].get_str() == "status") {
+        CoinsViewScanReserver reserver;
+        if (reserver.reserve()) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "No scan in progress");
+        }
+        result.pushKV("progress", g_scan_progress);
+    } else if (request.params[0].get_str() == "abort") {
+        CoinsViewScanReserver reserver;
+        if (reserver.reserve()) {
+            return false;
+        }
+        g_should_abort_scan = true;
+        return true;
+    } else if (request.params[0].get_str() == "start") {
+        CoinsViewScanReserver reserver;
+        if (!reserver.reserve()) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Scan already in progress, use action \"abort\" or \"status\"");
+        }
+        std::set<CScript> needles;
+        CBasicKeyStore temp_keystore;
+        CAmount total_in = 0;
+
+        // look for posssible pubkeys
+        std::vector<CPubKey> pubkeys;
+        UniValue pubkeys_uni = find_value(request.params[1], "pubkeys");
+        if (pubkeys_uni.isArray()) {
+            for (const UniValue& pubkey_uni : pubkeys_uni.get_array().getValues()) {
+                if (!pubkey_uni.isStr() || !IsHex(pubkey_uni.get_str())) {
+                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "public key must be hex encoded");
+                }
+                std::vector<unsigned char> data(ParseHex(pubkey_uni.get_str()));
+                CPubKey pub_key(data.begin(), data.end());
+                if (!pub_key.IsFullyValid()) {
+                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid public key");
+                }
+                pubkeys.push_back(pub_key);
+            }
+        }
+
+        // check for xpubs and derive a lookup window
+        UniValue xpubs_uni = find_value(request.params[1], "xpubs");
+        if (xpubs_uni.isArray()) {
+            for (const UniValue& xpub_uni : xpubs_uni.get_array().getValues()) {
+                if (!xpub_uni.isObject()) {
+                    throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid xpub object");
+                }
+
+                UniValue xpubkey_uni = find_value(xpub_uni, "xpub");
+                UniValue lookup_window_uni = find_value(xpub_uni, "lookupwindow");
+                //default lookup window
+                unsigned int window_start = 0;
+                unsigned int window_end = 1000;
+                if (!lookup_window_uni.isNull()) {
+                    if (lookup_window_uni.isArray() && lookup_window_uni.get_array().size() != 2) {
+                        throw JSONRPCError(RPC_INVALID_PARAMETER, "xpub lookupwindow must be an array with two elements (range)");
+                    }
+                    else {
+                        window_start = (unsigned int)lookup_window_uni.get_array().getValues()[0].get_int();
+                        window_end = (unsigned int)lookup_window_uni.get_array().getValues()[1].get_int();
+                    }
+                }
+                CBitcoinExtPubKey xpub_base58c(xpubkey_uni.get_str()); //will throw if xpubU does not contain a string
+
+                // Derive internal- and external-chain keys
+                CExtPubKey xpub = xpub_base58c.GetKey();
+                CExtPubKey c0;
+                CExtPubKey c1;
+                xpub.Derive(c0, 0);
+                xpub.Derive(c1, 1);
+
+                for (unsigned int i = window_start; i <= window_end; i++) {
+                    // derive both (internal and external chain) child keys
+                    CExtPubKey k;
+                    c0.Derive(k, i);
+                    pubkeys.push_back(k.pubkey);
+                    c1.Derive(k, i);
+                    pubkeys.push_back(k.pubkey);
+                }
+            }
+        }
+
+        // add all common scripts for the given and derived pubkeys
+        for (const CPubKey& pubKey : pubkeys) {
+            // add legacy P2PKH script
+            CKeyID address = pubKey.GetID();
+            CScript script = GetScriptForDestination(address);
+            if (!script.empty()) {
+                needles.insert(script);
+                temp_keystore.AddWatchOnly(script);
+            }
+            // add P2SH-P2WPKH script
+            CScript witscript = GetScriptForWitness(script);
+            CTxDestination result;
+            ExtractDestination(witscript, result);
+            CScript p2wpkh_script = GetScriptForDestination(result);
+            CScript p2sh_p2wpkh_script = GetScriptForDestination(CScriptID(p2wpkh_script));
+            if (!p2wpkh_script.empty()) {
+                needles.insert(p2wpkh_script);
+                temp_keystore.AddWatchOnly(p2wpkh_script);
+            }
+            if (!p2sh_p2wpkh_script.empty()) {
+                needles.insert(p2sh_p2wpkh_script);
+                temp_keystore.AddWatchOnly(p2sh_p2wpkh_script);
+            }
+            // add 1of1 multisig (used by Bitpay for a while)
+            script = GetScriptForMultisig(1, std::vector<CPubKey>(1, pubKey));
+            if (!script.empty()) {
+                needles.insert(script);
+                temp_keystore.AddWatchOnly(script);
+            }
+            // add legacy P2PK
+            script = GetScriptForRawPubKey(pubKey);
+            if (!script.empty()) {
+                needles.insert(script);
+                temp_keystore.AddWatchOnly(script);
+            }
+        }
+        // look for posssible addresses
+        UniValue addresses_uni = find_value(request.params[1], "addresses");
+        if (addresses_uni.isArray()) {
+            for (const UniValue& address_uni : addresses_uni.get_array().getValues()) {
+                CTxDestination dest = DecodeDestination(address_uni.get_str());
+                if (!IsValidDestination(dest)) {
+                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid address");
+                }
+                CScript script = GetScriptForDestination(dest);
+                if (!script.empty()) {
+                    needles.insert(script);
+                    temp_keystore.AddWatchOnly(script);
+                }
+            }
+        }
+        if (!pubkeys_uni.isArray() && !xpubs_uni.isArray() && !addresses_uni.isArray()) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid or empty publickey, addresses or xpub array");
+        }
+
+        // Scan the unspent transaction output set for inputs
+        UniValue unspents(UniValue::VARR);
+        std::vector<CTxOut> input_txos;
+        std::map<COutPoint, Coin> coins;
+        g_should_abort_scan = false;
+        g_scan_progress = 0;
+        int64_t count = 0;
+        FlushStateToDisk();
+        bool res = pcoinsdbview->FindScriptPubKey(g_scan_progress, g_should_abort_scan, count, needles, coins);
+        result.push_back(Pair("success", res ? "yes" : "no"));
+        result.push_back(Pair("searched_items", count));
+
+        for (const auto& it : coins) {
+            const COutPoint& outpoint = it.first;
+            const Coin& coin = it.second;
+            const CTxOut& txo = coin.out;
+            input_txos.push_back(txo);
+            total_in += txo.nValue;
+
+            UniValue unspent(UniValue::VOBJ);
+            unspent.push_back(Pair("txid", outpoint.hash.GetHex()));
+            unspent.push_back(Pair("vout", (int32_t)outpoint.n));
+            unspent.push_back(Pair("scriptPubKey", HexStr(txo.scriptPubKey.begin(), txo.scriptPubKey.end())));
+            unspent.push_back(Pair("amount", ValueFromAmount(txo.nValue)));
+            unspent.push_back(Pair("height", (int32_t)coin.nHeight));
+
+            unspents.push_back(unspent);
+        }
+        result.push_back(Pair("unspents", unspents));
+        result.push_back(Pair("total_amount", ValueFromAmount(total_in)));
+    } else {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid command");
+    }
+    return result;
+}
+
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         argNames
   //  --------------------- ------------------------  -----------------------  ----------
@@ -1637,6 +1881,7 @@ static const CRPCCommand commands[] =
     { "blockchain",         "verifychain",            &verifychain,            {"checklevel","nblocks"} },
 
     { "blockchain",         "preciousblock",          &preciousblock,          {"blockhash"} },
+    { "blockchain",         "scantxoutset",           &scantxoutset,           {"action", "options"} },
 
     /* Not shown in help */
     { "hidden",             "invalidateblock",        &invalidateblock,        {"blockhash"} },
