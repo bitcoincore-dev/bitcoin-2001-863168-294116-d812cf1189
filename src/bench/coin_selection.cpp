@@ -7,7 +7,7 @@
 
 #include <set>
 
-static void addCoin(const CAmount& nValue, const CWallet& wallet, std::vector<COutput>& vCoins)
+static void addCoin(const CAmount& nValue, const CWallet& wallet, std::vector<OutputGroup>& groups)
 {
     int nInput = 0;
 
@@ -20,7 +20,7 @@ static void addCoin(const CAmount& nValue, const CWallet& wallet, std::vector<CO
 
     int nAge = 6 * 24;
     COutput output(wtx, nInput, nAge, true /* spendable */, true /* solvable */, true /* safe */);
-    vCoins.push_back(output);
+    groups.emplace_back(output, false, -1);
 }
 
 // Simple benchmark for wallet coin selection. Note that it maybe be necessary
@@ -33,23 +33,26 @@ static void addCoin(const CAmount& nValue, const CWallet& wallet, std::vector<CO
 static void CoinSelection(benchmark::State& state)
 {
     const CWallet wallet;
-    std::vector<COutput> vCoins;
+    std::vector<OutputGroup> groups;
     LOCK(wallet.cs_wallet);
 
     while (state.KeepRunning()) {
         // Empty wallet.
-        for (COutput output : vCoins)
-            delete output.tx;
-        vCoins.clear();
+        for (OutputGroup& group : groups) {
+            for (COutput& output : group.m_outputs) {
+                delete output.tx;
+            }
+        }
+        groups.clear();
 
         // Add coins.
         for (int i = 0; i < 1000; i++)
-            addCoin(1000 * COIN, wallet, vCoins);
-        addCoin(3 * COIN, wallet, vCoins);
+            addCoin(1000 * COIN, wallet, groups);
+        addCoin(3 * COIN, wallet, groups);
 
         std::set<CInputCoin> setCoinsRet;
         CAmount nValueRet;
-        bool success = wallet.SelectCoinsMinConf(1003 * COIN, 1, 6, 0, vCoins, setCoinsRet, nValueRet);
+        bool success = wallet.SelectCoinsMinConf(1003 * COIN, 1, 6, 0, groups, setCoinsRet, nValueRet);
         assert(success);
         assert(nValueRet == 1003 * COIN);
         assert(setCoinsRet.size() == 2);
