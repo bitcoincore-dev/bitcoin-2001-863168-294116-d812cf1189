@@ -4314,3 +4314,39 @@ CTxDestination CWallet::AddAndGetDestinationForScript(const CScript& script, Out
     default: assert(false);
     }
 }
+
+std::vector<OutputGroup> CWallet::group_outputs(const std::vector<COutput>& outputs, bool single_coin) const {
+    std::vector<OutputGroup> groups;
+    std::map<CTxDestination, OutputGroup> gmap;
+    CTxDestination dst;
+    for (const auto& output : outputs) {
+        if (output.fSpendable) {
+            int64_t chain_limit_value = mempool.chain_limit_value(output.tx->GetHash());
+            if (!single_coin && ExtractDestination(output.tx->tx->vout[output.i].scriptPubKey, dst)) {
+                gmap[dst].push_back(output, output.tx->IsFromMe(ISMINE_ALL), chain_limit_value);
+            } else {
+                groups.emplace_back(output, output.tx->IsFromMe(ISMINE_ALL), chain_limit_value);
+            }
+        }
+    }
+    if (!single_coin) {
+        for (const auto& it : gmap) groups.push_back(it.second);
+    }
+    return groups;
+}
+
+void OutputGroup::push_back(const COutput& output, bool from_me, int64_t chain_limit_value) {
+    m_outputs.push_back(output);
+    m_from_me &= from_me;
+    m_value += output.tx->tx->vout[output.i].nValue;
+    m_depth = std::min(m_depth, output.nDepth);
+    m_chain_limit_value = std::max(m_chain_limit_value, chain_limit_value);
+}
+
+std::vector<CInputCoin> OutputGroup::input_coins() const {
+    std::vector<CInputCoin> coins;
+    for (const auto& output : m_outputs) {
+        coins.emplace_back(output.tx, output.i);
+    }
+    return coins;
+}
