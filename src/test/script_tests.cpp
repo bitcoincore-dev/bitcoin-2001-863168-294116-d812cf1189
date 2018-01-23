@@ -186,11 +186,13 @@ static void script_tests_debugger_ScriptEOF(void *userdata, struct bitcoinconsen
     ++data->eof;
 }
 
+#if defined(HAVE_CONSENSUS_LIB)
 static const struct bitcoinconsensus_script_debugger_callbacks debugger_cbs = {
     .ScriptBegin = script_tests_debugger_ScriptBegin,
     .ScriptPreStep = script_tests_debugger_ScriptPreStep,
     .ScriptEOF = script_tests_debugger_ScriptEOF,
 };
+#endif
 
 void DoTest(const CScript& scriptPubKey, const CScript& scriptSig, const CScriptWitness& scriptWitness, int flags, const std::string& message, int scriptError, CAmount nValue = 0)
 {
