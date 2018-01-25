@@ -2421,6 +2421,16 @@ static void ApproximateBestSubset(const std::vector<CInputCoin>& vValue, const C
     }
 }
 
+//! Simplification of std insertion
+template <typename Tdst, typename Tsrc>
+void aps_insert(Tdst& dst, const Tsrc& src) {
+    dst.insert(dst.begin(), src.begin(), src.end());
+}
+template <typename TsetT, typename Tsrc>
+void aps_insert(std::set<TsetT>& dst, const Tsrc&& src) {
+    dst.insert(src.begin(), src.end());
+}
+
 bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMine, const int nConfTheirs, const uint64_t nMaxAncestors, std::vector<COutput> vCoins,
                                  std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet) const
 {
