@@ -106,6 +106,15 @@ Low-level RPC changes
 - The wallet RPC `getreceivedbyaddress` will return an error if called with an address not in the wallet.
 - The wallet RPC `addwitnessaddress` was deprecated and will be removed in version 0.17,
   set the `address_type` argument of `getnewaddress`, or option `-addresstype=[bech32|p2sh-segwit]` instead.
+- Wallet `getnewaddress` and `addmultisigaddress` RPC `account` named
+  parameters have been renamed to `label` with no change in behavior.
+- Wallet `getlabeladdress`, `getreceivedbylabel`, `listreceivedbylabel`, and
+  `setlabel` RPCs have been added to replace to be deprecated
+  `getaccountaddress`, `getreceivedbyaccount`, `listreceivedbyaccount`, and
+  `setaccount` RPCs with no differences in behavior.
+- Wallet `listreceivedbylabel`, `listreceivedbyaccount` and `listunspent` RPCs
+  add `label` fields to returned JSON objects that previously only had
+  `account` fields.
 
 Changed command-line options
 -----------------------------
