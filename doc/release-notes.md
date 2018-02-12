@@ -56,6 +56,18 @@ frequently tested on them.
 Notable changes
 ===============
 
+Low-level RPC changes
+=====================
+- Wallet `getnewaddress` and `addmultisigaddress` RPC `account` named
+  parameters have been renamed to `label` with no change in behavior.
+- Wallet `getlabeladdress`, `getreceivedbylabel`, `listreceivedbylabel`, and
+  `setlabel` RPCs have been added to replace to be deprecated
+  `getaccountaddress`, `getreceivedbyaccount`, `listreceivedbyaccount`, and
+  `setaccount` RPCs with no differences in behavior.
+- Wallet `listreceivedbylabel`, `listreceivedbyaccount` and `listunspent` RPCs
+  add `label` fields to returned JSON objects that previously only had
+  `account` fields.
+
 Credits
 =======
 
