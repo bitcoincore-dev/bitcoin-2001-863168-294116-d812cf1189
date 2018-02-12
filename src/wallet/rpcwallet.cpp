@@ -1575,7 +1575,7 @@ UniValue listreceivedbylabel(const JSONRPCRequest& request)
             "    \"account\" : \"accountname\",  (string) DEPRECATED. Backwards compatible alias for label.\n"
             "    \"amount\" : x.xxx,             (numeric) The total amount received by addresses with this label\n"
             "    \"confirmations\" : n,          (numeric) The number of confirmations of the most recent transaction included\n"
-            "    \"label\" : \"label\"           (string) A comment for the address/transaction, if any\n"
+            "    \"label\" : \"label\"           (string) The label of the receiving address. The default label is \"\".\n"
             "  }\n"
             "  ,...\n"
             "]\n"
