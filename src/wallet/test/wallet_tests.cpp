@@ -454,6 +454,8 @@ BOOST_FIXTURE_TEST_CASE(rescan, TestChain100Setup)
 // than or equal to key birthday.
 BOOST_FIXTURE_TEST_CASE(importwallet_rescan, TestChain100Setup)
 {
+    g_address_type = OUTPUT_TYPE_DEFAULT;
+    g_change_type = OUTPUT_TYPE_DEFAULT;
     auto chain = interface::MakeChain();
 
     // Create two blocks with same timestamp to verify that importwallet rescan
