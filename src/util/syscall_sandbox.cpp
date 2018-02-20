@@ -580,6 +580,7 @@ public:
         allowed_syscalls.insert(__NR_chdir);           // change working directory
         allowed_syscalls.insert(__NR_chmod);           // change permissions of a file
         allowed_syscalls.insert(__NR_copy_file_range); // copy a range of data from one file to another
+        allowed_syscalls.insert(__NR_fadvise64);       // predeclare an access pattern for file data
         allowed_syscalls.insert(__NR_fallocate);       // manipulate file space
         allowed_syscalls.insert(__NR_fchmod);          // change permissions of a file
         allowed_syscalls.insert(__NR_fchown);          // change ownership of a file
