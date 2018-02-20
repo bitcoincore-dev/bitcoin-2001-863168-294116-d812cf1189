@@ -51,7 +51,7 @@ void TestRpcCommand(RPCConsole* console)
 //! Entry point for BitcoinApplication tests.
 void AppTests::appTests()
 {
-#if Q_OS_MAC
+#ifdef Q_OS_MAC
     if (QApplication::platformName() == "minimal") {
         // Disable for mac on "minimal" platform to avoid crashes inside the Qt
         // framework when it tries to look up unimplmented cocoa functions, and
