@@ -4,7 +4,6 @@
 
 #include "macdockiconhandler.h"
 
-#include <QApplication>
 #include <QImageWriter>
 #include <QMenu>
 #include <QBuffer>
@@ -113,8 +112,7 @@ void MacDockIconHandler::setIcon(const QIcon &icon)
 
 MacDockIconHandler *MacDockIconHandler::instance()
 {
-    // Disable on "minimal" platform to avoid bug https://bugreports.qt.io/browse/QTBUG-49686.
-    if (!s_instance && QApplication::platformName() != "minimal")
+    if (!s_instance)
         s_instance = new MacDockIconHandler();
     return s_instance;
 }

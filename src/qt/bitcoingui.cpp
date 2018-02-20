@@ -140,9 +140,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *_platformStyle, const NetworkStyle *
     QApplication::setWindowIcon(networkStyle->getTrayAndWindowIcon());
     setWindowIcon(networkStyle->getTrayAndWindowIcon());
 #else
-    if (MacDockIconHandler *instance = MacDockIconHandler::instance()) {
-        instance->setIcon(networkStyle->getAppIcon());
-    }
+    MacDockIconHandler::instance()->setIcon(networkStyle->getAppIcon());
 #endif
     setWindowTitle(windowTitle);
 
@@ -604,10 +602,9 @@ void BitcoinGUI::createTrayIconMenu()
             this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 #else
     // Note: On Mac, the dock icon is used to provide the tray's functionality.
-    if (MacDockIconHandler *dockIconHandler = MacDockIconHandler::instance()) {
-        dockIconHandler->setMainWindow(static_cast<QMainWindow*>(this));
-        trayIconMenu = dockIconHandler->dockMenu();
-    }
+    MacDockIconHandler *dockIconHandler = MacDockIconHandler::instance();
+    dockIconHandler->setMainWindow(static_cast<QMainWindow*>(this));
+    trayIconMenu = dockIconHandler->dockMenu();
 #endif
 
     // Configuration of the tray icon (or dock icon) icon menu
