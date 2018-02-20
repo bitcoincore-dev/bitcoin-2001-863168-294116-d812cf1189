@@ -509,6 +509,22 @@ void CDBEnv::CloseDb(const std::string& strFile)
     }
 }
 
+void CDBEnv::ReloadDbEnv()
+{
+    std::vector<std::string> filenames;
+    for (auto it : mapDb) {
+        filenames.push_back(it.first);
+    }
+    // Close the individual Db's
+    for (std::string filename : filenames) {
+        CloseDb(filename);
+    }
+    // Reset the environment
+    Flush(true); // This will flush and close the environment
+    Reset();
+    Open(strPath, true);
+}
+
 bool CDB::Rewrite(CWalletDBWrapper& dbw, const char* pszSkip)
 {
     if (dbw.IsDummy()) {
@@ -731,5 +747,12 @@ void CWalletDBWrapper::Flush(bool shutdown)
 {
     if (!IsDummy()) {
         env->Flush(shutdown);
+    }
+}
+
+void CWalletDBWrapper::ReloadDbEnv()
+{
+    if(!IsDummy()) {
+        env->ReloadDbEnv();
     }
 }

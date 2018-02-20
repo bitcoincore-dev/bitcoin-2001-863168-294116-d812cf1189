@@ -74,6 +74,7 @@ public:
     void CheckpointLSN(const std::string& strFile);
 
     void CloseDb(const std::string& strFile);
+    void ReloadDbEnv();
 
     DbTxn* TxnBegin(int flags = DB_TXN_WRITE_NOSYNC)
     {
@@ -122,6 +123,8 @@ public:
     void Flush(bool shutdown);
 
     void IncrementUpdateCounter();
+
+    void ReloadDbEnv();
 
     std::atomic<unsigned int> nUpdateCounter;
     unsigned int nLastSeen;
