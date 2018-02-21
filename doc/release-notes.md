@@ -136,6 +136,14 @@ GUI changes
 RPC changes
 ------------
 
+### Revised fess for mempool-related RPCs
+
+A new `fees` field is introduced in `getrawmempool`, `getmempoolancestors`,
+`getmempooldescendants` and `getmempoolentry` when verbosity is set to `true`.
+It has sub-fields `ancestor`, `base`, `modified` and `descendent`, all
+denominated in BTC. This new field supercedes previous fee fields, such as
+`fee`, `modifiedfee`, `ancestorfee` and `descendentfee`.
+
 ### New `rescanblockchain` RPC
 
 A new RPC `rescanblockchain` has been added to manually invoke a blockchain rescan.
