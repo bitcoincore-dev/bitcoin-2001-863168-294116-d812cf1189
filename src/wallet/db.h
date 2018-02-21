@@ -39,6 +39,7 @@ public:
     std::unique_ptr<DbEnv> dbenv;
     std::map<std::string, int> mapFileUseCount;
     std::map<std::string, Db*> mapDb;
+    std::condition_variable_any m_db_in_use;
 
     CDBEnv();
     ~CDBEnv();

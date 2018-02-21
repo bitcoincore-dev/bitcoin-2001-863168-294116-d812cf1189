@@ -492,6 +492,7 @@ void CDB::Close()
     {
         LOCK(env->cs_db);
         --env->mapFileUseCount[strFile];
+        env->m_db_in_use.notify_all();
     }
 }
 
@@ -511,6 +512,16 @@ void CDBEnv::CloseDb(const std::string& strFile)
 
 void CDBEnv::ReloadDbEnv()
 {
+    // Make sure that no Db's are in use
+    AssertLockNotHeld(cs_db);
+    std::unique_lock<std::recursive_mutex> lock(cs_db);
+    m_db_in_use.wait(lock, [this](){
+        for (auto& count : mapFileUseCount) {
+            if (count.second > 0) return false;
+        }
+        return true;
+    });
+
     std::vector<std::string> filenames;
     for (auto it : mapDb) {
         filenames.push_back(it.first);
