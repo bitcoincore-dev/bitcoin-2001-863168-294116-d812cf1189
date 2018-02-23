@@ -196,6 +196,17 @@ public:
     //! Return interfaces for accessing wallets (if any).
     virtual std::vector<std::unique_ptr<Wallet>> getWallets() = 0;
 
+    //! Return interface for accessing chain. Implementation by subclasses is
+    //! not required since this is only used for testing.
+    virtual Chain& getChain() { throw std::logic_error("Node::getChain not implemented"); }
+
+    //! Add chain client. Implementation by subclasses is not required since
+    //! this is only used for testing.
+    virtual void addClient(std::unique_ptr<Chain::Client>&& client)
+    {
+        throw std::logic_error("Node::addClient not implemented");
+    }
+
     //! Register handler for init messages.
     using InitMessageFn = std::function<void(const std::string& message)>;
     virtual std::unique_ptr<Handler> handleInitMessage(InitMessageFn fn) = 0;

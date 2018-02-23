@@ -5,6 +5,7 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <init.h>
+#include <interface/chain.h>
 #include <interface/handler.h>
 #include <interface/wallet.h>
 #include <net.h>
@@ -46,6 +47,7 @@ class NodeImpl : public Node
 {
     void parseParameters(int argc, const char* const argv[]) override
     {
+        m_interfaces.chain = interface::MakeChain();
         gArgs.ParseParameters(argc, argv);
     }
     void readConfigFile(const std::string& conf_path) override { gArgs.ReadConfigFile(conf_path); }
@@ -62,11 +64,11 @@ class NodeImpl : public Node
         return AppInitBasicSetup() && AppInitParameterInteraction() && AppInitSanityChecks() &&
                AppInitLockDataDirectory();
     }
-    bool appInitMain() override { return AppInitMain(); }
+    bool appInitMain() override { return AppInitMain(m_interfaces); }
     void appShutdown() override
     {
         Interrupt();
-        Shutdown();
+        Shutdown(m_interfaces);
     }
     void startShutdown() override { StartShutdown(); }
     bool shutdownRequested() override { return ShutdownRequested(); }
@@ -231,15 +233,17 @@ class NodeImpl : public Node
     }
     std::vector<std::unique_ptr<Wallet>> getWallets() override
     {
-#ifdef ENABLE_WALLET
         std::vector<std::unique_ptr<Wallet>> wallets;
-        for (CWalletRef wallet : ::vpwallets) {
-            wallets.emplace_back(MakeWallet(*wallet));
+        for (auto& client : m_interfaces.chain_clients) {
+            auto client_wallets = client->getWallets();
+            std::move(client_wallets.begin(), client_wallets.end(), std::back_inserter(wallets));
         }
         return wallets;
-#else
-        throw std::logic_error("Node::getWallets() called in non-wallet build.");
-#endif
+    }
+    Chain& getChain() override { return *m_interfaces.chain; }
+    void addClient(std::unique_ptr<Chain::Client>&& client) override
+    {
+        m_interfaces.chain_clients.emplace_back(std::move(client));
     }
     std::unique_ptr<Handler> handleInitMessage(InitMessageFn fn) override
     {
@@ -293,6 +297,8 @@ class NodeImpl : public Node
                     GuessVerificationProgress(Params().TxData(), block));
             }));
     }
+
+    InitInterfaces m_interfaces;
 };
 
 } // namespace

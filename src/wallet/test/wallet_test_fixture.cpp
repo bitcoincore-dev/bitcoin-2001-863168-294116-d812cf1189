@@ -16,16 +16,16 @@ WalletTestingSetup::WalletTestingSetup(const std::string& chainName):
     g_address_type = OUTPUT_TYPE_DEFAULT;
     g_change_type = OUTPUT_TYPE_DEFAULT;
     std::unique_ptr<CWalletDBWrapper> dbw(new CWalletDBWrapper(&bitdb, "wallet_test.dat"));
-    pwalletMain = MakeUnique<CWallet>(std::move(dbw));
+    pwalletMain = MakeUnique<CWallet>(m_chain.get(), std::move(dbw));
     pwalletMain->LoadWallet(fFirstRun);
-    RegisterValidationInterface(pwalletMain.get());
+    pwalletMain->m_handler = m_chain->handleNotifications(*pwalletMain);
 
-    RegisterWalletRPCCommands(tableRPC);
+    m_chain_client->registerRpcs();
 }
 
 WalletTestingSetup::~WalletTestingSetup()
 {
-    UnregisterValidationInterface(pwalletMain.get());
+    pwalletMain->m_handler->disconnect();
 
     bitdb.Flush(true);
     bitdb.Reset();
