@@ -1,5 +1,7 @@
 #include <qt/test/wallettests.h>
 
+#include <interface/chain.h>
+#include <interface/node.h>
 #include <qt/bitcoinamountfield.h>
 #include <qt/callback.h>
 #include <qt/optionsmodel.h>
@@ -159,7 +161,8 @@ void TestGUI()
     }
     bitdb.MakeMock();
     std::unique_ptr<CWalletDBWrapper> dbw(new CWalletDBWrapper(&bitdb, "wallet_test.dat"));
-    CWallet wallet(std::move(dbw));
+    auto chain = interface::MakeChain();
+    CWallet wallet(chain.get(), std::move(dbw));
     bool firstRun;
     wallet.LoadWallet(firstRun);
     {
@@ -168,10 +171,10 @@ void TestGUI()
         wallet.AddKeyPubKey(test.coinbaseKey, test.coinbaseKey.GetPubKey());
     }
     {
-        LOCK(cs_main);
+        auto locked_chain = chain->lock();
         WalletRescanReserver reserver(&wallet);
         reserver.reserve();
-        wallet.ScanForWalletTransactions(chainActive.Genesis(), nullptr, reserver, true);
+        wallet.ScanForWalletTransactions(locked_chain->getBlockHash(0), {} /* stop block */, reserver, true /* update */);
     }
     wallet.SetBroadcastTransactions(true);
 
@@ -179,8 +182,12 @@ void TestGUI()
     std::unique_ptr<const PlatformStyle> platformStyle(PlatformStyle::instantiate("other"));
     SendCoinsDialog sendCoinsDialog(platformStyle.get());
     TransactionView transactionView(platformStyle.get());
-    OptionsModel optionsModel;
-    WalletModel walletModel(platformStyle.get(), &wallet, &optionsModel);
+    auto node = interface::MakeNode();
+    node->addClient(MakeWalletClient(node->getChain(), {} /* wallet filenames */));
+    OptionsModel optionsModel(*node);
+    vpwallets.insert(vpwallets.begin(), &wallet);
+    WalletModel walletModel(std::move(node->getWallets()[0]), *node, platformStyle.get(), &optionsModel);
+    vpwallets.erase(vpwallets.begin());
     sendCoinsDialog.setModel(&walletModel);
     transactionView.setModel(&walletModel);
 
@@ -205,7 +212,7 @@ void TestGUI()
     QLabel* balanceLabel = overviewPage.findChild<QLabel*>("labelBalance");
     QString balanceText = balanceLabel->text();
     int unit = walletModel.getOptionsModel()->getDisplayUnit();
-    CAmount balance = walletModel.getBalance();
+    CAmount balance = walletModel.wallet().getBalance();
     QString balanceComparison = BitcoinUnits::formatWithUnit(unit, balance, false, BitcoinUnits::separatorAlways);
     QCOMPARE(balanceText, balanceComparison);
 

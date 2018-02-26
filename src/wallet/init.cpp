@@ -13,6 +13,8 @@
 #include <wallet/wallet.h>
 #include <wallet/walletutil.h>
 
+#include <init.h>  // For InitInterfaces
+
 std::string GetWalletHelpString(bool showDebug)
 {
     std::string strUsage = HelpMessageGroup(_("Wallet options:"));
@@ -65,7 +67,6 @@ bool WalletParameterInteraction()
         return true;
     }
 
-    gArgs.SoftSetArg("-wallet", DEFAULT_WALLET_DAT);
     const bool is_multiwallet = gArgs.GetArgs("-wallet").size() > 1;
 
     if (gArgs.GetBoolArg("-blocksonly", DEFAULT_BLOCKSONLY) && gArgs.SoftSetBoolArg("-walletbroadcast", false)) {
@@ -192,15 +193,6 @@ bool WalletParameterInteraction()
     return true;
 }
 
-void RegisterWalletRPC(CRPCTable &t)
-{
-    if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
-        return;
-    }
-
-    RegisterWalletRPCCommands(t);
-}
-
 bool VerifyWallets()
 {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
@@ -272,15 +264,19 @@ bool VerifyWallets()
     return true;
 }
 
-bool OpenWallets()
+void AddWallets(InitInterfaces& interfaces)
 {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
         LogPrintf("Wallet disabled!\n");
-        return true;
+        return;
     }
+    gArgs.SoftSetArg("-wallet", DEFAULT_WALLET_DAT);
+    interfaces.chain_clients.emplace_back(interface::MakeWalletClient(*interfaces.chain, gArgs.GetArgs("-wallet")));
+}
 
-    for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
-        CWallet * const pwallet = CWallet::CreateWalletFromFile(walletFile);
+bool OpenWallets(interface::Chain& chain, interface::Chain::Client& chain_client, const std::vector<std::string>& wallet_filenames) {
+    for (const std::string& walletFile : wallet_filenames) {
+        CWallet * const pwallet = CWallet::CreateWalletFromFile(chain, walletFile);
         if (!pwallet) {
             return false;
         }

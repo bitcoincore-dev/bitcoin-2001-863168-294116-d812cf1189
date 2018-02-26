@@ -6,10 +6,13 @@
 #ifndef BITCOIN_WALLET_INIT_H
 #define BITCOIN_WALLET_INIT_H
 
+#include <interface/chain.h>
+
 #include <string>
 
 class CRPCTable;
 class CScheduler;
+struct InitInterfaces;
 
 //! Return the wallets help message.
 std::string GetWalletHelpString(bool showDebug);
@@ -17,16 +20,16 @@ std::string GetWalletHelpString(bool showDebug);
 //! Wallets parameter interaction
 bool WalletParameterInteraction();
 
-//! Register wallet RPCs.
-void RegisterWalletRPC(CRPCTable &tableRPC);
-
 //! Responsible for reading and validating the -wallet arguments and verifying the wallet database.
 //  This function will perform salvage on the wallet if requested, as long as only one wallet is
 //  being loaded (WalletParameterInteraction forbids -salvagewallet, -zapwallettxes or -upgradewallet with multiwallet).
 bool VerifyWallets();
 
+//! Add wallets that should be opened to list of init interfaces.
+void AddWallets(InitInterfaces& interfaces);
+
 //! Load wallet databases.
-bool OpenWallets();
+bool OpenWallets(interface::Chain& chain, interface::Chain::Client& chain_client, const std::vector<std::string>& wallet_filenames);
 
 //! Complete startup of wallets.
 void StartWallets(CScheduler& scheduler);
