@@ -1679,7 +1679,6 @@ UniValue scantxoutset(const JSONRPCRequest& request)
             "                                          \"status\" for progress report (in %) of the current scan\n"
             "2. \"options\"                      (object, optional)\n"
             "      \"pubkeys\":[\"pubkey\",...]    (array of strings, optional) An array of HEX encoded public keys\n"
-            "      \"addresses\":[\"address\",...] (array of strings, optional) An array of bitcoin addresses\n"
             "      \"xpubs\":                    (array of xpub objects that will be used to derive child keys with the given lookup window after m/0/k and m/1/k scheme)\n"
             "           [\n"
             "               {\n"
