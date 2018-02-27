@@ -1708,7 +1708,7 @@ UniValue scantxoutset(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 3)
         throw std::runtime_error(
-            "scantxoutset <action> <scanobjects> ( <options> )\n"
+            "scantxoutset <action> ( <scanobjects> <options> )\n"
             "\nScans the unspent transaction output set for possible entries that matches common scripts of given public keys.\n"
             "\nArguments:\n"
             "1. \"action\"                       (string, required) The action to execute\n"
@@ -1717,7 +1717,6 @@ UniValue scantxoutset(const JSONRPCRequest& request)
             "                                      \"status\" for progress report (in %) of the current scan\n"
             "2. \"scanobjects\"                  (array, optional) Array of scan objects (only one object type per scan object allowed)\n"
             "      [\n"
-            "        { \"address\" : \"<address>\" },       (string, optional) Bitcoin address\n"
             "        { \"script\"  : \"<scriptPubKey>\" },  (string, optional) HEX encoded script (scriptPubKey)\n"
             "        { \"pubkey\"  :                      (object, optional) Public key\n"
             "          {\n"
