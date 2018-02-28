@@ -71,10 +71,10 @@ const uint256 CMerkleTx::ABANDON_HASH(uint256S("00000000000000000000000000000000
 
 struct CompareValueOnly
 {
-    bool operator()(const CInputCoin& t1,
-                    const CInputCoin& t2) const
+    bool operator()(const OutputGroup& t1,
+                    const OutputGroup& t2) const
     {
-        return t1.txout.nValue < t2.txout.nValue;
+        return t1.m_value < t2.m_value;
     }
 };
 
@@ -2375,24 +2375,24 @@ const CTxOut& CWallet::FindNonChangeParentOutput(const CTransaction& tx, int out
     return ptx->vout[n];
 }
 
-static void ApproximateBestSubset(const std::vector<CInputCoin>& vValue, const CAmount& nTotalLower, const CAmount& nTargetValue,
-                                  std::vector<char>& vfBest, CAmount& nBest, int iterations = 1000)
+static void ApproximateBestSubset(const std::vector<OutputGroup>& groups, const CAmount& nTotalLower, const CAmount& nTargetValue,
+                                  std::vector<bool>& vfBest, CAmount& nBest, int iterations = 1000)
 {
-    std::vector<char> vfIncluded;
+    std::vector<bool> vfIncluded;
 
-    vfBest.assign(vValue.size(), true);
+    vfBest.assign(groups.size(), true);
     nBest = nTotalLower;
 
     FastRandomContext insecure_rand;
 
     for (int nRep = 0; nRep < iterations && nBest != nTargetValue; nRep++)
     {
-        vfIncluded.assign(vValue.size(), false);
+        vfIncluded.assign(groups.size(), false);
         CAmount nTotal = 0;
         bool fReachedTarget = false;
         for (int nPass = 0; nPass < 2 && !fReachedTarget; nPass++)
         {
-            for (unsigned int i = 0; i < vValue.size(); i++)
+            for (unsigned int i = 0; i < groups.size(); i++)
             {
                 //The solver here uses a randomized algorithm,
                 //the randomness serves no real security purpose but is just
@@ -2402,7 +2402,7 @@ static void ApproximateBestSubset(const std::vector<CInputCoin>& vValue, const C
                 //the selection random.
                 if (nPass == 0 ? insecure_rand.randbool() : !vfIncluded[i])
                 {
-                    nTotal += vValue[i].txout.nValue;
+                    nTotal += groups[i].m_value;
                     vfIncluded[i] = true;
                     if (nTotal >= nTargetValue)
                     {
@@ -2412,7 +2412,7 @@ static void ApproximateBestSubset(const std::vector<CInputCoin>& vValue, const C
                             nBest = nTotal;
                             vfBest = vfIncluded;
                         }
-                        nTotal -= vValue[i].txout.nValue;
+                        nTotal -= groups[i].m_value;
                         vfIncluded[i] = false;
                     }
                 }
@@ -2431,103 +2431,81 @@ void aps_insert(std::set<TsetT>& dst, const Tsrc&& src) {
     dst.insert(src.begin(), src.end());
 }
 
-bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMine, const int nConfTheirs, const int64_t nMaxAncestors, std::vector<COutput> vCoins,
-                                 std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet) const
+bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMine, const int nConfTheirs, const int64_t nMaxAncestors,
+                                 std::vector<OutputGroup> groups, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet) const
 {
     setCoinsRet.clear();
     nValueRet = 0;
 
     // List of values less than target
-    boost::optional<CInputCoin> coinLowestLarger;
-    std::vector<CInputCoin> vValue;
+    boost::optional<OutputGroup> lowest_larger;
+    std::vector<OutputGroup> applicable_groups;
     CAmount nTotalLower = 0;
 
-    random_shuffle(vCoins.begin(), vCoins.end(), GetRandInt);
+    random_shuffle(groups.begin(), groups.end(), GetRandInt);
 
-    for (const COutput &output : vCoins)
-    {
-        if (!output.fSpendable)
-            continue;
+    for (const OutputGroup& group : groups) {
+        if (group.m_depth < (group.m_from_me ? nConfMine : nConfTheirs)) continue;
 
-        const CWalletTx *pcoin = output.tx;
+        if (group.m_chain_limit_value >= nMaxAncestors) continue;
 
-        if (output.nDepth < (pcoin->IsFromMe(ISMINE_ALL) ? nConfMine : nConfTheirs))
-            continue;
-
-        if (!mempool.TransactionWithinChainLimit(pcoin->GetHash(), nMaxAncestors))
-            continue;
-
-        int i = output.i;
-
-        CInputCoin coin = CInputCoin(pcoin, i);
-
-        if (coin.txout.nValue == nTargetValue)
-        {
-            setCoinsRet.insert(coin);
-            nValueRet += coin.txout.nValue;
+        if (group.m_value == nTargetValue) {
+            aps_insert(setCoinsRet, group.input_coins());
+            nValueRet += group.m_value;
             return true;
-        }
-        else if (coin.txout.nValue < nTargetValue + MIN_CHANGE)
-        {
-            vValue.push_back(coin);
-            nTotalLower += coin.txout.nValue;
-        }
-        else if (!coinLowestLarger || coin.txout.nValue < coinLowestLarger->txout.nValue)
-        {
-            coinLowestLarger = coin;
+        } else if (group.m_value < nTargetValue + MIN_CHANGE) {
+            applicable_groups.push_back(group);
+            nTotalLower += group.m_value;
+        } else if (!lowest_larger || group.m_value < lowest_larger->m_value) {
+            lowest_larger = group;
         }
     }
 
-    if (nTotalLower == nTargetValue)
-    {
-        for (const auto& input : vValue)
-        {
-            setCoinsRet.insert(input);
-            nValueRet += input.txout.nValue;
+    if (nTotalLower == nTargetValue) {
+        for (const auto& group : applicable_groups) {
+            aps_insert(setCoinsRet, group.input_coins());
+            nValueRet += group.m_value;
         }
         return true;
     }
 
-    if (nTotalLower < nTargetValue)
-    {
-        if (!coinLowestLarger)
-            return false;
-        setCoinsRet.insert(coinLowestLarger.get());
-        nValueRet += coinLowestLarger->txout.nValue;
+    if (nTotalLower < nTargetValue) {
+        if (!lowest_larger) return false;
+        aps_insert(setCoinsRet, lowest_larger->input_coins());
+        nValueRet += lowest_larger->m_value;
         return true;
     }
 
     // Solve subset sum by stochastic approximation
-    std::sort(vValue.begin(), vValue.end(), CompareValueOnly());
-    std::reverse(vValue.begin(), vValue.end());
-    std::vector<char> vfBest;
+    std::sort(applicable_groups.begin(), applicable_groups.end(), CompareValueOnly());
+    std::reverse(applicable_groups.begin(), applicable_groups.end());
+    std::vector<bool> vfBest;
     CAmount nBest;
 
-    ApproximateBestSubset(vValue, nTotalLower, nTargetValue, vfBest, nBest);
-    if (nBest != nTargetValue && nTotalLower >= nTargetValue + MIN_CHANGE)
-        ApproximateBestSubset(vValue, nTotalLower, nTargetValue + MIN_CHANGE, vfBest, nBest);
+    ApproximateBestSubset(applicable_groups, nTotalLower, nTargetValue, vfBest, nBest);
+    if (nBest != nTargetValue && nTotalLower >= nTargetValue + MIN_CHANGE) {
+        ApproximateBestSubset(applicable_groups, nTotalLower, nTargetValue + MIN_CHANGE, vfBest, nBest);
+    }
 
     // If we have a bigger coin and (either the stochastic approximation didn't find a good solution,
     //                                   or the next bigger coin is closer), return the bigger coin
-    if (coinLowestLarger &&
-        ((nBest != nTargetValue && nBest < nTargetValue + MIN_CHANGE) || coinLowestLarger->txout.nValue <= nBest))
-    {
-        setCoinsRet.insert(coinLowestLarger.get());
-        nValueRet += coinLowestLarger->txout.nValue;
-    }
-    else {
-        for (unsigned int i = 0; i < vValue.size(); i++)
-            if (vfBest[i])
-            {
-                setCoinsRet.insert(vValue[i]);
-                nValueRet += vValue[i].txout.nValue;
+    if (lowest_larger &&
+        ((nBest != nTargetValue && nBest < nTargetValue + MIN_CHANGE) || lowest_larger->m_value <= nBest)) {
+        aps_insert(setCoinsRet, lowest_larger->input_coins());
+        nValueRet += lowest_larger->m_value;
+    } else {
+        for (unsigned int i = 0; i < applicable_groups.size(); i++) {
+            if (vfBest[i]) {
+                aps_insert(setCoinsRet, applicable_groups[i].input_coins());
+                nValueRet += applicable_groups[i].m_value;
             }
+        }
 
         if (LogAcceptCategory(BCLog::SELECTCOINS)) {
             LogPrint(BCLog::SELECTCOINS, "SelectCoins() best subset: ");
-            for (unsigned int i = 0; i < vValue.size(); i++) {
+            for (unsigned int i = 0; i < applicable_groups.size(); i++) {
                 if (vfBest[i]) {
-                    LogPrint(BCLog::SELECTCOINS, "%s ", FormatMoney(vValue[i].txout.nValue));
+                    LogPrint(BCLog::SELECTCOINS, "%s ", FormatMoney(applicable_groups[i].m_value));
                 }
             }
             LogPrint(BCLog::SELECTCOINS, "total %s\n", FormatMoney(nBest));
@@ -2585,17 +2563,21 @@ bool CWallet::SelectCoins(const std::vector<COutput>& vAvailableCoins, const CAm
             ++it;
     }
 
+    // form groups from remaining coins; note that preset coins will not
+    // automatically have their associated (same address) coins included
+    std::vector<OutputGroup> groups = group_outputs(vCoins, !(coinControl && coinControl->m_avoid_partial_spends));
+
     size_t nMaxChainLength = std::min(gArgs.GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT), gArgs.GetArg("-limitdescendantcount", DEFAULT_DESCENDANT_LIMIT));
     bool fRejectLongChains = gArgs.GetBoolArg("-walletrejectlongchains", DEFAULT_WALLET_REJECT_LONG_CHAINS);
 
     bool res = nTargetValue <= nValueFromPresetInputs ||
-        SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 1, 6, 0, vCoins, setCoinsRet, nValueRet) ||
-        SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 1, 1, 0, vCoins, setCoinsRet, nValueRet) ||
-        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, 2, vCoins, setCoinsRet, nValueRet)) ||
-        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, std::min((size_t)4, nMaxChainLength/3), vCoins, setCoinsRet, nValueRet)) ||
-        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, nMaxChainLength/2, vCoins, setCoinsRet, nValueRet)) ||
-        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, nMaxChainLength, vCoins, setCoinsRet, nValueRet)) ||
-        (bSpendZeroConfChange && !fRejectLongChains && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, std::numeric_limits<int64_t>::max(), vCoins, setCoinsRet, nValueRet));
+        SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 1, 6, 0, groups, setCoinsRet, nValueRet) ||
+        SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 1, 1, 0, groups, setCoinsRet, nValueRet) ||
+        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, 2, groups, setCoinsRet, nValueRet)) ||
+        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, std::min((size_t)4, nMaxChainLength/3), groups, setCoinsRet, nValueRet)) ||
+        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, nMaxChainLength/2, groups, setCoinsRet, nValueRet)) ||
+        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, nMaxChainLength, groups, setCoinsRet, nValueRet)) ||
+        (bSpendZeroConfChange && !fRejectLongChains && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, std::numeric_limits<int64_t>::max(), groups, setCoinsRet, nValueRet));
 
     // because SelectCoinsMinConf clears the setCoinsRet, we now add the possible inputs to the coinset
     setCoinsRet.insert(setPresetCoins.begin(), setPresetCoins.end());
@@ -2712,7 +2694,7 @@ OutputType CWallet::TransactionChangeType(OutputType change_type, const std::vec
     return g_address_type;
 }
 
-bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet,
+bool CWallet::_create_tx(const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet,
                                 int& nChangePosInOut, std::string& strFailReason, const CCoinControl& coin_control, bool sign)
 {
     CAmount nValue = 0;
@@ -3071,6 +3053,30 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CWalletT
               100 * feeCalc.est.fail.withinTarget / (feeCalc.est.fail.totalConfirmed + feeCalc.est.fail.inMempool + feeCalc.est.fail.leftMempool),
               feeCalc.est.fail.withinTarget, feeCalc.est.fail.totalConfirmed, feeCalc.est.fail.inMempool, feeCalc.est.fail.leftMempool);
     return true;
+}
+
+bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet,
+                                int& nChangePosInOut, std::string& strFailReason, const CCoinControl& coin_control, bool sign)
+{
+    int nChangePosIn = nChangePosInOut;
+    CWalletTx wtx2 = wtxNew;
+    bool res = _create_tx(vecSend, wtxNew, reservekey, nFeeRet, nChangePosInOut, strFailReason, coin_control, sign);
+    // try with avoidpartialspends unless it's enabled already
+    if (res && !coin_control.m_avoid_partial_spends) {
+        CCoinControl tmp_cc = coin_control;
+        tmp_cc.m_avoid_partial_spends = true;
+        CAmount nFeeRet2;
+        int nChangePosInOut2 = nChangePosIn;
+        if (_create_tx(vecSend, wtx2, reservekey, nFeeRet2, nChangePosInOut2, strFailReason, tmp_cc, sign)) {
+            // if fee of this alternative one is <= the fee of the one above, we use this one
+            if (nFeeRet2 <= nFeeRet) {
+                wtxNew = wtx2;
+                nFeeRet = nFeeRet2;
+                nChangePosInOut = nChangePosInOut2;
+            }
+        }
+    }
+    return res;
 }
 
 /**
