@@ -2469,7 +2469,10 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMin
         return true;
     }
 
-    if (nTotalLower < nTargetValue) {
+    // we prioritize the lowest larger if
+    // 1. it has multiple outputs (i.e. it is the result of address reuse)
+    // 2. it is not substantially (>2x) larger than the target value
+    if (nTotalLower < nTargetValue || (lowest_larger && lowest_larger->m_outputs.size() > 1 && lowest_larger->m_value < 2 * nTargetValue)) {
         if (!lowest_larger) return false;
         aps_insert(setCoinsRet, lowest_larger->input_coins());
         nValueRet += lowest_larger->m_value;
