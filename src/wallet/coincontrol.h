@@ -30,6 +30,8 @@ public:
     boost::optional<CFeeRate> m_feerate;
     //! Override the default confirmation target if set
     boost::optional<unsigned int> m_confirm_target;
+    //! Avoid partial use of funds sent to a given address
+    bool m_avoid_partial_spends;
     //! Signal BIP-125 replace by fee.
     bool signalRbf;
     //! Fee estimation mode to control arguments to estimateSmartFee
@@ -40,19 +42,7 @@ public:
         SetNull();
     }
 
-    void SetNull()
-    {
-        destChange = CNoDestination();
-        change_type = g_change_type;
-        fAllowOtherInputs = false;
-        fAllowWatchOnly = false;
-        setSelected.clear();
-        m_feerate.reset();
-        fOverrideFeeRate = false;
-        m_confirm_target.reset();
-        signalRbf = fWalletRbf;
-        m_fee_mode = FeeEstimateMode::UNSET;
-    }
+    void SetNull();
 
     bool HasSelected() const
     {
