@@ -2432,7 +2432,7 @@ void aps_insert(std::set<TsetT>& dst, const Tsrc&& src) {
 }
 
 bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMine, const int nConfTheirs, const int64_t nMaxAncestors, std::vector<OutputGroup> vCoins,
-                                 std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet) const
+                                 std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet, bool avoidpartialspends_policy) const
 {
     setCoinsRet.clear();
     nValueRet = 0;
@@ -2472,7 +2472,7 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMin
     // we prioritize the lowest larger if
     // 1. it has multiple outputs (i.e. it is the result of address reuse)
     // 2. it is not substantially (>2x) larger than the target value
-    if (nTotalLower < nTargetValue || (coinLowestLarger && coinLowestLarger->m_outputs.size() > 1 && coinLowestLarger->m_value < 2 * nTargetValue)) {
+    if (nTotalLower < nTargetValue || (avoidpartialspends_policy && coinLowestLarger && coinLowestLarger->m_outputs.size() > 1 && coinLowestLarger->m_value < 2 * nTargetValue)) {
         if (!coinLowestLarger)
             return false;
         aps_insert(setCoinsRet, coinLowestLarger->input_coins());
@@ -2567,21 +2567,23 @@ bool CWallet::SelectCoins(const std::vector<COutput>& vAvailableCoins, const CAm
             ++it;
     }
 
+    const bool avoidpartialspends_policy = (coinControl && coinControl->m_avoid_partial_spends);
+
     // form groups from remaining coins; note that preset coins will not
     // automatically have their associated (same address) coins included
-    std::vector<OutputGroup> groups = group_outputs(vCoins, !(coinControl && coinControl->m_avoid_partial_spends));
+    std::vector<OutputGroup> groups = group_outputs(vCoins, !avoidpartialspends_policy);
 
     size_t nMaxChainLength = std::min(gArgs.GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT), gArgs.GetArg("-limitdescendantcount", DEFAULT_DESCENDANT_LIMIT));
     bool fRejectLongChains = gArgs.GetBoolArg("-walletrejectlongchains", DEFAULT_WALLET_REJECT_LONG_CHAINS);
 
     bool res = nTargetValue <= nValueFromPresetInputs ||
-        SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 1, 6, 0, groups, setCoinsRet, nValueRet) ||
-        SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 1, 1, 0, groups, setCoinsRet, nValueRet) ||
-        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, 2, groups, setCoinsRet, nValueRet)) ||
-        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, std::min((size_t)4, nMaxChainLength/3), groups, setCoinsRet, nValueRet)) ||
-        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, nMaxChainLength/2, groups, setCoinsRet, nValueRet)) ||
-        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, nMaxChainLength, groups, setCoinsRet, nValueRet)) ||
-        (bSpendZeroConfChange && !fRejectLongChains && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, std::numeric_limits<int64_t>::max(), groups, setCoinsRet, nValueRet));
+        SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 1, 6, 0, groups, setCoinsRet, nValueRet, avoidpartialspends_policy) ||
+        SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 1, 1, 0, groups, setCoinsRet, nValueRet, avoidpartialspends_policy) ||
+        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, 2, groups, setCoinsRet, nValueRet, avoidpartialspends_policy)) ||
+        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, std::min((size_t)4, nMaxChainLength/3), groups, setCoinsRet, nValueRet, avoidpartialspends_policy)) ||
+        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, nMaxChainLength/2, groups, setCoinsRet, nValueRet, avoidpartialspends_policy)) ||
+        (bSpendZeroConfChange && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, nMaxChainLength, groups, setCoinsRet, nValueRet, avoidpartialspends_policy)) ||
+        (bSpendZeroConfChange && !fRejectLongChains && SelectCoinsMinConf(nTargetValue - nValueFromPresetInputs, 0, 1, std::numeric_limits<int64_t>::max(), groups, setCoinsRet, nValueRet, avoidpartialspends_policy));
 
     // because SelectCoinsMinConf clears the setCoinsRet, we now add the possible inputs to the coinset
     setCoinsRet.insert(setPresetCoins.begin(), setPresetCoins.end());
@@ -2698,7 +2700,7 @@ OutputType CWallet::TransactionChangeType(OutputType change_type, const std::vec
     return g_address_type;
 }
 
-bool CWallet::_create_tx(const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet,
+bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet,
                                 int& nChangePosInOut, std::string& strFailReason, const CCoinControl& coin_control, bool sign)
 {
     CAmount nValue = 0;
@@ -3057,30 +3059,6 @@ bool CWallet::_create_tx(const std::vector<CRecipient>& vecSend, CWalletTx& wtxN
               100 * feeCalc.est.fail.withinTarget / (feeCalc.est.fail.totalConfirmed + feeCalc.est.fail.inMempool + feeCalc.est.fail.leftMempool),
               feeCalc.est.fail.withinTarget, feeCalc.est.fail.totalConfirmed, feeCalc.est.fail.inMempool, feeCalc.est.fail.leftMempool);
     return true;
-}
-
-bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet,
-                                int& nChangePosInOut, std::string& strFailReason, const CCoinControl& coin_control, bool sign)
-{
-    int nChangePosIn = nChangePosInOut;
-    CWalletTx wtx2 = wtxNew;
-    bool res = _create_tx(vecSend, wtxNew, reservekey, nFeeRet, nChangePosInOut, strFailReason, coin_control, sign);
-    // try with avoidpartialspends unless it's enabled already
-    if (res && !coin_control.m_avoid_partial_spends) {
-        CCoinControl tmp_cc = coin_control;
-        tmp_cc.m_avoid_partial_spends = true;
-        CAmount nFeeRet2;
-        int nChangePosInOut2 = nChangePosIn;
-        if (_create_tx(vecSend, wtx2, reservekey, nFeeRet2, nChangePosInOut2, strFailReason, tmp_cc, sign)) {
-            // if fee of this alternative one is <= the fee of the one above, we use this one
-            if (nFeeRet2 <= nFeeRet) {
-                wtxNew = wtx2;
-                nFeeRet = nFeeRet2;
-                nChangePosInOut = nChangePosInOut2;
-            }
-        }
-    }
-    return res;
 }
 
 /**

@@ -773,9 +773,6 @@ private:
      */
     const CBlockIndex* m_last_block_processed;
 
-    bool _create_tx(const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet, int& nChangePosInOut,
-                    std::string& strFailReason, const CCoinControl& coin_control, bool sign);
-
 public:
     /*
      * Main wallet lock.
@@ -891,7 +888,7 @@ public:
      * completion the coin set and corresponding actual target value is
      * assembled
      */
-    bool SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int nConfTheirs, int64_t nMaxAncestors, std::vector<OutputGroup> groups, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet) const;
+    bool SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int nConfTheirs, int64_t nMaxAncestors, std::vector<OutputGroup> groups, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet, bool avoidpartialspends_policy = false) const;
 
     bool IsSpent(const uint256& hash, unsigned int n) const;
     std::vector<OutputGroup> group_outputs(const std::vector<COutput>& outputs, bool single_coin) const;

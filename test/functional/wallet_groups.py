@@ -65,37 +65,5 @@ class WalletGroupTest(BitcoinTestFramework):
         assert_approx(v[0], 0.2)
         assert_approx(v[1], 1.3, 0.0001)
 
-        # Test 'avoid partial if warranted, even if disabled'
-        self.sync_all()
-        self.nodes[0].generate(1)
-        # Nodes 1-2 now have confirmed UTXOs:
-        # Node #1:      Node #2:
-        # - A  1.0      - D0 1.0
-        # - B0 1.0      - D1 0.5
-        # - B1 0.5      - E0 1.0
-        # - C0 1.0      - E1 0.5
-        # - C1 0.5      - F  ~1.3
-        # - D ~0.3
-        utxos = self.nodes[1].listunspent()
-        assert_approx(self.nodes[1].getbalance(), 4.3, 0.0001)
-        assert_approx(self.nodes[2].getbalance(), 4.3, 0.0001)
-        # Sending 1.1 btc should pick one 1.0 + one more. For node #1,
-        # this could be (A / B0 / C0) + (B1 / C1 / D). We ensure that it is
-        # B0 + B1 or C0 + C1, because this avoids partial spends while not being
-        # detrimental to transaction cost
-        txid3 = self.nodes[1].sendtoaddress(self.nodes[0].getnewaddress(), 1.1)
-        tx3 = self.nodes[1].getrawtransaction(txid3, True)
-        # tx3 should have 2 inputs and 2 outputs
-        assert_equal(2, len(tx3["vin"]))
-        assert_equal(2, len(tx3["vout"]))
-        # the accumulated value should be 1.5, so the outputs should be
-        # ~0.4 and 1.1 (TODO: this COULD be A and B1/C1 or B0/C1, etc, which
-        # would be wrong; the destinations should be checked!)
-        v = [vout["value"] for vout in tx3["vout"]]
-        v.sort()
-        assert_approx(v[0], 0.4, 0.0001)
-        assert_approx(v[1], 1.1)
-        # Node 2 enforces avoidpartialspends so needs no checking here
-
 if __name__ == '__main__':
     WalletGroupTest().main ()
