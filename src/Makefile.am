@@ -107,6 +107,8 @@ BITCOIN_CORE_H = \
   init.h \
   interface/chain.h \
   interface/handler.h \
+  interface/node.h \
+  interface/wallet.h \
   key.h \
   keystore.h \
   dbwrapper.h \
@@ -358,6 +360,8 @@ libbitcoin_util_a_SOURCES = \
   compat/strnlen.cpp \
   fs.cpp \
   interface/chain.cpp \
+  interface/handler.cpp \
+  interface/node.cpp \
   random.cpp \
   rpc/protocol.cpp \
   rpc/util.cpp \
