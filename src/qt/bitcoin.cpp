@@ -473,7 +473,9 @@ void BitcoinApplication::initializeResult(bool success)
         // Log this only after AppInitMain finishes, as then logging setup is guaranteed complete
         qWarning() << "Platform customization:" << platformStyle->getName();
 #ifdef ENABLE_WALLET
+#ifdef ENABLE_BIP70
         PaymentServer::LoadRootCAs();
+#endif
         paymentServer->setOptionsModel(optionsModel);
 #endif
 
@@ -491,8 +493,10 @@ void BitcoinApplication::initializeResult(bool success)
                 fFirstWallet = false;
             }
 
+#ifdef ENABLE_BIP70
             connect(walletModel, SIGNAL(coinsSent(CWallet*,SendCoinsRecipient,QByteArray)),
                              paymentServer, SLOT(fetchPaymentACK(CWallet*,const SendCoinsRecipient&,QByteArray)));
+#endif // ENABLE_BIP70
 
             m_wallet_models.push_back(walletModel);
         }
