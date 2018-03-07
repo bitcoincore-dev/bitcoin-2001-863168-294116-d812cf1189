@@ -1,6 +1,8 @@
 #ifndef BITCOIN_INTERFACE_CHAIN_H
 #define BITCOIN_INTERFACE_CHAIN_H
 
+#include <interface/wallet.h>
+
 #include <amount.h>                 // For CAmount
 #include <optional.h>               // For Optional and nullopt
 #include <policy/feerate.h>         // For CFeeRate
@@ -241,6 +243,9 @@ public:
 
         //! Shut down client.
         virtual void shutdown() = 0;
+
+        //! Return interfaces for accessing wallets (if any).
+        virtual std::vector<std::unique_ptr<Wallet>> getWallets() { return {}; }
     };
 
     //! Register handler for RPC. Command is not copied, so reference
