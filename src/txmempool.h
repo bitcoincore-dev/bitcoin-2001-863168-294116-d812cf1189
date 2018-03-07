@@ -620,9 +620,6 @@ public:
       */
     int64_t chain_limit_value(const uint256& txid) const;
 
-    /** Returns false if the transaction is in the mempool and not within the chain limit specified. */
-    bool TransactionWithinChainLimit(const uint256& txid, size_t chainLimit) const;
-
     unsigned long size()
     {
         LOCK(cs);
