@@ -33,26 +33,26 @@ static void addCoin(const CAmount& nValue, const CWallet& wallet, std::vector<Ou
 static void CoinSelection(benchmark::State& state)
 {
     const CWallet wallet;
-    std::vector<OutputGroup> groups;
+    std::vector<OutputGroup> vCoins;
     LOCK(wallet.cs_wallet);
 
     while (state.KeepRunning()) {
         // Empty wallet.
-        for (OutputGroup& group : groups) {
+        for (OutputGroup& group : vCoins) {
             for (COutput& output : group.m_outputs) {
                 delete output.tx;
             }
         }
-        groups.clear();
+        vCoins.clear();
 
         // Add coins.
         for (int i = 0; i < 1000; i++)
-            addCoin(1000 * COIN, wallet, groups);
-        addCoin(3 * COIN, wallet, groups);
+            addCoin(1000 * COIN, wallet, vCoins);
+        addCoin(3 * COIN, wallet, vCoins);
 
         std::set<CInputCoin> setCoinsRet;
         CAmount nValueRet;
-        bool success = wallet.SelectCoinsMinConf(1003 * COIN, 1, 6, 0, groups, setCoinsRet, nValueRet);
+        bool success = wallet.SelectCoinsMinConf(1003 * COIN, 1, 6, 0, vCoins, setCoinsRet, nValueRet);
         assert(success);
         assert(nValueRet == 1003 * COIN);
         assert(setCoinsRet.size() == 2);

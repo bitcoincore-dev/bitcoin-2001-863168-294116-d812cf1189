@@ -2375,24 +2375,24 @@ const CTxOut& CWallet::FindNonChangeParentOutput(const CTransaction& tx, int out
     return ptx->vout[n];
 }
 
-static void ApproximateBestSubset(const std::vector<OutputGroup>& groups, const CAmount& nTotalLower, const CAmount& nTargetValue,
+static void ApproximateBestSubset(const std::vector<OutputGroup>& vValue, const CAmount& nTotalLower, const CAmount& nTargetValue,
                                   std::vector<bool>& vfBest, CAmount& nBest, int iterations = 1000)
 {
     std::vector<bool> vfIncluded;
 
-    vfBest.assign(groups.size(), true);
+    vfBest.assign(vValue.size(), true);
     nBest = nTotalLower;
 
     FastRandomContext insecure_rand;
 
     for (int nRep = 0; nRep < iterations && nBest != nTargetValue; nRep++)
     {
-        vfIncluded.assign(groups.size(), false);
+        vfIncluded.assign(vValue.size(), false);
         CAmount nTotal = 0;
         bool fReachedTarget = false;
         for (int nPass = 0; nPass < 2 && !fReachedTarget; nPass++)
         {
-            for (unsigned int i = 0; i < groups.size(); i++)
+            for (unsigned int i = 0; i < vValue.size(); i++)
             {
                 //The solver here uses a randomized algorithm,
                 //the randomness serves no real security purpose but is just
@@ -2402,7 +2402,7 @@ static void ApproximateBestSubset(const std::vector<OutputGroup>& groups, const 
                 //the selection random.
                 if (nPass == 0 ? insecure_rand.randbool() : !vfIncluded[i])
                 {
-                    nTotal += groups[i].m_value;
+                    nTotal += vValue[i].m_value;
                     vfIncluded[i] = true;
                     if (nTotal >= nTargetValue)
                     {
@@ -2412,7 +2412,7 @@ static void ApproximateBestSubset(const std::vector<OutputGroup>& groups, const 
                             nBest = nTotal;
                             vfBest = vfIncluded;
                         }
-                        nTotal -= groups[i].m_value;
+                        nTotal -= vValue[i].m_value;
                         vfIncluded[i] = false;
                     }
                 }
@@ -2431,20 +2431,20 @@ void aps_insert(std::set<TsetT>& dst, const Tsrc&& src) {
     dst.insert(src.begin(), src.end());
 }
 
-bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMine, const int nConfTheirs, const int64_t nMaxAncestors,
-                                 std::vector<OutputGroup> groups, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet) const
+bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMine, const int nConfTheirs, const int64_t nMaxAncestors, std::vector<OutputGroup> vCoins,
+                                 std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet) const
 {
     setCoinsRet.clear();
     nValueRet = 0;
 
     // List of values less than target
-    boost::optional<OutputGroup> lowest_larger;
-    std::vector<OutputGroup> applicable_groups;
+    boost::optional<OutputGroup> coinLowestLarger;
+    std::vector<OutputGroup> vValue;
     CAmount nTotalLower = 0;
 
-    random_shuffle(groups.begin(), groups.end(), GetRandInt);
+    random_shuffle(vCoins.begin(), vCoins.end(), GetRandInt);
 
-    for (const OutputGroup& group : groups) {
+    for (const OutputGroup& group : vCoins) {
         if (group.m_depth < (group.m_from_me ? nConfMine : nConfTheirs)) continue;
 
         if (group.m_chain_limit_value >= nMaxAncestors) continue;
@@ -2454,15 +2454,15 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMin
             nValueRet += group.m_value;
             return true;
         } else if (group.m_value < nTargetValue + MIN_CHANGE) {
-            applicable_groups.push_back(group);
+            vValue.push_back(group);
             nTotalLower += group.m_value;
-        } else if (!lowest_larger || group.m_value < lowest_larger->m_value) {
-            lowest_larger = group;
+        } else if (!coinLowestLarger || group.m_value < coinLowestLarger->m_value) {
+            coinLowestLarger = group;
         }
     }
 
     if (nTotalLower == nTargetValue) {
-        for (const auto& group : applicable_groups) {
+        for (const auto& group : vValue) {
             aps_insert(setCoinsRet, group.input_coins());
             nValueRet += group.m_value;
         }
@@ -2472,43 +2472,44 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, const int nConfMin
     // we prioritize the lowest larger if
     // 1. it has multiple outputs (i.e. it is the result of address reuse)
     // 2. it is not substantially (>2x) larger than the target value
-    if (nTotalLower < nTargetValue || (lowest_larger && lowest_larger->m_outputs.size() > 1 && lowest_larger->m_value < 2 * nTargetValue)) {
-        if (!lowest_larger) return false;
-        aps_insert(setCoinsRet, lowest_larger->input_coins());
-        nValueRet += lowest_larger->m_value;
+    if (nTotalLower < nTargetValue || (coinLowestLarger && coinLowestLarger->m_outputs.size() > 1 && coinLowestLarger->m_value < 2 * nTargetValue)) {
+        if (!coinLowestLarger)
+            return false;
+        aps_insert(setCoinsRet, coinLowestLarger->input_coins());
+        nValueRet += coinLowestLarger->m_value;
         return true;
     }
 
     // Solve subset sum by stochastic approximation
-    std::sort(applicable_groups.begin(), applicable_groups.end(), CompareValueOnly());
-    std::reverse(applicable_groups.begin(), applicable_groups.end());
+    std::sort(vValue.begin(), vValue.end(), CompareValueOnly());
+    std::reverse(vValue.begin(), vValue.end());
     std::vector<bool> vfBest;
     CAmount nBest;
 
-    ApproximateBestSubset(applicable_groups, nTotalLower, nTargetValue, vfBest, nBest);
+    ApproximateBestSubset(vValue, nTotalLower, nTargetValue, vfBest, nBest);
     if (nBest != nTargetValue && nTotalLower >= nTargetValue + MIN_CHANGE) {
-        ApproximateBestSubset(applicable_groups, nTotalLower, nTargetValue + MIN_CHANGE, vfBest, nBest);
+        ApproximateBestSubset(vValue, nTotalLower, nTargetValue + MIN_CHANGE, vfBest, nBest);
     }
 
     // If we have a bigger coin and (either the stochastic approximation didn't find a good solution,
     //                                   or the next bigger coin is closer), return the bigger coin
-    if (lowest_larger &&
-        ((nBest != nTargetValue && nBest < nTargetValue + MIN_CHANGE) || lowest_larger->m_value <= nBest)) {
-        aps_insert(setCoinsRet, lowest_larger->input_coins());
-        nValueRet += lowest_larger->m_value;
+    if (coinLowestLarger &&
+        ((nBest != nTargetValue && nBest < nTargetValue + MIN_CHANGE) || coinLowestLarger->m_value <= nBest)) {
+        aps_insert(setCoinsRet, coinLowestLarger->input_coins());
+        nValueRet += coinLowestLarger->m_value;
     } else {
-        for (unsigned int i = 0; i < applicable_groups.size(); i++) {
+        for (unsigned int i = 0; i < vValue.size(); i++) {
             if (vfBest[i]) {
-                aps_insert(setCoinsRet, applicable_groups[i].input_coins());
-                nValueRet += applicable_groups[i].m_value;
+                aps_insert(setCoinsRet, vValue[i].input_coins());
+                nValueRet += vValue[i].m_value;
             }
         }
 
         if (LogAcceptCategory(BCLog::SELECTCOINS)) {
             LogPrint(BCLog::SELECTCOINS, "SelectCoins() best subset: ");
-            for (unsigned int i = 0; i < applicable_groups.size(); i++) {
+            for (unsigned int i = 0; i < vValue.size(); i++) {
                 if (vfBest[i]) {
-                    LogPrint(BCLog::SELECTCOINS, "%s ", FormatMoney(applicable_groups[i].m_value));
+                    LogPrint(BCLog::SELECTCOINS, "%s ", FormatMoney(vValue[i].m_value));
                 }
             }
             LogPrint(BCLog::SELECTCOINS, "total %s\n", FormatMoney(nBest));
