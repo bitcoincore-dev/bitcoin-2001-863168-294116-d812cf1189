@@ -8,6 +8,7 @@
 #include <policy/feerate.h>
 #include <policy/fees.h>
 #include <primitives/transaction.h>
+#include <util.h>
 #include <wallet/wallet.h>
 
 #include <boost/optional.hpp>
@@ -42,7 +43,20 @@ public:
         SetNull();
     }
 
-    void SetNull();
+    void SetNull()
+    {
+        destChange = CNoDestination();
+        change_type = g_change_type;
+        fAllowOtherInputs = false;
+        fAllowWatchOnly = false;
+        m_avoid_partial_spends = gArgs.GetBoolArg("-avoidpartialspends", DEFAULT_AVOIDPARTIALSPENDS);
+        setSelected.clear();
+        m_feerate.reset();
+        fOverrideFeeRate = false;
+        m_confirm_target.reset();
+        signalRbf = fWalletRbf;
+        m_fee_mode = FeeEstimateMode::UNSET;
+    }
 
     bool HasSelected() const
     {
