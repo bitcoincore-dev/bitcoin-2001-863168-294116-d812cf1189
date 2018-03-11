@@ -20,6 +20,7 @@ extern RecursiveMutex cs_main;
 class CBlock;
 class CBlockIndex;
 class CChainState;
+class ChainstateManager;
 class CTxMemPool;
 class UniValue;
 namespace node {
@@ -46,7 +47,7 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* tip, const CBlockIn
 UniValue MempoolInfoToJSON(const CTxMemPool& pool);
 
 /** Mempool to JSON */
-UniValue MempoolToJSON(const CTxMemPool& pool, bool verbose = false, bool include_mempool_sequence = false);
+UniValue MempoolToJSON(ChainstateManager& chainman, const CTxMemPool& pool, bool verbose = false, bool include_mempool_sequence = false);
 
 /** Block header to JSON */
 UniValue blockheaderToJSON(const CBlockIndex* tip, const CBlockIndex* blockindex) LOCKS_EXCLUDED(cs_main);
