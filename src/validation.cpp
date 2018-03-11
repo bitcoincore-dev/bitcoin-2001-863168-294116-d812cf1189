@@ -690,7 +690,8 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
 
     // nModifiedFees includes any fee deltas from PrioritiseTransaction
     nModifiedFees = nFees;
-    m_pool.ApplyDelta(hash, nModifiedFees);
+    double nPriorityDummy = 0;
+    m_pool.ApplyDeltas(hash, nPriorityDummy, nModifiedFees);
 
     CAmount inChainInputValue;
     // Since entries arrive *after* the tip's height, their priority is for the height+1
@@ -5073,7 +5074,7 @@ bool DumpMempool(const CTxMemPool& pool)
     {
         LOCK(pool.cs);
         for (const auto &i : pool.mapDeltas) {
-            mapDeltas[i.first] = std::make_pair(0.0, i.second);
+            mapDeltas[i.first] = std::make_pair(0.0, i.second.second);
         }
         vinfo = pool.infoAll();
     }
