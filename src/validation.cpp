@@ -4580,14 +4580,8 @@ bool LoadMempool(void)
         if (it != mapData.end()) {
             try {
                 CDataStream ss(it->second, SER_DISK, CLIENT_VERSION);
-                std::map<uint256, std::pair<double, CAmount>> mapDeltas;
-                ss >> mapDeltas;
                 LOCK(mempool.cs);
-                for (const auto& it : mapDeltas) {
-                    const uint256& txid = it.first;
-                    const CAmount& amountdelta = it.second.second;
-                    mempool.PrioritiseTransaction(txid, 0., amountdelta);
-                }
+                ss >> mempool.mapDeltas;
             } catch (const std::exception& e) {
                 LogPrintf("Failed to deserialize mempool %s from disk: %s. Continuing anyway.\n", "deltas", e.what());
             }
@@ -4672,9 +4666,7 @@ bool DumpMempool(void)
 
     {
         LOCK(mempool.cs);
-        for (const auto &i : mempool.mapDeltas) {
-            mapDeltas[i.first] = std::make_pair(0.0, i.second.second);
-        }
+        mapDeltas = mempool.mapDeltas;
         vinfo = mempool.infoAll();
     }
 
