@@ -4,6 +4,7 @@
 
 #include <bench/bench.h>
 #include <rpc/blockchain.h>
+#include <test/util/setup_common.h>
 #include <txmempool.h>
 
 #include <univalue.h>
@@ -17,6 +18,14 @@ static void AddTx(const CTransactionRef& tx, const CAmount& fee, CTxMemPool& poo
 
 static void RpcMempool(benchmark::Bench& bench)
 {
+    TestingSetup test_setup{
+        CBaseChainParams::REGTEST,
+        /* extra_args */ {
+            "-nodebuglogfile",
+            "-nodebug",
+        },
+    };
+
     CTxMemPool pool;
     LOCK2(cs_main, pool.cs);
 
