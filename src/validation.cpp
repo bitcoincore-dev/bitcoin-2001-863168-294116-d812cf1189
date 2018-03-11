@@ -20,6 +20,7 @@
 #include <index/txindex.h>
 #include <logging.h>
 #include <logging/timer.h>
+#include <policy/coin_age_priority.h>
 #include <policy/fees.h>
 #include <policy/policy.h>
 #include <policy/settings.h>
@@ -678,6 +679,10 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
     nModifiedFees = nFees;
     m_pool.ApplyDelta(hash, nModifiedFees);
 
+    CAmount inChainInputValue;
+    // Since entries arrive *after* the tip's height, their priority is for the height+1
+    double dPriority = GetPriority(tx, m_view, ::ChainActive().Height() + 1, inChainInputValue);
+
     // Keep track of transactions that spend a coinbase, which we re-scan
     // during reorgs to ensure COINBASE_MATURITY is still met.
     bool fSpendsCoinbase = false;
@@ -689,8 +694,8 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
         }
     }
 
-    entry.reset(new CTxMemPoolEntry(ptx, nFees, nAcceptTime, ::ChainActive().Height(),
-            fSpendsCoinbase, nSigOpsCost, lp));
+    entry.reset(new CTxMemPoolEntry(ptx, nFees, nAcceptTime, dPriority, ::ChainActive().Height(),
+            inChainInputValue, fSpendsCoinbase, nSigOpsCost, lp));
     unsigned int nSize = entry->GetTxSize();
 
     if (nSigOpsCost > MAX_STANDARD_TX_SIGOPS_COST)
@@ -2476,6 +2481,7 @@ bool CChainState::DisconnectTip(BlockValidationState& state, const CChainParams&
     if (disconnectpool) {
         // Save transactions to re-add to mempool at end of reorg
         for (auto it = block.vtx.rbegin(); it != block.vtx.rend(); ++it) {
+            mempool.UpdateDependentPriorities(*(*it), pindexDelete->nHeight, false);
             disconnectpool->addTransaction(*it);
         }
         while (disconnectpool->DynamicMemoryUsage() > MAX_DISCONNECTED_TX_POOL_SIZE * 1000) {
