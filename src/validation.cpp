@@ -808,7 +808,8 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
 
     // ws.m_modified_fees includes any fee deltas from PrioritiseTransaction
     ws.m_modified_fees = ws.m_base_fees;
-    m_pool.ApplyDelta(hash, ws.m_modified_fees);
+    double nPriorityDummy{0};
+    m_pool.ApplyDeltas(hash, nPriorityDummy, ws.m_modified_fees);
 
     CAmount inChainInputValue;
     // Since entries arrive *after* the tip's height, their priority is for the height+1
@@ -4618,7 +4619,9 @@ bool DumpMempool(const CTxMemPool& pool, FopenFn mockable_fopen_function, bool s
     {
         LOCK(pool.cs);
         for (const auto &i : pool.mapDeltas) {
-            mapDeltas[i.first] = i.second;
+            if (i.second.second) {  // fee delta
+                mapDeltas[i.first] = i.second.second;
+            }
         }
         vinfo = pool.infoAll();
         unbroadcast_txids = pool.GetUnbroadcastTxs();
