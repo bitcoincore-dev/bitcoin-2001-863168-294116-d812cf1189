@@ -10,6 +10,7 @@
 #include <consensus/consensus.h>
 #include <consensus/tx_verify.h>
 #include <consensus/validation.h>
+#include <policy/coin_age_priority.h>
 #include <policy/fees.h>
 #include <policy/policy.h>
 #include <policy/settings.h>
@@ -82,22 +83,33 @@ bool TestLockPointValidity(CChain& active_chain, const LockPoints& lp)
 }
 
 CTxMemPoolEntry::CTxMemPoolEntry(const CTransactionRef& tx, CAmount fee,
-                                 int64_t time, unsigned int entry_height,
+                                 int64_t time, double entry_priority, unsigned int entry_height,
+                                 CAmount in_chain_input_value,
                                  bool spends_coinbase, int64_t sigops_cost, LockPoints lp)
     : tx{tx},
       nFee{fee},
       nTxWeight(GetTransactionWeight(*tx)),
       nUsageSize{RecursiveDynamicUsage(tx)},
       nTime{time},
+      entryPriority{entry_priority},
       entryHeight{entry_height},
+      cachedPriority{entry_priority},
+      // Since entries arrive *after* the tip's height, their entry priority is for the height+1
+      cachedHeight{entry_height + 1},
+      inChainInputValue{in_chain_input_value},
       spendsCoinbase{spends_coinbase},
       sigOpCost{sigops_cost},
+      nModSize{CalculateModifiedSize(*tx, GetTxSize())},
       lockPoints{lp},
       nSizeWithDescendants{GetTxSize()},
       nModFeesWithDescendants{nFee},
       nSizeWithAncestors{GetTxSize()},
       nModFeesWithAncestors{nFee},
-      nSigOpCostWithAncestors{sigOpCost} {}
+      nSigOpCostWithAncestors{sigOpCost}
+{
+    CAmount nValueIn = tx->GetValueOut() + nFee;
+    assert(inChainInputValue <= nValueIn);
+}
 
 void CTxMemPoolEntry::UpdateFeeDelta(int64_t newFeeDelta)
 {
@@ -689,6 +701,7 @@ void CTxMemPool::removeForBlock(const std::vector<CTransactionRef>& vtx, unsigne
     if (minerPolicyEstimator) {minerPolicyEstimator->processBlock(nBlockHeight, entries);}
     for (const auto& tx : vtx)
     {
+        UpdateDependentPriorities(*tx, nBlockHeight, true);
         txiter it = mapTx.find(tx->GetHash());
         if (it != mapTx.end()) {
             setEntries stage;
@@ -740,6 +753,13 @@ void CTxMemPool::check(const CCoinsViewCache& active_coins_tip, int64_t spendhei
 
     for (const auto& it : GetSortedDepthAndScore()) {
         checkTotal += it->GetTxSize();
+        CAmount dummyValue;
+        double freshPriority = GetPriority(it->GetTx(), active_coins_tip, spendheight, dummyValue);
+        double cachePriority = it->GetPriority(spendheight);
+        double priDiff = cachePriority > freshPriority ? cachePriority - freshPriority : freshPriority - cachePriority;
+        // Verify that the difference between the on the fly calculation and a fresh calculation
+        // is small enough to be a result of double imprecision.
+        assert(priDiff < .0001 * freshPriority + 1);
         check_total_fee += it->GetFee();
         innerUsage += it->DynamicMemoryUsage();
         const CTransaction& tx = it->GetTx();
