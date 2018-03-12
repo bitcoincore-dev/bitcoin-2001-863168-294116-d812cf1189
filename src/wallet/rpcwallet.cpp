@@ -17,6 +17,7 @@
 #include <rpc/util.h>
 #include <script/descriptor.h>
 #include <script/sign.h>
+#include <txmempool.h>
 #include <util/bip32.h>
 #include <util/fees.h>
 #include <util/message.h> // For MessageSign()
@@ -2843,6 +2844,9 @@ static UniValue listunspent(const JSONRPCRequest& request)
                             {RPCResult::Type::STR, "scriptPubKey", "the script key"},
                             {RPCResult::Type::STR_AMOUNT, "amount", "the transaction output amount in " + CURRENCY_UNIT},
                             {RPCResult::Type::NUM, "confirmations", "The number of confirmations"},
+                            {RPCResult::Type::NUM, "ancestorcount", "If transaction is in the mempool, the number of in-mempool ancestor transactions (including this one)"},
+                            {RPCResult::Type::NUM, "ancestorsize", "If transaction is in the mempool, the virtual transaction size of in-mempool ancestors (including this one)"},
+                            {RPCResult::Type::STR_AMOUNT, "ancestorfees", "If transaction is in the mempool, total fees of in-mempool ancestors (including this one) with fee deltas used for mining priority"},
                             {RPCResult::Type::STR_HEX, "redeemScript", "The redeemScript if scriptPubKey is P2SH"},
                             {RPCResult::Type::STR, "witnessScript", "witnessScript if the scriptPubKey is P2WSH or P2SH-P2WSH"},
                             {RPCResult::Type::BOOL, "spendable", "Whether we have the private keys to spend this output"},
@@ -2997,6 +3001,16 @@ static UniValue listunspent(const JSONRPCRequest& request)
         entry.pushKV("scriptPubKey", HexStr(scriptPubKey.begin(), scriptPubKey.end()));
         entry.pushKV("amount", ValueFromAmount(out.tx->tx->vout[out.i].nValue));
         entry.pushKV("confirmations", out.nDepth);
+        if (!out.nDepth) {
+            size_t ancestor_count, descendant_count, ancestor_size;
+            CAmount ancestor_fees;
+            pwallet->chain().getTransactionAncestry(out.tx->GetHash(), ancestor_count, descendant_count, &ancestor_size, &ancestor_fees);
+            if (ancestor_count) {
+                entry.pushKV("ancestorcount", (uint64_t)ancestor_count);
+                entry.pushKV("ancestorsize", (uint64_t)ancestor_size);
+                entry.pushKV("ancestorfees", (uint64_t)ancestor_fees);
+            }
+        }
         entry.pushKV("spendable", out.fSpendable);
         entry.pushKV("solvable", out.fSolvable);
         if (out.fSolvable) {
