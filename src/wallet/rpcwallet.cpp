@@ -2846,7 +2846,7 @@ static UniValue listunspent(const JSONRPCRequest& request)
                             {RPCResult::Type::NUM, "confirmations", "The number of confirmations"},
                             {RPCResult::Type::NUM, "ancestorcount", "If transaction is in the mempool, the number of in-mempool ancestor transactions (including this one)"},
                             {RPCResult::Type::NUM, "ancestorsize", "If transaction is in the mempool, the virtual transaction size of in-mempool ancestors (including this one)"},
-                            {RPCResult::Type::STR_AMOUNT, "ancestorfees", "If transaction is in the mempool, total fees of in-mempool ancestors (including this one) with fee deltas used for mining priority"},
+                            {RPCResult::Type::STR_AMOUNT, "ancestorfees", "If transaction is in the mempool, the total fees of in-mempool ancestors (including this one) with fee deltas used for mining priority"},
                             {RPCResult::Type::STR_HEX, "redeemScript", "The redeemScript if scriptPubKey is P2SH"},
                             {RPCResult::Type::STR, "witnessScript", "witnessScript if the scriptPubKey is P2WSH or P2SH-P2WSH"},
                             {RPCResult::Type::BOOL, "spendable", "Whether we have the private keys to spend this output"},
