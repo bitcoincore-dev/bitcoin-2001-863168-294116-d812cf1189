@@ -54,6 +54,10 @@ bool IsDust(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
     return (txout.nValue < GetDustThreshold(txout, dustRelayFeeIn));
 }
 
+/**
+ * Note this must assign whichType even if returning false, in case
+ * IsStandardTx ignores the "scriptpubkey" rejection.
+ */
 bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool witnessEnabled)
 {
     std::vector<std::vector<unsigned char> > vSolutions;
@@ -79,11 +83,29 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool w
     return whichType != TX_NONSTANDARD && whichType != TX_WITNESS_UNKNOWN;
 }
 
-bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnessEnabled)
+namespace {
+    inline bool MaybeReject_(std::string& out_reason, const std::string& reason, const std::string& reason_prefix, const ignore_rejects_type& ignore_rejects) {
+        if (ignore_rejects.count(reason_prefix + reason)) {
+            return false;
+        }
+
+        out_reason = reason_prefix + reason;
+        return true;
+    }
+}
+
+#define MaybeReject(reason)  do {  \
+    if (MaybeReject_(out_reason, reason, reason_prefix, ignore_rejects)) {  \
+        return false;  \
+    }  \
+} while(0)
+
+bool IsStandardTx(const CTransaction& tx, std::string& out_reason, const bool witnessEnabled, const ignore_rejects_type& ignore_rejects)
 {
+    const std::string reason_prefix;
+
     if (tx.nVersion > CTransaction::MAX_STANDARD_VERSION || tx.nVersion < 1) {
-        reason = "version";
-        return false;
+        MaybeReject("version");
     }
 
     // Extremely large transactions with lots of inputs can cost the network
@@ -92,8 +114,7 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
     // to MAX_STANDARD_TX_WEIGHT mitigates CPU exhaustion attacks.
     unsigned int sz = GetTransactionWeight(tx);
     if (sz >= MAX_STANDARD_TX_WEIGHT) {
-        reason = "tx-size";
-        return false;
+        MaybeReject("tx-size");
     }
 
     for (const CTxIn& txin : tx.vin)
@@ -106,12 +127,10 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
         // CHECKMULTISIG scriptPubKey, though such a scriptPubKey is not
         // considered standard.
         if (txin.scriptSig.size() > 1650) {
-            reason = "scriptsig-size";
-            return false;
+            MaybeReject("scriptsig-size");
         }
         if (!txin.scriptSig.IsPushOnly()) {
-            reason = "scriptsig-not-pushonly";
-            return false;
+            MaybeReject("scriptsig-not-pushonly");
         }
     }
 
@@ -119,28 +138,26 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
     txnouttype whichType;
     for (const CTxOut& txout : tx.vout) {
         if (!::IsStandard(txout.scriptPubKey, whichType, witnessEnabled)) {
-            reason = "scriptpubkey";
             if (whichType == TX_WITNESS_UNKNOWN) {
-                reason += "-unknown-witnessversion";
+                MaybeReject("scriptpubkey-unknown-witnessversion");
+            } else {
+                MaybeReject("scriptpubkey");
             }
-            return false;
         }
 
         if (whichType == TX_NULL_DATA)
             nDataOut++;
         else if ((whichType == TX_MULTISIG) && (!fIsBareMultisigStd)) {
-            reason = "bare-multisig";
-            return false;
-        } else if (IsDust(txout, ::dustRelayFee)) {
-            reason = "dust";
-            return false;
+            MaybeReject("bare-multisig");
+        }
+        if (IsDust(txout, ::dustRelayFee)) {
+            MaybeReject("dust");
         }
     }
 
     // only one OP_RETURN txout is permitted
     if (nDataOut > 1) {
-        reason = "multi-op-return";
-        return false;
+        MaybeReject("multi-op-return");
     }
 
     return true;
