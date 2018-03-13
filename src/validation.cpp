@@ -469,7 +469,7 @@ public:
     struct ATMPArgs {
         const CChainParams& m_chainparams;
         const int64_t m_accept_time;
-        const bool m_bypass_limits;
+        const ignore_rejects_type& m_ignore_rejects;
         /*
          * Return any outpoints which were not previously present in the coins
          * cache, but were added as a result of validating the tx for mempool
@@ -491,11 +491,11 @@ public:
 
         /** Parameters for single transaction mempool validation. */
         static ATMPArgs SingleAccept(const CChainParams& chainparams, int64_t accept_time,
-                                     bool bypass_limits, std::vector<COutPoint>& coins_to_uncache,
+                                     const ignore_rejects_type& ignore_rejects, std::vector<COutPoint>& coins_to_uncache,
                                      bool test_accept) {
             return ATMPArgs{/* m_chainparams */ chainparams,
                             /* m_accept_time */ accept_time,
-                            /* m_bypass_limits */ bypass_limits,
+                            /* m_ignore_rejects */ ignore_rejects,
                             /* m_coins_to_uncache */ coins_to_uncache,
                             /* m_test_accept */ test_accept,
                             /* m_allow_bip125_replacement */ true,
@@ -508,7 +508,7 @@ public:
                                           std::vector<COutPoint>& coins_to_uncache) {
             return ATMPArgs{/* m_chainparams */ chainparams,
                             /* m_accept_time */ accept_time,
-                            /* m_bypass_limits */ false,
+                            empty_ignore_rejects,
                             /* m_coins_to_uncache */ coins_to_uncache,
                             /* m_test_accept */ true,
                             /* m_allow_bip125_replacement */ false,
@@ -521,7 +521,7 @@ public:
                                                 std::vector<COutPoint>& coins_to_uncache) {
             return ATMPArgs{/* m_chainparams */ chainparams,
                             /* m_accept_time */ accept_time,
-                            /* m_bypass_limits */ false,
+                            empty_ignore_rejects,
                             /* m_coins_to_uncache */ coins_to_uncache,
                             /* m_test_accept */ false,
                             /* m_allow_bip125_replacement */ false,
@@ -630,16 +630,16 @@ private:
          EXCLUSIVE_LOCKS_REQUIRED(cs_main, m_pool.cs);
 
     // Compare a package's feerate against minimum allowed.
-    bool CheckFeeRate(size_t package_size, CAmount package_fee, TxValidationState& state) EXCLUSIVE_LOCKS_REQUIRED(::cs_main, m_pool.cs)
+    bool CheckFeeRate(size_t package_size, CAmount package_fee, TxValidationState& state, const ignore_rejects_type& ignore_rejects) EXCLUSIVE_LOCKS_REQUIRED(::cs_main, m_pool.cs)
     {
         AssertLockHeld(::cs_main);
         AssertLockHeld(m_pool.cs);
         CAmount mempoolRejectFee = m_pool.GetMinFee(gArgs.GetIntArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000).GetFee(package_size);
-        if (mempoolRejectFee > 0 && package_fee < mempoolRejectFee) {
+        if (mempoolRejectFee > 0 && package_fee < mempoolRejectFee && !ignore_rejects.count(rejectmsg_lowfee_mempool)) {
             return state.Invalid(TxValidationResult::TX_MEMPOOL_POLICY, "mempool min fee not met", strprintf("%d < %d", package_fee, mempoolRejectFee));
         }
 
-        if (package_fee < ::minRelayTxFee.GetFee(package_size)) {
+        if (package_fee < ::minRelayTxFee.GetFee(package_size) && !ignore_rejects.count(rejectmsg_lowfee_relay)) {
             return state.Invalid(TxValidationResult::TX_MEMPOOL_POLICY, "min relay fee not met", strprintf("%d < %d", package_fee, ::minRelayTxFee.GetFee(package_size)));
         }
         return true;
@@ -675,7 +675,6 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
 
     // Copy/alias what we need out of args
     const int64_t nAcceptTime = args.m_accept_time;
-    const bool bypass_limits = args.m_bypass_limits;
     std::vector<COutPoint>& coins_to_uncache = args.m_coins_to_uncache;
 
     // Alias what we need out of ws
@@ -830,7 +829,7 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
 
     // No transactions are allowed below minRelayTxFee except from disconnected
     // blocks
-    if (!bypass_limits && !CheckFeeRate(ws.m_vsize, ws.m_modified_fees, state)) return false;
+    if (!CheckFeeRate(ws.m_vsize, ws.m_modified_fees, state, args.m_ignore_rejects)) return false;
 
     ws.m_iters_conflicting = m_pool.GetIterSet(ws.m_conflicts);
     // Calculate in-mempool ancestors, up to a limit.
@@ -1039,7 +1038,6 @@ bool MemPoolAccept::Finalize(const ATMPArgs& args, Workspace& ws)
     const CTransaction& tx = *ws.m_ptx;
     const uint256& hash = ws.m_hash;
     TxValidationState& state = ws.m_state;
-    const bool bypass_limits = args.m_bypass_limits;
 
     std::unique_ptr<CTxMemPoolEntry>& entry = ws.m_entry;
 
@@ -1061,7 +1059,7 @@ bool MemPoolAccept::Finalize(const ATMPArgs& args, Workspace& ws)
     // - the transaction is not dependent on any other transactions in the mempool
     // - it's not part of a package. Since package relay is not currently supported, this
     // transaction has not necessarily been accepted to miners' mempools.
-    bool validForFeeEstimation = !bypass_limits && !args.m_package_submission && IsCurrentForFeeEstimation(m_active_chainstate) && m_pool.HasNoInputsOf(tx);
+    bool validForFeeEstimation = args.m_ignore_rejects.empty() && !args.m_package_submission && IsCurrentForFeeEstimation(m_active_chainstate) && m_pool.HasNoInputsOf(tx);
 
     // Store transaction in memory
     m_pool.addUnchecked(*entry, ws.m_ancestors, validForFeeEstimation);
@@ -1070,7 +1068,7 @@ bool MemPoolAccept::Finalize(const ATMPArgs& args, Workspace& ws)
     // If we are validating a package, don't trim here because we could evict a previous transaction
     // in the package. LimitMempoolSize() should be called at the very end to make sure the mempool
     // is still within limits and package submission happens atomically.
-    if (!args.m_package_submission && !bypass_limits) {
+    if (!args.m_package_submission && !args.m_ignore_rejects.count(rejectmsg_mempoolfull)) {
         LimitMempoolSize(m_pool, m_active_chainstate.CoinsTip(), gArgs.GetIntArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000, std::chrono::hours{gArgs.GetIntArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY)});
         if (!m_pool.exists(GenTxid::Txid(hash)))
             return state.Invalid(TxValidationResult::TX_MEMPOOL_POLICY, "mempool full");
@@ -1356,7 +1354,7 @@ PackageMempoolAcceptResult MemPoolAccept::AcceptPackage(const Package& package, 
 } // anon namespace
 
 MempoolAcceptResult AcceptToMemoryPool(CChainState& active_chainstate, const CTransactionRef& tx,
-                                       int64_t accept_time, bool bypass_limits, bool test_accept)
+                                       int64_t accept_time, const ignore_rejects_type& ignore_rejects, bool test_accept)
     EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
 {
     AssertLockHeld(::cs_main);
@@ -1365,7 +1363,7 @@ MempoolAcceptResult AcceptToMemoryPool(CChainState& active_chainstate, const CTr
     CTxMemPool& pool{*active_chainstate.GetMempool()};
 
     std::vector<COutPoint> coins_to_uncache;
-    auto args = MemPoolAccept::ATMPArgs::SingleAccept(chainparams, accept_time, bypass_limits, coins_to_uncache, test_accept);
+    auto args = MemPoolAccept::ATMPArgs::SingleAccept(chainparams, accept_time, ignore_rejects, coins_to_uncache, test_accept);
     const MempoolAcceptResult result = MemPoolAccept(pool, active_chainstate).AcceptSingleTransaction(tx, args);
     if (result.m_result_type != MempoolAcceptResult::ResultType::VALID) {
         // Remove coins that were not present in the coins cache before calling
@@ -4554,7 +4552,7 @@ bool LoadMempool(CTxMemPool& pool, CChainState& active_chainstate, FopenFn mocka
             }
             if (nTime > nNow - nExpiryTimeout) {
                 LOCK(cs_main);
-                const auto& accepted = AcceptToMemoryPool(active_chainstate, tx, nTime, /*bypass_limits=*/false, /*test_accept=*/false);
+                const auto& accepted = AcceptToMemoryPool(active_chainstate, tx, nTime, empty_ignore_rejects, /*test_accept=*/false);
                 if (accepted.m_result_type == MempoolAcceptResult::ResultType::VALID) {
                     ++count;
                 } else {
