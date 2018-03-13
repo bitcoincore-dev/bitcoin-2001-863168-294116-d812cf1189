@@ -266,6 +266,11 @@ struct WalletAddress
     isminetype is_mine;
     std::string name;
     std::string purpose;
+
+    WalletAddress(CTxDestination dest, isminetype is_mine, std::string name, std::string purpose)
+        : dest(std::move(dest)), is_mine(is_mine), name(std::move(name)), purpose(std::move(purpose))
+    {
+    }
 };
 
 //! Collection of wallet balances.

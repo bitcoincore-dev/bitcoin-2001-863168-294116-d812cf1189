@@ -177,11 +177,7 @@ public:
         LOCK(m_wallet.cs_wallet);
         std::vector<WalletAddress> result;
         for (const auto& item : m_wallet.mapAddressBook) {
-            result.emplace_back();
-            result.back().dest = item.first;
-            result.back().is_mine = IsMine(m_wallet, item.first);
-            result.back().name = item.second.name;
-            result.back().purpose = item.second.purpose;
+            result.emplace_back(item.first, IsMine(m_wallet, item.first), item.second.name, item.second.purpose);
         }
         return result;
     }
