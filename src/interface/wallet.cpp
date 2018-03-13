@@ -154,7 +154,6 @@ public:
     }
     bool delAddressBook(const CTxDestination& dest) override
     {
-        LOCK(m_wallet.cs_wallet);
         return m_wallet.DelAddressBook(dest);
     }
     bool getAddress(const CTxDestination& dest, std::string* name, isminetype* is_mine) override
