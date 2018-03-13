@@ -19,9 +19,14 @@
 #include <net_processing.h>
 #include <netbase.h>
 #include <node/context.h>
+#include <outputtype.h>
 #include <txdb.h>       // for -dbcache defaults
 #include <util/string.h>
 #include <validation.h> // For DEFAULT_SCRIPTCHECK_THREADS
+#ifdef ENABLE_WALLET
+#include <interfaces/wallet.h>
+#include <wallet/wallet.h>
+#endif
 
 #include <QDebug>
 #include <QLatin1Char>
@@ -420,6 +425,11 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("external_signer_path");
         case SubFeeFromAmount:
             return m_sub_fee_from_amount;
+        case addresstype:
+        {
+            const OutputType default_address_type = ParseOutputType(gArgs.GetArg("-addresstype", "")).value_or(wallet::DEFAULT_ADDRESS_TYPE);
+            return QString::fromStdString(FormatOutputType(default_address_type));
+        }
 #endif
         case DisplayUnit:
             return nDisplayUnit;
@@ -573,6 +583,26 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             m_sub_fee_from_amount = value.toBool();
             settings.setValue("SubFeeFromAmount", m_sub_fee_from_amount);
             break;
+        case addresstype:
+        {
+            const std::string newvalue_str = value.toString().toStdString();
+            const OutputType oldvalue = ParseOutputType(gArgs.GetArg("-addresstype", "")).value_or(wallet::DEFAULT_ADDRESS_TYPE);
+            const OutputType newvalue = ParseOutputType(newvalue_str).value_or(oldvalue);
+            if (newvalue != oldvalue) {
+                gArgs.ModifyRWConfigFile("addresstype", newvalue_str);
+                gArgs.ForceSetArg("-addresstype", newvalue_str);
+                for (auto& wallet_interface : m_node->walletLoader().getWallets()) {
+                    wallet::CWallet *wallet;
+                    if (wallet_interface && (wallet = wallet_interface->wallet())) {
+                        wallet->m_default_address_type = newvalue;
+                    } else {
+                        setRestartRequired(true);
+                        continue;
+                    }
+                }
+            }
+            break;
+        }
 #endif
         case DisplayUnit:
             setDisplayUnit(value);
