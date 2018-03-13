@@ -899,6 +899,7 @@ bool CWallet::MarkReplaced(const uint256& originalHash, const uint256& newHash)
 
 bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
 {
+    AssertLockHeld(cs_main); // Needed for ComputeTimeSmart
     LOCK(cs_wallet);
 
     CWalletDB walletdb(*dbw, "r+", fFlushOnClose);
