@@ -149,7 +149,6 @@ public:
     bool haveWatchOnly() override { return m_wallet.HaveWatchOnly(); };
     bool setAddressBook(const CTxDestination& dest, const std::string& name, const std::string& purpose) override
     {
-        LOCK(m_wallet.cs_wallet);
         return m_wallet.SetAddressBook(dest, name, purpose);
     }
     bool delAddressBook(const CTxDestination& dest) override
