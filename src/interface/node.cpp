@@ -195,9 +195,11 @@ class NodeImpl : public Node
         FeeReason* reason) override
     {
         FeeCalculation fee_calc;
-        CHECK_WALLET(return GetMinimumFee(tx_bytes, coin_control, ::mempool, ::feeEstimator, &fee_calc));
+        CAmount result;
+        CHECK_WALLET(result = GetMinimumFee(tx_bytes, coin_control, ::mempool, ::feeEstimator, &fee_calc));
         if (returned_target) *returned_target = fee_calc.returnedTarget;
         if (reason) *reason = fee_calc.reason;
+        return result;
     }
     CAmount getMaxTxFee() override { return ::maxTxFee; }
     CFeeRate estimateSmartFee(int num_blocks, bool conservative, int* returned_target = nullptr) override
