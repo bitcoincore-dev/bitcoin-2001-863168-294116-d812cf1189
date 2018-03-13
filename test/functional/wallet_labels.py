@@ -113,7 +113,7 @@ class WalletLabelsTest(BitcoinTestFramework):
         assert_equal(node.listaccounts(), expected_account_balances)
         assert_equal(node.getbalance(""), 5200)
 
-        # Check that setlabel can assign an label to a new unused address.
+        # Check that setlabel can assign a label to a new unused address.
         for label in labels:
             address = node.getlabeladdress("")
             node.setlabel(address, label.name)
