@@ -62,17 +62,17 @@ public:
         {
             cachedNodeStats.clear();
 
-            interface::Node::NodesStats nodes;
-            node.getNodesStats(nodes);
+            interface::Node::NodesStats nodes_stats;
+            node.getNodesStats(nodes_stats);
 #if QT_VERSION >= 0x040700
-            cachedNodeStats.reserve(nodes.size());
+            cachedNodeStats.reserve(nodes_stats.size());
 #endif
-            for (auto& node : nodes)
+            for (auto& node_stats : nodes_stats)
             {
                 CNodeCombinedStats stats;
-                stats.nodeStats = std::get<0>(node);
-                stats.fNodeStateStatsAvailable = std::get<1>(node);
-                stats.nodeStateStats = std::get<2>(node);
+                stats.nodeStats = std::get<0>(node_stats);
+                stats.fNodeStateStatsAvailable = std::get<1>(node_stats);
+                stats.nodeStateStats = std::get<2>(node_stats);
                 cachedNodeStats.append(stats);
             }
         }
