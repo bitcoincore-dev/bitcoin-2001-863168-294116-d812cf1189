@@ -23,7 +23,7 @@ public:
 
     QList<SendCoinsRecipient> getRecipients() const;
 
-    CTransactionRef* getTransaction();
+    CTransactionRef& getTransaction();
     unsigned int getTransactionSize();
 
     void setTransactionFee(const CAmount& newFee);
