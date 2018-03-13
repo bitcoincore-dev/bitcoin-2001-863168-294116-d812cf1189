@@ -27,8 +27,6 @@
 #include <utility>
 #include <vector>
 
-class CScheduler;
-
 namespace interface {
 namespace {
 
