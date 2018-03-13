@@ -19,9 +19,9 @@ QList<SendCoinsRecipient> WalletModelTransaction::getRecipients() const
     return recipients;
 }
 
-CTransactionRef* WalletModelTransaction::getTransaction()
+CTransactionRef& WalletModelTransaction::getTransaction()
 {
-    return &walletTransaction;
+    return walletTransaction;
 }
 
 unsigned int WalletModelTransaction::getTransactionSize()
