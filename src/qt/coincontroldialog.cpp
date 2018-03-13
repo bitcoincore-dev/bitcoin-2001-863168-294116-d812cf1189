@@ -14,7 +14,6 @@
 #include <qt/walletmodel.h>
 
 #include <wallet/coincontrol.h>
-#include <init.h>
 #include <interface/node.h>
 #include <key_io.h>
 #include <policy/fees.h>
