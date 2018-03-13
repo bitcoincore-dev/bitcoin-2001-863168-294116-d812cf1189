@@ -317,6 +317,7 @@ bool RPCConsole::RPCParseCommandLine(interface::Node* node, std::string &strResu
                                 uri = "/wallet/"+std::string(encodedName.constData(), encodedName.length());
                             }
 #endif
+                            assert(node);
                             lastResult = node->executeRpc(method, params, uri);
                         }
 
