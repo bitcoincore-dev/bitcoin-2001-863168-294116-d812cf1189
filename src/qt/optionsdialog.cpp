@@ -185,6 +185,18 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->spendZeroConfChange, OptionsModel::SpendZeroConfChange);
     mapper->addMapping(ui->coinControlFeatures, OptionsModel::CoinControlFeatures);
 
+    {
+        QString radio_name_lower = "addresstype" + model->data(model->index(OptionsModel::addresstype, 0), Qt::EditRole).toString().toLower();
+        radio_name_lower.replace("-", "_");
+        for (int i = ui->layoutAddressType->count(); i--; ) {
+            QRadioButton * const radio = qobject_cast<QRadioButton*>(ui->layoutAddressType->itemAt(i)->widget());
+            if (!radio) {
+                continue;
+            }
+            radio->setChecked(radio->objectName().toLower() == radio_name_lower);
+        }
+    }
+
     /* Network */
     mapper->addMapping(ui->mapPortUpnp, OptionsModel::MapPortUPnP);
     mapper->addMapping(ui->allowIncoming, OptionsModel::Listen);
@@ -268,6 +280,20 @@ void OptionsDialog::on_openBitcoinConfButton_clicked()
 
 void OptionsDialog::on_okButton_clicked()
 {
+    {
+        QString new_addresstype;
+        for (int i = ui->layoutAddressType->count(); i--; ) {
+            QRadioButton * const radio = qobject_cast<QRadioButton*>(ui->layoutAddressType->itemAt(i)->widget());
+            if (!(radio && radio->objectName().startsWith("addressType") && radio->isChecked())) {
+                continue;
+            }
+            new_addresstype = radio->objectName().mid(11).toLower();
+            new_addresstype.replace("_", "-");
+            break;
+        }
+        model->setData(model->index(OptionsModel::addresstype, 0), new_addresstype);
+    }
+
     if (ui->maxuploadtargetCheckbox->isChecked()) {
         model->setData(model->index(OptionsModel::maxuploadtarget, 0), ui->maxuploadtarget->value());
     } else {

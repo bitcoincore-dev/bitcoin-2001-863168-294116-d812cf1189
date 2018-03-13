@@ -48,6 +48,7 @@ public:
         ThreadsScriptVerif,     // int
         DatabaseCache,          // int
         SpendZeroConfChange,    // bool
+        addresstype,            // QString
         Listen,                 // bool
         maxuploadtarget,
         peerbloomfilters,       // bool

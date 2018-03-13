@@ -276,6 +276,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
 #ifdef ENABLE_WALLET
         case SpendZeroConfChange:
             return settings.value("bSpendZeroConfChange");
+        case addresstype:
+            return QString::fromStdString(FormatOutputType(g_address_type));
 #endif
         case DisplayUnit:
             return nDisplayUnit;
@@ -391,6 +393,17 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 setRestartRequired(true);
             }
             break;
+        case addresstype:
+        {
+            const std::string newvalue_str = value.toString().toStdString();
+            OutputType newvalue = ParseOutputType(newvalue_str, g_address_type);
+            if (newvalue != g_address_type) {
+                gArgs.ModifyRWConfigFile("addresstype", newvalue_str);
+                g_address_type = newvalue;
+                g_change_type = ParseOutputType(gArgs.GetArg("-changetype", ""), g_address_type);
+            }
+            break;
+        }
 #endif
         case DisplayUnit:
             setDisplayUnit(value);
