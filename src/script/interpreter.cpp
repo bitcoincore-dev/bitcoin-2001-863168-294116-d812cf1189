@@ -14,6 +14,79 @@
 
 typedef std::vector<unsigned char> valtype;
 
+static const std::map<std::string, CScriptFlag> mapFlagNames = {
+    {std::string("NONE"), SCRIPT_VERIFY_NONE},
+    {std::string("BIP16"), SCRIPT_VERIFY_P2SH},
+    {std::string("STRICTENC"), SCRIPT_VERIFY_STRICTENC},
+    {std::string("DERSIG"), SCRIPT_VERIFY_DERSIG},
+    {std::string("LOW_S"), SCRIPT_VERIFY_LOW_S},
+    {std::string("SIGPUSHONLY"), SCRIPT_VERIFY_SIGPUSHONLY},
+    {std::string("MINIMALDATA"), SCRIPT_VERIFY_MINIMALDATA},
+    {std::string("NULLDUMMY"), SCRIPT_VERIFY_NULLDUMMY},
+    {std::string("DISCOURAGE_UPGRADABLE_NOPS"), SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS},
+    {std::string("CLEANSTACK"), SCRIPT_VERIFY_CLEANSTACK},
+    {std::string("MINIMALIF"), SCRIPT_VERIFY_MINIMALIF},
+    {std::string("NULLFAIL"), SCRIPT_VERIFY_NULLFAIL},
+    {std::string("CHECKLOCKTIMEVERIFY"), SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY},
+    {std::string("CHECKSEQUENCEVERIFY"), SCRIPT_VERIFY_CHECKSEQUENCEVERIFY},
+    {std::string("WITNESS"), SCRIPT_VERIFY_WITNESS},
+    {std::string("DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM"), SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM},
+    {std::string("WITNESS_PUBKEYTYPE"), SCRIPT_VERIFY_WITNESS_PUBKEYTYPE},
+};
+
+unsigned int ParseScriptFlag(const std::string flag_name)
+{
+    const auto it = mapFlagNames.find(flag_name);
+    if (it == mapFlagNames.end()) {
+        if (flag_name == "ALL") {
+            unsigned int ret = 0;
+            auto it = mapFlagNames.begin();
+            while (it != mapFlagNames.end()) {
+                ret |= it->second;
+            }
+            return ret;
+        }
+        throw std::runtime_error(std::string(__func__) + ": unknown verification flag '" + flag_name + "'");
+    }
+    return it->second;
+}
+
+std::vector<std::string> ScriptFlagsToStrings(unsigned int flags)
+{
+    std::vector<std::string> ret;
+    if (flags == 0) {
+        return ret;
+    }
+    auto it = mapFlagNames.begin();
+    while (flags && it != mapFlagNames.end()) {
+        if (flags & it->second) {
+            ret.push_back(it->first);
+        }
+        ++it;
+    }
+    return ret;
+}
+
+std::string SigVersionString(const SigVersion sigver)
+{
+    switch (sigver) {
+        case SIGVERSION_BASE:       return "Base";
+        case SIGVERSION_WITNESS_V0: return "Witness_V0";
+    }
+    return "(unknown)";
+}
+
+std::string ScriptExecution::ContextString(const Context ctx)
+{
+    switch (ctx) {
+        case ScriptExecution::Context::Sig:    return "Sig";
+        case ScriptExecution::Context::PubKey: return "PubKey";
+        case ScriptExecution::Context::BIP16:  return "BIP16";
+        case ScriptExecution::Context::Segwit: return "Segwit";
+    }
+    return "(unknown)";
+}
+
 namespace {
 
 inline bool set_success(ScriptError* ret)
@@ -248,7 +321,13 @@ bool static CheckMinimalPush(const valtype& data, opcodetype opcode) {
     return true;
 }
 
-bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptError* serror)
+ScriptExecution::ScriptExecution(ScriptExecution::Context context_in, StackType& stack_in, const CScript& script_in, unsigned int flags_in, const BaseSignatureChecker& checker_in, SigVersion sigversion_in) :
+    context(context_in), script(script_in), stack(stack_in), flags(flags_in), checker(checker_in), sigversion(sigversion_in), pc(script.begin()), pbegincodehash(script.begin()), nOpCount(0),
+    debugger(nullptr)
+{
+}
+
+bool ScriptExecution::Eval(ScriptError* serror)
 {
     static const CScriptNum bnZero(0);
     static const CScriptNum bnOne(1);
@@ -258,17 +337,18 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
     // static const valtype vchZero(0);
     static const valtype vchTrue(1, 1);
 
-    CScript::const_iterator pc = script.begin();
-    CScript::const_iterator pend = script.end();
-    CScript::const_iterator pbegincodehash = script.begin();
+    CScript::const_iterator pcur = pc;
+    const CScript::const_iterator pend = script.end();
     opcodetype opcode;
     valtype vchPushValue;
-    std::vector<bool> vfExec;
-    std::vector<valtype> altstack;
+
+    if (debugger) {
+        debugger->ScriptBegin(*this);
+    }
+
     set_error(serror, SCRIPT_ERR_UNKNOWN_ERROR);
     if (script.size() > MAX_SCRIPT_SIZE)
         return set_error(serror, SCRIPT_ERR_SCRIPT_SIZE);
-    int nOpCount = 0;
     bool fRequireMinimal = (flags & SCRIPT_VERIFY_MINIMALDATA) != 0;
 
     try
@@ -280,8 +360,14 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
             //
             // Read instruction
             //
+            pcur = pc;
             if (!script.GetOp(pc, opcode, vchPushValue))
                 return set_error(serror, SCRIPT_ERR_BAD_OPCODE);
+
+            if (debugger) {
+                debugger->ScriptPreStep(*this, pcur, opcode, vchPushValue);
+            }
+
             if (vchPushValue.size() > MAX_SCRIPT_ELEMENT_SIZE)
                 return set_error(serror, SCRIPT_ERR_PUSH_SIZE);
 
@@ -1036,6 +1122,10 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
         return set_error(serror, SCRIPT_ERR_UNKNOWN_ERROR);
     }
 
+    if (debugger) {
+        debugger->ScriptEOF(*this, pc);
+    }
+
     if (!vfExec.empty())
         return set_error(serror, SCRIPT_ERR_UNBALANCED_CONDITIONAL);
 
@@ -1353,7 +1443,7 @@ bool TransactionSignatureChecker::CheckSequence(const CScriptNum& nSequence) con
     return true;
 }
 
-static bool VerifyWitnessProgram(const CScriptWitness& witness, int witversion, const std::vector<unsigned char>& program, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror)
+static bool VerifyWitnessProgram(const CScriptWitness& witness, int witversion, const std::vector<unsigned char>& program, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror, ScriptExecutionDebugger * const debugger)
 {
     std::vector<std::vector<unsigned char> > stack;
     CScript scriptPubKey;
@@ -1394,7 +1484,7 @@ static bool VerifyWitnessProgram(const CScriptWitness& witness, int witversion, 
             return set_error(serror, SCRIPT_ERR_PUSH_SIZE);
     }
 
-    if (!EvalScript(stack, scriptPubKey, flags, checker, SIGVERSION_WITNESS_V0, serror)) {
+    if (!EvalScript(ScriptExecution::Context::Segwit, stack, scriptPubKey, flags, checker, SIGVERSION_WITNESS_V0, serror, debugger)) {
         return false;
     }
 
@@ -1406,7 +1496,7 @@ static bool VerifyWitnessProgram(const CScriptWitness& witness, int witversion, 
     return true;
 }
 
-bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CScriptWitness* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror)
+bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CScriptWitness* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror, ScriptExecutionDebugger * const debugger)
 {
     static const CScriptWitness emptyWitness;
     if (witness == nullptr) {
@@ -1421,12 +1511,12 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
     }
 
     std::vector<std::vector<unsigned char> > stack, stackCopy;
-    if (!EvalScript(stack, scriptSig, flags, checker, SIGVERSION_BASE, serror))
+    if (!EvalScript(ScriptExecution::Context::Sig, stack, scriptSig, flags, checker, SIGVERSION_BASE, serror, debugger))
         // serror is set
         return false;
     if (flags & SCRIPT_VERIFY_P2SH)
         stackCopy = stack;
-    if (!EvalScript(stack, scriptPubKey, flags, checker, SIGVERSION_BASE, serror))
+    if (!EvalScript(ScriptExecution::Context::PubKey, stack, scriptPubKey, flags, checker, SIGVERSION_BASE, serror, debugger))
         // serror is set
         return false;
     if (stack.empty())
@@ -1444,7 +1534,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
                 // The scriptSig must be _exactly_ CScript(), otherwise we reintroduce malleability.
                 return set_error(serror, SCRIPT_ERR_WITNESS_MALLEATED);
             }
-            if (!VerifyWitnessProgram(*witness, witnessversion, witnessprogram, flags, checker, serror)) {
+            if (!VerifyWitnessProgram(*witness, witnessversion, witnessprogram, flags, checker, serror, debugger)) {
                 return false;
             }
             // Bypass the cleanstack check at the end. The actual stack is obviously not clean
@@ -1472,7 +1562,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
         CScript pubKey2(pubKeySerialized.begin(), pubKeySerialized.end());
         popstack(stack);
 
-        if (!EvalScript(stack, pubKey2, flags, checker, SIGVERSION_BASE, serror))
+        if (!EvalScript(ScriptExecution::Context::BIP16, stack, pubKey2, flags, checker, SIGVERSION_BASE, serror, debugger))
             // serror is set
             return false;
         if (stack.empty())
@@ -1489,7 +1579,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
                     // reintroduce malleability.
                     return set_error(serror, SCRIPT_ERR_WITNESS_MALLEATED_P2SH);
                 }
-                if (!VerifyWitnessProgram(*witness, witnessversion, witnessprogram, flags, checker, serror)) {
+                if (!VerifyWitnessProgram(*witness, witnessversion, witnessprogram, flags, checker, serror, debugger)) {
                     return false;
                 }
                 // Bypass the cleanstack check at the end. The actual stack is obviously not clean
