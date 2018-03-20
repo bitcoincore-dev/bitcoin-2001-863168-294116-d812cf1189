@@ -15,6 +15,7 @@
 #include <clientversion.h>
 #include <validation.h>
 #include <net.h>
+#include <netbase.h>
 #include <txmempool.h>
 #include <ui_interface.h>
 #include <util.h>
@@ -361,4 +362,14 @@ void ClientModel::unsubscribeFromCoreSignals()
     uiInterface.NotifyHeaderTip.disconnect(boost::bind(BlockTipChanged, this, _1, _2, true));
 
     CStats::DefaultStats()->MempoolStatsDidChange.disconnect(boost::bind(MempoolStatsDidChange, this));
+}
+
+bool ClientModel::getProxyInfo(std::string& ip_port) const
+{
+    proxyType ipv4, ipv6;
+    if (GetProxy((Network) 1, ipv4) && GetProxy((Network) 2, ipv6)) {
+      ip_port = ipv4.proxy.ToStringIPPort();
+      return true;
+    }
+    return false;
 }
