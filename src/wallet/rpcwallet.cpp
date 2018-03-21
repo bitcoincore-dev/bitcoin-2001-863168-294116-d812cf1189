@@ -39,6 +39,7 @@ static const std::string WALLET_ENDPOINT_BASE = "/wallet/";
 
 CWallet *GetWalletForJSONRPCRequest(const JSONRPCRequest& request)
 {
+#ifdef USE_LIBEVENT
     if (request.URI.substr(0, WALLET_ENDPOINT_BASE.size()) == WALLET_ENDPOINT_BASE) {
         // wallet endpoint was used
         std::string requestedWallet = urlDecode(request.URI.substr(WALLET_ENDPOINT_BASE.size()));
@@ -50,6 +51,10 @@ CWallet *GetWalletForJSONRPCRequest(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_WALLET_NOT_FOUND, "Requested wallet does not exist or is not loaded");
     }
     return ::vpwallets.size() == 1 || (request.fHelp && ::vpwallets.size() > 0) ? ::vpwallets[0] : nullptr;
+#else
+    // GUI only has access to the first wallet
+    return vpwallets.empty() ? nullptr : vpwallets[0];
+#endif
 }
 
 std::string HelpRequiringPassphrase(CWallet * const pwallet)

@@ -593,12 +593,14 @@ UniValue logging(const JSONRPCRequest& request)
     // flag and it failed.
     uint32_t changedLogCategories = originalLogCategories ^ logCategories;
     if (changedLogCategories & BCLog::LIBEVENT) {
+#ifdef USE_LIBEVENT
         if (!UpdateHTTPServerLogging(logCategories & BCLog::LIBEVENT)) {
             logCategories &= ~BCLog::LIBEVENT;
             if (changedLogCategories == BCLog::LIBEVENT) {
             throw JSONRPCError(RPC_INVALID_PARAMETER, "libevent logging cannot be updated when using libevent before v2.1.1.");
             }
         }
+#endif
     }
 
     UniValue result(UniValue::VOBJ);
