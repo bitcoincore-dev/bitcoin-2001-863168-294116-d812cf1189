@@ -255,6 +255,9 @@ class SegWitTest(BitcoinTestFramework):
         assert(txid2 in template_txids)
         assert(txid3 in template_txids)
 
+        # Check that hash is properly reported in mempool entry
+        assert_equal(int(self.nodes[0].getmempoolentry(txid3)["hash"], 16), tx.calc_sha256(True))
+
         # Check that wtxid is properly reported in mempool entry
         assert_equal(int(self.nodes[0].getmempoolentry(txid3)["wtxid"], 16), tx.calc_sha256(True))
 
