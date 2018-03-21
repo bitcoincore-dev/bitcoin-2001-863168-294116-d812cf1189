@@ -1,4 +1,4 @@
-BIPs that are implemented by Bitcoin Core (up-to-date up to **v0.13.0**):
+BIPs that are implemented by Bitcoin Core (up-to-date up to **v0.16.0**):
 
 * [`BIP 9`](https://github.com/bitcoin/bips/blob/master/bip-0009.mediawiki): The changes allowing multiple soft-forks to be deployed in parallel have been implemented since **v0.12.1**  ([PR #7575](https://github.com/bitcoin/bitcoin/pull/7575))
 * [`BIP 11`](https://github.com/bitcoin/bips/blob/master/bip-0011.mediawiki): Multisig outputs are standard since **v0.6.0** ([PR #669](https://github.com/bitcoin/bitcoin/pull/669)).
@@ -19,7 +19,7 @@ BIPs that are implemented by Bitcoin Core (up-to-date up to **v0.13.0**):
 * [`BIP 61`](https://github.com/bitcoin/bips/blob/master/bip-0061.mediawiki): The 'reject' protocol message (and the protocol version bump to 70002) was added in **v0.9.0** ([PR #3185](https://github.com/bitcoin/bitcoin/pull/3185)).
 * [`BIP 65`](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki): The CHECKLOCKTIMEVERIFY softfork was merged in **v0.12.0** ([PR #6351](https://github.com/bitcoin/bitcoin/pull/6351)), and backported to **v0.11.2** and **v0.10.4**. Mempool-only CLTV was added in [PR #6124](https://github.com/bitcoin/bitcoin/pull/6124).
 * [`BIP 66`](https://github.com/bitcoin/bips/blob/master/bip-0066.mediawiki): The strict DER rules and associated version 3 blocks have been implemented since **v0.10.0** ([PR #5713](https://github.com/bitcoin/bitcoin/pull/5713)).
-* [`BIP 67`](https://github.com/bitcoin/bips/blob/master/bip-0067.mediawiki): Sorting multisig keys according to BIP 67 was merged in **v0.15.1** ([PR #8751](https://github.com/bitcoin/bitcoin/pull/8751)).
+* [`BIP 67`](https://github.com/bitcoin/bips/blob/master/bip-0067.mediawiki): Sorting multisig keys according to BIP 67 was merged in **Knots v0.13.2.knots20161221** ([PR #8751](https://github.com/bitcoin/bitcoin/pull/8751)).
 * [`BIP 68`](https://github.com/bitcoin/bips/blob/master/bip-0068.mediawiki): Sequence locks have been implemented as of **v0.12.1**  ([PR #7184](https://github.com/bitcoin/bitcoin/pull/7184)), and have been activated since *block 419328*.
 * [`BIP 70`](https://github.com/bitcoin/bips/blob/master/bip-0070.mediawiki) [`71`](https://github.com/bitcoin/bips/blob/master/bip-0071.mediawiki) [`72`](https://github.com/bitcoin/bips/blob/master/bip-0072.mediawiki): Payment Protocol support has been available in Bitcoin Core GUI since **v0.9.0** ([PR #5216](https://github.com/bitcoin/bitcoin/pull/5216)).
 * [`BIP 90`](https://github.com/bitcoin/bips/blob/master/bip-0090.mediawiki): Trigger mechanism for activation of BIPs 34, 65, and 66 has been simplified to block height checks since **v0.14.0** ([PR #8391](https://github.com/bitcoin/bitcoin/pull/8391)).
@@ -36,4 +36,6 @@ BIPs that are implemented by Bitcoin Core (up-to-date up to **v0.13.0**):
 * [`BIP 147`](https://github.com/bitcoin/bips/blob/master/bip-0147.mediawiki): NULLDUMMY softfork as of **v0.13.1** ([PR 8636](https://github.com/bitcoin/bitcoin/pull/8636) and [PR 8937](https://github.com/bitcoin/bitcoin/pull/8937)).
 * [`BIP 152`](https://github.com/bitcoin/bips/blob/master/bip-0152.mediawiki): Compact block transfer and related optimizations are used as of **v0.13.0** ([PR 8068](https://github.com/bitcoin/bitcoin/pull/8068)).
 * [`BIP 159`](https://github.com/bitcoin/bips/blob/master/bip-0159.mediawiki): NODE_NETWORK_LIMITED service bit [signaling only] is supported as of **v0.16.0** ([PR 11740](https://github.com/bitcoin/bitcoin/pull/11740)).
+* [`BIP 173`](https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki): Bech32 bc1-style addresses are supported as of **v0.16.0** ([PR 11403](https://github.com/bitcoin/bitcoin/pull/11403)).
+* [`BIP 174`](https://github.com/bitcoin/bips/blob/master/bip-0174.mediawiki): Partially Signed Bitcoin Transactions are supported by RPC as of **Knots v0.16.0** ([PR 12136](https://github.com/bitcoin/bitcoin/pull/12136)).
 * [`BIP 176`](https://github.com/bitcoin/bips/blob/master/bip-0176.mediawiki): Bits Denomination [QT only] is supported as of **v0.16.0** ([PR 12035](https://github.com/bitcoin/bitcoin/pull/12035)).
