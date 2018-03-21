@@ -7,6 +7,10 @@
 #include <consensus/consensus.h>
 #include <random.h>
 
+#include <map>
+#include <set>
+#include <stdexcept>
+
 bool CCoinsView::GetCoin(const COutPoint &outpoint, Coin &coin) const { return false; }
 uint256 CCoinsView::GetBestBlock() const { return uint256(); }
 std::vector<uint256> CCoinsView::GetHeadBlocks() const { return std::vector<uint256>(); }
@@ -18,6 +22,28 @@ bool CCoinsView::HaveCoin(const COutPoint &outpoint) const
     Coin coin;
     return GetCoin(outpoint, coin);
 }
+
+void CCoinsView::FindScriptPubKey(CCoinsViewCursor& cursor, const std::set<CScript>& needles, std::map<COutPoint, Coin>& out_results) {
+    for ( ; cursor.Valid(); cursor.Next()) {
+        COutPoint outpoint;
+        Coin coin;
+        if (!cursor.GetKey(outpoint)) {
+            throw std::runtime_error(std::string(__func__) + ": GetKey failed");
+        } else if (!cursor.GetValue(coin)) {
+            throw std::runtime_error(std::string(__func__) + ": GetValue failed");
+        }
+        if (!needles.count(coin.out.scriptPubKey)) {
+            continue;
+        }
+        out_results.emplace(outpoint, coin);
+    }
+}
+
+void CCoinsView::FindScriptPubKey(const std::set<CScript>& needles, std::map<COutPoint, Coin>& out_results) {
+    std::unique_ptr<CCoinsViewCursor> pcursor(Cursor());
+    FindScriptPubKey(*pcursor, needles, out_results);
+}
+
 
 CCoinsViewBacked::CCoinsViewBacked(CCoinsView *viewIn) : base(viewIn) { }
 bool CCoinsViewBacked::GetCoin(const COutPoint &outpoint, Coin &coin) const { return base->GetCoin(outpoint, coin); }

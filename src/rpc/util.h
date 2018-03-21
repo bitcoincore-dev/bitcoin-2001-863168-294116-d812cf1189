@@ -8,12 +8,14 @@
 #include <string>
 #include <vector>
 
+class CKey;
 class CKeyStore;
 class CPubKey;
 class CScript;
 
 CPubKey HexToPubKey(const std::string& hex_in);
 CPubKey AddrToPubKey(CKeyStore* const keystore, const std::string& addr_in);
+void ParseWIFPrivKey(const std::string wif_secret, CKey&, CPubKey*);
 CScript CreateMultisigRedeemscript(const int required, const std::vector<CPubKey>& pubkeys, bool sort);
 
 #endif // BITCOIN_RPC_UTIL_H
