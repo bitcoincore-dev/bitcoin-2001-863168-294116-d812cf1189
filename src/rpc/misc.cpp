@@ -257,11 +257,12 @@ class CWallet;
 
 UniValue createmultisig(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() < 2 || request.params.size() > 2)
+    if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
     {
-        std::string msg = "createmultisig nrequired [\"key\",...]\n"
+        std::string msg = "createmultisig nrequired [\"key\",...] ( options )\n"
             "\nCreates a multi-signature address with n signature of m keys required.\n"
             "It returns a json object with the address and redeemScript.\n"
+            "Public keys can be sorted according to BIP67 during the request if required.\n"
             "DEPRECATION WARNING: Using addresses with createmultisig is deprecated. Clients must\n"
             "transition to using addmultisigaddress to create multisig addresses with addresses known\n"
             "to the wallet before upgrading to v0.17. To use the deprecated functionality, start bitcoind with -deprecatedrpc=createmultisig\n"
@@ -272,6 +273,10 @@ UniValue createmultisig(const JSONRPCRequest& request)
             "       \"key\"                    (string) The hex-encoded public key\n"
             "       ,...\n"
             "     ]\n"
+            "3. options      (object, optional)\n"
+            "   {\n"
+            "     \"sort\"       (bool, optional, default=false) Whether to sort public keys according to BIP67.\n"
+            "   }\n"
 
             "\nResult:\n"
             "{\n"
@@ -290,12 +295,31 @@ UniValue createmultisig(const JSONRPCRequest& request)
 
     int required = request.params[0].get_int();
 
+    bool fSorted = false;
+
+    if (!request.params[2].isNull()) {
+        const UniValue& options = request.params[2];
+        RPCTypeCheckArgument(options, UniValue::VOBJ);
+        RPCTypeCheckObj(options,
+            {
+                {"sort", UniValueType(UniValue::VBOOL)},
+            },
+            true, true);
+
+        if (options.exists("sort")) {
+            fSorted = options["sort"].get_bool();
+        }
+    }
+
     // Get the public keys
     const UniValue& keys = request.params[1].get_array();
     std::vector<CPubKey> pubkeys;
     for (unsigned int i = 0; i < keys.size(); ++i) {
         if (IsHex(keys[i].get_str()) && (keys[i].get_str().length() == 66 || keys[i].get_str().length() == 130)) {
             pubkeys.push_back(HexToPubKey(keys[i].get_str()));
+            if (fSorted && !pubkeys.back().IsCompressed()) {
+                throw std::runtime_error(strprintf("Compressed key required for BIP67: %s", keys[i].get_str()));
+            }
         } else {
 #ifdef ENABLE_WALLET
             CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
@@ -310,7 +334,7 @@ UniValue createmultisig(const JSONRPCRequest& request)
     }
 
     // Construct using pay-to-script-hash:
-    CScript inner = CreateMultisigRedeemscript(required, pubkeys);
+    CScript inner = CreateMultisigRedeemscript(required, pubkeys, fSorted);
     CScriptID innerID(inner);
 
     UniValue result(UniValue::VOBJ);
@@ -643,7 +667,7 @@ static const CRPCCommand commands[] =
     { "control",            "getmemoryinfo",          &getmemoryinfo,          {"mode"} },
     { "control",            "logging",                &logging,                {"include", "exclude"}},
     { "util",               "validateaddress",        &validateaddress,        {"address"} }, /* uses wallet if enabled */
-    { "util",               "createmultisig",         &createmultisig,         {"nrequired","keys"} },
+    { "util",               "createmultisig",         &createmultisig,         {"nrequired","keys","options"} },
     { "util",               "verifymessage",          &verifymessage,          {"address","signature","message"} },
     { "util",               "signmessagewithprivkey", &signmessagewithprivkey, {"privkey","message"} },
 
