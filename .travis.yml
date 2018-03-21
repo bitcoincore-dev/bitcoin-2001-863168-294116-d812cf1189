@@ -11,6 +11,7 @@ git:
   depth: false  # full clone for git subtree check, this works around issue #12388
 env:
   global:
+    - COMMON_PACKAGES="icnsutils librsvg2-bin imagemagick"
     - MAKEJOBS=-j3
     - RUN_TESTS=false
     - CHECK_DOC=0
@@ -43,8 +44,8 @@ before_install:
     - export PATH=$(echo $PATH | tr ':' "\n" | sed '/\/opt\/python/d' | tr "\n" ":" | sed "s|::|:|g")
 install:
     - if [ -n "$DPKG_ADD_ARCH" ]; then sudo dpkg --add-architecture "$DPKG_ADD_ARCH" ; fi
-    - if [ -n "$PACKAGES" ]; then travis_retry sudo apt-get update; fi
-    - if [ -n "$PACKAGES" ]; then travis_retry sudo apt-get install --no-install-recommends --no-upgrade -qq $PACKAGES; fi
+    - if [ -n "$PACKAGES$COMMON_PACKAGES" ]; then travis_retry sudo apt-get update; fi
+    - if [ -n "$PACKAGES$COMMON_PACKAGES" ]; then travis_retry sudo apt-get install --no-install-recommends --no-upgrade -qq $COMMON_PACKAGES $PACKAGES; fi
     - if [ "$CHECK_DOC" = 1 -a "$TRAVIS_EVENT_TYPE" = "pull_request" ]; then travis_retry pip3 install flake8 --user; fi
 before_script:
     - if [ "$CHECK_DOC" = 1 -a "$TRAVIS_EVENT_TYPE" = "pull_request" ]; then contrib/devtools/commit-script-check.sh $TRAVIS_COMMIT_RANGE; fi
