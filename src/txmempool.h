@@ -633,8 +633,10 @@ public:
     /** Expire all transaction (and their dependencies) in the mempool older than time. Return the number of removed transactions. */
     int Expire(int64_t time);
 
-    /** Returns false if the transaction is in the mempool and not within the chain limit specified. */
-    bool TransactionWithinChainLimit(const uint256& txid, size_t chainLimit) const;
+    /** Get the maximum of the chain limit value in the mempool of the given transaction.
+      * If the transaction is not in the mempool, -1 is returned.
+      */
+    int64_t chain_limit_value(const uint256& txid) const;
 
     unsigned long size()
     {
