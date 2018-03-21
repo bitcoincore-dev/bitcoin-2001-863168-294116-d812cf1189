@@ -963,7 +963,15 @@ public:
     CAmount GetLegacyBalance(const isminefilter& filter, int minDepth, const std::string* account) const;
     CAmount GetAvailableBalance(const CCoinControl* coinControl = nullptr) const;
 
+    /**
+     * Return change type to use for a new transaction.
+     */
     OutputType TransactionChangeType(OutputType change_type, const std::vector<CRecipient>& vecSend);
+
+    /**
+     * Return change type to use for a new address.
+     */
+    OutputType ChangeAddressType() const;
 
     /**
      * Insert additional inputs into the transaction by

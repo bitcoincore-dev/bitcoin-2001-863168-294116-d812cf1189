@@ -406,7 +406,7 @@ public:
     }
     bool hdEnabled() override { return m_wallet.IsHDEnabled(); }
     OutputType getDefaultAddressType() override { return m_wallet.m_default_address_type; }
-    OutputType getDefaultChangeType() override { return m_wallet.m_default_change_type; }
+    OutputType getChangeAddressType() override { return m_wallet.ChangeAddressType(); }
     std::unique_ptr<Handler> handleShowProgress(ShowProgressFn fn) override
     {
         return MakeHandler(m_wallet.ShowProgress.connect(fn));
