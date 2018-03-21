@@ -22,6 +22,7 @@
 #include <script/sign.h>
 #include <timedata.h>
 #include <txdb.h>
+#include <txmempool.h>
 #include <util.h>
 #include <utilmoneystr.h>
 #include <wallet/coincontrol.h>
@@ -3193,6 +3194,9 @@ UniValue listunspent(const JSONRPCRequest& request)
             "    \"scriptPubKey\" : \"key\",   (string) the script key\n"
             "    \"amount\" : x.xxx,         (numeric) the transaction output amount in " + CURRENCY_UNIT + "\n"
             "    \"confirmations\" : n,      (numeric) The number of confirmations\n"
+            "    \"ancestorcount\" : n,      (numeric) The number of unconfirmed ancestors if spent\n"
+            "    \"ancestorsize\" : n,       (numeric) The virtual transaction size of all unconfirmed ancestors\n"
+            "    \"ancestorfees\" : n,       (numeric) The modified fees of all unconfirmed ancestors\n"
             "    \"redeemScript\" : n        (string) The redeemScript if scriptPubKey is P2SH\n"
             "    \"spendable\" : xxx,        (bool) Whether we have the private keys to spend this output\n"
             "    \"solvable\" : xxx,         (bool) Whether we know how to spend this output, ignoring the lack of keys\n"
@@ -3308,6 +3312,15 @@ UniValue listunspent(const JSONRPCRequest& request)
         entry.push_back(Pair("scriptPubKey", HexStr(scriptPubKey.begin(), scriptPubKey.end())));
         entry.push_back(Pair("amount", ValueFromAmount(out.tx->tx->vout[out.i].nValue)));
         entry.push_back(Pair("confirmations", out.nDepth));
+        if (!out.nDepth) {
+            LOCK(mempool.cs);
+            const auto it = mempool.mapTx.find(out.tx->GetHash());
+            if (it != mempool.mapTx.end()) {
+                entry.pushKV("ancestorcount", it->GetCountWithAncestors());
+                entry.pushKV("ancestorsize", it->GetSizeWithAncestors());
+                entry.pushKV("ancestorfees", it->GetModFeesWithAncestors());
+            }
+        }
         entry.push_back(Pair("spendable", out.fSpendable));
         entry.push_back(Pair("solvable", out.fSolvable));
         entry.push_back(Pair("safe", out.fSafe));
