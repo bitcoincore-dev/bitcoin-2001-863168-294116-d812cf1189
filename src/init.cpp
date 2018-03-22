@@ -773,6 +773,7 @@ void InitParameterInteraction()
         gArgs.SoftSetArg("-permitbaremultisig", "1");
         gArgs.SoftSetArg("-datacarriersize", "83");
 
+        gArgs.SoftSetArg("-mempoolreplacement", "rbf,optin");
         gArgs.SoftSetArg("-spkreuse", "allow");
         gArgs.SoftSetArg("-blockprioritysize", "0");
         gArgs.SoftSetArg("-blockmaxsize", "4000000");
