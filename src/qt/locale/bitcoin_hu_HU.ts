@@ -322,6 +322,10 @@
         <translation>&amp;URI... Megnyitása</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Tárca:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Kattintson a hálózati tevékenység felfüggesztéséhez.</translation>
     </message>
@@ -786,6 +790,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -908,6 +915,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -956,6 +970,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Ismeretlen. Fejlécek szinkronizálása (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Típus</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Cím</translation>
     </message>
 </context>
 <context>
@@ -1018,6 +1045,10 @@
     <message>
         <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
         <translation>Megmutatja, hogy az alapértelmezett SOCKS5 proxy van-e használatban, hogy elérje a párokat ennél a hálózati típusnál.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor hidden services:</source>
+        <translation type="unfinished">&amp;Más SOCKS5 proxy használata a párokhoz, a Tor rejtett szolgáltatásain keresztül:</translation>
     </message>
     <message>
         <source>Hide the icon from the system tray.</source>
@@ -1094,6 +1125,10 @@
     <message>
         <source>Accept connections from outside.</source>
         <translation>Kívülről érkező kapcsolatok fogadása.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Bejövő kapcsolatok engedélyezése</translation>
     </message>
     <message>
         <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
@@ -1174,6 +1209,10 @@
     <message>
         <source>Whether to show coin control features or not.</source>
         <translation>Mutassa a pénzküldés beállításait vagy ne.</translation>
+    </message>
+    <message>
+        <source>&amp;Third party transaction URLs</source>
+        <translation type="unfinished">&amp;Harmadik féltől származó tranzakciós URL-ek</translation>
     </message>
     <message>
         <source>&amp;OK</source>
@@ -1475,7 +1514,7 @@
         <source>unknown</source>
         <translation>ismeretlen</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject::QObject</name>
     <message>
@@ -1563,6 +1602,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Memóriahasználat</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Tárca: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1689,6 +1732,10 @@
         <translation>Írja be a %1 parancsot az elérhető utasítások áttekintéséhez.</translation>
     </message>
     <message>
+        <source>Network activity disabled</source>
+        <translation>Hálózati tevékenység letiltva</translation>
+    </message>
+    <message>
         <source>(node id: %1)</source>
         <translation>(csomópont azonosító: %1)</translation>
     </message>
@@ -1785,6 +1832,14 @@
     <message>
         <source>QR Code</source>
         <translation>QR-kód</translation>
+    </message>
+    <message>
+        <source>Copy &amp;URI</source>
+        <translation type="unfinished">&amp;URI másolása</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Cím másolása</translation>
     </message>
     <message>
         <source>&amp;Save Image...</source>
@@ -1905,6 +1960,10 @@
         <translation>Egyenleg:</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">Küldé&amp;s</translation>
+    </message>
+    <message>
         <source>Copy quantity</source>
         <translation>Mennyiség másolása</translation>
     </message>
@@ -1959,6 +2018,10 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Öszeg:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Címke:</translation>
@@ -2318,6 +2381,10 @@
 <context>
     <name>bitcoin-core</name>
     <message>
+        <source>Options:</source>
+        <translation type="unfinished">Opciók:</translation>
+    </message>
+    <message>
         <source>Information</source>
         <translation>Információ</translation>
     </message>
@@ -2332,6 +2399,10 @@
     <message>
         <source>Warning</source>
         <translation>Figyelmeztetés</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
+        <translation>Más SOCKS5 proxy használata a párokhoz, a Tor rejtett szolgáltatásain keresztül (default: %s)</translation>
     </message>
     <message>
         <source>Loading wallet...</source>

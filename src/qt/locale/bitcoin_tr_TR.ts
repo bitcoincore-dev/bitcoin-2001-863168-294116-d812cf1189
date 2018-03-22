@@ -274,6 +274,10 @@
         <translation>URI'yi aç</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Cüzdan:</translation>
+    </message>
+    <message>
         <source>Network activity disabled.</source>
         <translation>Ağ etkinliği devre dışı.</translation>
     </message>
@@ -292,6 +296,10 @@
     <message>
         <source>Backup wallet to another location</source>
         <translation>Cüzdanınızı başka bir lokasyona yedekleyin</translation>
+    </message>
+    <message>
+        <source>&amp;Debug window</source>
+        <translation type="unfinished">&amp;Hata giderme penceresi</translation>
     </message>
     <message>
         <source>Open debugging and diagnostic console</source>
@@ -478,6 +486,9 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -525,7 +536,18 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Yok</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
+    <message>
+        <source>Form</source>
+        <translation>Form</translation>
+    </message>
     <message>
         <source>Number of blocks left</source>
         <translation>Kalan blokların sayısı</translation>
@@ -548,7 +570,24 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tip</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>URI:</source>
+        <translation type="unfinished">URI:</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
@@ -609,6 +648,10 @@
         <translation>Varsayılan</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Çekirdeği</translation>
+    </message>
+    <message>
         <source>Client restart required to activate changes.</source>
         <translation>Değişikliklerin aktif edilebilmesi için yeniden başlatma gerekiyor.</translation>
     </message>
@@ -617,15 +660,47 @@
         <translation>Konfigürasyon ayarları</translation>
     </message>
     <message>
+        <source>The configuration file is used to specify advanced user options which override GUI settings. Additionally, any command-line options will override this configuration file.</source>
+        <translation>Konfigürasyon dosyası GUI ayarlarını geçersiz kılmak için gelişmiş kullanıcı ayarlarını değiştirir. Ek olarak, herhangi bir komut satırı seçeneği konfigürasyon dosyasını geçersiz kılar.</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Hata</translation>
     </message>
-    </context>
+    <message>
+        <source>The configuration file could not be opened.</source>
+        <translation>Konfigürasyon dosyası açılamadı.</translation>
+    </message>
+    <message>
+        <source>This change would require a client restart.</source>
+        <translation>Bu değişiklik istemcinin yeniden başlatılmasını gerektirir.</translation>
+    </message>
+    <message>
+        <source>The supplied proxy address is invalid.</source>
+        <translation>Sağlanan proxy adresi geçerli değil.</translation>
+    </message>
+</context>
 <context>
     <name>OverviewPage</name>
     <message>
+        <source>Form</source>
+        <translation>Form</translation>
+    </message>
+    <message>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
+        <translation>Gösterilen bilgi geçerli olmayabilir. Bağlantı tekrar sağlandıktan sonra cüzdanınız otomatik olarak senkronize olacaktır. Henüz senkronize olma işlemi tamamlanmadı.</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation>Sadece görüntülenebilir:</translation>
+    </message>
+    <message>
         <source>Available:</source>
         <translation>Kullanılabilir:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Mevcut harcanabilir tutarınız</translation>
     </message>
     <message>
         <source>Pending:</source>
@@ -635,9 +710,41 @@
         <source>Total:</source>
         <translation>Toplam:</translation>
     </message>
-    </context>
+    <message>
+        <source>Your current total balance</source>
+        <translation>Toplam mevcut miktarınız</translation>
+    </message>
+    <message>
+        <source>Your current balance in watch-only addresses</source>
+        <translation>Sadece görüntülenebilir adreslerdeki mevcut miktarınız</translation>
+    </message>
+    <message>
+        <source>Spendable:</source>
+        <translation>Harcanabilir:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Yakın zamanda yapılmış işlemler</translation>
+    </message>
+    <message>
+        <source>Unconfirmed transactions to watch-only addresses</source>
+        <translation>Sadece görüntülenebilir adreslerdeki doğrulanmamış işlemler</translation>
+    </message>
+    <message>
+        <source>Current total balance in watch-only addresses</source>
+        <translation>Sadece görüntülenebilir adreslerdeki mevcut toplam miktar</translation>
+    </message>
+</context>
 <context>
     <name>PaymentServer</name>
+    <message>
+        <source>Payment request error</source>
+        <translation>Ödeme isteği hatası</translation>
+    </message>
+    <message>
+        <source>Payment request fetch URL is invalid: %1</source>
+        <translation>Ödeme isteği URL'si hatalı: %1</translation>
+    </message>
     <message>
         <source>Invalid payment address %1</source>
         <translation>Hatalı ödeme adresi %1</translation>
@@ -675,6 +782,11 @@
     <message>
         <source>unknown</source>
         <translation>bilinmiyor</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>İşlem</translation>
     </message>
 </context>
 <context>
@@ -748,6 +860,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Bellek kullanımı</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Cüzdan: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -881,10 +997,6 @@
         <translation>Temizle</translation>
     </message>
     <message>
-        <source>Generate Bech32 address</source>
-        <translation>Bech32 adresi oluştur</translation>
-    </message>
-    <message>
         <source>Show</source>
         <translation>Göster</translation>
     </message>
@@ -978,6 +1090,10 @@
         <translation>Otomatik seçildi</translation>
     </message>
     <message>
+        <source>Insufficient funds!</source>
+        <translation>Yetersiz Bakiye</translation>
+    </message>
+    <message>
         <source>Bytes:</source>
         <translation>Bayt</translation>
     </message>
@@ -1016,6 +1132,10 @@
     <message>
         <source>Clear &amp;All</source>
         <translation>Hepsini sil</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">Gönder</translation>
     </message>
     <message>
         <source>Copy fee</source>
@@ -1077,6 +1197,10 @@
     </context>
 <context>
     <name>SignVerifyMessageDialog</name>
+    <message>
+        <source>&amp;Sign Message</source>
+        <translation type="unfinished">İmza &amp;Mesaj</translation>
+    </message>
     <message>
         <source>Paste address from clipboard</source>
         <translation>Panodaki adresi yapıştırın</translation>
@@ -1141,6 +1265,10 @@
     <message>
         <source>unknown</source>
         <translation>bilinmiyor</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>sadece görüntülenebilir</translation>
     </message>
     <message>
         <source>label</source>
@@ -1213,6 +1341,10 @@
         <translation>Kazıldı</translation>
     </message>
     <message>
+        <source>watch-only</source>
+        <translation>sadece görüntülenebilir</translation>
+    </message>
+    <message>
         <source>(n/a)</source>
         <translation>(yok)</translation>
     </message>
@@ -1276,6 +1408,10 @@
         <translation>Kabul edilen</translation>
     </message>
     <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">Sadece görüntülenebilir</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>Tarih</translation>
     </message>
@@ -1318,6 +1454,10 @@
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Çıkar</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Seçili sekmedeki veriyi dosya olarak dışa aktar</translation>
     </message>
     <message>
         <source>Backup Wallet</source>
@@ -1387,6 +1527,10 @@
         <translation>Versiyonu yazdır ve çıkış yap</translation>
     </message>
     <message>
+        <source>Send transactions with full-RBF opt-in enabled (RPC only, default: %u)</source>
+        <translation>Tam merkezi taban işlevi etkinleştirilmiş işlemleri gönder (varsayılan: %u)</translation>
+    </message>
+    <message>
         <source>Verifying blocks...</source>
         <translation>Bloklar Onaylanıyor...</translation>
     </message>
@@ -1413,6 +1557,10 @@
     <message>
         <source>Invalid -onion address or hostname: '%s'</source>
         <translation>Hatalı -onion adresi ya da host adı: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname: '%s'</source>
+        <translation>Hatalı -proxy adresi ya da host adı: '%s'</translation>
     </message>
     <message>
         <source>RPC server options:</source>
@@ -1449,6 +1597,18 @@
     <message>
         <source>(default: %s)</source>
         <translation>(varsayılan: %s)</translation>
+    </message>
+    <message>
+        <source>Set key pool size to &lt;n&gt; (default: %u)</source>
+        <translation>Anahtar havuzu boyutunu 1 olarak ayarla (varsayılan: %u)</translation>
+    </message>
+    <message>
+        <source>Set maximum BIP141 block weight (default: %d)</source>
+        <translation>Maksimum BIP141 Blok ağırlığını ayarlama (varsayılan: %d)</translation>
+    </message>
+    <message>
+        <source>Set the number of threads to service RPC calls (default: %d)</source>
+        <translation>RPC çağrılarına hizmet edecek konuların sayısını ayarlama (varsayılan: %d)</translation>
     </message>
     <message>
         <source>Specify configuration file (default: %s)</source>

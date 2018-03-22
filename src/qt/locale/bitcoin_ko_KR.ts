@@ -30,6 +30,10 @@
         <translation>현재 목록에 선택한 주소 삭제</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>검색하기 위한 주소 또는 표 입력</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>현재 탭에 있는 데이터를 파일로 내보내기</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>&amp;URI 열기...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">지갑:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -786,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -912,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>없음</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -960,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>알수없음. 헤더 동기화중 (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>형식</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>주소</translation>
     </message>
 </context>
 <context>
@@ -1206,6 +1237,10 @@
     <message>
         <source>none</source>
         <translation>없음</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>비트코인 코어</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1489,7 +1524,7 @@
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation><numerusform>&amp;n 일</numerusform></translation>
+        <translation><numerusform>%n 일</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
@@ -1526,6 +1561,16 @@
     <message>
         <source>unknown</source>
         <translation>알수없음</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>블럭</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>송금</translation>
     </message>
 </context>
 <context>
@@ -1627,6 +1672,10 @@
     <message>
         <source>Memory usage</source>
         <translation>메모리 사용량</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">지갑: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1900,14 +1949,6 @@
         <translation>지불 요청(&amp;R)</translation>
     </message>
     <message>
-        <source>Bech32 addresses (BIP-173) are cheaper to spend from and offer better protection against typos. When unchecked a P2SH wrapped SegWit address will be created, compatible with older wallets.</source>
-        <translation>Bech32 주소 (BIP-173)는 더 적은 수수료와 오입금으로부터 방지해 줍니다. Bech32가 비활성화 되어있으면 P2SH 기반의 세그윗 주소가 대신 생성됩니다.</translation>
-    </message>
-    <message>
-        <source>Generate Bech32 address</source>
-        <translation>Bech32 주소 생성</translation>
-    </message>
-    <message>
         <source>Show the selected request (does the same as double clicking an entry)</source>
         <translation>선택된 요청을 표시하기 (더블 클릭으로 항목을 표시할 수 있습니다)</translation>
     </message>
@@ -2103,10 +2144,6 @@
     <message>
         <source>per kilobyte</source>
         <translation>킬로바이트 당</translation>
-    </message>
-    <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>사용자 정의 수수료가 1000사토시로 지정된 경우 거래의 크기가 250바이트 일 경우 1킬로바이트당 250사토시만 지불되지만 "최소 수수료"에선 1000사토시가 지불됩니다. 1킬로바이트가 넘는 거래인 경우 어떠한 경우에든 1킬로바이트 기준으로 지불됩니다.</translation>
     </message>
     <message>
         <source>Hide</source>
@@ -3243,6 +3280,10 @@
         <translation>허용 된 최대 중간 피어 시간 오프셋 조정. 시간에 대한 지역적 전망치는 전방 또는 후방의 피어에 의해 영향을 받을 수 있습니다. (기본값: %u 초)</translation>
     </message>
     <message>
+        <source>Maximum total fees (in %s) to use in a single wallet transaction or raw transaction; setting this too low may abort large transactions (default: %s)</source>
+        <translation>하나의 지갑 트랜잭션에서의 총 수수료(%s)의 최대치; 너무 낮게 설정하면 큰 트랜잭션이 중지 됩니다 (기본값: %s)</translation>
+    </message>
+    <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
         <translation>컴퓨터의 날짜와 시간이 올바른지 확인하십시오! 시간이 잘못되면 %s은 제대로 동작하지 않습니다.</translation>
     </message>
@@ -3257,6 +3298,10 @@
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>블록 생성시 거래가 포함되도록 최저 수수료율을 설정하십시오 (%s/kB 단위). (기본값: %s)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>최대 크기를 최우선으로 설정 / 바이트당 최소 수수료로 거래(기본값: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3305,6 +3350,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>종료시 mempool 저장과 재시작시 로드 여부 (기본 : %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>설정된 IP주소 (보기 1.2.3.4) 혹은 CIDR로 작성된 네트워크 (보기 1.2.3.0/24)로 화이트리스트에 포함된 피어에 접속합니다. 이 설정은 복수로 지정 할 수 있습니다.</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3475,6 +3524,10 @@
         <translation>인증 쿠키의 위치 (기본값: data dir)</translation>
     </message>
     <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>중계 및 채굴을 할 때 트랜잭션에서의 sigop 당 데이터의 최소 크기 (기본값: %u)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>사용 가능한 파일 디스크립터-File Descriptor-가 부족합니다. </translation>
     </message>
@@ -3521,6 +3574,10 @@
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>데이터베이스 케시 크기를 메가바이트로 설정(%d 부터 %d, 기본값: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>최대 블락 크기를 Bytes로 지정하세요 (기본: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3883,10 +3940,6 @@
         <translation>디버그 정보 출력 (기본값: %u, &lt;category&gt; 제공은 선택입니다)</translation>
     </message>
     <message>
-        <source>Set maximum BIP141 block weight to this * 4. Deprecated, use blockmaxweight</source>
-        <translation>최대 BIP141 블록 무게: 설정값 *4. 현재 미 지원 옵션입니다. -blockmaxweight 를 대신 쓰세요.</translation>
-    </message>
-    <message>
         <source>Sets the serialization of raw transaction or block hex returned in non-verbose mode, non-segwit(0) or segwit(1) (default: %d)</source>
         <translation>non-segwit(0) 또는 segwit(1) (기본값: %d) 가 아닌 자세한 정보 표시 모드로 반환 된 원시 거래 또는 블록 hex의 직렬화를 설정합니다.</translation>
     </message>
@@ -3937,10 +3990,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>경고 : 지갑파일이 손상되어 데이터가 복구되었습니다. 원래의 %s 파일은 %s 후에 %s 이름으로 저장됩니다. 잔액과 거래 내역이 정확하지 않다면 백업 파일로 부터 복원해야 합니다. </translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>설정된 IP주소 (보기 1.2.3.4) 혹은 CIDR로 작성된 네트워크 (보기 1.2.3.0/24)로 화이트리스트에 포함된 피어에 접속합니다. 이 설정은 복수로 지정 할 수 있습니다.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

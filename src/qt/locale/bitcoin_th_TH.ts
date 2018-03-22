@@ -50,13 +50,69 @@
         <translation>เลือกที่อยู่เพื่อส่งเหรียญไปไว้</translation>
     </message>
     <message>
+        <source>C&amp;hoose</source>
+        <translation>&amp;เลือก</translation>
+    </message>
+    <message>
         <source>Sending addresses</source>
         <translation>ส่งที่อยู่</translation>
     </message>
-    </context>
+    <message>
+        <source>Receiving addresses</source>
+        <translation>กำลังรับที่อยู่</translation>
+    </message>
+    <message>
+        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>ที่อยู่เหล่านี้เป็นที่อยู่ Bitcoin ของคุณ สำหรับใช้เพื่อส่งเงิน กรุณาตรวจสอบจำนวนเงินและที่อยู่สำหรับรับเงินก่อนส่งเหรียญไป</translation>
+    </message>
+    <message>
+        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>มี Bitcoin address/ที่เก็บเงิน หลายที่อยู่ สำหรับรับการชำระเงิน เราแนะนำให้ท่านใช้ receiving address ที่อยูเพื่อรับเงิน ที่ใหม่ทุกครั้ง ในการทำธุรกรรม รับเงิน</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;คัดลอกที่อยู่</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Label</source>
+        <translation>คัดลอก &amp;ป้ายชื่อ</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;แก้ไข</translation>
+    </message>
+    <message>
+        <source>Export Address List</source>
+        <translation>ส่งออกรายการที่อยู่</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>คั่นไฟล์ด้วยเครื่องหมายจุลภาค (*.csv)</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>ส่งออกข้อมูลล้มเหลว</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the address list to %1. Please try again.</source>
+        <translation>พบข้อผิดพลาดบางกระการในการพยายามบันทึกรายชื่อที่อยู่ไปยัง %1. กรุณาลองใหม่อีกครั้ง</translation>
+    </message>
+</context>
 <context>
     <name>AddressTableModel</name>
-    </context>
+    <message>
+        <source>Label</source>
+        <translation>ชื่อ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>ที่อยู่</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(ไม่มีชื่อ)</translation>
+    </message>
+</context>
 <context>
     <name>AskPassphraseDialog</name>
     <message>
@@ -75,7 +131,91 @@
         <source>Repeat new passphrase</source>
         <translation>กรุณากรอกรหัสผ่านใหม่อีกครั้งหนึ่ง</translation>
     </message>
-    </context>
+    <message>
+        <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>ใส่รหัสผ่าน กระเป๋าเงิน ใหม่ &lt;br/&gt; กรุณาใช้รหัสผ่าน ที่ &lt;b&gt;มีตัวอักษร สิบ ตัว หรือมากกว่า&lt;/b&gt; หรือ &lt;b&gt;คำ แปด คำ หรือมากกว่า&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>กระเป๋าสตางค์ที่เข้ารหัส</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
+        <translation>การดำเนินการนี้ต้องมีรหัสผ่านกระเป๋าเงินของคุณเพื่อปลดล็อคกระเป๋าเงิน</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>เปิดกระเป๋าสตางค์</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
+        <translation>การดำเนินการนี้ต้องมีรหัสผ่านกระเป๋าเงินของคุณในการถอดรหัสกระเป๋าเงิน</translation>
+    </message>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>ถอดรหัสกระเป๋าสตางค์</translation>
+    </message>
+    <message>
+        <source>Change passphrase</source>
+        <translation>เปลี่ยนรหัสผ่าน</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase to the wallet.</source>
+        <translation>ใส่ รหัสผ่าน เก่า และ รหัสผ่านใหม่ เข้าในกระเป๋าเงิน</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>ยืนยันการเข้ารหัสกระเป๋าสตางค์</translation>
+    </message>
+    <message>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
+        <translation>คำเตือน: หากท่าน เข้ารหัสกระเป๋าเงิน และ ทำรหัสผ่านหาย &lt;b&gt;BITCOIN ของท่านจะหายทั้งหมด&lt;/b&gt;!</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to encrypt your wallet?</source>
+        <translation>คุณแน่ใจแล้วหรือว่าต้องการเข้ารหัสกระเป๋าสตางค์ของคุณ?</translation>
+    </message>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>กระเป๋าสตางค์ถูกเข้ารหัสเรียบร้อยแล้ว</translation>
+    </message>
+    <message>
+        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
+        <translation>สำคัญ: ไฟล์กระเป๋าเงินสำรองที่ท่านสร้างไว้แล้ว ควรได้รับการเปลี่ยนแทนที่ ด้วยไฟล์กระเป๋าเงินซึ่งเข้ารหัส ที่เพิ่งสร้างขึ้นใหม่นี้ ด้วยเหตุผลด้านการรักษาความปลอดภัย ไฟล์กระเป๋าเงินสำรองที่มิได้เข้ารหัส ที่สร้างขึ้นก่อนหน้านี้ จะใช้การไม่ได้อีกต่อไป ทันทีที่ท่านเริ่มใช้งาน กระเป๋าเงินซึ่งเข้ารหัส ที่สร้างขี้นใหม่</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed</source>
+        <translation>การเข้ารหัสกระเป๋าสตางค์ผิดพลาด</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
+        <translation>กระเป๋าเงินเข้ารหัสล้มเหลวเนื่องจากข้อผิดพลาดภายใน กระเป๋าเงินของคุณไม่ได้เข้ารหัส</translation>
+    </message>
+    <message>
+        <source>The supplied passphrases do not match.</source>
+        <translation>รหัสผ่านที่คุณกรอกไม่ตรงกัน</translation>
+    </message>
+    <message>
+        <source>Wallet unlock failed</source>
+        <translation>ปลดล็อคกระเป๋าเงินล้มเหลว</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>ป้อนรหัสผ่านสำหรับการถอดรหัสกระเป๋าเงินไม่ถูกต้อง</translation>
+    </message>
+    <message>
+        <source>Wallet decryption failed</source>
+        <translation>ถอดรหัสกระเป๋าเงินล้มเหลว</translation>
+    </message>
+    <message>
+        <source>Wallet passphrase was successfully changed.</source>
+        <translation>รหัสผ่าน กระเป๋าเงิน ได้รับการเปลี่ยนเรียบร้อยแล้ว</translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>คำเตือน: ท่านกำลังใช้อักษร Capital ตัวใหญ่ อยู่ / Caps Lock คีย์ กำลังใช้งานอยู่ !</translation>
+    </message>
+</context>
 <context>
     <name>BanTableModel</name>
     <message>
@@ -172,6 +312,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>เปิด &amp;URI</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">กระเป๋าเงิน:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -446,6 +590,10 @@
         <source>Confirmed</source>
         <translation>ยืนยันแล้ว</translation>
     </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(ไม่มีชื่อ)</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -469,7 +617,35 @@
         <source>&amp;Address</source>
         <translation>&amp;ที่เก็บ</translation>
     </message>
-    </context>
+    <message>
+        <source>New receiving address</source>
+        <translation>ที่อยู่ผู้รับใหม่</translation>
+    </message>
+    <message>
+        <source>New sending address</source>
+        <translation>ที่อยู่ผู้ส่งใหม่</translation>
+    </message>
+    <message>
+        <source>Edit receiving address</source>
+        <translation>แก้ไขที่อยู่ผู้รับ</translation>
+    </message>
+    <message>
+        <source>Edit sending address</source>
+        <translation>แก้ไขที่อยู่ผู้ส่ง</translation>
+    </message>
+    <message>
+        <source>The entered address "%1" is already in the address book.</source>
+        <translation>ป้อนที่อยู่ "%1" ที่มีอยู่แล้วในสมุดที่อยู่</translation>
+    </message>
+    <message>
+        <source>Could not unlock wallet.</source>
+        <translation>ไม่สามารถปลดล็อคกระเป๋าเงิน</translation>
+    </message>
+    <message>
+        <source>New key generation failed.</source>
+        <translation>สร้างกุญแจใหม่ล้มเหลว</translation>
+    </message>
+</context>
 <context>
     <name>FreespaceChecker</name>
     <message>
@@ -493,6 +669,9 @@
         <translation>ไม่สามารถสร้างไดเร็กทอรี่ข้อมูลที่นี่</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -592,12 +771,23 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>รูป</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>ที่อยู่</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -650,6 +840,22 @@
     <message>
         <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
         <translation>IP แอดเดส ของ proxy (เช่น IPv4: 127.0.0.1 / IPv6: ::1)</translation>
+    </message>
+    <message>
+        <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
+        <translation>แสดง หากใช้พร็อกซี่ SOCKS5 ที่เป็นค่าเริ่มต้น เพื่อเข้าถึง peer อีกฝ่าย ผ่านทางเน็ตเวิร์กชนิดนี้</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor hidden services:</source>
+        <translation type="unfinished">&amp;ใช้ พร็อกซี่ SOCKS5 แยก เพื่อเข้าถึง peers ผ่าน Tor เซอร์วิสซ่อน:</translation>
+    </message>
+    <message>
+        <source>Hide the icon from the system tray.</source>
+        <translation type="unfinished">ซ่อนไอคอน จากเทรย์ระบบ</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;ซ่อนไอคอนเทรย์</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
@@ -708,6 +914,14 @@
         <translation>จองพอร์ต โดยใช้ &amp;UPnP</translation>
     </message>
     <message>
+        <source>Accept connections from outside.</source>
+        <translation>ยอมรับ การเชื่อมต่อจากภายนอก</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;ยอมให้เชื่อมต่อจากภายนอกได้</translation>
+    </message>
+    <message>
         <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
         <translation>เชื่อมต่อกับ Bitcoin เน็ตเวิร์ก ผ่านพร็อกซี่แบบ SOCKS5</translation>
     </message>
@@ -756,6 +970,10 @@
         <translation>แสดงเทรย์ไอคอน หลังมืนิไมส์วินโดว์ เท่านั้น</translation>
     </message>
     <message>
+        <source>&amp;Third party transaction URLs</source>
+        <translation type="unfinished">&amp;URI รายการ แบบของเจ้าอื่นๆ</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>ข้อผิดพลาด</translation>
     </message>
@@ -779,11 +997,37 @@
         <source>Amount</source>
         <translation>จำนวน</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n ชั่วโมง</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n วัน</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n สัปดาห์</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 และ %2</translation>
     </message>
-    </context>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n ปี</numerusform></translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>บล็อก</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>ทำรายการ</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -792,9 +1036,29 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;ข้อมูล</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation>หน้าต่างตรวจสอบข้อผิดพลาด</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>เน็ตเวิร์ก</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">กระเป๋าเงิน: </translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation>&amp;จำนวน:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;ชื่อ:</translation>
@@ -802,9 +1066,41 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;คัดลอกที่อยู่</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>ที่อยู่</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>จำนวน</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>ชื่อ</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>วันที่</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>ชื่อ</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(ไม่มีชื่อ)</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
@@ -837,12 +1133,28 @@
         <translation>เงินทอน:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">เลือก...</translation>
+    </message>
+    <message>
         <source>Dust:</source>
         <translation>เศษ:</translation>
     </message>
-    </context>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;ส่ง</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(ไม่มีชื่อ)</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation>&amp;จำนวน:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;ชื่อ:</translation>
@@ -869,15 +1181,67 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Date</source>
+        <translation>วันที่</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>ทำรายการ</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>จำนวน</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>วันที่</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>ชื่อ</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(ไม่มีชื่อ)</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Today</source>
+        <translation>วันนี้</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>คั่นไฟล์ด้วยเครื่องหมายจุลภาค (*.csv)</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>ยืนยันแล้ว</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>วันที่</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>ชื่อ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>ที่อยู่</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>ส่งออกข้อมูลล้มเหลว</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -887,9 +1251,25 @@
     </context>
 <context>
     <name>WalletModel</name>
+    <message>
+        <source>Send Coins</source>
+        <translation>ส่งเหรียญ</translation>
+    </message>
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;ส่งออก</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>ส่งออกข้อมูลที่อยู่ในแท็บไปที่ไฟล์</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">สำรองกระเป๋าเงิน</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
@@ -904,6 +1284,10 @@
     <message>
         <source>Warning</source>
         <translation>คำเตือน</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
+        <translation>ใช้ พร็อกซี่ SOCKS5 แยก เพื่อเข้าถึง peers ผ่าน Tor เซอร์วิสซ่อน (default: %s)</translation>
     </message>
     <message>
         <source>Error</source>

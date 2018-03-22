@@ -15,7 +15,7 @@
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Kopiera den markerade adressen till systemets Urklipp</translation>
+        <translation>Kopiera den markerade adressen till systemets urklippshanterare</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
@@ -28,6 +28,10 @@
     <message>
         <source>Delete the currently selected address from the list</source>
         <translation>Ta bort den valda adressen från listan</translation>
+    </message>
+    <message>
+        <source>Enter address or label to search</source>
+        <translation>Ange en adress eller etikett att söka efter</translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
@@ -43,11 +47,11 @@
     </message>
     <message>
         <source>Choose the address to send coins to</source>
-        <translation>Välj en adress att sända betalning till</translation>
+        <translation>Välj en adress att skicka transaktionen till</translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
-        <translation>Välj en adress att ta emot betalning till</translation>
+        <translation>Välj en adress att ta emot transaktionen med</translation>
     </message>
     <message>
         <source>C&amp;hoose</source>
@@ -321,6 +325,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Open &amp;URI...</source>
         <translation>Öppna &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Plånbok:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -787,6 +795,9 @@ Var vänlig och försök igen.</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -905,6 +916,13 @@ Var vänlig och försök igen.</translation>
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>ej tillgänglig</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -953,6 +971,19 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Okänd. Synkar huvuden (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adress</translation>
     </message>
 </context>
 <context>
@@ -1017,6 +1048,18 @@ Var vänlig och försök igen.</translation>
         <translation>Visas, om den angivna standard-SOCKS5-proxyn används för att nå noder via den här nätverkstypen.</translation>
     </message>
     <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor hidden services:</source>
+        <translation>Använd separata SOCKS&amp;5-proxy för att nå noder via Tors dolda tjänster:</translation>
+    </message>
+    <message>
+        <source>Hide the icon from the system tray.</source>
+        <translation>Göm ikonen från aktivitetsfältet.</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation>&amp;Göm ikonen</translation>
+    </message>
+    <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
         <translation>Minimera istället för att stänga programmet när fönstret stängs. När detta alternativ är aktiverat stängs programmet endast genom att välja Stäng i menyn.</translation>
     </message>
@@ -1079,6 +1122,14 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Map port using &amp;UPnP</source>
         <translation>Tilldela port med hjälp av &amp;UPnP</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside.</source>
+        <translation>Acceptera anslutningar utifrån.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation>Tillåt ankommande anslutningar</translation>
     </message>
     <message>
         <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
@@ -1159,6 +1210,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Whether to show coin control features or not.</source>
         <translation>Om myntkontrollfunktioner skall visas eller inte</translation>
+    </message>
+    <message>
+        <source>&amp;Third party transaction URLs</source>
+        <translation>&amp;URL:er för tredjepartstransaktioner</translation>
     </message>
     <message>
         <source>&amp;OK</source>
@@ -1496,6 +1551,11 @@ Var vänlig och försök igen.</translation>
         <source>unknown</source>
         <translation>okänd</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1596,6 +1656,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Memory usage</source>
         <translation>Minnesåtgång</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Plånbok: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1772,6 +1836,18 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
         <translation>Använd upp- och ner-pilarna för att navigera i historiken, och %1 för att rensa skärmen.</translation>
+    </message>
+    <message>
+        <source>Type %1 for an overview of available commands.</source>
+        <translation>Skriv %1 för att få en överblick över tillgängliga kommandon.</translation>
+    </message>
+    <message>
+        <source>For more information on using this console type %1.</source>
+        <translation>För mer information om att använda denna konsol, skriv %1.</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.</source>
+        <translation>VARNING: Bedragare är kända för att be användare skriva olika kommandon här, varpå de stjäl plånböckernas innehåll. Använd inte konsolen utan att fullt ut förstå konsekvenserna av ett visst kommando.</translation>
     </message>
     <message>
         <source>Network activity disabled</source>
@@ -2038,6 +2114,10 @@ Var vänlig och försök igen.</translation>
         <translation>Välj...</translation>
     </message>
     <message>
+        <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until you have validated the complete chain.</source>
+        <translation>Med standardavgiften riskerar en transaktion ta timmar eller dagar för att komma fram, om den ens gör det. Överväg att själv välja avgift alternativt vänta tills du validerar hela kedjan.</translation>
+    </message>
+    <message>
         <source>Warning: Fee estimation is currently not possible.</source>
         <translation>Varning: Avgiftsberäkning är för närvarande inte möjlig.</translation>
     </message>
@@ -2048,10 +2128,6 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>per kilobyte</source>
         <translation>per kilobyte</translation>
-    </message>
-    <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Om den anpassad avgiften är satt till 1000 satoshi och transaktionen bara är 250 byte, betalar "per kilobyte" bara 250 satoshi i avgift, medans "totalt minst" betalar 1000 satoshi. För transaktioner större än en kilobyte betalar både per kilobyte.</translation>
     </message>
     <message>
         <source>Hide</source>
@@ -2096,6 +2172,14 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Confirmation time target:</source>
         <translation>Bekräftelsestidsmål:</translation>
+    </message>
+    <message>
+        <source>Enable Replace-By-Fee</source>
+        <translation>Möjliggör ersättande avgift</translation>
+    </message>
+    <message>
+        <source>With Replace-By-Fee (BIP-125) you can increase a transaction's fee after it is sent. Without this, a higher fee may be recommended to compensate for increased transaction delay risk.</source>
+        <translation>Med ersättande avgift (BIP-125) kan du höja transaktionsavgiften efter att transaktionen redan skickats. Om du väljer bort det kan en högre avgift rekommenderas för att kompensera för ökad risk för förhöjd transaktionstid.</translation>
     </message>
     <message>
         <source>Clear &amp;All</source>
@@ -2164,6 +2248,14 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>or</source>
         <translation>eller</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
+        <translation>Du kan välja att höja avgiften senare (med ersättande avgift, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Not signalling Replace-By-Fee, BIP-125.</source>
+        <translation>Använder inte ersättande avgift, BIP-125.</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -2283,6 +2375,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>S&amp;ubtract fee from amount</source>
         <translation>S&amp;ubtrahera avgiften från beloppet</translation>
+    </message>
+    <message>
+        <source>Use available balance</source>
+        <translation>Använd tillgänglig balans</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -2537,6 +2633,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>, has not been successfully broadcast yet</source>
         <translation>,har inte lyckats sända än</translation>
+    </message>
+    <message numerus="yes">
+        <source>, broadcast through %n node(s)</source>
+        <translation><numerusform>, sänd genom %n nod</numerusform><numerusform>, sänd genom %n noder</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2834,6 +2934,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Other</source>
         <translation>Övriga</translation>
+    </message>
+    <message>
+        <source>Enter address, transaction id, or label to search</source>
+        <translation>Ange adress, transaktions-id eller etikett för att söka</translation>
     </message>
     <message>
         <source>Min amount</source>
@@ -3143,6 +3247,14 @@ Var vänlig och försök igen.</translation>
         <translation>Var snäll och bidra om du finner %s användbar. Besök %s för mer information om mjukvaran.</translation>
     </message>
     <message>
+        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect used)</source>
+        <translation>Sök efter klientadresser med DNS sökningen, om det finns otillräckligt med adresser (förvalt: 1 om inte -connect)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Sätt den maximala storleken av hög-prioriterade/låg-avgifts transaktioner i byte (förvalt: %d)</translation>
+    </message>
+    <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
         <translation>Ange antalet skriptkontrolltrådar (%u till %d, 0 = auto, &lt;0 = lämna så många kärnor lediga, förval: %d)</translation>
     </message>
@@ -3153,6 +3265,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
         <translation>Detta är ett förhandstestbygge - använd på egen risk - använd inte för mining eller handels applikationer</translation>
+    </message>
+    <message>
+        <source>Unable to replay blocks. You will need to rebuild the database using -reindex-chainstate.</source>
+        <translation>Kunde inte spela om block. Du kommer att behöva bygga om databasen med -reindex-chainstate.</translation>
     </message>
     <message>
         <source>Unable to rewind the database to a pre-fork state. You will need to redownload the blockchain</source>
@@ -3303,6 +3419,10 @@ Var vänlig och försök igen.</translation>
         <translation>Misslyckades att lyssna på någon port. Använd -listen=0 om du vill detta.</translation>
     </message>
     <message>
+        <source>Failed to rescan the wallet during initialization</source>
+        <translation>Misslyckades med att skanna om plånboken under initiering.</translation>
+    </message>
+    <message>
         <source>Importing...</source>
         <translation>Importerar...</translation>
     </message>
@@ -3343,6 +3463,10 @@ Var vänlig och försök igen.</translation>
         <translation>Plats för authcookie (förvalt: datamapp)</translation>
     </message>
     <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimum antal byte per sigop i transaktioner som vi reläar och bryter (förvalt: %u)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Inte tillräckligt med filbeskrivningar tillgängliga.</translation>
     </message>
@@ -3375,12 +3499,24 @@ Var vänlig och försök igen.</translation>
         <translation>Återskapa blockkedjans status från aktuella indexerade block</translation>
     </message>
     <message>
+        <source>Replaying blocks...</source>
+        <translation>Spelar om block...</translation>
+    </message>
+    <message>
         <source>Rewinding blocks...</source>
         <translation>Spolar tillbaka blocken...</translation>
     </message>
     <message>
+        <source>Send transactions with full-RBF opt-in enabled (RPC only, default: %u)</source>
+        <translation>Skicka transaktioner med full-RBF opt-in aktiverad (standard: %u)</translation>
+    </message>
+    <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Sätt databasens cachestorlek i megabyte (%d till %d, förvalt: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Sätt maximal blockstorlek i byte (förvalt: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3625,6 +3761,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Verifying wallet(s)...</source>
         <translation>Verifierar plånbok(er)...</translation>
+    </message>
+    <message>
+        <source>Wallet %s resides outside wallet directory %s</source>
+        <translation>Plånbok %s ligger utanför datakatalogen %s</translation>
     </message>
     <message>
         <source>Warning</source>

@@ -30,6 +30,10 @@
         <translation>Удалить выбранный адрес из списка</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Введите адрес или метку для поиска</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Экспортировать данные из вкладки в файл</translation>
     </message>
@@ -322,6 +326,10 @@
         <translation>Открыть &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Бумажник:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Кликните, чтобы запретить сетевую активность.</translation>
     </message>
@@ -364,10 +372,6 @@
     <message>
         <source>&amp;Verify message...</source>
         <translation>&amp;Проверить сообщение...</translation>
-    </message>
-    <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -786,6 +790,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -871,10 +878,6 @@
         <translation>Использовать другой каталог данных:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Минимум %1 Гб данных будет храниться в этом каталоге, и со временем объем данных будет увеличиваться.</translation>
     </message>
@@ -907,6 +910,13 @@
         <translation><numerusform>(из необходимых %n ГБ)</numerusform><numerusform>(из необходимых %n ГБ)</numerusform><numerusform>(из необходимых %n ГБ)</numerusform><numerusform>(из необходимых %n ГБ)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Н/Д</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -959,6 +969,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тип</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адрес</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -967,10 +990,6 @@
     <message>
         <source>Open payment request from URI or file</source>
         <translation>Открыть запрос платежа из URI или файла</translation>
-    </message>
-    <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
     </message>
     <message>
         <source>Select payment request file</source>
@@ -1029,7 +1048,7 @@
     </message>
     <message>
         <source>&amp;Hide tray icon</source>
-        <translation>Скрыть иконку из трея</translation>
+        <translation>&amp;Скрыть иконку из трея</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
@@ -1128,18 +1147,6 @@
         <translation>Используется для достижения участников через:</translation>
     </message>
     <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
-    </message>
-    <message>
         <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor hidden services.</source>
         <translation>Подключаться к сети Bitcoin через прокси SOCKS5 для скрытых сервисов Tor.</translation>
     </message>
@@ -1186,10 +1193,6 @@
     <message>
         <source>&amp;Third party transaction URLs</source>
         <translation>Сторонние URL адреса транзакций.</translation>
-    </message>
-    <message>
-        <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
@@ -1523,6 +1526,16 @@
         <source>unknown</source>
         <translation>неизвестно</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакция</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1623,6 +1636,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Использование памяти</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Бумажник: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1896,14 +1913,6 @@
         <translation>&amp;Запросить платёж</translation>
     </message>
     <message>
-        <source>Bech32 addresses (BIP-173) are cheaper to spend from and offer better protection against typos. When unchecked a P2SH wrapped SegWit address will be created, compatible with older wallets.</source>
-        <translation>Bech32 адреса (BIP-173) дешевле в коммисиях и предлагают лучшую защиту от опечаток. Когда пункт P2SH не отмечен, будет создан связанный SegWit адрес, совместимый со старыми кошельками.</translation>
-    </message>
-    <message>
-        <source>Generate Bech32 address</source>
-        <translation>Создать Bech32 адрес</translation>
-    </message>
-    <message>
         <source>Show the selected request (does the same as double clicking an entry)</source>
         <translation>Показать выбранный запрос (то же самое, что и двойной клик по записи)</translation>
     </message>
@@ -1961,10 +1970,6 @@
     <message>
         <source>Payment information</source>
         <translation>Информация платежа</translation>
-    </message>
-    <message>
-        <source>URI</source>
-        <translation>URI</translation>
     </message>
     <message>
         <source>Address</source>
@@ -2099,10 +2104,6 @@
     <message>
         <source>per kilobyte</source>
         <translation>за килобайт</translation>
-    </message>
-    <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Если комиссия установлена в 1000 сатоши, а транзакция составляет лишь 250 байт, тогда комиссия "на килобайт" составит 250 сатоши, а "всего как минимум" — 1000 сатоши. Для транзакций крупнее килобайта в обоих случаях будет использоваться платёж "на килобайт".</translation>
     </message>
     <message>
         <source>Hide</source>
@@ -2328,16 +2329,8 @@
         <translation>Адрес Bitcoin, на который отправить платёж</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Вставить адрес из буфера обмена</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Remove this entry</source>
@@ -2429,16 +2422,8 @@
         <translation>Выберите ранее использованный адрес</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Вставить адрес из буфера обмена</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -2991,10 +2976,6 @@
         <translation>Адрес</translation>
     </message>
     <message>
-        <source>ID</source>
-        <translation>ID</translation>
-    </message>
-    <message>
         <source>Exporting Failed</source>
         <translation>Экспорт не удался</translation>
     </message>
@@ -3174,10 +3155,6 @@
         <translation>Невозможно запустить HTTP сервер. Смотри debug лог для подробностей.</translation>
     </message>
     <message>
-        <source>Bitcoin Core</source>
-        <translation>Bitcoin Core</translation>
-    </message>
-    <message>
         <source>The %s developers</source>
         <translation>Разработчики %s</translation>
     </message>
@@ -3258,6 +3235,10 @@
         <translation>Задать минимальный курс комиссии (в %s/Кб) для  транзакцийб включаемых в создаваемый блок. (по умолчанию: %s)</translation>
     </message>
     <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Задать максимальный размер высокоприоритетных/низкокомиссионных транзакций в байтах (по умолчанию: %d)</translation>
+    </message>
+    <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
         <translation>Задать число потоков проверки скрипта (от %u до %d, 0=авто, &lt;0 = оставить столько ядер свободными, по умолчанию: %d)</translation>
     </message>
@@ -3306,6 +3287,10 @@
         <translation>Сохранять ли mempool при выключении и загружать ли его при запуске (по умолчанию: %u)</translation>
     </message>
     <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Вносить в белый список участников, подключающихся с указанного IP (напр. 1.2.3.4) или CIDR-адреса сети (напр. 1.2.3.0/24). Можно использовать многократно.</translation>
+    </message>
+    <message>
         <source>%d of last 100 blocks have unexpected version</source>
         <translation>%d из последних 100 блоков имеют непредвиденную версию</translation>
     </message>
@@ -3352,10 +3337,6 @@
     <message>
         <source>Connection options:</source>
         <translation>Параметры подключения:</translation>
-    </message>
-    <message>
-        <source>Copyright (C) %i-%i</source>
-        <translation>Copyright (C) %i-%i</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
@@ -3478,6 +3459,10 @@
         <translation>Расположение куки входы(по умолчанию: data dir)</translation>
     </message>
     <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Минимально байт на sigop в транзакциях, которые мы ретранслируем и добываем (по умолчанию: %u)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Недостаточно файловых дескрипторов.</translation>
     </message>
@@ -3524,6 +3509,10 @@
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Установить размер кэша БД в мегабайтах(от %d до %d, по умолчанию: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Задать максимальный размер блока в байтах (по умолчанию: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3890,10 +3879,6 @@
         <translation>Выводить отладочную информацию (по умолчанию: %u, указание &lt;category&gt; необязательно)</translation>
     </message>
     <message>
-        <source>Set maximum BIP141 block weight to this * 4. Deprecated, use blockmaxweight</source>
-        <translation>Задать максимальный вес BIP141 блока как это * 4. Устарело, используйте blockmaxweight</translation>
-    </message>
-    <message>
         <source>Sets the serialization of raw transaction or block hex returned in non-verbose mode, non-segwit(0) or segwit(1) (default: %d)</source>
         <translation>Задаёт сериализацию сырой транзакции или хекса блока, возвращённого в не подробном режиме, non-segwit(0) или segwit(1) (по умолчанию: %d)</translation>
     </message>
@@ -3948,10 +3933,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Внимание: Файл бумажника поврежден, данные восстановлены! Оригинальный %s сохранен как %s в %s; Если баланс или транзакции некорректны, вы должны восстановить файл из резервной копии.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Вносить в белый список участников, подключающихся с указанного IP (напр. 1.2.3.4) или CIDR-адреса сети (напр. 1.2.3.0/24). Можно использовать многократно.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

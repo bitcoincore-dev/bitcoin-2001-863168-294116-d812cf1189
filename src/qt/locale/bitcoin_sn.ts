@@ -98,6 +98,10 @@
         <translation>Vhura &amp;URI</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Chikwama:</translation>
+    </message>
+    <message>
         <source>Bitcoin</source>
         <translation>Bitcoin</translation>
     </message>
@@ -141,6 +145,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Amount:</source>
+        <translation type="unfinished">Marii :</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>Marii </translation>
     </message>
@@ -155,12 +163,27 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;Zita</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;Kero</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Kuma %1</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
@@ -170,13 +193,32 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Hapana </translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Kero</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Chikwama</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -234,12 +276,32 @@
         <source>N/A</source>
         <translation>Hapana </translation>
     </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Ruzivo</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Chikwama: </translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Marii :</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Zita:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">Kopera Kero</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Kero</translation>
@@ -271,12 +333,28 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Amount:</source>
+        <translation type="unfinished">Marii :</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Tumira</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(hapana zita)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Marii :</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Zita:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>

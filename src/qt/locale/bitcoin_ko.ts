@@ -293,6 +293,10 @@
         <source>Backup wallet to another location</source>
         <translation>이 지갑을 다른 곳으로 백업</translation>
     </message>
+    <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>디스크에서 블럭 불러오는 중</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -304,19 +308,36 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">%1에 대해</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
+    </context>
+<context>
+    <name>NetWatchLogModel</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">설정</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -338,12 +359,20 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>네트워크 활동 중지</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;주소 복사</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -404,9 +433,17 @@
         <source>Export the data in the current tab to a file</source>
         <translation>현재 탭의 데이터를 파일로 내보냅니다</translation>
     </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">지갑 백업</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">설정:</translation>
+    </message>
     <message>
         <source>Transaction amounts must not be negative</source>
         <translation>송금액은 마이너스가 될 수 없습니다</translation>

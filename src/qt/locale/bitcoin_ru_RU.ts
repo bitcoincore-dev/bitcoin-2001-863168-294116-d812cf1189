@@ -286,6 +286,10 @@
         <translation>Открыть &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Кошелёк:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Нажмите для отключения взаимодействия с сетью.</translation>
     </message>
@@ -366,6 +370,10 @@
         <translation>Опции командной строки</translation>
     </message>
     <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Реиндексация блоков на диске...</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
@@ -399,6 +407,10 @@
     <message>
         <source>Fee:</source>
         <translation>Комиссия:</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished">Количество</translation>
     </message>
     <message>
         <source>Date</source>
@@ -447,15 +459,30 @@
         <source>Edit Address</source>
         <translation>Изменить адрес</translation>
     </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;Метка</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;Адрес</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
         <translation>версия</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">О программе %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -490,7 +517,14 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Неизвестно...</translation>
+    </message>
     <message>
         <source>Progress</source>
         <translation>Прогресс</translation>
@@ -500,6 +534,14 @@
         <translation>Спрятать</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адрес</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -522,6 +564,10 @@
         <translation>МБ</translation>
     </message>
     <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Спрятать иконку в трее</translation>
+    </message>
+    <message>
         <source>&amp;Reset Options</source>
         <translation>&amp;Сбросить опции</translation>
     </message>
@@ -540,6 +586,10 @@
     <message>
         <source>Map port using &amp;UPnP</source>
         <translation>Пробросить порт через &amp;UPnP</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Разрешить входящие соеденения</translation>
     </message>
     <message>
         <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
@@ -580,6 +630,10 @@
     <message>
         <source>&amp;Cancel</source>
         <translation>&amp;Отмена</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -630,12 +684,32 @@
 <context>
     <name>QObject</name>
     <message>
+        <source>Amount</source>
+        <translation type="unfinished">Количество</translation>
+    </message>
+    <message>
         <source>Enter a Bitcoin address (e.g. %1)</source>
         <translation>Введите биткоин-адрес (напр. %1)</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n час</numerusform><numerusform>%n часа</numerusform><numerusform>%n часов</numerusform><numerusform>%n часов</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n день</numerusform><numerusform>%n дней</numerusform><numerusform>%n дней</numerusform><numerusform>%n дней</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n неделя</numerusform><numerusform>%n недель</numerusform><numerusform>%n недель</numerusform><numerusform>%n недель</numerusform></translation>
     </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 и %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n год</numerusform><numerusform>%n лет</numerusform><numerusform>%n лет</numerusform><numerusform>%n лет</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -653,7 +727,17 @@
         <source>%1 GB</source>
         <translation>%1 ГБ</translation>
     </message>
-    </context>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакция</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     <message>
@@ -681,6 +765,14 @@
     <message>
         <source>Debug window</source>
         <translation>Окно отладки</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation type="unfinished">Сеть</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Кошелёк: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -727,6 +819,10 @@
         <translation>1 &amp;год</translation>
     </message>
     <message>
+        <source>Network activity disabled</source>
+        <translation>Взаимодействие с сетью отключено</translation>
+    </message>
+    <message>
         <source>never</source>
         <translation>никогда</translation>
     </message>
@@ -745,6 +841,14 @@
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Количество:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Метка:</translation>
+    </message>
     <message>
         <source>Clear</source>
         <translation>Отчистить</translation>
@@ -777,8 +881,24 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Copy &amp;URI</source>
+        <translation type="unfinished">&amp;Копировать URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Копировать адрес</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>Адрес</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished">Количество</translation>
     </message>
     <message>
         <source>Label</source>
@@ -787,6 +907,10 @@
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
     <message>
         <source>Label</source>
         <translation>Метка</translation>
@@ -823,6 +947,10 @@
         <translation>Баланс:</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Отправить</translation>
+    </message>
+    <message>
         <source>Copy amount</source>
         <translation>Копировать сумму</translation>
     </message>
@@ -833,6 +961,14 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Количество:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Метка:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -859,12 +995,24 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished">Количество</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
     <message>
         <source>Label</source>
         <translation>Метка</translation>
@@ -891,6 +1039,14 @@
     <message>
         <source>Copy transaction ID</source>
         <translation>Копировать ID транзакции</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Подтвержденные</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
     </message>
     <message>
         <source>Label</source>
@@ -920,9 +1076,17 @@
         <source>&amp;Export</source>
         <translation>Экспортировать</translation>
     </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Экспортировать данные текущей вкладки в файл</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">Опции:</translation>
+    </message>
     <message>
         <source>Bitcoin Core</source>
         <translation>Bitcoin Core</translation>

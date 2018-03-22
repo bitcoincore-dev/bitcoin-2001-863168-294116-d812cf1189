@@ -266,6 +266,10 @@
         <translation>Sluit af</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation type="unfinished">&amp;Oor %1</translation>
+    </message>
+    <message>
         <source>Show information about %1</source>
         <translation>Wys inligting oor %1</translation>
     </message>
@@ -298,8 +302,16 @@
         <translation>Uitstuur adresse...</translation>
     </message>
     <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;Ontvang adresse...</translation>
+    </message>
+    <message>
         <source>Open &amp;URI...</source>
         <translation>Maak &amp;URI oop...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Beursie:</translation>
     </message>
     <message>
         <source>Network activity disabled.</source>
@@ -616,6 +628,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -678,10 +693,17 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Vorm</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">onbekend...</translation>
     </message>
     <message>
         <source>Progress</source>
@@ -693,13 +715,34 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipe</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Maak URI oop</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
     <message>
         <source>Options</source>
         <translation>Opsies</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Steek weg skinkbord ikoon</translation>
     </message>
     <message>
         <source>&amp;Network</source>
@@ -821,6 +864,11 @@
         <source>unknown</source>
         <translation>onbekend</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -834,12 +882,32 @@
         <source>&amp;Information</source>
         <translation>Informasie</translation>
     </message>
-    </context>
+    <message>
+        <source>Network</source>
+        <translation type="unfinished">Netwerk</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Beursie: </translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Netwerk aktiwiteid afgeskakel</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">onbekend</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
         <source>&amp;Amount:</source>
         <translation>&amp;Bedrag:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Etiket:</translation>
     </message>
     <message>
         <source>&amp;Message:</source>
@@ -856,6 +924,10 @@
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Kopie adres</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adres</translation>
@@ -927,6 +999,10 @@
         <translation>Transaksie fooi:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Kies...</translation>
+    </message>
+    <message>
         <source>Hide</source>
         <translation>Steek weg</translation>
     </message>
@@ -992,6 +1068,10 @@
     <message>
         <source>A&amp;mount:</source>
         <translation>&amp;Bedrag:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Etiket:</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -1298,6 +1378,10 @@
     <message>
         <source>Importing...</source>
         <translation>Invoer proses tans besig..</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Laai p2p adresse...</translation>
     </message>
     <message>
         <source>Information</source>

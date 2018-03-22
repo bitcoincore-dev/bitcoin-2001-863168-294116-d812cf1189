@@ -30,6 +30,10 @@
         <translation>Rimuovi dalla lista l'indirizzo attualmente selezionato</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Inserisci un indirizzo o un'etichetta da cercare</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Esporta su file i dati contenuti nella tabella corrente</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Apri &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portamonete:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -786,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -912,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -960,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Sconosciuto. Sincronizzazione Headers (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Indirizzo</translation>
     </message>
 </context>
 <context>
@@ -1207,6 +1238,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>none</source>
         <translation>nessuno</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1528,6 +1563,16 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <source>unknown</source>
         <translation>sconosciuto</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tso</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1628,6 +1673,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>Memory usage</source>
         <translation>Utilizzo memoria</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portamonete: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1901,14 +1950,6 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>&amp;Richiedi pagamento</translation>
     </message>
     <message>
-        <source>Bech32 addresses (BIP-173) are cheaper to spend from and offer better protection against typos. When unchecked a P2SH wrapped SegWit address will be created, compatible with older wallets.</source>
-        <translation>Indirizzi Bech32 (BIP-173) sono piu' economici per spendere e offrono maggior protezione contro errori di battitura. Quando non selezionati, un indirizzo di tipo P2SH wrapped SegWit sara' creato, compatibile con i portafogli precedenti. </translation>
-    </message>
-    <message>
-        <source>Generate Bech32 address</source>
-        <translation>Genera un indirizzo Bech32</translation>
-    </message>
-    <message>
         <source>Show the selected request (does the same as double clicking an entry)</source>
         <translation>Mostra la richiesta selezionata (produce lo stesso effetto di un doppio click su una voce)</translation>
     </message>
@@ -2106,10 +2147,6 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>per kilobyte</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Se la commissione personalizzata è impostata su 1000 satoshi e la transazione è di soli 250 byte, allora "per kilobyte" paga solo 250 satoshi di commissione, mentre "somma almeno" paga 1000 satoshi. Per transazioni più grandi di un kilobyte, entrambe le opzioni pagano al kilobyte.</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Nascondi</translation>
     </message>
@@ -2283,7 +2320,7 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Inizio delle conferme stimato entro %n blocchi.</numerusform><numerusform>Inizio delle conferme stimato entro %n blocchi.</numerusform></translation>
+        <translation><numerusform>Inizio delle conferme stimato entro %n blocco.</numerusform><numerusform>Inizio delle conferme stimato entro %n blocchi.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2568,7 +2605,11 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <name>TransactionDesc</name>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Aperto per altri %n blocchi</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+        <translation><numerusform>Aperto per %n altro blocco</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Aperto fino a %1</translation>
     </message>
     <message>
         <source>conflicted with a transaction with %1 confirmations</source>
@@ -2612,7 +2653,7 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     </message>
     <message numerus="yes">
         <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, trasmessa attraverso %n nodi</numerusform><numerusform>, trasmessa attraverso %n nodi</numerusform></translation>
+        <translation><numerusform>, trasmesso attraverso %n nodo</numerusform><numerusform>, trasmessa attraverso %n nodi</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2656,7 +2697,7 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>matura tra %n blocchi</numerusform><numerusform>matura tra %n blocchi</numerusform></translation>
+        <translation><numerusform>matura tra %n blocco</numerusform><numerusform>matura tra %n blocchi</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2762,7 +2803,11 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Aperto per altri %n blocchi</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+        <translation><numerusform>Aperto per %n altro blocco</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Aperto fino a %1</translation>
     </message>
     <message>
         <source>Offline</source>
@@ -3259,6 +3304,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>Imposta la tariffa di commissione più bassa (in %s/kB) per transazioni da includere nella creazione del blocco. (predefinito: %s)</translation>
     </message>
     <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Imposta la dimensione massima in byte delle transazioni ad alta-priorità/basse-commissioni (predefinito: %d)</translation>
+    </message>
+    <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
         <translation>Imposta il numero di thread per la verifica degli script (da %u a %d, 0 = automatico, &lt;0 = lascia questo numero di core liberi, predefinito: %d)</translation>
     </message>
@@ -3305,6 +3354,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>Imposta se salvare la mempool allo spegnimento e caricarla alla riaccensione (predefinito: %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>I peer in whitelist che si connettono dal dato indirizzo IP (es. 1.2.3.4) o dalla rete annotata CIDR (es. 1.2.3.0/24). Può essere specificato più volte.</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3525,6 +3578,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Imposta la dimensione della cache del database in megabyte (%d a %d, predefinito: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Imposta la dimensione massima del blocco in byte (predefinito: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3891,10 +3948,6 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>Emette informazioni di debug (predefinito: %u, fornire &lt;category&gt; è opzionale)</translation>
     </message>
     <message>
-        <source>Set maximum BIP141 block weight to this * 4. Deprecated, use blockmaxweight</source>
-        <translation>Impostare massimo per il peso del blocco BIP141 a * 4. Obsoleto, usare blockmaxweight</translation>
-    </message>
-    <message>
         <source>Sets the serialization of raw transaction or block hex returned in non-verbose mode, non-segwit(0) or segwit(1) (default: %d)</source>
         <translation>Imposta che la serializzazione degli hex di transazioni o blocchi grezzi sia riportata in maniere non-verbose, non-segwit(0) o segwit(1) (predefinito: %d)</translation>
     </message>
@@ -3949,10 +4002,6 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Attenzione: file del Portafoglio corrotto, dati recuperati! %s originale salvato come %s in %s; se il saldo o le transazioni non sono corrette effettua un ripristino da un backup.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>I peer in whitelist che si connettono dal dato indirizzo IP (es. 1.2.3.4) o dalla rete annotata CIDR (es. 1.2.3.0/24). Può essere specificato più volte.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

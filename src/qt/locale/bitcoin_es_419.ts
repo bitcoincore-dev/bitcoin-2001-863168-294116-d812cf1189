@@ -45,27 +45,70 @@
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Estas son sus direcciones de Bitcoin para enviar sus pagos. Siempre revise el monto y la dirección recibida antes de enviar monedas.</translation>
     </message>
+    <message>
+        <source>Export Address List</source>
+        <translation>Exportar Lista de Direcciones</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
+    <message>
+        <source>Address</source>
+        <translation>Direccion</translation>
+    </message>
     </context>
 <context>
     <name>AskPassphraseDialog</name>
-    </context>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>Desencriptar Monedero</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>Confirmar Encriptacion de Monedero</translation>
+    </message>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>Monedero ha sido encriptado</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed</source>
+        <translation>La encriptacion del monedero ha fallado</translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Advertencia: La Tecla Caps Lock esta habilitada!</translation>
+    </message>
+</context>
 <context>
     <name>BanTableModel</name>
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;Enviando direcciones...</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;Recibiendo direcciones...</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;Direccion</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -74,8 +117,19 @@
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Direccion</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -108,6 +162,10 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address</source>
+        <translation>Direccion</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -144,6 +202,10 @@
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Address</source>
+        <translation>Direccion</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>

@@ -3,51 +3,59 @@
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation>Desni klik za izmenu adrese ili oznake</translation>
+        <translation>Десни клик за измену адресе или ознаке</translation>
     </message>
     <message>
         <source>Create a new address</source>
-        <translation>Napravite novu adresu</translation>
+        <translation>Направи нову адресу</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>Novo</translation>
+        <translation>&amp;Ново</translation>
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Kopirajte trenutno izabranu adresu</translation>
+        <translation>Копирај тренутно одабрану адресу</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation>Kopirajte</translation>
+        <translation>&amp;Копирај</translation>
     </message>
     <message>
         <source>C&amp;lose</source>
-        <translation>Zatvorite</translation>
+        <translation>&amp;Затвори</translation>
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
-        <translation>Izbrisite trenutno izabranu adresu sa liste</translation>
+        <translation>Обришите тренутно одабрану адресу са листе</translation>
+    </message>
+    <message>
+        <source>Enter address or label to search</source>
+        <translation>Navedite adresu ili naziv koji bi ste potražili</translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
-        <translation>Eksportuj podatke iz izabrane kartice u fajl</translation>
+        <translation>Извези податке из одабране картице у фајлj</translation>
     </message>
     <message>
         <source>&amp;Export</source>
-        <translation>&amp;Izvedi</translation>
+        <translation>&amp;Извези</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
-        <translation>&amp;Izbriši</translation>
+        <translation>&amp;Обриши</translation>
     </message>
     <message>
         <source>Choose the address to send coins to</source>
-        <translation>Izbirajte adresu za slanje</translation>
+        <translation>Изаберите адресу за слање</translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
-        <translation>Izbirajte adresu za primanje</translation>
+        <translation>Изаберите адресу за примање</translation>
+    </message>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation>&amp;Изабери</translation>
     </message>
     <message>
         <source>Sending addresses</source>
@@ -55,16 +63,60 @@
     </message>
     <message>
         <source>Receiving addresses</source>
-        <translation>Adresa za primanje</translation>
+        <translation>Адреса за примање</translation>
     </message>
-    </context>
+    <message>
+        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Ово су ваше Биткоин адресе за слање уплата. Увек добро проверите износ и адресу на коју шаљете пре него што пошаљете уплату.</translation>
+    </message>
+    <message>
+        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Ово су ваше Биткоин адресе за примање уплате. Препоручује се да се за сваку трансакцију користи нова адреса.</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;Копирај Адресу</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Label</source>
+        <translation>Копирај &amp; Обележи</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;Измени</translation>
+    </message>
+    <message>
+        <source>Export Address List</source>
+        <translation>Извези Листу Адреса</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Фајл раздојен тачком (*.csv)</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Извоз Неуспешан</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the address list to %1. Please try again.</source>
+        <translation>Десила се грешка приликом покушаја да се листа адреса упамти на  %1. Молимо покушајте поново.</translation>
+    </message>
+</context>
 <context>
     <name>AddressTableModel</name>
     <message>
-        <source>Address</source>
-        <translation>Adresa</translation>
+        <source>Label</source>
+        <translation>Налепница</translation>
     </message>
-    </context>
+    <message>
+        <source>Address</source>
+        <translation>Адреса</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(без налепнице)</translation>
+    </message>
+</context>
 <context>
     <name>AskPassphraseDialog</name>
     <message>
@@ -79,12 +131,116 @@
         <source>Repeat new passphrase</source>
         <translation>Поновите нову лозинку</translation>
     </message>
-    </context>
+    <message>
+        <source>Show password</source>
+        <translation>Прикажи лозинку</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Унесите лозинку за новчаник. &lt;br/&gt;Молимо да користите лозинку од &lt;b&gt;десет или више насумично одабраних карактера, или &lt;b&gt;осам или више речи&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>Шифрирај новчаник</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
+        <translation>Ова операција захтева да унесете лозинку новчаника како би откључали новчаник.</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Откључај новчаник</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
+        <translation>Ова операција захтева да унесете лозинку новчаника како би дешифровали новчаник.</translation>
+    </message>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>Дешифруј новчаник</translation>
+    </message>
+    <message>
+        <source>Change passphrase</source>
+        <translation>Измену лозинку</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase to the wallet.</source>
+        <translation>Унеси стару лозинку и нову лозинку новчаника.</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>Потврди шифрирање новчаника</translation>
+    </message>
+    <message>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
+        <translation>Упозорење: Уколико шифрирате новчаник и изгубите своју лозинку, &lt;b&gt;ИЗГУБИЋЕТЕ СВЕ СВОЈЕ БИТКОИНЕ&lt;/b&gt;!</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to encrypt your wallet?</source>
+        <translation>Да ли сте сигурни да желите да шифрирате свој новчаник?</translation>
+    </message>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>Новчаник шифриран</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 ће се сада затворити како би се завршио процес шифрирања.  Запамтите да шифрирањем свог новчаника не можете у потпуности заштити своје биткоине од крађе од стране злоћудних програма и компјутерских инфекција.</translation>
+    </message>
+    <message>
+        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
+        <translation>ВАЖНО: Свакa претходнa резерва новчаника коју сте имали треба да се замени новим, шифрираним фајлом новчаника. Из сигурносних разлога, свака претходна резерва нешифрираног фајла новчаника постаће сувишна, чим почнете да користите нови, шифрирани новчаник.</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed</source>
+        <translation>Шифрирање новчаника неуспешно.</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
+        <translation>Шифрирање новчаника није успело због интерне грешке. Ваш новчаник није шифриран.</translation>
+    </message>
+    <message>
+        <source>The supplied passphrases do not match.</source>
+        <translation>Лозинке које сте унели нису исте.</translation>
+    </message>
+    <message>
+        <source>Wallet unlock failed</source>
+        <translation>Отључавање новчаника није успело.</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>Лозинка коју сте унели за дешифровање новчаника је погрешна.</translation>
+    </message>
+    <message>
+        <source>Wallet decryption failed</source>
+        <translation>Дешифровање новчаника неуспешно.</translation>
+    </message>
+    <message>
+        <source>Wallet passphrase was successfully changed.</source>
+        <translation>Лозинка новчаника успешно је промењена.</translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Упозорање Caps Lock дугме укључено.</translation>
+    </message>
+</context>
 <context>
     <name>BanTableModel</name>
-    </context>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>ИП/Нетмаск</translation>
+    </message>
+    <message>
+        <source>Banned Until</source>
+        <translation>Забрањен до</translation>
+    </message>
+</context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>Sign &amp;message...</source>
+        <translation>Потпиши &amp;поруку...</translation>
+    </message>
     <message>
         <source>Synchronizing with network...</source>
         <translation>Синхронизација са мрежом у току...</translation>
@@ -92,6 +248,10 @@
     <message>
         <source>&amp;Overview</source>
         <translation>&amp;Општи преглед</translation>
+    </message>
+    <message>
+        <source>Node</source>
+        <translation>Ноде</translation>
     </message>
     <message>
         <source>Show general overview of wallet</source>
@@ -107,11 +267,19 @@
     </message>
     <message>
         <source>E&amp;xit</source>
-        <translation>I&amp;zlaz</translation>
+        <translation>И&amp;злаз</translation>
     </message>
     <message>
         <source>Quit application</source>
         <translation>Напустите програм</translation>
+    </message>
+    <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;О %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Прикажи информације о %1</translation>
     </message>
     <message>
         <source>About &amp;Qt</source>
@@ -126,32 +294,116 @@
         <translation>П&amp;оставке...</translation>
     </message>
     <message>
+        <source>Modify configuration options for %1</source>
+        <translation>Измени конфигурацију поставки за %1</translation>
+    </message>
+    <message>
         <source>&amp;Encrypt Wallet...</source>
         <translation>&amp;Шифровање новчаника...</translation>
     </message>
     <message>
         <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Backup новчаника</translation>
+        <translation>&amp;Резерна копија новчаника</translation>
     </message>
     <message>
         <source>&amp;Change Passphrase...</source>
         <translation>Промени &amp;лозинку...</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses...</source>
+        <translation>&amp;Адресе за слање...</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation>&amp;Адресе за пријем</translation>
+    </message>
+    <message>
+        <source>Open &amp;URI...</source>
+        <translation>Отвори &amp;УРИ...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">новчаник:</translation>
+    </message>
+    <message>
+        <source>Click to disable network activity.</source>
+        <translation>Кликни да искључиш активност на мрежи.</translation>
+    </message>
+    <message>
+        <source>Network activity disabled.</source>
+        <translation>Активност на мрежи искључена.</translation>
+    </message>
+    <message>
+        <source>Click to enable network activity again.</source>
+        <translation>Кликни да поново омогућиш активност на мрежи.</translation>
+    </message>
+    <message>
+        <source>Syncing Headers (%1%)...</source>
+        <translation>Синхронизовање Заглавља (%1%)...</translation>
+    </message>
+    <message>
+        <source>Reindexing blocks on disk...</source>
+        <translation>Поново идексирање блокова на диску.</translation>
+    </message>
+    <message>
         <source>Send coins to a Bitcoin address</source>
-        <translation>Пошаљите новац на bitcoin адресу</translation>
+        <translation>Пошаљите новац на Биткоин адресу</translation>
+    </message>
+    <message>
+        <source>Backup wallet to another location</source>
+        <translation>Направите резервну копију новчаника на другој локацији</translation>
     </message>
     <message>
         <source>Change the passphrase used for wallet encryption</source>
         <translation>Мењање лозинке којом се шифрује новчаник</translation>
     </message>
     <message>
+        <source>&amp;Debug window</source>
+        <translation>&amp;Прозор за отклањање грешке</translation>
+    </message>
+    <message>
+        <source>Open debugging and diagnostic console</source>
+        <translation>Отвори конзолу за отклањање грешака и дијагностику</translation>
+    </message>
+    <message>
+        <source>&amp;Verify message...</source>
+        <translation>&amp;Верификовање поруке...</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Биткоин</translation>
+    </message>
+    <message>
         <source>Wallet</source>
-        <translation>новчаник</translation>
+        <translation>Новчаник</translation>
     </message>
     <message>
         <source>&amp;Send</source>
         <translation>&amp;Пошаљи</translation>
+    </message>
+    <message>
+        <source>&amp;Receive</source>
+        <translation>&amp;Прими</translation>
+    </message>
+    <message>
+        <source>&amp;Show / Hide</source>
+        <translation>&amp;Прикажи / Сакриј</translation>
+    </message>
+    <message>
+        <source>Show or hide the main Window</source>
+        <translation>Прикажи или сакрији главни прозор</translation>
+    </message>
+    <message>
+        <source>Encrypt the private keys that belong to your wallet</source>
+        <translation>Шифрирај приватни клуљ који припада новчанику.</translation>
+    </message>
+    <message>
+        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
+        <translation>Потписуј поруку са своје Биткоин адресе као доказ да си њихов власник</translation>
+    </message>
+    <message>
+        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
+        <translation>Верификуј поруке и утврди да ли су потписане од стране спецификованих Биткоин адреса</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -163,15 +415,27 @@
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>П&amp;омоћ</translation>
+        <translation>&amp;Помоћ</translation>
     </message>
     <message>
         <source>Tabs toolbar</source>
         <translation>Трака са картицама</translation>
     </message>
     <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Поново идексирање блокова на диску.</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Greška</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Упозорење</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>Информације</translation>
     </message>
     <message>
         <source>Up to date</source>
@@ -190,6 +454,14 @@
         <translation>Придошла трансакција</translation>
     </message>
     <message>
+        <source>HD key generation is &lt;b&gt;enabled&lt;/b&gt;</source>
+        <translation>Генерисање ХД кључа је &lt;b&gt;омогућено&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>HD key generation is &lt;b&gt;disabled&lt;/b&gt;</source>
+        <translation>Генерисање ХД кључа је &lt;b&gt;онеомогућено&lt;/b&gt;</translation>
+    </message>
+    <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
         <translation>Новчаник јс &lt;b&gt;шифрован&lt;/b&gt; и тренутно &lt;b&gt;откључан&lt;/b&gt;</translation>
     </message>
@@ -197,26 +469,130 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Новчаник јс &lt;b&gt;шифрован&lt;/b&gt; и тренутно &lt;b&gt;закључан&lt;/b&gt;</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. Bitcoin can no longer continue safely and will quit.</source>
+        <translation>Дошло је до критичне грешке. Биткоин не може безбедно да настави са радом и искључиће се.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Coin Selection</source>
+        <translation>Избор новчића</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Количина:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
-        <translation>Iznos:</translation>
+        <translation>Износ:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Накнада:</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Прашина:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Након накнаде:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Промени:</translation>
     </message>
     <message>
         <source>Amount</source>
-        <translation>iznos</translation>
+        <translation>Износ</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Примљено са адресом</translation>
     </message>
     <message>
         <source>Date</source>
         <translation>datum</translation>
     </message>
     <message>
+        <source>Confirmations</source>
+        <translation>Потврде</translation>
+    </message>
+    <message>
         <source>Confirmed</source>
         <translation>Potvrdjen</translation>
     </message>
-    </context>
+    <message>
+        <source>Copy address</source>
+        <translation>Копирај адресу</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Копирај налепницу</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Копирај износ</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Копирај идентификациони број трансакције</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>Закључај непотрошено</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>Откључај непотрошено</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Копирај количину</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Копирај провизију</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Копирај након провизије</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Копирај бајтове</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Копирај прашину</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Копирај промену</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 закључан)</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>да</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>не</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(без налепнице)</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(промени)</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -231,15 +607,54 @@
         <source>&amp;Address</source>
         <translation>&amp;Адреса</translation>
     </message>
-    </context>
+    <message>
+        <source>New receiving address</source>
+        <translation>Нова адреса за пријем</translation>
+    </message>
+    <message>
+        <source>New sending address</source>
+        <translation>Нова адреса за слање</translation>
+    </message>
+    <message>
+        <source>Edit receiving address</source>
+        <translation>Измени адресу за примање</translation>
+    </message>
+    <message>
+        <source>Edit sending address</source>
+        <translation>Измени адресу за слање</translation>
+    </message>
+    <message>
+        <source>The entered address "%1" is already in the address book.</source>
+        <translation>Унешена адреса "%1" се већ налази у адресару.</translation>
+    </message>
+    <message>
+        <source>Could not unlock wallet.</source>
+        <translation>Новчаник није могуће откључати.</translation>
+    </message>
+    <message>
+        <source>New key generation failed.</source>
+        <translation>Генерисање новог кључа није успело.</translation>
+    </message>
+</context>
 <context>
     <name>FreespaceChecker</name>
+    <message>
+        <source>name</source>
+        <translation>име</translation>
+    </message>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
         <translation>верзија</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">О %1</translation>
     </message>
     <message>
         <source>Usage:</source>
@@ -249,9 +664,24 @@
 <context>
     <name>Intro</name>
     <message>
+        <source>Welcome</source>
+        <translation>Добродошли</translation>
+    </message>
+    <message>
+        <source>Welcome to %1.</source>
+        <translation>Добродошли на  %1.</translation>
+    </message>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Биткоин</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Greška</translation>
     </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -259,9 +689,50 @@
         <source>Form</source>
         <translation>Форма</translation>
     </message>
+    <message>
+        <source>Number of blocks left</source>
+        <translation>Остала количина блокова</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation>Непознато...</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Време последњег блока</translation>
+    </message>
+    <message>
+        <source>Progress</source>
+        <translation>Напредак</translation>
+    </message>
+    <message>
+        <source>calculating...</source>
+        <translation>Рачунање</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Сакриј</translation>
+    </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>tip</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адреса</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Отвори УРИ</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
@@ -270,8 +741,28 @@
         <translation>Поставке</translation>
     </message>
     <message>
+        <source>Open Configuration File</source>
+        <translation>Отвори Конфигурациону Датотеку</translation>
+    </message>
+    <message>
         <source>W&amp;allet</source>
         <translation>новчаник</translation>
+    </message>
+    <message>
+        <source>Expert</source>
+        <translation>Експерт</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Тор</translation>
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
@@ -279,7 +770,11 @@
     </message>
     <message>
         <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
+        <translation>&amp;Уреду</translation>
+    </message>
+    <message>
+        <source>&amp;Cancel</source>
+        <translation>&amp;Откажи</translation>
     </message>
     <message>
         <source>Error</source>
@@ -291,6 +786,18 @@
     <message>
         <source>Form</source>
         <translation>Форма</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Доступно:</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>На чекању:</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Укупно:</translation>
     </message>
     </context>
 <context>
@@ -309,6 +816,11 @@
         <source>unknown</source>
         <translation>nepoznato</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -319,6 +831,26 @@
 <context>
     <name>RPCConsole</name>
     <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Информације</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Прозор за отклањање грешке</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">новчаник: </translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Време последњег блока</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Активност на мрежи искључена</translation>
+    </message>
+    <message>
         <source>Yes</source>
         <translation>Da</translation>
     </message>
@@ -326,7 +858,11 @@
         <source>No</source>
         <translation>Ne</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">nepoznato</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -345,7 +881,16 @@
         <source>Show</source>
         <translation>Prikaži</translation>
     </message>
-    </context>
+    <message>
+        <source>Copy label</source>
+        <translation>Копирај налепницу
+</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>к</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
@@ -356,9 +901,37 @@
         <source>Address</source>
         <translation>Adresa</translation>
     </message>
+    <message>
+        <source>Amount</source>
+        <translation>Износ</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Налепница</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Poruka</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>datum</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Налепница</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Poruka</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(без налепнице)</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
@@ -367,8 +940,40 @@
         <translation>Слање новца</translation>
     </message>
     <message>
+        <source>Insufficient funds!</source>
+        <translation>Nedovoljno sredstava</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Количина:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>Iznos:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Накнада:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Након накнаде:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Промени:</translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Изабери...</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Сакриј</translation>
+    </message>
+    <message>
+        <source>Dust:</source>
+        <translation>Прашина:</translation>
     </message>
     <message>
         <source>Confirm the send action</source>
@@ -378,7 +983,39 @@
         <source>S&amp;end</source>
         <translation>&amp;Пошаљи</translation>
     </message>
-    </context>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Копирај количину</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>к</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Копирај провизију</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Копирај након провизије</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Копирај бајтове</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Копирај прашину</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Копирај промену</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(без налепнице)</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsEntry</name>
     <message>
@@ -435,6 +1072,46 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Open until %1</source>
+        <translation>Otvoreno do %1</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1/nepotvrdjeno</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>%1 potvrde</translation>
+    </message>
+    <message>
+        <source>, has not been successfully broadcast yet</source>
+        <translation>, nije još uvek uspešno emitovan</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>datum</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>nepoznato</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>етикета</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Poruka</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Transakcije</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Износ</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -445,14 +1122,187 @@
     </context>
 <context>
     <name>TransactionTableModel</name>
-    </context>
+    <message>
+        <source>Date</source>
+        <translation>datum</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>tip</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Налепница</translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Otvoreno do %1</translation>
+    </message>
+    <message>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation>Potvrdjena (%1 potvrdjenih)</translation>
+    </message>
+    <message>
+        <source>This block was not received by any other nodes and will probably not be accepted!</source>
+        <translation>Ovaj blok nije primljen od ostalih čvorova (nodova) i verovatno neće biti prihvaćen!</translation>
+    </message>
+    <message>
+        <source>Generated but not accepted</source>
+        <translation>Generisan ali nije prihvaćen</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>Primljen sa</translation>
+    </message>
+    <message>
+        <source>Received from</source>
+        <translation>Primljeno od</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>Poslat ka</translation>
+    </message>
+    <message>
+        <source>Payment to yourself</source>
+        <translation>Isplata samom sebi</translation>
+    </message>
+    <message>
+        <source>Mined</source>
+        <translation>Minirano</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(без налепнице)</translation>
+    </message>
+    <message>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation>Status vaše transakcije. Predjite mišem preko ovog polja da bi ste videli broj konfirmacija</translation>
+    </message>
+    <message>
+        <source>Date and time that the transaction was received.</source>
+        <translation>Datum i vreme primljene transakcije.</translation>
+    </message>
+    <message>
+        <source>Type of transaction.</source>
+        <translation>Tip transakcije</translation>
+    </message>
+    <message>
+        <source>Amount removed from or added to balance.</source>
+        <translation>Iznos odbijen ili dodat balansu.</translation>
+    </message>
+</context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>All</source>
+        <translation>Sve</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>Danas</translation>
+    </message>
+    <message>
+        <source>This week</source>
+        <translation>ove nedelje</translation>
+    </message>
+    <message>
+        <source>This month</source>
+        <translation>Ovog meseca</translation>
+    </message>
+    <message>
+        <source>Last month</source>
+        <translation>Prošlog meseca</translation>
+    </message>
+    <message>
+        <source>This year</source>
+        <translation>Ove godine</translation>
+    </message>
+    <message>
+        <source>Range...</source>
+        <translation>Opseg...</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>Primljen sa</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>Poslat ka</translation>
+    </message>
+    <message>
+        <source>To yourself</source>
+        <translation>Vama - samom sebi</translation>
+    </message>
+    <message>
+        <source>Mined</source>
+        <translation>Minirano</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>Drugi</translation>
+    </message>
+    <message>
+        <source>Min amount</source>
+        <translation>Min iznos</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Копирај адресу</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Копирај налепницу
+</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>к</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Копирај идентификациони број трансакције</translation>
+    </message>
+    <message>
+        <source>Edit label</source>
+        <translation>promeni naziv</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Фајл раздојен тачком (*.csv)</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Potvrdjen</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>datum</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>tip</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Налепница</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adresa</translation>
     </message>
-    </context>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Извоз Неуспешан</translation>
+    </message>
+    <message>
+        <source>Range:</source>
+        <translation>Opseg:</translation>
+    </message>
+    <message>
+        <source>to</source>
+        <translation>do</translation>
+    </message>
+</context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
     </context>
@@ -461,12 +1311,24 @@
     </context>
 <context>
     <name>WalletModel</name>
+    <message>
+        <source>Send Coins</source>
+        <translation>Слање новца</translation>
+    </message>
     </context>
 <context>
     <name>WalletView</name>
     <message>
         <source>&amp;Export</source>
         <translation>&amp;Izvedi</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Извези податке из одабране картице у фајлj</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation>Backup новчаника</translation>
     </message>
     </context>
 <context>
@@ -488,8 +1350,20 @@
         <translation>Radi u pozadini kao daemon servis i prihvati komande</translation>
     </message>
     <message>
+        <source>Loading P2P addresses...</source>
+        <translation>učitavam p2p adrese....</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>Информације</translation>
+    </message>
+    <message>
         <source>Username for JSON-RPC connections</source>
         <translation>Korisničko ime za JSON-RPC konekcije</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Упозорење</translation>
     </message>
     <message>
         <source>Password for JSON-RPC connections</source>

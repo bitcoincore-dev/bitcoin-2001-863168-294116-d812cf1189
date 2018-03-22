@@ -30,6 +30,10 @@
         <translation>Slett den valgte adressen fra listen.</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Skriv inn adresse eller merkelapp for søk</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Eksporter data fra nåværende fane til fil</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Åpne &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Lommebok:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -786,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -912,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>-</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -960,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Ukjent. Synkroniserer hoder (%1)…</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
     </message>
 </context>
 <context>
@@ -1188,6 +1219,10 @@
         <translation>Skal myntkontroll funksjoner vises eller ikke.</translation>
     </message>
     <message>
+        <source>&amp;Third party transaction URLs</source>
+        <translation>Tredjepart transaksjon URLer</translation>
+    </message>
+    <message>
         <source>&amp;OK</source>
         <translation>&amp;OK</translation>
     </message>
@@ -1202,6 +1237,10 @@
     <message>
         <source>none</source>
         <translation>ingen</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1523,6 +1562,11 @@
         <source>unknown</source>
         <translation>ukjent</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1623,6 +1667,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Minnebruk</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Lommebok: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2085,10 +2133,6 @@
         <translation>per kilobyte</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Hvis den egendefinerte avgiften er satt til 1000 satoshis og transaksjonen bare er 250 bytes, da vil "per kilobyte" bare betale 250 satoshis i gebyr, mens "minstebeløp" betaler 1000 satoshis. For transaksjoner større enn en kilobyte vil begge betale for antall kilobyte.</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Skjul</translation>
     </message>
@@ -2131,6 +2175,14 @@
     <message>
         <source>Confirmation time target:</source>
         <translation>Bekreftelsestidsmål:</translation>
+    </message>
+    <message>
+        <source>Enable Replace-By-Fee</source>
+        <translation>Aktiver Replace-By-Fee</translation>
+    </message>
+    <message>
+        <source>With Replace-By-Fee (BIP-125) you can increase a transaction's fee after it is sent. Without this, a higher fee may be recommended to compensate for increased transaction delay risk.</source>
+        <translation>Med Replace-By-Fee (BIP-125) kan du øke transaksjonens gebyr etter at den er sendt. Uten dette aktivert anbefales et høyere gebyr for å kompensere for risikoen for at transaksjonen blir forsinket. </translation>
     </message>
     <message>
         <source>Clear &amp;All</source>
@@ -2199,6 +2251,14 @@
     <message>
         <source>or</source>
         <translation>eller</translation>
+    </message>
+    <message>
+        <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
+        <translation>Du kan øke gebyret senere (signaliserer Replace-By-Fee, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Not signalling Replace-By-Fee, BIP-125.</source>
+        <translation>Signaliserer ikke Replace-By-Fee, BIP-125</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -2729,7 +2789,7 @@
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Åpen for én blokk til</numerusform><numerusform>Åpen for %n blokker til</numerusform></translation>
+        <translation><numerusform>Åpen for %n blokk til</numerusform><numerusform>Åpen for %n blokker til</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -3158,12 +3218,20 @@
         <translation>Godta stafettransaksjoner mottatt fra hvitlistede likemenn, selv når transaksjoner ikke stafettsendes (forvalg: %d)</translation>
     </message>
     <message>
+        <source>Add a node to connect to and attempt to keep the connection open (see the `addnode` RPC command help for more info)</source>
+        <translation>Legg til node for tilkobling og forsøk å holde forbindelsen åpen (se 'addnode' RPC kommandoen for mer informasjon)</translation>
+    </message>
+    <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
         <translation>Bind til angitt adresse. Bruk [vertsmaskin]:port notasjon for IPv6</translation>
     </message>
     <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
         <translation>Kan ikke låse datamappen %s. %s kjører antagelig allerede.</translation>
+    </message>
+    <message>
+        <source>Cannot provide specific connections and have addrman find outgoing connections at the same.</source>
+        <translation>Kan ikke angi spesifikke tilkoblinger og ha addrman til å finne utgående tilkoblinger samtidig. </translation>
     </message>
     <message>
         <source>Delete all wallet transactions and only recover those parts of the blockchain through -rescan on startup</source>
@@ -3218,6 +3286,10 @@
         <translation>Sett laveste gebyrtakst (i %s/kB) for transaksjoner som skal inkluderes i blokkopprettelse. (forvalg: %s)</translation>
     </message>
     <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Sett maksimum størrelse for transaksjoner med høy prioritet / lavt gebyr, i bytes (standardverdi: %d)</translation>
+    </message>
+    <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
         <translation>Angi antall tråder for skriptverifisering (%u til %d, 0 = auto, &lt;0 = la det antallet kjerner være ledig, standard: %d)</translation>
     </message>
@@ -3264,6 +3336,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>Hvorvidt hukommelsespuljen skal lagres ved avstengning og lastes inn ved omstart (forvalg: %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Hvitlist brukere som kobler til fra en gitt IP-adresse (e.g. 1.2.3.4) eller nettverk med CIDR-notasjon (f.eks. 1.2.3.0/24). Kan angis mange ganger.</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3470,8 +3546,16 @@
         <translation>Spoler tilbake blokker…</translation>
     </message>
     <message>
+        <source>Send transactions with full-RBF opt-in enabled (RPC only, default: %u)</source>
+        <translation>Send transaksjoner med full-RBF påslått for påmeldte (forvalg: %u)</translation>
+    </message>
+    <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Sett databasen sin størrelse på hurtigbufferen i megabytes (%d til %d, standardverdi: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Sett maks blokkstørrelse i bytes (standardverdi: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3730,6 +3814,10 @@
         <translation>Lommebokbekreftelse pågår…</translation>
     </message>
     <message>
+        <source>Wallet %s resides outside wallet directory %s</source>
+        <translation>Lommebok %s befinner seg utenfor datamappe %s</translation>
+    </message>
+    <message>
         <source>Warning</source>
         <translation>Advarsel</translation>
     </message>
@@ -3864,10 +3952,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Advarsel: Lommeboksfil skadet, data berget! Original %s lagret som %s i %s; hvis din saldo eller transaksjoner er uriktige, bør du gjenopprette fra sikkerhetskopi.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Hvitlist brukere som kobler til fra en gitt IP-adresse (e.g. 1.2.3.4) eller nettverk med CIDR-notasjon (f.eks. 1.2.3.0/24). Kan angis mange ganger.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

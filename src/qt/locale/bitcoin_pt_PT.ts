@@ -30,6 +30,10 @@
         <translation>Eliminar o endereço selecionado da lista</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Digite o endereço ou o rótulo para pesquisar</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Exportar os dados no separador atual para um ficheiro</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Abrir &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Carteira:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -786,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -851,6 +862,10 @@
         <translation>Bem-vindo ao %1.</translation>
     </message>
     <message>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Como esta é a primeira vez que o programa é iniciado, pode escolher onde guardar os seus dados do %1.</translation>
+    </message>
+    <message>
         <source>Use the default data directory</source>
         <translation>Utilizar a pasta de dados predefinida</translation>
     </message>
@@ -863,8 +878,16 @@
         <translation>Bitcoin</translation>
     </message>
     <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Pelo menos %1GB de dados serão guardados nesta diretoria, e estes irão crescer ao longo do tempo.</translation>
+    </message>
+    <message>
         <source>Approximately %1 GB of data will be stored in this directory.</source>
         <translation>Aproximadamente %1 GB de dados irão ser guardados nesta directoria. </translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>O %1 irá transferir e guardar uma cópia da cadeia de bloco do Bitcoin.</translation>
     </message>
     <message>
         <source>The wallet will also be stored in this directory.</source>
@@ -887,6 +910,13 @@
         <translation><numerusform>(de %n GB necessários)</numerusform><numerusform>(de %n GB necessário)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -936,6 +966,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Desconhecido. Sincronização de Cabeçalhos (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Endereço</translation>
     </message>
 </context>
 <context>
@@ -996,6 +1039,18 @@
         <translation>Endereço de IP do proxy (exemplo, IPv4: 127.0.0.1 / IPv6: ::1)</translation>
     </message>
     <message>
+        <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
+        <translation>Mostra, caso o proxy SOCKS5 predefinido submetido seja usado para alcançar nós através deste tipo de rede.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor hidden services:</source>
+        <translation type="unfinished">&amp;Utilizar um proxy SOCKS5 separado para alcançar nós via serviços ocultos do Tor:</translation>
+    </message>
+    <message>
+        <source>Hide the icon from the system tray.</source>
+        <translation>Esconder o ícone da barra de ferramentas.</translation>
+    </message>
+    <message>
         <source>&amp;Hide tray icon</source>
         <translation>&amp;Ocultar ícone da bandeja</translation>
     </message>
@@ -1011,6 +1066,10 @@
     <message>
         <source>Active command-line options that override above options:</source>
         <translation>Ativar as opções da linha de comando que se sobrepõem às opções acima:</translation>
+    </message>
+    <message>
+        <source>Open the %1 configuration file from the working directory.</source>
+        <translation>Abrir o ficheiro de configuração %1 do diretório aberto.</translation>
     </message>
     <message>
         <source>Open Configuration File</source>
@@ -1167,6 +1226,10 @@
     <message>
         <source>none</source>
         <translation>nenhum</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1458,7 +1521,7 @@
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation><numerusform>%n anos</numerusform><numerusform>%n anos</numerusform></translation>
+        <translation><numerusform>%n ano</numerusform><numerusform>%n anos</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1483,6 +1546,16 @@
     <message>
         <source>unknown</source>
         <translation>desconhecido</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Bco</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tso</translation>
     </message>
 </context>
 <context>
@@ -1584,6 +1657,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Utilização de memória</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Carteira: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1742,6 +1819,10 @@
         <translation>1 &amp;ano</translation>
     </message>
     <message>
+        <source>&amp;Disconnect</source>
+        <translation>&amp;Disconectar</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>Banir para</translation>
     </message>
@@ -1756,6 +1837,10 @@
     <message>
         <source>For more information on using this console type %1.</source>
         <translation>Para mais informação em como utilizar esta consola, digite %1.</translation>
+    </message>
+    <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.</source>
+        <translation>AVISO: Burlões têm estado ativos, tentando que utilizadores escrevam comandos aqui para lhes roubar as carteiras. Não utilize esta consola sem perceber perfeitamente as ramificações de um comando.</translation>
     </message>
     <message>
         <source>Network activity disabled</source>
@@ -2034,10 +2119,6 @@
         <translation>por kilobyte</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Se a taxa personalizada estiver definida para 1.000 satoshis e a transação é de apenas 250 bytes, então paga apenas 250 satoshis "por kilobyte" na taxa, enquanto em "total pelo menos" paga 1.000 satoshis. Para transações superiores a um kilobyte ambos pagam por kilobyte.</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Esconder</translation>
     </message>
@@ -2189,6 +2270,10 @@
     <message>
         <source>Pay only the required fee of %1</source>
         <translation>Pague apenas a taxa obrigatória de %1</translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>Estimativa para iniciar a confirmação dentro de %n bloco.</numerusform><numerusform>Estimativa para iniciar a confirmação dentro de %n blocos.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2471,9 +2556,17 @@
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Abrir para %n ou mais bloco</numerusform><numerusform>Abrir para %n ou mais blocos</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>Aberto até %1</translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <translation>incompatível com uma transação com %1 confirmações</translation>
     </message>
     <message>
         <source>%1/offline</source>
@@ -2510,6 +2603,10 @@
     <message>
         <source>, has not been successfully broadcast yet</source>
         <translation>, ainda não foi transmitido com sucesso</translation>
+    </message>
+    <message numerus="yes">
+        <source>, broadcast through %n node(s)</source>
+        <translation><numerusform>, transmitido através de %n nó</numerusform><numerusform>, transmitido através de %n nós</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2550,6 +2647,10 @@
     <message>
         <source>Credit</source>
         <translation>Crédito</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation><numerusform>matura em %n bloco</numerusform><numerusform>matura em %n blocos</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2598,6 +2699,10 @@
     <message>
         <source>Merchant</source>
         <translation>Comerciante</translation>
+    </message>
+    <message>
+        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
+        <translation>Moedas geradas deverão maturar por %1 blocos antes de poderem ser gastas. Quando gerou este bloco, ele foi transmitido para a rede para ser incluído na cadeia de blocos. Se a inclusão na cadeia de blocos falhar, o seu estado irá ser alterado para "não aceite" e as moedas não poderão ser gastas. Isto poderá acontecer ocasionalmente se outro nó da rede gerar um bloco a poucos segundos de diferença do seu.</translation>
     </message>
     <message>
         <source>Debug information</source>
@@ -2670,12 +2775,20 @@
         <translation>Abandonada</translation>
     </message>
     <message>
+        <source>Confirming (%1 of %2 recommended confirmations)</source>
+        <translation>A confirmar (%1 de %2 confirmações recomendadas)</translation>
+    </message>
+    <message>
         <source>Confirmed (%1 confirmations)</source>
         <translation>Confirmada (%1 confirmações)</translation>
     </message>
     <message>
         <source>Conflicted</source>
         <translation>Incompatível</translation>
+    </message>
+    <message>
+        <source>Immature (%1 confirmations, will be available after %2)</source>
+        <translation>Imaturo (%1 confirmações, estará disponível após %2)</translation>
     </message>
     <message>
         <source>This block was not received by any other nodes and will probably not be accepted!</source>
@@ -2728,6 +2841,14 @@
     <message>
         <source>Type of transaction.</source>
         <translation>Tipo de transação.</translation>
+    </message>
+    <message>
+        <source>Whether or not a watch-only address is involved in this transaction.</source>
+        <translation>Desde que um endereço de modo-verificação faça parte ou não desta transação</translation>
+    </message>
+    <message>
+        <source>User-defined intent/purpose of the transaction.</source>
+        <translation>Motivo da transacção definido pelo utilizador.</translation>
     </message>
     <message>
         <source>Amount removed from or added to balance.</source>
@@ -2869,8 +2990,16 @@
         <translation>Exportação Falhou</translation>
     </message>
     <message>
+        <source>There was an error trying to save the transaction history to %1.</source>
+        <translation>Ocorreu um erro ao tentar guardar o histórico de transações em %1.</translation>
+    </message>
+    <message>
         <source>Exporting Successful</source>
         <translation>Exportação Bem Sucedida</translation>
+    </message>
+    <message>
+        <source>The transaction history was successfully saved to %1.</source>
+        <translation>O histórico da transação foi guardado com sucesso em %1.</translation>
     </message>
     <message>
         <source>Range:</source>
@@ -2948,7 +3077,11 @@
         <source>Backup Successful</source>
         <translation>Cópia de Segurança Bem Sucedida</translation>
     </message>
-    </context>
+    <message>
+        <source>The wallet data was successfully saved to %1.</source>
+        <translation>Os dados da carteira foram guardados com sucesso em %1.</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -3028,12 +3161,24 @@
         <translation>Associar a endereço específico e escutar sempre nele. Use a notação [anfitrião]:porta para IPv6</translation>
     </message>
     <message>
+        <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
+        <translation>Impossível trancar a pasta de dados %s. Provavelmente o %s já está a ser executado.</translation>
+    </message>
+    <message>
         <source>Delete all wallet transactions and only recover those parts of the blockchain through -rescan on startup</source>
         <translation>Apague todas as transações da carteira e somente restore aquelas que façam parte do blockchain através de re-scan ao reiniciar o programa</translation>
     </message>
     <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
+        <translation>Erro ao ler %s! Todas as chaves foram lidas correctamente, mas os dados das transacções ou do livro de endereços podem estar em falta ou incorrectos.</translation>
+    </message>
+    <message>
         <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
         <translation>Executar o comando quando uma transação da carteira muda (no comando, %s é substituído pela Id. da Transação)</translation>
+    </message>
+    <message>
+        <source>Maximum total fees (in %s) to use in a single wallet transaction or raw transaction; setting this too low may abort large transactions (default: %s)</source>
+        <translation>Total máximo de taxas (em %s) a utilizar numa única transacção; definir este valor demasiado baixo pode abortar transacções grandes (padrão: %s)</translation>
     </message>
     <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
@@ -3044,6 +3189,10 @@
         <translation>Consultar por endereços de ponto via procura de DNS, se tiver poucos endereços (predefinição: 1, a menos que use -connect)</translation>
     </message>
     <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Definir tamanho máximo de transações com alta-prioridade/baixa-taxa em bytes (por defeito: %d)</translation>
+    </message>
+    <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
         <translation>Defina o número de processos de verificação (%u até %d, 0 = automático, &lt;0 = ldisponibiliza esse número de núcleos livres, por defeito: %d)</translation>
     </message>
@@ -3052,8 +3201,16 @@
         <translation>A base de dados de blocos contém um bloco que aparenta ser do futuro. Isto pode ser causado por uma data incorrecta definida no seu computador. Reconstrua apenas a base de dados de blocos caso tenha a certeza de que a data e hora do seu computador estão correctos.</translation>
     </message>
     <message>
+        <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
+        <translation>Esta é uma versão de testes pré-lançamento - use à sua responsabilidade - não usar para minar ou aplicações comerciais</translation>
+    </message>
+    <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
         <translation>Utilizar UPnP para mapear a porta de escuta (predefinição: 1 quando escutar e sem -proxy)</translation>
+    </message>
+    <message>
+        <source>Wallet will not create transactions that violate mempool chain limits (default: %u)</source>
+        <translation>A carteira não irá criar transações que violem os limites da cadeia do banco de memória (predefinição: %u)</translation>
     </message>
     <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
@@ -3212,6 +3369,10 @@
         <translation>Localização de cookie de autorização (predefinição: diretoria de dados)</translation>
     </message>
     <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Mínimo de bytes por sigop nas transações que nós transmitimos e mine (predefinição: %u)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Os descritores de ficheiros disponíveis são insuficientes.</translation>
     </message>
@@ -3240,8 +3401,16 @@
         <translation>Definir o tamanho da cache de base de dados em megabytes (%d a %d, padrão: %d)</translation>
     </message>
     <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Definir tamanho máximo por bloco em bytes (por defeito: %d)</translation>
+    </message>
+    <message>
         <source>Specify wallet file (within data directory)</source>
         <translation>Especifique ficheiro de carteira (dentro da pasta de dados)</translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer. %s is probably already running.</source>
+        <translation>Incapaz de vincular à porta %s neste computador. O %s provavelmente já está a correr.</translation>
     </message>
     <message>
         <source>Unsupported argument -benchmark ignored, use -debug=bench.</source>
@@ -3372,6 +3541,10 @@
         <translation>Endereço -onion ou hostname inválido: '%s'</translation>
     </message>
     <message>
+        <source>Invalid -proxy address or hostname: '%s'</source>
+        <translation>Endereço -proxy ou hostname inválido: '%s'</translation>
+    </message>
+    <message>
         <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s' (must be at least %s)</source>
         <translation>Montante inválido para -paytxfee=&lt;amount&gt;: '%s' (deverá ser no mínimo %s)</translation>
     </message>
@@ -3464,6 +3637,10 @@
         <translation>A verificar a(s) carteira(s)...</translation>
     </message>
     <message>
+        <source>Wallet %s resides outside wallet directory %s</source>
+        <translation>A carteira %s reside fora da pasta de dados %s</translation>
+    </message>
+    <message>
         <source>Warning</source>
         <translation>Aviso</translation>
     </message>
@@ -3474,6 +3651,10 @@
     <message>
         <source>Whether to operate in a blocks only mode (default: %u)</source>
         <translation>Se operar apenas num modo de blocos (predefinição: %u)</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to change -txindex</source>
+        <translation>É necessário reconstruir as bases de dados usando -reindex para mudar o -txindex</translation>
     </message>
     <message>
         <source>Zapping all transactions from wallet...</source>
@@ -3510,6 +3691,10 @@
     <message>
         <source>Fees (in %s/kB) smaller than this are considered zero fee for transaction creation (default: %s)</source>
         <translation>Taxas (em %s/kB) abaixo deste valor são consideradas nulas para a criação de transacções (padrão: %s)</translation>
+    </message>
+    <message>
+        <source>Force relay of transactions from whitelisted peers even if they violate local relay policy (default: %d)</source>
+        <translation>Forçar retransmissão das transações a partir dos pares da lista branca, mesmo que estes violem a política de retransmissão local (predefinição: %d)</translation>
     </message>
     <message>
         <source>How thorough the block verification of -checkblocks is (0-4, default: %u)</source>

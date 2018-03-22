@@ -41,10 +41,62 @@
         <source>&amp;Delete</source>
         <translation>&amp;Избриши</translation>
     </message>
+    <message>
+        <source>Choose the address to send coins to</source>
+        <translation>Изберете адресата за да пратите биткоини</translation>
+    </message>
+    <message>
+        <source>Choose the address to receive coins with</source>
+        <translation>Изберете адресата за да примите биткоини</translation>
+    </message>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation>И&amp;збери</translation>
+    </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation>Адреси за праќање</translation>
+    </message>
+    <message>
+        <source>Receiving addresses</source>
+        <translation>Адреси за примање</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;Копирај Адреса</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Label</source>
+        <translation>Копирај &amp;Етикета</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;Уреди</translation>
+    </message>
+    <message>
+        <source>Export Address List</source>
+        <translation>Експортирај Листа со Адреси</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Експортирањето не Успеа</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
-    </context>
+    <message>
+        <source>Label</source>
+        <translation>Етикета</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Адреса</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(без етикета)</translation>
+    </message>
+</context>
 <context>
     <name>AskPassphraseDialog</name>
     <message>
@@ -59,7 +111,71 @@
         <source>Repeat new passphrase</source>
         <translation>Повторете ја новата тајна фраза</translation>
     </message>
-    </context>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>Криптирање на паричник</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Отклучи паричник</translation>
+    </message>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>Декриптирање на паричник</translation>
+    </message>
+    <message>
+        <source>Change passphrase</source>
+        <translation>Измени тајна фраза</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>Потврдете го криптирањето на паричникот</translation>
+    </message>
+    <message>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
+        <translation>Предупредување: Ако го шифрирате вашиот паричник и ја изгубите вашата тајна фраза, ќе &lt;b&gt;ГИ ИЗГУБИТЕ СИТЕ ВАШИ БИТКОИНИ&lt;/b&gt;!</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to encrypt your wallet?</source>
+        <translation>Дали сте сигурни дека сакате да криптирате вашиот паричник?</translation>
+    </message>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>Паричникот е криптиран</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed</source>
+        <translation>Криптирањето на паричникот е неуспешно</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
+        <translation>Криптирањето на паричникот не успеа поради интерна грешка. Вашиот паричник не е криптиран.</translation>
+    </message>
+    <message>
+        <source>The supplied passphrases do not match.</source>
+        <translation>Приложените тајни фрази не се поклопуваат</translation>
+    </message>
+    <message>
+        <source>Wallet unlock failed</source>
+        <translation>Отклучувањето на паричникот е неуспешно</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>Тајната фраза која што ја внесовте за декриптирање на паричникот е неточна.</translation>
+    </message>
+    <message>
+        <source>Wallet decryption failed</source>
+        <translation>Декриптирањето на паричникот е неуспешно</translation>
+    </message>
+    <message>
+        <source>Wallet passphrase was successfully changed.</source>
+        <translation>Тајната фраза е успешно променета.</translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Предупредување: Caps Lock копчето е активно!</translation>
+    </message>
+</context>
 <context>
     <name>BanTableModel</name>
     </context>
@@ -98,6 +214,10 @@
         <translation>Напушти ја апликацијата</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Прикажи информации за %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>За &amp;Qt</translation>
     </message>
@@ -132,6 +252,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Отвори &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Паричник:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -176,6 +300,10 @@
     <message>
         <source>&amp;Help</source>
         <translation>&amp;Помош</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Повторно индексирање на блокови од дискот...</translation>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
@@ -262,7 +390,67 @@
         <source>Date</source>
         <translation>Дата</translation>
     </message>
-    </context>
+    <message>
+        <source>Copy address</source>
+        <translation>Копирај адреса</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Копирај етикета</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Копирај сума</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>Заклучи непотрошени</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>Отклучи непотрошени</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Копирај количина</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Копирај провизија</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Копирај после провизија</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Копирај бајти</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Копирај прашина</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Копирај кусур</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>да</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>не</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(без етикета)</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(кусур)</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -284,6 +472,9 @@
         <source>name</source>
         <translation>име</translation>
     </message>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -308,8 +499,19 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адреса</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -354,6 +556,10 @@
     <message>
         <source>none</source>
         <translation>нема</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Биткоин Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -403,9 +609,25 @@
         <source>%1 ms</source>
         <translation>%1 мс</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n час</numerusform><numerusform>%n часови</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n ден</numerusform><numerusform>%n денови</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n недела</numerusform><numerusform>%n недели</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 и %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n година</numerusform><numerusform>%n години</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -423,13 +645,35 @@
         <source>%1 GB</source>
         <translation>%1 ГБ</translation>
     </message>
-    </context>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакция</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
 <context>
     <name>QRImageWidget</name>
-    </context>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Сними Слика...</translation>
+    </message>
+    <message>
+        <source>Save QR Code</source>
+        <translation>Сними QR Код</translation>
+    </message>
+    <message>
+        <source>PNG Image (*.png)</source>
+        <translation>PNG Слика (*.png)</translation>
+    </message>
+</context>
 <context>
     <name>RPCConsole</name>
     <message>
@@ -447,6 +691,10 @@
     <message>
         <source>Block chain</source>
         <translation>Block chain</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Паричник: </translation>
     </message>
     <message>
         <source>Sent</source>
@@ -479,7 +727,23 @@
         <source>Show</source>
         <translation>Прикажи</translation>
     </message>
-    </context>
+    <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Копирај URI</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Копирај етикета</translation>
+    </message>
+    <message>
+        <source>Copy message</source>
+        <translation>Копирај порака</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Копирај сума</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
@@ -498,9 +762,45 @@
         <source>&amp;Save Image...</source>
         <translation>&amp;Сними Слика...</translation>
     </message>
+    <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Адреса</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Сума</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Етикета</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Порака</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Етикета</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Порака</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(без етикета)</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
@@ -525,10 +825,50 @@
         <translation>Кусур:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Избери...</translation>
+    </message>
+    <message>
         <source>Dust:</source>
         <translation>Прашина:</translation>
     </message>
-    </context>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Испрати</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Копирај количина</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Копирај сума</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Копирај провизија</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Копирај после провизија</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Копирај бајти</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Копирај прашина</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Копирај кусур</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(без етикета)</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsEntry</name>
     <message>
@@ -561,15 +901,71 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Порака</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Транзакция</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Сума</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Етикета</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(без етикета)</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Copy address</source>
+        <translation>Копирај Адреса</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Копирај етикета</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Копирај сума</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Етикета</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Адреса</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Експортирањето не Успеа</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -582,6 +978,18 @@
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Експорт</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Експортирај ги податоците од активното јазиче во датотека</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Бекап на Паричник</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>

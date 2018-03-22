@@ -30,6 +30,10 @@
         <translation>Şterge adresa selectată din listă</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Introduceţi adresa sau eticheta pentru căutare</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Exportă datele din tab-ul curent într-un fişier</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Deschide &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portofel:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -675,6 +683,10 @@
         <translation>Copiază rest</translation>
     </message>
     <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 blocat)</translation>
+    </message>
+    <message>
         <source>yes</source>
         <translation>da</translation>
     </message>
@@ -781,6 +793,9 @@
         <translation>Nu se poate crea un dosar de date aici.</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -908,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Nespecificat</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -956,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Necunoscut. Se sincronizeaza headerele (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tip</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresă</translation>
     </message>
 </context>
 <context>
@@ -1202,6 +1237,10 @@
     <message>
         <source>none</source>
         <translation>nimic</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Nucleul Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1481,7 +1520,7 @@
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation><numerusform>%n ora</numerusform><numerusform>%n ore</numerusform><numerusform>%n ore</numerusform></translation>
+        <translation><numerusform>%n oră</numerusform><numerusform>%n ore</numerusform><numerusform>%n ore</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
@@ -1489,7 +1528,7 @@
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation><numerusform>%n saptamana</numerusform><numerusform>%n saptamani</numerusform><numerusform>%n saptamani</numerusform></translation>
+        <translation><numerusform>%n săptămână</numerusform><numerusform>%n săptămâni</numerusform><numerusform>%n de săptămâni</numerusform></translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -1522,6 +1561,16 @@
     <message>
         <source>unknown</source>
         <translation>necunoscut</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tze</translation>
     </message>
 </context>
 <context>
@@ -1623,6 +1672,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Memorie folosită</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portofel: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1896,14 +1949,6 @@
         <translation>&amp;Cerere plată</translation>
     </message>
     <message>
-        <source>Bech32 addresses (BIP-173) are cheaper to spend from and offer better protection against typos. When unchecked a P2SH wrapped SegWit address will be created, compatible with older wallets.</source>
-        <translation>Adresele de tip Bech32 (BIP-173) sunt mai ieftin de folosit si ofera o protectie mai buna impotriva greselilor de tastare. Daca nu este bifat se creaza o adresa SegWit impachetata in P2SH, compatibila cu portofelele mai vechi.</translation>
-    </message>
-    <message>
-        <source>Generate Bech32 address</source>
-        <translation>Genereaza adresa Bech32</translation>
-    </message>
-    <message>
         <source>Show the selected request (does the same as double clicking an entry)</source>
         <translation>Arată cererea selectată (acelaşi lucru ca şi dublu-clic pe o înregistrare)</translation>
     </message>
@@ -2099,10 +2144,6 @@
     <message>
         <source>per kilobyte</source>
         <translation>per kilooctet</translation>
-    </message>
-    <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Daca taxa personalizata este setata la 1000 satoshi si tranzactia este doar de 250 bytes, atunci "per kilobyte" plateste o taxa de doar 250 satoshi, in timp ce "total minim" plateste 1000 satoshi. Pentru tranzactii mai mari de un kilobyte ambele platesc per kilobyte. </translation>
     </message>
     <message>
         <source>Hide</source>
@@ -2563,7 +2604,7 @@
     <name>TransactionDesc</name>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Deschis pentru inca un bloc</numerusform><numerusform>Deschis pentru inca %n blocuri</numerusform><numerusform>Deschis pentru inca %n blocuri</numerusform></translation>
+        <translation><numerusform>Deschis pentru încă %n bloc</numerusform><numerusform>Deschis pentru încă %n blocuri</numerusform><numerusform>Deschis pentru încă %n de blocuri</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2611,7 +2652,7 @@
     </message>
     <message numerus="yes">
         <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, difuzare printr-un nod</numerusform><numerusform>, difuzare prin %n noduri</numerusform><numerusform>, difuzare prin %n noduri</numerusform></translation>
+        <translation><numerusform>, distribuit prin %n nod</numerusform><numerusform>, distribuit prin %n noduri</numerusform><numerusform>, distribuit prin %n de noduri</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2655,7 +2696,7 @@
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>se matureaza intr-un bloc</numerusform><numerusform>se matureaza in %n blocuri</numerusform><numerusform>se matureaza in %n blocuri</numerusform></translation>
+        <translation><numerusform>se maturizează în încă %n bloc</numerusform><numerusform>se maturizează în încă %n blocuri</numerusform><numerusform>se maturizează în încă %n de blocuri</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2758,6 +2799,10 @@
     <message>
         <source>Label</source>
         <translation>Etichetă</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Deschis pentru încă %n bloc</numerusform><numerusform>Deschis pentru încă %n blocuri</numerusform><numerusform>Deschis pentru încă %n de blocuri</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -3258,6 +3303,10 @@
         <translation>Seteaza cea mai mica taxa (în %s/kB) pentru tranzactiile de adăugat la crearea blocului (implicit: %s)</translation>
     </message>
     <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Setează mărimea pentru tranzacţiile prioritare/taxe mici în octeţi (implicit: %d)</translation>
+    </message>
+    <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
         <translation>Setează numărul de thread-uri de verificare a script-urilor (%u la %d, 0 = auto, &lt;0 = lasă atîtea nuclee libere, implicit: %d)</translation>
     </message>
@@ -3304,6 +3353,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>Daca se salveaza mempool la shutdown si se incarca la restart (implicit: %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Parteneri din whitelist ce se conecteaza de la adresa IP specificata (ex. 1.2.3.4) sau o retea cu notatia CIDR (ex. 1.2.3.0/24). Poate fi specificat de mai multe ori.</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3524,6 +3577,10 @@
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Setează mărimea bazei de date cache în megaocteţi (%d la %d, implicit: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Setaţi dimensiunea maximă a unui bloc în bytes (implicit: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3882,10 +3939,6 @@
         <translation>Produce toate informaţiile de depanare (implicit: %u &lt;category&gt; furnizată este opţională)</translation>
     </message>
     <message>
-        <source>Set maximum BIP141 block weight to this * 4. Deprecated, use blockmaxweight</source>
-        <translation>Seteaza greutatea maxima a blocurilor BIP141 la aceasta valoare *4. In caz de depreciere, foloseste blockmaxwheight</translation>
-    </message>
-    <message>
         <source>Sets the serialization of raw transaction or block hex returned in non-verbose mode, non-segwit(0) or segwit(1) (default: %d)</source>
         <translation>Stabileste serializarea tranzactiilor brute sau hexul blocurile returnate in mod non-verbose, non-segwit(0) sau segwit(1) (implicit: %d)</translation>
     </message>
@@ -3940,10 +3993,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Atenţie: fişierul portofelului este corupt, date salvate! Fişierul %s a fost salvat ca %s in %s; dacă balanta sau tranzactiile sunt incorecte ar trebui să restauraţi dintr-o copie de siguranţă.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Parteneri din whitelist ce se conecteaza de la adresa IP specificata (ex. 1.2.3.4) sau o retea cu notatia CIDR (ex. 1.2.3.0/24). Poate fi specificat de mai multe ori.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

@@ -22,6 +22,10 @@
         <translation>&amp;Kustuta</translation>
     </message>
     <message>
+        <source>C&amp;hoose</source>
+        <translation type="unfinished">&amp;Vali</translation>
+    </message>
+    <message>
         <source>&amp;Edit</source>
         <translation>&amp;Muuda</translation>
     </message>
@@ -122,8 +126,16 @@
         <translation>&amp;Valikud...</translation>
     </message>
     <message>
+        <source>&amp;Backup Wallet...</source>
+        <translation type="unfinished">&amp;Varunda Rahakott...</translation>
+    </message>
+    <message>
         <source>Open &amp;URI...</source>
         <translation>Ava &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Rahakott:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -160,6 +172,10 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;Käsurea valikud</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Kõvakettal olevate plokkide reindekseerimine...</translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -232,6 +248,10 @@
 <context>
     <name>EditAddressDialog</name>
     <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;Silt</translation>
+    </message>
+    <message>
         <source>&amp;Address</source>
         <translation>&amp;Aadress</translation>
     </message>
@@ -246,6 +266,9 @@
         <source>name</source>
         <translation>nimi</translation>
     </message>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -282,10 +305,30 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tüüp</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Aadress</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Ava URI</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
@@ -302,6 +345,10 @@
         <translation>&amp;Võrk</translation>
     </message>
     <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Rahakott</translation>
+    </message>
+    <message>
         <source>IPv4</source>
         <translation>IPv4</translation>
     </message>
@@ -316,6 +363,10 @@
     <message>
         <source>&amp;OK</source>
         <translation>&amp;OK</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -357,7 +408,29 @@
         <source>Amount</source>
         <translation>Kogus</translation>
     </message>
-    </context>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n tund</numerusform><numerusform>%n tundi</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n päev</numerusform><numerusform>%n päeva</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n aasta</numerusform><numerusform>%n aastat</numerusform></translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Plk</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -405,6 +478,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Mälu kasutus</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Rahakott: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -464,6 +541,10 @@
     <message>
         <source>&amp;Amount:</source>
         <translation>&amp;Kogus:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Silt:</translation>
     </message>
     <message>
         <source>&amp;Message:</source>
@@ -539,6 +620,10 @@
         <translation>Vali...</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Saada</translation>
+    </message>
+    <message>
         <source>Copy amount</source>
         <translation>Kopeeri kogus</translation>
     </message>
@@ -550,12 +635,24 @@
 <context>
     <name>SendCoinsEntry</name>
     <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Kogus:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Silt:</translation>
+    </message>
+    <message>
         <source>Alt+A</source>
         <translation>Alt+A</translation>
     </message>
     <message>
         <source>Alt+P</source>
         <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished">Sõnum:</translation>
     </message>
     </context>
 <context>

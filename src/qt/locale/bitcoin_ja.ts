@@ -30,6 +30,10 @@
         <translation>選択されたアドレスを一覧から削除する</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>検索するアドレスまたはラベルを入力</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>ファイルに現在のタブのデータをエクスポート</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>URI を開く (&amp;U)...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">ウォレット:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -786,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -912,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -960,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>未知。ヘッダを同期しています (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>タイプ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>アドレス</translation>
     </message>
 </context>
 <context>
@@ -1208,6 +1239,10 @@
         <translation>なし</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin のコア</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>オプションのリセットの確認</translation>
     </message>
@@ -1430,11 +1465,11 @@
     </message>
     <message>
         <source>Sent</source>
-        <translation>送金</translation>
+        <translation>送信</translation>
     </message>
     <message>
         <source>Received</source>
-        <translation>受取</translation>
+        <translation>受信</translation>
     </message>
 </context>
 <context>
@@ -1526,6 +1561,16 @@
     <message>
         <source>unknown</source>
         <translation>未確認</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>ブロック</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>取引</translation>
     </message>
 </context>
 <context>
@@ -1629,16 +1674,20 @@
         <translation>メモリ使用量</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">ウォレット: </translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>リセット (&amp;R)</translation>
     </message>
     <message>
         <source>Received</source>
-        <translation>受取</translation>
+        <translation>受信</translation>
     </message>
     <message>
         <source>Sent</source>
-        <translation>送金</translation>
+        <translation>送信</translation>
     </message>
     <message>
         <source>&amp;Peers</source>
@@ -1900,14 +1949,6 @@
         <translation>支払をリクエストする (&amp;R)</translation>
     </message>
     <message>
-        <source>Bech32 addresses (BIP-173) are cheaper to spend from and offer better protection against typos. When unchecked a P2SH wrapped SegWit address will be created, compatible with older wallets.</source>
-        <translation>Bech32形式(BIP-173を参照)のアドレスを利用するとアドレスからの出金時に安い手数料で済み、また誤入力の可能性を減らすことができます。チェックを外すと、古いウォレットと互換性を保つことができるP2SH形式のセグウィットアドレスが作られます。</translation>
-    </message>
-    <message>
-        <source>Generate Bech32 address</source>
-        <translation>Bech32形式のアドレスを生成</translation>
-    </message>
-    <message>
         <source>Show the selected request (does the same as double clicking an entry)</source>
         <translation>選択されたリクエストを表示する（項目をダブルクリックすることでも表示できます）</translation>
     </message>
@@ -2103,10 +2144,6 @@
     <message>
         <source>per kilobyte</source>
         <translation>1キロバイトあたり手数料</translation>
-    </message>
-    <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>カスタム手数料が1000satoshiに設定されている場合、トランザクションサイズが250バイトとすると、「1キロバイトあたり手数料」では250satoshiの手数料のみを支払いますが、「最小手数料」では1000satoshiを支払います。1キロバイトを超えるトランザクションの場合には、どちらの方法を選択したとしても1キロバイトあたりで支払われます。</translation>
     </message>
     <message>
         <source>Hide</source>
@@ -3266,6 +3303,10 @@
         <translation>ブロック生成時に取り込まれるトランザクションの最低手数料率 (%s/kB 単位)。(デフォルト: %s)</translation>
     </message>
     <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>最優先/最低手数料の最大サイズをバイトで指定 (初期値: %d)</translation>
+    </message>
+    <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
         <translation>スクリプト検証スレッドを設定 (%uから%dの間, 0 = 自動, &lt;0 = たくさんのコアを自由にしておく, 初期値: %d)</translation>
     </message>
@@ -3312,6 +3353,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>シャットダウン時に mempool を保存し、再起動時にロードするかどうか (初期値: %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>ホワイトリストとして登録するピアノ、接続元の IP アドレス (例: 1.2.3.4) または CIDR 表現のネットワーク (例: 1.2.3.0/24)。複数回指定することもできる</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3487,6 +3532,10 @@
         <translation>認証クッキーの場所 (デフォルト: )</translation>
     </message>
     <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>中継や採掘を行ってもよい、sigopあたりの最小バイト数 (デフォルト: %u)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>使用可能なファイルディスクリプタが不足しています。</translation>
     </message>
@@ -3533,6 +3582,10 @@
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>データベースのキャッシュサイズをメガバイトで設定 (%dから%d。初期値: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>最大ブロックサイズをバイトで設定 (初期値: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3887,10 +3940,6 @@
         <translation>デバッグ情報を出力する (初期値: %u, &lt;category&gt; の指定は任意です)</translation>
     </message>
     <message>
-        <source>Set maximum BIP141 block weight to this * 4. Deprecated, use blockmaxweight</source>
-        <translation>BIP141:SegWitの最大ブロックサイズはこれを4倍したものとします。注意: 非推奨です。代わりにblockmaxweightを使用してください。</translation>
-    </message>
-    <message>
         <source>Sets the serialization of raw transaction or block hex returned in non-verbose mode, non-segwit(0) or segwit(1) (default: %d)</source>
         <translation>非冗長モードで返却する生トランザクションやブロックの16進数表現のシリアライゼーションフォーマットを非 segwit (0) または segwit (1) のものに設定する (デフォルト: %d)</translation>
     </message>
@@ -3945,10 +3994,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>警告: ウォレットファイルが破損していましたのでデータを復旧しました！元の %s は %s として %s に保存されました; 残高やトランザクションが正しくない場合にはバックアップから復元してください。</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>ホワイトリストとして登録するピアノ、接続元の IP アドレス (例: 1.2.3.4) または CIDR 表現のネットワーク (例: 1.2.3.0/24)。複数回指定することもできる</translation>
     </message>
     <message>
         <source>%s is set very high!</source>
