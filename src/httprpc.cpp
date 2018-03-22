@@ -65,6 +65,8 @@ private:
 static std::string strRPCUserColonPass;
 /* Stored RPC timer interface (for unregistration) */
 static std::unique_ptr<HTTPRPCTimerInterface> httpRPCTimerInterface;
+/* RPC Auth Whitelist */
+static std::map<std::string, std::set<std::string>> whitelistedRPC;
 
 static void JSONErrorReply(HTTPRequest* req, const UniValue& objError, const UniValue& id)
 {
@@ -187,15 +189,38 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
         // singleton request
         if (valRequest.isObject()) {
             jreq.parse(valRequest);
-
+            if (whitelistedRPC.count(jreq.authUser) && !whitelistedRPC[jreq.authUser].count(jreq.strMethod)) {
+                LogPrintf("RPC User %s not allowed to call method %s\n", jreq.authUser, jreq.strMethod);
+                req->WriteHeader("WWW-Authenticate", WWW_AUTH_HEADER_DATA);
+                req->WriteReply(HTTP_UNAUTHORIZED);
+                return false;
+            }
             UniValue result = tableRPC.execute(jreq);
 
             // Send reply
             strReply = JSONRPCReply(result, NullUniValue, jreq.id);
 
         // array of requests
-        } else if (valRequest.isArray())
+        } else if (valRequest.isArray()) {
+            if (whitelistedRPC.count(jreq.authUser)) {
+                for (unsigned int reqIdx = 0; reqIdx < valRequest.size(); reqIdx++) {
+                    if (!valRequest[reqIdx].isObject()) {
+                        throw JSONRPCError(RPC_INVALID_REQUEST, "Invalid Request object");
+                    } else {
+                        const UniValue& request = valRequest[reqIdx].get_obj();
+                        // Parse method
+                        std::string strMethod = find_value(request, "method").get_str();
+                        if (!whitelistedRPC[jreq.authUser].count(strMethod)) {
+                            LogPrintf("RPC User %s not allowed to call method %s\n", jreq.authUser, strMethod);
+                            req->WriteHeader("WWW-Authenticate", WWW_AUTH_HEADER_DATA);
+                            req->WriteReply(HTTP_UNAUTHORIZED);
+                            return false;
+                        }
+                    }
+                }
+            }
             strReply = JSONRPCExecBatch(jreq, valRequest.get_array());
+        }
         else
             throw JSONRPCError(RPC_PARSE_ERROR, "Top-level object parse error");
 
@@ -230,6 +255,13 @@ static bool InitRPCAuthentication()
     {
         LogPrintf("Using rpcauth authentication.\n");
     }
+
+    for (const std::string& strRPCWhitelist : gArgs.GetArgs("-rpcwhitelist")) {
+        std::string strUser = strRPCWhitelist.substr(0, strRPCWhitelist.find(':'));
+        std::string strWhitelist = strRPCWhitelist.substr(strRPCWhitelist.find(':') + 1);
+        boost::split(whitelistedRPC[strUser], strWhitelist, boost::is_any_of(","));
+    }
+
     return true;
 }
 
