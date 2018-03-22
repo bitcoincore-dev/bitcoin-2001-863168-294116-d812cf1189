@@ -1,6 +1,14 @@
 #ifndef BITCOIN_INTERFACE_HANDLER_H
 #define BITCOIN_INTERFACE_HANDLER_H
 
+#include <memory>
+
+namespace boost {
+namespace signals2 {
+class connection;
+} // namespace signals2
+} // namespace boost
+
 namespace interface {
 
 //! Generic interface for managing an event handler or callback function
@@ -14,6 +22,9 @@ public:
     //! Disconnect the handler.
     virtual void disconnect() = 0;
 };
+
+//! Return handler wrapping a boost signal connection.
+std::unique_ptr<Handler> MakeHandler(boost::signals2::connection connection);
 
 } // namespace interface
 
