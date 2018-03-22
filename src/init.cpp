@@ -1098,7 +1098,7 @@ bool AppInitParameterInteraction()
         boost::split(vstrReplacementModes, strReplacementModeList, boost::is_any_of(",+"));
         fEnableReplacement = (std::find(vstrReplacementModes.begin(), vstrReplacementModes.end(), "fee") != vstrReplacementModes.end());
         if (fEnableReplacement) {
-            fReplacementHonourOptOut = (std::find(vstrReplacementModes.begin(), vstrReplacementModes.end(), "-optin") == vstrReplacementModes.end());
+            fReplacementHonourOptOut = (std::find(vstrReplacementModes.begin(), vstrReplacementModes.end(), "optin") != vstrReplacementModes.end());
             if (!fReplacementHonourOptOut) {
                 nLocalServices = ServiceFlags(nLocalServices | NODE_REPLACE_BY_FEE);
             }
