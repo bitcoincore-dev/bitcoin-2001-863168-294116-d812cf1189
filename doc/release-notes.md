@@ -1,17 +1,13 @@
-Bitcoin Core version 0.16.0 is now available from:
+Bitcoin Knots version *0.16.0.knots20180321* is now available from:
 
-  <https://bitcoincore.org/bin/bitcoin-core-0.16.0/>
+  <https://bitcoinknots.org/files/0.16.x/0.16.0.knots20180321/>
 
 This is a new major version release, including new features, various bugfixes
 and performance improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at GitHub:
 
-  <https://github.com/bitcoin/bitcoin/issues>
-
-To receive security and update notifications, please subscribe to:
-
-  <https://bitcoincore.org/en/list/announcements/join/>
+  <https://github.com/bitcoinknots/bitcoin/issues>
 
 How to Upgrade
 ==============
@@ -40,32 +36,41 @@ wallets that were created with older versions are not affected by this.
 Compatibility
 ==============
 
-Bitcoin Core is extensively tested on multiple operating systems using
-the Linux kernel, macOS 10.8+, and Windows Vista and later. Windows XP is not supported.
+Bitcoin Knots is supported on multiple operating systems using the Linux kernel,
+macOS 10.8+, and Windows Vista and later. Windows XP is not supported.
 
-Bitcoin Core should also work on most other Unix-like systems but is not
+Bitcoin Knots should also work on most other Unix-like systems but is not
 frequently tested on them.
 
 Notable changes
 ===============
+
+Full Replace-By-Fee enabled by default
+--------------------------------------
+
+Due to popular request, full RBF has been enabled by default in this release.
+This means that your node will allow transaction replacements so long as a
+reasonable fee is paid, regardless of whether or not the replaced transactions
+set the RBF opt-in flag.
+
+To restore the previous policy, you may set `-mempoolreplacement=fee,optin`
+or use the GUI Options, under the Mempool tab.
 
 Wallet changes
 ---------------
 
 ### Segwit Wallet
 
-Bitcoin Core 0.16.0 introduces full support for segwit in the wallet and user interfaces. A new `-addresstype` argument has been added, which supports `legacy`, `p2sh-segwit` (default), and `bech32` addresses. It controls what kind of addresses are produced by `getnewaddress`, `getaccountaddress`, and `createmultisigaddress`. A `-changetype` argument has also been added, with the same options, and by default equal to `-addresstype`, to control which kind of change is used.
+Bitcoin Knots 0.16.0 introduces full support for segwit in the wallet and user interfaces. A new `-addresstype` argument has been added, which supports `legacy` (default), `p2sh-segwit`, and `bech32` addresses. It controls what kind of addresses are produced by `getnewaddress`, `getaccountaddress`, and `createmultisigaddress`. A `-changetype` argument has also been added, with the same options, and by default equal to `-addresstype`, to control which kind of change is used.
 
 A new `address_type` parameter has been added to the `getnewaddress` and `addmultisigaddress` RPCs to specify which type of address to generate.
 A `change_type` argument has been added to the `fundrawtransaction` RPC to override the `-changetype` argument for specific transactions.
 
 - All segwit addresses created through `getnewaddress` or `*multisig` RPCs explicitly get their redeemscripts added to the wallet file. This means that downgrading after creating a segwit address will work, as long as the wallet file is up to date.
-- All segwit keys in the wallet get an implicit redeemscript added, without it being written to the file. This means recovery of an old backup will work, as long as you use new software.
-- All keypool keys that are seen used in transactions explicitly get their redeemscripts added to the wallet files. This means that downgrading after recovering from a backup that includes a segwit address will work
+- If the `-walletimplicitsegwit` option is used, all keys in the wallet will get an implicit redeemscript added, without it being written to the file. This means recovery of an old backup will work, as long as you use this option.
+- All keypool keys that are seen used in transactions explicitly get their redeemscripts added to the wallet files. This means that downgrading after recovering from a backup using the `-walletimplicitsegwit` option will work.
 
-Note that some RPCs do not yet support segwit addresses. Notably, `signmessage`/`verifymessage` doesn't support segwit addresses, nor does `importmulti` at this time. Support for segwit in those RPCs will continue to be added in future versions.
-
-P2WPKH change outputs are now used by default if any destination in the transaction is a P2WPKH or P2WSH output. This is done to ensure the change output is as indistinguishable from the other outputs as possible in either case.
+Note that some RPCs do not yet support segwit addresses. Notably, `signmessage`/`verifymessage` doesn't support segwit addresses, nor does `importmulti` at this time. Support for segwit in those RPCs may continue to be added in future versions.
 
 ### BIP173 (Bech32) Address support ("bc1..." addresses)
 
@@ -73,9 +78,9 @@ Full support for native segwit addresses (BIP173 / Bech32) has now been added.
 This includes the ability to send to BIP173 addresses (including non-v0 ones), and generating these
 addresses (including as default new addresses, see above).
 
-A checkbox has been added to the GUI to select whether a Bech32 address or P2SH-wrapped address should be generated when using segwit addresses. When launched with `-addresstype=bech32` it is checked by default. When launched with `-addresstype=legacy` it is unchecked and disabled.
+A checkbox has been added to the GUI to select whether a Bech32 address or legacy address should be generated. When launched with `-addresstype=bech32` or `-addresstype=p2sh-segwit`, unchecking it instead uses P2SH-wrapped segwit addresses (and the default checkbox state is checked or unchecked as appropriate).
 
-### HD-wallets by default
+### Wallet incompatibility
 
 Due to a backward-incompatible change in the wallet database, wallets created
 with version 0.16.0 will be rejected by previous versions. Also, version 0.16.0
@@ -92,7 +97,7 @@ use the `replaceable` argument for individual transactions.
 
 ### Wallets directory configuration (`-walletdir`)
 
-Bitcoin Core now has more flexibility in where the wallets directory can be
+Bitcoin Knots now has more flexibility in where the wallets directory can be
 located. Previously wallet database files were stored at the top level of the
 bitcoin data directory. The behavior is now:
 
@@ -110,10 +115,17 @@ bitcoin data directory. The behavior is now:
 Care should be taken when choosing the wallets directory location, as if it
 becomes unavailable during operation, funds may be lost.
 
+### Experimental grouped coin selection
+
+An experimental option `-avoidpartialspends` has been added that modifies the
+coin selection algorithm to group together bitcoins received using the same
+address. (Note that reusing addresses is always detrimental to both your own
+and the rest of the network's privacy, and is not recommended.)
+
 Build: Minimum GCC bumped to 4.8.x
 ------------------------------------
-The minimum version of the GCC compiler required to compile Bitcoin Core is now 4.8. No effort will be
-made to support older versions of GCC. See discussion in issue #11732 for more information.
+The minimum version of the GCC compiler required to compile Bitcoin Knots is now 4.8. No effort will be
+made to support older versions of GCC. See discussion in Bitcoin Core issue #11732 for more information.
 The minimum version for the Clang compiler is still 3.3. Other minimum dependency versions can be found in `doc/dependencies.md` in the repository.
 
 Support for signalling pruned nodes (BIP159)
@@ -121,20 +133,56 @@ Support for signalling pruned nodes (BIP159)
 Pruned nodes can now signal BIP159's NODE_NETWORK_LIMITED using service bits, in preparation for
 full BIP159 support in later versions. This would allow pruned nodes to serve the most recent blocks. However, the current change does not yet include support for connecting to these pruned peers.
 
-Performance: SHA256 assembly enabled by default
--------------------------------------------------
-The SHA256 hashing optimizations for architectures supporting SSE4, which lead to ~50% speedups in SHA256 on supported hardware (~5% faster synchronization and block validation), have now been enabled by default. In previous versions they were enabled using the `--enable-experimental-asm` flag when building, but are now the default and no longer deemed experimental.
-
 GUI changes
 -----------
 - Uses of "µBTC" in the GUI now also show the more colloquial term "bits", specified in BIP176.
 - The option to reuse a previous address has now been removed. This was justified by the need to "resend" an invoice, but now that we have the request history, that need should be gone.
 - Support for searching by TXID has been added, rather than just address and label.
-- A "Use available balance" option has been added to the send coins dialog, to add the remaining available wallet balance to a transaction output.
 - A toggle for unblinding the password fields on the password dialog has been added.
+- The coin control tree widget now supports selecting multiple coins for acting on as a group.
+- The RPC console now logs when you change the wallet being used for commands.
+- The address book can now be searched.
+- When proxy is enabled, a 'P' icon will appear in the status bar.
+- The send dialog's "Clear All" button now resets coin control options as well.
+- After sending a transaction, the transaction history tab is opened.
+- Transaction details now include its "virtual size".
 
 RPC changes
 ------------
+
+### Wallet-independent UTXO scanning
+
+A new RPC method `scantxoutset` has been added to enable searching the entire
+"UTXO set" (spendable bitcoin identifiers), similar to the existing
+`sweepprivkeys` RPC method, but without necessarily sweeping them.
+
+### Explicit fee support for sendmany and sendtoaddress
+
+Both `sendmany` and `sendtoaddress` now support specifying an exact fee rate
+by setting the `estimate_mode` to "EXPLICIT".
+
+### BIP 174 Partially Signed Bitcoin Transactions
+
+Four new RPC calls are added for the creation and manipulation of PSBTs:
+
+`walletcreatepsbt` takes a network serialized raw transaction as produced by
+the *rawtransaction RPC methods and converts it to a PSBT. Inputs are filled
+using information known to the wallet.
+
+`walletupdatepsbt` updates a given PSBT with data from the wallet. For each
+input, it will attempt to add the proper UTXO, sign for the input, and
+finalize the input. It will also add any known redeem scripts, witness
+scripts, and public key derivation paths if they are known to the wallet.
+
+`combinepsbt` combines multiple PSBTs and finalizes them if possible.
+
+`decodepsbt` decodes a PSBT and into a human readable format in order to more
+easily examine them. It is analogous to `decoderawtransaction`.
+
+### Bump fee by subtracting fee from amount
+
+There is a new `reduce_output` option for the `bumpfee` method, which allows
+taking the fee increase out of the amount sent if you know its output index.
 
 ### Revised fess for mempool-related RPCs
 
@@ -143,16 +191,6 @@ A new `fees` field is introduced in `getrawmempool`, `getmempoolancestors`,
 It has sub-fields `ancestor`, `base`, `modified` and `descendent`, all
 denominated in BTC. This new field supercedes previous fee fields, such as
 `fee`, `modifiedfee`, `ancestorfee` and `descendentfee`.
-
-### New `rescanblockchain` RPC
-
-A new RPC `rescanblockchain` has been added to manually invoke a blockchain rescan.
-The RPC supports start and end-height arguments for the rescan, and can be used in a
-multiwallet environment to rescan the blockchain at runtime.
-
-### New `savemempool` RPC
-A new `savemempool` RPC has been added which allows the current mempool to be saved to
-disk at any time to avoid it being lost due to crashes / power loss.
 
 ### Safe mode disabled by default
 
@@ -186,22 +224,28 @@ The `validateaddress` RPC output has been extended with a few new fields, and su
   `importwallet` now imports these scripts, but corresponding addresses may not be added
   correctly or a manual rescan may be required to find relevant transactions.
 - The RPC `getblockchaininfo` now includes an `errors` field.
-- A new `blockhash` parameter has been added to the `getrawtransaction` RPC which allows for a raw transaction to be fetched from a specific block if known, even without `-txindex` enabled.
 - The `decoderawtransaction` and `fundrawtransaction` RPCs now have optional `iswitness` parameters to override the
   heuristic witness checks if necessary.
 - The `walletpassphrase` timeout is now clamped to 2^30 seconds.
 - Using addresses with the `createmultisig` RPC is now deprecated, and will be removed in a later version. Public keys should be used instead.
 - Blockchain rescans now no longer lock the wallet for the entire rescan process, so other RPCs can now be used at the same time (although results of balances / transactions may be incorrect or incomplete until the rescan is complete).
 - The `logging` RPC has now been made public rather than hidden.
-- An `initialblockdownload` boolean has been added to the `getblockchaininfo` RPC to indicate whether the node is currently in IBD or not.
 - `minrelaytxfee` is now included in the output of `getmempoolinfo`
+- `getrawmempool` and related RPC methods now return a per-transaction list of other transaction ids in a new `spentby` field, indicating transactions dependent upon the transaction in question.
+- `decodescript` now supports p2wpkh, p2wsh and p2sh-nested scripts.
+- `addnode` now makes even onetry connections immune to anti-DoS rules. A new `privileged` flag may be set to false to restore the original behaviour.
+- `dumpwallet` includes additional HD wallet metadata (`hdkeypath` and `hdmasterkeyid`).
+- `listunspent` now includes `ancestorcount`, `ancestorsize`, and `ancestorfees` in some cases.
+
+REST changes
+------------
+- Added a `/rest/fee/<MODE>/<TARGET>.json` endpoint to give fee estinates, similar to the RPC `estimatesmartfee` method.
+- Added a `/rest/blockhash/<HEIGHT>.<bin|hex|json>` endpoint, so that the user can fetch a block hash by height via REST (analogous to the `getblockhash` RPC method).
 
 Other changed command-line options
 ----------------------------------
 - `-debuglogfile=<file>` can be used to specify an alternative debug logging file.
-- bitcoin-cli now has an `-stdinrpcpass` option to allow the RPC password to be read from standard input.
 - The `-usehd` option has been removed.
-- bitcoin-cli now supports a new `-getinfo` flag which returns an output like that of the now-removed `getinfo` RPC.
 
 Testing changes
 ----------------
@@ -214,11 +258,10 @@ Testing changes
 ### Block and transaction handling
 - #10953 `aeed345` Combine scriptPubKey and amount as CTxOut in CScriptCheck (jl2012)
 - #11309 `93d20a7` Minor cleanups for AcceptToMemoryPool (morcos)
-- #11418 `38c201f` Add error string for CLEANSTACK script violation (maaku)
 - #11411 `339da9c` Change SignatureHash input index check to an assert (jimpo)
 - #11406 `e12522d` Add state message print to AcceptBlock failure message (TheBlueMatt)
 - #11062 `26fee4f` Mark mempool import fails that were found in mempool as 'already there' (kallewoof)
-- #11269 `61fb806` CTxMemPoolEntry::UpdateAncestorState: modifySiagOps param type (donaloconnor)
+- #11269 `61fb806` CTxMemPoolEntry::UpdateAncestorState: modifySigOps param type (donaloconnor)
 - #11747 `e970396` Fix: Open files read only if requested (Elbandi)
 - #11737 `46d1ebf` Document partial validation in ConnectBlock() (sdaftuar)
 - #10699 `c090262` Make all script validation flags backward compatible (sipa)
@@ -230,6 +273,8 @@ Testing changes
 - #12368 `3f5012b` Hold mempool.cs for the duration of ATMP (TheBlueMatt)
 - #12401 `d44cd7e` Reset pblocktree before deleting LevelDB file (Sjors)
 - #12415 `f893824` Interrupt loading thread after shutdown request (promag)
+- #12495 `318a1f4` *Increase LevelDB max_open_files unless on 32-bit Unix. (Evan Klitzke)
+- n/a    `b4a994a` *Add a new checkpoint at block 514,048 (luke-jr)
 
 ### P2P protocol and network code
 - #10596 `6866b49` Add vConnect to CConnman::Options (benma)
@@ -285,33 +330,27 @@ Testing changes
 - #12119 `9594139` Use P2WPKH change output if any destination is P2WPKH or P2WSH (Sjors)
 - #12213 `eadb2da` Add address type option to addmultisigaddress (promag)
 - #12276 `7936446` Remove duplicate mapWallet lookups (promag)
+- #12257 `27758a2` *Use destination groups instead of coins in coin select (kallewoof)
+- #12146 `f5f5a92` *Wallet: Support disabling implicit Segwit operation (luke-jr)
 
 ### RPC and other APIs
 - #11008 `3841aaf` Enable disablesafemode by default (gmaxwell)
 - #11050 `7ed57d3` Avoid treating null RPC arguments different from missing arguments (ryanofsky)
-- #10997 `affe927` Add option -stdinrpcpass to bitcoin-cli to allow RPC password to be read from standard input (jharvell)
 - #11179 `e0e3cbb` Push down safe mode checks (laanwj)
-- #11203 `d745b4c` add wtxid to mempool entry output (sdaftuar)
-- #11099 `bc561b4` Add savemempool RPC (greenaddress)
 - #10838 `66a5b41` (finally) remove getinfo (TheBlueMatt)
 - #10753 `7fcd61b` test: Check RPC argument mapping (laanwj)
 - #11288 `0f8e095` More user-friendly error message when partially signing (MeshCollider)
 - #11031 `ef8340d` deprecate estimatefee (jnewbery)
 - #10858 `9a8e916` Add "errors" field to getblockchaininfo and unify "errors" field in get*info RPCs (achow101)
 - #11021 `90926db` Fix getchaintxstats() (AkioNak)
-- #11367 `3a93270` getblockchaininfo: Add disk_size, prune_target_size (esotericnonsense)
 - #11006 `a1d78b5` Improve shutdown process (promag)
-- #11529 `ff92fbf` Avoid slow transaction search with txindex enabled (promag)
 - #11618 `87d90ef` Lock cs_main in blockToJSON/blockheaderToJSON (practicalswift)
-- #11626 `998c304` Make `logging` RPC public (laanwj)
-- #11258 `033c786` Add initialblockdownload to getblockchaininfo (jnewbery)
 - #11087 `99bc0b4` Diagnose unsuitable outputs in lockunspent() (BitonicEelis)
 - #11710 `9388639` cli: Reject arguments to -getinfo (laanwj)
 - #11738 `d4267a3` Fix sendrawtransaction hang when sending a tx already in mempool (TheBlueMatt)
 - #11753 `32c9b57` clarify abortrescan rpc use (instagibbs)
 - #11191 `ef14f2e` Improve help text and behavior of RPC-logging (AkioNak)
 - #10874 `9e38d35` getblockchaininfo: Loop through the bip9 soft fork deployments instead of hard coding (achow101)
-- #10275 `497d0e0` Allow fetching tx directly from specified block in getrawtransaction (kallewoof)
 - #11178 `fee0370` Add iswitness parameter to decode- and fundrawtransaction RPCs (MeshCollider)
 - #11667 `711d16c` Add scripts to dumpwallet RPC (MeshCollider)
 - #11475 `9bad8d6` mempoolinfo should take ::minRelayTxFee into account (mess110)
@@ -319,32 +358,43 @@ Testing changes
 - #12198 `adce1de` Add deprecation error for `getinfo` (laanwj)
 - #11415 `69ec021` Disallow using addresses in createmultisig (achow101)
 - #12278 `288deac` Add special error for genesis coinbase to getrawtransaction (MeshCollider)
-- #11362 `c6223b3` Remove nBlockMaxSize from miner opt struct as it is no longer used (gmaxwell)
 - #10825 `28485c7` Set regtest JSON-RPC port to 18443 to avoid conflict with testnet 18332 (fametrano)
 - #11303 `e542728` Fix estimatesmartfee rounding display issue (TheBlueMatt)
-- #7061 `8c2de82` Add RPC call "rescanblockchain <startheight> <stopheight>" (jonasschnelli)
 - #11055 `95e14dc` RPC getreceivedbyaddress should return error if called with address not owned by the wallet (jnewbery)
 - #12366 `93de37a` http: Join worker threads before deleting work queue (laanwj)
 - #12315 `758a41e` Bech32 addresses in dumpwallet (fivepiece)
 - #12427 `3762ac1` Make signrawtransaction accept P2SH-P2WSH redeemscripts (sipa)
+- #11765 `e02f4c3` *[REST] added blockhash api, tests and documentation (aaron-hanson)
+- #11383 `cf1eba3` *Bugfix: RPC: Add missing UnregisterHTTPHandler for /wallet/ (luke-jr)
+- #11383 `bbbc234` *RPC: Add JSONRPCRequest preparation callbacks (luke-jr)
+- #12479 `2c26938` *[RPC] Add list of child transactions to verbose output of getrawmempool (Conor Scott)
+- #12196 `de23b5c` *Blockchain/RPC: Add scantxoutset method to scan UTXO set (jonasschnelli)
+- #12196 `b0cb15b` *scantxoutset: Add optional raw sweep transaction (jonasschnelli)
+- #11413 `77e1471` *[wallet] [rpc] sendtoaddress: Add an EXPLICIT mode to estimate_mode and a feerate optional to explicitly specify the feerate of the transaction (kallewoof)
+- #11413 `8da3c0b` *[wallet] [rpc] sendmany: Add EXPLICIT mode for sendmany RPC call (kallewoof)
+- #11770 `6c2029a` *rest: add endpoint for estimatesmartfee (joemphilips)
+- #12136 `71ad120` *Implement BIP 174 Partially Signed Bitcoin Transactions (achow101)
+- #12240 `8eb6fc0` *Add new fee structure with all sub-fields denominated in BTC (mryandao)
+- #12321 `039c67c` *p2wpkh, p2wsh and p2sh-nested scripts in decodescript (fivepiece)
+- #12674 `0670e4f` *RPC: Support addnode onetry without making the connection priviliged (luke-jr)
+- #11803 `da2a862` *Bugfix: RPC/Wallet: dumpwallet should include hdkeypath metadata outside of comment (luke-jr)
+- #11803 `da54bfb` *Bugfix: RPC/Wallet: dumpwallet should include hdmasterkeyid metadata (luke-jr)
+- #12096 `acd0577` *[rpc] [wallet] Allow single-output transactions in bumpfee (kallewoof)
+- #12677 `56862c9` *RPC: Add ancestor{count,size,fees} to listunspent output (luke-jr)
 
 ### GUI
 - #10964 `64e66bb` Pass SendCoinsRecipient (208 bytes) by reference (practicalswift)
-- #11169 `5b8af7b` Make tabs toolbar no longer have a context menu (achow101)
 - #10911 `9c8f365` Fix typo and access key in optionsdialog.ui (keystrike)
 - #10770 `ea729d5` Drop upgrade-cancel callback registration for a generic "cancelable" (TheBlueMatt)
 - #11156 `a3624dd` Fix memory leaks in qt/guiutil.cpp (danra)
 - #11268 `31e72b2` [macOS] remove Growl support, remove unused code (jonasschnelli)
 - #11193 `c5c77bd` Terminate string *pszExePath after readlink and without using memset (practicalswift)
 - #11508 `ffa5159` Fix crash via division by zero assertion (jonasschnelli)
-- #11499 `6157e8c` Add upload and download info to the peerlist (debug menu) (aarongolliver)
 - #11480 `ffc0b11` Add toggle for unblinding password fields (tjps)
-- #11316 `22cdf93` Add use available balance in send coins dialog (CryptAxe, promag)
 - #3716 `13e352d` Receive: Remove option to reuse a previous address (luke-jr)
 - #11690 `f0c1f8a` Fix the StartupWMClass for bitoin-qt, so gnome-shell can recognize it (eklitzke)
 - #10920 `f6f8d54` Fix potential memory leak in newPossibleKey(ChangeCWallet *wallet) (practicalswift)
 - #11698 `7293d06` RPC-Console nested commands documentation  (lmlsna)
-- #11395 `38d31f9` Enable searching by transaction id (luke-jr)
 - #11556 `91eeaa0` Improved copy for RBF checkbox and tooltip (Sjors)
 - #11809 `80f9dad` Fix proxy setting options dialog crash (laanwj)
 - #11616 `8585bb8` Update ban-state in case of dirty-state during periodic sweep (jonasschnelli)
@@ -361,12 +411,22 @@ Testing changes
 - #12377 `604f289` qt: Poll ShutdownTimer after init is done (MarcoFalke)
 - #12374 `daaae36` qt: Make sure splash screen is freed on AppInitMain fail (laanwj)
 - #12349 `ad10b90` shutdown: fix crash on shutdown with reindex-chainstate (theuni)
+- #11750 `7cec76f` *Multiselect in coincontrol treewidget and display selected count (Andras Elso)
+- #11383 `f5aa574` *GUI: RPCConsole: Log wallet changes (luke-jr)
+- #12080 `c316fdf` *[qt] Add support to search the address book (João Barbosa)
+- #11491 `d4b6d92` *[gui] Add proxy icon in statusbar (Cristian Mircea Messel)
+- #12208 `3920633` *GUI: Rephrase Bech32 checkbox text/tooltip (luke-jr)
+- #12208 `0cdd445` *GUI: Allow generating Bech32 addresses with a legacy-address default (luke-jr)
+- #12432 `936e604` *[qt] send: Clear All also resets coin control options (Sjors Provoost)
+- #12501 `9e09742` *[qt] Improved "custom fee" explanation in tooltip (Randolf Richardson)
+- #12421 `20c476a` *[qt] navigate to  transaction history page after send (Sjors Provoost)
+- #12580 `9d326d2` *Show a transaction's virtual size in its details dialog. (Chris Moore)
+- #7510 `f367b33` *Qt/Options: Expose addresstype in GUI using rwconf (luke-jr)
 
 ### Build system
 - #10923 `2c9f5ec` travis: Build with --enable-werror under OS X (practicalswift)
 - #11176 `df8c722` build: Rename --enable-experimental-asm to --enable-asm and enable by default (laanwj)
 - #11286 `11dacc6` [depends] Don't build libevent sample code (fanquake)
-- #7142 `801dd40` Travis: Test build against system libs (& Qt4) (luke-jr)
 - #11380 `390771b` Remove outdated share/certs/ directory (MeshCollider)
 - #11391 `7632310` Remove lxcbr0 lines from gitian-build.sh (MeshCollider)
 - #11435 `167cef8` build: Make "make clean" remove all files created when running "make check" (practicalswift)
@@ -387,6 +447,7 @@ Testing changes
 - #11711 `6378e5c` bitcoin_qt.m4: Minor fixes and clean-ups (fanquake)
 - #11989 `90d4104` .gitignore: add QT Creator artifacts (Sjors)
 - #11577 `c0ae864` Fix warnings (-Wsign-compare) when building with DEBUG_ADDRMAN (practicalswift)
+- #12573 `0951b70` *Consensus: Fix bug when compiler do not support __builtin_clz* (532479301)
 
 ### Tests and QA
 - #11024 `3e55f13` Remove OldSetKeyFromPassphrase/OldEncrypt/OldDecrypt (practicalswift)
@@ -401,7 +462,6 @@ Testing changes
 - #11311 `cce94c5` travis: Revert default datadir check (MarcoFalke)
 - #11300 `f4ed44a` Add a lint check for trailing whitespace (MeshCollider)
 - #11323 `4ce2f3d` mininode: add an optimistic write and disable nagle (theuni)
-- #11370 `2d85899` Add getblockchaininfo functional test (promag)
 - #11365 `f199b8a` Add Qt GUI tests to Overview and ReceiveCoin Page (anditto)
 - #11293 `dbc4ae0` Deduplicate CMerkleBlock construction code, add test coverage (jamesob)
 - #10440 `9e8ef9d` Add libFuzzer support (practicalswift)
@@ -464,6 +524,8 @@ Testing changes
 - #12206 `898f560` Sync with validationinterface queue in sync_mempools (MarcoFalke)
 - #12424 `ff44101` Fix rescan test failure due to unset g_address_type, g_change_type (ryanofsky)
 - #12388 `e2431d1` travis: Full clone for git subtree check (MarcoFalke)
+- #12246 `dd888a3` *Bugfix: Only run bitcoin-tx tests when bitcoin-tx is enabled (luke-jr)
+- n/a    `5f63999` *Bugfix: script_tests: Only define debugger_cbs if HAVE_CONSENSUS_LIB (luke-jr)
 
 ### Documentation
 - #10680 `6366941` Fix inconsistencies and grammar in various files (MeshCollider)
@@ -471,7 +533,6 @@ Testing changes
 - #10878 `c58128f` Fix Markdown formatting issues in init.md (dongcarl)
 - #11066 `9e00a62` Document the preference of nullptr over NULL or (void*)0 (practicalswift)
 - #11094 `271e40a` Hash in ZMQ hash is raw bytes, not hex (runn1ng)
-- #11026 `ea3ac59` Bugfix: Use testnet RequireStandard for -acceptnonstdtxn default (luke-jr)
 - #11058 `4b65fa5` Comments: More comments on functions/globals in standard.h (jimpo)
 - #11112 `3f726c9` [developer-notes] By default, declare single-argument constructors "explicit" (practicalswift)
 - #11155 `a084767` Trivial: Documentation fixes for CVectorWriter ctors (danra)
@@ -583,10 +644,10 @@ Testing changes
 - #12108 `9220426` Remove unused fQuit var from checkqueue.h (donaloconnor)
 - #12159 `f3c7062` Use the character based overload for std::string::find (kekimusmaximus)
 - #12266 `3448907` Move scheduler/threadGroup into common-init instead of per-app (TheBlueMatt)
+- #12196 `688f4da` *CCoinsView::FindScriptPubKey: Switch to Jonas's version (jonasschnelli)
 
 ### Miscellaneous
 - #11246 `777519b` github-merge: Coalesce git fetches (laanwj)
-- #10871 `c9a4aa8` Handle getinfo in bitcoin-cli w/ -getinfo (revival of #8843) (achow101)
 - #11419 `093074b` Utils: Fix launchctl not being able to stop bitcoind (OmeGak)
 - #11394 `6e4e98e` Perform a weaker subtree check in Travis (sipa)
 - #11702 `4122112` [build] Add a script for installing db4 (jamesob)
@@ -617,13 +678,19 @@ Testing changes
 - #11952 `9ab9963` univalue: Bump subtree (MarcoFalke)
 - #12367 `09fc859` Fix two fast-shutdown bugs (TheBlueMatt)
 - #12422 `4d54e7a` util: Make LockDirectory thread-safe, consistent, and fix OpenBSD 6.2 build (laanwj)
+- #12568 `874e818` *Allow dustrelayfee to be set to zero (luke-jr)
+- #12491 `3e3e41d` *Try to use posix_fadvise with CBufferedFile (Evan Klitzke)
+- n/a    `f2e441f` *Wallet: Increase default confirmation target to 144 (luke-jr)
+- #9245 `4ad2d57` *Drop IO priority to idle while reading blocks for peer requests and startup verification (luke-jr)
+- n/a    `61fae13` *Policy: Adjust default transaction replacement mode to full RBF (luke-jr)
 
 Credits
 =======
 
 Thanks to everyone who directly contributed to this release:
 
-- 251
+- 251Labs
+- 532479301
 - Aaron Clauson
 - Aaron Golliver
 - aaron-hanson
@@ -643,6 +710,7 @@ Thanks to everyone who directly contributed to this release:
 - Chris Moore
 - Chris Stewart
 - Christian Gentry
+- Conor Scott
 - Cory Fields
 - Cristian Mircea Messel
 - CryptAxe
@@ -676,6 +744,7 @@ Thanks to everyone who directly contributed to this release:
 - Jim Posen
 - jjz
 - Joe Harvell
+- joemphilips
 - Johannes Kanig
 - John Newbery
 - Johnson Lau
@@ -698,6 +767,7 @@ Thanks to everyone who directly contributed to this release:
 - Martin Ankerl
 - Matt Corallo
 - mruddy
+- mryandao
 - Murch
 - NicolasDorier
 - Pablo Fernandez
