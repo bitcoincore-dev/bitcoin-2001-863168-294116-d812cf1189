@@ -18,6 +18,7 @@
 #include <stdio.h>
 
 #include <memory>
+#include <set>
 
 #include <boost/algorithm/string.hpp> // boost::trim
 

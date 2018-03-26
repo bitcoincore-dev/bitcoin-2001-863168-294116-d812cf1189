@@ -7,7 +7,6 @@
 
 #include <string>
 #include <map>
-#include <set>
 
 /** Start HTTP RPC subsystem.
  * Precondition; HTTP and RPC has been started.
