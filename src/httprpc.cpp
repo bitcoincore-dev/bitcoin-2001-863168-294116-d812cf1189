@@ -192,8 +192,7 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
             jreq.parse(valRequest);
             if (whitelistedRPC.count(jreq.authUser) && !whitelistedRPC[jreq.authUser].count(jreq.strMethod)) {
                 LogPrintf("RPC User %s not allowed to call method %s\n", jreq.authUser, jreq.strMethod);
-                req->WriteHeader("WWW-Authenticate", WWW_AUTH_HEADER_DATA);
-                req->WriteReply(HTTP_UNAUTHORIZED);
+                req->WriteReply(HTTP_FORBIDDEN);
                 return false;
             }
             UniValue result = tableRPC.execute(jreq);
@@ -213,8 +212,7 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
                         std::string strMethod = find_value(request, "method").get_str();
                         if (!whitelistedRPC[jreq.authUser].count(strMethod)) {
                             LogPrintf("RPC User %s not allowed to call method %s\n", jreq.authUser, strMethod);
-                            req->WriteHeader("WWW-Authenticate", WWW_AUTH_HEADER_DATA);
-                            req->WriteReply(HTTP_UNAUTHORIZED);
+                            req->WriteReply(HTTP_FORBIDDEN);
                             return false;
                         }
                     }
