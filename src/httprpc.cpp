@@ -250,9 +250,13 @@ static bool InitRPCAuthentication()
     }
 
     for (const std::string& strRPCWhitelist : gArgs.GetArgs("-rpcwhitelist")) {
-        std::string strUser = strRPCWhitelist.substr(0, strRPCWhitelist.find(':'));
-        std::string strWhitelist = strRPCWhitelist.substr(strRPCWhitelist.find(':') + 1);
-        boost::split(whitelistedRPC[strUser], strWhitelist, boost::is_any_of(","));
+        auto pos = strRPCWhitelist.find(':');
+        std::string strUser = strRPCWhitelist.substr(0, pos);
+        std::set<std::string>& whitelist = whitelistedRPC[strUser];
+        if (pos != std::string::npos) {
+            std::string strWhitelist = strRPCWhitelist.substr(pos + 1);
+            boost::split(whitelist, strWhitelist, boost::is_any_of(","));
+        }
     }
 
     return true;
