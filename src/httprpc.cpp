@@ -67,7 +67,7 @@ static std::string strRPCUserColonPass;
 /* Stored RPC timer interface (for unregistration) */
 static std::unique_ptr<HTTPRPCTimerInterface> httpRPCTimerInterface;
 /* RPC Auth Whitelist */
-static std::map<std::string, std::set<std::string>> whitelistedRPC;
+static std::map<std::string, std::set<std::string>> rpc_whitelist;
 
 static void JSONErrorReply(HTTPRequest* req, const UniValue& objError, const UniValue& id)
 {
@@ -190,7 +190,7 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
         // singleton request
         if (valRequest.isObject()) {
             jreq.parse(valRequest);
-            if (whitelistedRPC.count(jreq.authUser) && !whitelistedRPC[jreq.authUser].count(jreq.strMethod)) {
+            if (rpc_whitelist.count(jreq.authUser) && !rpc_whitelist[jreq.authUser].count(jreq.strMethod)) {
                 LogPrintf("RPC User %s not allowed to call method %s\n", jreq.authUser, jreq.strMethod);
                 req->WriteReply(HTTP_FORBIDDEN);
                 return false;
@@ -202,7 +202,7 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
 
         // array of requests
         } else if (valRequest.isArray()) {
-            if (whitelistedRPC.count(jreq.authUser)) {
+            if (rpc_whitelist.count(jreq.authUser)) {
                 for (unsigned int reqIdx = 0; reqIdx < valRequest.size(); reqIdx++) {
                     if (!valRequest[reqIdx].isObject()) {
                         throw JSONRPCError(RPC_INVALID_REQUEST, "Invalid Request object");
@@ -210,7 +210,7 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
                         const UniValue& request = valRequest[reqIdx].get_obj();
                         // Parse method
                         std::string strMethod = find_value(request, "method").get_str();
-                        if (!whitelistedRPC[jreq.authUser].count(strMethod)) {
+                        if (!rpc_whitelist[jreq.authUser].count(strMethod)) {
                             LogPrintf("RPC User %s not allowed to call method %s\n", jreq.authUser, strMethod);
                             req->WriteReply(HTTP_FORBIDDEN);
                             return false;
@@ -258,7 +258,7 @@ static bool InitRPCAuthentication()
     for (const std::string& strRPCWhitelist : gArgs.GetArgs("-rpcwhitelist")) {
         auto pos = strRPCWhitelist.find(':');
         std::string strUser = strRPCWhitelist.substr(0, pos);
-        std::set<std::string>& whitelist = whitelistedRPC[strUser];
+        std::set<std::string>& whitelist = rpc_whitelist[strUser];
         if (pos != std::string::npos) {
             std::string strWhitelist = strRPCWhitelist.substr(pos + 1);
             boost::split(whitelist, strWhitelist, boost::is_any_of(","));
