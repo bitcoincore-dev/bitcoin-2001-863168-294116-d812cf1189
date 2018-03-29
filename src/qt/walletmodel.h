@@ -229,6 +229,8 @@ public:
 
     QString getWalletName() const;
 
+    AddressTableModel* getAddressTableModel() const { return addressTableModel; }
+
     static bool isMultiwallet();
 private:
     CWallet *wallet;
