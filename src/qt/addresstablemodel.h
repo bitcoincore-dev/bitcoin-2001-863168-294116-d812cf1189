@@ -7,6 +7,7 @@
 
 #include <QAbstractTableModel>
 #include <QStringList>
+#include <wallet/wallet.h>
 
 enum class OutputType;
 
@@ -65,9 +66,11 @@ public:
      */
     QString addRow(const QString &type, const QString &label, const QString &address, const OutputType address_type);
 
-    /* Look up label for address in address book, if not found return empty string.
-     */
+    /** Look up label for address in address book, if not found return empty string. */
     QString labelForAddress(const QString &address) const;
+
+    /** Look up purpose for address in address book, if not found return empty string. */
+    QString purposeForAddress(const QString &address) const;
 
     /* Look up row index of an address in the model.
        Return -1 if not found.
@@ -84,6 +87,9 @@ private:
     AddressTablePriv *priv;
     QStringList columns;
     EditStatus editStatus;
+
+    /** Look up address book data given an address. */
+    bool dataForAddress(const QString &address, CAddressBookData &book_data) const;
 
     /** Notify listeners that data changed. */
     void emitDataChanged(int index);
