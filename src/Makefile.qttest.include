@@ -20,6 +20,7 @@ TEST_QT_H = \
   qt/test/compattests.h \
   qt/test/rpcnestedtests.h \
   qt/test/uritests.h \
+  qt/test/util.h \
   qt/test/paymentrequestdata.h \
   qt/test/paymentservertests.h \
   qt/test/wallettests.h
