@@ -76,10 +76,6 @@ void AppTests::appTests()
 
     // Reset some global state to avoid interfering with later tests.
     ResetShutdownRequested();
-#ifdef ENABLE_WALLET
-    ::bitdb.Close();
-    ::bitdb.Reset();
-#endif
     UnloadBlockIndex();
 }
 
