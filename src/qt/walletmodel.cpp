@@ -369,12 +369,8 @@ bool WalletModel::setWalletLocked(bool locked, const SecureString &passPhrase)
 
 bool WalletModel::changePassphrase(const SecureString &oldPass, const SecureString &newPass)
 {
-    bool retval;
-    {
-        m_wallet->lock(); // Make sure wallet is locked before attempting pass change
-        retval = m_wallet->changeWalletPassphrase(oldPass, newPass);
-    }
-    return retval;
+    m_wallet->lock(); // Make sure wallet is locked before attempting pass change
+    return m_wallet->changeWalletPassphrase(oldPass, newPass);
 }
 
 // Handlers for core signals
