@@ -5,31 +5,20 @@
 #include <qt/walletmodel.h>
 
 #include <qt/addresstablemodel.h>
-#include <consensus/validation.h>
 #include <qt/guiconstants.h>
-#include <qt/guiutil.h>
 #include <qt/optionsmodel.h>
 #include <qt/paymentserver.h>
 #include <qt/recentrequeststablemodel.h>
 #include <qt/sendcoinsdialog.h>
 #include <qt/transactiontablemodel.h>
 
-#include <chain.h>
 #include <interface/handler.h>
 #include <interface/node.h>
 #include <key_io.h>
-#include <keystore.h>
-#include <validation.h>
-#include <net.h> // for g_connman
-#include <policy/fees.h>
-#include <policy/rbf.h>
-#include <sync.h>
 #include <ui_interface.h>
 #include <util.h> // for GetBoolArg
 #include <wallet/coincontrol.h>
-#include <wallet/feebumper.h>
 #include <wallet/wallet.h>
-#include <wallet/walletdb.h> // for BackupWallet
 
 #include <stdint.h>
 
