@@ -168,7 +168,7 @@ void Interrupt()
         g_connman->Interrupt();
 }
 
-void Shutdown()
+void Shutdown(InitInterfaces& interfaces)
 {
     LogPrintf("%s: In progress...\n", __func__);
     static CCriticalSection cs_Shutdown;
@@ -187,7 +187,9 @@ void Shutdown()
     StopREST();
     StopRPC();
     StopHTTPServer();
-    g_wallet_init_interface->Flush();
+    for (const auto& client : interfaces.chain_clients) {
+        client->stop();
+    }
     StopMapPort();
 
     // Because these depend on each-other, we make sure that neither can be
@@ -245,7 +247,9 @@ void Shutdown()
         pcoinsdbview.reset();
         pblocktree.reset();
     }
-    g_wallet_init_interface->Stop();
+    for (const auto& client : interfaces.chain_clients) {
+        client->shutdown();
+    }
 
 #if ENABLE_ZMQ
     if (pzmqNotificationInterface) {
@@ -265,7 +269,7 @@ void Shutdown()
     UnregisterAllValidationInterfaces();
     GetMainSignals().UnregisterBackgroundSignalScheduler();
     GetMainSignals().UnregisterWithMempoolSignals(mempool);
-    g_wallet_init_interface->Close();
+    interfaces.chain_clients.clear();
     g_wallet_init_interface.reset();
     globalVerifyHandle.reset();
     ECC_Stop();
@@ -707,7 +711,7 @@ bool InitSanityCheck(void)
     return true;
 }
 
-bool AppInitServers()
+bool AppInitServers(InitInterfaces& interfaces)
 {
     RPCServer::OnStarted(&OnRPCStarted);
     RPCServer::OnStopped(&OnRPCStopped);
@@ -1187,7 +1191,7 @@ bool AppInitLockDataDirectory()
     return true;
 }
 
-bool AppInitMain()
+bool AppInitMain(InitInterfaces& interfaces)
 {
     const CChainParams& chainparams = Params();
     // ********************************************************* Step 4a: application initialization
@@ -1238,11 +1242,19 @@ bool AppInitMain()
     GetMainSignals().RegisterBackgroundSignalScheduler(scheduler);
     GetMainSignals().RegisterWithMempoolSignals(mempool);
 
+    // Create client interfaces for wallets that are supposed to be loaded
+    // according to -wallet and -disablewallet options. Note this only creates
+    // the interface pointers. Wallets get actually loaded by the client
+    // registerRpcs(), prepare(), and start() calls below.
+    g_wallet_init_interface->Construct(interfaces);
+
     /* Register RPC commands regardless of -server setting so they will be
      * available in the GUI RPC console even if external calls are disabled.
      */
     RegisterAllCoreRPCCommands(tableRPC);
-    g_wallet_init_interface->RegisterRPC(tableRPC);
+    for (const auto& client : interfaces.chain_clients) {
+        client->registerRpcs();
+    }
 
     /* Start the RPC server already.  It will be started in "warmup" mode
      * and not really process calls already (but it will signify connections
@@ -1252,7 +1264,7 @@ bool AppInitMain()
     if (gArgs.GetBoolArg("-server", false))
     {
         uiInterface.InitMessage.connect(SetRPCWarmupStatus);
-        if (!AppInitServers())
+        if (!AppInitServers(interfaces))
             return InitError(_("Unable to start HTTP server. See debug log for details."));
     }
 
@@ -1578,7 +1590,11 @@ bool AppInitMain()
     fFeeEstimatesInitialized = true;
 
     // ********************************************************* Step 8: load wallet
-    if (!g_wallet_init_interface->Open()) return false;
+    for (const auto& client : interfaces.chain_clients) {
+        if (!client->prepare()) {
+            return false;
+        }
+    }
 
     // ********************************************************* Step 9: data directory maintenance
 
@@ -1724,7 +1740,9 @@ bool AppInitMain()
     SetRPCWarmupFinished();
     uiInterface.InitMessage(_("Done loading"));
 
-    g_wallet_init_interface->Start(scheduler);
+    for (const auto& client : interfaces.chain_clients) {
+        client->start(scheduler);
+    }
 
     return true;
 }

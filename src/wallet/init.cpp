@@ -6,6 +6,7 @@
 #include <wallet/init.h>
 
 #include <chainparams.h>
+#include <init.h>
 #include <net.h>
 #include <util.h>
 #include <utilmoneystr.h>
@@ -66,7 +67,6 @@ bool WalletInit::ParameterInteraction()
         return true;
     }
 
-    gArgs.SoftSetArg("-wallet", "");
     const bool is_multiwallet = gArgs.GetArgs("-wallet").size() > 1;
 
     if (gArgs.GetBoolArg("-blocksonly", DEFAULT_BLOCKSONLY) && gArgs.SoftSetBoolArg("-walletbroadcast", false)) {
@@ -184,15 +184,6 @@ bool WalletInit::ParameterInteraction()
     return true;
 }
 
-void WalletInit::RegisterRPC(CRPCTable &t)
-{
-    if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
-        return;
-    }
-
-    RegisterWalletRPCCommands(t);
-}
-
 bool WalletInit::Verify()
 {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
@@ -247,7 +238,7 @@ bool WalletInit::Verify()
 
         if (gArgs.GetBoolArg("-salvagewallet", false)) {
             // Recover readable keypairs:
-            CWallet dummyWallet("dummy", CWalletDBWrapper::CreateDummy());
+            CWallet dummyWallet(nullptr, "dummy", CWalletDBWrapper::CreateDummy());
             std::string backup_filename;
             if (!CWalletDB::Recover(wallet_path, (void *)&dummyWallet, CWalletDB::RecoverKeysOnlyFilter, backup_filename)) {
                 return false;
@@ -268,49 +259,12 @@ bool WalletInit::Verify()
     return true;
 }
 
-bool WalletInit::Open()
+void WalletInit::Construct(InitInterfaces& interfaces)
 {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
         LogPrintf("Wallet disabled!\n");
-        return true;
+        return;
     }
-
-    for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
-        CWallet * const pwallet = CWallet::CreateWalletFromFile(walletFile, fs::absolute(walletFile, GetWalletDir()));
-        if (!pwallet) {
-            return false;
-        }
-        vpwallets.push_back(pwallet);
-    }
-
-    return true;
-}
-
-void WalletInit::Start(CScheduler& scheduler)
-{
-    for (CWalletRef pwallet : vpwallets) {
-        pwallet->postInitProcess(scheduler);
-    }
-}
-
-void WalletInit::Flush()
-{
-    for (CWalletRef pwallet : vpwallets) {
-        pwallet->Flush(false);
-    }
-}
-
-void WalletInit::Stop()
-{
-    for (CWalletRef pwallet : vpwallets) {
-        pwallet->Flush(true);
-    }
-}
-
-void WalletInit::Close()
-{
-    for (CWalletRef pwallet : vpwallets) {
-        delete pwallet;
-    }
-    vpwallets.clear();
+    gArgs.SoftSetArg("-wallet", "");
+    interfaces.chain_clients.emplace_back(interface::MakeWalletClient(*interfaces.chain, gArgs.GetArgs("-wallet")));
 }
