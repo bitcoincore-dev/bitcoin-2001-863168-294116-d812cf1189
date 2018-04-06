@@ -106,9 +106,9 @@ Low-level RPC changes
   name of any wallet is just its `<path>` string.
 - Passing an empty string (`""`) as the `address_type` parameter to
   `getnewaddress`, `getrawchangeaddress`, `addmultisigaddress`,
-  `addmultisigaddress`, `fundrawtransaction` RPCs is now an error. Previously,
-  this would fall back to using the default address type. It is still possible
-  to pass null or leave the parameter unset to use the default address type.
+  `fundrawtransaction` RPCs is now an error. Previously, this would fall back
+  to using the default address type. It is still possible to pass null or leave
+  the parameter unset to use the default address type.
 
 ### Logging
 
