@@ -296,9 +296,7 @@ public:
     virtual const CTransaction& get() = 0;
 
     //! Send pending transaction and commit to wallet.
-    virtual bool commit(WalletValueMap value_map,
-        WalletOrderForm order_form,
-        std::string& reject_reason) = 0;
+    virtual bool commit(WalletValueMap value_map, WalletOrderForm order_form, std::string& reject_reason) = 0;
 };
 
 //! Information about one wallet address.
