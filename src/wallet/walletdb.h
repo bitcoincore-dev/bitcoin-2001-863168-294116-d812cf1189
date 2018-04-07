@@ -134,7 +134,7 @@ public:
 };
 
 /** Access to the wallet database.
- * This should really be named CWalletDBBatch, as it represents a single transaction at the
+ * This represents a single transaction at the
  * database. It will be committed when the object goes out of scope.
  * Optionally (on by default) it will flush to disk as well.
  */
