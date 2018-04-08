@@ -715,6 +715,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             "{\n"
             "  \"hex\" : \"value\",           (string) The hex-encoded raw transaction with signature(s)\n"
             "  \"complete\" : true|false,   (boolean) If the transaction has a complete set of signatures\n"
+            "  \"fee\" : n,                 (numeric) The fee (input amounts minus output amounts), if known\n"
             "  \"errors\" : [                 (json array of objects) Script verification errors (if there are any)\n"
             "    {\n"
             "      \"txid\" : \"hash\",           (string) The hash of the referenced, previous transaction\n"
@@ -880,15 +881,20 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
     // transaction to avoid rehashing.
     const CTransaction txConst(mtx);
     // Sign what we can:
+    CAmount inout_amount = 0;
+    bool known_inputs = true;
     for (unsigned int i = 0; i < mtx.vin.size(); i++) {
         CTxIn& txin = mtx.vin[i];
         const Coin& coin = view.AccessCoin(txin.prevout);
         if (coin.IsSpent()) {
+            known_inputs = false;
             TxInErrorToJSON(txin, vErrors, "Input not found or already spent");
             continue;
         }
         const CScript& prevPubKey = coin.out.scriptPubKey;
         const CAmount& amount = coin.out.nValue;
+        inout_amount += amount;
+        known_inputs &= amount > 0;
 
         SignatureData sigdata;
         // Only sign SIGHASH_SINGLE if there's a corresponding output:
@@ -913,6 +919,12 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
     UniValue result(UniValue::VOBJ);
     result.push_back(Pair("hex", EncodeHexTx(mtx)));
     result.push_back(Pair("complete", fComplete));
+    if (known_inputs) {
+        for (const CTxOut& txout : mtx.vout) {
+            inout_amount -= txout.nValue;
+        }
+        result.pushKV("fee", ValueFromAmount(inout_amount));
+    }
     if (!vErrors.empty()) {
         result.push_back(Pair("errors", vErrors));
     }
