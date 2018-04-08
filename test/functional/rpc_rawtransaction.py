@@ -201,6 +201,8 @@ class RawTransactionsTest(BitcoinTestFramework):
 
         # This will raise an exception since there are missing inputs
         assert_raises_rpc_error(-25, "Missing inputs", self.nodes[2].sendrawtransaction, rawtx['hex'])
+        # Due to missing inputs, we should not see a fee entry
+        assert 'fee' not in rawtx
 
         #####################################
         # getrawtransaction with block hash #
