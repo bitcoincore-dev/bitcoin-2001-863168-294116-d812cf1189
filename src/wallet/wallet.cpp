@@ -12,6 +12,7 @@
 #include <consensus/validation.h>
 #include <fs.h>
 #include <interfaces/chain.h>
+#include <interfaces/wallet.h>
 #include <key.h>
 #include <key_io.h>
 #include <keystore.h>
@@ -4242,7 +4243,7 @@ std::shared_ptr<CWallet> CWallet::CreateWalletFromFile(interfaces::Chain& chain,
         }
     }
 
-    uiInterface.LoadWallet(walletInstance);
+    chain.loadWallet(interfaces::MakeWallet(walletInstance));
 
     // Register with the validation interface. It's ok to do this after rescan since we're still holding cs_main.
     RegisterValidationInterface(walletInstance.get());
