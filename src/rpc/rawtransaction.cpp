@@ -936,13 +936,19 @@ UniValue SignTransaction(interfaces::Chain& chain, CMutableTransaction& mtx, con
     bool fComplete = vErrors.empty();
 
     UniValue result(UniValue::VOBJ);
-    result.pushKV("hex", EncodeHexTx(CTransaction(mtx)));
+    CTransaction tx(mtx);
+    result.pushKV("hex", EncodeHexTx(tx));
     result.pushKV("complete", fComplete);
     if (known_inputs) {
         for (const CTxOut& txout : mtx.vout) {
             inout_amount -= txout.nValue;
         }
         result.pushKV("fee", ValueFromAmount(inout_amount));
+        result.pushKV("feerate",
+            ValueFromAmount(
+                CFeeRate(inout_amount, GetVirtualTransactionSize(tx)).GetFeePerK()
+            )
+        );
     }
     if (!vErrors.empty()) {
         result.pushKV("errors", vErrors);
@@ -996,6 +1002,7 @@ static UniValue signrawtransactionwithkey(const JSONRPCRequest& request)
             "  \"hex\" : \"value\",                  (string) The hex-encoded raw transaction with signature(s)\n"
             "  \"complete\" : true|false,          (boolean) If the transaction has a complete set of signatures\n"
             "  \"fee\" : n,                        (numeric) The fee (input amounts minus output amounts), if known\n"
+            "  \"feerate\" : x.x,                  (numeric) The fee rate (in " + CURRENCY_UNIT + "/kB), if fee is known\n"
             "  \"errors\" : [                      (json array of objects) Script verification errors (if there are any)\n"
             "    {\n"
             "      \"txid\" : \"hash\",              (string) The hash of the referenced, previous transaction\n"
