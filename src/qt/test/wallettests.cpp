@@ -158,7 +158,9 @@ void TestGUI()
     for (int i = 0; i < 5; ++i) {
         test.CreateAndProcessBlock({}, GetScriptForRawPubKey(test.coinbaseKey.GetPubKey()));
     }
-    CWallet wallet("mock", CWalletDBWrapper::CreateMock());
+    auto node = interfaces::MakeNode();
+    node->parseParameters(0, nullptr);
+    CWallet wallet(&node->getChain(), "mock", CWalletDBWrapper::CreateMock());
     bool firstRun;
     wallet.LoadWallet(firstRun);
     {
@@ -167,10 +169,10 @@ void TestGUI()
         wallet.AddKeyPubKey(test.coinbaseKey, test.coinbaseKey.GetPubKey());
     }
     {
-        LOCK(cs_main);
+        auto locked_chain = wallet.chain().lock();
         WalletRescanReserver reserver(&wallet);
         reserver.reserve();
-        wallet.ScanForWalletTransactions(chainActive.Genesis(), nullptr, reserver, true);
+        wallet.ScanForWalletTransactions(locked_chain->getBlockHash(0), {} /* stop block */, reserver, true /* update */);
     }
     wallet.SetBroadcastTransactions(true);
 
@@ -178,7 +180,6 @@ void TestGUI()
     std::unique_ptr<const PlatformStyle> platformStyle(PlatformStyle::instantiate("other"));
     SendCoinsDialog sendCoinsDialog(platformStyle.get());
     TransactionView transactionView(platformStyle.get());
-    auto node = interfaces::MakeNode();
     OptionsModel optionsModel(*node);
     vpwallets.insert(vpwallets.begin(), &wallet);
     WalletModel walletModel(std::move(node->getWallets()[0]), *node, platformStyle.get(), &optionsModel);
