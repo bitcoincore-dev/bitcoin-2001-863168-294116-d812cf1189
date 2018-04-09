@@ -326,13 +326,19 @@ UniValue SignTransaction(CMutableTransaction& mtx, const SigningProvider* keysto
     bool fComplete = vErrors.empty();
 
     UniValue result(UniValue::VOBJ);
-    result.pushKV("hex", EncodeHexTx(CTransaction(mtx)));
+    CTransaction tx(mtx);
+    result.pushKV("hex", EncodeHexTx(tx));
     result.pushKV("complete", fComplete);
     if (known_inputs) {
         for (const CTxOut& txout : mtx.vout) {
             inout_amount -= txout.nValue;
         }
         result.pushKV("fee", ValueFromAmount(inout_amount));
+        result.pushKV("feerate",
+            ValueFromAmount(
+                CFeeRate(inout_amount, GetVirtualTransactionSize(tx)).GetFeePerK()
+            )
+        );
     }
     if (!vErrors.empty()) {
         result.pushKV("errors", vErrors);
