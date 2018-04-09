@@ -716,6 +716,7 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
             "  \"hex\" : \"value\",           (string) The hex-encoded raw transaction with signature(s)\n"
             "  \"complete\" : true|false,   (boolean) If the transaction has a complete set of signatures\n"
             "  \"fee\" : n,                 (numeric) The fee (input amounts minus output amounts), if known\n"
+            "  \"feerate\" : x.x,           (numeric) The fee rate (in " + CURRENCY_UNIT + "/kB), if fee is known\n"
             "  \"errors\" : [                 (json array of objects) Script verification errors (if there are any)\n"
             "    {\n"
             "      \"txid\" : \"hash\",           (string) The hash of the referenced, previous transaction\n"
@@ -917,13 +918,15 @@ UniValue signrawtransaction(const JSONRPCRequest& request)
     bool fComplete = vErrors.empty();
 
     UniValue result(UniValue::VOBJ);
-    result.push_back(Pair("hex", EncodeHexTx(mtx)));
+    std::string hex = EncodeHexTx(mtx);
+    result.pushKV("hex", hex);
     result.push_back(Pair("complete", fComplete));
     if (known_inputs) {
         for (const CTxOut& txout : mtx.vout) {
             inout_amount -= txout.nValue;
         }
         result.pushKV("fee", ValueFromAmount(inout_amount));
+        result.pushKV("feerate", ValueFromAmount(inout_amount*1000/(hex.length()>>1)));
     }
     if (!vErrors.empty()) {
         result.push_back(Pair("errors", vErrors));
