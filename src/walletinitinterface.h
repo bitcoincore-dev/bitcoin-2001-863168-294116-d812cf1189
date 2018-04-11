@@ -9,6 +9,7 @@
 
 class CScheduler;
 class CRPCTable;
+class InitInterfaces;
 
 class WalletInitInterface {
 public:
@@ -16,20 +17,10 @@ public:
     virtual std::string GetHelpString(bool showDebug) = 0;
     /** Check wallet parameter interaction */
     virtual bool ParameterInteraction() = 0;
-    /** Register wallet RPC*/
-    virtual void RegisterRPC(CRPCTable &) = 0;
     /** Verify wallets */
     virtual bool Verify() = 0;
-    /** Open wallets*/
-    virtual bool Open() = 0;
-    /** Start wallets*/
-    virtual void Start(CScheduler& scheduler) = 0;
-    /** Flush Wallets*/
-    virtual void Flush() = 0;
-    /** Stop Wallets*/
-    virtual void Stop() = 0;
-    /** Close wallets */
-    virtual void Close() = 0;
+    /** Construct wallets*/
+    virtual void Construct(InitInterfaces& interfaces) = 0;
 
     virtual ~WalletInitInterface() {}
 };

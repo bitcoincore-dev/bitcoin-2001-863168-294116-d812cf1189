@@ -5,8 +5,8 @@
 #ifndef BITCOIN_WALLET_TEST_WALLET_TEST_FIXTURE_H
 #define BITCOIN_WALLET_TEST_WALLET_TEST_FIXTURE_H
 
+#include <interfaces/chain.h>
 #include <test/test_bitcoin.h>
-
 #include <wallet/wallet.h>
 
 #include <memory>
@@ -17,6 +17,8 @@ struct WalletTestingSetup: public TestingSetup {
     explicit WalletTestingSetup(const std::string& chainName = CBaseChainParams::MAIN);
     ~WalletTestingSetup();
 
+    std::unique_ptr<interfaces::Chain> m_chain = interfaces::MakeChain();
+    std::unique_ptr<interfaces::Chain::Client> m_chain_client = interfaces::MakeWalletClient(*m_chain, {});
     CWallet m_wallet;
 };
 
