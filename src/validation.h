@@ -102,6 +102,7 @@ extern const std::vector<std::string> CHECKLEVEL_DOC;
 void StartScriptCheckWorkerThreads(int threads_num);
 /** Stop all of the script checking worker threads */
 void StopScriptCheckWorkerThreads();
+size_t ScriptCheckWorkerThreadCount();
 
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams);
 
