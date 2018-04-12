@@ -150,6 +150,7 @@ extern std::atomic_bool fReindex;
  */
 extern bool g_parallel_script_checks;
 extern int nScriptCheckThreads;
+extern std::atomic_bool g_script_threads_enabled;
 extern bool fRequireStandard;
 extern bool fCheckBlockIndex;
 extern bool fCheckpointsEnabled;
