@@ -260,20 +260,19 @@ static bool InitRPCAuthentication()
     for (const std::string& strRPCWhitelist : gArgs.GetArgs("-rpcwhitelist")) {
         auto pos = strRPCWhitelist.find(':');
         std::string strUser = strRPCWhitelist.substr(0, pos);
-        bool first = rpc_whitelist.count(strUser) == 0;
+        bool intersect = rpc_whitelist.count(strUser);
         std::set<std::string>& whitelist = rpc_whitelist[strUser];
         if (pos != std::string::npos) {
             std::string strWhitelist = strRPCWhitelist.substr(pos + 1);
-            std::set<std::string> tmp_whitelist;
-            boost::split(tmp_whitelist, strWhitelist, boost::is_any_of(", "));
-            if (first) {
-                whitelist = std::move(tmp_whitelist); 
-            } else {
-                std::set<std::string> output;
-                std::set_intersection(tmp_whitelist.begin(), tmp_whitelist.end(),
-                       whitelist.begin(), whitelist.end(), std::inserter(output, output.end()));
-                whitelist = std::move(output);
+            std::set<std::string> new_whitelist;
+            boost::split(new_whitelist, strWhitelist, boost::is_any_of(", "));
+            if (intersect) {
+                std::set<std::string> tmp_whitelist;
+                std::set_intersection(new_whitelist.begin(), new_whitelist.end(),
+                       whitelist.begin(), whitelist.end(), std::inserter(tmp_whitelist, tmp_whitelist.end()));
+                new_whitelist = std::move(tmp_whitelist);
             }
+            whitelist = std::move(new_whitelist);
         }
     }
 
