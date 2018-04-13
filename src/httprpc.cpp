@@ -70,6 +70,7 @@ static std::string strRPCUserColonPass;
 static std::unique_ptr<HTTPRPCTimerInterface> httpRPCTimerInterface;
 /* RPC Auth Whitelist */
 static std::map<std::string, std::set<std::string>> rpc_whitelist;
+static bool rpc_whitelist_default = false;
 
 static void JSONErrorReply(HTTPRequest* req, const UniValue& objError, const UniValue& id)
 {
@@ -189,10 +190,16 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
         jreq.URI = req->GetURI();
 
         std::string strReply;
+        bool user_has_whitelist = rpc_whitelist.count(jreq.authUser);
+        if (!user_has_whitelist && rpc_whitelist_default) {
+            LogPrintf("RPC User %s not allowed to call any methods\n", jreq.authUser);
+            req->WriteReply(HTTP_FORBIDDEN);
+            return false;
+
         // singleton request
-        if (valRequest.isObject()) {
+        } else if (valRequest.isObject()) {
             jreq.parse(valRequest);
-            if (rpc_whitelist.count(jreq.authUser) && !rpc_whitelist[jreq.authUser].count(jreq.strMethod)) {
+            if (user_has_whitelist && !rpc_whitelist[jreq.authUser].count(jreq.strMethod)) {
                 LogPrintf("RPC User %s not allowed to call method %s\n", jreq.authUser, jreq.strMethod);
                 req->WriteReply(HTTP_FORBIDDEN);
                 return false;
@@ -204,7 +211,7 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
 
         // array of requests
         } else if (valRequest.isArray()) {
-            if (rpc_whitelist.count(jreq.authUser)) {
+            if (user_has_whitelist) {
                 for (unsigned int reqIdx = 0; reqIdx < valRequest.size(); reqIdx++) {
                     if (!valRequest[reqIdx].isObject()) {
                         throw JSONRPCError(RPC_INVALID_REQUEST, "Invalid Request object");
@@ -257,6 +264,7 @@ static bool InitRPCAuthentication()
         LogPrintf("Using rpcauth authentication.\n");
     }
 
+    rpc_whitelist_default = gArgs.GetBoolArg("-rpcwhitelistdefault", gArgs.IsArgSet("-rpcwhitelist"));
     for (const std::string& strRPCWhitelist : gArgs.GetArgs("-rpcwhitelist")) {
         auto pos = strRPCWhitelist.find(':');
         std::string strUser = strRPCWhitelist.substr(0, pos);
