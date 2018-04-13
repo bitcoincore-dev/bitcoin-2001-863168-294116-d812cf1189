@@ -265,7 +265,7 @@ static bool InitRPCAuthentication()
         if (pos != std::string::npos) {
             std::string strWhitelist = strRPCWhitelist.substr(pos + 1);
             std::set<std::string> tmp_whitelist;
-            boost::split(tmp_whitelist, strWhitelist, boost::is_any_of(","));
+            boost::split(tmp_whitelist, strWhitelist, boost::is_any_of(", "));
             if (first) {
                 whitelist = std::move(tmp_whitelist); 
             } else {
