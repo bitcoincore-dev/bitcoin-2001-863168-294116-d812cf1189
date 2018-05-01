@@ -12,6 +12,7 @@ from test_framework.comptool import TestManager, TestInstance, RejectResult
 from test_framework.blocktools import *
 import time
 
+REJECT_INVALID = 16
 
 
 # Use the ComparisonTestFramework with 1 node: only use --testbinary.
