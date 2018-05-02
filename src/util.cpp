@@ -815,7 +815,9 @@ void AllocateFileRange(FILE *file, unsigned int offset, unsigned int length) {
     // Fallback version
     // TODO: just write one byte per block
     static const char buf[65536] = {};
-    fseek(file, offset, SEEK_SET);
+    if (fseek(file, offset, SEEK_SET)) {
+        return;
+    }
     while (length > 0) {
         unsigned int now = 65536;
         if (length < now)
@@ -839,7 +841,10 @@ void ShrinkDebugFile()
     {
         // Restart the file with some of the end
         std::vector<char> vch(RECENT_DEBUG_HISTORY_SIZE, 0);
-        fseek(file, -((long)vch.size()), SEEK_END);
+        if (fseek(file, -((long)vch.size()), SEEK_END)) {
+            fclose(file);
+            return;
+        }
         int nBytes = fread(vch.data(), 1, vch.size(), file);
         fclose(file);
 
