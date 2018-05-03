@@ -842,6 +842,7 @@ void ShrinkDebugFile()
         // Restart the file with some of the end
         std::vector<char> vch(RECENT_DEBUG_HISTORY_SIZE, 0);
         if (fseek(file, -((long)vch.size()), SEEK_END)) {
+            LogPrintf("Failed to shrink debug log file: fseek(...) failed\n");
             fclose(file);
             return;
         }
