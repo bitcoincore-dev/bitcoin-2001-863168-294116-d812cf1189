@@ -5,6 +5,12 @@
 
 #include <logging.h>
 #include <utiltime.h>
+#include <util.h>
+#include <utilstrencodings.h>
+#include <threadval.h>
+
+#include <list>
+#include <mutex>
 
 const char * const DEFAULT_DEBUGLOGFILE = "debug.log";
 
@@ -200,7 +206,9 @@ std::string BCLog::Logger::LogTimestampStr(const std::string &str)
 
 void BCLog::Logger::LogPrintStr(const std::string &str)
 {
-    std::string strTimestamped = LogTimestampStr(str);
+    std::string thread_name(thread_data::get_internal_name());
+    thread_name.resize(16, ' ');
+    std::string strTimestamped = "[" + std::move(thread_name) + "] " + LogTimestampStr(str);
 
     if (m_print_to_console) {
         // print to console
