@@ -85,8 +85,14 @@ namespace BCLog {
         fs::path m_file_path;
         std::atomic<bool> m_reopen_file{false};
 
-        /** Send a string to the log output */
-        void LogPrintStr(const std::string &str);
+        /**
+         * Send a string to the log output
+         *
+         * @argument include_threadname  If true, prefix the message with the name of
+         *                               the originating thread. Should be false when
+         *                               working with "Continued" log lines.
+         */
+        void LogPrintStr(const std::string &str, bool include_threadname = true);
 
         /** Returns whether logs will be written to any output */
         bool Enabled() const { return m_print_to_console || m_print_to_file; }
@@ -143,7 +149,12 @@ template<typename T, typename... Args> static inline void MarkUsed(const T& t, c
 #define LogPrintf(...) do { MarkUsed(__VA_ARGS__); } while(0)
 #define LogPrint(category, ...) do { MarkUsed(__VA_ARGS__); } while(0)
 #else
-#define LogPrintf(...) do { \
+#define LogPrintf(...) do { _LogPrintf(false, __VA_ARGS__); } while(0)
+#define LogPrint(category, ...) do { _LogPrint(false, category, __VA_ARGS__); } while(0)
+#define LogPrintfContinued(...) do { _LogPrintf(true, __VA_ARGS__); } while(0)
+#define LogPrintContinued(category, ...) do { _LogPrint(true, category, __VA_ARGS__); } while(0)
+
+#define _LogPrintf(is_continued_logline, ...) do { \
     if (g_logger->Enabled()) { \
         std::string _log_msg_; /* Unlikely name to avoid shadowing variables */ \
         try { \
@@ -152,15 +163,16 @@ template<typename T, typename... Args> static inline void MarkUsed(const T& t, c
             /* Original format string will have newline so don't add one here */ \
             _log_msg_ = "Error \"" + std::string(fmterr.what()) + "\" while formatting log message: " + FormatStringFromLogArgs(__VA_ARGS__); \
         } \
-        g_logger->LogPrintStr(_log_msg_); \
+        g_logger->LogPrintStr(_log_msg_, /*include_threadname*/ !(is_continued_logline)); \
     } \
 } while(0)
 
-#define LogPrint(category, ...) do { \
+#define _LogPrint(is_continued_logline, category, ...) do { \
     if (LogAcceptCategory((category))) { \
-        LogPrintf(__VA_ARGS__); \
+        _LogPrintf((is_continued_logline), __VA_ARGS__); \
     } \
 } while(0)
+
 #endif
 
 #endif // BITCOIN_LOGGING_H

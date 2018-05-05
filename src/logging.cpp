@@ -204,12 +204,16 @@ std::string BCLog::Logger::LogTimestampStr(const std::string &str)
     return strStamped;
 }
 
-void BCLog::Logger::LogPrintStr(const std::string &str)
+void BCLog::Logger::LogPrintStr(const std::string &str, bool include_threadname)
 {
-    std::string thread_name(thread_util::GetInternalName());
-    // The longest thread name (with numeric suffix) we have at the moment is 13 characters.
-    thread_name.resize(13, ' ');
-    std::string strTimestamped = "[" + std::move(thread_name) + "] " + LogTimestampStr(str);
+    std::string strTimestamped = LogTimestampStr(str);
+
+    if (include_threadname) {
+        std::string thread_name(thread_util::GetInternalName());
+        // The longest thread name (with numeric suffix) we have at the moment is 13 characters.
+        thread_name.resize(13, ' ');
+        strTimestamped = "[" + std::move(thread_name) + "] " + strTimestamped;
+    }
 
     if (m_print_to_console) {
         // print to console

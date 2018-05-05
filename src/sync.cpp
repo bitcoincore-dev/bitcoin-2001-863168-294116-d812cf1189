@@ -94,7 +94,7 @@ static void potential_deadlock_detected(const std::pair<void*, void*>& mismatch,
         if (i.first == mismatch.second) {
             LogPrintf(" (2)"); /* Continued */
         }
-        LogPrintf(" %s\n", i.second.ToString());
+        LogPrintfContinued(" %s\n", i.second.ToString());
     }
     LogPrintf("Current lock order is:\n");
     for (const std::pair<void*, CLockLocation> & i : s1) {
@@ -104,7 +104,7 @@ static void potential_deadlock_detected(const std::pair<void*, void*>& mismatch,
         if (i.first == mismatch.second) {
             LogPrintf(" (2)"); /* Continued */
         }
-        LogPrintf(" %s\n", i.second.ToString());
+        LogPrintfContinued(" %s\n", i.second.ToString());
     }
     assert(false);
 }
