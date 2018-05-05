@@ -5,6 +5,12 @@
 
 #include <logging.h>
 #include <utiltime.h>
+#include <util.h>
+#include <utilstrencodings.h>
+#include <threadutil.h>
+
+#include <list>
+#include <mutex>
 
 const char * const DEFAULT_DEBUGLOGFILE = "debug.log";
 
@@ -177,7 +183,11 @@ std::string BCLog::Logger::LogTimestampStr(const std::string &str)
 
     if (m_started_new_line) {
         int64_t nTimeMicros = GetTimeMicros();
-        strStamped = FormatISO8601DateTime(nTimeMicros/1000000);
+        std::string thread_name = thread_util::GetInternalName();
+        // The longest thread name (with numeric suffix) we have at the moment is 13 characters.
+        thread_name.resize(13, ' ');
+        strStamped = "[" + std::move(thread_name) + "] " + FormatISO8601DateTime(nTimeMicros/1000000);
+
         if (m_log_time_micros) {
             strStamped.pop_back();
             strStamped += strprintf(".%06dZ", nTimeMicros%1000000);
