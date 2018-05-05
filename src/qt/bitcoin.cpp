@@ -29,6 +29,7 @@
 #include <init.h>
 #include <interfaces/handler.h>
 #include <interfaces/node.h>
+#include <threadutil.h>
 #include <rpc/server.h>
 #include <ui_interface.h>
 #include <uint256.h>
@@ -535,6 +536,7 @@ WId BitcoinApplication::getMainWinId() const
 int main(int argc, char *argv[])
 {
     SetupEnvironment();
+    thread_util::Rename("bitcoin-qt");
 
     std::unique_ptr<interfaces::Node> node = interfaces::MakeNode();
 
