@@ -153,6 +153,7 @@ BITCOIN_CORE_H = \
   support/events.h \
   support/lockedpool.h \
   sync.h \
+  threadutil.h \
   threadsafety.h \
   threadinterrupt.h \
   timedata.h \
@@ -371,6 +372,7 @@ libbitcoin_util_a_SOURCES = \
   rpc/util.cpp \
   support/cleanse.cpp \
   sync.cpp \
+  threadutil.cpp \
   threadinterrupt.cpp \
   util.cpp \
   utilmoneystr.cpp \
