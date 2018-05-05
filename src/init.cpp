@@ -200,7 +200,7 @@ void Shutdown()
     /// for example if the data directory was found to be locked.
     /// Be sure that anything that writes files or flushes caches only does this if the respective
     /// module was initialized.
-    thread_util::rename("shutoff");
+    thread_util::Rename("shutoff");
     mempool.AddTransactionsUpdated(1);
 
     StopHTTPRPC();
@@ -634,7 +634,7 @@ void CleanupBlockRevFiles()
 void ThreadImport(std::vector<fs::path> vImportFiles)
 {
     const CChainParams& chainparams = Params();
-    thread_util::rename("loadblk");
+    thread_util::Rename("loadblk");
     ScheduleBatchPriority();
 
     {

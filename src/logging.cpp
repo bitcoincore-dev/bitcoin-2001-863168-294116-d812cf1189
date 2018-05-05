@@ -206,7 +206,7 @@ std::string BCLog::Logger::LogTimestampStr(const std::string &str)
 
 void BCLog::Logger::LogPrintStr(const std::string &str)
 {
-    std::string thread_name(thread_util::get_internal_name());
+    std::string thread_name(thread_util::GetInternalName());
     // The longest thread name (with numeric suffix) we have at the moment is 13 characters.
     thread_name.resize(13, ' ');
     std::string strTimestamped = "[" + std::move(thread_name) + "] " + LogTimestampStr(str);

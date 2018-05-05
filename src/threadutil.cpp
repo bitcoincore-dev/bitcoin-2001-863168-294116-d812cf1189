@@ -6,11 +6,20 @@
 #include <config/bitcoin-config.h>
 #endif
 
+#include <atomic>
+
 #include <threadutil.h>
 
-/*  TODO: using thread_local changes the abi in ways that may not play nice
-    when the c++ stdlib is linked dynamically. Disable it until thorough
-    testing has been done. */
+/*
+ * TODO: using thread_local changes the abi in ways that may not play nice
+ * when the c++ stdlib is linked dynamically. Disable it until thorough
+ * testing has been done.
+ *
+ * mingw32's implementation of thread_local has also been shown to behave
+ * erroneously under concurrent usage; see:
+ *
+ *   https://gist.github.com/jamesob/fe9a872051a88b2025b1aa37bfa98605
+ */
 #undef HAVE_THREAD_LOCAL
 
 #ifdef HAVE_SYS_PRCTL_H
@@ -22,11 +31,9 @@
 #endif
 
 #if defined(HAVE_THREAD_LOCAL)
-#include <atomic>
 #include <thread>
 
 #elif defined(HAVE_PTHREAD)
-#include <atomic>
 #include <pthread.h>
 
 #else
@@ -34,8 +41,6 @@
 #include <thread>
 #include <unordered_map>
 #endif
-
-const std::string UNNAMED_THREAD = "<unnamed>";
 
 struct thread_data_type
 {
@@ -46,7 +51,7 @@ struct thread_data_type
     std::string m_name{""};
 };
 
-void thread_util::set_process_name(const char* name)
+void thread_util::SetProcessName(const char* name)
 {
 #if defined(PR_SET_NAME)
     // Only the first 15 characters are used (16 - NUL terminator)
@@ -61,7 +66,7 @@ void thread_util::set_process_name(const char* name)
 #endif
 }
 
-std::string thread_util::get_process_name()
+std::string thread_util::GetProcessName()
 {
 #if !defined(CAN_READ_PROCESS_NAME)
     return "";
@@ -78,24 +83,16 @@ std::string thread_util::get_process_name()
     return std::string(pthreadname_buff);
 }
 
-static std::string try_set_internal_name_from_process()
+bool thread_util::Rename(std::string name)
 {
-    std::string procname = thread_util::get_process_name();
-    if (procname.size()) thread_util::set_internal_name(procname);
-    return procname;
+    SetProcessName(name.c_str());
+    SetInternalName(name);
 }
-
-
-bool thread_util::rename(std::string name)
-{
-    set_process_name(name.c_str());
-    set_internal_name(name);
-}
-
 
 /*
  * What follows are three separate platform-dependent implementations of
- * *name and *id parts of the thread_utils interface.
+ * *name and *id parts of the thread_utils interface. Each implementation
+ * emulates thread_local storage.
  *
  * If we have thread_local, just keep thread ID and name in a thread_local
  * global.
@@ -103,25 +100,16 @@ bool thread_util::rename(std::string name)
 #if defined(HAVE_THREAD_LOCAL)
 
 static thread_local thread_data_type g_thread_data;
-std::string thread_util::get_internal_name()
+std::string thread_util::GetInternalName()
 {
-    auto name = g_thread_data.m_name;
-
-    if (g_thread_data.m_name.empty()) {
-        try_set_internal_name_from_process();
-    }
-    return g_thread_data.m_name.size() ? g_thread_data.m_name : UNNAMED_THREAD;
+    return g_thread_data.m_name;
 }
 
-long thread_util::get_internal_id()
+bool thread_util::SetInternalName(std::string name)
 {
-    return g_thread_data.m_id;
-}
-
-bool thread_util::set_internal_name(std::string name)
-{
-    static std::atomic<long> internal_id{0};
-    g_thread_data = {internal_id++, std::move(name)};
+    static std::atomic<long> id_accumulator{0};
+    static thread_local thread_id{id_accumulator++};
+    g_thread_data = {thread_id, std::move(name)};
     return true;
 }
 
@@ -142,32 +130,28 @@ static void make_key()
     pthread_key_create(&g_key, destruct_data);
 }
 
-std::string thread_util::get_internal_name()
+static bool EnsureKeyCreated()
 {
-    void* data = pthread_getspecific(g_key);
-    if (data) {
-        return static_cast<thread_data_type*>(data)->m_name;
-    }
-    std::string fromproc = try_set_internal_name_from_process();
-    return fromproc.size() ? fromproc : UNNAMED_THREAD;
+    static pthread_once_t key_once = PTHREAD_ONCE_INIT;
+    return pthread_once(&key_once, make_key) ? false : true;
 }
 
-long thread_util::get_internal_id()
+std::string thread_util::GetInternalName()
 {
-    void* data = pthread_getspecific(g_key);
-    if (data) {
-        return static_cast<thread_data_type*>(data)->m_id;
+    if (EnsureKeyCreated()) {
+        void* data = pthread_getspecific(g_key);
+        if (data) {
+            return static_cast<thread_data_type*>(data)->m_name;
+        }
     }
-    return -1;
+    return UNNAMED_THREAD;
 }
 
-bool thread_util::set_internal_name(std::string name)
+bool thread_util::SetInternalName(std::string name)
 {
     static std::atomic<long> internal_id{0};
-    static pthread_once_t key_once = PTHREAD_ONCE_INIT;
-    if (pthread_once(&key_once, make_key)) {
-        return false;
-    }
+    if (!EnsureKeyCreated()) return false;
+
     void* data = pthread_getspecific(g_key);
     if (data) {
         static_cast<thread_data_type*>(data)->m_name = std::move(name);
@@ -188,7 +172,7 @@ static std::mutex m_map_mutex;
 
 static inline thread_data_type get_thread_data()
 {
-    thread_data_type ret{-1, ""};
+    thread_data_type ret{-1, UNNAMED_THREAD};
     std::thread::id thread_id(std::this_thread::get_id());
     {
         std::lock_guard<std::mutex> lock(m_map_mutex);
@@ -200,38 +184,31 @@ static inline thread_data_type get_thread_data()
     return ret;
 }
 
-bool thread_util::set_internal_name(std::string name)
+bool thread_util::SetInternalName(std::string name)
 {
     static long internal_id{0};
     std::string name_copy(name);
     std::thread::id thread_id(std::this_thread::get_id());
     {
         std::lock_guard<std::mutex> lock(m_map_mutex);
-        auto it = m_thread_map.emplace(
-            std::piecewise_construct,
-            std::forward_as_tuple(std::move(thread_id)),
-            std::forward_as_tuple(internal_id++, std::move(name)));
-        if (!it.second) {
-            it.first->second.m_name = std::move(name_copy);
+        auto it_found = m_thread_map.find(thread_id);
+
+        if (it_found != m_thread_map.end()) {
+            // Data already exists in map; name has already been set.
+            it_found->second.m_name = std::move(name_copy);
+        } else {
+            // Insert a new data entry into the map.
+            m_thread_map.insert(std::pair(
+                std::move(thread_id),
+                thread_data_type{internal_id++, std::move(name)});
         }
     }
     return true;
 }
 
-long thread_util::get_internal_id()
+std::string thread_util::GetInternalName()
 {
-    return get_thread_data().m_id;
-}
-
-std::string thread_util::get_internal_name()
-{
-    auto data = get_thread_data();
-
-    if (!data.m_name.empty()) {
-        return data.m_name;
-    }
-    std::string fromproc = try_set_internal_name_from_process();
-    return fromproc.size() ? fromproc : UNNAMED_THREAD;
+    return get_thread_data().m_name;
 }
 
 #endif

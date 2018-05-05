@@ -20,26 +20,26 @@ BOOST_FIXTURE_TEST_SUITE(threadutil_tests, BasicTestingSetup)
 
 BOOST_AUTO_TEST_CASE(threadutil_test_process_rename_serial)
 {
-    std::string original_process_name = thread_util::get_process_name();
+    std::string original_process_name = thread_util::GetProcessName();
 
-    thread_util::set_process_name("bazzz");
+    thread_util::SetProcessName("bazzz");
 #ifdef CAN_READ_PROCESS_NAME
-    BOOST_CHECK_EQUAL(thread_util::get_process_name(), "bazzz");
+    BOOST_CHECK_EQUAL(thread_util::GetProcessName(), "bazzz");
 #else
     // Special case for platforms which don't support reading of process name.
-    BOOST_CHECK_EQUAL(thread_util::get_process_name(), "");
+    BOOST_CHECK_EQUAL(thread_util::GetProcessName(), "");
 #endif
 
-    thread_util::set_process_name("barrr");
+    thread_util::SetProcessName("barrr");
 #ifdef CAN_READ_PROCESS_NAME
-    BOOST_CHECK_EQUAL(thread_util::get_process_name(), "barrr");
+    BOOST_CHECK_EQUAL(thread_util::GetProcessName(), "barrr");
 #else
     // Special case for platforms which don't support reading of process name.
-    BOOST_CHECK_EQUAL(thread_util::get_process_name(), "");
+    BOOST_CHECK_EQUAL(thread_util::GetProcessName(), "");
 #endif
 
-    thread_util::set_process_name(original_process_name.c_str());
-    BOOST_CHECK_EQUAL(thread_util::get_process_name(), original_process_name);
+    thread_util::SetProcessName(original_process_name.c_str());
+    BOOST_CHECK_EQUAL(thread_util::GetProcessName(), original_process_name);
 }
 
 std::string TEST_THREAD_NAME_BASE = "test_thread.";
@@ -56,9 +56,9 @@ std::set<std::string> RenameEnMasse(int num_threads)
     std::mutex lock;
 
     auto RenameThisThread = [&](int i) {
-        thread_util::rename(TEST_THREAD_NAME_BASE + std::to_string(i));
+        thread_util::Rename(TEST_THREAD_NAME_BASE + std::to_string(i));
         std::lock_guard<std::mutex> guard(lock);
-        names.insert(thread_util::get_internal_name());
+        names.insert(thread_util::GetInternalName());
     };
 
     for (int i = 0; i < num_threads; ++i) {
@@ -76,6 +76,8 @@ std::set<std::string> RenameEnMasse(int num_threads)
  */
 BOOST_AUTO_TEST_CASE(threadutil_test_rename_threaded)
 {
+    BOOST_CHECK_EQUAL(thread_util::GetInternalName(), thread_util::UNNAMED_THREAD);
+
     std::set<std::string> names = RenameEnMasse(100);
 
     BOOST_CHECK_EQUAL(names.size(), 100);

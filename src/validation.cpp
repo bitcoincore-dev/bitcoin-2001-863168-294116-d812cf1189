@@ -1652,7 +1652,7 @@ static bool WriteUndoDataForBlock(const CBlockUndo& blockundo, CValidationState&
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
 void ThreadScriptCheck(int worker_num) {
-    thread_util::rename(("scriptch." + std::to_string(worker_num)).c_str());
+    thread_util::Rename(("scriptch." + std::to_string(worker_num)).c_str());
     scriptcheckqueue.Thread();
 }
 

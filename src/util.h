@@ -267,7 +267,7 @@ int GetNumCores();
  */
 template <typename Callable> void TraceThread(const char* name,  Callable func)
 {
-    thread_util::rename(name);
+    thread_util::Rename(name);
     try
     {
         LogPrintf("%s thread start\n", name);

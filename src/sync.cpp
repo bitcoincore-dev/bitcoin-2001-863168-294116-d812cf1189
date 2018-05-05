@@ -141,7 +141,7 @@ static void pop_lock()
 
 void EnterCritical(const char* pszName, const char* pszFile, int nLine, void* cs, bool fTry)
 {
-    push_lock(cs, CLockLocation(pszName, pszFile, nLine, fTry, thread_util::get_internal_name()));
+    push_lock(cs, CLockLocation(pszName, pszFile, nLine, fTry, thread_util::GetInternalName()));
 }
 
 void LeaveCritical()

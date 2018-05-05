@@ -21,41 +21,38 @@
 
 namespace thread_util
 {
+    const std::string UNNAMED_THREAD = "<unnamed>";
+
     /**
      * Rename a thread both in terms of an internal (in-memory) name as well
      * as its system process name.
      *
      * @return whether or not the rename succeeded.
      */
-    bool rename(std::string);
+    bool Rename(std::string);
 
     /**
      * Set the thread's internal (in-memory) name; used e.g. for identification in
      * logging.
      */
-    std::string get_internal_name();
+    std::string GetInternalName();
 
     /**
      * Set the in-memory internal name for this thread. Does not affect the process
      * name.
      */
-    bool set_internal_name(std::string);
-
-    /**
-     * @return an id unique to this thread.
-     */
-    long get_internal_id();
+    bool SetInternalName(std::string);
 
     /**
      * @return this thread's name according to the related system process.
      */
-    std::string get_process_name();
+    std::string GetProcessName();
 
     /**
      * Set the thread's name at the process level. Does not affect the
      * internal name.
      */
-    void set_process_name(const char* name);
+    void SetProcessName(const char* name);
 
 } // namespace thread_util
 

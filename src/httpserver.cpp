@@ -282,7 +282,7 @@ static void http_reject_request_cb(struct evhttp_request* req, void*)
 /** Event dispatcher thread */
 static bool ThreadHTTP(struct event_base* base, struct evhttp* http)
 {
-    thread_util::rename("http");
+    thread_util::Rename("http");
     LogPrint(BCLog::HTTP, "Entering http event loop\n");
     event_base_dispatch(base);
     // Event loop will be interrupted by InterruptHTTPServer()
@@ -331,7 +331,7 @@ static bool HTTPBindAddresses(struct evhttp* http)
 /** Simple wrapper to set thread name and run work queue */
 static void HTTPWorkQueueRun(WorkQueue<HTTPClosure>* queue, int worker_num)
 {
-    thread_util::rename(("httpworker." + std::to_string(worker_num)).c_str());
+    thread_util::Rename(("httpworker." + std::to_string(worker_num)).c_str());
     queue->Run();
 }
 
