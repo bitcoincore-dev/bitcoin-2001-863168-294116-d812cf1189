@@ -217,8 +217,7 @@ public:
         //! Prepare for execution, loading any needed state.
         virtual bool prepare() = 0;
 
-        //! Start client execution and provide a scheduler. (Scheduler is
-        //! ignored if client is out-of-process).
+        //! Start client execution and provide a scheduler.
         virtual void start(CScheduler& scheduler) = 0;
 
         //! Stop client execution and prepare for shutdown.
