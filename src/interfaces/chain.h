@@ -47,7 +47,7 @@ public:
         virtual Optional<int> getHeight() = 0;
 
         //! Get block height above genesis block. Returns 0 for genesis block,
-        //! for following block, and so on. Returns nothing for a block not
+        //! 1 for following block, and so on. Returns nothing for a block not
         //! included in the current chain.
         virtual Optional<int> getBlockHeight(const uint256& hash) = 0;
 
