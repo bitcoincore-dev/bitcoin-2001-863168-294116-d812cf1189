@@ -4160,53 +4160,53 @@ CWallet* CWallet::CreateWalletFromFile(interfaces::Chain& chain, const std::stri
 
     auto locked_chain = chain.lock();
 
-    int index_rescan = 0;
+    int rescan_height = 0;
     if (!gArgs.GetBoolArg("-rescan", false))
     {
         WalletBatch batch(*walletInstance->database);
         CBlockLocator locator;
         if (batch.ReadBestBlock(locator)) {
             if (const Optional<int> fork_height = locked_chain->findLocatorFork(locator)) {
-                index_rescan = *fork_height;
+                rescan_height = *fork_height;
             }
         }
     }
 
     const Optional<int> tip_height = locked_chain->getHeight();
     if (tip_height) {
-        walletInstance->m_last_block_processed = locked_chain->getBlockHash(index_rescan);
+        walletInstance->m_last_block_processed = locked_chain->getBlockHash(rescan_height);
     } else {
         walletInstance->m_last_block_processed.SetNull();
     }
 
     walletInstance->m_handler = chain.handleNotifications(*walletInstance);
 
-    if (tip_height && *tip_height != index_rescan)
+    if (tip_height && *tip_height != rescan_height)
     {
         //We can't rescan beyond non-pruned blocks, stop and throw an error
         //this might happen if a user uses an old wallet within a pruned node
         // or if he ran -disablewallet for a longer time, then decided to re-enable
         if (chain.getPruneMode())
         {
-            int block = *tip_height;
-            while (block > 0 && locked_chain->blockHasTransactions(block - 1) && index_rescan != block) {
-                --block;
+            int block_height = *tip_height;
+            while (block_height > 0 && locked_chain->blockHasTransactions(block_height - 1) && rescan_height != block_height) {
+                --block_height;
             }
 
-            if (index_rescan != block) {
+            if (rescan_height != block_height) {
                 chain.initError(_("Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of pruned node)"));
                 return nullptr;
             }
         }
 
         chain.initMessage(_("Rescanning..."));
-        LogPrintf("Rescanning last %i blocks (from block %i)...\n", *tip_height - index_rescan, index_rescan);
+        LogPrintf("Rescanning last %i blocks (from block %i)...\n", *tip_height - rescan_height, rescan_height);
 
         // No need to read and scan block if block was created before
         // our wallet birthday (as adjusted for block time variability)
         if (walletInstance->nTimeFirstKey) {
-            if (Optional<int> last_older_block = locked_chain->findLastBefore(walletInstance->nTimeFirstKey - TIMESTAMP_WINDOW, index_rescan)) {
-                index_rescan = *last_older_block;
+            if (Optional<int> last_older_block = locked_chain->findLastBefore(walletInstance->nTimeFirstKey - TIMESTAMP_WINDOW, rescan_height)) {
+                rescan_height = *last_older_block;
             }
         }
 
@@ -4217,7 +4217,7 @@ CWallet* CWallet::CreateWalletFromFile(interfaces::Chain& chain, const std::stri
                 InitError(_("Failed to rescan the wallet during initialization"));
                 return nullptr;
             }
-            walletInstance->ScanForWalletTransactions(locked_chain->getBlockHash(index_rescan), {} /* stop block */, reserver, true /* update */);
+            walletInstance->ScanForWalletTransactions(locked_chain->getBlockHash(rescan_height), {} /* stop block */, reserver, true /* update */);
         }
         LogPrintf(" rescan      %15dms\n", GetTimeMillis() - nStart);
         walletInstance->ChainStateFlushed(locked_chain->getLocator());
