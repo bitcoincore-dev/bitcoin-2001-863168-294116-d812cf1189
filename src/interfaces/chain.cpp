@@ -78,7 +78,7 @@ class LockImpl : public Chain::Lock
         CBlockIndex* block = ::chainActive[height];
         return block && (block->nStatus & BLOCK_HAVE_DATA) && block->nTx > 0;
     }
-    Optional<int> findEarliestAtLeast(int64_t time) override
+    Optional<int> findFirstBlockWithTime(int64_t time) override
     {
         CBlockIndex* block = ::chainActive.FindEarliestAtLeast(time);
         if (block) {
@@ -86,14 +86,12 @@ class LockImpl : public Chain::Lock
         }
         return nullopt;
     }
-    Optional<int> findLastBefore(int64_t time, int start_height) override
+    Optional<int> findFirstBlockWithTimeAndHeight(int64_t time, int height) override
     {
-        CBlockIndex* block = ::chainActive[start_height];
-        while (block && block->GetBlockTime() < time) {
-            block = ::chainActive.Next(block);
-        }
-        if (block) {
-            return block->nHeight;
+        for (CBlockIndex* block = ::chainActive[height]; block; block = ::chainActive.Next(block)) {
+            if (block->GetBlockTime() >= time) {
+                return block->nHeight;
+            }
         }
         return nullopt;
     }

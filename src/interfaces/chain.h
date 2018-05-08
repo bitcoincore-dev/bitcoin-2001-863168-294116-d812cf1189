@@ -68,15 +68,19 @@ public:
         //! pruned), and contains transactions.
         virtual bool haveBlockOnDisk(int height) = 0;
 
-        //! Return height of earliest block in chain with timestamp equal or
-        //! greater than the given time, or nothing if there is no block with a
-        //! high enough timestamp.
-        virtual Optional<int> findEarliestAtLeast(int64_t time) = 0;
+        //! Return height of the first block in the chain with timestamp equal
+        //! or greater than the given time, or nothing if there is no block with
+        //! a high enough timestamp.
+        virtual Optional<int> findFirstBlockWithTime(int64_t time) = 0;
 
-        //! Return height of last block in chain with timestamp less than the
-        //! given, and height less than or equal to the given, or nothing if
-        //! there is no such block.
-        virtual Optional<int> findLastBefore(int64_t time, int start_height) = 0;
+        //! Return height of the first block in the chain with timestamp equal
+        //! or greater than the given time and height equal or greater than the
+        //! given height, or nothing if there is no such block.
+        //!
+        //! Calling this with height 0 is equivalent to calling
+        //! findFirstBlockWithTime, but less efficient because it requires a
+        //! linear instead of a binary search.
+        virtual Optional<int> findFirstBlockWithTimeAndHeight(int64_t time, int height) = 0;
 
         //! Return height of last block in the specified range which is pruned, or
         //! nothing if no block in the range is pruned. Range is inclusive.

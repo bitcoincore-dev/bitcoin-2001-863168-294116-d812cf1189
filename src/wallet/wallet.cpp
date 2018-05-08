@@ -1698,7 +1698,7 @@ int64_t CWallet::RescanFromTime(int64_t startTime, const WalletRescanReserver& r
     uint256 start_block;
     {
         auto locked_chain = m_chain->lock();
-        const Optional<int> start_height = locked_chain->findEarliestAtLeast(startTime - TIMESTAMP_WINDOW);
+        const Optional<int> start_height = locked_chain->findFirstBlockWithTime(startTime - TIMESTAMP_WINDOW);
         const Optional<int> tip_height = locked_chain->getHeight();
         LogPrintf("%s: Rescanning last %i blocks\n", __func__, tip_height && start_height ? *tip_height - *start_height + 1 : 0);
         if (start_height) start_block = locked_chain->getBlockHash(*start_height);
@@ -4205,8 +4205,8 @@ CWallet* CWallet::CreateWalletFromFile(interfaces::Chain& chain, const std::stri
         // No need to read and scan block if block was created before
         // our wallet birthday (as adjusted for block time variability)
         if (walletInstance->nTimeFirstKey) {
-            if (Optional<int> last_older_block = locked_chain->findLastBefore(walletInstance->nTimeFirstKey - TIMESTAMP_WINDOW, rescan_height)) {
-                rescan_height = *last_older_block;
+            if (Optional<int> first_block = locked_chain->findFirstBlockWithTimeAndHeight(walletInstance->nTimeFirstKey - TIMESTAMP_WINDOW, rescan_height)) {
+                rescan_height = *first_block;
             }
         }
 
