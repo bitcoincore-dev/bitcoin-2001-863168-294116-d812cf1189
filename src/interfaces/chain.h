@@ -64,8 +64,9 @@ public:
         //! Get block median time past.
         virtual int64_t getBlockMedianTimePast(int height) = 0;
 
-        //! Check if block is empty.
-        virtual bool blockHasTransactions(int height) = 0;
+        //! Check that the full block is available on disk (ie has not been
+        //! pruned), and contains transactions.
+        virtual bool haveBlockOnDisk(int height) = 0;
 
         //! Return height of earliest block in chain with timestamp equal or
         //! greater than the given time, or nothing if there is no block with a

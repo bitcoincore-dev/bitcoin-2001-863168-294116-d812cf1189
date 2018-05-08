@@ -73,7 +73,7 @@ class LockImpl : public Chain::Lock
     uint256 getBlockHash(int height) override { return ::chainActive[height]->GetBlockHash(); }
     int64_t getBlockTime(int height) override { return ::chainActive[height]->GetBlockTime(); }
     int64_t getBlockMedianTimePast(int height) override { return ::chainActive[height]->GetMedianTimePast(); }
-    bool blockHasTransactions(int height) override
+    bool haveBlockOnDisk(int height) override
     {
         CBlockIndex* block = ::chainActive[height];
         return block && (block->nStatus & BLOCK_HAVE_DATA) && block->nTx > 0;

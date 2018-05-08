@@ -4189,7 +4189,7 @@ CWallet* CWallet::CreateWalletFromFile(interfaces::Chain& chain, const std::stri
         if (chain.getPruneMode())
         {
             int block_height = *tip_height;
-            while (block_height > 0 && locked_chain->blockHasTransactions(block_height - 1) && rescan_height != block_height) {
+            while (block_height > 0 && locked_chain->haveBlockOnDisk(block_height - 1) && rescan_height != block_height) {
                 --block_height;
             }
 
