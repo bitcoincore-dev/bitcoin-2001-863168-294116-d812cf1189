@@ -696,7 +696,7 @@ private:
     void SyncMetaData(std::pair<TxSpends::iterator, TxSpends::iterator>);
 
     /* Used by TransactionAddedToMemorypool/BlockConnected/Disconnected.
-     * Should be called with pindexBlock and posInBlock if this is for a transaction that is included in a block. */
+     * Should be called with non-zero block_hash and posInBlock if this is for a transaction that is included in a block. */
     void SyncTransaction(interfaces::Chain::Lock& locked_chain, const CTransactionRef& ptx, const uint256& block_hash, int posInBlock);
 
     /* the HD chain data model (external chain counters) */
