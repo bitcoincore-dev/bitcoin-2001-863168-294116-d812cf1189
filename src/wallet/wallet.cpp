@@ -1782,7 +1782,7 @@ uint256 CWallet::ScanForWalletTransactions(const uint256& start_block, const uin
                 LOCK(cs_wallet);
                 if (!locked_chain->getBlockHeight(block_hash)) {
                     // Abort scan if current block is no longer active, to prevent
-                    // marking transac<tions as coming from the wrong block.
+                    // marking transactions as coming from the wrong block.
                     ret = block_hash;
                     break;
                 }
