@@ -49,9 +49,13 @@ namespace {
 
 class NodeImpl : public Node
 {
-    void parseParameters(int argc, const char* const argv[]) override
+public:
+    NodeImpl()
     {
         m_interfaces.chain = interfaces::MakeChain();
+    }
+    void parseParameters(int argc, const char* const argv[]) override
+    {
         gArgs.ParseParameters(argc, argv);
     }
     void readConfigFile(const std::string& conf_path) override { gArgs.ReadConfigFile(conf_path); }
