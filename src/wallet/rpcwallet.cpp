@@ -3771,7 +3771,7 @@ UniValue rescanblockchain(const JSONRPCRequest& request)
     }
     UniValue response(UniValue::VOBJ);
     response.pushKV("start_height", start_height);
-    response.pushKV("stop_height", stop_height ? UniValue(*stop_height) : tip_height ? UniValue(*tip_height): UniValue());
+    response.pushKV("stop_height", stop_height ? *stop_height : tip_height ? *tip_height: UniValue());
     return response;
 }
 
