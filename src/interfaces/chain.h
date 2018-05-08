@@ -83,7 +83,7 @@ public:
 
         //! Return height of the highest block on the chain that is an ancestor
         //! of the specified block. Also return the height of the specified
-        //! block as an optinal output parameter.
+        //! block as an optional output parameter.
         virtual Optional<int> findFork(const uint256& hash, Optional<int>* height) = 0;
 
         //! Return true if block hash points to the current chain tip, or to a
