@@ -3417,7 +3417,6 @@ static UniValue fundrawtransaction(const JSONRPCRequest& request)
     CAmount nFeeOut;
     std::string strFailReason;
 
-    auto locked_chain = pwallet->chain().assumeLocked();  // Temporary. Removed in upcoming lock cleanup
     if (!pwallet->FundTransaction(*locked_chain, tx, nFeeOut, changePosition, strFailReason, lockUnspents, setSubtractFeeFromOutputs, coinControl)) {
         throw JSONRPCError(RPC_WALLET_ERROR, strFailReason);
     }

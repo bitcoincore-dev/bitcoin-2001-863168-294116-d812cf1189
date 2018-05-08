@@ -2668,7 +2668,7 @@ bool CWallet::FundTransaction(interfaces::Chain::Lock& locked_chain, CMutableTra
 
     // Acquire the locks to prevent races to the new locked unspents between the
     // CreateTransaction call and LockCoin calls (when lockUnspents is true).
-    auto locked_chain_recursive = m_chain->lock();  // Temporary. Removed in upcoming lock cleanup
+    auto locked_chain = m_chain->lock();
     LOCK(cs_wallet);
 
     CReserveKey reservekey(this);
