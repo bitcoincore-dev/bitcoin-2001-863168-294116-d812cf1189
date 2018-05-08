@@ -73,7 +73,7 @@ namespace BCLog {
         /** Log categories bitfield. */
         std::atomic<uint32_t> m_categories{0};
 
-        std::string LogTimestampStr(const std::string& str);
+        std::string LogTimestampStr(const std::string& str, const std::string& = "");
 
     public:
         bool m_print_to_console = false;
@@ -86,7 +86,7 @@ namespace BCLog {
         std::atomic<bool> m_reopen_file{false};
 
         /** Send a string to the log output */
-        void LogPrintStr(const std::string &str);
+        void LogPrintStr(const std::string &str, const std::string& threadname = "");
 
         /** Returns whether logs will be written to any output */
         bool Enabled() const { return m_print_to_console || m_print_to_file; }
@@ -152,7 +152,7 @@ template<typename T, typename... Args> static inline void MarkUsed(const T& t, c
             /* Original format string will have newline so don't add one here */ \
             _log_msg_ = "Error \"" + std::string(fmterr.what()) + "\" while formatting log message: " + FormatStringFromLogArgs(__VA_ARGS__); \
         } \
-        g_logger->LogPrintStr(_log_msg_); \
+        async_logging::Queue(_log_msg_); \
     } \
 } while(0)
 
@@ -162,5 +162,11 @@ template<typename T, typename... Args> static inline void MarkUsed(const T& t, c
     } \
 } while(0)
 #endif
+
+namespace async_logging {
+    void Queue(const std::string& str);
+    void FlushAll();
+    void Shutdown();
+}
 
 #endif // BITCOIN_LOGGING_H

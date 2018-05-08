@@ -8,6 +8,7 @@
 #include <util.h>
 #include <utilstrencodings.h>
 #include <threadutil.h>
+#include <ringbuffer.h>
 
 #include <list>
 #include <mutex>
@@ -174,7 +175,7 @@ std::vector<CLogCategoryActive> ListActiveLogCategories()
     return ret;
 }
 
-std::string BCLog::Logger::LogTimestampStr(const std::string &str)
+std::string BCLog::Logger::LogTimestampStr(const std::string& str, const std::string& threadname)
 {
     std::string strStamped;
 
@@ -183,7 +184,11 @@ std::string BCLog::Logger::LogTimestampStr(const std::string &str)
 
     if (m_started_new_line) {
         int64_t nTimeMicros = GetTimeMicros();
-        std::string thread_name = thread_util::GetInternalName();
+        std::string thread_name(threadname);
+
+        if (!thread_name.size()) {
+            thread_name = thread_util::GetInternalName();
+        }
         // The longest thread name (with numeric suffix) we have at the moment is 13 characters.
         thread_name.resize(13, ' ');
         strStamped = "[" + std::move(thread_name) + "] " + FormatISO8601DateTime(nTimeMicros/1000000);
@@ -208,9 +213,10 @@ std::string BCLog::Logger::LogTimestampStr(const std::string &str)
     return strStamped;
 }
 
-void BCLog::Logger::LogPrintStr(const std::string &str)
+
+void BCLog::Logger::LogPrintStr(const std::string& str, const std::string& threadname)
 {
-    std::string strTimestamped = LogTimestampStr(str);
+    std::string strTimestamped = LogTimestampStr(str, threadname);
 
     if (m_print_to_console) {
         // print to console
@@ -276,4 +282,41 @@ void BCLog::Logger::ShrinkDebugFile()
     }
     else if (file != nullptr)
         fclose(file);
+}
+
+namespace async_logging {
+    using LogArgs = std::pair<std::string, std::string>;
+    RingBuffer<LogArgs, 1024> log_buffer;
+    std::unique_ptr<std::thread> flush_logs_thread;
+    std::once_flag flush_logs_thread_started;
+
+    static void ConsumeLogs()
+    {
+        std::unique_ptr<LogArgs> next_log_line;
+        while (next_log_line = log_buffer.PollForOne()) {
+            g_logger->LogPrintStr(next_log_line->first, next_log_line->second);
+        }
+    }
+
+    void FlushAll()
+    {
+        for (LogArgs s : log_buffer.PopAll()) {
+            g_logger->LogPrintStr(s.first, s.second);
+        }
+    }
+
+    void Queue(const std::string& str)
+    {
+        std::call_once(flush_logs_thread_started, [](){
+            flush_logs_thread.reset(new std::thread(ConsumeLogs));
+        });
+        log_buffer.PushBack(LogArgs(str, thread_util::GetInternalName()));
+    }
+
+    void Shutdown()
+    {
+        log_buffer.SignalStopWaiting();
+        FlushAll();
+        flush_logs_thread->join();
+    }
 }
