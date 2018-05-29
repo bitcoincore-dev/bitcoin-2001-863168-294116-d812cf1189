@@ -1005,7 +1005,9 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
     if (!strCmd.empty())
     {
         boost::replace_all(strCmd, "%s", wtxIn.GetHash().GetHex());
-        boost::replace_all(strCmd, "%w", GetName());
+        std::string name = GetName();
+        boost::replace_all(name, "'", "'\''");
+        boost::replace_all(strCmd, "%w", "'" + name + "'");
         std::thread t(runCommand, strCmd);
         t.detach(); // thread runs free
     }
