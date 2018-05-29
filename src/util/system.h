@@ -44,9 +44,7 @@ void SetupEnvironment();
 bool SetupNetworking();
 // Return true if -datadir option points to a valid directory or is not specified.
 bool CheckDataDirOption(const ArgsManager& args);
-#ifndef WIN32
 std::string ShellEscape(const std::string& arg);
-#endif
 #if HAVE_SYSTEM
 void runCommand(const std::string& strCommand);
 #endif
