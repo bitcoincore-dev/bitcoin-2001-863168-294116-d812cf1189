@@ -74,6 +74,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "sendmany", 6 , "conf_target" },
     { "sweepprivkeys", 0, "options" },
     { "scantxoutset", 1, "scanobjects" },
+    { "scantxoutset", 2, "options" },
     { "addmultisigaddress", 0, "nrequired" },
     { "addmultisigaddress", 1, "keys" },
     { "createmultisig", 0, "nrequired" },

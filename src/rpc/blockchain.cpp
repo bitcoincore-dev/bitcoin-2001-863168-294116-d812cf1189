@@ -16,9 +16,12 @@
 #include <core_io.h>
 #include <keystore.h>
 #include <policy/feerate.h>
+#include <policy/fees.h>
 #include <policy/policy.h>
+#include <policy/rbf.h>
 #include <primitives/transaction.h>
 #include <rpc/server.h>
+#include <script/sign.h>
 #include <streams.h>
 #include <sync.h>
 #include <txdb.h>
@@ -1684,11 +1687,28 @@ CTxDestination GetDestinationForKey(const CPubKey& key, OutputScriptType type)
     }
 }
 
+/** A dummy keystore for the txout-set scan in order to calculate the right fees for the sweep transaction */
+static CPubKey pub_key(std::vector<unsigned char>(33)); // always use a compress pubkey
+class CCoinsViewScanDummySignKeyStore : public CBasicKeyStore
+{
+public:
+    bool GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const override {
+        // return dummy pubkey
+        vchPubKeyOut = pub_key;
+        return true;
+    }
+    bool GetCScript(const CScriptID &hash, CScript& redeemScriptOut) const override {
+        // return a dummy TX_WITNESS_V0_KEYHASH script
+        redeemScriptOut = CScript() << OP_0 << std::vector<unsigned char>(20);
+        return true;
+    }
+};
+
 UniValue scantxoutset(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 3)
         throw std::runtime_error(
-            "scantxoutset <action> <scanobjects>\n"
+            "scantxoutset <action> <scanobjects> ( <options> )\n"
             "\nScans the unspent transaction output set for possible entries that matches common scripts of given public keys.\n"
             "\nArguments:\n"
             "1. \"action\"                       (string, required) The action to execute\n"
@@ -1713,6 +1733,12 @@ UniValue scantxoutset(const JSONRPCRequest& request)
             "          }\n"
             "        },\n"
             "      ]\n"
+            "3. \"options\"                               (object, optional)\n"
+            "      \"rawsweep\": {                        (object, optional) Optionally creates a raw sweep transaction\n"
+            "          \"address\": \"address\",            (string, required) Address where the funds should be sent to\n"
+            "          \"feerate\": n,                    (numeric, optional, default not set: makes wallet determine the fee) Set a specific fee rate in " + CURRENCY_UNIT + "/kB\n"
+            "          \"conf_target\": n,                (numeric, optional) Confirmation target (in blocks), has no effect if feerate is provided\n"
+            "       }\n"
             "\nResult:\n"
             "{\n"
             "  \"unspents\": [\n"
@@ -1725,7 +1751,10 @@ UniValue scantxoutset(const JSONRPCRequest& request)
             "   }\n"
             "   ,...], \n"
             " \"total_amount\" : x.xxx,          (numeric) The total amount of all found unspent outputs in " + CURRENCY_UNIT + "\n"
-            "]\n"
+            " \"rawsweep_tx\" : \"value\",         (string) The hex-encoded raw transaction of the optional sweep transaction\n"
+            " \"rawsweep_vsize\" : \"value\",      (numeric) Estimated virtual transaction size of the sweep transaction including signatures\n"
+            " \"rawsweep_fee\" : \"value\",        (numeric) Estimated fee for the sweep transaction in " + CURRENCY_UNIT + "\n"
+            "}\n"
         );
 
     RPCTypeCheck(request.params, {UniValue::VSTR, UniValue::VARR});
@@ -1752,7 +1781,7 @@ UniValue scantxoutset(const JSONRPCRequest& request)
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Scan already in progress, use action \"abort\" or \"status\"");
         }
         std::set<CScript> needles;
-        CBasicKeyStore temp_keystore;
+        CCoinsViewScanDummySignKeyStore temp_keystore;
         CAmount total_in = 0;
 
         // loop through the scan objects
@@ -1913,6 +1942,7 @@ UniValue scantxoutset(const JSONRPCRequest& request)
             }
         }
 
+        CMutableTransaction tx;
         // Scan the unspent transaction output set for inputs
         UniValue unspents(UniValue::VARR);
         std::vector<CTxOut> input_txos;
@@ -1931,10 +1961,20 @@ UniValue scantxoutset(const JSONRPCRequest& request)
         result.push_back(Pair("success", res));
         result.push_back(Pair("searched_items", count));
 
+        int nIn = 0;
         for (const auto& it : coins) {
             const COutPoint& outpoint = it.first;
             const Coin& coin = it.second;
             const CTxOut& txo = coin.out;
+            tx.vin.emplace_back(outpoint.hash, outpoint.n);
+            tx.vin.back().nSequence = MAX_BIP125_RBF_SEQUENCE; //enforce BIP125
+
+            // Fill in dummy signatures for fee calculation, ignore signature verification.
+            const CScript& scriptPubKey = txo.scriptPubKey;
+            SignatureData sigdata;
+            ProduceSignature(DummySignatureCreator(&temp_keystore), scriptPubKey, sigdata);
+            UpdateTransaction(tx, nIn, sigdata);
+
             input_txos.push_back(txo);
             total_in += txo.nValue;
 
@@ -1946,7 +1986,55 @@ UniValue scantxoutset(const JSONRPCRequest& request)
             unspent.push_back(Pair("height", (int32_t)coin.nHeight));
 
             unspents.push_back(unspent);
+
+            nIn++;
         }
+
+        // check and eventually build a raw sweep transaction
+        UniValue rawsweep_uni = find_value(request.params[2], "rawsweep");
+        if (!coins.empty() && rawsweep_uni.isObject()) {
+            CTxDestination dest = DecodeDestination(find_value(rawsweep_uni, "address").get_str());
+            if (!IsValidDestination(dest)) {
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid or missing raw sweep address");
+            }
+            tx.vout.emplace_back(total_in, GetScriptForDestination(dest));
+            int64_t tx_vsize = GetVirtualTransactionSize(tx);
+
+            // Remove scriptSigs to eliminate the fee calculation dummy signatures
+            for (auto& vin : tx.vin) {
+                vin.scriptSig = CScript();
+                vin.scriptWitness.SetNull();
+            }
+
+            // look for user provided feerate
+            UniValue feerate_uni = find_value(rawsweep_uni, "feerate");
+            CFeeRate feerate;
+            if (feerate_uni.isNum()) {
+                feerate = CFeeRate(AmountFromValue(feerate_uni));
+            } else {
+                // estimate feerate, check for optional conf_target
+                int conf_target = 6;
+                UniValue conf_target_uni = find_value(rawsweep_uni, "conf_target");
+                if (conf_target_uni.isNum()) conf_target = conf_target_uni.get_int();
+                FeeCalculation fee_calc;
+                feerate = ::feeEstimator.estimateSmartFee(conf_target, &fee_calc, false).GetFee(tx_vsize);
+            }
+            CAmount fee_needed = feerate.GetFee(tx_vsize);
+            if (fee_needed < ::minRelayTxFee.GetFee(tx_vsize)) {
+                throw JSONRPCError(RPC_VERIFY_REJECTED, "Min relay fee not met");
+            }
+            if (fee_needed >= total_in) {
+                throw JSONRPCError(RPC_VERIFY_REJECTED, strprintf("Not enough funds available in found unspent outputs to pay for the fee (total inputs: %lld, fee: %lld)", total_in, fee_needed));
+            }
+            tx.vout[0].nValue = total_in - fee_needed;
+            if (IsDust(tx.vout[0], ::minRelayTxFee)) {
+                throw JSONRPCError(RPC_VERIFY_REJECTED, "Swept value would be dust");
+            }
+            result.push_back(Pair("rawsweep_tx", EncodeHexTx(tx)));
+            result.push_back(Pair("rawsweep_fee", ValueFromAmount(fee_needed)));
+            result.push_back(Pair("rawsweep_vsize", tx_vsize));
+        }
+
         result.push_back(Pair("unspents", unspents));
         result.push_back(Pair("total_amount", ValueFromAmount(total_in)));
     } else {
@@ -1979,7 +2067,7 @@ static const CRPCCommand commands[] =
     { "blockchain",         "verifychain",            &verifychain,            {"checklevel","nblocks"} },
 
     { "blockchain",         "preciousblock",          &preciousblock,          {"blockhash"} },
-    { "blockchain",         "scantxoutset",           &scantxoutset,           {"action", "scanobjects"} },
+    { "blockchain",         "scantxoutset",           &scantxoutset,           {"action", "scanobjects", "options"} },
 
     /* Not shown in help */
     { "hidden",             "invalidateblock",        &invalidateblock,        {"blockhash"} },
