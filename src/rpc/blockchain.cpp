@@ -1722,14 +1722,14 @@ UniValue scantxoutset(const JSONRPCRequest& request)
             "        { \"pubkey\"  :                      (object, optional) Public key\n"
             "          {\n"
             "            \"pubkey\" : \"<pubkey\">,         (string, required) HEX encoded public key\n"
-            "            \"script_types\" : [ ... ],      (array, optional) Array of script-types to derive from the pubkey (possible values: \"P2PKH\", \"P2SH-P2WPKH\", \"P2WPKH\")\n"
+            "            \"script_types\" : [ ... ],      (array, optional) Array of script-types to derive from the pubkey (possible values: \"P2PK\", \"P2PKH\", \"P2SH-P2WPKH\", \"P2WPKH\")\n"
             "          }\n"
             "        },\n"
             "        { \"xpub\"  :                        (object, optional) Use an extended public key child key range (m/0/k & m/1/k) to derive scripts from\n"
             "          { \n"
             "            \"xpub\" : \"<xpub\">,             (string, required) Base58check encoded extended public key (xpub)\n"
             "            \"range\" : [ <s>, <e> ],        (array, optional) Range of keys that will be deriven from the given xpubs (default is 0 to 1000)\n"
-            "            \"script_types\" : [ ... ],      (array, optional) Array of derivation type (possible values: \"P2PKH\", \"P2SH-P2WPKH\", \"P2WPKH\")\n"
+            "            \"script_types\" : [ ... ],      (array, optional) Array of derivation type (possible values: \"P2PK\", \"P2PKH\", \"P2SH-P2WPKH\", \"P2WPKH\")\n"
             "          }\n"
             "        },\n"
             "      ]\n"
@@ -1855,8 +1855,14 @@ UniValue scantxoutset(const JSONRPCRequest& request)
                 for (const UniValue& script_type_uni : script_types_uni.get_array().getValues()) {
                     OutputScriptType script_type = GetOutputScriptTypeFromString(script_type_uni.get_str());
                     if (script_type == OutputScriptType::UNKNOWN) throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid script type");
-
-                    CScript script = GetScriptForDestination(GetDestinationForKey(pubkey, script_type));
+                    CScript script;
+                    if (script_type == OutputScriptType::P2PK) {
+                        // support legacy P2PK scripts
+                        script << ToByteVector(pubkey) << OP_CHECKSIG;
+                    }
+                    else {
+                        script = GetScriptForDestination(GetDestinationForKey(pubkey, script_type));
+                    }
                     assert(!script.empty());
                     needles.insert(script);
                     temp_keystore.AddWatchOnly(script);
