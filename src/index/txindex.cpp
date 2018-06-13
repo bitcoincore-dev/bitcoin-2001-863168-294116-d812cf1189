@@ -5,6 +5,7 @@
 #include <chainparams.h>
 #include <index/txindex.h>
 #include <init.h>
+#include <threadutil.h>
 #include <tinyformat.h>
 #include <ui_interface.h>
 #include <util.h>
@@ -77,6 +78,8 @@ static const CBlockIndex* NextSyncBlock(const CBlockIndex* pindex_prev)
 
 void TxIndex::ThreadSync()
 {
+    thread_util::Rename("txindex");
+
     const CBlockIndex* pindex = m_best_block_index.load();
     if (!m_synced) {
         auto& consensus_params = Params().GetConsensus();
