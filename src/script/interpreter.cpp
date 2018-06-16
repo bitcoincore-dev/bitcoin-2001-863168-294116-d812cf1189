@@ -32,6 +32,7 @@ static const std::map<std::string, CScriptFlag> mapFlagNames = {
     {std::string("WITNESS"), SCRIPT_VERIFY_WITNESS},
     {std::string("DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM"), SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM},
     {std::string("WITNESS_PUBKEYTYPE"), SCRIPT_VERIFY_WITNESS_PUBKEYTYPE},
+    {std::string("CONST_SCRIPTCODE"), SCRIPT_VERIFY_CONST_SCRIPTCODE},
 };
 
 CScriptFlag ParseScriptFlag(const std::string flag_name)
@@ -350,6 +351,10 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                 opcode == OP_LSHIFT ||
                 opcode == OP_RSHIFT)
                 return set_error(serror, SCRIPT_ERR_DISABLED_OPCODE); // Disabled opcodes.
+
+            // With SCRIPT_VERIFY_CONST_SCRIPTCODE, OP_CODESEPARATOR in non-segwit script is rejected even in an unexecuted branch
+            if (opcode == OP_CODESEPARATOR && sigversion == SIGVERSION_BASE && (flags & SCRIPT_VERIFY_CONST_SCRIPTCODE))
+                return set_error(serror, SCRIPT_ERR_OP_CODESEPARATOR);
 
             if (fExec && 0 <= opcode && opcode <= OP_PUSHDATA4) {
                 if (fRequireMinimal && !CheckMinimalPush(vchPushValue, opcode)) {
@@ -914,6 +919,9 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
 
                 case OP_CODESEPARATOR:
                 {
+                    // If SCRIPT_VERIFY_CONST_SCRIPTCODE flag is set, use of OP_CODESEPARATOR is rejected in pre-segwit
+                    // script, even in an unexecuted branch (this is checked above the opcode case statement).
+
                     // Hash starts after the code separator
                     pbegincodehash = pc;
                 }
@@ -934,7 +942,9 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
 
                     // Drop the signature in pre-segwit scripts but not segwit scripts
                     if (sigversion == SIGVERSION_BASE) {
-                        scriptCode.FindAndDelete(CScript(vchSig));
+                        int found = scriptCode.FindAndDelete(CScript(vchSig));
+                        if (found > 0 && (flags & SCRIPT_VERIFY_CONST_SCRIPTCODE))
+                            return set_error(serror, SCRIPT_ERR_SIG_FINDANDDELETE);
                     }
 
                     if (!CheckSignatureEncoding(vchSig, flags, serror) || !CheckPubKeyEncoding(vchPubKey, flags, sigversion, serror)) {
@@ -998,7 +1008,9 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     {
                         valtype& vchSig = stacktop(-isig-k);
                         if (sigversion == SIGVERSION_BASE) {
-                            scriptCode.FindAndDelete(CScript(vchSig));
+                            int found = scriptCode.FindAndDelete(CScript(vchSig));
+                            if (found > 0 && (flags & SCRIPT_VERIFY_CONST_SCRIPTCODE))
+                                return set_error(serror, SCRIPT_ERR_SIG_FINDANDDELETE);
                         }
                     }
 

@@ -410,7 +410,7 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char *pszDest, bool fCo
 
     // Connect
     bool connected = false;
-    SOCKET hSocket;
+    SOCKET hSocket = INVALID_SOCKET;
     proxyType proxy;
     if (addrConnect.IsValid()) {
         bool proxyConnectionFailed = false;
@@ -1619,7 +1619,8 @@ void CConnman::ThreadDNSAddressSeed()
             if (!resolveSource.SetInternal(host)) {
                 continue;
             }
-            if (LookupHost(host.c_str(), vIPs, 0, true))
+            unsigned int nMaxIPs = 256; // Limits number of IPs learned from a DNS seed
+            if (LookupHost(host.c_str(), vIPs, nMaxIPs, true))
             {
                 for (const CNetAddr& ip : vIPs)
                 {
@@ -1682,8 +1683,7 @@ void CConnman::ProcessOneShot()
     CAddress addr;
     CSemaphoreGrant grant(*semOutbound, true);
     if (grant) {
-        if (!OpenNetworkConnection(addr, false, &grant, strDest.c_str(), true))
-            AddOneShot(strDest);
+        OpenNetworkConnection(addr, false, &grant, strDest.c_str(), true);
     }
 }
 
@@ -1953,29 +1953,29 @@ void CConnman::ThreadOpenAddedConnections()
 }
 
 // if successful, this moves the passed grant to the constructed node
-bool CConnman::OpenNetworkConnection(const CAddress& addrConnect, bool fCountFailure, CSemaphoreGrant *grantOutbound, const char *pszDest, bool fOneShot, bool fFeeler, bool manual_connection)
+void CConnman::OpenNetworkConnection(const CAddress& addrConnect, bool fCountFailure, CSemaphoreGrant *grantOutbound, const char *pszDest, bool fOneShot, bool fFeeler, bool manual_connection)
 {
     //
     // Initiate outbound network connection
     //
     if (interruptNet) {
-        return false;
+        return;
     }
     if (!fNetworkActive) {
-        return false;
+        return;
     }
     if (!pszDest) {
         if (IsLocal(addrConnect) ||
             FindNode((CNetAddr)addrConnect) || IsBanned(addrConnect) ||
             FindNode(addrConnect.ToStringIPPort()))
-            return false;
+            return;
     } else if (FindNode(std::string(pszDest)))
-        return false;
+        return;
 
     CNode* pnode = ConnectNode(addrConnect, pszDest, fCountFailure);
 
     if (!pnode)
-        return false;
+        return;
     if (grantOutbound)
         grantOutbound->MoveTo(pnode->grantOutbound);
     if (fOneShot)
@@ -1990,8 +1990,6 @@ bool CConnman::OpenNetworkConnection(const CAddress& addrConnect, bool fCountFai
         LOCK(cs_vNodes);
         vNodes.push_back(pnode);
     }
-
-    return true;
 }
 
 void CConnman::ThreadMessageHandler()
