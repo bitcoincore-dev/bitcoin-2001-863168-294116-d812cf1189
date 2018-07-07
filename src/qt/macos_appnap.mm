@@ -18,8 +18,7 @@ CAppNapInhibitor::CAppNapInhibitor(const char* strReason) : d(new Private)
 {
 #if defined(MAC_OS_X_VERSION_MAX_ALLOWED) &&  MAC_OS_X_VERSION_MAX_ALLOWED >= 1090
     const NSActivityOptions activityOptions =
-    (NSActivityUserInitiatedAllowingIdleSystemSleep |
-     NSActivityLatencyCritical) &
+    NSActivityUserInitiatedAllowingIdleSystemSleep &
     ~(NSActivitySuddenTerminationDisabled |
       NSActivityAutomaticTerminationDisabled);
 
