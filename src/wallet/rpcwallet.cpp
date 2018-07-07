@@ -35,21 +35,57 @@
 
 #include <univalue.h>
 
-static const std::string WALLET_ENDPOINT_BASE = "/wallet/";
+void JSONRPCRequestWalletResolver(JSONRPCRequest& jreq, const HTTPRequest& httpreq)
+{
+    static const std::string WALLET_ENDPOINT_BASE = "/wallet/";
+
+    jreq.wallet = nullptr;
+    std::string requestedWallet;
+    if (jreq.URI.substr(0, WALLET_ENDPOINT_BASE.size()) == WALLET_ENDPOINT_BASE) {
+        // wallet endpoint was used
+        requestedWallet = urlDecode(jreq.URI.substr(WALLET_ENDPOINT_BASE.size()));
+    }
+
+    if (jreq.authorized_wallet_name.empty()) {
+        // Any wallet is permitted; select by endpoint, or use the sole wallet
+        jreq.wallet = nullptr;
+        if (!requestedWallet.empty()) {
+            for (CWalletRef pwallet : ::vpwallets) {
+                if (pwallet->GetName() == requestedWallet) {
+                    jreq.wallet = pwallet;
+                }
+            }
+            if (!jreq.wallet) {
+                throw JSONRPCError(RPC_WALLET_NOT_FOUND, "Requested wallet does not exist or is not loaded");
+            }
+        } else if (::vpwallets.size() == 1) {
+            jreq.wallet = ::vpwallets[0];
+        }
+    } else if (jreq.authorized_wallet_name == "-") {
+        // Block wallet access always
+        if (!requestedWallet.empty()) {
+            throw JSONRPCError(RPC_WALLET_NOT_FOUND, "Requested wallet does not exist or is not loaded");
+        }
+    } else {
+        // Select specifically a named wallet
+        if (!(requestedWallet.empty() || requestedWallet == jreq.authorized_wallet_name)) {
+            throw JSONRPCError(RPC_WALLET_NOT_FOUND, "Requested wallet does not exist or is not loaded");
+        }
+        for (CWalletRef pwallet : vpwallets) {
+            if (jreq.authorized_wallet_name == pwallet->GetName()) {
+                jreq.wallet = pwallet;
+            }
+        }
+    }
+}
 
 CWallet *GetWalletForJSONRPCRequest(const JSONRPCRequest& request)
 {
-    if (request.URI.substr(0, WALLET_ENDPOINT_BASE.size()) == WALLET_ENDPOINT_BASE) {
-        // wallet endpoint was used
-        std::string requestedWallet = urlDecode(request.URI.substr(WALLET_ENDPOINT_BASE.size()));
-        for (CWalletRef pwallet : ::vpwallets) {
-            if (pwallet->GetName() == requestedWallet) {
-                return pwallet;
-            }
-        }
-        throw JSONRPCError(RPC_WALLET_NOT_FOUND, "Requested wallet does not exist or is not loaded");
+    if (request.fHelp && (!request.wallet) && ::vpwallets.size() > 0) {
+        return ::vpwallets[0];
     }
-    return ::vpwallets.size() == 1 || (request.fHelp && ::vpwallets.size() > 0) ? ::vpwallets[0] : nullptr;
+
+    return request.wallet;
 }
 
 std::string HelpRequiringPassphrase(CWallet * const pwallet)

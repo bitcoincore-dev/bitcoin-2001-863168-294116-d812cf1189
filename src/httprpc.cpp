@@ -18,9 +18,22 @@
 #include <stdio.h>
 
 #include <boost/algorithm/string.hpp> // boost::trim
+#include <boost/signals2/signal.hpp>
 
 /** WWW-Authenticate to present with 401 Unauthorized response */
 static const char* WWW_AUTH_HEADER_DATA = "Basic realm=\"jsonrpc\"";
+
+boost::signals2::signal<void (JSONRPCRequest&, const HTTPRequest&)> PrepareJSONRPCRequestCallbacks;
+
+void RegisterJSONRPCRequestPreparer(const JSONRPCRequestPreparer& preparer)
+{
+    PrepareJSONRPCRequestCallbacks.connect(preparer);
+}
+
+void UnregisterJSONRPCRequestPreparer(const JSONRPCRequestPreparer& preparer)
+{
+    PrepareJSONRPCRequestCallbacks.disconnect(preparer);
+}
 
 /** Simple one-shot callback timer to be used by the RPC mechanism to e.g.
  * re-lock the wallet.
@@ -83,7 +96,7 @@ static void JSONErrorReply(HTTPRequest* req, const UniValue& objError, const Uni
 
 //This function checks username and password against -rpcauth
 //entries from config file.
-static bool multiUserAuthorized(std::string strUserPass)
+static bool multiUserAuthorized(std::string strUserPass, std::string& out_wallet_name)
 {    
     if (strUserPass.find(':') == std::string::npos) {
         return false;
@@ -95,7 +108,7 @@ static bool multiUserAuthorized(std::string strUserPass)
         //Search for multi-user login/pass "rpcauth" from config
         std::vector<std::string> vFields;
         boost::split(vFields, strRPCAuth, boost::is_any_of(":$"));
-        if (vFields.size() != 3) {
+        if (vFields.size() < 3 || vFields.size() > 4) {
             //Incorrect formatting in config file
             continue;
         }
@@ -116,13 +129,16 @@ static bool multiUserAuthorized(std::string strUserPass)
         std::string strHashFromPass = HexStr(hexvec);
 
         if (TimingResistantEqual(strHashFromPass, strHash)) {
+            if (vFields.size() > 3) {
+                out_wallet_name = vFields[3];
+            }
             return true;
         }
     }
     return false;
 }
 
-static bool RPCAuthorized(const std::string& strAuth, std::string& strAuthUsernameOut)
+static bool RPCAuthorized(const std::string& strAuth, std::string& strAuthUsernameOut, std::string& out_wallet_name)
 {
     if (strRPCUserColonPass.empty()) // Belt-and-suspenders measure if InitRPCAuthentication was not called
         return false;
@@ -139,7 +155,7 @@ static bool RPCAuthorized(const std::string& strAuth, std::string& strAuthUserna
     if (TimingResistantEqual(strUserPass, strRPCUserColonPass)) {
         return true;
     }
-    return multiUserAuthorized(strUserPass);
+    return multiUserAuthorized(strUserPass, out_wallet_name);
 }
 
 static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
@@ -159,7 +175,7 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
 
     JSONRPCRequest jreq;
     jreq.peerAddr = req->GetPeer().ToString();
-    if (!RPCAuthorized(authHeader.second, jreq.authUser)) {
+    if (!RPCAuthorized(authHeader.second, jreq.authUser, jreq.authorized_wallet_name)) {
         LogPrintf("ThreadRPCServer incorrect password attempt from %s\n", jreq.peerAddr);
 
         /* Deter brute-forcing
@@ -180,6 +196,8 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
 
         // Set the URI
         jreq.URI = req->GetURI();
+
+        PrepareJSONRPCRequestCallbacks(jreq, *req);
 
         std::string strReply;
         // singleton request
@@ -227,6 +245,8 @@ static bool InitRPCAuthentication()
     return true;
 }
 
+void JSONRPCRequestWalletResolver(JSONRPCRequest&, const HTTPRequest&);
+
 bool StartHTTPRPC()
 {
     LogPrint(BCLog::RPC, "Starting HTTP RPC server\n");
@@ -237,6 +257,8 @@ bool StartHTTPRPC()
 #ifdef ENABLE_WALLET
     // ifdef can be removed once we switch to better endpoint support and API versioning
     RegisterHTTPHandler("/wallet/", false, HTTPReq_JSONRPC);
+
+    RegisterJSONRPCRequestPreparer(JSONRPCRequestWalletResolver);
 #endif
     assert(EventBase());
     httpRPCTimerInterface = MakeUnique<HTTPRPCTimerInterface>(EventBase());
@@ -253,6 +275,11 @@ void StopHTTPRPC()
 {
     LogPrint(BCLog::RPC, "Stopping HTTP RPC server\n");
     UnregisterHTTPHandler("/", true);
+#ifdef ENABLE_WALLET
+    UnregisterHTTPHandler("/wallet/", false);
+
+    UnregisterJSONRPCRequestPreparer(JSONRPCRequestWalletResolver);
+#endif
     if (httpRPCTimerInterface) {
         RPCUnsetTimerInterface(httpRPCTimerInterface.get());
         httpRPCTimerInterface.reset();
