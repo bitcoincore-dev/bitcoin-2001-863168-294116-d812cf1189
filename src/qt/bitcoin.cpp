@@ -53,7 +53,7 @@
 #include <QSslConfiguration>
 
 #if defined(Q_OS_MACOS)
-#include "macos_appnap.h"
+#include <qt/macos_appnap.h>
 #endif
 
 #if defined(QT_STATICPLUGIN)
