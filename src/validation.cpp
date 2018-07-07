@@ -1149,14 +1149,20 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
     return true;
 }
 
-bool ReadRawBlockFromDisk(std::vector<uint8_t>& block, const CDiskBlockPos& pos, const CMessageHeader::MessageStartChars& message_start)
+bool ReadRawBlockFromDisk(std::vector<uint8_t>& block, const CDiskBlockPos& pos, const CMessageHeader::MessageStartChars& message_start, const bool lowprio)
 {
     CDiskBlockPos hpos = pos;
     hpos.nPos -= 8; // Seek back 8 bytes for meta header
+
+    {
+    IOPRIO_IDLER(lowprio);
+
     CAutoFile filein(OpenBlockFile(hpos, true), SER_DISK, CLIENT_VERSION);
     if (filein.IsNull()) {
         return error("%s: OpenBlockFile failed for %s", __func__, pos.ToString());
     }
+
+    ioprio_set_file_idle(filein.Get());
 
     try {
         CMessageHeader::MessageStartChars blk_start;
@@ -1181,10 +1187,12 @@ bool ReadRawBlockFromDisk(std::vector<uint8_t>& block, const CDiskBlockPos& pos,
         return error("%s: Read from block file failed: %s for %s", __func__, e.what(), pos.ToString());
     }
 
+    }  // end IOPRIO_IDLER scope
+
     return true;
 }
 
-bool ReadRawBlockFromDisk(std::vector<uint8_t>& block, const CBlockIndex* pindex, const CMessageHeader::MessageStartChars& message_start)
+bool ReadRawBlockFromDisk(std::vector<uint8_t>& block, const CBlockIndex* pindex, const CMessageHeader::MessageStartChars& message_start, const bool lowprio)
 {
     CDiskBlockPos block_pos;
     {
@@ -1192,7 +1200,7 @@ bool ReadRawBlockFromDisk(std::vector<uint8_t>& block, const CBlockIndex* pindex
         block_pos = pindex->GetBlockPos();
     }
 
-    return ReadRawBlockFromDisk(block, block_pos, message_start);
+    return ReadRawBlockFromDisk(block, block_pos, message_start, lowprio);
 }
 
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
