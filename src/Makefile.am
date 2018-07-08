@@ -155,6 +155,7 @@ BITCOIN_CORE_H = \
   ui_interface.h \
   undo.h \
   util.h \
+  utilioprio.h \
   utilmoneystr.h \
   utiltime.h \
   validation.h \
@@ -358,6 +359,7 @@ libbitcoin_util_a_SOURCES = \
   sync.cpp \
   threadinterrupt.cpp \
   util.cpp \
+  utilioprio.cpp \
   utilmoneystr.cpp \
   utilstrencodings.cpp \
   utiltime.cpp \

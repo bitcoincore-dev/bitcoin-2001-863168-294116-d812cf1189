@@ -351,7 +351,7 @@ case $host in
        AC_MSG_ERROR("windres not found")
      fi
 
-     CPPFLAGS="$CPPFLAGS -D_MT -DWIN32 -D_WINDOWS -DBOOST_THREAD_USE_LIB"
+     CPPFLAGS="$CPPFLAGS -D_MT -DWIN32 -D_WINDOWS -D_WIN32_WINNT=0x0600 -D_WIN32_IE=0x0501 -DWIN32_LEAN_AND_MEAN -DBOOST_THREAD_USE_LIB"
      LEVELDB_TARGET_FLAGS="-DOS_WINDOWS"
      if test "x$CXXFLAGS_overridden" = "xno"; then
        CXXFLAGS="$CXXFLAGS -w"
@@ -612,6 +612,69 @@ AC_CHECK_DECLS([bswap_16, bswap_32, bswap_64],,,
                  #endif])
 
 AC_CHECK_DECLS([__builtin_clz, __builtin_clzl, __builtin_clzll])
+
+AC_MSG_CHECKING(for iopolicy functions)
+AC_COMPILE_IFELSE([
+  AC_LANG_PROGRAM([[
+    #include <sys/resource.h>
+  ]],[[
+    int x = getiopolicy_np(IOPOL_TYPE_DISK, IOPOL_SCOPE_THREAD);
+    setiopolicy_np(IOPOL_TYPE_DISK, IOPOL_SCOPE_THREAD, x);
+  ]])
+],[
+  have_iopolicy=yes
+  AC_DEFINE(HAVE_IOPOLICY,1,[Define this symbol if you have iopolicy functions])
+],[
+  have_iopolicy=no
+])
+AC_MSG_RESULT($have_iopolicy)
+
+if test x$have_iopolicy = xno; then
+  AC_MSG_CHECKING(for ioprio syscalls)
+  AC_COMPILE_IFELSE([
+    AC_LANG_PROGRAM([[
+      #define _GNU_SOURCE
+      #include <unistd.h>
+      #include <sys/syscall.h>
+    ]],[[
+      int x = syscall(SYS_ioprio_get, 1, 0);
+      syscall(SYS_ioprio_set, 1, 0, x);
+    ]])
+  ],[
+    have_ioprio_syscall=yes
+    AC_DEFINE(HAVE_IOPRIO_SYSCALL,1,[Define this symbol if you have ioprio syscalls])
+  ],[
+    have_ioprio_syscall=no
+  ])
+  AC_MSG_RESULT($have_ioprio_syscall)
+else
+  have_ioprio_syscall=no
+fi
+
+AC_MSG_CHECKING(for Windows file I/O priority functions)
+AC_COMPILE_IFELSE([
+  AC_LANG_PROGRAM([[
+    #define _WIN32_WINNT 0x0600
+    #include <windows.h>
+    #include <io.h>
+    #include <stdio.h>
+  ]],[[
+    static const FILE_IO_PRIORITY_HINT_INFO priorityHint = {
+        .PriorityHint = IoPriorityHintLow,
+    };
+    FILE * const F = fopen("test", "r");
+    HANDLE hFile = _get_osfhandle(_fileno(F));
+
+    SetFileInformationByHandle(hFile, FileIoPriorityHintInfo, &priorityHint, sizeof(priorityHint));
+  ]])
+],[
+  have_windows_ioprio=yes
+  AC_DEFINE(HAVE_WINDOWS_IOPRIO,1,[Define this symbol if you have Windows I/O priority functions])
+],[
+  have_windows_ioprio=no
+])
+AC_MSG_RESULT($have_windows_ioprio)
+
 
 dnl Check for MSG_NOSIGNAL
 AC_MSG_CHECKING(for MSG_NOSIGNAL)
@@ -1207,6 +1270,9 @@ AM_CONDITIONAL([ENABLE_BENCH],[test x$use_bench = xyes])
 AM_CONDITIONAL([USE_QRCODE], [test x$use_qr = xyes])
 AM_CONDITIONAL([USE_LCOV],[test x$use_lcov = xyes])
 AM_CONDITIONAL([GLIBC_BACK_COMPAT],[test x$use_glibc_compat = xyes])
+AM_CONDITIONAL([HAVE_IOPOLICY],[test x$have_iopolicy = xyes])
+AM_CONDITIONAL([HAVE_IOPRIO_SYSCALL],[test x$have_ioprio_syscall = xyes])
+AM_CONDITIONAL([HAVE_WINDOWS_IOPRIO],[test x$have_windows_ioprio = xyes])
 AM_CONDITIONAL([HARDEN],[test x$use_hardening = xyes])
 AM_CONDITIONAL([ENABLE_HWCRC32],[test x$enable_hwcrc32 = xyes])
 AM_CONDITIONAL([USE_ASM],[test x$use_asm = xyes])
