@@ -16,6 +16,7 @@
 #include <chainparams.h>
 #include <compat/sanity.h>
 #include <consensus/amount.h>
+#include <dbwrapper.h>
 #include <deploymentstatus.h>
 #include <fs.h>
 #include <hash.h>
