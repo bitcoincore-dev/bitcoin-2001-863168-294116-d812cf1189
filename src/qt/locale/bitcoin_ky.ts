@@ -25,6 +25,9 @@
     <name>AskPassphraseDialog</name>
     </context>
 <context>
+    <name>BanTableModel</name>
+    </context>
+<context>
     <name>BitcoinGUI</name>
     <message>
         <source>&amp;Transactions</source>
@@ -68,21 +71,10 @@
     </message>
     </context>
 <context>
-    <name>ClientModel</name>
-    </context>
-<context>
     <name>CoinControlDialog</name>
-    <message>
-        <source>Address</source>
-        <translation>Дарек</translation>
-    </message>
     <message>
         <source>Date</source>
         <translation>Дата</translation>
-    </message>
-    <message>
-        <source>none</source>
-        <translation>жок</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -114,6 +106,9 @@
     </message>
     </context>
 <context>
+    <name>ModalOverlay</name>
+    </context>
+<context>
     <name>OpenURIDialog</name>
     </context>
 <context>
@@ -125,6 +120,10 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Тармак</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation>Капчык</translation>
     </message>
     <message>
         <source>&amp;Port:</source>
@@ -153,15 +152,7 @@
     </context>
 <context>
     <name>OverviewPage</name>
-    <message>
-        <source>Wallet</source>
-        <translation>Капчык</translation>
-    </message>
-    <message>
-        <source>out of sync</source>
-        <translation>синхрондоштурулган эмес</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>PaymentServer</name>
     </context>
@@ -170,6 +161,9 @@
     </context>
 <context>
     <name>QObject</name>
+    </context>
+<context>
+    <name>QObject::QObject</name>
     </context>
 <context>
     <name>QRImageWidget</name>
@@ -183,6 +177,10 @@
     <message>
         <source>General</source>
         <translation>Жалпы</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>&amp;Тармак</translation>
     </message>
     <message>
         <source>Name</source>
@@ -203,6 +201,10 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Message:</source>
+        <translation>Билдирүү:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -244,7 +246,7 @@
         <source>(no label)</source>
         <translation>(аты жок)</translation>
     </message>
-    </context>
+</context>
 <context>
     <name>SendCoinsEntry</name>
     <message>
@@ -255,6 +257,9 @@
         <source>Message:</source>
         <translation>Билдирүү:</translation>
     </message>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -301,8 +306,8 @@
         <translation>Дата</translation>
     </message>
     <message>
-        <source>Address</source>
-        <translation>Дарек</translation>
+        <source>(no label)</source>
+        <translation>(аты жок)</translation>
     </message>
     </context>
 <context>

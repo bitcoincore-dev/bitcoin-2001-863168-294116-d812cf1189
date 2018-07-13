@@ -1,167 +1,115 @@
 Mac OS X Build Instructions and Notes
 ====================================
-This guide will show you how to build bitcoind(headless client) for OSX.
-
-Notes
------
-
-* Tested on OS X 10.6 through 10.9 on 64-bit Intel processors only.
-Older OSX releases or 32-bit processors are no longer supported.
-
-* All of the commands should be executed in a Terminal application. The
-built-in one is located in `/Applications/Utilities`.
+The commands in this guide should be executed in a Terminal application.
+The built-in one is located in `/Applications/Utilities/Terminal.app`.
 
 Preparation
 -----------
+Install the OS X command line tools:
 
-You need to install XCode with all the options checked so that the compiler
-and everything is available in /usr not just /Developer. XCode should be
-available on your OS X installation media, but if not, you can get the
-current version from https://developer.apple.com/xcode/. If you install
-Xcode 4.3 or later, you'll need to install its command line tools. This can
-be done in `Xcode > Preferences > Downloads > Components` and generally must
-be re-done or updated every time Xcode is updated.
+`xcode-select --install`
 
-There's also an assumption that you already have `git` installed. If
-not, it's the path of least resistance to install [Github for Mac](https://mac.github.com/)
-(OS X 10.7+) or
-[Git for OS X](https://code.google.com/p/git-osx-installer/). It is also
-available via Homebrew or MacPorts.
+When the popup appears, click `Install`.
 
-You will also need to install [Homebrew](http://brew.sh)
-or [MacPorts](https://www.macports.org/) in order to install library
-dependencies. It's largely a religious decision which to choose, however, Homebrew
-is now used for building release versions.
+Then install [Homebrew](https://brew.sh).
 
-The installation of the actual dependencies is covered in the Instructions
-sections below.
-
-Instructions: MacPorts
+Dependencies
 ----------------------
 
-### Install dependencies
+    brew install automake berkeley-db4 libtool boost miniupnpc openssl pkg-config protobuf python3 qt libevent
 
-    sudo port install boost db48@+no_java openssl miniupnpc autoconf pkgconfig automake libtool
+See [dependencies.md](dependencies.md) for a complete overview.
 
-Optional: install Qt4
+If you want to build the disk image with `make deploy` (.dmg / optional), you need RSVG
 
-    sudo port install qt4-mac qrencode protobuf-cpp
+    brew install librsvg
 
-### Building `bitcoind`
+NOTE: Building with Qt4 is still supported, however, could result in a broken UI. Building with Qt5 is recommended.
 
-1. Clone the github tree to get the source code and go into the directory.
+Berkeley DB
+-----------
+It is recommended to use Berkeley DB 4.8. If you have to build it yourself,
+you can use [the installation script included in contrib/](/contrib/install_db4.sh)
+like so
 
-        git clone git@github.com:bitcoin/bitcoin.git bitcoin
-        cd bitcoin
-
-2.  Build bitcoind (and Bitcoin-Qt, if configured):
-
-        ./autogen.sh
-        ./configure
-        make
-
-3.  It is a good idea to build and run the unit tests, too:
-
-        make check
-
-Instructions: Homebrew
-----------------------
-
-#### Install dependencies using Homebrew
-
-        brew install autoconf automake libtool boost miniupnpc openssl pkg-config protobuf qt
-
-#### Installing berkeley-db4 using Homebrew
-
-The homebrew package for berkeley-db4 has been broken for some time.  It will install without Java though.
-
-Running this command takes you into brew's interactive mode, which allows you to configure, make, and install by hand:
-```
-$ brew install https://raw.github.com/mxcl/homebrew/master/Library/Formula/berkeley-db4.rb -–without-java 
+```shell
+./contrib/install_db4.sh .
 ```
 
-These rest of these commands are run inside brew interactive mode:
-```
-/private/tmp/berkeley-db4-UGpd0O/db-4.8.30 $ cd ..
-/private/tmp/berkeley-db4-UGpd0O $ db-4.8.30/dist/configure --prefix=/usr/local/Cellar/berkeley-db4/4.8.30 --mandir=/usr/local/Cellar/berkeley-db4/4.8.30/share/man --enable-cxx
-/private/tmp/berkeley-db4-UGpd0O $ make
-/private/tmp/berkeley-db4-UGpd0O $ make install
-/private/tmp/berkeley-db4-UGpd0O $ exit
-```
+from the root of the repository.
 
-After exiting, you'll get a warning that the install is keg-only, which means it wasn't symlinked to `/usr/local`.  You don't need it to link it to build bitcoin, but if you want to, here's how:
+**Note**: You only need Berkeley DB if the wallet is enabled (see the section *Disable-Wallet mode* below).
 
-    $ brew --force link berkeley-db4
-
-
-### Building `bitcoind`
-
-1. Clone the github tree to get the source code and go into the directory.
-
-        git clone https://github.com/bitcoin/bitcoin.git
-        cd bitcoin
-
-2.  Build bitcoind:
-
-        ./autogen.sh
-        ./configure
-        make
-
-3.  It is also a good idea to build and run the unit tests:
-
-        make check
-
-Creating a release build
+Build Bitcoin Core
 ------------------------
-You can ignore this section if you are building `bitcoind` for your own use.
 
-bitcoind/bitcoin-cli binaries are not included in the Bitcoin-Qt.app bundle.
+1. Clone the bitcoin source code and cd into `bitcoin`
 
-If you are building `bitcoind` or `Bitcoin-Qt` for others, your build machine should be set up
-as follows for maximum compatibility:
+        git clone https://github.com/bitcoin/bitcoin
+        cd bitcoin
 
-All dependencies should be compiled with these flags:
+2.  Build bitcoin-core:
 
- -mmacosx-version-min=10.6
- -arch x86_64
- -isysroot $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk
+    Configure and build the headless bitcoin binaries as well as the GUI (if Qt is found).
 
-For MacPorts, that means editing your macports.conf and setting
-`macosx_deployment_target` and `build_arch`:
+    You can disable the GUI build by passing `--without-gui` to configure.
 
-    macosx_deployment_target=10.6
-    build_arch=x86_64
+        ./autogen.sh
+        ./configure
+        make
 
-... and then uninstalling and re-installing, or simply rebuilding, all ports.
+3.  It is recommended to build and run the unit tests:
 
-As of December 2012, the `boost` port does not obey `macosx_deployment_target`.
-Download `https://gavinandresen-bitcoin.s3.amazonaws.com/boost_macports_fix.zip`
-for a fix.
+        make check
 
-Once dependencies are compiled, see release-process.md for how the Bitcoin-Qt.app
-bundle is packaged and signed to create the .dmg disk image that is distributed.
+4.  You can also create a .dmg that contains the .app bundle (optional):
+
+        make deploy
 
 Running
 -------
 
-It's now available at `./bitcoind`, provided that you are still in the `src`
-directory. We have to first create the RPC configuration file, though.
+Bitcoin Core is now available at `./src/bitcoind`
 
-Run `./bitcoind` to get the filename where it should be put, or just try these
-commands:
+Before running, it's recommended you create an RPC configuration file.
 
     echo -e "rpcuser=bitcoinrpc\nrpcpassword=$(xxd -l 16 -p /dev/urandom)" > "/Users/${USER}/Library/Application Support/Bitcoin/bitcoin.conf"
+
     chmod 600 "/Users/${USER}/Library/Application Support/Bitcoin/bitcoin.conf"
 
-The next time you run it, it will start downloading the blockchain, but it won't
-output anything while it's doing this. This process may take several hours;
-you can monitor its process by looking at the debug.log file, like this:
+The first time you run bitcoind, it will start downloading the blockchain. This process could take several hours.
+
+You can monitor the download process by looking at the debug.log file:
 
     tail -f $HOME/Library/Application\ Support/Bitcoin/debug.log
 
 Other commands:
 -------
 
-    ./bitcoind -daemon # to start the bitcoin daemon.
-    ./bitcoin-cli --help  # for a list of command-line options.
-    ./bitcoin-cli help    # When the daemon is running, to get a list of RPC commands
+    ./src/bitcoind -daemon # Starts the bitcoin daemon.
+    ./src/bitcoin-cli --help # Outputs a list of command-line options.
+    ./src/bitcoin-cli help # Outputs a list of RPC commands when the daemon is running.
+
+Using Qt Creator as IDE
+------------------------
+You can use Qt Creator as an IDE, for bitcoin development.
+Download and install the community edition of [Qt Creator](https://www.qt.io/download/).
+Uncheck everything except Qt Creator during the installation process.
+
+1. Make sure you installed everything through Homebrew mentioned above
+2. Do a proper ./configure --enable-debug
+3. In Qt Creator do "New Project" -> Import Project -> Import Existing Project
+4. Enter "bitcoin-qt" as project name, enter src/qt as location
+5. Leave the file selection as it is
+6. Confirm the "summary page"
+7. In the "Projects" tab select "Manage Kits..."
+8. Select the default "Desktop" kit and select "Clang (x86 64bit in /usr/bin)" as compiler
+9. Select LLDB as debugger (you might need to set the path to your installation)
+10. Start debugging with Qt Creator
+
+Notes
+-----
+
+* Tested on OS X 10.8 through 10.13 on 64-bit Intel processors only.
+
+* Building with downloaded Qt binaries is not officially supported. See the notes in [#7714](https://github.com/bitcoin/bitcoin/issues/7714)

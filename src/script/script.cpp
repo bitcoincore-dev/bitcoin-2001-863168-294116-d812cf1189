@@ -1,13 +1,12 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2013 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2017 The Bitcoin Core developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "script.h"
+#include <script/script.h>
 
-#include <boost/foreach.hpp>
-
-using namespace std;
+#include <tinyformat.h>
+#include <utilstrencodings.h>
 
 const char* GetOpName(opcodetype opcode)
 {
@@ -128,10 +127,10 @@ const char* GetOpName(opcodetype opcode)
     case OP_CHECKMULTISIG          : return "OP_CHECKMULTISIG";
     case OP_CHECKMULTISIGVERIFY    : return "OP_CHECKMULTISIGVERIFY";
 
-    // expanson
+    // expansion
     case OP_NOP1                   : return "OP_NOP1";
-    case OP_NOP2                   : return "OP_NOP2";
-    case OP_NOP3                   : return "OP_NOP3";
+    case OP_CHECKLOCKTIMEVERIFY    : return "OP_CHECKLOCKTIMEVERIFY";
+    case OP_CHECKSEQUENCEVERIFY    : return "OP_CHECKSEQUENCEVERIFY";
     case OP_NOP4                   : return "OP_NOP4";
     case OP_NOP5                   : return "OP_NOP5";
     case OP_NOP6                   : return "OP_NOP6";
@@ -143,7 +142,7 @@ const char* GetOpName(opcodetype opcode)
     case OP_INVALIDOPCODE          : return "OP_INVALIDOPCODE";
 
     // Note:
-    //  The template matching params OP_SMALLDATA/etc are defined in opcodetype enum
+    //  The template matching params OP_SMALLINTEGER/etc are defined in opcodetype enum
     //  as kind of implementation hack, they are *NOT* real opcodes.  If found in real
     //  Script, just let the default: case deal with them.
 
@@ -169,7 +168,7 @@ unsigned int CScript::GetSigOpCount(bool fAccurate) const
             if (fAccurate && lastOpcode >= OP_1 && lastOpcode <= OP_16)
                 n += DecodeOP_N(lastOpcode);
             else
-                n += 20;
+                n += MAX_PUBKEYS_PER_MULTISIG;
         }
         lastOpcode = opcode;
     }
@@ -185,18 +184,18 @@ unsigned int CScript::GetSigOpCount(const CScript& scriptSig) const
     // get the last item that the scriptSig
     // pushes onto the stack:
     const_iterator pc = scriptSig.begin();
-    vector<unsigned char> data;
+    std::vector<unsigned char> vData;
     while (pc < scriptSig.end())
     {
         opcodetype opcode;
-        if (!scriptSig.GetOp(pc, opcode, data))
+        if (!scriptSig.GetOp(pc, opcode, vData))
             return 0;
         if (opcode > OP_16)
             return 0;
     }
 
     /// ... and return its opcount:
-    CScript subscript(data.begin(), data.end());
+    CScript subscript(vData.begin(), vData.end());
     return subscript.GetSigOpCount(true);
 }
 
@@ -204,14 +203,39 @@ bool CScript::IsPayToScriptHash() const
 {
     // Extra-fast test for pay-to-script-hash CScripts:
     return (this->size() == 23 &&
-            this->at(0) == OP_HASH160 &&
-            this->at(1) == 0x14 &&
-            this->at(22) == OP_EQUAL);
+            (*this)[0] == OP_HASH160 &&
+            (*this)[1] == 0x14 &&
+            (*this)[22] == OP_EQUAL);
 }
 
-bool CScript::IsPushOnly() const
+bool CScript::IsPayToWitnessScriptHash() const
 {
-    const_iterator pc = begin();
+    // Extra-fast test for pay-to-witness-script-hash CScripts:
+    return (this->size() == 34 &&
+            (*this)[0] == OP_0 &&
+            (*this)[1] == 0x20);
+}
+
+// A witness program is any valid CScript that consists of a 1-byte push opcode
+// followed by a data push between 2 and 40 bytes.
+bool CScript::IsWitnessProgram(int& version, std::vector<unsigned char>& program) const
+{
+    if (this->size() < 4 || this->size() > 42) {
+        return false;
+    }
+    if ((*this)[0] != OP_0 && ((*this)[0] < OP_1 || (*this)[0] > OP_16)) {
+        return false;
+    }
+    if ((size_t)((*this)[1] + 2) == this->size()) {
+        version = DecodeOP_N((opcodetype)(*this)[0]);
+        program = std::vector<unsigned char>(this->begin() + 2, this->end());
+        return true;
+    }
+    return false;
+}
+
+bool CScript::IsPushOnly(const_iterator pc) const
+{
     while (pc < end())
     {
         opcodetype opcode;
@@ -219,7 +243,7 @@ bool CScript::IsPushOnly() const
             return false;
         // Note that IsPushOnly() *does* consider OP_RESERVED to be a
         // push-type opcode, however execution of OP_RESERVED fails, so
-        // it's not relevant to P2SH as the scriptSig would fail prior to
+        // it's not relevant to P2SH/BIP62 as the scriptSig would fail prior to
         // the P2SH special validation code being executed.
         if (opcode > OP_16)
             return false;
@@ -227,69 +251,32 @@ bool CScript::IsPushOnly() const
     return true;
 }
 
-bool CScript::HasCanonicalPushes() const
+bool CScript::IsPushOnly() const
 {
-    const_iterator pc = begin();
-    while (pc < end())
-    {
+    return this->IsPushOnly(begin());
+}
+
+std::string CScriptWitness::ToString() const
+{
+    std::string ret = "CScriptWitness(";
+    for (unsigned int i = 0; i < stack.size(); i++) {
+        if (i) {
+            ret += ", ";
+        }
+        ret += HexStr(stack[i]);
+    }
+    return ret + ")";
+}
+
+bool CScript::HasValidOps() const
+{
+    CScript::const_iterator it = begin();
+    while (it < end()) {
         opcodetype opcode;
-        std::vector<unsigned char> data;
-        if (!GetOp(pc, opcode, data))
+        std::vector<unsigned char> item;
+        if (!GetOp(it, opcode, item) || opcode > MAX_OPCODE || item.size() > MAX_SCRIPT_ELEMENT_SIZE) {
             return false;
-        if (opcode > OP_16)
-            continue;
-        if (opcode < OP_PUSHDATA1 && opcode > OP_0 && (data.size() == 1 && data[0] <= 16))
-            // Could have used an OP_n code, rather than a 1-byte push.
-            return false;
-        if (opcode == OP_PUSHDATA1 && data.size() < OP_PUSHDATA1)
-            // Could have used a normal n-byte push, rather than OP_PUSHDATA1.
-            return false;
-        if (opcode == OP_PUSHDATA2 && data.size() <= 0xFF)
-            // Could have used an OP_PUSHDATA1.
-            return false;
-        if (opcode == OP_PUSHDATA4 && data.size() <= 0xFFFF)
-            // Could have used an OP_PUSHDATA2.
-            return false;
+        }
     }
     return true;
-}
-
-class CScriptVisitor : public boost::static_visitor<bool>
-{
-private:
-    CScript *script;
-public:
-    CScriptVisitor(CScript *scriptin) { script = scriptin; }
-
-    bool operator()(const CNoDestination &dest) const {
-        script->clear();
-        return false;
-    }
-
-    bool operator()(const CKeyID &keyID) const {
-        script->clear();
-        *script << OP_DUP << OP_HASH160 << keyID << OP_EQUALVERIFY << OP_CHECKSIG;
-        return true;
-    }
-
-    bool operator()(const CScriptID &scriptID) const {
-        script->clear();
-        *script << OP_HASH160 << scriptID << OP_EQUAL;
-        return true;
-    }
-};
-
-void CScript::SetDestination(const CTxDestination& dest)
-{
-    boost::apply_visitor(CScriptVisitor(this), dest);
-}
-
-void CScript::SetMultisig(int nRequired, const std::vector<CPubKey>& keys)
-{
-    this->clear();
-
-    *this << EncodeOP_N(nRequired);
-    BOOST_FOREACH(const CPubKey& key, keys)
-        *this << key;
-    *this << EncodeOP_N(keys.size()) << OP_CHECKMULTISIG;
 }
