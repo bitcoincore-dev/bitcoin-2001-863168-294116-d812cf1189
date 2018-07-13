@@ -449,14 +449,6 @@ if test x$system_leveldb != xno; then
   ],[
     AC_MSG_ERROR([leveldb library not found; using --with-system-leveldb is not supported anyway])
   ])
-  TEMP_LIBS="$LIBS"
-  LIBS="$LIBS $LIBLEVELDB"
-  AC_CHECK_LIB([memenv],[main],[
-    LIBMEMENV=-lmemenv
-  ],[
-    AC_MSG_ERROR([LevelDB's memenv library not found; using --with-system-leveldb is not supported anyway])
-  ])
-  LIBS="$TEMP_LIBS"
   AC_CHECK_HEADER([leveldb/filter_policy.h],[],[
     AC_MSG_ERROR([LevelDB headers not found; using --with-system-leveldb is not supported anyway])
   ])
@@ -468,6 +460,34 @@ if test x$system_leveldb != xno; then
       AC_MSG_ERROR([LevelDB headers not found; using --with-system-leveldb is not supported anyway])
     ])
   ])
+
+  AC_MSG_CHECKING([library containing leveldb::NewMemEnv])
+  TEMP_LIBS="$LIBS"
+  TEMP_CPPFLAGS="$CPPFLAGS"
+  CPPFLAGS="$CPPFLAGS $LEVELDB_CPPFLAGS"
+  for searchlib in "" "-lmemenv" ERR; do
+    if test "x$searchlib" = "xERR"; then
+      AC_MSG_RESULT([no])
+      AC_MSG_ERROR([LevelDB's memenv helper not found; using --with-system-leveldb is not supported anyway])
+    fi
+    searchlib="$searchlib $LIBLEVELDB"
+    LIBS="$searchlib $TEMP_LIBS"
+    AC_LINK_IFELSE([AC_LANG_SOURCE([
+        #include <leveldb/env.h>
+        #include <memenv.h>
+
+        int main() {
+            leveldb::Env *myenv = leveldb::NewMemEnv(leveldb::Env::Default());
+            delete myenv;
+        }
+    ])],[
+      AC_MSG_RESULT([$searchlib])
+      LIBMEMENV="$searchlib"
+      break
+    ])
+  done
+  LIBS="$TEMP_LIBS"
+  CPPFLAGS="$TEMP_CPPFLAGS"
 fi
 AM_CONDITIONAL([EMBEDDED_LEVELDB],[test x$system_leveldb = xno])
 AC_SUBST(LEVELDB_CPPFLAGS)
