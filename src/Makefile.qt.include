@@ -112,6 +112,7 @@ QT_TS = \
   qt/locale/bitcoin_tr_TR.ts \
   qt/locale/bitcoin_tr.ts \
   qt/locale/bitcoin_uk.ts \
+  qt/locale/bitcoin_uk_UA.ts \
   qt/locale/bitcoin_ur_PK.ts \
   qt/locale/bitcoin_uz@Cyrl.ts \
   qt/locale/bitcoin_vi.ts \

@@ -289,6 +289,14 @@
         <source>&amp;Options...</source>
         <translation>&amp;አማራጮች...</translation>
     </message>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;የመላኪያ አድራሻዎች...</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;የመቀበያ አድራሻዎች...</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -299,24 +307,54 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;መለያ ስም</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;አድራሻ</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">ስለ %1</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>አድራሻ</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">አማራጮች</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -341,9 +379,17 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;መለያ ስም:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;አድራሻ ቅዳ</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>አድራሻ</translation>
@@ -367,12 +413,20 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">ምረጥ...</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(መለያ ስም የለም)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;መለያ ስም:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -447,5 +501,9 @@
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">አማራጮች:</translation>
+    </message>
     </context>
 </TS>

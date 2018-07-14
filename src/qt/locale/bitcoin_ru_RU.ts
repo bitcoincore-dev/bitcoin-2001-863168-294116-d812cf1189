@@ -314,6 +314,10 @@
         <translation>Открыть &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Кошелёк:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Нажмите для отключения взаимодействия с сетью.</translation>
     </message>
@@ -501,6 +505,10 @@
         <translation>После комиссии:</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation type="unfinished">Количество</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>Дата</translation>
     </message>
@@ -552,6 +560,10 @@
         <translation>Изменить адрес</translation>
     </message>
     <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;Метка</translation>
+    </message>
+    <message>
         <source>&amp;Address</source>
         <translation>&amp;Адрес</translation>
     </message>
@@ -587,6 +599,9 @@
         <translation>Невозможно создать директорию данных здесь.</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -674,6 +689,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Н/Д</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Number of blocks left</source>
@@ -700,6 +722,19 @@
         <translation>Спрятать</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тип</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адрес</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -770,6 +805,10 @@
         <translation>Пробросить порт через &amp;UPnP</translation>
     </message>
     <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Разрешить входящие соеденения</translation>
+    </message>
+    <message>
         <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
         <translation>Подключится к сети Bitcoin через SOCKS5 прокси.</translation>
     </message>
@@ -816,6 +855,10 @@
     <message>
         <source>&amp;Cancel</source>
         <translation>&amp;Отмена</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -910,6 +953,10 @@
 <context>
     <name>QObject</name>
     <message>
+        <source>Amount</source>
+        <translation type="unfinished">Количество</translation>
+    </message>
+    <message>
         <source>Enter a Bitcoin address (e.g. %1)</source>
         <translation>Введите биткоин-адрес (напр. %1)</translation>
     </message>
@@ -933,9 +980,25 @@
         <source>N/A</source>
         <translation>Н/Д</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n час</numerusform><numerusform>%n часа</numerusform><numerusform>%n часов</numerusform><numerusform>%n часов</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n день</numerusform><numerusform>%n дней</numerusform><numerusform>%n дней</numerusform><numerusform>%n дней</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n неделя</numerusform><numerusform>%n недель</numerusform><numerusform>%n недель</numerusform><numerusform>%n недель</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 и %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n год</numerusform><numerusform>%n лет</numerusform><numerusform>%n лет</numerusform><numerusform>%n лет</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -956,6 +1019,16 @@
     <message>
         <source>unknown</source>
         <translation>неизвестно</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакция</translation>
     </message>
 </context>
 <context>
@@ -1035,6 +1108,10 @@
         <translation>Использование памяти</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Кошелёк: </translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Сбросить</translation>
     </message>
@@ -1095,6 +1172,10 @@
         <translation>Ввести %1 для обзора доступных команд.</translation>
     </message>
     <message>
+        <source>Network activity disabled</source>
+        <translation>Взаимодействие с сетью отключено</translation>
+    </message>
+    <message>
         <source>never</source>
         <translation>никогда</translation>
     </message>
@@ -1113,6 +1194,18 @@
 </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Количество:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Метка:</translation>
+    </message>
+    <message>
+        <source>&amp;Message:</source>
+        <translation type="unfinished">&amp;Сообщение:</translation>
+    </message>
     <message>
         <source>Clear all fields of the form.</source>
         <translation>Очистить все поля формы.</translation>
@@ -1161,6 +1254,14 @@
         <translation>QR-код</translation>
     </message>
     <message>
+        <source>Copy &amp;URI</source>
+        <translation type="unfinished">&amp;Копировать URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Копировать адрес</translation>
+    </message>
+    <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;Сохранить изображение...</translation>
     </message>
@@ -1169,8 +1270,16 @@
         <translation>Информация о платеже</translation>
     </message>
     <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>Адрес</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished">Количество</translation>
     </message>
     <message>
         <source>Label</source>
@@ -1271,6 +1380,10 @@
         <translation>Баланс:</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Отправить</translation>
+    </message>
+    <message>
         <source>Copy quantity</source>
         <translation>Копировать количество</translation>
     </message>
@@ -1285,6 +1398,10 @@
     <message>
         <source>or</source>
         <translation>или</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Комиссия за транзакцию</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -1317,6 +1434,18 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Количество:</translation>
+    </message>
+    <message>
+        <source>Pay &amp;To:</source>
+        <translation type="unfinished">&amp;Выполнить оплату в пользу:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Метка:</translation>
+    </message>
     <message>
         <source>Choose previously used address</source>
         <translation>Выбрать предыдущий использованный адрес</translation>
@@ -1440,8 +1569,16 @@
         <translation>неизвестно</translation>
     </message>
     <message>
+        <source>Transaction fee</source>
+        <translation>Комиссия за транзакцию</translation>
+    </message>
+    <message>
         <source>Message</source>
         <translation>Сообщение</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished">Количество</translation>
     </message>
     </context>
 <context>
@@ -1511,6 +1648,10 @@
     <message>
         <source>Show transaction details</source>
         <translation>Отобразить детали транзакции</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Подтвержденные</translation>
     </message>
     <message>
         <source>Date</source>

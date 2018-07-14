@@ -138,6 +138,18 @@
         <translation>నిష్క్రమించు</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;పంపించే చిరునామాలు...</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;అందుకునే చిరునామాలు...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">వాలెట్:</translation>
+    </message>
+    <message>
         <source>Bitcoin</source>
         <translation>బిట్కోయిన్</translation>
     </message>
@@ -187,9 +199,20 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;ఉల్లాకు</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;చిరునామా</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -206,13 +229,32 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>చిరునామా</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;వాలెట్</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>బిట్కోయిన్ కోర్</translation>
+    </message>
     <message>
         <source>Error</source>
         <translation>లోపం</translation>
@@ -233,7 +275,7 @@
         <source>unknown</source>
         <translation>తెలియదు</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -242,9 +284,25 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;వర్తమానము</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">వాలెట్: </translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ఉల్లాకు:</translation>
+    </message>
+    <message>
+        <source>&amp;Message:</source>
+        <translation type="unfinished">&amp;సందేశం:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -282,9 +340,25 @@
         <source>Quantity:</source>
         <translation>పరిమాణం</translation>
     </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">ఎంచుకోండి...</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">పంపు</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ఉల్లాకు:</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished">సందేశం:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
