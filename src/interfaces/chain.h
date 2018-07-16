@@ -177,6 +177,9 @@ public:
     //! Send init error.
     virtual void initError(const std::string& message) = 0;
 
+    //! Start shutdown.
+    virtual void startShutdown() = 0;
+
     //! Send wallet load notification.
     virtual void loadWallet(std::unique_ptr<Wallet> wallet) = 0;
 
