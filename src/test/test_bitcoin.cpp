@@ -8,6 +8,7 @@
 #include <consensus/consensus.h>
 #include <consensus/validation.h>
 #include <crypto/sha256.h>
+#include <interfaces/chain.h>
 #include <validation.h>
 #include <miner.h>
 #include <net_processing.h>
@@ -76,6 +77,7 @@ fs::path BasicTestingSetup::SetDataDir(const std::string& name)
 
 TestingSetup::TestingSetup(const std::string& chainName) : BasicTestingSetup(chainName)
 {
+    g_interfaces.chain = interfaces::MakeChain();
     SetDataDir("tempdir");
     const CChainParams& chainparams = Params();
         // Ideally we'd move all the RPC tests to the functional testing framework
@@ -122,6 +124,12 @@ TestingSetup::~TestingSetup()
         pcoinsTip.reset();
         pcoinsdbview.reset();
         pblocktree.reset();
+}
+
+interfaces::Chain& TestingSetup::chain() const
+{
+    assert(g_interfaces.chain.get());
+    return *g_interfaces.chain;
 }
 
 TestChain100Setup::TestChain100Setup() : TestingSetup(CBaseChainParams::REGTEST)

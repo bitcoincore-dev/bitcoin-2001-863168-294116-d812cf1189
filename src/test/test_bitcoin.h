@@ -71,6 +71,9 @@ struct TestingSetup: public BasicTestingSetup {
 
     explicit TestingSetup(const std::string& chainName = CBaseChainParams::MAIN);
     ~TestingSetup();
+
+    /** Interface for accessing chain state */
+    interfaces::Chain& chain() const;
 };
 
 class CBlock;

@@ -11,6 +11,7 @@
 #include <clientversion.h>
 #include <compat.h>
 #include <fs.h>
+#include <interfaces/chain.h>
 #include <rpc/server.h>
 #include <init.h>
 #include <noui.h>
@@ -56,6 +57,7 @@ static void WaitForShutdown()
 //
 static bool AppInit(int argc, char* argv[])
 {
+    g_interfaces.chain = interfaces::MakeChain();
     bool fRet = false;
 
     //
