@@ -129,6 +129,9 @@ public:
         int64_t* time = nullptr,
         int64_t* max_time = nullptr) = 0;
 
+    //! Get unspent outputs associated with a transaction.
+    virtual std::vector<Coin> findCoins(const std::vector<COutPoint>& outputs) = 0;
+
     //! Estimate fraction of total transactions verified if blocks up to
     //! given height are verified.
     virtual double guessVerificationProgress(const uint256& block_hash) = 0;
