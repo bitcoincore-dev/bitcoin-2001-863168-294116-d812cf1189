@@ -19,6 +19,7 @@ class CFeeRate;
 class CRPCCommand;
 class CScheduler;
 class CValidationState;
+class Coin;
 class uint256;
 enum class RBFTransactionState;
 struct CBlockLocator;
@@ -161,6 +162,10 @@ public:
         CBlock* block = nullptr,
         int64_t* time = nullptr,
         int64_t* max_time = nullptr) = 0;
+
+    //! Look up unspent output information. Iterates through all the keys in the
+    //! map and populates the values.
+    virtual void findCoins(std::map<COutPoint, Coin>& coins) = 0;
 
     //! Estimate fraction of total transactions verified if blocks up to
     //! the specified block hash are verified.

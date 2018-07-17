@@ -252,6 +252,18 @@ public:
         }
         return true;
     }
+    void findCoins(std::map<COutPoint, Coin>& coins) override
+    {
+        LOCK2(cs_main, ::mempool.cs);
+        assert(pcoinsTip);
+        CCoinsViewCache& chain_view = *::pcoinsTip;
+        CCoinsViewMemPool mempool_view(&chain_view, ::mempool);
+        for (auto& coin : coins) {
+            if (!mempool_view.GetCoin(coin.first, coin.second)) {
+                coin.second.Clear();
+            }
+        }
+    }
     double guessVerificationProgress(const uint256& block_hash) override
     {
         LOCK(cs_main);
