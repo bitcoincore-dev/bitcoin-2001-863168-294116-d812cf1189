@@ -258,6 +258,20 @@ public:
         }
         return true;
     }
+    std::vector<Coin> findCoins(const std::vector<COutPoint>& outputs) override
+    {
+        std::vector<Coin> coins;
+        LOCK2(cs_main, ::mempool.cs);
+        assert(pcoinsTip);
+        CCoinsViewCache& chain_view = *::pcoinsTip;
+        CCoinsViewMemPool mempool_view(&chain_view, ::mempool);
+        for (const auto& output : outputs) {
+            Coin coin;
+            mempool_view.GetCoin(output, coin);
+            coins.emplace_back(std::move(coin));
+        }
+        return coins;
+    }
     double guessVerificationProgress(const uint256& block_hash) override
     {
         LOCK(cs_main);
