@@ -7,7 +7,7 @@
 
 #include <set>
 
-static void addCoin(const CAmount& nValue, const CWallet& wallet, std::vector<COutput>& vCoins)
+static void addCoin(const CAmount& nValue, const CWallet& wallet, std::vector<OutputGroup>& groups)
 {
     int nInput = 0;
 
@@ -20,7 +20,7 @@ static void addCoin(const CAmount& nValue, const CWallet& wallet, std::vector<CO
 
     int nAge = 6 * 24;
     COutput output(wtx, nInput, nAge, true /* spendable */, true /* solvable */, true /* safe */);
-    vCoins.push_back(output);
+    groups.emplace_back(output, false, -1);
 }
 
 // Simple benchmark for wallet coin selection. Note that it maybe be necessary
@@ -33,13 +33,16 @@ static void addCoin(const CAmount& nValue, const CWallet& wallet, std::vector<CO
 static void CoinSelection(benchmark::State& state)
 {
     const CWallet wallet;
-    std::vector<COutput> vCoins;
+    std::vector<OutputGroup> vCoins;
     LOCK(wallet.cs_wallet);
 
     while (state.KeepRunning()) {
         // Empty wallet.
-        for (COutput output : vCoins)
-            delete output.tx;
+        for (OutputGroup& group : vCoins) {
+            for (COutput& output : group.m_outputs) {
+                delete output.tx;
+            }
+        }
         vCoins.clear();
 
         // Add coins.

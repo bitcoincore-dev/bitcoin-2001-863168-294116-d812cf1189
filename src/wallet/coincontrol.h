@@ -8,6 +8,7 @@
 #include <policy/feerate.h>
 #include <policy/fees.h>
 #include <primitives/transaction.h>
+#include <util.h>
 #include <wallet/wallet.h>
 
 #include <boost/optional.hpp>
@@ -30,6 +31,8 @@ public:
     boost::optional<CFeeRate> m_feerate;
     //! Override the default confirmation target if set
     boost::optional<unsigned int> m_confirm_target;
+    //! Avoid partial use of funds sent to a given address
+    bool m_avoid_partial_spends;
     //! Signal BIP-125 replace by fee.
     bool signalRbf;
     //! Fee estimation mode to control arguments to estimateSmartFee
@@ -46,6 +49,7 @@ public:
         change_type = g_change_type;
         fAllowOtherInputs = false;
         fAllowWatchOnly = false;
+        m_avoid_partial_spends = gArgs.GetBoolArg("-avoidpartialspends", DEFAULT_AVOIDPARTIALSPENDS);
         setSelected.clear();
         m_feerate.reset();
         fOverrideFeeRate = false;

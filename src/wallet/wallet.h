@@ -60,6 +60,8 @@ static const CAmount MIN_FINAL_CHANGE = MIN_CHANGE/2;
 static const bool DEFAULT_SPEND_ZEROCONF_CHANGE = true;
 //! Default for -walletrejectlongchains
 static const bool DEFAULT_WALLET_REJECT_LONG_CHAINS = false;
+//! Default for -avoidpartialspends
+static const bool DEFAULT_AVOIDPARTIALSPENDS = false;
 //! -txconfirmtarget default
 static const unsigned int DEFAULT_TX_CONFIRM_TARGET = 6;
 //! -walletrbf default
@@ -549,6 +551,27 @@ public:
 };
 
 
+struct OutputGroup
+{
+    std::vector<COutput> m_outputs;
+    bool m_from_me;
+    CAmount m_value;
+    int m_depth;
+    int64_t m_chain_limit_value;
+    OutputGroup() : OutputGroup(std::vector<COutput>(), true, 0, 999, -1) {}
+    OutputGroup(const std::vector<COutput>&& outputs, bool from_me, CAmount value, int depth, int64_t chain_limit_value)
+    : m_outputs(outputs)
+    , m_from_me(from_me)
+    , m_value(value)
+    , m_depth(depth)
+    , m_chain_limit_value(chain_limit_value)
+    {}
+    OutputGroup(const COutput& output, bool from_me, int64_t chain_limit_value) : OutputGroup() {
+        push_back(output, from_me, chain_limit_value);
+    }
+    void push_back(const COutput& output, bool from_me, int64_t chain_limit_value);
+    std::vector<CInputCoin> input_coins() const;
+};
 
 
 /** Private key that includes an expiration date in case it never gets used. */
@@ -867,9 +890,10 @@ public:
      * completion the coin set and corresponding actual target value is
      * assembled
      */
-    bool SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int nConfTheirs, uint64_t nMaxAncestors, std::vector<COutput> vCoins, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet) const;
+    bool SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int nConfTheirs, int64_t nMaxAncestors, std::vector<OutputGroup> groups, std::set<CInputCoin>& setCoinsRet, CAmount& nValueRet, bool avoidpartialspends_policy = false) const;
 
     bool IsSpent(const uint256& hash, unsigned int n) const;
+    std::vector<OutputGroup> group_outputs(const std::vector<COutput>& outputs, bool single_coin) const;
 
     bool IsLockedCoin(uint256 hash, unsigned int n) const;
     void LockCoin(const COutPoint& output);
