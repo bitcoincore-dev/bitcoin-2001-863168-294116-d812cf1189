@@ -3,18 +3,8 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the wallet."""
-import time
-from decimal import Decimal
 from test_framework.test_framework import BitcoinTestFramework
-from test_framework.util import (
-    assert_array_result,
-    assert_equal,
-    assert_fee_amount,
-    assert_raises_rpc_error,
-    connect_nodes_bi,
-    sync_blocks,
-    sync_mempools,
-)
+from test_framework.util import *
 
 class WalletTest(BitcoinTestFramework):
     def set_test_params(self):
@@ -423,9 +413,9 @@ class WalletTest(BitcoinTestFramework):
             self.start_node(0, [m, "-limitancestorcount="+str(chainlimit)])
             self.start_node(1, [m, "-limitancestorcount="+str(chainlimit)])
             self.start_node(2, [m, "-limitancestorcount="+str(chainlimit)])
-            while m == '-reindex' and [block_count] * 3 != [self.nodes[i].getblockcount() for i in range(3)]:
+            if m == '-reindex':
                 # reindex will leave rpc warm up "early"; Wait for it to finish
-                time.sleep(0.1)
+                wait_until(lambda: [block_count] * 3 == [self.nodes[i].getblockcount() for i in range(3)])
             assert_equal(balance_nodes, [self.nodes[i].getbalance() for i in range(3)])
 
         # Exercise listsinceblock with the last two blocks

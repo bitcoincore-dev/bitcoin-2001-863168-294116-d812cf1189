@@ -1,4 +1,5 @@
 [Desktop Entry]
+Encoding=UTF-8
 Version=1.0
 Name=Bitcoin Core
 Comment=Connect to the Bitcoin P2P Network
@@ -10,5 +11,5 @@ Terminal=false
 Type=Application
 Icon=bitcoin128
 MimeType=x-scheme-handler/bitcoin;
-Categories=Office;Finance;
+Categories=Office;Finance;P2P;Network;Qt;
 StartupWMClass=Bitcoin-qt

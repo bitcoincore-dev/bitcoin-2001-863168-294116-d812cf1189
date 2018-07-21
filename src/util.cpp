@@ -349,8 +349,12 @@ int LogPrintStr(const std::string &str)
             if (fReopenDebugLog) {
                 fReopenDebugLog = false;
                 fs::path pathDebug = GetDebugLogPath();
-                if (fsbridge::freopen(pathDebug,"a",fileout) != nullptr)
-                    setbuf(fileout, nullptr); // unbuffered
+                FILE* new_fileout = fsbridge::fopen(pathDebug, "a");
+                if (new_fileout) {
+                    setbuf(new_fileout, nullptr); // unbuffered
+                    fclose(fileout);
+                    fileout = new_fileout;
+                }
             }
 
             ret = FileWriteStr(strTimestamped, fileout);
@@ -589,9 +593,40 @@ fs::path GetDefaultDataDir()
 #endif
 }
 
+static fs::path g_blocks_path_cached;
+static fs::path g_blocks_path_cache_net_specific;
 static fs::path pathCached;
 static fs::path pathCachedNetSpecific;
 static CCriticalSection csPathCached;
+
+const fs::path &GetBlocksDir(bool fNetSpecific)
+{
+
+    LOCK(csPathCached);
+
+    fs::path &path = fNetSpecific ? g_blocks_path_cache_net_specific : g_blocks_path_cached;
+
+    // This can be called during exceptions by LogPrintf(), so we cache the
+    // value so we don't have to do memory allocations after that.
+    if (!path.empty())
+        return path;
+
+    if (gArgs.IsArgSet("-blocksdir")) {
+        path = fs::system_complete(gArgs.GetArg("-blocksdir", ""));
+        if (!fs::is_directory(path)) {
+            path = "";
+            return path;
+        }
+    } else {
+        path = GetDataDir(false);
+    }
+    if (fNetSpecific)
+        path /= BaseParams().DataDir();
+
+    path /= "blocks";
+    fs::create_directories(path);
+    return path;
+}
 
 const fs::path &GetDataDir(bool fNetSpecific)
 {
@@ -631,6 +666,8 @@ void ClearDatadirCache()
 
     pathCached = fs::path();
     pathCachedNetSpecific = fs::path();
+    g_blocks_path_cached = fs::path();
+    g_blocks_path_cache_net_specific = fs::path();
 }
 
 fs::path GetConfigFile(const std::string& confPath)
@@ -976,14 +1013,21 @@ void FileCommit(FILE *file)
 #ifdef WIN32
     HANDLE hFile = (HANDLE)_get_osfhandle(_fileno(file));
     FlushFileBuffers(hFile);
-#else
-    #if defined(__linux__) || defined(__NetBSD__)
-    fdatasync(fileno(file));
-    #elif defined(__APPLE__) && defined(F_FULLFSYNC)
+#elif defined(__APPLE__) && defined(F_FULLFSYNC)
     fcntl(fileno(file), F_FULLFSYNC, 0);
-    #else
+#elif HAVE_FDATASYNC
+    fdatasync(fileno(file));
+#else
     fsync(fileno(file));
-    #endif
+#endif
+}
+
+void DirectoryCommit(const fs::path &dirname)
+{
+#ifndef WIN32
+    FILE* file = fsbridge::fopen(dirname, "r");
+    fsync(fileno(file));
+    fclose(file);
 #endif
 }
 
@@ -1054,7 +1098,9 @@ void AllocateFileRange(FILE *file, unsigned int offset, unsigned int length) {
     // Fallback version
     // TODO: just write one byte per block
     static const char buf[65536] = {};
-    fseek(file, offset, SEEK_SET);
+    if (fseek(file, offset, SEEK_SET)) {
+        return;
+    }
     while (length > 0) {
         unsigned int now = 65536;
         if (length < now)
@@ -1121,7 +1167,11 @@ void ShrinkDebugFile()
     {
         // Restart the file with some of the end
         std::vector<char> vch(RECENT_DEBUG_HISTORY_SIZE, 0);
-        fseek(file, -((long)vch.size()), SEEK_END);
+        if (fseek(file, -((long)vch.size()), SEEK_END)) {
+            LogPrintf("Failed to shrink debug log file: fseek(...) failed\n");
+            fclose(file);
+            return;
+        }
         int nBytes = fread(vch.data(), 1, vch.size(), file);
         fclose(file);
 

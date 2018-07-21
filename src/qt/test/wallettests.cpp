@@ -19,6 +19,8 @@
 #include <qt/receiverequestdialog.h>
 
 #include <base58.h>
+#include <memory>
+
 
 #include <QAbstractButton>
 #include <QAction>

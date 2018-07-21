@@ -1,4 +1,4 @@
-BIPs that are implemented by Bitcoin Core (up-to-date up to **v0.13.0**):
+BIPs that are implemented by Bitcoin Core (up-to-date up to **v0.16.0**):
 
 * [`BIP 9`](https://github.com/bitcoin/bips/blob/master/bip-0009.mediawiki): The changes allowing multiple soft-forks to be deployed in parallel have been implemented since **v0.12.1**  ([PR #7575](https://github.com/bitcoin/bitcoin/pull/7575))
 * [`BIP 11`](https://github.com/bitcoin/bips/blob/master/bip-0011.mediawiki): Multisig outputs are standard since **v0.6.0** ([PR #669](https://github.com/bitcoin/bitcoin/pull/669)).
@@ -16,7 +16,7 @@ BIPs that are implemented by Bitcoin Core (up-to-date up to **v0.13.0**):
 * [`BIP 35`](https://github.com/bitcoin/bips/blob/master/bip-0035.mediawiki): The 'mempool' protocol message (and the protocol version bump to 60002) has been implemented since **v0.7.0** ([PR #1641](https://github.com/bitcoin/bitcoin/pull/1641)).
 * [`BIP 37`](https://github.com/bitcoin/bips/blob/master/bip-0037.mediawiki): The bloom filtering for transaction relaying, partial merkle trees for blocks, and the protocol version bump to 70001 (enabling low-bandwidth SPV clients) has been implemented since **v0.8.0** ([PR #1795](https://github.com/bitcoin/bitcoin/pull/1795)).
 * [`BIP 42`](https://github.com/bitcoin/bips/blob/master/bip-0042.mediawiki): The bug that would have caused the subsidy schedule to resume after block 13440000 was fixed in **v0.9.2** ([PR #3842](https://github.com/bitcoin/bitcoin/pull/3842)).
-* [`BIP 61`](https://github.com/bitcoin/bips/blob/master/bip-0061.mediawiki): The 'reject' protocol message (and the protocol version bump to 70002) was added in **v0.9.0** ([PR #3185](https://github.com/bitcoin/bitcoin/pull/3185)).
+* [`BIP 61`](https://github.com/bitcoin/bips/blob/master/bip-0061.mediawiki): The 'reject' protocol message (and the protocol version bump to 70002) was added in **v0.9.0** ([PR #3185](https://github.com/bitcoin/bitcoin/pull/3185)). Starting *v0.17.0*, whether to send reject messages can be configured with the `-enablebip61` option.
 * [`BIP 65`](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki): The CHECKLOCKTIMEVERIFY softfork was merged in **v0.12.0** ([PR #6351](https://github.com/bitcoin/bitcoin/pull/6351)), and backported to **v0.11.2** and **v0.10.4**. Mempool-only CLTV was added in [PR #6124](https://github.com/bitcoin/bitcoin/pull/6124).
 * [`BIP 66`](https://github.com/bitcoin/bips/blob/master/bip-0066.mediawiki): The strict DER rules and associated version 3 blocks have been implemented since **v0.10.0** ([PR #5713](https://github.com/bitcoin/bitcoin/pull/5713)).
 * [`BIP 67`](https://github.com/bitcoin/bips/blob/master/bip-0067.mediawiki): Sorting multisig keys according to BIP 67 was merged in **v0.15.1** ([PR #8751](https://github.com/bitcoin/bitcoin/pull/8751)).
@@ -36,4 +36,5 @@ BIPs that are implemented by Bitcoin Core (up-to-date up to **v0.13.0**):
 * [`BIP 147`](https://github.com/bitcoin/bips/blob/master/bip-0147.mediawiki): NULLDUMMY softfork as of **v0.13.1** ([PR 8636](https://github.com/bitcoin/bitcoin/pull/8636) and [PR 8937](https://github.com/bitcoin/bitcoin/pull/8937)).
 * [`BIP 152`](https://github.com/bitcoin/bips/blob/master/bip-0152.mediawiki): Compact block transfer and related optimizations are used as of **v0.13.0** ([PR 8068](https://github.com/bitcoin/bitcoin/pull/8068)).
 * [`BIP 159`](https://github.com/bitcoin/bips/blob/master/bip-0159.mediawiki): NODE_NETWORK_LIMITED service bit [signaling only] is supported as of **v0.16.0** ([PR 11740](https://github.com/bitcoin/bitcoin/pull/11740)).
+* [`BIP 173`](https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki): Bech32 addresses for native Segregated Witness outputs are supported as of **v0.16.0** ([PR 11167](https://github.com/bitcoin/bitcoin/pull/11167)).
 * [`BIP 176`](https://github.com/bitcoin/bips/blob/master/bip-0176.mediawiki): Bits Denomination [QT only] is supported as of **v0.16.0** ([PR 12035](https://github.com/bitcoin/bitcoin/pull/12035)).

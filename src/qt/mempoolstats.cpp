@@ -79,12 +79,8 @@ void MempoolStats::setClientModel(ClientModel *model)
 
 void MempoolStats::drawChart()
 {
-    if (!isVisible())
+    if (!(isVisible() && clientModel))
         return;
-
-    const bool drawTxCount = cbShowNumTxns->isChecked();
-    const bool drawMinFee = cbShowMinFeerate->isChecked();
-    const bool drawDynMemUsage = cbShowMemUsage->isChecked();
 
     if (!titleItem)
     {
@@ -349,11 +345,11 @@ void MempoolStats::drawChart()
     QPen linePenRed(QColor(188,49,62, 250), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     QPen linePenGreen(QColor(49,188,62, 250), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 
-    if (drawTxCount)
+    if (cbShowNumTxns->isChecked())
         redrawItems.append(scene->addPath(txCountPath, linePenRed));
-    if (drawMinFee)
+    if (cbShowMinFeerate->isChecked())
         redrawItems.append(scene->addPath(minFeePath, linePenGreen));
-    if (drawDynMemUsage)
+    if (cbShowMemUsage->isChecked())
     {
         redrawItems.append(scene->addPath(dynMemUsagePath, linePenBlue));
         redrawItems.append(scene->addPath(dynMemUsagePathFill, QPen(Qt::NoPen), graBru));

@@ -39,6 +39,7 @@
 #include <wallet/wallet.h>
 #endif
 
+#include <memory>
 #include <stdint.h>
 
 #include <boost/thread.hpp>
@@ -53,6 +54,10 @@
 #include <QTimer>
 #include <QTranslator>
 #include <QSslConfiguration>
+
+#if defined(Q_OS_MACOS)
+#include <qt/macos_appnap.h>
+#endif
 
 #if defined(QT_STATICPLUGIN)
 #include <QtPlugin>
@@ -559,6 +564,11 @@ int main(int argc, char *argv[])
 {
     SetupEnvironment();
 
+#if defined(Q_OS_MACOS)
+    // Disable macOS App Nap
+    CAppNapInhibitor noIdle("bitcoin-qt");
+#endif
+
     /// 1. Parse command-line options. These take precedence over anything else.
     // Command-line options take precedence:
     gArgs.ParseParameters(argc, argv);
@@ -629,7 +639,7 @@ int main(int argc, char *argv[])
     if (!Intro::pickDataDirectory())
         return EXIT_SUCCESS;
 
-    /// 6. Determine availability of data directory and parse bitcoin.conf
+    /// 6. Determine availability of data and blocks directory and parse bitcoin.conf
     /// - Do not call GetDataDir(true) before this step finishes
     if (!fs::is_directory(GetDataDir(false)))
     {
@@ -713,7 +723,7 @@ int main(int argc, char *argv[])
     // Allow parameter interaction before we create the options model
     app.parameterSetup();
     // Load GUI settings from QSettings
-    app.createOptionsModel(gArgs.IsArgSet("-resetguisettings"));
+    app.createOptionsModel(gArgs.GetBoolArg("-resetguisettings", false));
 
     // Subscribe to global signals from core
     uiInterface.InitMessage.connect(InitMessage);

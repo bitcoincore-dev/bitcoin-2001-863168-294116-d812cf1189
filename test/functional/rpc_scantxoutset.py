@@ -9,7 +9,7 @@ from test_framework.util import *
 import shutil
 import os
 
-class ScanrxoutsetTest(BitcoinTestFramework):
+class ScantxoutsetTest(BitcoinTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.setup_clean_chain = True
@@ -17,7 +17,7 @@ class ScanrxoutsetTest(BitcoinTestFramework):
         self.log.info("Mining blocks...")
         self.nodes[0].generate(110)
 
-        addr_P2SH_SEGWIT = self.nodes[0].getnewaddress()
+        addr_P2SH_SEGWIT = self.nodes[0].getnewaddress("", "p2sh-segwit")
         pubk1 = self.nodes[0].validateaddress(addr_P2SH_SEGWIT)['pubkey']
         addr_LEGACY = self.nodes[0].getnewaddress("", "legacy")
         pubk2 = self.nodes[0].validateaddress(addr_LEGACY)['pubkey']
@@ -30,7 +30,7 @@ class ScanrxoutsetTest(BitcoinTestFramework):
 
         self.log.info("Stop node, remove wallet, mine again some blocks...")
         self.stop_node(0)
-        shutil.rmtree(os.path.join(self.options.tmpdir, "node0/regtest/wallets"))
+        shutil.rmtree(os.path.join(self.nodes[0].datadir, "regtest", 'wallets'))
         self.start_node(0)
         self.nodes[0].generate(110)
 
@@ -50,24 +50,27 @@ class ScanrxoutsetTest(BitcoinTestFramework):
         self.nodes[0].sendtoaddress(k_bip44_child4_ard, 0.5)
         self.nodes[0].generate(1)
 
-        self.stop_node(0)
-        os.remove(os.path.join(self.options.tmpdir, "node0/regtest/wallet.dat"))
-        self.start_node(0)
+        self.restart_node(0, ['-nowallet'])
         self.log.info("Test if we have found the non HD unspent outputs.")
-        assert_equal(self.nodes[0].scantxoutset("start", {"pubkeys": [pubk1, pubk2, pubk3]})['total_amount'], 6)
-        decodedsweeptx = self.nodes[0].decoderawtransaction(self.nodes[0].scantxoutset("start", {"rawsweep" : {"address": addr_BECH32, "feerate": 0.00025000}, "pubkeys": [pubk1, pubk2, pubk3]})['rawsweep_tx'])
-        assert(decodedsweeptx['vout'][0]['value'] > 5.9 and decodedsweeptx['vout'][0]['value'] < 6.0)
+        assert_equal(self.nodes[0].scantxoutset("start", [ {"pubkey": {"pubkey": pubk1}}, {"pubkey": {"pubkey": pubk2}}, {"pubkey": {"pubkey": pubk3}}])['total_amount'], 6)
+        decodedsweeptx = self.nodes[0].decoderawtransaction(self.nodes[0].scantxoutset("start", [ {"pubkey": {"pubkey": pubk1}}, {"pubkey": {"pubkey": pubk2}}, {"pubkey": {"pubkey": pubk3}}], {"rawsweep" : {"address": addr_BECH32, "feerate": 0.00025000}})['rawsweep_tx'])
         assert_equal(len(decodedsweeptx['vin']), 3)
-        assert_equal(self.nodes[0].scantxoutset("start", {"addresses": [addr_P2SH_SEGWIT, addr_LEGACY, addr_BECH32]})['total_amount'], 6)
-        assert_equal(self.nodes[0].scantxoutset("start", {"addresses": [addr_P2SH_SEGWIT, addr_LEGACY, addr_BECH32], "pubkeys": [pubk1, pubk2, pubk3]})['total_amount'], 6)
+        assert_equal(self.nodes[0].scantxoutset("start", [ {"address": addr_P2SH_SEGWIT}, {"address": addr_LEGACY}, {"address": addr_BECH32}])['total_amount'], 6)
+        assert_equal(self.nodes[0].scantxoutset("start", [ {"address": addr_P2SH_SEGWIT}, {"address": addr_LEGACY}, {"pubkey": {"pubkey": pubk3}} ])['total_amount'], 6)
+
+        self.log.info("Test invalid parameters.")
+        assert_raises_rpc_error(-8, 'Scanobject "pubkey" must contain an object as value', self.nodes[0].scantxoutset, "start", [ {"pubkey": pubk1}]) #missing pubkey object
+        assert_raises_rpc_error(-8, 'Scanobject "address" must contain a single string as value', self.nodes[0].scantxoutset, "start", [ {"address": {"address": addr_P2SH_SEGWIT}}]) #invalid object for address
+        assert_raises_rpc_error(-8, 'Scanobject "xpub" must contain an object as value', self.nodes[0].scantxoutset, "start", [ {"xpub": pubk1}]) #missing xpub object
+
         self.log.info("Test if we have found the HD unspent outputs in range 0-1000 (default).")
-        assert_equal(self.nodes[0].scantxoutset("start", {"xpubs": [{"xpub": xpub_account_key}]})['total_amount'], Decimal("0.70000000"))
+        assert_equal(self.nodes[0].scantxoutset("start", [ {"xpub": {"xpub": xpub_account_key}}])['total_amount'], Decimal("0.70000000"))
         self.log.info("Ensure that we do find nothing in the unused range 10-20.")
-        assert_equal(self.nodes[0].scantxoutset("start", {"xpubs": [{"xpub": xpub_account_key, "lookupwindow": [10, 20]}]})['total_amount'], 0)
+        assert_equal(self.nodes[0].scantxoutset("start", [ {"xpub": {"xpub": xpub_account_key, "range": [10, 20]}}])['total_amount'], 0)
         self.log.info("Ensure we find all HD unspent outputs when using a lookup-window up to key 2000")
-        assert_equal(self.nodes[0].scantxoutset("start", {"xpubs": [{"xpub": xpub_account_key, "lookupwindow": [0, 2000]}]})['total_amount'], Decimal("1.5"))
+        assert_equal(self.nodes[0].scantxoutset("start", [ {"xpub": {"xpub": xpub_account_key, "range": [0, 2000]}}])['total_amount'], Decimal("1.5"))
         self.log.info("Make sure we find all unspent outputs when we search for plain pubkeys AND hd derived keys")
-        assert_equal(self.nodes[0].scantxoutset("start", {"pubkeys": [pubk1, pubk2, pubk3], "xpubs": [{"xpub": xpub_account_key, "lookupwindow": [0, 2000]}]})['total_amount'], Decimal("7.5"))
+        assert_equal(self.nodes[0].scantxoutset("start", [ {"pubkey": {"pubkey": pubk1}}, {"pubkey": {"pubkey": pubk2}}, {"pubkey": {"pubkey": pubk3}}, {"xpub": {"xpub": xpub_account_key, "range": [0, 2000]}}])['total_amount'], Decimal("7.5"))
 
 if __name__ == '__main__':
-    ScanrxoutsetTest().main()
+    ScantxoutsetTest().main()

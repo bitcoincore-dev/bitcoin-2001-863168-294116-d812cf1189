@@ -2,7 +2,7 @@ dnl require autoconf 2.60 (AS_ECHO/AS_ECHO_N)
 AC_PREREQ([2.60])
 define(_CLIENT_VERSION_MAJOR, 0)
 define(_CLIENT_VERSION_MINOR, 16)
-define(_CLIENT_VERSION_REVISION, 0)
+define(_CLIENT_VERSION_REVISION, 1)
 define(_CLIENT_VERSION_BUILD, 0)
 define(_CLIENT_VERSION_IS_RELEASE, true)
 define(_COPYRIGHT_YEAR, 2018)
@@ -277,6 +277,10 @@ fi
 # be compiled with them, rather that specific objects/libs may use them after checking for runtime
 # compatibility.
 AX_CHECK_COMPILE_FLAG([-msse4.2],[[SSE42_CXXFLAGS="-msse4.2"]],,[[$CXXFLAG_WERROR]])
+AX_CHECK_COMPILE_FLAG([-msse4.1],[[SSE41_CXXFLAGS="-msse4.1"]],,[[$CXXFLAG_WERROR]])
+AX_CHECK_COMPILE_FLAG([-mavx -mavx2],[[AVX2_CXXFLAGS="-mavx -mavx2"]],,[[$CXXFLAG_WERROR]])
+AX_CHECK_COMPILE_FLAG([-msse4 -msha],[[SHANI_CXXFLAGS="-msse4 -msha"]],,[[$CXXFLAG_WERROR]])
+AX_CHECK_COMPILE_FLAG([-mpower8-vector],[[POWER8_CXXFLAGS="-mpower8-vector"]],,[[$CXXFLAG_WERROR]])
 
 TEMP_CXXFLAGS="$CXXFLAGS"
 CXXFLAGS="$CXXFLAGS $SSE42_CXXFLAGS"
@@ -297,6 +301,69 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
   ]])],
  [ AC_MSG_RESULT(yes); enable_hwcrc32=yes],
  [ AC_MSG_RESULT(no)]
+)
+CXXFLAGS="$TEMP_CXXFLAGS"
+
+TEMP_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $SSE41_CXXFLAGS"
+AC_MSG_CHECKING(for SSE4.1 intrinsics)
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+    #include <stdint.h>
+    #include <immintrin.h>
+  ]],[[
+    __m128i l = _mm_set1_epi32(0);
+    return _mm_extract_epi32(l, 3);
+  ]])],
+ [ AC_MSG_RESULT(yes); enable_sse41=yes; AC_DEFINE(ENABLE_SSE41, 1, [Define this symbol to build code that uses SSE4.1 intrinsics]) ],
+ [ AC_MSG_RESULT(no)]
+)
+CXXFLAGS="$TEMP_CXXFLAGS"
+
+TEMP_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $AVX2_CXXFLAGS"
+AC_MSG_CHECKING(for AVX2 intrinsics)
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+    #include <stdint.h>
+    #include <immintrin.h>
+  ]],[[
+    __m256i l = _mm256_set1_epi32(0);
+    return _mm256_extract_epi32(l, 7);
+  ]])],
+ [ AC_MSG_RESULT(yes); enable_avx2=yes; AC_DEFINE(ENABLE_AVX2, 1, [Define this symbol to build code that uses AVX2 intrinsics]) ],
+ [ AC_MSG_RESULT(no)]
+)
+CXXFLAGS="$TEMP_CXXFLAGS"
+
+TEMP_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $SHANI_CXXFLAGS"
+AC_MSG_CHECKING(for SHA-NI intrinsics)
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+    #include <stdint.h>
+    #include <immintrin.h>
+  ]],[[
+    __m128i i = _mm_set1_epi32(0);
+    __m128i j = _mm_set1_epi32(1);
+    __m128i k = _mm_set1_epi32(2);
+    return _mm_extract_epi32(_mm_sha256rnds2_epu32(i, i, k), 0);
+  ]])],
+ [ AC_MSG_RESULT(yes); enable_shani=yes; AC_DEFINE(ENABLE_SHANI, 1, [Define this symbol to build code that uses SHA-NI intrinsics]) ],
+ [ AC_MSG_RESULT(no)]
+)
+CXXFLAGS="$TEMP_CXXFLAGS"
+
+TEMP_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$TEMP_CXXFLAGS $POWER8_CXXFLAGS"
+AC_MSG_CHECKING(for POWER8 compiler support)
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+    #include <altivec.h>
+    #include <stdint.h>
+  ]], [[
+    unsigned char src[16];
+    __builtin_crypto_vshasigmaw((__vector uint32_t)vec_vsx_ld(0, src), 1, 0xf);
+    return 0;
+  ]])],
+  [ AC_MSG_RESULT(yes); enable_power8=yes; AC_DEFINE(ENABLE_POWER8, 1, [Define if compiler supports POWER8 instructions.]) ],
+  [ AC_MSG_RESULT(no) ]
 )
 CXXFLAGS="$TEMP_CXXFLAGS"
 
@@ -632,6 +699,7 @@ if test x$TARGET_OS = xdarwin; then
 fi
 
 AC_CHECK_HEADERS([endian.h sys/endian.h byteswap.h stdio.h stdlib.h unistd.h strings.h sys/types.h sys/stat.h sys/select.h sys/prctl.h])
+AC_CHECK_FUNCS([fdatasync])
 
 AC_CHECK_DECLS([strnlen])
 
@@ -843,14 +911,6 @@ if test x$system_leveldb != xno; then
   ],[
     AC_MSG_ERROR([leveldb library not found; using --with-system-leveldb is not supported anyway])
   ])
-  TEMP_LIBS="$LIBS"
-  LIBS="$LIBS $LIBLEVELDB"
-  AC_CHECK_LIB([memenv],[main],[
-    LIBMEMENV=-lmemenv
-  ],[
-    AC_MSG_ERROR([LevelDB's memenv library not found; using --with-system-leveldb is not supported anyway])
-  ])
-  LIBS="$TEMP_LIBS"
   AC_CHECK_HEADER([leveldb/filter_policy.h],[],[
     AC_MSG_ERROR([LevelDB headers not found; using --with-system-leveldb is not supported anyway])
   ])
@@ -862,6 +922,34 @@ if test x$system_leveldb != xno; then
       AC_MSG_ERROR([LevelDB headers not found; using --with-system-leveldb is not supported anyway])
     ])
   ])
+
+  AC_MSG_CHECKING([library containing leveldb::NewMemEnv])
+  TEMP_LIBS="$LIBS"
+  TEMP_CPPFLAGS="$CPPFLAGS"
+  CPPFLAGS="$CPPFLAGS $LEVELDB_CPPFLAGS"
+  for searchlib in "" "-lmemenv" ERR; do
+    if test "x$searchlib" = "xERR"; then
+      AC_MSG_RESULT([no])
+      AC_MSG_ERROR([LevelDB's memenv helper not found; using --with-system-leveldb is not supported anyway])
+    fi
+    searchlib="$searchlib $LIBLEVELDB"
+    LIBS="$searchlib $TEMP_LIBS"
+    AC_LINK_IFELSE([AC_LANG_SOURCE([
+        #include <leveldb/env.h>
+        #include <memenv.h>
+
+        int main() {
+            leveldb::Env *myenv = leveldb::NewMemEnv(leveldb::Env::Default());
+            delete myenv;
+        }
+    ])],[
+      AC_MSG_RESULT([$searchlib])
+      LIBMEMENV="$searchlib"
+      break
+    ])
+  done
+  LIBS="$TEMP_LIBS"
+  CPPFLAGS="$TEMP_CPPFLAGS"
 fi
 AM_CONDITIONAL([EMBEDDED_LEVELDB],[test x$system_leveldb = xno])
 AC_SUBST(LEVELDB_CPPFLAGS)
@@ -1442,6 +1530,10 @@ AM_CONDITIONAL([HAVE_IOPRIO_SYSCALL],[test x$have_ioprio_syscall = xyes])
 AM_CONDITIONAL([HAVE_WINDOWS_IOPRIO],[test x$have_windows_ioprio = xyes])
 AM_CONDITIONAL([HARDEN],[test x$use_hardening = xyes])
 AM_CONDITIONAL([ENABLE_HWCRC32],[test x$enable_hwcrc32 = xyes])
+AM_CONDITIONAL([ENABLE_SSE41],[test x$enable_sse41 = xyes])
+AM_CONDITIONAL([ENABLE_AVX2],[test x$enable_avx2 = xyes])
+AM_CONDITIONAL([ENABLE_SHANI],[test x$enable_shani = xyes])
+AM_CONDITIONAL([ENABLE_POWER8], [test x$enable_power8 = xyes])
 AM_CONDITIONAL([USE_ASM],[test x$use_asm = xyes])
 
 AC_DEFINE(CLIENT_VERSION_MAJOR, _CLIENT_VERSION_MAJOR, [Major version])
@@ -1476,6 +1568,10 @@ AC_SUBST(HARDENED_LDFLAGS)
 AC_SUBST(PIC_FLAGS)
 AC_SUBST(PIE_FLAGS)
 AC_SUBST(SSE42_CXXFLAGS)
+AC_SUBST(SSE41_CXXFLAGS)
+AC_SUBST(AVX2_CXXFLAGS)
+AC_SUBST(SHANI_CXXFLAGS)
+AC_SUBST(POWER8_CXXFLAGS)
 AC_SUBST(LIBTOOL_APP_LDFLAGS)
 AC_SUBST(USE_UPNP)
 AC_SUBST(USE_QRCODE)
