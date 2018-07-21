@@ -129,7 +129,7 @@ static const int64_t DEFAULT_MAX_TIP_AGE = 24 * 60 * 60;
 static const int64_t MAX_FEE_ESTIMATION_TIP_AGE = 3 * 60 * 60;
 
 /** Default for -permitbaremultisig */
-static const bool DEFAULT_PERMIT_BAREMULTISIG = true;
+static const bool DEFAULT_PERMIT_BAREMULTISIG = false;
 static const bool DEFAULT_CHECKPOINTS_ENABLED = true;
 static const bool DEFAULT_TXINDEX = false;
 static const unsigned int DEFAULT_BANSCORE_THRESHOLD = 100;
@@ -332,6 +332,8 @@ static inline bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state,
     static const ignore_rejects_type ignore_rejects_legacy{rejectmsg_lowfee_mempool, rejectmsg_lowfee_relay, rejectmsg_mempoolfull};
     return AcceptToMemoryPool(pool, state, tx, pfMissingInputs, plTxnReplaced, (bypass_limits ? ignore_rejects_legacy : empty_ignore_rejects), nAbsurdFee);
 }
+
+void LimitMempoolSize();
 
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state);

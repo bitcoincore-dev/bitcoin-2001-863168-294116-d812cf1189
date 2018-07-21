@@ -72,6 +72,7 @@
 #endif
 
 bool fFeeEstimatesInitialized = false;
+static const bool DEFAULT_COREPOLICY = false;
 static const bool DEFAULT_PROXYRANDOMIZE = true;
 static const bool DEFAULT_REST_ENABLE = false;
 static const bool DEFAULT_STOPAFTERBLOCKIMPORT = false;
@@ -350,6 +351,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage +=HelpMessageOpt("-assumevalid=<hex>", strprintf(_("If this block is in the chain assume that it and its ancestors are valid and potentially skip their script verification (0 to verify all, default: %s, testnet: %s)"), defaultChainParams->GetConsensus().defaultAssumeValid.GetHex(), testnetChainParams->GetConsensus().defaultAssumeValid.GetHex()));
     strUsage += HelpMessageOpt("-conf=<file>", strprintf(_("Specify configuration file (default: %s)"), BITCOIN_CONF_FILENAME));
     strUsage += HelpMessageOpt("-confrw=<file>", strprintf(_("Specify read/write configuration file (default: %s)"), BITCOIN_RW_CONF_FILENAME));
+    strUsage += HelpMessageOpt("-corepolicy", strprintf(_("Use Bitcoin Core policy defaults (default: %s)"), DEFAULT_COREPOLICY));
     if (mode == HMM_BITCOIND)
     {
 #if HAVE_DECL_DAEMON
@@ -778,6 +780,17 @@ bool AppInitServers()
 // Parameter interaction based on rules
 void InitParameterInteraction()
 {
+    if (gArgs.GetBoolArg("-corepolicy", DEFAULT_COREPOLICY)) {
+        gArgs.SoftSetArg("-bytespersigopstrict", "0");
+        gArgs.SoftSetArg("-permitbaremultisig", "1");
+        gArgs.SoftSetArg("-datacarriersize", "83");
+
+        gArgs.SoftSetArg("-spkreuse", "allow");
+        gArgs.SoftSetArg("-blockprioritysize", "0");
+        gArgs.SoftSetArg("-blockmaxsize", "4000000");
+        gArgs.SoftSetArg("-blockmaxweight", "3996000");
+    }
+
     // when specifying an explicit binding address, you want to listen on it
     // even when -connect or -proxy is specified
     if (gArgs.IsArgSet("-bind")) {
@@ -1046,7 +1059,7 @@ bool AppInitParameterInteraction()
 
     // mempool limits
     int64_t nMempoolSizeMax = gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000;
-    int64_t nMempoolSizeMin = gArgs.GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT) * 1000 * 40;
+    int64_t nMempoolSizeMin = maxmempoolMinimum(gArgs.GetArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT)) * 1000000;
     if (nMempoolSizeMax < 0 || nMempoolSizeMax < nMempoolSizeMin)
         return InitError(strprintf(_("-maxmempool must be at least %d MB"), std::ceil(nMempoolSizeMin / 1000000.0)));
     // incremental relay fee sets the minimum feerate increase necessary for BIP 125 replacement in the mempool
