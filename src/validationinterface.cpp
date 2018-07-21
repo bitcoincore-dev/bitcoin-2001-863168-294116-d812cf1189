@@ -173,9 +173,7 @@ void CMainSignals::SetBestChain(const CBlockLocator &locator) {
 }
 
 void CMainSignals::Inventory(const uint256 &hash) {
-    m_internals->m_schedulerClient.AddToProcessQueue([hash, this] {
         m_internals->Inventory(hash);
-    });
 }
 
 void CMainSignals::Broadcast(int64_t nBestBlockTime, CConnman* connman) {
