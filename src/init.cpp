@@ -785,6 +785,7 @@ void InitParameterInteraction()
         gArgs.SoftSetArg("-permitbaremultisig", "1");
         gArgs.SoftSetArg("-datacarriersize", "83");
 
+        gArgs.SoftSetArg("-mempoolreplacement", "rbf,optin");
         gArgs.SoftSetArg("-spkreuse", "allow");
         gArgs.SoftSetArg("-blockprioritysize", "0");
         gArgs.SoftSetArg("-blockmaxsize", "4000000");
@@ -1183,7 +1184,7 @@ bool AppInitParameterInteraction()
         boost::split(vstrReplacementModes, strReplacementModeList, boost::is_any_of(",+"));
         fEnableReplacement = (std::find(vstrReplacementModes.begin(), vstrReplacementModes.end(), "fee") != vstrReplacementModes.end());
         if (fEnableReplacement) {
-            fReplacementHonourOptOut = (std::find(vstrReplacementModes.begin(), vstrReplacementModes.end(), "-optin") == vstrReplacementModes.end());
+            fReplacementHonourOptOut = (std::find(vstrReplacementModes.begin(), vstrReplacementModes.end(), "optin") != vstrReplacementModes.end());
             if (!fReplacementHonourOptOut) {
                 nLocalServices = ServiceFlags(nLocalServices | NODE_REPLACE_BY_FEE);
             }
