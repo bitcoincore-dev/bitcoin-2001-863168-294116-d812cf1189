@@ -167,6 +167,7 @@ extern uint256 hashBestBlock;
 extern std::atomic_bool fImporting;
 extern std::atomic_bool fReindex;
 extern int nScriptCheckThreads;
+extern std::atomic_bool g_script_threads_enabled;
 extern bool fTxIndex;
 extern bool fIsBareMultisigStd;
 extern bool fRequireStandard;
