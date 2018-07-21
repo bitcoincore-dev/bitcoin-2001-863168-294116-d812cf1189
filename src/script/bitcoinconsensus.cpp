@@ -71,18 +71,46 @@ ECCryptoClosure instance_of_eccryptoclosure;
 } // namespace
 
 /** Check that all specified flags are part of the libconsensus interface. */
-static bool verify_flags(unsigned int flags)
+static bool verify_flags(uint64_t flags)
 {
     return (flags & ~(bitcoinconsensus_SCRIPT_FLAGS_VERIFY_ALL)) == 0;
 }
 
+class ScriptExecutionDebuggerForCAPI final : public ScriptExecutionDebugger {
+public:
+    const bitcoinconsensus_script_debugger_callbacks* const c_debugger;
+
+    ScriptExecutionDebuggerForCAPI(const bitcoinconsensus_script_debugger_callbacks* const c_debugger_in, void * const userdata_in) : c_debugger(c_debugger_in) {
+        userdata = userdata_in;
+    }
+
+    void ScriptBegin(ScriptExecution& ex) {
+        c_debugger->ScriptBegin(userdata, (struct bitcoinconsensus_script_execution*)&ex);
+    }
+
+    void ScriptPreStep(ScriptExecution& ex, const CScript::const_iterator& pos, opcodetype& opcode, ScriptExecution::StackElementType& pushdata) {
+        auto c_opcode = (uint8_t)opcode;
+        auto c_pushdata_sz = (size_t)pushdata.size();
+        c_debugger->ScriptPreStep(userdata, (struct bitcoinconsensus_script_execution*)&ex, (pos - ex.script.begin()), &c_opcode, pushdata.data(), &c_pushdata_sz);
+    }
+
+    void ScriptEOF(ScriptExecution& ex, const CScript::const_iterator& pos) {
+        c_debugger->ScriptEOF(userdata, (struct bitcoinconsensus_script_execution*)&ex, (pos - ex.script.begin()));
+    }
+};
+
 static int verify_script(const unsigned char *scriptPubKey, unsigned int scriptPubKeyLen, CAmount amount,
                                     const unsigned char *txTo        , unsigned int txToLen,
-                                    unsigned int nIn, unsigned int flags, bitcoinconsensus_error* err)
+                                    unsigned int nIn, uint64_t flags, bitcoinconsensus_error* err, const struct bitcoinconsensus_script_debugger_callbacks* const c_debugger = nullptr, void * const userdata = nullptr)
 {
     if (!verify_flags(flags)) {
         return bitcoinconsensus_ERR_INVALID_FLAGS;
     }
+    ScriptExecutionDebuggerForCAPI *cpp_debugger = nullptr;
+    if (c_debugger) {
+        cpp_debugger = new ScriptExecutionDebuggerForCAPI(c_debugger, userdata);
+    }
+    int rv;
     try {
         TxInputStream stream(SER_NETWORK, PROTOCOL_VERSION, txTo, txToLen);
         CTransaction tx(deserialize, stream);
@@ -95,10 +123,24 @@ static int verify_script(const unsigned char *scriptPubKey, unsigned int scriptP
         set_error(err, bitcoinconsensus_ERR_OK);
 
         PrecomputedTransactionData txdata(tx);
-        return VerifyScript(tx.vin[nIn].scriptSig, CScript(scriptPubKey, scriptPubKey + scriptPubKeyLen), &tx.vin[nIn].scriptWitness, flags, TransactionSignatureChecker(&tx, nIn, amount, txdata), nullptr);
+        rv = VerifyScript(tx.vin[nIn].scriptSig, CScript(scriptPubKey, scriptPubKey + scriptPubKeyLen), &tx.vin[nIn].scriptWitness, flags, TransactionSignatureChecker(&tx, nIn, amount, txdata), nullptr, cpp_debugger);
     } catch (const std::exception&) {
-        return set_error(err, bitcoinconsensus_ERR_TX_DESERIALIZE); // Error deserializing
+        rv = set_error(err, bitcoinconsensus_ERR_TX_DESERIALIZE); // Error deserializing
     }
+    delete cpp_debugger;
+    return rv;
+}
+
+int bitcoinconsensus_trace_script(const unsigned char *scriptPubKey, unsigned int scriptPubKeyLen, int64_t amount, const unsigned char *txTo, unsigned int txToLen, unsigned int nIn, uint64_t flags, bitcoinconsensus_error* err, const struct bitcoinconsensus_script_debugger_callbacks* c_debugger, void *userdata)
+{
+    if (amount < 0) {
+        if (flags & bitcoinconsensus_SCRIPT_FLAGS_VERIFY_WITNESS) {
+            return set_error(err, bitcoinconsensus_ERR_AMOUNT_REQUIRED);
+        }
+        amount = 0;
+    }
+    CAmount am(amount);
+    return ::verify_script(scriptPubKey, scriptPubKeyLen, am, txTo, txToLen, nIn, flags, err, c_debugger, userdata);
 }
 
 int bitcoinconsensus_verify_script_with_amount(const unsigned char *scriptPubKey, unsigned int scriptPubKeyLen, int64_t amount,

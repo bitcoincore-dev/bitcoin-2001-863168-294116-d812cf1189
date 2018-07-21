@@ -6,6 +6,7 @@
 #ifndef BITCOIN_BITCOINCONSENSUS_H
 #define BITCOIN_BITCOINCONSENSUS_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 #if defined(BUILD_BITCOIN_INTERNAL) && defined(HAVE_CONFIG_H)
@@ -71,6 +72,16 @@ EXPORT_SYMBOL int bitcoinconsensus_verify_script(const unsigned char *scriptPubK
 EXPORT_SYMBOL int bitcoinconsensus_verify_script_with_amount(const unsigned char *scriptPubKey, unsigned int scriptPubKeyLen, int64_t amount,
                                     const unsigned char *txTo        , unsigned int txToLen,
                                     unsigned int nIn, unsigned int flags, bitcoinconsensus_error* err);
+
+struct bitcoinconsensus_script_execution;
+
+struct bitcoinconsensus_script_debugger_callbacks {
+    void (*ScriptBegin)(void *userdata, struct bitcoinconsensus_script_execution*);
+    void (*ScriptPreStep)(void *userdata, struct bitcoinconsensus_script_execution*, size_t pos, const uint8_t* opcode, const void* pushdata, size_t* pushdata_sz);
+    void (*ScriptEOF)(void *userdata, struct bitcoinconsensus_script_execution*, size_t pos);
+};
+
+EXPORT_SYMBOL int bitcoinconsensus_trace_script(const unsigned char *scriptPubKey, unsigned int scriptPubKeyLen, int64_t amount, const unsigned char *txTo, unsigned int txToLen, unsigned int nIn, uint64_t flags, bitcoinconsensus_error* err, const struct bitcoinconsensus_script_debugger_callbacks*, void *userdata);
 
 EXPORT_SYMBOL unsigned int bitcoinconsensus_version();
 

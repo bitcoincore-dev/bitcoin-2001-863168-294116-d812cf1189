@@ -525,6 +525,17 @@ UniValue decoderawtransaction(const JSONRPCRequest& request)
     return result;
 }
 
+CScript ParseHexScript(const UniValue &v, std::string strName)
+{
+    if (v.get_str().size() > 0) {
+        std::vector<unsigned char> scriptData(ParseHexV(v, strName));
+        return CScript(scriptData.begin(), scriptData.end());
+    } else {
+        // Empty scripts are valid
+    }
+    return CScript();
+}
+
 UniValue decodescript(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
@@ -553,13 +564,7 @@ UniValue decodescript(const JSONRPCRequest& request)
     RPCTypeCheck(request.params, {UniValue::VSTR});
 
     UniValue r(UniValue::VOBJ);
-    CScript script;
-    if (request.params[0].get_str().size() > 0){
-        std::vector<unsigned char> scriptData(ParseHexV(request.params[0], "argument"));
-        script = CScript(scriptData.begin(), scriptData.end());
-    } else {
-        // Empty scripts are valid
-    }
+    CScript script = ParseHexScript(request.params[0], "argument");
     ScriptPubKeyToUniv(script, r, false);
 
     UniValue type;
@@ -572,6 +577,236 @@ UniValue decodescript(const JSONRPCRequest& request)
     }
 
     return r;
+}
+
+class verifyscript_ScriptExecutionDebugger final : public ScriptExecutionDebugger {
+private:
+    UniValue result;
+    UniValue current_script;
+    UniValue current_steps;
+
+    void CompleteScript() {
+        if (!current_script.isNull()) {
+            current_script.pushKV("steps", current_steps);
+            result.push_back(current_script);
+        }
+    }
+
+    static UniValue StackToUniValue(ScriptExecution::StackType& stack) {
+        UniValue rv(UniValue::VARR);
+        for (const auto elem : stack) {
+            rv.push_back(HexStr(elem.begin(), elem.end()));
+        }
+        return rv;
+    }
+
+    static UniValue vfExecToUniValue(std::vector<bool>& vfExec) {
+        UniValue rv(UniValue::VARR);
+        for (const auto elem : vfExec) {
+            bool elem_bool = elem;
+            rv.push_back(elem_bool);
+        }
+        return rv;
+    }
+
+    static void PushExInfo(UniValue& step_info, ScriptExecution& ex, const CScript::const_iterator& pos) {
+        step_info.pushKV("pos", (int64_t)(pos - ex.script.begin()));
+        step_info.pushKV("pos_codehash", (int64_t)(ex.pbegincodehash - ex.script.begin()));
+        step_info.pushKV("opcount", ex.nOpCount);
+        step_info.pushKV("stack", StackToUniValue(ex.stack));
+        step_info.pushKV("altstack", StackToUniValue(ex.altstack));
+        step_info.pushKV("exec", vfExecToUniValue(ex.vfExec));
+    }
+
+public:
+
+    verifyscript_ScriptExecutionDebugger() : result(UniValue::VARR) {}
+
+    void ScriptBegin(ScriptExecution& ex) {
+        CompleteScript();
+
+        current_script = UniValue(UniValue::VOBJ);
+
+        current_script.pushKV("context", ScriptExecution::ContextString(ex.context));
+
+        UniValue script_info(UniValue::VOBJ);
+        script_info.pushKV("asm", ScriptToAsmStr(ex.script));
+        script_info.pushKV("hex", HexStr(ex.script.begin(), ex.script.end()));
+        current_script.pushKV("script", script_info);
+
+        current_script.pushKV("sigversion", SigVersionString(ex.sigversion));
+    }
+
+    void ScriptPreStep(ScriptExecution& ex, const CScript::const_iterator& pos, opcodetype& opcode, ScriptExecution::StackElementType& pushelem) {
+        UniValue step_info(UniValue::VOBJ);
+        PushExInfo(step_info, ex, pos);
+
+        std::vector<uint8_t> opcode_arr;
+        opcode_arr.push_back(opcode);
+        step_info.pushKV("next_op", GetOpName(opcode));
+        step_info.pushKV("next_opcode", HexStr(opcode_arr.begin(), opcode_arr.end()));
+        step_info.pushKV("next_push", HexStr(pushelem.begin(), pushelem.end()));
+
+        current_steps.push_back(step_info);
+    }
+
+    void ScriptEOF(ScriptExecution& ex, const CScript::const_iterator& pos) {
+        UniValue step_info(UniValue::VOBJ);
+        PushExInfo(step_info, ex, pos);
+        current_steps.push_back(step_info);
+    }
+
+    const UniValue& GetResult() {
+        CompleteScript();
+        return result;
+    }
+};
+
+UniValue verifyscript(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            "verifyscript options\n"
+            "\nExecute a script and return the result.\n"
+            "\nArguments:\n"
+            "1. options      (object, required)\n"
+            "   {\n"
+            "     \"input\": {  (object, required) Information on the input being spent.\n"
+            "       \"scriptPubKey\": \"hex\",  (string, required) Hex encoded pubkey script.\n"
+            "       \"amount\": value,        (numeric, optional) The amount spent. Required for VERIFY_WITNESS flag.\n"
+            "       \"txid\": \"id\",           (string, this or \"transaction\" required) The input's transaction id.\n"
+            "       \"transaction\": \"hex\",   (string, this or \"txid\" required) The input's raw transaction.\n"
+            "       \"vout\": n               (numeric, required) The output number.\n"
+            "     }\n"
+            "     \"flags\": [  (array, optional) Zero or more of:"
+            "       \"BIP16\", \"STRICTENC\", \"DERSIR\", \"LOW_S\", \"SIGPUSHONLY\", \"MINIMALDATA\", \"NULLDUMMY\",\"DISCOURAGE_UPGRADABLE_NOPS\", \"CLEANSTACK\", \"MINIMALIF\", \"NULLFAIL\", \"CHECKLOCKTIMEVERIFY\", \"CHECKSEQUENCEVERIFY\", \"WITNESS\", \"DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM\", \"WITNESS_PUBKEYTYPE\",\n"
+            "       \"NONE\",     Indicates explicitly that no flags should be enabled.\n"
+            "       \"ALL\"       Indicates all supported flags should be enabled.\n"
+            "     ]\n"
+            "     \"trace\": true|false,  (boolean) Whether to trace execution and return \"trace\" in the result.\n"
+            "   }\n"
+            "\nResult:\n"
+            "{\n"
+            "  \"result\": true|false,  (boolean) Whether the spend is allowed.\n"
+            "  \"error\": \"code\",       (string) What error, if any, caused the script to fail.\n"
+            "  \"trace\": [\n"
+            "    {\n"
+            "      \"context\": \"Sig\"|\"PubKey\"|\"BIP16\"|\"Segwit\",  (string) Context the script is being executed in.\n"
+            "      \"script\": {                                  (object) Script being executed.\n"
+            "         \"asm\": \"asm\",  (string) asm\n"
+            "         \"hex\": \"hex\"   (string) hex\n"
+            "      },"
+            "      \"sigversion\": \"Base\"|\"Witness_V0\",           (string) Signature hashing algorithm.\n"
+            "      \"steps\": [\n"
+            "        {\n"
+            "          \"pos\": n,              (numeric) Execution position into script, in bytes.\n"
+            "          \"pos_codehash\": n,     (numeric) Code hashing start position into script, in bytes.\n"
+            "          \"opcount\": n,          (numeric) Number of sigops executed so far.\n"
+            "          \"stack\": [             (array) Items on the stack.\n"
+            "            \"hex\", ...           (string) Hex encoded data on the stack.\n"
+            "          ],\n"
+            "          \"altstack\": [          (array) Items on the alternate stack.\n"
+            "            \"hex\", ...           (string) Hex encoded data on the stack.\n"
+            "          ],\n"
+            "          \"exec\": [              (array) State of active conditionals.\n"
+            "            true|false, ...      (boolean) If any of these are false, the next instruction will be skipped.\n"
+            "          ],\n"
+            "          \"next_op\": \"asm\",      (string) Opcode to be processed next, as a single asm instruction.\n"
+            "          \"next_opcode\": \"hex\",  (string) Hex encoded opcode to be processed next.\n"
+            "          \"next_push\": \"hex\",    (string) Hex encoded data to be pushed with opcode.\n"
+            "        }, ...\n"
+            "      ]\n"
+            "    }, ...\n"
+            "  ]\n"
+            "}\n"
+        );
+
+    RPCTypeCheck(request.params, {UniValue::VOBJ});
+
+    const UniValue & options = request.params[0];
+
+    const UniValue & flags_uv = find_value(options, "flags");
+    unsigned int flags = 0;
+    if (flags_uv.isArray()) {
+        for (unsigned int i = flags_uv.size(); i-- > 0; ) {
+            const UniValue & flag_uv = flags_uv[i];
+            flags |= ParseScriptFlag(flag_uv.get_str());
+        }
+    } else if (!flags_uv.isNull()) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "expected array for \"flags\"");
+    }
+
+    const UniValue & input_uv = find_value(options, "input");
+    if (!input_uv.isObject()) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "expected object for \"input\"");
+    }
+    const UniValue & sPK_uv = find_value(input_uv, "scriptPubKey");
+    if (!sPK_uv.isStr()) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "expected string for \"input\" \"scriptPubKey\"");
+    }
+    const CScript scriptPubKey = ParseHexScript(sPK_uv, "scriptPubKey");
+    const UniValue & amount_uv = find_value(input_uv, "amount");
+    CAmount amount = 0;
+    if (amount_uv.isNum()) {
+        amount = amount_uv.get_int64();
+    } else if (amount_uv.isNull()) {
+        if (flags & SCRIPT_VERIFY_WITNESS) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "\"input\" \"amount\" is required for VERIFY_WITNESS flag");
+        }
+    } else {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "expected number for \"input\" \"amount\"");
+    }
+
+    const UniValue & txid_uv = find_value(input_uv, "txid");
+    const UniValue & rawtx_uv = find_value(input_uv, "transaction");
+    CMutableTransaction mtx;
+    CTransactionRef tx;
+    if (rawtx_uv.isStr()) {
+        if (!DecodeHexTx(mtx, rawtx_uv.get_str(), true)) {
+            throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
+        }
+        if (txid_uv.isStr()) {
+            const uint256 txid = ParseHashV(txid_uv, "txid");
+            if (mtx.GetHash() != txid) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "\"input\" \"txid\" and \"transaction\" strings contradict");
+            }
+        }
+        tx = MakeTransactionRef(std::move(mtx));
+    } else if (txid_uv.isStr()) {
+        const uint256 txid = ParseHashV(txid_uv, "txid");
+        uint256 hashBlock;
+        if (!GetTransaction(txid, tx, Params().GetConsensus(), hashBlock, true)) {
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Cannot find transaction specified by \"txid\"");
+        }
+    } else {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "expected \"input\" with either \"txid\" or \"transaction\" string");
+    }
+
+    const UniValue & vout_uv = find_value(input_uv, "vout");
+    if (!vout_uv.isNum()) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "expected number for \"input\" \"vout\"");
+    }
+    unsigned int vout = vout_uv.get_int64();
+
+    const bool do_trace = find_value(options, "trace").isTrue();
+    verifyscript_ScriptExecutionDebugger debugger;
+
+    PrecomputedTransactionData txdata(*tx);
+    ScriptError err;
+    const bool rv = VerifyScript(tx->vin[vout].scriptSig, scriptPubKey, &tx->vin[vout].scriptWitness, flags, TransactionSignatureChecker(&*tx, vout, amount, txdata), &err, (do_trace ? &debugger : nullptr));
+
+    UniValue result(UniValue::VOBJ);
+    result.push_back(Pair("result", rv));
+
+    if (!rv) {
+        result.push_back(Pair("error", std::string(ScriptErrorString(err))));
+    }
+
+    if (do_trace) {
+        result.pushKV("trace", debugger.GetResult());
+    }
+
+    return result;
 }
 
 /** Pushes a JSON object for script verification or signing errors to vErrorsRet. */
@@ -1032,6 +1267,7 @@ static const CRPCCommand commands[] =
     { "rawtransactions",    "createrawtransaction",   &createrawtransaction,   {"inputs","outputs","locktime","replaceable"} },
     { "rawtransactions",    "decoderawtransaction",   &decoderawtransaction,   {"hexstring","iswitness"} },
     { "rawtransactions",    "decodescript",           &decodescript,           {"hexstring"} },
+    { "rawtransactions",    "verifyscript",           &verifyscript,           {"options"} },
     { "rawtransactions",    "sendrawtransaction",     &sendrawtransaction,     {"hexstring","allowhighfees"} },
     { "rawtransactions",    "combinerawtransaction",  &combinerawtransaction,  {"txs"} },
     { "rawtransactions",    "signrawtransaction",     &signrawtransaction,     {"hexstring","prevtxs","privkeys","sighashtype"} }, /* uses wallet if enabled */
