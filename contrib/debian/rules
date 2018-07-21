@@ -25,6 +25,7 @@ endif
 override_dh_auto_configure:
 	./autogen.sh
 	./configure --with-gui=$(QT)
+	cp src/qt/res/src/bitcoin.svg bitcoinknots.svg
 
 override_dh_auto_test:
 ifeq ($(QT), qt4)

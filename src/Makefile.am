@@ -594,6 +594,7 @@ endif
 RES_RENDERED_ICON_SRC = \
   qt/res/src/chart.svg \
   qt/res/src/bitcoin.svg \
+  qt/res/src/nsis-header.svg \
   qt/res/src/proxy.svg
 
 RES_RENDERED_ICONS = \
@@ -619,11 +620,11 @@ qt/res/rendered_icons/chart.png: qt/res/src/chart.svg
 	$(RSVG_CONVERT) -f png < $< > $@
 
 qt/res/rendered_icons/about.png: qt/res/rendered_icons/about.svg
-	$(RSVG_CONVERT) -f png -d 142 -p 142 < $< | $(IMAGEMAGICK_CONVERT) - -crop 128x128+7+7 -colorspace Gray -strip $@
+	$(RSVG_CONVERT) -f png -d 142 -p 142 < $< | $(IMAGEMAGICK_CONVERT) - -crop 128x128+7+7 -background white -alpha remove -colorspace Gray -negate -alpha copy -negate -strip $@
 
-qt/res/rendered_icons/about.svg: qt/res/src/bitcoin.svg
+qt/res/rendered_icons/about.svg: qt/res/src/bitcoin.svg Makefile
 	@$(MKDIR_P) $(@D)
-	sed '/fill="white"/d;s/\(stop-color:\)#....../\1black/' < $< > $@
+	sed 's/#\(006837\|00FF00\)/white/g;s/\(stop-color:\)#....../\1black/;s/#\(8C6239\|42210B\)/black/g' < $< > $@
 
 qt/res/rendered_icons/bitcoin%.png: qt/res/src/bitcoin.svg
 	@$(MKDIR_P) $(@D)
@@ -644,6 +645,9 @@ qt/res/rendered_icons/bitcoin_testnet.ico: qt/res/rendered_icons/bitcoin.ico
 
 qt/res/rendered_icons/nsis-wizard.bmp: qt/res/rendered_icons/bitcoin290.png
 	$(IMAGEMAGICK_CONVERT) $^ -crop 164x290+62+0 -border 0x12 -strip BMP3:$@
+
+qt/res/rendered_icons/nsis-header.bmp: qt/res/src/nsis-header.svg
+	sed 's/PACKAGE_NAME/$(PACKAGE_NAME)/' < "$<" | $(RSVG_CONVERT) -f png -d 57 -p 57 | $(IMAGEMAGICK_CONVERT) - -background white -alpha remove BMP3:$@
 
 qt/res/rendered_icons/proxy.png: qt/res/src/proxy.svg
 	@$(MKDIR_P) $(@D)
