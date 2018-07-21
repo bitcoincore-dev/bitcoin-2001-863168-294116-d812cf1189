@@ -1247,16 +1247,10 @@ UniValue sweepprivkeys(const JSONRPCRequest& request)
         // Collect all possible inputs
         std::map<COutPoint, Coin> coins;
         {
-            std::atomic<int> scanProgress;
-            std::atomic<bool> shouldAbort;
-            int64_t count;
-
             LOCK(cs_main);
             mempool.FindScriptPubKey(needles, coins);
             FlushStateToDisk();
-            if (!pcoinsdbview->FindScriptPubKey(scanProgress, shouldAbort, count, needles, coins)) {
-                throw JSONRPCError(RPC_MISC_ERROR, "pcoinsdbview->FindScriptPubKey failed");
-            }
+            pcoinsdbview->FindScriptPubKey(needles, coins);
         }
 
         // Add them as inputs to the transaction, and count the total value

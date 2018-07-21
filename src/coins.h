@@ -17,7 +17,6 @@
 #include <assert.h>
 #include <stdint.h>
 
-#include <atomic>
 #include <map>
 #include <set>
 #include <unordered_map>
@@ -160,15 +159,15 @@ public:
     //! Retrieve the block hash whose state this CCoinsView currently represents
     virtual uint256 GetBestBlock() const;
 
-    //! Search for a given set of pubkey scripts
-    static bool FindScriptPubKey(std::atomic<int>& scanProgress, std::atomic<bool>& shouldAbort, int64_t& count, CCoinsViewCursor& cursor, const std::set<CScript>& needles, std::map<COutPoint, Coin>& out_results);
-    bool FindScriptPubKey(std::atomic<int>& scanProgress, std::atomic<bool>& shouldAbort, int64_t& searchItems, const std::set<CScript>& needles, std::map<COutPoint, Coin>& out_results);
-
     //! Retrieve the range of blocks that may have been only partially written.
     //! If the database is in a consistent state, the result is the empty vector.
     //! Otherwise, a two-element vector is returned consisting of the new and
     //! the old block hash, in that order.
     virtual std::vector<uint256> GetHeadBlocks() const;
+
+    //! Search for a given set of pubkey scripts
+    static void FindScriptPubKey(CCoinsViewCursor& cursor, const std::set<CScript>& needles, std::map<COutPoint, Coin>& out_results);
+    void FindScriptPubKey(const std::set<CScript>& needles, std::map<COutPoint, Coin>& out_results);
 
     //! Do a bulk modification (multiple Coin changes + BestBlock change).
     //! The passed mapCoins can be modified.
