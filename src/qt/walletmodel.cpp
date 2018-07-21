@@ -682,7 +682,7 @@ bool WalletModel::transactionCanBeBumped(uint256 hash) const
     return feebumper::TransactionCanBeBumped(wallet, hash);
 }
 
-bool WalletModel::bumpFee(uint256 hash)
+bool WalletModel::bumpFee(uint256 hash, uint256& new_hash)
 {
     CCoinControl coin_control;
     coin_control.signalRbf = true;
@@ -734,8 +734,7 @@ bool WalletModel::bumpFee(uint256 hash)
         return false;
     }
     // commit the bumped transaction
-    uint256 txid;
-    if (feebumper::CommitTransaction(wallet, hash, std::move(mtx), errors, txid) != feebumper::Result::OK) {
+    if (feebumper::CommitTransaction(wallet, hash, std::move(mtx), errors, new_hash) != feebumper::Result::OK) {
         QMessageBox::critical(0, tr("Fee bump error"), tr("Could not commit transaction") + "<br />(" +
             QString::fromStdString(errors[0])+")");
          return false;
