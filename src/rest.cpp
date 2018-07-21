@@ -17,6 +17,8 @@
 #include <txmempool.h>
 #include <utilstrencodings.h>
 #include <version.h>
+#include <validation.h>
+#include <policy/fees.h>
 
 #include <boost/algorithm/string.hpp>
 
@@ -620,6 +622,73 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
     }
 }
 
+static bool rest_getfee(HTTPRequest* req, const std::string& strURIPart) {
+    if (!CheckWarmup(req)) {
+        return false;
+    }
+    std::string param;
+    const RetFormat rf = ParseDataFormat(param, strURIPart);
+    switch (rf) {
+    case RF_JSON: {
+        std::vector<std::string> path;
+        boost::split(path, param, boost::is_any_of("/"));
+        path.erase(path.begin());
+        // check url scheme is correct
+        if (path.size() != 2) {
+            return RESTERR(req, HTTP_BAD_REQUEST, "Path must be /rest/fee/<MODE>/<TARGET>.json");
+        }
+
+        // check estimation mode is valid
+        auto modestr = path[0];
+        std::transform(modestr.cbegin(), modestr.cend(), modestr.begin(), toupper);
+        FeeEstimateMode mode;
+        if (!FeeModeFromString(modestr, mode)){
+            return RESTERR(req, HTTP_BAD_REQUEST, "<MODE> must be one of <unset|economical|conservative>");
+        };
+
+        // type conversions for estimateSmartFee
+        bool conservative;
+        if (mode == FeeEstimateMode::ECONOMICAL) {
+            conservative = false;
+        } else {
+            conservative = true;
+        }
+        unsigned int conf_target;
+        try {
+             conf_target = std::stoi(path[1]);
+        } catch (std::invalid_argument& e) {
+            return RESTERR(req, HTTP_BAD_REQUEST, strprintf("Uneable to parse confirmation target to int"));
+        };
+        unsigned int max_target = ::feeEstimator.HighestTargetTracked(FeeEstimateHorizon::LONG_HALFLIFE);
+        if (conf_target < 1 || (unsigned int)conf_target > max_target) {
+            return RESTERR(req, HTTP_BAD_REQUEST, strprintf("Invalid confirmation target, must be in between %u - %u", 1, max_target));
+        };
+
+        // perform fee estimation
+        FeeCalculation feeCalc;
+        CFeeRate estimatedfee = ::feeEstimator.estimateSmartFee(conf_target, &feeCalc, conservative);
+
+        // create json for replying
+        UniValue feejson(UniValue::VOBJ);
+        if (estimatedfee != CFeeRate(0)) {
+            feejson.push_back(Pair("feerate", ValueFromAmount(estimatedfee.GetFeePerK())));
+        } else {
+            return RESTERR(req, HTTP_SERVICE_UNAVAILABLE, "Insufficient data or no feerate found");
+        }
+        feejson.push_back(Pair("blocks", feeCalc.returnedTarget));
+
+        // reply
+        std::string strJSON = feejson.write() + "\n";
+        req->WriteHeader("Content-Type", "application/json");
+        req->WriteReply(HTTP_OK, strJSON);
+        return true;
+    }
+    default: {
+        return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: json)");
+    }
+    }
+}
+
 static const struct {
     const char* prefix;
     bool (*handler)(HTTPRequest* req, const std::string& strReq);
@@ -633,6 +702,7 @@ static const struct {
       {"/rest/mempool/contents", rest_mempool_contents},
       {"/rest/headers/", rest_headers},
       {"/rest/getutxos", rest_getutxos},
+      {"/rest/fee", rest_getfee},
 };
 
 bool StartREST()
