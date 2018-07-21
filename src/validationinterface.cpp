@@ -30,6 +30,7 @@ struct MainSignalsInstance {
     boost::signals2::signal<void (int64_t nBestBlockTime, CConnman* connman)> Broadcast;
     boost::signals2::signal<void (const CBlock&, const CValidationState&)> BlockChecked;
     boost::signals2::signal<void (const CBlockIndex *, const std::shared_ptr<const CBlock>&)> NewPoWValidBlock;
+    boost::signals2::signal<void ()> ValidationInterfaceUnregistering;
 
     // We are not allowed to assume the scheduler only runs in one thread,
     // but must ensure all callbacks happen in-order, so we end up creating
@@ -85,9 +86,12 @@ void RegisterValidationInterface(CValidationInterface* pwalletIn) {
     g_signals.m_internals->Broadcast.connect(boost::bind(&CValidationInterface::ResendWalletTransactions, pwalletIn, _1, _2));
     g_signals.m_internals->BlockChecked.connect(boost::bind(&CValidationInterface::BlockChecked, pwalletIn, _1, _2));
     g_signals.m_internals->NewPoWValidBlock.connect(boost::bind(&CValidationInterface::NewPoWValidBlock, pwalletIn, _1, _2));
+    g_signals.m_internals->ValidationInterfaceUnregistering.connect(boost::bind(&CValidationInterface::ValidationInterfaceUnregistering, pwalletIn));
 }
 
 void UnregisterValidationInterface(CValidationInterface* pwalletIn) {
+    pwalletIn->ValidationInterfaceUnregistering();
+
     g_signals.m_internals->BlockChecked.disconnect(boost::bind(&CValidationInterface::BlockChecked, pwalletIn, _1, _2));
     g_signals.m_internals->Broadcast.disconnect(boost::bind(&CValidationInterface::ResendWalletTransactions, pwalletIn, _1, _2));
     g_signals.m_internals->Inventory.disconnect(boost::bind(&CValidationInterface::Inventory, pwalletIn, _1));
@@ -98,12 +102,16 @@ void UnregisterValidationInterface(CValidationInterface* pwalletIn) {
     g_signals.m_internals->TransactionRemovedFromMempool.disconnect(boost::bind(&CValidationInterface::TransactionRemovedFromMempool, pwalletIn, _1));
     g_signals.m_internals->UpdatedBlockTip.disconnect(boost::bind(&CValidationInterface::UpdatedBlockTip, pwalletIn, _1, _2, _3));
     g_signals.m_internals->NewPoWValidBlock.disconnect(boost::bind(&CValidationInterface::NewPoWValidBlock, pwalletIn, _1, _2));
+    g_signals.m_internals->ValidationInterfaceUnregistering.disconnect(boost::bind(&CValidationInterface::ValidationInterfaceUnregistering, pwalletIn));
 }
 
 void UnregisterAllValidationInterfaces() {
     if (!g_signals.m_internals) {
         return;
     }
+
+    g_signals.m_internals->ValidationInterfaceUnregistering();
+
     g_signals.m_internals->BlockChecked.disconnect_all_slots();
     g_signals.m_internals->Broadcast.disconnect_all_slots();
     g_signals.m_internals->Inventory.disconnect_all_slots();
@@ -114,6 +122,7 @@ void UnregisterAllValidationInterfaces() {
     g_signals.m_internals->TransactionRemovedFromMempool.disconnect_all_slots();
     g_signals.m_internals->UpdatedBlockTip.disconnect_all_slots();
     g_signals.m_internals->NewPoWValidBlock.disconnect_all_slots();
+    g_signals.m_internals->ValidationInterfaceUnregistering.disconnect_all_slots();
 }
 
 void CallFunctionInValidationInterfaceQueue(std::function<void ()> func) {
