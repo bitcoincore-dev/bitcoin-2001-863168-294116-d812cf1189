@@ -4,6 +4,7 @@
 
 #include <dbwrapper.h>
 
+#include <memory>
 #include <random.h>
 #include <ui_interface.h>
 
