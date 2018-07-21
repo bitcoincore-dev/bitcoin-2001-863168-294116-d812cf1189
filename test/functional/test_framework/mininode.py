@@ -75,23 +75,46 @@ class P2PConnection(asyncore.dispatcher):
 
         super().__init__(map=mininode_socket_map)
 
-    def peer_connect(self, dstaddr, dstport, net="regtest"):
+    def peer_connect(self, dstaddr, dstport, net="regtest", node_outgoing=False):
         self.dstaddr = dstaddr
         self.dstport = dstport
-        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         self.sendbuf = b""
         self.recvbuf = b""
         self.state = "connecting"
         self.network = net
+        self.node_outgoing = node_outgoing
         self.disconnect = False
 
-        logger.info('Connecting to Bitcoin Node: %s:%d' % (self.dstaddr, self.dstport))
-
         try:
-            self.connect((dstaddr, dstport))
+            self.do_connect()
         except:
             self.handle_close()
+
+    def do_connect(self):
+        if not self.node_outgoing:
+            logger.info('Connecting to Bitcoin Node: %s:%d' % (self.dstaddr, self.dstport))
+            self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+            self.connect((self.dstaddr, self.dstport))
+            return
+
+        logger.info('Connecting from Bitcoin Node: %s:%d' % (self.dstaddr, self.dstport))
+
+        listen_sock = socket.socket()
+        listen_sock.bind(('127.0.0.1', 0))
+        listen_sock.listen(1)
+        listen_port = listen_sock.getsockname()[1]
+        self.rpc.addnode('127.0.0.1:%u' % (listen_port,), 'onetry', False)
+        (sock, addr) = listen_sock.accept()
+        assert sock
+        listen_sock.close()
+
+        sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        sock.setblocking(0)
+        self.set_socket(sock)
+        self.connected = True
+        self.addr = addr
+        self.handle_connect_event()
 
     def peer_disconnect(self):
         # Connection could have already been closed by other end.
