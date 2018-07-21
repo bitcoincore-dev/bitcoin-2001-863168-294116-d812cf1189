@@ -104,6 +104,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "decoderawtransaction", 1, "iswitness" },
     { "signrawtransaction", 1, "prevtxs" },
     { "signrawtransaction", 2, "privkeys" },
+    { "sendrawtransaction", 1, "ignore_rejects" },
     { "sendrawtransaction", 1, "allowhighfees" },
     { "combinerawtransaction", 0, "txs" },
     { "fundrawtransaction", 1, "options" },

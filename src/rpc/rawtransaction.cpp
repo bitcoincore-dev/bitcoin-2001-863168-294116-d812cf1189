@@ -1204,12 +1204,12 @@ UniValue sendrawtransaction(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
         throw std::runtime_error(
-            "sendrawtransaction \"hexstring\" ( allowhighfees )\n"
+            "sendrawtransaction \"hexstring\" ( [\"ignore_reject\",...] )\n"
             "\nSubmits raw transaction (serialized, hex-encoded) to local node and network.\n"
             "\nAlso see createrawtransaction and signrawtransaction calls.\n"
             "\nArguments:\n"
             "1. \"hexstring\"    (string, required) The hex string of the raw transaction)\n"
-            "2. allowhighfees    (boolean, optional, default=false) Allow high fees\n"
+            "2. \"ignore_reject\" (string, optional) Rejection conditions to ignore, eg 'absurdly-high-fee'\n"
             "\nResult:\n"
             "\"hex\"             (string) The transaction hash in hex\n"
             "\nExamples:\n"
@@ -1227,7 +1227,7 @@ UniValue sendrawtransaction(const JSONRPCRequest& request)
 
     std::promise<void> promise;
 
-    RPCTypeCheck(request.params, {UniValue::VSTR, UniValue::VBOOL});
+    RPCTypeCheck(request.params, {UniValue::VSTR});
 
     // parse hex string from parameter
     CMutableTransaction mtx;
@@ -1237,8 +1237,24 @@ UniValue sendrawtransaction(const JSONRPCRequest& request)
     const uint256& hashTx = tx->GetHash();
 
     CAmount nMaxRawTxFee = maxTxFee;
-    if (!request.params[1].isNull() && request.params[1].get_bool())
-        nMaxRawTxFee = 0;
+
+    ignore_rejects_type ignore_rejects;
+    const UniValue& json_ign_rejs = request.params[1];
+    if (!json_ign_rejs.isNull()) {
+        if (json_ign_rejs.isBool()) {
+            // This parameter used to be boolean allowhighfees
+            if (json_ign_rejs.isTrue()) {
+                ignore_rejects.insert(rejectmsg_absurdfee);
+            }
+        } else {
+            RPCTypeCheckArgument(json_ign_rejs, UniValue::VARR);
+
+            for (size_t i = 0; i < json_ign_rejs.size(); ++i) {
+                const UniValue& json_ign_rej = json_ign_rejs[i];
+                ignore_rejects.insert(json_ign_rej.get_str());
+            }
+        }
+    }
 
     { // cs_main scope
     LOCK(cs_main);
@@ -1254,7 +1270,7 @@ UniValue sendrawtransaction(const JSONRPCRequest& request)
         CValidationState state;
         bool fMissingInputs;
         if (!AcceptToMemoryPool(mempool, state, std::move(tx), &fMissingInputs,
-                                nullptr /* plTxnReplaced */, false /* bypass_limits */, nMaxRawTxFee)) {
+                                nullptr /* plTxnReplaced */, ignore_rejects, nMaxRawTxFee)) {
             if (state.IsInvalid()) {
                 throw JSONRPCError(RPC_TRANSACTION_REJECTED, strprintf("%i: %s", state.GetRejectCode(), state.GetRejectReason()));
             } else {
@@ -1305,7 +1321,7 @@ static const CRPCCommand commands[] =
     { "rawtransactions",    "decoderawtransaction",   &decoderawtransaction,   {"hexstring","iswitness"} },
     { "rawtransactions",    "decodescript",           &decodescript,           {"hexstring"} },
     { "rawtransactions",    "verifyscript",           &verifyscript,           {"options"} },
-    { "rawtransactions",    "sendrawtransaction",     &sendrawtransaction,     {"hexstring","allowhighfees"} },
+    { "rawtransactions",    "sendrawtransaction",     &sendrawtransaction,     {"hexstring","ignore_rejects|allowhighfees"} },
     { "rawtransactions",    "combinerawtransaction",  &combinerawtransaction,  {"txs"} },
     { "rawtransactions",    "signrawtransaction",     &signrawtransaction,     {"hexstring","prevtxs","privkeys","sighashtype"} }, /* uses wallet if enabled */
 
