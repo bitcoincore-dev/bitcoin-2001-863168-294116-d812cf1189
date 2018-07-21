@@ -389,7 +389,8 @@ std::string EntryDescriptionString()
            "       ... ]\n"
            "    \"spentby\" : [           (array) unconfirmed transactions spending outputs from this transaction\n"
            "        \"transactionid\",    (string) child transaction id\n"
-           "       ... ]\n";
+           "       ... ]\n"
+           "    \"bip125-replaceable\" : true|false,  (boolean) Whether this transaction could be replaced due to BIP125 (replace-by-fee)\n";
 }
 
 void entryToJSON(UniValue &info, const CTxMemPoolEntry &e)
@@ -441,6 +442,18 @@ void entryToJSON(UniValue &info, const CTxMemPoolEntry &e)
     }
 
     info.pushKV("spentby", spent);
+
+    // Add opt-in RBF status
+    switch (IsRBFOptIn(tx, mempool)) {
+        case RBF_TRANSACTIONSTATE_FINAL:
+            info.push_back(Pair("bip125-replaceable", false));
+            break;
+        case RBF_TRANSACTIONSTATE_REPLACEABLE_BIP125:
+            info.push_back(Pair("bip125-replaceable", true));
+            break;
+        case RBF_TRANSACTIONSTATE_UNKNOWN:
+            break;
+    }
 }
 
 UniValue mempoolToJSON(bool fVerbose)
