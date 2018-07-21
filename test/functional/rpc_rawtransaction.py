@@ -108,6 +108,8 @@ class RawTransactionsTest(BitcoinTestFramework):
 
         # This will raise an exception since there are missing inputs
         assert_raises_rpc_error(-25, "Missing inputs", self.nodes[2].sendrawtransaction, rawtx['hex'])
+        # Due to missing inputs, we should not see a fee entry
+        assert 'fee' not in rawtx
 
         #####################################
         # getrawtransaction with block hash #
@@ -204,9 +206,13 @@ class RawTransactionsTest(BitcoinTestFramework):
         rawTx = self.nodes[2].createrawtransaction(inputs, outputs)
         rawTxPartialSigned = self.nodes[1].signrawtransaction(rawTx, inputs)
         assert_equal(rawTxPartialSigned['complete'], False) #node1 only has one key, can't comp. sign the tx
+        # We should have a fee because we know the input amounts. The fee should be correct.
+        assert_equal(rawTxPartialSigned['fee'], vout['value'] - Decimal('2.19'))
 
         rawTxSigned = self.nodes[2].signrawtransaction(rawTx, inputs)
         assert_equal(rawTxSigned['complete'], True) #node2 can sign the tx compl., own two of three keys
+        # We should have a fee because we know the input amounts. The fee should be correct.
+        assert_equal(rawTxPartialSigned['fee'], vout['value'] - Decimal('2.19'))
         self.nodes[2].sendrawtransaction(rawTxSigned['hex'])
         rawTx = self.nodes[0].decoderawtransaction(rawTxSigned['hex'])
         self.sync_all()
@@ -249,11 +255,13 @@ class RawTransactionsTest(BitcoinTestFramework):
         rawTx2 = self.nodes[2].createrawtransaction(inputs, outputs)
         rawTxPartialSigned1 = self.nodes[1].signrawtransaction(rawTx2, inputs)
         self.log.info(rawTxPartialSigned1)
-        assert_equal(rawTxPartialSigned['complete'], False) #node1 only has one key, can't comp. sign the tx
+        assert_equal(rawTxPartialSigned1['complete'], False) #node1 only has one key, can't comp. sign the tx
+        assert_equal(rawTxPartialSigned1['fee'], vout['value'] - Decimal('2.19'))
 
         rawTxPartialSigned2 = self.nodes[2].signrawtransaction(rawTx2, inputs)
         self.log.info(rawTxPartialSigned2)
         assert_equal(rawTxPartialSigned2['complete'], False) #node2 only has one key, can't comp. sign the tx
+        assert_equal(rawTxPartialSigned2['fee'], vout['value'] - Decimal('2.19'))
         rawTxComb = self.nodes[2].combinerawtransaction([rawTxPartialSigned1['hex'], rawTxPartialSigned2['hex']])
         self.log.info(rawTxComb)
         self.nodes[2].sendrawtransaction(rawTxComb)
