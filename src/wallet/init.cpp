@@ -5,6 +5,7 @@
 
 #include <wallet/init.h>
 
+#include <keystore.h>
 #include <net.h>
 #include <util.h>
 #include <utilmoneystr.h>
@@ -40,6 +41,7 @@ std::string GetWalletHelpString(bool showDebug)
     strUsage += HelpMessageOpt("-wallet=<file>", _("Specify wallet file (within data directory)") + " " + strprintf(_("(default: %s)"), DEFAULT_WALLET_DAT));
     strUsage += HelpMessageOpt("-walletbroadcast", _("Make the wallet broadcast transactions") + " " + strprintf(_("(default: %u)"), DEFAULT_WALLETBROADCAST));
     strUsage += HelpMessageOpt("-walletdir=<dir>", _("Specify directory to hold wallets (default: <datadir>/wallets if it exists, otherwise <datadir>)"));
+    strUsage += HelpMessageOpt("-walletimplicitsegwit", strprintf(_("Support segwit when restoring wallet backups and importing keys (default: %u)"), DEFAULT_WALLET_IMPLICIT_SEGWIT));
     strUsage += HelpMessageOpt("-walletnotify=<cmd>", _("Execute command when a wallet transaction changes (%s in cmd is replaced by TxID and %w is replaced by wallet name)"));
     strUsage += HelpMessageOpt("-zapwallettxes=<mode>", _("Delete all wallet transactions and only recover those parts of the blockchain through -rescan on startup") +
                                " " + _("(1 = keep tx meta data e.g. account owner and payment request information, 2 = drop tx meta data)"));
@@ -178,6 +180,12 @@ bool WalletParameterInteraction()
     nTxConfirmTarget = gArgs.GetArg("-txconfirmtarget", DEFAULT_TX_CONFIRM_TARGET);
     bSpendZeroConfChange = gArgs.GetBoolArg("-spendzeroconfchange", DEFAULT_SPEND_ZEROCONF_CHANGE);
     fWalletRbf = gArgs.GetBoolArg("-walletrbf", DEFAULT_WALLET_RBF);
+
+    if (!g_implicit_segwit) {
+        if (gArgs.SoftSetArg("-addresstype", "legacy")) {
+            LogPrintf("%s: parameter interaction: -walletimplicitsegwit=%u -> setting -addresstype=legacy\n", __func__, g_implicit_segwit);
+        }
+    }
 
     g_address_type = ParseOutputType(gArgs.GetArg("-addresstype", ""));
     if (g_address_type == OUTPUT_TYPE_NONE) {

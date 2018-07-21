@@ -4262,6 +4262,7 @@ void CWallet::LearnRelatedScripts(const CPubKey& key, OutputType type)
 
 void CWallet::LearnAllRelatedScripts(const CPubKey& key)
 {
+    if (!g_implicit_segwit) return;
     // OUTPUT_TYPE_P2SH_SEGWIT always adds all necessary scripts for all types.
     LearnRelatedScripts(key, OUTPUT_TYPE_P2SH_SEGWIT);
 }
@@ -4288,7 +4289,7 @@ CTxDestination GetDestinationForKey(const CPubKey& key, OutputType type)
 std::vector<CTxDestination> GetAllDestinationsForKey(const CPubKey& key)
 {
     CKeyID keyid = key.GetID();
-    if (key.IsCompressed()) {
+    if (key.IsCompressed() && g_implicit_segwit) {
         CTxDestination segwit = WitnessV0KeyHash(keyid);
         CTxDestination p2sh = CScriptID(GetScriptForDestination(segwit));
         return std::vector<CTxDestination>{std::move(keyid), std::move(p2sh), std::move(segwit)};

@@ -22,6 +22,7 @@
 #include <httpserver.h>
 #include <httprpc.h>
 #include <key.h>
+#include <keystore.h>
 #include <validation.h>
 #include <miner.h>
 #include <netbase.h>
@@ -1121,6 +1122,8 @@ bool AppInitParameterInteraction()
 
     fRequireStandard = !gArgs.GetBoolArg("-acceptnonstdtxn", !chainparams.RequireStandardDefault());
     nBytesPerSigOp = gArgs.GetArg("-bytespersigop", nBytesPerSigOp);
+
+    g_implicit_segwit = gArgs.GetBoolArg("-walletimplicitsegwit", DEFAULT_WALLET_IMPLICIT_SEGWIT);
 
 #ifdef ENABLE_WALLET
     if (!WalletParameterInteraction())
