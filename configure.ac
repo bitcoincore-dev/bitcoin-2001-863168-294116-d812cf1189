@@ -263,6 +263,10 @@ if test "x$CXXFLAGS_overridden" = "xno"; then
 fi
 
 enable_hwcrc32=no
+enable_sse41=no
+enable_avx2=no
+enable_shani=no
+enable_power8=no
 
 if test "x$use_asm" = "xyes"; then
 
