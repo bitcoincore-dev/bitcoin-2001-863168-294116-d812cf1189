@@ -262,6 +262,8 @@ if test "x$CXXFLAGS_overridden" = "xno"; then
   AX_CHECK_COMPILE_FLAG([-Wimplicit-fallthrough],[CXXFLAGS="$CXXFLAGS -Wno-implicit-fallthrough"],,[[$CXXFLAG_WERROR]])
 fi
 
+enable_hwcrc32=no
+
 if test "x$use_asm" = "xyes"; then
 
 # Check for optional instruction set support. Enabling these does _not_ imply that all code will
