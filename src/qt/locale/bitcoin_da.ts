@@ -30,6 +30,10 @@
         <translation>Slet den markerede adresse fra listen</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Indtast adresse eller mærkat for at søge</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Eksportér den aktuelle visning til en fil</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>&amp;Åbn URI…</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Tegnebog:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -786,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -912,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -960,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Ukendt. Synkroniserer hoveder (%1)…</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
     </message>
 </context>
 <context>
@@ -1206,6 +1237,10 @@
     <message>
         <source>none</source>
         <translation>ingen</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1527,6 +1562,11 @@
         <source>unknown</source>
         <translation>ukendt</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1627,6 +1667,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Hukommelsesforbrug</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Tegnebog: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2105,10 +2149,6 @@
         <translation>pr. kilobyte</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Hvis det brugertilpassede gebyr er sat til 1000 satoshis, og transaktionen kun fylder 250 byte, betaler “pr. kilobyte” kun 250 satoshis i gebyr, mens “total mindst” betaler 1000 satoshis. For transaktioner større end en kilobyte betaler begge pr. kilobyte.</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Skjul</translation>
     </message>
@@ -2217,20 +2257,16 @@
         <translation>Er du sikker på, at du vil sende?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>tilføjet som transaktionsgebyr</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Beløb i alt %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>eller</translation>
     </message>
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>Du kan øge gebyret senere (signalerer erstat-med-gebyr, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Transaktionsgebyr</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
@@ -2578,10 +2614,6 @@
         <translation>i konflikt med en transaktion, der har %1 bekræftelser</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/offline</translation>
-    </message>
-    <message>
         <source>0/unconfirmed, %1</source>
         <translation>0/ubekræftet, %1</translation>
     </message>
@@ -2608,14 +2640,6 @@
     <message>
         <source>Status</source>
         <translation>Status</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, er ikke blevet transmitteret endnu</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, transmitteret igennem %n knude</numerusform><numerusform>, transmitteret igennem %n knuder</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2772,10 +2796,6 @@
         <translation>Åben indtil %1</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Offline</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Ubekræftet</translation>
     </message>
@@ -2798,10 +2818,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Umoden (%1 bekræftelser; vil være tilgængelig efter %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Denne blok blev ikke modtaget af nogen andre knuder og vil formentlig ikke blive accepteret!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3226,10 +3242,6 @@
         <translation>Ekskludér fejlsøgningsinformation for en kategori. Kan bruges sammen med -debug=1 for at udskrive fejlsøgningslogs for alle kategorier undtaget én eller flere specificerede kategorier.</translation>
     </message>
     <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>Udfør kommando, når en transaktion i tegnebogen ændres (%s i kommandoen erstattes med TxID)</translation>
-    </message>
-    <message>
         <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
         <translation>Ekstra transaktioner, der skal beholdes i hukommelsen til kompakte blokgenopbygninger (standard: %u)</translation>
     </message>
@@ -3264,6 +3276,10 @@
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>Sæt den laveste gebyrsats (i %s/kB) for transaktioner, der skal inkluderes i blokoprettelse. (standard: %s)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Sæt maksimumstørrelse for højprioritet/lavgebyr-transaktioner i byte (standard: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3312,6 +3328,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>Hvorvidt hukommelsespuljen skal gemmes under nedlukning og indlæses under genstart (standard: %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Sæt knuder på hvidliste, som forbinder fra den givne IP-adresse (fx 1.2.3.4) eller CIDR-noteret netværk (fx 1.2.3.0/24). Kan angives flere gange.</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3486,6 +3506,10 @@
         <translation>Placering for autentificerings-cookie (standard: datamappe)</translation>
     </message>
     <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimum bytes pr. sigop i transaktioner, vi videresender og miner (standard: %u)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>For få tilgængelige fildeskriptorer.</translation>
     </message>
@@ -3532,6 +3556,10 @@
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Sæt cache-størrelse for database i megabytes (%d til %d; standard: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Sæt maksimum blokstørrelse i byte (standard: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3940,10 +3968,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Advarsel: Tegnebogsfil ødelagt, data reddet! Oprindelig %s gemt som %s i %s; hvis din saldo eller dine transaktioner er forkert, bør du genskabe fra en sikkerhedskopi.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Sæt knuder på hvidliste, som forbinder fra den givne IP-adresse (fx 1.2.3.4) eller CIDR-noteret netværk (fx 1.2.3.0/24). Kan angives flere gange.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

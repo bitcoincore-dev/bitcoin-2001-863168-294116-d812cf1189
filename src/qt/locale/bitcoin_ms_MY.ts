@@ -133,6 +133,11 @@ Alihkan fail data ke dalam tab semasa</translation>
         <translation>Ulangi frasa laluan baru</translation>
     </message>
     <message>
+        <source>Show password</source>
+        <translation>Tunjukkan kata laluan
+</translation>
+    </message>
+    <message>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
         <translation>Memasukkan frasa laluan baru kepada dompet.&lt;br/&gt;Sila mengunakkan frasa laluan yang&lt;b&gt;mengandungi 10 atau lebih aksara rawak&lt;/b&gt;,ataupun&lt;b&gt;lapan atau lebih perkataan.&lt;/b&gt;</translation>
     </message>
@@ -319,6 +324,10 @@ Alihkan fail data ke dalam tab semasa</translation>
         <translation>Buka &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">dompet:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Tekan untuk lumpuhkan rangkaian</translation>
     </message>
@@ -410,6 +419,25 @@ Alihkan fail data ke dalam tab semasa</translation>
         <source>&amp;Help</source>
         <translation>tolong</translation>
     </message>
+    <message>
+        <source>Tabs toolbar</source>
+        <translation>Bar alat tab
+</translation>
+    </message>
+    <message>
+        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
+        <translation>Minta bayaran (menjana kod QR dan bitcoin: URI)
+</translation>
+    </message>
+    <message>
+        <source>Show the list of used sending addresses and labels</source>
+        <translation>Tunjukkan senarai alamat dan label yang digunakan
+</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Reindexi blok pada cakera...</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -425,6 +453,10 @@ Alihkan fail data ke dalam tab semasa</translation>
         <translation>Alamat</translation>
     </message>
     <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;Label</translation>
+    </message>
+    <message>
         <source>&amp;Address</source>
         <translation>Alamat</translation>
     </message>
@@ -433,7 +465,14 @@ Alihkan fail data ke dalam tab semasa</translation>
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Mengenai%1</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
@@ -443,13 +482,32 @@ Alihkan fail data ke dalam tab semasa</translation>
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Alamat</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Buka URI</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;dompet</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -471,9 +529,25 @@ Alihkan fail data ke dalam tab semasa</translation>
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Tetingkap Debug</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">dompet: </translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Aktiviti rangkaian dilumpuhkan</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Label:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -504,8 +578,16 @@ Alihkan fail data ke dalam tab semasa</translation>
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Pilih...</translation>
+    </message>
+    <message>
         <source>Balance:</source>
         <translation>Baki</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">hantar</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -514,6 +596,10 @@ Alihkan fail data ke dalam tab semasa</translation>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Label:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -532,6 +618,10 @@ Alihkan fail data ke dalam tab semasa</translation>
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Transaction</source>
+        <translation>Transaksi</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -578,9 +668,17 @@ Alihkan fail data ke dalam tab semasa</translation>
 <context>
     <name>WalletView</name>
     <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Eksport</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>
 Alihkan fail data ke dalam tab semasa</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Dompet Sandaran</translation>
     </message>
     </context>
 <context>

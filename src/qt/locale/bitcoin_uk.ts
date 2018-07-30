@@ -30,6 +30,10 @@
         <translation>Вилучити вибрані адреси з переліку</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Введіть адресу чи мітку для пошуку</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Експортувати дані з поточної вкладки в файл</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Відкрити &amp;URI</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Гаманець:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -782,6 +790,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -904,6 +915,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Н/Д</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -955,6 +973,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тип</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адреса</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -986,6 +1017,10 @@
     <message>
         <source>&amp;Main</source>
         <translation>&amp;Головні</translation>
+    </message>
+    <message>
+        <source>&amp;Start %1 on system login</source>
+        <translation>&amp;Запускати %1 при вході в систему</translation>
     </message>
     <message>
         <source>Size of &amp;database cache</source>
@@ -1190,6 +1225,10 @@
     <message>
         <source>none</source>
         <translation>відсутні</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1513,6 +1552,16 @@
         <source>unknown</source>
         <translation>невідомо</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакція</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1613,6 +1662,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Використання пам'яті</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Гаманець: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1878,6 +1931,10 @@
         <translation>Очистити</translation>
     </message>
     <message>
+        <source>Generate native segwit (Bech32) address</source>
+        <translation>Згенерувати чистий SegWit (Bech32) адрес </translation>
+    </message>
+    <message>
         <source>Requested payments history</source>
         <translation>Історія запитів платежу</translation>
     </message>
@@ -2083,10 +2140,6 @@
         <translation>за кілобайт</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Якщо комісія встановлюється в 1000 сатоші і розмір транзакції лише 250 байтів, то опція "за кілобайт" встановлює комісію в 250 сатоші, в той час, як "всього щонайменше" - в 1000 сатоші. Для транзакцій більших за кілобайт в обох випадках буде знято комісію за кілобайт.</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Приховати</translation>
     </message>
@@ -2195,20 +2248,16 @@
         <translation>Ви впевнені, що хочете відправити?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>додано як комісія за транзакцію</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Загальна сума %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>або</translation>
     </message>
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>Ви можете збільшити комісію пізніше (сигналізує Заміна-Через-Комісію, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Комісія за транзакцію</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
@@ -2556,10 +2605,6 @@
         <translation>конфліктує з транзакцією із %1 підтвердженнями</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/вимкнено</translation>
-    </message>
-    <message>
         <source>0/unconfirmed, %1</source>
         <translation>0/не підтверджено, %1</translation>
     </message>
@@ -2586,14 +2631,6 @@
     <message>
         <source>Status</source>
         <translation>Статут</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, ще не було успішно розіслано</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, транслюється через %n вузол</numerusform><numerusform>, транслюється через %n вузлів</numerusform><numerusform>, транслюється через %n вузлів</numerusform><numerusform>, транслюється через %n вузлів</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2750,10 +2787,6 @@
         <translation>Відкрито до %1</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Поза мережею</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Не підтверджено</translation>
     </message>
@@ -2776,10 +2809,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Повністтю не підтверджено (%1 підтверджень, будуть доступні після %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Цей блок не був отриманий жодними іншими вузлами і, ймовірно, не буде прийнятий!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3204,10 +3233,6 @@
         <translation>Виключити налагоджувальну інформацію для категорії. Може використовуватися разом з -debug = 1 для виведення журналів налагодження для всіх категорій за винятком однієї або декількох зазначених категорій.</translation>
     </message>
     <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>Виконати команду, коли транзакція гаманця зміниться (замість %s в команді буде підставлено ідентифікатор транзакції)</translation>
-    </message>
-    <message>
         <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
         <translation>Додаткові транзакції для збереження в пам'яті компактних реконструкцій блоку (типово: %u)</translation>
     </message>
@@ -3242,6 +3267,10 @@
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>Встановіть найнижчу ставку (у %s/kB) для транзакцій, щоб долукчити їх до блоку. (типово: %s)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Встановити максимальний розмір транзакцій з високим пріоритетом та низькою комісією (в байтах) (типово: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3290,6 +3319,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>Чи зберігати пул пам'яті при вимкненні та завантажувати при перезавантаженні (типово: %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Занести в білий список вузли з заданою IP-адресою (наприклад, 1.2.3.4), або мережею з позначкою CIDR (наприклад, 1.2.3.0/24). Можна вказати кілька разів.</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3510,6 +3543,10 @@
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Встановити розмір кешу бази даних в мегабайтах (від %d до %d, типово: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Встановити максимальний розмір блоку у байтах (типово: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3930,10 +3967,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Попередження: файл гаманця пошкоджено, дані врятовано! Оригінальний %s збережено як %s в %s; якщо ваш баланс або транзакції некорректно відображаються, ви повинні відновити його з резервної копії.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Занести в білий список вузли з заданою IP-адресою (наприклад, 1.2.3.4), або мережею з позначкою CIDR (наприклад, 1.2.3.0/24). Можна вказати кілька разів.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

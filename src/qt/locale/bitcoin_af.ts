@@ -184,6 +184,10 @@
         <translation>Beursie gekodifiseer</translation>
     </message>
     <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 gaan nou toemaak om die kodifikasie af te handel. Onthou dat die kodifikasie van u beursie nie altyd u munte kan beskerm teen diefstal deur kwaadwillige sagteware op u rekenaar nie.</translation>
+    </message>
+    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>BELANGRIK:  Alle vorige kopieë en rugsteun-weergawes wat u tevore van die gemaak het, moet vervang word met die jongste weergawe van u nuutste gekodifiseerde beursie.  Alle vorige weergawes en rugsteun-kopieë van u beursie sal nutteloos raak die oomblik wat u die nuut-gekodifiseerde beursie begin gebruik.</translation>
     </message>
@@ -318,6 +322,10 @@
         <translation>Oop &amp; URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Beursie:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Kliek om netwerkaktiwiteit af te skakel.</translation>
     </message>
@@ -436,6 +444,10 @@
     <message>
         <source>Processing blocks on disk...</source>
         <translation>Blokke op skyf word geprosesseer...</translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation><numerusform>%n blok van transaksiegeskiedenis geprosesseer.</numerusform><numerusform>%n blokke van transaksiegeskiedenis geprosesseer.</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -750,6 +762,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -840,6 +855,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>n.v.t.</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -880,6 +902,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Onbekend. Besig Met Sinchroniseer Van Hoofde (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipe</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
     </message>
 </context>
 <context>
@@ -936,6 +971,10 @@
         <translation>Aantal skrip &amp;verifikasie drade</translation>
     </message>
     <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Versteek skinkbord ikoon</translation>
+    </message>
+    <message>
         <source>Active command-line options that override above options:</source>
         <translation>Aktiewe opdrag lyn opsies wat die boonste opsies ignoreer:</translation>
     </message>
@@ -974,6 +1013,14 @@
     <message>
         <source>&amp;Spend unconfirmed change</source>
         <translation>&amp;Spandeer onbevestigde kleingeld</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside.</source>
+        <translation>Verbindings van buite toelaat.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Inkomende verbindings toelaat</translation>
     </message>
     <message>
         <source>&amp;Port:</source>
@@ -1020,6 +1067,10 @@
         <translation>Of om munt beheer funksies te wys of nie.</translation>
     </message>
     <message>
+        <source>&amp;Third party transaction URLs</source>
+        <translation type="unfinished">&amp;Derdeparty transaksie URL's</translation>
+    </message>
+    <message>
         <source>&amp;OK</source>
         <translation>&amp;OK</translation>
     </message>
@@ -1034,6 +1085,10 @@
     <message>
         <source>none</source>
         <translation>geen</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Kern</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1219,9 +1274,25 @@
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n uur</numerusform><numerusform>%n ure</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n dag</numerusform><numerusform>%n dae</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n week</numerusform><numerusform>%n weke</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 en %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n jaar</numerusform><numerusform>%n jare</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1239,7 +1310,12 @@
         <source>%1 GB</source>
         <translation>%1 GB</translation>
     </message>
-    </context>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     <message>
@@ -1265,6 +1341,10 @@
         <translation>&amp;Informasie</translation>
     </message>
     <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Ontfout venster</translation>
+    </message>
+    <message>
         <source>General</source>
         <translation>Algemeen</translation>
     </message>
@@ -1287,6 +1367,10 @@
     <message>
         <source>Current number of blocks</source>
         <translation>Huidige aantal blokke</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Beursie: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1633,6 +1717,10 @@
         <translation>%1 tot %2</translation>
     </message>
     <message>
+        <source>Transaction fee</source>
+        <translation>Transaksie fooi</translation>
+    </message>
+    <message>
         <source>Payment request expired.</source>
         <translation>Betalings versoek verstryk.</translation>
     </message>
@@ -1646,6 +1734,10 @@
     <message>
         <source>A&amp;mount:</source>
         <translation>B&amp;edrag:</translation>
+    </message>
+    <message>
+        <source>Pay &amp;To:</source>
+        <translation type="unfinished">&amp;Betaal Vir:</translation>
     </message>
     <message>
         <source>&amp;Label:</source>
@@ -1687,6 +1779,10 @@
     <message>
         <source>Signature</source>
         <translation>Handtekening</translation>
+    </message>
+    <message>
+        <source>Sign &amp;Message</source>
+        <translation type="unfinished">&amp;Teken Boodskap</translation>
     </message>
     <message>
         <source>Clear &amp;All</source>
@@ -1782,6 +1878,10 @@
         <translation>Transaksie</translation>
     </message>
     <message>
+        <source>Inputs</source>
+        <translation type="unfinished">Insette</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>Bedrag</translation>
     </message>
@@ -1853,6 +1953,10 @@
     <message>
         <source>Confirmed</source>
         <translation>Bevestig</translation>
+    </message>
+    <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">Kyk-net</translation>
     </message>
     <message>
         <source>Date</source>

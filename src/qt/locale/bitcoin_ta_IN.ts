@@ -60,6 +60,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
@@ -70,7 +73,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
+    </context>
+<context>
+    <name>NetWatchLogModel</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
@@ -101,7 +110,7 @@
         <source>unknown</source>
         <translation>தெரியாத</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -130,6 +139,10 @@
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Insufficient funds!</source>
+        <translation>போதுமான பணம் இல்லை</translation>
+    </message>
     <message>
         <source>Balance:</source>
         <translation>இருப்பு:</translation>

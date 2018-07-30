@@ -30,6 +30,10 @@
         <translation>Poista valittu osoite listalta</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Anna etsittävä osoite tai tunniste</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Vie auki olevan välilehden tiedot tiedostoon</translation>
     </message>
@@ -322,6 +326,10 @@
         <translation>Avaa &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Lompakko:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Paina poistaaksesi verkkoyhteysilmaisin käytöstä.</translation>
     </message>
@@ -437,6 +445,10 @@
         <source>&amp;Command-line options</source>
         <translation>&amp;Komentorivin valinnat</translation>
     </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network</source>
+        <translation><numerusform>%n aktiivinen yhteys Bitcoin-verkkoon</numerusform><numerusform>%n aktiivista yhteyttä Bitcoin-verkkoon</numerusform></translation>
+    </message>
     <message>
         <source>Indexing blocks on disk...</source>
         <translation>Ladataan lohkoindeksiä...</translation>
@@ -444,6 +456,10 @@
     <message>
         <source>Processing blocks on disk...</source>
         <translation>Käsitellään lohkoja levyllä...</translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation><numerusform>Prosessoitu %n lohko rahansiirtohistoriasta.</numerusform><numerusform>Prosessoitu %n lohkoa rahansiirtohistoriasta.</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -778,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -894,6 +913,21 @@
         <source>Error</source>
         <translation>Virhe</translation>
     </message>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation><numerusform>%n Gt vapaata tilaa käytettävissä</numerusform><numerusform>%n Gt vapaata tilaa käytettävissä</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation><numerusform>(%n Gt tarvittavasta tilasta)</numerusform><numerusform>(%n Gt tarvittavasta tilasta)</numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Ei saatavilla</translation>
+    </message>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -944,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Tuntematon. Synkronoidaan tunnisteita (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Laatu</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Osoite</translation>
     </message>
 </context>
 <context>
@@ -1006,6 +1053,10 @@
     <message>
         <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
         <translation>Ilmoittaa, mikäli oletetettua SOCKS5-välityspalvelinta käytetään vertaisten tavoittamiseen tämän verkkotyypin kautta.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor hidden services:</source>
+        <translation type="unfinished">&amp;Käytä erillistä SOCKS5-välityspalvelinta saavuttaaksesi vertaisia piilotettujen Tor-palveluiden kautta:</translation>
     </message>
     <message>
         <source>Hide the icon from the system tray.</source>
@@ -1186,6 +1237,10 @@
     <message>
         <source>none</source>
         <translation>ei mitään</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin-ydin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1455,9 +1510,33 @@
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation><numerusform>%n sekunti</numerusform><numerusform>%n sekuntia</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation><numerusform>%n minuutti</numerusform><numerusform>%n minuuttia</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n tunti</numerusform><numerusform>%n tuntia</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n päivä</numerusform><numerusform>%n päivää</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n viikko</numerusform><numerusform>%n viikkoa</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 ja %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n vuosi</numerusform><numerusform>%n vuotta</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1482,6 +1561,16 @@
     <message>
         <source>unknown</source>
         <translation>tuntematon</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Lko</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Rso</translation>
     </message>
 </context>
 <context>
@@ -1583,6 +1672,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Muistin käyttö</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Lompakko: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2049,10 +2142,6 @@
         <translation>per kilotavu</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Jos määritelty palkkio on asetettu 1000 satoshiin ja siirto on vain 250 tavua, niin "kilotavua kohti" maksaa vain 250 satoshin palkkion, kun "vähintään" maksaa 1000 satoshia. Kilotavua suuremmilla siirroilla molemmat maksavat jokaista kilotavua kohti.</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Piilota</translation>
     </message>
@@ -2153,16 +2242,12 @@
         <translation>Oletko varma, että haluat lähettää?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>lisätty rahansiirtomaksuna</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Kokonaismäärä %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>tai</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Siirtokulu</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -2207,6 +2292,10 @@
     <message>
         <source>Pay only the required fee of %1</source>
         <translation>Maksa vain vaadittu kulu %1 </translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>Vahvistuminen alkaa arviolta %n lohkon päästä.</numerusform><numerusform>Vahvistuminen alkaa arviolta %n lohkon päästä.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2489,6 +2578,10 @@
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Avoinna %n lisälohkolle</numerusform><numerusform>Avoinna %n lisälohkolle</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>Avoinna %1 asti</translation>
@@ -2496,10 +2589,6 @@
     <message>
         <source>conflicted with a transaction with %1 confirmations</source>
         <translation>ristiriidassa maksutapahtumalle, jolla on %1 varmistusta</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/ei linjalla</translation>
     </message>
     <message>
         <source>0/unconfirmed, %1</source>
@@ -2528,10 +2617,6 @@
     <message>
         <source>Status</source>
         <translation>Tila</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, ei ole vielä onnistuneesti kuulutettu</translation>
     </message>
     <message>
         <source>Date</source>
@@ -2572,6 +2657,10 @@
     <message>
         <source>Credit</source>
         <translation>Krediitti</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation><numerusform>kypsyy %n lohkon kuluttua</numerusform><numerusform>kypsyy %n lohkon kuluttua</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2671,13 +2760,13 @@
         <source>Label</source>
         <translation>Nimike</translation>
     </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Avoinna %n lisälohkolle</numerusform><numerusform>Avoinna %n lisälohkolle</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>Avoinna %1 asti</translation>
-    </message>
-    <message>
-        <source>Offline</source>
-        <translation>Ei yhteydessä</translation>
     </message>
     <message>
         <source>Unconfirmed</source>
@@ -2702,10 +2791,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Epäkypsä (%1 varmistusta, saatavilla %2 jälkeen)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Tätä lohkoa ei vastaanotettu mistään muusta solmusta ja sitä ei mahdollisesti hyväksytä!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3110,10 +3195,6 @@
         <translation>Virhe luettaessa %s! Avaimet luetttiin oikein, mutta rahansiirtotiedot tai osoitekirjan sisältö saattavat olla puutteellisia tai vääriä.</translation>
     </message>
     <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>Suorita käsky kun lompakossa rahansiirto muuttuu (%s cmd on vaihdettu TxID kanssa)</translation>
-    </message>
-    <message>
         <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
         <translation>Muistissa pidettävien rahansiirtojen määrä tiiviiden lohkojen muodostusta varten (oletus: %u)</translation>
     </message>
@@ -3136,6 +3217,10 @@
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>Aseta lohkon luonnissa lisättävien siirtojen vähimmäispalkkion suhde (%s/kt) (oletus: %s)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Aseta maksimikoko korkea prioriteetti/pieni palkkio rahansiirtoihin tavuissa (oletus: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3356,6 +3441,10 @@
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Aseta tietokannan välimuistin koko megatavuissa (%d - %d, oletus: %d</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Aseta lohkon maksimikoko tavuissa (oletus: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3602,6 +3691,10 @@
         <translation>Varmistetaan lompakko(ja)...</translation>
     </message>
     <message>
+        <source>Wallet %s resides outside wallet directory %s</source>
+        <translation>Lompakko %s sijaitsee data-hakemiston ulkopuolella %s</translation>
+    </message>
+    <message>
         <source>Warning</source>
         <translation>Varoitus</translation>
     </message>
@@ -3668,6 +3761,10 @@
     <message>
         <source>Output debugging information (default: %u, supplying &lt;category&gt; is optional)</source>
         <translation>Tulosta debuggaustieto (oletus: %u, annettu &lt;category&gt; valinnainen)</translation>
+    </message>
+    <message>
+        <source>This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit %s and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard.</source>
+        <translation>Tämä tuote sisältää ohjelmistoa, jonka on kehittänyt OpenSSL Project käytettäväksi OpenSSL Toolkit -ohjelmistossa %s, ja Eric Youngin kirjoittamaa salausohjelmistoa sekä Thomas Bernardin kirjoittamaa UPnP-ohjelmistoa.</translation>
     </message>
     <message>
         <source>Tries to keep outbound traffic under the given target (in MiB per 24h), 0 = no limit (default: %d)</source>

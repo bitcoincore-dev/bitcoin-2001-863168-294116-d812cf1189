@@ -133,7 +133,7 @@
     </message>
     <message>
         <source>Encrypt wallet</source>
-        <translation>Incripteaza portofelul</translation>
+        <translation>Criptează portofelul</translation>
     </message>
     <message>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
@@ -176,8 +176,20 @@
         <translation>Portofel criptat</translation>
     </message>
     <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 se va inchide pentru a termina procesul de criptare. Aduți aminte că prin criptarea portofelului tău virtual, nu îți poți proteja complet monedele virtuale de a fi furate când te-ai infectat cu un virus de tip malware pe calculatorul tau.</translation>
+    </message>
+    <message>
+        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
+        <translation>IMPORTANT: Fiecare backup anterior pe care l-ai facut portofelului tău virtual trebuie înlocuit cu cel nou. Din motive de securitate, backup-urile anteroiare făcute portofelului tău, care nu sunt criptate vor deveni inutilizabile și inutile când vei începe să utilizezi portofelul criptat.</translation>
+    </message>
+    <message>
         <source>Wallet encryption failed</source>
         <translation>Criptarea portofelului a eșuat</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
+        <translation>Criptarea portofelului a eșuat din cauza unei erori interne. Portofelul tău nu a fost criptat.</translation>
     </message>
     <message>
         <source>The supplied passphrases do not match.</source>
@@ -186,6 +198,10 @@
     <message>
         <source>Wallet unlock failed</source>
         <translation>Deblocarea portofelului a eșuat</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>Parola pe care ai introdus-o pentru decripatrea portofelului nu este corectă.</translation>
     </message>
     <message>
         <source>Wallet decryption failed</source>
@@ -215,7 +231,7 @@
     <name>BitcoinGUI</name>
     <message>
         <source>Sign &amp;message...</source>
-        <translation>Semnează &amp;mesajul...</translation>
+        <translation>Semnează și trimite...</translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -242,8 +258,20 @@
         <translation>Navighează în istoricul tranzacțiilor</translation>
     </message>
     <message>
+        <source>E&amp;xit</source>
+        <translation>Ieși din...</translation>
+    </message>
+    <message>
         <source>Quit application</source>
         <translation>Părăsește aplicația</translation>
+    </message>
+    <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;Despre %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Arată informații despre %1</translation>
     </message>
     <message>
         <source>About &amp;Qt</source>
@@ -280,6 +308,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Deschide &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portofel:</translation>
     </message>
     <message>
         <source>Click to enable network activity again.</source>
@@ -540,6 +572,10 @@
         <translation>Modifică adresa</translation>
     </message>
     <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Etichetă</translation>
+    </message>
+    <message>
         <source>&amp;Address</source>
         <translation>&amp;Adresa</translation>
     </message>
@@ -576,6 +612,9 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -586,8 +625,20 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
+        <source>About %1</source>
+        <translation type="unfinished">Despre %1</translation>
+    </message>
+    <message>
+        <source>Command-line options</source>
+        <translation type="unfinished">Linie de comandă Setări</translation>
+    </message>
+    <message>
         <source>Usage:</source>
         <translation>Utilizare:</translation>
+    </message>
+    <message>
+        <source>command-line options</source>
+        <translation type="unfinished">Linie de comandă Setări</translation>
     </message>
     <message>
         <source>Start minimized</source>
@@ -638,6 +689,9 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -660,6 +714,19 @@
         <translation>Ascunde</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>tip</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresă</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -686,6 +753,10 @@
         <translation>Adresa IP a proxy-ului (ex. IPv4: 127.0.0.1 / IPv6: ::1)</translation>
     </message>
     <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor hidden services:</source>
+        <translation type="unfinished">&amp;Folosește un SOCKS5 separat pentru a accesa peer-uri prin intermediul servicilor ascunse ale Tor.</translation>
+    </message>
+    <message>
         <source>Open Configuration File</source>
         <translation>Deschide fișierul de Configurare</translation>
     </message>
@@ -698,8 +769,20 @@
         <translation>&amp;Rețea</translation>
     </message>
     <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Portofel</translation>
+    </message>
+    <message>
         <source>Expert</source>
         <translation>Expert</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside.</source>
+        <translation>Acceptă conexiuni externe.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Acceptă conexiunea care sosește</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
@@ -744,6 +827,10 @@
     <message>
         <source>none</source>
         <translation>fără</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -841,12 +928,26 @@
         <source>%1 GB</source>
         <translation>%1 GB</translation>
     </message>
-    </context>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tze</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
 <context>
     <name>QRImageWidget</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Salvează imaginea...</translation>
+    </message>
     <message>
         <source>Save QR Code</source>
         <translation>Salvează codul QR</translation>
@@ -885,6 +986,10 @@
     <message>
         <source>Number of connections</source>
         <translation>Numărul de conexiuni</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portofel: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -946,6 +1051,14 @@
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Cantitate:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etichetă:</translation>
+    </message>
+    <message>
         <source>&amp;Message:</source>
         <translation>&amp;Mesaj:</translation>
     </message>
@@ -985,6 +1098,10 @@
         <translation>&amp;Salvează imaginea...</translation>
     </message>
     <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>Adresă</translation>
     </message>
@@ -1003,6 +1120,10 @@
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
     <message>
         <source>Label</source>
         <translation>Etichetă</translation>
@@ -1043,8 +1164,16 @@
         <translation>Schimbă:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Selectează...</translation>
+    </message>
+    <message>
         <source>Hide</source>
         <translation>Ascunde</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Trimite</translation>
     </message>
     <message>
         <source>Copy amount</source>
@@ -1065,10 +1194,26 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Cantitate:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etichetă:</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished">Mesaj:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
-    </context>
+    <message>
+        <source>Yes</source>
+        <translation>Da</translation>
+    </message>
+</context>
 <context>
     <name>ShutdownWindow</name>
     </context>
@@ -1091,6 +1236,10 @@
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
     <message>
         <source>Generated</source>
         <translation>Generat</translation>
@@ -1145,6 +1294,10 @@
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
     <message>
         <source>Type</source>
         <translation>tip</translation>
@@ -1229,6 +1382,10 @@
         <translation>Confirmat</translation>
     </message>
     <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
         <source>Type</source>
         <translation>tip</translation>
     </message>
@@ -1264,6 +1421,10 @@
         <source>&amp;Export</source>
         <translation>&amp;Exportă</translation>
     </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Exportă datele din tabul curent in fisier</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
@@ -1286,6 +1447,10 @@
     <message>
         <source>Warning</source>
         <translation>Atenționare</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
+        <translation>Folosește un SOCKS5 separat pentru a accesa peer-uri prin intermediul servicilor ascunse ale Tor (default: %s)</translation>
     </message>
     <message>
         <source>Loading wallet...</source>

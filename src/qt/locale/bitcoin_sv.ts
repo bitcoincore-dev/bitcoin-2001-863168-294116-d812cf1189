@@ -3,7 +3,7 @@
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation>Högerklicka för att redigera adressen eller etiketten.</translation>
+        <translation>Högerklicka för att redigera adress eller etikett</translation>
     </message>
     <message>
         <source>Create a new address</source>
@@ -28,6 +28,10 @@
     <message>
         <source>Delete the currently selected address from the list</source>
         <translation>Ta bort den valda adressen från listan</translation>
+    </message>
+    <message>
+        <source>Enter address or label to search</source>
+        <translation>Ange en adress eller etikett att söka efter</translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
@@ -321,6 +325,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Open &amp;URI...</source>
         <translation>Öppna &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Plånbok:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -787,6 +795,9 @@ Var vänlig och försök igen.</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -856,6 +867,10 @@ Var vänlig och försök igen.</translation>
         <translation>Eftersom detta är första gången programmet startas får du välja var %1 skall lagra sitt data.</translation>
     </message>
     <message>
+        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
+        <translation>När du trycker OK kommer %1 påbörja nedladdning och bearbetning av den fulla %4-blockkedjan (%2GB), med start vid de första transaktionerna i %3 när %4 först lanserades.</translation>
+    </message>
+    <message>
         <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
         <translation>Denna första synkronisering är väldigt krävande, och kan påvisa hårdvaruproblem med din dator som tidigare inte visats sig. Varje gång du kör %1, kommer nerladdningen att fortsätta där den avslutades.</translation>
     </message>
@@ -905,6 +920,13 @@ Var vänlig och försök igen.</translation>
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>ej tillgänglig</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -953,6 +975,19 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Okänd. Synkar huvuden (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adress</translation>
     </message>
 </context>
 <context>
@@ -1520,6 +1555,11 @@ Var vänlig och försök igen.</translation>
         <source>unknown</source>
         <translation>okänd</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1620,6 +1660,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Memory usage</source>
         <translation>Minnesåtgång</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Plånbok: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2090,10 +2134,6 @@ Var vänlig och försök igen.</translation>
         <translation>per kilobyte</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Om den anpassade avgiften är satt till 1000 satoshi och transaktionen bara är 250 byte, betalar "per kilobyte" bara 250 satoshi i avgift, medan "totalt minst" betalar 1000 satoshi. För transaktioner större än en kilobyte betalar båda per kilobyte.</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Göm</translation>
     </message>
@@ -2202,20 +2242,16 @@ Var vänlig och försök igen.</translation>
         <translation>Är du säker på att du vill skicka?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>adderad som transaktionsavgift</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Totalt belopp %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>eller</translation>
     </message>
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>Du kan välja att höja avgiften senare (med ersättande avgift, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Transaktionsavgift</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
@@ -2563,10 +2599,6 @@ Var vänlig och försök igen.</translation>
         <translation>konflikt med en transaktion med %1 konfirmationer</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/nedkopplad</translation>
-    </message>
-    <message>
         <source>0/unconfirmed, %1</source>
         <translation>0/obekräftade, %1</translation>
     </message>
@@ -2593,14 +2625,6 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Status</source>
         <translation>Status</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>,har inte lyckats sända än</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, sänd genom %n nod</numerusform><numerusform>, sänd genom %n noder</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2757,10 +2781,6 @@ Var vänlig och försök igen.</translation>
         <translation>Öppet till %1</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Nerkopplad</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Obekräftade</translation>
     </message>
@@ -2783,10 +2803,6 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Omogen (%1 bekräftelser, blir tillgänglig efter %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Det här blocket togs inte emot av några andra noder och kommer antagligen inte att accepteras!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3191,8 +3207,8 @@ Var vänlig och försök igen.</translation>
         <translation>Fel vid läsning av %s! Alla nycklar lästes korrekt, men transaktionsdata eller poster i adressboken kanske saknas eller är felaktiga.</translation>
     </message>
     <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>Exekvera kommando när en plånbokstransaktion ändras (%s i cmd är ersatt av TxID)</translation>
+        <source>Exclude debugging information for a category. Can be used in conjunction with -debug=1 to output debug logs for all categories except one or more specified categories.</source>
+        <translation>Exkludera debuginformation för en kategori. Kan användas tillsammans med -debug=1 för att skapa debugloggar för alla kategorier utom en eller flera specificerade kategorier.</translation>
     </message>
     <message>
         <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
@@ -3213,6 +3229,14 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Please contribute if you find %s useful. Visit %s for further information about the software.</source>
         <translation>Var snäll och bidra om du finner %s användbar. Besök %s för mer information om mjukvaran.</translation>
+    </message>
+    <message>
+        <source>Query for peer addresses via DNS lookup, if low on addresses (default: 1 unless -connect used)</source>
+        <translation>Sök efter klientadresser med DNS sökningen, om det finns otillräckligt med adresser (förvalt: 1 om inte -connect)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Sätt den maximala storleken av hög-prioriterade/låg-avgifts transaktioner i byte (förvalt: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3423,6 +3447,10 @@ Var vänlig och försök igen.</translation>
         <translation>Plats för authcookie (förvalt: datamapp)</translation>
     </message>
     <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimum antal byte per sigop i transaktioner som vi reläar och bryter (förvalt: %u)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Inte tillräckligt med filbeskrivningar tillgängliga.</translation>
     </message>
@@ -3463,8 +3491,16 @@ Var vänlig och försök igen.</translation>
         <translation>Spolar tillbaka blocken...</translation>
     </message>
     <message>
+        <source>Send transactions with full-RBF opt-in enabled (RPC only, default: %u)</source>
+        <translation>Skicka transaktioner med full-RBF opt-in aktiverad (standard: %u)</translation>
+    </message>
+    <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Sätt databasens cachestorlek i megabyte (%d till %d, förvalt: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Sätt maximal blockstorlek i byte (förvalt: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3493,6 +3529,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Unsupported argument -tor found, use -onion.</source>
         <translation>Argumentet -tor hittades men stöds inte, använd -onion.</translation>
+    </message>
+    <message>
+        <source>Unsupported logging category %s=%s.</source>
+        <translation>Saknar stöd för loggningskategori %s=%s.</translation>
     </message>
     <message>
         <source>Upgrading UTXO database</source>
@@ -3605,6 +3645,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Error reading from database, shutting down.</source>
         <translation>Fel vid läsning från databas, avslutar.</translation>
+    </message>
+    <message>
+        <source>Error upgrading chainstate database</source>
+        <translation>Fel vid uppgradering av blockdatabasen</translation>
     </message>
     <message>
         <source>Imports blocks from external blk000??.dat file on startup</source>
@@ -3731,6 +3775,10 @@ Var vänlig och försök igen.</translation>
         <translation>Verifierar plånbok(er)...</translation>
     </message>
     <message>
+        <source>Wallet %s resides outside wallet directory %s</source>
+        <translation>Plånbok %s ligger utanför datakatalogen %s</translation>
+    </message>
+    <message>
         <source>Warning</source>
         <translation>Varning</translation>
     </message>
@@ -3773,6 +3821,10 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>-maxtxfee is set very high! Fees this large could be paid on a single transaction.</source>
         <translation>-maxtxfee är väldigt högt satt! Så höga avgifter kan komma att betalas för en enstaka transaktion.</translation>
+    </message>
+    <message>
+        <source>Bind to given address to listen for JSON-RPC connections. This option is ignored unless -rpcallowip is also passed. Port is optional and overrides -rpcport. Use [host]:port notation for IPv6. This option can be specified multiple times (default: 127.0.0.1 and ::1 i.e., localhost, or if -rpcallowip has been specified, 0.0.0.0 and :: i.e., all addresses)</source>
+        <translation>Bind till angiven adress för att lyssna på JSON-RPC-anslutningar. Använd [värd]:port-format for IPv6. Detta alternativ kan anges flera gånger (förvalt: 127.0.0.1 och ::1 d.v.s., localhost, eller om -rpcallowip har angetts, 0.0.0.0 och :: d.v.s., alla adresser)</translation>
     </message>
     <message>
         <source>Do not keep transactions in the mempool longer than &lt;n&gt; hours (default: %u)</source>

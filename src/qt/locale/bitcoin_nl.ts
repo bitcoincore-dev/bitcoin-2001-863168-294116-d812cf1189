@@ -30,6 +30,10 @@
         <translation>Verwijder het geselecteerde adres van de lijst</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Vul adres of label in om te zoeken</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Exporteer de data in de huidige tab naar een bestand</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Open &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portemonnee:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -786,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -912,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N.v.t.</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -960,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Onbekend. Blokhoofden synchroniseren (%1%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
     </message>
 </context>
 <context>
@@ -1206,6 +1237,10 @@
     <message>
         <source>none</source>
         <translation>geen</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1527,6 +1562,11 @@
         <source>unknown</source>
         <translation>onbekend</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1627,6 +1667,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Geheugengebruik</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portemonnee: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2105,10 +2149,6 @@
         <translation>per kilobyte</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Als de aangepaste toeslag is ingesteld op 1000 satoshis en de transactie is maar 250 bytes, dan wordt bij "per kilobyte" 250 satoshis aan toeslag berekend, terwijl er bij "totaal tenminste" 1000 satoshis worden berekend. Voor transacties die groter zijn dan een kilobyte, wordt in beide gevallen per kilobyte de toeslag berekend.</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Verbergen</translation>
     </message>
@@ -2217,20 +2257,16 @@
         <translation>Weet u zeker dat u wilt verzenden?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>toegevoegd als transactie vergoeding</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Totaalbedrag %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>of</translation>
     </message>
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>Je kunt de vergoeding later verhogen (signaleert Replace-By-Fee, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Transactiekosten</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
@@ -2578,10 +2614,6 @@
         <translation>geconflicteerd met een transactie met %1 confirmaties</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/offline</translation>
-    </message>
-    <message>
         <source>0/unconfirmed, %1</source>
         <translation>0/onbevestigd, %1</translation>
     </message>
@@ -2608,10 +2640,6 @@
     <message>
         <source>Status</source>
         <translation>Status</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, is nog niet met succes uitgezonden</translation>
     </message>
     <message>
         <source>Date</source>
@@ -2768,10 +2796,6 @@
         <translation>Open tot %1</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Offline</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Onbevestigd</translation>
     </message>
@@ -2794,10 +2818,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Niet beschikbaar (%1 bevestigingen, zal beschikbaar zijn na %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Dit blok is niet ontvangen bij andere nodes en zal waarschijnlijk niet worden geaccepteerd!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3222,10 +3242,6 @@
         <translation>Sluit debugging informatie uit van een categorie. Dit kan samen gebruikt worden met -debug=1 om uitvoer debug logboeken te creëren voor alle categorieën, behalve één of meerdere categorieën.</translation>
     </message>
     <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>Voer opdracht uit zodra een portemonneetransactie verandert (%s in cmd wordt vervangen door TxID)</translation>
-    </message>
-    <message>
         <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
         <translation>Extra transacties wordt bijgehouden voor compacte blokreconstructie (standaard: %u)</translation>
     </message>
@@ -3260,6 +3276,10 @@
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>Specificeer het laagste tarief (in %s/kB) voor transacties die bij het maken van een blok moeten worden in rekening worden gebracht (standaard: %s)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Stel maximumgrootte in bytes in voor hoge-prioriteits-/lage-transactiekosten-transacties (standaard: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3308,6 +3328,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>Of de mempool opgeslagen moet worden bij afsluiten en ingeladen moet worden tijdens herstarten (standaard: %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Goedgekeurde peers die verbinden vanaf een bepaald IP adres (vb. 1.2.3.4) of CIDR genoteerd netwerk (vb. 1.2.3.0/24). Kan meerdere keren worden gespecificeerd.</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3482,6 +3506,10 @@
         <translation>Locatie van de auth cookie (standaard: data dir)</translation>
     </message>
     <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimum aantal bytes dat er per sigop in een transactie gerelayed en gemined worden (standaard: %u)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Niet genoeg file descriptors beschikbaar.</translation>
     </message>
@@ -3528,6 +3556,10 @@
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Zet database cache grootte in megabytes (%d tot %d, standaard: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Stel maximum blokgrootte in in bytes (standaard: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3944,10 +3976,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Waarschuwing: portemonnee bestand is corrupt, data is veiliggesteld! Originele %s is opgeslagen als %s in %s; als uw balans of transacties incorrect zijn dient u een backup terug te zetten.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Goedgekeurde peers die verbinden vanaf een bepaald IP adres (vb. 1.2.3.4) of CIDR genoteerd netwerk (vb. 1.2.3.0/24). Kan meerdere keren worden gespecificeerd.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

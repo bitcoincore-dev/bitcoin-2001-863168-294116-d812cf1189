@@ -30,6 +30,10 @@
         <translation>Brisanje trenutno odabrane adrese s popisa.</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Unesite adresu ili oznaku za pretraživanje</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Izvoz podataka iz trenutnog lista u datoteku</translation>
     </message>
@@ -262,6 +266,10 @@
         <translation>&amp;Više o %1</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Prikaži informacije o programu %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Više o &amp;Qt</translation>
     </message>
@@ -296,6 +304,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Otvori &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Novčanik:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -650,6 +662,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -658,6 +673,10 @@
     <message>
         <source>(%1-bit)</source>
         <translation>(%1-bit)</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation>Više o %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -692,16 +711,40 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Oblik</translation>
     </message>
     <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Nepoznato...</translation>
+    </message>
+    <message>
         <source>Last block time</source>
         <translation>Posljednje vrijeme bloka</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tip</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresa</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -784,6 +827,10 @@
         <translation>Mapiraj port koristeći &amp;UPnP</translation>
     </message>
     <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Dozvoli povezivanje izvana</translation>
+    </message>
+    <message>
         <source>Proxy &amp;IP:</source>
         <translation>Proxy &amp;IP:</translation>
     </message>
@@ -840,6 +887,10 @@
         <translation>standardne vrijednosti</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Greška</translation>
     </message>
@@ -891,13 +942,34 @@
         <source>N/A</source>
         <translation>N/A</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n sat</numerusform><numerusform>%n sata</numerusform><numerusform>%n sati</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n dan</numerusform><numerusform>%n dana</numerusform><numerusform>%n dana</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n tjedan</numerusform><numerusform>%n tjedna</numerusform><numerusform>%n tjedana</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 i %2</translation>
     </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n godina</numerusform><numerusform>%n godine</numerusform><numerusform>%n godina</numerusform></translation>
+    </message>
     <message>
         <source>unknown</source>
         <translation>nepoznato</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsa</translation>
     </message>
 </context>
 <context>
@@ -951,6 +1023,10 @@
     <message>
         <source>Current number of blocks</source>
         <translation>Trenutni broj blokova</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Novčanik: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1026,6 +1102,10 @@
     <message>
         <source>Show</source>
         <translation>Pokaži</translation>
+    </message>
+    <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Kopiraj URI</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -1113,6 +1193,10 @@
         <translation>Slanje novca</translation>
     </message>
     <message>
+        <source>Inputs...</source>
+        <translation type="unfinished">Unosi...</translation>
+    </message>
+    <message>
         <source>Insufficient funds!</source>
         <translation>Nedovoljna sredstva</translation>
     </message>
@@ -1139,6 +1223,10 @@
     <message>
         <source>Transaction Fee:</source>
         <translation>Naknada za transakciju:</translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Odaberi...</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -1179,6 +1267,10 @@
     <message>
         <source>or</source>
         <translation>ili</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Naknada za transakciju</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -1314,10 +1406,6 @@
         <translation>Otvoren do %1</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1 nije dostupan</translation>
-    </message>
-    <message>
         <source>%1/unconfirmed</source>
         <translation>%1/nepotvrđeno</translation>
     </message>
@@ -1328,10 +1416,6 @@
     <message>
         <source>Status</source>
         <translation>Status</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, još nije bio uspješno emitiran</translation>
     </message>
     <message>
         <source>Date</source>
@@ -1438,10 +1522,6 @@
     <message>
         <source>Confirmed (%1 confirmations)</source>
         <translation>Potvrđen (%1 potvrda)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Ovaj blok nije bio primljen od strane bilo kojeg drugog čvora i vjerojatno neće biti prihvaćen!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -1680,6 +1760,10 @@
     <message>
         <source>Error: Disk space is low!</source>
         <translation>Pogreška: Nema dovoljno prostora na disku!</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Učitavanje adresa...</translation>
     </message>
     <message>
         <source>Information</source>

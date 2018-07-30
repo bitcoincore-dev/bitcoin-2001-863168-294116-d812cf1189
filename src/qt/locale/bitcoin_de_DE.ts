@@ -310,6 +310,10 @@
         <translation>Öffne &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Brieftasche:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Klicken Sie, um die Netzwerkaktivität zu deaktivieren.</translation>
     </message>
@@ -586,10 +590,17 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
         <translation>Version</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Über %1</translation>
     </message>
     </context>
 <context>
@@ -608,6 +619,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -619,10 +637,30 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Öffne URI</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Einstellungen</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Brieftasche</translation>
+    </message>
     <message>
         <source>Error</source>
         <translation>Fehler</translation>
@@ -672,9 +710,37 @@
         <source>N/A</source>
         <translation>N/A</translation>
     </message>
-    </context>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Information</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Debug Fenster</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Brieftasche: </translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Netzwerkaktivität wurde deaktiviert</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">Unbekannt</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Betrag:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etikett:</translation>
+    </message>
     <message>
         <source>Copy label</source>
         <translation>Etikett kopieren</translation>
@@ -686,6 +752,10 @@
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Kopiere Adresse</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adresse</translation>
@@ -717,6 +787,10 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Insufficient funds!</source>
+        <translation>Ungenügendes Guthaben</translation>
+    </message>
+    <message>
         <source>Quantity:</source>
         <translation>Anzahl:</translation>
     </message>
@@ -737,8 +811,17 @@
         <translation>Nach Gebühr:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Dies sind deine Bitcoin Adressen zum Senden von Zahlungsmitteln.
+Überprüfe immer die Menge, sowie die Empfänger-Adresse vor dem Senden von Coins....</translation>
+    </message>
+    <message>
         <source>Dust:</source>
         <translation>Dust:</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Senden</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -755,6 +838,14 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Betrag:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etikett:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -776,6 +867,10 @@
     <message>
         <source>Date</source>
         <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Überweisung</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -861,6 +956,10 @@
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Daten des aktiven Fensters exportieren</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Sicherungskopie der Brieftasche</translation>
     </message>
     <message>
         <source>Backup Failed</source>

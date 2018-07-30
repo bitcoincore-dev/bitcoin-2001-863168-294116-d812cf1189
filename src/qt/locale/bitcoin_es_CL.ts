@@ -30,6 +30,10 @@
         <translation>Eliminar la dirección seleccionada de la lista</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Introduce una dirección o etiqueta para  buscar</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Exportar los datos de la pestaña actual a un archivo</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Abrir y url...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Cartera:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -787,6 +795,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -909,6 +920,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -957,6 +975,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Desconocido. Sincronizando cabeceras (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Dirección</translation>
     </message>
 </context>
 <context>
@@ -1019,6 +1050,10 @@
     <message>
         <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
         <translation>Muestra si el proxy SOCKS5 por defecto se utiliza para conectarse a pares a través de este tipo de red.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor hidden services:</source>
+        <translation>Usar distintos proxys SOCKS&amp;5 para comunicarse vía Tor de forma anónima:</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
@@ -1168,6 +1203,10 @@
     <message>
         <source>none</source>
         <translation>Nada</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>bitcoin core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1429,6 +1468,16 @@
         <source>unknown</source>
         <translation>desconocido</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blq</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1525,6 +1574,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Memoria utilizada</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Cartera: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2053,16 +2106,12 @@
         <translation>¿Seguro que quiere enviar?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>agregado como comisión de transacción</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Monto total %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>o</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Comisión transacción</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -2374,10 +2423,6 @@
         <translation>Hay un conflicto con la traducción de las confirmaciones %1</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/sin conexión</translation>
-    </message>
-    <message>
         <source>0/unconfirmed, %1</source>
         <translation>0/no confirmado, %1</translation>
     </message>
@@ -2404,10 +2449,6 @@
     <message>
         <source>Status</source>
         <translation>Estado</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, no ha sido emitido con éxito aún</translation>
     </message>
     <message>
         <source>Date</source>
@@ -2552,10 +2593,6 @@
         <translation>Abierto hasta %1</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Fuera de linea</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Sin confirmar</translation>
     </message>
@@ -2578,10 +2615,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Inmaduro (%1 confirmación(es), Estarán disponibles después de %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>¡Este bloque no ha sido recibido por otros nodos y probablemente no sea aceptado!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -2946,6 +2979,10 @@
         <translation>Los desarrolladores de %s</translation>
     </message>
     <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Los pares de listas blancas que se conectan desde la dirección IP dada (por ejemplo, 1.2.3.4) o la red marcada CIDR (por ejemplo, 1.2.3.0/24). Se puede especificar varias veces.</translation>
+    </message>
+    <message>
         <source>%d of last 100 blocks have unexpected version</source>
         <translation>%d de los últimos 100 bloques tienen una versión no esperada</translation>
     </message>
@@ -3214,6 +3251,10 @@
         <translation>Dirección de -onion o dominio '%s' inválido</translation>
     </message>
     <message>
+        <source>Invalid -proxy address or hostname: '%s'</source>
+        <translation>Dirección de -proxy o dominio '%s' inválido</translation>
+    </message>
+    <message>
         <source>Invalid netmask specified in -whitelist: '%s'</source>
         <translation>Máscara de red inválida especificada en -whitelist: '%s'</translation>
     </message>
@@ -3435,10 +3476,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Advertencia: Archivo de monedero corrupto, datos recuperados! Original %s guardado como %s en %s; si su balance de transacciones es incorrecto, debe restaurar desde una copia de seguridad.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Los pares de listas blancas que se conectan desde la dirección IP dada (por ejemplo, 1.2.3.4) o la red marcada CIDR (por ejemplo, 1.2.3.0/24). Se puede especificar varias veces.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

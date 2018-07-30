@@ -322,6 +322,10 @@
         <translation>Buka &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Wallet:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Klik untuk menonaktifkan aktifitas network</translation>
     </message>
@@ -638,6 +642,10 @@
         <translation>&amp;Label</translation>
     </message>
     <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;Alamat</translation>
+    </message>
+    <message>
         <source>New receiving address</source>
         <translation>Alamat penerima baru</translation>
     </message>
@@ -670,6 +678,9 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -700,13 +711,36 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Alamat</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Buka URI</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Pilihan</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Wallet</translation>
+    </message>
     <message>
         <source>Error</source>
         <translation>Error</translation>
@@ -727,7 +761,12 @@
         <source>Amount</source>
         <translation>Jumlah</translation>
     </message>
-    </context>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsi</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -736,9 +775,33 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Informasi</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Debug window</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Wallet: </translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Aktifitas network tidak aktif</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Jumlah:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Label:</translation>
+    </message>
     <message>
         <source>Copy label</source>
         <translation>Salin label</translation>
@@ -750,6 +813,10 @@
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Salin Alamat</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Alamat</translation>
@@ -805,8 +872,16 @@
         <translation>Ganti:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Pilih...</translation>
+    </message>
+    <message>
         <source>Dust:</source>
         <translation>Dust:</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Kirim</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -815,6 +890,10 @@
     <message>
         <source>Copy amount</source>
         <translation>Salin jumla</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Salin biaya</translation>
     </message>
     <message>
         <source>Copy after fee</source>
@@ -839,6 +918,14 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Jumlah:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Label:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -860,6 +947,10 @@
     <message>
         <source>Date</source>
         <translation>Tanggal</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Transaksi</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -949,6 +1040,10 @@
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">Pilihan:</translation>
+    </message>
     <message>
         <source>Information</source>
         <translation>Informasi</translation>

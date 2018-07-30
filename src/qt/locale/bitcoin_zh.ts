@@ -25,6 +25,10 @@
         <source>Choose the address to send coins to</source>
         <translation>选择想要发送币的地址</translation>
     </message>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation type="unfinished">&amp;选择</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
@@ -60,6 +64,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
@@ -70,7 +77,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
+    </context>
+<context>
+    <name>NetWatchLogModel</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
@@ -93,7 +106,12 @@
     </context>
 <context>
     <name>QObject</name>
-    </context>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>转账</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -199,6 +217,10 @@
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>正在载入地址...</translation>
+    </message>
     <message>
         <source>Transaction too large for fee policy</source>
         <translation>根据费率标准，本次转账超额</translation>

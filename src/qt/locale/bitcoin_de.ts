@@ -30,6 +30,10 @@
         <translation>Ausgewählte Adresse aus der Liste entfernen</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Zu suchende Adresse oder Bezeichnung eingeben</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Daten der aktuellen Ansicht in eine Datei exportieren</translation>
     </message>
@@ -63,7 +67,7 @@
     </message>
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Dies sind ihre Bitcoin-Adressen zum Tätigen von Überweisungen. Bitte prüfen Sie den Betrag und die Adresse des Empfängers, bevor Sie Bitcoins überweisen.</translation>
+        <translation>Dies sind Ihre Bitcoin-Adressen zum Tätigen von Überweisungen. Bitte prüfen Sie den Betrag und die Adresse des Empfängers, bevor Sie Bitcoins überweisen.</translation>
     </message>
     <message>
         <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
@@ -145,7 +149,7 @@
     </message>
     <message>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation>Dieser Vorgang benötigt ihre Passphrase, um die Brieftasche zu entsperren.</translation>
+        <translation>Dieser Vorgang benötigt Ihre Passphrase, um die Brieftasche zu entsperren.</translation>
     </message>
     <message>
         <source>Unlock wallet</source>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>&amp;URI öffnen...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Wallet:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -786,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -912,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>k.A.</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -960,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Unbekannt. Synchronisiere Headers (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
     </message>
 </context>
 <context>
@@ -1204,6 +1235,10 @@
         <translation>keine</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Zurücksetzen der Konfiguration bestätigen</translation>
     </message>
@@ -1418,7 +1453,7 @@
     </message>
     <message>
         <source>NodeId</source>
-        <translation>Knoten Identität</translation>
+        <translation>Knotenkennung</translation>
     </message>
     <message>
         <source>Ping</source>
@@ -1523,6 +1558,11 @@
         <source>unknown</source>
         <translation>unbekannt</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1623,6 +1663,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Speichernutzung</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Wallet: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1790,7 +1834,7 @@
     </message>
     <message>
         <source>&amp;Unban</source>
-        <translation>&amp;Node entsperren</translation>
+        <translation>K&amp;noten entsperren</translation>
     </message>
     <message>
         <source>Welcome to the %1 RPC console.</source>
@@ -1886,6 +1930,14 @@
     <message>
         <source>Clear</source>
         <translation>Zurücksetzen</translation>
+    </message>
+    <message>
+        <source>Native segwit addresses (aka Bech32 or BIP-173) reduce your transaction fees later on and offer better protection against typos, but old wallets don't support them. When unchecked, an address compatible with older wallets will be created instead.</source>
+        <translation>Ureigene SegWit-Adressen (alias Bech32 oder BIP-173) werden Ihre Transaktionsgebühren senken und bieten besseren Tippfehlerschutz, werden jedoch von alten Brieftaschen nicht unterstützt. Wenn abgewählt, wird eine mit älteren Brieftaschen kompatible Adresse erstellt.</translation>
+    </message>
+    <message>
+        <source>Generate native segwit (Bech32) address</source>
+        <translation>Generiere ureigene SegWit(Bech32)-Adresse</translation>
     </message>
     <message>
         <source>Requested payments history</source>
@@ -2093,10 +2145,6 @@
         <translation>pro Kilobyte</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Wenn die benutzerdefinierte Gebühr 1000 Satoshis beträgt und die Transaktion nur 250 Byte groß ist, wird bei Auswahl von "pro Kilobyte" eine Gebühr in Höhe von 250 Satoshis, bei Auswahl von "Mindestbetrag" eine Gebühr in Höhe von 1000 Satoshis bezahlt. Bei Transaktionen die Größer als ein Kilobyte sind, werden bei beiden Optionen die Gebühren pro Kilobyte bezahlt.</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Ausblenden</translation>
     </message>
@@ -2205,20 +2253,16 @@
         <translation>Wollen Sie die Überweisung ausführen?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>als Transaktionsgebühr hinzugefügt</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Gesamtbetrag %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>oder</translation>
     </message>
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>Du kannst die Gebühr später erhöhen (Zeigt Replace-By-Fee, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Transaktionsgebühr</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
@@ -2270,7 +2314,7 @@
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Voraussichtlicher Beginn der Bestätigung innerhalb von %n Block</numerusform><numerusform>Voraussichtlicher Beginn der Bestätigung innerhalb von %n Blöcken.</numerusform></translation>
+        <translation><numerusform>Voraussichtlicher Beginn der Bestätigung innerhalb von %n Block.</numerusform><numerusform>Voraussichtlicher Beginn der Bestätigung innerhalb von %n Blöcken.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2566,10 +2610,6 @@
         <translation>steht im Konflikt mit einer Transaktion mit %1 Bestätigungen</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/offline</translation>
-    </message>
-    <message>
         <source>0/unconfirmed, %1</source>
         <translation>%1/unbestätigt</translation>
     </message>
@@ -2596,14 +2636,6 @@
     <message>
         <source>Status</source>
         <translation>Status</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, wurde noch nicht erfolgreich übertragen</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, verteilt durch %n Knoten</numerusform><numerusform>, verteilt durch %n Knoten</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2760,10 +2792,6 @@
         <translation>Offen bis %1</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Offline</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Unbestätigt</translation>
     </message>
@@ -2786,10 +2814,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Unreif (%1 Bestätigungen, wird verfügbar sein nach %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Dieser Block wurde vom Netzwerk nicht angenommen und wird wahrscheinlich nicht bestätigt werden!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3214,10 +3238,6 @@
         <translation>Debugging-Informationen für eine Kategorie ausschließen. Kann in Verbindung mit -debug = 1 verwendet werden, um Debug-Logs für alle Kategorien auszugeben, mit Ausnahme einer oder mehrerer spezifizierter Kategorien.</translation>
     </message>
     <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>Befehl ausführen wenn sich eine Wallet-Transaktion verändert (%s im Befehl wird durch die Transaktions-ID ersetzt)</translation>
-    </message>
-    <message>
         <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
         <translation>Zusätzliche Transaktionen für kompakten Block-Nachbau im Speicher vorhalten (default: %u)</translation>
     </message>
@@ -3252,6 +3272,10 @@
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>Niedrigste Gebühr (in %s/kB) für Transaktionen einstellen, die bei der Blockerzeugung berücksichtigt werden sollen. (default: %s)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Maximale Größe in Byte von "high-priority/low-fee"-Transaktionen festlegen (Standard: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3300,6 +3324,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>Gibt an, ob der mempool beim Beenden gespeichert und beim Starten wieder geladen werden soll (Standard: %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Gegenstellen die sich von der angegebenen IP-Adresse (e.g. 1.2.3.4) oder CIDR Notation (eg. 1.2.3.0/24) aus verbinden immer zulassen. Kann mehrmals angegeben werden.</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3379,7 +3407,7 @@
     </message>
     <message>
         <source>Enable publish raw block in &lt;address&gt;</source>
-        <translation>Aktiviere das Veröffentlichen des Raw-Blocks in &lt;address&gt;</translation>
+        <translation>Aktiviere das Veröffentlichen des Roh-Blocks in &lt;address&gt;</translation>
     </message>
     <message>
         <source>Enable publish raw transaction in &lt;address&gt;</source>
@@ -3503,7 +3531,7 @@
     </message>
     <message>
         <source>Rebuild chain state from the currently indexed blocks</source>
-        <translation>Blockkettenzustand aus aktuelle indizierten Blöcken wiederaufbauen</translation>
+        <translation>Blockkettenzustand aus aktuell indizierten Blöcken wiederaufbauen</translation>
     </message>
     <message>
         <source>Replaying blocks...</source>
@@ -3520,6 +3548,10 @@
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Größe des Datenbankcaches in Megabyte festlegen (%d bis %d, Standard: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Maximale Blockgröße in Byte festlegen (Standard: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3551,7 +3583,7 @@
     </message>
     <message>
         <source>Upgrading UTXO database</source>
-        <translation>Aktualisierung der UTXO Datenbank</translation>
+        <translation>Aktualisierung der UTXO-Datenbank</translation>
     </message>
     <message>
         <source>Use UPnP to map the listening port (default: %u)</source>
@@ -3559,7 +3591,7 @@
     </message>
     <message>
         <source>Use the test chain</source>
-        <translation>Die Testchain verwenden</translation>
+        <translation>Die Test-Blockkette verwenden</translation>
     </message>
     <message>
         <source>User Agent comment (%s) contains unsafe characters.</source>
@@ -3623,7 +3655,7 @@
     </message>
     <message>
         <source>Randomize credentials for every proxy connection. This enables Tor stream isolation (default: %u)</source>
-        <translation>Zufällige Anmeldedaten für jede Proxyverbindung verwenden. Dies aktiviert Tor-Datenflussisolation (Standard: %u)</translation>
+        <translation>Zufällige Anmeldedaten für jede Proxy-Verbindung verwenden. Dies aktiviert Tor-Datenflussisolation (Standard: %u)</translation>
     </message>
     <message>
         <source>The transaction amount is too small to send after the fee has been deducted</source>
@@ -3751,11 +3783,11 @@
     </message>
     <message>
         <source>Tor control port password (default: empty)</source>
-        <translation>TOR Kontrollport Passwort (Standard: leer)</translation>
+        <translation>Tor-Kontrollport-Passwort (Standard: leer)</translation>
     </message>
     <message>
         <source>Tor control port to use if onion listening enabled (default: %s)</source>
-        <translation>Zu benutzender TOR Kontrollport wenn Onion Auflistung aktiv ist (Standard: %s)</translation>
+        <translation>Zu benutzender Tor-Kontrollport, wenn Onion-Lauschen aktiv ist (Standard: %s)</translation>
     </message>
     <message>
         <source>Transaction amount too small</source>
@@ -3803,7 +3835,7 @@
     </message>
     <message>
         <source>Whether to operate in a blocks only mode (default: %u)</source>
-        <translation>Legt fest ob nur Blöcke Modus aktiv sein soll (Standard: %u)</translation>
+        <translation>Legt fest, ob Nur-Blöcke-Modus aktiv sein soll (Standard: %u)</translation>
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to change -txindex</source>
@@ -3863,7 +3895,7 @@
     </message>
     <message>
         <source>Force relay of transactions from whitelisted peers even if they violate local relay policy (default: %d)</source>
-        <translation>Leite Transaktionen von Peers auf der Positivliste auf jeden Fall weiter, auch wenn sie die lokale Weiterleitungsregeln verletzen (Standardeinstellung: %d)</translation>
+        <translation>Leite Transaktionen von Peers auf der Positivliste auf jeden Fall weiter, auch wenn sie lokale Weiterleitungsregeln verletzen (Standardeinstellung: %d)</translation>
     </message>
     <message>
         <source>How thorough the block verification of -checkblocks is (0-4, default: %u)</source>
@@ -3875,7 +3907,7 @@
     </message>
     <message>
         <source>Number of seconds to keep misbehaving peers from reconnecting (default: %u)</source>
-        <translation>Anzahl Sekunden, während denen sich nicht konform verhaltenden Gegenstellen die Wiederverbindung verweigert wird (Standard: %u)</translation>
+        <translation>Anzahl Sekunden der Wiederverbindungssperre für sich schlecht benehmende Gegenstellen (Standard: %u)</translation>
     </message>
     <message>
         <source>Output debugging information (default: %u, supplying &lt;category&gt; is optional)</source>
@@ -3883,7 +3915,7 @@
     </message>
     <message>
         <source>Sets the serialization of raw transaction or block hex returned in non-verbose mode, non-segwit(0) or segwit(1) (default: %d)</source>
-        <translation>Setzt die Serialisierung von Rohtransaktionen oder Block Hex-Daten auf non-verbose mode, nicht-Segwit(0) oder Segwit(1) (default: %d)</translation>
+        <translation>Setzt die Serialisierung von Rohtransaktionen oder Block Hex-Daten auf nicht-wortreichen Modus, nicht-Segwit(0) oder Segwit(1) (default: %d)</translation>
     </message>
     <message>
         <source>Specify directory to hold wallets (default: &lt;datadir&gt;/wallets if it exists, otherwise &lt;datadir&gt;)</source>
@@ -3891,11 +3923,11 @@
     </message>
     <message>
         <source>Specify location of debug log file: this can be an absolute path or a path relative to the data directory (default: %s)</source>
-        <translation>Verzeichniss für das Debug Logfile: Es kann sich um einen absoluten oder relativen Pfad zum Datenverzeichniss handeln (Standard: %s)</translation>
+        <translation>Verzeichniss für die Debug-Logdatei: Es kann sich um einen absoluten oder relativen Pfad zum Datenverzeichniss handeln (Standard: %s)</translation>
     </message>
     <message>
         <source>Support filtering of blocks and transaction with bloom filters (default: %u)</source>
-        <translation>Unterstütze Blöcke und Transaktionen mit  Bloomfiltern zu filtern (default: %u)</translation>
+        <translation>Unterstütze, Blöcke und Transaktionen mit  Bloom-Filtern zu filtern (default: %u)</translation>
     </message>
     <message>
         <source>The fee rate (in %s/kB) that indicates your tolerance for discarding change by adding it to the fee (default: %s). Note: An output is discarded if it is dust at this rate, but we will always discard up to the dust relay fee and a discard fee above that is limited by the fee estimate for the longest target</source>
@@ -3932,10 +3964,6 @@
     <message>
         <source>Warning: Unknown block versions being mined! It's possible unknown rules are in effect</source>
         <translation>Warnung: Unbekannte Blockversion wird durch Mining erzeugt! Es ist möglich, dass unbekannte Regeln in Kraft sind.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Gegenstellen die sich von der angegebenen IP-Adresse (e.g. 1.2.3.4) oder CIDR Notation (eg. 1.2.3.0/24) aus verbinden immer zulassen. Kann mehrmals angegeben werden.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>
@@ -3987,7 +4015,7 @@
     </message>
     <message>
         <source>Make the wallet broadcast transactions</source>
-        <translation>Die Wallet soll Transaktionen übertragen/broadcasten</translation>
+        <translation>Die Brieftasche soll Transaktionen im Netzwerk rundrufen</translation>
     </message>
     <message>
         <source>Maximum per-connection receive buffer, &lt;n&gt;*1000 bytes (default: %u)</source>

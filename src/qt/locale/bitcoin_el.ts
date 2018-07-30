@@ -12,6 +12,14 @@
     </context>
 <context>
     <name>AddressTableModel</name>
+    <message>
+        <source>Label</source>
+        <translation>Ετικέτα</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Διεύθυνση</translation>
+    </message>
     </context>
 <context>
     <name>AskPassphraseDialog</name>
@@ -27,6 +35,10 @@
         <source>Repeat new passphrase</source>
         <translation>Επαναλάβετε νέο συνθηματικό</translation>
     </message>
+    <message>
+        <source>Change passphrase</source>
+        <translation>Αλλαγή συνθηματικού</translation>
+    </message>
     </context>
 <context>
     <name>BanTableModel</name>
@@ -36,6 +48,10 @@
     <message>
         <source>Quit application</source>
         <translation>Κλείσιμο εφαρμογής</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Πορτοφόλι:</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -52,6 +68,22 @@
         <source>Date</source>
         <translation>Ημερομηνία</translation>
     </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Αντιγραφή διεύθυνσης</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Αντιγραφή ποσού</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Αντιγραφή ποσότητας</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Αντιγραφή αλλαγής</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -66,6 +98,9 @@
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -86,8 +121,19 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Διεύθυνση</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -113,7 +159,17 @@
     </context>
 <context>
     <name>QObject</name>
-    </context>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>μπλοκ</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Συναλλαγή</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -123,6 +179,10 @@
 <context>
     <name>RPCConsole</name>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Πορτοφόλι: </translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation>Υπηρεσίες</translation>
     </message>
@@ -130,15 +190,59 @@
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
+        <source>&amp;Label:</source>
+        <translation>Ετικέτα:</translation>
+    </message>
+    <message>
+        <source>&amp;Message:</source>
+        <translation>&amp;Μήνυμα:</translation>
+    </message>
+    <message>
         <source>Remove</source>
         <translation>Αφαίρεση</translation>
     </message>
-    </context>
+    <message>
+        <source>Copy message</source>
+        <translation>Αντιγραφή μηνύματος</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Αντιγραφή ποσού</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address</source>
+        <translation>Διεύθυνση</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Ετικέτα</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Μήνυμα</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Ημερομηνία</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Ετικέτα</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Μήνυμα</translation>
+    </message>
+    <message>
+        <source>(no message)</source>
+        <translation>(κανένα μήνυμα)</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
@@ -150,9 +254,25 @@
         <source>Recommended:</source>
         <translation>Συνίσταται:</translation>
     </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Αντιγραφή ποσότητας</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Αντιγραφή ποσού</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Αντιγραφή αλλαγής</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>Ετικέτα:</translation>
+    </message>
     <message>
         <source>Message:</source>
         <translation>Μήνυμα:</translation>
@@ -175,15 +295,51 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Date</source>
+        <translation>Ημερομηνία</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Μήνυμα</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Ημερομηνία</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Ετικέτα</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Copy address</source>
+        <translation>Αντιγραφή διεύθυνσης</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Αντιγραφή ποσού</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Ημερομηνία</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Ετικέτα</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Διεύθυνση</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>

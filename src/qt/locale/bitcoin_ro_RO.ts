@@ -30,6 +30,10 @@
         <translation>Şterge adresa selectată din listă</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Introduceţi adresa sau eticheta pentru căutare</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Exportă datele din tab-ul curent într-un fişier</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Deschide &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portofel:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -675,6 +683,10 @@
         <translation>Copiază rest</translation>
     </message>
     <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 blocat)</translation>
+    </message>
+    <message>
         <source>yes</source>
         <translation>da</translation>
     </message>
@@ -781,6 +793,9 @@
         <translation>Nu se poate crea un dosar de date aici.</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -908,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Nespecificat</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -956,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Necunoscut. Se sincronizeaza headerele (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tip</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresă</translation>
     </message>
 </context>
 <context>
@@ -1202,6 +1237,10 @@
     <message>
         <source>none</source>
         <translation>nimic</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Nucleul Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1481,7 +1520,7 @@
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation><numerusform>%n ora</numerusform><numerusform>%n ore</numerusform><numerusform>%n ore</numerusform></translation>
+        <translation><numerusform>%n oră</numerusform><numerusform>%n ore</numerusform><numerusform>%n ore</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
@@ -1489,7 +1528,7 @@
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation><numerusform>%n saptamana</numerusform><numerusform>%n saptamani</numerusform><numerusform>%n saptamani</numerusform></translation>
+        <translation><numerusform>%n săptămână</numerusform><numerusform>%n săptămâni</numerusform><numerusform>%n de săptămâni</numerusform></translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -1522,6 +1561,16 @@
     <message>
         <source>unknown</source>
         <translation>necunoscut</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tze</translation>
     </message>
 </context>
 <context>
@@ -1623,6 +1672,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Memorie folosită</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portofel: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1888,6 +1941,14 @@
         <translation>Curăţă</translation>
     </message>
     <message>
+        <source>Native segwit addresses (aka Bech32 or BIP-173) reduce your transaction fees later on and offer better protection against typos, but old wallets don't support them. When unchecked, an address compatible with older wallets will be created instead.</source>
+        <translation>Adresele native segwit (aka Bech32 sau BIP-173) vor reduce mai tarziu comisioanele de tranzactionare si vor oferi o mai buna protectie impotriva introducerii gresite, dar portofelele vechi nu sunt compatibile. Daca optiunea nu e bifata, se va crea o adresa compatibila cu portofelele vechi.</translation>
+    </message>
+    <message>
+        <source>Generate native segwit (Bech32) address</source>
+        <translation>Genereaza adresa nativa segwit (Bech32)</translation>
+    </message>
+    <message>
         <source>Requested payments history</source>
         <translation>Istoricul plăţilor cerute</translation>
     </message>
@@ -2093,10 +2154,6 @@
         <translation>per kilooctet</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Daca taxa personalizata este setata la 1000 satoshi si tranzactia este doar de 250 bytes, atunci "per kilobyte" plateste o taxa de doar 250 satoshi, in timp ce "total minim" plateste 1000 satoshi. Pentru tranzactii mai mari de un kilobyte ambele platesc per kilobyte. </translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Ascunde</translation>
     </message>
@@ -2205,20 +2262,16 @@
         <translation>Sigur doriţi să trimiteţi?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>adăugat ca taxă de tranzacţie</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Suma totală %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>sau</translation>
     </message>
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>Puteti creste taxa mai tarziu (semnaleaza Replace-By-Fee, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Taxă tranzacţie</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
@@ -2555,7 +2608,7 @@
     <name>TransactionDesc</name>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Deschis pentru inca un bloc</numerusform><numerusform>Deschis pentru inca %n blocuri</numerusform><numerusform>Deschis pentru inca %n blocuri</numerusform></translation>
+        <translation><numerusform>Deschis pentru încă %n bloc</numerusform><numerusform>Deschis pentru încă %n blocuri</numerusform><numerusform>Deschis pentru încă %n de blocuri</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2564,10 +2617,6 @@
     <message>
         <source>conflicted with a transaction with %1 confirmations</source>
         <translation>in conflict cu o tranzactie cu %1 confirmari</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/offline</translation>
     </message>
     <message>
         <source>0/unconfirmed, %1</source>
@@ -2596,14 +2645,6 @@
     <message>
         <source>Status</source>
         <translation>Stare</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, nu a fost încă publicată</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, difuzare printr-un nod</numerusform><numerusform>, difuzare prin %n noduri</numerusform><numerusform>, difuzare prin %n noduri</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2647,7 +2688,7 @@
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>se matureaza intr-un bloc</numerusform><numerusform>se matureaza in %n blocuri</numerusform><numerusform>se matureaza in %n blocuri</numerusform></translation>
+        <translation><numerusform>se maturizează în încă %n bloc</numerusform><numerusform>se maturizează în încă %n blocuri</numerusform><numerusform>se maturizează în încă %n de blocuri</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2751,13 +2792,13 @@
         <source>Label</source>
         <translation>Etichetă</translation>
     </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Deschis pentru încă %n bloc</numerusform><numerusform>Deschis pentru încă %n blocuri</numerusform><numerusform>Deschis pentru încă %n de blocuri</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>Deschis pînă la %1</translation>
-    </message>
-    <message>
-        <source>Offline</source>
-        <translation>Deconectat</translation>
     </message>
     <message>
         <source>Unconfirmed</source>
@@ -2782,10 +2823,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Imatur (%1 confirmari, va fi disponibil după %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Acest bloc nu a fost recepţionat de nici un alt nod şi probabil nu va fi acceptat!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3210,10 +3247,6 @@
         <translation>Exclude informatia de depanare pentru o categorie. Poate fi folosit impreuna cu -debug=1 pentru a produce loguri de depanare pentru toate categoriile mai ptin una sau mai multe categorii specificate.</translation>
     </message>
     <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>Execută comanda cînd o tranzacţie a portofelului se schimbă (%s în cmd este înlocuit de TxID)</translation>
-    </message>
-    <message>
         <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
         <translation>Extra tranzactii de tinut in memorie pentru reconstructia compacta a blocurilor (implicit: %u)</translation>
     </message>
@@ -3248,6 +3281,10 @@
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>Seteaza cea mai mica taxa (în %s/kB) pentru tranzactiile de adăugat la crearea blocului (implicit: %s)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Setează mărimea pentru tranzacţiile prioritare/taxe mici în octeţi (implicit: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3296,6 +3333,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>Daca se salveaza mempool la shutdown si se incarca la restart (implicit: %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Parteneri din whitelist ce se conecteaza de la adresa IP specificata (ex. 1.2.3.4) sau o retea cu notatia CIDR (ex. 1.2.3.0/24). Poate fi specificat de mai multe ori.</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3516,6 +3557,10 @@
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Setează mărimea bazei de date cache în megaocteţi (%d la %d, implicit: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Setaţi dimensiunea maximă a unui bloc în bytes (implicit: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3928,10 +3973,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Atenţie: fişierul portofelului este corupt, date salvate! Fişierul %s a fost salvat ca %s in %s; dacă balanta sau tranzactiile sunt incorecte ar trebui să restauraţi dintr-o copie de siguranţă.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Parteneri din whitelist ce se conecteaza de la adresa IP specificata (ex. 1.2.3.4) sau o retea cu notatia CIDR (ex. 1.2.3.0/24). Poate fi specificat de mai multe ori.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

@@ -30,6 +30,10 @@
         <translation>Vymaž vybranú adresu zo zoznamu</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Zadajte adresu alebo popis pre hľadanie</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Exportovať tento náhľad do súboru</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Otvoriť &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Peňaženka:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -786,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -912,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>nie je k dispozícii</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -960,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Neznámy. Synchronizujú sa hlavičky (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresa</translation>
     </message>
 </context>
 <context>
@@ -1206,6 +1237,10 @@
     <message>
         <source>none</source>
         <translation>žiadne</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Jadro Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1527,6 +1562,11 @@
         <source>unknown</source>
         <translation>neznámy</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1627,6 +1667,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Využitie pamäte</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Peňaženka: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2106,10 +2150,6 @@
         <translation>za kilobajt</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Ak je poplatok nastavený na 1000 satoshi a transakcia je veľká len 250 bajtov, potom "za kilobajt" zaplatí poplatok 250 satoshi, ale "spolu aspoň" zaplatí 1000 satoshi. Pre transakcie väčšie ako kilobajt platia oba spôsoby za každý kilobajt.</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Skryť</translation>
     </message>
@@ -2218,20 +2258,16 @@
         <translation>Určite chcete odoslať transakciu?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>pridané ako poplatok za transakciu</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Celková suma %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>alebo</translation>
     </message>
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>Poplatok môžete navýšiť neskôr (vysiela sa "Replace-By-Fee" - nahradenie poplatkom, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Transakčný poplatok</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
@@ -2579,10 +2615,6 @@
         <translation>koliduje s transakciou s %1 potvrdeniami</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/offline</translation>
-    </message>
-    <message>
         <source>0/unconfirmed, %1</source>
         <translation>0/nepotvrdené, %1</translation>
     </message>
@@ -2609,14 +2641,6 @@
     <message>
         <source>Status</source>
         <translation>Stav</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, ešte nebola úspešne odoslaná</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, vysielať cez %n uzol</numerusform><numerusform>, vysielať cez %n uzle </numerusform><numerusform>, vysielať cez %n uzolov</numerusform><numerusform>, vysielať cez %n uzolov</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2773,10 +2797,6 @@
         <translation>Otvorené do %1</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Offline</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Nepotvrdené</translation>
     </message>
@@ -2799,10 +2819,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Nezrelé (%1 potvrdení, bude dostupné po %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Ten blok nebol prijatý žiadnym iným uzlom a pravdepodobne nebude akceptovaný!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3227,10 +3243,6 @@
         <translation>Vylúčiť ladiacu informáciu danej kategórie. Dá se zkombinovať s -debug=1, aby sa zaznamenávali ladice informácie všetkých kategórií pkrem jednej alebo niekolkých zvolených.</translation>
     </message>
     <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>Vykonaj príkaz keď sa zmení transakcia peňaženky (%s v príkaze je nahradená TxID)</translation>
-    </message>
-    <message>
         <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
         <translation>Počet extra transakcíí, ktoré sa majú držať v pamäti pre účely rekonštrukcie kompaktných blokov (predvolené: %u)</translation>
     </message>
@@ -3265,6 +3277,10 @@
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>Nastaviť nejnižší akceptovateľný poplatok (v %s/kB) pre transakcie, ktoré majú byť zahrnutý do nových blokov. (predvolené: %s)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Nastaviť najväčšiu veľkosť vysoká-dôležitosť/nízke-poplatky transakcií v bajtoch (prednastavené: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3313,6 +3329,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>Či uchovať transakčný zásobník medzi vypnutím a zapnutím (predvolené: %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Povoliť partnerov pripájajúcich sa z danej IP adresy (napr. 1.2.3.4) alebo zo siete vo formáte CIDR (napr. 1.2.3.0/24). Môže byť zadané viackrát.</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3533,6 +3553,10 @@
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Nastaviť veľkosť pomocnej pamäti databázy v megabajtoch (%d do %d, prednastavené: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Nastaviť najväčšiu veľkosť bloku v bytoch (predvolené: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3949,10 +3973,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Varovanie: Peňaženka poškodená, dáta boli zachránené! Originálna %s ako %s v %s; ak váš zostatok alebo transakcie sú nesprávne, mali by ste obnoviť zálohu.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Povoliť partnerov pripájajúcich sa z danej IP adresy (napr. 1.2.3.4) alebo zo siete vo formáte CIDR (napr. 1.2.3.0/24). Môže byť zadané viackrát.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

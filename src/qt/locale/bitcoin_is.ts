@@ -318,6 +318,10 @@
         <translation>Opna &amp;URL...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Veski:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Smelltu til að loka fyrir netumferð.</translation>
     </message>
@@ -428,6 +432,10 @@
     <message>
         <source>Open a bitcoin: URI or payment request</source>
         <translation>Opna bitcoin: URI eða greiðslubeiðni</translation>
+    </message>
+    <message>
+        <source>&amp;Command-line options</source>
+        <translation>&amp;Valkostir skipanalínu</translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -662,7 +670,22 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Um %1</translation>
+    </message>
+    <message>
+        <source>Command-line options</source>
+        <translation type="unfinished">Valkostir skipanalínu</translation>
+    </message>
+    <message>
+        <source>command-line options</source>
+        <translation>valkostir skipanalínu</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
@@ -676,6 +699,9 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Number of blocks left</source>
@@ -687,10 +713,26 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Vistfang</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Opna URI</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Valkostir</translation>
+    </message>
     <message>
         <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
         <translation>IP tala staðgengils (t.d. IPv4: 127.0.0.1 / IPv6: ::1)</translation>
@@ -698,6 +740,10 @@
     <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>URL frá þriðja aðila (t.d. blokkarskoðari) sem birtast í færsluflipanum sem samhengisatriði. %s í URL-inu skipt út fyrir færslutvíkross. Mörg URL eru aðskilin með lóðréttu striki |.</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Veski</translation>
     </message>
     <message>
         <source>Error</source>
@@ -757,12 +803,24 @@
 <context>
     <name>RPCConsole</name>
     <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Upplýsingar</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Kembunargluggi</translation>
+    </message>
+    <message>
         <source>Block chain</source>
         <translation>Blokkarkeðja</translation>
     </message>
     <message>
         <source>Current number of blocks</source>
         <translation>Núverandi fjöldi blokka</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Veski: </translation>
     </message>
     <message>
         <source>Starting Block</source>
@@ -776,9 +834,17 @@
         <source>Last block time</source>
         <translation>Tími síðustu blokkar</translation>
     </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Slökkt á netumferð</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Upphæð:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Merki:</translation>
@@ -794,6 +860,10 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Afrita netfangið</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Vistfang</translation>
@@ -849,6 +919,10 @@
         <translation>Skiptimynt:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Veldu...</translation>
+    </message>
+    <message>
         <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
         <translation>Það er í lagi að greiða einungis lágmarksupphæðina svo framarlega sem færslurúmtakið er minna en plássið í blokkunum. En gætið þess að þegar það er meiri eftirspurn eftir bitcoin færslum en netið getur unnið úr þá gæti svo farið að færslurnar verða aldrei samþykktar.</translation>
     </message>
@@ -861,12 +935,20 @@
         <translation>Ryk:</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Senda</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(ekkert merki)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Upphæð:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Merki:</translation>
@@ -906,10 +988,6 @@
     <message>
         <source>Label</source>
         <translation>Merki</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Þessi blokk barst ekki í neinn annan hnútpunkt og verður sennilega ekki samþykkt!</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -970,9 +1048,17 @@
         <source>Export the data in the current tab to a file</source>
         <translation>Flytja gögn í flipanum í skrá</translation>
     </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Öryggisafrit á veski</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">Valkostir:</translation>
+    </message>
     <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>Villa við lestur %s! Allir lyklar fóru inn á réttan hátt, en færslugögn eða færslugildi gætu verið röng eða horfin.</translation>

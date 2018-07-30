@@ -322,6 +322,10 @@
         <translation>&amp;URI... Megnyitása</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Tárca:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Kattintson a hálózati tevékenység felfüggesztéséhez.</translation>
     </message>
@@ -786,6 +790,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -908,6 +915,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -956,6 +970,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Ismeretlen. Fejlécek szinkronizálása (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Típus</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Cím</translation>
     </message>
 </context>
 <context>
@@ -1018,6 +1045,10 @@
     <message>
         <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
         <translation>Megmutatja, hogy az alapértelmezett SOCKS5 proxy van-e használatban, hogy elérje a párokat ennél a hálózati típusnál.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor hidden services:</source>
+        <translation type="unfinished">&amp;Más SOCKS5 proxy használata a párokhoz, a Tor rejtett szolgáltatásain keresztül:</translation>
     </message>
     <message>
         <source>Hide the icon from the system tray.</source>
@@ -1198,6 +1229,10 @@
     <message>
         <source>none</source>
         <translation>semmi</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Mag</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1511,7 +1546,7 @@
         <source>unknown</source>
         <translation>ismeretlen</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject::QObject</name>
     <message>
@@ -1607,6 +1642,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Memóriahasználat</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Tárca: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2137,6 +2176,10 @@
         <translation>vagy</translation>
     </message>
     <message>
+        <source>Transaction fee</source>
+        <translation>Tranzakciós díj</translation>
+    </message>
+    <message>
         <source>The amount to pay must be larger than 0.</source>
         <translation>Az összegnek nagyobbnak kell lennie, mint 0.</translation>
     </message>
@@ -2269,6 +2312,10 @@
         <translation>&amp;Üzenet megerősítése</translation>
     </message>
     <message>
+        <source>Verify &amp;Message</source>
+        <translation type="unfinished">&amp;Üzenet megerősítése</translation>
+    </message>
+    <message>
         <source>The entered address is invalid.</source>
         <translation>A beírt cím érvénytelen.</translation>
     </message>
@@ -2394,6 +2441,10 @@
         <translation>Tranzakció</translation>
     </message>
     <message>
+        <source>Inputs</source>
+        <translation type="unfinished">Bemenetek</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>Összeg</translation>
     </message>
@@ -2422,10 +2473,6 @@
     <message>
         <source>Label</source>
         <translation>Címke</translation>
-    </message>
-    <message>
-        <source>Offline</source>
-        <translation>Offline</translation>
     </message>
     <message>
         <source>Unconfirmed</source>
@@ -2714,6 +2761,10 @@
         <translation>Jelszó a JSON-RPC kapcsolódásokhoz</translation>
     </message>
     <message>
+        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
+        <translation>Más SOCKS5 proxy használata a párokhoz, a Tor rejtett szolgáltatásain keresztül (default: %s)</translation>
+    </message>
+    <message>
         <source>%s is set very high!</source>
         <translation>%s túl magasra van állítva!</translation>
     </message>
@@ -2724,6 +2775,10 @@
     <message>
         <source>Listen for JSON-RPC connections on &lt;port&gt; (default: %u or testnet: %u)</source>
         <translation>Figyelés a JSON-RPC kapcsolatokra itt: &lt;port&gt; (alapértelmezett:  %u vagy tesztnet: %u)</translation>
+    </message>
+    <message>
+        <source>Listen for connections on &lt;port&gt; (default: %u or testnet: %u)</source>
+        <translation>Figyelés a kapcsolatokra itt: &lt;port&gt; (alapértelmezett:  %u vagy tesztnet: %u)</translation>
     </message>
     <message>
         <source>Starting network threads...</source>

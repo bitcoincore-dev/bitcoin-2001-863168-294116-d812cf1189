@@ -94,7 +94,11 @@ Exportar los datos en la pestaña actual a un archivo</translation>
         <source>Exporting Failed</source>
         <translation>Exportación fallida</translation>
     </message>
-    </context>
+    <message>
+        <source>There was an error trying to save the address list to %1. Please try again.</source>
+        <translation>Hubo un error intentando guardar la lista de direcciones a %1 Inténtelo otravez</translation>
+    </message>
+</context>
 <context>
     <name>AddressTableModel</name>
     <message>
@@ -179,6 +183,10 @@ Exportar los datos en la pestaña actual a un archivo</translation>
     <message>
         <source>Wallet encrypted</source>
         <translation>Billetera encriptada</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 se cerrará ahora para finalizar el proceso de encriptación. Recuerda que encriptando tu billetera no protegera por completo tus bitcoins desde robos por malware que infectan tu computadora.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -267,6 +275,14 @@ Exportar los datos en la pestaña actual a un archivo</translation>
         <translation>Salir de la aplicación</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation type="unfinished">&amp;Alrededor de %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Mostrar información sobre %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Acerca de &amp;Qt</translation>
     </message>
@@ -301,6 +317,10 @@ Exportar los datos en la pestaña actual a un archivo</translation>
     <message>
         <source>Open &amp;URI...</source>
         <translation>Abrir &amp;URL...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Billetera:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -685,6 +705,9 @@ Exportar los datos en la pestaña actual a un archivo</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -767,6 +790,13 @@ Exportar los datos en la pestaña actual a un archivo</translation>
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -813,6 +843,14 @@ Exportar los datos en la pestaña actual a un archivo</translation>
         <translation>Esconder</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Dirección</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -1037,6 +1075,10 @@ Exportar los datos en la pestaña actual a un archivo</translation>
     <message>
         <source>none</source>
         <translation>ninguno </translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1314,6 +1356,16 @@ Exportar los datos en la pestaña actual a un archivo</translation>
         <source>unknown</source>
         <translation>desconocido</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blq</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1406,6 +1458,10 @@ Exportar los datos en la pestaña actual a un archivo</translation>
     <message>
         <source>Memory usage</source>
         <translation>Uso de memoria</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Billetera: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1698,6 +1754,10 @@ Exportar los datos en la pestaña actual a un archivo</translation>
         <translation>Guardar imagen...</translation>
     </message>
     <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>Dirección</translation>
     </message>
@@ -1708,6 +1768,10 @@ Exportar los datos en la pestaña actual a un archivo</translation>
     <message>
         <source>Label</source>
         <translation>Etiqueta</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished">Mensaje</translation>
     </message>
     </context>
 <context>
@@ -1721,12 +1785,20 @@ Exportar los datos en la pestaña actual a un archivo</translation>
         <translation>Etiqueta</translation>
     </message>
     <message>
+        <source>Message</source>
+        <translation type="unfinished">Mensaje</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(no etiqueta)</translation>
     </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Insufficient funds!</source>
+        <translation>Fondos Insuficientes</translation>
+    </message>
     <message>
         <source>Quantity:</source>
         <translation>Cantidad:</translation>
@@ -1752,6 +1824,10 @@ Exportar los datos en la pestaña actual a un archivo</translation>
         <translation>Cambio:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Escojer...</translation>
+    </message>
+    <message>
         <source>Hide</source>
         <translation>Esconder</translation>
     </message>
@@ -1762,6 +1838,10 @@ Exportar los datos en la pestaña actual a un archivo</translation>
     <message>
         <source>Dust:</source>
         <translation>Polvo:</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Enviar</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -1804,8 +1884,16 @@ Tarifa de copia</translation>
 <context>
     <name>SendCoinsEntry</name>
     <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Cantidad:</translation>
+    </message>
+    <message>
         <source>&amp;Label:</source>
         <translation>Etiqueta:</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished">Mensaje:</translation>
     </message>
     </context>
 <context>
@@ -1838,6 +1926,18 @@ Tarifa de copia</translation>
         <translation>desconocido</translation>
     </message>
     <message>
+        <source>watch-only</source>
+        <translation>ver-solo</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished">Mensaje</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Transacción</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>Cantidad</translation>
     </message>
@@ -1854,6 +1954,10 @@ Tarifa de copia</translation>
     <message>
         <source>Label</source>
         <translation>Etiqueta</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>ver-solo</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -1887,6 +1991,10 @@ Tarifa de copia</translation>
         <translation>Confirmado</translation>
     </message>
     <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">Ver-solo</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>Fecha</translation>
     </message>
@@ -1915,13 +2023,25 @@ Tarifa de copia</translation>
 <context>
     <name>WalletView</name>
     <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Exportar</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>
 Exportar los datos en la pestaña actual a un archivo</translation>
     </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Billetera Copia de seguridad</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">Opciones:</translation>
+    </message>
     <message>
         <source>Bitcoin Core</source>
         <translation>Bitcoin Core</translation>
@@ -1937,6 +2057,10 @@ Exportar los datos en la pestaña actual a un archivo</translation>
     <message>
         <source>Warning</source>
         <translation>Peligro.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
+        <translation>Use SOCKS&amp;5 y proxy por separado para llegar a sus compañeros a través de los servicios ocultos de Tor (default: %s)</translation>
     </message>
     <message>
         <source>Insufficient funds</source>

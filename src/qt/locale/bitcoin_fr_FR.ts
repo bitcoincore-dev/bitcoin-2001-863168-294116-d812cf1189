@@ -30,6 +30,10 @@
         <translation>Supprimer l'adresse sélectionnée de la liste</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Entrez une adresse ou une étiquette à rechercher</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Exporter les données de l'onglet courant vers un fichier</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Ouvrir &amp;URI</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portefeuille:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -782,6 +790,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -870,6 +881,17 @@
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation><numerusform>%n GO d'espace libre disponible</numerusform><numerusform>%n GO d'espace libre disponible</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation><numerusform>(%n GB nécessaire)</numerusform><numerusform>(%n GB nécessaire)</numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -878,10 +900,27 @@
         <translation>Formulaire</translation>
     </message>
     <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Inconnu...</translation>
+    </message>
+    <message>
         <source>Hide</source>
         <translation>Cacher</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -928,6 +967,14 @@
         <translation>Adresse IP du proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</translation>
     </message>
     <message>
+        <source>Hide the icon from the system tray.</source>
+        <translation type="unfinished">Cacher l'icône dans la zone de notification.</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Cacher l'icône de la zone de notification</translation>
+    </message>
+    <message>
         <source>Reset all client options to default.</source>
         <translation>Réinitialiser toutes les options du client par défaut.</translation>
     </message>
@@ -940,6 +987,10 @@
         <translation>&amp;Réseau</translation>
     </message>
     <message>
+        <source>W&amp;allet</source>
+        <translation>&amp;Portefeuille</translation>
+    </message>
+    <message>
         <source>Expert</source>
         <translation>Expert</translation>
     </message>
@@ -950,6 +1001,14 @@
     <message>
         <source>Map port using &amp;UPnP</source>
         <translation>Ouvrir le port avec l'&amp;UPnP</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside.</source>
+        <translation>Accepter les connexions venant de l'extérieur.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Autoriser les connexions entrantes</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
@@ -1014,6 +1073,10 @@
     <message>
         <source>none</source>
         <translation>aucun</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1175,9 +1238,25 @@
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n heure</numerusform><numerusform>%n heures</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n jour</numerusform><numerusform>%n jours</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n semaine</numerusform><numerusform>%n semaines</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 et %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n an</numerusform><numerusform>%n années</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1198,6 +1277,16 @@
     <message>
         <source>unknown</source>
         <translation>inconnu</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -1283,6 +1372,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Usage de la mémoire</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portefeuille: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1401,6 +1494,10 @@
         <translation>1 &amp;an</translation>
     </message>
     <message>
+        <source>Network activity disabled</source>
+        <translation>Activité réseau désactivée</translation>
+    </message>
+    <message>
         <source>via %1</source>
         <translation>via %1</translation>
     </message>
@@ -1458,6 +1555,10 @@
     <message>
         <source>Remove</source>
         <translation>Retirer</translation>
+    </message>
+    <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Copier URI</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -1673,16 +1774,12 @@
         <translation>Êtes-vous sûr de vouloir envoyer ?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>Ajoute en tant que frais de transaction</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Montant Total %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>ou</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Frais de transaction</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -1873,6 +1970,10 @@
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Ouvert pour %n bloc de plus</numerusform><numerusform>Ouvert pour %n blocs de plus</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>Ouvert jusqu'à %1</translation>
@@ -1892,10 +1993,6 @@
     <message>
         <source>Status</source>
         <translation>État</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, n'a pas encore été diffusée avec succès</translation>
     </message>
     <message>
         <source>Date</source>
@@ -2023,13 +2120,13 @@
         <source>Label</source>
         <translation>Étiquette</translation>
     </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Ouvert pour %n bloc de plus</numerusform><numerusform>Ouvert pour %n blocs de plus</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>Ouvert jusqu'à %1</translation>
-    </message>
-    <message>
-        <source>Offline</source>
-        <translation>Hors ligne</translation>
     </message>
     <message>
         <source>Unconfirmed</source>
@@ -2042,10 +2139,6 @@
     <message>
         <source>Confirmed (%1 confirmations)</source>
         <translation>Confirmée (%1 confirmations)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Ce bloc n'a été reçu par aucun autre nœud et ne sera probablement pas accepté !</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -2191,6 +2284,10 @@
         <translation>Confirmée</translation>
     </message>
     <message>
+        <source>Watch-only</source>
+        <translation>Regarder seulement</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>Date</translation>
     </message>
@@ -2323,6 +2420,10 @@
 Importation ...</translation>
     </message>
     <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Chargement des adresses...</translation>
+    </message>
+    <message>
         <source>Verifying blocks...</source>
         <translation>Vérifications des blocs...</translation>
     </message>
@@ -2385,6 +2486,10 @@ Importation ...</translation>
     <message>
         <source>Username for JSON-RPC connections</source>
         <translation>Nom d'utilisateur pour les connexions JSON-RPC</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Vérification du portefeuille...</translation>
     </message>
     <message>
         <source>Warning</source>

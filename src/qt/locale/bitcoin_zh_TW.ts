@@ -30,6 +30,10 @@
         <translation>把目前選擇的位址從列表中刪掉</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>請輸入要搜尋的位址或標記</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>把目前分頁的資料匯出存成檔案</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>開啓 &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">錢包:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -786,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -912,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>未知</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -960,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>不明。正在同步前導資料(%1)中...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>種類</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>位址</translation>
     </message>
 </context>
 <context>
@@ -1206,6 +1237,10 @@
     <message>
         <source>none</source>
         <translation>無</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1527,6 +1562,16 @@
         <source>unknown</source>
         <translation>未知</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>塊</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>交易</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1627,6 +1672,10 @@
     <message>
         <source>Memory usage</source>
         <translation>記憶體使用量</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">錢包: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2105,10 +2154,6 @@
         <translation>每千位元組</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>如果自訂手續費設定為 1000 satoshi, 而交易資料大小只有 250 個位元組的話，那麽選擇「每千位元組」就只會付 250 satoshi 的手續費，換做選「總共至少」就會付 1000 satoshi. 但是如果交易資料大小超過一千個位元組，那麽兩者都是每千位元組的費用。</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>隱藏</translation>
     </message>
@@ -2217,20 +2262,16 @@
         <translation>你確定要付錢出去嗎？</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>加做交易手續費</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>總金額 %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>或</translation>
     </message>
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>你可以之後再提高手續費(有 BIP-125 手續費追加的標記)</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>交易手續費</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
@@ -2279,6 +2320,10 @@
     <message>
         <source>Pay only the required fee of %1</source>
         <translation>只付必要的手續費 %1</translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>預計可在 %n 個區塊內開始確認。</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2574,10 +2619,6 @@
         <translation>跟一個目前確認 %1 次的交易互相衝突</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1 次/離線中</translation>
-    </message>
-    <message>
         <source>0/unconfirmed, %1</source>
         <translation>0 次/未確認，%1</translation>
     </message>
@@ -2604,14 +2645,6 @@
     <message>
         <source>Status</source>
         <translation>狀態</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>，還沒成功公告出去</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>，已公告給 %n 個節點</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2768,10 +2801,6 @@
         <translation>到 %1 前可修改</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>離線中</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>未確認</translation>
     </message>
@@ -2794,10 +2823,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>未成熟(確認 %1 次，會在 %2 次後可用)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>沒有其他節點收到這個區塊，也許它不會被接受！</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3223,10 +3248,6 @@
         <translation>不要對一種類別紀錄除錯資訊。可以和 -debug=1 配合，用來輸入除了指定的一種或多種類別外的所有除錯紀錄。</translation>
     </message>
     <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>當錢包有交易改變時要執行的指令(指令中的 %s 會被取代成交易識別碼)</translation>
-    </message>
-    <message>
         <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
         <translation>為了將摘要區塊完整回組而額外保留在記憶體中的交易數量(預設值: %u)</translation>
     </message>
@@ -3261,6 +3282,10 @@
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>設定製造區塊時，所要包含交易每千位元組的最低手續費(單位是 %s)。(預設值: %s)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>設定高優先度或低手續費的交易資料大小上限成多少位元組(預設值: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3309,6 +3334,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>是否要在結束時儲存記憶池，並在下次重起時載入(預設值: %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>把來自指定位址(例如：1.2.3.4)或 CIDR 格式網段(例如：1.2.3.0/24)的節點放進白名單。這個選項可以設定多次。</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3483,6 +3512,10 @@
         <translation>認證 cookie 資料的位置(預設值: 同資料目錄)</translation>
     </message>
     <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>轉發和開採時，對交易資料的 sigop 平均位元組數下限(預設值: %u)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>檔案描述元不足。</translation>
     </message>
@@ -3529,6 +3562,10 @@
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>設定資料庫快取大小是多少百萬位元組(MB，範圍: %d 到 %d，預設值: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>設定區塊大小上限成多少位元組(預設值: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3949,10 +3986,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>警告: 錢包檔壞掉，但資料被救回來了！原來的檔案 %s 改儲存為 %s，在目錄 %s 下。 如果餘額或交易資料有誤的話，你應該要從備份資料復原回來。</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>把來自指定位址(例如：1.2.3.4)或 CIDR 格式網段(例如：1.2.3.0/24)的節點放進白名單。這個選項可以設定多次。</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

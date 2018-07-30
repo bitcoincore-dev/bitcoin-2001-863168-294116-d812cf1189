@@ -1,46 +1,54 @@
-<TS language="my" version="2.1">
+<TS language="nl_BE" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation>လိပ်စာ သို့မဟုတ် ခေါင်းစဉ်တပ်ရန် Right-click နှိပ်ပါ။</translation>
+        <translation>Rechtermuisklik om het adres of label te wijzigen</translation>
     </message>
     <message>
         <source>Create a new address</source>
-        <translation>လိပ်စာအသစ်ယူမယ်။</translation>
+        <translation>créer une nouvelle adresse | maak een nieuw adres</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>&amp;အသစ်</translation>
+        <translation>&amp;Nieuw</translation>
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>လက်ရှိရွေးထားတဲ့ လိပ်စာကို clipboard ပေါ်တင်မယ်။</translation>
+        <translation>Kopieer het geselecteerd adres naar het klembord</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation>&amp;ကူးမယ်</translation>
+        <translation>&amp;Kopieer</translation>
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
-        <translation>လက်ရှိရွေးထားတဲ့ လိပ်စာကို ဖျက်မယ်။</translation>
+        <translation>Verwijder het geselecteerd adres van de lijst</translation>
     </message>
     <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>လက်ရှိ tab မှာရှိတဲ့ဒေတာတွေကို ဖိုင်လ်မှာသိမ်းမယ်။</translation>
+        <source>Choose the address to send coins to</source>
+        <translation>Kies het adres naar waar u coins wilt versturen</translation>
     </message>
     <message>
-        <source>&amp;Export</source>
-        <translation>&amp;ထုတ်ယူသိမ်းဆည်း</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;ဖျက်</translation>
+        <source>Choose the address to receive coins with</source>
+        <translation>Kies het adres waarmee u coins wilt ontvangen</translation>
     </message>
     </context>
 <context>
     <name>AddressTableModel</name>
-    </context>
+    <message>
+        <source>Label</source>
+        <translation>Label</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(geen label)</translation>
+    </message>
+</context>
 <context>
     <name>AskPassphraseDialog</name>
     </context>
@@ -49,9 +57,21 @@
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
+        <source>Wallet</source>
+        <translation>Portefeuille</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
+    <message>
+        <source>(no label)</source>
+        <translation>(geen label)</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -60,22 +80,17 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
-    <name>GuiNetWatch</name>
-    </context>
-<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
     <name>Intro</name>
-    </context>
-<context>
-    <name>MempoolStats</name>
+    <message>
+        <source>Bitcoin</source>
+        <translation>Bitcoin</translation>
+    </message>
     </context>
 <context>
     <name>ModalOverlay</name>
-    </context>
-<context>
-    <name>NetWatchLogModel</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
@@ -109,13 +124,33 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Label</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Label</source>
+        <translation>Label</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(geen label)</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
-    </context>
+    <message>
+        <source>(no label)</source>
+        <translation>(geen label)</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsEntry</name>
     </context>
@@ -142,9 +177,25 @@
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Label</source>
+        <translation>Label</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(geen label)</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Label</source>
+        <translation>Label</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Adres</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -157,14 +208,6 @@
     </context>
 <context>
     <name>WalletView</name>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;ထုတ်ယူသိမ်းဆည်း</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>လက်ရှိ tab မှာရှိတဲ့ဒေတာတွေကို ဖိုင်လ်မှာသိမ်းမယ်။</translation>
-    </message>
     </context>
 <context>
     <name>bitcoin-core</name>

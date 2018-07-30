@@ -322,6 +322,10 @@
         <translation>Open &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Wallet:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Click to disable network activity.</translation>
     </message>
@@ -786,6 +790,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -912,6 +919,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -960,6 +974,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Unknown. Syncing Headers (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Address</translation>
     </message>
 </context>
 <context>
@@ -1206,6 +1233,10 @@
     <message>
         <source>none</source>
         <translation>none</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1527,7 +1558,7 @@
         <source>unknown</source>
         <translation>unknown</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject::QObject</name>
     <message>
@@ -1627,6 +1658,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Memory usage</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Wallet: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2097,10 +2132,6 @@
         <translation>per kilobyte</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Hide</translation>
     </message>
@@ -2209,20 +2240,16 @@
         <translation>Are you sure you want to send?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>added as transaction fee</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Total Amount %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>or</translation>
     </message>
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>You can increase the fee later (signals Replace-By-Fee, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Transaction fee</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
@@ -2570,10 +2597,6 @@
         <translation>conflicted with a transaction with %1 confirmations</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/offline</translation>
-    </message>
-    <message>
         <source>0/unconfirmed, %1</source>
         <translation>0/unconfirmed, %1</translation>
     </message>
@@ -2600,14 +2623,6 @@
     <message>
         <source>Status</source>
         <translation>Status</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, has not been successfully broadcast yet</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, broadcast through %n node</numerusform><numerusform>, broadcast through %n nodes</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2764,10 +2779,6 @@
         <translation>Open until %1</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Offline</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Unconfirmed</translation>
     </message>
@@ -2790,10 +2801,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Immature (%1 confirmations, will be available after %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>This block was not received by any other nodes and will probably not be accepted!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3216,10 +3223,6 @@
     <message>
         <source>Exclude debugging information for a category. Can be used in conjunction with -debug=1 to output debug logs for all categories except one or more specified categories.</source>
         <translation>Exclude debugging information for a category. Can be used in conjunction with -debug=1 to output debug logs for all categories except one or more specified categories.</translation>
-    </message>
-    <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</translation>
     </message>
     <message>
         <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
@@ -3944,10 +3947,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

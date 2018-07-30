@@ -30,6 +30,10 @@
         <translation>حذف العنوان المحدد من القائمة</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>ادخل عنوان أووصف للبحث</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>تحميل البيانات في علامة التبويب الحالية إلى ملف.</translation>
     </message>
@@ -63,11 +67,11 @@
     </message>
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>هذه هي عناوين Bitcion التابعة لك من أجل إرسال الدفعات. تحقق دائما من المبلغ و عنوان المرسل المستقبل قبل إرسال العملات</translation>
+        <translation>هذه هي عناوين Bitcoin التابعة لك من أجل إرسال الدفعات. تحقق دائما من المبلغ و عنوان المرسل المستقبل قبل إرسال العملات</translation>
     </message>
     <message>
         <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>هذه هي عناوين Bitcion التابعة لك من أجل إستقبال الدفعات. ينصح استخدام عنوان جديد من أجل كل صفقة</translation>
+        <translation>هذه هي عناوين Bitcoin التابعة لك من أجل إستقبال الدفعات. ينصح استخدام عنوان جديد من أجل كل صفقة</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>افتح &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">محفظة:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -780,6 +788,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -906,6 +917,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>غير معروف</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -954,6 +972,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>غير معروف. مزامنة الرؤوس (%1) ...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>النوع</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>عنوان</translation>
     </message>
 </context>
 <context>
@@ -1176,6 +1207,10 @@
     <message>
         <source>none</source>
         <translation>لا شيء</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>جوهر البيت كوين</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1447,7 +1482,7 @@
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation><numerusform>%n ساعة</numerusform><numerusform>%n ساعة</numerusform><numerusform>%n ساعة</numerusform><numerusform>%n ساعة</numerusform><numerusform>%n ساعات</numerusform><numerusform>%n ساعة</numerusform></translation>
+        <translation><numerusform>0 ساعة</numerusform><numerusform>%n ساعة</numerusform><numerusform>%n ساعتين</numerusform><numerusform>%n ساعات</numerusform><numerusform>%n ساعة</numerusform><numerusform>%n ساعات</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
@@ -1488,6 +1523,11 @@
     <message>
         <source>unknown</source>
         <translation>غير معروف</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>معاملة</translation>
     </message>
 </context>
 <context>
@@ -1585,6 +1625,10 @@
     <message>
         <source>Memory usage</source>
         <translation>استخدام الذاكرة</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">محفظة: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2155,20 +2199,16 @@
         <translation>هل أنت متأكد من أنك تريد أن ترسل؟</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>أضيفت كرسوم للمعاملة</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>إجمالي المبلغ %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>أو</translation>
     </message>
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>يمكنك زيادة الرسوم لاحقًا (بإشارة الإستبدال بواسطة الرسوم، BIP-125).</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>رسوم المعاملة</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
@@ -2504,10 +2544,6 @@
         <translation>تعارضت مع معاملة لديها %1 تأكيدات</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1 غير متواجد</translation>
-    </message>
-    <message>
         <source>in memory pool</source>
         <translation>في تجمع الذاكرة</translation>
     </message>
@@ -2530,10 +2566,6 @@
     <message>
         <source>Status</source>
         <translation>الحالة.</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>,  لم يتم حتى الآن البث بنجاح</translation>
     </message>
     <message>
         <source>Date</source>
@@ -2686,10 +2718,6 @@
         <translation>مفتوح حتى %1</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>غير متصل</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>غير مؤكد</translation>
     </message>
@@ -2708,10 +2736,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>غير ناضجة (تأكيدات %1 ، ستكون متوفرة بعد %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>لم يتم تلقى هذه الكتلة (Block) من قبل أي العقد الأخرى وربما لن تكون مقبولة!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3054,6 +3078,10 @@
     <message>
         <source>Bitcoin Core</source>
         <translation>جوهر بيتكوين</translation>
+    </message>
+    <message>
+        <source>The %s developers</source>
+        <translation>%s المبرمجون</translation>
     </message>
     <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>

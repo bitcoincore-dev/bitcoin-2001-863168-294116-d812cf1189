@@ -318,6 +318,10 @@
         <translation>Apri &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portafoglio:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Clicca per disabilitare attività di rete.</translation>
     </message>
@@ -730,6 +734,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -776,6 +783,9 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Number of blocks left</source>
@@ -783,13 +793,29 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Indirizzo</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Apri URI</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
     <message>
         <source>Options</source>
         <translation>Opzioni</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Portafoglio</translation>
     </message>
     <message>
         <source>Configuration options</source>
@@ -843,7 +869,17 @@
         <source>Amount</source>
         <translation>Importo</translation>
     </message>
-    </context>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tso</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -853,12 +889,36 @@
 <context>
     <name>RPCConsole</name>
     <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Informazione</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Finestra di debug</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portafoglio: </translation>
+    </message>
+    <message>
         <source>Sent</source>
         <translation>Inviato</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Attività di rete disabilitata</translation>
     </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Importo:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etichetta:</translation>
+    </message>
     <message>
         <source>Copy label</source>
         <translation>Copia etichetta</translation>
@@ -870,6 +930,10 @@
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>copia indirizzo </translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Indirizzo</translation>
@@ -921,8 +985,16 @@
         <translation>Cambio:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Scegli...</translation>
+    </message>
+    <message>
         <source>Dust:</source>
         <translation>Minimo:</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">Invia</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -955,6 +1027,14 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Importo:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etichetta:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -976,6 +1056,10 @@
     <message>
         <source>Date</source>
         <translation>Data</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Transazione</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -1054,9 +1138,21 @@
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>Esporta</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Esportare i dati nella scheda corrente in un file</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">Opzioni:</translation>
+    </message>
     <message>
         <source>Information</source>
         <translation>Informazione</translation>

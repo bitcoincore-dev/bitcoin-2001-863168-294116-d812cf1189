@@ -30,6 +30,10 @@
         <translation>Eliminar la dirección seleccionada de la lista</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Introduzca una dirección o etiqueta que buscar</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Exportar los datos en la ficha actual a un archivo</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Abrir &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Monedero:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -786,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -912,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -960,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Desconocido. Sincronizando cabeceras (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Dirección</translation>
     </message>
 </context>
 <context>
@@ -1206,6 +1237,10 @@
     <message>
         <source>none</source>
         <translation>Ninguna</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1489,7 +1524,7 @@
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation><numerusform>%n dia</numerusform><numerusform>%n dias</numerusform></translation>
+        <translation><numerusform>%n día</numerusform><numerusform>%n días</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
@@ -1526,6 +1561,16 @@
     <message>
         <source>unknown</source>
         <translation>desconocido</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blq</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -1627,6 +1672,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Uso de memoria</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Monedero: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1892,6 +1941,14 @@
         <translation>Vaciar</translation>
     </message>
     <message>
+        <source>Native segwit addresses (aka Bech32 or BIP-173) reduce your transaction fees later on and offer better protection against typos, but old wallets don't support them. When unchecked, an address compatible with older wallets will be created instead.</source>
+        <translation>Las direcciones segwit nativas (también conocidas como Bech32 o BIP-173) reducen las tarifas de transacción más adelante y ofrecen una mejor protección contra errores tipográficos, pero las billeteras antiguas no las admiten. Cuando no está marcada, se creará una dirección compatible con billeteras más antiguas.</translation>
+    </message>
+    <message>
+        <source>Generate native segwit (Bech32) address</source>
+        <translation>Generar direcciones nativas seguidas(Bech32)</translation>
+    </message>
+    <message>
         <source>Requested payments history</source>
         <translation>Historial de pagos solicitados</translation>
     </message>
@@ -2097,10 +2154,6 @@
         <translation>por kilobyte</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Si la comisión se establece en 1000 satoshis y la transacción está a sólo 250 bytes, entonces "por kilobyte" sólo paga 250 satoshis de cuota, mientras que "el mínimo total" pagaría 1.000 satoshis. Para las transacciones más grandes que un kilobyte ambos pagan por kilobyte</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Ocultar</translation>
     </message>
@@ -2209,20 +2262,16 @@
         <translation>¿Seguro que quiere enviar?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>añadido como comisión de transacción</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Cantidad total %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>o</translation>
     </message>
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>Puede incrementar la comisión más tarde (usa Replace-By-Fee, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Comisión de transacción</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
@@ -2570,10 +2619,6 @@
         <translation>Hay un conflicto con la traducción de las confirmaciones %1</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/sin conexión</translation>
-    </message>
-    <message>
         <source>0/unconfirmed, %1</source>
         <translation>0/no confirmado, %1</translation>
     </message>
@@ -2600,14 +2645,6 @@
     <message>
         <source>Status</source>
         <translation>Estado</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, no ha sido emitido con éxito aún</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, transmitir a través de %n nodo</numerusform><numerusform>, transmitir a través de %n nodos</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2764,10 +2801,6 @@
         <translation>Abierto hasta %1</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Sin conexion</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Sin confirmar</translation>
     </message>
@@ -2790,10 +2823,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>No disponible (%1 confirmaciones. Estarán disponibles al cabo de %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Este bloque no ha sido recibido por otros nodos y probablemente no sea aceptado!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3221,10 +3250,6 @@
         <translation>Descartar información de depuración para una categoría. Puede utilizarse simultáneamente con -debug=1 para escribir información de depuración de todas las categorías a excepción de una o más categorías.  </translation>
     </message>
     <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>Ejecutar comando cuando una transacción del monedero cambia (%s en cmd se remplazará por TxID)</translation>
-    </message>
-    <message>
         <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
         <translation>Transacciones extra a mantener en la memoria para reconstrucciones de bloque compacto (predeterminado: %u)</translation>
     </message>
@@ -3259,6 +3284,10 @@
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>Establecer la tasa más baja (en %s/kB) por transacciones para incluirse en la creación de bloque. (predeterminado: %s)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Establecer tamaño máximo de las transacciones de alta prioridad/baja comisión en bytes (predeterminado: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3307,6 +3336,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>Indica si guardar el mempool al cerrar y cargar al reiniciar (por defecto: %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Los pares de listas blancas que se conectan desde la dirección IP dada (por ejemplo, 1.2.3.4) o la red marcada CIDR (por ejemplo, 1.2.3.0/24). Se puede especificar varias veces.</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3481,6 +3514,10 @@
         <translation>Ubicación de la cookie de autenticación (default: data dir)</translation>
     </message>
     <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Mínimo de bytes por sigop en transacciones que retransmitimos y minamos (predeterminado: %u)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>No hay suficientes descriptores de archivo disponibles. </translation>
     </message>
@@ -3521,8 +3558,16 @@
         <translation>Verificando bloques...</translation>
     </message>
     <message>
+        <source>Send transactions with full-RBF opt-in enabled (RPC only, default: %u)</source>
+        <translation>Enviar transacciones con full-RBF opt-in habilitado (predeterminado: %u)</translation>
+    </message>
+    <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Asignar tamaño del cache en megabytes (entre %d y %d; predeterminado: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Establecer tamaño máximo de bloque en bytes (predeterminado: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3946,10 +3991,6 @@ Establecer la serialización de las transacciones sin procesar o el bloque hex d
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Aviso: fichero de monedero corrupto, datos recuperados! Original %s guardado como %s en %s; si su balance de transacciones es incorrecto, debe restaurar desde una copia de seguridad.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Los pares de listas blancas que se conectan desde la dirección IP dada (por ejemplo, 1.2.3.4) o la red marcada CIDR (por ejemplo, 1.2.3.0/24). Se puede especificar varias veces.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

@@ -318,6 +318,10 @@
         <translation>オープン&amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">財布:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>ネットワーク処理を無効にするためにクリックする</translation>
     </message>
@@ -774,6 +778,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -851,12 +858,23 @@
         <translation>カスタムデータ辞書を使用</translation>
     </message>
     <message>
+        <source>Bitcoin</source>
+        <translation>ビットコイン</translation>
+    </message>
+    <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
         <translation>エラー: 特定の辞書%1の作成に失敗しました。</translation>
     </message>
     <message>
         <source>Error</source>
         <translation>エラー</translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>該当なし</translation>
     </message>
     </context>
 <context>
@@ -908,6 +926,14 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>不明. ヘッダーの同期中 (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>アドレス</translation>
     </message>
 </context>
 <context>
@@ -964,16 +990,20 @@
         <translation>&amp;認証スレッドスクリプトの数</translation>
     </message>
     <message>
-        <source>Accept connections from outside</source>
-        <translation>外部からの接続承認</translation>
-    </message>
-    <message>
-        <source>Allow incoming connections</source>
-        <translation>内部接続の許可</translation>
-    </message>
-    <message>
         <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
         <translation>IP プロキシのアドレス (例 IPv4: 127.0.0.1 / IPv6: ::1)</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor hidden services:</source>
+        <translation type="unfinished">&amp;Tor匿名サービスを経由して到達ピアへ、区切られたSOCKS5 プロキシを使用:</translation>
+    </message>
+    <message>
+        <source>Hide the icon from the system tray.</source>
+        <translation type="unfinished">システムトレイのアイコンを非表示.</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;トレイアイコンを非表示</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
@@ -982,10 +1012,6 @@
     <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>サードパーティのURL(例 a block explorer)はコンテキストメニューアイテムの処理タブに表示されます。YRLの%sは処理ハッシュによって置き換えられます。複数URLは水平バー | によって区切られます。</translation>
-    </message>
-    <message>
-        <source>Third party transaction URLs</source>
-        <translation>サードパティ処理URL</translation>
     </message>
     <message>
         <source>Active command-line options that override above options:</source>
@@ -1036,6 +1062,14 @@
         <translation>&amp;UPnPを使用してポート配置します。</translation>
     </message>
     <message>
+        <source>Accept connections from outside.</source>
+        <translation>外部からの接続承認</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;内部接続の許可</translation>
+    </message>
+    <message>
         <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
         <translation>SOCKS5プロキシを使用してビットコインネットワークへ接続</translation>
     </message>
@@ -1076,20 +1110,8 @@
         <translation>Tor秘匿ネットワークのための区切られたSOCKS5を経由して、ビットコインネットワークに接続</translation>
     </message>
     <message>
-        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
-        <translation>Tor匿名サービスを経由して到達ピアへ、区切られたSOCKS5 プロキシを使用:</translation>
-    </message>
-    <message>
         <source>&amp;Window</source>
         <translation>&amp;画面</translation>
-    </message>
-    <message>
-        <source>&amp;Hide the icon from the system tray.</source>
-        <translation>&amp;システムトレイのアイコンを非表示.</translation>
-    </message>
-    <message>
-        <source>Hide tray icon</source>
-        <translation>トレイアイコンを非表示</translation>
     </message>
     <message>
         <source>Show only a tray icon after minimizing the window.</source>
@@ -1128,6 +1150,10 @@
         <translation>コイン制御機能を表示するかどうか。</translation>
     </message>
     <message>
+        <source>&amp;Third party transaction URLs</source>
+        <translation type="unfinished">&amp;サードパティ処理URL</translation>
+    </message>
+    <message>
         <source>&amp;OK</source>
         <translation>&amp;OK</translation>
     </message>
@@ -1154,6 +1180,10 @@
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
         <translation>クライアントは停止します。継続してもよろしいでしょうか？</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>エラー</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
@@ -1348,6 +1378,14 @@
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
+    <message>
+        <source>Sent</source>
+        <translation>送信済み</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>受信済み</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -1392,10 +1430,30 @@
         <translation>%1 と %2</translation>
     </message>
     <message>
+        <source>%1 B</source>
+        <translation>%1 バイト</translation>
+    </message>
+    <message>
+        <source>%1 KB</source>
+        <translation>%1 キロバイト</translation>
+    </message>
+    <message>
+        <source>%1 MB</source>
+        <translation>%1 メガバイト</translation>
+    </message>
+    <message>
+        <source>%1 GB</source>
+        <translation>%1 Gギガバイト</translation>
+    </message>
+    <message>
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 は安全に終了できませんでした...</translation>
     </message>
-</context>
+    <message>
+        <source>unknown</source>
+        <translation>不明</translation>
+    </message>
+    </context>
 <context>
     <name>QObject::QObject</name>
     <message>
@@ -1495,6 +1553,10 @@
     <message>
         <source>Memory usage</source>
         <translation>メモリ使用量</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">財布: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1665,28 +1727,8 @@
         <translation>%1 RPCコンソールへようこそ</translation>
     </message>
     <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>&lt;b&gt;help&lt;/b&gt; と入力すると有効なコマンドが表示されます。</translation>
-    </message>
-    <message>
         <source>Network activity disabled</source>
         <translation>無効化されたネットワーク利用</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 バイト</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 キロバイト</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 メガバイト</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 Gギガバイト</translation>
     </message>
     <message>
         <source>(node id: %1)</source>
@@ -1734,14 +1776,6 @@
     <message>
         <source>&amp;Message:</source>
         <translation>&amp;メッセージ:</translation>
-    </message>
-    <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>前回使用された受信アドレスを再利用します。再度アドレスを使用することは、セキュリティとプライバシーの問題になります。再度支払要求を事前に再生成しない限り、これを使用しないようにしてください。</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>&amp;再度存在している受信アドレスを死闘する(非推奨)</translation>
     </message>
     <message>
         <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
@@ -1965,10 +1999,6 @@
         <translation>キロバイトごと</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>カスタム料金が1000 satoshiで処理が250バイトのみの場合、料金はキロバイトあたりは250 satoshiのみとなり、最新の合計は1000 satoshiまで支払います。処理が1キロバイトよりも大きい場合、キロバイトごとに支払いが行われます。</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>隠す</translation>
     </message>
@@ -2065,16 +2095,12 @@
         <translation>送信してもよろしいですか？</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>処理料金として追加済み</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>合計残高: %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>もしくは</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>処理料金</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -2406,10 +2432,6 @@
         <translation>処理と%1確認が矛盾しています。</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/オフライン</translation>
-    </message>
-    <message>
         <source>0/unconfirmed, %1</source>
         <translation>0/未確認, %1</translation>
     </message>
@@ -2436,10 +2458,6 @@
     <message>
         <source>Status</source>
         <translation>状態</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>まだ、散布に成功していません</translation>
     </message>
     <message>
         <source>Date</source>
@@ -2530,6 +2548,14 @@
         <translation>商人</translation>
     </message>
     <message>
+        <source>Transaction</source>
+        <translation>処理</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation type="unfinished">入力</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>残高</translation>
     </message>
@@ -2587,6 +2613,10 @@
         <translation>確認済み</translation>
     </message>
     <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">読み取り専用</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>日付</translation>
     </message>
@@ -2615,7 +2645,7 @@
         <source>Send Coins</source>
         <translation>コイン送付</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletView</name>
     <message>
@@ -2626,9 +2656,17 @@
         <source>Export the data in the current tab to a file</source>
         <translation>ファイルの現在のタブを出力します</translation>
     </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">財布のバックアップ</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">オプション:</translation>
+    </message>
     <message>
         <source>Information</source>
         <translation>情報</translation>
@@ -2636,6 +2674,14 @@
     <message>
         <source>Warning</source>
         <translation>警告</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
+        <translation>Tor匿名サービスを経由して到達ピアへ、区切られたSOCKS5 プロキシを使用 (default: %s)</translation>
+    </message>
+    <message>
+        <source>Insufficient funds</source>
+        <translation>残高不十分</translation>
     </message>
     <message>
         <source>Error</source>

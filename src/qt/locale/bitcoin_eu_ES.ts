@@ -30,6 +30,10 @@
         <translation>Ezabatu aukeratutako helbideak listatik</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Sartu bilatzeko helbide edo etiketa</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Uneko fitxategian datuak esportatu</translation>
     </message>
@@ -172,6 +176,10 @@
         <translation>Zorroa enkriptatuta</translation>
     </message>
     <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 orain itxiko da enkriptazio prozezua amaitzeko. Gogoratu enkriptatzean zure diruzorroa ez duzula guztiz babesten zure Bitcoinak lapurretatik infektatzen zure ordenagailua Malwareekin.</translation>
+    </message>
+    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>GARRANTZITSUA: Diruzorroaren segurtasun-kopia, wallet.dat, erabilezina bihurtuko da enkriptazioa burutu ondoren. Ondorioz, segurtasun-kopia berriekin ordezkatu beharko zenituzke zure jada eginik dituzun diruzorroaren kopiak.</translation>
     </message>
@@ -234,6 +242,10 @@
         <translation>Aplikaziotik irten</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Erakutsi %1 buruzko informazioa</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>&amp;Qt-ri buruz</translation>
     </message>
@@ -244,6 +256,10 @@
     <message>
         <source>&amp;Options...</source>
         <translation>&amp;Aukerak...</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;Helbideak bidaltzen...</translation>
     </message>
     <message>
         <source>&amp;Receiving addresses...</source>
@@ -368,10 +384,16 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
     <name>Intro</name>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -379,7 +401,24 @@
         <source>Form</source>
         <translation>Inprimakia</translation>
     </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">ezezaguna...</translation>
+    </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Mota</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Helbidea</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -413,6 +452,11 @@
         <source>unknown</source>
         <translation>ezezaguna</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tzn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -422,7 +466,11 @@
     </context>
 <context>
     <name>RPCConsole</name>
-    </context>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">ezezaguna</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -493,6 +541,10 @@
     <message>
         <source>Amount:</source>
         <translation>Kopurua:</translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Aukeratu...</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -604,10 +656,6 @@
         <translation>%1 konfirmazio</translation>
     </message>
     <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, ez da oraindik arrakastaz igorri</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation>Data</translation>
     </message>
@@ -656,10 +704,6 @@
     <message>
         <source>Confirmed (%1 confirmations)</source>
         <translation>Konfirmatuta (%1 konfirmazio)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Bloke hau ez du beste inongo nodok jaso, eta seguruenik ez da onartuko!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
