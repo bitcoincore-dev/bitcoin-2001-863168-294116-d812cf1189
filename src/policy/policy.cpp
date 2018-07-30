@@ -54,6 +54,10 @@ bool IsDust(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
     return (txout.nValue < GetDustThreshold(txout, dustRelayFeeIn));
 }
 
+/**
+ * Note this must assign whichType even if returning false, in case
+ * IsStandardTx ignores the "scriptpubkey" rejection.
+ */
 bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool witnessEnabled)
 {
     std::vector<std::vector<unsigned char> > vSolutions;
@@ -79,11 +83,29 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType, const bool w
     return whichType != TX_NONSTANDARD && whichType != TX_WITNESS_UNKNOWN;
 }
 
-bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnessEnabled)
+namespace {
+    inline bool MaybeReject_(std::string& out_reason, const std::string& reason, const std::string& reason_prefix, const ignore_rejects_type& ignore_rejects) {
+        if (ignore_rejects.count(reason_prefix + reason)) {
+            return false;
+        }
+
+        out_reason = reason_prefix + reason;
+        return true;
+    }
+}
+
+#define MaybeReject(reason)  do {  \
+    if (MaybeReject_(out_reason, reason, reason_prefix, ignore_rejects)) {  \
+        return false;  \
+    }  \
+} while(0)
+
+bool IsStandardTx(const CTransaction& tx, std::string& out_reason, const bool witnessEnabled, const ignore_rejects_type& ignore_rejects)
 {
+    const std::string reason_prefix;
+
     if (tx.nVersion > CTransaction::MAX_STANDARD_VERSION || tx.nVersion < 1) {
-        reason = "version";
-        return false;
+        MaybeReject("version");
     }
 
     // Extremely large transactions with lots of inputs can cost the network
@@ -92,8 +114,7 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
     // to MAX_STANDARD_TX_WEIGHT mitigates CPU exhaustion attacks.
     unsigned int sz = GetTransactionWeight(tx);
     if (sz >= MAX_STANDARD_TX_WEIGHT) {
-        reason = "tx-size";
-        return false;
+        MaybeReject("tx-size");
     }
 
     for (const CTxIn& txin : tx.vin)
@@ -106,12 +127,10 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
         // CHECKMULTISIG scriptPubKey, though such a scriptPubKey is not
         // considered standard.
         if (txin.scriptSig.size() > 1650) {
-            reason = "scriptsig-size";
-            return false;
+            MaybeReject("scriptsig-size");
         }
         if (!txin.scriptSig.IsPushOnly()) {
-            reason = "scriptsig-not-pushonly";
-            return false;
+            MaybeReject("scriptsig-not-pushonly");
         }
     }
 
@@ -119,25 +138,26 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
     txnouttype whichType;
     for (const CTxOut& txout : tx.vout) {
         if (!::IsStandard(txout.scriptPubKey, whichType, witnessEnabled)) {
-            reason = "scriptpubkey";
-            return false;
+            if (whichType == TX_WITNESS_UNKNOWN) {
+                MaybeReject("scriptpubkey-unknown-witnessversion");
+            } else {
+                MaybeReject("scriptpubkey");
+            }
         }
 
         if (whichType == TX_NULL_DATA)
             nDataOut++;
         else if ((whichType == TX_MULTISIG) && (!fIsBareMultisigStd)) {
-            reason = "bare-multisig";
-            return false;
-        } else if (IsDust(txout, ::dustRelayFee)) {
-            reason = "dust";
-            return false;
+            MaybeReject("bare-multisig");
+        }
+        if (IsDust(txout, ::dustRelayFee)) {
+            MaybeReject("dust");
         }
     }
 
     // only one OP_RETURN txout is permitted
     if (nDataOut > 1) {
-        reason = "multi-op-return";
-        return false;
+        MaybeReject("multi-op-return");
     }
 
     return true;
@@ -159,7 +179,7 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
  * expensive-to-check-upon-redemption script like:
  *   DUP CHECKSIG DROP ... repeated 100 times... OP_1
  */
-bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
+bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs, const std::string& reason_prefix, std::string& out_reason, const ignore_rejects_type& ignore_rejects)
 {
     if (tx.IsCoinBase())
         return true; // Coinbases don't use vin normally
@@ -173,19 +193,33 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
         // get the scriptPubKey corresponding to this input:
         const CScript& prevScript = prev.scriptPubKey;
         if (!Solver(prevScript, whichType, vSolutions))
-            return false;
+            MaybeReject("script-unknown");
 
         if (whichType == TX_SCRIPTHASH)
         {
+            if (!tx.vin[i].scriptSig.IsPushOnly()) {
+                // The only way we got this far, is if the user ignored scriptsig-not-pushonly.
+                // However, this case is invalid, and will be caught later on.
+                // But for now, we don't want to run the [possibly expensive] script here.
+                continue;
+            }
             std::vector<std::vector<unsigned char> > stack;
             // convert the scriptSig into a stack, so we can inspect the redeemScript
             if (!EvalScript(ScriptExecution::Context::Sig, stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(), SIGVERSION_BASE))
+            {
+                // This case is also invalid or a bug
+                out_reason = reason_prefix + "scriptsig-failure";
                 return false;
+            }
             if (stack.empty())
+            {
+                // Also invalid
+                out_reason = reason_prefix + "scriptcheck-missing";
                 return false;
+            }
             CScript subscript(stack.back().begin(), stack.back().end());
             if (subscript.GetSigOpCount(true) > MAX_P2SH_SIGOPS) {
-                return false;
+                MaybeReject("scriptcheck-sigops");
             }
         }
     }
@@ -193,7 +227,7 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
     return true;
 }
 
-bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
+bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs, const std::string& reason_prefix, std::string& out_reason, const ignore_rejects_type& ignore_rejects)
 {
     if (tx.IsCoinBase())
         return true; // Coinbases are skipped
@@ -216,9 +250,15 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
             // into a stack. We do not check IsPushOnly nor compare the hash as these will be done later anyway.
             // If the check fails at this stage, we know that this txid must be a bad one.
             if (!EvalScript(ScriptExecution::Context::Sig, stack, tx.vin[i].scriptSig, SCRIPT_VERIFY_NONE, BaseSignatureChecker(), SIGVERSION_BASE))
+            {
+                out_reason = reason_prefix + "scriptsig-failure";
                 return false;
+            }
             if (stack.empty())
+            {
+                out_reason = reason_prefix + "scriptcheck-missing";
                 return false;
+            }
             prevScript = CScript(stack.back().begin(), stack.back().end());
         }
 
@@ -227,18 +267,21 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
 
         // Non-witness program must not be associated with any witness
         if (!prevScript.IsWitnessProgram(witnessversion, witnessprogram))
+        {
+            out_reason = reason_prefix + "nonwitness-input";
             return false;
+        }
 
         // Check P2WSH standard limits
         if (witnessversion == 0 && witnessprogram.size() == 32) {
             if (tx.vin[i].scriptWitness.stack.back().size() > MAX_STANDARD_P2WSH_SCRIPT_SIZE)
-                return false;
+                MaybeReject("script-size");
             size_t sizeWitnessStack = tx.vin[i].scriptWitness.stack.size() - 1;
             if (sizeWitnessStack > MAX_STANDARD_P2WSH_STACK_ITEMS)
-                return false;
+                MaybeReject("stackitem-count");
             for (unsigned int j = 0; j < sizeWitnessStack; j++) {
                 if (tx.vin[i].scriptWitness.stack[j].size() > MAX_STANDARD_P2WSH_STACK_ITEM_SIZE)
-                    return false;
+                    MaybeReject("stackitem-size");
             }
         }
     }
