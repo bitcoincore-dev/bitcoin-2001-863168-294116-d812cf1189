@@ -67,6 +67,7 @@
 
 #if ENABLE_ZMQ
 #include <zmq/zmqnotificationinterface.h>
+#include <zmq/zmqrpc.h>
 #endif
 
 bool fFeeEstimatesInitialized = false;
@@ -76,10 +77,6 @@ static const bool DEFAULT_STOPAFTERBLOCKIMPORT = false;
 
 std::unique_ptr<CConnman> g_connman;
 std::unique_ptr<PeerLogicValidation> peerLogic;
-
-#if ENABLE_ZMQ
-static CZMQNotificationInterface* pzmqNotificationInterface = nullptr;
-#endif
 
 #ifdef WIN32
 // Win32 LevelDB doesn't use filedescriptors, and the ones used for
@@ -263,10 +260,10 @@ void Shutdown()
 #endif
 
 #if ENABLE_ZMQ
-    if (pzmqNotificationInterface) {
-        UnregisterValidationInterface(pzmqNotificationInterface);
-        delete pzmqNotificationInterface;
-        pzmqNotificationInterface = nullptr;
+    if (g_zmq_notification_interface) {
+        UnregisterValidationInterface(g_zmq_notification_interface);
+        delete g_zmq_notification_interface;
+        g_zmq_notification_interface = nullptr;
     }
 #endif
 
@@ -1301,6 +1298,9 @@ bool AppInitMain()
 #ifdef ENABLE_WALLET
     RegisterWalletRPC(tableRPC);
 #endif
+#if ENABLE_ZMQ
+    RegisterZMQRPCCommands(tableRPC);
+#endif
 
 #ifdef USE_LIBEVENT
     /* Start the RPC server already.  It will be started in "warmup" mode
@@ -1423,10 +1423,10 @@ bool AppInitMain()
     }
 
 #if ENABLE_ZMQ
-    pzmqNotificationInterface = CZMQNotificationInterface::Create();
+    g_zmq_notification_interface = CZMQNotificationInterface::Create();
 
-    if (pzmqNotificationInterface) {
-        RegisterValidationInterface(pzmqNotificationInterface);
+    if (g_zmq_notification_interface) {
+        RegisterValidationInterface(g_zmq_notification_interface);
     }
 #endif
     uint64_t nMaxOutboundLimit = 0; //unlimited unless -maxuploadtarget is set
