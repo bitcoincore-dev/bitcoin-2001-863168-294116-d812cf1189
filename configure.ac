@@ -283,7 +283,7 @@ if test "x$use_asm" = "xyes"; then
 AX_CHECK_COMPILE_FLAG([-msse4.2],[[SSE42_CXXFLAGS="-msse4.2"]],,[[$CXXFLAG_WERROR]])
 
 TEMP_CXXFLAGS="$CXXFLAGS"
-CXXFLAGS="$CXXFLAGS $SSE42_CXXFLAGS"
+CXXFLAGS="$SSE42_CXXFLAGS $CXXFLAGS"
 AC_MSG_CHECKING(for assembler crc32 support)
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
     #include <stdint.h>
