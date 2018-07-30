@@ -60,7 +60,6 @@ BITCOIN_TESTS =\
   test/policyestimator_tests.cpp \
   test/pow_tests.cpp \
   test/prevector_tests.cpp \
-  test/raii_event_tests.cpp \
   test/random_tests.cpp \
   test/reverselock_tests.cpp \
   test/rpc_tests.cpp \
@@ -79,7 +78,6 @@ BITCOIN_TESTS =\
   test/test_bitcoin.h \
   test/test_bitcoin_main.cpp \
   test/timedata_tests.cpp \
-  test/torcontrol_tests.cpp \
   test/transaction_tests.cpp \
   test/txvalidation_tests.cpp \
   test/txvalidationcache_tests.cpp \
@@ -87,6 +85,12 @@ BITCOIN_TESTS =\
   test/util_tests.cpp \
   test/validation_block_tests.cpp \
   test/versionbits_tests.cpp
+
+if USE_LIBEVENT
+BITCOIN_TESTS += \
+  test/raii_event_tests.cpp \
+  test/torcontrol_tests.cpp
+endif
 
 if ENABLE_WALLET
 BITCOIN_TESTS += \
