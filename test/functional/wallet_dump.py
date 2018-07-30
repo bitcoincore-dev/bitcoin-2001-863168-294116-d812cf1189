@@ -28,23 +28,24 @@ def read_dump(file_name, addrs, script_addrs, hd_master_addr_old):
                 # split out some data
                 key_label, comment = line.split("#")
                 # key = key_label.split(" ")[0]
-                keytype = key_label.split(" ")[2]
+                key_params = dict(map(lambda x: x.split('=', 1), key_label.rstrip().split(" ")[2:]))
                 if len(comment) > 1:
-                    addr_keypath = comment.split(" addr=")[1]
-                    addr = addr_keypath.split(" ")[0]
+                    comment_params = dict(map(lambda x: x.split('=', 1), comment.strip().split(" ")))
+                    addr = comment_params['addr']
                     keypath = None
-                    if keytype == "inactivehdmaster=1":
+                    if key_params.get('inactivehdmaster'):
                         # ensure the old master is still available
                         assert(hd_master_addr_old == addr)
-                    elif keytype == "hdmaster=1":
+                    elif key_params.get('hdmaster'):
                         # ensure we have generated a new hd master key
                         assert(hd_master_addr_old != addr)
                         hd_master_addr_ret = addr
-                    elif keytype == "script=1":
+                    elif key_params.get('script'):
                         # scripts don't have keypaths
                         keypath = None
                     else:
-                        keypath = addr_keypath.rstrip().split("hdkeypath=")[1]
+                        keypath = key_params['hdkeypath']
+                    keytype = key_label.split(" ")[2]
 
                     # count key types
                     for addrObj in addrs:
@@ -58,16 +59,16 @@ def read_dump(file_name, addrs, script_addrs, hd_master_addr_old):
                                 witness_addr_ret = addr_list[1]
                             found_addr += 1
                             break
-                        elif keytype == "change=1":
+                        elif key_params.get('change'):
                             found_addr_chg += 1
                             break
-                        elif keytype == "reserve=1":
+                        elif key_params.get('reserve'):
                             found_addr_rsv += 1
                             break
 
                     # count scripts
                     for script_addr in script_addrs:
-                        if script_addr == addr.rstrip() and keytype == "script=1":
+                        if script_addr == addr.rstrip() and key_params.get('script'):
                             found_script_addr += 1
                             break
 
