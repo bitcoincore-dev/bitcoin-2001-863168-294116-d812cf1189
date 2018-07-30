@@ -1108,7 +1108,7 @@ bool AppInitParameterInteraction()
     if (gArgs.IsArgSet("-dustrelayfee"))
     {
         CAmount n = 0;
-        if (!ParseMoney(gArgs.GetArg("-dustrelayfee", ""), n) || 0 == n)
+        if (!ParseMoney(gArgs.GetArg("-dustrelayfee", ""), n))
             return InitError(AmountErrMsg("dustrelayfee", gArgs.GetArg("-dustrelayfee", "")));
         dustRelayFee = CFeeRate(n);
     }
