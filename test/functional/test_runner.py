@@ -115,6 +115,7 @@ BASE_SCRIPTS= [
     'wallet_importprunedfunds.py',
     'rpc_signmessage.py',
     'feature_nulldummy.py',
+    'sort_multisig.py',
     'wallet_import_rescan.py',
     'mining_basic.py',
     'wallet_bumpfee.py',
