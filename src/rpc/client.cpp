@@ -136,6 +136,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "bumpfee", 1, "options" },
     { "logging", 0, "include" },
     { "logging", 1, "exclude" },
+    { "addnode", 2, "privileged" },
     { "disconnectnode", 1, "nodeid" },
     { "addwitnessaddress", 1, "p2sh" },
     // Echo with conversion (For testing only)
