@@ -356,8 +356,12 @@ int LogPrintStr(const std::string &str)
             if (fReopenDebugLog) {
                 fReopenDebugLog = false;
                 fs::path pathDebug = GetDebugLogPath();
-                if (fsbridge::freopen(pathDebug,"a",fileout) != nullptr)
-                    setbuf(fileout, nullptr); // unbuffered
+                FILE* new_fileout = fsbridge::fopen(pathDebug, "a");
+                if (new_fileout) {
+                    setbuf(new_fileout, nullptr); // unbuffered
+                    fclose(fileout);
+                    fileout = new_fileout;
+                }
             }
 
             ret = FileWriteStr(strTimestamped, fileout);
