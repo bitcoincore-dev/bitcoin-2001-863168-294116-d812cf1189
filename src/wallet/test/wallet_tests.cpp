@@ -38,7 +38,7 @@ typedef std::set<CInputCoin> CoinSet;
 BOOST_FIXTURE_TEST_SUITE(wallet_tests, WalletTestingSetup)
 
 static const CWallet testWallet;
-static std::vector<COutput> vCoins;
+static std::vector<OutputGroup> vCoins;
 
 static void add_coin(const CAmount& nValue, int nAge = 6*24, bool fIsFromMe = false, int nInput=0)
 {
@@ -59,7 +59,7 @@ static void add_coin(const CAmount& nValue, int nAge = 6*24, bool fIsFromMe = fa
         wtx->nDebitCached = 1;
     }
     COutput output(wtx.get(), nInput, nAge, true /* spendable */, true /* solvable */, true /* safe */);
-    vCoins.push_back(output);
+    vCoins.emplace_back(output, fIsFromMe, -1);
     wtxn.emplace_back(std::move(wtx));
 }
 
