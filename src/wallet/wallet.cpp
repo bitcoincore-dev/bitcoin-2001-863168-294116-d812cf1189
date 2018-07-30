@@ -158,6 +158,12 @@ CPubKey CWallet::GenerateNewKey(CWalletDB &walletdb, bool internal)
     int64_t nCreationTime = GetTime();
     CKeyMetadata metadata(nCreationTime);
 
+    //check if the wallet supports keyflags
+    if (CanSupportFeature(FEATURE_KEYFLAGS)) {
+        metadata.nVersion = CKeyMetadata::VERSION_WITH_FLAGS;
+    }
+    metadata.SetKeyOrigin(IsCrypted() ? CKeyMetadata::KEY_ORIGIN_ENC_WALLET : CKeyMetadata::KEY_ORIGIN_UNENC_WALLET);
+
     // use HD key derivation if HD was enabled during wallet creation
     if (IsHDEnabled()) {
         DeriveNewChildKey(walletdb, metadata, secret, (CanSupportFeature(FEATURE_HD_SPLIT) ? internal : false));
