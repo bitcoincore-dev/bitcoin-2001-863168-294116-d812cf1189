@@ -8,6 +8,8 @@ from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
     connect_nodes_bi,
+    assert_raises_message,
+    JSONRPCException,
 )
 import shutil
 import os
@@ -35,6 +37,14 @@ class WalletHDTest(BitcoinTestFramework):
         change_addr = self.nodes[1].getrawchangeaddress()
         change_addrV= self.nodes[1].validateaddress(change_addr)
         assert_equal(change_addrV["hdkeypath"], "m/0'/1'/0'") #first internal child key
+
+        # Check that the exported master private key begins with tprv
+        xprv = self.nodes[1].dumpmasterprivkey()
+        assert_equal(xprv[0:4], "tprv")
+
+        # Exporting the master private key should fail on a non-HD wallet
+        # FIXME: No way to create non-HD wallets anymore :/
+        #assert_raises_message(JSONRPCException, "Wallet is not a HD wallet.", self.nodes[0].dumpmasterprivkey)
 
         # Import a non-HD private key in the HD wallet
         non_hd_add = self.nodes[0].getnewaddress()
