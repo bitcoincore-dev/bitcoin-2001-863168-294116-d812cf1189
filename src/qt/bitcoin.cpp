@@ -54,6 +54,10 @@
 #include <QTranslator>
 #include <QSslConfiguration>
 
+#if defined(Q_OS_MACOS)
+#include <qt/macos_appnap.h>
+#endif
+
 #if defined(QT_STATICPLUGIN)
 #include <QtPlugin>
 #if QT_VERSION < 0x050000
@@ -558,6 +562,11 @@ WId BitcoinApplication::getMainWinId() const
 int main(int argc, char *argv[])
 {
     SetupEnvironment();
+
+#if defined(Q_OS_MACOS)
+    // Disable macOS App Nap
+    CAppNapInhibitor noIdle("bitcoin-qt");
+#endif
 
     /// 1. Parse command-line options. These take precedence over anything else.
     // Command-line options take precedence:
