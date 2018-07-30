@@ -1190,6 +1190,8 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
     std::vector<CInv> vNotFound;
     const CNetMsgMaker msgMaker(pfrom->GetSendVersion());
     {
+        LOCK(cs_main);
+
         while (it != pfrom->vRecvGetData.end() && (it->type == MSG_TX || it->type == MSG_WITNESS_TX)) {
             if (interruptMsgProc)
                 return;
@@ -1199,9 +1201,6 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
 
             const CInv &inv = *it;
             it++;
-
-            {
-            LOCK(cs_main);
 
             // Send stream from relay memory
             bool push = false;
@@ -1223,12 +1222,10 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
                 vNotFound.push_back(inv);
             }
 
-            }  // End of cs_main lock
-
             // Track requests for our stuff.
             GetMainSignals().Inventory(inv.hash);
         }
-    }
+    } // release cs_main
 
     if (it != pfrom->vRecvGetData.end() && !pfrom->fPauseSend) {
         const CInv &inv = *it;
@@ -1874,15 +1871,14 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         if (pfrom->fWhitelisted && gArgs.GetBoolArg("-whitelistrelay", DEFAULT_WHITELISTRELAY))
             fBlocksOnly = false;
 
+        LOCK(cs_main);
+
         uint32_t nFetchFlags = GetFetchFlags(pfrom);
 
         for (CInv &inv : vInv)
         {
             if (interruptMsgProc)
                 return true;
-
-            {
-            LOCK(cs_main);
 
             bool fAlreadyHave = AlreadyHave(inv);
             LogPrint(BCLog::NET, "got inv: %s  %s peer=%d\n", inv.ToString(), fAlreadyHave ? "have" : "new", pfrom->GetId());
@@ -1912,8 +1908,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                     pfrom->AskFor(inv);
                 }
             }
-
-            }  // End of cs_main lock
 
             // Track requests for our stuff
             GetMainSignals().Inventory(inv.hash);
