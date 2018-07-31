@@ -644,7 +644,7 @@ std::string SHA256AutoDetect()
 #elif (defined(__linux__)) && defined(ENABLE_POWER8)
     if (getauxval(AT_HWCAP2) & 0x02000000) {
         TransformD64_4way = sha256_power8::Transform_4way;
-        assert(SelfTest(Transform));
+        assert(SelfTest());
         return "power8(4way),C(1way)";
     }
 #endif
