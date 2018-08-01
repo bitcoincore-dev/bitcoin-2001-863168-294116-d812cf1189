@@ -4,6 +4,7 @@
 #include <interfaces/chain.h>
 #include <interfaces/node.h>
 #include <qt/bitcoinamountfield.h>
+#include <qt/clientmodel.h>
 #include <qt/optionsmodel.h>
 #include <qt/platformstyle.h>
 #include <qt/qvalidatedlineedit.h>
@@ -161,7 +162,8 @@ void TestGUI(interfaces::Init& init)
     TransactionView transactionView(platformStyle.get());
     std::unique_ptr<interfaces::Node> node = interfaces::MakeNode(init);
     OptionsModel optionsModel(*node);
-    WalletModel walletModel(interfaces::MakeWallet(wallet), *node, platformStyle.get(), &optionsModel);
+    ClientModel clientModel(*node, &optionsModel);
+    WalletModel walletModel(interfaces::MakeWallet(wallet), *node, platformStyle.get(), &optionsModel, &clientModel);
     RemoveWallet(wallet);
     sendCoinsDialog.setModel(&walletModel);
     transactionView.setModel(&walletModel);
