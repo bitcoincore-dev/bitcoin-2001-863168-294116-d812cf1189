@@ -123,6 +123,7 @@ void IpcProtocolImpl::listen(kj::Own<kj::ConnectionReceiver>&& listener)
         })));
 }
 
+// FIXME move above to match class method order
 std::unique_ptr<interfaces::Init> IpcProtocolImpl::connect(int fd)
 {
     std::promise<messages::Init::Client> init_promise;
