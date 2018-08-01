@@ -486,7 +486,7 @@ void BitcoinApplication::initializeResult(bool success)
         });
 
         for (auto& wallet : m_node.getWallets()) {
-            addWallet(new WalletModel(std::move(wallet), m_node, platformStyle, optionsModel));
+            addWallet(new WalletModel(std::move(wallet), m_node, platformStyle, optionsModel, clientModel));
         }
 #endif
 
