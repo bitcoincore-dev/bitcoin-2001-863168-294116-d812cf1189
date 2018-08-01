@@ -333,8 +333,12 @@ void BitcoinApplication::initializeResult(bool success)
     {
         // Log this only after AppInitMain finishes, as then logging setup is guaranteed complete
         qInfo() << "Platform customization:" << platformStyle->getName();
+
+        clientModel = new ClientModel(m_node, optionsModel);
+        window->setClientModel(clientModel);
+
 #ifdef ENABLE_WALLET
-        m_wallet_controller = new WalletController(m_node, platformStyle, optionsModel, this);
+        m_wallet_controller = new WalletController(m_node, platformStyle, optionsModel, clientModel, this);
 #ifdef ENABLE_BIP70
         PaymentServer::LoadRootCAs();
 #endif
@@ -344,11 +348,6 @@ void BitcoinApplication::initializeResult(bool success)
             connect(m_wallet_controller, &WalletController::coinsSent, paymentServer, &PaymentServer::fetchPaymentACK);
 #endif
         }
-#endif
-
-        clientModel = new ClientModel(m_node, optionsModel);
-        window->setClientModel(clientModel);
-#ifdef ENABLE_WALLET
         window->setWalletController(m_wallet_controller);
 #endif
 
