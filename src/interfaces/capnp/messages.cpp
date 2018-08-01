@@ -29,7 +29,7 @@
 
 #include <boost/core/explicit_operator_bool.hpp>
 #include <boost/move/utility_core.hpp>
-#include <boost/optional/optional.hpp>
+#include <boost/optional.hpp>
 #include <boost/variant/get.hpp>
 #include <capnp/blob.h>
 #include <capnp/list.h>

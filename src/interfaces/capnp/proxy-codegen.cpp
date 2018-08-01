@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <boost/core/explicit_operator_bool.hpp>
-#include <boost/optional/optional.hpp>
+#include <boost/optional.hpp>
 #include <capnp/blob.h>
 #include <capnp/schema-parser.h>
 #include <capnp/schema.capnp.h>
