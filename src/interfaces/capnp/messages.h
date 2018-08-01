@@ -99,7 +99,7 @@ public:
     void ResendWalletTransactions(int64_t best_block_time) override;
 };
 
-//! Specialization of ChainClient proxy server needed to add m_timer_interface
+//! Specialization of Node proxy server needed to add m_timer_interface
 //! member used by rpcSetTimerInterfaceIfUnset and rpcUnsetTimerInterface
 //! methods.
 template <>

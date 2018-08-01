@@ -1046,6 +1046,20 @@ void BuildField(TypeList<std::unique_ptr<Impl>>,
     }
 }
 
+template <typename LocalType, typename Output>
+void BuildField(TypeList<LocalType&>,
+                    Priority<1>,
+                    InvokeContext& invoke_context,
+                    LocalType& value,
+                    Output&& output,
+                    typename decltype(output.get())::Calls* enable = nullptr)
+{
+    // Set owned to false so proxy object doesn't attempt to delete interface
+    // reference when it is discarded remotely, or on disconnect.
+    output.set(kj::heap<ProxyServer<typename decltype(output.get())::Calls>>(
+                                                                             &value, false /* owned */, invoke_context.connection));
+}
+
 template <typename LocalType, typename Value, typename Output>
 void BuildField(TypeList<LocalType*>, Priority<3>, InvokeContext& invoke_context, Value&& value, Output&& output)
 {
@@ -1153,20 +1167,6 @@ LocalType BuildPrimitive(InvokeContext& invoke_context,
     static_assert(std::is_same<Value, LocalType>::value,
         "mismatched floating point types. please fix message.capnp type declaration to match wrapped interface");
     return value;
-}
-
-template <typename LocalType, typename Output>
-void BuildField(TypeList<LocalType&>,
-    Priority<1>,
-    InvokeContext& invoke_context,
-    LocalType& value,
-    Output&& output,
-    typename decltype(output.get())::Calls* enable = nullptr)
-{
-    // Set owned to false so proxy object doesn't attempt to delete interface
-    // reference when it is discarded remotely, or on disconnect.
-    output.set(kj::heap<ProxyServer<typename decltype(output.get())::Calls>>(
-        &value, false /* owned */, invoke_context.connection));
 }
 
 template <typename LocalType, typename Value, typename Output>
@@ -1568,7 +1568,7 @@ struct ServerRet : Parent
         auto&& result = Parent::invoke(server_context, TypeList<>(), std::forward<Args>(args)...);
         auto&& results = server_context.call_context.getResults();
         InvokeContext& invoke_context = server_context;
-        BuildField(TypeList<decltype(result)>(), BuildFieldPriority(), invoke_context, std::move(result),
+        BuildField(TypeList<decltype(result)>(), BuildFieldPriority(), invoke_context, std::forward<decltype(result)>(result),
             Make<StructField, Accessor>(results));
     }
 };
