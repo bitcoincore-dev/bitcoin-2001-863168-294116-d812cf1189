@@ -5,6 +5,7 @@
 #include <qt/transactiontablemodel.h>
 
 #include <qt/addresstablemodel.h>
+#include <qt/clientmodel.h>
 #include <qt/guiconstants.h>
 #include <qt/guiutil.h>
 #include <qt/optionsmodel.h>
@@ -176,7 +177,7 @@ public:
         return cachedWallet.size();
     }
 
-    TransactionRecord *index(interfaces::Wallet& wallet, int idx)
+    TransactionRecord *index(interfaces::Wallet& wallet, int cur_num_blocks, int idx)
     {
         if(idx >= 0 && idx < cachedWallet.size())
         {
@@ -192,7 +193,7 @@ public:
             interfaces::WalletTxStatus wtx;
             int numBlocks;
             int64_t adjustedTime;
-            if (wallet.tryGetTxStatus(rec->hash, wtx, numBlocks, adjustedTime) && rec->statusUpdateNeeded(numBlocks)) {
+            if (rec->statusUpdateNeeded(cur_num_blocks) && wallet.tryGetTxStatus(rec->hash, wtx, numBlocks, adjustedTime)) {
                 rec->updateStatus(wtx, numBlocks, adjustedTime);
             }
             return rec;
@@ -216,9 +217,10 @@ public:
     }
 };
 
-TransactionTableModel::TransactionTableModel(const PlatformStyle *_platformStyle, WalletModel *parent):
+TransactionTableModel::TransactionTableModel(const PlatformStyle *_platformStyle, ClientModel *clientModel, WalletModel *parent):
         QAbstractTableModel(parent),
         walletModel(parent),
+        clientModel(clientModel),
         priv(new TransactionTablePriv(this)),
         fProcessingQueuedTransactions(false),
         platformStyle(_platformStyle)
@@ -663,10 +665,10 @@ QVariant TransactionTableModel::headerData(int section, Qt::Orientation orientat
 QModelIndex TransactionTableModel::index(int row, int column, const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    TransactionRecord *data = priv->index(walletModel->wallet(), row);
+    TransactionRecord *data = priv->index(walletModel->wallet(), clientModel->getNumBlocks(), row);
     if(data)
     {
-        return createIndex(row, column, priv->index(walletModel->wallet(), row));
+        return createIndex(row, column, data);
     }
     return QModelIndex();
 }
