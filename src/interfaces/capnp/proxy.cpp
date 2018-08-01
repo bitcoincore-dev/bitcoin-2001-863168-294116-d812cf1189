@@ -112,7 +112,8 @@ EventLoop::~EventLoop()
 void EventLoop::loop()
 {
     assert(!g_thread_context.loop_thread);
-    TempSetter<bool> temp_setter(g_thread_context.loop_thread, true);
+    g_thread_context.loop_thread = true;
+    KJ_DEFER(g_thread_context.loop_thread = false);
 
     kj::Own<kj::AsyncIoStream> wait_stream{
         m_io_context.lowLevelProvider->wrapSocketFd(m_wait_fd, kj::LowLevelAsyncIoProvider::TAKE_OWNERSHIP)};

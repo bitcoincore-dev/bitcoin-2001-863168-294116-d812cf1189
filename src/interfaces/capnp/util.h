@@ -236,6 +236,8 @@ struct BoundFn<Fn, TypeList<BindArg, BindArgs...>, TypeList<BoundArgs...>>
 
     BoundFn(Fn& fn, BindArg& bind_arg, BindArgs&... bind_args) : Base{fn, bind_args...}, m_bind_arg(bind_arg) {}
 
+    // Use std::result_of instead of AUTO_RETURN to work around gcc bug
+    // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=83249
     template <typename... FreeArgs>
     auto operator()(BoundArgs&... bound_args, FreeArgs&&... free_args) ->
         typename std::result_of<Base(BoundArgs&..., BindArg&, FreeArgs...)>::type
@@ -282,32 +284,6 @@ BoundTupleFn<Fn> BindTuple(Fn&& fn)
 {
     return {fn};
 }
-
-//! FIXME: Delete and replace with KJ_DEFER
-//! Temporarily set reference to value in constructor, and restore previous
-//! value in destructor.
-//! Example:
-//!
-//!     int i = 3;
-//!     {
-//!        TempSetter t(i, 4);
-//         ... i is 4 here ...
-//!     }
-//!     ... i is 3 again ...
-template <typename T>
-struct TempSetter
-{
-    template <typename U>
-    TempSetter(T& ref, U&& value) : m_ref(ref), m_prev(std::move(ref))
-    {
-        m_ref = std::forward<U>(value);
-    }
-
-    ~TempSetter() { m_ref = std::move(m_prev); }
-
-    T& m_ref;
-    T m_prev;
-};
 
 //! Return capnp type name with filename prefix removed.
 template <typename T>

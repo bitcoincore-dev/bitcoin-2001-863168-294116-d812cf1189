@@ -14,3 +14,4 @@ Next steps:
 - [ ] Support `-server`, `-rpcbind` etc options on `bitcoin-wallet` executable so wallet processes handle RPC requests directly without going through the node.
 - [ ] Support windows subprocesses and pipes.
 - [ ] Make build system / code organization improvements so different executables don't link in code they don't need, or accept command line options they would ignore.
+- [ ] Sandboxing improvements, restricting subprocesses so they can't access to resources and data they don't need to function. See [https://eklitzke.org/multiprocess-bitcoin](https://eklitzke.org/multiprocess-bitcoin).
