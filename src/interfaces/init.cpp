@@ -3,6 +3,9 @@
 #include <fs.h>
 #include <interfaces/config.h>
 
+#include <boost/algorithm/string.hpp>
+#include <signal.h>
+
 namespace interfaces {
 namespace {
 
@@ -80,6 +83,22 @@ public:
 
 std::unique_ptr<Init> MakeInit(int argc, char* argv[], const Config& config)
 {
+    FILE* gdb = fsbridge::fopen("/tmp/gdb.txt", "a");
+    fprintf(gdb, "%i %s\n", getpid(), argv[0]);
+    fclose(gdb);
+    if (const char* env_stop = getenv("STOP")) {
+        std::string stop = env_stop;
+        std::vector<std::string> stops;
+        if (stop.size()) boost::split(stops, stop, boost::is_space(), boost::token_compress_on);
+        for (const auto& s : stops) {
+            if (strstr(interfaces::g_config.exe_name, s.c_str())) {
+                printf("Pid %i stopping for GDB\n", getpid());
+                printf("sudo gdb -ex c %s %i\n", argv[0], getpid());
+                raise(SIGSTOP);
+                break;
+            }
+        }
+    }
     return MakeUnique<InitImpl>(argc, argv, config);
 }
 
