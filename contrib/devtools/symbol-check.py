@@ -65,6 +65,8 @@ ALLOWED_LIBRARIES = {
 'ld-linux.so.2', # 32-bit dynamic linker
 'ld-linux-aarch64.so.1', # 64-bit ARM dynamic linker
 'ld-linux-armhf.so.3', # 32-bit ARM dynamic linker
+'ld64.so.1', # 32-bit POWER dynamic linker
+'ld64.so.2', # 64-bit POWER dynamic linker
 'ld-linux-riscv64-lp64d.so.1', # 64-bit RISC-V dynamic linker
 # bitcoin-qt only
 'libX11-xcb.so.1', # part of X11
@@ -79,6 +81,7 @@ ARCH_MIN_GLIBC_VER = {
 'X86-64': (2,2,5),
 'ARM':    (2,4),
 'AArch64':(2,17),
+'PowerPC64':(2,17),
 'RISC-V': (2,27)
 }
 class CPPFilt(object):
