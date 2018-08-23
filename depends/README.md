@@ -25,6 +25,8 @@ Common `host-platform-triplets` for cross compilation are:
 - `x86_64-apple-darwin14` for macOS
 - `arm-linux-gnueabihf` for Linux ARM 32 bit
 - `aarch64-linux-gnu` for Linux ARM 64 bit
+- `powerpc64-linux-gnu` for Linux POWER 64-bit (big endian)
+- `powerpc64le-linux-gnu` for Linux POWER 64-bit (little endian)
 - `riscv32-linux-gnu` for Linux RISC-V 32 bit
 - `riscv64-linux-gnu` for Linux RISC-V 64 bit
 
@@ -44,6 +46,10 @@ For Win32/Win64 cross compilation:
 For linux (including i386, ARM) cross compilation:
 
     sudo apt-get install curl g++-aarch64-linux-gnu g++-4.8-aarch64-linux-gnu gcc-4.8-aarch64-linux-gnu binutils-aarch64-linux-gnu g++-arm-linux-gnueabihf g++-4.8-arm-linux-gnueabihf gcc-4.8-arm-linux-gnueabihf binutils-arm-linux-gnueabihf g++-4.8-multilib gcc-4.8-multilib binutils-gold bsdmainutils
+
+For linux POWER 64-bit cross compilation (there are no packages for 32-bit):
+
+    sudo apt-get install curl g++-7-powerpc64-linux-gnu binutils-powerpc64-linux-gnu g++-7-powerpc64le-linux-gnu binutils-powerpc64le-linux-gnu
 
 For linux RISC-V 64-bit cross compilation (there are no packages for 32-bit):
 
