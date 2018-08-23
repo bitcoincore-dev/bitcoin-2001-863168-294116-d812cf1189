@@ -386,18 +386,6 @@ void ProxyServerMethodTraits<messages::Node::RpcUnsetTimerInterfaceParams>::invo
     context.proxy_server.m_timer_interface.reset();
 }
 
-void ProxyClientCustom<messages::Node, Node>::setupServerArgs()
-{
-    SetupServerArgs();
-    self().customSetupServerArgs();
-}
-
-bool ProxyClientCustom<messages::Node, Node>::parseParameters(int argc, const char* const argv[], std::string& error)
-{
-    gArgs.ParseParameters(argc, argv, error);
-    return self().customParseParameters(argc, argv, error);
-}
-
 bool ProxyClientCustom<messages::Node, Node>::softSetArg(const std::string& arg, const std::string& value)
 {
     gArgs.SoftSetArg(arg, value);

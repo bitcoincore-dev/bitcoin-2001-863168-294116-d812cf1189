@@ -159,7 +159,7 @@ void Interrupt()
     }
 }
 
-void Shutdown(InitInterfaces& interfaces)
+void Shutdown(interfaces::Init& init, InitInterfaces& interfaces)
 {
     LogPrintf("%s: In progress...\n", __func__);
     static CCriticalSection cs_Shutdown;
@@ -263,6 +263,9 @@ void Shutdown(InitInterfaces& interfaces)
     }
 #endif
     interfaces.chain_clients.clear();
+    if (init.getProtocol()) {
+        init.getProtocol()->shutdown();
+    }
     UnregisterAllValidationInterfaces();
     GetMainSignals().UnregisterBackgroundSignalScheduler();
     GetMainSignals().UnregisterWithMempoolSignals(mempool);
@@ -319,7 +322,7 @@ static void OnRPCStopped()
     LogPrint(BCLog::RPC, "RPC stopped.\n");
 }
 
-void SetupServerArgs()
+void SetupServerArgs(interfaces::Init& init)
 {
     const auto defaultBaseParams = CreateBaseChainParams(CBaseChainParams::MAIN);
     const auto testnetBaseParams = CreateBaseChainParams(CBaseChainParams::TESTNET);
@@ -502,6 +505,11 @@ void SetupServerArgs()
     gArgs.AddArg("-rpcuser=<user>", "Username for JSON-RPC connections", false, OptionsCategory::RPC);
     gArgs.AddArg("-rpcworkqueue=<n>", strprintf("Set the depth of the work queue to service RPC calls (default: %d)", DEFAULT_HTTP_WORKQUEUE), true, OptionsCategory::RPC);
     gArgs.AddArg("-server", "Accept command line and JSON-RPC commands", false, OptionsCategory::RPC);
+
+    if (init.getProcess()) {
+        gArgs.AddArg("-ipcbind=<address>", "Bind bitcoin-node process to tcp or unix socket address.", false, OptionsCategory::IPC);
+        gArgs.AddArg("-ipcconnect=<address>", "Instead of starting a bitcoin-node process in the background, connect to the an existing process listening at the specified address. Valid address values are 'unix<socket path>' to connect to '<datadir>/node.sock' socket, or 'unix:<socket path>' to connect to a different socket path.", false, OptionsCategory::IPC);
+    }
 
 #if HAVE_DECL_DAEMON
     gArgs.AddArg("-daemon", "Run in the background as a daemon and accept commands", false, OptionsCategory::OPTIONS);
@@ -1227,6 +1235,14 @@ bool AppInitMain(interfaces::Init& init, InitInterfaces& interfaces)
     // the interfaces, it doesn't load wallet data. Wallets actually get loaded
     // when load() and start() interface methods are called below.
     g_wallet_init_interface.Construct(init, interfaces);
+
+    if (init.getProtocol()) {
+        init.getProtocol()->start();
+        for (const std::string& address : gArgs.GetArgs("-ipcbind")) {
+            int fd = init.getProcess()->bind(address, GetDataDir());
+            init.getProtocol()->listen(fd);
+        }
+    }
 
     /* Register RPC commands regardless of -server setting so they will be
      * available in the GUI RPC console even if external calls are disabled.

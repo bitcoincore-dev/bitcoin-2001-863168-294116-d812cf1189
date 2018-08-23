@@ -10,17 +10,44 @@ class InitImpl : public Init
 public:
     InitImpl(int argc, char* argv[], const Config& config) : m_argc(argc), m_argv(argv), m_config(config) {}
 
-    std::unique_ptr<Node> makeNode() override
+    std::unique_ptr<Init> spawnOrConnect(const std::string& dest_exe_name, bool& spawned)
     {
+        spawned = false;
+        std::unique_ptr<Init> process;
+        if (m_ipc_process && m_ipc_protocol) {
+            int fd = -1;
+            if (gArgs.IsArgSet("-ipcconnect") && !gArgs.IsArgNegated("-ipcconnect")) {
+                std::string address = gArgs.GetArg("-ipcconnect", "");
+                if (address.empty()) address = "unix";
+                LogPrint(::BCLog::IPC, "Trying to connect to running process '%s' at address '%s'\n", dest_exe_name,
+                    address);
+                fd = m_ipc_process->connect(address, GetDataDir(), dest_exe_name);
+            }
+            if (fd < 0) {
+                LogPrint(::BCLog::IPC, "Spawning subprocess process '%s'\n", dest_exe_name);
+                fd = m_ipc_process->spawn(dest_exe_name);
+                spawned = true;
+            }
+            if (fd < 0) {
+                LogPrint(::BCLog::IPC, "Failed to spawn or connect to running process '%s'\n", dest_exe_name);
+            } else {
+                process = m_ipc_protocol->connect(fd);
+            }
+        }
+        return process;
+    }
+
+    std::unique_ptr<Node> makeNode(bool& new_node_process) override
+    {
+        new_node_process = false;
         if (m_config.make_node) {
             return m_config.make_node(*this);
-        }
-        if (m_ipc_process && m_ipc_protocol) {
-            int fd = m_ipc_process->spawn("bitcoin-node");
-            auto init = m_ipc_protocol->connect(fd);
-            auto node = init->makeNode();
+        } else if (m_ipc_process && m_ipc_protocol) {
+            auto process = spawnOrConnect("bitcoin-node", new_node_process);
+            bool ignore;
+            auto node = process->makeNode(ignore);
             // Subprocess no longer needed after node client is discarded.
-            node->addCloseHook(MakeUnique<Deleter<std::unique_ptr<Init>>>(std::move(init)));
+            node->addCloseHook(MakeUnique<Deleter<std::unique_ptr<Init>>>(std::move(process)));
             return node;
         }
         throw std::logic_error("Build configuration error. Init::makeNode called unexpectedly from executable not "

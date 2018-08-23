@@ -14,6 +14,7 @@
 #include <interfaces/chain.h>
 #include <interfaces/config.h>
 #include <interfaces/init.h>
+#include <interfaces/ipc.h>
 #include <rpc/server.h>
 #include <init.h>
 #include <noui.h>
@@ -70,7 +71,7 @@ static bool AppInit(interfaces::Init& init, int argc, char* argv[])
     // Parameters
     //
     // If Qt is used, parameters/bitcoin.conf are parsed in qt/bitcoin.cpp's main()
-    SetupServerArgs();
+    SetupServerArgs(init);
     std::string error;
     if (!gArgs.ParseParameters(argc, argv, error)) {
         fprintf(stderr, "Error parsing command line arguments: %s\n", error.c_str());
@@ -184,7 +185,7 @@ static bool AppInit(interfaces::Init& init, int argc, char* argv[])
     } else {
         WaitForShutdown();
     }
-    Shutdown(interfaces);
+    Shutdown(init, interfaces);
 
     return fRet;
 }

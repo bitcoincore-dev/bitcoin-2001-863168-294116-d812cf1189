@@ -31,7 +31,7 @@ class OptionsModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    explicit OptionsModel(interfaces::Node& node, QObject *parent = 0, bool resetSettings = false);
+    explicit OptionsModel(interfaces::Node& node, QObject *parent, bool reset_settings, bool new_node_process);
 
     enum OptionID {
         StartAtStartup,         // bool
@@ -58,7 +58,7 @@ public:
         OptionIDRowCount,
     };
 
-    void Init(bool resetSettings = false);
+    void Init(bool resetSettings, bool new_node_process);
     void Reset();
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;

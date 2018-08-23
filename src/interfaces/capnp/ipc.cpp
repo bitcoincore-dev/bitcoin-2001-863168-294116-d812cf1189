@@ -73,7 +73,9 @@ public:
 
     std::unique_ptr<interfaces::Init> connect(int fd) override;
     void serve(int stream_fd) override;
+    void listen(int listen_fd) override;
     void loop() override { m_loop->loop(); }
+    void start() override;
     void shutdown() override { m_loop->shutdown(); }
 
 private:
@@ -90,6 +92,17 @@ void IpcProtocolImpl::serve(int stream_fd)
     m_loop.emplace(m_exe_name);
     serve(m_loop->m_io_context.lowLevelProvider->wrapSocketFd(stream_fd, kj::LowLevelAsyncIoProvider::TAKE_OWNERSHIP),
         true /* shutdown */);
+}
+
+void IpcProtocolImpl::listen(int listen_fd)
+{
+    if (::listen(listen_fd, 5 /* backlog */) != 0) {
+        throw std::system_error(errno, std::system_category());
+    }
+    m_loop->sync([&]() {
+        listen(m_loop->m_io_context.lowLevelProvider->wrapListenSocketFd(
+            listen_fd, kj::LowLevelAsyncIoProvider::TAKE_OWNERSHIP));
+    });
 }
 
 void IpcProtocolImpl::serve(kj::Own<kj::AsyncIoStream>&& stream, bool shutdown)
@@ -117,6 +130,7 @@ void IpcProtocolImpl::listen(kj::Own<kj::ConnectionReceiver>&& listener)
         })));
 }
 
+// FIXME move above to match class method order
 std::unique_ptr<interfaces::Init> IpcProtocolImpl::connect(int fd)
 {
     std::promise<messages::Init::Client> init_promise;
@@ -141,6 +155,20 @@ std::unique_ptr<interfaces::Init> IpcProtocolImpl::connect(int fd)
         }));
     });
     return proxy;
+}
+
+// FIXME move above to match class method order
+void IpcProtocolImpl::start()
+{
+    assert(!m_loop);
+    std::promise<void> promise;
+    std::thread thread([&]() {
+        RenameThread("capnp-serve");
+        m_loop.emplace(m_exe_name, std::move(thread));
+        promise.set_value();
+        m_loop->loop();
+    });
+    promise.get_future().wait();
 }
 
 } // namespace

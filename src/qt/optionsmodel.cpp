@@ -26,19 +26,19 @@ const char *DEFAULT_GUI_PROXY_HOST = "127.0.0.1";
 
 static const QString GetDefaultProxyAddress();
 
-OptionsModel::OptionsModel(interfaces::Node& node, QObject *parent, bool resetSettings) :
+OptionsModel::OptionsModel(interfaces::Node& node, QObject *parent, bool reset_settings, bool new_node_process) :
     QAbstractListModel(parent), m_node(node)
 {
-    Init(resetSettings);
+    Init(reset_settings, new_node_process);
 }
 
 void OptionsModel::addOverriddenOption(const std::string &option)
 {
-    strOverriddenByCommandLine += QString::fromStdString(option) + "=" + QString::fromStdString(gArgs.GetArg(option, "")) + " ";
+    strOverriddenByCommandLine += QString::fromStdString(option) + "=" + QString::fromStdString(m_node.getArg(option, "")) + " ";
 }
 
 // Writes all missing QSettings with their default values
-void OptionsModel::Init(bool resetSettings)
+void OptionsModel::Init(bool resetSettings, bool new_node_process)
 {
     if (resetSettings)
         Reset();
@@ -84,7 +84,7 @@ void OptionsModel::Init(bool resetSettings)
     //
     // If setting doesn't exist create it with defaults.
     //
-    // If gArgs.SoftSetArg() or gArgs.SoftSetBoolArg() return false we were overridden
+    // If try_set or try_set_bool return false we were overridden
     // by command-line and show this in the UI.
 
     // Main
@@ -94,18 +94,18 @@ void OptionsModel::Init(bool resetSettings)
         settings.setValue("nPruneSize", 2);
     // Convert prune size to MB:
     const uint64_t nPruneSizeMB = settings.value("nPruneSize").toInt() * 1000;
-    if (!m_node.softSetArg("-prune", settings.value("bPrune").toBool() ? std::to_string(nPruneSizeMB) : "0")) {
+    if (!new_node_process || !m_node.softSetArg("-prune", settings.value("bPrune").toBool() ? std::to_string(nPruneSizeMB) : "0")) {
       addOverriddenOption("-prune");
     }
 
     if (!settings.contains("nDatabaseCache"))
         settings.setValue("nDatabaseCache", (qint64)nDefaultDbCache);
-    if (!m_node.softSetArg("-dbcache", settings.value("nDatabaseCache").toString().toStdString()))
+    if (!new_node_process || !m_node.softSetArg("-dbcache", settings.value("nDatabaseCache").toString().toStdString()))
         addOverriddenOption("-dbcache");
 
     if (!settings.contains("nThreadsScriptVerif"))
         settings.setValue("nThreadsScriptVerif", DEFAULT_SCRIPTCHECK_THREADS);
-    if (!m_node.softSetArg("-par", settings.value("nThreadsScriptVerif").toString().toStdString()))
+    if (!new_node_process || !m_node.softSetArg("-par", settings.value("nThreadsScriptVerif").toString().toStdString()))
         addOverriddenOption("-par");
 
     if (!settings.contains("strDataDir"))
@@ -115,19 +115,19 @@ void OptionsModel::Init(bool resetSettings)
 #ifdef ENABLE_WALLET
     if (!settings.contains("bSpendZeroConfChange"))
         settings.setValue("bSpendZeroConfChange", true);
-    if (!m_node.softSetBoolArg("-spendzeroconfchange", settings.value("bSpendZeroConfChange").toBool()))
+    if (!new_node_process || !m_node.softSetBoolArg("-spendzeroconfchange", settings.value("bSpendZeroConfChange").toBool()))
         addOverriddenOption("-spendzeroconfchange");
 #endif
 
     // Network
     if (!settings.contains("fUseUPnP"))
         settings.setValue("fUseUPnP", DEFAULT_UPNP);
-    if (!m_node.softSetBoolArg("-upnp", settings.value("fUseUPnP").toBool()))
+    if (!new_node_process || !m_node.softSetBoolArg("-upnp", settings.value("fUseUPnP").toBool()))
         addOverriddenOption("-upnp");
 
     if (!settings.contains("fListen"))
         settings.setValue("fListen", DEFAULT_LISTEN);
-    if (!m_node.softSetBoolArg("-listen", settings.value("fListen").toBool()))
+    if (!new_node_process || !m_node.softSetBoolArg("-listen", settings.value("fListen").toBool()))
         addOverriddenOption("-listen");
 
     if (!settings.contains("fUseProxy"))
@@ -135,9 +135,9 @@ void OptionsModel::Init(bool resetSettings)
     if (!settings.contains("addrProxy"))
         settings.setValue("addrProxy", GetDefaultProxyAddress());
     // Only try to set -proxy, if user has enabled fUseProxy
-    if (settings.value("fUseProxy").toBool() && !m_node.softSetArg("-proxy", settings.value("addrProxy").toString().toStdString()))
+    if (!new_node_process || (settings.value("fUseProxy").toBool() && !m_node.softSetArg("-proxy", settings.value("addrProxy").toString().toStdString())))
         addOverriddenOption("-proxy");
-    else if(!settings.value("fUseProxy").toBool() && !gArgs.GetArg("-proxy", "").empty())
+    else if(!settings.value("fUseProxy").toBool() && !m_node.getArg("-proxy", "").empty())
         addOverriddenOption("-proxy");
 
     if (!settings.contains("fUseSeparateProxyTor"))
@@ -145,15 +145,15 @@ void OptionsModel::Init(bool resetSettings)
     if (!settings.contains("addrSeparateProxyTor"))
         settings.setValue("addrSeparateProxyTor", GetDefaultProxyAddress());
     // Only try to set -onion, if user has enabled fUseSeparateProxyTor
-    if (settings.value("fUseSeparateProxyTor").toBool() && !m_node.softSetArg("-onion", settings.value("addrSeparateProxyTor").toString().toStdString()))
+    if (!new_node_process || (settings.value("fUseSeparateProxyTor").toBool() && !m_node.softSetArg("-onion", settings.value("addrSeparateProxyTor").toString().toStdString())))
         addOverriddenOption("-onion");
-    else if(!settings.value("fUseSeparateProxyTor").toBool() && !gArgs.GetArg("-onion", "").empty())
+    else if(!settings.value("fUseSeparateProxyTor").toBool() && !m_node.getArg("-onion", "").empty())
         addOverriddenOption("-onion");
 
     // Display
     if (!settings.contains("language"))
         settings.setValue("language", "");
-    if (!m_node.softSetArg("-lang", settings.value("language").toString().toStdString()))
+    if (!new_node_process || !m_node.softSetArg("-lang", settings.value("language").toString().toStdString()))
         addOverriddenOption("-lang");
 
     language = settings.value("language").toString();

@@ -5,6 +5,8 @@
 #ifndef BITCOIN_QT_INTRO_H
 #define BITCOIN_QT_INTRO_H
 
+#include <optional.h>
+
 #include <QDialog>
 #include <QMutex>
 #include <QThread>
@@ -45,7 +47,7 @@ public:
      * @note do NOT call global GetDataDir() before calling this function, this
      * will cause the wrong path to be cached.
      */
-    static bool pickDataDirectory(interfaces::Node& node);
+    static bool pickDataDirectory(Optional<std::string>& data_dir_override);
 
     /**
      * Determine default data directory for operating system.

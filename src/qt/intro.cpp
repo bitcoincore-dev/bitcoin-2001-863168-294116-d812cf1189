@@ -187,8 +187,10 @@ QString Intro::getDefaultDataDirectory()
     return GUIUtil::boostPathToQString(GetDefaultDataDir());
 }
 
-bool Intro::pickDataDirectory(interfaces::Node& node)
+bool Intro::pickDataDirectory(Optional<std::string>& data_dir_override)
 {
+    data_dir_override.reset();
+
     QSettings settings;
     /* If data directory provided on command line, no need to look at settings
        or show a picking dialog */
@@ -235,7 +237,7 @@ bool Intro::pickDataDirectory(interfaces::Node& node)
      * (to be consistent with bitcoind behavior)
      */
     if(dataDir != getDefaultDataDirectory()) {
-        node.softSetArg("-datadir", GUIUtil::qstringToBoostPath(dataDir).string()); // use OS locale for path setting
+        data_dir_override = GUIUtil::qstringToBoostPath(dataDir).string(); // use OS locale for path setting
     }
     return true;
 }

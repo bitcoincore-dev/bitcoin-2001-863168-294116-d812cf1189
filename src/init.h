@@ -30,7 +30,7 @@ class thread_group;
 
 /** Interrupt threads */
 void Interrupt();
-void Shutdown(InitInterfaces& interfaces);
+void Shutdown(interfaces::Init& init, InitInterfaces& interfaces);
 //!Initialize the logging infrastructure
 void InitLogging();
 //!Parameter interaction: change current parameters depending on various rules
@@ -69,7 +69,7 @@ bool AppInitMain(interfaces::Init& init, InitInterfaces& interfaces);
 /**
  * Setup the arguments for gArgs
  */
-void SetupServerArgs();
+void SetupServerArgs(interfaces::Init& init);
 
 /** Returns licensing information (for -version) */
 std::string LicenseInfo();

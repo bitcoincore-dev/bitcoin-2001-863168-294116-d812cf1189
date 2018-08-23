@@ -136,16 +136,14 @@ struct ProxyServerMethodTraits<messages::Node::RpcUnsetTimerInterfaceParams>
 
 //! Specialization of Node client to deal with argument & config handling across
 //! processes. If node and node client are running in same process it's
-//! sufficient to only call parseParameters, softSetArgs, etc methods only on the
-//! node object, but if node is running in a different process, the calls need to
-//! be made repeated locally as well to update the state of the client process..
+//! sufficient to only call softSetArgs, etc methods only on the node object,
+//! but if node is running in a different process, the calls need to be made
+//! repeated locally as well to update the state of the client process..
 template <>
 class ProxyClientCustom<messages::Node, Node> : public ProxyClientBase<messages::Node, Node>
 {
 public:
     using ProxyClientBase::ProxyClientBase;
-    void setupServerArgs() override;
-    bool parseParameters(int argc, const char* const argv[], std::string& error) override;
     bool softSetArg(const std::string& arg, const std::string& value) override;
     bool softSetBoolArg(const std::string& arg, bool value) override;
     bool readConfigFiles(std::string& error) override;

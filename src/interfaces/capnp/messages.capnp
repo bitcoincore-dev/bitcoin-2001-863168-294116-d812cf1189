@@ -7,7 +7,7 @@ using X = import "proxy.capnp";
 
 interface Init $X.proxy("interfaces::Init") {
     construct @0 (threadMap: X.ThreadMap) -> (threadMap :X.ThreadMap);
-    makeNode @1 (context :X.Context) -> (result :Node);
+    makeNode @1 (context :X.Context) -> (newNodeProcess :Bool, result :Node);
     makeWalletClient @2 (context :X.Context, globalArgs :GlobalArgs, chain :Chain, walletFilenames :List(Text)) -> (result :ChainClient);
 }
 
@@ -86,8 +86,8 @@ interface ChainClient $X.proxy("interfaces::ChainClient") {
 
 interface Node $X.proxy("interfaces::Node") {
     destroy @0 (context :X.Context) -> ();
-    customSetupServerArgs @1 (context :X.Context) -> () $X.name("setupServerArgs");
-    customParseParameters @2 (context :X.Context, argv :List(Text) $X.count(2)) -> (errorStr :Text, result :Bool) $X.name("parseParameters");
+    setupServerArgs @1 (context :X.Context) -> ();
+    parseParameters @2 (context :X.Context, argv :List(Text) $X.count(2)) -> (errorStr :Text, result :Bool);
     customSoftSetArg @3 (context :X.Context, arg :Text, value :Text) -> (result :Bool) $X.name("softSetArg");
     customSoftSetBoolArg @4 (context :X.Context, arg :Text, value :Bool) -> (result :Bool) $X.name("softSetBoolArg");
     customReadConfigFiles @5 (context :X.Context) -> (errorStr :Text, result: Bool) $X.name("readConfigFiles");

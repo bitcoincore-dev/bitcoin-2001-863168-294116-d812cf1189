@@ -24,6 +24,12 @@ public:
 
     //! Spawn process and return file descriptor for communicating with it.
     virtual int spawn(const std::string& new_exe_name) = 0;
+
+    //! Connect to address and return socket descriptor.
+    virtual int connect(const std::string& address, const fs::path& data_dir, const std::string& dest_exe_name) = 0;
+
+    //! Create listening socket, bind address, and return socket descriptor.
+    virtual int bind(const std::string& address, const fs::path& ata_dir) = 0;
 };
 
 //! IPC protocol interface for communicating with other processes over socket
@@ -40,17 +46,27 @@ public:
     //! disconnect.
     virtual void serve(int stream_fd) = 0;
 
+    //! Listen for connections on provided socket descriptor, and handle
+    //! requests on new connections. Does not shut down event loop on
+    //! disconnect.
+    virtual void listen(int listen_fd) = 0;
+
     //! Run event loop handling requests. Blocks until shutdown is called or a
     //! provided stream_fd disconnects.
     virtual void loop() = 0;
+
+    //! Start event loop thread for handling requests.
+    virtual void start() = 0;
 
     //! Shut down event loop.
     virtual void shutdown() = 0;
 };
 
+//! Return implementation of IpcProcess interface.
 using MakeIpcProcessFn = std::unique_ptr<IpcProcess>(int argc, char* argv[], const Config& config, Init& init);
 MakeIpcProcessFn MakeIpcProcess;
 
+//! Return implementation of IpcProtocol interface.
 using MakeIpcProtocolFn = std::unique_ptr<IpcProtocol>(const char* exe_name, Init& init);
 
 } // namespace interfaces
