@@ -109,6 +109,11 @@ void BaseIndex::ThreadSync()
                     Commit();
                     break;
                 }
+                if (pindex_next->pprev != pindex && !Rewind(pindex, pindex_next->pprev)) {
+                    FatalError("%s: Failed to rewind index %s to a previous chain tip",
+                               __func__, GetName());
+                    return;
+                }
                 pindex = pindex_next;
             }
 
@@ -164,7 +169,7 @@ bool BaseIndex::Commit(CDBBatch& batch)
 
 bool BaseIndex::Rewind(const CBlockIndex* current_tip, const CBlockIndex* new_tip)
 {
-    assert(current_tip = m_best_block_index);
+    assert(current_tip == m_best_block_index);
     assert(current_tip->GetAncestor(new_tip->nHeight) == new_tip);
 
     // In the case of a reorg, ensure persisted block locator is not stale.
@@ -203,6 +208,11 @@ void BaseIndex::BlockConnected(const std::shared_ptr<const CBlock>& block, const
                       "known best chain (tip=%s); not updating index\n",
                       __func__, pindex->GetBlockHash().ToString(),
                       best_block_index->GetBlockHash().ToString());
+            return;
+        }
+        if (best_block_index != pindex->pprev && !Rewind(best_block_index, pindex->pprev)) {
+            FatalError("%s: Failed to rewind index %s to a previous chain tip",
+                       __func__, GetName());
             return;
         }
     }
