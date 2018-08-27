@@ -8,6 +8,7 @@
 #include <random.h>
 #include <node/ui_interface.h>
 #include <util/translation.h>
+#include <validation.h>
 
 #include <leveldb/c.h>
 #include <leveldb/cache.h>
@@ -111,6 +112,25 @@ static void SetMaxOpenFiles(leveldb::Options *options) {
 #ifndef WIN32
     if (sizeof(void*) < 8) {
         options->max_open_files = 64;
+    } else {
+#  ifndef EMBEDDED_LEVELDB
+        // The embedded LevelDB is patched to mmap up to 4096 files, so it
+        // doesn't need this logic.
+
+        // LevelDB checks the mmap limit before reducing to avoid overflow.
+        // Therefore, avoid getting opened without a mmap by forcing the
+        // overflow 1 file earlier.
+        --options->max_open_files;
+
+        // max_open_files is actually a per-database limit, whereas LevelDB will
+        // only use up to 1000 mmaps *globally*. Therefore, divide the limit by the
+        // number of databases we use.
+        int num_dbs = 2;  // blocks/index and chainstate
+        if (gArgs.GetBoolArg("-txindex", DEFAULT_TXINDEX)) {
+            ++num_dbs;
+        }
+        options->max_open_files /= num_dbs;
+#  endif
     }
 #endif
     LogPrint(BCLog::LEVELDB, "LevelDB using max_open_files=%d (default=%d)\n",
