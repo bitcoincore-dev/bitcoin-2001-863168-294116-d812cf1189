@@ -1,6 +1,8 @@
 #include <qt/test/wallettests.h>
 #include <qt/test/util.h>
 
+#include <init.h>
+#include <interfaces/chain.h>
 #include <interfaces/node.h>
 #include <qt/bitcoinamountfield.h>
 #include <qt/callback.h>
@@ -133,7 +135,8 @@ void TestGUI()
     for (int i = 0; i < 5; ++i) {
         test.CreateAndProcessBlock({}, GetScriptForRawPubKey(test.coinbaseKey.GetPubKey()));
     }
-    std::shared_ptr<CWallet> wallet = std::make_shared<CWallet>("mock", WalletDatabase::CreateMock());
+    auto chain = interfaces::MakeChain();
+    std::shared_ptr<CWallet> wallet = std::make_shared<CWallet>(*chain, "mock", WalletDatabase::CreateMock());
     bool firstRun;
     wallet->LoadWallet(firstRun);
     {
@@ -142,10 +145,10 @@ void TestGUI()
         wallet->AddKeyPubKey(test.coinbaseKey, test.coinbaseKey.GetPubKey());
     }
     {
-        LOCK(cs_main);
+        auto locked_chain = wallet->chain().lock();
         WalletRescanReserver reserver(wallet.get());
         reserver.reserve();
-        wallet->ScanForWalletTransactions(chainActive.Genesis(), nullptr, reserver, true);
+        wallet->ScanForWalletTransactions(locked_chain->getBlockHash(0), {} /* stop block */, reserver, true /* update */);
     }
     wallet->SetBroadcastTransactions(true);
 
