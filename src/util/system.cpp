@@ -75,6 +75,9 @@
 
 #include <thread>
 
+/** Minimum disk space required - used in CheckDiskSpace() */
+static constexpr uint64_t nMinDiskSpace = 52428800;
+
 // Application startup time (used for uptime calculation)
 const int64_t nStartupTime = GetTime();
 
@@ -133,6 +136,14 @@ bool DirIsWritable(const fs::path& directory)
     remove(tmpFile);
 
     return true;
+}
+
+bool CheckDiskSpace(const fs::path& dir, uint64_t nAdditionalBytes)
+{
+    uint64_t nFreeBytesAvailable = fs::space(dir).available;
+
+    // Check for nMinDiskSpace bytes (currently 50MB)
+    return nFreeBytesAvailable >= nMinDiskSpace + nAdditionalBytes;
 }
 
 /**
