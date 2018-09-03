@@ -50,6 +50,7 @@ class QComboBox;
 class QMenu;
 class QProgressBar;
 class QProgressDialog;
+class QWinTaskbarButton;
 QT_END_NAMESPACE
 
 namespace GUIUtil {
@@ -161,6 +162,9 @@ private:
     RPCConsole* rpcConsole = nullptr;
     HelpMessageDialog* helpMessageDialog = nullptr;
     ModalOverlay* modalOverlay = nullptr;
+#ifdef Q_OS_WIN
+    QWinTaskbarButton* m_taskbar_button = nullptr;
+#endif
 
 #ifdef Q_OS_MAC
     CAppNapInhibitor* m_app_nap_inhibitor = nullptr;
