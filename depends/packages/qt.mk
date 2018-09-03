@@ -20,8 +20,12 @@ $(package)_qttranslations_sha256_hash=fb5a47799754af73d3bf501fe513342cfe2fc37f64
 $(package)_qttools_file_name=qttools-$($(package)_suffix)
 $(package)_qttools_sha256_hash=a97556eb7b2f30252cdd8a598c396cfce2b2f79d2bae883af6d3b26a2cdcc63c
 
+$(package)_qtwinextras_file_name=qtwinextras-$($(package)_suffix)
+$(package)_qtwinextras_sha256_hash=8b177f8b0bc5e22ec3d4e31a30dff0c63bd5af25d11a0374c4255b796f7f4918
+
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
+$(package)_extra_sources += $($(package)_qtwinextras_file_name)
 
 define $(package)_set_vars
 $(package)_config_opts_release = -release
@@ -175,7 +179,8 @@ endef
 define $(package)_fetch_cmds
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_download_file),$($(package)_file_name),$($(package)_sha256_hash)) && \
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttranslations_file_name),$($(package)_qttranslations_file_name),$($(package)_qttranslations_sha256_hash)) && \
-$(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttools_file_name),$($(package)_qttools_file_name),$($(package)_qttools_sha256_hash))
+$(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttools_file_name),$($(package)_qttools_file_name),$($(package)_qttools_sha256_hash)) && \
+$(call fetch_file,$(package),$($(package)_download_path),$($(package)_qtwinextras_file_name),$($(package)_qtwinextras_file_name),$($(package)_qtwinextras_sha256_hash))
 endef
 
 define $(package)_extract_cmds
@@ -183,13 +188,16 @@ define $(package)_extract_cmds
   echo "$($(package)_sha256_hash)  $($(package)_source)" > $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   echo "$($(package)_qttranslations_sha256_hash)  $($(package)_source_dir)/$($(package)_qttranslations_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   echo "$($(package)_qttools_sha256_hash)  $($(package)_source_dir)/$($(package)_qttools_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
+  echo "$($(package)_qtwinextras_sha256_hash)  $($(package)_source_dir)/$($(package)_qtwinextras_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   $(build_SHA256SUM) -c $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   mkdir qtbase && \
   tar --no-same-owner --strip-components=1 -xf $($(package)_source) -C qtbase && \
   mkdir qttranslations && \
   tar --no-same-owner --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttranslations_file_name) -C qttranslations && \
   mkdir qttools && \
-  tar --no-same-owner --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttools_file_name) -C qttools
+  tar --no-same-owner --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttools_file_name) -C qttools && \
+  mkdir qtwinextras && \
+  tar --no-same-owner --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qtwinextras_file_name) -C qtwinextras
 endef
 
 define $(package)_preprocess_cmds
@@ -198,6 +206,7 @@ define $(package)_preprocess_cmds
   sed -i.old "s|updateqm.commands = \$$$$\$$$$LRELEASE|updateqm.commands = $($(package)_extract_dir)/qttools/bin/lrelease|" qttranslations/translations/translations.pro && \
   patch -p1 -i $($(package)_patch_dir)/drop_lrelease_dependency.patch && \
   patch -p1 -i $($(package)_patch_dir)/dont_hardcode_pwd.patch &&\
+  sed -i.old -e '/qwinjumplist/d' qtwinextras/src/winextras/winextras.pro && \
   mkdir -p qtbase/mkspecs/macx-clang-linux &&\
   cp -f qtbase/mkspecs/macx-clang/Info.plist.lib qtbase/mkspecs/macx-clang-linux/ &&\
   cp -f qtbase/mkspecs/macx-clang/Info.plist.app qtbase/mkspecs/macx-clang-linux/ &&\
@@ -237,6 +246,7 @@ define $(package)_config_cmds
   $(MAKE) sub-src-clean && \
   cd ../qttranslations && ../qtbase/bin/qmake qttranslations.pro -o Makefile && \
   cd translations && ../../qtbase/bin/qmake translations.pro -o Makefile && cd ../.. && \
+  cd qtwinextras && ../qtbase/bin/qmake qtwinextras.pro -o Makefile && cd .. && \
   cd qttools/src/linguist/lrelease/ && ../../../../qtbase/bin/qmake lrelease.pro -o Makefile && \
   cd ../lupdate/ && ../../../../qtbase/bin/qmake lupdate.pro -o Makefile && cd ../../../..
 endef
@@ -245,7 +255,8 @@ define $(package)_build_cmds
   $(MAKE) -C src $(addprefix sub-,$($(package)_qt_libs)) && \
   $(MAKE) -C ../qttools/src/linguist/lrelease && \
   $(MAKE) -C ../qttools/src/linguist/lupdate && \
-  $(MAKE) -C ../qttranslations
+  $(MAKE) -C ../qttranslations && \
+  $(MAKE) -C ../qtwinextras
 endef
 
 define $(package)_stage_cmds
@@ -253,6 +264,7 @@ define $(package)_stage_cmds
   $(MAKE) -C qttools/src/linguist/lrelease INSTALL_ROOT=$($(package)_staging_dir) install_target && \
   $(MAKE) -C qttools/src/linguist/lupdate INSTALL_ROOT=$($(package)_staging_dir) install_target && \
   $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
+  $(MAKE) -C qtwinextras INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   if `test -f qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a`; then \
     cp qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a $($(package)_staging_prefix_dir)/lib; \
   fi
