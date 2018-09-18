@@ -151,6 +151,9 @@ void OptionsModel::Init(bool resetSettings)
     else if(!settings.value("fUseSeparateProxyTor").toBool() && !gArgs.GetArg("-onion", "").empty())
         addOverriddenOption("-onion");
 
+    // rwconf settings that require a restart
+    f_peerbloomfilters = gArgs.GetBoolArg("-peerbloomfilters", DEFAULT_PEERBLOOMFILTERS);
+
     // Display
     if (!settings.contains("language"))
         settings.setValue("language", "");
@@ -288,6 +291,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
 #ifdef ENABLE_WALLET
         case SpendZeroConfChange:
             return settings.value("bSpendZeroConfChange");
+        case addresstype:
+            return QString::fromStdString(FormatOutputType(g_address_type));
 #endif
         case DisplayUnit:
             return nDisplayUnit;
@@ -303,6 +308,10 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("nThreadsScriptVerif");
         case Listen:
             return settings.value("fListen");
+        case maxuploadtarget:
+            return qlonglong(g_connman->GetMaxOutboundTarget() / 1024 / 1024);
+        case peerbloomfilters:
+            return f_peerbloomfilters;
         default:
             return QVariant();
         }
@@ -411,6 +420,17 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 setRestartRequired(true);
             }
             break;
+        case addresstype:
+        {
+            const std::string newvalue_str = value.toString().toStdString();
+            OutputType newvalue = ParseOutputType(newvalue_str, g_address_type);
+            if (newvalue != g_address_type) {
+                gArgs.ModifyRWConfigFile("addresstype", newvalue_str);
+                g_address_type = newvalue;
+                g_change_type = ParseOutputType(gArgs.GetArg("-changetype", ""), g_address_type);
+            }
+            break;
+        }
 #endif
         case DisplayUnit:
             setDisplayUnit(value);
@@ -448,6 +468,22 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
         case Listen:
             if (settings.value("fListen") != value) {
                 settings.setValue("fListen", value);
+                setRestartRequired(true);
+            }
+            break;
+        case maxuploadtarget:
+        {
+            qlonglong nv = value.toLongLong();
+            if (g_connman->GetMaxOutboundTarget() / 1024 / 1024 != uint64_t(nv)) {
+                gArgs.ModifyRWConfigFile("maxuploadtarget", value.toString().toStdString());
+                g_connman->SetMaxOutboundTarget(nv * 1024 * 1024);
+            }
+            break;
+        }
+        case peerbloomfilters:
+            if (f_peerbloomfilters != value) {
+                gArgs.ModifyRWConfigFile("peerbloomfilters", strprintf("%d", value.toBool()));
+                f_peerbloomfilters = value.toBool();
                 setRestartRequired(true);
             }
             break;
