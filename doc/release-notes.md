@@ -1,17 +1,13 @@
-Bitcoin Core version 0.16.3 is now available from:
+Bitcoin Knots version *0.16.3.knots20180918* is now available from:
 
-  <https://bitcoincore.org/bin/bitcoin-core-0.16.3/>
+  <https://bitcoinknots.org/files/0.16.x/0.16.3.knots20180918/>
 
-This is a new minor version release, with various bugfixes
-as well as updated translations.
+This is a new minor version release, including new features, various bugfixes
+and performance improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at GitHub:
 
-  <https://github.com/bitcoin/bitcoin/issues>
-
-To receive security and update notifications, please subscribe to:
-
-  <https://bitcoincore.org/en/list/announcements/join/>
+  <https://github.com/bitcoinknots/bitcoin/issues>
 
 How to Upgrade
 ==============
@@ -40,10 +36,10 @@ wallets that were created with older versions are not affected by this.
 Compatibility
 ==============
 
-Bitcoin Core is extensively tested on multiple operating systems using
-the Linux kernel, macOS 10.8+, and Windows Vista and later. Windows XP is not supported.
+Bitcoin Knots is supported on multiple operating systems using the Linux kernel,
+macOS 10.8+, and Windows Vista and later. Windows XP is not supported.
 
-Bitcoin Core should also work on most other Unix-like systems but is not
+Bitcoin Knots should also work on most other Unix-like systems but is not
 frequently tested on them.
 
 Notable changes
@@ -62,12 +58,6 @@ the vulnerable versions to 0.16.3 as soon as possible.
 ### Consensus
 - #14249 `696b936` Fix crash bug with duplicate inputs within a transaction (TheBlueMatt, sdaftuar)
 
-### RPC and other APIs
-- #13547 `212ef1f` Make `signrawtransaction*` give an error when amount is needed but missing (ajtowns)
-
-### Miscellaneous
-- #13655 `1cdbea7` bitcoinconsensus: invalid flags error should be set to `bitcoinconsensus_err` (afk11)
-
 ### Documentation
 - #13844 `11b9dbb` correct the help output for -prune (hebasto)
 
@@ -76,11 +66,10 @@ Credits
 
 Thanks to everyone who directly contributed to this release:
 
-- Anthony Towns
 - Hennadii Stepanov
+- Luke Dashjr
 - Matt Corallo
 - Suhas Daftuar
-- Thomas Kerin
 - Wladimir J. van der Laan
 
 And to those that reported security issues:
