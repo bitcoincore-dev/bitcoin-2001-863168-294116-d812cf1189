@@ -1034,7 +1034,9 @@ bool GetTransaction(const uint256& hash, CTransactionRef& txOut, const Consensus
                 CBlockHeader header;
                 try {
                     file >> header;
-                    fseek(file.Get(), postx.nTxOffset, SEEK_CUR);
+                    if (fseek(file.Get(), postx.nTxOffset, SEEK_CUR)) {
+                        return error("%s: fseek(...) failed", __func__);
+                    }
                     file >> txOut;
                 } catch (const std::exception& e) {
                     return error("%s: Deserialize or I/O error - %s", __func__, e.what());
