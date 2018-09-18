@@ -115,6 +115,7 @@ BASE_SCRIPTS= [
     'feature_versionbits_warning.py',
     'rpc_preciousblock.py',
     'wallet_importprunedfunds.py',
+    'rpc_zmq.py',
     'rpc_signmessage.py',
     'feature_nulldummy.py',
     'sort_multisig.py',
