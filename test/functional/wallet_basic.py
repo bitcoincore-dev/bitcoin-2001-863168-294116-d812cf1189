@@ -192,6 +192,22 @@ class WalletTest(BitcoinTestFramework):
         assert_equal(self.nodes[2].getbalance(), node_2_bal)
         node_0_bal = self.check_fee_amount(self.nodes[0].getbalance(), node_0_bal + Decimal('10'), fee_per_byte, self.get_vsize(self.nodes[2].getrawtransaction(txid)))
 
+        # Sendmany with explicit fee
+        fee_per_kb = 2500
+        explicit_fee_per_byte = Decimal(fee_per_kb) / 1000 / 100000000 # sat/kb -> btc/b
+        txid = self.nodes[2].sendmany(
+            fromaccount='from1',
+            amounts={ address: 10 },
+            conf_target=fee_per_kb,
+            estimate_mode='EXPLICIT',
+        )
+        self.nodes[2].generate(1)
+        self.sync_all([self.nodes[0:3]])
+        node_2_bal = self.check_fee_amount(self.nodes[2].getbalance(), node_2_bal - Decimal('10'), explicit_fee_per_byte, self.get_vsize(self.nodes[2].getrawtransaction(txid)))
+        assert_equal(self.nodes[2].getbalance(), node_2_bal)
+        node_0_bal += Decimal('10')
+        assert_equal(self.nodes[0].getbalance(), node_0_bal)
+
         # Test ResendWalletTransactions:
         # Create a couple of transactions, then start up a fourth
         # node (nodes[3]) and ask nodes[0] to rebroadcast.
@@ -305,6 +321,24 @@ class WalletTest(BitcoinTestFramework):
 
         # This will raise an exception since generate does not accept a string
         assert_raises_rpc_error(-1, "not an integer", self.nodes[0].generate, "2")
+
+        # send with explicit fee
+        self.log.info("test explicit fee (sendtoaddress)")
+        self.nodes[0].generate(1)
+        prebalance = self.nodes[2].getbalance()
+        assert prebalance > 2
+        txid = self.nodes[2].sendtoaddress(
+            address=self.nodes[1].getnewaddress(),
+            amount=1.0,
+            conf_target=2500,
+            estimate_mode='EXPLICIT',
+        )
+        tx_size = self.get_vsize(self.nodes[2].getrawtransaction(txid))
+        self.sync_all([self.nodes[0:3]])
+        self.nodes[0].generate(1)
+        postbalance = self.nodes[2].getbalance()
+        fee = prebalance - postbalance - Decimal('1')
+        assert_fee_amount(fee, tx_size, Decimal('0.00002500'))
 
         # Import address and private key to check correct behavior of spendable unspents
         # 1. Send some coins to generate new UTXO
