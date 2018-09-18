@@ -231,7 +231,7 @@ public:
     bool abandonTransaction(uint256 hash) const;
 
     bool transactionCanBeBumped(uint256 hash) const;
-    bool bumpFee(uint256 hash);
+    bool bumpFee(uint256 hash, uint256& new_hash);
 
     static bool isWalletEnabled();
 
