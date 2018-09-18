@@ -423,13 +423,8 @@ UniValue signmessagewithprivkey(const JSONRPCRequest& request)
     std::string strPrivkey = request.params[0].get_str();
     std::string strMessage = request.params[1].get_str();
 
-    CBitcoinSecret vchSecret;
-    bool fGood = vchSecret.SetString(strPrivkey);
-    if (!fGood)
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid private key");
-    CKey key = vchSecret.GetKey();
-    if (!key.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Private key outside allowed range");
+    CKey key;
+    ParseWIFPrivKey(strPrivkey, key, nullptr);
 
     CHashWriter ss(SER_GETHASH, 0);
     ss << strMessageMagic;
