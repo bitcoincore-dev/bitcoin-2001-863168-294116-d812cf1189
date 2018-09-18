@@ -47,6 +47,7 @@ public:
     bool fHelp;
     std::string URI;
     std::string authUser;
+    std::string peerAddr;
     std::string authorized_wallet_name;
     CWallet *wallet;
 
