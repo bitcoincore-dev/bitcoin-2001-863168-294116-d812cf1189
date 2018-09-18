@@ -11,6 +11,8 @@
 #include <set>
 #include <stdexcept>
 
+#include <boost/thread.hpp>
+
 bool CCoinsView::GetCoin(const COutPoint &outpoint, Coin &coin) const { return false; }
 uint256 CCoinsView::GetBestBlock() const { return uint256(); }
 std::vector<uint256> CCoinsView::GetHeadBlocks() const { return std::vector<uint256>(); }
@@ -23,25 +25,37 @@ bool CCoinsView::HaveCoin(const COutPoint &outpoint) const
     return GetCoin(outpoint, coin);
 }
 
-void CCoinsView::FindScriptPubKey(CCoinsViewCursor& cursor, const std::set<CScript>& needles, std::map<COutPoint, Coin>& out_results) {
-    for ( ; cursor.Valid(); cursor.Next()) {
-        COutPoint outpoint;
+bool CCoinsView::FindScriptPubKey(std::atomic<int>& scan_progress, const std::atomic<bool>& should_abort, int64_t& count, CCoinsViewCursor& cursor, const std::set<CScript>& needles, std::map<COutPoint, Coin>& out_results) {
+    scan_progress = 0;
+    count = 0;
+    while (cursor.Valid()) {
+        COutPoint key;
         Coin coin;
-        if (!cursor.GetKey(outpoint)) {
-            throw std::runtime_error(std::string(__func__) + ": GetKey failed");
-        } else if (!cursor.GetValue(coin)) {
-            throw std::runtime_error(std::string(__func__) + ": GetValue failed");
+        if (!cursor.GetKey(key) || !cursor.GetValue(coin)) return false;
+        if (++count % 8192 == 0) {
+            boost::this_thread::interruption_point();
+            if (should_abort) {
+                // allow to abort the scan via the abort reference
+                return false;
+            }
         }
-        if (!needles.count(coin.out.scriptPubKey)) {
-            continue;
+        if (count % 256 == 0) {
+            // update progress reference every 256 item
+            uint32_t high = 0x100 * *key.hash.begin() + *(key.hash.begin() + 1);
+            scan_progress = (int)(high * 100.0 / 65536.0 + 0.5);
         }
-        out_results.emplace(outpoint, coin);
+        if (needles.count(coin.out.scriptPubKey)) {
+            out_results.emplace(key, coin);
+        }
+        cursor.Next();
     }
+    scan_progress = 100;
+    return true;
 }
 
-void CCoinsView::FindScriptPubKey(const std::set<CScript>& needles, std::map<COutPoint, Coin>& out_results) {
+bool CCoinsView::FindScriptPubKey(std::atomic<int>& scan_progress, const std::atomic<bool>& should_abort, int64_t& search_items, const std::set<CScript>& needles, std::map<COutPoint, Coin>& out_results) {
     std::unique_ptr<CCoinsViewCursor> pcursor(Cursor());
-    FindScriptPubKey(*pcursor, needles, out_results);
+    return FindScriptPubKey(scan_progress, should_abort, search_items, *pcursor, needles, out_results);
 }
 
 
