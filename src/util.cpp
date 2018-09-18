@@ -733,8 +733,14 @@ void ArgsManager::ReadRWConfigFile(const std::string& confPath)
 {
     rwconf_path = GetRWConfigFile(confPath);
     fs::ifstream streamRWConfig(rwconf_path);
-    ReadConfigFile(streamRWConfig, &args_assigned_by_conf, NULL);
+    std::unordered_set<std::string> rwconf_assigned;
+    ReadConfigFile(streamRWConfig, &args_assigned_by_conf, &rwconf_assigned);
     args_assigned_by_conf.clear();
+    if (!rwconf_queued_writes.empty()) {
+        ModifyRWConfigFile(rwconf_queued_writes);
+        rwconf_queued_writes.clear();
+    }
+    rwconf_had_prune_option = rwconf_assigned.count("prune");
 }
 
 namespace {
@@ -899,7 +905,13 @@ void ModifyRWConfigFile(std::istream& streamIn, std::ostream& streamOut, const s
 
 void ArgsManager::ModifyRWConfigFile(const std::map<std::string, std::string>& mapChangeSettings)
 {
-    assert(!rwconf_path.empty());
+    if (rwconf_path.empty()) {
+        // Queue the change for after rwconf is loaded
+        for (auto& it : mapChangeSettings) {
+            rwconf_queued_writes[it.first] = it.second;
+        }
+        return;
+    }
     fs::path rwconf_new_path = rwconf_path;
     rwconf_new_path += ".new";
     const std::string new_path_str = rwconf_new_path.string();
