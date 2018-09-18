@@ -188,6 +188,10 @@
         <translation>%1 gaan nou toe maak om die enkripsie proses klaar te maak. Onthou dat jou bitcoins nie ten volle beskerm kan word deur die beursie te enkrip teen "malware" wat jou rekenaar besmet.</translation>
     </message>
     <message>
+        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
+        <translation>BELANGRIK: Enige vorige rugsteune wat u gemaak het van u beursie-lêer moet vervang word met die nuut-gegenereerde, versleutelde beursie-lêer. Vir sekuriteitsredes sal vorige rugsteune van die onversleutelde beursie-lêer onbruikbaar word sodra u die nuwe, versleutelde beursie begin gebruik.</translation>
+    </message>
+    <message>
         <source>Wallet encryption failed</source>
         <translation>Die beursie kon nie bewaak word nie</translation>
     </message>
@@ -266,6 +270,10 @@
         <translation>Sluit af</translation>
     </message>
     <message>
+        <source>&amp;About %1</source>
+        <translation type="unfinished">&amp;Oor %1</translation>
+    </message>
+    <message>
         <source>Show information about %1</source>
         <translation>Wys inligting oor %1</translation>
     </message>
@@ -290,6 +298,10 @@
         <translation>&amp;Enkripteer Beursie...</translation>
     </message>
     <message>
+        <source>&amp;Backup Wallet...</source>
+        <translation>&amp;Rugsteun Beursie...</translation>
+    </message>
+    <message>
         <source>&amp;Change Passphrase...</source>
         <translation>Verander wagwoord frase...</translation>
     </message>
@@ -298,12 +310,44 @@
         <translation>Uitstuur adresse...</translation>
     </message>
     <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation>&amp;Ontvang adresse...</translation>
+    </message>
+    <message>
         <source>Open &amp;URI...</source>
         <translation>Maak &amp;URI oop...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Beursie:</translation>
+    </message>
+    <message>
+        <source>Click to disable network activity.</source>
+        <translation>Klik om netwerk aktiwiteit af te skakel.</translation>
+    </message>
+    <message>
         <source>Network activity disabled.</source>
         <translation>Netwerk aktiwiteid afgeskakel.</translation>
+    </message>
+    <message>
+        <source>Click to enable network activity again.</source>
+        <translation>Klik om netwerk aktiwiteit weer aan te skakel.</translation>
+    </message>
+    <message>
+        <source>Send coins to a Bitcoin address</source>
+        <translation>Stuur muntstukke na 'n Bitcoin adres</translation>
+    </message>
+    <message>
+        <source>Backup wallet to another location</source>
+        <translation>Rugsteun beursie na 'n ander plek</translation>
+    </message>
+    <message>
+        <source>Change the passphrase used for wallet encryption</source>
+        <translation>Verander die wagwoordfrase wat vir beursie-versleuteling gebruik word</translation>
+    </message>
+    <message>
+        <source>&amp;Debug window</source>
+        <translation>&amp;Ontfoutvenster</translation>
     </message>
     <message>
         <source>&amp;Verify message...</source>
@@ -326,6 +370,26 @@
         <translation>&amp;Ontvang</translation>
     </message>
     <message>
+        <source>&amp;Show / Hide</source>
+        <translation>&amp;Wys / Versteek</translation>
+    </message>
+    <message>
+        <source>Show or hide the main Window</source>
+        <translation>Wys of versteek die hoof Venster</translation>
+    </message>
+    <message>
+        <source>Encrypt the private keys that belong to your wallet</source>
+        <translation>Versleutel die private sleutels wat aan u beursie behoort</translation>
+    </message>
+    <message>
+        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
+        <translation>Teken boodskappe met u Bitcoin adresse om te bewys dat u hul besit</translation>
+    </message>
+    <message>
+        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
+        <translation>Bevestig boodskappe om te verseker dat hulle geteken was met gespesifiseerde Bitcoin adresse</translation>
+    </message>
+    <message>
         <source>&amp;File</source>
         <translation>&amp;Lêer</translation>
     </message>
@@ -340,6 +404,18 @@
     <message>
         <source>Tabs toolbar</source>
         <translation>Blad nutsbalk</translation>
+    </message>
+    <message>
+        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
+        <translation>Versoek betalings (genereer QR kodes en bitcoin: URIs)</translation>
+    </message>
+    <message>
+        <source>Show the list of used sending addresses and labels</source>
+        <translation>Wys die lys van gebruikte stuur adresse en etikette</translation>
+    </message>
+    <message>
+        <source>Show the list of used receiving addresses and labels</source>
+        <translation>Wys die lys van gebruikte ontvangsadresse en etikette</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -616,6 +692,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -678,10 +757,17 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Vorm</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">onbekend...</translation>
     </message>
     <message>
         <source>Progress</source>
@@ -693,13 +779,34 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipe</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Maak URI oop</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
     <message>
         <source>Options</source>
         <translation>Opsies</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Steek weg skinkbord ikoon</translation>
     </message>
     <message>
         <source>&amp;Network</source>
@@ -821,6 +928,11 @@
         <source>unknown</source>
         <translation>onbekend</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -834,12 +946,36 @@
         <source>&amp;Information</source>
         <translation>Informasie</translation>
     </message>
-    </context>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Ontfoutvenster</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation type="unfinished">Netwerk</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Beursie: </translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Netwerk aktiwiteid afgeskakel</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">onbekend</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
         <source>&amp;Amount:</source>
         <translation>&amp;Bedrag:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Etiket:</translation>
     </message>
     <message>
         <source>&amp;Message:</source>
@@ -856,6 +992,10 @@
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Kopie adres</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adres</translation>
@@ -927,6 +1067,10 @@
         <translation>Transaksie fooi:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Kies...</translation>
+    </message>
+    <message>
         <source>Hide</source>
         <translation>Steek weg</translation>
     </message>
@@ -983,6 +1127,10 @@
         <translation>of</translation>
     </message>
     <message>
+        <source>Transaction fee</source>
+        <translation>Transaksie fooi</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(geen etiket)</translation>
     </message>
@@ -992,6 +1140,10 @@
     <message>
         <source>A&amp;mount:</source>
         <translation>&amp;Bedrag:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Etiket:</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -1284,6 +1436,10 @@
         <source>Export the data in the current tab to a file</source>
         <translation>Voer inligting uit van die huidige blad na n lêer</translation>
     </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Rugsteun Beursie</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
@@ -1298,6 +1454,10 @@
     <message>
         <source>Importing...</source>
         <translation>Invoer proses tans besig..</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Laai p2p adresse...</translation>
     </message>
     <message>
         <source>Information</source>

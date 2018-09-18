@@ -30,6 +30,10 @@
         <translation>Ištrinti pasirinktą adresą iš sąrašo</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Įveskite adresą ar žymę į paiešką</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Eksportuoti informaciją iš dabartinės lentelės į failą</translation>
     </message>
@@ -41,14 +45,78 @@
         <source>&amp;Delete</source>
         <translation>&amp;Trinti</translation>
     </message>
-    </context>
+    <message>
+        <source>Choose the address to send coins to</source>
+        <translation>Pasirinkite adresą, kuriam siūsite monetas</translation>
+    </message>
+    <message>
+        <source>Choose the address to receive coins with</source>
+        <translation>Pasirinkite adresą su kuriuo gauti monetas</translation>
+    </message>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation>P&amp;asirinkti</translation>
+    </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation>Siunčiami adresai</translation>
+    </message>
+    <message>
+        <source>Receiving addresses</source>
+        <translation>Gaunami adresai</translation>
+    </message>
+    <message>
+        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Tai yra jūsų Bitcoin adresai mokėjimų siuntimui. Visada patikrinkite siunčiamą sumą ir gavėjo adresą prieš siųsdami monetas.</translation>
+    </message>
+    <message>
+        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Tai yra jūsų Bitcoin adresai mokėjimų gavimui. Rekomenduojame naudoti naujus gavimo adresus kiekvienai tranzakcijai.</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;Kopijuoti adresą</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Label</source>
+        <translation>Kopijuoti ž&amp;ymę</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;Keisti</translation>
+    </message>
+    <message>
+        <source>Export Address List</source>
+        <translation>Eksportuoti adresų sąrašą</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Kableliais atskirtų duomenų failas (*.csv)</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Eksportavimas nepavyko</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the address list to %1. Please try again.</source>
+        <translation>Bandant išsaugoti adresų sąrašą - įvyko klaida keliant į %1. Prašome bandyti dar kartą.</translation>
+    </message>
+</context>
 <context>
     <name>AddressTableModel</name>
+    <message>
+        <source>Label</source>
+        <translation>Žymė</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adresas</translation>
     </message>
-    </context>
+    <message>
+        <source>(no label)</source>
+        <translation>(nėra žymės)</translation>
+    </message>
+</context>
 <context>
     <name>AskPassphraseDialog</name>
     <message>
@@ -67,7 +135,79 @@
         <source>Repeat new passphrase</source>
         <translation>Pakartokite naują slaptafrazę</translation>
     </message>
-    </context>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>Užšifruoti piniginę</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
+        <translation>Ši operacija reikalauja jūsų piniginės slaptafrazės jai atrakinti.</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Atrakinti piniginę</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
+        <translation>Ši operacija reikalauja jūsų piniginės slaptafrazės jai iššifruoti.</translation>
+    </message>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>Iššifruoti piniginę</translation>
+    </message>
+    <message>
+        <source>Change passphrase</source>
+        <translation>Pakeisti slaptafrazę</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>Patvirtinkite piniginės užšifravimą</translation>
+    </message>
+    <message>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
+        <translation>Dėmesio: jei užšifruosite savo piniginę ir pamesite slaptafrazę, jūs&lt;b&gt;PRARASITE VISUS SAVO BITCOINUS&lt;/b&gt;! </translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to encrypt your wallet?</source>
+        <translation>Ar tikrai norite šifruoti savo piniginę?</translation>
+    </message>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>Piniginė užšifruota</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed</source>
+        <translation>Nepavyko užšifruoti piniginę</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
+        <translation>Dėl vidinės klaidos nepavyko užšifruoti piniginę.Piniginė neužšifruota.</translation>
+    </message>
+    <message>
+        <source>The supplied passphrases do not match.</source>
+        <translation>Įvestos slaptafrazės nesutampa.</translation>
+    </message>
+    <message>
+        <source>Wallet unlock failed</source>
+        <translation>Nepavyko atrakinti piniginę</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>Neteisingai įvestas slaptažodis piniginės iššifravimui.</translation>
+    </message>
+    <message>
+        <source>Wallet decryption failed</source>
+        <translation>Nepavyko iššifruoti piniginės</translation>
+    </message>
+    <message>
+        <source>Wallet passphrase was successfully changed.</source>
+        <translation>Piniginės slaptažodis sėkmingai pakeistas.</translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Įspėjimas: įjungtas Caps Lock klavišas!</translation>
+    </message>
+</context>
 <context>
     <name>BanTableModel</name>
     <message>
@@ -158,6 +298,10 @@
         <translation>Atidaryti &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Piniginė:</translation>
+    </message>
+    <message>
         <source>Reindexing blocks on disk...</source>
         <translation>Blokai iš naujo indeksuojami...</translation>
     </message>
@@ -232,6 +376,10 @@
     <message>
         <source>&amp;Command-line options</source>
         <translation>Komandinės eilutės parametrai</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Blokai iš naujo indeksuojami...</translation>
     </message>
     <message>
         <source>Error</source>
@@ -334,7 +482,51 @@
         <source>Confirmed</source>
         <translation>Patvirtintas</translation>
     </message>
-    </context>
+    <message>
+        <source>Copy address</source>
+        <translation>Kopijuoti adresą</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Kopijuoti žymę</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopijuoti sumą</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Kopijuoti kiekį</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Kopijuoti mokestį</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Kopijuoti po mokesčio</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Kopijuoti baitus</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>taip</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>ne</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(nėra žymės)</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(Graža)</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -349,7 +541,39 @@
         <source>&amp;Address</source>
         <translation>&amp;Adresas</translation>
     </message>
-    </context>
+    <message>
+        <source>New receiving address</source>
+        <translation>Naujas gavimo adresas</translation>
+    </message>
+    <message>
+        <source>New sending address</source>
+        <translation>Naujas siuntimo adresas</translation>
+    </message>
+    <message>
+        <source>Edit receiving address</source>
+        <translation>Keisti gavimo adresą</translation>
+    </message>
+    <message>
+        <source>Edit sending address</source>
+        <translation>Keisti siuntimo adresą</translation>
+    </message>
+    <message>
+        <source>The entered address "%1" is not a valid Bitcoin address.</source>
+        <translation>Įvestas adresas „%1“ nėra galiojantis Bitcoin adresas.</translation>
+    </message>
+    <message>
+        <source>The entered address "%1" is already in the address book.</source>
+        <translation>Įvestas adresas „%1“ jau yra adresų knygelėje.</translation>
+    </message>
+    <message>
+        <source>Could not unlock wallet.</source>
+        <translation>Nepavyko atrakinti piniginės.</translation>
+    </message>
+    <message>
+        <source>New key generation failed.</source>
+        <translation>Naujo rakto generavimas nepavyko.</translation>
+    </message>
+</context>
 <context>
     <name>FreespaceChecker</name>
     <message>
@@ -358,10 +582,17 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
         <translation>versija</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation>Apie %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -392,10 +623,21 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>nėra</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Forma</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">nežinomas...</translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -403,7 +645,24 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipas</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresas</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Atidaryti URI</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
@@ -516,6 +775,10 @@
         <translation>niekas</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin branduolys</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Patvirtinti nustatymų atstatymą</translation>
     </message>
@@ -569,6 +832,26 @@
     </context>
 <context>
     <name>PaymentServer</name>
+    <message>
+        <source>URI handling</source>
+        <translation>URI apdorojimas</translation>
+    </message>
+    <message>
+        <source>Invalid payment address %1</source>
+        <translation>Neteisingas mokėjimo adresas %1</translation>
+    </message>
+    <message>
+        <source>Payment request rejected</source>
+        <translation>Mokėjimo siuntimas atmestas</translation>
+    </message>
+    <message>
+        <source>Payment request expired.</source>
+        <translation>Mokėjimo siuntimas pasibaigė</translation>
+    </message>
+    <message>
+        <source>Network request error</source>
+        <translation>Tinklo užklausos klaida</translation>
+    </message>
     </context>
 <context>
     <name>PeerTableModel</name>
@@ -615,13 +898,30 @@
         <source>unknown</source>
         <translation>nežinomas</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Sds</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
     </context>
 <context>
     <name>QRImageWidget</name>
-    </context>
+    <message>
+        <source>&amp;Copy Image</source>
+        <translation>Kopijuoti nuotrauką</translation>
+    </message>
+    <message>
+        <source>Save QR Code</source>
+        <translation>Įrašyti QR kodą</translation>
+    </message>
+    <message>
+        <source>PNG Image (*.png)</source>
+        <translation>PNG paveikslėlis (*.png)</translation>
+    </message>
+</context>
 <context>
     <name>RPCConsole</name>
     <message>
@@ -663,6 +963,10 @@
     <message>
         <source>Current number of blocks</source>
         <translation>Dabartinis blokų skaičius</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Piniginė: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -712,7 +1016,11 @@
         <source>No</source>
         <translation>Ne</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">nežinomas</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -731,7 +1039,15 @@
         <source>Clear</source>
         <translation>Išvalyti</translation>
     </message>
-    </context>
+    <message>
+        <source>Copy label</source>
+        <translation>Kopijuoti žymę</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopijuoti sumą</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
@@ -743,12 +1059,48 @@
         <translation>&amp;Kopijuoti adresą</translation>
     </message>
     <message>
+        <source>Payment information</source>
+        <translation>Mokėjimo informacija</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>Adresas</translation>
     </message>
-    </context>
+    <message>
+        <source>Amount</source>
+        <translation>Suma</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Žymė</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Žinutė</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Klaida, koduojant URI į QR kodą.</translation>
+    </message>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Žymė</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Žinutė</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(nėra žymės)</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
@@ -789,6 +1141,10 @@
         <translation>Sandorio mokestis:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Pasirinkti...</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Siųsti keliems gavėjams vienu metu</translation>
     </message>
@@ -812,7 +1168,55 @@
         <source>S&amp;end</source>
         <translation>&amp;Siųsti</translation>
     </message>
-    </context>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Kopijuoti kiekį</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopijuoti sumą</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Kopijuoti mokestį</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Kopijuoti po mokesčio</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Kopijuoti baitus</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Sandorio mokestis</translation>
+    </message>
+    <message>
+        <source>Confirm send coins</source>
+        <translation>Patvirtinti monetų siuntimą</translation>
+    </message>
+    <message>
+        <source>The amount to pay must be larger than 0.</source>
+        <translation>Apmokėjimo suma turi būti didesnė nei 0.</translation>
+    </message>
+    <message>
+        <source>The amount exceeds your balance.</source>
+        <translation>Suma viršija jūsų balansą.</translation>
+    </message>
+    <message>
+        <source>The total exceeds your balance when the %1 transaction fee is included.</source>
+        <translation>Jei pridedame sandorio mokestį %1 bendra suma viršija jūsų balansą.</translation>
+    </message>
+    <message>
+        <source>Payment request expired.</source>
+        <translation>Mokėjimo siuntimas pasibaigė</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(nėra žymės)</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsEntry</name>
     <message>
@@ -847,10 +1251,18 @@
         <source>Pay To:</source>
         <translation>Mokėti gavėjui:</translation>
     </message>
-    </context>
+    <message>
+        <source>Enter a label for this address to add it to your address book</source>
+        <translation>Įveskite žymę šiam adresui kad galėtumėte įtraukti ją į adresų knygelę</translation>
+    </message>
+</context>
 <context>
     <name>SendConfirmationDialog</name>
-    </context>
+    <message>
+        <source>Yes</source>
+        <translation>Taip</translation>
+    </message>
+</context>
 <context>
     <name>ShutdownWindow</name>
     </context>
@@ -900,7 +1312,51 @@
         <source>Verify &amp;Message</source>
         <translation>&amp;Patikrinti žinutę</translation>
     </message>
-    </context>
+    <message>
+        <source>Click "Sign Message" to generate signature</source>
+        <translation>Spragtelėkite "Registruotis žinutę" tam, kad gauti parašą</translation>
+    </message>
+    <message>
+        <source>The entered address is invalid.</source>
+        <translation>Įvestas adresas negalioja.</translation>
+    </message>
+    <message>
+        <source>Please check the address and try again.</source>
+        <translation>Prašom patikrinti adresą ir bandyti iš naujo.</translation>
+    </message>
+    <message>
+        <source>Wallet unlock was cancelled.</source>
+        <translation>Piniginės atrakinimas atšauktas.</translation>
+    </message>
+    <message>
+        <source>Message signing failed.</source>
+        <translation>Žinutės pasirašymas nepavyko.</translation>
+    </message>
+    <message>
+        <source>Message signed.</source>
+        <translation>Žinutė pasirašyta.</translation>
+    </message>
+    <message>
+        <source>The signature could not be decoded.</source>
+        <translation>Nepavyko iškoduoti parašo.</translation>
+    </message>
+    <message>
+        <source>Please check the signature and try again.</source>
+        <translation>Prašom patikrinti parašą ir bandyti iš naujo.</translation>
+    </message>
+    <message>
+        <source>The signature did not match the message digest.</source>
+        <translation>Parašas neatitinka žinutės.</translation>
+    </message>
+    <message>
+        <source>Message verification failed.</source>
+        <translation>Žinutės tikrinimas nepavyko.</translation>
+    </message>
+    <message>
+        <source>Message verified.</source>
+        <translation>Žinutė patikrinta.</translation>
+    </message>
+</context>
 <context>
     <name>SplashScreen</name>
     <message>
@@ -917,7 +1373,107 @@
 </context>
 <context>
     <name>TransactionDesc</name>
-    </context>
+    <message>
+        <source>Open until %1</source>
+        <translation>Atidaryta iki %1</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1/nepatvirtintas</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>%1 patvirtinimų</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Būsena</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>Šaltinis</translation>
+    </message>
+    <message>
+        <source>Generated</source>
+        <translation>Sugeneruotas</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Nuo</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>nežinomas</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Kam</translation>
+    </message>
+    <message>
+        <source>own address</source>
+        <translation>savo adresas</translation>
+    </message>
+    <message>
+        <source>label</source>
+        <translation>žymė</translation>
+    </message>
+    <message>
+        <source>Credit</source>
+        <translation>Kreditas</translation>
+    </message>
+    <message>
+        <source>not accepted</source>
+        <translation>nepriimta</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>Debitas</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Sandorio mokestis</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>Neto suma</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Žinutė</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>Komentaras</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>Sandorio ID</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>Derinimo informacija</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Sandoris</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Suma</translation>
+    </message>
+    <message>
+        <source>true</source>
+        <translation>tiesa</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>netiesa</translation>
+    </message>
+</context>
 <context>
     <name>TransactionDescDialog</name>
     <message>
@@ -927,14 +1483,186 @@
     </context>
 <context>
     <name>TransactionTableModel</name>
-    </context>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Tipas</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Žymė</translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Atidaryta iki %1</translation>
+    </message>
+    <message>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation>Patvirtinta (%1 patvirtinimai)</translation>
+    </message>
+    <message>
+        <source>Generated but not accepted</source>
+        <translation>Išgauta bet nepriimta</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>Gauta su</translation>
+    </message>
+    <message>
+        <source>Received from</source>
+        <translation>Gauta iš</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>Išsiųsta</translation>
+    </message>
+    <message>
+        <source>Payment to yourself</source>
+        <translation>Mokėjimas sau</translation>
+    </message>
+    <message>
+        <source>Mined</source>
+        <translation>Išgauta</translation>
+    </message>
+    <message>
+        <source>(n/a)</source>
+        <translation>nepasiekiama</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(nėra žymės)</translation>
+    </message>
+    <message>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation>Sandorio būklė. Užvedus pelės žymeklį ant šios srities matysite patvirtinimų skaičių.</translation>
+    </message>
+    <message>
+        <source>Date and time that the transaction was received.</source>
+        <translation>Sandorio gavimo data ir laikas</translation>
+    </message>
+    <message>
+        <source>Type of transaction.</source>
+        <translation>Sandorio tipas.</translation>
+    </message>
+    <message>
+        <source>Amount removed from or added to balance.</source>
+        <translation>Suma pridėta ar išskaičiuota iš balanso</translation>
+    </message>
+</context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>All</source>
+        <translation>Visi</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>Šiandien</translation>
+    </message>
+    <message>
+        <source>This week</source>
+        <translation>Šią savaitę</translation>
+    </message>
+    <message>
+        <source>This month</source>
+        <translation>Šį mėnesį</translation>
+    </message>
+    <message>
+        <source>Last month</source>
+        <translation>Paskutinį mėnesį</translation>
+    </message>
+    <message>
+        <source>This year</source>
+        <translation>Šiais metais</translation>
+    </message>
+    <message>
+        <source>Range...</source>
+        <translation>Intervalas...</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>Gauta su</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>Išsiųsta</translation>
+    </message>
+    <message>
+        <source>To yourself</source>
+        <translation>Skirta sau</translation>
+    </message>
+    <message>
+        <source>Mined</source>
+        <translation>Išgauta</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>Kita</translation>
+    </message>
+    <message>
+        <source>Min amount</source>
+        <translation>Minimali suma</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Kopijuoti adresą</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Kopijuoti žymę</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopijuoti sumą</translation>
+    </message>
+    <message>
+        <source>Edit label</source>
+        <translation>Taisyti žymę</translation>
+    </message>
+    <message>
+        <source>Show transaction details</source>
+        <translation>Rodyti sandėrio detales</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Kableliais atskirtų duomenų failas (*.csv)</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Patvirtintas</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Data</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Tipas</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Žymė</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adresas</translation>
     </message>
-    </context>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>Eksportavimas nepavyko</translation>
+    </message>
+    <message>
+        <source>Range:</source>
+        <translation>Grupė:</translation>
+    </message>
+    <message>
+        <source>to</source>
+        <translation>skirta</translation>
+    </message>
+</context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
     </context>
@@ -943,9 +1671,37 @@
     </context>
 <context>
     <name>WalletModel</name>
+    <message>
+        <source>Send Coins</source>
+        <translation>Siųsti monetas</translation>
+    </message>
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Eksportuoti</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Eksportuoti informaciją iš dabartinės lentelės į failą</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation>Backup piniginę</translation>
+    </message>
+    <message>
+        <source>Wallet Data (*.dat)</source>
+        <translation>Piniginės duomenys (*.dat)</translation>
+    </message>
+    <message>
+        <source>Backup Failed</source>
+        <translation>Nepavyko padaryti atsarginės kopijos</translation>
+    </message>
+    <message>
+        <source>Backup Successful</source>
+        <translation>Atsarginė kopija sėkmingai padaryta</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
@@ -978,6 +1734,10 @@
         <translation>Klaida atveriant blokų duombazę</translation>
     </message>
     <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Užkraunami p2p adresai...</translation>
+    </message>
+    <message>
         <source>Verifying blocks...</source>
         <translation>Tikrinami blokai...</translation>
     </message>
@@ -992,6 +1752,10 @@
     <message>
         <source>Username for JSON-RPC connections</source>
         <translation>Vartotojo vardas JSON-RPC jungimuisi</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Tikrinama piniginė...</translation>
     </message>
     <message>
         <source>Warning</source>

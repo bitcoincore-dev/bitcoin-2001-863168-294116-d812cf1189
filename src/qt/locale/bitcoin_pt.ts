@@ -146,6 +146,14 @@ Por favor, utilize uma senha com dez ou mais caracteres, ou com oito ou mais pal
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;Enviando informações...</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;Recebendo informações...</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -160,9 +168,20 @@ Por favor, utilize uma senha com dez ou mais caracteres, ou com oito ou mais pal
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;Etiqueta</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;Endereço</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -171,8 +190,19 @@ Por favor, utilize uma senha com dez ou mais caracteres, ou com oito ou mais pal
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Endereço</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -202,6 +232,10 @@ Por favor, utilize uma senha com dez ou mais caracteres, ou com oito ou mais pal
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etiqueta:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -234,6 +268,10 @@ Por favor, utilize uma senha com dez ou mais caracteres, ou com oito ou mais pal
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etiqueta:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>

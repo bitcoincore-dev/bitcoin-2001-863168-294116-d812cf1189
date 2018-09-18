@@ -30,6 +30,10 @@
         <translation>Supprimer de la liste l’adresse sélectionnée actuellement</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Saisir une adresse ou une étiquette à rechercher</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Exporter les données de l’onglet actuel vers un fichier</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Ouvrir une &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Porte-monnaie:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -786,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -912,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N.D.</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -960,6 +978,14 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Inconnu. Synchronisation des en-têtes (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
     </message>
 </context>
 <context>
@@ -1206,6 +1232,10 @@
     <message>
         <source>none</source>
         <translation>aucune</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1527,6 +1557,16 @@
         <source>unknown</source>
         <translation>inconnue</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1627,6 +1667,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Utilisation de la mémoire</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Porte-monnaie: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2105,10 +2149,6 @@
         <translation>par kilo-octet</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Si les frais personnalisés sont définis à 1 000 satoshis et que la transaction est seulement de 250 octets, le « par kilo-octet » ne paiera donc que 250 satoshis de frais, alors que le « total au moins » paiera 1 000 satoshis. Pour des transactions supérieures à un kilo-octet, les deux paieront par kilo-octet.</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Cacher</translation>
     </message>
@@ -2217,20 +2257,16 @@
         <translation>Voulez-vous vraiment envoyer ?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>ajoutés comme frais de transaction</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Montant total %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>ou</translation>
     </message>
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>Vous pouvez augmenter les frais ultérieurement (signale Remplacer-par-des-frais, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Frais de transaction</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
@@ -2578,10 +2614,6 @@
         <translation>est en conflit avec une transaction ayant %1 confirmations</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/hors ligne</translation>
-    </message>
-    <message>
         <source>0/unconfirmed, %1</source>
         <translation>0/non confirmées, %1</translation>
     </message>
@@ -2608,14 +2640,6 @@
     <message>
         <source>Status</source>
         <translation>État</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, n’a pas encore été diffusée avec succès</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, diffusée par %n nœud</numerusform><numerusform>, diffusée par %n nœuds</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2772,10 +2796,6 @@
         <translation>Ouvert jusqu’à %1</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Hors ligne</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Non confirmée</translation>
     </message>
@@ -2798,10 +2818,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Immature (%1 confirmations, sera disponible après %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Ce bloc n’a été reçu par aucun autre nœud et ne sera probablement pas accepté !</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3226,10 +3242,6 @@
         <translation>Exclure les informations de débogage pour une catégorie. Peut être utilisé en combinaison avec -debug=1 pour sortir les journaux de débogage pour toutes les catégories sauf une ou plusieurs particulières.</translation>
     </message>
     <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>Exécuter la commande lorsqu’une transaction de porte-monnaie change (%s dans la commande est remplacée par TxID)</translation>
-    </message>
-    <message>
         <source>If this block is in the chain assume that it and its ancestors are valid and potentially skip their script verification (0 to verify all, default: %s, testnet: %s)</source>
         <translation>Si ce bloc est dans la chaîne, supposer qu’il est valide, ainsi que ces ancêtres, et ignorer potentiellement la vérification de leur script (0 pour tout vérifier, valeur par défaut : %s, réseau de test : %s)</translation>
     </message>
@@ -3260,6 +3272,10 @@
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>Définir le taux minimal de frais (en %s/Ko) pour les transactions à inclure dans la création de blocs (par défaut : %s)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Définir la taille maximale en octets des transactions à priorité élevée et frais modiques (par défaut : %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3308,6 +3324,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>Enregistrer ou non la réserve de mémoire lors de la fermeture et la charger ou non lors du redémarrage (par défaut : %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Pairs de la liste blanche se connectant à partir de l'adresse IP donnée (p. ex. 1.2.3.4) ou du réseau noté CIDR (p. ex. 1.2.3.0/24). Peut être spécifié plusieurs fois.</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3482,6 +3502,10 @@
         <translation>Emplacement du fichier témoin auth (par défaut : data dir)</translation>
     </message>
     <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Octets minimaux par sigop dans les transactions que nous relayons et minons (par défaut : %u)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Pas assez de descripteurs de fichiers proposés.</translation>
     </message>
@@ -3528,6 +3552,10 @@
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Définir la taille du cache de la base de données en mégaoctets (%d à %d, default: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Définir la taille minimale de bloc en octets (par défaut : %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3936,10 +3964,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Avertissement : le fichier du porte-monnaie est corrompu, les données ont été récupérées ! Le fichier %s original a été enregistré en tant que %s dans %s ; si votre solde ou vos transactions sont incorrects, vous devriez restaurer une sauvegarde.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Pairs de la liste blanche se connectant à partir de l’adresse IP donnée (p. ex. 1.2.3.4) ou du réseau noté CIDR (p. ex. 1.2.3.0/24). Peut être précisé plusieurs fois.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

@@ -13,10 +13,30 @@
         <source>&amp;Delete</source>
         <translation>&amp;Supprimer</translation>
     </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation>envoyer adresse de reception </translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Fichier séparé par une virgule (*.csv)</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
-    </context>
+    <message>
+        <source>Label</source>
+        <translation>Record</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Addresse</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(pas de record)</translation>
+    </message>
+</context>
 <context>
     <name>AskPassphraseDialog</name>
     <message>
@@ -31,18 +51,46 @@
         <source>Repeat new passphrase</source>
         <translation>Répéter Mot de Passe</translation>
     </message>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>Encrypter Porte-Feuille</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
+        <translation>Cette opération nécessite le mot de passe de votre porte-feuille pour débarrer le porte-feuille.</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Débarrer Porte-Feuille</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
+        <translation>Cette opération nécessite le mot de passe de votre porte-feuille pour le décrypter.</translation>
+    </message>
     </context>
 <context>
     <name>BanTableModel</name>
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;envoyer adresse de reception ...</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
     <message>
         <source>(un)select all</source>
         <translation>Toute sélectionner </translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>copier l'adresse </translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(pas de record)</translation>
     </message>
     </context>
 <context>
@@ -60,6 +108,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
@@ -70,8 +121,19 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Addresse</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -89,7 +151,17 @@
     </context>
 <context>
     <name>QObject</name>
-    </context>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -101,18 +173,46 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>Record:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address</source>
+        <translation>Addresse</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Record</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Label</source>
+        <translation>Record</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(pas de record)</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
-    </context>
+    <message>
+        <source>(no label)</source>
+        <translation>(pas de record)</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>Record:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>

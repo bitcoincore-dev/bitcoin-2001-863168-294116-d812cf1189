@@ -82,6 +82,18 @@
 <context>
     <name>BitcoinGUI</name>
     <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;שולח כתובות...</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;מקבל כתובות...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">ארנק:</translation>
+    </message>
+    <message>
         <source>Bitcoin</source>
         <translation>ביטקוין</translation>
     </message>
@@ -108,6 +120,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
@@ -118,13 +133,23 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
+    </context>
+<context>
+    <name>NetWatchLogModel</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;ארנק</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -146,6 +171,10 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">ארנק: </translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -162,6 +191,10 @@
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">בחר...</translation>
+    </message>
     <message>
         <source>Copy quantity</source>
         <translation>העתק כמות</translation>

@@ -288,6 +288,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>Usage:</source>
@@ -302,8 +305,24 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresa</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -357,6 +376,10 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation>&amp;Množství:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Popisek:</translation>
@@ -429,6 +452,10 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation>&amp;Množství:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Popisek:</translation>
@@ -512,10 +539,6 @@
     <message>
         <source>Confirmed (%1 confirmations)</source>
         <translation>Potvrzeno (%1 potvrzení)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Tento blok nebyl přijat žádným dalším uzlem a pravděpodobně nebude akceptován!</translation>
     </message>
     <message>
         <source>Received with</source>
@@ -666,6 +689,10 @@
     <message>
         <source>Options:</source>
         <translation>Možnosti:</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Načítání P2P adres...</translation>
     </message>
     <message>
         <source>Loading wallet...</source>

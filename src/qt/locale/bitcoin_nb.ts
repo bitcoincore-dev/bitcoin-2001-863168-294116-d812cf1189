@@ -30,6 +30,10 @@
         <translation>Slett den valgte adressen fra listen.</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Skriv inn adresse eller merkelapp for søk</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Eksporter data fra nåværende fane til fil</translation>
     </message>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Åpne &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Lommebok:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -786,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -912,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>-</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -960,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Ukjent. Synkroniserer hoder (%1)…</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
     </message>
 </context>
 <context>
@@ -1206,6 +1237,10 @@
     <message>
         <source>none</source>
         <translation>ingen</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1527,6 +1562,11 @@
         <source>unknown</source>
         <translation>ukjent</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1627,6 +1667,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Minnebruk</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Lommebok: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2097,10 +2141,6 @@
         <translation>per kilobyte</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Hvis den egendefinerte avgiften er satt til 1000 satoshis og transaksjonen bare er 250 bytes, da vil "per kilobyte" bare betale 250 satoshis i gebyr, mens "minstebeløp" betaler 1000 satoshis. For transaksjoner større enn en kilobyte vil begge betale for antall kilobyte.</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Skjul</translation>
     </message>
@@ -2209,20 +2249,16 @@
         <translation>Er du sikker på at du vil sende?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>lagt til som transaksjonsgebyr</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Totalt beløp %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>eller</translation>
     </message>
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>Du kan øke gebyret senere (signaliserer Replace-By-Fee, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Transaksjonsgebyr</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
@@ -2570,10 +2606,6 @@
         <translation>gikk ikke overens med en transaksjon med %1 bekreftelser</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/frakoblet</translation>
-    </message>
-    <message>
         <source>0/unconfirmed, %1</source>
         <translation>0/ubekreftet, %1</translation>
     </message>
@@ -2600,14 +2632,6 @@
     <message>
         <source>Status</source>
         <translation>Status</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, har ikke blitt kringkastet enda</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, kringkast gjennom %n node</numerusform><numerusform>, kringkast gjennom %n noder</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2757,15 +2781,11 @@
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Åpen for én blokk til</numerusform><numerusform>Åpen for %n blokker til</numerusform></translation>
+        <translation><numerusform>Åpen for %n blokk til</numerusform><numerusform>Åpen for %n blokker til</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
         <translation>Åpen til %1</translation>
-    </message>
-    <message>
-        <source>Offline</source>
-        <translation>Frakoblet</translation>
     </message>
     <message>
         <source>Unconfirmed</source>
@@ -2790,10 +2810,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Umoden (%1 bekreftelser, vil være tilgjengelig etter %2)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Denne blokken har ikke blitt mottatt av noen andre noder og vil sannsynligvis ikke bli akseptert!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3214,10 +3230,6 @@
         <translation>Ekskluder feilrettingsinformasjon for en kategori. Kan brukes i sammenheng med -debug=1 til utdatafeilrettingslogger for alle kategorier, unntatt én eller flere angitte kategorier.</translation>
     </message>
     <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>Kjør kommando når en lommeboktransaksjon endres (%s i kommando er erstattet med TxID)</translation>
-    </message>
-    <message>
         <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
         <translation>Ekstra transaksjoner å beholde i minne for rekonstruksjoner av kompakte blokker (forvalg: %u)</translation>
     </message>
@@ -3252,6 +3264,10 @@
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>Sett laveste gebyrtakst (i %s/kB) for transaksjoner som skal inkluderes i blokkopprettelse. (forvalg: %s)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Sett maksimum størrelse for transaksjoner med høy prioritet / lavt gebyr, i bytes (standardverdi: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3300,6 +3316,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>Hvorvidt hukommelsespuljen skal lagres ved avstengning og lastes inn ved omstart (forvalg: %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Hvitlist brukere som kobler til fra en gitt IP-adresse (e.g. 1.2.3.4) eller nettverk med CIDR-notasjon (f.eks. 1.2.3.0/24). Kan angis mange ganger.</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3514,8 +3534,16 @@
         <translation>Spoler tilbake blokker…</translation>
     </message>
     <message>
+        <source>Send transactions with full-RBF opt-in enabled (RPC only, default: %u)</source>
+        <translation>Send transaksjoner med full-RBF påslått for påmeldte (forvalg: %u)</translation>
+    </message>
+    <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Sett databasen sin størrelse på hurtigbufferen i megabytes (%d til %d, standardverdi: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Sett maks blokkstørrelse i bytes (standardverdi: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3936,10 +3964,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>Advarsel: Lommeboksfil skadet, data berget! Original %s lagret som %s i %s; hvis din saldo eller transaksjoner er uriktige, bør du gjenopprette fra sikkerhetskopi.</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Hvitlist brukere som kobler til fra en gitt IP-adresse (e.g. 1.2.3.4) eller nettverk med CIDR-notasjon (f.eks. 1.2.3.0/24). Kan angis mange ganger.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

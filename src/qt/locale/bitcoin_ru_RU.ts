@@ -3,7 +3,7 @@
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation>$Right-click to edit address or label</translation>
+        <translation>Кликните правой кнопкой мыши для редактирования адреса или метки</translation>
     </message>
     <message>
         <source>Create a new address</source>
@@ -196,6 +196,10 @@
         <translation>Шифрование кошелька завершилось неудачно из-за внутренней ошибки. Ваш кошелек не был зашифрован.</translation>
     </message>
     <message>
+        <source>The supplied passphrases do not match.</source>
+        <translation>Пароли не совпадают.</translation>
+    </message>
+    <message>
         <source>Wallet unlock failed</source>
         <translation>Ошибка разблокировки кошелька</translation>
     </message>
@@ -314,6 +318,10 @@
         <translation>Открыть &amp;URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Кошелёк:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Нажмите для отключения взаимодействия с сетью.</translation>
     </message>
@@ -386,6 +394,14 @@
         <translation>Зашифровать приватные ключи, принадлежащие вашему кошельку</translation>
     </message>
     <message>
+        <source>Sign messages with your Bitcoin addresses to prove you own them</source>
+        <translation>Подписывайте сообщения Bitcoin адресами чтобы подтвердить что это написали именно Вы</translation>
+    </message>
+    <message>
+        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
+        <translation>Проверяйте сообщения чтобы убедиться что они подписаны конкретными Bitcoin адресами</translation>
+    </message>
+    <message>
         <source>&amp;File</source>
         <translation>&amp;Файл</translation>
     </message>
@@ -396,6 +412,26 @@
     <message>
         <source>&amp;Help</source>
         <translation>&amp;Помощь</translation>
+    </message>
+    <message>
+        <source>Tabs toolbar</source>
+        <translation>Панель вкладок</translation>
+    </message>
+    <message>
+        <source>Request payments (generates QR codes and bitcoin: URIs)</source>
+        <translation>Запросить платеж</translation>
+    </message>
+    <message>
+        <source>Show the list of used sending addresses and labels</source>
+        <translation>Показать список использованных адресов и меток получателей</translation>
+    </message>
+    <message>
+        <source>Show the list of used receiving addresses and labels</source>
+        <translation>Показать список использованных адресов и меток получателей</translation>
+    </message>
+    <message>
+        <source>Open a bitcoin: URI or payment request</source>
+        <translation>Открыть биткойн: URI или запрос платежа</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -418,6 +454,10 @@
         <translation>Последний полученный блок был сгенерирован %1 назад.</translation>
     </message>
     <message>
+        <source>Transactions after this will not yet be visible.</source>
+        <translation>После этого транзакции больше не будут видны.</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
@@ -436,6 +476,10 @@
     <message>
         <source>Connecting to peers...</source>
         <translation>Подключение к пирам...</translation>
+    </message>
+    <message>
+        <source>Catching up...</source>
+        <translation>Синхронизация...</translation>
     </message>
     <message>
         <source>Date: %1
@@ -462,6 +506,15 @@
 </translation>
     </message>
     <message>
+        <source>Address: %1
+</source>
+        <translation>Адрес: %1</translation>
+    </message>
+    <message>
+        <source>Sent transaction</source>
+        <translation>Отправленная транзакция</translation>
+    </message>
+    <message>
         <source>Incoming transaction</source>
         <translation>Входящая транзакция</translation>
     </message>
@@ -481,6 +534,10 @@
 <context>
     <name>CoinControlDialog</name>
     <message>
+        <source>Coin Selection</source>
+        <translation>Выбор коинов</translation>
+    </message>
+    <message>
         <source>Quantity:</source>
         <translation>Количество:</translation>
     </message>
@@ -497,8 +554,40 @@
         <translation>Комиссия:</translation>
     </message>
     <message>
+        <source>Dust:</source>
+        <translation>Пыль:</translation>
+    </message>
+    <message>
         <source>After Fee:</source>
         <translation>После комиссии:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Сдача:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>Выбрать все</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Режим дерева</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Режим списка</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Количество</translation>
+    </message>
+    <message>
+        <source>Received with label</source>
+        <translation>Получено с меткой</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Получено с адресом</translation>
     </message>
     <message>
         <source>Date</source>
@@ -529,8 +618,36 @@
         <translation>Копировать ID транзакции</translation>
     </message>
     <message>
+        <source>Lock unspent</source>
+        <translation>Заблокировать непотраченное</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>Разблокировать непотраченное</translation>
+    </message>
+    <message>
         <source>Copy quantity</source>
         <translation>Копировать количество</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Скопировать комиссию</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Скопировать после комиссии</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Скопировать байты</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Скопировать пыль</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Скопировать сдачу</translation>
     </message>
     <message>
         <source>yes</source>
@@ -544,12 +661,20 @@
         <source>(no label)</source>
         <translation>(нет метки)</translation>
     </message>
-    </context>
+    <message>
+        <source>(change)</source>
+        <translation>(сдача)</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
         <translation>Изменить адрес</translation>
+    </message>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Метка</translation>
     </message>
     <message>
         <source>&amp;Address</source>
@@ -575,7 +700,11 @@
         <source>Could not unlock wallet.</source>
         <translation>Невозможно разблокировать кошелек.</translation>
     </message>
-    </context>
+    <message>
+        <source>New key generation failed.</source>
+        <translation>Произошла ошибка при генерации нового ключа.</translation>
+    </message>
+</context>
 <context>
     <name>FreespaceChecker</name>
     <message>
@@ -583,10 +712,17 @@
         <translation>Будет создана новая директория данных.</translation>
     </message>
     <message>
+        <source>name</source>
+        <translation>имя</translation>
+    </message>
+    <message>
         <source>Cannot create data directory here.</source>
         <translation>Невозможно создать директорию данных здесь.</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -674,7 +810,26 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Н/Д</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
+    <message>
+        <source>Form</source>
+        <translation>Форма</translation>
+    </message>
+    <message>
+        <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
+        <translation>Последние транзакции пока могут быть не видны, поэтому вы можете видеть некорректный баланс ваших кошельков. Отображаемая информация будет верна после завершения синхронизации. Прогресс синхронизации вы можете видеть ниже.</translation>
+    </message>
+    <message>
+        <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
+        <translation>Попытка потратить средства, использованные в транзакциях, которые ещё не синхронизированы, будет отклонена сетью.</translation>
+    </message>
     <message>
         <source>Number of blocks left</source>
         <translation>Количество оставшихся блоков</translation>
@@ -684,8 +839,16 @@
         <translation>Неизвестно...</translation>
     </message>
     <message>
+        <source>Last block time</source>
+        <translation>Время последнего блока</translation>
+    </message>
+    <message>
         <source>Progress</source>
         <translation>Прогресс</translation>
+    </message>
+    <message>
+        <source>Progress increase per hour</source>
+        <translation>Прогресс за час</translation>
     </message>
     <message>
         <source>calculating...</source>
@@ -699,7 +862,24 @@
         <source>Hide</source>
         <translation>Спрятать</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown. Syncing Headers (%1)...</source>
+        <translation>Не известно. Синхронизация заголовков (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тип</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адрес</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -710,7 +890,15 @@
         <source>URI:</source>
         <translation>URI:</translation>
     </message>
-    </context>
+    <message>
+        <source>Select payment request file</source>
+        <translation>Выберите файл запроса платежа</translation>
+    </message>
+    <message>
+        <source>Select payment request file to open</source>
+        <translation>Выберите файл запроса платежа для открытия</translation>
+    </message>
+</context>
 <context>
     <name>OptionsDialog</name>
     <message>
@@ -766,8 +954,24 @@
         <translation>Эксперт</translation>
     </message>
     <message>
+        <source>Enable coin &amp;control features</source>
+        <translation>Включить возможность &amp;управления монетами</translation>
+    </message>
+    <message>
+        <source>&amp;Spend unconfirmed change</source>
+        <translation>&amp;Тратить неподтвержденную сдачу</translation>
+    </message>
+    <message>
         <source>Map port using &amp;UPnP</source>
         <translation>Пробросить порт через &amp;UPnP</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside.</source>
+        <translation>Принимать внешние подключения</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation>Разрешить входящие соединения</translation>
     </message>
     <message>
         <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
@@ -810,12 +1014,36 @@
         <translation>Отобразить только значок в области уведомлений после сворачивания окна.</translation>
     </message>
     <message>
+        <source>M&amp;inimize on close</source>
+        <translation>З&amp;акрыть при сворачивании</translation>
+    </message>
+    <message>
+        <source>User Interface &amp;language:</source>
+        <translation>Язык пользовательского интерфейса:</translation>
+    </message>
+    <message>
+        <source>The user interface language can be set here. This setting will take effect after restarting %1.</source>
+        <translation>Здесь можно выбрать язык пользовательского интерфейса. Параметры будут применены после перезапуска %1</translation>
+    </message>
+    <message>
+        <source>Whether to show coin control features or not.</source>
+        <translation>Показывать ли опцию управления монетами.</translation>
+    </message>
+    <message>
         <source>&amp;OK</source>
         <translation>&amp;ОК</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
         <translation>&amp;Отмена</translation>
+    </message>
+    <message>
+        <source>default</source>
+        <translation>по умолчанию</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -853,6 +1081,26 @@
 <context>
     <name>OverviewPage</name>
     <message>
+        <source>Form</source>
+        <translation>Форма</translation>
+    </message>
+    <message>
+        <source>Watch-only:</source>
+        <translation type="unfinished">только просмотр:</translation>
+    </message>
+    <message>
+        <source>Available:</source>
+        <translation>Доступно:</translation>
+    </message>
+    <message>
+        <source>Your current spendable balance</source>
+        <translation>Ваш доступный баланс</translation>
+    </message>
+    <message>
+        <source>Pending:</source>
+        <translation>В ожидании:</translation>
+    </message>
+    <message>
         <source>Immature:</source>
         <translation>Незрелые:</translation>
     </message>
@@ -873,12 +1121,40 @@
         <translation>Ваш текущий баланс (только чтение):</translation>
     </message>
     <message>
+        <source>Spendable:</source>
+        <translation>Доступно:</translation>
+    </message>
+    <message>
         <source>Recent transactions</source>
         <translation>Последние транзакции</translation>
     </message>
     </context>
 <context>
     <name>PaymentServer</name>
+    <message>
+        <source>Payment request error</source>
+        <translation>Ошибка запроса платежа</translation>
+    </message>
+    <message>
+        <source>Invalid payment address %1</source>
+        <translation>Неверный адрес %1</translation>
+    </message>
+    <message>
+        <source>Payment request rejected</source>
+        <translation>Запрос платежа отклонен</translation>
+    </message>
+    <message>
+        <source>Payment request expired.</source>
+        <translation>Истекло время ожидания запроса платежа</translation>
+    </message>
+    <message>
+        <source>Payment request is not initialized.</source>
+        <translation>Запрос платежа не инициализирован</translation>
+    </message>
+    <message>
+        <source>Invalid payment request.</source>
+        <translation>Неверный запрос платежа.</translation>
+    </message>
     <message>
         <source>Error communicating with %1: %2</source>
         <translation>Ошибка связи с %1: %2</translation>
@@ -895,8 +1171,16 @@
 <context>
     <name>PeerTableModel</name>
     <message>
+        <source>User Agent</source>
+        <translation>Пользовательский агент</translation>
+    </message>
+    <message>
         <source>Node/Service</source>
         <translation>Узел/служба</translation>
+    </message>
+    <message>
+        <source>NodeId</source>
+        <translation>Идентификатор узла</translation>
     </message>
     <message>
         <source>Sent</source>
@@ -909,6 +1193,10 @@
 </context>
 <context>
     <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>Количество</translation>
+    </message>
     <message>
         <source>Enter a Bitcoin address (e.g. %1)</source>
         <translation>Введите биткоин-адрес (напр. %1)</translation>
@@ -933,9 +1221,25 @@
         <source>N/A</source>
         <translation>Н/Д</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n час</numerusform><numerusform>%n часа</numerusform><numerusform>%n часов</numerusform><numerusform>%n часов</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n день</numerusform><numerusform>%n дней</numerusform><numerusform>%n дней</numerusform><numerusform>%n дней</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n неделя</numerusform><numerusform>%n недель</numerusform><numerusform>%n недель</numerusform><numerusform>%n недель</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 и %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n год</numerusform><numerusform>%n лет</numerusform><numerusform>%n лет</numerusform><numerusform>%n лет</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -956,6 +1260,16 @@
     <message>
         <source>unknown</source>
         <translation>неизвестно</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакция</translation>
     </message>
 </context>
 <context>
@@ -1035,6 +1349,10 @@
         <translation>Использование памяти</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Кошелёк: </translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Сбросить</translation>
     </message>
@@ -1059,6 +1377,18 @@
         <translation>Версия</translation>
     </message>
     <message>
+        <source>Synced Headers</source>
+        <translation>Синхронизировано заголовков</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>Синхронизировано блоков</translation>
+    </message>
+    <message>
+        <source>User Agent</source>
+        <translation>Пользовательский агент</translation>
+    </message>
+    <message>
         <source>Decrease font size</source>
         <translation>Уменьшить размер шрифта</translation>
     </message>
@@ -1067,12 +1397,52 @@
         <translation>Увеличить размер шрифта</translation>
     </message>
     <message>
+        <source>Services</source>
+        <translation>Сервисы</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Время соединения</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Последние отправленные</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Последние полученные</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Время отклика Ping</translation>
+    </message>
+    <message>
+        <source>Min Ping</source>
+        <translation>Минимальное время отклика Ping</translation>
+    </message>
+    <message>
+        <source>Last block time</source>
+        <translation>Время последнего блока</translation>
+    </message>
+    <message>
         <source>&amp;Open</source>
         <translation>&amp;Открыть</translation>
     </message>
     <message>
         <source>&amp;Console</source>
         <translation>&amp;Консоль</translation>
+    </message>
+    <message>
+        <source>&amp;Network Traffic</source>
+        <translation>&amp;Сетевой трафик</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Вход:</translation>
+    </message>
+    <message>
+        <source>Out:</source>
+        <translation>Выход:</translation>
     </message>
     <message>
         <source>1 &amp;hour</source>
@@ -1095,6 +1465,10 @@
         <translation>Ввести %1 для обзора доступных команд.</translation>
     </message>
     <message>
+        <source>Network activity disabled</source>
+        <translation>Взаимодействие с сетью отключено</translation>
+    </message>
+    <message>
         <source>never</source>
         <translation>никогда</translation>
     </message>
@@ -1114,12 +1488,32 @@
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Количество:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Метка:</translation>
+    </message>
+    <message>
+        <source>&amp;Message:</source>
+        <translation>&amp;Сообщение:</translation>
+    </message>
+    <message>
         <source>Clear all fields of the form.</source>
         <translation>Очистить все поля формы.</translation>
     </message>
     <message>
         <source>Clear</source>
         <translation>Отчистить</translation>
+    </message>
+    <message>
+        <source>Requested payments history</source>
+        <translation>История платежных запросов</translation>
+    </message>
+    <message>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Запросить платеж</translation>
     </message>
     <message>
         <source>Show the selected request (does the same as double clicking an entry)</source>
@@ -1161,6 +1555,14 @@
         <translation>QR-код</translation>
     </message>
     <message>
+        <source>Copy &amp;URI</source>
+        <translation>Копировать URI</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>Копировать &amp;Адрес</translation>
+    </message>
+    <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;Сохранить изображение...</translation>
     </message>
@@ -1169,8 +1571,16 @@
         <translation>Информация о платеже</translation>
     </message>
     <message>
+        <source>URI</source>
+        <translation>URI</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>Адрес</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Количество</translation>
     </message>
     <message>
         <source>Label</source>
@@ -1207,7 +1617,15 @@
         <source>(no message)</source>
         <translation>(нет сообщений)</translation>
     </message>
-    </context>
+    <message>
+        <source>(no amount requested)</source>
+        <translation>(не указана запрашиваемая сумма)</translation>
+    </message>
+    <message>
+        <source>Requested</source>
+        <translation>Запрошено</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsDialog</name>
     <message>
@@ -1215,8 +1633,20 @@
         <translation>Отправить монеты</translation>
     </message>
     <message>
+        <source>Coin Control Features</source>
+        <translation>Опции управления монетами</translation>
+    </message>
+    <message>
+        <source>Inputs...</source>
+        <translation>Входы...</translation>
+    </message>
+    <message>
         <source>automatically selected</source>
         <translation>выбрано автоматически</translation>
+    </message>
+    <message>
+        <source>Insufficient funds!</source>
+        <translation>Недостаточно средств!</translation>
     </message>
     <message>
         <source>Quantity:</source>
@@ -1239,12 +1669,32 @@
         <translation>После комиссии:</translation>
     </message>
     <message>
+        <source>Change:</source>
+        <translation>Сдача:</translation>
+    </message>
+    <message>
+        <source>Custom change address</source>
+        <translation>Указать адрес для сдачи</translation>
+    </message>
+    <message>
         <source>Transaction Fee:</source>
         <translation>Комиссия за транзакцию:</translation>
     </message>
     <message>
         <source>Choose...</source>
         <translation>Выбрать...</translation>
+    </message>
+    <message>
+        <source>Warning: Fee estimation is currently not possible.</source>
+        <translation>Предупреждение: оценка комиссии в данный момент невозможна.</translation>
+    </message>
+    <message>
+        <source>collapse fee-settings</source>
+        <translation>Свернуть настройки комиссионных</translation>
+    </message>
+    <message>
+        <source>per kilobyte</source>
+        <translation>за килобайт</translation>
     </message>
     <message>
         <source>Hide</source>
@@ -1263,12 +1713,32 @@
         <translation>Отправить нескольким получателям сразу</translation>
     </message>
     <message>
+        <source>Add &amp;Recipient</source>
+        <translation>Добавить &amp;получателя</translation>
+    </message>
+    <message>
         <source>Clear all fields of the form.</source>
         <translation>Очистить все поля формы.</translation>
     </message>
     <message>
+        <source>Dust:</source>
+        <translation>Пыль:</translation>
+    </message>
+    <message>
+        <source>Confirmation time target:</source>
+        <translation>Целевое время подтверждения</translation>
+    </message>
+    <message>
+        <source>Enable Replace-By-Fee</source>
+        <translation>Включить Replace-By-Fee</translation>
+    </message>
+    <message>
         <source>Balance:</source>
         <translation>Баланс:</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Отправить</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -1279,12 +1749,36 @@
         <translation>Копировать сумму</translation>
     </message>
     <message>
+        <source>Copy fee</source>
+        <translation>Скопировать комиссию</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Скопировать после комиссии</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Скопировать байты</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Скопировать пыль</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Скопировать сдачу</translation>
+    </message>
+    <message>
         <source>Are you sure you want to send?</source>
         <translation>Вы действительно хотите выполнить отправку?</translation>
     </message>
     <message>
         <source>or</source>
         <translation>или</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Комиссия за транзакцию</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -1311,12 +1805,28 @@
         <translation>Комиссия более чем в %1 считается абсурдно высокой.</translation>
     </message>
     <message>
+        <source>Payment request expired.</source>
+        <translation>Истекло время ожидания запроса платежа</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(нет метки)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Количество:</translation>
+    </message>
+    <message>
+        <source>Pay &amp;To:</source>
+        <translation type="unfinished">&amp;Выполнить оплату в пользу:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Метка:</translation>
+    </message>
     <message>
         <source>Choose previously used address</source>
         <translation>Выбрать предыдущий использованный адрес</translation>
@@ -1420,6 +1930,14 @@
 <context>
     <name>TransactionDesc</name>
     <message>
+        <source>in memory pool</source>
+        <translation>в мемпуле</translation>
+    </message>
+    <message>
+        <source>not in memory pool</source>
+        <translation>не в мемпуле</translation>
+    </message>
+    <message>
         <source>Status</source>
         <translation>Статус</translation>
     </message>
@@ -1440,8 +1958,36 @@
         <translation>неизвестно</translation>
     </message>
     <message>
+        <source>watch-only</source>
+        <translation>только просмотр</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Комиссия</translation>
+    </message>
+    <message>
         <source>Message</source>
         <translation>Сообщение</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>Комментарий</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>ID транзакции</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Транзакция</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation type="unfinished">Входы</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Количество</translation>
     </message>
     </context>
 <context>
@@ -1466,6 +2012,22 @@
         <translation>Метка</translation>
     </message>
     <message>
+        <source>Received with</source>
+        <translation>Получено на</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>Отправить</translation>
+    </message>
+    <message>
+        <source>Mined</source>
+        <translation>Добыто</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>только просмотр</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(нет метки)</translation>
     </message>
@@ -1484,6 +2046,62 @@
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>All</source>
+        <translation>Все</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>Сегодня</translation>
+    </message>
+    <message>
+        <source>This week</source>
+        <translation>Эта неделя</translation>
+    </message>
+    <message>
+        <source>This month</source>
+        <translation>Этот месяц</translation>
+    </message>
+    <message>
+        <source>Last month</source>
+        <translation>Последний месяц</translation>
+    </message>
+    <message>
+        <source>This year</source>
+        <translation>Последний год</translation>
+    </message>
+    <message>
+        <source>Range...</source>
+        <translation>Диапазон...</translation>
+    </message>
+    <message>
+        <source>Received with</source>
+        <translation>Получено на</translation>
+    </message>
+    <message>
+        <source>Sent to</source>
+        <translation>Отправить</translation>
+    </message>
+    <message>
+        <source>To yourself</source>
+        <translation>Себе</translation>
+    </message>
+    <message>
+        <source>Mined</source>
+        <translation>Добыто</translation>
+    </message>
+    <message>
+        <source>Enter address, transaction id, or label to search</source>
+        <translation>Введите адрес, ID транзакции или метку для поиска</translation>
+    </message>
+    <message>
+        <source>Min amount</source>
+        <translation>Минимальное количество</translation>
+    </message>
+    <message>
+        <source>Abandon transaction</source>
+        <translation>Отказ от транзакции</translation>
+    </message>
     <message>
         <source>Increase transaction fee</source>
         <translation>Увеличить комиссию за транзакцию</translation>
@@ -1505,12 +2123,28 @@
         <translation>Копировать ID транзакции</translation>
     </message>
     <message>
+        <source>Copy raw transaction</source>
+        <translation>Копировать raw транзакцию</translation>
+    </message>
+    <message>
         <source>Copy full transaction details</source>
         <translation>Копировать все детали транзакции</translation>
     </message>
     <message>
+        <source>Edit label</source>
+        <translation>Изменить метку</translation>
+    </message>
+    <message>
         <source>Show transaction details</source>
         <translation>Отобразить детали транзакции</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Подтвержденные</translation>
+    </message>
+    <message>
+        <source>Watch-only</source>
+        <translation>только просмотр</translation>
     </message>
     <message>
         <source>Date</source>
@@ -1688,6 +2322,10 @@
         <translation>Выполняется загрузка P2P-адресов...</translation>
     </message>
     <message>
+        <source>Loading banlist...</source>
+        <translation>Загрузка черного списка...</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Недоступно достаточного количества дескрипторов файла.</translation>
     </message>
@@ -1708,12 +2346,20 @@
         <translation>Указать файл кошелька (в пределах директории данных)</translation>
     </message>
     <message>
+        <source>Transaction fee and change calculation failed</source>
+        <translation>Не удалось рассчитать комиссию и сдачу для транзакции </translation>
+    </message>
+    <message>
         <source>Unsupported argument -debugnet ignored, use -debug=net.</source>
         <translation>Неподдерживаемый аргумент -debugnet пропущен, необходимо использовать -debug=net.</translation>
     </message>
     <message>
         <source>Unsupported argument -tor found, use -onion.</source>
         <translation>Обнаружен неподдерживаемый аргумент -tor, необходимо использовать -onion.</translation>
+    </message>
+    <message>
+        <source>Verifying blocks...</source>
+        <translation>Проверка блоков...</translation>
     </message>
     <message>
         <source>Wallet options:</source>
@@ -1744,6 +2390,14 @@
         <translation>Подписание транзакции завершилось неудачей</translation>
     </message>
     <message>
+        <source>Transaction amount too small</source>
+        <translation>Размер транзакции слишком мал</translation>
+    </message>
+    <message>
+        <source>Transaction too large</source>
+        <translation>Транзакция слишком большая</translation>
+    </message>
+    <message>
         <source>Warning</source>
         <translation>Предупреждение</translation>
     </message>
@@ -1754,6 +2408,38 @@
     <message>
         <source>(default: %s)</source>
         <translation>(значение по умолчанию: %s)</translation>
+    </message>
+    <message>
+        <source>Specify configuration file (default: %s)</source>
+        <translation>Задайте файл параметров (по умолчанию: %s)</translation>
+    </message>
+    <message>
+        <source>Starting network threads...</source>
+        <translation>Запуск сетевых потоков...</translation>
+    </message>
+    <message>
+        <source>This is the minimum transaction fee you pay on every transaction.</source>
+        <translation>Это минимальная комиссия, которую вы платите для любой транзакции</translation>
+    </message>
+    <message>
+        <source>This is the transaction fee you will pay if you send a transaction.</source>
+        <translation>Это размер комиссии, которую вы заплатите при отправке транзакции </translation>
+    </message>
+    <message>
+        <source>Transaction amounts must not be negative</source>
+        <translation>Размер транзакции не может быть отрицательным</translation>
+    </message>
+    <message>
+        <source>Transaction must have at least one recipient</source>
+        <translation>Транзакция должна иметь хотя бы одного получателя</translation>
+    </message>
+    <message>
+        <source>Insufficient funds</source>
+        <translation>Недостаточно средств</translation>
+    </message>
+    <message>
+        <source>Loading block index...</source>
+        <translation>Загрузка индекса блоков...</translation>
     </message>
     <message>
         <source>Loading wallet...</source>

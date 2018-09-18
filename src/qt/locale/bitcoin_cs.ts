@@ -7,19 +7,19 @@
     </message>
     <message>
         <source>Create a new address</source>
-        <translation>Vytvořit novou adresu</translation>
+        <translation>Vytvoř novou adresu</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>&amp;Nová/&amp;Nový/&amp;Nové</translation>
+        <translation>&amp;Nová</translation>
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Zkopíruj tuto adresu do schránky</translation>
+        <translation>Zkopíruj tuto adresu do systémové schránky</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation>&amp;Zkopírovat</translation>
+        <translation>&amp;Kopíruj</translation>
     </message>
     <message>
         <source>C&amp;lose</source>
@@ -27,27 +27,31 @@
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
-        <translation>Smazat tuto adresu ze seznamu</translation>
+        <translation>Smaž tuto adresu ze seznamu</translation>
+    </message>
+    <message>
+        <source>Enter address or label to search</source>
+        <translation>Zadej adresu nebo označení pro její vyhledání</translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
-        <translation>Exportuj data z aktuálního panelu do souboru</translation>
+        <translation>Exportuj data z tohoto panelu do souboru</translation>
     </message>
     <message>
         <source>&amp;Export</source>
-        <translation>&amp;Exportovat</translation>
+        <translation>&amp;Export</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
-        <translation>&amp;Smaž</translation>
+        <translation>S&amp;maž</translation>
     </message>
     <message>
         <source>Choose the address to send coins to</source>
-        <translation>Zvol adresu, na kterou pošleš coiny</translation>
+        <translation>Zvol adresu, na kterou pošleš mince</translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
-        <translation>Zvol adresu na příjem mincí</translation>
+        <translation>Zvol adres na příjem mincí</translation>
     </message>
     <message>
         <source>C&amp;hoose</source>
@@ -55,7 +59,7 @@
     </message>
     <message>
         <source>Sending addresses</source>
-        <translation>Odesílající adresy</translation>
+        <translation>Odesílací adresy</translation>
     </message>
     <message>
         <source>Receiving addresses</source>
@@ -67,27 +71,27 @@
     </message>
     <message>
         <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Tohle jsou tvé bitcoinové adresy pro příjem plateb. Je doporučeno pro každou transakci vždy vygenerovat novou adresu.</translation>
+        <translation>Tohle jsou tvé bitcoinové adresy pro příjem plateb. Nezapomeň si pro každou transakci vždy vygenerovat novou adresu.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
-        <translation>&amp;Zkopírovat adresu</translation>
+        <translation>&amp;Kopíruj adresu</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
-        <translation>Kopíruj &amp;Označ</translation>
+        <translation>Kopíruj &amp;označení</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation>&amp;Upravit</translation>
+        <translation>&amp;Uprav</translation>
     </message>
     <message>
         <source>Export Address List</source>
-        <translation>Exportuj seznam adres</translation>
+        <translation>Export seznamu adres</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
-        <translation>CSV formát (*.csv)</translation>
+        <translation>Formát CSV (*.csv)</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -133,7 +137,7 @@
     </message>
     <message>
         <source>Show password</source>
-        <translation>Zobrazit heslo</translation>
+        <translation>Ukaž heslo</translation>
     </message>
     <message>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Načíst &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Peněženka:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -786,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -912,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>nedostupná informace</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -960,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Neznámý. Synchronizuji záhlaví bloků (%1)…</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresa</translation>
     </message>
 </context>
 <context>
@@ -1025,15 +1056,15 @@
     </message>
     <message>
         <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor hidden services:</source>
-        <translation>Použít samostatnou SOCKS5 proxy ke spojení s protějšky přes skryté služby v Toru:</translation>
+        <translation>Použít samostatnou SOCKS&amp;5 proxy ke spojení s protějšky přes skryté služby v Toru:</translation>
     </message>
     <message>
         <source>Hide the icon from the system tray.</source>
-        <translation>Skrýt ikonu z panelu.</translation>
+        <translation>Skryje ikonu, která se zobrazuje v panelu.</translation>
     </message>
     <message>
         <source>&amp;Hide tray icon</source>
-        <translation>&amp;Gt; Skrýt ikonu na hlavním panelu</translation>
+        <translation>Skrýt &amp;ikonu z panelu</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
@@ -1101,7 +1132,11 @@
     </message>
     <message>
         <source>Accept connections from outside.</source>
-        <translation>Přijímat spojení z venku.</translation>
+        <translation>Přijímat spojení zvenčí.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation>Přijí&amp;mat příchozí spojení</translation>
     </message>
     <message>
         <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
@@ -1184,6 +1219,10 @@
         <translation>Zda ukazovat možnosti pro ruční správu mincí nebo ne.</translation>
     </message>
     <message>
+        <source>&amp;Third party transaction URLs</source>
+        <translation>&amp;URL třetích stran pro transakce</translation>
+    </message>
+    <message>
         <source>&amp;OK</source>
         <translation>&amp;Budiž</translation>
     </message>
@@ -1198,6 +1237,10 @@
     <message>
         <source>none</source>
         <translation>žádné</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1519,6 +1562,11 @@
         <source>unknown</source>
         <translation>neznámo</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1619,6 +1667,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Obsazenost paměti</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Peněženka: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2081,10 +2133,6 @@
         <translation>za kilobajt</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Pokud je vlastní poplatek nastavený na 1000 satoshi a transakce má pouze 250 bajtů, tak „za kilobajt“ zaplatí poplatek jen 250 satoshi, zatímco „přinejmenším“ zaplatí 1000 satoshi. Pro transakce větší než kilobajt obě možnosti platí za kilobajt.</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Skryj</translation>
     </message>
@@ -2127,6 +2175,10 @@
     <message>
         <source>Confirmation time target:</source>
         <translation>Časové cílování potvrzení:</translation>
+    </message>
+    <message>
+        <source>Enable Replace-By-Fee</source>
+        <translation>Povolit možnost dodatečně transakci navýšit poplatek (tzv. „replace-by-fee“)</translation>
     </message>
     <message>
         <source>Clear &amp;All</source>
@@ -2185,16 +2237,12 @@
         <translation>Jsi si jistý, že tuhle transakci chceš poslat?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>přidáno jakožto transakční poplatek</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Celková částka %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>nebo</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Transakční poplatek</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -2534,10 +2582,6 @@
         <translation>koliduje s transakcí o %1 konfirmacích</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/offline</translation>
-    </message>
-    <message>
         <source>0/unconfirmed, %1</source>
         <translation>0/nepotvrzeno, %1</translation>
     </message>
@@ -2564,14 +2608,6 @@
     <message>
         <source>Status</source>
         <translation>Stav</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, ještě nebylo rozesláno</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, rozesláno přes %n uzel</numerusform><numerusform>, rozesláno přes %n uzly</numerusform><numerusform>, rozesláno přes %n uzlů</numerusform><numerusform>, rozesláno přes %n uzlů</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2728,10 +2764,6 @@
         <translation>Otřevřeno dokud %1</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>Offline</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>Nepotvrzeno</translation>
     </message>
@@ -2754,10 +2786,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>Nedozráno (%1 potvrzení, dozraje při %2 potvrzeních)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Tento blok nedostal žádný jiný uzel a pravděpodobně nebude akceptován!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -2869,6 +2897,10 @@
     <message>
         <source>Other</source>
         <translation>Ostatní</translation>
+    </message>
+    <message>
+        <source>Enter address, transaction id, or label to search</source>
+        <translation>Zadej adresu, její označení nebo ID transakce pro vyhledání</translation>
     </message>
     <message>
         <source>Min amount</source>
@@ -3154,6 +3186,10 @@
         <translation>Nedaří se mi získat zámek na datový adresář %s. %s pravděpodobně už jednou běží.</translation>
     </message>
     <message>
+        <source>Cannot provide specific connections and have addrman find outgoing connections at the same.</source>
+        <translation>Nemohu poskytovat konkrétní spojení a současně chtít, aby addrman vyhledával odchozí spojení.</translation>
+    </message>
+    <message>
         <source>Delete all wallet transactions and only recover those parts of the blockchain through -rescan on startup</source>
         <translation>Smazat všechny transakce peněženky a při startu obnovit pouze relevantní části bločenky pomocí -rescan</translation>
     </message>
@@ -3164,10 +3200,6 @@
     <message>
         <source>Exclude debugging information for a category. Can be used in conjunction with -debug=1 to output debug logs for all categories except one or more specified categories.</source>
         <translation>Vyloučit ladicí informace dané kategorie. Dá se zkombinovat s -debug=1, aby se zaznamenávaly ladicí informace všech kategorií kromě jedné nebo několika zvolených.</translation>
-    </message>
-    <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>Spustit příkaz, když se objeví transakce týkající se peněženky (%s se v příkazu nahradí za TxID)</translation>
     </message>
     <message>
         <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
@@ -3204,6 +3236,10 @@
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>Nastavit nejnižší akceptovatelný poplatek (v %s/kB) pro transakce, které mají být zahrnuty do nových bloků. (výchozí: %s)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>Nastavit maximální velikost prioritních/nízkopoplatkových transakcí v bajtech (výchozí: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3252,6 +3288,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>Zda uchovat transakční zásobník mezi vypnutím a zapnutím (výchozí: %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>Vždy vítat protějšky připojující se z dané IP adresy (např. 1.2.3.4) či podsítě (CIDR zápis, např. 1.2.3.0/24). Lze zadat i vícekrát.</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3342,6 +3382,10 @@
         <translation>Povolit výměnu transakcí v transakčním zásobníku (výchozí: %u)</translation>
     </message>
     <message>
+        <source>Error creating %s: You can't create non-HD wallets with this version.</source>
+        <translation>Chyba při vytváření %s: v této verzi nemůžeš vytvářeš ne-HD peněženky.</translation>
+    </message>
+    <message>
         <source>Error initializing block database</source>
         <translation>Chyba při zakládání databáze bloků</translation>
     </message>
@@ -3418,6 +3462,10 @@
         <translation>Místo pro autentizační cookie (výchozí: adresář pro data)</translation>
     </message>
     <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>Minimální počet bajtů na každý sigop v transakcích, které přeposíláme a těžíme (výchozí: %u)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Je nedostatek deskriptorů souborů.</translation>
     </message>
@@ -3458,8 +3506,16 @@
         <translation>Vracím bloky…</translation>
     </message>
     <message>
+        <source>Send transactions with full-RBF opt-in enabled (RPC only, default: %u)</source>
+        <translation>Posílat transakce se zapnutým plným RBF (= replace-by-fee) (výchozí: %u)</translation>
+    </message>
+    <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>Nastavit velikost databázové vyrovnávací paměti v megabajtech (%d až %d, výchozí: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>Nastavit maximální velikost bloku v bajtech (výchozí: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3706,6 +3762,10 @@
         <translation>Nedaří se mi připojit na %s na tomhle počítači (operace bind vrátila chybu %s)</translation>
     </message>
     <message>
+        <source>Unable to generate initial keys</source>
+        <translation>Nepodařilo se mi vygenerovat počáteční klíče</translation>
+    </message>
+    <message>
         <source>Upgrade wallet to latest format on startup</source>
         <translation>Převést při startu peněženku na nejnovější formát</translation>
     </message>
@@ -3716,6 +3776,10 @@
     <message>
         <source>Verifying wallet(s)...</source>
         <translation>Kontroluji peněženku/y…</translation>
+    </message>
+    <message>
+        <source>Wallet %s resides outside wallet directory %s</source>
+        <translation>Peněženka %s se nachází mimo datový adresář %s</translation>
     </message>
     <message>
         <source>Warning</source>
@@ -3854,10 +3918,6 @@
         <translation>Upozornění: soubor s peněženkou je poškozený, data jsou však zachráněna! Původní soubor %s je uložený jako %s v %s. Pokud nejsou stav tvého účtu nebo transakce v pořádku, zřejmě bys měl obnovit zálohu.</translation>
     </message>
     <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>Vždy vítat protějšky připojující se z dané IP adresy (např. 1.2.3.4) či podsítě (CIDR zápis, např. 1.2.3.0/24). Lze zadat i vícekrát.</translation>
-    </message>
-    <message>
         <source>%s is set very high!</source>
         <translation>%s je nastaveno velmi vysoko!</translation>
     </message>
@@ -3948,6 +4008,10 @@
     <message>
         <source>Specify connection timeout in milliseconds (minimum: 1, default: %d)</source>
         <translation>Zadej časový limit spojení v milivteřinách (minimum: 1, výchozí: %d)</translation>
+    </message>
+    <message>
+        <source>Specify pid file (default: %s)</source>
+        <translation>PID soubor (výchozí: %s)</translation>
     </message>
     <message>
         <source>Spend unconfirmed change when sending transactions (default: %u)</source>

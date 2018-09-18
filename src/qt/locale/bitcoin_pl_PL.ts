@@ -318,6 +318,10 @@
         <translation>Otwórz &amp;URl...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portfel:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Kliknij żeby zablokować aktywność sieciową.</translation>
     </message>
@@ -583,12 +587,27 @@
         <source>&amp;Label</source>
         <translation>&amp;Etykieta</translation>
     </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;Adres</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">O aplikacji %1</translation>
+    </message>
+    <message>
+        <source>Command-line options</source>
+        <translation type="unfinished">Wiersz-poleceń opcje</translation>
+    </message>
     <message>
         <source>command-line options</source>
         <translation>Opcje wierszu poleceń</translation>
@@ -682,6 +701,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -733,6 +759,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -780,6 +819,22 @@
     <message>
         <source>Number of script &amp;verification threads</source>
         <translation>Numer skryptów &amp; wątków weryfikacji</translation>
+    </message>
+    <message>
+        <source>&amp;Network</source>
+        <translation type="unfinished">&amp;Sieć</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Portfel</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside.</source>
+        <translation>Akceptuj połączenia z zewnątrz.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Pozwól na przychodzące połączenia</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -925,7 +980,7 @@
         <source>unknown</source>
         <translation>nieznany</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -1001,6 +1056,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Użycie pamięci</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portfel: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1113,6 +1172,10 @@
     <message>
         <source>Totals</source>
         <translation>W sumie</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Aktywność sieciowa zablokowana</translation>
     </message>
     <message>
         <source>Yes</source>
@@ -1411,16 +1474,12 @@
         <translation>Czy na pewno jesteś pewien że chcesz wysłać?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>Dodane jako koszt transakcji.</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Wartość w sumie %1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>lub</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Koszt transakcji</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -1461,6 +1520,10 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Ilość:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Etykieta</translation>
@@ -1556,8 +1619,16 @@
         <translation>własny adres</translation>
     </message>
     <message>
+        <source>watch-only</source>
+        <translation>tylko do odczytu</translation>
+    </message>
+    <message>
         <source>label</source>
         <translation>etykieta</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Koszt transakcji</translation>
     </message>
     <message>
         <source>Message</source>
@@ -1570,6 +1641,10 @@
     <message>
         <source>Transaction</source>
         <translation>Tranzakcja</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation type="unfinished">Wejścia</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -1610,6 +1685,10 @@
         <translation>Wyślij do</translation>
     </message>
     <message>
+        <source>watch-only</source>
+        <translation>tylko do odczytu</translation>
+    </message>
+    <message>
         <source>(n/a)</source>
         <translation>(n/a)</translation>
     </message>
@@ -1639,6 +1718,10 @@
     <message>
         <source>Comma separated file (*.csv)</source>
         <translation>Plik oddzielony przecinkiem (*.csv)</translation>
+    </message>
+    <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">Tylko do odczytu</translation>
     </message>
     <message>
         <source>Date</source>
@@ -1684,9 +1767,17 @@
         <source>Export the data in the current tab to a file</source>
         <translation>Eksportuj dane z aktywnej karty do pliku</translation>
     </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Utwórz kopię zapasową portfela</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Options:</source>
+        <translation type="unfinished">Opcje:</translation>
+    </message>
     <message>
         <source>Loading banlist...</source>
         <translation>Ładuję banlistę...</translation>

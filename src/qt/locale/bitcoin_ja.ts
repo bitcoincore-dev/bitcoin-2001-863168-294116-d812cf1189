@@ -3,7 +3,7 @@
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation>アドレスまたはラベルを編集するにはダブルクリック</translation>
+        <translation>右クリックでアドレスまたはラベルを編集します</translation>
     </message>
     <message>
         <source>Create a new address</source>
@@ -28,6 +28,10 @@
     <message>
         <source>Delete the currently selected address from the list</source>
         <translation>選択されたアドレスを一覧から削除する</translation>
+    </message>
+    <message>
+        <source>Enter address or label to search</source>
+        <translation>検索するアドレスまたはラベルを入力</translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
@@ -320,6 +324,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>URI を開く (&amp;U)...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">ウォレット:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -786,6 +794,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -912,6 +923,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -960,6 +978,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>未知。ヘッダを同期しています (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>タイプ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>アドレス</translation>
     </message>
 </context>
 <context>
@@ -1206,6 +1237,10 @@
     <message>
         <source>none</source>
         <translation>なし</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin のコア</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1527,6 +1562,16 @@
         <source>unknown</source>
         <translation>未確認</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>ブロック</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>取引</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1627,6 +1672,10 @@
     <message>
         <source>Memory usage</source>
         <translation>メモリ使用量</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">ウォレット: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1892,6 +1941,14 @@
         <translation>クリア</translation>
     </message>
     <message>
+        <source>Native segwit addresses (aka Bech32 or BIP-173) reduce your transaction fees later on and offer better protection against typos, but old wallets don't support them. When unchecked, an address compatible with older wallets will be created instead.</source>
+        <translation>Segwitアドレス(Bech32もしくはBIP-173アドレス)を利用すると手数料が安くなり、また誤入力防止機能も強化されますが、Segwitアドレスをサポートしない古いウォレットとの互換性は失われます。チェックを外すと、古いウォレットとの互換性を保った古いアドレスが代わりに生成されます。</translation>
+    </message>
+    <message>
+        <source>Generate native segwit (Bech32) address</source>
+        <translation>Segwitアドレス(Bech32アドレス)を生成する</translation>
+    </message>
+    <message>
         <source>Requested payments history</source>
         <translation>支払リクエスト履歴</translation>
     </message>
@@ -2097,10 +2154,6 @@
         <translation>1キロバイトあたり手数料</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee, while "total at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>カスタム手数料が1000satoshiに設定されている場合、トランザクションサイズが250バイトとすると、「1キロバイトあたり手数料」では250satoshiの手数料のみを支払いますが、「最小手数料」では1000satoshiを支払います。1キロバイトを超えるトランザクションの場合には、どちらの方法を選択したとしても1キロバイトあたりで支払われます。</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>隠す</translation>
     </message>
@@ -2209,20 +2262,16 @@
         <translation>送ってよろしいですか？</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>取引手数料として追加された</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>合計：　%1</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>または</translation>
     </message>
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>手数料は後から上乗せすることができます(Replace-By-Feeのシグナル: BIP-125を参照)。</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>取引手数料</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
@@ -2570,10 +2619,6 @@
         <translation>%1 検証のトランザクションと衝突</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/オフライン</translation>
-    </message>
-    <message>
         <source>0/unconfirmed, %1</source>
         <translation>0/未検証, %1</translation>
     </message>
@@ -2600,14 +2645,6 @@
     <message>
         <source>Status</source>
         <translation>ステータス</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>まだブロードキャストが成功していません</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>%n ノードにブロードキャスト</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
@@ -2764,10 +2801,6 @@
         <translation>ユニット %1 を開く</translation>
     </message>
     <message>
-        <source>Offline</source>
-        <translation>オフライン</translation>
-    </message>
-    <message>
         <source>Unconfirmed</source>
         <translation>未検証</translation>
     </message>
@@ -2790,10 +2823,6 @@
     <message>
         <source>Immature (%1 confirmations, will be available after %2)</source>
         <translation>未成熟（%1検証。%2検証完了後に使用可能となります）</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>このブロックは他のどのノードによっても受け取られないで、多分受け入れられないでしょう！</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -3218,10 +3247,6 @@
         <translation>カテゴリに対してデバッグ情報を除外する。-debug=1 とともに用いることで、一つ以上の指定されたカテゴリを除くすべてのカテゴリのデバッグログを出力できる。</translation>
     </message>
     <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>ウォレットの取引を変更する際にコマンドを実行 (cmd の %s は TxID に置換される)</translation>
-    </message>
-    <message>
         <source>Extra transactions to keep in memory for compact block reconstructions (default: %u)</source>
         <translation>コンパクトブロック再構成のために追加のトランザクションをメモリ内に保管しておく (デフォルト: %u)</translation>
     </message>
@@ -3256,6 +3281,10 @@
     <message>
         <source>Set lowest fee rate (in %s/kB) for transactions to be included in block creation. (default: %s)</source>
         <translation>ブロック生成時に取り込まれるトランザクションの最低手数料率 (%s/kB 単位)。(デフォルト: %s)</translation>
+    </message>
+    <message>
+        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
+        <translation>最優先/最低手数料の最大サイズをバイトで指定 (初期値: %d)</translation>
     </message>
     <message>
         <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
@@ -3304,6 +3333,10 @@
     <message>
         <source>Whether to save the mempool on shutdown and load on restart (default: %u)</source>
         <translation>シャットダウン時に mempool を保存し、再起動時にロードするかどうか (初期値: %u)</translation>
+    </message>
+    <message>
+        <source>Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
+        <translation>ホワイトリストとして登録するピアノ、接続元の IP アドレス (例: 1.2.3.4) または CIDR 表現のネットワーク (例: 1.2.3.0/24)。複数回指定することもできる</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3479,6 +3512,10 @@
         <translation>認証クッキーの場所 (デフォルト: )</translation>
     </message>
     <message>
+        <source>Minimum bytes per sigop in transactions we relay and mine (default: %u)</source>
+        <translation>中継や採掘を行ってもよい、sigopあたりの最小バイト数 (デフォルト: %u)</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>使用可能なファイルディスクリプタが不足しています。</translation>
     </message>
@@ -3525,6 +3562,10 @@
     <message>
         <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
         <translation>データベースのキャッシュサイズをメガバイトで設定 (%dから%d。初期値: %d)</translation>
+    </message>
+    <message>
+        <source>Set maximum block size in bytes (default: %d)</source>
+        <translation>最大ブロックサイズをバイトで設定 (初期値: %d)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -3933,10 +3974,6 @@
     <message>
         <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
         <translation>警告: ウォレットファイルが破損していましたのでデータを復旧しました！元の %s は %s として %s に保存されました; 残高やトランザクションが正しくない場合にはバックアップから復元してください。</translation>
-    </message>
-    <message>
-        <source>Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple times.</source>
-        <translation>ホワイトリストとして登録するピアノ、接続元の IP アドレス (例: 1.2.3.4) または CIDR 表現のネットワーク (例: 1.2.3.0/24)。複数回指定することもできる</translation>
     </message>
     <message>
         <source>%s is set very high!</source>

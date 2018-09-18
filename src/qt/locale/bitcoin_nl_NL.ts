@@ -318,6 +318,10 @@
         <translation>Open &amp;URL...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portemonnee:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Klik om netwerk activiteit uit te zetten.</translation>
     </message>
@@ -681,12 +685,35 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;Label</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;Adres</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Over %1</translation>
+    </message>
+    <message>
+        <source>Command-line options</source>
+        <translation type="unfinished">Commando-regel opties</translation>
+    </message>
+    <message>
+        <source>command-line options</source>
+        <translation type="unfinished">Commando-regel opties</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
@@ -700,20 +727,95 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Open URL</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
     <message>
+        <source>Options</source>
+        <translation type="unfinished">Opties</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor hidden services:</source>
+        <translation>Gebruike aparte SOCKS&amp;5 proxy om peers te bereiken via Tor hidden services</translation>
+    </message>
+    <message>
+        <source>Hide the icon from the system tray.</source>
+        <translation>Verberg het icoontje van de taakbalk</translation>
+    </message>
+    <message>
+        <source>Open Configuration File</source>
+        <translation>Open Configuratie Bestand</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Portemonnee</translation>
+    </message>
+    <message>
+        <source>Expert</source>
+        <translation>Expert</translation>
+    </message>
+    <message>
+        <source>Map port using &amp;UPnP</source>
+        <translation>Poort mappen met &amp;UPnP</translation>
+    </message>
+    <message>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <source>IPv6</source>
+        <translation>IPv6</translation>
+    </message>
+    <message>
+        <source>Tor</source>
+        <translation>Tor</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Fout</translation>
     </message>
-    </context>
+    <message>
+        <source>The supplied proxy address is invalid.</source>
+        <translation>Het ingegeven proxy adres is ongeldig</translation>
+    </message>
+</context>
 <context>
     <name>OverviewPage</name>
+    <message>
+        <source>Available:</source>
+        <translation>Beschikbaar:</translation>
+    </message>
+    <message>
+        <source>Balances</source>
+        <translation>Saldi</translation>
+    </message>
+    <message>
+        <source>Total:</source>
+        <translation>Totaal:</translation>
+    </message>
+    <message>
+        <source>Recent transactions</source>
+        <translation>Recente transacties</translation>
+    </message>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -740,9 +842,33 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Informatie</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Debug scherm</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portemonnee: </translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Netwerk activiteit uitgeschakeld</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Bedrag:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Label:</translation>
+    </message>
     <message>
         <source>Copy label</source>
         <translation>Kopieer label</translation>
@@ -754,6 +880,10 @@
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Adres Kopiëren</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adres</translation>
@@ -809,8 +939,16 @@
         <translation>Wisselgeld:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Selecteren...</translation>
+    </message>
+    <message>
         <source>Dust:</source>
         <translation>Dust:</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Versturen</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -847,6 +985,14 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Bedrag:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Label:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -868,6 +1014,10 @@
     <message>
         <source>Date</source>
         <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Transactie</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -958,12 +1108,20 @@
 <context>
     <name>bitcoin-core</name>
     <message>
+        <source>Options:</source>
+        <translation type="unfinished">Opties:</translation>
+    </message>
+    <message>
         <source>Information</source>
         <translation>Informatie</translation>
     </message>
     <message>
         <source>Warning</source>
         <translation>Waarschuwing</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
+        <translation>Gebruike aparte SOCKS5 proxy om peers te bereiken via Tor hidden services (default: %s)</translation>
     </message>
     <message>
         <source>Error</source>

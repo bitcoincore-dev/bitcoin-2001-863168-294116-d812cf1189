@@ -30,6 +30,10 @@
         <translation>Kustuta märgistatud aadress loetelust</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>Otsimiseks sisesta märgis või aadress</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Ekspordi kuvatava vahelehe sisu faili</translation>
     </message>
@@ -180,6 +184,10 @@
         <translation>Rahakott krüpteeritud</translation>
     </message>
     <message>
+        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
+        <translation>TÄHTIS: Kõik varasemad rahakoti varundfailid tuleks üle kirjutada äsja loodud krüpteeritud rahakoti failiga. Turvakaalutlustel tühistatakse krüpteerimata rahakoti failid alates uue, krüpteeritud rahakoti, kasutusele võtust.</translation>
+    </message>
+    <message>
         <source>Wallet encryption failed</source>
         <translation>Rahakoti krüpteerimine ebaõnnestus</translation>
     </message>
@@ -258,6 +266,10 @@
         <translation>&amp;Teave %1</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Kuva %1 kohta käiv info</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Teave &amp;Qt kohta</translation>
     </message>
@@ -282,8 +294,20 @@
         <translation>&amp;Salafraasi muutmine</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses...</source>
+        <translation type="unfinished">&amp;Saatvad aadressid...</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation type="unfinished">&amp;Vastuvõtvad aadressid...</translation>
+    </message>
+    <message>
         <source>Open &amp;URI...</source>
         <translation>Ava &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Rahakott:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -650,10 +674,17 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
         <translation>versioon</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Teave %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -692,10 +723,21 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Vorm</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Teadmata...</translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -706,6 +748,19 @@
         <translation>Peida</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tüüp</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Aadress</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -738,6 +793,10 @@
     <message>
         <source>MB</source>
         <translation>MB</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Peida tegumiriba ikoon</translation>
     </message>
     <message>
         <source>Reset all client options to default.</source>
@@ -840,6 +899,10 @@
         <translation>puudub</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoini tuumik</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Kinnita valikute algseadistamine</translation>
     </message>
@@ -888,6 +951,14 @@
     <message>
         <source>Payment request error</source>
         <translation>Maksepäringu tõrge</translation>
+    </message>
+    <message>
+        <source>Cannot start bitcoin: click-to-pay handler</source>
+        <translation>Bitcoin ei käivitu: vajuta-maksa toiming</translation>
+    </message>
+    <message>
+        <source>URI handling</source>
+        <translation>URI käsitsemine</translation>
     </message>
     <message>
         <source>Payment request rejected</source>
@@ -967,6 +1038,16 @@
         <source>unknown</source>
         <translation>tundmatu</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Plk</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Thg</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1031,6 +1112,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Mälu kasutus</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Rahakott: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1157,6 +1242,10 @@
     <message>
         <source>Payment information</source>
         <translation>Makse Informatsioon</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
     </message>
     <message>
         <source>Address</source>
@@ -1329,12 +1418,12 @@
         <translation>Oled kindel, et soovid saata?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>lisatud kui tehingutasu</translation>
-    </message>
-    <message>
         <source>or</source>
         <translation>või</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Tehingutasu</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -1586,10 +1675,6 @@
         <translation>Avatud kuni %1</translation>
     </message>
     <message>
-        <source>%1/offline</source>
-        <translation>%1/offline'is</translation>
-    </message>
-    <message>
         <source>%1/unconfirmed</source>
         <translation>%1/kinnitamata</translation>
     </message>
@@ -1600,10 +1685,6 @@
     <message>
         <source>Status</source>
         <translation>Olek</translation>
-    </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, veel esitlemata</translation>
     </message>
     <message>
         <source>Date</source>
@@ -1730,10 +1811,6 @@
     <message>
         <source>Confirmed (%1 confirmations)</source>
         <translation>Kinnitatud (%1 kinnitust)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Antud klotsi pole saanud ükski osapool ning tõenäoliselt seda ei aktsepteerita!</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -1978,10 +2055,6 @@
         <translation>Määratud aadressiga sidumine ning sellelt kuulamine. IPv6 jaoks kasuta vormingut [host]:port</translation>
     </message>
     <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>Käivita käsklus, kui rahakoti tehing muutub (%s cmd's muudetakse TxID'ks)</translation>
-    </message>
-    <message>
         <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
         <translation>See on test-versioon - kasutamine omal riisikol - ära kasuta mining'uks ega kaupmeeste programmides</translation>
     </message>
@@ -1992,6 +2065,10 @@
     <message>
         <source>Block creation options:</source>
         <translation>Blokeeri loomise valikud:</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>Tundmatu -%s aadress: '%s'</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
@@ -2024,6 +2101,10 @@
     <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
         <translation>Pordi kuulamine nurjus. Soovikorral kasuta -listen=0.</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Aadresside p2p laadimine...</translation>
     </message>
     <message>
         <source>Verifying blocks...</source>
@@ -2072,6 +2153,10 @@
     <message>
         <source>Username for JSON-RPC connections</source>
         <translation>JSON-RPC ühenduste kasutajatunnus</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Kontrollin rahakotti...</translation>
     </message>
     <message>
         <source>Warning</source>
