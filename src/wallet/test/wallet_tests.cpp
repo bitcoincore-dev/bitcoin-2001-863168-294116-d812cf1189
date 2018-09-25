@@ -375,7 +375,8 @@ public:
         LOCK(wallet->cs_wallet);
         auto it = wallet->mapWallet.find(tx->GetHash());
         BOOST_CHECK(it != wallet->mapWallet.end());
-        it->second.SetMerkleBranch(::ChainActive().Tip()->GetBlockHash(), 1);
+        it->second.hashBlock = ChainActive().Tip()->GetBlockHash();
+        it->second.nIndex = 1;
         return it->second;
     }
 
