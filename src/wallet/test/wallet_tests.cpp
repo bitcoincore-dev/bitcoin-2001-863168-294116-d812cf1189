@@ -249,7 +249,7 @@ BOOST_FIXTURE_TEST_CASE(coin_mark_dirty_immature_credit, TestChain100Setup)
     LockAssertion lock(::cs_main);
     LOCK(wallet.cs_wallet);
 
-    wtx.SetConf(CWalletTx::Status::CONFIRMED, ::ChainActive().Tip()->GetBlockHash(), 0);
+    wtx.m_confirm = {CWalletTx::Status::CONFIRMED, ::ChainActive().Tip()->GetBlockHash(), 0};
 
     // Call GetImmatureCredit() once before adding the key to the wallet to
     // cache the current immature credit amount, which is 0.
@@ -459,7 +459,7 @@ public:
         LOCK(wallet->cs_wallet);
         auto it = wallet->mapWallet.find(tx->GetHash());
         BOOST_CHECK(it != wallet->mapWallet.end());
-        it->second.SetConf(CWalletTx::Status::CONFIRMED, ::ChainActive().Tip()->GetBlockHash(), 1);
+        it->second.m_confirm = {CWalletTx::Status::CONFIRMED, ::ChainActive().Tip()->GetBlockHash(), 1};
         return it->second;
     }
 
