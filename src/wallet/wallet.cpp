@@ -4469,15 +4469,6 @@ CWalletKey::CWalletKey(int64_t nExpires)
     nTimeExpires = nExpires;
 }
 
-void CMerkleTx::SetMerkleBranch(const uint256& block_hash, int posInBlock)
-{
-    // Update the tx's hashBlock
-    hashBlock = block_hash;
-
-    // set the position of the transaction in the block
-    nIndex = posInBlock;
-}
-
 int CMerkleTx::GetDepthInMainChain(interfaces::Chain::Lock& locked_chain) const
 {
     if (hashUnset())

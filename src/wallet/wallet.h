@@ -405,8 +405,6 @@ public:
         READWRITE(nIndex);
     }
 
-    void SetMerkleBranch(const uint256& block_hash, int posInBlock);
-
     /**
      * Return depth of transaction in blockchain:
      * <0  : conflicts with a transaction this deep in the blockchain
