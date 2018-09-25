@@ -4629,18 +4629,6 @@ CKeyPool::CKeyPool(const CPubKey& vchPubKeyIn, bool internalIn)
     m_pre_split = false;
 }
 
-void CWalletTx::SetConf(Status status, const uint256& block_hash, int posInBlock)
-{
-    // Update tx status
-    m_confirm.status = status;
-
-    // Update the tx's hashBlock
-    m_confirm.hashBlock = block_hash;
-
-    // set the position of the transaction in the block
-    m_confirm.nIndex = posInBlock;
-}
-
 int CWalletTx::GetDepthInMainChain(interfaces::Chain::Lock& locked_chain) const
 {
     if (isUnconfirmed() || isAbandoned()) return 0;
