@@ -4639,15 +4639,6 @@ CKeyPool::CKeyPool(const CPubKey& vchPubKeyIn, bool internalIn)
     m_pre_split = false;
 }
 
-void CWalletTx::SetMerkleBranch(const uint256& block_hash, int posInBlock)
-{
-    // Update the tx's hashBlock
-    hashBlock = block_hash;
-
-    // set the position of the transaction in the block
-    nIndex = posInBlock;
-}
-
 int CWalletTx::GetDepthInMainChain(interfaces::Chain::Lock& locked_chain) const
 {
     if (hashUnset())
