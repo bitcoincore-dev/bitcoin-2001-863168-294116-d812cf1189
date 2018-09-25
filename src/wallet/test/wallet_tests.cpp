@@ -300,7 +300,8 @@ public:
         LOCK(wallet->cs_wallet);
         auto it = wallet->mapWallet.find(tx->GetHash());
         BOOST_CHECK(it != wallet->mapWallet.end());
-        it->second.SetMerkleBranch(chainActive.Tip(), 1);
+        it->second.hashBlock = chainActive.Tip()->GetBlockHash();
+        it->second.nIndex = 1;
         return it->second;
     }
 
