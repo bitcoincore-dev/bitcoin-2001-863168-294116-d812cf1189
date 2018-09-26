@@ -9,6 +9,8 @@
 #include <consensus/validation.h>
 #include <core_io.h>
 #include <index/txindex.h>
+#include <init.h>
+#include <interfaces/chain.h>
 #include <keystore.h>
 #include <validation.h>
 #include <validationinterface.h>
@@ -20,6 +22,7 @@
 #include <primitives/transaction.h>
 #include <rpc/rawtransaction.h>
 #include <rpc/server.h>
+#include <rpc/util.h>
 #include <script/script.h>
 #include <script/script_error.h>
 #include <script/sign.h>
@@ -754,22 +757,44 @@ static UniValue combinerawtransaction(const JSONRPCRequest& request)
     return EncodeHexTx(mergedTx);
 }
 
-UniValue SignTransaction(CMutableTransaction& mtx, const UniValue& prevTxsUnival, CBasicKeyStore *keystore, bool is_temp_keystore, const UniValue& hashType)
+// Wrapper to help add a single coin to CCoinsViewCache.
+class CoinFill : private CCoinsView
+{
+public:
+    CoinFill(CCoinsViewCache& cache, const COutPoint &output, Coin&& coin, CCoinsView &backend) : m_cache(cache), m_output(output), m_coin(std::move(coin)), m_backend(backend) {
+        m_cache.SetBackend(*this);
+        m_cache.AccessCoin(output);
+    }
+    ~CoinFill() {
+        m_cache.SetBackend(m_backend);
+    }
+
+    private:
+    bool GetCoin(const COutPoint &output, Coin &coin) const override {
+        assert(output == m_output);
+        coin = std::move(m_coin);
+        return true;
+    }
+    CCoinsViewCache& m_cache;
+    const COutPoint& m_output;
+    Coin&& m_coin;
+    CCoinsView& m_backend;
+};
+
+UniValue SignTransaction(interfaces::Chain& chain, CMutableTransaction& mtx, const UniValue& prevTxsUnival, CBasicKeyStore *keystore, bool is_temp_keystore, const UniValue& hashType)
 {
     // Fetch previous transactions (inputs):
     CCoinsView viewDummy;
     CCoinsViewCache view(&viewDummy);
     {
-        LOCK2(cs_main, mempool.cs);
-        CCoinsViewCache &viewChain = *pcoinsTip;
-        CCoinsViewMemPool viewMempool(&viewChain, mempool);
-        view.SetBackend(viewMempool); // temporarily switch cache backend to db+mempool view
-
+        std::vector<COutPoint> outputs;
         for (const CTxIn& txin : mtx.vin) {
-            view.AccessCoin(txin.prevout); // Load entries from viewChain into view; can fail.
+            outputs.emplace_back(txin.prevout);
         }
-
-        view.SetBackend(viewDummy); // switch back to avoid locking mempool for too long
+        std::vector<Coin> coins = chain.findCoins(outputs);
+        for (size_t i = 0; i < coins.size(); ++i) {
+            CoinFill(view, outputs[i], std::move(coins[i]), viewDummy);
+        }
     }
 
     // Add previous txouts given in the RPC call:
@@ -969,7 +994,7 @@ static UniValue signrawtransactionwithkey(const JSONRPCRequest& request)
         keystore.AddKey(key);
     }
 
-    return SignTransaction(mtx, request.params[2], &keystore, true, request.params[3]);
+    return SignTransaction(*g_rpc_interfaces->chain, mtx, request.params[2], &keystore, true, request.params[3]);
 }
 
 UniValue signrawtransaction(const JSONRPCRequest& request)

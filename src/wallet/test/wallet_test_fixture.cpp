@@ -8,16 +8,11 @@
 #include <wallet/db.h>
 
 WalletTestingSetup::WalletTestingSetup(const std::string& chainName):
-    TestingSetup(chainName), m_wallet("mock", WalletDatabase::CreateMock())
+    TestingSetup(chainName), m_wallet(*m_chain, "mock", WalletDatabase::CreateMock())
 {
     bool fFirstRun;
     m_wallet.LoadWallet(fFirstRun);
-    RegisterValidationInterface(&m_wallet);
+    m_wallet.m_handler = m_chain->handleNotifications(m_wallet);
 
-    RegisterWalletRPCCommands(tableRPC);
-}
-
-WalletTestingSetup::~WalletTestingSetup()
-{
-    UnregisterValidationInterface(&m_wallet);
+    m_chain_client->registerRpcs();
 }
