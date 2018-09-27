@@ -11,6 +11,8 @@
 #include <chainparams.h>
 #include <qt/clientmodel.h>
 #include <fs.h>
+#include <interfaces/config.h>
+#include <interfaces/init.h>
 #include <qt/guiconstants.h>
 #include <qt/guiutil.h>
 #include <qt/intro.h>
@@ -484,7 +486,7 @@ void BitcoinApplication::initializeResult(bool success)
         });
 
         for (auto& wallet : m_node.getWallets()) {
-            addWallet(new WalletModel(std::move(wallet), m_node, platformStyle, optionsModel));
+            addWallet(new WalletModel(std::move(wallet), m_node, platformStyle, optionsModel, clientModel));
         }
 #endif
 
@@ -552,9 +554,11 @@ static void SetupUIArgs()
 #ifndef BITCOIN_QT_TEST
 int main(int argc, char *argv[])
 {
+    auto init = interfaces::MakeInit(argc, argv, interfaces::g_config);
+
     SetupEnvironment();
 
-    std::unique_ptr<interfaces::Node> node = interfaces::MakeNode();
+    auto node = init->makeNode();
 
     // Do not refer to data directory yet, this can be overridden by Intro::pickDataDirectory
 

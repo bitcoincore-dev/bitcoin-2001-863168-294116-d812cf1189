@@ -5,6 +5,8 @@
 #ifndef BITCOIN_INTERFACES_NODE_H
 #define BITCOIN_INTERFACES_NODE_H
 
+#include <interfaces/base.h>
+
 #include <addrdb.h>     // For banmap_t
 #include <amount.h>     // For CAmount
 #include <net.h>        // For CConnman::NumConnections
@@ -29,10 +31,11 @@ struct CNodeStateStats;
 
 namespace interfaces {
 class Handler;
+class Init;
 class Wallet;
 
 //! Top-level interface for a bitcoin node (bitcoind process).
-class Node
+class Node : public Base
 {
 public:
     virtual ~Node() {}
@@ -54,6 +57,9 @@ public:
 
     //! Get network name.
     virtual std::string getNetwork() = 0;
+
+    //! Get argument value.
+    virtual std::string getArg(const std::string& arg, const std::string& default_value) = 0;
 
     //! Init logging.
     virtual void initLogging() = 0;
@@ -228,7 +234,8 @@ public:
 };
 
 //! Return implementation of Node interface.
-std::unique_ptr<Node> MakeNode();
+using MakeNodeFn = std::unique_ptr<Node>(Init& init);
+std::unique_ptr<Node> MakeNode(Init& init);
 
 } // namespace interfaces
 

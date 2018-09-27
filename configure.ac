@@ -212,6 +212,18 @@ AC_ARG_ENABLE([zmq],
 
 AC_ARG_WITH([protoc-bindir],[AS_HELP_STRING([--with-protoc-bindir=BIN_DIR],[specify protoc bin path])], [protoc_bin_path=$withval], [])
 
+AC_ARG_WITH([capnp],
+  [AS_HELP_STRING([--with-capnp=PREFIX_DIR],
+  [specify Cap'n Proto install path (default: auto-detect)])],
+  [with_capnp=$withval],
+  [with_capnp=auto])
+
+AC_ARG_ENABLE([multiprocess],
+  [AS_HELP_STRING([--enable-multiprocess],
+  [build multiprocess bitcoin-node, bitcoin-wallet, and bitcoin-gui executables in addition to monolithic bitcoind and bitcoin-qt executables (default is yes if capnp is found)])],
+  [enable_multiprocess=$enableval],
+  [enable_multiprocess=auto])
+
 AC_ARG_ENABLE(man,
     [AS_HELP_STRING([--disable-man],
                     [do not install man pages (default is to install)])],,
@@ -1220,6 +1232,57 @@ AM_CONDITIONAL([EMBEDDED_UNIVALUE],[test x$need_bundled_univalue = xyes])
 AC_SUBST(UNIVALUE_CFLAGS)
 AC_SUBST(UNIVALUE_LIBS)
 
+dnl Cap'n Proto check
+
+if test "x$with_capnp" = xno; then
+  capnp_found=no
+elif test "x$with_capnp" = xyes || test "x$with_capnp" = xauto; then
+  AC_PATH_PROG(CAPNP_BIN, capnp)
+  if test "x$use_pkgconfig" = xyes; then
+    m4_ifdef([PKG_CHECK_MODULES], [PKG_CHECK_MODULES([CAPNP_RPC], [capnp-rpc],
+      [capnp_found=yes; capnp_rpc_prefix=`$PKG_CONFIG --variable=prefix capnp-rpc`],
+      [capnp_found=no; test "x$with_capnp" != xyes || AC_MSG_ERROR([--with-capnp=yes specified and capnp-rpc not found])]
+    )])
+  fi
+elif test -d "$with_capnp"; then
+  CAPNP_BIN="$with_capnp/bin/capnp "
+  CAPNP_RPC_CFLAGS="-I$with_capnp/include"
+  CAPNP_RPC_LIBS="-L$with_capnp/lib -lcapnp-rpc -lkj-async -lcapnp -lkj"
+  capnp_found=yes
+  capnp_rpc_prefix="$with_capnp"
+else
+  AC_MSG_ERROR([--with-capnp=$with_capnp value does not point to a directory])
+fi
+if test "x$capnp_found" = xyes; then
+  CAPNP_PARSER_CFLAGS="$CAPNP_RPC_CFLAGS"
+  CAPNP_PARSER_LIBS="$CAPNP_RPC_LIBS -lcapnpc"
+  CAPNP_PARSER_INCLUDE="$capnp_rpc_prefix/include"
+fi
+AC_SUBST(CAPNP_BIN)
+AC_SUBST(CAPNP_RPC_CFLAGS)
+AC_SUBST(CAPNP_RPC_LIBS)
+AC_SUBST(CAPNP_PARSER_CFLAGS)
+AC_SUBST(CAPNP_PARSER_LIBS)
+AC_SUBST(CAPNP_PARSER_INCLUDE)
+
+dnl Multiprocess check
+
+if test "x$enable_multiprocess" = xyes; then
+  if test "x$capnp_found" != xyes; then
+    AC_MSG_ERROR([capnp-rpc library not found (required for --enable-multiprocess)])
+  fi
+  build_multiprocess=yes
+elif test "x$enable_multiprocess" = xauto; then
+  build_multiprocess=$capnp_found
+else
+  build_multiprocess=no
+fi
+
+AM_CONDITIONAL([BUILD_MULTIPROCESS],[test x$build_multiprocess = xyes])
+AM_CONDITIONAL([BUILD_BITCOIN_NODE], [test "x$build_multiprocess" = xyes])
+AM_CONDITIONAL([BUILD_BITCOIN_WALLET], [test "x$build_multiprocess$enable_wallet" = xyesyes])
+AM_CONDITIONAL([BUILD_BITCOIN_GUI], [test "x$build_multiprocess" = xyes])
+
 BITCOIN_QT_PATH_PROGS([PROTOC], [protoc],$protoc_bin_path)
 
 AC_MSG_CHECKING([whether to build bitcoind])
@@ -1380,6 +1443,7 @@ AM_CONDITIONAL([ENABLE_AVX2],[test x$enable_avx2 = xyes])
 AM_CONDITIONAL([ENABLE_SHANI],[test x$enable_shani = xyes])
 AM_CONDITIONAL([USE_ASM],[test x$use_asm = xyes])
 
+AC_DEFINE_UNQUOTED(BITCOIN_DAEMON_NAME, "$BITCOIN_DAEMON_NAME", [Base name of bitcoind executable])
 AC_DEFINE(CLIENT_VERSION_MAJOR, _CLIENT_VERSION_MAJOR, [Major version])
 AC_DEFINE(CLIENT_VERSION_MINOR, _CLIENT_VERSION_MINOR, [Minor version])
 AC_DEFINE(CLIENT_VERSION_REVISION, _CLIENT_VERSION_REVISION, [Build revision])
@@ -1500,6 +1564,7 @@ esac
 
 echo
 echo "Options used to compile and link:"
+echo "  multiprocess  = $build_multiprocess"
 echo "  with wallet   = $enable_wallet"
 echo "  with gui / qt = $bitcoin_enable_qt"
 if test x$bitcoin_enable_qt != xno; then

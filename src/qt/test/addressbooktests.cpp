@@ -2,11 +2,13 @@
 #include <qt/test/util.h>
 #include <test/test_bitcoin.h>
 
+#include <interfaces/chain.h>
 #include <interfaces/node.h>
 #include <qt/addressbookpage.h>
 #include <qt/addresstablemodel.h>
 #include <qt/editaddressdialog.h>
 #include <qt/callback.h>
+#include <qt/clientmodel.h>
 #include <qt/optionsmodel.h>
 #include <qt/platformstyle.h>
 #include <qt/qvalidatedlineedit.h>
@@ -53,10 +55,11 @@ void EditAddressAndSubmit(
  * In each case, verify the resulting state of the address book and optionally
  * the warning message presented to the user.
  */
-void TestAddAddressesToSendBook()
+void TestAddAddressesToSendBook(interfaces::Init& init)
 {
     TestChain100Setup test;
-    std::shared_ptr<CWallet> wallet = std::make_shared<CWallet>("mock", WalletDatabase::CreateMock());
+    auto chain = interfaces::MakeChain();
+    std::shared_ptr<CWallet> wallet = std::make_shared<CWallet>(*chain, "mock", WalletDatabase::CreateMock());
     bool firstRun;
     wallet->LoadWallet(firstRun);
 
@@ -101,10 +104,10 @@ void TestAddAddressesToSendBook()
 
     // Initialize relevant QT models.
     std::unique_ptr<const PlatformStyle> platformStyle(PlatformStyle::instantiate("other"));
-    auto node = interfaces::MakeNode();
+    auto node = interfaces::MakeNode(init);
     OptionsModel optionsModel(*node);
-    AddWallet(wallet);
-    WalletModel walletModel(std::move(node->getWallets()[0]), *node, platformStyle.get(), &optionsModel);
+    ClientModel clientModel(*node, &optionsModel);
+    WalletModel walletModel(interfaces::MakeWallet(wallet), *node, platformStyle.get(), &optionsModel, &clientModel);
     RemoveWallet(wallet);
     EditAddressDialog editAddressDialog(EditAddressDialog::NewSendingAddress);
     editAddressDialog.setModel(walletModel.getAddressTableModel());
@@ -139,5 +142,5 @@ void TestAddAddressesToSendBook()
 
 void AddressBookTests::addressBookTests()
 {
-    TestAddAddressesToSendBook();
+    TestAddAddressesToSendBook(m_init);
 }

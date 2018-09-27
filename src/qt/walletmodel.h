@@ -24,6 +24,7 @@
 enum class OutputType;
 
 class AddressTableModel;
+class ClientModel;
 class OptionsModel;
 class PlatformStyle;
 class RecentRequestsTableModel;
@@ -111,7 +112,7 @@ class WalletModel : public QObject
     Q_OBJECT
 
 public:
-    explicit WalletModel(std::unique_ptr<interfaces::Wallet> wallet, interfaces::Node& node, const PlatformStyle *platformStyle, OptionsModel *optionsModel, QObject *parent = 0);
+    explicit WalletModel(std::unique_ptr<interfaces::Wallet> wallet, interfaces::Node& node, const PlatformStyle *platformStyle, OptionsModel *optionsModel, ClientModel *clientModel, QObject *parent = 0);
     ~WalletModel();
 
     enum StatusCode // Returned by sendCoins
@@ -197,7 +198,6 @@ public:
     bool bumpFee(uint256 hash, uint256& new_hash);
 
     static bool isWalletEnabled();
-    bool privateKeysDisabled() const;
 
     interfaces::Node& node() const { return m_node; }
     interfaces::Wallet& wallet() const { return *m_wallet; }
