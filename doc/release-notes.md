@@ -69,6 +69,18 @@ nodes. The option will now by default be off for improved privacy and security
 as well as reduced upload usage. The option can explicitly be turned on for
 local-network debugging purposes.
 
+`listtransaction` label support
+-------------------------------
+
+The `listtransactions` RPC `account` parameter which was deprecated in 0.17.0
+and renamed to `dummy` has been un-deprecated and renamed again to `label`.
+
+The behavior of the `label` argument is identical to previous behavior of the
+`account` argument, except `label` filtering will only return incoming
+transactions and not outgoing transactions (because it used to be possible to
+create transactions spending from specific accounts, but this is no longer
+possible with labels).
+
 Example item
 ------------
 
