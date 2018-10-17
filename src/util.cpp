@@ -1042,8 +1042,10 @@ void DirectoryCommit(const fs::path &dirname)
 {
 #ifndef WIN32
     FILE* file = fsbridge::fopen(dirname, "r");
-    fsync(fileno(file));
-    fclose(file);
+    if (file) {
+        fsync(fileno(file));
+        fclose(file);
+    }
 #endif
 }
 
