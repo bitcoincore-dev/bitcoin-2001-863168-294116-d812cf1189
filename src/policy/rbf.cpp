@@ -7,7 +7,7 @@
 bool SignalsOptInRBF(const CTransaction &tx)
 {
     for (const CTxIn &txin : tx.vin) {
-        if (txin.nSequence < std::numeric_limits<unsigned int>::max()-1) {
+        if (txin.nSequence < CTxIn::SEQUENCE_FINAL - 1) {
             return true;
         }
     }
