@@ -501,12 +501,12 @@ public:
         : m_chain(chain), m_wallet_filenames(std::move(wallet_filenames))
     {
     }
-    void registerRpcs() override { RegisterWalletRPCCommands(::tableRPC); }
+    void registerRpcs() override { return RegisterWalletRPCCommands(::tableRPC); }
     bool verify() override { return VerifyWallets(m_chain, m_wallet_filenames); }
     bool load() override { return LoadWallets(m_chain, m_wallet_filenames); }
-    void start(CScheduler& scheduler) override { StartWallets(scheduler); }
-    void flush() override { FlushWallets(); }
-    void stop() override { StopWallets(); }
+    void start(CScheduler& scheduler) override { return StartWallets(scheduler); }
+    void flush() override { return FlushWallets(); }
+    void stop() override { return StopWallets(); }
     ~WalletClientImpl() override { UnloadWallets(); }
 
     Chain& m_chain;
