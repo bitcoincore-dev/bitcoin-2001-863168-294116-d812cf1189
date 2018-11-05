@@ -1609,7 +1609,7 @@ int64_t CWallet::RescanFromTime(int64_t startTime, const WalletRescanReserver& r
         uint256 failed_block = ScanForWalletTransactions(start_block, {} /* stop block */, reserver, update);
         if (!failed_block.IsNull()) {
             int64_t time_max;
-            if (!chain().findBlock(failed_block, nullptr /* CBlock */, nullptr /* time */, &time_max)) {
+            if (!chain().findBlock(failed_block, nullptr /* block */, nullptr /* time */, &time_max)) {
                 throw std::logic_error("ScanForWalletTransactions returned invalid block hash");
             }
             return time_max + TIMESTAMP_WINDOW + 1;
@@ -3755,7 +3755,7 @@ unsigned int CWallet::ComputeTimeSmart(const CWalletTx& wtx) const
     unsigned int nTimeSmart = wtx.nTimeReceived;
     if (!wtx.hashUnset()) {
         int64_t blocktime;
-        if (chain().findBlock(wtx.hashBlock, nullptr /* CBlock */, &blocktime)) {
+        if (chain().findBlock(wtx.hashBlock, nullptr /* block */, &blocktime)) {
             int64_t latestNow = wtx.nTimeReceived;
             int64_t latestEntry = 0;
 
