@@ -1720,9 +1720,9 @@ uint256 CWallet::ScanForWalletTransactions(const uint256& start_block, const uin
             }
         }
         if (!block_hash.IsNull() && fAbortRescan) {
-            WalletLogPrintf("Rescan aborted at block %d. Progress=%f\n", *block_height, progress_current);
+            WalletLogPrintf("Rescan aborted at block %d. Progress=%f\n", block_height.value_or(0), progress_current);
         } else if (!block_hash.IsNull() && ShutdownRequested()) {
-            WalletLogPrintf("Rescan interrupted by shutdown request at block %d. Progress=%f\n", *block_height, progress_current);
+            WalletLogPrintf("Rescan interrupted by shutdown request at block %d. Progress=%f\n", block_height.value_or(0), progress_current);
         }
         ShowProgress(strprintf("%s " + _("Rescanning..."), GetDisplayName()), 100); // hide progress dialog in GUI
     }
@@ -2639,7 +2639,7 @@ bool CWallet::CreateTransaction(interfaces::Chain::Lock& locked_chain, const std
     // enough, that fee sniping isn't a problem yet, but by implementing a fix
     // now we ensure code won't be written that makes assumptions about
     // nLockTime that preclude a fix later.
-    txNew.nLockTime = locked_chain.getHeight().value_or(LOCKTIME_MAX);
+    txNew.nLockTime = uint32_t(locked_chain.getHeight().value_or(-1));
 
     // Secondly occasionally randomly pick a nLockTime even further back, so
     // that transactions that are delayed after signing for whatever reason,
