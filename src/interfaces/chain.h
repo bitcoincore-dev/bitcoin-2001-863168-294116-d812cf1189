@@ -106,7 +106,12 @@ public:
     //! behavior while code is transitioned to use the Chain::Lock interface.
     virtual std::unique_ptr<Lock> assumeLocked() = 0;
 
-    //! Return whether node has the block and optionally return block metadata or contents.
+    //! Return whether node has the block and optionally return block metadata
+    //! or contents.
+    //!
+    //! If a block pointer is provided to retrieve the block contents, and the
+    //! block exists but doesn't have data (for example due to pruning), the
+    //! block will be empty and all fields set to null.
     virtual bool findBlock(const uint256& hash,
         CBlock* block = nullptr,
         int64_t* time = nullptr,

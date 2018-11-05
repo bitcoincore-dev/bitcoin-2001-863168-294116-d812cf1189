@@ -537,7 +537,6 @@ UniValue importwallet(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_WALLET_ERROR, "Wallet is currently rescanning. Abort existing rescan or wait.");
     }
 
-    Optional<int> tip_height;
     int64_t nTimeBegin = 0;
     bool fGood = true;
     {
@@ -551,7 +550,7 @@ UniValue importwallet(const JSONRPCRequest& request)
         if (!file.is_open()) {
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
         }
-        tip_height = locked_chain->getHeight();
+        Optional<int> tip_height = locked_chain->getHeight();
         nTimeBegin = tip_height ? locked_chain->getBlockTime(*tip_height) : 0;
 
         int64_t nFilesize = std::max((int64_t)1, (int64_t)file.tellg());

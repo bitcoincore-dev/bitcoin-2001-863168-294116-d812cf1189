@@ -102,9 +102,8 @@ static void WalletTxToJSON(interfaces::Chain& chain, interfaces::Chain::Lock& lo
         entry.pushKV("blockhash", wtx.hashBlock.GetHex());
         entry.pushKV("blockindex", wtx.nIndex);
         int64_t block_time;
-        if (!chain.findBlock(wtx.hashBlock, nullptr /* CBlock */, &block_time)) {
-            throw std::logic_error("invalid wallet transaction block hash");
-        }
+        bool found_block = chain.findBlock(wtx.hashBlock, nullptr /* block */, &block_time);
+        assert(found_block);
         entry.pushKV("blocktime", block_time);
     } else {
         entry.pushKV("trusted", wtx.IsTrusted(locked_chain));
@@ -3302,6 +3301,7 @@ UniValue rescanblockchain(const JSONRPCRequest& request)
     {
         auto locked_chain = pwallet->chain().lock();
         tip_height = locked_chain->getHeight();
+        stop_height = tip_height;
 
         if (!request.params[0].isNull()) {
             start_height = request.params[0].get_int();
@@ -3341,7 +3341,7 @@ UniValue rescanblockchain(const JSONRPCRequest& request)
     }
     UniValue response(UniValue::VOBJ);
     response.pushKV("start_height", start_height);
-    response.pushKV("stop_height", stop_height ? *stop_height : tip_height ? *tip_height: UniValue());
+    response.pushKV("stop_height", stop_height ? *stop_height : UniValue());
     return response;
 }
 

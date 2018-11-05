@@ -43,9 +43,24 @@ class LockImpl : public Chain::Lock
         const Optional<int> height = getBlockHeight(hash);
         return tip_height && height ? *tip_height - *height + 1 : 0;
     }
-    uint256 getBlockHash(int height) override { return ::chainActive[height]->GetBlockHash(); }
-    int64_t getBlockTime(int height) override { return ::chainActive[height]->GetBlockTime(); }
-    int64_t getBlockMedianTimePast(int height) override { return ::chainActive[height]->GetMedianTimePast(); }
+    uint256 getBlockHash(int height) override
+    {
+        CBlockIndex* block = ::chainActive[height];
+        assert(block != nullptr);
+        return block->GetBlockHash();
+    }
+    int64_t getBlockTime(int height) override
+    {
+        CBlockIndex* block = ::chainActive[height];
+        assert(block != nullptr);
+        return block->GetBlockTime();
+    }
+    int64_t getBlockMedianTimePast(int height) override
+    {
+        CBlockIndex* block = ::chainActive[height];
+        assert(block != nullptr);
+        return block->GetMedianTimePast();
+    }
     bool haveBlockOnDisk(int height) override
     {
         CBlockIndex* block = ::chainActive[height];
