@@ -157,7 +157,7 @@ protected:
     std::set<std::string> m_network_only_args;
     std::map<OptionsCategory, std::map<std::string, Arg>> m_available_args;
 
-    bool ReadConfigStream(std::istream& stream, std::string& error, bool ignore_invalid_keys = false);
+    bool ReadConfigStream(std::istream& stream, std::string& error, bool ignore_invalid_keys = false, bool prepend = false);
 
 public:
     ArgsManager();

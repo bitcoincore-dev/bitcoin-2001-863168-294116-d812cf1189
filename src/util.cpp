@@ -854,21 +854,37 @@ static bool GetConfigOptions(std::istream& stream, std::string& error, std::vect
     return true;
 }
 
-bool ArgsManager::ReadConfigStream(std::istream& stream, std::string& error, bool ignore_invalid_keys)
+bool ArgsManager::ReadConfigStream(std::istream& stream, std::string& error, bool ignore_invalid_keys, bool prepend)
 {
     LOCK(cs_args);
     std::vector<std::pair<std::string, std::string>> options;
     if (!GetConfigOptions(stream, error, options)) {
         return false;
     }
+    std::map<std::string, size_t> offsets;
     for (const std::pair<std::string, std::string>& option : options) {
         std::string strKey = std::string("-") + option.first;
         std::string strValue = option.second;
 
         if (InterpretNegatedOption(strKey, strValue)) {
-            m_config_args[strKey].clear();
+            auto& opt_values = m_config_args[strKey];
+            if (prepend) {
+                // only clear entries created by this config file
+                if (offsets.count(strKey)) {
+                    opt_values.erase(opt_values.begin(), opt_values.begin() + offsets.at(strKey));
+                    offsets.erase(strKey);
+                }
+            } else {
+                opt_values.clear();
+            }
         } else {
-            m_config_args[strKey].push_back(strValue);
+            auto& opt_values = m_config_args[strKey];
+            if (prepend) {
+                opt_values.insert(opt_values.begin() + offsets[strKey], strValue);
+                ++offsets[strKey];
+            } else {
+                opt_values.push_back(strValue);
+            }
         }
 
         // Check that the arg is known
