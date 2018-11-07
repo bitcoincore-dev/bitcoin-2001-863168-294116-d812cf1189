@@ -130,13 +130,6 @@ static int AppInitRPC(int argc, char* argv[])
         fprintf(stderr, "Error reading configuration file: %s\n", error.c_str());
         return EXIT_FAILURE;
     }
-    // Check for -testnet or -regtest parameter (BaseParams() calls are only valid after this clause)
-    try {
-        SelectBaseParams(gArgs.GetChainName());
-    } catch (const std::exception& e) {
-        fprintf(stderr, "Error: %s\n", e.what());
-        return EXIT_FAILURE;
-    }
     return CONTINUE_EXECUTION;
 }
 
