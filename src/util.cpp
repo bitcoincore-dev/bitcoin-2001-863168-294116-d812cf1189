@@ -854,7 +854,7 @@ static bool GetConfigOptions(std::istream& stream, std::string& error, std::vect
     return true;
 }
 
-bool ArgsManager::ReadConfigStream(std::istream& stream, std::string& error, bool ignore_invalid_keys, bool prepend)
+bool ArgsManager::ReadConfigStream(std::istream& stream, std::string& error, bool ignore_invalid_keys, bool prepend, bool make_net_specific)
 {
     LOCK(cs_args);
     std::vector<std::pair<std::string, std::string>> options;
@@ -865,8 +865,13 @@ bool ArgsManager::ReadConfigStream(std::istream& stream, std::string& error, boo
     for (const std::pair<std::string, std::string>& option : options) {
         std::string strKey = std::string("-") + option.first;
         std::string strValue = option.second;
+        const bool is_negated = InterpretNegatedOption(strKey, strValue);
 
-        if (InterpretNegatedOption(strKey, strValue)) {
+        if (make_net_specific) {
+            strKey = ArgsManagerHelper::NetworkArg(*this, strKey);
+        }
+
+        if (is_negated) {
             auto& opt_values = m_config_args[strKey];
             if (prepend) {
                 // only clear entries created by this config file
