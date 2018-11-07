@@ -149,7 +149,7 @@ protected:
     std::map<OptionsCategory, std::map<std::string, Arg>> m_available_args GUARDED_BY(cs_args);
     std::set<std::string> m_config_sections GUARDED_BY(cs_args);
 
-    NODISCARD bool ReadConfigStream(std::istream& stream, std::string& error, bool ignore_invalid_keys = false, bool prepend = false);
+    NODISCARD bool ReadConfigStream(std::istream& stream, std::string& error, bool ignore_invalid_keys = false, bool prepend = false, bool make_net_specific = false);
 
 public:
     ArgsManager();
