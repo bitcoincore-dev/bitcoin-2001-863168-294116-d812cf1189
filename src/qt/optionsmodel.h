@@ -51,8 +51,7 @@ public:
         Language,               // QString
         CoinControlFeatures,    // bool
         ThreadsScriptVerif,     // int
-        Prune,                  // bool
-        PruneSize,              // int
+        PruneMB,                // int
         DatabaseCache,          // int
         SpendZeroConfChange,    // bool
         addresstype,            // QString
