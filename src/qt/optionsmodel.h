@@ -51,8 +51,7 @@ public:
         Language,               // QString
         CoinControlFeatures,    // bool
         ThreadsScriptVerif,     // int
-        Prune,                  // bool
-        PruneSize,              // int
+        PruneMiB,               // int
         DatabaseCache,          // int
         SpendZeroConfChange,    // bool
         addresstype,            // QString
@@ -104,6 +103,7 @@ private:
     QString strOverriddenByCommandLine;
 
     /* rwconf settings that require a restart */
+    qlonglong m_nextrun_prune;
     bool f_peerbloomfilters;
 
     // Add option to list of GUI options overridden through command line/config file

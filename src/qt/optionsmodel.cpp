@@ -94,11 +94,20 @@ void OptionsModel::Init(bool resetSettings)
     // by command-line and show this in the UI.
 
     // Main
-    if (!settings.contains("bPrune"))
-        settings.setValue("bPrune", false);
-    if (!settings.contains("nPruneSize"))
-        settings.setValue("nPruneSize", 2);
-    SetPrune(settings.value("bPrune").toBool());
+    if (!gArgs.IsArgSet("-prune")) {
+        if (settings.contains("bPrune")) {
+            if (settings.value("bPrune").toBool()) {
+                if (!settings.contains("nPruneSize")) {
+                    settings.setValue("nPruneSize", 2);
+                }
+                // Convert prune size from GB to MiB:
+                const uint64_t nPruneSizeMiB = (settings.value("nPruneSize").toInt() * GB_BYTES) >> 20;
+                gArgs.ForceSetArg("-prune", nPruneSizeMiB);
+            } else {
+                gArgs.ForceSetArg("-prune", "0");
+            }
+        }
+    }
 
     if (!settings.contains("nDatabaseCache"))
         settings.setValue("nDatabaseCache", (qint64)nDefaultDbCache);
@@ -158,6 +167,7 @@ void OptionsModel::Init(bool resetSettings)
         addOverriddenOption("-onion");
 
     // rwconf settings that require a restart
+    m_nextrun_prune = gArgs.GetArg("-prune", 0);
     f_peerbloomfilters = gArgs.GetBoolArg("-peerbloomfilters", DEFAULT_PEERBLOOMFILTERS);
 
     // Display
@@ -330,10 +340,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("language");
         case CoinControlFeatures:
             return fCoinControlFeatures;
-        case Prune:
-            return settings.value("bPrune");
-        case PruneSize:
-            return settings.value("nPruneSize");
+        case PruneMiB:
+            return m_nextrun_prune;
         case DatabaseCache:
             return settings.value("nDatabaseCache");
         case ThreadsScriptVerif:
@@ -490,18 +498,20 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             settings.setValue("fCoinControlFeatures", fCoinControlFeatures);
             Q_EMIT coinControlFeaturesChanged(fCoinControlFeatures);
             break;
-        case Prune:
-            if (settings.value("bPrune") != value) {
-                settings.setValue("bPrune", value);
+        case PruneMiB:
+        {
+            const qlonglong llvalue = value.toLongLong();
+            if (m_nextrun_prune != llvalue) {
+                m_nextrun_prune = llvalue;
+                gArgs.ModifyRWConfigFile("prune", value.toString().toStdString());
+                settings.setValue("bPrune", (llvalue > 1));
+                if (llvalue > 1) {
+                    settings.setValue("nPruneSize", ((llvalue * 1024 * 1024) + GB_BYTES - 1) / GB_BYTES);
+                }
                 setRestartRequired(true);
             }
             break;
-        case PruneSize:
-            if (settings.value("nPruneSize") != value) {
-                settings.setValue("nPruneSize", value);
-                setRestartRequired(true);
-            }
-            break;
+        }
         case DatabaseCache:
             if (settings.value("nDatabaseCache") != value) {
                 settings.setValue("nDatabaseCache", value);
