@@ -136,11 +136,18 @@ void OptionsModel::Init(bool resetSettings)
     // by command-line and show this in the UI.
 
     // Main
-    if (!settings.contains("bPrune"))
-        settings.setValue("bPrune", false);
-    if (!settings.contains("nPruneSize"))
-        settings.setValue("nPruneSize", DEFAULT_PRUNE_TARGET_GB);
-    SetPruneEnabled(settings.value("bPrune").toBool());
+    if (!gArgs.IsArgSet("-prune")) {
+        if (settings.contains("bPrune")) {
+            if (settings.value("bPrune").toBool()) {
+                if (!settings.contains("nPruneSize"))
+                    settings.setValue("nPruneSize", DEFAULT_PRUNE_TARGET_GB);
+                const uint64_t nPruneSizeMiB = PruneGBtoMiB(settings.value("nPruneSize").toInt());
+                gArgs.ForceSetArg("-prune", nPruneSizeMiB);
+            } else {
+                gArgs.ForceSetArg("-prune", "0");
+            }
+        }
+    }
 
     if (!settings.contains("nDatabaseCache"))
         settings.setValue("nDatabaseCache", (qint64)nDefaultDbCache);
@@ -447,10 +454,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return fCoinControlFeatures;
         case EnablePSBTControls:
             return settings.value("enable_psbt_controls");
-        case Prune:
-            return settings.value("bPrune");
-        case PruneSize:
-            return settings.value("nPruneSize");
+        case PruneMiB:
+            return qlonglong(gArgs.GetIntArg("-prune", 0));
         case DatabaseCache:
             return settings.value("nDatabaseCache");
         case ThreadsScriptVerif:
@@ -652,18 +657,19 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             m_enable_psbt_controls = value.toBool();
             settings.setValue("enable_psbt_controls", m_enable_psbt_controls);
             break;
-        case Prune:
-            if (settings.value("bPrune") != value) {
-                settings.setValue("bPrune", value);
+        case PruneMiB:
+        {
+            const qlonglong llvalue = value.toLongLong();
+            if (gArgs.GetIntArg("-prune", 0) != llvalue) {
+                gArgs.ModifyRWConfigFile("prune", value.toString().toStdString());
+                settings.setValue("bPrune", (llvalue > 1));
+                if (llvalue > 1) {
+                    settings.setValue("nPruneSize", PruneMiBtoGB(llvalue));
+                }
                 setRestartRequired(true);
             }
             break;
-        case PruneSize:
-            if (settings.value("nPruneSize") != value) {
-                settings.setValue("nPruneSize", value);
-                setRestartRequired(true);
-            }
-            break;
+        }
         case DatabaseCache:
             if (settings.value("nDatabaseCache") != value) {
                 settings.setValue("nDatabaseCache", value);
