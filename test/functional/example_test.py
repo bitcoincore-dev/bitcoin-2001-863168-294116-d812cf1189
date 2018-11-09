@@ -193,10 +193,14 @@ class ExampleTest(BitcoinTestFramework):
 
         self.log.info("Wait for node2 reach current tip. Test that it has propagated all the blocks to us")
 
-        getdata_request = msg_getdata()
-        for block in blocks:
-            getdata_request.inv.append(CInv(2, block))
-        self.nodes[2].p2p.send_message(getdata_request)
+        # If we have Linux perf-tools installed, we can easily profile part of the
+        # test (or the whole test using `--perf`) for benchmarking. See the
+        # docstring of `TestNode.profile_with_perf` for more details.
+        with self.nodes[1].profile_with_perf("getdata"):
+            getdata_request = msg_getdata()
+            for block in blocks:
+                getdata_request.inv.append(CInv(2, block))
+            self.nodes[2].p2p.send_message(getdata_request)
 
         # wait_until() will loop until a predicate condition is met. Use it to test properties of the
         # P2PInterface objects.
