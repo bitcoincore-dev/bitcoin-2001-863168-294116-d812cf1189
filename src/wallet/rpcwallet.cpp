@@ -1657,7 +1657,7 @@ static UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bo
             obj.pushKV("address",       EncodeDestination(address));
             obj.pushKV("account",       label);
             obj.pushKV("amount",        ValueFromAmount(nAmount));
-            if (!keyOrigin.empty()) {
+            if (!keyOrigin.empty() && IsDeprecatedRPCEnabled("key_origin")) {
                 obj.pushKV("key_origin",    keyOrigin);
             }
             obj.pushKV("confirmations", (nConf == std::numeric_limits<int>::max() ? 0 : nConf));
