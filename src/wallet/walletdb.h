@@ -153,6 +153,10 @@ public:
     }
 
     uint8_t GetKeyOrigin() const {
+        if (nVersion < VERSION_WITH_FLAGS || nVersion >= VERSION_WITH_HDDATA) {
+            // If the metadata doesn't support saving flags, never return them
+            return 0;
+        }
         return keyFlags;
     }
 };
