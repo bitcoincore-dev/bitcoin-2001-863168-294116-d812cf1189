@@ -1150,7 +1150,7 @@ static UniValue ListReceived(interfaces::Chain::Lock& locked_chain, CWallet * co
         // convert keyflags into a string
         CKeyID keyID = GetKeyForDestination(*pwallet, address);
         uint8_t keyFlags = 0;
-        if (!keyID.IsNull()) {
+        if ((!keyID.IsNull()) && pwallet->mapKeyMetadata.count(keyID)) {
             keyFlags = pwallet->mapKeyMetadata[keyID].GetKeyOrigin();
         }
 
@@ -1181,7 +1181,9 @@ static UniValue ListReceived(interfaces::Chain::Lock& locked_chain, CWallet * co
                 obj.pushKV("involvesWatchonly", true);
             obj.pushKV("address",       EncodeDestination(address));
             obj.pushKV("amount",        ValueFromAmount(nAmount));
-            obj.pushKV("key_origin",    keyOrigin);
+            if (!keyOrigin.empty()) {
+                obj.pushKV("key_origin",    keyOrigin);
+            }
             obj.pushKV("confirmations", (nConf == std::numeric_limits<int>::max() ? 0 : nConf));
             obj.pushKV("label", label);
             UniValue transactions(UniValue::VARR);
