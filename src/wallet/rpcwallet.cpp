@@ -1181,7 +1181,7 @@ static UniValue ListReceived(interfaces::Chain::Lock& locked_chain, CWallet * co
                 obj.pushKV("involvesWatchonly", true);
             obj.pushKV("address",       EncodeDestination(address));
             obj.pushKV("amount",        ValueFromAmount(nAmount));
-            if (!keyOrigin.empty()) {
+            if (!keyOrigin.empty() && IsDeprecatedRPCEnabled("key_origin")) {
                 obj.pushKV("key_origin",    keyOrigin);
             }
             obj.pushKV("confirmations", (nConf == std::numeric_limits<int>::max() ? 0 : nConf));
