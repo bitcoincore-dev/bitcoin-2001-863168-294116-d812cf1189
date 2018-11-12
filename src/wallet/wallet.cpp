@@ -979,14 +979,17 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransactionRef& ptx, const CBlockI
                     updated = true;
                 }
                 // Clear abandoned state assuming notification means it isn't
-                // safe to consider the transaction abandoned (see TODO above).
+                // safe to consider the transaction abandoned.
+                // TODO: Abandoned state should probably be more carefully
+                // tracked via different posInBlock signals or by checking
+                // mempool presence when necessary.
                 if (wtx.isAbandoned()) {
                     wtx.hashBlock.SetNull();
                     updated = true;
                 }
                 return updated;
             };
-            return AddToWallet(MakeTransactionRef(tx), update_wtx);
+            return AddToWallet(MakeTransactionRef(tx), update_wtx, false /* fFlushOnClose */);
         }
     }
     return false;

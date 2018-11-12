@@ -627,11 +627,6 @@ private:
      * notifications happen and cached balances are marked dirty.
      *
      * If fUpdate is true, existing transactions will be updated.
-     * TODO: One exception to this is that the abandoned state is cleared under the
-     * assumption that any further notification of a transaction that was considered
-     * abandoned is an indication that it is not safe to be considered abandoned.
-     * Abandoned state should probably be more carefully tracked via different
-     * posInBlock signals or by checking mempool presence when necessary.
      */
     bool AddToWalletIfInvolvingMe(const CTransactionRef& tx, const CBlockIndex* pIndex, int posInBlock, bool fUpdate) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
 
