@@ -2161,14 +2161,13 @@ CWallet::Balance CWallet::GetBalance(const int min_depth, bool avoid_reuse) cons
 // trusted.
 CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth) const
 {
-    auto locked_chain = chain().lock();
     LOCK(cs_wallet);
 
     CAmount balance = 0;
     for (const auto& entry : mapWallet) {
         const CWalletTx& wtx = entry.second;
         const int depth = wtx.GetDepthInMainChain();
-        if (depth < 0 || !locked_chain->checkFinalTx(*wtx.tx) || wtx.IsImmatureCoinBase()) {
+        if (depth < 0 || !chain().checkFinalTx(*wtx.tx) || wtx.IsImmatureCoinBase()) {
             continue;
         }
 
