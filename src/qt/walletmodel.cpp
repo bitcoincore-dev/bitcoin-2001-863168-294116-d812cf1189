@@ -571,6 +571,9 @@ QString WalletModel::getWalletName() const
 QString WalletModel::getWalletDisplayName() const
 {
     QString walletName = getWalletName();
+    if (walletName.endsWith(".dat")) {
+        walletName.truncate(walletName.size() - 4);
+    }
     if (walletName.isEmpty()) {
         walletName = "[" + tr("default wallet") + "]";
     }
