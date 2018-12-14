@@ -240,6 +240,7 @@ def count_format_specifiers(format_string):
     4
     """
     assert(type(format_string) is str)
+    format_string = format_string.replace('%%', 'X')
     n = 0
     in_specifier = False
     for i, char in enumerate(format_string):
