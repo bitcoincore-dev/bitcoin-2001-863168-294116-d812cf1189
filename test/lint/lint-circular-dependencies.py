@@ -26,6 +26,7 @@ EXPECTED_CIRCULAR_DEPENDENCIES = (
     # Temporary, removed in followup https://github.com/bitcoin/bitcoin/pull/24230
     "index/base -> node/context -> net_processing -> index/blockfilterindex -> index/base",
 )
+EXPECTED_CIRCULAR_DEPENDENCIES = ()
 
 CODE_DIR = "src"
 
@@ -48,6 +49,7 @@ def main():
     )
 
     for dependency_str in dependencies_output.stdout.rstrip().split("\n"):
+        if dependency_str == '': continue
         circular_dependencies.append(
             re.sub("^Circular dependency: ", "", dependency_str)
         )
