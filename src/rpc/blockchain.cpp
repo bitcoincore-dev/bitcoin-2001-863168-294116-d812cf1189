@@ -358,6 +358,7 @@ static std::string EntryDescriptionString()
 {
     return "    \"vsize\" : n,            (numeric) virtual transaction size as defined in BIP 141. This is different from actual serialized size for witness transactions as witness data is discounted.\n"
            "    \"size\" : n,             (numeric) (DEPRECATED) same as vsize.\n"
+           "    \"weight\" : n,           (numeric) transaction weight as defined in BIP 141.\n"
            "    \"fee\" : n,              (numeric) transaction fee in " + CURRENCY_UNIT + " (DEPRECATED)\n"
            "    \"modifiedfee\" : n,      (numeric) transaction fee with fee deltas used for mining priority (DEPRECATED)\n"
            "    \"time\" : n,             (numeric) local time transaction entered pool in seconds since 1 Jan 1970 GMT\n"
@@ -368,6 +369,7 @@ static std::string EntryDescriptionString()
            "    \"ancestorcount\" : n,    (numeric) number of in-mempool ancestor transactions (including this one)\n"
            "    \"ancestorsize\" : n,     (numeric) virtual transaction size of in-mempool ancestors (including this one)\n"
            "    \"ancestorfees\" : n,     (numeric) modified fees (see above) of in-mempool ancestors (including this one) (DEPRECATED)\n"
+           "    \"hash\" : hash,          (string) hash of entire serialized transaction\n"
            "    \"wtxid\" : hash,         (string) hash of serialized transaction, including witness data\n"
            "    \"fees\" : {\n"
            "        \"base\" : n,         (numeric) transaction fee in " + CURRENCY_UNIT + "\n"
@@ -396,6 +398,7 @@ static void entryToJSON(UniValue &info, const CTxMemPoolEntry &e) EXCLUSIVE_LOCK
 
     info.pushKV("size", (int)e.GetTxSize());
     info.pushKV("vsize", info["size"]);
+    info.pushKV("weight", (int)e.GetTxWeight());
     info.pushKV("fee", ValueFromAmount(e.GetFee()));
     info.pushKV("modifiedfee", ValueFromAmount(e.GetModifiedFee()));
     info.pushKV("time", e.GetTime());
@@ -407,6 +410,7 @@ static void entryToJSON(UniValue &info, const CTxMemPoolEntry &e) EXCLUSIVE_LOCK
     info.pushKV("ancestorsize", e.GetSizeWithAncestors());
     info.pushKV("ancestorfees", e.GetModFeesWithAncestors());
     info.pushKV("wtxid", mempool.vTxHashes[e.vTxHashesIdx].first.ToString());
+    info.pushKV("hash", info["wtxid"]);
     const CTransaction& tx = e.GetTx();
     std::set<std::string> setDepends;
     for (const CTxIn& txin : tx.vin)
