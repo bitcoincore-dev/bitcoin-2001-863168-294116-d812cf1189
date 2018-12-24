@@ -36,6 +36,7 @@
 #include <script/sigcache.h>
 #include <scheduler.h>
 #include <shutdown.h>
+#include <stats/stats.h>
 #include <timedata.h>
 #include <txdb.h>
 #include <txmempool.h>
@@ -520,6 +521,8 @@ void SetupServerArgs()
 #else
     hidden_args.emplace_back("-daemon");
 #endif
+
+    CStats::AddStatsOptions();
 
     // Add the hidden options
     gArgs.AddHiddenArgs(hidden_args);
@@ -1172,6 +1175,10 @@ bool AppInitParameterInteraction()
             }
         }
     }
+
+    if (!CStats::parameterInteraction())
+        return false;
+
     return true;
 }
 
