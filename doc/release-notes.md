@@ -1,9 +1,6 @@
-(note: this is a temporary file, to be added-to by anybody, and moved to
-release-notes at release time)
+Bitcoin Core version 0.17.1 is now available from:
 
-Bitcoin Core version *version* is now available from:
-
-  <https://bitcoincore.org/bin/bitcoin-core-*version*/>
+  <https://bitcoincore.org/bin/bitcoin-core-0.17.1/>
 
 This is a new major version release, including new features, various bugfixes
 and performance improvements, as well as updated translations.
@@ -24,7 +21,9 @@ shut down (which might take a few minutes for older versions), then run the
 installer (on Windows) or just copy over `/Applications/Bitcoin-Qt` (on Mac)
 or `bitcoind`/`bitcoin-qt` (on Linux).
 
-The first time you run version 0.15.0, your chainstate database will be converted to a
+If your node has a txindex, the txindex db will be migrated the first time you run 0.17.0 or newer, which may take up to a few hours. Your node will not be functional until this migration completes.
+
+The first time you run version 0.15.0 or newer, your chainstate database will be converted to a
 new format, which will take anywhere from a few minutes to half an hour,
 depending on the speed of your machine.
 
@@ -59,214 +58,107 @@ support versions of macOS older than 10.10.
 Notable changes
 ===============
 
-Changed command-line options
-----------------------------
+`listtransactions` label support
+--------------------------------
 
-- `-includeconf=<file>` can be used to include additional configuration files.
-  Only works inside the `bitcoin.conf` file, not inside included files or from
-  command-line. Multiple files may be included. Can be disabled from command-
-  line via `-noincludeconf`. Note that multi-argument commands like
-  `-includeconf` will override preceding `-noincludeconf`, i.e.
+The `listtransactions` RPC `account` parameter which was deprecated in 0.17.0
+and renamed to `dummy` has been un-deprecated and renamed again to `label`.
 
-    noincludeconf=1
-    includeconf=relative.conf
+When bitcoin is configured with the `-deprecatedrpc=accounts` setting, specifying
+a label/account/dummy argument will return both outgoing and incoming
+transactions. Without the `-deprecatedrpc=accounts` setting, it will only return
+incoming transactions (because it used to be possible to create transactions
+spending from specific accounts, but this is no longer possible with labels).
 
-  as bitcoin.conf will still include `relative.conf`.
+When `-deprecatedrpc=accounts` is set, it's possible to pass the empty string ""
+to list transactions that don't have any label. Without
+`-deprecatedrpc=accounts`, passing the empty string is an error because returning
+only non-labeled transactions is not generally useful behavior and can cause
+confusion.
 
-GUI changes
------------
+0.17.1 change log
+=================
 
-- Block storage can be limited under Preferences, in the Main tab. Undoing this setting requires downloading the full blockchain again. This mode is incompatible with -txindex and -rescan.
+### P2P protocol and network code
+- #14685 `9406502` Fix a deserialization overflow edge case (kazcw)
+- #14728 `b901578` Fix uninitialized read when stringifying an addrLocal (kazcw)
 
-RPC changes
-------------
+### Wallet
+- #14441 `5150acc` Restore ability to list incoming transactions by label (jnewbery)
+- #13546 `91fa15a` Fix use of uninitialized value `bnb_used` in CWallet::CreateTransaction(…) (practicalswift)
+- #14310 `bb90695` Ensure wallet is unlocked before signing (gustavonalle)
+- #14690 `5782fdc` Throw error if CPubKey is invalid during PSBT keypath serialization (instagibbs)
+- #14852 `2528443` backport: [tests] Add `wallet_balance.py` (MarcoFalke)
+- #14196 `3362a95` psbt: always drop the unnecessary utxo and convert non-witness utxo to witness when necessary (achow101)
+- #14588 `70ee1f8` Refactor PSBT signing logic to enforce invariant and fix signing bug (gwillen)
+- #14424 `89a9a9d` Stop requiring imported pubkey to sign non-PKH schemes (sipa, MeshCollider)
 
-### Low-level changes
+### RPC and other APIs
+- #14417 `fb9ad04` Fix listreceivedbyaddress not taking address as a string (etscrivner)
+- #14596 `de5e48a` Bugfix: RPC: Add `address_type` named param for createmultisig (luke-jr)
+- #14618 `9666dba` Make HTTP RPC debug logging more informative (practicalswift)
+- #14197 `7bee414` [psbt] Convert non-witness UTXOs to witness if witness sig created (achow101)
+- #14377 `a3fe125` Check that a separator is found for psbt inputs, outputs, and global map (achow101)
+- #14356 `7a590d8` Fix converttopsbt permitsigdata arg, add basic test (instagibbs)
+- #14453 `75b5d8c` Fix wallet unload during walletpassphrase timeout (promag)
 
-- The `createrawtransaction` RPC will now accept an array or dictionary (kept for compatibility) for the `outputs` parameter. This means the order of transaction outputs can be specified by the client.
-- The `fundrawtransaction` RPC will reject the previously deprecated `reserveChangeKey` option.
-- `sendmany` now shuffles outputs to improve privacy, so any previously expected behavior with regards to output ordering can no longer be relied upon.
-- The new RPC `testmempoolaccept` can be used to test acceptance of a transaction to the mempool without adding it.
-- JSON transaction decomposition now includes a `weight` field which provides
-  the transaction's exact weight. This is included in REST /rest/tx/ and
-  /rest/block/ endpoints when in json mode. This is also included in `getblock`
-  (with verbosity=2), `listsinceblock`, `listtransactions`, and
-  `getrawtransaction` RPC commands.
-- New `fees` field introduced in `getrawmempool`, `getmempoolancestors`, `getmempooldescendants` and
-   `getmempoolentry` when verbosity is set to `true` with sub-fields `ancestor`, `base`, `modified`
-   and `descendant` denominated in BTC. This new field deprecates previous fee fields, such as
-   `fee`, `modifiedfee`, `ancestorfee` and `descendantfee`.
-- The new RPC `getzmqnotifications` returns information about active ZMQ
-  notifications.
+### GUI
+- #14403 `0242b5a` Revert "Force TLS1.0+ for SSL connections" (real-or-random)
+- #14593 `df5131b` Explicitly disable "Dark Mode" appearance on macOS (fanquake)
 
-External wallet files
----------------------
+### Build system
+- #14647 `7edebed` Remove illegal spacing in darwin.mk (ch4ot1c)
+- #14698 `ec71f06` Add bitcoin-tx.exe into Windows installer (ken2812221)
 
-The `-wallet=<path>` option now accepts full paths instead of requiring wallets
-to be located in the -walletdir directory.
+### Tests and QA
+- #13965 `29899ec` Fix extended functional tests fail (ken2812221)
+- #14011 `9461f98` Disable wallet and address book Qt tests on macOS minimal platform (ryanofsky)
+- #14180 `86fadee` Run all tests even if wallet is not compiled (MarcoFalke)
+- #14122 `8bc1bad` Test `rpc_help.py` failed: Check whether ZMQ is enabled or not (Kvaciral)
+- #14101 `96dc936` Use named args in validation acceptance tests (MarcoFalke)
+- #14020 `24d796a` Add tests for RPC help (promag)
+- #14052 `7ff32a6` Add some actual witness in `rpc_rawtransaction` (MarcoFalke)
+- #14215 `b72fbab` Use correct python index slices in example test (sdaftuar)
+- #14024 `06544fa` Add `TestNode::assert_debug_log` (MarcoFalke)
+- #14658 `60f7a97` Add test to ensure node can generate all rpc help texts at runtime (MarcoFalke)
+- #14632 `96f15e8` Fix a comment (fridokus)
+- #14700 `f9db08e` Avoid race in `p2p_invalid_block` by waiting for the block request (MarcoFalke)
+- #14845 `67225e2` Add `wallet_balance.py` (jnewbery)
 
-Newly created wallet format
----------------------------
-
-If `-wallet=<path>` is specified with a path that does not exist, it will now
-create a wallet directory at the specified location (containing a wallet.dat
-data file, a db.log file, and database/log.?????????? files) instead of just
-creating a data file at the path and storing log files in the parent
-directory. This should make backing up wallets more straightforward than
-before because the specified wallet path can just be directly archived without
-having to look in the parent directory for transaction log files.
-
-For backwards compatibility, wallet paths that are names of existing data files
-in the `-walletdir` directory will continue to be accepted and interpreted the
-same as before.
-
-Dynamic loading and creation of wallets
----------------------------------------
-
-Previously, wallets could only be loaded or created at startup, by specifying `-wallet` parameters on the command line or in the bitcoin.conf file. It is now possible to load, create and unload wallets dynamically at runtime:
-
-- Existing wallets can be loaded by calling the `loadwallet` RPC. The wallet can be specified as file/directory basename (which must be located in the `walletdir` directory), or as an absolute path to a file/directory.
-- New wallets can be created (and loaded) by calling the `createwallet` RPC. The provided name must not match a wallet file in the `walletdir` directory or the name of a wallet that is currently loaded.
-- Loaded wallets can be unloaded by calling the `unloadwallet` RPC.
-
-This feature is currently only available through the RPC interface.
-
-Coin selection
---------------
-- A new `-avoidpartialspends` flag has been added (default=false). If enabled, the wallet will try to spend UTXO's that point at the same destination
-  together. This is a privacy increase, as there will no longer be cases where a wallet will inadvertently spend only parts of the coins sent to
-  the same address (note that if someone were to send coins to that address after it was used, those coins will still be included in future
-  coin selections).
-
-Configuration sections for testnet and regtest
-----------------------------------------------
-
-It is now possible for a single configuration file to set different
-options for different networks. This is done by using sections or by
-prefixing the option with the network, such as:
-
-    main.uacomment=bitcoin
-    test.uacomment=bitcoin-testnet
-    regtest.uacomment=regtest
-    [main]
-    mempoolsize=300
-    [test]
-    mempoolsize=100
-    [regtest]
-    mempoolsize=20
-
-The `addnode=`, `connect=`, `port=`, `bind=`, `rpcport=`, `rpcbind=`
-and `wallet=` options will only apply to mainnet when specified in the
-configuration file, unless a network is specified.
-
-'label' and 'account' APIs for wallet
--------------------------------------
-
-A new 'label' API has been introduced for the wallet. This is intended as a
-replacement for the deprecated 'account' API. The 'account' can continue to
-be used in V0.17 by starting bitcoind with the '-deprecatedrpc=accounts'
-argument, and will be fully removed in V0.18.
-
-The label RPC methods mirror the account functionality, with the following functional differences:
-
-- Labels can be set on any address, not just receiving addresses. This functionality was previously only available through the GUI.
-- Labels can be deleted by reassigning all addresses using the `setlabel` RPC method.
-- There isn't support for sending transactions _from_ a label, or for determining which label a transaction was sent from.
-- Labels do not have a balance.
-
-Here are the changes to RPC methods:
-
-| Deprecated Method       | New Method            | Notes       |
-| :---------------------- | :-------------------- | :-----------|
-| `getaccount`            | `getaddressinfo`      | `getaddressinfo` returns a json object with address information instead of just the name of the account as a string. |
-| `getaccountaddress`     | n/a                   | There is no replacement for `getaccountaddress` since labels do not have an associated receive address. |
-| `getaddressesbyaccount` | `getaddressesbylabel` | `getaddressesbylabel` returns a json object with the addresses as keys, instead of a list of strings. |
-| `getreceivedbyaccount`  | `getreceivedbylabel`  | _no change in behavior_ |
-| `listaccounts`          | `listlabels`          | `listlabels` does not return a balance or accept `minconf` and `watchonly` arguments. |
-| `listreceivedbyaccount` | `listreceivedbylabel` | Both methods return new `label` fields, along with `account` fields for backward compatibility. |
-| `move`                  | n/a                   | _no replacement_ |
-| `sendfrom`              | n/a                   | _no replacement_ |
-| `setaccount`            | `setlabel`            | Both methods now: <ul><li>allow assigning labels to any address, instead of raising an error if the address is not receiving address.<li>delete the previous label associated with an address when the final address using that label is reassigned to a different label, instead of making an implicit `getaccountaddress` call to ensure the previous label still has a receiving address. |
-
-| Changed Method         | Notes   |
-| :--------------------- | :------ |
-| `addmultisigaddress`   | Renamed `account` named parameter to `label`. Still accepts `account` for backward compatibility if running with '-deprecatedrpc=accounts'. |
-| `getnewaddress`        | Renamed `account` named parameter to `label`. Still accepts `account` for backward compatibility. if running with '-deprecatedrpc=accounts' |
-| `listunspent`          | Returns new `label` fields. `account` field will be returned for backward compatibility if running with '-deprecatedrpc=accounts' |
-| `sendmany`             | The `account` named parameter has been renamed to `dummy`. If provided, the `dummy` parameter must be set to the empty string, unless running with the `-deprecatedrpc=accounts` argument (in which case functionality is unchanged). |
-| `listtransactions`     | The `account` named parameter has been renamed to `dummy`. If provided, the `dummy` parameter must be set to the string `*`, unless running with the `-deprecatedrpc=accounts` argument (in which case functionality is unchanged). |
-| `getbalance`           | `account`, `minconf` and `include_watchonly` parameters are deprecated, and can only be used if running with '-deprecatedrpc=accounts' |
-
-Low-level RPC changes
----------------------
-
-- When bitcoin is not started with any `-wallet=<path>` options, the name of
-  the default wallet returned by `getwalletinfo` and `listwallets` RPCs is
-  now the empty string `""` instead of `"wallet.dat"`. If bitcoin is started
-  with any `-wallet=<path>` options, there is no change in behavior, and the
-  name of any wallet is just its `<path>` string.
-- Passing an empty string (`""`) as the `address_type` parameter to
-  `getnewaddress`, `getrawchangeaddress`, `addmultisigaddress`,
-  `fundrawtransaction` RPCs is now an error. Previously, this would fall back
-  to using the default address type. It is still possible to pass null or leave
-  the parameter unset to use the default address type.
-
-- Bare multisig outputs to our keys are no longer automatically treated as
-  incoming payments. As this feature was only available for multisig outputs for
-  which you had all private keys in your wallet, there was generally no use for
-  them compared to single-key schemes. Furthermore, no address format for such
-  outputs is defined, and wallet software can't easily send to it. These outputs
-  will no longer show up in `listtransactions`, `listunspent`, or contribute to
-  your balance, unless they are explicitly watched (using `importaddress` or
-  `importmulti` with hex script argument). `signrawtransaction*` also still
-  works for them.
-
-- The `getwalletinfo` RPC method now returns an `hdseedid` value, which is always the same as the incorrectly-named `hdmasterkeyid` value. `hdmasterkeyid` will be removed in V0.18.
-- The `getaddressinfo` RPC method now returns an `hdseedid` value, which is always the same as the incorrectly-named `hdmasterkeyid` value. `hdmasterkeyid` will be removed in V0.18.
-
-Other API changes
------------------
-
-- The `inactivehdmaster` property in the `dumpwallet` output has been corrected to `inactivehdseed`
-
-### Logging
-
-- The log timestamp format is now ISO 8601 (e.g. "2018-02-28T12:34:56Z").
-
-- When running bitcoind with `-debug` but without `-daemon`, logging to stdout
-  is now the default behavior. Setting `-printtoconsole=1` no longer implicitly
-  disables logging to debug.log. Instead, logging to file can be explicitly disabled
-  by setting `-debuglogfile=0`.
-
-Transaction index changes
--------------------------
-
-The transaction index is now built separately from the main node procedure,
-meaning the `-txindex` flag can be toggled without a full reindex. If bitcoind
-is run with `-txindex` on a node that is already partially or fully synced
-without one, the transaction index will be built in the background and become
-available once caught up. When switching from running `-txindex` to running
-without the flag, the transaction index database will *not* be deleted
-automatically, meaning it could be turned back on at a later time without a full
-resync.
-
-Miner block size removed
-------------------------
-
-The `-blockmaxsize` option for miners to limit their blocks' sizes was
-deprecated in V0.15.1, and has now been removed. Miners should use the
-`-blockmaxweight` option if they want to limit the weight of their blocks'
-weights.
-
-Python Support
---------------
-
-Support for Python 2 has been discontinued for all test files and tools.
+### Documentation
+- #14161 `5f51fd6` doc/descriptors.md tweaks (ryanofsky)
+- #14276 `85aacc4` Add autogen.sh in ARM Cross-compilation (walterwhite81)
 
 Credits
 =======
 
 Thanks to everyone who directly contributed to this release:
 
+- Andrew Chow
+- Chun Kuan Lee
+- David A. Harding
+- Eric Scrivner
+- fanquake
+- fridokus
+- Glenn Willen
+- Gregory Sanders
+- gustavonalle
+- John Newbery
+- Jon Layton
+- Jonas Schnelli
+- João Barbosa
+- Kaz Wesley
+- Kvaciral
+- Luke Dashjr
+- MarcoFalke
+- MeshCollider
+- Pieter Wuille
+- practicalswift
+- Russell Yanofsky
+- Sjors Provoost
+- Suhas Daftuar
+- Tim Ruffing
+- Walter
+- Wladimir J. van der Laan
 
 As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/bitcoin/).
