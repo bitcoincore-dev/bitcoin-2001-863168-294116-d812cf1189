@@ -314,24 +314,12 @@
         <translation>&amp;Changer la phrase de passe...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>Adresses d’&amp;envoi...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Adresses de &amp;réception...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Ouvrir une &amp;URI...</translation>
     </message>
     <message>
         <source>Wallet:</source>
         <translation>Porte-monnaie :</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>porte-monnaie par défaut</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -498,8 +486,20 @@
         <translation>À jour</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">Adresses d’&amp;envoi</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">Adresses de &amp;réception</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Afficher le message d’aide de %1 pour obtenir la liste des options de ligne de commande Bitcoin possibles.</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Fenêtre</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -808,6 +808,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -898,6 +901,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N.D.</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -946,6 +956,14 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Inconnu. Synchronisation des en-têtes (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
     </message>
 </context>
 <context>
@@ -1060,10 +1078,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Élaguer l’espace de stockage des &amp;blocs jusqu’à</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>Go</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1208,6 +1222,10 @@
     <message>
         <source>none</source>
         <translation>aucune</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1533,6 +1551,16 @@
         <source>unknown</source>
         <translation>inconnue</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1813,10 +1841,6 @@
     <message>
         <source>&amp;Unban</source>
         <translation>&amp;Réhabiliter</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>porte-monnaie par défaut</translation>
     </message>
     <message>
         <source>Welcome to the %1 RPC console.</source>
@@ -2741,7 +2765,7 @@ Note : Les frais étant calculés par octet, des frais de « 100 satoshis par
     </message>
     <message>
         <source>Output index</source>
-        <translation>Index de sorties</translation>
+        <translation>Index des sorties</translation>
     </message>
     <message>
         <source>Merchant</source>
@@ -3109,6 +3133,10 @@ Note : Les frais étant calculés par octet, des frais de « 100 satoshis par
         <source>Could not commit transaction</source>
         <translation>Impossible de valider la transaction</translation>
     </message>
+    <message>
+        <source>default wallet</source>
+        <translation>porte-monnaie par défaut</translation>
+    </message>
 </context>
 <context>
     <name>WalletView</name>
@@ -3198,6 +3226,10 @@ Note : Les frais étant calculés par octet, des frais de « 100 satoshis par
     <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>Erreur de lecture de %s ! Toutes les clés ont été lues correctement, mais les données transactionnelles ou les entrées du carnet d’adresses sont peut-être manquantes ou incorrectes.</translation>
+    </message>
+    <message>
+        <source>Group outputs by address, selecting all or none, instead of selecting on a per-output basis. Privacy is improved as an address is only used once (unless someone sends to it after spending from it), but may result in slightly higher fees as suboptimal coin selection may result due to the added limitation (default: %u)</source>
+        <translation>Grouper les sorties par adresse, les sélectionnant toutes ou n’en sélectionnant aucune, au lieu d’une sélection par sortie. La confidentialité est améliorée dans la mesure où une adresse n’est utilisée qu’une fois (à moins que quelqu’un envoie à adresse après l’avoir utilisée pour une dépense). Cela pourrait entraîner des frais légèrement plus élevés, car une sélection sous-optimale des pièces pourrait en résulter en raison de la restriction supplémentaire (par défaut : %u)</translation>
     </message>
     <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
@@ -3338,6 +3370,10 @@ Note : Les frais étant calculés par octet, des frais de « 100 satoshis par
     <message>
         <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
         <translation>Montant invalide pour -fallbackfee=&lt;amount&gt; : « %s »</translation>
+    </message>
+    <message>
+        <source>Specified blocks directory "%s" does not exist.</source>
+        <translation>Le répertoire des blocs indiqué « %s » n’existe pas.</translation>
     </message>
     <message>
         <source>Upgrading txindex database</source>

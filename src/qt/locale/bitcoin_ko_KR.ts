@@ -314,24 +314,12 @@
         <translation>암호문 변경(&amp;C)...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>보내는 주소(&amp;S)</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>받는 주소(&amp;R)</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>&amp;URI 열기...</translation>
     </message>
     <message>
         <source>Wallet:</source>
         <translation>지갑:&lt;br&gt;</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>&lt;br&gt;기본 지갑</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -498,8 +486,20 @@
         <translation>현재까지</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;보내는 주소들</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;받는 주소들</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>사용할 수 있는 비트코인 명령줄 옵션 목록을 가져오기 위해 %1 도움말 메시지를 표시합니다.</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>창(&amp;W)</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -808,6 +808,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -898,6 +901,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>없음</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -946,6 +956,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>알수없음. 헤더 동기화중 (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>형식</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>주소</translation>
     </message>
 </context>
 <context>
@@ -1060,10 +1083,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>블록 데이터 축소와 저장할 곳</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1208,6 +1227,10 @@
     <message>
         <source>none</source>
         <translation>없음</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>비트코인 코어</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1495,7 +1518,7 @@
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation><numerusform>&amp;n 일</numerusform></translation>
+        <translation><numerusform>%n 일</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
@@ -1532,6 +1555,16 @@
     <message>
         <source>unknown</source>
         <translation>알수없음</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>블럭</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>송금</translation>
     </message>
 </context>
 <context>
@@ -1813,10 +1846,6 @@
     <message>
         <source>&amp;Unban</source>
         <translation>노드 추방 취소(&amp;U)</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>&lt;br&gt;기본 지갑</translation>
     </message>
     <message>
         <source>Welcome to the %1 RPC console.</source>
@@ -3108,7 +3137,11 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Could not commit transaction</source>
-        <translation>트랜잭션을 커밋 할 수 없습니다.</translation>
+        <translation>거래를 커밋 할 수 없습니다.</translation>
+    </message>
+    <message>
+        <source>default wallet</source>
+        <translation>&lt;br&gt;기본 지갑</translation>
     </message>
 </context>
 <context>
@@ -3335,6 +3368,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
         <translation>유효하지 않은 금액 -fallbackfee=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
+        <source>Specified blocks directory "%s" does not exist.</source>
+        <translation>디렉토리 "%s"에 지정한 블록들이 존재하지 않습니다.</translation>
     </message>
     <message>
         <source>Upgrading txindex database</source>

@@ -3,7 +3,7 @@
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation>Klikatu eskuinean helbidea edo etiketa aldatzeko</translation>
+        <translation>Klikatu eskuinarekin helbidea edo etiketa aldatzeko</translation>
     </message>
     <message>
         <source>Create a new address</source>
@@ -136,6 +136,14 @@
         <translation>Pasahitz berria errepiikatu</translation>
     </message>
     <message>
+        <source>Show password</source>
+        <translation>Erakutsi pasahitza</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Sartu pasaesaldi bat diru-zorrorako. Mesedez erabili ausazko hamar edo gehiago karaktere edo zortzi edo gehiago hitz.</translation>
+    </message>
+    <message>
         <source>Encrypt wallet</source>
         <translation>Diruzorroa enkriptatu</translation>
     </message>
@@ -174,6 +182,10 @@
     <message>
         <source>Wallet encrypted</source>
         <translation>Zorroa enkriptatuta</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 orain itxiko da enkriptazio prozezua amaitzeko. Gogoratu enkriptatzean zure diruzorroa ez duzula guztiz babesten zure Bitcoinak lapurretatik infektatzen zure ordenagailua Malwareekin.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -238,6 +250,10 @@
         <translation>Aplikaziotik irten</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Erakutsi %1 buruzko informazioa</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>&amp;Qt-ri buruz</translation>
     </message>
@@ -248,10 +264,6 @@
     <message>
         <source>&amp;Options...</source>
         <translation>&amp;Aukerak...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Helbideak jasotzen...</translation>
     </message>
     <message>
         <source>Change the passphrase used for wallet encryption</source>
@@ -274,8 +286,20 @@
         <translation>Fitxen tresna-barra</translation>
     </message>
     <message>
+        <source>Error</source>
+        <translation>Akatsa</translation>
+    </message>
+    <message>
         <source>Up to date</source>
         <translation>Eguneratua</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Helbideak bidaltzen</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Helbideak jasotzen</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -364,10 +388,20 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
     <name>Intro</name>
+    <message>
+        <source>Error</source>
+        <translation>Akatsa</translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -375,7 +409,24 @@
         <source>Form</source>
         <translation>Inprimakia</translation>
     </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">ezezaguna...</translation>
+    </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Mota</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Helbidea</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -384,6 +435,10 @@
     <message>
         <source>Options</source>
         <translation>Aukerak</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Akatsa</translation>
     </message>
     </context>
 <context>
@@ -409,6 +464,11 @@
         <source>unknown</source>
         <translation>ezezaguna</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tzn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -418,7 +478,11 @@
     </context>
 <context>
     <name>RPCConsole</name>
-    </context>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">ezezaguna</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -489,6 +553,10 @@
     <message>
         <source>Amount:</source>
         <translation>Kopurua:</translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Aukeratu...</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -808,6 +876,10 @@
 <context>
     <name>bitcoin-core</name>
     <message>
+        <source>Loading wallet...</source>
+        <translation>Diru-zorroa kargatzen</translation>
+    </message>
+    <message>
         <source>Rescanning...</source>
         <translation>Birbilatzen...</translation>
     </message>
@@ -815,5 +887,9 @@
         <source>Done loading</source>
         <translation>Zamaketa amaitua</translation>
     </message>
-    </context>
+    <message>
+        <source>Error</source>
+        <translation>Akatsa</translation>
+    </message>
+</context>
 </TS>

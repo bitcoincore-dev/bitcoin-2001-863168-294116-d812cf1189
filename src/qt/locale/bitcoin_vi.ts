@@ -3,15 +3,15 @@
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation>Phải chuột để edit address hoặc label</translation>
+        <translation>Phải chuột để sửa địa chỉ hoặc nhãn</translation>
     </message>
     <message>
         <source>Create a new address</source>
-        <translation>Create một address mới</translation>
+        <translation>Tạo một địa chỉ mới</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>&amp;Tạo mới</translation>
+        <translation>&amp;Mới</translation>
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
@@ -306,16 +306,12 @@
         <translation>&amp;Thay Đổi Cụm Mật Khẩu...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Địa chỉ đang gửi...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Địa chỉ đang nhận...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Mở &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation>Ví tiền</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -435,7 +431,7 @@
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n kết nối đến Bitcoin network</numerusform></translation>
+        <translation><numerusform>%n kết nối đến hệ thống Bitcoin</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -478,8 +474,20 @@
         <translation>Đã cập nhật</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Địa chỉ đang gửi</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Địa chỉ đang nhận</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Hiển thị %1 tin nhắn hỗ trợ để nhận được danh sách Bitcoin command-line khả dụng</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Window</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -774,6 +782,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -856,13 +867,20 @@
     </message>
     <message numerus="yes">
         <source>%n GB of free space available</source>
-        <translation><numerusform>%n GB of free space available</numerusform></translation>
+        <translation><numerusform>Có %n GB trống</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
-        <translation><numerusform>(of %n GB cần thiết)</numerusform></translation>
+        <translation><numerusform>(cần %n GB)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -912,6 +930,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Unknown. Đang đồng bộ Headers (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Địa chỉ</translation>
     </message>
 </context>
 <context>
@@ -976,6 +1007,18 @@
         <translation>Hiển thị nếu cung cấp default SOCKS5 proxy is used to reach peers via this network type.</translation>
     </message>
     <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor hidden services:</source>
+        <translation type="unfinished">&amp;Sử dụng nhánh chia SOCKS5 proxy để reach peers via Tor hidden services:</translation>
+    </message>
+    <message>
+        <source>Hide the icon from the system tray.</source>
+        <translation type="unfinished">Hide the icon từ thẻ system tray.</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Ản thẻ icon</translation>
+    </message>
+    <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
         <translation>Minimize thay vì thoát khỏi ứng dụng khi cửa sổ đóng lại. Khi bật tùy chọn này, ứng dụng sẽ chỉ được đóng sau khi chọn Exit trong menu.</translation>
     </message>
@@ -1038,6 +1081,14 @@
     <message>
         <source>Map port using &amp;UPnP</source>
         <translation>Map port using &amp;UPnP</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside.</source>
+        <translation type="unfinished">Chấp nhận connections từ bên ngoài.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Chấp nhận connections đang tới</translation>
     </message>
     <message>
         <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
@@ -1120,6 +1171,10 @@
         <translation>Cho hiển thị tính năng coin control hoặc không.</translation>
     </message>
     <message>
+        <source>&amp;Third party transaction URLs</source>
+        <translation type="unfinished">&amp;Bên thứ ba transaction URLs</translation>
+    </message>
+    <message>
         <source>&amp;OK</source>
         <translation>&amp;OK</translation>
     </message>
@@ -1134,6 +1189,10 @@
     <message>
         <source>none</source>
         <translation>không có gì</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1455,7 +1514,7 @@
         <source>unknown</source>
         <translation>unknown</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject::QObject</name>
     <message>
@@ -1551,6 +1610,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Bộ nhớ usage</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Ví: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2939,7 +3002,7 @@
         <source>Could not commit transaction</source>
         <translation>Could not commit transaction</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletView</name>
     <message>
@@ -2974,7 +3037,11 @@
         <source>The wallet data was successfully saved to %1.</source>
         <translation>The wallet data was successfully saved to %1.</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Hủy</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>

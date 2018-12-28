@@ -9,8 +9,10 @@
 #define UNUSED
 #endif
 static const char UNUSED *bitcoin_strings[] = {
-QT_TRANSLATE_NOOP("bitcoin-core", "Bitcoin Core"),
+QT_TRANSLATE_NOOP("bitcoin-core", "Bitcoin Knots"),
 QT_TRANSLATE_NOOP("bitcoin-core", "The %s developers"),
+QT_TRANSLATE_NOOP("bitcoin-core", "Bitcoin Core"),
+QT_TRANSLATE_NOOP("bitcoin-core", " failed."),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
 "-maxtxfee is set very high! Fees this large could be paid on a single "
 "transaction."),
@@ -125,6 +127,7 @@ QT_TRANSLATE_NOOP("bitcoin-core", "Change index out of range"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Copyright (C) %i-%i"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Corrupted block database detected"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Do you want to rebuild the block database now?"),
+QT_TRANSLATE_NOOP("bitcoin-core", "Do you want to use the standard network port for "),
 QT_TRANSLATE_NOOP("bitcoin-core", "Done loading"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error creating %s: You can't create non-HD wallets with this version."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error initializing block database"),
@@ -157,6 +160,7 @@ QT_TRANSLATE_NOOP("bitcoin-core", "Invalid amount for -fallbackfee=<amount>: '%s
 QT_TRANSLATE_NOOP("bitcoin-core", "Invalid amount for -paytxfee=<amount>: '%s' (must be at least %s)"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Invalid netmask specified in -whitelist: '%s'"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Keypool ran out, please call keypoolrefill first"),
+QT_TRANSLATE_NOOP("bitcoin-core", "Listen on port "),
 QT_TRANSLATE_NOOP("bitcoin-core", "Loading P2P addresses..."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Loading banlist..."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Loading block index..."),

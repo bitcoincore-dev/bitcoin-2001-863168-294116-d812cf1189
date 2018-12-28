@@ -93,7 +93,11 @@
         <source>Exporting Failed</source>
         <translation>Xuất không thành công</translation>
     </message>
-    </context>
+    <message>
+        <source>There was an error trying to save the address list to %1. Please try again.</source>
+        <translation>Đã xảy ra lỗi khi cố gắng lưu danh sách địa chỉ vào %1. Vui lòng thử lại.</translation>
+    </message>
+</context>
 <context>
     <name>AddressTableModel</name>
     <message>
@@ -174,6 +178,10 @@
     <message>
         <source>Wallet encrypted</source>
         <translation>Ví đã được mã hóa</translation>
+    </message>
+    <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>%1 sẽ đóng ngay bây giờ để kết thúc quá trình mã hóa. Hãy nhớ rằng mã mã hóa ví không thể bảo vệ đầy đủ bitcoin của bạn khỏi bị ăn cắp bởi phần mềm độc hại lây nhiễm vào máy tính của bạn.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -299,16 +307,12 @@ Ví của bạn chưa được mã hóa.</translation>
         <translation>&amp;Thay đổi mật khẩu...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Địa chỉ gửi</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Địa chỉ nhận</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Mở &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Ví:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -471,6 +475,14 @@ Ví của bạn chưa được mã hóa.</translation>
         <translation>Đã cập nhật</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Địa chỉ gửi đến</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Địa chỉ nhận</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Hiển thị tin nhắn trợ giúp %1 để có được danh sách với các tùy chọn dòng lệnh Bitcoin.</translation>
     </message>
@@ -584,6 +596,26 @@ Ví của bạn chưa được mã hóa.</translation>
         <translation>Đã xác nhận</translation>
     </message>
     <message>
+        <source>Copy address</source>
+        <translation>Copy địa chỉ</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Copy nhãn</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Lượng copy</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>có</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>không</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(không nhãn)</translation>
     </message>
@@ -611,6 +643,9 @@ Ví của bạn chưa được mã hóa.</translation>
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -619,6 +654,10 @@ Ví của bạn chưa được mã hóa.</translation>
     <message>
         <source>(%1-bit)</source>
         <translation>(%1-bit)</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Thông tin về %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -643,6 +682,17 @@ Ví của bạn chưa được mã hóa.</translation>
         <source>Error</source>
         <translation>Lỗi</translation>
     </message>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation type="unfinished"><numerusform /></translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation type="unfinished"><numerusform /></translation>
+    </message>
+</context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -655,6 +705,14 @@ Ví của bạn chưa được mã hóa.</translation>
         <translation>Ẩn</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Địa chỉ</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -689,6 +747,14 @@ Ví của bạn chưa được mã hóa.</translation>
         <translation>Ví</translation>
     </message>
     <message>
+        <source>Accept connections from outside.</source>
+        <translation type="unfinished">Chấp nhận các kết nối từ bên ngoài.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Cho phép nhận kết nối</translation>
+    </message>
+    <message>
         <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
         <translation>Kết nối đến máy chủ Bitcoin thông qua SOCKS5 proxy.</translation>
     </message>
@@ -721,6 +787,10 @@ Ví của bạn chưa được mã hóa.</translation>
         <translation>Giao diện người dùng &amp; ngôn ngữ</translation>
     </message>
     <message>
+        <source>&amp;Third party transaction URLs</source>
+        <translation type="unfinished">&amp;Phần mềm giao dịch bên thứ ba URLs</translation>
+    </message>
+    <message>
         <source>&amp;OK</source>
         <translation>&amp;OK</translation>
     </message>
@@ -735,6 +805,10 @@ Ví của bạn chưa được mã hóa.</translation>
     <message>
         <source>none</source>
         <translation>Trống</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -780,9 +854,33 @@ Ví của bạn chưa được mã hóa.</translation>
         <source>Amount</source>
         <translation>Lượng</translation>
     </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation type="unfinished"><numerusform /></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation type="unfinished"><numerusform /></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n giờ</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n ngày</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n tuần</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 và %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n năm</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -800,7 +898,17 @@ Ví của bạn chưa được mã hóa.</translation>
         <source>%1 GB</source>
         <translation>%1 GB</translation>
     </message>
-    </context>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Khối</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Gdh</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -818,6 +926,10 @@ Ví của bạn chưa được mã hóa.</translation>
         <translation>Thông tin</translation>
     </message>
     <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Cửa sổ xử lý lỗi (debug)</translation>
+    </message>
+    <message>
         <source>General</source>
         <translation>Nhìn Chung</translation>
     </message>
@@ -828,6 +940,10 @@ Ví của bạn chưa được mã hóa.</translation>
     <message>
         <source>Block chain</source>
         <translation>Block chain</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Ví: </translation>
     </message>
     <message>
         <source>Sent</source>
@@ -852,6 +968,10 @@ Ví của bạn chưa được mã hóa.</translation>
     <message>
         <source>1 &amp;year</source>
         <translation>1&amp;năm</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Kết nối mạng đã bị ngắt</translation>
     </message>
     <message>
         <source>never</source>
@@ -913,10 +1033,22 @@ Ví của bạn chưa được mã hóa.</translation>
         <translation>Xóa</translation>
     </message>
     <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Copy URI</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Copy nhãn</translation>
+    </message>
+    <message>
         <source>Copy message</source>
         <translation>Copy tin nhắn</translation>
     </message>
-    </context>
+    <message>
+        <source>Copy amount</source>
+        <translation>Lượng copy</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
@@ -974,6 +1106,10 @@ Ví của bạn chưa được mã hóa.</translation>
 </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Ngày tháng</translation>
+    </message>
     <message>
         <source>Label</source>
         <translation>Nhãn</translation>
@@ -1086,6 +1222,14 @@ Ví của bạn chưa được mã hóa.</translation>
         <translation>Xác nhận sự gửi</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Gửi</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Lượng copy</translation>
+    </message>
+    <message>
         <source>%1 to %2</source>
         <translation>%1 đến %2</translation>
     </message>
@@ -1094,8 +1238,16 @@ Ví của bạn chưa được mã hóa.</translation>
         <translation>hoặc</translation>
     </message>
     <message>
+        <source>Transaction fee</source>
+        <translation>Phí giao dịch</translation>
+    </message>
+    <message>
         <source>Confirm send coins</source>
         <translation>Xác nhận gửi coins</translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation type="unfinished"><numerusform /></translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -1111,6 +1263,10 @@ Ví của bạn chưa được mã hóa.</translation>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Nhãn</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished">Tin nhắn:</translation>
     </message>
     </context>
 <context>
@@ -1138,9 +1294,33 @@ Ví của bạn chưa được mã hóa.</translation>
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation type="unfinished"><numerusform /></translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Ngày tháng</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation type="unfinished"><numerusform /></translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Phí giao dịch</translation>
+    </message>
     <message>
         <source>Message</source>
         <translation>Tin nhắn</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Giao dịch</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation type="unfinished">Nhập</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -1153,8 +1333,16 @@ Ví của bạn chưa được mã hóa.</translation>
 <context>
     <name>TransactionTableModel</name>
     <message>
+        <source>Date</source>
+        <translation>Ngày tháng</translation>
+    </message>
+    <message>
         <source>Label</source>
         <translation>Nhãn</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation type="unfinished"><numerusform /></translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -1164,8 +1352,28 @@ Ví của bạn chưa được mã hóa.</translation>
 <context>
     <name>TransactionView</name>
     <message>
+        <source>Copy address</source>
+        <translation>Copy địa chỉ</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Copy nhãn</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Lượng copy</translation>
+    </message>
+    <message>
         <source>Comma separated file (*.csv)</source>
         <translation>Các tệp tác nhau bằng đấu phẩy (* .csv)</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Đã xác nhận</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Ngày tháng</translation>
     </message>
     <message>
         <source>Label</source>
@@ -1199,12 +1407,28 @@ Ví của bạn chưa được mã hóa.</translation>
         <source>&amp;Export</source>
         <translation>&amp;Xuất</translation>
     </message>
-    </context>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Xuất dữ liệu trong mục hiện tại ra file</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Sao lưu ví tiền</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Từ chối</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
         <source>Bitcoin Core</source>
         <translation>Bitcoin Core</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Đang đọc các địa chỉ...</translation>
     </message>
     <message>
         <source>Information</source>

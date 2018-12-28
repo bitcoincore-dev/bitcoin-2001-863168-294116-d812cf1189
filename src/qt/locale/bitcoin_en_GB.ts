@@ -314,14 +314,6 @@
         <translation>&amp;Change Passphrase...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Sending addresses...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Receiving addresses...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Open &amp;URI...</translation>
     </message>
@@ -348,6 +340,10 @@
     <message>
         <source>Reindexing blocks on disk...</source>
         <translation>Reindexing blocks on disk...</translation>
+    </message>
+    <message>
+        <source>Proxy is &lt;b&gt;enabled&lt;/b&gt;: %1</source>
+        <translation>Proxy is &lt;b&gt;enabled&lt;/b&gt;: %1</translation>
     </message>
     <message>
         <source>Send coins to a Bitcoin address</source>
@@ -490,8 +486,20 @@
         <translation>Up to date</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Sending addresses</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Receiving addresses</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Show the %1 help message to get a list with possible Bitcoin command-line options</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Window</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -760,6 +768,14 @@
         <translation>The entered address "%1" is not a valid Bitcoin address.</translation>
     </message>
     <message>
+        <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
+        <translation>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</translation>
+    </message>
+    <message>
+        <source>The entered address "%1" is already in the address book with label "%2".</source>
+        <translation>The entered address "%1" is already in the address book with label "%2".</translation>
+    </message>
+    <message>
         <source>Could not unlock wallet.</source>
         <translation>Could not unlock wallet.</translation>
     </message>
@@ -791,6 +807,9 @@
         <translation>Cannot create data directory here.</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -834,7 +853,7 @@
     </message>
     <message>
         <source>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</source>
-        <translation>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</translation>
+        <translation>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterwards to keep your disk usage low.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -881,6 +900,13 @@
         <translation><numerusform>(of %n GB needed)</numerusform><numerusform>(of %n GB needed)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -930,6 +956,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Unknown. Syncing Headers (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Address</translation>
     </message>
 </context>
 <context>
@@ -1038,8 +1077,16 @@
         <translation>&amp;Network</translation>
     </message>
     <message>
-        <source>GB</source>
-        <translation>GB</translation>
+        <source>Disables some advanced features but all blocks will still be fully validated. Reverting this setting requires re-downloading the entire blockchain. Actual disk usage may be somewhat higher.</source>
+        <translation>Disables some advanced features but all blocks will still be fully validated. Reverting this setting requires re-downloading the entire blockchain. Actual disk usage may be somewhat higher.</translation>
+    </message>
+    <message>
+        <source>Prune &amp;block storage to</source>
+        <translation>Prune &amp;block storage to</translation>
+    </message>
+    <message>
+        <source>Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation>Reverting this setting requires re-downloading the entire blockchain.</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1182,6 +1229,10 @@
         <translation>none</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Confirm options reset</translation>
     </message>
@@ -1306,6 +1357,10 @@
     <message>
         <source>URI handling</source>
         <translation>URI handling</translation>
+    </message>
+    <message>
+        <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
+        <translation>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</translation>
     </message>
     <message>
         <source>Payment request fetch URL is invalid: %1</source>
@@ -1501,12 +1556,20 @@
         <source>unknown</source>
         <translation>unknown</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject::QObject</name>
     <message>
+        <source>Error parsing command line arguments: %1.</source>
+        <translation>Error parsing command line arguments: %1.</translation>
+    </message>
+    <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
         <translation>Error: Specified data directory "%1" does not exist.</translation>
+    </message>
+    <message>
+        <source>Error: Cannot parse configuration file: %1.</source>
+        <translation>Error: Cannot parse configuration file: %1.</translation>
     </message>
     <message>
         <source>Error: %1</source>
@@ -1564,7 +1627,7 @@
     </message>
     <message>
         <source>Startup time</source>
-        <translation>Startup time</translation>
+        <translation>Start up time</translation>
     </message>
     <message>
         <source>Network</source>
@@ -1799,6 +1862,14 @@
         <translation>Network activity disabled</translation>
     </message>
     <message>
+        <source>Executing command without any wallet</source>
+        <translation>Executing command without any wallet</translation>
+    </message>
+    <message>
+        <source>Executing command using "%1" wallet</source>
+        <translation>Executing command using "%1" wallet</translation>
+    </message>
+    <message>
         <source>(node id: %1)</source>
         <translation>(node id: %1)</translation>
     </message>
@@ -1868,6 +1939,14 @@
     <message>
         <source>Clear</source>
         <translation>Clear</translation>
+    </message>
+    <message>
+        <source>Native segwit addresses (aka Bech32 or BIP-173) reduce your transaction fees later on and offer better protection against typos, but old wallets don't support them. When unchecked, an address compatible with older wallets will be created instead.</source>
+        <translation>Native segwit addresses (aka Bech32 or BIP-173) reduce your transaction fees later on and offer better protection against typos, but old wallets don't support them. When unchecked, an address compatible with older wallets will be created instead.</translation>
+    </message>
+    <message>
+        <source>Generate native segwit (Bech32) address</source>
+        <translation>Generate native segwit (Bech32) address</translation>
     </message>
     <message>
         <source>Requested payments history</source>
@@ -2075,6 +2154,14 @@
         <translation>collapse fee-settings</translation>
     </message>
     <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis per kB" for a transaction size of 500 bytes (half of 1 kB) would ultimately yield a fee of only 50 satoshis.</source>
+        <translation>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis per kB" for a transaction size of 500 bytes (half of 1 kB) would ultimately yield a fee of only 50 satoshis.</translation>
+    </message>
+    <message>
         <source>per kilobyte</source>
         <translation>per kilobyte</translation>
     </message>
@@ -2195,12 +2282,24 @@
         <translation>You can increase the fee later (signals Replace-By-Fee, BIP-125).</translation>
     </message>
     <message>
+        <source>from wallet %1</source>
+        <translation>from wallet %1</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction.</source>
+        <translation>Please, review your transaction.</translation>
+    </message>
+    <message>
         <source>Transaction fee</source>
         <translation>Transaction fee</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
         <translation>Not signalling Replace-By-Fee, BIP-125.</translation>
+    </message>
+    <message>
+        <source>Total Amount</source>
+        <translation>Total Amount</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -2656,6 +2755,10 @@
         <translation>Transaction total size</translation>
     </message>
     <message>
+        <source>Transaction virtual size</source>
+        <translation>Transaction virtual size</translation>
+    </message>
+    <message>
         <source>Output index</source>
         <translation>Output index</translation>
     </message>
@@ -3025,6 +3128,10 @@
         <source>Could not commit transaction</source>
         <translation>Could not commit transaction.</translation>
     </message>
+    <message>
+        <source>default wallet</source>
+        <translation>default wallet</translation>
+    </message>
 </context>
 <context>
     <name>WalletView</name>
@@ -3116,6 +3223,10 @@
         <translation>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</translation>
     </message>
     <message>
+        <source>Group outputs by address, selecting all or none, instead of selecting on a per-output basis. Privacy is improved as an address is only used once (unless someone sends to it after spending from it), but may result in slightly higher fees as suboptimal coin selection may result due to the added limitation (default: %u)</source>
+        <translation>Group outputs by address, selecting all or none, instead of selecting on a per-output basis. Privacy is improved as an address is only used once (unless someone sends to it after spending from it), but may result in slightly higher fees as suboptimal coin selection may result due to the added limitation (default: %u)</translation>
+    </message>
+    <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
         <translation>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</translation>
     </message>
@@ -3200,6 +3311,10 @@
         <translation>Error loading %s</translation>
     </message>
     <message>
+        <source>Error loading %s: Private keys can only be disabled during creation</source>
+        <translation>Error loading %s: Private keys can only be disabled during creation</translation>
+    </message>
+    <message>
         <source>Error loading %s: Wallet corrupted</source>
         <translation>Error loading %s: Wallet corrupted</translation>
     </message>
@@ -3252,6 +3367,14 @@
         <translation>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</translation>
     </message>
     <message>
+        <source>Specified blocks directory "%s" does not exist.</source>
+        <translation>Specified blocks directory "%s" does not exist.</translation>
+    </message>
+    <message>
+        <source>Upgrading txindex database</source>
+        <translation>Upgrading txindex database</translation>
+    </message>
+    <message>
         <source>Loading P2P addresses...</source>
         <translation>Loading P2P addresses...</translation>
     </message>
@@ -3290,6 +3413,10 @@
     <message>
         <source>Unable to bind to %s on this computer. %s is probably already running.</source>
         <translation>Unable to bind to %s on this computer. %s is probably already running.</translation>
+    </message>
+    <message>
+        <source>Unable to generate keys</source>
+        <translation>Unable to generate keys</translation>
     </message>
     <message>
         <source>Unsupported argument -benchmark ignored, use -debug=bench.</source>
@@ -3465,7 +3592,7 @@
     </message>
     <message>
         <source>Unsupported argument -socks found. Setting SOCKS version isn't possible anymore, only SOCKS5 proxies are supported.</source>
-        <translation>Unsupported argument -socks found. Setting SOCKS version isn't possible anymore, only SOCKS5 proxies are supported.</translation>
+        <translation>Unsupported argument -socks found. Setting SOCKS version isn't possible any more, only SOCKS5 proxies are supported.</translation>
     </message>
     <message>
         <source>Unsupported argument -whitelistalwaysrelay ignored, use -whitelistrelay and/or -whitelistforcerelay.</source>
@@ -3526,6 +3653,26 @@
     <message>
         <source>Insufficient funds</source>
         <translation>Insufficient funds</translation>
+    </message>
+    <message>
+        <source>Can't generate a change-address key. Private keys are disabled for this wallet.</source>
+        <translation>Can't generate a change-address key. Private keys are disabled for this wallet.</translation>
+    </message>
+    <message>
+        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use -upgradewallet=169900 or -upgradewallet with no version specified.</source>
+        <translation>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use -upgradewallet=169900 or -upgradewallet with no version specified.</translation>
+    </message>
+    <message>
+        <source>Fee estimation failed. Fallbackfee is disabled. Wait a few blocks or enable -fallbackfee.</source>
+        <translation>Fee estimation failed. Fallbackfee is disabled. Wait a few blocks or enable -fallbackfee.</translation>
+    </message>
+    <message>
+        <source>Warning: Private keys detected in wallet {%s} with disabled private keys</source>
+        <translation>Warning: Private keys detected in wallet {%s} with disabled private keys</translation>
+    </message>
+    <message>
+        <source>Cannot write to data directory '%s'; check permissions.</source>
+        <translation>Cannot write to data directory '%s'; check permissions.</translation>
     </message>
     <message>
         <source>Loading block index...</source>

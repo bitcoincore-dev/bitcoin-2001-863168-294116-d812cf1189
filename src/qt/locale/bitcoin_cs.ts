@@ -314,24 +314,12 @@
         <translation>Změň &amp;heslo...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>Od&amp;esílací adresy...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Př&amp;ijímací adresy...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Načíst &amp;URI...</translation>
     </message>
     <message>
         <source>Wallet:</source>
         <translation>Peněženka:</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>výchozí peněženka</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -352,6 +340,10 @@
     <message>
         <source>Reindexing blocks on disk...</source>
         <translation>Vytvářím nový index bloků na disku...</translation>
+    </message>
+    <message>
+        <source>Proxy is &lt;b&gt;enabled&lt;/b&gt;: %1</source>
+        <translation>Proxy je &lt;b&gt;zapnutá&lt;/b&gt;: %1</translation>
     </message>
     <message>
         <source>Send coins to a Bitcoin address</source>
@@ -494,8 +486,20 @@
         <translation>Aktuální</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">Od&amp;esílací adresy</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">Př&amp;ijímací adresy</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Seznam argumentů Bitcoinu pro příkazovou řádku získáš v nápovědě %1</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>O&amp;kno</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -519,6 +523,12 @@
         <source>Amount: %1
 </source>
         <translation>Částka: %1
+</translation>
+    </message>
+    <message>
+        <source>Wallet: %1
+</source>
+        <translation>Peněženka: %1
 </translation>
     </message>
     <message>
@@ -758,6 +768,14 @@
         <translation>Zadaná adresa „%1“ není platná bitcoinová adresa.</translation>
     </message>
     <message>
+        <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
+        <translation>Adresa "%1" již existuje jako přijímací adresa s označením "%2" a proto nemůže být přidána jako odesílací adresa.</translation>
+    </message>
+    <message>
+        <source>The entered address "%1" is already in the address book with label "%2".</source>
+        <translation>Zadaná adresa „%1“ už v adresáři je s označením "%2".</translation>
+    </message>
+    <message>
         <source>Could not unlock wallet.</source>
         <translation>Nemohu odemknout peněženku.</translation>
     </message>
@@ -789,6 +807,9 @@
         <translation>Tady nemůžu vytvořit adresář pro data.</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -880,6 +901,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>nedostupná informace</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -928,6 +956,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Neznámý. Synchronizuji záhlaví bloků (%1)…</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresa</translation>
     </message>
 </context>
 <context>
@@ -1174,6 +1215,10 @@
     <message>
         <source>none</source>
         <translation>žádné</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1499,6 +1544,11 @@
         <source>unknown</source>
         <translation>neznámo</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1595,6 +1645,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Obsazenost paměti</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation>Peněženka:</translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1765,10 +1819,6 @@
         <translation>&amp;Odblokuj</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>výchozí peněženka</translation>
-    </message>
-    <message>
         <source>Welcome to the %1 RPC console.</source>
         <translation>Vítej v RPC konzoli %1.</translation>
     </message>
@@ -1783,6 +1833,10 @@
     <message>
         <source>Network activity disabled</source>
         <translation>Síť je vypnutá</translation>
+    </message>
+    <message>
+        <source>Executing command without any wallet</source>
+        <translation>Spouštění příkazu bez jakékoliv peněženky</translation>
     </message>
     <message>
         <source>(node id: %1)</source>
@@ -2171,6 +2225,10 @@
     <message>
         <source>or</source>
         <translation>nebo</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction.</source>
+        <translation>Prosím, zkontrolujte vaši transakci.</translation>
     </message>
     <message>
         <source>Transaction fee</source>
@@ -2995,6 +3053,10 @@
         <source>Could not commit transaction</source>
         <translation>Nemohl jsem uložit transakci do peněženky</translation>
     </message>
+    <message>
+        <source>default wallet</source>
+        <translation>výchozí peněženka</translation>
+    </message>
 </context>
 <context>
     <name>WalletView</name>
@@ -3030,7 +3092,11 @@
         <source>The wallet data was successfully saved to %1.</source>
         <translation>Data z peněženky byla v pořádku uložena do %1.</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Zrušit</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -3376,6 +3442,10 @@
     <message>
         <source>Verifying wallet(s)...</source>
         <translation>Kontroluji peněženku/y…</translation>
+    </message>
+    <message>
+        <source>Wallet %s resides outside wallet directory %s</source>
+        <translation>Peněženka %s se nachází mimo datový adresář %s</translation>
     </message>
     <message>
         <source>Warning</source>

@@ -314,24 +314,12 @@
         <translation>&amp;Zmień hasło...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>Adresy wysyłania...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Adresy odbioru...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Otwórz URI...</translation>
     </message>
     <message>
         <source>Wallet:</source>
         <translation>Portfel:</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>domyślny portfel</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -498,8 +486,20 @@
         <translation>Aktualny</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">Adresy wysyłania</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">Adresy odbioru</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Pokaż pomoc %1 aby zobaczyć listę wszystkich opcji lnii poleceń.</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Okno</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -808,6 +808,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -898,6 +901,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>NIEDOSTĘPNE</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -946,6 +956,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Nieznane. Synchronizowanie nagłówków (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
     </message>
 </context>
 <context>
@@ -1060,10 +1083,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Przytnij magazyn &amp;bloków do</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1208,6 +1227,10 @@
     <message>
         <source>none</source>
         <translation>żaden</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Rdzeń Bitcoina</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1533,6 +1556,11 @@
         <source>unknown</source>
         <translation>nieznane</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsa</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1813,10 +1841,6 @@
     <message>
         <source>&amp;Unban</source>
         <translation>&amp;Odblokuj</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>domyślny portfel</translation>
     </message>
     <message>
         <source>Welcome to the %1 RPC console.</source>
@@ -3111,6 +3135,10 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
         <source>Could not commit transaction</source>
         <translation>Nie można zatwierdzić transakcji</translation>
     </message>
+    <message>
+        <source>default wallet</source>
+        <translation>domyślny portfel</translation>
+    </message>
 </context>
 <context>
     <name>WalletView</name>
@@ -3340,6 +3368,11 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
     <message>
         <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
         <translation>Nieprawidłowa kwota dla -fallbackfee=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
+        <source>Specified blocks directory "%s" does not exist.</source>
+        <translation>Podany folder bloków "%s" nie istnieje.
+</translation>
     </message>
     <message>
         <source>Upgrading txindex database</source>

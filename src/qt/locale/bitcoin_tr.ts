@@ -314,16 +314,12 @@
         <translation>&amp;Parolayı Değiştir...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Gönderme adresleri...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Alma adresleri...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>&amp;URI Aç...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation>Cüzdan:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -344,6 +340,10 @@
     <message>
         <source>Reindexing blocks on disk...</source>
         <translation>Diskteki bloklar yeniden indeksleniyor...</translation>
+    </message>
+    <message>
+        <source>Proxy is &lt;b&gt;enabled&lt;/b&gt;: %1</source>
+        <translation>Tünelleme &lt;b&gt;etkin&lt;/b&gt;: %1</translation>
     </message>
     <message>
         <source>Send coins to a Bitcoin address</source>
@@ -486,8 +486,20 @@
         <translation>Güncel</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Gönderme adresleri</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Alma adresleri</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Olası Bitcoin komut satırı seçeneklerinin listesini görmek için %1 yardım mesajını göster</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Pencere</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -511,6 +523,12 @@
         <source>Amount: %1
 </source>
         <translation>Tutar: %1
+</translation>
+    </message>
+    <message>
+        <source>Wallet: %1
+</source>
+        <translation>Cüzdan: %1
 </translation>
     </message>
     <message>
@@ -750,6 +768,10 @@
         <translation>Girilen "%1" adresi geçerli bir Bitcoin adresi değildir.</translation>
     </message>
     <message>
+        <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
+        <translation>Adres "%1" adres "%2" etiketiyle alım adresiniz olarak mevcut ve bu sebepten gönderen adres olarak eklenemiyor.</translation>
+    </message>
+    <message>
         <source>Could not unlock wallet.</source>
         <translation>Cüzdan kilidi açılamadı.</translation>
     </message>
@@ -781,6 +803,9 @@
         <translation>Burada veri klasörü oluşturulamaz.</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -815,6 +840,10 @@
         <translation>Bu programın ilk kez başlatılmasından dolayı %1 yazılımının verilerini nerede saklayacağını seçebilirsiniz.</translation>
     </message>
     <message>
+        <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
+        <translation>Bu başlangıç senkronizasyonu çok zorlayıcıdır ve bilgisayarınızdaki daha önce fark edilmemiş olan donanım sorunlarını ortaya çıkarabilir. %1'i her çalıştırdığınızda, kaldığı yerden devam edecektir.</translation>
+    </message>
+    <message>
         <source>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</source>
         <translation>Blok zinciri saklamayı sınırlamayı seçtiyseniz (budama), geçmiş veriler yine de indirilmeli ve işlenmelidir, ancak disk kullanımınızı düşük tutmak için daha sonra silinmelidir.</translation>
     </message>
@@ -831,8 +860,16 @@
         <translation>Bitcoin</translation>
     </message>
     <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Bu dizinde en az %1 GB lık veri depolanacak ve zamanla büyüyecek.</translation>
+    </message>
+    <message>
         <source>Approximately %1 GB of data will be stored in this directory.</source>
         <translation>Yaklaşık %1 GB veri bu dizinde depolanacak.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 lik Bitcoin blok zinciri nin bir kopyasını indirecek ve depolayacak.</translation>
     </message>
     <message>
         <source>The wallet will also be stored in this directory.</source>
@@ -855,6 +892,13 @@
         <translation><numerusform>(gereken %n GB alandan)</numerusform><numerusform>(gereken %n GB alandan)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Mevcut değil</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -904,6 +948,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Bilinmeyen. Üstbilgiler Senkronize Ediliyor (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tür</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
     </message>
 </context>
 <context>
@@ -1150,6 +1207,10 @@
     <message>
         <source>none</source>
         <translation>boş</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Çekirdeği</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1471,12 +1532,21 @@
         <source>unknown</source>
         <translation>bilinmiyor</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>İşlem</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
     <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
         <translation>Hata: Belirtilen "%1" veri klasörü yoktur.</translation>
+    </message>
+    <message>
+        <source>Error: Cannot parse configuration file: %1.</source>
+        <translation>Hata: %1 yapılandırma dosyası ayrıştırılamadı. </translation>
     </message>
     <message>
         <source>Error: %1</source>
@@ -1567,6 +1637,14 @@
     <message>
         <source>Memory usage</source>
         <translation>Bellek kullanımı</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation>Cüzdan:</translation>
+    </message>
+    <message>
+        <source>(none)</source>
+        <translation>(boş)</translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1761,6 +1839,14 @@
         <translation>Ağ etkinliği devre dışı bırakıldı</translation>
     </message>
     <message>
+        <source>Executing command without any wallet</source>
+        <translation>Komut bir cüzdan olmadan çalıştırılıyor</translation>
+    </message>
+    <message>
+        <source>Executing command using "%1" wallet</source>
+        <translation>Komut "%1" cüzdanı kullanılarak çalıştırılıyor</translation>
+    </message>
+    <message>
         <source>(node id: %1)</source>
         <translation>(düğüm kimliği: %1)</translation>
     </message>
@@ -1830,6 +1916,10 @@
     <message>
         <source>Clear</source>
         <translation>Temizle</translation>
+    </message>
+    <message>
+        <source>Generate native segwit (Bech32) address</source>
+        <translation>Yerli segwit (Bech32) adresi oluştur</translation>
     </message>
     <message>
         <source>Requested payments history</source>
@@ -2141,8 +2231,20 @@
         <translation>veya</translation>
     </message>
     <message>
+        <source>from wallet %1</source>
+        <translation>cüzdan %1'den</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction.</source>
+        <translation>Lütfen, işleminizi gözden geçirin.</translation>
+    </message>
+    <message>
         <source>Transaction fee</source>
         <translation>İşlem ücreti</translation>
+    </message>
+    <message>
+        <source>Total Amount</source>
+        <translation>Toplam Tutar</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -2187,6 +2289,10 @@
     <message>
         <source>Pay only the required fee of %1</source>
         <translation>Sadece asgari ücret olan %1 tutarını öde</translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>Tahmini %n blok içinde doğrulamaya başlanacaktır.</numerusform><numerusform>Tahmini %n blok içinde doğrulamaya başlanacaktır.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2955,6 +3061,10 @@
         <source>Could not commit transaction</source>
         <translation>Alışveriş taahüt edilemedi.</translation>
     </message>
+    <message>
+        <source>default wallet</source>
+        <translation>varsayılan cüzdan</translation>
+    </message>
 </context>
 <context>
     <name>WalletView</name>
@@ -2990,7 +3100,11 @@
         <source>The wallet data was successfully saved to %1.</source>
         <translation>Cüzdan verileri %1 konumuna başarıyla kaydedildi.</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation>İptal</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -3162,6 +3276,10 @@
         <translation> -fallbackfee=&lt;tutar&gt; için geçersiz tutar: '%s'</translation>
     </message>
     <message>
+        <source>Upgrading txindex database</source>
+        <translation>txindex veritabanı yükseltiliyor</translation>
+    </message>
+    <message>
         <source>Loading P2P addresses...</source>
         <translation>P2P adresleri yükleniyor...</translation>
     </message>
@@ -3200,6 +3318,10 @@
     <message>
         <source>Unable to bind to %s on this computer. %s is probably already running.</source>
         <translation>Bu bilgisayarda %s unsuruna bağlanılamadı. %s muhtemelen hâlihazırda çalışmaktadır.</translation>
+    </message>
+    <message>
+        <source>Unable to generate keys</source>
+        <translation>Anahtar üretilemiyor</translation>
     </message>
     <message>
         <source>Unsupported argument -benchmark ignored, use -debug=bench.</source>
@@ -3338,6 +3460,10 @@
         <translation>Cüzdan(lar) kontrol ediliyor...</translation>
     </message>
     <message>
+        <source>Wallet %s resides outside wallet directory %s</source>
+        <translation>Cüzdan %s, %s cüzdan klasörünün dışında bulunuyor</translation>
+    </message>
+    <message>
         <source>Warning</source>
         <translation>Uyarı</translation>
     </message>
@@ -3432,6 +3558,14 @@
     <message>
         <source>Insufficient funds</source>
         <translation>Yetersiz bakiye</translation>
+    </message>
+    <message>
+        <source>Fee estimation failed. Fallbackfee is disabled. Wait a few blocks or enable -fallbackfee.</source>
+        <translation>İşlem ücreti hesaplama başarısız. Fallbackfee özelliği devre dışı. Lütfen bir kaç blok için bekleyiniz yada -fallbackfee özelliğini aktif ediniz.</translation>
+    </message>
+    <message>
+        <source>Cannot write to data directory '%s'; check permissions.</source>
+        <translation>Veriler klasöre yazılamıyor '%s'; yetkilendirmeyi kontrol edin.</translation>
     </message>
     <message>
         <source>Loading block index...</source>

@@ -314,16 +314,12 @@
         <translation>&amp;Cambiar la contraseña...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>Mandando direcciones</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Recibiendo direcciones</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Abrir y url...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Cartera:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -486,8 +482,21 @@
         <translation>Actualizado</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Enviando direcciones</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Recibiendo direcciones</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Mostrar el mensaje de ayuda %1 para obtener una lista de los posibles comandos de Bitcoin</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>y windows
+</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -783,6 +792,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -869,6 +881,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -917,6 +936,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Desconocido. Sincronizando cabeceras (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Dirección</translation>
     </message>
 </context>
 <context>
@@ -979,6 +1011,10 @@
     <message>
         <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
         <translation>Muestra si el proxy SOCKS5 por defecto se utiliza para conectarse a pares a través de este tipo de red.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor hidden services:</source>
+        <translation>Usar distintos proxys SOCKS&amp;5 para comunicarse vía Tor de forma anónima:</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
@@ -1128,6 +1164,10 @@
     <message>
         <source>none</source>
         <translation>Nada</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>bitcoin core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1389,6 +1429,16 @@
         <source>unknown</source>
         <translation>desconocido</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blq</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1485,6 +1535,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Memoria utilizada</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Cartera: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2787,7 +2841,7 @@
         <source>Could not commit transaction</source>
         <translation>No se pudo confirmar la transacción</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletView</name>
     <message>
@@ -2822,7 +2876,11 @@
         <source>The wallet data was successfully saved to %1.</source>
         <translation>Los datos del monedero se han guardado con éxito en %1.</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancela</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -3016,6 +3074,10 @@
     <message>
         <source>Invalid -onion address or hostname: '%s'</source>
         <translation>Dirección de -onion o dominio '%s' inválido</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname: '%s'</source>
+        <translation>Dirección de -proxy o dominio '%s' inválido</translation>
     </message>
     <message>
         <source>Invalid netmask specified in -whitelist: '%s'</source>

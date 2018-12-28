@@ -314,16 +314,12 @@
         <translation>&amp;Modifier le mot de passe</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Adresses d'envoi</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Adresses de réception</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Ouvrir &amp;URI</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portefeuille:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -482,8 +478,20 @@
         <translation>À jour</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Adresses d'envoi</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Adresses de réception</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Afficher le %1 message d'aide pour récupérer une liste des options de ligne de commande Bitcoin</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Fenêtre</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -778,6 +786,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -838,6 +849,17 @@
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation><numerusform>%n GO d'espace libre disponible</numerusform><numerusform>%n GO d'espace libre disponible</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation><numerusform>(%n GB nécessaire)</numerusform><numerusform>(%n GB nécessaire)</numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -846,10 +868,27 @@
         <translation>Formulaire</translation>
     </message>
     <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Inconnu...</translation>
+    </message>
+    <message>
         <source>Hide</source>
         <translation>Cacher</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -896,6 +935,14 @@
         <translation>Adresse IP du proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</translation>
     </message>
     <message>
+        <source>Hide the icon from the system tray.</source>
+        <translation type="unfinished">Cacher l'icône dans la zone de notification.</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Cacher l'icône de la zone de notification</translation>
+    </message>
+    <message>
         <source>Reset all client options to default.</source>
         <translation>Réinitialiser toutes les options du client par défaut.</translation>
     </message>
@@ -908,6 +955,10 @@
         <translation>&amp;Réseau</translation>
     </message>
     <message>
+        <source>W&amp;allet</source>
+        <translation>&amp;Portefeuille</translation>
+    </message>
+    <message>
         <source>Expert</source>
         <translation>Expert</translation>
     </message>
@@ -918,6 +969,14 @@
     <message>
         <source>Map port using &amp;UPnP</source>
         <translation>Ouvrir le port avec l'&amp;UPnP</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside.</source>
+        <translation>Accepter les connexions venant de l'extérieur.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Autoriser les connexions entrantes</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
@@ -982,6 +1041,10 @@
     <message>
         <source>none</source>
         <translation>aucun</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1143,9 +1206,25 @@
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n heure</numerusform><numerusform>%n heures</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n jour</numerusform><numerusform>%n jours</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n semaine</numerusform><numerusform>%n semaines</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 et %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n an</numerusform><numerusform>%n années</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1166,6 +1245,16 @@
     <message>
         <source>unknown</source>
         <translation>inconnu</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -1251,6 +1340,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Usage de la mémoire</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portefeuille: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1369,6 +1462,10 @@
         <translation>1 &amp;an</translation>
     </message>
     <message>
+        <source>Network activity disabled</source>
+        <translation>Activité réseau désactivée</translation>
+    </message>
+    <message>
         <source>via %1</source>
         <translation>via %1</translation>
     </message>
@@ -1426,6 +1523,10 @@
     <message>
         <source>Remove</source>
         <translation>Retirer</translation>
+    </message>
+    <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Copier URI</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -1841,6 +1942,10 @@
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Ouvert pour %n bloc de plus</numerusform><numerusform>Ouvert pour %n blocs de plus</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>Ouvert jusqu'à %1</translation>
@@ -1986,6 +2091,10 @@
     <message>
         <source>Label</source>
         <translation>Étiquette</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Ouvert pour %n bloc de plus</numerusform><numerusform>Ouvert pour %n blocs de plus</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2147,6 +2256,10 @@
         <translation>Confirmée</translation>
     </message>
     <message>
+        <source>Watch-only</source>
+        <translation>Regarder seulement</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>Date</translation>
     </message>
@@ -2226,7 +2339,11 @@
         <source>Backup Successful</source>
         <translation>Sauvegarde réussie</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Annuler </translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -2241,6 +2358,10 @@
         <source>Importing...</source>
         <translation>
 Importation ...</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Chargement des adresses...</translation>
     </message>
     <message>
         <source>Verifying blocks...</source>
@@ -2277,6 +2398,10 @@ Importation ...</translation>
     <message>
         <source>Transaction too large</source>
         <translation>Transaction trop grande</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Vérification du portefeuille...</translation>
     </message>
     <message>
         <source>Warning</source>

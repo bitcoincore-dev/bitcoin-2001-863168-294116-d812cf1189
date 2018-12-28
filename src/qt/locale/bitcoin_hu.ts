@@ -97,7 +97,11 @@
         <source>Exporting Failed</source>
         <translation>Hiba az exportálás során</translation>
     </message>
-    </context>
+    <message>
+        <source>There was an error trying to save the address list to %1. Please try again.</source>
+        <translation>Hiba történt a címjegyzék %1 helyre való mentésekor. Kérlek próbáld újra.</translation>
+    </message>
+</context>
 <context>
     <name>AddressTableModel</name>
     <message>
@@ -311,16 +315,12 @@ Kérem a kulcsmondatban használjon &lt;b&gt; tíz vagy több véletlenszerű ka
         <translation>Jelszó &amp;megváltoztatása...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Küldési címek...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Fogadó címek...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>&amp;URI azonosító megnyitása...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Tárca:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -483,8 +483,20 @@ Kérem a kulcsmondatban használjon &lt;b&gt; tíz vagy több véletlenszerű ka
         <translation>Naprakész</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Küldési címek</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Fogadó címek</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>A %1 súgó megjelenítése a Bitcoin lehetséges parancssori kapcsolóinak listájával</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Ablak</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -775,6 +787,9 @@ Kérem a kulcsmondatban használjon &lt;b&gt; tíz vagy több véletlenszerű ka
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -859,6 +874,17 @@ Kérem a kulcsmondatban használjon &lt;b&gt; tíz vagy több véletlenszerű ka
         <source>%n GB of free space available</source>
         <translation><numerusform>%n GB elérhető szabad hely</numerusform><numerusform>%n GB elérhető szabad hely</numerusform></translation>
     </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation><numerusform>(a szükséges %n GB-ból)</numerusform><numerusform>(a szükséges %n GB-ból)</numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Nem elérhető</translation>
+    </message>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -909,6 +935,19 @@ Kérem a kulcsmondatban használjon &lt;b&gt; tíz vagy több véletlenszerű ka
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Ismeretlen. Fejlécek szinkronizálása (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Típus</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Cím</translation>
     </message>
 </context>
 <context>
@@ -973,8 +1012,16 @@ Kérem a kulcsmondatban használjon &lt;b&gt; tíz vagy több véletlenszerű ka
         <translation>Megmutatja, hogy az alapértelmezett SOCKS5 proxy van-e használatban, hogy elérje a párokat ennél a hálózati típusnál.</translation>
     </message>
     <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor hidden services:</source>
+        <translation type="unfinished">&amp;Más SOCKS5 proxy használata a párok eléréséhez, a Tor rejtett szolgáltatásain keresztül:</translation>
+    </message>
+    <message>
         <source>Hide the icon from the system tray.</source>
         <translation>Ikon elrejtése a tálcáról.</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Tálcaikon elrejtése</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
@@ -1147,6 +1194,10 @@ Kérem a kulcsmondatban használjon &lt;b&gt; tíz vagy több véletlenszerű ka
     <message>
         <source>none</source>
         <translation>semmi</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1460,6 +1511,11 @@ Kérem a kulcsmondatban használjon &lt;b&gt; tíz vagy több véletlenszerű ka
         <source>unknown</source>
         <translation>ismeretlen</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tzó</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1556,6 +1612,10 @@ Kérem a kulcsmondatban használjon &lt;b&gt; tíz vagy több véletlenszerű ka
     <message>
         <source>Memory usage</source>
         <translation>Memóriahasználat</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Tárca: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2664,7 +2724,11 @@ Kérem a kulcsmondatban használjon &lt;b&gt; tíz vagy több véletlenszerű ka
         <source>Whether or not a watch-only address is involved in this transaction.</source>
         <translation>Egy csak megfigyelt cím érintett vagy nem ebben a tranzakcióban.</translation>
     </message>
-    </context>
+    <message>
+        <source>Amount removed from or added to balance.</source>
+        <translation>Az egyenleghez jóváírt vagy ráterhelt összeg.</translation>
+    </message>
+</context>
 <context>
     <name>TransactionView</name>
     <message>
@@ -2811,7 +2875,11 @@ Kérem a kulcsmondatban használjon &lt;b&gt; tíz vagy több véletlenszerű ka
         <source>Range:</source>
         <translation>Tartomány:</translation>
     </message>
-    </context>
+    <message>
+        <source>to</source>
+        <translation>meddig</translation>
+    </message>
+</context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
     </context>
@@ -2856,7 +2924,7 @@ Kérem a kulcsmondatban használjon &lt;b&gt; tíz vagy több véletlenszerű ka
         <source>Could not commit transaction</source>
         <translation>A tranzakciót nem lehet elküldeni</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletView</name>
     <message>
@@ -2887,7 +2955,11 @@ Kérem a kulcsmondatban használjon &lt;b&gt; tíz vagy több véletlenszerű ka
         <source>The wallet data was successfully saved to %1.</source>
         <translation>A tárca adatai sikeresen elmentve %1.</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Megszakítás</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -2921,6 +2993,10 @@ Kérem a kulcsmondatban használjon &lt;b&gt; tíz vagy több véletlenszerű ka
     <message>
         <source>-maxmempool must be at least %d MB</source>
         <translation>-maxmempool legalább %d MB kell legyen.</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>Külső cím (-%s address) feloldása nem sikerült: '%s'</translation>
     </message>
     <message>
         <source>Copyright (C) %i-%i</source>

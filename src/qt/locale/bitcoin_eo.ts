@@ -168,6 +168,10 @@
         <translation>Tajpu la malnovan pasvorton kaj la novan pasvorton por la monujo.</translation>
     </message>
     <message>
+        <source>Confirm wallet encryption</source>
+        <translation>Konfirmo de ĉifrado de la monujo</translation>
+    </message>
+    <message>
         <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
         <translation>Atentu! Se vi ĉifras vian monujon kaj perdas la pasfrazon, vi &lt;b&gt;PERDOS LA TUTON DE VIA BITMONO&lt;b&gt;!</translation>
     </message>
@@ -191,7 +195,35 @@
         <source>Wallet encryption failed</source>
         <translation>Ĉifrado de la monujo fiaskis</translation>
     </message>
-    </context>
+    <message>
+        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
+        <translation>Ĉifrado de monujo fiaskis pro interna eraro. Via monujo ne estas ĉifrita.</translation>
+    </message>
+    <message>
+        <source>The supplied passphrases do not match.</source>
+        <translation>La pasfrazoj entajpitaj ne samas.</translation>
+    </message>
+    <message>
+        <source>Wallet unlock failed</source>
+        <translation>Malŝloso de la monujo fiaskis</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>La pasfrazo enigita por ĉifrado de monujo ne ĝustas.</translation>
+    </message>
+    <message>
+        <source>Wallet decryption failed</source>
+        <translation>Malĉifrado de la monujo fiaskis</translation>
+    </message>
+    <message>
+        <source>Wallet passphrase was successfully changed.</source>
+        <translation>Vi sukcese ŝanĝis la pasfrazon de la monujo.</translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Atentu: la majuskla baskulo estas ŝaltita!</translation>
+    </message>
+</context>
 <context>
     <name>BanTableModel</name>
     </context>
@@ -234,6 +266,10 @@
         <translation>Eliri la aplikaĵon</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Vidigi informon pri %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Pri &amp;Qt</translation>
     </message>
@@ -258,16 +294,12 @@
         <translation>Ŝanĝi &amp;Pasfrazon...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Sendaj adresoj...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Ricevaj adresoj...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Malfermi &amp;URI-on...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Monujo:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -370,6 +402,10 @@
         <translation>&amp;Komandliniaj agordaĵoj</translation>
     </message>
     <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Indeksado de blokoj sur disko...</translation>
+    </message>
+    <message>
         <source>%1 behind</source>
         <translation>mankas %1</translation>
     </message>
@@ -396,6 +432,18 @@
     <message>
         <source>Up to date</source>
         <translation>Ĝisdata</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Sendaj adresoj</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Ricevaj adresoj</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Fenestro</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -515,10 +563,78 @@
         <translation>Konfirmita</translation>
     </message>
     <message>
+        <source>Copy address</source>
+        <translation>Kopii adreson</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>Kopii etikedon</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopii sumon</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>Kopii transakcian ID-on</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>Ŝlosi la neelspezitajn</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>Malŝlosi la neelspezitajn</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Kopii kvanton</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Kopii krompagon</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Kopii post krompago</translation>
+    </message>
+    <message>
+        <source>Copy bytes</source>
+        <translation>Kopii bajtojn</translation>
+    </message>
+    <message>
+        <source>Copy dust</source>
+        <translation>Kopii polvon</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Kopii restmonon</translation>
+    </message>
+    <message>
+        <source>(%1 locked)</source>
+        <translation>(%1 ŝlosita)</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>jes</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>ne</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(neniu etikedo)</translation>
     </message>
-    </context>
+    <message>
+        <source>change from %1 (%2)</source>
+        <translation>restmono de %1 (%2)</translation>
+    </message>
+    <message>
+        <source>(change)</source>
+        <translation>(restmono)</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -541,7 +657,31 @@
         <source>&amp;Address</source>
         <translation>&amp;Adreso</translation>
     </message>
-    </context>
+    <message>
+        <source>New sending address</source>
+        <translation>Nova adreso por sendi</translation>
+    </message>
+    <message>
+        <source>Edit receiving address</source>
+        <translation>Redakti adreson por ricevi</translation>
+    </message>
+    <message>
+        <source>Edit sending address</source>
+        <translation>Redakti adreson por sendi</translation>
+    </message>
+    <message>
+        <source>The entered address "%1" is not a valid Bitcoin address.</source>
+        <translation>La adreso enigita "%1" ne estas valida Bitmon-adreso.</translation>
+    </message>
+    <message>
+        <source>Could not unlock wallet.</source>
+        <translation>Ne eblis malŝlosi monujon.</translation>
+    </message>
+    <message>
+        <source>New key generation failed.</source>
+        <translation>Fiaskis kreo de nova ŝlosilo.</translation>
+    </message>
+</context>
 <context>
     <name>FreespaceChecker</name>
     <message>
@@ -566,6 +706,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -583,6 +726,10 @@
         <translation>Bonvenon</translation>
     </message>
     <message>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Dum tiu ĉi unua uzo de la programo, vi povas elekti lokon, kie %1 stokos siajn datumojn.</translation>
+    </message>
+    <message>
         <source>Use the default data directory</source>
         <translation>Uzi la defaŭltan dosierujon por datumoj</translation>
     </message>
@@ -595,6 +742,18 @@
         <translation>Bitmono</translation>
     </message>
     <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Almenaŭ %1GB da datumoj konserviĝos en tiu loko, kaj tio poiome kreskos.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 elŝutos kaj konservos kopion de la bitmona blokĉeno.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>Ankaŭ via monujo konserviĝos en tiu dosierujo.</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Eraro</translation>
     </message>
@@ -604,16 +763,40 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>neaplikebla</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Formularo</translation>
     </message>
     <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">nekonata...</translation>
+    </message>
+    <message>
         <source>Last block time</source>
         <translation>Horo de la lasta bloko</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adreso</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -632,7 +815,11 @@
         <source>Select payment request file</source>
         <translation>Elektu la dosieron de la pagpeto</translation>
     </message>
-    </context>
+    <message>
+        <source>Select payment request file to open</source>
+        <translation>Elektu la malfermotan dosieron de la pagpeto</translation>
+    </message>
+</context>
 <context>
     <name>OptionsDialog</name>
     <message>
@@ -678,6 +865,14 @@
     <message>
         <source>Map port using &amp;UPnP</source>
         <translation>Mapigi pordon per &amp;UPnP</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside.</source>
+        <translation>Akcepti konektojn el ekstere.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Permesi envenantajn konektojn</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
@@ -752,6 +947,10 @@
         <translation>neniu</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Kerno de Bitmono</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Konfirmi reŝargo de agordoj</translation>
     </message>
@@ -813,7 +1012,47 @@
     </context>
 <context>
     <name>PaymentServer</name>
-    </context>
+    <message>
+        <source>Payment request error</source>
+        <translation>Eraro dum pagopeto</translation>
+    </message>
+    <message>
+        <source>Cannot start bitcoin: click-to-pay handler</source>
+        <translation>Ne eblas lanĉi la ilon 'klaki-por-pagi'</translation>
+    </message>
+    <message>
+        <source>URI handling</source>
+        <translation>Traktado de URI-oj</translation>
+    </message>
+    <message>
+        <source>Invalid payment address %1</source>
+        <translation>Nevalida pagadreso %1</translation>
+    </message>
+    <message>
+        <source>Requested payment amount of %1 is too small (considered dust).</source>
+        <translation>La petita pagosumo de %1 estas tro malgranda (konsiderata kiel polvo).</translation>
+    </message>
+    <message>
+        <source>Refund from %1</source>
+        <translation>Repago de %1</translation>
+    </message>
+    <message>
+        <source>Error communicating with %1: %2</source>
+        <translation>Eraro dum komunikado kun %1: %2</translation>
+    </message>
+    <message>
+        <source>Bad response from server %1</source>
+        <translation>Malbona respondo de la servilo %1</translation>
+    </message>
+    <message>
+        <source>Network request error</source>
+        <translation>Eraro dum ret-peto</translation>
+    </message>
+    <message>
+        <source>Payment acknowledged</source>
+        <translation>Pago agnoskita</translation>
+    </message>
+</context>
 <context>
     <name>PeerTableModel</name>
     <message>
@@ -851,9 +1090,25 @@
         <source>N/A</source>
         <translation>neaplikebla</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n horo</numerusform><numerusform>%n horoj</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n tago</numerusform><numerusform>%n tagoj</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n semajno</numerusform><numerusform>%n semajnoj</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 kaj %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n jaro</numerusform><numerusform>%n jaroj</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -875,6 +1130,11 @@
         <source>unknown</source>
         <translation>nekonata</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tso</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -885,7 +1145,19 @@
         <source>&amp;Save Image...</source>
         <translation>&amp;Konservi Bildon...</translation>
     </message>
-    </context>
+    <message>
+        <source>&amp;Copy Image</source>
+        <translation>&amp;Kopii Bildon</translation>
+    </message>
+    <message>
+        <source>Save QR Code</source>
+        <translation>Konservi QR-kodon</translation>
+    </message>
+    <message>
+        <source>PNG Image (*.png)</source>
+        <translation>PNG-bildo (*.png)</translation>
+    </message>
+</context>
 <context>
     <name>RPCConsole</name>
     <message>
@@ -931,6 +1203,10 @@
     <message>
         <source>Current number of blocks</source>
         <translation>Aktuala nombro de blokoj</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Monujo: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -996,7 +1272,11 @@
         <source>Clear console</source>
         <translation>Malplenigi konzolon</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">nekonata</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -1030,6 +1310,10 @@
     <message>
         <source>Remove</source>
         <translation>Forigi</translation>
+    </message>
+    <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Kopii URI</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -1171,6 +1455,10 @@
     <message>
         <source>Transaction Fee:</source>
         <translation>Krompago:</translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Elekti...</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -1838,7 +2126,11 @@
         <source>Backup Successful</source>
         <translation>Sukcesis krei sekurkopion</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Nuligi</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -1856,6 +2148,10 @@
     <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
         <translation>Averto: ŝajne ni ne tute konsentas kun niaj samtavolanoj! Eble vi devas ĝisdatigi vian klienton, aŭ eble aliaj nodoj faru same.</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>Ne eblas trovi la adreson -%s: '%s'</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
@@ -1894,6 +2190,10 @@
         <translation>Geneza bloko aŭ netrovita aŭ neĝusta. Ĉu eble la datadir de la reto malĝustas?</translation>
     </message>
     <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Ŝarĝante adresojn...</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Nesufiĉa nombro de dosierpriskribiloj disponeblas.</translation>
     </message>
@@ -1920,6 +2220,14 @@
     <message>
         <source>Transaction too large</source>
         <translation>Transakcio estas tro granda</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Kontrolado de monujo...</translation>
+    </message>
+    <message>
+        <source>Wallet %s resides outside wallet directory %s</source>
+        <translation>Monujo %s troviĝas ekster la dosierujo por datumoj %s</translation>
     </message>
     <message>
         <source>Warning</source>

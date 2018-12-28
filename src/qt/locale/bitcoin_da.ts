@@ -314,24 +314,12 @@
         <translation>&amp;Skift adgangskode…</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Afsendelsesadresser…</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Modtagelsesadresser…</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>&amp;Åbn URI…</translation>
     </message>
     <message>
         <source>Wallet:</source>
         <translation>Tegnebog:</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>Standard tegnebog</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -498,8 +486,20 @@
         <translation>Opdateret</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Afsendelsesadresser</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Modtagelsesadresser</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Vis %1 hjælpebesked for at få en liste over mulige tilvalg for Bitcoin kommandolinje</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Vindue</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -808,6 +808,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -898,6 +901,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -946,6 +956,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Ukendt. Synkroniserer hoveder (%1)…</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
     </message>
 </context>
 <context>
@@ -1060,10 +1083,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Beskære &amp;blok opbevaring til</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1208,6 +1227,10 @@
     <message>
         <source>none</source>
         <translation>ingen</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1533,6 +1556,11 @@
         <source>unknown</source>
         <translation>ukendt</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1813,10 +1841,6 @@
     <message>
         <source>&amp;Unban</source>
         <translation>&amp;Fjern bandlysning</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>Standard tegnebog</translation>
     </message>
     <message>
         <source>Welcome to the %1 RPC console.</source>
@@ -3108,6 +3132,10 @@ Note: Siden gebyret er kalkuleret på en per-byte basis, et gebyr på "100 satos
     <message>
         <source>Could not commit transaction</source>
         <translation>Kunne ikke gennemføre transaktionen</translation>
+    </message>
+    <message>
+        <source>default wallet</source>
+        <translation>Standard tegnebog</translation>
     </message>
 </context>
 <context>

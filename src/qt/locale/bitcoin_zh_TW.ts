@@ -314,24 +314,12 @@
         <translation>改變密碼(&amp;C)...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>付款位址(&amp;S)...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>收款位址(&amp;R)...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>開啓 &amp;URI...</translation>
     </message>
     <message>
         <source>Wallet:</source>
         <translation>錢包:</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>預設錢包</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -498,8 +486,20 @@
         <translation>最新狀態</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">付款位址(&amp;S)</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">收款位址(&amp;R)</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>顯示 %1 的說明訊息，來取得可用命令列選項的列表</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>視窗(&amp;W)</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -808,6 +808,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -898,6 +901,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>未知</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -946,6 +956,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>不明。正在同步前導資料(%1)中...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>種類</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>位址</translation>
     </message>
 </context>
 <context>
@@ -1060,10 +1083,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>修剪區塊資料大小到</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB (十億位元組)</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1208,6 +1227,10 @@
     <message>
         <source>none</source>
         <translation>無</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1533,6 +1556,16 @@
         <source>unknown</source>
         <translation>未知</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>塊</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>交易</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1813,10 +1846,6 @@
     <message>
         <source>&amp;Unban</source>
         <translation>連線解禁(&amp;U)</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>預設錢包</translation>
     </message>
     <message>
         <source>Welcome to the %1 RPC console.</source>
@@ -2325,6 +2354,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Pay only the required fee of %1</source>
         <translation>只付必要的手續費 %1</translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>預計可在 %n 個區塊內開始確認。</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -3105,6 +3138,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Could not commit transaction</source>
         <translation>沒辦法提交交易</translation>
     </message>
+    <message>
+        <source>default wallet</source>
+        <translation>預設錢包</translation>
+    </message>
 </context>
 <context>
     <name>WalletView</name>
@@ -3334,6 +3371,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
         <translation>設定 -fallbackfee=&lt;金額&gt; 的金額無效: '%s'</translation>
+    </message>
+    <message>
+        <source>Specified blocks directory "%s" does not exist.</source>
+        <translation>指定的區塊目錄 "%s" 不存在。</translation>
     </message>
     <message>
         <source>Upgrading txindex database</source>

@@ -314,24 +314,12 @@
         <translation>&amp;Canvia la contrasenya...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>Adreces d'e&amp;nviament...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Adreces de &amp;recepció...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Obre un &amp;URI...</translation>
     </message>
     <message>
         <source>Wallet:</source>
         <translation>Moneder:</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>moneder per defecte</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -498,8 +486,20 @@
         <translation>Al dia</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">Adreces d'e&amp;nviament</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">Adreces de &amp;recepció</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Mostra el missatge d'ajuda del %1 per obtenir una llista amb les possibles opcions de línia d'ordres de Bitcoin</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Finestra</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -808,6 +808,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -898,6 +901,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -946,6 +956,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Desconegut. Sincronització de les capçaleres (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipus</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adreça</translation>
     </message>
 </context>
 <context>
@@ -1060,10 +1083,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Prunar emmagatzemament de &amp;block a</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1208,6 +1227,10 @@
     <message>
         <source>none</source>
         <translation>cap</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Nucli de Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1533,6 +1556,16 @@
         <source>unknown</source>
         <translation>desconegut</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsó</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1813,10 +1846,6 @@
     <message>
         <source>&amp;Unban</source>
         <translation>Desbandeja per</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>moneder per defecte</translation>
     </message>
     <message>
         <source>Welcome to the %1 RPC console.</source>
@@ -2310,6 +2339,10 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
         <source>Pay only the required fee of %1</source>
         <translation>Paga només la comissió necessària de %1</translation>
     </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>Estimat per començar la confirmació en %n bloc.</numerusform><numerusform>Estimat per començar la confirmació en %n blocs.</numerusform></translation>
+    </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
         <translation>Avís: adreça Bitcoin no vàlida</translation>
@@ -2587,6 +2620,10 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Obre per %n bloc més</numerusform><numerusform>Obre per %n blocs més</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>Obert fins %1</translation>
@@ -2662,6 +2699,10 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
     <message>
         <source>Credit</source>
         <translation>Crèdit</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation><numerusform>disponible en %n bloc més</numerusform><numerusform>disponibles en %n blocs més</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2764,6 +2805,10 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
     <message>
         <source>Label</source>
         <translation>Etiqueta</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Obre per %n bloc més</numerusform><numerusform>Obre per %n blocs més</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -3065,6 +3110,10 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
         <source>Could not commit transaction</source>
         <translation>No s'ha pogut confirmar la transacció</translation>
     </message>
+    <message>
+        <source>default wallet</source>
+        <translation>moneder per defecte</translation>
+    </message>
 </context>
 <context>
     <name>WalletView</name>
@@ -3100,7 +3149,11 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
         <source>The wallet data was successfully saved to %1.</source>
         <translation>S'han desat les dades del moneder correctament a %1.</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancel·la</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -3434,6 +3487,10 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
     <message>
         <source>Verifying wallet(s)...</source>
         <translation>S'està verificant el moneder(s) ...</translation>
+    </message>
+    <message>
+        <source>Wallet %s resides outside wallet directory %s</source>
+        <translation>El moneder %s resideix fora del directori de dades %s</translation>
     </message>
     <message>
         <source>Warning</source>

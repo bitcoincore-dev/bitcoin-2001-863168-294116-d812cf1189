@@ -314,24 +314,12 @@
         <translation>Alterar &amp;Frase de Segurança...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>A &amp;enviar os endereços...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>A &amp;receber os endereços...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Abrir &amp;URI...</translation>
     </message>
     <message>
         <source>Wallet:</source>
         <translation>Carteira:</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>carteira predefinida</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -498,8 +486,20 @@
         <translation>Atualizado</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">A &amp;enviar os endereços</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">A &amp;receber os endereços</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Mostrar a mensagem de ajuda %1 para obter uma lista com possíveis opções a usar na linha de comandos.</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Janela</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -800,6 +800,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -827,6 +830,10 @@
     <message>
         <source>Welcome to %1.</source>
         <translation>Bem-vindo ao %1.</translation>
+    </message>
+    <message>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Como esta é a primeira vez que o programa é iniciado, pode escolher onde guardar os seus dados do %1.</translation>
     </message>
     <message>
         <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
@@ -886,6 +893,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -934,6 +948,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Desconhecido. Sincronização de Cabeçalhos (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Endereço</translation>
     </message>
 </context>
 <context>
@@ -1041,10 +1068,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Rede</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>PT</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1185,6 +1208,10 @@
     <message>
         <source>none</source>
         <translation>nenhum</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1484,7 +1511,7 @@
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation><numerusform>%n anos</numerusform><numerusform>%n anos</numerusform></translation>
+        <translation><numerusform>%n ano</numerusform><numerusform>%n anos</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1509,6 +1536,16 @@
     <message>
         <source>unknown</source>
         <translation>desconhecido</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Bco</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tso</translation>
     </message>
 </context>
 <context>
@@ -1780,16 +1817,16 @@
         <translation>1 &amp;ano</translation>
     </message>
     <message>
+        <source>&amp;Disconnect</source>
+        <translation>&amp;Disconectar</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>Banir para</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
         <translation>&amp;Desbanir</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>carteira predefinida</translation>
     </message>
     <message>
         <source>Welcome to the %1 RPC console.</source>
@@ -2272,6 +2309,10 @@
         <source>Pay only the required fee of %1</source>
         <translation>Pague apenas a taxa obrigatória de %1</translation>
     </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>Estimativa para iniciar a confirmação dentro de %n bloco.</numerusform><numerusform>Estimativa para iniciar a confirmação dentro de %n blocos.</numerusform></translation>
+    </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
         <translation>Aviso: endereço Bitcoin inválido</translation>
@@ -2553,9 +2594,17 @@
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Abrir para %n ou mais bloco</numerusform><numerusform>Abrir para %n ou mais blocos</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>Aberto até %1</translation>
+    </message>
+    <message>
+        <source>conflicted with a transaction with %1 confirmations</source>
+        <translation>incompatível com uma transação com %1 confirmações</translation>
     </message>
     <message>
         <source>0/unconfirmed, %1</source>
@@ -2975,6 +3024,10 @@
         <translation>Exportação Bem Sucedida</translation>
     </message>
     <message>
+        <source>The transaction history was successfully saved to %1.</source>
+        <translation>O histórico da transação foi guardado com sucesso em %1.</translation>
+    </message>
+    <message>
         <source>Range:</source>
         <translation>Período:</translation>
     </message>
@@ -3038,6 +3091,10 @@
     <message>
         <source>Could not commit transaction</source>
         <translation>Não foi possível cometer a transação</translation>
+    </message>
+    <message>
+        <source>default wallet</source>
+        <translation>carteira predefinida</translation>
     </message>
 </context>
 <context>
@@ -3118,8 +3175,16 @@
         <translation>Os programadores de %s</translation>
     </message>
     <message>
+        <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
+        <translation>Impossível trancar a pasta de dados %s. Provavelmente o %s já está a ser executado.</translation>
+    </message>
+    <message>
         <source>Cannot provide specific connections and have addrman find outgoing connections at the same.</source>
         <translation>Não é possível fornecer conexões específicas e ter o addrman a procurar conexões de saída ao mesmo tempo.</translation>
+    </message>
+    <message>
+        <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
+        <translation>Erro ao ler %s! Todas as chaves foram lidas correctamente, mas os dados das transacções ou do livro de endereços podem estar em falta ou incorrectos.</translation>
     </message>
     <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
@@ -3132,6 +3197,10 @@
     <message>
         <source>The block database contains a block which appears to be from the future. This may be due to your computer's date and time being set incorrectly. Only rebuild the block database if you are sure that your computer's date and time are correct</source>
         <translation>A base de dados de blocos contém um bloco que aparenta ser do futuro. Isto pode ser causado por uma data incorrecta definida no seu computador. Reconstrua apenas a base de dados de blocos caso tenha a certeza de que a data e hora do seu computador estão correctos.</translation>
+    </message>
+    <message>
+        <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
+        <translation>Esta é uma versão de testes pré-lançamento - use à sua responsabilidade - não usar para minar ou aplicações comerciais</translation>
     </message>
     <message>
         <source>This is the transaction fee you may discard if change is smaller than dust at this level</source>
@@ -3270,6 +3339,10 @@
         <translation>Cálculo da taxa de transação e de troco falhou</translation>
     </message>
     <message>
+        <source>Unable to bind to %s on this computer. %s is probably already running.</source>
+        <translation>Incapaz de vincular à porta %s neste computador. O %s provavelmente já está a correr.</translation>
+    </message>
+    <message>
         <source>Unsupported argument -benchmark ignored, use -debug=bench.</source>
         <translation>Argumento não suportado -benchmark ignorado, use -debug=bench.</translation>
     </message>
@@ -3326,6 +3399,10 @@
         <translation>Endereço -onion ou hostname inválido: '%s'</translation>
     </message>
     <message>
+        <source>Invalid -proxy address or hostname: '%s'</source>
+        <translation>Endereço -proxy ou hostname inválido: '%s'</translation>
+    </message>
+    <message>
         <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s' (must be at least %s)</source>
         <translation>Montante inválido para -paytxfee=&lt;amount&gt;: '%s' (deverá ser no mínimo %s)</translation>
     </message>
@@ -3376,6 +3453,10 @@
     <message>
         <source>Verifying wallet(s)...</source>
         <translation>A verificar a(s) carteira(s)...</translation>
+    </message>
+    <message>
+        <source>Wallet %s resides outside wallet directory %s</source>
+        <translation>A carteira %s reside fora da pasta de dados %s</translation>
     </message>
     <message>
         <source>Warning</source>

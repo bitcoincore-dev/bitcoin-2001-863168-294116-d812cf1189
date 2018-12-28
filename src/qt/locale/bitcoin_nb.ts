@@ -314,16 +314,12 @@
         <translation>&amp;Endre Adgangsfrase...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Utsendingsadresser...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Mottaksadresser...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Åpne &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Lommebok:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -486,8 +482,20 @@
         <translation>Oppdatert</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Utsendingsadresser</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Mottaksadresser</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Vis %1 hjelpemeldingen for å få en liste med mulige Bitcoin kommandolinjevalg.</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Vindu</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -782,6 +790,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -872,6 +883,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>-</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -920,6 +938,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Ukjent. Synkroniserer hoder (%1)…</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
     </message>
 </context>
 <context>
@@ -1166,6 +1197,10 @@
     <message>
         <source>none</source>
         <translation>ingen</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1487,6 +1522,11 @@
         <source>unknown</source>
         <translation>ukjent</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1583,6 +1623,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Minnebruk</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Lommebok: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -2697,7 +2741,7 @@
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Åpen for én blokk til</numerusform><numerusform>Åpen for %n blokker til</numerusform></translation>
+        <translation><numerusform>Åpen for %n blokk til</numerusform><numerusform>Åpen for %n blokker til</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -3003,7 +3047,7 @@
         <source>Could not commit transaction</source>
         <translation>Kunne ikke sende inn transaksjon</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletView</name>
     <message>
@@ -3038,7 +3082,11 @@
         <source>The wallet data was successfully saved to %1.</source>
         <translation>Lommebokdata lagret til %1.</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Avbryt</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>

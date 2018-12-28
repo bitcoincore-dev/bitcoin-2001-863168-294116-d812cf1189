@@ -314,16 +314,12 @@
         <translation>更改密码(&amp;C)...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>正在发送地址(&amp;S)...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>正在接收地址(&amp;R)...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>打开 &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation>钱包：</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -344,6 +340,10 @@
     <message>
         <source>Reindexing blocks on disk...</source>
         <translation>正在为数据块重建索引...</translation>
+    </message>
+    <message>
+        <source>Proxy is &lt;b&gt;enabled&lt;/b&gt;: %1</source>
+        <translation>代理已被&lt;b&gt;启用&lt;/b&gt;：%1</translation>
     </message>
     <message>
         <source>Send coins to a Bitcoin address</source>
@@ -441,6 +441,10 @@
         <source>&amp;Command-line options</source>
         <translation>命令行选项(&amp;C)</translation>
     </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network</source>
+        <translation><numerusform>%n 个有效连接至比特币网络</numerusform></translation>
+    </message>
     <message>
         <source>Indexing blocks on disk...</source>
         <translation>正在为数据块建立索引...</translation>
@@ -448,6 +452,10 @@
     <message>
         <source>Processing blocks on disk...</source>
         <translation>正在处理数据块...</translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation><numerusform>已处理 %n 交易历史数据块</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -478,8 +486,20 @@
         <translation>已是最新</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">正在发送地址(&amp;S)</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">正在接收地址(&amp;R)</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>显示 %1 帮助信息，获取可用命令行选项列表</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>窗口(&amp;W)</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -504,6 +524,11 @@
 </source>
         <translation>金额: %1
 </translation>
+    </message>
+    <message>
+        <source>Wallet: %1
+</source>
+        <translation>钱包：%1</translation>
     </message>
     <message>
         <source>Type: %1
@@ -742,6 +767,14 @@
         <translation>输入的地址 %1 并不是有效的比特币地址。</translation>
     </message>
     <message>
+        <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
+        <translation>地址“%1”已经存在，它是一个接受地址，标签为“%2”，所以它不能被添加为一个发送地址。</translation>
+    </message>
+    <message>
+        <source>The entered address "%1" is already in the address book with label "%2".</source>
+        <translation>输入地址“%1”已经存在于地址簿中，标签为“%2”。</translation>
+    </message>
+    <message>
         <source>Could not unlock wallet.</source>
         <translation>无法将钱包解锁。</translation>
     </message>
@@ -773,6 +806,9 @@
         <translation>无法在此创建数据目录。</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -850,6 +886,21 @@
         <source>Error</source>
         <translation>错误</translation>
     </message>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation><numerusform>%n GB 可用空闲空间</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation><numerusform>（%n GB 需要）</numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>不可用</translation>
+    </message>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -900,6 +951,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>未知状态。同步区块头(%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>种类</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>地址</translation>
     </message>
 </context>
 <context>
@@ -1006,6 +1070,10 @@
     <message>
         <source>&amp;Network</source>
         <translation>网络(&amp;N)</translation>
+    </message>
+    <message>
+        <source>Disables some advanced features but all blocks will still be fully validated. Reverting this setting requires re-downloading the entire blockchain. Actual disk usage may be somewhat higher.</source>
+        <translation>禁用一些高级特性，但是所有数据块仍会被完全验证。还原此设置要求重新下载整个数据块链。实际的磁盘空间占用可能会更高。</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1146,6 +1214,10 @@
     <message>
         <source>none</source>
         <translation>无</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>比特币核心</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1307,6 +1379,10 @@
         <translation>付款请求已过期。</translation>
     </message>
     <message>
+        <source>Payment request is not initialized.</source>
+        <translation>支付请求未成形。</translation>
+    </message>
+    <message>
         <source>Unverified payment requests to custom payment scripts are unsupported.</source>
         <translation>不支持到自定义付款脚本的未验证付款请求。</translation>
     </message>
@@ -1412,9 +1488,33 @@
         <source>%1 ms</source>
         <translation>%1 毫秒</translation>
     </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation><numerusform>%n 秒</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation><numerusform>%n 分</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n 时</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n 天</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n 周</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 和 %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n 年</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1440,12 +1540,30 @@
         <source>unknown</source>
         <translation>未知</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>块</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>交易</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
     <message>
+        <source>Error parsing command line arguments: %1.</source>
+        <translation>解析命令行参数错误：%1</translation>
+    </message>
+    <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
         <translation>错误：指定的数据目录“%1”不存在。</translation>
+    </message>
+    <message>
+        <source>Error: Cannot parse configuration file: %1.</source>
+        <translation>错误：无法解析配置文件：%1</translation>
     </message>
     <message>
         <source>Error: %1</source>
@@ -1538,6 +1656,10 @@
         <translation>内存使用</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation>钱包：</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;重启</translation>
     </message>
@@ -1588,6 +1710,10 @@
     <message>
         <source>User Agent</source>
         <translation>用户代理</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>从当前的数据目录打开%1调试日志文件。对于较大的日志文件，这可能需要几秒钟。</translation>
     </message>
     <message>
         <source>Decrease font size</source>
@@ -1726,6 +1852,14 @@
         <translation>网络活动已禁用</translation>
     </message>
     <message>
+        <source>Executing command without any wallet</source>
+        <translation>不使用任何钱包执行命令</translation>
+    </message>
+    <message>
+        <source>Executing command using "%1" wallet</source>
+        <translation>使用“%1”钱包执行命令</translation>
+    </message>
+    <message>
         <source>(node id: %1)</source>
         <translation>(节点ID: %1)</translation>
     </message>
@@ -1795,6 +1929,10 @@
     <message>
         <source>Clear</source>
         <translation>清除</translation>
+    </message>
+    <message>
+        <source>Native segwit addresses (aka Bech32 or BIP-173) reduce your transaction fees later on and offer better protection against typos, but old wallets don't support them. When unchecked, an address compatible with older wallets will be created instead.</source>
+        <translation>本地隔离见证地址（又称为Bench32或者BIP-173）可减少您日后的交易费用，并且提供对于打印错误更好的保护，但旧版本的钱包不支持这些功能。当取消选择后，一个与旧版本钱包兼容的地址会被创建。</translation>
     </message>
     <message>
         <source>Generate native segwit (Bech32) address</source>
@@ -2126,12 +2264,24 @@
         <translation>你可以之后再提高手续费（有BIP-125手续费追加的标记）</translation>
     </message>
     <message>
+        <source>from wallet %1</source>
+        <translation>从钱包%1</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction.</source>
+        <translation>请检查您的交易。</translation>
+    </message>
+    <message>
         <source>Transaction fee</source>
         <translation>交易费用</translation>
     </message>
     <message>
         <source>Not signalling Replace-By-Fee, BIP-125.</source>
         <translation>没有BIP-125手续费追加的标记。</translation>
+    </message>
+    <message>
+        <source>Total Amount</source>
+        <translation>总额</translation>
     </message>
     <message>
         <source>Confirm send coins</source>
@@ -2176,6 +2326,10 @@
     <message>
         <source>Pay only the required fee of %1</source>
         <translation>只支付必要费用 %1</translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>预计可在%n个区块内开始确认。</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2458,6 +2612,10 @@
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>到下%n个区块产生出来前可修改</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>至 %1 个数据块时开启</translation>
@@ -2533,6 +2691,10 @@
     <message>
         <source>Credit</source>
         <translation>收入</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation><numerusform>再等%n个区块产生出来后成熟</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2635,6 +2797,10 @@
     <message>
         <source>Label</source>
         <translation>标签</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>到下%n个区块产生出来前可修改</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2940,6 +3106,10 @@
         <source>Could not commit transaction</source>
         <translation>无法提交交易</translation>
     </message>
+    <message>
+        <source>default wallet</source>
+        <translation>默认钱包</translation>
+    </message>
 </context>
 <context>
     <name>WalletView</name>
@@ -2975,7 +3145,11 @@
         <source>The wallet data was successfully saved to %1.</source>
         <translation>钱包数据成功保存至 %1。</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -3197,6 +3371,10 @@
     <message>
         <source>Unable to bind to %s on this computer. %s is probably already running.</source>
         <translation>无法在本机绑定 %s 端口。%s 可能已经在运行。</translation>
+    </message>
+    <message>
+        <source>Unable to generate keys</source>
+        <translation>无法生成密钥</translation>
     </message>
     <message>
         <source>Unsupported argument -benchmark ignored, use -debug=bench.</source>
@@ -3433,6 +3611,10 @@
     <message>
         <source>Insufficient funds</source>
         <translation>金额不足</translation>
+    </message>
+    <message>
+        <source>Can't generate a change-address key. Private keys are disabled for this wallet.</source>
+        <translation>无法生成一个变更地址密钥。对于此钱包，私有密钥已被禁用。</translation>
     </message>
     <message>
         <source>Loading block index...</source>

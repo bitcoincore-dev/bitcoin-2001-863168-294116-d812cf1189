@@ -314,24 +314,12 @@
         <translation>Змінити парол&amp;ь...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>Адреси для &amp;відправлення...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Адреси для &amp;отримання...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Відкрити &amp;URI</translation>
     </message>
     <message>
         <source>Wallet:</source>
         <translation>Гаманець:</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>типовий гаманець</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -498,8 +486,20 @@
         <translation>Синхронізовано</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">Адреси для &amp;відправлення</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">Адреси для &amp;отримання</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Показати довідку %1 для отримання переліку можливих параметрів командного рядка.</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Вікно</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -804,6 +804,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -890,6 +893,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Н/Д</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -941,6 +951,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тип</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адреса</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -972,6 +995,10 @@
     <message>
         <source>&amp;Main</source>
         <translation>&amp;Головні</translation>
+    </message>
+    <message>
+        <source>&amp;Start %1 on system login</source>
+        <translation>&amp;Запускати %1 при вході в систему</translation>
     </message>
     <message>
         <source>Size of &amp;database cache</source>
@@ -1044,10 +1071,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Скоротити місце під блоки...</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>ГБ</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1192,6 +1215,10 @@
     <message>
         <source>none</source>
         <translation>відсутні</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1519,6 +1546,16 @@
         <source>unknown</source>
         <translation>невідомо</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакція</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1799,10 +1836,6 @@
     <message>
         <source>&amp;Unban</source>
         <translation>&amp;Розблокувати</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>гаманець за змовчуванням</translation>
     </message>
     <message>
         <source>Welcome to the %1 RPC console.</source>
@@ -3094,6 +3127,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Could not commit transaction</source>
         <translation>Не вдалось виконати транзакцію</translation>
+    </message>
+    <message>
+        <source>default wallet</source>
+        <translation>типовий гаманець</translation>
     </message>
 </context>
 <context>

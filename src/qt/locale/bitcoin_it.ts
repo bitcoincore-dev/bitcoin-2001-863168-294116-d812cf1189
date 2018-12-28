@@ -314,24 +314,12 @@
         <translation>&amp;Cambia passphrase...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Indirizzi di invio...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Indirizzi di &amp;ricezione...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Apri &amp;URI...</translation>
     </message>
     <message>
         <source>Wallet:</source>
         <translation>Portafoglio:</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>Portafoglio predefinito:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -498,8 +486,20 @@
         <translation>Aggiornato</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Indirizzi di invio</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">Indirizzi di &amp;ricezione</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Mostra il messaggio di aiuto di %1 per ottenere una lista di opzioni di comando per Bitcoin </translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Finestra</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -800,6 +800,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -890,6 +893,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -938,6 +948,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Sconosciuto. Sincronizzazione Headers (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Indirizzo</translation>
     </message>
 </context>
 <context>
@@ -1053,10 +1076,6 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Eliminare e bloccare l'archiviazione su</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1201,6 +1220,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>none</source>
         <translation>nessuno</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1526,6 +1549,16 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <source>unknown</source>
         <translation>sconosciuto</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tso</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1798,10 +1831,6 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>&amp;Unban</source>
         <translation>&amp;Elimina Ban</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>Portafoglio predefinito:</translation>
     </message>
     <message>
         <source>Welcome to the %1 RPC console.</source>
@@ -2305,7 +2334,7 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Inizio delle conferme stimato entro %n blocchi.</numerusform><numerusform>Inizio delle conferme stimato entro %n blocchi.</numerusform></translation>
+        <translation><numerusform>Inizio delle conferme stimato entro %n blocco.</numerusform><numerusform>Inizio delle conferme stimato entro %n blocchi.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2590,7 +2619,11 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     <name>TransactionDesc</name>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Aperto per altri %n blocchi</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+        <translation><numerusform>Aperto per %n altro blocco</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Aperto fino a %1</translation>
     </message>
     <message>
         <source>conflicted with a transaction with %1 confirmations</source>
@@ -2666,7 +2699,7 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>matura tra %n blocchi</numerusform><numerusform>matura tra %n blocchi</numerusform></translation>
+        <translation><numerusform>matura tra %n blocco</numerusform><numerusform>matura tra %n blocchi</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2776,7 +2809,11 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Aperto per altri %n blocchi</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+        <translation><numerusform>Aperto per %n altro blocco</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Aperto fino a %1</translation>
     </message>
     <message>
         <source>Unconfirmed</source>
@@ -3078,6 +3115,10 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
         <source>Could not commit transaction</source>
         <translation>Non è stato possibile completare la transazione</translation>
     </message>
+    <message>
+        <source>default wallet</source>
+        <translation>Portafoglio predefinito:</translation>
+    </message>
 </context>
 <context>
     <name>WalletView</name>
@@ -3167,6 +3208,10 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>Errore lettura %s! Tutte le chiavi sono state lette correttamente, ma i dati delle transazioni o della rubrica potrebbero essere mancanti o non corretti.</translation>
+    </message>
+    <message>
+        <source>Group outputs by address, selecting all or none, instead of selecting on a per-output basis. Privacy is improved as an address is only used once (unless someone sends to it after spending from it), but may result in slightly higher fees as suboptimal coin selection may result due to the added limitation (default: %u)</source>
+        <translation>Raggruppa gli output per indirizzo, selezionando tutti o nessuno, invece di selezionarli in base all'output. La privacy è migliorata in quanto un indirizzo viene usato una sola volta (a meno che qualcuno vi invii denaro dopo che avevate già speso da quell'indirizzo), ma può comportare commissioni leggermente più alte visto che le limitazioni aggiunte possono condurre a una selezione subottimale degli input da spendere (default: %u)</translation>
     </message>
     <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
@@ -3303,6 +3348,10 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     <message>
         <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
         <translation>Importo non valido per -fallbackfee=&lt;amount&gt;: '%s'</translation>
+    </message>
+    <message>
+        <source>Specified blocks directory "%s" does not exist.</source>
+        <translation>La cartella specificata "%s" non esiste.</translation>
     </message>
     <message>
         <source>Upgrading txindex database</source>

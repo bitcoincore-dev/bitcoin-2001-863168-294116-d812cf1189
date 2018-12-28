@@ -3,7 +3,7 @@
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation>Clique com o botão direito para editar o endereço ou rótulo</translation>
+        <translation>Clique com o botão direito para editar o endereço ou rótulo </translation>
     </message>
     <message>
         <source>Create a new address</source>
@@ -188,6 +188,10 @@
         <translation>Carteira criptografada</translation>
     </message>
     <message>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>O %1 irá fechar agora para terminar o processo de criptografia. Lembre-se que criptografando sua carteira não te protege totalmente de ter seus bitcoins roubados por um malware que infectar seu computador.</translation>
+    </message>
+    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>IMPORTANTE: Qualquer backup prévio que você tenha feito da sua carteira deve ser substituído pelo novo e encriptado arquivo gerado. Por razões de segurança, qualquer backup do arquivo não criptografado se tornará inútil assim que você começar a usar uma nova carteira criptografada.</translation>
     </message>
@@ -310,24 +314,12 @@
         <translation>&amp;Mudar frase de segurança...</translation>
     </message>
     <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>Endereço&amp;s de envio...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>Endereços de &amp;recebimento...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Abrir &amp;URI...</translation>
     </message>
     <message>
         <source>Wallet:</source>
         <translation>Carteira:</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>carteira padrão</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -494,8 +486,20 @@
         <translation>Atualizado</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">Endereço&amp;s de envio</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">Endereços de &amp;recebimento</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Mostrar a mensagem de ajuda do %1 para obter uma lista com possíveis opções de linha de comando Bitcoin</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Janela</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -804,6 +808,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -894,6 +901,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -942,6 +956,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1)...</source>
         <translation>Desconhecido. Sincronizando cabeçalhos (%1)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Endereço</translation>
     </message>
 </context>
 <context>
@@ -1056,10 +1083,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Fazer Prune &amp;da memória de blocos para</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1204,6 +1227,10 @@
     <message>
         <source>none</source>
         <translation>nenhum</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1529,6 +1556,16 @@
         <source>unknown</source>
         <translation>desconhecido</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Bco</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tso</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1809,10 +1846,6 @@
     <message>
         <source>&amp;Unban</source>
         <translation>&amp;Desbanir</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>carteira padrão</translation>
     </message>
     <message>
         <source>Welcome to the %1 RPC console.</source>
@@ -2324,7 +2357,7 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Confirmação em %n bloco.</numerusform><numerusform>Início estimado para confirmação em %n blocos.</numerusform></translation>
+        <translation><numerusform>Confirmação estimada em %n bloco.</numerusform><numerusform>Confirmação estimada em %n blocos.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -3104,6 +3137,10 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
     <message>
         <source>Could not commit transaction</source>
         <translation>Não foi possível mandar a transação</translation>
+    </message>
+    <message>
+        <source>default wallet</source>
+        <translation>carteira padrão</translation>
     </message>
 </context>
 <context>
