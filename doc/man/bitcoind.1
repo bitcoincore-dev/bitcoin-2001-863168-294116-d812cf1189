@@ -4,9 +4,9 @@
 bitcoind \- manual page for bitcoind v0.17.1.0
 .SH SYNOPSIS
 .B bitcoind
-[\fI\,options\/\fR]                     \fI\,Start Bitcoin Core Daemon\/\fR
+[\fI\,options\/\fR]                     \fI\,Start Bitcoin Knots Daemon\/\fR
 .SH DESCRIPTION
-Bitcoin Core Daemon version v0.17.1.0
+Bitcoin Knots Daemon version v0.17.1.0
 .SH OPTIONS
 .HP
 \-?
@@ -23,7 +23,7 @@ long fork (%s in cmd is replaced by message)
 If this block is in the chain assume that it and its ancestors are valid
 and potentially skip their script verification (0 to verify all,
 default:
-0000000000000000002e63058c023a9a1de233554f28c7b21380b6c9003f36a8,
+0000000000000000000e06b6698a4f65ab9915f24b23ca2f9d1abf30cc3e9173,
 testnet:
 0000000000000037a8cd3e06cd5edbfe9dd1dbcc5dacab279376ef7cfc2b4c75)
 .HP
@@ -45,6 +45,16 @@ Specify blocks directory (default: <datadir>/blocks)
 .IP
 Specify configuration file. Relative paths will be prefixed by datadir
 location. (default: bitcoin.conf)
+.HP
+\fB\-confrw=\fR<file>
+.IP
+Specify read/write configuration file. Relative paths will be prefixed
+by the network\-specific datadir location. (default:
+bitcoin_rw.conf)
+.HP
+\fB\-corepolicy\fR
+.IP
+Use Bitcoin Core policy defaults (default: false)
 .HP
 \fB\-daemon\fR
 .IP
@@ -88,7 +98,7 @@ Do not keep transactions in the mempool longer than <n> hours (default:
 .HP
 \fB\-par=\fR<n>
 .IP
-Set the number of script verification threads (\fB\-6\fR to 16, 0 = auto, <0 =
+Set the number of script verification threads (\fB\-8\fR to 16, 0 = auto, <0 =
 leave that many cores free, default: 0)
 .HP
 \fB\-persistmempool\fR
@@ -239,7 +249,7 @@ Support filtering of blocks and transaction with bloom filters (default:
 .HP
 \fB\-permitbaremultisig\fR
 .IP
-Relay non\-P2SH multisig (default: 1)
+Relay non\-P2SH multisig (default: 0)
 .HP
 \fB\-port=\fR<port>
 .IP
@@ -285,8 +295,8 @@ Bind to given address and whitelist peers connecting to it. Use
 .HP
 \fB\-whitelist=\fR<IP address or network>
 .IP
-Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or
-CIDR notated network (e.g. 1.2.3.0/24). Can be specified multiple
+Whitelist peers using the given IP address (e.g. 1.2.3.4) or CIDR
+notated network (e.g. 1.2.3.0/24). Can be specified multiple
 times. Whitelisted peers cannot be DoS banned and their
 transactions are always relayed, even if they are already in the
 mempool, useful e.g. for a gateway
@@ -358,7 +368,7 @@ Spend unconfirmed change when sending transactions (default: 1)
 \fB\-txconfirmtarget=\fR<n>
 .IP
 If paytxfee is not set, include enough fee so transactions begin
-confirmation on average within n blocks (default: 6)
+confirmation on average within n blocks (default: 144)
 .HP
 \fB\-upgradewallet\fR
 .IP
@@ -382,10 +392,15 @@ Make the wallet broadcast transactions (default: 1)
 Specify directory to hold wallets (default: <datadir>/wallets if it
 exists, otherwise <datadir>)
 .HP
+\fB\-walletimplicitsegwit\fR
+.IP
+Support segwit when restoring wallet backups and importing keys
+(default: 0)
+.HP
 \fB\-walletnotify=\fR<cmd>
 .IP
 Execute command when a wallet transaction changes (%s in cmd is replaced
-by TxID)
+by TxID and %w is replaced by wallet name)
 .HP
 \fB\-walletrbf\fR
 .IP
@@ -404,17 +419,53 @@ ZeroMQ notification options:
 .IP
 Enable publish hash block in <address>
 .HP
+\fB\-zmqpubhashblockhwm=\fR<n>
+.IP
+Set publish hash block outbound message high water mark (default: 1000)
+.HP
 \fB\-zmqpubhashtx=\fR<address>
 .IP
 Enable publish hash transaction in <address>
+.HP
+\fB\-zmqpubhashtxhwm=\fR<n>
+.IP
+Set publish hash transaction outbound message high water mark (default:
+1000)
+.HP
+\fB\-zmqpubhashwallettx=\fR<address>
+.IP
+Enable publish hash wallet transaction in <address>
+.HP
+\fB\-zmqpubhashwallettxhwm=\fR<n>
+.IP
+Set publish hash wallet transaction outbound message high water mark
+(default: 1000)
 .HP
 \fB\-zmqpubrawblock=\fR<address>
 .IP
 Enable publish raw block in <address>
 .HP
+\fB\-zmqpubrawblockhwm=\fR<n>
+.IP
+Set publish raw block outbound message high water mark (default: 1000)
+.HP
 \fB\-zmqpubrawtx=\fR<address>
 .IP
 Enable publish raw transaction in <address>
+.HP
+\fB\-zmqpubrawtxhwm=\fR<n>
+.IP
+Set publish raw transaction outbound message high water mark (default:
+1000)
+.HP
+\fB\-zmqpubrawwallettx=\fR<address>
+.IP
+Enable publish raw wallet transaction in <address>
+.HP
+\fB\-zmqpubrawwallettxhwm=\fR<n>
+.IP
+Set publish raw wallet transaction outbound message high water mark
+(default: 1000)
 .PP
 Debugging/Testing options:
 .HP
@@ -472,10 +523,18 @@ Use the test chain
 .PP
 Node relay options:
 .HP
+\fB\-acceptnonstdtxn\fR
+.IP
+Relay and mine "non\-standard" transactions (default: 0 or testnet: 1)
+.HP
 \fB\-bytespersigop\fR
 .IP
 Equivalent bytes per sigop in transactions for relay and mining
 (default: 20)
+.HP
+\fB\-bytespersigopstrict\fR
+.IP
+Minimum bytes per sigop in transactions we relay and mine (default: 20)
 .HP
 \fB\-datacarrier\fR
 .IP
@@ -484,7 +543,7 @@ Relay and mine data carrier transactions (default: 1)
 \fB\-datacarriersize\fR
 .IP
 Maximum size of data in data carrier transactions we relay and mine
-(default: 83)
+(default: 42)
 .HP
 \fB\-mempoolreplacement\fR
 .IP
@@ -494,6 +553,11 @@ Enable transaction replacement in the memory pool (default: 1)
 .IP
 Fees (in BTC/kB) smaller than this are considered zero fee for relaying,
 mining and transaction creation (default: 0.00001)
+.HP
+\fB\-spkreuse\fR
+.IP
+Accept transactions reusing addresses or other pubkey scripts (default:
+allow)
 .HP
 \fB\-whitelistforcerelay\fR
 .IP
@@ -507,14 +571,23 @@ not relaying transactions (default: 1)
 .PP
 Block creation options:
 .HP
+\fB\-blockmaxsize=\fR<n>
+.IP
+Set maximum block size in bytes (default: 500000)
+.HP
 \fB\-blockmaxweight=\fR<n>
 .IP
-Set maximum BIP141 block weight (default: 3996000)
+Set maximum BIP141 block weight (default: 3000000)
 .HP
 \fB\-blockmintxfee=\fR<amt>
 .IP
 Set lowest fee rate (in BTC/kB) for transactions to be included in block
 creation. (default: 0.00001)
+.HP
+\fB\-blockprioritysize=\fR<n>
+.IP
+Set maximum size of high\-priority/low\-fee transactions in bytes
+(default: 100000)
 .PP
 RPC server options:
 .HP
@@ -574,15 +647,42 @@ Set the number of threads to service RPC calls (default: 4)
 .IP
 Username for JSON\-RPC connections
 .HP
+\fB\-rpcwhitelist=\fR<whitelist>
+.IP
+Set a whitelist to filter incoming RPC calls for a specific user. The
+field <whitelist> comes in the format: <USERNAME>:<rpc 1>,<rpc
+2>,...,<rpc n>. If multiple whitelists are set for a given user,
+they are set\-intersected. See \fB\-rpcwhitelistdefault\fR documentation
+for information on default whitelist behavior.
+.HP
+\fB\-rpcwhitelistdefault\fR
+.IP
+Sets default behavior for rpc whitelisting. Unless rpcwhitelistdefault
+is set to 0, if any \fB\-rpcwhitelist\fR is set, the rpc server acts as
+if all rpc users are subject to empty\-unless\-otherwise\-specified
+whitelists. If rpcwhitelistdefault is set to 1 and no
+\fB\-rpcwhitelist\fR is set, rpc server acts as if all rpc users are
+subject to empty whitelists.
+.HP
 \fB\-server\fR
 .IP
 Accept command line and JSON\-RPC commands
+.PP
+Statistic options:
+.HP
+\fB\-statsenable\fR
+.IP
+Enable statistics (default: 0)
+.HP
+\fB\-statsmaxmemorytarget=\fR<n>
+.IP
+Set the memory limit target for statistics in bytes (default: 10485760)
 .SH COPYRIGHT
 Copyright (C) 2009-2018 The Bitcoin Core developers
 
-Please contribute if you find Bitcoin Core useful. Visit
-<https://bitcoincore.org> for further information about the software.
-The source code is available from <https://github.com/bitcoin/bitcoin>.
+Please contribute if you find Bitcoin Knots useful. Visit
+<http://bitcoinknots.org/> for further information about the software.
+The source code is available from <https://github.com/bitcoinknots/bitcoin>.
 
 This is experimental software.
 Distributed under the MIT software license, see the accompanying file COPYING
