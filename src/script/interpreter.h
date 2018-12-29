@@ -117,7 +117,7 @@ enum CScriptFlag
     SCRIPT_VERIFY_CONST_SCRIPTCODE = (1U << 16),
 };
 
-CScriptFlag ParseScriptFlag(const std::string flag_name);
+unsigned int ParseScriptFlag(const std::string flag_name);
 std::vector<std::string> ScriptFlagsToStrings(unsigned int flags);
 
 bool CheckSignatureEncoding(const std::vector<unsigned char> &vchSig, unsigned int flags, ScriptError* serror);
@@ -140,6 +140,8 @@ enum class SigVersion
 /** Signature hash sizes */
 static constexpr size_t WITNESS_V0_SCRIPTHASH_SIZE = 32;
 static constexpr size_t WITNESS_V0_KEYHASH_SIZE = 20;
+
+std::string SigVersionString(SigVersion);
 
 template <class T>
 uint256 SignatureHash(const CScript& scriptCode, const T& txTo, unsigned int nIn, int nHashType, const CAmount& amount, SigVersion sigversion, const PrecomputedTransactionData* cache = nullptr);
@@ -188,11 +190,22 @@ public:
 using TransactionSignatureChecker = GenericTransactionSignatureChecker<CTransaction>;
 using MutableTransactionSignatureChecker = GenericTransactionSignatureChecker<CMutableTransaction>;
 
+class ScriptExecutionDebugger;
+
 class ScriptExecution {
 public:
     typedef std::vector<unsigned char> StackElementType;
     typedef std::vector<StackElementType> StackType;
+    enum class Context {
+        Sig,
+        PubKey,
+        BIP16,
+        Segwit,
+    };
 
+    static std::string ContextString(Context);
+
+    Context context;
     const CScript& script;
     StackType& stack;
     unsigned int flags;
@@ -206,17 +219,33 @@ public:
     StackType altstack;
     int nOpCount;
 
-    ScriptExecution(StackType& stack, const CScript&, unsigned int flags, const BaseSignatureChecker&, SigVersion);
+    ScriptExecutionDebugger *debugger;
+
+    ScriptExecution(Context, StackType& stack, const CScript&, unsigned int flags, const BaseSignatureChecker&, SigVersion);
 
     bool Eval(ScriptError* error = nullptr);
 };
 
-inline bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptError* error = nullptr)
+class ScriptExecutionDebugger {
+public:
+    void *userdata;
+
+protected:
+    virtual void ScriptBegin(ScriptExecution&) {}
+    virtual void ScriptPreStep(ScriptExecution&, const CScript::const_iterator&, opcodetype&, ScriptExecution::StackElementType&) {}
+    virtual void ScriptEOF(ScriptExecution&, const CScript::const_iterator&) {}
+
+    friend bool ScriptExecution::Eval(ScriptError* serror);
+};
+
+inline bool EvalScript(ScriptExecution::Context context, std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptError* error = nullptr, ScriptExecutionDebugger * const debugger = nullptr)
 {
-    return ScriptExecution(stack, script, flags, checker, sigversion).Eval(error);
+    ScriptExecution executor(context, stack, script, flags, checker, sigversion);
+    executor.debugger = debugger;
+    return executor.Eval(error);
 }
 
-bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CScriptWitness* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror = nullptr);
+bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CScriptWitness* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror = nullptr, ScriptExecutionDebugger *debugger = nullptr);
 
 size_t CountWitnessSigOps(const CScript& scriptSig, const CScript& scriptPubKey, const CScriptWitness* witness, unsigned int flags);
 
