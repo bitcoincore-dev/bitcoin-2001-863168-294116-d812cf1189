@@ -1892,6 +1892,26 @@ static UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bo
             fIsWatchonly = (*it).second.fIsWatchonly;
         }
 
+        // convert keyflags into a string
+        CKeyID keyID = GetKeyForDestination(*pwallet, address);
+        uint8_t keyFlags = 0;
+        if ((!keyID.IsNull()) && pwallet->mapKeyMetadata.count(keyID)) {
+            keyFlags = pwallet->mapKeyMetadata[keyID].GetKeyOrigin();
+        }
+
+        std::string keyOrigin;
+        if (keyFlags & CKeyMetadata::KEY_ORIGIN_UNKNOWN) {
+            keyOrigin = "unknown";
+        }
+        if (keyFlags & CKeyMetadata::KEY_ORIGIN_ENC_WALLET) {
+            keyOrigin = "encrypted";
+        } else if (keyFlags & CKeyMetadata::KEY_ORIGIN_UNENC_WALLET) {
+            keyOrigin = "unencrypted";
+        }
+        if (keyFlags & CKeyMetadata::KEY_ORIGIN_IMPORTED) {
+            keyOrigin = "imported";
+        }
+
         if (by_label)
         {
             tallyitem& _item = label_tally[label];
@@ -1907,6 +1927,9 @@ static UniValue ListReceived(CWallet * const pwallet, const UniValue& params, bo
             obj.pushKV("address",       EncodeDestination(address));
             obj.pushKV("account",       label);
             obj.pushKV("amount",        ValueFromAmount(nAmount));
+            if (!keyOrigin.empty() && IsDeprecatedRPCEnabled("key_origin")) {
+                obj.pushKV("key_origin",    keyOrigin);
+            }
             obj.pushKV("confirmations", (nConf == std::numeric_limits<int>::max() ? 0 : nConf));
             obj.pushKV("label", label);
             UniValue transactions(UniValue::VARR);
