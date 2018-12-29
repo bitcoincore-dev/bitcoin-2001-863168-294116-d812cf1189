@@ -23,6 +23,7 @@ from test_framework.util import (
 )
 
 class ReqType(Enum):
+    NONE = 0
     JSON = 1
     BIN = 2
     HEX = 3
@@ -197,6 +198,51 @@ class RESTTest (BitcoinTestFramework):
 
         self.nodes[0].generate(1)  # generate block to not affect upcoming tests
         self.sync_all()
+
+
+        self.log.info("Test the /blockhash URIs")
+
+        # Check json block hash against bb_hash
+        response_hash_json = self.test_rest_request("/blockhash/{}".format(str(chain_height)), req_type=ReqType.JSON, ret_type=RetType.OBJ)
+        response_hash_json_str = response_hash_json.read().decode('utf-8')
+        hash_json_obj = json.loads(response_hash_json_str)
+        assert_equal(hash_json_obj['hash'], bb_hash)
+
+        # Check binary block hash against bb_hash
+        response_hash = self.test_rest_request("/blockhash/{}".format(str(chain_height)), req_type=ReqType.BIN, ret_type=RetType.OBJ)
+        assert_equal(int(response_hash.getheader('content-length')), 32)
+        response_hash_str = response_hash.read()
+        output = BytesIO()
+        output.write(response_hash_str)
+        output.seek(0)
+        hashFromBinResponse = binascii.hexlify(output.read(32)[::-1]).decode('ascii')
+        assert_equal(hashFromBinResponse, bb_hash)
+
+        # Check hex block hash against bb_hash
+        response_hash_hex = self.test_rest_request("/blockhash/{}".format(str(chain_height)), req_type=ReqType.HEX, ret_type=RetType.OBJ)
+        assert_equal(int(response_hash_hex.getheader('content-length')), 65)
+        response_hash_hex_str = response_hash_hex.read()
+        assert_equal(binascii.hexlify(response_hash_str)[0:64], response_hash_hex_str[0:64])
+
+        # Check invalid requests
+        # Must be a 404 because it's missing the trailing slash and height parameter
+        response = self.test_rest_request("/blockhash", req_type=ReqType.NONE, status=404, ret_type=RetType.OBJ)
+
+        # Must be a 400 because no height parameter was passed
+        response = self.test_rest_request("/blockhash/", req_type=ReqType.JSON, status=400, ret_type=RetType.OBJ)
+
+        # Must be a 404 because no output format was passed
+        response = self.test_rest_request("/blockhash/0", req_type=ReqType.NONE, status=404, ret_type=RetType.OBJ)
+
+        # Must be a 400 because a non-numeric height parameter was passed
+        response = self.test_rest_request("/blockhash/a0", req_type=ReqType.JSON, status=400, ret_type=RetType.OBJ)
+
+        # Must be a 400 because a negative height parameter was passed
+        response = self.test_rest_request("/blockhash/-1", req_type=ReqType.JSON, status=400, ret_type=RetType.OBJ)
+
+        # Must be a 400 because the height parameter is greater than the chain height
+        response = self.test_rest_request("/blockhash/1000", req_type=ReqType.JSON, status=400, ret_type=RetType.OBJ)
+
 
         self.log.info("Test the /block and /headers URIs")
         bb_hash = self.nodes[0].getbestblockhash()
