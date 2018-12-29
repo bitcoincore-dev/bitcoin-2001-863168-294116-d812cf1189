@@ -32,7 +32,7 @@ enum
  *  All flags are intended to be soft forks: the set of acceptable scripts under
  *  flags (A | B) is a subset of the acceptable scripts under flag (A).
  */
-enum
+enum CScriptFlag
 {
     SCRIPT_VERIFY_NONE      = 0,
 
@@ -116,6 +116,9 @@ enum
     //
     SCRIPT_VERIFY_CONST_SCRIPTCODE = (1U << 16),
 };
+
+CScriptFlag ParseScriptFlag(const std::string flag_name);
+std::vector<std::string> ScriptFlagsToStrings(unsigned int flags);
 
 bool CheckSignatureEncoding(const std::vector<unsigned char> &vchSig, unsigned int flags, ScriptError* serror);
 
