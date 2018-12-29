@@ -15,6 +15,7 @@ KNOWN_VIOLATIONS=(
     "src/qt/rpcconsole.cpp:.*atoi"
     "src/qt/rpcconsole.cpp:.*isdigit"
     "src/rest.cpp:.*strtol"
+    "src/rest.cpp:.*toupper"
     "src/rpc/server.cpp.*to_upper"
     "src/test/dbwrapper_tests.cpp:.*snprintf"
     "src/test/getarg_tests.cpp.*split"
