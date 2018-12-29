@@ -5,6 +5,7 @@
 
 #include <chainparams.h>
 #include <init.h>
+#include <keystore.h>
 #include <net.h>
 #include <scheduler.h>
 #include <outputtype.h>
@@ -75,6 +76,7 @@ void WalletInit::AddWalletOptions() const
     gArgs.AddArg("-wallet=<path>", "Specify wallet database path. Can be specified multiple times to load multiple wallets. Path is interpreted relative to <walletdir> if it is not absolute, and will be created if it does not exist (as a directory containing a wallet.dat file and log files). For backwards compatibility this will also accept names of existing data files in <walletdir>.)", false, OptionsCategory::WALLET);
     gArgs.AddArg("-walletbroadcast",  strprintf("Make the wallet broadcast transactions (default: %u)", DEFAULT_WALLETBROADCAST), false, OptionsCategory::WALLET);
     gArgs.AddArg("-walletdir=<dir>", "Specify directory to hold wallets (default: <datadir>/wallets if it exists, otherwise <datadir>)", false, OptionsCategory::WALLET);
+    gArgs.AddArg("-walletimplicitsegwit", strprintf("Support segwit when restoring wallet backups and importing keys (default: %u)", DEFAULT_WALLET_IMPLICIT_SEGWIT), false, OptionsCategory::WALLET);
     gArgs.AddArg("-walletnotify=<cmd>", "Execute command when a wallet transaction changes (%s in cmd is replaced by TxID and %w is replaced by wallet name)", false, OptionsCategory::WALLET);
     gArgs.AddArg("-walletrbf", strprintf("Send transactions with full-RBF opt-in enabled (RPC only, default: %u)", DEFAULT_WALLET_RBF), false, OptionsCategory::WALLET);
     gArgs.AddArg("-zapwallettxes=<mode>", "Delete all wallet transactions and only recover those parts of the blockchain through -rescan on startup"
@@ -156,6 +158,13 @@ bool WalletInit::ParameterInteraction() const
         {
             return InitError(strprintf(_("Invalid amount for -maxtxfee=<amount>: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)"),
                                        gArgs.GetArg("-maxtxfee", ""), ::minRelayTxFee.ToString()));
+        }
+    }
+
+    g_implicit_segwit = gArgs.GetBoolArg("-walletimplicitsegwit", DEFAULT_WALLET_IMPLICIT_SEGWIT);
+    if (!g_implicit_segwit) {
+        if (gArgs.SoftSetArg("-addresstype", "legacy")) {
+            LogPrintf("%s: parameter interaction: -walletimplicitsegwit=%u -> setting -addresstype=legacy\n", __func__, g_implicit_segwit);
         }
     }
 
