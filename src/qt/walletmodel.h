@@ -219,6 +219,7 @@ public:
     interfaces::Wallet& wallet() const { return *m_wallet; }
 
     QString getWalletName() const;
+    QString getWalletDisplayName() const;
 
     bool isMultiwallet();
 
