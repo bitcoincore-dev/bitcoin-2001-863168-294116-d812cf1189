@@ -94,9 +94,10 @@ static UniValue createmultisig(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
     {
-        std::string msg = "createmultisig nrequired [\"key\",...] ( \"address_type\" )\n"
+        std::string msg = "createmultisig nrequired [\"key\",...] ( options )\n"
             "\nCreates a multi-signature address with n signature of m keys required.\n"
             "It returns a json object with the address and redeemScript.\n"
+            "Public keys can be sorted according to BIP67 during the request if required.\n"
             "\nArguments:\n"
             "1. nrequired                    (numeric, required) The number of required signatures out of the n keys.\n"
             "2. \"keys\"                       (string, required) A json array of hex-encoded public keys\n"
@@ -104,7 +105,11 @@ static UniValue createmultisig(const JSONRPCRequest& request)
             "       \"key\"                    (string) The hex-encoded public key\n"
             "       ,...\n"
             "     ]\n"
-            "3. \"address_type\"               (string, optional) The address type to use. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\". Default is legacy.\n"
+            "3. options      (object, optional)\n"
+            "   {\n"
+            "     \"address_type\"  (string, optional) The address type to use. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\". Default is legacy.\n"
+            "     \"sort\"          (bool, optional, default=false) Whether to sort public keys according to BIP67.\n"
+            "   }\n"
 
             "\nResult:\n"
             "{\n"
@@ -123,28 +128,52 @@ static UniValue createmultisig(const JSONRPCRequest& request)
 
     int required = request.params[0].get_int();
 
+    bool fSorted = false;
+    OutputType output_type = OutputType::LEGACY;
+
+    if (request.params[2].isStr()) {
+        // backward compatibility
+        if (!ParseOutputType(request.params[2].get_str(), output_type)) {
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Unknown address type '%s'", request.params[2].get_str()));
+        }
+    } else if (!request.params[2].isNull()) {
+        const UniValue& options = request.params[2];
+        RPCTypeCheckArgument(options, UniValue::VOBJ);
+        RPCTypeCheckObj(options,
+            {
+                {"address_type", UniValueType(UniValue::VSTR)},
+                {"sort", UniValueType(UniValue::VBOOL)},
+            },
+            true, true);
+
+        if (options.exists("address_type")) {
+            if (!ParseOutputType(options["address_type"].get_str(), output_type)) {
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Unknown address type '%s'", options["address_type"].get_str()));
+            }
+        }
+
+        if (options.exists("sort")) {
+            fSorted = options["sort"].get_bool();
+        }
+    }
+
     // Get the public keys
     const UniValue& keys = request.params[1].get_array();
     std::vector<CPubKey> pubkeys;
     for (unsigned int i = 0; i < keys.size(); ++i) {
         if (IsHex(keys[i].get_str()) && (keys[i].get_str().length() == 66 || keys[i].get_str().length() == 130)) {
             pubkeys.push_back(HexToPubKey(keys[i].get_str()));
+            if (fSorted && !pubkeys.back().IsCompressed()) {
+                throw std::runtime_error(strprintf("Compressed key required for BIP67: %s", keys[i].get_str()));
+            }
         } else {
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Invalid public key: %s\nNote that from v0.16, createmultisig no longer accepts addresses."
             " Users must use addmultisigaddress to create multisig addresses with addresses known to the wallet.", keys[i].get_str()));
         }
     }
 
-    // Get the output type
-    OutputType output_type = OutputType::LEGACY;
-    if (!request.params[2].isNull()) {
-        if (!ParseOutputType(request.params[2].get_str(), output_type)) {
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Unknown address type '%s'", request.params[2].get_str()));
-        }
-    }
-
     // Construct using pay-to-script-hash:
-    const CScript inner = CreateMultisigRedeemscript(required, pubkeys);
+    const CScript inner = CreateMultisigRedeemscript(required, pubkeys, fSorted);
     CBasicKeyStore keystore;
     const CTxDestination dest = AddAndGetDestinationForScript(keystore, inner, output_type);
 
@@ -474,7 +503,7 @@ static const CRPCCommand commands[] =
     { "control",            "getmemoryinfo",          &getmemoryinfo,          {"mode"} },
     { "control",            "logging",                &logging,                {"include", "exclude"}},
     { "util",               "validateaddress",        &validateaddress,        {"address"} }, /* uses wallet if enabled */
-    { "util",               "createmultisig",         &createmultisig,         {"nrequired","keys","address_type"} },
+    { "util",               "createmultisig",         &createmultisig,         {"nrequired","keys","options|address_type"} },
     { "util",               "verifymessage",          &verifymessage,          {"address","signature","message"} },
     { "util",               "signmessagewithprivkey", &signmessagewithprivkey, {"privkey","message"} },
 

@@ -1321,12 +1321,13 @@ static UniValue addmultisigaddress(const JSONRPCRequest& request)
     }
 
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 4) {
-        std::string msg = "addmultisigaddress nrequired [\"key\",...] ( \"label\" \"address_type\" )\n"
+        std::string msg = "addmultisigaddress nrequired [\"key\",...] ( options )\n"
             "\nAdd a nrequired-to-sign multisignature address to the wallet. Requires a new wallet backup.\n"
             "Each key is a Bitcoin address or hex-encoded public key.\n"
             "This functionality is only intended for use with non-watchonly addresses.\n"
             "See `importaddress` for watchonly p2sh address support.\n"
             "If 'label' is specified, assign address to that label.\n"
+            "Public keys can be sorted according to BIP67 during the request if required.\n"
 
             "\nArguments:\n"
             "1. nrequired                      (numeric, required) The number of required signatures out of the n keys or addresses.\n"
@@ -1335,8 +1336,12 @@ static UniValue addmultisigaddress(const JSONRPCRequest& request)
             "       \"address\"                  (string) bitcoin address or hex-encoded public key\n"
             "       ...,\n"
             "     ]\n"
-            "3. \"label\"                        (string, optional) A label to assign the addresses to.\n"
-            "4. \"address_type\"                 (string, optional) The address type to use. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\". Default is set by -addresstype.\n"
+            "3. options        (object, optional)\n"
+            "   {\n"
+            "     \"address_type\"  (string, optional) The address type to use. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\". Default is set by -addresstype.\n"
+            "     \"label\"         (string, optional) A label to assign the address to.\n"
+            "     \"sort\"          (bool, optional, default=false) Whether to sort public keys according to BIP67.\n"
+            "   }\n"
 
             "\nResult:\n"
             "{\n"
@@ -1354,11 +1359,45 @@ static UniValue addmultisigaddress(const JSONRPCRequest& request)
 
     LOCK2(cs_main, pwallet->cs_wallet);
 
-    std::string label;
-    if (!request.params[2].isNull())
-        label = LabelFromValue(request.params[2]);
-
     int required = request.params[0].get_int();
+
+    std::string label;
+    OutputType output_type = pwallet->m_default_address_type;
+    bool fSorted = false;
+
+    if (!request.params[2].isNull()) {
+        if (request.params[2].type() == UniValue::VSTR) {
+            // Backward compatibility
+            label = LabelFromValue(request.params[2]);
+        } else {
+            const UniValue& options = request.params[2];
+            RPCTypeCheckArgument(options, UniValue::VOBJ);
+            RPCTypeCheckObj(options,
+                {
+                    {"address_type", UniValueType(UniValue::VSTR)},
+                    {"label", UniValueType(UniValue::VSTR)},
+                    {"sort", UniValueType(UniValue::VBOOL)},
+                },
+                true, true);
+
+            if (options.exists("address_type")) {
+                if (!request.params[3].isNull()) {
+                    throw JSONRPCError(RPC_MISC_ERROR, "address_type provided in both options and 4th parameter");
+                }
+                if (!ParseOutputType(options["address_type"].get_str(), output_type)) {
+                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Unknown address type '%s'", options["address_type"].get_str()));
+                }
+            }
+
+            if (options.exists("label")) {
+                label = LabelFromValue(options["label"]);
+            }
+
+            if (options.exists("sort")) {
+                fSorted = options["sort"].get_bool();
+            }
+        }
+    }
 
     // Get the public keys
     const UniValue& keys_or_addrs = request.params[1].get_array();
@@ -1369,9 +1408,11 @@ static UniValue addmultisigaddress(const JSONRPCRequest& request)
         } else {
             pubkeys.push_back(AddrToPubKey(pwallet, keys_or_addrs[i].get_str()));
         }
+        if (fSorted && !pubkeys.back().IsCompressed()) {
+            throw std::runtime_error(strprintf("Compressed key required for BIP67: %s", keys_or_addrs[i].get_str()));
+        }
     }
 
-    OutputType output_type = pwallet->m_default_address_type;
     if (!request.params[3].isNull()) {
         if (!ParseOutputType(request.params[3].get_str(), output_type)) {
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Unknown address type '%s'", request.params[3].get_str()));
@@ -1379,7 +1420,7 @@ static UniValue addmultisigaddress(const JSONRPCRequest& request)
     }
 
     // Construct using pay-to-script-hash:
-    CScript inner = CreateMultisigRedeemscript(required, pubkeys);
+    CScript inner = CreateMultisigRedeemscript(required, pubkeys, fSorted);
     CTxDestination dest = AddAndGetDestinationForScript(*pwallet, inner, output_type);
     pwallet->SetAddressBook(dest, label, "send");
 
@@ -4782,7 +4823,7 @@ static const CRPCCommand commands[] =
     { "hidden",             "resendwallettransactions",         &resendwallettransactions,      {} },
     { "wallet",             "abandontransaction",               &abandontransaction,            {"txid"} },
     { "wallet",             "abortrescan",                      &abortrescan,                   {} },
-    { "wallet",             "addmultisigaddress",               &addmultisigaddress,            {"nrequired","keys","label|account","address_type"} },
+    { "wallet",             "addmultisigaddress",               &addmultisigaddress,            {"nrequired","keys","options|label|account","address_type"} },
     { "hidden",             "addwitnessaddress",                &addwitnessaddress,             {"address","p2sh"} },
     { "wallet",             "backupwallet",                     &backupwallet,                  {"destination"} },
     { "wallet",             "bumpfee",                          &bumpfee,                       {"txid", "options"} },
