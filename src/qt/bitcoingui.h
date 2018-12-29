@@ -18,6 +18,10 @@
 #include <QPoint>
 #include <QSystemTrayIcon>
 
+#ifdef Q_OS_MAC
+#include <qt/macos_appnap.h>
+#endif
+
 #include <memory>
 
 class ClientModel;
@@ -146,6 +150,10 @@ private:
     HelpMessageDialog* helpMessageDialog = nullptr;
     ModalOverlay* modalOverlay = nullptr;
     MempoolStats* mempoolStats = nullptr;
+
+#ifdef Q_OS_MAC
+    CAppNapInhibitor* m_app_nap_inhibitor = nullptr;
+#endif
 
     /** Keep track of previous number of blocks, to detect progress */
     int prevBlocks = 0;
