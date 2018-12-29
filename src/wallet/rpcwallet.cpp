@@ -3756,6 +3756,7 @@ void FundTransaction(CWallet* const pwallet, CMutableTransaction& tx, CAmount& f
     bool lockUnspents = false;
     UniValue subtractFeeFromOutputs;
     std::set<int> setSubtractFeeFromOutputs;
+    int min_depth = 0;
 
     if (!options.isNull()) {
       if (options.type() == UniValue::VBOOL) {
@@ -3775,6 +3776,7 @@ void FundTransaction(CWallet* const pwallet, CMutableTransaction& tx, CAmount& f
                 {"subtractFeeFromOutputs", UniValueType(UniValue::VARR)},
                 {"replaceable", UniValueType(UniValue::VBOOL)},
                 {"conf_target", UniValueType(UniValue::VNUM)},
+                {"min_conf", UniValueType(UniValue::VNUM)},
                 {"estimate_mode", UniValueType(UniValue::VSTR)},
             },
             true, true);
@@ -3826,6 +3828,9 @@ void FundTransaction(CWallet* const pwallet, CMutableTransaction& tx, CAmount& f
             }
             coinControl.m_confirm_target = ParseConfirmTarget(options["conf_target"]);
         }
+        if (options.exists("min_conf")) {
+            min_depth = options["min_conf"].get_int();
+        }
         if (options.exists("estimate_mode")) {
             if (options.exists("feeRate")) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot specify both estimate_mode and feeRate");
@@ -3856,7 +3861,7 @@ void FundTransaction(CWallet* const pwallet, CMutableTransaction& tx, CAmount& f
 
     std::string strFailReason;
 
-    if (!pwallet->FundTransaction(tx, fee_out, change_position, strFailReason, lockUnspents, setSubtractFeeFromOutputs, coinControl)) {
+    if (!pwallet->FundTransaction(tx, fee_out, change_position, strFailReason, lockUnspents, setSubtractFeeFromOutputs, coinControl, min_depth)) {
         throw JSONRPCError(RPC_WALLET_ERROR, strFailReason);
     }
 }
@@ -3902,6 +3907,7 @@ static UniValue fundrawtransaction(const JSONRPCRequest& request)
                             "     \"replaceable\"            (boolean, optional) Marks this transaction as BIP125 replaceable.\n"
                             "                              Allows this transaction to be replaced by a transaction with higher fees\n"
                             "     \"conf_target\"            (numeric, optional) Confirmation target (in blocks)\n"
+                            "     \"min_conf\"               (numeric, optional, default=0) The minimum confirmations to filter\n"
                             "     \"estimate_mode\"          (string, optional, default=UNSET) The fee estimate mode, must be one of:\n"
                             "         \"UNSET\"\n"
                             "         \"ECONOMICAL\"\n"
@@ -5007,6 +5013,7 @@ UniValue walletcreatefundedpsbt(const JSONRPCRequest& request)
                             "     \"replaceable\"            (boolean, optional) Marks this transaction as BIP125 replaceable.\n"
                             "                              Allows this transaction to be replaced by a transaction with higher fees\n"
                             "     \"conf_target\"            (numeric, optional) Confirmation target (in blocks)\n"
+                            "     \"min_conf\"               (numeric, optional, default=0) The minimum confirmations to filter\n"
                             "     \"estimate_mode\"          (string, optional, default=UNSET) The fee estimate mode, must be one of:\n"
                             "         \"UNSET\"\n"
                             "         \"ECONOMICAL\"\n"
