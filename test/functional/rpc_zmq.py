@@ -29,7 +29,7 @@ class RPCZMQTest(BitcoinTestFramework):
 
         self.restart_node(0, extra_args=["-zmqpubhashtx=%s" % self.address])
         assert_equal(self.nodes[0].getzmqnotifications(), [
-            {"type": "pubhashtx", "address": self.address},
+            {"type": "pubhashtx", "address": self.address, 'hwm': 1000},
         ])
 
 
