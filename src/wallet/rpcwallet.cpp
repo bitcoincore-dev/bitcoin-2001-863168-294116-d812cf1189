@@ -885,8 +885,7 @@ static UniValue getbalance(const JSONRPCRequest& request)
             "                     balances. In general, account balance calculation is not considered\n"
             "                     reliable and has resulted in confusing outcomes, so it is recommended to\n"
             "                     avoid passing this argument.\n"
-            "2. minconf           (numeric, optional) Only include transactions confirmed at least this many times. \n"
-            "                     The default is 1 if an account is provided or 0 if no account is provided\n")
+            "2. minconf           (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n")
             : std::string(
             "getbalance ( \"(dummy)\" minconf include_watchonly )\n"
             "\nReturns the total available balance.\n"
@@ -894,7 +893,7 @@ static UniValue getbalance(const JSONRPCRequest& request)
             "thus affected by options which limit spendability such as -spendzeroconfchange.\n"
             "\nArguments:\n"
             "1. (dummy)           (string, optional) Remains for backward compatibility. Must be excluded or set to \"*\".\n"
-            "2. minconf           (numeric, optional, default=0) Only include transactions confirmed at least this many times.\n")) +
+            "2. minconf           (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n")) +
             "3. include_watchonly (bool, optional, default=false) Also include balance in watch-only addresses (see 'importaddress')\n"
             "\nResult:\n"
             "amount              (numeric) The total amount in " + CURRENCY_UNIT + " received for this account.\n"
@@ -916,7 +915,7 @@ static UniValue getbalance(const JSONRPCRequest& request)
     const UniValue& account_value = request.params[0];
 
     int min_depth = 0;
-    if (IsDeprecatedRPCEnabled("accounts") && !account_value.isNull()) {
+    if (!account_value.isNull()) {
         // Default min_depth to 1 when an account is provided.
         min_depth = 1;
     }
@@ -936,11 +935,14 @@ static UniValue getbalance(const JSONRPCRequest& request)
 
         if (!IsDeprecatedRPCEnabled("accounts") && account_param != "*") {
             throw JSONRPCError(RPC_METHOD_DEPRECATED, "dummy first argument must be excluded or set to \"*\".");
-        } else if (IsDeprecatedRPCEnabled("accounts")) {
+        } else {
             return ValueFromAmount(pwallet->GetLegacyBalance(filter, min_depth, account));
         }
     }
 
+    if (!request.params[1].isNull()) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "getbalance minconf option is only currently supported if an account is specified");
+    }
     return ValueFromAmount(pwallet->GetBalance(filter, min_depth));
 }
 
