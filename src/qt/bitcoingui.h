@@ -49,6 +49,7 @@ class QAction;
 class QComboBox;
 class QProgressBar;
 class QProgressDialog;
+class QWinTaskbarButton;
 QT_END_NAMESPACE
 
 /**
@@ -153,6 +154,8 @@ private:
 
 #ifdef Q_OS_MAC
     CAppNapInhibitor* m_app_nap_inhibitor = nullptr;
+#elif defined Q_OS_WIN
+    QWinTaskbarButton* m_taskbar_button = nullptr;
 #endif
 
     /** Keep track of previous number of blocks, to detect progress */
