@@ -257,6 +257,48 @@ make cov
 # A coverage report will now be accessible at `./test_bitcoin.coverage/index.html`.
 ```
 
+### Performance profiling with perf
+
+Profiling is a good way to get a precise idea of where time is being spent in
+code. One tool for doing profiling on Linux platforms is called
+[`perf`](http://www.brendangregg.com/perf.html), and has been integrated into
+the functional test framework. Perf can observe a running process and sample
+(at some frequency) where its execution is.
+
+Perf installation is contingent on which kernel version you're running; see
+[this StackExchange
+thread](https://askubuntu.com/questions/50145/how-to-install-perf-monitoring-tool)
+for specific instructions.
+
+Certain kernel parameters may need to be set for perf to be able to inspect the
+running process' stack.
+
+```sh
+$ sudo sysctl -w kernel.perf_event_paranoid=-1
+$ echo 1 | sudo tee /proc/sys/kernel/kptr_restrict
+```
+
+To profile a running bitcoind process for 60 seconds, you could use an
+invocation of `perf record` like this:
+
+```sh
+$ perf record \
+    -g --call-graph dwarf --per-thread -F 140 \
+    -p `pgrep bitcoind` -- sleep 60
+```
+
+You could then analyze the results by running
+
+```sh
+perf report --stdio | c++filt | less`
+```
+
+or using a graphical tool like [Hotspot](https://github.com/KDAB/hotspot).
+
+See the [test documentation](./test/functional#benchmarking-with-perf) for how
+to invoke perf within a functional test.
+
+
 **Sanitizers**
 
 Bitcoin Core can be compiled with various "sanitizers" enabled, which add
