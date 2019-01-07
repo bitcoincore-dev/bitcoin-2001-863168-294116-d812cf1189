@@ -74,7 +74,7 @@ size_t FlatFileSeq::Allocate(const FlatFilePos& pos, size_t add_size, bool& out_
 
 bool FlatFileSeq::Flush(const FlatFilePos& pos, bool finalize)
 {
-    FILE* file = Open(pos);
+    FILE* file = Open(FlatFilePos(pos.nFile, 0)); // Avoid fseek to nPos
     if (!file) {
         return error("%s: failed to open file %d", __func__, pos.nFile);
     }

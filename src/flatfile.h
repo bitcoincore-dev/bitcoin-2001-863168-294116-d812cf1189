@@ -54,9 +54,9 @@ struct FlatFilePos
 class FlatFileSeq
 {
 private:
-    fs::path m_dir;
-    const char* m_prefix;
-    size_t m_chunk_size;
+    const fs::path m_dir;
+    const char* const m_prefix;
+    const size_t m_chunk_size;
 
 public:
     /**

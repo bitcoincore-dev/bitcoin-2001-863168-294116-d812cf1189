@@ -3013,7 +3013,7 @@ static bool FindBlockPos(FlatFilePos &pos, unsigned int nAddSize, unsigned int n
 
     if (!fKnown) {
         bool out_of_space;
-        size_t bytes_allocated = UndoFileSeq().Allocate(pos, nAddSize, out_of_space);
+        size_t bytes_allocated = BlockFileSeq().Allocate(pos, nAddSize, out_of_space);
         if (out_of_space) {
             return AbortNode("Disk space is low!", _("Error: Disk space is low!"));
         }
