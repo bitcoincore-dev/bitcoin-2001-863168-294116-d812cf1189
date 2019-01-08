@@ -15,6 +15,7 @@
 class CBlock;
 class CScheduler;
 class uint256;
+struct CBlockLocator;
 
 namespace interfaces {
 
@@ -57,6 +58,10 @@ public:
         //! Get block median time past.
         virtual int64_t getBlockMedianTimePast(int height) = 0;
 
+        //! Check that the full block is available on disk (ie has not been
+        //! pruned), and contains transactions.
+        virtual bool haveBlockOnDisk(int height) = 0;
+
         //! Return height of the first block in the chain with timestamp equal
         //! or greater than the given time, or nothing if there is no block with
         //! a high enough timestamp.
@@ -79,6 +84,17 @@ public:
         //! of the specified block. Also return the height of the specified
         //! block as an optional output parameter.
         virtual Optional<int> findFork(const uint256& hash, Optional<int>* height) = 0;
+
+        //! Return true if block hash points to the current chain tip, or to a
+        //! possible descendant of the current chain tip that isn't currently
+        //! connected.
+        virtual bool isPotentialTip(const uint256& hash) = 0;
+
+        //! Get locator for the current chain tip.
+        virtual CBlockLocator getLocator() = 0;
+
+        //! Return height of block on the chain using locator.
+        virtual Optional<int> findLocatorFork(const CBlockLocator& locator) = 0;
     };
 
     //! Return Lock interface. Chain is locked when this is called, and
