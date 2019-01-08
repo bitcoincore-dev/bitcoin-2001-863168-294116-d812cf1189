@@ -5,6 +5,8 @@
 #include <interfaces/chain.h>
 
 #include <chain.h>
+#include <chainparams.h>
+#include <primitives/block.h>
 #include <sync.h>
 #include <uint256.h>
 #include <util/system.h>
@@ -59,6 +61,26 @@ class LockImpl : public Chain::Lock
         assert(block != nullptr);
         return block->GetMedianTimePast();
     }
+    Optional<int> findFork(const uint256& hash, Optional<int>* height) override
+    {
+        const CBlockIndex *block{nullptr}, *fork{nullptr};
+        auto it = ::mapBlockIndex.find(hash);
+        if (it != ::mapBlockIndex.end()) {
+            block = it->second;
+            fork = ::chainActive.FindFork(block);
+        }
+        if (height != nullptr) {
+            if (block) {
+                *height = block->nHeight;
+            } else {
+                height->reset();
+            }
+        }
+        if (fork) {
+            return fork->nHeight;
+        }
+        return nullopt;
+    }
 };
 
 class LockingStateImpl : public LockImpl, public UniqueLock<CCriticalSection>
@@ -78,6 +100,28 @@ public:
         return std::move(result);
     }
     std::unique_ptr<Chain::Lock> assumeLocked() override { return MakeUnique<LockImpl>(); }
+    bool findBlock(const uint256& hash, CBlock* block, int64_t* time, int64_t* time_max) override
+    {
+        CBlockIndex* index;
+        {
+            LOCK(cs_main);
+            auto it = ::mapBlockIndex.find(hash);
+            if (it == ::mapBlockIndex.end()) {
+                return false;
+            }
+            index = it->second;
+            if (time) {
+                *time = index->GetBlockTime();
+            }
+            if (time_max) {
+                *time_max = index->GetBlockTimeMax();
+            }
+        }
+        if (block && !ReadBlockFromDisk(*block, index, Params().GetConsensus())) {
+            block->SetNull();
+        }
+        return true;
+    }
 };
 
 } // namespace
