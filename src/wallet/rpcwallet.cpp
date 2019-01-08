@@ -3383,47 +3383,46 @@ UniValue rescanblockchain(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_WALLET_ERROR, "Wallet is currently rescanning. Abort existing rescan or wait.");
     }
 
-    CBlockIndex *pindexStart = nullptr;
-    CBlockIndex *pindexStop = nullptr;
-    CBlockIndex *pChainTip = nullptr;
+    int start_height = 0;
+    Optional<int> stop_height;
+    Optional<int> tip_height;
+    uint256 start_block, stop_block;
     {
         auto locked_chain = pwallet->chain().lock();
-        pindexStart = chainActive.Genesis();
-        pChainTip = chainActive.Tip();
+        tip_height = locked_chain->getHeight();
+        stop_height = tip_height;
 
         if (!request.params[0].isNull()) {
-            pindexStart = chainActive[request.params[0].get_int()];
-            if (!pindexStart) {
+            start_height = request.params[0].get_int();
+            if (start_height < 0 || !tip_height || start_height > *tip_height) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid start_height");
             }
         }
 
         if (!request.params[1].isNull()) {
-            pindexStop = chainActive[request.params[1].get_int()];
-            if (!pindexStop) {
+            stop_height = request.params[1].get_int();
+            if (*stop_height < 0 || !tip_height || *stop_height > *tip_height) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid stop_height");
             }
-            else if (pindexStop->nHeight < pindexStart->nHeight) {
+            else if (*stop_height < start_height) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "stop_height must be greater than start_height");
             }
         }
-    }
 
-    // We can't rescan beyond non-pruned blocks, stop and throw an error
-    if (fPruneMode) {
-        auto locked_chain = pwallet->chain().lock();
-        CBlockIndex *block = pindexStop ? pindexStop : pChainTip;
-        while (block && block->nHeight >= pindexStart->nHeight) {
-            if (!(block->nStatus & BLOCK_HAVE_DATA)) {
-                throw JSONRPCError(RPC_MISC_ERROR, "Can't rescan beyond pruned data. Use RPC call getblockchaininfo to determine your pruned height.");
-            }
-            block = block->pprev;
+        // We can't rescan beyond non-pruned blocks, stop and throw an error
+        if (locked_chain->findPruned(start_height, stop_height)) {
+            throw JSONRPCError(RPC_MISC_ERROR, "Can't rescan beyond pruned data. Use RPC call getblockchaininfo to determine your pruned height.");
+        }
+
+        if (tip_height) {
+            start_block = locked_chain->getBlockHash(start_height);
+            stop_block = locked_chain->getBlockHash(stop_height.value_or(*tip_height));
         }
     }
 
-    const CBlockIndex *failed_block, *stopBlock;
+    uint256 failed_block, stopBlock;
     CWallet::ScanResult result =
-        pwallet->ScanForWalletTransactions(pindexStart, pindexStop, reserver, failed_block, stopBlock, true);
+        pwallet->ScanForWalletTransactions(start_block, stop_block, reserver, failed_block, stopBlock, true /* prune */);
     switch (result) {
     case CWallet::ScanResult::SUCCESS:
         break; // stopBlock set by ScanForWalletTransactions
@@ -3434,8 +3433,8 @@ UniValue rescanblockchain(const JSONRPCRequest& request)
         // no default case, so the compiler can warn about missing cases
     }
     UniValue response(UniValue::VOBJ);
-    response.pushKV("start_height", pindexStart->nHeight);
-    response.pushKV("stop_height", stopBlock->nHeight);
+    response.pushKV("start_height", start_height);
+    response.pushKV("stop_height", stop_height ? *stop_height : UniValue());
     return response;
 }
 

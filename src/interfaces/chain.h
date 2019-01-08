@@ -57,6 +57,24 @@ public:
         //! Get block median time past.
         virtual int64_t getBlockMedianTimePast(int height) = 0;
 
+        //! Return height of the first block in the chain with timestamp equal
+        //! or greater than the given time, or nothing if there is no block with
+        //! a high enough timestamp.
+        virtual Optional<int> findFirstBlockWithTime(int64_t time) = 0;
+
+        //! Return height of the first block in the chain with timestamp equal
+        //! or greater than the given time and height equal or greater than the
+        //! given height, or nothing if there is no such block.
+        //!
+        //! Calling this with height 0 is equivalent to calling
+        //! findFirstBlockWithTime, but less efficient because it requires a
+        //! linear instead of a binary search.
+        virtual Optional<int> findFirstBlockWithTimeAndHeight(int64_t time, int height) = 0;
+
+        //! Return height of last block in the specified range which is pruned, or
+        //! nothing if no block in the range is pruned. Range is inclusive.
+        virtual Optional<int> findPruned(int start_height = 0, Optional<int> stop_height = nullopt) = 0;
+
         //! Return height of the highest block on the chain that is an ancestor
         //! of the specified block. Also return the height of the specified
         //! block as an optional output parameter.
@@ -82,6 +100,10 @@ public:
         CBlock* block = nullptr,
         int64_t* time = nullptr,
         int64_t* max_time = nullptr) = 0;
+
+    //! Estimate fraction of total transactions verified if blocks up to
+    //! given height are verified.
+    virtual double guessVerificationProgress(const uint256& block_hash) = 0;
 };
 
 //! Interface to let node manage chain clients (wallets, or maybe tools for
