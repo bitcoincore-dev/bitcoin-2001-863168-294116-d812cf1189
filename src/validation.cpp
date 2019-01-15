@@ -323,6 +323,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
 static FILE* OpenUndoFile(const FlatFilePos &pos, bool fReadOnly = false);
 static FlatFileSeq BlockFileSeq();
 static FlatFileSeq UndoFileSeq();
+bool RunCheckInputsMaybeParallel(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, unsigned int flags, bool cacheSigStore, bool cacheFullScriptStore, PrecomputedTransactionData& txdata);
 
 bool CheckFinalTx(const CTransaction &tx, int flags)
 {
@@ -558,7 +559,7 @@ static bool CheckInputsFromMempoolAndCache(const CTransaction& tx, CValidationSt
         }
     }
 
-    return CheckInputs(tx, state, view, true, flags, cacheSigStore, true, txdata);
+    return RunCheckInputsMaybeParallel(tx, state, view, flags, cacheSigStore, true, txdata);
 }
 
 /**
@@ -894,7 +895,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         // Check against previous transactions
         // This is done last to help prevent CPU exhaustion denial-of-service attacks.
         PrecomputedTransactionData txdata(tx);
-        if (!CheckInputs(tx, state, view, true, scriptVerifyFlags, true, false, txdata)) {
+        if (!RunCheckInputsMaybeParallel(tx, state, view, scriptVerifyFlags, true, false, txdata)) {
             // Assume that this is due to a policy violation, rather than
             // re-checking with the consensus flags. Separating policy rules
             // from consensus rules is tricky, because we want to be able to
@@ -913,8 +914,8 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
             // need to turn both off, and compare against just turning off CLEANSTACK
             // to see if the failure is specifically due to witness validation.
             CValidationState stateDummy; // Want reported failures to be from first CheckInputs
-            if (!tx.HasWitness() && CheckInputs(tx, stateDummy, view, true, scriptVerifyFlags & ~(SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_CLEANSTACK), true, false, txdata) &&
-                !CheckInputs(tx, stateDummy, view, true, scriptVerifyFlags & ~SCRIPT_VERIFY_CLEANSTACK, true, false, txdata)) {
+            if (!tx.HasWitness() && RunCheckInputsMaybeParallel(tx, stateDummy, view, scriptVerifyFlags & ~(SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_CLEANSTACK), true, false, txdata) &&
+                !RunCheckInputsMaybeParallel(tx, stateDummy, view, scriptVerifyFlags & ~SCRIPT_VERIFY_CLEANSTACK, true, false, txdata)) {
                 // Only the witness is missing, so the transaction itself may be fine.
                 state.Invalid(ValidationInvalidReason::TX_WITNESS_MUTATED, false,
                         state.GetRejectCode(), state.GetRejectReason(), state.GetDebugMessage());
@@ -1674,6 +1675,19 @@ void ThreadScriptCheck(int worker_num) {
     scriptcheckqueue.Thread();
 }
 
+bool RunCheckInputsMaybeParallel(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, unsigned int flags, bool cacheSigStore, bool cacheFullScriptStore, PrecomputedTransactionData& txdata) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
+{
+    CCheckQueueControl<CScriptCheck> control(nScriptCheckThreads ? &scriptcheckqueue : nullptr);
+    std::vector<CScriptCheck> vChecks;
+    if (!CheckInputs(tx, state, inputs, true, flags, cacheSigStore, cacheFullScriptStore, txdata, nScriptCheckThreads ? &vChecks : nullptr)) {
+        return false;
+    }
+    control.Add(vChecks);
+    if (!control.Wait()) {
+        return state.Invalid(ValidationInvalidReason::CONSENSUS, false, REJECT_INVALID, "script-verify-flag-failed");
+    }
+    return true;
+}
 VersionBitsCache versionbitscache GUARDED_BY(cs_main);
 
 int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Params& params)
