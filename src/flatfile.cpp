@@ -22,14 +22,14 @@ fs::path FlatFileSeq::FileName(const FlatFilePos& pos) const
     return m_dir / strprintf("%s%05u.dat", m_prefix, pos.nFile);
 }
 
-FILE* FlatFileSeq::Open(const FlatFilePos& pos, bool fReadOnly)
+FILE* FlatFileSeq::Open(const FlatFilePos& pos, bool read_only)
 {
     if (pos.IsNull())
         return nullptr;
     fs::path path = FileName(pos);
     fs::create_directories(path.parent_path());
-    FILE* file = fsbridge::fopen(path, fReadOnly ? "rb": "rb+");
-    if (!file && !fReadOnly)
+    FILE* file = fsbridge::fopen(path, read_only ? "rb": "rb+");
+    if (!file && !read_only)
         file = fsbridge::fopen(path, "wb+");
     if (!file) {
         LogPrintf("Unable to open file %s\n", path.string());
@@ -64,8 +64,7 @@ size_t FlatFileSeq::Allocate(const FlatFilePos& pos, size_t add_size, bool& out_
                 fclose(file);
                 return inc_size;
             }
-        }
-        else {
+        } else {
             out_of_space = true;
         }
     }
