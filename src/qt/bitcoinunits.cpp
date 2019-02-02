@@ -17,7 +17,7 @@ BitcoinUnits::BitcoinUnits(QObject *parent):
 
 QList<BitcoinUnits::Unit> BitcoinUnits::availableUnits()
 {
-    static QList<BitcoinUnits::Unit> unitlist;
+    QList<BitcoinUnits::Unit> unitlist;
     unitlist.append(BTC);
     unitlist.append(mBTC);
     unitlist.append(uBTC);
