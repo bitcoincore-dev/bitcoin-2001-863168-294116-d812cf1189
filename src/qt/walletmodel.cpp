@@ -39,6 +39,7 @@ WalletModel::WalletModel(std::unique_ptr<interfaces::Wallet> wallet, interfaces:
     cachedEncryptionStatus(Unencrypted),
     cachedNumBlocks(0)
 {
+    assert(clientModel != nullptr);
     fHaveWatchOnly = m_wallet->haveWatchOnly();
     addressTableModel = new AddressTableModel(this);
     transactionTableModel = new TransactionTableModel(platformStyle, this);
