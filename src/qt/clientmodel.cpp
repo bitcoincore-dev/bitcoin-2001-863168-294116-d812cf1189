@@ -251,6 +251,10 @@ void ClientModel::subscribeToCoreSignals()
         [this](bool network_active) {
             Q_EMIT networkActiveChanged(network_active);
         });
+    m_handler_notify_network_local_changed = m_node.handleNotifyNetworkLocalChanged(
+        [this]() {
+            Q_EMIT networkLocalChanged();
+        });
     m_handler_notify_alert_changed = m_node.handleNotifyAlertChanged(
         [this]() {
             qDebug() << "ClientModel: NotifyAlertChanged";
@@ -278,6 +282,7 @@ void ClientModel::unsubscribeFromCoreSignals()
     m_handler_show_progress->disconnect();
     m_handler_notify_num_connections_changed->disconnect();
     m_handler_notify_network_active_changed->disconnect();
+    m_handler_notify_network_local_changed->disconnect();
     m_handler_notify_alert_changed->disconnect();
     m_handler_banned_list_changed->disconnect();
     m_handler_notify_block_tip->disconnect();
