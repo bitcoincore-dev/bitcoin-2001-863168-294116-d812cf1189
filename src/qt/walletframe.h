@@ -52,6 +52,7 @@ Q_SIGNALS:
     void requestedSyncWarningInfo();
 
 private:
+    QStackedWidget *m_global_stack;
     QStackedWidget *walletStack;
     BitcoinGUI *gui;
     ClientModel *clientModel;
