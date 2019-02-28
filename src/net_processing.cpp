@@ -962,37 +962,10 @@ void Misbehaving(NodeId pnode, int howmuch, const std::string& message) EXCLUSIV
  * whitelisted peers, preventing us from relaying things which would result in them disconnecting
  * us.
  */
-static bool MayResultInDisconnect(const CValidationState& state, bool via_compact_block) {
-    switch (state.GetReason()) {
-    case ValidationInvalidReason::NONE:
-        return false;
-    // The node is providing invalid data:
-    case ValidationInvalidReason::CONSENSUS:
-    case ValidationInvalidReason::BLOCK_MUTATED:
-    case ValidationInvalidReason::CACHED_INVALID:
-        // Blocks (or headers) invalid for one of the above reasons may not be
-        // knowable to a high-bandwidth compact block peer, prior to relay.
-        // Headers that are invalid for reasons that should be known prior to
-        // block validation -- such as bad proof of work, too-early-time, or
-        // building off an invalid or missing block -- are punished regardless
-        // (see below).
-        return !via_compact_block;
-    case ValidationInvalidReason::BLOCK_INVALID_HEADER:
-    case ValidationInvalidReason::BLOCK_CHECKPOINT:
-    case ValidationInvalidReason::BLOCK_INVALID_PREV:
-    case ValidationInvalidReason::BLOCK_MISSING_PREV:
-        return true;
-    // Conflicting (but not necessarily invalid) data or different policy:
-    case ValidationInvalidReason::RECENT_CONSENSUS_CHANGE:
-    case ValidationInvalidReason::BLOCK_BAD_TIME:
-    case ValidationInvalidReason::TX_NOT_STANDARD:
-    case ValidationInvalidReason::TX_MISSING_INPUTS:
-    case ValidationInvalidReason::TX_WITNESS_MUTATED:
-    case ValidationInvalidReason::TX_CONFLICT:
-    case ValidationInvalidReason::TX_MEMPOOL_POLICY:
-        return false;
-    }
-    return false;
+static bool TxRelayMayResultInDisconnect(const CValidationState& state)
+{
+    assert(IsTransactionReason(state.GetReason()));
+    return state.GetReason() == ValidationInvalidReason::CONSENSUS;
 }
 
 //! Returns true if the peer was punished (probably disconnected)
@@ -2548,7 +2521,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                 // Never relay transactions that we would assign a non-zero DoS
                 // score for, as we expect peers to do the same with us in that
                 // case.
-                if (state.IsInvalid() && MayResultInDisconnect(state, false)) {
+                if (state.IsInvalid() && TxRelayMayResultInDisconnect(state)) {
                     LogPrintf("Not relaying invalid transaction %s from whitelisted peer=%d (%s)\n", tx.GetHash().ToString(), pfrom->GetId(), FormatStateMessage(state));
                 } else {
                     LogPrintf("Force relaying tx %s from whitelisted peer=%d\n", tx.GetHash().ToString(), pfrom->GetId());
