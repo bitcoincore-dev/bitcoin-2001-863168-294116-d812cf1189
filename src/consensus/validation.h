@@ -71,7 +71,6 @@ inline bool IsTransactionReason(ValidationInvalidReason r)
     return r == ValidationInvalidReason::NONE ||
            r == ValidationInvalidReason::CONSENSUS ||
            r == ValidationInvalidReason::RECENT_CONSENSUS_CHANGE ||
-           r == ValidationInvalidReason::CACHED_INVALID ||
            r == ValidationInvalidReason::TX_NOT_STANDARD ||
            r == ValidationInvalidReason::TX_MISSING_INPUTS ||
            r == ValidationInvalidReason::TX_WITNESS_MUTATED ||
