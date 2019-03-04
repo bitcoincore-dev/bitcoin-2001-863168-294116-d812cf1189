@@ -16,6 +16,7 @@
 #include <vector>
 
 class CBlock;
+class CRPCCommand;
 class CScheduler;
 class CValidationState;
 class uint256;
@@ -24,6 +25,7 @@ struct FeeCalculation;
 
 namespace interfaces {
 
+class Handler;
 class Wallet;
 
 //! Interface for giving wallet processes access to blockchain state.
@@ -138,6 +140,9 @@ public:
         int64_t* time = nullptr,
         int64_t* max_time = nullptr) = 0;
 
+    //! Get unspent outputs associated with a transaction.
+    virtual std::vector<Coin> findCoins(const std::vector<COutPoint>& outputs) = 0;
+
     //! Estimate fraction of total transactions verified if blocks up to
     //! the specified block hash are verified.
     virtual double guessVerificationProgress(const uint256& block_hash) = 0;
@@ -195,6 +200,33 @@ public:
 
     //! Send wallet load notification to the GUI.
     virtual void loadWallet(std::unique_ptr<Wallet> wallet) = 0;
+
+    //! Chain notifications.
+    class Notifications
+    {
+    public:
+        virtual ~Notifications() {}
+        virtual void TransactionAddedToMempool(const CTransactionRef& tx) {}
+        virtual void TransactionRemovedFromMempool(const CTransactionRef& ptx) {}
+        virtual void BlockConnected(const CBlock& block,
+            const uint256& block_hash,
+            const std::vector<CTransactionRef>& tx_conflicted)
+        {
+        }
+        virtual void BlockDisconnected(const CBlock& block) {}
+        virtual void ChainStateFlushed(const CBlockLocator& locator) {}
+        virtual void ResendWalletTransactions(int64_t best_block_time) {}
+    };
+
+    //! Register handler for notifications.
+    virtual std::unique_ptr<Handler> handleNotifications(Notifications& notifications) = 0;
+
+    //! Wait for pending notifications to be handled.
+    virtual void waitForNotifications() = 0;
+
+    //! Register handler for RPC. Command is not copied, so reference
+    //! needs to remain valid until Handler is disconnected.
+    virtual std::unique_ptr<Handler> handleRpc(const CRPCCommand& command) = 0;
 };
 
 //! Interface to let node manage chain clients (wallets, or maybe tools for
