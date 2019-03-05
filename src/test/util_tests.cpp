@@ -12,6 +12,7 @@
 #include <test/setup_common.h>
 
 #include <stdint.h>
+#include <univalue.h>
 #include <vector>
 #ifndef WIN32
 #include <signal.h>
@@ -136,16 +137,53 @@ struct TestArgsManager : public ArgsManager
     TestArgsManager() { m_network_only_args.clear(); }
     std::map<std::string, std::vector<std::string> >& GetOverrideArgs() { return m_override_args; }
     std::map<std::string, std::vector<std::string> >& GetConfigArgs() { return m_config_args; }
+    bool ParseParameters(int argc, const char* const argv[], std::string& error) {
+        bool result = ArgsManager::ParseParameters(argc, argv, error);
+        m_override_args.clear();
+        for (const auto& option : m_settings.command_line_options) {
+            auto& args = m_override_args["-" + option.first];
+            for (const auto& value : util::SettingsSpan(option.second)) {
+                args.push_back(value.get_str());
+            }
+        }
+        return result;
+    }
     void ReadConfigString(const std::string str_config)
     {
         std::istringstream streamConfig(str_config);
         {
             LOCK(cs_args);
-            m_config_args.clear();
+            m_settings.ro_config.clear();
             m_config_sections.clear();
         }
         std::string error;
         BOOST_REQUIRE(ReadConfigStream(streamConfig, "", error));
+        m_config_args.clear();
+        for (const auto& section : m_settings.ro_config) {
+            std::string prefix = section.first;
+            if (!prefix.empty()) prefix += ".";
+            for (const auto& option : section.second) {
+                auto& args = m_config_args["-" + prefix + option.first];
+                for (const auto& value : util::SettingsSpan(option.second)) {
+                    args.push_back(value.get_str());
+                }
+            }
+        }
+    }
+    void UpdateSettings()
+    {
+        for (const auto* args : {&m_override_args, &m_config_args}) {
+            for (const auto& arg : *args) {
+                if (arg.first.compare(0, 1, "-") == 0) {
+                    std::string name = arg.first.substr(1);
+                    auto& settings = args == &m_override_args ? m_settings.command_line_options[name] :
+                                                                m_settings.ro_config[""][name];
+                    for (const auto& value : arg.second) {
+                        settings.push_back(value);
+                    }
+                }
+            }
+        }
     }
     void SetNetworkOnlyArg(const std::string arg)
     {
@@ -161,6 +199,9 @@ struct TestArgsManager : public ArgsManager
     using ArgsManager::ReadConfigStream;
     using ArgsManager::cs_args;
     using ArgsManager::m_network;
+
+    std::map<std::string, std::vector<std::string>> m_override_args;
+    std::map<std::string, std::vector<std::string>> m_config_args;
 };
 
 BOOST_AUTO_TEST_CASE(util_ParseParameters)
@@ -468,38 +509,40 @@ BOOST_AUTO_TEST_CASE(util_GetArg)
 {
     TestArgsManager testArgs;
     testArgs.GetOverrideArgs().clear();
-    testArgs.GetOverrideArgs()["strtest1"] = {"string..."};
+    testArgs.GetOverrideArgs()["-strtest1"] = {"string..."};
     // strtest2 undefined on purpose
-    testArgs.GetOverrideArgs()["inttest1"] = {"12345"};
-    testArgs.GetOverrideArgs()["inttest2"] = {"81985529216486895"};
+    testArgs.GetOverrideArgs()["-inttest1"] = {"12345"};
+    testArgs.GetOverrideArgs()["-inttest2"] = {"81985529216486895"};
     // inttest3 undefined on purpose
-    testArgs.GetOverrideArgs()["booltest1"] = {""};
+    testArgs.GetOverrideArgs()["-booltest1"] = {""};
     // booltest2 undefined on purpose
-    testArgs.GetOverrideArgs()["booltest3"] = {"0"};
-    testArgs.GetOverrideArgs()["booltest4"] = {"1"};
+    testArgs.GetOverrideArgs()["-booltest3"] = {"0"};
+    testArgs.GetOverrideArgs()["-booltest4"] = {"1"};
 
     // priorities
-    testArgs.GetOverrideArgs()["pritest1"] = {"a", "b"};
-    testArgs.GetConfigArgs()["pritest2"] = {"a", "b"};
-    testArgs.GetOverrideArgs()["pritest3"] = {"a"};
-    testArgs.GetConfigArgs()["pritest3"] = {"b"};
-    testArgs.GetOverrideArgs()["pritest4"] = {"a","b"};
-    testArgs.GetConfigArgs()["pritest4"] = {"c","d"};
+    testArgs.GetOverrideArgs()["-pritest1"] = {"a", "b"};
+    testArgs.GetConfigArgs()["-pritest2"] = {"a", "b"};
+    testArgs.GetOverrideArgs()["-pritest3"] = {"a"};
+    testArgs.GetConfigArgs()["-pritest3"] = {"b"};
+    testArgs.GetOverrideArgs()["-pritest4"] = {"a","b"};
+    testArgs.GetConfigArgs()["-pritest4"] = {"c","d"};
 
-    BOOST_CHECK_EQUAL(testArgs.GetArg("strtest1", "default"), "string...");
-    BOOST_CHECK_EQUAL(testArgs.GetArg("strtest2", "default"), "default");
-    BOOST_CHECK_EQUAL(testArgs.GetArg("inttest1", -1), 12345);
-    BOOST_CHECK_EQUAL(testArgs.GetArg("inttest2", -1), 81985529216486895LL);
-    BOOST_CHECK_EQUAL(testArgs.GetArg("inttest3", -1), -1);
-    BOOST_CHECK_EQUAL(testArgs.GetBoolArg("booltest1", false), true);
-    BOOST_CHECK_EQUAL(testArgs.GetBoolArg("booltest2", false), false);
-    BOOST_CHECK_EQUAL(testArgs.GetBoolArg("booltest3", false), false);
-    BOOST_CHECK_EQUAL(testArgs.GetBoolArg("booltest4", false), true);
+    testArgs.UpdateSettings();
 
-    BOOST_CHECK_EQUAL(testArgs.GetArg("pritest1", "default"), "b");
-    BOOST_CHECK_EQUAL(testArgs.GetArg("pritest2", "default"), "a");
-    BOOST_CHECK_EQUAL(testArgs.GetArg("pritest3", "default"), "a");
-    BOOST_CHECK_EQUAL(testArgs.GetArg("pritest4", "default"), "b");
+    BOOST_CHECK_EQUAL(testArgs.GetArg("-strtest1", "default"), "string...");
+    BOOST_CHECK_EQUAL(testArgs.GetArg("-strtest2", "default"), "default");
+    BOOST_CHECK_EQUAL(testArgs.GetArg("-inttest1", -1), 12345);
+    BOOST_CHECK_EQUAL(testArgs.GetArg("-inttest2", -1), 81985529216486895LL);
+    BOOST_CHECK_EQUAL(testArgs.GetArg("-inttest3", -1), -1);
+    BOOST_CHECK_EQUAL(testArgs.GetBoolArg("-booltest1", false), true);
+    BOOST_CHECK_EQUAL(testArgs.GetBoolArg("-booltest2", false), false);
+    BOOST_CHECK_EQUAL(testArgs.GetBoolArg("-booltest3", false), false);
+    BOOST_CHECK_EQUAL(testArgs.GetBoolArg("-booltest4", false), true);
+
+    BOOST_CHECK_EQUAL(testArgs.GetArg("-pritest1", "default"), "b");
+    BOOST_CHECK_EQUAL(testArgs.GetArg("-pritest2", "default"), "a");
+    BOOST_CHECK_EQUAL(testArgs.GetArg("-pritest3", "default"), "a");
+    BOOST_CHECK_EQUAL(testArgs.GetArg("-pritest4", "default"), "b");
 }
 
 BOOST_AUTO_TEST_CASE(util_GetChainName)
