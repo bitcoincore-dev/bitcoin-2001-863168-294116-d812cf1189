@@ -6,6 +6,7 @@
 
 #include <chain.h>
 #include <chainparams.h>
+#include <interfaces/handler.h>
 #include <interfaces/wallet.h>
 #include <net.h>
 #include <policy/fees.h>
@@ -14,20 +15,36 @@
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <protocol.h>
+#include <rpc/protocol.h>
+#include <rpc/server.h>
 #include <sync.h>
 #include <threadsafety.h>
 #include <timedata.h>
 #include <txmempool.h>
 #include <ui_interface.h>
 #include <uint256.h>
+#include <univalue.h>
 #include <util/system.h>
 #include <validation.h>
+#include <validationinterface.h>
 
+#include <algorithm>
+#include <map>
 #include <memory>
+#include <tuple>
 #include <utility>
 
 namespace interfaces {
 namespace {
+
+//! Extension of std::reference_wrapper with operator< for use as map key.
+template <typename T>
+class Ref : public std::reference_wrapper<T>
+{
+public:
+    using std::reference_wrapper<T>::reference_wrapper;
+    bool operator<(const Ref<T>& other) const { return this->get() < other.get(); }
+};
 
 class LockImpl : public Chain::Lock
 {
@@ -161,6 +178,64 @@ class LockingStateImpl : public LockImpl, public UniqueLock<CCriticalSection>
     using UniqueLock::UniqueLock;
 };
 
+class HandlerImpl : public Handler
+{
+public:
+    explicit HandlerImpl(Chain::Notifications& notifications) : m_forwarder(notifications) {}
+    ~HandlerImpl() override
+    {
+        // It is important to disconnect here in the HandlerImpl destructor,
+        // instead of in the HandleImpl::Forwarder destructor, because
+        // UnregisterAllValidationInterfaces() internally accesses Forwarder
+        // virtual methods which are no longer available after Forwarder object
+        // has begun to be being destroyed.
+        m_forwarder.disconnect();
+    }
+    void disconnect() override { m_forwarder.disconnect(); }
+
+    struct Forwarder : CValidationInterface
+    {
+        explicit Forwarder(Chain::Notifications& notifications) : m_notifications(&notifications)
+        {
+            RegisterValidationInterface(this);
+        }
+        void disconnect()
+        {
+            if (m_notifications) {
+                m_notifications = nullptr;
+                UnregisterValidationInterface(this);
+            }
+        }
+        void TransactionAddedToMempool(const CTransactionRef& tx) override
+        {
+            m_notifications->TransactionAddedToMempool(tx);
+        }
+        void TransactionRemovedFromMempool(const CTransactionRef& tx) override
+        {
+            m_notifications->TransactionRemovedFromMempool(tx);
+        }
+        void BlockConnected(const std::shared_ptr<const CBlock>& block,
+            const CBlockIndex* index,
+            const std::vector<CTransactionRef>& tx_conflicted) override
+        {
+            m_notifications->BlockConnected(*block, index->GetBlockHash(), tx_conflicted);
+        }
+        void BlockDisconnected(const std::shared_ptr<const CBlock>& block) override
+        {
+            m_notifications->BlockDisconnected(*block);
+        }
+        void ChainStateFlushed(const CBlockLocator& locator) override { m_notifications->ChainStateFlushed(locator); }
+        void ResendWalletTransactions(int64_t best_block_time, CConnman*) override
+        {
+            m_notifications->ResendWalletTransactions(best_block_time);
+        }
+
+        Chain::Notifications* m_notifications;
+    };
+
+    Forwarder m_forwarder;
+};
+
 class ChainImpl : public Chain
 {
 public:
@@ -193,6 +268,20 @@ public:
             block->SetNull();
         }
         return true;
+    }
+    std::vector<Coin> findCoins(const std::vector<COutPoint>& outputs) override
+    {
+        std::vector<Coin> coins;
+        LOCK2(cs_main, ::mempool.cs);
+        assert(pcoinsTip);
+        CCoinsViewCache& chain_view = *::pcoinsTip;
+        CCoinsViewMemPool mempool_view(&chain_view, ::mempool);
+        for (const auto& output : outputs) {
+            Coin coin;
+            mempool_view.GetCoin(output, coin);
+            coins.emplace_back(std::move(coin));
+        }
+        return coins;
     }
     double guessVerificationProgress(const uint256& block_hash) override
     {
@@ -254,7 +343,110 @@ public:
     void initWarning(const std::string& message) override { InitWarning(message); }
     void initError(const std::string& message) override { InitError(message); }
     void loadWallet(std::unique_ptr<Wallet> wallet) override { ::uiInterface.LoadWallet(wallet); }
+    std::unique_ptr<Handler> handleNotifications(Notifications& notifications) override
+    {
+        return MakeUnique<HandlerImpl>(notifications);
+    }
+    void waitForNotifications() override { SyncWithValidationInterfaceQueue(); }
+    std::unique_ptr<Handler> handleRpc(const CRPCCommand& command) override;
+
+    //! Map of RPC method name to forwarder. If multiple clients provide
+    //! implementations of the same RPC method, the RPC forwarder can dispatch
+    //! between them.
+    class RpcForwarder;
+    std::map<Ref<const std::string>, RpcForwarder> m_rpc_forwarders;
 };
+
+//! Forwarder for one RPC method.
+class ChainImpl::RpcForwarder
+{
+public:
+    explicit RpcForwarder(const CRPCCommand& command) : m_command(command)
+    {
+        m_command.actor = [this](const JSONRPCRequest& request) { return forwardRequest(request); };
+    }
+
+    bool registerForwarder() { return ::tableRPC.appendCommand(m_command.name, &m_command); }
+
+    void addCommand(const CRPCCommand& command) { m_commands.emplace_back(&command); }
+
+    void removeCommand(const CRPCCommand& command)
+    {
+        m_commands.erase(std::remove(m_commands.begin(), m_commands.end(), &command), m_commands.end());
+    }
+
+    UniValue forwardRequest(const JSONRPCRequest& request) const
+    {
+        // Simple forwarding of RPC requests. This just sends the request to the
+        // first client that registered a handler for the RPC method. If the
+        // handler throws a wallet not found exception, this will retry
+        // forwarding to the next handler (if any).
+        //
+        // This forwarding mechanism could be made more efficient (peeking
+        // inside the RPC request for wallet name and sending it directly to the
+        // right handler), but right now all wallets are in-process so there is
+        // only ever a single handler, and in the future it isn't clear if we
+        // will want we want to keep forwarding RPCs at all (clients could just
+        // listen for their own RPCs).
+        for (auto it = m_commands.begin(); it != m_commands.end();) {
+            const CRPCCommand& command = **it++;
+            try {
+                return command.actor(request);
+            } catch (const UniValue& e) {
+                if (it != m_commands.end()) {
+                    const UniValue& code = e["code"];
+                    if (code.isNum() && code.get_int() == RPC_WALLET_NOT_FOUND) {
+                        continue;
+                    }
+                }
+                throw;
+            }
+        }
+
+        // This will only be reached if m_commands is empty. (Because the RPC
+        // server provides an appendCommand, but no removeCommand method, it
+        // will keep sending requests here even if there are no clients left to
+        // forward to.)
+        throw JSONRPCError(RPC_METHOD_NOT_FOUND, "Method not found");
+    }
+
+    CRPCCommand m_command;
+    std::vector<const CRPCCommand*> m_commands;
+};
+
+class RpcHandler : public Handler
+{
+public:
+    RpcHandler(ChainImpl::RpcForwarder& forwarder, const CRPCCommand& command)
+        : m_forwarder(&forwarder), m_command(command)
+    {
+        m_forwarder->addCommand(m_command);
+    }
+
+    void disconnect() override final
+    {
+        if (m_forwarder) {
+            m_forwarder->removeCommand(m_command);
+            m_forwarder = nullptr;
+        }
+    }
+
+    ~RpcHandler() override { disconnect(); }
+
+    ChainImpl::RpcForwarder* m_forwarder;
+    const CRPCCommand& m_command;
+};
+
+std::unique_ptr<Handler> ChainImpl::handleRpc(const CRPCCommand& command)
+{
+    auto inserted = m_rpc_forwarders.emplace(
+        std::piecewise_construct, std::forward_as_tuple(command.name), std::forward_as_tuple(command));
+    if (inserted.second && !inserted.first->second.registerForwarder()) {
+        m_rpc_forwarders.erase(inserted.first);
+        return {};
+    }
+    return MakeUnique<RpcHandler>(inserted.first->second, command);
+}
 
 } // namespace
 
