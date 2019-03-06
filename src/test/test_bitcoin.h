@@ -8,6 +8,7 @@
 #include <chainparamsbase.h>
 #include <fs.h>
 #include <key.h>
+#include <node/node.h>
 #include <pubkey.h>
 #include <random.h>
 #include <scheduler.h>
@@ -76,6 +77,7 @@ class CNode;
 
 class PeerLogicValidation;
 struct TestingSetup : public BasicTestingSetup {
+    Node m_node;
     boost::thread_group threadGroup;
     CScheduler scheduler;
 

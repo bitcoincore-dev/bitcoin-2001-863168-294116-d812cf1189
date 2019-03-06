@@ -38,7 +38,7 @@ std::string TransactionErrorString(const TransactionError err)
     assert(false);
 }
 
-TransactionError BroadcastTransaction(const CTransactionRef tx, uint256& hashTx, std::string& err_string, const CAmount& highfee)
+TransactionError BroadcastTransaction(const CTransactionRef tx, uint256& hashTx, std::string& err_string, const CAmount& highfee, CConnman* connman)
 {
     std::promise<void> promise;
     hashTx = tx->GetHash();
@@ -90,12 +90,12 @@ TransactionError BroadcastTransaction(const CTransactionRef tx, uint256& hashTx,
 
     promise.get_future().wait();
 
-    if (!g_connman) {
+    if (!connman) {
         return TransactionError::P2P_DISABLED;
     }
 
     CInv inv(MSG_TX, hashTx);
-    g_connman->ForEachNode([&inv](CNode* pnode) {
+    connman->ForEachNode([&inv](CNode* pnode) {
         pnode->PushInventory(inv);
     });
 

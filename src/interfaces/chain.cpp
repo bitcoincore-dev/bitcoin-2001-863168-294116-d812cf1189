@@ -213,7 +213,7 @@ public:
     void relayTransaction(const uint256& txid) override
     {
         CInv inv(MSG_TX, txid);
-        g_connman->ForEachNode([&inv](CNode* node) { node->PushInventory(inv); });
+        m_connman->ForEachNode([&inv](CNode* node) { node->PushInventory(inv); });
     }
     void getTransactionAncestry(const uint256& txid, size_t& ancestors, size_t& descendants) override
     {
@@ -247,13 +247,15 @@ public:
     }
     CAmount maxTxFee() override { return ::maxTxFee; }
     bool getPruneMode() override { return ::fPruneMode; }
-    bool p2pEnabled() override { return g_connman != nullptr; }
+    bool p2pEnabled() override { return m_connman != nullptr; }
     bool isInitialBlockDownload() override { return IsInitialBlockDownload(); }
     int64_t getAdjustedTime() override { return GetAdjustedTime(); }
     void initMessage(const std::string& message) override { ::uiInterface.InitMessage(message); }
     void initWarning(const std::string& message) override { InitWarning(message); }
     void initError(const std::string& message) override { InitError(message); }
     void loadWallet(std::unique_ptr<Wallet> wallet) override { ::uiInterface.LoadWallet(wallet); }
+    void setConnman(CConnman* connman) { m_connman = connman; }
+    CConnman* m_connman = nullptr;
 };
 
 } // namespace

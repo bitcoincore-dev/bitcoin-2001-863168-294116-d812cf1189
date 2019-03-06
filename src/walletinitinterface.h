@@ -9,7 +9,7 @@
 
 class CScheduler;
 class CRPCTable;
-struct InitInterfaces;
+struct Node;
 
 class WalletInitInterface {
 public:
@@ -19,8 +19,8 @@ public:
     virtual void AddWalletOptions() const = 0;
     /** Check wallet parameter interaction */
     virtual bool ParameterInteraction() const = 0;
-    /** Add wallets that should be opened to list of init interfaces. */
-    virtual void Construct(InitInterfaces& interfaces) const = 0;
+    /** Add wallets that should be opened to list of init node. */
+    virtual void Construct(Node& node) const = 0;
 
     virtual ~WalletInitInterface() {}
 };

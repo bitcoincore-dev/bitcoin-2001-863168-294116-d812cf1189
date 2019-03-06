@@ -9,6 +9,8 @@
 #include <primitives/transaction.h>
 #include <uint256.h>
 
+class CConnman;
+
 enum class TransactionError {
     OK, //!< No error
     MISSING_INPUTS,
@@ -30,8 +32,9 @@ std::string TransactionErrorString(const TransactionError error);
  * @param[out] &txid the txid of the transaction, if successfully broadcast
  * @param[out] &err_string reference to std::string to fill with error string if available
  * @param[in]  highfee Reject txs with fees higher than this (if 0, accept any fee)
+ * @param[in]  connman
  * return error
  */
-NODISCARD TransactionError BroadcastTransaction(CTransactionRef tx, uint256& txid, std::string& err_string, const CAmount& highfee);
+NODISCARD TransactionError BroadcastTransaction(CTransactionRef tx, uint256& txid, std::string& err_string, const CAmount& highfee, CConnman* connvman);
 
 #endif // BITCOIN_NODE_TRANSACTION_H

@@ -15,6 +15,7 @@
 #include <vector>
 
 class CBlock;
+class CConnman;
 class CFeeRate;
 class CScheduler;
 class CValidationState;
@@ -217,6 +218,9 @@ public:
 
     //! Send wallet load notification to the GUI.
     virtual void loadWallet(std::unique_ptr<Wallet> wallet) = 0;
+
+    //! Set connection manager to use internally.
+    virtual void setConnman(CConnman* connman) {}
 };
 
 //! Interface to let node manage chain clients (wallets, or maybe tools for
