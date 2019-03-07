@@ -1531,7 +1531,8 @@ void CConnman::ThreadDNSAddressSeed()
     int found = 0;
 
     if (gArgs.GetBoolArg("-forcednsseed", DEFAULT_FORCEDNSSEED)) {
-        seeds_right_now += DNSSEEDS_TO_QUERY_AT_ONCE;
+        // When -forcednsseed is provided, query all.
+        seeds_right_now = seeds.size();
     }
 
     for (const auto& seed : seeds) {
