@@ -425,7 +425,7 @@ static void PushNodeVersion(CNode *pnode, CConnman* connman, int64_t nTime)
     CAddress addrMe = CAddress(CService(), nLocalNodeServices);
 
     connman->PushMessage(pnode, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::VERSION, PROTOCOL_VERSION, (uint64_t)nLocalNodeServices, nTime, addrYou, addrMe,
-            nonce, strSubVersion, nNodeStartingHeight, ::g_relay_txes));
+            nonce, strSubVersion, nNodeStartingHeight, ::g_relay_txes && pnode->m_tx_relay != nullptr));
 
     if (fLogIPs) {
         LogPrint(BCLog::NET, "send version message: version %d, blocks=%d, us=%s, them=%s, peer=%d\n", PROTOCOL_VERSION, nNodeStartingHeight, addrMe.ToString(), addrYou.ToString(), nodeid);
@@ -756,11 +756,11 @@ void UpdateLastBlockAnnounceTime(NodeId node, int64_t time_in_seconds)
     if (state) state->m_last_block_announcement = time_in_seconds;
 }
 
-// Returns true for outbound peers, excluding manual connections, feelers, and
-// one-shots
+// Returns true for outbound transaction-relay peers, excluding manual
+// connections, feelers, one-shots, and blocks-only connections
 static bool IsOutboundDisconnectionCandidate(const CNode *node)
 {
-    return !(node->fInbound || node->m_manual_connection || node->fFeeler || node->fOneShot);
+    return !(node->fInbound || node->m_manual_connection || node->fFeeler || node->fOneShot || node->m_tx_relay == nullptr);
 }
 
 void PeerLogicValidation::InitializeNode(CNode *pnode) {
@@ -2088,9 +2088,11 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             // Mark this node as currently connected, so we update its timestamp later.
             LOCK(cs_main);
             State(pfrom->GetId())->fCurrentlyConnected = true;
-            LogPrintf("New outbound peer connected: version: %d, blocks=%d, peer=%d%s\n",
-                      pfrom->nVersion.load(), pfrom->nStartingHeight, pfrom->GetId(),
-                      (fLogIPs ? strprintf(", peeraddr=%s", pfrom->addr.ToString()) : ""));
+            LogPrintf("New outbound peer connected: version: %d, blocks=%d, blocks-only=%s, feeler=%s, peer=%d%s\n",
+                      pfrom->nVersion.load(), pfrom->nStartingHeight,
+                      pfrom->m_tx_relay == nullptr ? "true" : "false",
+                      pfrom->fFeeler ? "true" : "false",
+                      pfrom->GetId(), (fLogIPs ? strprintf(", peeraddr=%s", pfrom->addr.ToString()) : ""));
         }
 
         if (pfrom->nVersion >= SENDHEADERS_VERSION) {
