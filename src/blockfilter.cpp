@@ -18,7 +18,7 @@ static constexpr int GCS_SER_TYPE = SER_NETWORK;
 static constexpr int GCS_SER_VERSION = 0;
 
 static const std::map<BlockFilterType, std::string> g_filter_types = {
-    {BASIC, "basic"},
+    {BlockFilterType::BASIC, "basic"},
 };
 
 template <typename OStream>
