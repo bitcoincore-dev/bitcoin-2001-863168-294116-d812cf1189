@@ -269,6 +269,15 @@ public:
     //! Register handler for RPC. Command is not copied, so reference
     //! needs to remain valid until Handler is disconnected.
     virtual std::unique_ptr<Handler> handleRpc(const CRPCCommand& command) = 0;
+
+    //! Check if deprecated RPC is enabled.
+    virtual bool rpcEnableDeprecated(const std::string& method) = 0;
+
+    //! Run function after given number of seconds. Cancel any previous calls with same name.
+    virtual void rpcRunLater(const std::string& name, std::function<void()> fn, int64_t seconds) = 0;
+
+    //! Current RPC serialization flags.
+    virtual int rpcSerializationFlags() = 0;
 };
 
 //! Interface to let node manage chain clients (wallets, or maybe tools for
