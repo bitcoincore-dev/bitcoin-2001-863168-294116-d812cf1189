@@ -5,6 +5,7 @@
 #include <coins.h>
 #include <consensus/tx_verify.h>
 #include <policy/policy.h>
+#include <policy/settings.h>
 #include <psbt.h>
 #include <util/strencodings.h>
 
