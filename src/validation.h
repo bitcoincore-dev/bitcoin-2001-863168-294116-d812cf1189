@@ -249,8 +249,6 @@ bool LoadChainTip(const CChainParams& chainparams) EXCLUSIVE_LOCKS_REQUIRED(cs_m
 void UnloadBlockIndex();
 /** Run an instance of the script checking thread */
 void ThreadScriptCheck(int worker_num);
-/** Check whether we are doing an initial block download (synchronizing from disk or network) */
-bool IsInitialBlockDownload();
 /** Retrieve a transaction (from memory pool, or from disk, if possible) */
 bool GetTransaction(const uint256& hash, CTransactionRef& tx, const Consensus::Params& params, uint256& hashBlock, const CBlockIndex* const blockIndex = nullptr);
 /**
@@ -523,6 +521,14 @@ private:
      */
     CCriticalSection m_cs_chainstate;
 
+    /**
+     * Is this chainstate undergoing initial block download?
+     *
+     * Mutable because we need to be able to mark IsInitialBlockDownload()
+     * const, which toggles this for caching purposes.
+     */
+    mutable std::atomic<bool> m_cached_finished_ibd{false};
+
 public:
     //! The current chain of blockheaders we consult and build on.
     //! @see CChain, CBlockIndex.
@@ -577,6 +583,9 @@ public:
     void PruneBlockIndexCandidates();
 
     void UnloadBlockIndex();
+
+    /** Check whether we are doing an initial block download (synchronizing from disk or network) */
+    bool IsInitialBlockDownload() const;
 
 private:
     bool ActivateBestChainStep(CValidationState& state, const CChainParams& chainparams, CBlockIndex* pindexMostWork, const std::shared_ptr<const CBlock>& pblock, bool& fInvalidFound, ConnectTrace& connectTrace) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
