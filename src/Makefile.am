@@ -256,6 +256,7 @@ libbitcoin_server_a_SOURCES = \
   banman.cpp \
   blockencodings.cpp \
   blockfilter.cpp \
+  coinstats.cpp \
   chain.cpp \
   checkpoints.cpp \
   consensus/tx_verify.cpp \
