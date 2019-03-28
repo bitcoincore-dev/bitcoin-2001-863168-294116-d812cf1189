@@ -68,6 +68,9 @@ public:
 
     //! Dynamically alter the underlying leveldb cache size.
     void ResizeCache(size_t new_cache_size);
+
+    //! Mark the on-disk leveldb database for deletion.
+    void MarkForDeletion() { return db->MarkForDeletion(); }
 };
 
 /** Specialization of CCoinsViewCursor to iterate over a CCoinsViewDB */
