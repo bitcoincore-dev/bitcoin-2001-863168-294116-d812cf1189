@@ -116,6 +116,7 @@ BITCOIN_CORE_H = \
   checkqueue.h \
   clientversion.h \
   coins.h \
+  coinstats.h \
   compat.h \
   compat/assumptions.h \
   compat/byteswap.h \
@@ -261,6 +262,7 @@ libbitcoin_server_a_SOURCES = \
   banman.cpp \
   blockencodings.cpp \
   blockfilter.cpp \
+  coinstats.cpp \
   chain.cpp \
   consensus/tx_verify.cpp \
   flatfile.cpp \
