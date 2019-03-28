@@ -48,6 +48,7 @@ bool GetUTXOStats(CCoinsView *view, CCoinsStats &stats)
     }
     ss << stats.hashBlock;
     uint256 prevkey;
+    unsigned int coins_count{0};
     std::map<uint32_t, Coin> outputs;
     while (pcursor->Valid()) {
         boost::this_thread::interruption_point();
@@ -60,6 +61,7 @@ bool GetUTXOStats(CCoinsView *view, CCoinsStats &stats)
             }
             prevkey = key.hash;
             outputs[key.n] = std::move(coin);
+            coins_count += 1;
         } else {
             return error("%s: unable to read value", __func__);
         }
@@ -70,5 +72,6 @@ bool GetUTXOStats(CCoinsView *view, CCoinsStats &stats)
     }
     stats.hashSerialized = ss.GetHash();
     stats.nDiskSize = view->EstimateSize();
+    stats.coins_count = coins_count;
     return true;
 }
