@@ -18,6 +18,8 @@
 #include <protocol.h> // For CMessageHeader::MessageStartChars
 #include <script/script_error.h>
 #include <sync.h>
+#include <txdb.h>
+#include <util/system.h>
 #include <versionbits.h>
 
 #include <algorithm>
@@ -36,7 +38,6 @@ class CBlockIndex;
 class CBlockTreeDB;
 class CBlockUndo;
 class CChainParams;
-class CCoinsViewDB;
 class CInv;
 class CConnman;
 class CScriptCheck;
@@ -530,6 +531,32 @@ public:
 };
 
 /**
+ * A convenience class for constructing the CCoinsView* hierarchy used
+ * to facilitate access to the UTXO set.
+ */
+class CoinsViews {
+
+public:
+    std::unique_ptr<CCoinsViewDB> m_dbview;
+    std::unique_ptr<CCoinsViewErrorCatcher> m_catcherview;
+    std::unique_ptr<CCoinsViewCache> m_cacheview;
+
+    CoinsViews(
+            std::string ldb_name,
+            size_t cache_size_bytes,
+            bool in_memory = false,
+            bool should_wipe = false)
+    {
+        m_dbview.reset(new CCoinsViewDB(
+            GetDataDir() / ldb_name, cache_size_bytes, in_memory, should_wipe));
+        m_catcherview.reset(new CCoinsViewErrorCatcher(m_dbview.get()));
+        m_cacheview.reset(new CCoinsViewCache(m_catcherview.get()));
+    }
+};
+
+extern BlockManager g_blockman;
+
+/**
  * CChainState stores and provides an API to update our local knowledge of the
  * current best chain.
  *
@@ -576,8 +603,23 @@ private:
     //! CChainState instances.
     BlockManager& m_blockman;
 
+    //! Manages the UTXO set, which is a reflection of the contents of `m_chain`.
+    std::unique_ptr<CoinsViews> m_coins_views;
+
 public:
-    CChainState(BlockManager& blockman) : m_blockman(blockman) { }
+    CChainState(
+        /* parameters forwarded to CoinsViews */
+        size_t cache_size_bytes,
+        bool in_memory,
+        bool should_wipe,
+        std::string leveldb_name = "chainstate"
+        // NOTE: for now m_blockman is set to a global, but this will be changed
+        // in a future commit.
+        ) : m_blockman(g_blockman)
+    {
+        m_coins_views.reset(new CoinsViews(
+            leveldb_name, cache_size_bytes, in_memory, should_wipe));
+    }
 
     /**
      * The current chain of blockheaders we consult and build on.
@@ -585,6 +627,7 @@ public:
      * @see CChain, CBlockIndex.
      */
     CChain m_chain;
+
     /**
      * The set of all CBlockIndex entries with BLOCK_VALID_TRANSACTIONS (for itself and all ancestors) and
      * as good as our current tip or better. Entries may be failed, though, and pruning nodes may be
@@ -592,7 +635,25 @@ public:
      */
     std::set<CBlockIndex*, CBlockIndexWorkComparator> setBlockIndexCandidates;
 
-    CBlockIndex *pindexBestInvalid = nullptr;
+    CCoinsViewCache& CoinsTip()
+    {
+        assert(m_coins_views->m_cacheview);
+        return *m_coins_views->m_cacheview.get();
+    }
+
+    CCoinsViewDB& CoinsDB()
+    {
+        assert(m_coins_views->m_dbview);
+        return *m_coins_views->m_dbview.get();
+    }
+
+    CCoinsViewErrorCatcher& CoinsErrorCatcher()
+    {
+        assert(m_coins_views->m_catcherview);
+        return *m_coins_views->m_catcherview.get();
+    }
+
+    void ResetCoinsViews() { m_coins_views.reset(); }
 
     /**
      * Update the on-disk chain state.
@@ -618,7 +679,7 @@ public:
     bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pindex,
                       CCoinsViewCache& view, const CChainParams& chainparams, bool fJustCheck = false) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
-    // Block disconnection on our pcoinsTip:
+    // Block disconnection on our UTXO set:
     bool DisconnectTip(CValidationState& state, const CChainParams& chainparams, DisconnectedBlockTransactions* disconnectpool) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
     // Manual block validity manipulation:
@@ -680,13 +741,7 @@ CChainState& ChainstateActive();
 /** @returns the most-work chain. */
 CChain& ChainActive();
 
-extern BlockManager g_blockman;
-
-/** Global variable that points to the coins database (protected by cs_main) */
-extern std::unique_ptr<CCoinsViewDB> pcoinsdbview;
-
-/** Global variable that points to the active CCoinsView (protected by cs_main) */
-extern std::unique_ptr<CCoinsViewCache> pcoinsTip;
+extern std::unique_ptr<CChainState> g_chainstate;
 
 /** Global variable that points to the active block tree (protected by cs_main) */
 extern std::unique_ptr<CBlockTreeDB> pblocktree;
