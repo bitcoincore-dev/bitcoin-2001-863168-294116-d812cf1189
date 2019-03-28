@@ -2247,6 +2247,106 @@ static UniValue getblockfilter(const JSONRPCRequest& request)
     return ret;
 }
 
+/**
+ * Serialize the UTXO set to a file for loading elsewhere.
+ *
+ * @see SnapshotMetadata
+ */
+UniValue dumptxoutset(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            RPCHelpMan{
+                "dumptxoutset",
+                "\nWrite the serialized UTXO set to disk.\n"
+                "Incidentally flushes the latest coinsdb (leveldb) to disk.\n",
+                {
+                    {"path",
+                        RPCArg::Type::STR,
+                        RPCArg::Optional::NO,
+                        /* default_val */ "",
+                        "path to the output file. If relative, will be prefixed by datadir."},
+                },
+                RPCResults{},
+                RPCExamples{"{\n"
+            "  \"coins_written\": n,   (numeric) the number of coins written in the snapshot\n"
+            "  \"base_hash\": \"...\",   (string) the hash of the base of the snapshot\n"
+            "  \"base_height\": n,     (string) the hash of the base of the snapshot\n"
+            "  \"path\": \"...\"         (string) the absolute path that the snapshot was written to\n"
+            "]\n"},
+            }.ToString()
+        );
+
+    fs::path path = request.params[0].get_str();
+    if (path.is_relative()) {
+        path = fs::absolute(path, GetDataDir());
+    }
+    if (fs::exists(path)) {
+        throw JSONRPCError(
+            RPC_INVALID_PARAMETER,
+            path.string() + " already exists. If you are sure this is what you want, "
+            "move it out of the way first");
+    }
+
+    FILE* file{fsbridge::fopen(path, "wb")};
+    CAutoFile afile{file, SER_DISK, CLIENT_VERSION};
+    std::unique_ptr<CCoinsViewCursor> pcursor;
+    CCoinsStats stats;
+    CBlockIndex* tip;
+
+    {
+        // We need to lock cs_main to ensure that the coinsdb isn't written to
+        // between (i) flushing coins cache to disk (coinsdb), (ii) getting stats
+        // based upon the coinsdb, and (iii) constructing a cursor to the
+        // coinsdb for use below this block.
+        //
+        // Cursors returned by leveldb iterate over snapshots, so the contents
+        // of the pcursor will not be affected by simultaneous writes during
+        // use below this block.
+        //
+        // See discussion here:
+        //   https://github.com/bitcoin/bitcoin/pull/15606#discussion_r274479369
+        //
+        LOCK(::cs_main);
+
+        ::ChainstateActive().ForceFlushStateToDisk();
+
+        if (!GetUTXOStats(&::ChainstateActive().CoinsDB(), stats)) {
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "Unable to read UTXO set");
+        }
+
+        pcursor = std::unique_ptr<CCoinsViewCursor>(::ChainstateActive().CoinsDB().Cursor());
+        tip = LookupBlockIndex(stats.hashBlock);
+        assert(tip);
+    }
+
+    SnapshotMetadata metadata{
+        CDiskBlockIndex(tip), stats.hashSerialized, stats.coins_count, tip->nChainTx};
+
+    afile << metadata;
+
+    while (pcursor->Valid()) {
+        boost::this_thread::interruption_point();
+        COutPoint key;
+        Coin coin;
+        if (pcursor->GetKey(key) && pcursor->GetValue(coin)) {
+            afile << key;
+            afile << coin;
+        }
+
+        pcursor->Next();
+    }
+
+    afile.fclose();
+
+    UniValue result(UniValue::VOBJ);
+    result.pushKV("coins_written", stats.coins_count);
+    result.pushKV("base_hash", tip->GetBlockHash().ToString());
+    result.pushKV("base_height", tip->nHeight);
+    result.pushKV("path", path.string());
+    return result;
+}
+
 // clang-format off
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         argNames
@@ -2275,6 +2375,7 @@ static const CRPCCommand commands[] =
     { "blockchain",         "preciousblock",          &preciousblock,          {"blockhash"} },
     { "blockchain",         "scantxoutset",           &scantxoutset,           {"action", "scanobjects"} },
     { "blockchain",         "getblockfilter",         &getblockfilter,         {"blockhash", "filtertype"} },
+    { "blockchain",         "dumptxoutset",           &dumptxoutset,           {"path"} },
 
     /* Not shown in help */
     { "hidden",             "invalidateblock",        &invalidateblock,        {"blockhash"} },
