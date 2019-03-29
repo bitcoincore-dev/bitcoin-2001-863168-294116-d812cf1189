@@ -12,6 +12,7 @@
 #include <coins.h>
 #include <consensus/validation.h>
 #include <core_io.h>
+#include <fs.h>
 #include <hash.h>
 #include <index/blockfilterindex.h>
 #include <node/coinstats.h>
@@ -2353,6 +2354,86 @@ UniValue dumptxoutset(const JSONRPCRequest& request)
     return result;
 }
 
+UniValue loadtxoutset(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            RPCHelpMan{"loadtxoutset",
+                "\nLoad the serialized UTXO set from disk.\n",
+                {
+                    {"path",
+                        RPCArg::Type::STR,
+                        RPCArg::Optional::NO,
+                        /* default_val */ "",
+                        "path to the snapshot file. If relative, will be prefixed by datadir."},
+                },
+                RPCResults{},
+                RPCExamples{"{\n"
+                "  \"coins_loaded\": n,   (numeric) the number of coins loaded by the snapshot\n"
+                "  \"tip_hash\": \"...\",   (string) the hash of the new tip\n"
+                "  \"tip_height\": n,     (string) the height of the new chain\n"
+                "  \"path\": \"...\"         (string) the absolute path that the snapshot was loaded\n"
+                "]\n"},
+            }.ToString()
+        );
+
+    fs::path path = request.params[0].get_str();
+    if (path.is_relative()) {
+        path = fs::absolute(path, GetDataDir());
+    }
+    FILE* file{fsbridge::fopen(path, "rb")};
+    CAutoFile afile{file, SER_DISK, CLIENT_VERSION};
+    SnapshotMetadata metadata;
+    afile >> metadata;
+
+    uint256 base_blockhash = metadata.m_base_blockhash;
+    int max_secs_to_wait_for_headers = 60 * 10;
+    CBlockIndex* snapshot_start_block = nullptr;
+
+    LogPrintf("[snapshot] waiting to see blockheader %s in headers chain before snapshot activation\n",
+        base_blockhash.ToString());
+
+    while (max_secs_to_wait_for_headers > 0) {
+        {
+            LOCK(cs_main);
+            snapshot_start_block = LookupBlockIndex(base_blockhash);
+        }
+        max_secs_to_wait_for_headers -= 1;
+        boost::this_thread::interruption_point();
+
+        if (!snapshot_start_block) {
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        } else {
+            break;
+        }
+    }
+
+    if (snapshot_start_block == nullptr) {
+        LogPrintf("[snapshot] timed out waiting for snapshot start blockheader %s\n",
+            base_blockhash.ToString());
+        throw JSONRPCError(
+            RPC_INTERNAL_ERROR,
+            "Timed out waiting for base block header to appear in headers chain");
+    }
+
+    // TODO jamesob: no real need to lock cs_main here, but during testing it makes it
+    // easier to follow the logs. We may want to remove this before merge.
+    //
+    LOCK(::cs_main);
+
+    if (!g_chainman.ActivateSnapshot(&afile, metadata, false)) {
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Unable to load UTXO snapshot " + path.string());
+    }
+    CBlockIndex* new_tip{::ChainActive().Tip()};
+
+    UniValue result(UniValue::VOBJ);
+    result.pushKV("coins_loaded", metadata.m_coins_count);
+    result.pushKV("tip_hash", new_tip->GetBlockHash().ToString());
+    result.pushKV("base_height", new_tip->nHeight);
+    result.pushKV("path", path.string());
+    return result;
+}
+
 // clang-format off
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         argNames
@@ -2390,6 +2471,7 @@ static const CRPCCommand commands[] =
     { "hidden",             "waitforblockheight",     &waitforblockheight,     {"height","timeout"} },
     { "hidden",             "syncwithvalidationinterfacequeue", &syncwithvalidationinterfacequeue, {} },
     { "hidden",             "dumptxoutset",           &dumptxoutset,           {"path"} },
+    { "hidden",             "loadtxoutset",           &loadtxoutset,           {"path"} },
 };
 // clang-format on
 
