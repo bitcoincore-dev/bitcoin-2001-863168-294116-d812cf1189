@@ -1474,7 +1474,7 @@ bool AppInitMain(InitInterfaces& interfaces)
     int64_t nCoinDBCache = std::min(nTotalCache / 2, (nTotalCache / 4) + (1 << 23)); // use 25%-50% of the remainder for disk cache
     nCoinDBCache = std::min(nCoinDBCache, nMaxCoinsDBCache << 20); // cap total coins db cache
     nTotalCache -= nCoinDBCache;
-    nCoinCacheUsage = nTotalCache; // the rest goes to in-memory cache
+    int64_t nCoinCacheUsage = nTotalCache; // the rest goes to in-memory cache
     int64_t nMempoolSizeMax = gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000;
     LogPrintf("Cache configuration:\n");
     LogPrintf("* Using %.1f MiB for block index database\n", nBlockTreeDBCache * (1.0 / 1024 / 1024));
@@ -1504,20 +1504,30 @@ bool AppInitMain(InitInterfaces& interfaces)
                 // Load snapshot metadata, if any exists.
                 g_chainman.LoadSnapshotMetadata();
 
-                // Determine how many chains we'll be initializing so that we
-                // can divide up cache sizes properly. If we're working with a
-                // snapshot and we haven't validated it yet, we'll have two
-                // chains.
-                int total_chains_to_load =
-                    (g_chainman.HasSnapshotMetadata() && !g_chainman.IsSnapshotValidated()) ? 2 : 1;
+                float snapshot_cache_multiplier = 1.;
+                float ibd_cache_multiplier = 1.;
 
                 // If we were using a chainstate snapshot, load and use it.
                 if (g_chainman.HasSnapshotMetadata()) {
                     LogPrintf("Loading chainstate from snapshot (%s)\n",
                         g_chainman.SnapshotBlockhash().ToString());
 
+                    // Determine how many chains we'll be initializing so that we
+                    // can divide up cache sizes properly. If we're working with a
+                    // snapshot and we haven't validated it yet, we'll have two
+                    // chains.
+                    if (!g_chainman.IsSnapshotValidated()) {
+                        // We'll have two chainstates.
+                        // Allocate more to the validation cache because the snapshot chain
+                        // shouldn't be IBDing for very long.
+                        snapshot_cache_multiplier = 0.3;
+                        ibd_cache_multiplier = 0.7;
+                    }
+
                     g_chainman.InitializeChainstate(
-                        nCoinDBCache / total_chains_to_load, false, fReset || fReindexChainState,
+                        nCoinCacheUsage * snapshot_cache_multiplier,
+                        nCoinDBCache * snapshot_cache_multiplier,
+                        /* memory */ false, /* should_wipe */ fReset || fReindexChainState,
                         /* activate */ true, g_chainman.SnapshotBlockhash());
                 }
 
@@ -1526,7 +1536,9 @@ bool AppInitMain(InitInterfaces& interfaces)
                 if (!g_chainman.IsSnapshotValidated()) {
                     LogPrintf("Loading validation chainstate\n");
                     g_chainman.InitializeChainstate(
-                        nCoinDBCache / total_chains_to_load, false, fReset || fReindexChainState,
+                        nCoinCacheUsage * ibd_cache_multiplier,
+                        nCoinDBCache * ibd_cache_multiplier,
+                        /* memory */ false, /* should_wipe */ fReset || fReindexChainState,
                         /* activate */ !g_chainman.IsSnapshotActive());
                 }
 
@@ -1654,7 +1666,8 @@ bool AppInitMain(InitInterfaces& interfaces)
                         }
 
                         if (!CVerifyDB().VerifyDB(
-                                chainparams, &chainstate->CoinsTip(),
+                                *chainstate,
+                                chainparams, chainstate->CoinsTip(),
                                 gArgs.GetArg("-checklevel", DEFAULT_CHECKLEVEL),
                                 gArgs.GetArg("-checkblocks", DEFAULT_CHECKBLOCKS))) {
                             strLoadError = _("Corrupted block database detected");
