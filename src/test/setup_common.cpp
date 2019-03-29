@@ -82,7 +82,8 @@ TestingSetup::TestingSetup(const std::string& chainName) : BasicTestingSetup(cha
     mempool.setSanityCheck(1.0);
     pblocktree.reset(new CBlockTreeDB(1 << 20, true));
     g_chainman.InitializeChainstate(
-        /* cache_size_bytes */ 1 << 23, /* in_memory */ true, /* should_wipe */ false);
+        /* coinstip_cache_size_bytes */ 1 << 23, /* coinsdb_cache_size_bytes */ 1 << 23,
+        /* in_memory */ true, /* should_wipe */ false);
     if (!LoadGenesisBlock(chainparams)) {
         throw std::runtime_error("LoadGenesisBlock failed.");
     }
