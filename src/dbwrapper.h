@@ -211,6 +211,9 @@ private:
 
     std::vector<unsigned char> CreateObfuscateKey() const;
 
+    //! path to filesystem storage
+    const fs::path m_path;
+
 public:
     /**
      * @param[in] path        Location in the filesystem where leveldb data will be stored.
@@ -259,6 +262,9 @@ public:
         batch.Write(key, value);
         return WriteBatch(batch, fSync);
     }
+
+    //! @returns filesystem path to the on-disk data.
+    fs::path StoragePath() { return m_path; }
 
     template <typename K>
     bool Exists(const K& key) const
