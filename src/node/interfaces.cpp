@@ -469,6 +469,11 @@ public:
         assert(std::addressof(::ChainActive()) == std::addressof(chainman().ActiveChain()));
         return CheckFinalTx(chainman().ActiveChain().Tip(), tx);
     }
+    int getLowestBlockDataHeight() override
+    {
+        LOCK(cs_main);
+        return g_chainman.GetSnapshotNChainTx().value_or(0);
+    }
     std::optional<int> findLocatorFork(const CBlockLocator& locator) override
     {
         LOCK(cs_main);
