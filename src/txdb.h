@@ -79,7 +79,7 @@ public:
     unsigned int GetNChainTx();
 
     //! @returns filesystem path to on-disk storage.
-    fs::path StoragePath() { return db->StoragePath(); }
+    fs::path StoragePath() { return m_db->StoragePath(); }
 };
 
 /** Specialization of CCoinsViewCursor to iterate over a CCoinsViewDB */

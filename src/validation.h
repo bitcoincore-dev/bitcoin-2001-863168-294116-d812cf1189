@@ -917,7 +917,7 @@ public:
 
     CBlockIndex* SnapshotBaseBlock() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
     {
-        return LookupBlockIndex(SnapshotBlockhash());
+        return LookupBlockIndex(SnapshotBlockhash().value_or(uint256()));
     }
 
     //! @returns height at which the active UTXO snapshot was taken.

@@ -2643,7 +2643,7 @@ bool CChainState::ConnectTip(BlockValidationState& state, const CChainParams& ch
     // If this is our non-active validation chainstate, check to see if it's
     // time we compare the UTXO set hash to the base of our active snapshot.
     //
-    if (g_chainman.IsBackgroundValidationChainstate(this)) {
+    if (g_chainman.IsBackgroundIBD(this)) {
         if (pindexNew->nHeight > g_chainman.SnapshotHeight()) {
             // TODO jamesob: better handling?
             LogPrintf("[snapshot] something is wrong! validation chain " /* Continued */
@@ -4159,8 +4159,10 @@ bool BlockManager::LoadBlockIndex(
         vSortedByHeight.push_back(std::make_pair(pindex->nHeight, pindex));
     }
     sort(vSortedByHeight.begin(), vSortedByHeight.end());
+    const uint256 snapshot_blockhash =
+        g_chainman.SnapshotBlockhash().value_or(uint256());
     const bool using_unvalidated_snapshot =
-        !g_chainman.SnapshotBlockhash()->IsNull() && !g_chainman.IsSnapshotValidated();
+        !snapshot_blockhash.IsNull() && !g_chainman.IsSnapshotValidated();
     bool pindex_assumed_valid = false;
 
     for (const std::pair<int, CBlockIndex*>& item : vSortedByHeight)
@@ -5634,13 +5636,14 @@ bool ChainstateManager::CompleteSnapshotValidation(CChainState* validation_chain
     validation_chainstate->ForceFlushStateToDisk();
 
     CCoinsStats ibd_stats;
-    if (!GetUTXOStats(&ibd_coins_db, ibd_stats)) {
+    if (!GetUTXOStats(&ibd_coins_db, ibd_stats, CoinStatsHashType::HASH_SERIALIZED)) {
         LogPrintf("[snapshot] failed to generate stats for validation coins db\n");
         return false;
     }
 
     LogPrintf("[snapshot] tip: actual=%s expected=%s\n",
-            validation_chainstate->m_chain.Tip()->ToString(), SnapshotBlockhash().ToString());
+            validation_chainstate->m_chain.Tip()->ToString(),
+            SnapshotBlockhash().value_or(uint256()).ToString());
 
     uint256 expected_contents_hash;
     int curr_height = validation_chainstate->m_chain.Height();
@@ -5685,7 +5688,7 @@ bool ChainstateManager::CompleteSnapshotValidation(CChainState* validation_chain
         return false;
     }
     LogPrintf("[snapshot] snapshot beginning at %s has been fully validated\n",
-        SnapshotBlockhash().ToString());
+        SnapshotBlockhash().value_or(uint256()).ToString());
 
     m_snapshot_validated = true;
 
