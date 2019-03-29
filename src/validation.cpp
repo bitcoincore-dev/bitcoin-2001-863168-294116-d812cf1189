@@ -3726,8 +3726,8 @@ bool BlockMetadataManager::LoadBlockIndex(const Consensus::Params& consensus_par
 
     // Calculate nChainWork
     std::vector<std::pair<int, CBlockIndex*> > vSortedByHeight;
-    vSortedByHeight.reserve(mapBlockIndex.size());
-    for (const std::pair<const uint256, CBlockIndex*>& item : mapBlockIndex)
+    vSortedByHeight.reserve(m_block_index.size());
+    for (const std::pair<const uint256, CBlockIndex*>& item : m_block_index)
     {
         CBlockIndex* pindex = item.second;
         vSortedByHeight.push_back(std::make_pair(pindex->nHeight, pindex));
@@ -3757,8 +3757,9 @@ bool BlockMetadataManager::LoadBlockIndex(const Consensus::Params& consensus_par
             setDirtyBlockIndex.insert(pindex);
         }
         if (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) && (pindex->HaveTxsDownloaded() || pindex->pprev == nullptr))
-            // TODO(utxosnapshots) run on all chainstates
-            ::ChainstateActive().setBlockIndexCandidates.insert(pindex);
+            g_chainman.RunOnAll([pindex](CChainState& chainstate) {
+                chainstate.setBlockIndexCandidates.insert(pindex);
+            });
         if (pindex->nStatus & BLOCK_FAILED_MASK && (!pindexBestInvalid || pindex->nChainWork > pindexBestInvalid->nChainWork))
             pindexBestInvalid = pindex;
         if (pindex->pprev)
