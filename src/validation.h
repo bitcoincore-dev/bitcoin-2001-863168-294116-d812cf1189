@@ -534,6 +534,11 @@ public:
     void InitCache() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 };
 
+extern BlockManager g_blockman;
+
+// Defined below, but needed for `friend` usage in CChainState.
+class ChainstateManager;
+
 /**
  * CChainState stores and provides an API to update our local knowledge of the
  * current best chain.
@@ -587,7 +592,7 @@ private:
 
 public:
     CChainState(BlockManager& blockman) : m_blockman(blockman) {}
-    CChainState();
+    CChainState(uint256 from_snapshot_blockhash = uint256());
 
     /**
      * Initialize the CoinsViews UTXO set database management data structures. The in-memory
@@ -614,6 +619,13 @@ public:
     //! The current chain of blockheaders we consult and build on.
     //! @see CChain, CBlockIndex.
     CChain m_chain;
+
+    /**
+     * The blockhash which is the base of the snapshot this chainstate was created from.
+     *
+     * IsNull() if this chainstate was not created from a snapshot.
+     */
+    uint256 m_from_snapshot_blockhash{};
 
     /**
      * The set of all CBlockIndex entries with BLOCK_VALID_TRANSACTIONS (for itself and all ancestors) and
@@ -646,6 +658,8 @@ public:
 
     //! Destructs all objects related to accessing the UTXO set.
     void ResetCoinsViews() { m_coins_views.reset(); }
+
+    size_t m_coinsdb_cache_size_bytes{0};
 
     /**
      * Update the on-disk chain state.
@@ -736,6 +750,8 @@ private:
 
     //! Mark a block as not having block data
     void EraseBlockData(CBlockIndex* index) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
+    friend ChainstateManager;
 };
 
 /** Mark a block as precious and reorganize.
@@ -807,6 +823,171 @@ public:
 
 };
 
+/**
+ * Provides an interface for creating and interacting with multiple
+ * chainstates, as well as a means to initialize chainstates from a
+ * UTXO snapshot. Managed chainstates can be maintained at different
+ * heights simultaneously.
+ *
+ * This class provides abstractions that allow the retrieval of the current
+ * most-work chainstate ("Active") as well as chainstates which may be in
+ * background use to validate UTXO snapshots.
+ *
+ * A few quick definitions:
+ *
+ *   - *IBD chainstate*: a chainstate populated via initial block download.
+ *
+ *   - *Snapshot chainstate*: a chainstate populated by loading in an
+ *        assumed-valid UTXO snapshot.
+ *
+ *   - *Active chainstate*: the chainstate containing the current most-work
+ *        chain. Consulted by most parts of the system (net_processing,
+ *        wallet) as a reflection of the current chain and UTXO set.
+ *        This may either be an IBD chainstate or a snapshot chainstate.
+ *
+ *   - *Background validation chainstate*: an IBD chainstate for which the
+ *        IBD process is happening in the background while use of the
+ *        active chainstate allows the rest of the system to function.
+ *
+ *   - *Validated chainstate*: a chainstate whose validity is not assumed.
+ *        This could be an IBD chainstate, or a snapshot chainstate for
+ *        which background validation (up to the base of the snapshot)
+ *        has completed.
+ */
+class ChainstateManager
+{
+private:
+    //! Guards manipulation of the chainstate pointers.
+    //! Nota bene: does not guard the chainstates themselves; that's for ::cs_main.
+    mutable CCriticalSection m_cs_chainstates;
+
+    /**
+     * If not empty, this points to metadata corresponding to the UTXO snapshot
+     * currently in use.
+     */
+    std::unique_ptr<SnapshotMetadata> m_snapshot_metadata;
+
+    /**
+     * The chainstate used under normal operation (i.e. "regular" IBD) or,
+     * if a snapshot is in use, for background validation. Its contents will
+     * be freed when background validation of the snapshot has completed.
+     */
+    std::unique_ptr<CChainState> m_ibd_chainstate GUARDED_BY(m_cs_chainstates);
+
+    /**
+     * A chainstate initialized on the basis of a UTXO snapshot. If this is
+     * non-null, it is always our active chainstate unless proven invalid.
+     */
+    std::unique_ptr<CChainState> m_snapshot_chainstate GUARDED_BY(m_cs_chainstates);
+
+    /**
+     * Points to either the ibd or snapshot chainstate; indicates our
+     * most-work chain.
+     */
+    CChainState* m_active_chainstate GUARDED_BY(m_cs_chainstates);
+
+    // For access to m_active_chainstate.
+    friend CChainState& ChainstateActive();
+    friend CChain& ChainActive();
+
+public:
+    /**
+     * Instantiate a new chainstate and assign it based upon whether it is
+     * from a snapshot.
+     *
+     * @param[in] activate   If true, make this new chainstate the active one.
+     * @param[in] snapshot_blockhash   If given, signify that this chainstate
+     *                                 is based on a snapshot.
+     */
+    CChainState& InitializeChainstate(
+        bool activate = true, const uint256& snapshot_blockhash = uint256());
+
+    void SaveSnapshotMetadataToDisk() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+    bool LoadSnapshotMetadata() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    /** Get all chainstates currently being used. */
+    std::vector<CChainState*> GetAll();
+
+    /** Run some function on all chainstates in use.  */
+    void RunOnAll(const std::function<void(CChainState&)> fn);
+
+    //! The most-work chain.
+    CChain& ActiveChain() const;
+    int ActiveHeight() const { return ActiveChain().Height(); }
+    CBlockIndex* ActiveTip() const { return ActiveChain().Tip(); }
+
+    bool IsSnapshotActive() const
+    {
+        LOCK(m_cs_chainstates);
+        return m_snapshot_chainstate && m_active_chainstate == m_snapshot_chainstate.get();
+    }
+
+    //! Do we have metadata about a snapshot?
+    bool HasSnapshotMetadata() const { return !SnapshotBlockhash().IsNull(); }
+
+    uint256 SnapshotBlockhash() const
+    {
+        return m_snapshot_metadata ? m_snapshot_metadata->m_base_blockheader.GetBlockHash() : uint256{};
+    }
+
+    //! Is there a snapshot in use and has it been fully validated?
+    bool IsSnapshotValidated() const
+    {
+        return m_snapshot_metadata ? m_snapshot_metadata->m_validation_complete : false;
+    }
+
+    int SnapshotHeight() const {
+        return m_snapshot_metadata ? m_snapshot_metadata->m_base_blockheader.nHeight : -1;
+    }
+
+    /**
+     * @returns true if this chainstate is being used to validate an active
+     *          snapshot in the background.
+     */
+    bool IsBackgroundValidationChainstate(CChainState* chainstate) const
+    {
+        LOCK(m_cs_chainstates);
+        return (m_snapshot_chainstate && chainstate == m_ibd_chainstate.get());
+    }
+
+    /**
+     * Return the most-work chainstate that has been fully validated.
+     *
+     * During background validation of a snapshot, this is the ibd chain. After
+     * background validation has completed, this is the snapshot chain.
+     */
+    CChainState& ValidatedChainstate() const
+    {
+        LOCK(m_cs_chainstates);
+        if (m_snapshot_chainstate && IsSnapshotValidated()) {
+            return *m_snapshot_chainstate.get();
+        }
+        assert(m_ibd_chainstate);
+        return *m_ibd_chainstate.get();
+    }
+
+    CChain& ValidatedChain() const { return ValidatedChainstate().m_chain; }
+    CBlockIndex* ValidatedTip() const { return ValidatedChain().Tip(); }
+
+    void Unload() EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+    {
+        RunOnAll([](CChainState& chainstate) {
+            chainstate.m_chain.SetTip(nullptr);
+            chainstate.UnloadBlockIndex();
+        });
+    }
+
+    void Reset()
+    {
+        LOCK(m_cs_chainstates);
+        m_ibd_chainstate.reset();
+        m_snapshot_chainstate.reset();
+        m_active_chainstate = nullptr;
+    }
+};
+
+extern ChainstateManager g_chainman;
+
 /** @returns the most-work valid chainstate. */
 CChainState& ChainstateActive();
 
@@ -815,11 +996,6 @@ CChain& ChainActive();
 
 /** @returns the global block index map. */
 BlockMap& BlockIndex();
-
-// Most often ::ChainstateActive() should be used instead of this, but some code
-// may not be able to assume that this has been initialized yet and so must use it
-// directly, e.g. init.cpp.
-extern std::unique_ptr<CChainState> g_chainstate;
 
 /** Global variable that points to the active block tree (protected by cs_main) */
 extern std::unique_ptr<CBlockTreeDB> pblocktree;

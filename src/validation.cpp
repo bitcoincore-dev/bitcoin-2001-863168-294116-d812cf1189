@@ -9,6 +9,7 @@
 #include <chain.h>
 #include <chainparams.h>
 #include <checkqueue.h>
+#include <coinstats.h>
 #include <consensus/consensus.h>
 #include <consensus/merkle.h>
 #include <consensus/tx_check.h>
@@ -80,16 +81,18 @@ bool CBlockIndexWorkComparator::operator()(const CBlockIndex *pa, const CBlockIn
 
 BlockManager g_blockman;
 
-std::unique_ptr<CChainState> g_chainstate;
+ChainstateManager g_chainman;
 
-CChainState& ChainstateActive() {
-    assert(g_chainstate);
-    return *g_chainstate;
+CChainState& ChainstateActive()
+{
+    LOCK(g_chainman.m_cs_chainstates);
+    assert(g_chainman.m_active_chainstate);
+    return *g_chainman.m_active_chainstate;
 }
 
-CChain& ChainActive() {
-    assert(g_chainstate);
-    return g_chainstate->m_chain;
+CChain& ChainActive()
+{
+    return ::ChainstateActive().m_chain;
 }
 
 /**
@@ -1059,7 +1062,9 @@ void CoinsViews::InitCache()
 
 // NOTE: for now m_blockman is set to a global, but this will be changed
 // in a future commit.
-CChainState::CChainState() : m_blockman(g_blockman) {}
+CChainState::CChainState(uint256 from_snapshot_blockhash) :
+    m_blockman(g_blockman),
+    m_from_snapshot_blockhash(from_snapshot_blockhash) {}
 
 
 void CChainState::InitCoinsDB(
@@ -1068,6 +1073,10 @@ void CChainState::InitCoinsDB(
     bool should_wipe,
     std::string leveldb_name)
 {
+    if (!m_from_snapshot_blockhash.IsNull()) {
+        leveldb_name += "_" + m_from_snapshot_blockhash.ToString();
+    }
+
     m_coins_views = MakeUnique<CoinsViews>(
         leveldb_name, cache_size_bytes, in_memory, should_wipe);
 }
@@ -3517,7 +3526,7 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
             ret = ::ChainstateActive().AcceptBlock(pblock, state, chainparams, &pindex, fForceProcessing, nullptr, fNewBlock);
         }
         if (!ret) {
-            GetMainSignals().BlockChecked(*g_chainstate.get(), *pblock, state);
+            GetMainSignals().BlockChecked(::ChainstateActive(), *pblock, state);
             return error("%s: AcceptBlock FAILED (%s)", __func__, FormatStateMessage(state));
         }
     }
@@ -4271,7 +4280,7 @@ void CChainState::UnloadBlockIndex() {
 void UnloadBlockIndex()
 {
     LOCK(cs_main);
-    ::ChainActive().SetTip(nullptr);
+    g_chainman.Unload();
     g_blockman.Unload();
     pindexBestInvalid = nullptr;
     pindexBestHeader = nullptr;
@@ -4285,8 +4294,6 @@ void UnloadBlockIndex()
         warningcache[b].clear();
     }
     fHavePruned = false;
-
-    ::ChainstateActive().UnloadBlockIndex();
 }
 
 bool LoadBlockIndex(const CChainParams& chainparams)
@@ -4650,7 +4657,8 @@ void CChainState::CheckBlockIndex(const Consensus::Params& consensusParams)
 std::string CChainState::ToString()
 {
     CBlockIndex* tip = m_chain.Tip();
-    return strprintf("Chainstate [%s] @ height %d",
+    return strprintf("Chainstate [%s] @ height %d (%s)",
+        m_from_snapshot_blockhash.IsNull() ? "ibd" : "snapshot",
         tip ? tip->nHeight : -1, tip ? tip->GetBlockHash().ToString() : "null");
 }
 
@@ -4848,3 +4856,77 @@ public:
     }
 };
 static CMainCleanup instance_of_cmaincleanup;
+
+//
+// ChainstateManager
+//
+
+void ChainstateManager::SaveSnapshotMetadataToDisk() const
+{
+    fs::path path = GetDataDir() / "chainstate_snapshot.dat";
+    FILE* out = fsbridge::fopen(path, "wb");
+    CAutoFile file(out, SER_DISK, CLIENT_VERSION);
+    file << *m_snapshot_metadata;
+    LogPrintf("[snapshot] wrote snapshot metadata to %s\n", path);
+}
+
+bool ChainstateManager::LoadSnapshotMetadata()
+{
+    fs::path path = GetDataDir() / "chainstate_snapshot.dat";
+    CAutoFile in{fsbridge::fopen(path, "rb"), SER_DISK, CLIENT_VERSION};
+    if (in.IsNull()) {
+        LogPrintf("[snapshot] no snapshot metadata found at %s\n", path);
+        return false;
+    }
+    SnapshotMetadata metadata;
+    in >> metadata;
+    m_snapshot_metadata = MakeUnique<SnapshotMetadata>(metadata);
+    return true;
+}
+
+std::vector<CChainState*> ChainstateManager::GetAll()
+{
+    LOCK(m_cs_chainstates);
+    std::vector<CChainState*> out;
+
+    if (!IsSnapshotValidated() && m_ibd_chainstate) {
+        out.push_back(m_ibd_chainstate.get());
+    }
+
+    if (m_snapshot_chainstate) {
+        out.push_back(m_snapshot_chainstate.get());
+    }
+
+    return out;
+}
+
+void ChainstateManager::RunOnAll(const std::function<void(CChainState&)> fn)
+{
+    LOCK(m_cs_chainstates);
+    for (CChainState* chainstate : GetAll()) {
+        fn(*chainstate);
+    }
+}
+
+CChainState& ChainstateManager::InitializeChainstate(
+    bool activate, const uint256& snapshot_blockhash)
+{
+    LOCK(m_cs_chainstates);
+    std::unique_ptr<CChainState>& to_modify = (
+        snapshot_blockhash.IsNull() ? m_ibd_chainstate : m_snapshot_chainstate);
+
+    to_modify.reset(new CChainState(snapshot_blockhash));
+
+    if (activate) {
+        LogPrintf("Switching active chainstate to %s\n", snapshot_blockhash.ToString());
+        m_active_chainstate = to_modify.get();
+    }
+
+    return *to_modify.get();
+}
+
+CChain& ChainstateManager::ActiveChain() const
+{
+    LOCK(m_cs_chainstates);
+    return m_active_chainstate->m_chain;
+}
