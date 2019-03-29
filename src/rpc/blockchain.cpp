@@ -2788,6 +2788,66 @@ static RPCHelpMan loadtxoutset()
     };
 }
 
+static RPCHelpMan monitorsnapshot()
+{
+return RPCHelpMan{
+        "monitorsnapshot",
+        "\nReturn information about UTXO snapshot status.\n",
+        {},
+        RPCResult{
+            RPCResult::Type::ELISION, "", "",
+        },
+        RPCExamples{
+            HelpExampleCli("monitorsnapshot", "")
+    + HelpExampleRpc("monitorsnapshot", "")
+        },
+        [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
+{
+    LOCK(cs_main);
+    UniValue obj(UniValue::VOBJ);
+
+    NodeContext& node = EnsureAnyNodeContext(request.context);
+    ChainstateManager& chainman = *node.chainman;
+
+    auto make_chain_data = [](Chainstate* cs) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
+        AssertLockHeld(::cs_main);
+        UniValue data(UniValue::VOBJ);
+        if (!cs || !cs->m_chain.Tip()) {
+            return data;
+        }
+        const CChain& chain = cs->m_chain;
+        const CBlockIndex* tip = chain.Tip();
+
+        data.pushKV("blocks",                (int)chain.Height());
+        data.pushKV("bestblockhash",         tip->GetBlockHash().GetHex());
+        data.pushKV("difficulty",            (double)GetDifficulty(tip));
+        data.pushKV("verificationprogress",  GuessVerificationProgress(Params().TxData(), tip));
+        data.pushKV("snapshot_blockhash",    cs->m_from_snapshot_blockhash.value_or(uint256{}).ToString());
+        data.pushKV("initialblockdownload",  cs->IsInitialBlockDownload());
+        return data;
+    };
+
+    auto get_chain_type = [&chainman](Chainstate* cs) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
+        AssertLockHeld(::cs_main);
+        if (cs->m_from_snapshot_blockhash) {
+            return (chainman.IsSnapshotValidated() ? "validated_snapshot" : "snapshot");
+        }
+        return "ibd";
+    };
+
+    obj.pushKV("active_chain_type", get_chain_type(&chainman.ActiveChainstate()));
+
+    for (Chainstate* chainstate : chainman.GetAll()) {
+        obj.pushKV(get_chain_type(chainstate), make_chain_data(chainstate));
+    }
+    obj.pushKV("headers", chainman.m_best_header ? chainman.m_best_header->nHeight : -1);
+
+    return obj;
+}
+    };
+}
+
+
 void RegisterBlockchainRPCCommands(CRPCTable& t)
 {
     static const CRPCCommand commands[]{
@@ -2819,6 +2879,7 @@ void RegisterBlockchainRPCCommands(CRPCTable& t)
         {"hidden", &syncwithvalidationinterfacequeue},
         {"hidden", &dumptxoutset},
         {"hidden", &loadtxoutset},
+        {"hidden", &monitorsnapshot},
     };
     for (const auto& c : commands) {
         t.appendCommand(c.name, &c);
