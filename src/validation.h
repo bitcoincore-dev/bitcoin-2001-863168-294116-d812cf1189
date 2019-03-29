@@ -158,7 +158,6 @@ extern int nScriptCheckThreads;
 extern bool fRequireStandard;
 extern bool fCheckBlockIndex;
 extern bool fCheckpointsEnabled;
-extern size_t nCoinCacheUsage;
 /** A fee rate smaller than this is considered zero fee (for relaying, mining and transaction creation) */
 extern CFeeRate minRelayTxFee;
 /** If the tip is older than this (in seconds), the node is considered to be in initial block download. */
@@ -403,7 +402,12 @@ class CVerifyDB {
 public:
     CVerifyDB();
     ~CVerifyDB();
-    bool VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview, int nCheckLevel, int nCheckDepth);
+    bool VerifyDB(
+        CChainState& chainstate,
+        const CChainParams& chainparams,
+        CCoinsView& coinsview,
+        int nCheckLevel,
+        int nCheckDepth);
 };
 
 CBlockIndex* LookupBlockIndex(const uint256& hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
@@ -598,6 +602,7 @@ public:
     CChainState(
         BlockManager& blockman,
         /* parameters forwarded to CoinsViews */
+        size_t coinstip_cache_size_bytes,
         size_t coinsdb_cache_size_bytes,
         bool in_memory,
         bool should_wipe,
@@ -605,7 +610,8 @@ public:
         uint256 from_snapshot_blockhash = uint256()
         ) : m_blockman(blockman),
             m_from_snapshot_blockhash(from_snapshot_blockhash),
-            m_coinsdb_cache_size_bytes(coinsdb_cache_size_bytes)
+            m_coinsdb_cache_size_bytes(coinsdb_cache_size_bytes),
+            m_coinstip_cache_size_bytes(coinstip_cache_size_bytes)
     {
         if (!from_snapshot_blockhash.IsNull()) {
             leveldb_name += "_" + from_snapshot_blockhash.ToString();
@@ -659,6 +665,13 @@ public:
     void ResetCoinsViews() { m_coins_views.reset(); }
 
     size_t m_coinsdb_cache_size_bytes{0};
+
+    //! The cache size of the in-memory coins view.
+    size_t m_coinstip_cache_size_bytes{0};
+
+    //! Resize the CoinsViews caches dynamically and flush state to disk.
+    void ResizeCoinsCaches(size_t coinstip_size, size_t coinsdb_size)
+        EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     /**
      * Free members and *delete* the on-disk coinsdb data. Should only be used for
@@ -745,14 +758,14 @@ public:
     /** Update the chain tip based on database information. */
     bool LoadChainTip(const CChainParams& chainparams) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
+    void ReceivedBlockTransactions(const CBlock& block, CBlockIndex* pindexNew, const FlatFilePos& pos, const Consensus::Params& consensusParams) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
 private:
     bool ActivateBestChainStep(CValidationState& state, const CChainParams& chainparams, CBlockIndex* pindexMostWork, const std::shared_ptr<const CBlock>& pblock, bool& fInvalidFound, ConnectTrace& connectTrace) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
     bool ConnectTip(CValidationState& state, const CChainParams& chainparams, CBlockIndex* pindexNew, const std::shared_ptr<const CBlock>& pblock, ConnectTrace& connectTrace, DisconnectedBlockTransactions &disconnectpool) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
     void InvalidBlockFound(CBlockIndex *pindex, const CValidationState &state) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
     CBlockIndex* FindMostWorkChain() EXCLUSIVE_LOCKS_REQUIRED(cs_main);
-
-    void ReceivedBlockTransactions(const CBlock& block, CBlockIndex* pindexNew, const FlatFilePos& pos, const Consensus::Params& consensusParams) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
     bool RollforwardBlock(const CBlockIndex* pindex, CCoinsViewCache& inputs, const CChainParams& params) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
@@ -910,7 +923,8 @@ public:
     /**
      * Instantiate a new chainstate and assign it based upon whether it is from a snapshot.
      *
-     * @param[in] cache_size_bytes   Forwarded to CChainState construction.
+     * @param[in] coinstip_cache_size_bytes   Forwarded to CChainState construction.
+     * @param[in] coinsdb_cache_size_bytes   Forwarded to CChainState construction.
      * @param[in] in_memory   Forwarded to CChainState construction.
      * @param[in] should_wipe   Forwarded to CChainState construction.
      * @param[in] activate   If true, make this new chainstate the active one.
@@ -918,7 +932,8 @@ public:
      *                                 is based on a snapshot.
      */
     CChainState& InitializeChainstate(
-        size_t cache_size_bytes,
+        size_t coinstip_cache_size_bytes,
+        size_t coinsdb_cache_size_bytes,
         bool in_memory,
         bool should_wipe,
         bool activate = true,
@@ -1079,6 +1094,11 @@ public:
         m_snapshot_chainstate.reset();
         m_active_chainstate = nullptr;
     }
+
+    //! If we're pruning the snapshot chainstate, be sure not to
+    //! step on the toes of the background validation by pruning blocks it
+    //! might be currently using.
+    unsigned int PruneStartHeight(CChainState* chainstate);
 
     //! Check to see if any of the chainstates under management have signaled
     //! deletion. If so, unlink them.
