@@ -589,6 +589,12 @@ private:
     //! Manages the UTXO set, which is a reflection of the contents of `m_chain`.
     std::unique_ptr<CoinsViews> m_coins_views;
 
+    //! This toggle exists for use when doing background validation for UTXO
+    //! snapshots. It is set once the background validation chain reaches the
+    //! same height as the base of the snapshot, and signals that we should no
+    //! longer connect blocks to this chainstate.
+    bool m_stop_use{false};
+
 public:
     CChainState(BlockManager& blockman, uint256 from_snapshot_blockhash = uint256());
 
@@ -710,7 +716,7 @@ public:
     bool ActivateBestChain(
         BlockValidationState& state,
         const CChainParams& chainparams,
-        std::shared_ptr<const CBlock> pblock) LOCKS_EXCLUDED(cs_main);
+        std::shared_ptr<const CBlock> pblock = std::shared_ptr<const CBlock>()) LOCKS_EXCLUDED(cs_main);
 
     bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, BlockValidationState& state, const CChainParams& chainparams, CBlockIndex** ppindex, bool fRequested, const FlatFilePos* dbp, bool* fNewBlock) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
@@ -842,7 +848,10 @@ private:
     CChainState* m_active_chainstate;
 
     //! If true, the assumed-valid chainstate has been fully validated
-    //! by the background validation chainstate.
+    //! by the background validation chainstate. This will trigger shutdown
+    //! logic.
+    //!
+    //! @sa ValidatedSnapshotShutdownCleanup()
     bool m_snapshot_validated{false};
 
     //! Internal helper for ActivateSnapshot().
@@ -854,6 +863,11 @@ private:
     // For access to m_active_chainstate.
     friend CChainState& ChainstateActive();
     friend CChain& ChainActive();
+
+    //! If we have validated a snapshot chain during this runtime, copy its
+    //! chainstate directory over to the main `chainstate` location, completing
+    //! validation of the snapshot.
+    void ValidatedSnapshotShutdownCleanup(fs::path new_chainstate, fs::path old_chainstate);
 
 public:
     //! A single BlockManager instance is shared across each constructed
@@ -880,6 +894,7 @@ public:
         bool activate = true, const uint256& snapshot_blockhash = uint256());
 
     void SaveSnapshotMetadataToDisk() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+    bool DeleteSnapshotMetadataFromDisk() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
     bool LoadSnapshotMetadata() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     /** Get all chainstates currently being used. */
@@ -923,6 +938,18 @@ public:
         CAutoFile* coins_file, SnapshotMetadata metadata, bool in_memory);
 
     /**
+     * Once the background validation chainstate has reached the height which
+     * is the base of the UTXO snapshot in use, compare its coins to ensure
+     * they match those expected by the snapshot.
+     *
+     * If the coins match (expected), then mark the validation chainstate for
+     * deletion and continue using the snapshot chainstate as active.
+     * Otherwise, revert to using the ibd chainstate and shutdown (TODO).
+     */
+    bool CompleteSnapshotValidation(
+        CChainState* validation_chainstate) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
+    /**
      * Return the relevant chainstate for a new block.
      *
      * Because the use of UTXO snapshots requires the simultaneous maintenance
@@ -958,6 +985,18 @@ public:
     uint256 SnapshotBlockhash() const
     {
         return m_snapshot_metadata ? m_snapshot_metadata->m_base_blockhash : uint256{};
+    }
+
+    CBlockIndex* SnapshotBaseBlock() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+    {
+        return LookupBlockIndex(SnapshotBlockhash());
+    }
+
+    //! @returns height at which the active UTXO snapshot was taken.
+    int SnapshotHeight() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+    {
+        CBlockIndex* base = SnapshotBaseBlock();
+        return base ? base->nHeight : -1;
     }
 
     //! Is there a snapshot in use and has it been fully validated?
@@ -1004,11 +1043,23 @@ public:
         m_blockman.Unload();
     }
 
-    void Reset()
+    void Reset() EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
     {
+        auto get_storage_path = [](std::unique_ptr<CChainState>& chainstate) -> fs::path {
+            return chainstate ? chainstate->CoinsDB().StoragePath() : fs::path();
+        };
+        fs::path valid_chainstate_path = get_storage_path(m_ibd_chainstate);
+        fs::path snapshot_chainstate_path = get_storage_path(m_snapshot_chainstate);
+        bool should_cleanup_snapshot = m_snapshot_chainstate && m_snapshot_validated;
+
         m_ibd_chainstate.reset();
         m_snapshot_chainstate.reset();
         m_active_chainstate = nullptr;
+
+        if (should_cleanup_snapshot) {
+            this->ValidatedSnapshotShutdownCleanup(
+                snapshot_chainstate_path, valid_chainstate_path);
+        }
     }
 
     //! Check to see if caches are out of balance and if so, call
@@ -1017,6 +1068,11 @@ public:
 
     //! Returns true if any chainstate in use is in initial block download.
     bool IsAnyChainInIBD();
+
+    //! If we completed background validation of the loaded snapshot during the
+    //! last run but didn't for whatever reason shutdown properly, ensure that
+    //! the background validation chainstate is marked accordingly.
+    void CheckForUncleanShutdown() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 };
 
 extern ChainstateManager g_chainman;
