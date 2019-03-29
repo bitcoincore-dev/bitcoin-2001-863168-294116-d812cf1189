@@ -5305,7 +5305,8 @@ bool ChainstateManager::ActivateSnapshot(
     uint256 base_blockhash = metadata.m_base_blockhash;
 
     // Can't activate a snapshot more than once.
-    assert(!this->SnapshotBlockhash());
+    auto snapshot_blockhash = this->SnapshotBlockhash();
+    assert(!snapshot_blockhash || snapshot_blockhash.get().IsNull());
     int64_t current_coinsdb_cache_size{0};
     int64_t current_coinstip_cache_size{0};
 
