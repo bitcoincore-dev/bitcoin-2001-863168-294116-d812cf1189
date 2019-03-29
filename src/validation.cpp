@@ -4796,6 +4796,7 @@ void ChainstateManager::RunOnAll(
 
 std::vector<CChainState*> ChainstateManager::GetAllForBlockDownload()
 {
+    LOCK(m_cs_chainstates);
     std::vector<CChainState*> out;
 
     if (m_snapshot_chainstate) out.push_back(m_snapshot_chainstate.get());
