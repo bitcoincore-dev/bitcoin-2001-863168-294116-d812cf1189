@@ -1018,6 +1018,10 @@ public:
 
     //! Returns true if any chainstate in use is in initial block download.
     bool IsAnyChainInIBD() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! When starting up, search the datadir for a chainstate based on a UTXO
+    //! snapshot that is in the process of being validated.
+    bool DetectSnapshotChainstate(CTxMemPool& mempool) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 };
 
 /** DEPRECATED! Please use node.chainman instead. May only be used in validation.cpp internally */
