@@ -938,6 +938,19 @@ public:
     [[nodiscard]] bool ActivateSnapshot(
         AutoFile& coins_file, const node::SnapshotMetadata& metadata, bool in_memory);
 
+    //! Return the relevant chainstate for a new block.
+    //!
+    //! Because the use of UTXO snapshots requires the simultaneous maintenance
+    //! of two chainstates, when a new block message arrives we have to decide
+    //! which chain we should attempt to append it to.
+    //!
+    //! If our active chainstate hasn't seen the incoming blockhash, return that.
+    //! Otherwise we're receiving a block that has already been assumed
+    //! valid by the snapshot chain, so attempt to append that to the validation
+    //! chain.
+    Chainstate& GetChainstateForNewBlock(
+        const uint256& blockhash) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
     //! The most-work chain.
     Chainstate& ActiveChainstate() const;
     CChain& ActiveChain() const EXCLUSIVE_LOCKS_REQUIRED(GetMutex()) { return ActiveChainstate().m_chain; }
