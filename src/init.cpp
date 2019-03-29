@@ -257,11 +257,12 @@ void Shutdown(NodeContext& node)
         LOCK(cs_main);
         for (CChainState* chainstate : g_chainman.GetAll()) {
             if (chainstate->CanFlushToDisk()) {
+                LogPrintf("[snapshot] resetting coinsviews for %s\n", chainstate->ToString());
                 chainstate->ForceFlushStateToDisk();
                 chainstate->ResetCoinsViews();
             }
         }
-        pblocktree.reset();
+        ::pblocktree.reset();
     }
     for (const auto& client : node.chain_clients) {
         client->stop();
@@ -287,6 +288,7 @@ void Shutdown(NodeContext& node)
     GetMainSignals().UnregisterBackgroundSignalScheduler();
     GetMainSignals().UnregisterWithMempoolSignals(mempool);
     globalVerifyHandle.reset();
+    g_chainman.Reset();
     ECC_Stop();
     LogPrintf("%s: done\n", __func__);
 }
@@ -700,11 +702,15 @@ static void ThreadImport(std::vector<fs::path> vImportFiles)
     }
 
     // scan for better chains in the block chain database, that are not yet connected in the active best chain
-    BlockValidationState state;
-    if (!ActivateBestChain(state, chainparams)) {
-        LogPrintf("Failed to connect best block (%s)\n", FormatStateMessage(state));
-        StartShutdown();
-        return;
+    auto chainstates = g_chainman.GetAll();
+
+    for (CChainState* chainstate : chainstates) {
+        BlockValidationState state;
+        if (!chainstate->ActivateBestChain(state, chainparams)) {
+            LogPrintf("Failed to connect best block (%s)\n", FormatStateMessage(state));
+            StartShutdown();
+            return;
+        }
     }
 
     if (gArgs.GetBoolArg("-stopafterblockimport", DEFAULT_STOPAFTERBLOCKIMPORT)) {
@@ -1456,12 +1462,35 @@ bool AppInitMain(NodeContext& node)
 
         do {
             const int64_t load_block_index_start_time = GetTimeMillis();
-            bool is_coinsview_empty;
+            bool is_coinsview_empty = true;
             try {
                 LOCK(cs_main);
-                g_chainman.InitializeChainstate();
                 g_chainman.m_total_coinstip_cache = nCoinCacheUsage;
                 g_chainman.m_total_coinsdb_cache = nCoinDBCache;
+
+                // Load snapshot metadata, if any exists.
+                g_chainman.LoadSnapshotMetadata();
+
+                // Conservative value that will ultimately be changed by
+                // a call to `g_chainman.MaybeRebalanceCaches()`.
+                double init_cache_fraction = 0.2;
+
+                // If we were using a chainstate snapshot, load and use it.
+                if (g_chainman.HasSnapshotMetadata()) {
+                    LogPrintf("Loading chainstate from snapshot (%s)\n",
+                        g_chainman.SnapshotBlockhash().ToString());
+
+                    g_chainman.InitializeChainstate(
+                        /*activate*/ true, g_chainman.SnapshotBlockhash());
+                }
+
+                // If we're not using a snapshot or we haven't fully validated it yet,
+                // create a validation chainstate.
+                if (!g_chainman.IsSnapshotValidated()) {
+                    LogPrintf("Loading validation chainstate\n");
+                    g_chainman.InitializeChainstate(
+                        /*activate*/ !g_chainman.IsSnapshotActive());
+                }
 
                 UnloadBlockIndex();
 
@@ -1519,13 +1548,18 @@ bool AppInitMain(NodeContext& node)
 
                 for (CChainState* chainstate : g_chainman.GetAll()) {
                     LogPrintf("Initializing chainstate %s\n", chainstate->ToString());
+
+                    size_t dbcache_size = nCoinDBCache * init_cache_fraction;
+                    size_t tipcache_size = nCoinCacheUsage * init_cache_fraction;
+
                     chainstate->InitCoinsDB(
-                        /* cache_size_bytes */ nCoinDBCache,
+                        /* cache_size_bytes */ dbcache_size,
                         /* in_memory */ false,
                         /* should_wipe */ fReset || fReindexChainState);
 
                     chainstate->CoinsErrorCatcher().AddReadErrCallback([]() {
                         uiInterface.ThreadSafeMessageBox(
+                            // TODO jamesob: chainstate-specific error message?
                             _("Error reading from database, shutting down.").translated,
                             "", CClientUIInterface::MSG_ERROR);
                     });
@@ -1567,6 +1601,12 @@ bool AppInitMain(NodeContext& node)
                     // are local to the per-chainstate loop.
                     break;
                 }
+
+                // Now that chainstates are loaded and we're able to flush to
+                // disk, rebalance the coins caches to desired levels based
+                // on the condition of each chainstate.
+                g_chainman.MaybeRebalanceCaches();
+
             } catch (const std::exception& e) {
                 LogPrintf("%s\n", e.what());
                 strLoadError = _("Error opening block database").translated;
