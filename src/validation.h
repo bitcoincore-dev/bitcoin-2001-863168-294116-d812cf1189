@@ -427,14 +427,10 @@ public:
      * Load the blocktree off disk and into memory. Populate certain metadata
      * per index entry (nStatus, nChainWork, nTimeMax, etc.) as well as peripheral
      * collections like setDirtyBlockIndex.
-     *
-     * @param[out] block_index_candidates  Fill this set with any valid blocks for
-     *                                     which we've downloaded all transactions.
      */
     bool LoadBlockIndex(
         const Consensus::Params& consensus_params,
-        CBlockTreeDB& blocktree,
-        std::set<CBlockIndex*, CBlockIndexWorkComparator>& block_index_candidates)
+        CBlockTreeDB& blocktree)
         EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
     /** Clear all data members. */
@@ -609,6 +605,9 @@ public:
      * IsNull() if this chainstate was not created from a snapshot.
      */
     const uint256 m_from_snapshot_blockhash{};
+
+    //! Return true if this chainstate was created from a UTXO snapshot.
+    bool IsFromSnapshot() { return !m_from_snapshot_blockhash.IsNull(); }
 
     /**
      * The set of all CBlockIndex entries with BLOCK_VALID_TRANSACTIONS (for itself and all ancestors) and
@@ -925,6 +924,22 @@ public:
 
     std::optional<uint256> SnapshotBlockhash() const;
 
+    CBlockIndex* SnapshotBaseBlock() EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+    {
+        auto blockhash_op = SnapshotBlockhash();
+        if (!blockhash_op) {
+            return nullptr;
+        }
+        return m_blockman.LookupBlockIndex(*blockhash_op);
+    }
+
+    //! @returns height at which the active UTXO snapshot was taken.
+    int SnapshotHeight() EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+    {
+        CBlockIndex* base = SnapshotBaseBlock();
+        return base ? base->nHeight : -1;
+    }
+
     //! Is there a snapshot in use and has it been fully validated?
     bool IsSnapshotValidated() const { return m_snapshot_validated; }
 
@@ -988,6 +1003,10 @@ public:
     //! Check to see if caches are out of balance and if so, call
     //! ResizeCoinsCaches() as needed.
     void MaybeRebalanceCaches() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! Return the cached nChainTx value for the snapshot (per the chainparams assumeutxo data),
+    //! if one exists
+    std::optional<unsigned int> GetSnapshotNChainTx() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 };
 
 /** DEPRECATED! Please use node.chainman instead. May only be used in validation.cpp internally */
