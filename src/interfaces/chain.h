@@ -114,6 +114,12 @@ public:
     //! Check if transaction will be final given chain height current time.
     virtual bool checkFinalTx(const CTransaction& tx) = 0;
 
+    //! Return the lowest height in the chain after which point we have contiguous
+    //! block data. Returning -1 indicates we don't even have data for Tip(), which
+    //! could be possible if this is called right after UTXO snapshot load when the
+    //! Tip() is an assumed-valid block.
+    virtual int getLowestBlockDataHeight() = 0;
+
     //! Return whether node has the block and optionally return block metadata
     //! or contents.
     virtual bool findBlock(const uint256& hash, const FoundBlock& block={}) = 0;
