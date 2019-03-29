@@ -587,6 +587,12 @@ private:
     //! Manages the UTXO set, which is a reflection of the contents of `m_chain`.
     std::unique_ptr<CoinsViews> m_coins_views;
 
+    //! This toggle exists for use when doing background validation for UTXO
+    //! snapshots. It is set once the background validation chain reaches the
+    //! same height as the base of the snapshot, and signals that we should no
+    //! longer connect blocks to this chainstate.
+    bool m_stop_use{false};
+
 public:
     explicit CChainState(BlockManager& blockman, uint256 from_snapshot_blockhash = uint256());
 
@@ -844,7 +850,10 @@ private:
     CChainState* m_active_chainstate{nullptr};
 
     //! If true, the assumed-valid chainstate has been fully validated
-    //! by the background validation chainstate.
+    //! by the background validation chainstate. This will trigger shutdown
+    //! logic.
+    //!
+    //! @sa ValidatedSnapshotShutdownCleanup()
     bool m_snapshot_validated{false};
 
     //! Internal helper for ActivateSnapshot().
@@ -856,6 +865,11 @@ private:
     // For access to m_active_chainstate.
     friend CChainState& ChainstateActive();
     friend CChain& ChainActive();
+
+    //! If we have validated a snapshot chain during this runtime, copy its
+    //! chainstate directory over to the main `chainstate` location, completing
+    //! validation of the snapshot.
+    void ValidatedSnapshotShutdownCleanup(fs::path new_chainstate, fs::path old_chainstate);
 
 public:
     //! A single BlockManager instance is shared across each constructed
@@ -910,6 +924,16 @@ public:
     NODISCARD bool ActivateSnapshot(
         CAutoFile* coins_file, SnapshotMetadata metadata, bool in_memory);
 
+    //! Once the background validation chainstate has reached the height which
+    //! is the base of the UTXO snapshot in use, compare its coins to ensure
+    //! they match those expected by the snapshot.
+    //!
+    //! If the coins match (expected), then mark the validation chainstate for
+    //! deletion and continue using the snapshot chainstate as active.
+    //! Otherwise, revert to using the ibd chainstate and shutdown (TODO).
+    bool CompleteSnapshotValidation(
+        CChainState* validation_chainstate) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
     //! Return the relevant chainstate for a new block.
     //!
     //! Because the use of UTXO snapshots requires the simultaneous maintenance
@@ -937,6 +961,18 @@ public:
 
     uint256 SnapshotBlockhash() const;
 
+    CBlockIndex* SnapshotBaseBlock() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+    {
+        return LookupBlockIndex(SnapshotBlockhash());
+    }
+
+    //! @returns height at which the active UTXO snapshot was taken.
+    int SnapshotHeight() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+    {
+        CBlockIndex* base = SnapshotBaseBlock();
+        return base ? base->nHeight : -1;
+    }
+
     //! Is there a snapshot in use and has it been fully validated?
     bool IsSnapshotValidated() const { return m_snapshot_validated; }
 
@@ -957,7 +993,7 @@ public:
     void Unload() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     //! Clear (deconstruct) chainstate data.
-    void Reset();
+    void Reset() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     unsigned int GetSnapshotNChainTx() EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
     {
@@ -979,6 +1015,11 @@ public:
     //! When starting up, search the datadir for a chainstate based on a UTXO
     //! snapshot that is in the process of being validated.
     bool DetectSnapshotChainstate() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! If we completed background validation of the loaded snapshot during the
+    //! last run but didn't for whatever reason shutdown properly, ensure that
+    //! the background validation chainstate is marked accordingly.
+    void CheckForUncleanShutdown() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 };
 
 extern ChainstateManager g_chainman GUARDED_BY(::cs_main);
