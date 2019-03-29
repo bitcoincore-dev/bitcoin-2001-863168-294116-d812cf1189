@@ -771,7 +771,7 @@ public:
     /** Remove invalidity status from a block and its descendants. */
     void ResetBlockFailureFlags(CBlockIndex* pindex) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
-    /** Replay blocks that aren't fully applied to the database. */
+    //! Replay blocks that aren't fully applied to the database.
     bool ReplayBlocks(const CChainParams& params);
 
     /** Whether the chain state needs to be redownloaded due to lack of witness data */
