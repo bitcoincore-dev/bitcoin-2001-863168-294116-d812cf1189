@@ -267,11 +267,12 @@ void Shutdown(NodeContext& node)
         LOCK(cs_main);
         for (CChainState* chainstate : node.chainman->GetAll()) {
             if (chainstate->CanFlushToDisk()) {
+                LogPrintf("[snapshot] resetting coinsviews for %s\n", chainstate->ToString());
                 chainstate->ForceFlushStateToDisk();
                 chainstate->ResetCoinsViews();
             }
         }
-        pblocktree.reset();
+        ::pblocktree.reset();
     }
     for (const auto& client : node.chain_clients) {
         client->stop();
@@ -289,6 +290,7 @@ void Shutdown(NodeContext& node)
     UnregisterAllValidationInterfaces();
     GetMainSignals().UnregisterBackgroundSignalScheduler();
     globalVerifyHandle.reset();
+    WITH_LOCK(::cs_main, g_chainman.Reset());
     ECC_Stop();
     node.mempool.reset();
     node.fee_estimator.reset();
@@ -740,7 +742,7 @@ static void ThreadImport(ChainstateManager& chainman, std::vector<fs::path> vImp
     // the relevant pointers before the ABC call.
     for (CChainState* chainstate : WITH_LOCK(::cs_main, return chainman.GetAll())) {
         BlockValidationState state;
-        if (!chainstate->ActivateBestChain(state, chainparams, nullptr)) {
+        if (!chainstate->ActivateBestChain(state, chainparams)) {
             LogPrintf("Failed to connect best block (%s)\n", state.ToString());
             StartShutdown();
             return;
@@ -1578,9 +1580,22 @@ bool AppInitMain(const util::Ref& context, NodeContext& node, interfaces::BlockA
             const int64_t load_block_index_start_time = GetTimeMillis();
             try {
                 LOCK(cs_main);
-                chainman.InitializeChainstate(*Assert(node.mempool));
                 chainman.m_total_coinstip_cache = nCoinCacheUsage;
                 chainman.m_total_coinsdb_cache = nCoinDBCache;
+
+                // Load a chain created from a UTXO snapshot, if any exist.
+                chainman.DetectSnapshotChainstate(*Assert(node.mempool));
+
+                // Conservative value that will ultimately be changed by
+                // a call to `chainman.MaybeRebalanceCaches()`.
+                double init_cache_fraction = 0.2;
+
+                // If we're not using a snapshot or we haven't fully validated it yet,
+                // create a validation chainstate.
+                if (!chainman.IsSnapshotValidated()) {
+                    LogPrintf("Loading validation chainstate\n");
+                    chainman.InitializeChainstate(*Assert(node.mempool));
+                }
 
                 UnloadBlockIndex(node.mempool.get(), chainman);
 
@@ -1597,6 +1612,17 @@ bool AppInitMain(const util::Ref& context, NodeContext& node, interfaces::BlockA
                 }
 
                 if (ShutdownRequested()) break;
+
+                for (CChainState* chainstate : chainman.GetAll()) {
+                    // Initialize CoinsDB before loading the block index in case we
+                    // have to consult a cached nChainTx value in the snapshot
+                    // chainstate storage.
+                    // (See nChainTx usage in BlockManager::LoadBlockIndex()).
+                    chainstate->InitCoinsDB(
+                        /* cache_size_bytes */ nCoinDBCache * init_cache_fraction,
+                        /* in_memory */ false,
+                        /* should_wipe */ fReset || fReindexChainState);
+                }
 
                 // LoadBlockIndex will load fHavePruned if we've ever removed a
                 // block file from disk.
@@ -1637,10 +1663,7 @@ bool AppInitMain(const util::Ref& context, NodeContext& node, interfaces::BlockA
                 bool failed_chainstate_init = false;
 
                 for (CChainState* chainstate : chainman.GetAll()) {
-                    chainstate->InitCoinsDB(
-                        /* cache_size_bytes */ nCoinDBCache,
-                        /* in_memory */ false,
-                        /* should_wipe */ fReset || fReindexChainState);
+                    LogPrintf("Initializing chainstate %s\n", chainstate->ToString());
 
                     chainstate->CoinsErrorCatcher().AddReadErrCallback([]() {
                         uiInterface.ThreadSafeMessageBox(
@@ -1681,6 +1704,12 @@ bool AppInitMain(const util::Ref& context, NodeContext& node, interfaces::BlockA
                 if (failed_chainstate_init) {
                     break; // out of the chainstate activation do-while
                 }
+
+                // Now that chainstates are loaded and we're able to flush to
+                // disk, rebalance the coins caches to desired levels based
+                // on the condition of each chainstate.
+                chainman.MaybeRebalanceCaches();
+
             } catch (const std::exception& e) {
                 LogPrintf("%s\n", e.what());
                 strLoadError = _("Error opening block database");
