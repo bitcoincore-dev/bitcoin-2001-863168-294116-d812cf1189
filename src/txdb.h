@@ -8,6 +8,7 @@
 
 #include <coins.h>
 #include <dbwrapper.h>
+#include <fs.h>
 #include <chain.h>
 #include <primitives/block.h>
 
@@ -75,6 +76,9 @@ public:
     //! @returns the cached nChainTx value for the snapshot base block (if one
     //! applies).
     unsigned int GetNChainTx();
+
+    //! @returns filesystem path to on-disk storage.
+    fs::path StoragePath() { return db->StoragePath(); }
 };
 
 /** Specialization of CCoinsViewCursor to iterate over a CCoinsViewDB */
