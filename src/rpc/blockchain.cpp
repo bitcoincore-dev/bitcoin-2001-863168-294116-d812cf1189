@@ -2730,6 +2730,71 @@ static RPCHelpMan loadtxoutset()
     };
 }
 
+static RPCHelpMan monitorsnapshot()
+{
+return RPCHelpMan{
+        "monitorsnapshot",
+        "\nReturn information about UTXO snapshot status.\n",
+        {},
+        RPCResult{
+            RPCResult::Type::OBJ, "x", "x",
+                {
+                    {RPCResult::Type::NUM, "headers", "the number of headers we've seen"},
+                    {RPCResult::Type::STR, "active_chain_type", "whether active chain is ibd or snapshot"},
+                }
+        },
+        RPCExamples{
+            HelpExampleCli("monitorsnapshot", "")
+    + HelpExampleRpc("monitorsnapshot", "")
+        },
+        [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
+{
+    LOCK(cs_main);
+    UniValue obj(UniValue::VOBJ);
+
+    NodeContext& node = EnsureAnyNodeContext(request.context);
+    ChainstateManager& chainman = *node.chainman;
+
+    auto make_chain_data = [](CChainState* cs) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
+        AssertLockHeld(::cs_main);
+        UniValue data(UniValue::VOBJ);
+        if (!cs || !cs->m_chain.Tip()) {
+            return data;
+        }
+        const CChain& chain = cs->m_chain;
+        const CBlockIndex* tip = chain.Tip();
+
+        data.pushKV("blocks",                (int)chain.Height());
+        data.pushKV("bestblockhash",         tip->GetBlockHash().GetHex());
+        data.pushKV("difficulty",            (double)GetDifficulty(tip));
+        data.pushKV("mediantime",            (int64_t)tip->GetMedianTimePast());
+        data.pushKV("verificationprogress",  GuessVerificationProgress(Params().TxData(), tip));
+        data.pushKV("snapshot_blockhash",    cs->m_from_snapshot_blockhash.value_or(uint256{}).ToString());
+        data.pushKV("initialblockdownload",  cs->IsInitialBlockDownload());
+        return data;
+    };
+
+    auto get_chain_type = [&chainman](CChainState* cs) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
+        AssertLockHeld(::cs_main);
+        if (cs->m_from_snapshot_blockhash) {
+            return (chainman.IsSnapshotValidated() ? "validated_snapshot" : "snapshot");
+        }
+        return "ibd";
+    };
+
+    obj.pushKV("active_chain_type", get_chain_type(&chainman.ActiveChainstate()));
+
+    for (CChainState* chainstate : chainman.GetAll()) {
+        obj.pushKV(get_chain_type(chainstate), make_chain_data(chainstate));
+    }
+    obj.pushKV("headers", pindexBestHeader ? pindexBestHeader->nHeight : -1);
+
+    return obj;
+}
+    };
+}
+
+
 void RegisterBlockchainRPCCommands(CRPCTable &t)
 {
 // clang-format off
@@ -2770,6 +2835,7 @@ static const CRPCCommand commands[] =
     { "hidden",              &syncwithvalidationinterfacequeue,  },
     { "hidden",              &dumptxoutset,                      },
     { "hidden",              &loadtxoutset,                      },
+    { "hidden",              &monitorsnapshot,                   },
 };
 // clang-format on
     for (const auto& c : commands) {
