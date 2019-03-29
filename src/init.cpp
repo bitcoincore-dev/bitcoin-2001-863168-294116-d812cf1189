@@ -232,7 +232,9 @@ void Shutdown(InitInterfaces& interfaces)
     }
 
     // FlushStateToDisk generates a ChainStateFlushed callback, which we should avoid missing
-    ::ChainstateActive().ForceFlushStateToDisk();
+    for (CChainState* chainstate : g_chainman.GetAll()) {
+        chainstate->ForceFlushStateToDisk();
+    }
 
     // After there are no more peers/RPC left to give us new data which may generate
     // CValidationInterface callbacks, flush them...
@@ -246,10 +248,15 @@ void Shutdown(InitInterfaces& interfaces)
 
     {
         LOCK(cs_main);
-        ::ChainstateActive().ForceFlushStateToDisk();
-        ::ChainstateActive().ResetCoinsViews();
-        pblocktree.reset();
+        for (CChainState* chainstate : g_chainman.GetAll()) {
+            LogPrintf("[snapshot] resetting coinsviews for %s\n", chainstate->ToString());
+            chainstate->ForceFlushStateToDisk();
+            chainstate->ResetCoinsViews();
+        }
+        ::pblocktree.reset();
     }
+
+
     for (const auto& client : interfaces.chain_clients) {
         client->stop();
     }
@@ -274,6 +281,7 @@ void Shutdown(InitInterfaces& interfaces)
     GetMainSignals().UnregisterBackgroundSignalScheduler();
     GetMainSignals().UnregisterWithMempoolSignals(mempool);
     globalVerifyHandle.reset();
+    g_chainman.Reset();
     ECC_Stop();
     LogPrintf("%s: done\n", __func__);
 }
@@ -458,7 +466,7 @@ void SetupServerArgs()
         "and level 4 tries to reconnect the blocks, "
         "each level includes the checks of the previous levels "
         "(0-4, default: %u)", DEFAULT_CHECKLEVEL), true, OptionsCategory::DEBUG_TEST);
-    gArgs.AddArg("-checkblockindex", strprintf("Do a full consistency check for BlockManager.m_block_index, setBlockIndexCandidates, ::ChainActive() and mapBlocksUnlinked occasionally. (default: %u, regtest: %u)", defaultChainParams->DefaultConsistencyChecks(), regtestChainParams->DefaultConsistencyChecks()), true, OptionsCategory::DEBUG_TEST);
+    gArgs.AddArg("-checkblockindex", strprintf("Do a full consistency check for BlockIndex(), setBlockIndexCandidates, the active chain and mapBlocksUnlinked occasionally. (default: %u, regtest: %u)", defaultChainParams->DefaultConsistencyChecks(), regtestChainParams->DefaultConsistencyChecks()), true, OptionsCategory::DEBUG_TEST);
     gArgs.AddArg("-checkmempool=<n>", strprintf("Run checks every <n> transactions (default: %u, regtest: %u)", defaultChainParams->DefaultConsistencyChecks(), regtestChainParams->DefaultConsistencyChecks()), true, OptionsCategory::DEBUG_TEST);
     gArgs.AddArg("-checkpoints", strprintf("Disable expensive verification for known chain history (default: %u)", DEFAULT_CHECKPOINTS_ENABLED), true, OptionsCategory::DEBUG_TEST);
     gArgs.AddArg("-deprecatedrpc=<method>", "Allows deprecated RPC method(s) to be used", true, OptionsCategory::DEBUG_TEST);
@@ -689,11 +697,14 @@ static void ThreadImport(std::vector<fs::path> vImportFiles)
     }
 
     // scan for better chains in the block chain database, that are not yet connected in the active best chain
-    CValidationState state;
-    if (!ActivateBestChain(state, chainparams)) {
-        LogPrintf("Failed to connect best block (%s)\n", FormatStateMessage(state));
-        StartShutdown();
-        return;
+
+    for (CChainState* chainstate : g_chainman.GetAll()) {
+        CValidationState state;
+        if (!chainstate->ActivateBestChain(state, chainparams)) {
+            LogPrintf("Failed to connect best block (%s)\n", FormatStateMessage(state));
+            StartShutdown();
+            return;
+        }
     }
 
     if (gArgs.GetBoolArg("-stopafterblockimport", DEFAULT_STOPAFTERBLOCKIMPORT)) {
@@ -1464,22 +1475,49 @@ bool AppInitMain(InitInterfaces& interfaces)
 
         do {
             const int64_t load_block_index_start_time = GetTimeMillis();
-            bool is_coinsview_empty;
+            bool is_coinsview_empty = true;
             try {
                 LOCK(cs_main);
-                UnloadBlockIndex();
-                g_chainman.InitializeChainstate(
-                    /* cache_size_bytes */ nCoinDBCache,
-                    /* in_memory */ false,
-                    /* should_wipe */ fReset || fReindexChainState);
+
+                // Load snapshot metadata, if any exists.
+                g_chainman.LoadSnapshotMetadata();
+
+                // Determine how many chains we'll be initializing so that we
+                // can divide up cache sizes properly. If we're working with a
+                // snapshot and we haven't validated it yet, we'll have two
+                // chains.
+                int total_chains_to_load =
+                    (g_chainman.HasSnapshotMetadata() && !g_chainman.IsSnapshotValidated()) ? 2 : 1;
+
+                // If we were using a chainstate snapshot, load and use it.
+                if (g_chainman.HasSnapshotMetadata()) {
+                    LogPrintf("Loading chainstate from snapshot (%s)\n",
+                        g_chainman.SnapshotBlockhash().ToString());
+
+                    g_chainman.InitializeChainstate(
+                        nCoinDBCache / total_chains_to_load, false, fReset || fReindexChainState,
+                        /* activate */ true, g_chainman.SnapshotBlockhash());
+                }
+
+                // If we're not using a snapshot or we haven't fully validated it yet,
+                // create a validation chainstate.
+                if (!g_chainman.IsSnapshotValidated()) {
+                    LogPrintf("Loading validation chainstate\n");
+                    g_chainman.InitializeChainstate(
+                        nCoinDBCache / total_chains_to_load, false, fReset || fReindexChainState,
+                        /* activate */ !g_chainman.IsSnapshotActive());
+                }
 
                 for (CChainState* chainstate : g_chainman.GetAll()) {
                     chainstate->CoinsErrorCatcher().AddReadErrCallback([]() {
+                        // TODO jamesob: chainstate-specific error message?
                         uiInterface.ThreadSafeMessageBox(
                             _("Error reading from database, shutting down."),
                             "", CClientUIInterface::MSG_ERROR);
                     });
                 }
+
+                UnloadBlockIndex();
 
                 // new CBlockTreeDB tries to delete the existing file, which
                 // fails if it's still open from the previous loop. Close it first:
@@ -1545,15 +1583,14 @@ bool AppInitMain(InitInterfaces& interfaces)
                         break;
                     }
 
-                    is_coinsview_empty = fReset || fReindexChainState ||
-                        chainstate->CoinsTip().GetBestBlock().IsNull();
+                    is_coinsview_empty = fReset || fReindexChainState || chainstate->CoinsTip().GetBestBlock().IsNull();
                     if (!is_coinsview_empty) {
                         // LoadChainTip initializes the chain based on CoinsTip()'s best block
                         if (!chainstate->LoadChainTip(chainparams)) {
                             strLoadError = _("Error initializing block database");
                             break;
                         }
-                        assert(::ChainActive().Tip() != nullptr);
+                        assert(chainstate->m_chain.Tip() != nullptr);
                     }
                 }
             } catch (const std::exception& e) {
