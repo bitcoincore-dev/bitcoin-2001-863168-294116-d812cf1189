@@ -4917,6 +4917,12 @@ void ChainstateManager::SaveSnapshotMetadataToDisk() const
     LogPrintf("[snapshot] wrote snapshot metadata to %s\n", path);
 }
 
+bool ChainstateManager::DeleteSnapshotMetadataFromDisk() const
+{
+    LogPrintf("[snapshot] %s: deleting chainstate_snapshot.dat\n", __func__);
+    return fs::remove(GetDataDir() / "chainstate_snapshot.dat");
+}
+
 bool ChainstateManager::LoadSnapshotMetadata()
 {
     fs::path path = GetDataDir() / "chainstate_snapshot.dat";
@@ -5160,6 +5166,81 @@ bool ChainstateManager::ActivateSnapshot(
     m_snapshot_metadata = MakeUnique<SnapshotMetadata>(metadata);
     SaveSnapshotMetadataToDisk();
     LogPrintf("[snapshot] successfully activated snapshot %s\n", base_blockhash.ToString());
+    return true;
+}
+
+bool ChainstateManager::CompleteSnapshotValidation(CChainState* validation_chainstate)
+{
+    AssertLockHeld(cs_main);
+    {
+        LOCK(m_cs_chainstates);
+        assert(validation_chainstate == m_ibd_chainstate.get());
+    }
+
+    if (!m_snapshot_metadata) {
+        LogPrintf("[snapshot] no snapshot metadata found - cannot complete validation\n");
+        return false;
+    }
+
+    CCoinsViewDB& ibd_coins_db = validation_chainstate->CoinsDB();
+    validation_chainstate->ForceFlushStateToDisk();
+
+    CCoinsStats ibd_stats;
+    if (!GetUTXOStats(&ibd_coins_db, ibd_stats)) {
+        LogPrintf("[snapshot] failed to generate stats for validation coins db\n");
+        return false;
+    }
+
+    LogPrintf("[snapshot] tip: actual=%s expected=%s\n",
+            validation_chainstate->m_chain.Tip()->ToString(), SnapshotBlockhash().ToString());
+
+    bool snapshot_invalid{false};
+
+    if (ibd_stats.hashSerialized != m_snapshot_metadata->m_utxo_contents_hash) {
+        LogPrintf("[snapshot] hash mismatch: actual=%s, expected=%s\n",
+            ibd_stats.hashSerialized.ToString(),
+            m_snapshot_metadata->m_utxo_contents_hash.ToString());
+        snapshot_invalid = true;
+    }
+    if (validation_chainstate->m_chain.Height() != SnapshotHeight()) {
+        LogPrintf("[snapshot] height mismatch: actual=%d expected=%d\n",
+                validation_chainstate->m_chain.Height(), SnapshotHeight());
+        snapshot_invalid = true;
+    }
+    if (ibd_stats.coins_count != m_snapshot_metadata->m_coins_count) {
+        LogPrintf("[snapshot] num coins mismatch: actual=%d expected=%d\n",
+            ibd_stats.coins_count,
+            m_snapshot_metadata->m_coins_count);
+        snapshot_invalid = true;
+    }
+
+    if (snapshot_invalid) {
+        LogPrintf("[snapshot] !!! the snapshot you've been working off of is invalid\n");
+        LogPrintf("[snapshot] deleting snapshot and reverting to validated chain\n");
+
+        {
+            LOCK(m_cs_chainstates);
+            m_active_chainstate = m_ibd_chainstate.get();
+            m_snapshot_chainstate->m_should_delete = true;
+        }
+        DeleteSnapshotMetadataFromDisk();
+        // TODO jamesob: shutdown?
+
+        return false;
+    }
+    LogPrintf("[snapshot] snapshot beginning at %s has been fully validated\n",
+        SnapshotBlockhash().ToString());
+
+    m_snapshot_metadata->m_validation_complete = true;
+    SaveSnapshotMetadataToDisk();
+
+    // m_ibd_chainstate is the same as validation_chainstate, per the assertion above.
+    // Modification happens to the argument (this symbol) to make it explicit that
+    // the caller might act specifically based on this value being different.
+    //
+    // Chainstate will be destructed during Shutdown().
+    validation_chainstate->m_should_delete = true;
+
     return true;
 }
 
