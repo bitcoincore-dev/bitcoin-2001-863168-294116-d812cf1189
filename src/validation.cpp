@@ -3502,6 +3502,12 @@ bool ChainstateManager::ProcessNewBlock(const CChainParams& chainparams, const s
     AssertLockNotHeld(cs_main);
     assert(std::addressof(::ChainstateActive()) == std::addressof(ActiveChainstate()));
 
+    CChainState* chainstate;
+    {
+        LOCK(cs_main);
+        chainstate = &g_chainman.GetChainstateForNewBlock(pblock->GetHash());
+    }
+
     {
         CBlockIndex *pindex = nullptr;
         if (fNewBlock) *fNewBlock = false;
@@ -3516,7 +3522,8 @@ bool ChainstateManager::ProcessNewBlock(const CChainParams& chainparams, const s
         bool ret = CheckBlock(*pblock, state, chainparams.GetConsensus());
         if (ret) {
             // Store to disk
-            ret = ActiveChainstate().AcceptBlock(pblock, state, chainparams, &pindex, fForceProcessing, nullptr, fNewBlock);
+            ret = chainstate->AcceptBlock(
+                pblock, state, chainparams, &pindex, fForceProcessing, nullptr, fNewBlock);
         }
         if (!ret) {
             GetMainSignals().BlockChecked(*pblock, state);
@@ -3524,11 +3531,14 @@ bool ChainstateManager::ProcessNewBlock(const CChainParams& chainparams, const s
         }
     }
 
-    NotifyHeaderTip(ActiveChainstate());
+    if (WITH_LOCK(::cs_main, return chainstate == &::ChainstateActive())) {
+        NotifyHeaderTip(*chainstate);
+    }
 
     BlockValidationState state; // Only used to report errors, not invalidity - ignore it
-    if (!ActiveChainstate().ActivateBestChain(state, chainparams, pblock))
+    if (!chainstate->ActivateBestChain(state, chainparams, pblock)) {
         return error("%s: ActivateBestChain failed (%s)", __func__, state.ToString());
+    }
 
     return true;
 }
@@ -4811,7 +4821,7 @@ bool ChainstateManager::ActivateSnapshot(
     }
 
     auto snapshot_chainstate = WITH_LOCK(::cs_main, return std::make_unique<CChainState>(
-            this->ActiveChainstate().m_mempool, m_blockman, base_blockhash));
+        this->ActiveChainstate().m_mempool, m_blockman, base_blockhash));
 
     {
         LOCK(::cs_main);
@@ -5024,6 +5034,21 @@ bool ChainstateManager::PopulateAndValidateSnapshot(
     LogPrintf("[snapshot] validated snapshot (%.2f MB)\n",
         coins_cache.DynamicMemoryUsage() / (1000 * 1000));
     return true;
+}
+
+CChainState& ChainstateManager::GetChainstateForNewBlock(const uint256& blockhash)
+{
+    auto* pblock = m_blockman.LookupBlockIndex(blockhash);
+    if (m_snapshot_chainstate &&
+            // If pblock is null, we haven't seen the header for this block.
+            // Because we expect to have received the headers for the IBD chain
+            // contents before receiving blocks, this means that any block for
+            // which we don't have headers should go in the snapshot chain.
+            (pblock == nullptr || !m_snapshot_chainstate->m_chain.Contains(pblock))) {
+        return *m_snapshot_chainstate.get();
+    }
+    assert(m_ibd_chainstate);
+    return *m_ibd_chainstate.get();
 }
 
 CChainState& ChainstateManager::ActiveChainstate() const
