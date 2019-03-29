@@ -2257,7 +2257,7 @@ UniValue dumptxoutset(const JSONRPCRequest& request)
 
     {
         LOCK(::cs_main);
-        ::FlushStateToDisk();
+        ::FlushStateToDisk(::ChainstateActive());
         pcursor = std::unique_ptr<CCoinsViewCursor>(::ChainstateActive().CoinsDB()->Cursor());
         assert(pcursor);
     }
