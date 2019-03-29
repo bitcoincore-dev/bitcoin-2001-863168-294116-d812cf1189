@@ -589,6 +589,16 @@ private:
     //! Manages the UTXO set, which is a reflection of the contents of `m_chain`.
     std::unique_ptr<CoinsViews> m_coins_views;
 
+    /**
+     * If true, this chainstate is marked for destruction ASAP and should
+     * unload accordingly. We use this indirect marker (instead of calling
+     * `Unload()` synchronously) because we might realize we need to unload
+     * in the middle of, say, an `ActivateBestChain()` call.
+     *
+     * @see Unload()
+     */
+    bool m_should_delete = false;
+
 public:
     CChainState(BlockManager& blockman, uint256 from_snapshot_blockhash = uint256());
 
@@ -933,6 +943,7 @@ public:
         bool activate = true, const uint256& snapshot_blockhash = uint256());
 
     void SaveSnapshotMetadataToDisk() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+    bool DeleteSnapshotMetadataFromDisk() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
     bool LoadSnapshotMetadata() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     /** Get all chainstates currently being used. */
@@ -974,6 +985,18 @@ public:
      */
     NODISCARD bool ActivateSnapshot(
         CAutoFile* coins_file, SnapshotMetadata metadata, bool in_memory);
+
+    /**
+     * Once the background validation chainstate has reached the height which
+     * is the base of the UTXO snapshot in use, compare its coins to ensure
+     * they match those expected by the snapshot.
+     *
+     * If the coins match (expected), then mark the validation chainstate for
+     * deletion and continue using the snapshot chainstate as active.
+     * Otherwise, revert to using the ibd chainstate and shutdown (TODO).
+     */
+    bool CompleteSnapshotValidation(
+        CChainState* validation_chainstate) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
     /**
      * Return the relevant chainstate for a new block.
