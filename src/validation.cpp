@@ -3748,16 +3748,18 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams) EXCLUSIVE_LOCKS_RE
     return true;
 }
 
-bool LoadChainTip(const CChainParams& chainparams)
+bool CChainState::LoadChainTip(const CChainParams& chainparams)
 {
     AssertLockHeld(cs_main);
-    CCoinsViewCache* coins_cache = &::ChainstateActive().CoinsTip();
 
-    if (::ChainActive().Tip() && ::ChainActive().Tip()->GetBlockHash() == coins_cache->GetBestBlock()) return true;
+    CCoinsViewCache& coins_cache = CoinsTip();
+    CBlockIndex* tip = m_chain.Tip();
 
-    if (coins_cache->GetBestBlock().IsNull() && g_blockman.m_block_index.size() == 1) {
+    if (tip && tip->GetBlockHash() == coins_cache.GetBestBlock()) return true;
+
+    if (coins_cache.GetBestBlock().IsNull() && BlockIndex().size() == 1) {
         // In case we just added the genesis block, connect it now, so
-        // that we always have a ::ChainActive().Tip() when we return.
+        // that we always have a tip when we return.
         LogPrintf("%s: Connecting genesis block...\n", __func__);
         CValidationState state;
         if (!ActivateBestChain(state, chainparams)) {
@@ -3767,18 +3769,19 @@ bool LoadChainTip(const CChainParams& chainparams)
     }
 
     // Load pointer to end of best chain
-    CBlockIndex* pindex = LookupBlockIndex(coins_cache->GetBestBlock());
+    CBlockIndex* pindex = LookupBlockIndex(coins_cache.GetBestBlock());
     if (!pindex) {
         return false;
     }
-    ::ChainActive().SetTip(pindex);
+    m_chain.SetTip(pindex);
+    PruneBlockIndexCandidates();
 
-    ::ChainstateActive().PruneBlockIndexCandidates();
-
+    tip = m_chain.Tip();
     LogPrintf("Loaded best chain: hashBestChain=%s height=%d date=%s progress=%f\n",
-        ::ChainActive().Tip()->GetBlockHash().ToString(), ::ChainActive().Height(),
-        FormatISO8601DateTime(::ChainActive().Tip()->GetBlockTime()),
-        GuessVerificationProgress(chainparams.TxData(), ::ChainActive().Tip()));
+        tip->GetBlockHash().ToString(),
+        m_chain.Height(),
+        FormatISO8601DateTime(tip->GetBlockTime()),
+        GuessVerificationProgress(chainparams.TxData(), tip));
     return true;
 }
 
