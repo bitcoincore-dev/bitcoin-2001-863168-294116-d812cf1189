@@ -259,12 +259,15 @@ void Shutdown(InitInterfaces& interfaces)
         LOCK(cs_main);
         for (CChainState* chainstate : g_chainman.GetAll()) {
             if (chainstate->CanFlushToDisk()) {
+                LogPrintf("[snapshot] resetting coinsviews for %s\n", chainstate->ToString());
                 chainstate->ForceFlushStateToDisk();
                 chainstate->ResetCoinsViews();
             }
         }
-        pblocktree.reset();
+        ::pblocktree.reset();
     }
+
+
     for (const auto& client : interfaces.chain_clients) {
         client->stop();
     }
@@ -289,6 +292,7 @@ void Shutdown(InitInterfaces& interfaces)
     GetMainSignals().UnregisterBackgroundSignalScheduler();
     GetMainSignals().UnregisterWithMempoolSignals(mempool);
     globalVerifyHandle.reset();
+    g_chainman.Reset();
     ECC_Stop();
     LogPrintf("%s: done\n", __func__);
 }
@@ -485,7 +489,7 @@ void SetupServerArgs()
         "and level 4 tries to reconnect the blocks, "
         "each level includes the checks of the previous levels "
         "(0-4, default: %u)", DEFAULT_CHECKLEVEL), ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::DEBUG_TEST);
-    gArgs.AddArg("-checkblockindex", strprintf("Do a full consistency check for the block tree, setBlockIndexCandidates, ::ChainActive() and mapBlocksUnlinked occasionally. (default: %u, regtest: %u)", defaultChainParams->DefaultConsistencyChecks(), regtestChainParams->DefaultConsistencyChecks()), ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::DEBUG_TEST);
+    gArgs.AddArg("-checkblockindex", strprintf("Do a full consistency check for the block tree, setBlockIndexCandidates, the active chain and mapBlocksUnlinked occasionally. (default: %u, regtest: %u)", defaultChainParams->DefaultConsistencyChecks(), regtestChainParams->DefaultConsistencyChecks()), ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::DEBUG_TEST);
     gArgs.AddArg("-checkmempool=<n>", strprintf("Run checks every <n> transactions (default: %u, regtest: %u)", defaultChainParams->DefaultConsistencyChecks(), regtestChainParams->DefaultConsistencyChecks()), ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::DEBUG_TEST);
     gArgs.AddArg("-checkpoints", strprintf("Disable expensive verification for known chain history (default: %u)", DEFAULT_CHECKPOINTS_ENABLED), ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::DEBUG_TEST);
     gArgs.AddArg("-deprecatedrpc=<method>", "Allows deprecated RPC method(s) to be used", ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::DEBUG_TEST);
@@ -717,11 +721,16 @@ static void ThreadImport(std::vector<fs::path> vImportFiles)
     }
 
     // scan for better chains in the block chain database, that are not yet connected in the active best chain
-    CValidationState state;
-    if (!ActivateBestChain(state, chainparams)) {
-        LogPrintf("Failed to connect best block (%s)\n", FormatStateMessage(state));
-        StartShutdown();
-        return;
+
+    auto chainstates = g_chainman.GetAll();
+
+    for (CChainState* chainstate : chainstates) {
+        CValidationState state;
+        if (!chainstate->ActivateBestChain(state, chainparams)) {
+            LogPrintf("Failed to connect best block (%s)\n", FormatStateMessage(state));
+            StartShutdown();
+            return;
+        }
     }
 
     if (gArgs.GetBoolArg("-stopafterblockimport", DEFAULT_STOPAFTERBLOCKIMPORT)) {
@@ -1473,10 +1482,37 @@ bool AppInitMain(InitInterfaces& interfaces)
 
         do {
             const int64_t load_block_index_start_time = GetTimeMillis();
-            bool is_coinsview_empty;
+            bool is_coinsview_empty = true;
             try {
                 LOCK(cs_main);
-                g_chainman.InitializeChainstate();
+
+                // Load snapshot metadata, if any exists.
+                g_chainman.LoadSnapshotMetadata();
+
+                // Determine how many chains we'll be initializing so that we
+                // can divide up cache sizes properly. If we're working with a
+                // snapshot and we haven't validated it yet, we'll have two
+                // chains.
+                int total_chains_to_load =
+                    (g_chainman.HasSnapshotMetadata() && !g_chainman.IsSnapshotValidated()) ? 2 : 1;
+
+                // If we were using a chainstate snapshot, load and use it.
+                if (g_chainman.HasSnapshotMetadata()) {
+                    LogPrintf("Loading chainstate from snapshot (%s)\n",
+                        g_chainman.SnapshotBlockhash().ToString());
+
+                    g_chainman.InitializeChainstate(
+                        /*activate*/ true, g_chainman.SnapshotBlockhash());
+                }
+
+                // If we're not using a snapshot or we haven't fully validated it yet,
+                // create a validation chainstate.
+                if (!g_chainman.IsSnapshotValidated()) {
+                    LogPrintf("Loading validation chainstate\n");
+                    g_chainman.InitializeChainstate(
+                        /*activate*/ !g_chainman.IsSnapshotActive());
+                }
+
                 UnloadBlockIndex();
 
                 // new CBlockTreeDB tries to delete the existing file, which
@@ -1534,12 +1570,13 @@ bool AppInitMain(InitInterfaces& interfaces)
                 for (CChainState* chainstate : g_chainman.GetAll()) {
                     LogPrintf("Initializing chainstate %s\n", chainstate->ToString());
                     chainstate->InitCoinsDB(
-                        /* cache_size_bytes */ nCoinDBCache,
+                        /* cache_size_bytes */ nCoinDBCache / total_chains_to_load,
                         /* in_memory */ false,
                         /* should_wipe */ fReset || fReindexChainState);
 
                     chainstate->CoinsErrorCatcher().AddReadErrCallback([]() {
                         uiInterface.ThreadSafeMessageBox(
+                            // TODO jamesob: chainstate-specific error message?
                             _("Error reading from database, shutting down.").translated,
                             "", CClientUIInterface::MSG_ERROR);
                     });
