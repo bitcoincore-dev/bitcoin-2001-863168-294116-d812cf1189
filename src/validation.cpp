@@ -4930,6 +4930,24 @@ void ChainstateManager::RunOnAll(const std::function<void(CChainState&)> fn)
     }
 }
 
+std::vector<CChainState*> ChainstateManager::GetAllForBlockDownload()
+{
+    LOCK(m_cs_chainstates);
+    std::vector<CChainState*> out;
+
+    bool snapshot_in_ibd =
+        m_snapshot_chainstate && m_snapshot_chainstate->IsInitialBlockDownload();
+
+    if (m_snapshot_chainstate) {
+        out.push_back(m_snapshot_chainstate.get());
+    }
+    if (!IsSnapshotValidated() && !snapshot_in_ibd && m_ibd_chainstate) {
+        out.push_back(m_ibd_chainstate.get());
+    }
+
+    return out;
+}
+
 CChainState& ChainstateManager::InitializeChainstate(
     bool activate, const uint256& snapshot_blockhash)
 {
