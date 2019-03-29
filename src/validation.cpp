@@ -4789,6 +4789,27 @@ std::vector<CChainState*> ChainstateManager::GetAll()
     return out;
 }
 
+std::vector<CChainState*> ChainstateManager::GetAllForBlockDownload()
+{
+    std::vector<CChainState*> out;
+
+    bool snapshot_in_ibd =
+        m_snapshot_chainstate && m_snapshot_chainstate->IsInitialBlockDownload();
+
+    if (m_snapshot_chainstate) {
+        out.push_back(m_snapshot_chainstate.get());
+    }
+    // Exclude the ibd chainstate (which is in the background if we have a snapshot
+    // chainstate active) if the snapshot chainstate is in IBD because the main
+    // priority is getting the active chain to network tip.
+    if (!IsSnapshotValidated() && !snapshot_in_ibd && m_ibd_chainstate) {
+        out.push_back(m_ibd_chainstate.get());
+    }
+
+    assert(out.size() > 0);
+    return out;
+}
+
 CChainState& ChainstateManager::InitializeChainstate(
     CTxMemPool* mempool, const std::optional<uint256>& snapshot_blockhash)
 {
