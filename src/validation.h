@@ -726,12 +726,22 @@ public:
     bool DisconnectTip(BlockValidationState& state, const CChainParams& chainparams, DisconnectedBlockTransactions* disconnectpool) EXCLUSIVE_LOCKS_REQUIRED(cs_main, m_mempool.cs);
 
     // Manual block validity manipulation:
+
+    //! Mark a block as precious and reorganize.
+    //! May not be called in a validationinterface callback.
     bool PreciousBlock(BlockValidationState& state, const CChainParams& params, CBlockIndex* pindex) LOCKS_EXCLUDED(cs_main);
+
+    //! Mark a block as invalid.
     bool InvalidateBlock(BlockValidationState& state, const CChainParams& chainparams, CBlockIndex* pindex) LOCKS_EXCLUDED(cs_main);
+
+    //! Remove invalidity status from a block and its descendants.
     void ResetBlockFailureFlags(CBlockIndex* pindex) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
-    /** Replay blocks that aren't fully applied to the database. */
+    //! Replay blocks that aren't fully applied to the database.
     bool ReplayBlocks(const CChainParams& params);
+
+    //! When there are blocks in the active chain with missing data, rewind the
+    //! chainstate and remove them from the block index.
     bool RewindBlockIndex(const CChainParams& params) LOCKS_EXCLUDED(cs_main);
     bool LoadGenesisBlock(const CChainParams& chainparams) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
