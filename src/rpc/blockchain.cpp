@@ -2459,6 +2459,43 @@ UniValue loadtxoutset(const JSONRPCRequest& request)
     return result;
 }
 
+UniValue monitorsnapshot(const JSONRPCRequest& request)
+{
+
+    LOCK(cs_main);
+    UniValue obj(UniValue::VOBJ);
+
+    auto make_chain_data = [](CChainState* cs) {
+        UniValue data(UniValue::VOBJ);
+        if (!cs || !cs->m_chain.Tip()) {
+            return data;
+        }
+        const CChain& chain = cs->m_chain;
+        const CBlockIndex* tip = chain.Tip();
+
+        data.pushKV("blocks",                (int)chain.Height());
+        data.pushKV("bestblockhash",         tip->GetBlockHash().GetHex());
+        data.pushKV("difficulty",            (double)GetDifficulty(tip));
+        data.pushKV("mediantime",            (int64_t)tip->GetMedianTimePast());
+        data.pushKV("verificationprogress",  GuessVerificationProgress(Params().TxData(), tip));
+        data.pushKV("snapshot_blockhash",    cs->m_from_snapshot_blockhash.ToString());
+        data.pushKV("initialblockdownload",  cs->IsInitialBlockDownload());
+        return data;
+    };
+
+    obj.pushKV("active_chain_type",
+        ::ChainstateActive().m_from_snapshot_blockhash.IsNull() ?
+        "ibd" : "snapshot");
+
+    for (CChainState* chainstate : g_chainman.GetAll()) {
+        std::string cstype = chainstate->m_from_snapshot_blockhash.IsNull() ? "ibd" : "snapshot";
+        obj.pushKV(cstype, make_chain_data(chainstate));
+    }
+    obj.pushKV("headers", pindexBestHeader ? pindexBestHeader->nHeight : -1);
+
+    return obj;
+}
+
 // clang-format off
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         argNames
@@ -2497,6 +2534,7 @@ static const CRPCCommand commands[] =
     { "hidden",             "syncwithvalidationinterfacequeue", &syncwithvalidationinterfacequeue, {} },
     { "hidden",             "dumptxoutset",           &dumptxoutset,           {"path"} },
     { "hidden",             "loadtxoutset",           &loadtxoutset,           {"path"} },
+    { "hidden",             "monitorsnapshot",        &monitorsnapshot,        {} },
 };
 // clang-format on
 
