@@ -123,6 +123,9 @@ public:
 
         //! Check if transaction will be final given chain height current time.
         virtual bool checkFinalTx(const CTransaction& tx) = 0;
+
+        //! Return the lowest height in the chain at which we've seen block data.
+        virtual int getLowestBlockDataHeight() = 0;
     };
 
     //! Return Lock interface. Chain is locked when this is called, and

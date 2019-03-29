@@ -152,6 +152,14 @@ class LockImpl : public Chain::Lock, public UniqueLock<CCriticalSection>
         return CheckFinalTx(tx);
     }
 
+    int getLowestBlockDataHeight() override
+    {
+        if (g_chainman.IsSnapshotActive() && !g_chainman.IsSnapshotValidated()) {
+            return g_chainman.SnapshotHeight();
+        }
+        return 0;
+    }
+
     using UniqueLock::UniqueLock;
 };
 
@@ -184,14 +192,29 @@ public:
         const CBlockIndex* index,
         const std::vector<CTransactionRef>& tx_conflicted) override
     {
+        if (&chainstate != &::ChainstateActive()) {
+            // Block connections which happen on a non-active chainstate (i.e. a
+            // background-validation chainstate) aren't relevant to us since
+            // we're operating off of a UTXO snapshot which is a more recent
+            // reflection of spentness.
+            return;
+        }
         m_notifications->BlockConnected(*block, tx_conflicted);
     }
     void BlockDisconnected(const CChainState& chainstate, const std::shared_ptr<const CBlock>& block) override
     {
+        if (&chainstate != &::ChainstateActive()) {
+            // We don't expect (or handle) the disconnection of any blocks on a
+            // background-validation chainstate.
+            return;
+        }
         m_notifications->BlockDisconnected(*block);
     }
     void ChainStateFlushed(const CChainState& chainstate, const CBlockLocator& locator) override
     {
+        if (&chainstate != &::ChainstateActive()) {
+            return;
+        }
         m_notifications->ChainStateFlushed(locator);
     }
     void UpdatedBlockTip(const CChainState& chainstate, const CBlockIndex* index, const CBlockIndex* fork_index, bool is_ibd) override
