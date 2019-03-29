@@ -636,6 +636,9 @@ public:
      */
     uint256 m_from_snapshot_blockhash{};
 
+    //! Return true if this chainstate was created from a UTXO snapshot.
+    bool IsFromSnapshot() { return !m_from_snapshot_blockhash.IsNull(); }
+
     /**
      * The set of all CBlockIndex entries with BLOCK_VALID_TRANSACTIONS (for itself and all ancestors) and
      * as good as our current tip or better. Entries may be failed, though, and pruning nodes may be
@@ -1008,6 +1011,10 @@ public:
 
     int SnapshotHeight() const {
         return m_snapshot_metadata ? m_snapshot_metadata->m_base_blockheader.nHeight : -1;
+    }
+
+    unsigned int SnapshotNChainTx() const {
+        return m_snapshot_metadata ? m_snapshot_metadata->m_nchaintx : 0;
     }
 
     /**
