@@ -6,6 +6,7 @@
 #define BITCOIN_RPC_BLOCKCHAIN_H
 
 #include <amount.h>
+#include <fs.h>
 #include <streams.h>
 #include <sync.h>
 
@@ -63,6 +64,11 @@ CBlockPolicyEstimator& EnsureFeeEstimator(const util::Ref& context);
  * Helper to create UTXO snapshots given a chainstate and a file handle.
  * @return a UniValue map containing metadata about the snapshot.
  */
-UniValue CreateUTXOSnapshot(NodeContext& node, CChainState& chainstate, CAutoFile& afile);
+UniValue CreateUTXOSnapshot(
+    NodeContext& node,
+    CChainState& chainstate,
+    CAutoFile& afile,
+    const fs::path path,
+    const fs::path tmppath);
 
 #endif
