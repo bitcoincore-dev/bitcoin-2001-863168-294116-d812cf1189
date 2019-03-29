@@ -467,14 +467,10 @@ public:
      * Load the blocktree off disk and into memory. Populate certain metadata
      * per index entry (nStatus, nChainWork, nTimeMax, etc.) as well as peripheral
      * collections like setDirtyBlockIndex.
-     *
-     * @param[out] block_index_candidates  Fill this set with any valid blocks for
-     *                                     which we've downloaded all transactions.
      */
     bool LoadBlockIndex(
         const Consensus::Params& consensus_params,
-        CBlockTreeDB& blocktree,
-        std::set<CBlockIndex*, CBlockIndexWorkComparator>& block_index_candidates)
+        CBlockTreeDB& blocktree)
         EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
     /** Clear all data members. */
@@ -628,6 +624,9 @@ public:
      * IsNull() if this chainstate was not created from a snapshot.
      */
     uint256 m_from_snapshot_blockhash{};
+
+    //! Return true if this chainstate was created from a UTXO snapshot.
+    bool IsFromSnapshot() { return !m_from_snapshot_blockhash.IsNull(); }
 
     /**
      * The set of all CBlockIndex entries with BLOCK_VALID_TRANSACTIONS (for itself and all ancestors) and
@@ -963,6 +962,10 @@ public:
 
     //! Is there a snapshot in use and has it been fully validated?
     bool IsSnapshotValidated() const { return m_snapshot_validated; }
+
+    unsigned int SnapshotNChainTx() const {
+        return m_snapshot_metadata ? m_snapshot_metadata->m_nchaintx : 0;
+    }
 
     /**
      * @returns true if this chainstate is being used to validate an active
