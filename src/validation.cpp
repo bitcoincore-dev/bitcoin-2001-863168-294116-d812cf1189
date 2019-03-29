@@ -4878,6 +4878,23 @@ std::vector<CChainState*> ChainstateManager::GetAll()
     return out;
 }
 
+std::vector<CChainState*> ChainstateManager::GetAllForBlockDownload()
+{
+    std::vector<CChainState*> out;
+
+    bool snapshot_in_ibd =
+        m_snapshot_chainstate && m_snapshot_chainstate->IsInitialBlockDownload();
+
+    if (m_snapshot_chainstate) {
+        out.push_back(m_snapshot_chainstate.get());
+    }
+    if (!IsSnapshotValidated() && !snapshot_in_ibd && m_ibd_chainstate) {
+        out.push_back(m_ibd_chainstate.get());
+    }
+
+    return out;
+}
+
 CChainState& ChainstateManager::InitializeChainstate(CTxMemPool& mempool, const std::optional<uint256>& snapshot_blockhash)
 {
     bool is_snapshot = snapshot_blockhash.has_value();
