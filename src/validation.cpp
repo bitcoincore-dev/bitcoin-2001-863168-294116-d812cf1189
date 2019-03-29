@@ -77,9 +77,7 @@ bool CBlockIndexWorkComparator::operator()(const CBlockIndex *pa, const CBlockIn
     return false;
 }
 
-namespace {
 BlockManager g_blockman;
-} // anon namespace
 
 std::unique_ptr<CChainState> g_chainstate;
 
@@ -3861,27 +3859,28 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams) EXCLUSIVE_LOCKS_RE
     return true;
 }
 
-bool LoadChainTip(const CChainParams& chainparams)
+bool CChainState::LoadChainTip(const CChainParams& chainparams)
 {
     AssertLockHeld(cs_main);
-    CCoinsViewCache* coins_cache = &::ChainstateActive().CoinsTip();
-    assert(!coins_cache->GetBestBlock().IsNull()); // Never called when the coins view is empty
+    CCoinsViewCache& coins_cache = CoinsTip();
+    assert(!coins_cache.GetBestBlock().IsNull()); // Never called when the coins view is empty
 
-    if (::ChainActive().Tip() && ::ChainActive().Tip()->GetBlockHash() == coins_cache->GetBestBlock()) return true;
+    CBlockIndex* tip = m_chain.Tip();
 
     // Load pointer to end of best chain
-    CBlockIndex* pindex = LookupBlockIndex(coins_cache->GetBestBlock());
+    CBlockIndex* pindex = LookupBlockIndex(coins_cache.GetBestBlock());
     if (!pindex) {
         return false;
     }
-    ::ChainActive().SetTip(pindex);
+    m_chain.SetTip(pindex);
+    PruneBlockIndexCandidates();
 
-    ::ChainstateActive().PruneBlockIndexCandidates();
-
+    tip = m_chain.Tip();
     LogPrintf("Loaded best chain: hashBestChain=%s height=%d date=%s progress=%f\n",
-        ::ChainActive().Tip()->GetBlockHash().ToString(), ::ChainActive().Height(),
-        FormatISO8601DateTime(::ChainActive().Tip()->GetBlockTime()),
-        GuessVerificationProgress(chainparams.TxData(), ::ChainActive().Tip()));
+        tip->GetBlockHash().ToString(),
+        m_chain.Height(),
+        FormatISO8601DateTime(tip->GetBlockTime()),
+        GuessVerificationProgress(chainparams.TxData(), tip));
     return true;
 }
 
