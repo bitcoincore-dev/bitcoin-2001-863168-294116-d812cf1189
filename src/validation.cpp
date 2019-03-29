@@ -81,16 +81,17 @@ namespace {
 BlockManager g_blockman;
 } // anon namespace
 
-std::unique_ptr<CChainState> g_chainstate;
+ChainstateManager g_chainman;
 
-CChainState& ChainstateActive() {
-    assert(g_chainstate);
-    return *g_chainstate;
+CChainState& ChainstateActive()
+{
+    assert(g_chainman.m_active_chainstate);
+    return *g_chainman.m_active_chainstate;
 }
 
-CChain& ChainActive() {
-    assert(g_chainstate);
-    return g_chainstate->m_chain;
+CChain& ChainActive()
+{
+    return ::ChainstateActive().m_chain;
 }
 
 /**
@@ -1248,7 +1249,9 @@ void CoinsViews::InitCache()
 
 // NOTE: for now m_blockman is set to a global, but this will be changed
 // in a future commit.
-CChainState::CChainState() : m_blockman(g_blockman) {}
+CChainState::CChainState(uint256 from_snapshot_blockhash) :
+    m_blockman(g_blockman),
+    m_from_snapshot_blockhash(from_snapshot_blockhash) {}
 
 
 void CChainState::InitCoinsDB(
@@ -1257,6 +1260,10 @@ void CChainState::InitCoinsDB(
     bool should_wipe,
     std::string leveldb_name)
 {
+    if (!m_from_snapshot_blockhash.IsNull()) {
+        leveldb_name += "_" + m_from_snapshot_blockhash.ToString();
+    }
+
     m_coins_views = MakeUnique<CoinsViews>(
         leveldb_name, cache_size_bytes, in_memory, should_wipe);
 }
@@ -4535,7 +4542,7 @@ void CChainState::UnloadBlockIndex() {
 void UnloadBlockIndex()
 {
     LOCK(cs_main);
-    ::ChainActive().SetTip(nullptr);
+    g_chainman.Unload();
     g_blockman.Unload();
     pindexBestInvalid = nullptr;
     pindexBestHeader = nullptr;
@@ -4549,8 +4556,6 @@ void UnloadBlockIndex()
         warningcache[b].clear();
     }
     fHavePruned = false;
-
-    ::ChainstateActive().UnloadBlockIndex();
 }
 
 bool LoadBlockIndex(const CChainParams& chainparams)
@@ -4914,7 +4919,8 @@ void CChainState::CheckBlockIndex(const Consensus::Params& consensusParams)
 std::string CChainState::ToString()
 {
     CBlockIndex* tip = m_chain.Tip();
-    return strprintf("Chainstate [%s] @ height %d",
+    return strprintf("Chainstate [%s] @ height %d (%s)",
+        m_from_snapshot_blockhash.IsNull() ? "ibd" : "snapshot",
         tip ? tip->nHeight : -1, tip ? tip->GetBlockHash().ToString() : "null");
 }
 
@@ -5112,3 +5118,50 @@ public:
     }
 };
 static CMainCleanup instance_of_cmaincleanup;
+
+//
+// ChainstateManager
+//
+
+std::vector<CChainState*> ChainstateManager::GetAll()
+{
+    std::vector<CChainState*> out;
+
+    if (!IsSnapshotValidated() && m_ibd_chainstate) {
+        out.push_back(m_ibd_chainstate.get());
+    }
+
+    if (m_snapshot_chainstate) {
+        out.push_back(m_snapshot_chainstate.get());
+    }
+
+    return out;
+}
+
+void ChainstateManager::RunOnAll(const std::function<void(CChainState&)> fn)
+{
+    for (CChainState* chainstate : GetAll()) {
+        fn(*chainstate);
+    }
+}
+
+CChainState& ChainstateManager::InitializeChainstate(
+    bool activate, const uint256& snapshot_blockhash)
+{
+    std::unique_ptr<CChainState>& to_modify = (
+        snapshot_blockhash.IsNull() ? m_ibd_chainstate : m_snapshot_chainstate);
+
+    to_modify.reset(new CChainState(snapshot_blockhash));
+
+    if (activate) {
+        LogPrintf("Switching active chainstate to %s\n", snapshot_blockhash.ToString());
+        m_active_chainstate = to_modify.get();
+    }
+
+    return *to_modify.get();
+}
+
+CChain& ChainstateManager::ActiveChain() const
+{
+    return m_active_chainstate->m_chain;
+}
