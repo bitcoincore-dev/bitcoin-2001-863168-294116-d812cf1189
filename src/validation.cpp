@@ -2548,6 +2548,20 @@ bool CChainState::ConnectTip(BlockValidationState& state, const CChainParams& ch
     LogPrint(BCLog::BENCH, "  - Connect postprocess: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime6 - nTime5) * MILLI, nTimePostConnect * MICRO, nTimePostConnect * MILLI / nBlocksTotal);
     LogPrint(BCLog::BENCH, "- Connect block: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime6 - nTime1) * MILLI, nTimeTotal * MICRO, nTimeTotal * MILLI / nBlocksTotal);
 
+    // If this is our non-active validation chainstate, check to see if it's
+    // time we compare the UTXO set hash to the base of our active snapshot.
+    //
+    if (g_chainman.IsBackgroundIBD(this)) {
+        if (pindexNew->nHeight > g_chainman.GetSnapshotHeight()) {
+            // TODO jamesob: better handling?
+            LogPrintf("[snapshot] something is wrong! validation chain " /* Continued */
+                "should not have continued past the snapshot origin\n");
+        } else if (pindexNew->nHeight == g_chainman.GetSnapshotHeight()) {
+            // This may set `m_stop_use`.
+            g_chainman.CompleteSnapshotValidation(this);
+        }
+    }
+
     connectTrace.BlockConnected(pindexNew, std::move(pthisBlock));
     return true;
 }
@@ -2765,6 +2779,7 @@ bool CChainState::ActivateBestChain(BlockValidationState &state, const CChainPar
     // we use m_cs_chainstate to enforce mutual exclusion so that only one caller may execute this function at a time
     LOCK(m_cs_chainstate);
 
+    bool started_in_ibd = this->IsInitialBlockDownload();
     CBlockIndex *pindexMostWork = nullptr;
     CBlockIndex *pindexNewTip = nullptr;
     int nStopAtHeight = gArgs.GetArg("-stopatheight", DEFAULT_STOPATHEIGHT);
@@ -2840,6 +2855,12 @@ bool CChainState::ActivateBestChain(BlockValidationState &state, const CChainPar
 
         if (nStopAtHeight && pindexNewTip && pindexNewTip->nHeight >= nStopAtHeight) StartShutdown();
 
+        // This will have been toggled in ABCStep -> ConnectTip -> CompleteSnapshotValidation,
+        // if at all, so we should catch it here.
+        if (m_stop_use) {
+            return true;
+        }
+
         // We check shutdown only after giving ActivateBestChainStep a chance to run once so that we
         // never shutdown before connecting the genesis block during LoadChainTip(). Previously this
         // caused an assert() failure during shutdown in such cases as the UTXO DB flushing checks
@@ -2847,6 +2868,11 @@ bool CChainState::ActivateBestChain(BlockValidationState &state, const CChainPar
         if (ShutdownRequested()) break;
     } while (pindexNewTip != pindexMostWork);
     CheckBlockIndex(chainparams.GetConsensus());
+
+    if (started_in_ibd && !this->IsInitialBlockDownload()) {
+        // This chainstate has transitioned out of IBD, so consider rebalancing caches.
+        WITH_LOCK(::cs_main, g_chainman.MaybeRebalanceCaches());
+    }
 
     // Write changes periodically to disk, after relay.
     if (!FlushStateToDisk(chainparams, state, FlushStateMode::PERIODIC)) {
@@ -5183,6 +5209,90 @@ bool ChainstateManager::PopulateAndValidateSnapshot(
     return true;
 }
 
+bool ChainstateManager::CompleteSnapshotValidation(CChainState* validation_chainstate)
+{
+    AssertLockHeld(cs_main);
+    {
+        assert(validation_chainstate == m_ibd_chainstate.get());
+    }
+
+    CCoinsViewDB& ibd_coins_db = validation_chainstate->CoinsDB();
+    validation_chainstate->ForceFlushStateToDisk();
+
+    CCoinsStats ibd_stats{CoinStatsHashType::HASH_SERIALIZED};
+    auto breakpoint_fnc = [] { /* TODO insert breakpoint here? */ };
+
+    if (!GetUTXOStats(&ibd_coins_db, WITH_LOCK(::cs_main, return std::ref(m_blockman)), ibd_stats, breakpoint_fnc)) {
+        LogPrintf("[snapshot] failed to generate stats for validation coins db\n");
+        return false;
+    }
+
+    auto snapshot_blockhash = SnapshotBlockhash().value_or(uint256());
+
+    LogPrintf("[snapshot] tip: actual=%s expected=%s\n",
+            validation_chainstate->m_chain.Tip()->ToString(),
+            snapshot_blockhash.ToString());
+
+    uint256 expected_contents_hash;
+    int curr_height = validation_chainstate->m_chain.Height();
+
+    bool snapshot_invalid{false};
+    auto maybe_au_data = ExpectedAssumeutxo(curr_height, ::Params());
+
+    if (!maybe_au_data) {
+        LogPrintf("[snapshot] assumeutxo data not found for height " /* Continued */
+            "(%d) - refusing to validate snapshot\n", curr_height);
+        return false;
+    }
+
+    const AssumeutxoData& au_data = *maybe_au_data;
+
+    // Compare the background validation chainstate's UTXO set hash against the hard-coded
+    // assumeutxo hash we expect.
+    //
+    // TODO: For belt-and-suspenders, we should cache an obfuscated version of the UTXO set
+    // hash for the snapshot when it's loaded in its chainstate's leveldb. We should then
+    // reference that here for an additional check.
+    if (AssumeutxoHash{ibd_stats.hashSerialized} != au_data.hash_serialized) {
+        LogPrintf("[snapshot] hash mismatch: actual=%s, expected=%s\n",
+            ibd_stats.hashSerialized.ToString(),
+            expected_contents_hash.ToString());
+        snapshot_invalid = true;
+    }
+    if (validation_chainstate->m_chain.Height() != GetSnapshotHeight()) {
+        LogPrintf("[snapshot] height mismatch: actual=%d expected=%d\n",
+            validation_chainstate->m_chain.Height(), GetSnapshotHeight().value_or(-1));
+        snapshot_invalid = true;
+    }
+
+    if (snapshot_invalid) {
+        LogPrintf("[snapshot] !!! the snapshot you've been working off of is invalid\n");
+        LogPrintf("[snapshot] deleting snapshot and reverting to validated chain\n");
+
+        {
+            m_active_chainstate = m_ibd_chainstate.get();
+            m_snapshot_chainstate->m_stop_use = true;
+        }
+        LogPrintf("[snapshot] SHUTTING DOWN!\n");
+        StartShutdown();
+
+        return false;
+    }
+    LogPrintf("[snapshot] snapshot beginning at %s has been fully validated\n",
+        snapshot_blockhash.ToString());
+
+    m_snapshot_validated = true;
+
+    // m_ibd_chainstate is the same as validation_chainstate, per the assertion above.
+    // Modification happens to the argument (this symbol) to make it explicit that
+    // the caller might act specifically based on this value being different.
+    //
+    // Chainstate will be destructed during Shutdown().
+    validation_chainstate->m_stop_use = true;
+
+    return true;
+}
+
 CChainState& ChainstateManager::GetChainstateForNewBlock(const uint256& blockhash)
 {
     auto* pblock = m_blockman.LookupBlockIndex(blockhash);
@@ -5239,11 +5349,26 @@ void ChainstateManager::Unload()
 
 void ChainstateManager::Reset()
 {
-    LOCK(::cs_main);
+    auto get_storage_path = [](std::unique_ptr<CChainState>& chainstate) EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+            -> fs::path {
+        if (!chainstate) {
+            return fs::path();
+        }
+        return chainstate->CoinsDB().StoragePath();
+    };
+    fs::path valid_chainstate_path = get_storage_path(m_ibd_chainstate);
+    fs::path snapshot_chainstate_path = get_storage_path(m_snapshot_chainstate);
+    bool should_cleanup_snapshot = m_snapshot_chainstate && m_snapshot_validated;
+
     m_ibd_chainstate.reset();
     m_snapshot_chainstate.reset();
     m_active_chainstate = nullptr;
     m_snapshot_validated = false;
+
+    if (should_cleanup_snapshot) {
+        this->ValidatedSnapshotShutdownCleanup(
+            snapshot_chainstate_path, valid_chainstate_path);
+    }
 }
 
 void ChainstateManager::MaybeRebalanceCaches()
@@ -5253,7 +5378,8 @@ void ChainstateManager::MaybeRebalanceCaches()
         // Allocate everything to the IBD chainstate.
         m_ibd_chainstate->ResizeCoinsCaches(m_total_coinstip_cache, m_total_coinsdb_cache);
     }
-    else if (m_snapshot_chainstate && !m_ibd_chainstate) {
+    else if (m_snapshot_chainstate && m_snapshot_validated) {
+        // If background validation has completed and snapshot is our active chain...
         LogPrintf("[snapshot] allocating all cache to the snapshot chainstate\n");
         // Allocate everything to the snapshot chainstate.
         m_snapshot_chainstate->ResizeCoinsCaches(m_total_coinstip_cache, m_total_coinsdb_cache);
@@ -5338,4 +5464,32 @@ bool ChainstateManager::DetectSnapshotChainstate(CTxMemPool& mempool)
         }
     }
     return false;
+}
+
+void ChainstateManager::ValidatedSnapshotShutdownCleanup(
+    fs::path new_chainstate, fs::path old_chainstate)
+{
+    // Both paths should exist.
+    assert(fs::exists(new_chainstate));
+    assert(fs::exists(old_chainstate));
+    LogPrintf("[snapshot] deleting background chainstate directory (now unnecessary) (%s)\n", old_chainstate);
+    assert(fs::remove_all(old_chainstate) > 0);
+    LogPrintf(
+        "[snapshot] moving snapshot chainstate (%s) to default chainstate directory (%s)\n",
+        new_chainstate, old_chainstate);
+    fs::rename(new_chainstate, old_chainstate);
+}
+
+void ChainstateManager::CheckForUncleanShutdown()
+{
+    if (!(m_snapshot_chainstate && m_ibd_chainstate)) {
+        return;
+    }
+    if (m_ibd_chainstate->m_chain.Height() != this->GetSnapshotHeight()) {
+        return;
+    }
+    LogPrintf(
+        "[snapshot] unclean shutdown detected - background validation chain needs to " /* Continued */
+        "be checked against the loaded snapshot and cleaned up.\n");
+    this->CompleteSnapshotValidation(m_ibd_chainstate.get());
 }

@@ -593,6 +593,12 @@ protected:
     //! Manages the UTXO set, which is a reflection of the contents of `m_chain`.
     std::unique_ptr<CoinsViews> m_coins_views;
 
+    //! This toggle exists for use when doing background validation for UTXO
+    //! snapshots. It is set once the background validation chain reaches the
+    //! same height as the base of the snapshot, and signals that we should no
+    //! longer connect blocks to this chainstate.
+    bool m_stop_use{false};
+
 public:
     //! Reference to a BlockManager instance which itself is shared across all
     //! CChainState instances.
@@ -878,7 +884,10 @@ private:
     CChainState* m_active_chainstate GUARDED_BY(::cs_main) {nullptr};
 
     //! If true, the assumed-valid chainstate has been fully validated
-    //! by the background validation chainstate.
+    //! by the background validation chainstate. This will trigger shutdown
+    //! logic.
+    //!
+    //! @sa ValidatedSnapshotShutdownCleanup()
     bool m_snapshot_validated{false};
 
     //! Internal helper for ActivateSnapshot().
@@ -890,6 +899,11 @@ private:
     // For access to m_active_chainstate.
     friend CChainState& ChainstateActive();
     friend CChain& ChainActive();
+
+    //! If we have validated a snapshot chain during this runtime, copy its
+    //! chainstate directory over to the main `chainstate` location, completing
+    //! validation of the snapshot.
+    void ValidatedSnapshotShutdownCleanup(fs::path new_chainstate, fs::path old_chainstate);
 
 public:
     std::thread m_load_block;
@@ -939,6 +953,16 @@ public:
     //!   ChainstateActive().
     [[nodiscard]] bool ActivateSnapshot(
         CAutoFile& coins_file, const SnapshotMetadata& metadata, bool in_memory);
+
+    //! Once the background validation chainstate has reached the height which
+    //! is the base of the UTXO snapshot in use, compare its coins to ensure
+    //! they match those expected by the snapshot.
+    //!
+    //! If the coins match (expected), then mark the validation chainstate for
+    //! deletion and continue using the snapshot chainstate as active.
+    //! Otherwise, revert to using the ibd chainstate and shutdown (TODO).
+    bool CompleteSnapshotValidation(
+        CChainState* validation_chainstate) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
     //! Return the relevant chainstate for a new block.
     //!
@@ -1028,7 +1052,7 @@ public:
     void Unload() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     //! Clear (deconstruct) chainstate data.
-    void Reset();
+    void Reset() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     //! Check to see if caches are out of balance and if so, call
     //! ResizeCoinsCaches() as needed.
