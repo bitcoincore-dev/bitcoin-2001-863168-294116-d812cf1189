@@ -257,9 +257,7 @@ void Shutdown(NodeContext& node)
         LOCK(cs_main);
         for (CChainState* chainstate : g_chainman.GetAll()) {
             if (chainstate->CanFlushToDisk()) {
-                LogPrintf("[snapshot] resetting coinsviews for %s\n", chainstate->ToString());
                 chainstate->ForceFlushStateToDisk();
-                chainstate->ResetCoinsViews();
             }
         }
         ::pblocktree.reset();
@@ -288,7 +286,11 @@ void Shutdown(NodeContext& node)
     GetMainSignals().UnregisterBackgroundSignalScheduler();
     GetMainSignals().UnregisterWithMempoolSignals(mempool);
     globalVerifyHandle.reset();
-    g_chainman.Reset();
+
+    {
+        LOCK(::cs_main);
+        g_chainman.Reset();
+    }
     ECC_Stop();
     LogPrintf("%s: done\n", __func__);
 }
@@ -1611,6 +1613,7 @@ bool AppInitMain(NodeContext& node)
                     break;
                 }
 
+                g_chainman.CheckForUncleanShutdown();
                 // Now that chainstates are loaded and we're able to flush to
                 // disk, rebalance the coins caches to desired levels based
                 // on the condition of each chainstate.
