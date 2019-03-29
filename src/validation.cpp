@@ -18,6 +18,7 @@
 #include <cuckoocache.h>
 #include <deploymentstatus.h>
 #include <flatfile.h>
+#include <fs.h>
 #include <hash.h>
 #include <index/blockfilterindex.h>
 #include <logging.h>
@@ -5215,4 +5216,49 @@ bool CChainState::destroyCoinsDB(const std::string& db_path)
     // teardown all coinsviews.
     m_coins_views.reset();
     return dbwrapper::DestroyDB(db_path, options).ok();
+}
+
+constexpr int SNAPSHOT_NAME_LEN = 75; // "chainstate_" + 64 hex characters for blockhash.
+
+static bool IsPathSnapshotDatadir(const fs::path& datadir_path)
+{
+    return fs::PathToString(datadir_path.filename()).length() == SNAPSHOT_NAME_LEN &&
+        fs::PathToString(datadir_path.filename()).substr(0,11) == "chainstate_";
+}
+
+static uint256 PathToSnapshotHash(const fs::path& datadir_path)
+{
+    assert(IsPathSnapshotDatadir(datadir_path));
+    return uint256S(fs::PathToString(datadir_path.filename()).substr(11));
+}
+
+static std::optional<fs::path> FindSnapshotChainstateDatadir()
+{
+    fs::path found;
+
+    for (fs::directory_iterator it(gArgs.GetDataDirNet()); it != fs::directory_iterator(); it++) {
+        if (fs::is_directory(*it) && !fs::is_empty(*it) && IsPathSnapshotDatadir(it->path()))
+        {
+            if (found.empty()) {
+                found = it->path();
+                LogPrintf("[snapshot] found snapshot datadir %s\n", fs::PathToString(found));
+            } else {
+                LogPrintf("[snapshot] WARNING - detected multiple snapshot " /* Continued */
+                    "datadirs (%s). This is not expected.\n", fs::PathToString(it->path()));
+            }
+        }
+    }
+    return found.empty() ? std::nullopt : std::make_optional(found);
+}
+
+bool ChainstateManager::DetectSnapshotChainstate(CTxMemPool* mempool)
+{
+    std::optional<fs::path> path = FindSnapshotChainstateDatadir();
+    if (!path) {
+        return false;
+    }
+    LogPrintf("[snapshot] detected active snapshot chainstate (%s) - loading\n",
+        fs::PathToString(*path));
+    this->InitializeChainstate(mempool, /*snapshot_blockhash*/ PathToSnapshotHash(*path));
+    return true;
 }
