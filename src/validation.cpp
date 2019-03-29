@@ -3827,6 +3827,12 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
 {
     AssertLockNotHeld(cs_main);
 
+    CChainState* chainstate;
+    {
+        LOCK(cs_main);
+        chainstate = &g_chainman.GetChainstateForNewBlock(pblock->GetHash());
+    }
+
     {
         CBlockIndex *pindex = nullptr;
         if (fNewBlock) *fNewBlock = false;
@@ -3841,7 +3847,7 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
         bool ret = CheckBlock(*pblock, state, chainparams.GetConsensus());
         if (ret) {
             // Store to disk
-            ret = ::ChainstateActive().AcceptBlock(pblock, state, chainparams, &pindex, fForceProcessing, nullptr, fNewBlock);
+            ret = chainstate->AcceptBlock(pblock, state, chainparams, &pindex, fForceProcessing, nullptr, fNewBlock);
         }
         if (!ret) {
             GetMainSignals().BlockChecked(*pblock, state);
@@ -3849,10 +3855,12 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
         }
     }
 
-    NotifyHeaderTip();
+    if (WITH_LOCK(::cs_main, return chainstate == &::ChainstateActive())) {
+        NotifyHeaderTip();
+    }
 
     BlockValidationState state; // Only used to report errors, not invalidity - ignore it
-    if (!::ChainstateActive().ActivateBestChain(state, chainparams, pblock))
+    if (!chainstate->ActivateBestChain(state, chainparams, pblock))
         return error("%s: ActivateBestChain failed (%s)", __func__, state.ToString());
 
     return true;
@@ -5291,8 +5299,7 @@ bool ChainstateManager::ActivateSnapshot(
     uint256 base_blockhash = metadata.m_base_blockhash;
 
     // Can't activate a snapshot more than once.
-    auto snapshot_blockhash = this->SnapshotBlockhash();
-    assert(!snapshot_blockhash || snapshot_blockhash.get().IsNull());
+    assert(!m_snapshot_chainstate);
     int64_t current_coinsdb_cache_size{0};
     int64_t current_coinstip_cache_size{0};
 
@@ -5518,6 +5525,16 @@ bool ChainstateManager::PopulateAndValidateSnapshot(
     LogPrintf("[snapshot] validated snapshot (%.2f MB)\n",
         coins_cache.DynamicMemoryUsage() / (1000 * 1000));
     return true;
+}
+
+CChainState& ChainstateManager::GetChainstateForNewBlock(const uint256& blockhash)
+{
+    if (m_snapshot_chainstate &&
+            !m_snapshot_chainstate->m_chain.Contains(LookupBlockIndex(blockhash))) {
+        return *m_snapshot_chainstate.get();
+    }
+    assert(m_ibd_chainstate);
+    return *m_ibd_chainstate.get();
 }
 
 CChain& ChainstateManager::ActiveChain() const
