@@ -3705,8 +3705,9 @@ bool BlockManager::LoadBlockIndex(const Consensus::Params& consensus_params, CBl
             setDirtyBlockIndex.insert(pindex);
         }
         if (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) && (pindex->HaveTxsDownloaded() || pindex->pprev == nullptr))
-            // TODO(utxosnapshots) run on all chainstates
-            ::ChainstateActive().setBlockIndexCandidates.insert(pindex);
+            g_chainman.RunOnAll([pindex](CChainState& chainstate) {
+                chainstate.setBlockIndexCandidates.insert(pindex);
+            });
         if (pindex->nStatus & BLOCK_FAILED_MASK && (!pindexBestInvalid || pindex->nChainWork > pindexBestInvalid->nChainWork))
             pindexBestInvalid = pindex;
         if (pindex->pprev)
