@@ -14,6 +14,7 @@
 #include <coinstats.h>
 #include <consensus/validation.h>
 #include <core_io.h>
+#include <fs.h>
 #include <hash.h>
 #include <index/txindex.h>
 #include <key_io.h>
@@ -2331,6 +2332,54 @@ UniValue dumptxoutset(const JSONRPCRequest& request)
     return result;
 }
 
+UniValue loadtxoutset(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 1)
+        throw std::runtime_error(
+            RPCHelpMan{"loadtxoutset",
+                "\nLoad the serialized UTXO set from disk.\n",
+                {
+                    {"path",
+                        RPCArg::Type::STR,
+                        RPCArg::Optional::NO,
+                        /* default_val */ "",
+                        "path to the snapshot file. If relative, will be prefixed by datadir."},
+                },
+                RPCResults{},
+                RPCExamples{"{\n"
+                "  \"coins_loaded\": n,   (numeric) the number of coins loaded by the snapshot\n"
+                "  \"tip_hash\": \"...\",   (string) the hash of the new tip\n"
+                "  \"tip_height\": n,     (string) the height of the new chain\n"
+                "  \"path\": \"...\"         (string) the absolute path that the snapshot was loaded\n"
+                "]\n"},
+            }.ToString()
+        );
+
+    fs::path path = request.params[0].get_str();
+    if (path.is_relative()) {
+        path = fs::absolute(path, GetDataDir());
+    }
+    FILE* file{fsbridge::fopen(path, "rb")};
+    CAutoFile afile{file, SER_DISK, CLIENT_VERSION};
+    SnapshotMetadata metadata;
+    afile >> metadata;
+
+    if (!g_chainman.ActivateSnapshot(
+            &afile, metadata, ::ChainstateActive().m_coins_cache_size_bytes, false)) {
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Unable to load UTXO snapshot " + path.string());
+    }
+    CBlockIndex* new_tip{::ChainActive().Tip()};
+
+    UniValue result(UniValue::VOBJ);
+    result.pushKV("coins_loaded", metadata.m_coins_count);
+    result.pushKV("tip_hash", new_tip->GetBlockHash().ToString());
+    result.pushKV("base_height", new_tip->nHeight);
+    result.pushKV("path", path.string());
+    return result;
+
+    return tfm::format("Loaded snapshot %s", metadata.m_base_blockheader.GetBlockHash().ToString());
+}
+
 // clang-format off
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         argNames
@@ -2359,6 +2408,7 @@ static const CRPCCommand commands[] =
     { "blockchain",         "preciousblock",          &preciousblock,          {"blockhash"} },
     { "blockchain",         "scantxoutset",           &scantxoutset,           {"action", "scanobjects"} },
     { "blockchain",         "dumptxoutset",           &dumptxoutset,           {"path"} },
+    { "blockchain",         "loadtxoutset",           &loadtxoutset,           {"path"} },
 
     /* Not shown in help */
     { "hidden",             "invalidateblock",        &invalidateblock,        {"blockhash"} },
