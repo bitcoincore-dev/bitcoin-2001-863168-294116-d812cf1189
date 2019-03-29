@@ -5280,7 +5280,8 @@ bool ChainstateManager::ActivateSnapshot(
     uint256 base_blockhash = metadata.m_base_blockhash;
 
     // Can't activate a snapshot more than once.
-    assert(m_snapshot_blockhash.IsNull());
+    auto snapshot_blockhash = this->SnapshotBlockhash();
+    assert(!snapshot_blockhash || snapshot_blockhash.get().IsNull());
     int64_t current_coinsdb_cache_size{0};
     int64_t current_coinstip_cache_size{0};
 
@@ -5325,7 +5326,6 @@ bool ChainstateManager::ActivateSnapshot(
         assert(m_snapshot_chainstate->LoadChainTip(::Params()));
 
         m_active_chainstate = m_snapshot_chainstate.get();
-        m_snapshot_blockhash = metadata.m_base_blockhash;
         // Don't rebalance disk or FlushStateToDisk
     }
     LogPrintf("[snapshot] successfully activated snapshot %s\n", base_blockhash.ToString());
@@ -5381,7 +5381,7 @@ bool ChainstateManager::PopulateAndValidateSnapshot(
             if (ShutdownRequested()) {
                 return false;
             }
-            if (snapshot_chainstate.GetCoinsCacheSizeState() >= CoinsCacheSizeState::CRITICAL) {
+            if (snapshot_chainstate.GetCoinsCacheSizeState(::mempool) >= CoinsCacheSizeState::CRITICAL) {
                 LogPrintf("[snapshot] flushing coins cache (%.2f MB)... ", /* Continued */
                     coins_cache.DynamicMemoryUsage() / (1000 * 1000));
                 flush_now = GetTimeMillis();
