@@ -1025,6 +1025,28 @@ public:
     //! ResizeCoinsCaches() as needed.
     void MaybeRebalanceCaches() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
+    //! Returns true if any chainstate in use is in initial block download.
+    bool IsAnyChainInIBD() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! When starting up, search the datadir for a chainstate based on a UTXO
+    //! snapshot that is in the process of being validated.
+    bool DetectSnapshotChainstate(CTxMemPool& mempool) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! If we completed background validation of the loaded snapshot during the
+    //! last run but didn't for whatever reason shutdown properly, ensure that
+    //! the background validation chainstate is marked accordingly.
+    void CheckForUncleanShutdown() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! Return the cached nChainTx value for the snapshot (per the chainparams assumeutxo data),
+    //! if one exists
+    std::optional<unsigned int> GetSnapshotNChainTx() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! @returns height at which the active UTXO snapshot was taken, if applicable.
+    std::optional<CBlockIndex*> GetSnapshotBaseBlock() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! @returns height at which the active UTXO snapshot was taken, if a snapshot is being used.
+    std::optional<int> GetSnapshotHeight() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
     ~ChainstateManager() {
         LOCK(::cs_main);
         UnloadBlockIndex(/* mempool */ nullptr, *this);

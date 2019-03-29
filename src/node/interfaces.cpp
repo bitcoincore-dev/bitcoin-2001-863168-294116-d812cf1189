@@ -457,6 +457,11 @@ public:
         LOCK(cs_main);
         return CheckFinalTx(chainman().ActiveChain().Tip(), tx);
     }
+    int getLowestBlockDataHeight() override
+    {
+        LOCK(cs_main);
+        return Assert(m_node.chainman)->GetSnapshotNChainTx().value_or(0);
+    }
     std::optional<int> findLocatorFork(const CBlockLocator& locator) override
     {
         LOCK(cs_main);
