@@ -8,6 +8,7 @@
 
 #include <coins.h>
 #include <dbwrapper.h>
+#include <fs.h>
 #include <chain.h>
 #include <primitives/block.h>
 
@@ -67,6 +68,9 @@ public:
 
     //! Dynamically alter the underlying leveldb cache size.
     void ResizeCache(size_t new_cache_size);
+
+    //! @returns filesystem path to on-disk storage.
+    fs::path StoragePath() { return db->StoragePath(); }
 };
 
 /** Specialization of CCoinsViewCursor to iterate over a CCoinsViewDB */
