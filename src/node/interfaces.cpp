@@ -443,6 +443,14 @@ public:
         LOCK(cs_main);
         return CheckFinalTx(tx);
     }
+    int getLowestBlockDataHeight() override
+    {
+        LOCK(cs_main);
+        if (g_chainman.IsSnapshotActive() && !g_chainman.IsSnapshotValidated()) {
+            return g_chainman.SnapshotHeight();
+        }
+        return 0;
+    }
     Optional<int> findLocatorFork(const CBlockLocator& locator) override
     {
         LOCK(cs_main);

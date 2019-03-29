@@ -1067,7 +1067,7 @@ public:
     //! the background validation chainstate is marked accordingly.
     void CheckForUncleanShutdown() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
-    std::optional<unsigned int> GetSnapshotNChainTx() EXCLUSIVE_LOCKS_Rbitnomial/EQUIRED(::cs_main);
+    std::optional<unsigned int> GetSnapshotNChainTx() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 };
 
 /** DEPRECATED! Please use node.chainman instead. May only be used in validation.cpp internally */

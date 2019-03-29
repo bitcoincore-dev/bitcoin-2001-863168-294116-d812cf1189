@@ -4092,8 +4092,10 @@ bool BlockManager::LoadBlockIndex(
         vSortedByHeight.push_back(std::make_pair(pindex->nHeight, pindex));
     }
     sort(vSortedByHeight.begin(), vSortedByHeight.end());
+    const uint256 snapshot_blockhash =
+        g_chainman.SnapshotBlockhash().value_or(uint256());
     const bool using_unvalidated_snapshot =
-        !g_chainman.SnapshotBlockhash()->IsNull() && !g_chainman.IsSnapshotValidated();
+        !snapshot_blockhash.IsNull() && !g_chainman.IsSnapshotValidated();
     bool pindex_assumed_valid = false;
 
     for (const std::pair<int, CBlockIndex*>& item : vSortedByHeight)
