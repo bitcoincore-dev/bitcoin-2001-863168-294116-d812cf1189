@@ -2766,6 +2766,13 @@ bool CWallet::AttachChain(const std::shared_ptr<CWallet>& walletInstance, interf
 
     if (tip_height && *tip_height != rescan_height)
     {
+        int lowest_height_with_data = chain.getLowestBlockDataHeight();
+        if (lowest_height_with_data == -1) {
+            // If for some weird reason our Tip() doesn't even have block data, disable
+            // rescans.
+            lowest_height_with_data = *tip_height + 1;
+        }
+
         if (chain.havePruned()) {
             int block_height = *tip_height;
             while (block_height > 0 && chain.haveBlockOnDisk(block_height - 1) && rescan_height != block_height) {
@@ -2782,6 +2789,13 @@ bool CWallet::AttachChain(const std::shared_ptr<CWallet>& walletInstance, interf
                 error = _("Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of pruned node)");
                 return false;
             }
+        }
+        // Otherwise refuse to rescan if we have an assumed-valid region of the chain and
+        // the rescan height is at or lower than blocks we have data for.
+        else if (rescan_height < lowest_height_with_data) {
+            error = _("Assumed-valid: rescan height goes beyond blocks "
+                "we have data for. You need to wait for background validation to complete");
+            return false;
         }
 
         chain.initMessage(_("Rescanning…").translated);
