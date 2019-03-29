@@ -2788,6 +2788,85 @@ static RPCHelpMan loadtxoutset()
     };
 }
 
+const std::vector<RPCResult> RPCHelpForChainstate{
+    {RPCResult::Type::NUM, "blocks", "number of blocks in this chainstate"},
+    {RPCResult::Type::STR_HEX, "bestblockhash", "blockhash of the tip"},
+    {RPCResult::Type::NUM, "difficulty", "difficulty of the tip"},
+    {RPCResult::Type::NUM, "verificationprogress", "progress towards the network tip"},
+    {RPCResult::Type::STR_HEX, "snapshot_blockhash", /*optional=*/true, "the base block of the snapshot this chainstate is based on, if any"},
+    {RPCResult::Type::BOOL, "initialblockdownload", "is this chainstate in IBD"},
+    {RPCResult::Type::NUM, "coins_db_cache_bytes", "size of the coinsdb cache"},
+    {RPCResult::Type::NUM, "coins_tip_cache_bytes", "size of the coinstip cache"},
+};
+
+static RPCHelpMan getchainstates()
+{
+return RPCHelpMan{
+        "getchainstates",
+        "\nReturn information about chainstates.\n",
+        {},
+        RPCResult{
+            RPCResult::Type::OBJ, "", "", {
+                {RPCResult::Type::STR, "active_chain_type", "one of \"ibd\", \"snapshot\", \"validated_snapshot\""},
+                {RPCResult::Type::NUM, "headers", "the number of headers seen so far"},
+                {RPCResult::Type::OBJ, "ibd", /*optional=*/true, "a traditional initial block download chainstate", RPCHelpForChainstate},
+                {RPCResult::Type::OBJ, "snapshot", /*optional=*/true, "a traditional initial block download chainstate", RPCHelpForChainstate},
+                {RPCResult::Type::OBJ, "validated_snapshot", /*optional=*/true, "a traditional initial block download chainstate", RPCHelpForChainstate},
+            }
+        },
+        RPCExamples{
+            HelpExampleCli("getchainstates", "")
+    + HelpExampleRpc("getchainstates", "")
+        },
+        [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
+{
+    LOCK(cs_main);
+    UniValue obj(UniValue::VOBJ);
+
+    NodeContext& node = EnsureAnyNodeContext(request.context);
+    ChainstateManager& chainman = *node.chainman;
+
+    auto make_chain_data = [&](Chainstate* cs) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
+        AssertLockHeld(::cs_main);
+        UniValue data(UniValue::VOBJ);
+        if (!cs || !cs->m_chain.Tip()) {
+            return data;
+        }
+        const CChain& chain = cs->m_chain;
+        const CBlockIndex* tip = chain.Tip();
+
+        data.pushKV("blocks",                (int)chain.Height());
+        data.pushKV("bestblockhash",         tip->GetBlockHash().GetHex());
+        data.pushKV("difficulty",            (double)GetDifficulty(tip));
+        data.pushKV("verificationprogress",  GuessVerificationProgress(Params().TxData(), tip));
+        data.pushKV("snapshot_blockhash",    cs->m_from_snapshot_blockhash.value_or(uint256{}).ToString());
+        data.pushKV("initialblockdownload",  chainman.IsInitialBlockDownload());
+        data.pushKV("coins_db_cache_bytes",  cs->m_coinsdb_cache_size_bytes);
+        data.pushKV("coins_tip_cache_bytes", cs->m_coinstip_cache_size_bytes);
+        return data;
+    };
+
+    auto get_chain_type = [&chainman](Chainstate* cs) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
+        AssertLockHeld(::cs_main);
+        if (cs->m_from_snapshot_blockhash) {
+            return (chainman.IsSnapshotValidated() ? "validated_snapshot" : "snapshot");
+        }
+        return "ibd";
+    };
+
+    obj.pushKV("active_chain_type", get_chain_type(&chainman.ActiveChainstate()));
+
+    for (Chainstate* chainstate : chainman.GetAll()) {
+        obj.pushKV(get_chain_type(chainstate), make_chain_data(chainstate));
+    }
+    obj.pushKV("headers", chainman.m_best_header ? chainman.m_best_header->nHeight : -1);
+
+    return obj;
+}
+    };
+}
+
+
 void RegisterBlockchainRPCCommands(CRPCTable& t)
 {
     static const CRPCCommand commands[]{
@@ -2813,6 +2892,7 @@ void RegisterBlockchainRPCCommands(CRPCTable& t)
         {"blockchain", &getblockfilter},
         {"blockchain", &dumptxoutset},
         {"blockchain", &loadtxoutset},
+        {"blockchain", &getchainstates},
         {"hidden", &invalidateblock},
         {"hidden", &reconsiderblock},
         {"hidden", &waitfornewblock},
