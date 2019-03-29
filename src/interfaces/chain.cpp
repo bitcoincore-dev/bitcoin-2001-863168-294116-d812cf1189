@@ -151,6 +151,14 @@ class LockImpl : public Chain::Lock, public UniqueLock<CCriticalSection>
         return CheckFinalTx(tx);
     }
 
+    int getLowestBlockDataHeight() override
+    {
+        if (g_chainman.IsSnapshotActive() && !g_chainman.IsSnapshotValidated()) {
+            return g_chainman.SnapshotHeight();
+        }
+        return 0;
+    }
+
     using UniqueLock::UniqueLock;
 };
 
