@@ -2761,12 +2761,11 @@ bool CWallet::AttachChain(const std::shared_ptr<CWallet>& walletInstance, interf
         }
         // Otherwise refuse to rescan if we're operating on a snapshot and the
         // rescan height is at or lower than the base of the snapshot.
-        //
         else if (rescan_height < chain.getLowestBlockDataHeight()) {
-            chain.initError(_("Snapshot: last wallet synchronisation goes beyond the base "
+            error = _("Snapshot: last wallet synchronisation goes beyond the base "
                 "of the snapshot. You need to wait for background validation of "
-                "the snapshot to complete"));
-            return nullptr;
+                "the snapshot to complete");
+            return false;
         }
 
         chain.initMessage(_("Rescanning…").translated);
