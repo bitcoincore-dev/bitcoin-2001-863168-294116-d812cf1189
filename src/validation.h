@@ -635,6 +635,8 @@ public:
      */
     std::set<CBlockIndex*, CBlockIndexWorkComparator> setBlockIndexCandidates;
 
+    std::string ToString();
+
     CCoinsViewCache& CoinsTip()
     {
         assert(m_coins_views->m_cacheview);
