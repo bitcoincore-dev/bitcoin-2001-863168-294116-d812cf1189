@@ -714,7 +714,7 @@ public:
     bool ActivateBestChain(
         BlockValidationState& state,
         const CChainParams& chainparams,
-        std::shared_ptr<const CBlock> pblock) LOCKS_EXCLUDED(cs_main);
+        std::shared_ptr<const CBlock> pblock = nullptr) LOCKS_EXCLUDED(cs_main);
 
     bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, BlockValidationState& state, const CChainParams& chainparams, CBlockIndex** ppindex, bool fRequested, const FlatFilePos* dbp, bool* fNewBlock) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
@@ -1002,6 +1002,10 @@ public:
 
     //! Returns true if any chainstate in use is in initial block download.
     bool IsAnyChainInIBD();
+
+    //! When starting up, search the datadir for a chainstate based on a UTXO
+    //! snapshot that is in the process of being validated.
+    bool DetectSnapshotChainstate();
 };
 
 extern ChainstateManager g_chainman;
