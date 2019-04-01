@@ -1865,11 +1865,13 @@ CWallet::ScanResult CWallet::ScanForWalletTransactions(const uint256& start_bloc
     return result;
 }
 
-void CWallet::ReacceptWalletTransactions(interfaces::Chain::Lock& locked_chain)
+void CWallet::ReacceptWalletTransactions()
 {
     // If transactions aren't being broadcasted, don't let them into local mempool either
     if (!fBroadcastTransactions)
         return;
+    auto locked_chain = chain().lock();
+    LOCK(cs_wallet);
     std::map<int64_t, CWalletTx*> mapSorted;
 
     // Sort pending wallet transactions based on their initial wallet insertion order
@@ -1879,7 +1881,7 @@ void CWallet::ReacceptWalletTransactions(interfaces::Chain::Lock& locked_chain)
         CWalletTx& wtx = item.second;
         assert(wtx.GetHash() == wtxid);
 
-        int nDepth = wtx.GetDepthInMainChain(locked_chain);
+        int nDepth = wtx.GetDepthInMainChain(*locked_chain);
 
         if (!wtx.IsCoinBase() && (nDepth == 0 && !wtx.isAbandoned())) {
             mapSorted.insert(std::make_pair(wtx.nOrderPos, &wtx));
@@ -1890,7 +1892,7 @@ void CWallet::ReacceptWalletTransactions(interfaces::Chain::Lock& locked_chain)
     for (const std::pair<const int64_t, CWalletTx*>& item : mapSorted) {
         CWalletTx& wtx = *(item.second);
         CValidationState state;
-        wtx.AcceptToMemoryPool(locked_chain, state);
+        wtx.AcceptToMemoryPool(*locked_chain, state);
     }
 }
 
@@ -4206,6 +4208,17 @@ std::shared_ptr<CWallet> CWallet::CreateWalletFromFile(interfaces::Chain& chain,
     // Try to top up keypool. No-op if the wallet is locked.
     walletInstance->TopUpKeyPool();
 
+    // Register with the validation interface. Skip requesting mempool transactions if wallet is empty.
+    interfaces::Chain::SnapshotFn snapshot_fn;
+    if (!fFirstRun) {
+        snapshot_fn = [walletInstance](std::vector<CTransactionRef> mempool_txs) {
+            for (const auto& mempool_tx : mempool_txs) {
+                walletInstance->TransactionAddedToMempool(mempool_tx);
+            }
+        };
+    }
+    walletInstance->m_chain_notifications_handler = chain.handleNotifications(*walletInstance, snapshot_fn);
+
     auto locked_chain = chain.lock();
     LOCK(walletInstance->cs_wallet);
 
@@ -4295,9 +4308,6 @@ std::shared_ptr<CWallet> CWallet::CreateWalletFromFile(interfaces::Chain& chain,
 
     chain.loadWallet(interfaces::MakeWallet(walletInstance));
 
-    // Register with the validation interface. It's ok to do this after rescan since we're still holding locked_chain.
-    walletInstance->m_chain_notifications_handler = chain.handleNotifications(*walletInstance);
-
     walletInstance->SetBroadcastTransactions(gArgs.GetBoolArg("-walletbroadcast", DEFAULT_WALLETBROADCAST));
 
     {
@@ -4311,15 +4321,9 @@ std::shared_ptr<CWallet> CWallet::CreateWalletFromFile(interfaces::Chain& chain,
 
 void CWallet::postInitProcess()
 {
-    auto locked_chain = chain().lock();
-    LOCK(cs_wallet);
-
     // Add wallet transactions that aren't already in a block to mempool
     // Do this here as mempool requires genesis block to be loaded
-    ReacceptWalletTransactions(*locked_chain);
-
-    // Update wallet transactions with current mempool transactions.
-    chain().requestMempoolTransactions(*this);
+    ReacceptWalletTransactions();
 }
 
 bool CWallet::BackupWallet(const std::string& strDest)
