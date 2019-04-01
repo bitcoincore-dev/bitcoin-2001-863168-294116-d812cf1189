@@ -30,6 +30,7 @@
 #include <validation.h>
 #include <validationinterface.h>
 
+#include <future>
 #include <memory>
 #include <utility>
 
@@ -358,21 +359,39 @@ public:
     {
         ::uiInterface.ShowProgress(title, progress, resume_possible);
     }
-    std::unique_ptr<Handler> handleNotifications(Notifications& notifications) override
+    std::unique_ptr<Handler> handleNotifications(Notifications& notifications, SnapshotFn snapshot_fn) override
+        LOCKS_EXCLUDED(::cs_main, ::mempool.cs)
     {
-        return MakeUnique<NotificationsHandlerImpl>(*this, notifications);
+        AssertLockNotHeld(::cs_main);
+        AssertLockNotHeld(::mempool.cs);
+
+        // Declare packaged task to run in notification thread, and to first
+        // send the snapshot before enabling subsequent notifications.
+        std::vector<CTransactionRef> snapshot;
+        std::packaged_task<std::unique_ptr<Handler>()> task([&] {
+            if (snapshot_fn) snapshot_fn(std::move(snapshot));
+            return MakeUnique<NotificationsHandlerImpl>(*this, notifications);
+        });
+
+        // Snapshot mempool transactions, then schedule the task to execute.
+        // Hold locks while scheduling the task so notifications about added and
+        // removed transactions after taking the snapshot arrive after the
+        // snapshot callback in task().
+        {
+            LOCK2(::cs_main, ::mempool.cs);
+            if (snapshot_fn) {
+                for (const CTxMemPoolEntry& entry : ::mempool.mapTx) {
+                    snapshot.push_back(entry.GetSharedTx());
+                }
+            }
+            CallFunctionInValidationInterfaceQueue([&task] { task(); });
+        }
+        return task.get_future().get();
     }
     void waitForNotifications() override { SyncWithValidationInterfaceQueue(); }
     std::unique_ptr<Handler> handleRpc(const CRPCCommand& command) override
     {
         return MakeUnique<RpcHandlerImpl>(command);
-    }
-    void requestMempoolTransactions(Notifications& notifications) override
-    {
-        LOCK2(::cs_main, ::mempool.cs);
-        for (const CTxMemPoolEntry& entry : ::mempool.mapTx) {
-            notifications.TransactionAddedToMempool(entry.GetSharedTx());
-        }
     }
 };
 } // namespace
