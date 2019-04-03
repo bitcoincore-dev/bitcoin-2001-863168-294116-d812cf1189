@@ -18,6 +18,7 @@
 #include <script/ismine.h>
 #include <script/sign.h>
 #include <util/system.h>
+#include <util/time.h>
 #include <wallet/crypter.h>
 #include <wallet/coinselection.h>
 #include <wallet/walletdb.h>
@@ -644,6 +645,7 @@ class CWallet final : public CCryptoKeyStore, public CValidationInterface
 private:
     std::atomic<bool> fAbortRescan{false};
     std::atomic<bool> fScanningWallet{false}; // controlled by WalletRescanReserver
+    std::atomic<int64_t> m_scanning_start{0};
     std::mutex mutexScanning;
     friend class WalletRescanReserver;
 
@@ -857,6 +859,7 @@ public:
     void AbortRescan() { fAbortRescan = true; }
     bool IsAbortingRescan() { return fAbortRescan; }
     bool IsScanning() { return fScanningWallet; }
+    int64_t ScanningDuration() const { return fScanningWallet ? GetTimeMillis() - m_scanning_start : 0; }
 
     /**
      * keystore implementation
@@ -1271,6 +1274,7 @@ public:
         if (m_wallet->fScanningWallet) {
             return false;
         }
+        m_wallet->m_scanning_start = GetTimeMillis();
         m_wallet->fScanningWallet = true;
         m_could_reserve = true;
         return true;
