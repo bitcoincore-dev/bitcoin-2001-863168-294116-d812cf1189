@@ -3551,33 +3551,32 @@ bool PeerLogicValidation::SendMessages(CNode* pto)
         // Message: addr
         //
         if (pto->IsAddrRelayPeer()) {
-        LOCK(pto->m_addr_relay.cs_addrsend);
-        if (pto->m_addr_relay.nNextAddrSend < nNow) {
-            pto->m_addr_relay.nNextAddrSend = PoissonNextSend(nNow, AVG_ADDRESS_BROADCAST_INTERVAL);
-            std::vector<CAddress> vAddr;
-            vAddr.reserve(pto->m_addr_relay.vAddrToSend.size());
-            for (const CAddress& addr : pto->m_addr_relay.vAddrToSend)
-            {
-                if (!pto->m_addr_relay.addrKnown.contains(addr.GetKey()))
+            LOCK(pto->m_addr_relay.cs_addrsend);
+            if (pto->m_addr_relay.nNextAddrSend < nNow) {
+                pto->m_addr_relay.nNextAddrSend = PoissonNextSend(nNow, AVG_ADDRESS_BROADCAST_INTERVAL);
+                std::vector<CAddress> vAddr;
+                vAddr.reserve(pto->m_addr_relay.vAddrToSend.size());
+                for (const CAddress& addr : pto->m_addr_relay.vAddrToSend)
                 {
-                    pto->m_addr_relay.addrKnown.insert(addr.GetKey());
-                    vAddr.push_back(addr);
-                    // receiver rejects addr messages larger than 1000
-                    if (vAddr.size() >= 1000)
+                    if (!pto->m_addr_relay.addrKnown.contains(addr.GetKey()))
                     {
-                        connman->PushMessage(pto, msgMaker.Make(NetMsgType::ADDR, vAddr));
-                        vAddr.clear();
+                        pto->m_addr_relay.addrKnown.insert(addr.GetKey());
+                        vAddr.push_back(addr);
+                        // receiver rejects addr messages larger than 1000
+                        if (vAddr.size() >= 1000)
+                        {
+                            connman->PushMessage(pto, msgMaker.Make(NetMsgType::ADDR, vAddr));
+                            vAddr.clear();
+                        }
                     }
                 }
+                pto->m_addr_relay.vAddrToSend.clear();
+                if (!vAddr.empty())
+                    connman->PushMessage(pto, msgMaker.Make(NetMsgType::ADDR, vAddr));
+                // we only send the big addr message once
+                if (pto->m_addr_relay.vAddrToSend.capacity() > 40)
+                    pto->m_addr_relay.vAddrToSend.shrink_to_fit();
             }
-            pto->m_addr_relay.vAddrToSend.clear();
-            if (!vAddr.empty())
-                connman->PushMessage(pto, msgMaker.Make(NetMsgType::ADDR, vAddr));
-            // we only send the big addr message once
-            if (pto->m_addr_relay.vAddrToSend.capacity() > 40) {
-                pto->m_addr_relay.vAddrToSend.shrink_to_fit();
-            }
-        }
         }
 
         // Start block sync
