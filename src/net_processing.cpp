@@ -1991,7 +1991,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         UpdatePreferredDownload(pfrom, State(pfrom->GetId()));
         }
 
-        if (!pfrom->fInbound)
+        if (!pfrom->fInbound && pfrom->IsAddrRelayPeer())
         {
             // Advertise our address
             if (fListen && !::ChainstateActive().IsInitialBlockDownload())
@@ -2107,6 +2107,9 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         // Don't want addr from older versions unless seeding
         if (pfrom->nVersion < CADDR_TIME_VERSION && connman->GetAddressCount() > 1000)
             return true;
+        if (!pfrom->IsAddrRelayPeer()) {
+            return true;
+        }
         if (vAddr.size() > 1000)
         {
             LOCK(cs_main);
@@ -2966,6 +2969,10 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             LogPrint(BCLog::NET, "Ignoring \"getaddr\" from outbound connection. peer=%d\n", pfrom->GetId());
             return true;
         }
+        if (!pfrom->IsAddrRelayPeer()) {
+            LogPrint(BCLog::NET, "Ignoring \"getaddr\" from block-relay-only connection. peer=%d\n", pfrom->GetId());
+            return true;
+        }
 
         // Only send one GetAddr response per connection to reduce resource waste
         //  and discourage addr stamping of INV announcements.
@@ -3532,7 +3539,7 @@ bool PeerLogicValidation::SendMessages(CNode* pto)
 
         // Address refresh broadcast
         int64_t nNow = GetTimeMicros();
-        {
+        if (pto->IsAddrRelayPeer()) {
             LOCK(pto->m_addr_relay.cs_addrsend);
             if (!::ChainstateActive().IsInitialBlockDownload() && pto->m_addr_relay.nNextLocalAddrSend < nNow) {
                 AdvertiseLocal(pto);
@@ -3543,7 +3550,7 @@ bool PeerLogicValidation::SendMessages(CNode* pto)
         //
         // Message: addr
         //
-        {
+        if (pto->IsAddrRelayPeer()) {
         LOCK(pto->m_addr_relay.cs_addrsend);
         if (pto->m_addr_relay.nNextAddrSend < nNow) {
             pto->m_addr_relay.nNextAddrSend = PoissonNextSend(nNow, AVG_ADDRESS_BROADCAST_INTERVAL);

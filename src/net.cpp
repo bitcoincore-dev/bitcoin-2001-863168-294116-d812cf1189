@@ -2628,6 +2628,10 @@ CNode::CNode(NodeId idIn, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn
     addrBind(addrBindIn),
     fInbound(fInboundIn),
     nKeyedNetGroup(nKeyedNetGroupIn),
+    // Don't relay addr messages to peers that we connect to as blocks_only
+    // peers (to prevent adversaries from inferring these links from addr
+    // traffic).
+    m_addr_relay_peer(!blocks_only),
     id(idIn),
     nLocalHostNonce(nLocalHostNonceIn),
     nLocalServices(nLocalServicesIn),
