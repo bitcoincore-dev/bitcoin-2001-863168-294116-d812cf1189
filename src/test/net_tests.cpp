@@ -227,4 +227,80 @@ BOOST_AUTO_TEST_CASE(ipv4_peer_with_ipv6_addrMe_test)
     BOOST_CHECK(1);
 }
 
+
+BOOST_AUTO_TEST_CASE(LimitedAndReachable_Network)
+{
+    BOOST_CHECK_EQUAL(IsReachable(NET_IPV4), true);
+    BOOST_CHECK_EQUAL(IsReachable(NET_IPV6), true);
+    BOOST_CHECK_EQUAL(IsReachable(NET_ONION), true);
+
+    SetReachable(NET_IPV4, false);
+    SetReachable(NET_IPV6, false);
+    SetReachable(NET_ONION, false);
+
+    BOOST_CHECK_EQUAL(IsReachable(NET_IPV4), false);
+    BOOST_CHECK_EQUAL(IsReachable(NET_IPV6), false);
+    BOOST_CHECK_EQUAL(IsReachable(NET_ONION), false);
+
+    SetReachable(NET_IPV4, true);
+    SetReachable(NET_IPV6, true);
+    SetReachable(NET_ONION, true);
+
+    BOOST_CHECK_EQUAL(IsReachable(NET_IPV4), true);
+    BOOST_CHECK_EQUAL(IsReachable(NET_IPV6), true);
+    BOOST_CHECK_EQUAL(IsReachable(NET_ONION), true);
+}
+
+BOOST_AUTO_TEST_CASE(LimitedAndReachable_NetworkCaseUnroutableAndInternal)
+{
+    BOOST_CHECK_EQUAL(IsReachable(NET_UNROUTABLE), true);
+    BOOST_CHECK_EQUAL(IsReachable(NET_INTERNAL), true);
+
+    SetReachable(NET_UNROUTABLE, false);
+    SetReachable(NET_INTERNAL, false);
+
+    BOOST_CHECK_EQUAL(IsReachable(NET_UNROUTABLE), true); // Ignored for both networks
+    BOOST_CHECK_EQUAL(IsReachable(NET_INTERNAL), true);
+}
+
+CNetAddr UtilBuildAddress(unsigned char p1, unsigned char p2, unsigned char p3, unsigned char p4)
+{
+    unsigned char ip[] = {p1, p2, p3, p4};
+
+    struct sockaddr_in sa;
+    memset(&sa, 0, sizeof(sockaddr_in)); // initialize the memory block
+    memcpy(&(sa.sin_addr), &ip, sizeof(ip));
+    return CNetAddr(sa.sin_addr);
+}
+
+
+BOOST_AUTO_TEST_CASE(LimitedAndReachable_CNetAddr)
+{
+    CNetAddr addr = UtilBuildAddress(0x001, 0x001, 0x001, 0x001); // 1.1.1.1
+
+    SetReachable(NET_IPV4, true);
+    BOOST_CHECK_EQUAL(IsReachable(addr), true);
+
+    SetReachable(NET_IPV4, false);
+    BOOST_CHECK_EQUAL(IsReachable(addr), false);
+
+    SetReachable(NET_IPV4, true); // have to reset this, because this is stateful.
+}
+
+
+BOOST_AUTO_TEST_CASE(LocalAddress_BasicLifecycle)
+{
+    CService addr = CService(UtilBuildAddress(0x002, 0x001, 0x001, 0x001), 1000); // 2.1.1.1:1000
+
+    SetReachable(NET_IPV4, true);
+
+    BOOST_CHECK_EQUAL(IsLocal(addr), false);
+    BOOST_CHECK_EQUAL(AddLocal(addr, 1000), true);
+    BOOST_CHECK_EQUAL(IsLocal(addr), true);
+
+    RemoveLocal(addr);
+    BOOST_CHECK_EQUAL(IsLocal(addr), false);
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
