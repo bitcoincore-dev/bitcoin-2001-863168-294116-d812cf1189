@@ -13,6 +13,7 @@
 #include <fs.h>
 #include <init.h>
 #include <interfaces/chain.h>
+#include <node/node.h>
 #include <noui.h>
 #include <shutdown.h>
 #include <ui_interface.h>
@@ -43,13 +44,13 @@ const std::function<std::string(const char*)> G_TRANSLATION_FUN = nullptr;
  * Use the buttons <code>Namespaces</code>, <code>Classes</code> or <code>Files</code> at the top of the page to start navigating the code.
  */
 
-static void WaitForShutdown()
+static void WaitForShutdown(Node& node)
 {
     while (!ShutdownRequested())
     {
         MilliSleep(200);
     }
-    Interrupt();
+    Interrupt(node);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -58,8 +59,8 @@ static void WaitForShutdown()
 //
 static bool AppInit(int argc, char* argv[])
 {
-    InitInterfaces interfaces;
-    interfaces.chain = interfaces::MakeChain();
+    Node node;
+    node.chain = interfaces::MakeChain(node);
 
     bool fRet = false;
 
@@ -161,7 +162,7 @@ static bool AppInit(int argc, char* argv[])
             // If locking the data directory failed, exit immediately
             return false;
         }
-        fRet = AppInitMain(interfaces);
+        fRet = AppInitMain(node);
     }
     catch (const std::exception& e) {
         PrintExceptionContinue(&e, "AppInit()");
@@ -171,11 +172,11 @@ static bool AppInit(int argc, char* argv[])
 
     if (!fRet)
     {
-        Interrupt();
+        Interrupt(node);
     } else {
-        WaitForShutdown();
+        WaitForShutdown(node);
     }
-    Shutdown(interfaces);
+    Shutdown(node);
 
     return fRet;
 }
