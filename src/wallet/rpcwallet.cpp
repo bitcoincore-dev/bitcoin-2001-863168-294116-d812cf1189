@@ -12,6 +12,7 @@
 #include <validation.h>
 #include <key_io.h>
 #include <net.h>
+#include <node/node.h>
 #include <node/transaction.h>
 #include <outputtype.h>
 #include <policy/feerate.h>
@@ -2551,7 +2552,7 @@ static UniValue loadwallet(const JSONRPCRequest& request)
     }
 
     std::string error, warning;
-    std::shared_ptr<CWallet> const wallet = LoadWallet(*g_rpc_interfaces->chain, location, error, warning);
+    std::shared_ptr<CWallet> const wallet = LoadWallet(*g_rpc_node->chain, location, error, warning);
     if (!wallet) throw JSONRPCError(RPC_WALLET_ERROR, error);
 
     UniValue obj(UniValue::VOBJ);
@@ -2602,11 +2603,11 @@ static UniValue createwallet(const JSONRPCRequest& request)
     }
 
     // Wallet::Verify will check if we're trying to create a wallet with a duplication name.
-    if (!CWallet::Verify(*g_rpc_interfaces->chain, location, false, error, warning)) {
+    if (!CWallet::Verify(*g_rpc_node->chain, location, false, error, warning)) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Wallet file verification failed: " + error);
     }
 
-    std::shared_ptr<CWallet> const wallet = CWallet::CreateWalletFromFile(*g_rpc_interfaces->chain, location, flags);
+    std::shared_ptr<CWallet> const wallet = CWallet::CreateWalletFromFile(*g_rpc_node->chain, location, flags);
     if (!wallet) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Wallet creation failed.");
     }

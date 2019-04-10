@@ -304,7 +304,7 @@ public:
     void relayTransaction(const uint256& txid) override
     {
         CInv inv(MSG_TX, txid);
-        g_connman->ForEachNode([&inv](CNode* node) { node->PushInventory(inv); });
+        m_connman->ForEachNode([&inv](CNode* node) { node->PushInventory(inv); });
     }
     void getTransactionAncestry(const uint256& txid, size_t& ancestors, size_t& descendants) override
     {
@@ -341,7 +341,7 @@ public:
     CFeeRate relayDustFee() override { return ::dustRelayFee; }
     CAmount maxTxFee() override { return ::maxTxFee; }
     bool getPruneMode() override { return ::fPruneMode; }
-    bool p2pEnabled() override { return g_connman != nullptr; }
+    bool p2pEnabled() override { return m_connman != nullptr; }
     bool isReadyToBroadcast() override { return !::fImporting && !::fReindex && !IsInitialBlockDownload(); }
     bool isInitialBlockDownload() override { return IsInitialBlockDownload(); }
     bool shutdownRequested() override { return ShutdownRequested(); }
@@ -370,6 +370,8 @@ public:
             notifications.TransactionAddedToMempool(entry.GetSharedTx());
         }
     }
+    void setConnman(CConnman* connman) { m_connman = connman; }
+    CConnman* m_connman = nullptr;
 };
 } // namespace
 

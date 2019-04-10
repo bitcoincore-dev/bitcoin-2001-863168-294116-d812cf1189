@@ -15,6 +15,7 @@
 #include <vector>
 
 class CBlock;
+class CConnman;
 class CFeeRate;
 class CRPCCommand;
 class CScheduler;
@@ -283,6 +284,9 @@ public:
     //! to be prepared to handle this by ignoring notifications about unknown
     //! removed transactions and already added new transactions.
     virtual void requestMempoolTransactions(Notifications& notifications) = 0;
+
+    //! Set connection manager to use internally.
+    virtual void setConnman(CConnman* connman) {}
 };
 
 //! Interface to let node manage chain clients (wallets, or maybe tools for

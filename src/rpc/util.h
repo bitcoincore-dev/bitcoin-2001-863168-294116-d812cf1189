@@ -19,12 +19,12 @@
 class CKeyStore;
 class CPubKey;
 class CScript;
-struct InitInterfaces;
+struct Node;
 
-//! Pointers to interfaces that need to be accessible from RPC methods. Due to
+//! Pointer to node state that needs to be accessible from RPC methods. Due to
 //! limitations of the RPC framework, there's currently no direct way to pass in
-//! state to RPC method implementations.
-extern InitInterfaces* g_rpc_interfaces;
+//! state to RPC method implementations without a global.
+extern Node* g_rpc_node;
 
 /** Wrapper for UniValue::VType, which includes typeAny:
  * Used to denote don't care type. */

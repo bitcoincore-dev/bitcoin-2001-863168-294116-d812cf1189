@@ -8,7 +8,7 @@
 #include <tinyformat.h>
 #include <util/strencodings.h>
 
-InitInterfaces* g_rpc_interfaces = nullptr;
+Node* g_rpc_node = nullptr;
 
 void RPCTypeCheck(const UniValue& params,
                   const std::list<UniValueType>& typesExpected,

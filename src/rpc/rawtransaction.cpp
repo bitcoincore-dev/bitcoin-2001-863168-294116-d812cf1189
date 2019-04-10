@@ -15,6 +15,7 @@
 #include <key_io.h>
 #include <keystore.h>
 #include <merkleblock.h>
+#include <node/node.h>
 #include <node/psbt.h>
 #include <node/transaction.h>
 #include <policy/policy.h>
@@ -769,7 +770,7 @@ static UniValue signrawtransactionwithkey(const JSONRPCRequest& request)
         keystore.AddKey(key);
     }
 
-    return SignTransaction(*g_rpc_interfaces->chain, mtx, request.params[2], &keystore, true, request.params[3]);
+    return SignTransaction(*g_rpc_node->chain, mtx, request.params[2], &keystore, true, request.params[3]);
 }
 
 static UniValue sendrawtransaction(const JSONRPCRequest& request)
@@ -830,7 +831,7 @@ static UniValue sendrawtransaction(const JSONRPCRequest& request)
 
     uint256 txid;
     std::string err_string;
-    const TransactionError err = BroadcastTransaction(tx, txid, err_string, max_raw_tx_fee);
+    const TransactionError err = BroadcastTransaction(tx, txid, err_string, max_raw_tx_fee, g_rpc_node->connman.get());
     if (TransactionError::OK != err) {
         throw JSONRPCTransactionError(err, err_string);
     }
