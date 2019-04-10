@@ -8,11 +8,8 @@
 #include <support/allocators/secure.h>
 
 class CWallet;
+class Node;
 enum class WalletCreationStatus;
-
-namespace interfaces {
-class Chain;
-}
 
 class DummyWalletInit : public WalletInitInterface {
 public:
@@ -20,7 +17,7 @@ public:
     bool HasWalletSupport() const override {return false;}
     void AddWalletOptions() const override;
     bool ParameterInteraction() const override {return true;}
-    void Construct(InitInterfaces& interfaces) const override {LogPrintf("No wallet support compiled in!\n");}
+    void Construct(Node& node) const override {LogPrintf("No wallet support compiled in!\n");}
 };
 
 void DummyWalletInit::AddWalletOptions() const

@@ -24,6 +24,7 @@ class CCoinControl;
 class CFeeRate;
 class CNodeStats;
 class Coin;
+class Node;
 class RPCTimerInterface;
 class UniValue;
 class proxyType;
@@ -254,6 +255,10 @@ public:
     using NotifyHeaderTipFn =
         std::function<void(bool initial_download, int height, int64_t block_time, double verification_progress)>;
     virtual std::unique_ptr<Handler> handleNotifyHeaderTip(NotifyHeaderTipFn fn) = 0;
+
+    //! Return pointer to internal chain interface, useful for testing.
+    //! Only works if node interface is being called in same process as implementation.
+    virtual ::Node* state() { return nullptr; }
 };
 
 //! Return implementation of Node interface.
