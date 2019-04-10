@@ -534,8 +534,6 @@ public:
     void InitCache() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 };
 
-extern BlockManager g_blockman;
-
 // Defined below, but needed for `friend` usage in CChainState.
 class ChainstateManager;
 
@@ -591,8 +589,7 @@ private:
     std::unique_ptr<CoinsViews> m_coins_views;
 
 public:
-    CChainState(BlockManager& blockman) : m_blockman(blockman) {}
-    CChainState(uint256 from_snapshot_blockhash = uint256());
+    CChainState(BlockManager& blockman, uint256 from_snapshot_blockhash = uint256());
 
     /**
      * Initialize the CoinsViews UTXO set database management data structures. The in-memory
@@ -891,6 +888,10 @@ private:
     friend CChain& ChainActive();
 
 public:
+    //! A single BlockManager instance is shared across each constructed
+    //! chainstate to avoid duplicating block metadata.
+    BlockManager m_blockman GUARDED_BY(::cs_main);
+
     /**
      * Instantiate a new chainstate and assign it based upon whether it is
      * from a snapshot.
@@ -915,6 +916,11 @@ public:
     CChain& ActiveChain() const;
     int ActiveHeight() const { return ActiveChain().Height(); }
     CBlockIndex* ActiveTip() const { return ActiveChain().Tip(); }
+
+    BlockMap& BlockIndex() EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+    {
+        return m_blockman.m_block_index;
+    }
 
     bool IsSnapshotActive() const
     {
@@ -975,6 +981,8 @@ public:
             chainstate.m_chain.SetTip(nullptr);
             chainstate.UnloadBlockIndex();
         });
+
+        m_blockman.Unload();
     }
 
     void Reset()
