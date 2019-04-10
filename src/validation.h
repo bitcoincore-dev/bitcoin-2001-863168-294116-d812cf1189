@@ -522,8 +522,6 @@ public:
     }
 };
 
-extern BlockManager g_blockman;
-
 // Defined below, but needed for `friend` usage in CChainState.
 class ChainstateManager;
 
@@ -580,14 +578,13 @@ private:
 
 public:
     CChainState(
+        BlockManager& blockman,
         /* parameters forwarded to CoinsViews */
         size_t coinsdb_cache_size_bytes,
         bool in_memory,
         bool should_wipe,
         std::string leveldb_name = "chainstate",
         uint256 from_snapshot_blockhash = uint256()
-        // NOTE: for now m_blockman is set to a global, but this will be changed
-        // in a future commit.
         );
 
     //! The current chain of blockheaders we consult and build on.
@@ -867,6 +864,10 @@ private:
     friend CChain& ChainActive();
 
 public:
+    //! A single BlockManager instance is shared across each constructed
+    //! chainstate to avoid duplicating block metadata.
+    BlockManager m_blockman GUARDED_BY(::cs_main);
+
     /**
      * Instantiate a new chainstate and assign it based upon whether it is from a snapshot.
      *
@@ -897,6 +898,11 @@ public:
     CChain& ActiveChain() const;
     int ActiveHeight() const { return ActiveChain().Height(); }
     CBlockIndex* ActiveTip() const { return ActiveChain().Tip(); }
+
+    BlockMap& BlockIndex() EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+    {
+        return m_blockman.m_block_index;
+    }
 
     bool IsSnapshotActive() const
     {
@@ -957,6 +963,8 @@ public:
             chainstate.m_chain.SetTip(nullptr);
             chainstate.UnloadBlockIndex();
         });
+
+        m_blockman.Unload();
     }
 
     void Reset()
