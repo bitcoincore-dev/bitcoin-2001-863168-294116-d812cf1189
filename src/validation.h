@@ -506,8 +506,6 @@ public:
      */
     std::multimap<CBlockIndex*, CBlockIndex*> m_blocks_unlinked;
 
-    CBlockIndex *m_pindex_best_invalid = nullptr;
-
     bool LoadBlockIndex(
         const Consensus::Params& consensus_params,
         CBlockTreeDB& blocktree) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
@@ -515,7 +513,6 @@ public:
     void Unload() EXCLUSIVE_LOCKS_REQUIRED(cs_main) {
         m_failed_blocks.clear();
         m_blocks_unlinked.clear();
-        m_pindex_best_invalid = nullptr;
 
         for (const BlockMap::value_type& entry : m_block_index) {
             delete entry.second;
