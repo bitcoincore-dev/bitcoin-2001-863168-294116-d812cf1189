@@ -12,11 +12,13 @@
 #include <key_io.h>
 #include <merkleblock.h>
 #include <node/coin.h>
+#include <node/node.h>
 #include <node/psbt.h>
 #include <node/transaction.h>
 #include <policy/rbf.h>
 #include <primitives/transaction.h>
 #include <psbt.h>
+#include <rpc/blockchain.h>
 #include <rpc/rawtransaction_util.h>
 #include <rpc/server.h>
 #include <rpc/util.h>
@@ -819,7 +821,7 @@ static UniValue sendrawtransaction(const JSONRPCRequest& request)
 
     std::string err_string;
     AssertLockNotHeld(cs_main);
-    const TransactionError err = BroadcastTransaction(tx, err_string, max_raw_tx_fee, /*relay*/ true, /*wait_callback*/ true);
+    const TransactionError err = BroadcastTransaction(tx, err_string, max_raw_tx_fee, /*relay*/ true, /*wait_callback*/ true, g_rpc_node->connman.get());
     if (TransactionError::OK != err) {
         throw JSONRPCTransactionError(err, err_string);
     }

@@ -498,7 +498,11 @@ public:
         : m_chain(chain), m_wallet_filenames(std::move(wallet_filenames))
     {
     }
-    void registerRpcs() override { return RegisterWalletRPCCommands(m_chain, m_rpc_handlers); }
+    void registerRpcs() override
+    {
+        g_rpc_chain = &m_chain;
+        return RegisterWalletRPCCommands(m_chain, m_rpc_handlers);
+    }
     bool verify() override { return VerifyWallets(m_chain, m_wallet_filenames); }
     bool load() override { return LoadWallets(m_chain, m_wallet_filenames); }
     void start(CScheduler& scheduler) override { return StartWallets(scheduler); }
@@ -509,6 +513,7 @@ public:
     Chain& m_chain;
     std::vector<std::string> m_wallet_filenames;
     std::vector<std::unique_ptr<Handler>> m_rpc_handlers;
+    std::unique_ptr<Handler> m_client_handler;
 };
 
 } // namespace
@@ -517,7 +522,11 @@ std::unique_ptr<Wallet> MakeWallet(const std::shared_ptr<CWallet>& wallet) { ret
 
 std::unique_ptr<ChainClient> MakeWalletClient(Chain& chain, std::vector<std::string> wallet_filenames)
 {
-    return MakeUnique<WalletClientImpl>(chain, std::move(wallet_filenames));
+    auto client = MakeUnique<WalletClientImpl>(chain, std::move(wallet_filenames));
+    client->m_client_handler = chain.addClient(*client);
+    // std::move should not be necessary but is needed by older versions of clang
+    // (https://stackoverflow.com/questions/36752678/clang-returning-stdunique-ptr-with-type-conversion)
+    return std::move(client);
 }
 
 } // namespace interfaces

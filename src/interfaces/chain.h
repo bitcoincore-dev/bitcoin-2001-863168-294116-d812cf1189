@@ -15,6 +15,7 @@
 #include <vector>
 
 class CBlock;
+class CConnman;
 class CFeeRate;
 class CRPCCommand;
 class CScheduler;
@@ -24,9 +25,11 @@ class uint256;
 enum class RBFTransactionState;
 struct CBlockLocator;
 struct FeeCalculation;
+struct Node;
 
 namespace interfaces {
 
+class ChainClient;
 class Handler;
 class Wallet;
 
@@ -257,6 +260,9 @@ public:
     //! to be prepared to handle this by ignoring notifications about unknown
     //! removed transactions and already added new transactions.
     virtual void requestMempoolTransactions(Notifications& notifications) = 0;
+
+    //! Add chain client interface, receives flush and stop.
+    virtual std::unique_ptr<Handler> addClient(ChainClient& client) = 0;
 };
 
 //! Interface to let node manage chain clients (wallets, or maybe tools for
@@ -286,7 +292,7 @@ public:
 };
 
 //! Return implementation of Chain interface.
-std::unique_ptr<Chain> MakeChain();
+std::unique_ptr<Chain> MakeChain(::Node& node);
 
 //! Return implementation of ChainClient interface for a wallet client. This
 //! function will be undefined in builds where ENABLE_WALLET is false.
