@@ -64,8 +64,6 @@
  * Global state
  */
 
-BlockManager g_blockman;
-
 ChainstateManager g_chainman;
 
 CChainState& ChainstateActive()
@@ -145,8 +143,8 @@ namespace {
 CBlockIndex* LookupBlockIndex(const uint256& hash)
 {
     AssertLockHeld(cs_main);
-    BlockMap::const_iterator it = g_blockman.m_block_index.find(hash);
-    return it == g_blockman.m_block_index.end() ? nullptr : it->second;
+    BlockMap::const_iterator it = g_chainman.BlockIndex().find(hash);
+    return it == g_chainman.BlockIndex().end() ? nullptr : it->second;
 }
 
 CBlockIndex* FindForkInGlobalIndex(const CChain& chain, const CBlockLocator& locator)
@@ -3077,7 +3075,7 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationSta
     if (fCheckpointsEnabled) {
         // Don't accept any forks from the main chain prior to last checkpoint.
         // GetLastCheckpoint finds the last checkpoint in MapCheckpoints that's in our
-        // g_blockman.m_block_index.
+        // BlockIndex().
         CBlockIndex* pcheckpoint = GetLastCheckpoint(params.Checkpoints());
         if (pcheckpoint && nHeight < pcheckpoint->nHeight)
             return state.DoS(100, error("%s: forked chain older than last checkpoint (height %d)", __func__, nHeight), REJECT_CHECKPOINT, "bad-fork-prior-to-checkpoint");
@@ -3280,7 +3278,7 @@ bool ProcessNewBlockHeaders(const std::vector<CBlockHeader>& headers, CValidatio
         LOCK(cs_main);
         for (const CBlockHeader& header : headers) {
             CBlockIndex *pindex = nullptr; // Use a temp pindex instead of ppindex to avoid a const_cast
-            if (!g_blockman.AcceptBlockHeader(header, state, chainparams, &pindex)) {
+            if (!g_chainman.m_blockman.AcceptBlockHeader(header, state, chainparams, &pindex)) {
                 if (first_invalid) *first_invalid = header;
                 return false;
             }
@@ -3473,7 +3471,7 @@ void PruneOneBlockFile(const int fileNumber)
 {
     LOCK(cs_LastBlockFile);
 
-    for (const auto& entry : g_blockman.m_block_index) {
+    for (const auto& entry : g_chainman.BlockIndex()) {
         CBlockIndex* pindex = entry.second;
         if (pindex->nFile == fileNumber) {
             pindex->nStatus &= ~BLOCK_HAVE_DATA;
@@ -3489,12 +3487,12 @@ void PruneOneBlockFile(const int fileNumber)
             // m_blocks_unlinked or setBlockIndexCandidates.
             std::pair<std::multimap<CBlockIndex*, CBlockIndex*>::iterator,
                 std::multimap<CBlockIndex*, CBlockIndex*>::iterator> range =
-                    g_blockman.m_blocks_unlinked.equal_range(pindex->pprev);
+                    g_chainman.m_blockman.m_blocks_unlinked.equal_range(pindex->pprev);
             while (range.first != range.second) {
                 std::multimap<CBlockIndex *, CBlockIndex *>::iterator _it = range.first;
                 range.first++;
                 if (_it->second == pindex) {
-                    g_blockman.m_blocks_unlinked.erase(_it);
+                    g_chainman.m_blockman.m_blocks_unlinked.erase(_it);
                 }
             }
         }
@@ -3716,7 +3714,7 @@ bool BlockManager::LoadBlockIndex(const Consensus::Params& consensus_params, CBl
 
 bool static LoadBlockIndexDB(const CChainParams& chainparams) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
-    if (!g_blockman.LoadBlockIndex(chainparams.GetConsensus(), *pblocktree))
+    if (!g_chainman.m_blockman.LoadBlockIndex(chainparams.GetConsensus(), *pblocktree))
         return false;
 
     // Load block file info
@@ -3739,7 +3737,7 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams) EXCLUSIVE_LOCKS_RE
     // Check presence of blk files
     LogPrintf("Checking all blk files are present...\n");
     std::set<int> setBlkDataFiles;
-    for (const std::pair<const uint256, CBlockIndex*>& item : g_blockman.m_block_index)
+    for (const std::pair<const uint256, CBlockIndex*>& item : g_chainman.BlockIndex())
     {
         CBlockIndex* pindex = item.second;
         if (pindex->nStatus & BLOCK_HAVE_DATA) {
@@ -4164,7 +4162,6 @@ void UnloadBlockIndex()
 {
     LOCK(cs_main);
     g_chainman.Unload();
-    g_blockman.Unload();
     pindexBestInvalid = nullptr;
     pindexBestHeader = nullptr;
     mempool.clear();
@@ -4186,7 +4183,7 @@ bool LoadBlockIndex(const CChainParams& chainparams)
     if (!fReindex) {
         bool ret = LoadBlockIndexDB(chainparams);
         if (!ret) return false;
-        needs_init = g_blockman.m_block_index.empty();
+        needs_init = g_chainman.m_blockman.m_block_index.empty();
     }
 
     if (needs_init) {
@@ -4732,10 +4729,10 @@ public:
     CMainCleanup() {}
     ~CMainCleanup() {
         // block headers
-        BlockMap::iterator it1 = g_blockman.m_block_index.begin();
-        for (; it1 != g_blockman.m_block_index.end(); it1++)
+        BlockMap::iterator it1 = g_chainman.BlockIndex().begin();
+        for (; it1 != g_chainman.BlockIndex().end(); it1++)
             delete (*it1).second;
-        g_blockman.m_block_index.clear();
+        g_chainman.BlockIndex().clear();
     }
 } instance_of_cmaincleanup;
 
@@ -4803,7 +4800,7 @@ CChainState& ChainstateManager::InitializeChainstate(
         snapshot_blockhash.IsNull() ? m_ibd_chainstate : m_snapshot_chainstate);
 
     to_modify.reset(new CChainState(
-        cache_size_bytes, in_memory, should_wipe, "chainstate", snapshot_blockhash));
+        m_blockman, cache_size_bytes, in_memory, should_wipe, "chainstate", snapshot_blockhash));
 
     if (activate) {
         LogPrintf("Switching active chainstate to %s\n", snapshot_blockhash.ToString());
