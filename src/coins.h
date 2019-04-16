@@ -295,6 +295,10 @@ public:
     //! Check whether all prevouts of the transaction are present in the UTXO set represented by this view
     bool HaveInputs(const CTransaction& tx) const;
 
+    //! During snapshot load, allow the intermediate writing of coins without
+    //! unnecessary cache lookups.
+    bool BatchWriteFromSnapshot(CCoinsMap &mapCoins, const uint256 &hashBlockIn);
+
 private:
     /**
      * @note this is marked const, but may actually append to `cacheCoins`, increasing
