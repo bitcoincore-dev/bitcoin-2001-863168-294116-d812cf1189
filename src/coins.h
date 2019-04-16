@@ -199,6 +199,9 @@ public:
 };
 
 
+class ChainstateManager;
+
+
 /** CCoinsView that adds a memory cache for transactions to another CCoinsView */
 class CCoinsViewCache : public CCoinsViewBacked
 {
@@ -212,6 +215,8 @@ protected:
 
     /* Cached dynamic memory usage for the inner Coin objects. */
     mutable size_t cachedCoinsUsage;
+
+    friend ChainstateManager;
 
 public:
     CCoinsViewCache(CCoinsView *baseIn);
