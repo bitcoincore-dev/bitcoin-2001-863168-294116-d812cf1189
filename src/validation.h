@@ -534,6 +534,15 @@ public:
     void InitCache() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 };
 
+enum class CoinsCacheSizeState
+{
+    //! The coins cache is in immediate need of a flush.
+    CRITICAL = 2,
+    //! The cache is at >= 90% capacity.
+    LARGE = 1,
+    OK = 0
+};
+
 // Defined below, but needed for `friend` usage in CChainState.
 class ChainstateManager;
 
@@ -747,6 +756,10 @@ private:
 
     //! Mark a block as not having block data
     void EraseBlockData(CBlockIndex* index) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
+    //! Return the state of the size of the coins cache.
+    //! Dictates whether we need to flush the cache to disk or not.
+    CoinsCacheSizeState GetCoinsCacheSizeState() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     friend ChainstateManager;
 };
