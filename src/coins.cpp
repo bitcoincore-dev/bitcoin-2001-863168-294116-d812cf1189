@@ -201,6 +201,17 @@ bool CCoinsViewCache::BatchWrite(CCoinsMap &mapCoins, const uint256 &hashBlockIn
     return true;
 }
 
+bool CCoinsViewCache::BatchWriteFromSnapshot(CCoinsMap &mapCoins)
+{
+    for (CCoinsMap::iterator it = mapCoins.begin(); it != mapCoins.end(); it = mapCoins.erase(it)) {
+        CCoinsCacheEntry& entry = cacheCoins[it->first];
+        entry.coin = std::move(it->second.coin);
+        cachedCoinsUsage += entry.coin.DynamicMemoryUsage();
+        entry.flags = CCoinsCacheEntry::DIRTY;
+    }
+    return true;
+}
+
 bool CCoinsViewCache::Flush() {
     bool fOk = base->BatchWrite(cacheCoins, hashBlock);
     cacheCoins.clear();
