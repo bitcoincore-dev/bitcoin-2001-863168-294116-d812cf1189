@@ -89,4 +89,9 @@ struct CNodeStateStats {
 /** Get statistics from node state */
 bool GetNodeStateStats(NodeId nodeid, CNodeStateStats &stats);
 
+/**
+ * Get number of peers from which we're downloading blocks
+ */
+int GetNumberOfPeersWithValidatedDownloads() EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
 #endif // BITCOIN_NET_PROCESSING_H
