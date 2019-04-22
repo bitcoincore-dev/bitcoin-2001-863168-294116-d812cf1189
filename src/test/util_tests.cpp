@@ -16,6 +16,7 @@
 
 #include <stdint.h>
 #include <thread>
+#include <univalue.h>
 #include <utility>
 #include <vector>
 #ifndef WIN32
@@ -156,19 +157,58 @@ BOOST_AUTO_TEST_CASE(util_FormatISO8601Date)
 
 struct TestArgsManager : public ArgsManager
 {
+    std::map<std::string, std::vector<std::string>> m_override_args;
+    std::map<std::string, std::vector<std::string>> m_config_args;
+
     TestArgsManager() { m_network_only_args.clear(); }
     std::map<std::string, std::vector<std::string> >& GetOverrideArgs() { return m_override_args; }
     std::map<std::string, std::vector<std::string> >& GetConfigArgs() { return m_config_args; }
+    bool ParseParameters(int argc, const char* const argv[], std::string& error) {
+        bool result = ArgsManager::ParseParameters(argc, argv, error);
+        LOCK(cs_args);
+        m_override_args.clear();
+        for (const auto& option : m_settings.command_line_options) {
+            auto& args = m_override_args["-" + option.first];
+            for (const auto& value : util::SettingsSpan(option.second)) {
+                args.push_back(value.isFalse() ? "0" : value.isTrue() ? "1" : value.get_str());
+            }
+        }
+        return result;
+    }
     void ReadConfigString(const std::string str_config)
     {
         std::istringstream streamConfig(str_config);
         {
             LOCK(cs_args);
-            m_config_args.clear();
+            m_settings.ro_config.clear();
             m_config_sections.clear();
         }
         std::string error;
         BOOST_REQUIRE(ReadConfigStream(streamConfig, "", error));
+        LOCK(cs_args);
+        m_config_args.clear();
+        for (const auto& section : m_settings.ro_config) {
+            for (const auto& setting : section.second) {
+                auto& args = m_config_args["-" + (section.first.empty() ? "" : section.first + ".") + setting.first];
+                for (const auto& value : util::SettingsSpan(setting.second)) {
+                    args.push_back(value.isFalse() ? "0" : value.isTrue() ? "1" : value.get_str());
+                }
+            }
+        }
+    }
+    void UpdateSettings()
+    {
+        LOCK(cs_args);
+        for (const auto* args : {&m_override_args, &m_config_args}) {
+            for (const auto& arg : *args) {
+                std::string name = arg.first[0] == '-' ? arg.first.substr(1) : arg.first;
+                auto& settings = args == &m_override_args ? m_settings.command_line_options[name] :
+                                                            m_settings.ro_config[""][name];
+                for (const auto& value : arg.second) {
+                    settings.push_back(value);
+                }
+            }
+        }
     }
     void SetNetworkOnlyArg(const std::string arg)
     {
@@ -528,6 +568,7 @@ BOOST_AUTO_TEST_CASE(util_GetArg)
     testArgs.GetConfigArgs()["pritest3"] = {"b"};
     testArgs.GetOverrideArgs()["pritest4"] = {"a","b"};
     testArgs.GetConfigArgs()["pritest4"] = {"c","d"};
+    testArgs.UpdateSettings();
 
     BOOST_CHECK_EQUAL(testArgs.GetArg("strtest1", "default"), "string...");
     BOOST_CHECK_EQUAL(testArgs.GetArg("strtest2", "default"), "default");
