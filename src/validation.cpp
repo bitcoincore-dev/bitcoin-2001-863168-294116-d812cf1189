@@ -19,6 +19,7 @@
 #include <hash.h>
 #include <index/txindex.h>
 #include <node/coinstats.h>
+#include <node/utxo_snapshot.h>
 #include <policy/fees.h>
 #include <policy/policy.h>
 #include <policy/settings.h>
@@ -5173,6 +5174,34 @@ CChainState& ChainstateManager::InitializeChainstate(
     }
 
     return *to_modify.get();
+}
+
+/**
+ * Return the expected assumeutxo value for a given height, if one exists.
+ *
+ * @param height[in]         Get the assumeutxo value for this height.
+ * @param expected_out[out]  Set to the expected assumeutxo hash value if one exists.
+ *
+ * @returns bool - false if no assumeutxo value exists for the given height.
+ */
+static bool ExpectedAssumeutxo(int height, uint256& expected_out)
+{
+    const CChainParams& params = ::Params();
+
+    if (params.NetworkIDString() == "regtest") {
+        // Regtest allows any hash at any height.
+        return true;
+    }
+
+    const MapAssumeutxo& valid_assumeutxos_map = params.Assumeutxo();
+    const auto assumeutxo_found = valid_assumeutxos_map.find(height);
+
+    if (assumeutxo_found != valid_assumeutxos_map.end()) {
+        expected_out = assumeutxo_found->second;
+    } else {
+        return false;
+    }
+    return true;
 }
 
 CChain& ChainstateManager::ActiveChain() const
