@@ -15,10 +15,12 @@
 #include <core_io.h>
 #include <deploymentinfo.h>
 #include <deploymentstatus.h>
+#include <fs.h>
 #include <hash.h>
-#include <index/blockfilterindex.h>
 #include <index/coinstatsindex.h>
+#include <index/blockfilterindex.h>
 #include <node/blockstorage.h>
+#include <logging/timer.h>
 #include <node/coinstats.h>
 #include <node/context.h>
 #include <node/utxo_snapshot.h>
@@ -2537,6 +2539,7 @@ static RPCHelpMan dumptxoutset()
                     {RPCResult::Type::STR_HEX, "base_hash", "the hash of the base of the snapshot"},
                     {RPCResult::Type::NUM, "base_height", "the height of the base of the snapshot"},
                     {RPCResult::Type::STR, "path", "the absolute path that the snapshot was written to"},
+                    {RPCResult::Type::STR_HEX, "assumeutxo", "the hash of the UTXO set contents"},
                 }
         },
         RPCExamples{
@@ -2559,7 +2562,8 @@ static RPCHelpMan dumptxoutset()
     FILE* file{fsbridge::fopen(temppath, "wb")};
     CAutoFile afile{file, SER_DISK, CLIENT_VERSION};
     NodeContext& node = EnsureAnyNodeContext(request.context);
-    UniValue result = CreateUTXOSnapshot(node, node.chainman->ActiveChainstate(), afile);
+    UniValue result = CreateUTXOSnapshot(
+        node, node.chainman->ActiveChainstate(), afile, path, temppath);
     fs::rename(temppath, path);
 
     result.pushKV("path", path.string());
@@ -2568,10 +2572,15 @@ static RPCHelpMan dumptxoutset()
     };
 }
 
-UniValue CreateUTXOSnapshot(NodeContext& node, CChainState& chainstate, CAutoFile& afile)
+UniValue CreateUTXOSnapshot(
+    NodeContext& node,
+    CChainState& chainstate,
+    CAutoFile& afile,
+    const fs::path path,
+    const fs::path temppath)
 {
     std::unique_ptr<CCoinsViewCursor> pcursor;
-    CCoinsStats stats{CoinStatsHashType::NONE};
+    CCoinsStats stats{CoinStatsHashType::HASH_SERIALIZED};
     CBlockIndex* tip;
 
     {
@@ -2600,6 +2609,9 @@ UniValue CreateUTXOSnapshot(NodeContext& node, CChainState& chainstate, CAutoFil
         CHECK_NONFATAL(tip);
     }
 
+    LOG_TIME_SECONDS(strprintf("writing UTXO snapshot at height %s (%s) to file %s (via %s)",
+        tip->nHeight, tip->GetBlockHash().ToString(), path, temppath));
+
     SnapshotMetadata metadata{tip->GetBlockHash(), stats.coins_count, tip->nChainTx};
 
     afile << metadata;
@@ -2625,7 +2637,9 @@ UniValue CreateUTXOSnapshot(NodeContext& node, CChainState& chainstate, CAutoFil
     result.pushKV("coins_written", stats.coins_count);
     result.pushKV("base_hash", tip->GetBlockHash().ToString());
     result.pushKV("base_height", tip->nHeight);
-
+    result.pushKV("path", path.string());
+    result.pushKV("assumeutxo", stats.hashSerialized.ToString());
+    result.pushKV("nchaintx", static_cast<int>(tip->nChainTx));
     return result;
 }
 
