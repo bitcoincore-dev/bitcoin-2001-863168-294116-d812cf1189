@@ -25,6 +25,8 @@ struct CCheckpointData {
     MapCheckpoints mapCheckpoints;
 };
 
+using MapAssumeutxo = std::map<int, uint256>;
+
 /**
  * Holds various statistics on transactions within a chain. Used to estimate
  * verification progress during chain sync.
@@ -85,6 +87,11 @@ public:
     const std::string& Bech32HRP() const { return bech32_hrp; }
     const std::vector<SeedSpec6>& FixedSeeds() const { return vFixedSeeds; }
     const CCheckpointData& Checkpoints() const { return checkpointData; }
+
+    //! Get allowed assumeutxo height-hash pairs.
+    //! @see ChainstateManager
+    const MapAssumeutxo& Assumeutxo() const { return m_assumeutxo_data; }
+
     const ChainTxData& TxData() const { return chainTxData; }
 protected:
     CChainParams() {}
@@ -106,6 +113,7 @@ protected:
     bool m_is_test_chain;
     bool m_is_mockable_chain;
     CCheckpointData checkpointData;
+    MapAssumeutxo m_assumeutxo_data;
     ChainTxData chainTxData;
 };
 

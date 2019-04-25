@@ -156,6 +156,10 @@ public:
             }
         };
 
+        m_assumeutxo_data = {
+            // TODO to be specified in a future patch.
+        };
+
         chainTxData = ChainTxData{
             // Data from RPC: getchaintxstats 4096 0000000000000000000f2adce67e49b0b6bdeb9de8b7c3d7e93b21e7fc1e819d
             /* nTime    */ 1585764811,
@@ -241,6 +245,10 @@ public:
             }
         };
 
+        m_assumeutxo_data = {
+            {1512062, uint256S("0x042286b5243272fb3b0c4ccf3b90396eb1d0689c15cb9984d25438010a53a554")},
+        };
+
         chainTxData = ChainTxData{
             // Data from RPC: getchaintxstats 4096 000000000000056c49030c174179b52a928c870e6e8a822c75973b7970cfbd01
             /* nTime    */ 1585561140,
@@ -311,6 +319,11 @@ public:
             {
                 {0, uint256S("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206")},
             }
+        };
+
+        m_assumeutxo_data = {
+            {110, uint256S("0x76fd7334ac7c1baf57ddc0c626f073a655a35d98a4258cd1382c8cc2b8392e10")},
+            {210, uint256S("0x9c5ed99ef98544b34f8920b6d1802f72ac28ae6e2bd2bd4c316ff10c230df3f2")},
         };
 
         chainTxData = ChainTxData{
