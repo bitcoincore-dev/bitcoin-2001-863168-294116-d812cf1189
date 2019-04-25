@@ -15,6 +15,9 @@
 
 #include <boost/thread.hpp>
 
+//! XXX: be very careful when changing this! assumeutuxo and UTXO snapshot
+//! validation commitments are reliant on the hash constructed by this
+//! function.
 static void ApplyStats(CCoinsStats &stats, CHashWriter& ss, const uint256& hash, const std::map<uint32_t, Coin>& outputs)
 {
     assert(!outputs.empty());
