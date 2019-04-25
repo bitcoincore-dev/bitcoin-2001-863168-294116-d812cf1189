@@ -159,6 +159,10 @@ public:
             }
         };
 
+        m_assumeutxo_data = {
+            // TODO to be specified in a future patch.
+        };
+
         chainTxData = ChainTxData{
             // Data from RPC: getchaintxstats 4096 0000000000000000000f2adce67e49b0b6bdeb9de8b7c3d7e93b21e7fc1e819d
             /* nTime    */ 1585764811,
@@ -244,6 +248,10 @@ public:
             {
                 {546, uint256S("000000002a936ca763904c3c35fce2f3556c559c0214345d31b1bcebf76acb70")},
             }
+        };
+
+        m_assumeutxo_data = {
+            // TODO to be specified in a future patch.
         };
 
         chainTxData = ChainTxData{
@@ -419,6 +427,17 @@ public:
             }
         };
 
+        m_assumeutxo_data = {
+            {
+                110,
+                AssumeutxoData{uint256S("0x76fd7334ac7c1baf57ddc0c626f073a655a35d98a4258cd1382c8cc2b8392e10"), 110},
+            },
+            {
+                210,
+                AssumeutxoData{uint256S("0x9c5ed99ef98544b34f8920b6d1802f72ac28ae6e2bd2bd4c316ff10c230df3f2"), 210},
+            },
+        };
+
         chainTxData = ChainTxData{
             0,
             0,
@@ -513,4 +532,10 @@ void SelectParams(const std::string& network)
 {
     SelectBaseParams(network);
     globalChainParams = CreateChainParams(network);
+}
+
+std::ostream& operator<<(std::ostream& o, const AssumeutxoData& aud)
+{
+    o << tfm::format("AssumeutxoData(%s, %d)", aud.hash_serialized.ToString(), aud.nChainTx);
+    return o;
 }
