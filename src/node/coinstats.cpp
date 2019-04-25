@@ -24,6 +24,18 @@ static uint64_t GetBogoSize(const CScript& scriptPubKey)
            scriptPubKey.size() /* scriptPubKey */;
 }
 
+//! Warning: be very careful when changing this! assumeutxo and UTXO snapshot
+//! validation commitments are reliant on the hash constructed by this
+//! function.
+//!
+//! If the construction of this hash is changed, it will invalidate
+//! existing UTXO snapshots. This will not result in any kind of consensus
+//! failure, but it will force clients that were expecting to make use of
+//! assumeutxo to do traditional IBD instead.
+//!
+//! It is also possible, though very unlikely, that a change in this
+//! construction could cause a previously invalid (and potentially malicious)
+//! UTXO snapshot to be considered valid.
 static void ApplyStats(CCoinsStats& stats, CHashWriter& ss, const uint256& hash, const std::map<uint32_t, Coin>& outputs)
 {
     assert(!outputs.empty());
