@@ -5108,6 +5108,34 @@ CChainState& ChainstateManager::InitializeChainstate(
     return *to_modify.get();
 }
 
+/**
+ * Return the expected assumeutxo value for a given height, if one exists.
+ *
+ * @param metadata[in]
+ * @param expected_out[out]  Set to the expected assumeutxo hash value if one exists.
+ *
+ * @returns bool - false if no assumeutxo value exists for the given height.
+ */
+static bool ExpectedAssumeutxo(const SnapshotMetadata& metadata, uint256& expected_out)
+{
+    const CChainParams& params = ::Params();
+    int base_height = metadata.m_base_blockheader.nHeight;
+    const MapAssumeutxo& valid_assumeutxos_map = params.Assumeutxo();
+    const auto assumeutxo_found = valid_assumeutxos_map.find(base_height);
+
+    if (assumeutxo_found != valid_assumeutxos_map.end()) {
+        expected_out = assumeutxo_found->second;
+    } else if (params.Assumeutxo().size() == 0) {
+        // If there are no assumeutxo values specified, allow any - but only in regtest.
+        assert(params.NetworkIDString() == "regtest");
+        expected_out = metadata.m_utxo_contents_hash;
+    } else {
+        return false;
+    }
+    return true;
+}
+
+
 bool ChainstateManager::ActivateSnapshot(
         CAutoFile* coins_file,
         SnapshotMetadata metadata,
@@ -5145,6 +5173,7 @@ bool ChainstateManager::ActivateSnapshot(
     Coin coin;
     uint64_t coins_count = metadata.m_coins_count;
     uint64_t coins_left = metadata.m_coins_count;
+    uint64_t coins_processed = 0;
 
     LogPrintf("[snapshot] loading coins from snapshot %s\n", base_blockhash.ToString());
 
@@ -5157,15 +5186,21 @@ bool ChainstateManager::ActivateSnapshot(
             std::forward_as_tuple(std::move(outpoint)),
             std::forward_as_tuple(std::move(coin), CCoinsCacheEntry::DIRTY));
         coins_left -= 1;
+        coins_processed = coins_count - coins_left;
 
-        if ((coins_count - coins_left) % 1000000 == 0) {
-            boost::this_thread::interruption_point();
-            LogPrintf("[snapshot] progress=%d\n", coins_count - coins_left);
+        if (coins_processed % 1000000 == 0) {
+            LogPrintf("[snapshot] %d coins loaded (%.2f%%)\n",
+                coins_processed, (float) coins_processed * 100 / (float) coins_count);
         }
 
-        // Batch write and flush (if we need to) every so often. No good reason for
-        // the choice of 10000.
-        if ((coins_count - coins_left) % 10000 == 0) {
+        // Batch write and flush (if we need to) every so often.
+        //
+        // If our average Coin size is roughly 41 bytes, flushing every 120,000 coins
+        // should consume (on average) <5MB of memory overhead in `coins_map`.
+        if (coins_processed % 120000 == 0) {
+            if (ShutdownRequested()) {
+                return false;
+            }
             coins_cache.BatchWriteFromSnapshot(coins_map, base_blockhash);
             coins_map.clear();
             if (snapshot_chainstate->GetCoinsCacheSizeState() >= CoinsCacheSizeState::CRITICAL) {
@@ -5202,9 +5237,18 @@ bool ChainstateManager::ActivateSnapshot(
         return false;
     }
 
-    if (stats.hashSerialized != metadata.m_utxo_contents_hash) {
+    int base_height = metadata.m_base_blockheader.nHeight;
+    uint256 expected_contents_hash;
+
+    if (!ExpectedAssumeutxo(metadata, expected_contents_hash)) {
+        LogPrintf("[snapshot] assumeutxo value in snapshot metadata not valid for " /* Continued */
+            "height %s - refusing to load snapshot\n", base_height);
+        return false;
+    }
+
+    if (stats.hashSerialized != expected_contents_hash) {
         LogPrintf("[snapshot] bad snapshot content hash: expected %s, got %s\n",
-            metadata.m_utxo_contents_hash.ToString(), stats.hashSerialized.ToString());
+            expected_contents_hash.ToString(), stats.hashSerialized.ToString());
         return false;
     }
     if (stats.coins_count != coins_count) {
@@ -5229,8 +5273,6 @@ bool ChainstateManager::ActivateSnapshot(
             break;
         }
     }
-
-    int base_height = metadata.m_base_blockheader.nHeight;
 
     if (snapshot_start_block == nullptr) {
         LogPrintf("[snapshot] timed out waiting for snapshot start blockheader %s\n",
@@ -5319,25 +5361,39 @@ bool ChainstateManager::CompleteSnapshotValidation(CChainState* validation_chain
     LogPrintf("[snapshot] tip: actual=%s expected=%s\n",
             validation_chainstate->m_chain.Tip()->ToString(), SnapshotBlockhash().ToString());
 
-    bool snapshot_invalid{false};
+    bool snapshot_invalid = false;
+    int base_height = m_snapshot_metadata->m_base_blockheader.nHeight;
+    uint256 expected_contents_hash;
 
-    if (ibd_stats.hashSerialized != m_snapshot_metadata->m_utxo_contents_hash) {
-        LogPrintf("[snapshot] hash mismatch: actual=%s, expected=%s\n",
-            ibd_stats.hashSerialized.ToString(),
-            m_snapshot_metadata->m_utxo_contents_hash.ToString());
-        snapshot_invalid = true;
-    }
-    if (validation_chainstate->m_chain.Height() != SnapshotHeight()) {
-        LogPrintf("[snapshot] height mismatch: actual=%d expected=%d\n",
-                validation_chainstate->m_chain.Height(), SnapshotHeight());
-        snapshot_invalid = true;
-    }
-    if (ibd_stats.coins_count != m_snapshot_metadata->m_coins_count) {
-        LogPrintf("[snapshot] num coins mismatch: actual=%d expected=%d\n",
-            ibd_stats.coins_count,
-            m_snapshot_metadata->m_coins_count);
-        snapshot_invalid = true;
-    }
+    do { // do-while used for early exit.
+        if (!ExpectedAssumeutxo(*m_snapshot_metadata.get(), expected_contents_hash)) {
+            LogPrintf("[snapshot] assumeutxo value in snapshot metadata not valid for " /* Continued */
+                "height %s - snapshot does not validate\n", base_height);
+            snapshot_invalid = true;
+            break;
+        }
+
+        if (ibd_stats.hashSerialized != expected_contents_hash) {
+            LogPrintf("[snapshot] hash mismatch: actual=%s, expected=%s\n",
+                ibd_stats.hashSerialized.ToString(),
+                m_snapshot_metadata->m_utxo_contents_hash.ToString());
+            snapshot_invalid = true;
+            break;
+        }
+        if (validation_chainstate->m_chain.Height() != SnapshotHeight()) {
+            LogPrintf("[snapshot] height mismatch: actual=%d expected=%d\n",
+                    validation_chainstate->m_chain.Height(), SnapshotHeight());
+            snapshot_invalid = true;
+            break;
+        }
+        if (ibd_stats.coins_count != m_snapshot_metadata->m_coins_count) {
+            LogPrintf("[snapshot] num coins mismatch: actual=%d expected=%d\n",
+                ibd_stats.coins_count,
+                m_snapshot_metadata->m_coins_count);
+            snapshot_invalid = true;
+            break;
+        }
+    } while(false);
 
     if (snapshot_invalid) {
         LogPrintf("[snapshot] !!! the snapshot you've been working off of is invalid\n");

@@ -153,6 +153,10 @@ public:
             }
         };
 
+        m_assumeutxo_data = {
+            {570000, uint256S("0x39bb7d6d9935466c79305bd47d7bc2a72701a8a6cd20f9464966275482107499")},
+        };
+
         chainTxData = ChainTxData{
             // Data from rpc: getchaintxstats 4096 0000000000000000000f1c54590ee18d15ec70e68c8cd4cfbadb1b4f11697eee
             /* nTime    */ 1550374134,
@@ -237,6 +241,10 @@ public:
             }
         };
 
+        m_assumeutxo_data = {
+            {1512062, uint256S("0x042286b5243272fb3b0c4ccf3b90396eb1d0689c15cb9984d25438010a53a554")},
+        };
+
         chainTxData = ChainTxData{
             // Data from rpc: getchaintxstats 4096 0000000000000037a8cd3e06cd5edbfe9dd1dbcc5dacab279376ef7cfc2b4c75
             /* nTime    */ 1531929919,
@@ -306,6 +314,8 @@ public:
                 {0, uint256S("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206")},
             }
         };
+
+        m_assumeutxo_data = {};
 
         chainTxData = ChainTxData{
             0,
