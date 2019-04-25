@@ -2279,6 +2279,7 @@ UniValue dumptxoutset(const JSONRPCRequest& request)
             "  \"base_hash\": \"...\",   (string) the hash of the base of the snapshot\n"
             "  \"base_height\": n,     (string) the height of the base of the snapshot\n"
             "  \"path\": \"...\"         (string) the absolute path that the snapshot was written to\n"
+            "  \"assumeutxo\": \"...\"   (hash) the hash of the UTXO set contents\n"
             "]\n"
         },
         RPCExamples{
@@ -2362,6 +2363,7 @@ UniValue dumptxoutset(const JSONRPCRequest& request)
     result.pushKV("base_hash", tip->GetBlockHash().ToString());
     result.pushKV("base_height", tip->nHeight);
     result.pushKV("path", path.string());
+    result.pushKV("assumeutxo", stats.hashSerialized.ToString());
     return result;
 }
 
