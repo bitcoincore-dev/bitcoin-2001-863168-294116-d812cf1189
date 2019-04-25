@@ -22,6 +22,7 @@
 #include <logging/timer.h>
 #include <node/ui_interface.h>
 #include <optional.h>
+#include <node/coinstats.h>
 #include <policy/fees.h>
 #include <policy/policy.h>
 #include <policy/settings.h>
@@ -5245,6 +5246,17 @@ CChainState& ChainstateManager::InitializeChainstate(CTxMemPool& mempool, const 
     }
 
     return *to_modify;
+}
+
+Optional<AssumeutxoData> ExpectedAssumeutxo(const int height, const CChainParams& chainparams)
+{
+    const MapAssumeutxo& valid_assumeutxos_map = chainparams.Assumeutxo();
+    const auto assumeutxo_found = valid_assumeutxos_map.find(height);
+
+    if (assumeutxo_found != valid_assumeutxos_map.end()) {
+        return assumeutxo_found->second;
+    }
+    return {};
 }
 
 CChainState& ChainstateManager::ActiveChainstate() const
