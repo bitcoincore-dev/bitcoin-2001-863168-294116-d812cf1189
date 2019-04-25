@@ -818,6 +818,9 @@ static UniValue sendrawtransaction(const JSONRPCRequest& request)
     // TODO: temporary migration code for old clients. Remove in v0.20
     if (request.params[1].isBool()) {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Second argument must be numeric (maxfeerate) and no longer supports a boolean. To allow a transaction with high fees, set maxfeerate to 0.");
+    } else if (request.params[1].isArray() && request.params[2].isNull()) {
+        // ignore_rejects used to occupy this position
+        json_ign_rejs = &request.params[1];
     } else if (!request.params[1].isNull()) {
         max_raw_tx_fee_rate = CFeeRate(AmountFromValue(request.params[1]));
     }
