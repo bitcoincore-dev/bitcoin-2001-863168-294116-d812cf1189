@@ -1080,6 +1080,9 @@ static UniValue sendrawtransaction(const JSONRPCRequest& request)
     // TODO: temporary migration code for old clients. Remove in v0.20
     if (request.params[1].isBool()) {
         if (request.params[1].get_bool()) highfee = 0;
+    } else if (request.params[1].isArray() && request.params[2].isNull()) {
+        // ignore_rejects used to occupy this position
+        json_ign_rejs = &request.params[1];
     } else if (!request.params[1].isNull()) {
         size_t weight = GetTransactionWeight(*tx);
         CFeeRate fr(AmountFromValue(request.params[1]));
