@@ -2532,6 +2532,7 @@ static RPCHelpMan dumptxoutset()
                     {RPCResult::Type::STR_HEX, "base_hash", "the hash of the base of the snapshot"},
                     {RPCResult::Type::NUM, "base_height", "the height of the base of the snapshot"},
                     {RPCResult::Type::STR, "path", "the absolute path that the snapshot was written to"},
+                    {RPCResult::Type::STR_HEX, "assumeutxo", "the hash of the UTXO set contents"},
                 }
         },
         RPCExamples{
@@ -2620,7 +2621,8 @@ UniValue CreateUTXOSnapshot(NodeContext& node, CChainState& chainstate, CAutoFil
     result.pushKV("coins_written", stats.coins_count);
     result.pushKV("base_hash", tip->GetBlockHash().ToString());
     result.pushKV("base_height", tip->nHeight);
-
+    result.pushKV("path", path.string());
+    result.pushKV("assumeutxo", stats.hashSerialized.ToString());
     return result;
 }
 
