@@ -2261,13 +2261,15 @@ UniValue dumptxoutset(const JSONRPCRequest& request)
                 RPCExamples{"{\n"
             "  \"coins_written\": n,   (numeric) the number of coins written in the snapshot\n"
             "  \"base_hash\": \"...\",   (string) the hash of the base of the snapshot\n"
-            "  \"base_height\": n,     (string) the hash of the base of the snapshot\n"
+            "  \"base_height\": n,     (string) the height of the base of the snapshot\n"
             "  \"path\": \"...\"         (string) the absolute path that the snapshot was written to\n"
+            "  \"assumeutxo\": \"...\"   (hash) the hash of the UTXO set contents\n"
             "]\n"},
             }.ToString()
         );
 
     fs::path path = request.params[0].get_str();
+
     if (path.is_relative()) {
         path = fs::absolute(path, GetDataDir());
     }
@@ -2334,6 +2336,7 @@ UniValue dumptxoutset(const JSONRPCRequest& request)
     result.pushKV("base_hash", tip->GetBlockHash().ToString());
     result.pushKV("base_height", tip->nHeight);
     result.pushKV("path", path.string());
+    result.pushKV("assumeutxo", stats.hashSerialized.ToString());
     return result;
 }
 
