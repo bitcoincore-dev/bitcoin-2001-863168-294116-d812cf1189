@@ -955,4 +955,14 @@ inline bool IsBlockPruned(const CBlockIndex* pblockindex)
     return (fHavePruned && !(pblockindex->nStatus & BLOCK_HAVE_DATA) && pblockindex->nTx > 0);
 }
 
+/**
+ * Return the expected assumeutxo value for a given height, if one exists.
+ *
+ * @param height[in]         Get the assumeutxo value for this height.
+ * @param expected_out[out]  Set to the expected assumeutxo hash value if one exists.
+ *
+ * @returns bool - false if no assumeutxo value exists for the given height.
+ */
+bool ExpectedAssumeutxo(const int height, uint256& expected_out, const CChainParams& params);
+
 #endif // BITCOIN_VALIDATION_H
