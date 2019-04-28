@@ -1,7 +1,7 @@
 Filename            | Description
 --------------------|----------------------------------------------------------------------------------------------------------------------------
 banlist.dat         | stores the IPs/Subnets of banned nodes
-bitcoin.conf        | contains configuration settings for bitcoind or bitcoin-qt
+bitcoin.conf        | user-defined settings for bitcoind and bitcoin-qt; file is read-only and must be created manually
 bitcoind.pid        | stores the process id of bitcoind while running
 blocks/blk000??.dat | block data (custom, 128 MiB per file); since 0.8.0
 blocks/rev000??.dat | block undo data (custom); since 0.8.0 (format changed since pre-0.8)
@@ -14,6 +14,7 @@ fee_estimates.dat   | stores statistics used to estimate minimum transaction fee
 indexes/txindex/*   | optional transaction index database (LevelDB); since 0.17.0
 mempool.dat         | dump of the mempool's transactions; since 0.14.0
 peers.dat           | peer IP address database (custom format); since 0.7.0
+setting.json        | read-write settings set in GUI or RPC interfaces that augment manual settings from bitcoin.conf
 wallet.dat          | personal wallet (BDB) with keys and transactions; moved to wallets/ directory on new installs since 0.16.0
 wallets/database/*  | BDB database environment; used for wallets since 0.16.0
 wallets/db.log      | wallet database log file; since 0.16.0
