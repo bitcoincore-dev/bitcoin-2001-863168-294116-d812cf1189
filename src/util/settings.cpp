@@ -29,6 +29,9 @@ static void MergeSettings(const Settings& settings, const std::string& section, 
     if (auto* value = FindKey(settings.command_line_options, name)) {
         fn(Source(SettingsSpan(*value)));
     }
+    if (auto* value = FindKey(settings.rw_settings, name)) {
+        fn(Source(SettingsSpan(value)));
+    }
     if (!section.empty()) {
         if (auto* map = FindKey(settings.ro_config, section)) {
             if (auto* value = FindKey(*map, name)) {
