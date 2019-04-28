@@ -20,16 +20,18 @@ namespace util {
 //!       be substituted if there's a need to move away from UniValue.
 using SettingsValue = UniValue;
 
-//! Stored bitcoin settings. This struct combines settings from the command line
-//! and a static configuration file.
+//! Stored bitcoin settings. This struct combines settings from the command line,
+//! a static configuration file, and a read/write runtime settings file.
 struct Settings {
     std::map<std::string, SettingsValue> forced_settings;
     std::map<std::string, std::vector<SettingsValue>> command_line_options;
+    std::map<std::string, SettingsValue> rw_settings;
     std::map<std::string, std::map<std::string, std::vector<SettingsValue>>> ro_config;
 };
 
 //! Get settings value from combined sources: forced settings, command line
-//! arguments, the static config file.
+//! arguments, runtime read/write settings, and the static read-only config
+//! file.
 //!
 //! @param ignore_default_section_config - ignore values set in the top-level
 //!                                        section of the config file.
