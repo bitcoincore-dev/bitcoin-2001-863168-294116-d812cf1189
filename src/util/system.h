@@ -291,6 +291,33 @@ public:
      * Check whether we know of this arg
      */
     bool IsArgKnown(const std::string& key) const;
+
+    /**
+     * Load <datadir>/settings.json file with saved settings. This needs to be
+     * called after SelectParams() because the settings file is network-specific.
+     */
+    bool ReadSettingsFile();
+
+    /**
+     * Save <datadir>/settings.json file with persistent settings.
+     */
+    bool WriteSettingsFile() const;
+
+    /**
+     * Get current setting from config file or read/write settings file,
+     * ignoring runtime command line or forced argument values.
+     */
+    util::SettingsValue GetPersistentSetting(const std::string& name) const;
+
+    /**
+     * Access settings with lock held.
+     */
+    template <typename Fn>
+    void LockSettings(Fn&& fn)
+    {
+        LOCK(cs_args);
+        fn(m_settings);
+    }
 };
 
 extern ArgsManager gArgs;
