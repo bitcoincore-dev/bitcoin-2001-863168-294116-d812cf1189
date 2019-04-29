@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_CASE(Simple)
     util::Settings settings;
     settings.command_line_options["name"].push_back("val1");
     settings.ro_config["section"]["name"].push_back(2);
-    util::SettingsValue single_value = GetSetting(settings, "section", "name", false, false);
+    util::SettingsValue single_value = GetSetting(settings, "section", "name", false, false, false);
     util::SettingsValue list_value(util::SettingsValue::VARR);
     for (const auto& item : GetListSetting(settings, "section", "name", false)) {
         list_value.push_back(item);
@@ -105,7 +105,7 @@ BOOST_FIXTURE_TEST_CASE(Merge, MergeTestingSetup)
         }
 
         desc += " || ";
-        desc += GetSetting(settings, network, name, ignore_default_section_config, /* skip_nonpersistent= */ false).write();
+        desc += GetSetting(settings, network, name, ignore_default_section_config, /* skip_nonpersistent= */ false, /* skip_negated_command_line= */ false).write();
         desc += " |";
         for (const auto& s : GetListSetting(settings, network, name, ignore_default_section_config)) {
             desc += " ";
