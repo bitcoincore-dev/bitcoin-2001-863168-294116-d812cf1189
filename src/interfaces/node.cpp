@@ -61,9 +61,24 @@ public:
     }
     bool readConfigFiles(std::string& error) override { return gArgs.ReadConfigFiles(error, true); }
     bool softSetArg(const std::string& arg, const std::string& value) override { return gArgs.SoftSetArg(arg, value); }
-    bool softSetBoolArg(const std::string& arg, bool value) override { return gArgs.SoftSetBoolArg(arg, value); }
     void selectParams(const std::string& network) override { SelectParams(network); }
     bool readSettingsFile() override { return gArgs.ReadSettingsFile(); }
+    util::SettingsValue getSetting(const std::string& name) override { return gArgs.GetPersistentSetting(name); }
+    void updateSetting(const std::string& name, const util::SettingsValue& value) override
+    {
+        gArgs.LockSettings([&](util::Settings& settings) { settings.rw_settings[name] = value; });
+    }
+    bool writeSettingsFile() override { return gArgs.WriteSettingsFile(); }
+    bool isSettingIgnored(const std::string& name) override
+    {
+        bool ignored = false;
+        gArgs.LockSettings([&](util::Settings& settings) {
+            if (auto* options = util::FindKey(settings.command_line_options, name)) {
+                ignored = !options->empty();
+            }
+        });
+        return ignored;
+    }
     uint64_t getAssumedBlockchainSize() override { return Params().AssumedBlockchainSize(); }
     uint64_t getAssumedChainStateSize() override { return Params().AssumedChainStateSize(); }
     std::string getNetwork() override { return Params().NetworkIDString(); }
