@@ -190,7 +190,7 @@ public:
         // negated values, or at least warn they are ignored.
         const bool skip_negated_command_line = no_network;
 
-        return GetSetting(am.m_settings, no_network ? "" : am.m_network, SettingName(arg), !UseDefaultSection(am, arg), skip_negated_command_line);
+        return GetSetting(am.m_settings, no_network ? "" : am.m_network, SettingName(arg), !UseDefaultSection(am, arg), /* skip_nonpersistent= */ false, skip_negated_command_line);
     }
 };
 
@@ -445,6 +445,12 @@ bool ArgsManager::WriteSettingsFile() const
         return false;
     }
     return true;
+}
+
+util::SettingsValue ArgsManager::GetPersistentSetting(const std::string& name) const
+{
+    LOCK(cs_args);
+    return GetSetting(m_settings, m_network, name, !ArgsManagerHelper::UseDefaultSection(*this, "-" + name), /* skip_nonpersistent = */ true, /* skip_negated_command_line= */ false);
 }
 
 bool ArgsManager::IsArgNegated(const std::string& strArg) const

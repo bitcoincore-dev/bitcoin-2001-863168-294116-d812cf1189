@@ -53,6 +53,7 @@ SettingsValue GetSetting(const Settings& settings,
     const std::string& section,
     const std::string& name,
     bool ignore_default_section_config,
+    bool skip_nonpersistent,
     bool skip_negated_command_line)
 {
     SettingsValue result;

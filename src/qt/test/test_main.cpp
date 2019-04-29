@@ -10,6 +10,7 @@
 #include <interfaces/node.h>
 #include <qt/bitcoin.h>
 #include <qt/test/apptests.h>
+#include <qt/test/optiontests.h>
 #include <qt/test/rpcnestedtests.h>
 #include <util/system.h>
 #include <qt/test/uritests.h>
@@ -78,6 +79,10 @@ int main(int argc, char *argv[])
 
     AppTests app_tests(app);
     if (QTest::qExec(&app_tests) != 0) {
+        fInvalid = true;
+    }
+    OptionTests options_tests(*node);
+    if (QTest::qExec(&options_tests) != 0) {
         fInvalid = true;
     }
     URITests test1;
