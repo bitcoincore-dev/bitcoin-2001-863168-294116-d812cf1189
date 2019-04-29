@@ -181,7 +181,7 @@ public:
     static util::SettingsValue Get(const ArgsManager& am, const std::string& arg)
     {
         LOCK(am.cs_args);
-        return GetSetting(am.m_settings, am.m_network, SettingName(arg), !UseDefaultSection(am, arg), /* get_chain_name= */ false);
+        return GetSetting(am.m_settings, am.m_network, SettingName(arg), !UseDefaultSection(am, arg), /* ignore_nonpersistent= */ false, /* get_chain_name= */ false);
     }
 };
 
@@ -463,6 +463,13 @@ bool ArgsManager::WriteSettingsFile() const
         return false;
     }
     return true;
+}
+
+util::SettingsValue ArgsManager::GetPersistentSetting(const std::string& name) const
+{
+    LOCK(cs_args);
+    return util::GetSetting(m_settings, m_network, name, !ArgsManagerHelper::UseDefaultSection(*this, "-" + name),
+        /* ignore_nonpersistent = */ true, /* get_chain_name= */ false);
 }
 
 bool ArgsManager::IsArgNegated(const std::string& strArg) const
@@ -937,6 +944,7 @@ std::string ArgsManager::GetChainName() const
         LOCK(cs_args);
         util::SettingsValue value = GetSetting(m_settings, /* section= */ "", SettingName(arg),
                                                /* ignore_default_section_config= */ false,
+                                               /* ignore_nonpersistent= */ false,
                                                /* get_chain_name= */ true);
         return value.isNull() ? false : value.isBool() ? value.get_bool() : InterpretBool(value.get_str());
     };

@@ -6,6 +6,7 @@
 #define BITCOIN_QT_OPTIONSMODEL_H
 
 #include <amount.h>
+#include <qt/guiconstants.h>
 
 #include <QAbstractListModel>
 
@@ -15,6 +16,9 @@ class Node;
 
 extern const char *DEFAULT_GUI_PROXY_HOST;
 static constexpr unsigned short DEFAULT_GUI_PROXY_PORT = 9050;
+
+static inline int64_t PruneGBtoMiB(int gb) { return gb * GB_BYTES / 1024 / 1024; }
+static inline int PruneMiBtoGB(int64_t mib) { return (mib * 1024 * 1024 + GB_BYTES - 1) / GB_BYTES; }
 
 /** Interface from Qt to configuration data structure for Bitcoin client.
    To Qt, the options are presented as a list with the different options
@@ -60,6 +64,8 @@ public:
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
+    QVariant getOption(OptionID option) const;
+    bool setOption(OptionID option, const QVariant &value);
     /** Updates current unit in memory, settings and emits displayUnitChanged(newUnit) signal */
     void setDisplayUnit(const QVariant &value);
 
@@ -73,7 +79,7 @@ public:
     const QString& getOverriddenByCommandLine() { return strOverriddenByCommandLine; }
 
     /* Explicit setters */
-    void SetPrune(bool prune, bool force = false);
+    void SetPrune(bool prune);
 
     /* Restart flag helper */
     void setRestartRequired(bool fRequired);
@@ -91,6 +97,15 @@ private:
     int nDisplayUnit;
     QString strThirdPartyTxUrls;
     bool fCoinControlFeatures;
+    //! In-memory settings for display. These are stored persistently by the
+    //! bitcoin node but it's also nice to store them in memory to prevent them
+    //! getting cleared when enable/disable toggles are used in the GUI.
+    int m_prune_size_gb;
+    QString m_proxy_ip;
+    QString m_proxy_port;
+    QString m_onion_ip;
+    QString m_onion_port;
+
     /* settings that were overridden by command-line */
     QString strOverriddenByCommandLine;
 

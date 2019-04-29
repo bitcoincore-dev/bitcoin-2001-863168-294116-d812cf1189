@@ -12,6 +12,7 @@
 
 #include <qt/guiconstants.h>
 #include <qt/guiutil.h>
+#include <qt/optionsmodel.h>
 
 #include <interfaces/node.h>
 #include <util/system.h>
@@ -139,7 +140,7 @@ Intro::Intro(QWidget *parent, uint64_t blockchain_size, uint64_t chain_state_siz
     requiredSpace = m_blockchain_size;
     QString storageRequiresMsg = tr("At least %1 GB of data will be stored in this directory, and it will grow over time.");
     if (pruneTarget) {
-        uint64_t prunedGBs = std::ceil(pruneTarget * 1024 * 1024.0 / GB_BYTES);
+        uint64_t prunedGBs = PruneMiBtoGB(pruneTarget);
         if (prunedGBs <= requiredSpace) {
             requiredSpace = prunedGBs;
             storageRequiresMsg = tr("Approximately %1 GB of data will be stored in this directory.");
