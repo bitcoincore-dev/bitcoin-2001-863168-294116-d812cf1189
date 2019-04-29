@@ -182,7 +182,8 @@ public:
     static util::SettingsValue Get(const ArgsManager& am, const std::string& arg, bool no_network = false)
     {
         LOCK(am.cs_args);
-        return GetSetting(am.m_settings, no_network ? "" : am.m_network, SettingName(arg), !UseDefaultSection(am, arg));
+        return GetSetting(am.m_settings, no_network ? "" : am.m_network, SettingName(arg),
+            !UseDefaultSection(am, arg), /* skip_nonpersistent= */ false);
     }
 };
 
@@ -436,6 +437,13 @@ bool ArgsManager::WriteSettingsFile() const
         return false;
     }
     return true;
+}
+
+util::SettingsValue ArgsManager::GetPersistentSetting(const std::string& name) const
+{
+    LOCK(cs_args);
+    bool ignore_default_section_config = !ArgsManagerHelper::UseDefaultSection(*this, "-" + name);
+    return GetSetting(m_settings, m_network, name, ignore_default_section_config, /* skip_nonpersistent = */ true);
 }
 
 bool ArgsManager::IsArgNegated(const std::string& strArg) const

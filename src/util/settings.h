@@ -35,7 +35,11 @@ struct Settings {
 //!
 //! @param ignore_default_section_config - ignore values set in the top-level
 //!                                        section of the config file.
-SettingsValue GetSetting(const Settings& settings, const std::string& section, const std::string& name, bool ignore_default_section_config);
+//! @param skip_nonpersistent - ignore non-persistent settings values (forced
+//!                             settings values and values specified on the
+//!                             command line). Only return settings in the
+//!                             static config file.
+SettingsValue GetSetting(const Settings& settings, const std::string& section, const std::string& name, bool ignore_default_section_config, bool skip_nonpersistent);
 
 //! Get combined setting value similar to Get(), except if setting was
 //! specified multiple times, return a list of all the values that were

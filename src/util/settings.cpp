@@ -52,7 +52,8 @@ static void MergeSettings(const Settings& settings, const std::string& section, 
 SettingsValue GetSetting(const Settings& settings,
     const std::string& section,
     const std::string& name,
-    bool ignore_default_section_config)
+    bool ignore_default_section_config,
+    bool skip_nonpersistent)
 {
     SettingsValue result;
     MergeSettings(settings, section, name, [&](Source source) {

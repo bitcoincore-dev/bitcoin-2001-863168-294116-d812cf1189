@@ -5,10 +5,11 @@
 #ifndef BITCOIN_INTERFACES_NODE_H
 #define BITCOIN_INTERFACES_NODE_H
 
-#include <addrdb.h>     // For banmap_t
-#include <amount.h>     // For CAmount
-#include <net.h>        // For CConnman::NumConnections
-#include <netaddress.h> // For Network
+#include <addrdb.h>        // For banmap_t
+#include <amount.h>        // For CAmount
+#include <net.h>           // For CConnman::NumConnections
+#include <netaddress.h>    // For Network
+#include <util/settings.h> // For util::SettingsValue
 
 #include <functional>
 #include <memory>
@@ -44,9 +45,6 @@ public:
     //! Set a command line argument if it doesn't already have a value
     virtual bool softSetArg(const std::string& arg, const std::string& value) = 0;
 
-    //! Set a command line boolean argument if it doesn't already have a value
-    virtual bool softSetBoolArg(const std::string& arg, bool value) = 0;
-
     //! Load settings from configuration file.
     virtual bool readConfigFiles(std::string& error) = 0;
 
@@ -57,6 +55,28 @@ public:
     //! called after selectParams() because the settings file is
     //! network-specific.
     virtual bool readSettingsFile() = 0;
+
+    // Return <datadir>/settings.json setting value. If not set will return underlying config value.
+    virtual util::SettingsValue getSetting(const std::string& name) = 0;
+
+    //! Update a setting in <datadir>/settings.json.
+    //!
+    //! Updated setting values are returned by getSetting() and GetArg()
+    //! immediately but are not saved to disk until writeSettingsFile() is
+    //! called.
+    //!
+    //! Setting name should be a command line -option name specified without the
+    //! hyphen prefix. In GetArg() calls, values in settings.json will take
+    //! precedence over values in bitcoin.conf, but will not take precedence
+    //! over values specified explicitly on the command line.
+    virtual void updateSetting(const std::string& name, const util::SettingsValue& value) = 0;
+
+    //! Save <datadir>/settings.json file with updated settings.
+    virtual bool writeSettingsFile() = 0;
+
+    //! Return whether a particular setting in <datadir>/settings.json is or
+    //! would be ignored because it is also specified in the command line.
+    virtual bool isSettingIgnored(const std::string& name) = 0;
 
     //! Get the (assumed) blockchain size.
     virtual uint64_t getAssumedBlockchainSize() = 0;
