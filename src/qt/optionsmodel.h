@@ -67,6 +67,7 @@ public:
         incrementalrelayfee,
         mempoolexpiry,
         rejectunknownscripts,   // bool
+        rejectfuturewitness,    // bool
         rejectspkreuse,         // bool
         minrelaytxfee,
         bytespersigop,

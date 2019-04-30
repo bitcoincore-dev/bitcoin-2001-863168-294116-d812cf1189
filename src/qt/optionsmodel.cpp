@@ -387,6 +387,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return qlonglong(gArgs.GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY));
         case rejectunknownscripts:
             return fRequireStandard;
+        case rejectfuturewitness:
+            return !g_allow_sending_to_future_witness_versions;
         case rejectspkreuse:
             return f_rejectspkreuse;
         case minrelaytxfee:
@@ -722,6 +724,16 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 fRequireStandard = fNewValue;
                 // This option is inverted in the config:
                 gArgs.ModifyRWConfigFile("acceptnonstdtxn", strprintf("%d", ! fNewValue));
+            }
+            break;
+        }
+        case rejectfuturewitness:
+        {
+            // The config and internal option is inverted
+            const bool fNewValue = ! value.toBool();
+            if (fNewValue != g_allow_sending_to_future_witness_versions) {
+                g_allow_sending_to_future_witness_versions = fNewValue;
+                gArgs.ModifyRWConfigFile("sendtofuture", strprintf("%d", fNewValue));
             }
             break;
         }
