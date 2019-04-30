@@ -44,6 +44,8 @@ private:
     QMenu *contextMenu;
 };
 
+#ifdef ENABLE_WALLET
+
 class ReceiveRequestDialog : public QDialog
 {
     Q_OBJECT
@@ -66,5 +68,7 @@ private:
     WalletModel *model;
     SendCoinsRecipient info;
 };
+
+#endif // ENABLE_WALLET
 
 #endif // BITCOIN_QT_RECEIVEREQUESTDIALOG_H

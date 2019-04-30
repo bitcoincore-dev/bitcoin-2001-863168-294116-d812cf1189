@@ -145,6 +145,8 @@ void QRImageWidget::contextMenuEvent(QContextMenuEvent *event)
     contextMenu->exec(event->globalPos());
 }
 
+#ifdef ENABLE_WALLET
+
 ReceiveRequestDialog::ReceiveRequestDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ReceiveRequestDialog),
@@ -224,3 +226,5 @@ void ReceiveRequestDialog::on_btnCopyAddress_clicked()
 {
     GUIUtil::setClipboard(info.address);
 }
+
+#endif // ENABLE_WALLET
