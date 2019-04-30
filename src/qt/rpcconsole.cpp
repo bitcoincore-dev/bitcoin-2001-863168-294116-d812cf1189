@@ -11,6 +11,7 @@
 
 #include <qt/bantablemodel.h>
 #include <qt/clientmodel.h>
+#include <qt/pairingpage.h>
 #include <qt/platformstyle.h>
 #include <qt/walletmodel.h>
 #include <chainparams.h>
@@ -575,6 +576,7 @@ void RPCConsole::setClientModel(ClientModel *model)
     }
 
     ui->trafficGraph->setClientModel(model);
+    if (m_tab_pairing) m_tab_pairing->setClientModel(model);
     if (model && clientModel->getPeerTableModel() && clientModel->getBanTableModel()) {
         // Keep up to date with client
         setNumConnections(model->getNumConnections());
@@ -697,6 +699,15 @@ void RPCConsole::setClientModel(ClientModel *model)
         thread.quit();
         thread.wait();
     }
+}
+
+void RPCConsole::addPairingTab()
+{
+    assert(!m_tab_pairing);
+    m_tab_pairing = new PairingPage(this);
+    ui->tabWidget->insertTab(1, m_tab_pairing, tr("&Pairing"));
+    m_tabs[TAB_PAIRING] = m_tab_pairing;
+    if (clientModel) m_tab_pairing->setClientModel(clientModel);
 }
 
 #ifdef ENABLE_WALLET
