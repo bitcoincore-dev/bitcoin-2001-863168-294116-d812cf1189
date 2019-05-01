@@ -27,6 +27,7 @@
 #include <util/validation.h>
 #include <wallet/coincontrol.h>
 #include <wallet/feebumper.h>
+#include <wallet/load.h>
 #include <wallet/psbtwallet.h>
 #include <wallet/rpcwallet.h>
 #include <wallet/wallet.h>
@@ -2593,7 +2594,7 @@ static UniValue listwallets(const JSONRPCRequest& request)
 
 static UniValue loadwallet(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() != 1)
+    if (request.fHelp || request.params.size() > 2)
         throw std::runtime_error(
             RPCHelpMan{"loadwallet",
                 "\nLoads a wallet from a wallet file or directory."
@@ -2601,6 +2602,7 @@ static UniValue loadwallet(const JSONRPCRequest& request)
                 "\napplied to the new wallet (eg -zapwallettxes, upgradewallet, rescan, etc).\n",
                 {
                     {"filename", RPCArg::Type::STR, RPCArg::Optional::NO, "The wallet directory or .dat file."},
+                    {"load_on_startup", RPCArg::Type::BOOL, /* default */ "false", "Save wallet name to persistent settings and load on startup."},
                 },
                 RPCResult{
             "{\n"
@@ -2626,9 +2628,19 @@ static UniValue loadwallet(const JSONRPCRequest& request)
         }
     }
 
+    bool load_on_startup = false;
+    if (!request.params[1].isNull() && request.params[1].isBool()) {
+        load_on_startup = request.params[1].get_bool();
+    }
+
     std::string error, warning;
     std::shared_ptr<CWallet> const wallet = LoadWallet(*g_rpc_interfaces->chain, location, error, warning);
     if (!wallet) throw JSONRPCError(RPC_WALLET_ERROR, error);
+
+    if (load_on_startup && !AddWalletSetting(wallet->chain(), location.GetName())) {
+        throw JSONRPCError(RPC_MISC_ERROR, "Wallet loaded, but load-on-startup list could not be written, so wallet "
+                                           "may be not loaded on node restart.");
+    }
 
     UniValue obj(UniValue::VOBJ);
     obj.pushKV("name", wallet->GetName());
@@ -2647,6 +2659,7 @@ static UniValue createwallet(const JSONRPCRequest& request)
             {"disable_private_keys", RPCArg::Type::BOOL, /* default */ "false", "Disable the possibility of private keys (only watchonlys are possible in this mode)."},
             {"blank", RPCArg::Type::BOOL, /* default */ "false", "Create a blank wallet. A blank wallet has no keys or HD seed. One can be set using sethdseed."},
             {"passphrase", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "Encrypt the wallet with this passphrase."},
+            {"load_on_startup", RPCArg::Type::BOOL, /* default */ "false", "Save wallet name to persistent settings and load on startup."},
         },
         RPCResult{
             "{\n"
@@ -2686,6 +2699,11 @@ static UniValue createwallet(const JSONRPCRequest& request)
         }
         // Born encrypted wallets need to be blank first so that wallet creation doesn't make any unencrypted keys
         flags |= WALLET_FLAG_BLANK_WALLET;
+    }
+
+    bool load_on_startup = false;
+    if (!request.params[4].isNull() && request.params[4].isBool()) {
+        load_on_startup = request.params[4].get_bool();
     }
 
     WalletLocation location(request.params[0].get_str());
@@ -2728,6 +2746,11 @@ static UniValue createwallet(const JSONRPCRequest& request)
     AddWallet(wallet);
 
     wallet->postInitProcess();
+
+    if (load_on_startup && !AddWalletSetting(wallet->chain(), location.GetName())) {
+        throw JSONRPCError(RPC_MISC_ERROR, "Wallet loaded, but load-on-startup list could not be written, so wallet "
+                                           "may be not loaded on node restart.");
+    }
 
     UniValue obj(UniValue::VOBJ);
     obj.pushKV("name", wallet->GetName());
@@ -2775,7 +2798,12 @@ static UniValue unloadwallet(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_MISC_ERROR, "Requested wallet already unloaded");
     }
 
+    interfaces::Chain& chain = wallet->chain();
     UnloadWallet(std::move(wallet));
+    if (!RemoveWalletSetting(chain, wallet_name)) {
+        throw JSONRPCError(RPC_MISC_ERROR, "Wallet unloaded, but load-on-startup list could not be written, so wallet "
+                                           "may be reloaded on node restart.");
+    }
 
     return NullUniValue;
 }
@@ -4178,7 +4206,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "addmultisigaddress",               &addmultisigaddress,            {"nrequired","keys","label","address_type"} },
     { "wallet",             "backupwallet",                     &backupwallet,                  {"destination"} },
     { "wallet",             "bumpfee",                          &bumpfee,                       {"txid", "options"} },
-    { "wallet",             "createwallet",                     &createwallet,                  {"wallet_name", "disable_private_keys", "blank", "passphrase"} },
+    { "wallet",             "createwallet",                     &createwallet,                  {"wallet_name", "disable_private_keys", "blank", "passphrase", "load_on_startup"} },
     { "wallet",             "dumpprivkey",                      &dumpprivkey,                   {"address"}  },
     { "wallet",             "dumpwallet",                       &dumpwallet,                    {"filename"} },
     { "wallet",             "encryptwallet",                    &encryptwallet,                 {"passphrase"} },
@@ -4210,7 +4238,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "listunspent",                      &listunspent,                   {"minconf","maxconf","addresses","include_unsafe","query_options"} },
     { "wallet",             "listwalletdir",                    &listwalletdir,                 {} },
     { "wallet",             "listwallets",                      &listwallets,                   {} },
-    { "wallet",             "loadwallet",                       &loadwallet,                    {"filename"} },
+    { "wallet",             "loadwallet",                       &loadwallet,                    {"filename", "load_on_startup"} },
     { "wallet",             "lockunspent",                      &lockunspent,                   {"unlock","transactions"} },
     { "wallet",             "removeprunedfunds",                &removeprunedfunds,             {"txid"} },
     { "wallet",             "rescanblockchain",                 &rescanblockchain,              {"start_height", "stop_height"} },
