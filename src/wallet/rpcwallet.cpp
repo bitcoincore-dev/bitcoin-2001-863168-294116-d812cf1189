@@ -26,6 +26,7 @@
 #include <util/validation.h>
 #include <wallet/coincontrol.h>
 #include <wallet/feebumper.h>
+#include <wallet/load.h>
 #include <wallet/psbtwallet.h>
 #include <wallet/rpcwallet.h>
 #include <wallet/wallet.h>
@@ -2571,6 +2572,7 @@ static UniValue loadwallet(const JSONRPCRequest& request)
                 "\napplied to the new wallet (eg -zapwallettxes, upgradewallet, rescan, etc).\n",
                 {
                     {"filename", RPCArg::Type::STR, RPCArg::Optional::NO, "The wallet directory or .dat file."},
+                    {"load_on_startup", RPCArg::Type::BOOL, /* default */ "false", "Save wallet name to persistent settings and load on startup."},
                 },
                 RPCResult{
             "{\n"
@@ -2596,10 +2598,20 @@ static UniValue loadwallet(const JSONRPCRequest& request)
         }
     }
 
+    bool load_on_startup = false;
+    if (!request.params[1].isNull() && request.params[1].isBool()) {
+        load_on_startup = request.params[1].get_bool();
+    }
+
     std::string error;
     std::vector<std::string> warning;
     std::shared_ptr<CWallet> const wallet = LoadWallet(*g_rpc_chain, location, error, warning);
     if (!wallet) throw JSONRPCError(RPC_WALLET_ERROR, error);
+
+    if (load_on_startup && !AddWalletSetting(wallet->chain(), location.GetName())) {
+        throw JSONRPCError(RPC_MISC_ERROR, "Wallet loaded, but load-on-startup list could not be written, so wallet "
+                                           "may be not loaded on node restart.");
+    }
 
     UniValue obj(UniValue::VOBJ);
     obj.pushKV("name", wallet->GetName());
@@ -2686,6 +2698,7 @@ static UniValue createwallet(const JSONRPCRequest& request)
             {"blank", RPCArg::Type::BOOL, /* default */ "false", "Create a blank wallet. A blank wallet has no keys or HD seed. One can be set using sethdseed."},
             {"passphrase", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "Encrypt the wallet with this passphrase."},
             {"avoid_reuse", RPCArg::Type::BOOL, /* default */ "false", "Keep track of coin reuse, and treat dirty and clean coins differently with privacy considerations in mind."},
+            {"load_on_startup", RPCArg::Type::BOOL, /* default */ "false", "Save wallet name to persistent settings and load on startup."},
         },
         RPCResult{
             "{\n"
@@ -2722,6 +2735,11 @@ static UniValue createwallet(const JSONRPCRequest& request)
         flags |= WALLET_FLAG_AVOID_REUSE;
     }
 
+    bool load_on_startup = false;
+    if (!request.params[5].isNull() && request.params[5].isBool()) {
+        load_on_startup = request.params[5].get_bool();
+    }
+
     std::string error;
     std::shared_ptr<CWallet> wallet;
     WalletCreationStatus status = CreateWallet(*g_rpc_chain, passphrase, flags, request.params[0].get_str(), error, warnings, wallet);
@@ -2733,6 +2751,11 @@ static UniValue createwallet(const JSONRPCRequest& request)
         case WalletCreationStatus::SUCCESS:
             break;
         // no default case, so the compiler can warn about missing cases
+    }
+
+    if (load_on_startup && !AddWalletSetting(wallet->chain(), wallet->GetName())) {
+        throw JSONRPCError(RPC_MISC_ERROR, "Wallet loaded, but load-on-startup list could not be written, so wallet "
+                                           "may be not loaded on node restart.");
     }
 
     UniValue obj(UniValue::VOBJ);
@@ -2778,7 +2801,12 @@ static UniValue unloadwallet(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_MISC_ERROR, "Requested wallet already unloaded");
     }
 
+    interfaces::Chain& chain = wallet->chain();
     UnloadWallet(std::move(wallet));
+    if (!RemoveWalletSetting(chain, wallet_name)) {
+        throw JSONRPCError(RPC_MISC_ERROR, "Wallet unloaded, but load-on-startup list could not be written, so wallet "
+                                           "may be reloaded on node restart.");
+    }
 
     return NullUniValue;
 }
@@ -4240,7 +4268,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "addmultisigaddress",               &addmultisigaddress,            {"nrequired","keys","label","address_type"} },
     { "wallet",             "backupwallet",                     &backupwallet,                  {"destination"} },
     { "wallet",             "bumpfee",                          &bumpfee,                       {"txid", "options"} },
-    { "wallet",             "createwallet",                     &createwallet,                  {"wallet_name", "disable_private_keys", "blank", "passphrase", "avoid_reuse"} },
+    { "wallet",             "createwallet",                     &createwallet,                  {"wallet_name", "disable_private_keys", "blank", "passphrase", "avoid_reuse", "load_on_startup"} },
     { "wallet",             "dumpprivkey",                      &dumpprivkey,                   {"address"}  },
     { "wallet",             "dumpwallet",                       &dumpwallet,                    {"filename"} },
     { "wallet",             "encryptwallet",                    &encryptwallet,                 {"passphrase"} },
@@ -4272,7 +4300,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "listunspent",                      &listunspent,                   {"minconf","maxconf","addresses","include_unsafe","query_options"} },
     { "wallet",             "listwalletdir",                    &listwalletdir,                 {} },
     { "wallet",             "listwallets",                      &listwallets,                   {} },
-    { "wallet",             "loadwallet",                       &loadwallet,                    {"filename"} },
+    { "wallet",             "loadwallet",                       &loadwallet,                    {"filename", "load_on_startup"} },
     { "wallet",             "lockunspent",                      &lockunspent,                   {"unlock","transactions"} },
     { "wallet",             "removeprunedfunds",                &removeprunedfunds,             {"txid"} },
     { "wallet",             "rescanblockchain",                 &rescanblockchain,              {"start_height", "stop_height"} },
