@@ -23,6 +23,7 @@
 #include <util/threadnames.h>
 #include <tinyformat.h>
 #include <util/memory.h>
+#include <util/settings.h>
 #include <util/time.h>
 
 #include <atomic>
@@ -151,8 +152,7 @@ protected:
     };
 
     mutable CCriticalSection cs_args;
-    std::map<std::string, std::vector<std::string>> m_override_args GUARDED_BY(cs_args);
-    std::map<std::string, std::vector<std::string>> m_config_args GUARDED_BY(cs_args);
+    util::Settings m_settings;
     std::string m_network GUARDED_BY(cs_args);
     std::set<std::string> m_network_only_args GUARDED_BY(cs_args);
     std::map<OptionsCategory, std::map<std::string, Arg>> m_available_args GUARDED_BY(cs_args);
@@ -365,6 +365,14 @@ std::string CopyrightHolders(const std::string& strPrefix);
 int ScheduleBatchPriority();
 
 namespace util {
+
+//! Simplified map lookup.
+template <typename Map, typename Key>
+auto FindKey(Map&& map, Key&& key) -> decltype(&map.at(key))
+{
+    auto it = map.find(key);
+    return it == map.end() ? nullptr : &it->second;
+}
 
 //! Simplification of std insertion
 template <typename Tdst, typename Tsrc>
