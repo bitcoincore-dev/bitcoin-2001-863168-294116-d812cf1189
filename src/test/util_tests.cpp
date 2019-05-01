@@ -12,6 +12,7 @@
 #include <test/setup_common.h>
 
 #include <stdint.h>
+#include <univalue.h>
 #include <vector>
 #ifndef WIN32
 #include <signal.h>
@@ -136,16 +137,51 @@ struct TestArgsManager : public ArgsManager
     TestArgsManager() { m_network_only_args.clear(); }
     std::map<std::string, std::vector<std::string> >& GetOverrideArgs() { return m_override_args; }
     std::map<std::string, std::vector<std::string> >& GetConfigArgs() { return m_config_args; }
+    bool ParseParameters(int argc, const char* const argv[], std::string& error) {
+        bool result = ArgsManager::ParseParameters(argc, argv, error);
+        m_override_args.clear();
+        for (const auto& option : m_settings.command_line_options) {
+            auto& args = m_override_args["-" + option.first];
+            for (const auto& value : util::SettingsSpan(option.second)) {
+                args.push_back(value.get_str());
+            }
+        }
+        return result;
+    }
     void ReadConfigString(const std::string str_config)
     {
         std::istringstream streamConfig(str_config);
         {
             LOCK(cs_args);
-            m_config_args.clear();
+            m_settings.ro_config.clear();
             m_config_sections.clear();
         }
         std::string error;
         BOOST_REQUIRE(ReadConfigStream(streamConfig, "", error));
+        m_config_args.clear();
+        for (const auto& section : m_settings.ro_config) {
+            std::string prefix = section.first;
+            if (!prefix.empty()) prefix += ".";
+            for (const auto& option : section.second) {
+                auto& args = m_config_args["-" + prefix + option.first];
+                for (const auto& value : util::SettingsSpan(option.second)) {
+                    args.push_back(value.get_str());
+                }
+            }
+        }
+    }
+    void UpdateSettings()
+    {
+        for (const auto* args : {&m_override_args, &m_config_args}) {
+            for (const auto& arg : *args) {
+                std::string name = arg.first[0] == '-' ? arg.first.substr(1) : arg.first;
+                auto& settings = args == &m_override_args ? m_settings.command_line_options[name] :
+                                                            m_settings.ro_config[""][name];
+                for (const auto& value : arg.second) {
+                    settings.push_back(value);
+                }
+            }
+        }
     }
     void SetNetworkOnlyArg(const std::string arg)
     {
@@ -161,6 +197,8 @@ struct TestArgsManager : public ArgsManager
     using ArgsManager::ReadConfigStream;
     using ArgsManager::cs_args;
     using ArgsManager::m_network;
+    std::map<std::string, std::vector<std::string>> m_override_args;
+    std::map<std::string, std::vector<std::string>> m_config_args;
 };
 
 BOOST_AUTO_TEST_CASE(util_ParseParameters)
@@ -485,6 +523,7 @@ BOOST_AUTO_TEST_CASE(util_GetArg)
     testArgs.GetConfigArgs()["pritest3"] = {"b"};
     testArgs.GetOverrideArgs()["pritest4"] = {"a","b"};
     testArgs.GetConfigArgs()["pritest4"] = {"c","d"};
+    testArgs.UpdateSettings();
 
     BOOST_CHECK_EQUAL(testArgs.GetArg("strtest1", "default"), "string...");
     BOOST_CHECK_EQUAL(testArgs.GetArg("strtest2", "default"), "default");
