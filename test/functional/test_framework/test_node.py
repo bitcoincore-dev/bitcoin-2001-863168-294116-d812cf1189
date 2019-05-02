@@ -85,6 +85,7 @@ class TestNode():
         self.extra_args = extra_args
         self.args = [
             self.binary,
+            "-corepolicy",
             "-datadir=" + self.datadir,
             "-logtimemicros",
             "-debug",
