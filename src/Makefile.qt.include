@@ -141,6 +141,7 @@ QT_MOC_CPP = \
   qt/moc_optionsdialog.cpp \
   qt/moc_optionsmodel.cpp \
   qt/moc_overviewpage.cpp \
+  qt/moc_pairingpage.cpp \
   qt/moc_peertablemodel.cpp \
   qt/moc_paymentserver.cpp \
   qt/moc_qvalidatedlineedit.cpp \
@@ -221,6 +222,7 @@ BITCOIN_QT_H = \
   qt/optionsdialog.h \
   qt/optionsmodel.h \
   qt/overviewpage.h \
+  qt/pairingpage.h \
   qt/paymentrequestplus.h \
   qt/paymentserver.h \
   qt/peertablemodel.h \
@@ -327,10 +329,12 @@ BITCOIN_QT_BASE_CPP = \
   qt/notificator.cpp \
   qt/optionsdialog.cpp \
   qt/optionsmodel.cpp \
+  qt/pairingpage.cpp \
   qt/peertablemodel.cpp \
   qt/platformstyle.cpp \
   qt/qvalidatedlineedit.cpp \
   qt/qvaluecombobox.cpp \
+  qt/receiverequestdialog.cpp \
   qt/rpcconsole.cpp \
   qt/splashscreen.cpp \
   qt/trafficgraphwidget.cpp \
@@ -349,7 +353,6 @@ BITCOIN_QT_WALLET_CPP = \
   qt/overviewpage.cpp \
   qt/paymentserver.cpp \
   qt/receivecoinsdialog.cpp \
-  qt/receiverequestdialog.cpp \
   qt/recentrequeststablemodel.cpp \
   qt/sendcoinsdialog.cpp \
   qt/sendcoinsentry.cpp \
