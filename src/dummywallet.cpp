@@ -30,6 +30,7 @@ void DummyWalletInit::AddWalletOptions() const
     gArgs.AddHiddenArgs(opts);
     gArgs.AddHiddenArgs({
         "-avoidpartialspends",
+        "-walletimplicitsegwit",
     });
 }
 
