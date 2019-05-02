@@ -50,6 +50,10 @@
         <translation>நாணயங்களைப் பெற முகவரியைத் தேர்வுசெய்யவும்</translation>
     </message>
     <message>
+        <source>C&amp;hoose</source>
+        <translation>&amp;தேர்ந்தெடு</translation>
+    </message>
+    <message>
         <source>Sending addresses</source>
         <translation>முகவரிகள் அனுப்பப்படுகின்றன</translation>
     </message>
@@ -60,10 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>இவை பணம் அனுப்புவதற்கு உங்கள் பிட்கின் முகவரிகள். நாணயங்களை அனுப்புவதற்கு முன் எப்பொழுதும் தொகையும் பெறுதலையும் சரிபார்க்கவும்.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>இவை உங்கள் Bitcoin முகவரிகள் பணம் பெறுவதற்கு. ஒவ்வொரு பரிவர்த்தனைக்கும் புதிய பெறுதல் முகவரியைப் பயன்படுத்த பரிந்துரைக்கப்படுகிறது.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -724,6 +724,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -763,6 +766,13 @@
     <message>
         <source>Error</source>
         <translation>தவறு</translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
     </message>
     </context>
 <context>
@@ -812,6 +822,14 @@
         <translation>மறை</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>முகவரி</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -900,10 +918,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>பிரவுன் &amp; தடுப்பு சேமிப்பு</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>ஜிபி</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1054,6 +1068,10 @@
         <translation>none</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin மையம்</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>விருப்பங்களை மீட்டமைக்கவும்</translation>
     </message>
@@ -1165,6 +1183,9 @@
         <translation>தற்போதைய மொத்த சமநிலை வாட்ச் மட்டும் முகவரிகள்</translation>
     </message>
 </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1301,6 +1322,10 @@
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n மணி</numerusform><numerusform>%n மணி</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 மற்றும் %2</translation>
@@ -1325,6 +1350,11 @@
         <source>unknown</source>
         <translation>தெரியாத</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>பரிவர்த்தனை</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1338,6 +1368,14 @@
     <message>
         <source>&amp;Copy Image</source>
         <translation>&amp;படத்தை நகலெடு</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>யு.ஐ.ஐ. முடிவுக்கு நீண்ட காலம், லேபிள் / செய்திக்கு உரைகளை குறைக்க முயற்சிக்கவும்.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>QR குறியீட்டில் யு.ஆர்.ஐ குறியாக்கப் பிழை.</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -1764,14 +1802,6 @@
         <source>Wallet</source>
         <translation>பணப்பை</translation>
     </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>யு.ஐ.ஐ. முடிவுக்கு நீண்ட காலம், லேபிள் / செய்திக்கு உரைகளை குறைக்க முயற்சிக்கவும்.</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>QR குறியீட்டில் யு.ஆர்.ஐ குறியாக்கப் பிழை.</translation>
-    </message>
 </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -1967,6 +1997,14 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>மாற்றத்தை நகலெடுக்கவும்</translation>
     </message>
     <message>
+        <source>or</source>
+        <translation>அல்லது</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>பரிமாற்ற கட்டணம்</translation>
+    </message>
+    <message>
         <source>Payment request expired.</source>
         <translation>கட்டணம் கோரிக்கை காலாவதியானது.</translation>
     </message>
@@ -2000,7 +2038,11 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </context>
 <context>
     <name>SendConfirmationDialog</name>
-    </context>
+    <message>
+        <source>Yes</source>
+        <translation>ஆம்</translation>
+    </message>
+</context>
 <context>
     <name>ShutdownWindow</name>
     </context>
@@ -2032,22 +2074,86 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
 <context>
     <name>TransactionDesc</name>
     <message>
+        <source>Status</source>
+        <translation>நிலை</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>தேதி</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>மூலம்</translation>
     </message>
     <message>
         <source>unknown</source>
         <translation>தெரியாத</translation>
     </message>
     <message>
+        <source>Credit</source>
+        <translation>கடன்</translation>
+    </message>
+    <message>
+        <source>Debit</source>
+        <translation>பற்று</translation>
+    </message>
+    <message>
+        <source>Total debit</source>
+        <translation>மொத்த பற்று</translation>
+    </message>
+    <message>
+        <source>Total credit</source>
+        <translation>மொத்த கடன்</translation>
+    </message>
+    <message>
+        <source>Transaction fee</source>
+        <translation>பரிமாற்ற கட்டணம்</translation>
+    </message>
+    <message>
+        <source>Net amount</source>
+        <translation>நிகர தொகை</translation>
+    </message>
+    <message>
         <source>Message</source>
         <translation>செய்தி</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>கருத்து</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>பரிவர்த்தனை ID</translation>
+    </message>
+    <message>
+        <source>Merchant</source>
+        <translation>வணிகர்</translation>
+    </message>
+    <message>
+        <source>Debug information</source>
+        <translation>சரிசெய்வதற்கான தகவல்</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>பரிவர்த்தனை</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>உள்ளீடுகள்</translation>
     </message>
     <message>
         <source>Amount</source>
         <translation>தொகை</translation>
     </message>
-    </context>
+    <message>
+        <source>true</source>
+        <translation>உண்மை</translation>
+    </message>
+    <message>
+        <source>false</source>
+        <translation>தவறான</translation>
+    </message>
+</context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
@@ -2069,6 +2175,38 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
 <context>
     <name>TransactionView</name>
     <message>
+        <source>All</source>
+        <translation>முழுவதும்</translation>
+    </message>
+    <message>
+        <source>Today</source>
+        <translation>இன்று</translation>
+    </message>
+    <message>
+        <source>This week</source>
+        <translation>இந்த வாரம்</translation>
+    </message>
+    <message>
+        <source>This month</source>
+        <translation>இந்த மாதம்</translation>
+    </message>
+    <message>
+        <source>Last month</source>
+        <translation>கடந்த மாதம்</translation>
+    </message>
+    <message>
+        <source>This year</source>
+        <translation>இந்த வருடம்</translation>
+    </message>
+    <message>
+        <source>Range...</source>
+        <translation>எல்லை...</translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation>வேறு</translation>
+    </message>
+    <message>
         <source>Copy address</source>
         <translation>முகவரி முகவரியை நகலெடுக்கவும்</translation>
     </message>
@@ -2089,6 +2227,14 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>கமா பிரிக்கப்பட்ட கோப்பு</translation>
     </message>
     <message>
+        <source>Confirmed</source>
+        <translation>உறுதியாக</translation>
+    </message>
+    <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">பார்க்க மட்டுமே</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>தேதி</translation>
     </message>
@@ -2103,6 +2249,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Exporting Failed</source>
         <translation>ஏற்றுமதி தோல்வியடைந்தது</translation>
+    </message>
+    <message>
+        <source>Range:</source>
+        <translation>எல்லை:</translation>
     </message>
     </context>
 <context>
@@ -2124,10 +2274,18 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
 <context>
     <name>WalletView</name>
     <message>
+        <source>&amp;Export</source>
+        <translation>&amp;ஏற்றுமதி</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>தற்போதைய தாவலில் தரவை ஒரு கோப்பிற்கு ஏற்றுமதி செய்க</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">ரத்து</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -2141,6 +2299,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Warning</source>
         <translation>எச்சரிக்கை</translation>
+    </message>
+    <message>
+        <source>Insufficient funds</source>
+        <translation>போதுமான பணம் இல்லை</translation>
     </message>
     <message>
         <source>Error</source>

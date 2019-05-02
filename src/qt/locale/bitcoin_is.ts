@@ -66,10 +66,6 @@
         <translation>Þetta eru Bitcoin færslugildin sem senda greiðslur. Skoðið ævinlega vel upphæðina og færslugildin sem þiggja greiðslur áður en mynt er send.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Þetta eru Bitcoin færslugildin sem þiggja greiðslur. Mælt er með að nota aldrei sama færslugildið til að þiggja fleiri en eina greiðslu.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Afrita færslugildi</translation>
     </message>
@@ -302,6 +298,10 @@
         <translation>Opna &amp;URL...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Veski:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Smelltu til að loka fyrir netumferð.</translation>
     </message>
@@ -410,6 +410,10 @@
         <translation>Opna bitcoin: URI eða greiðslubeiðni</translation>
     </message>
     <message>
+        <source>&amp;Command-line options</source>
+        <translation>&amp;Valkostir skipanalínu</translation>
+    </message>
+    <message>
         <source>Indexing blocks on disk...</source>
         <translation>Raða blokkum á drifi</translation>
     </message>
@@ -444,6 +448,14 @@
     <message>
         <source>Up to date</source>
         <translation>Uppfært</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Sendi færslugildi</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Tek við færslugildum</translation>
     </message>
     <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
@@ -638,8 +650,19 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
-    <name>HelpMessageDialog</name>
+    <name>GuiNetWatch</name>
     </context>
+<context>
+    <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Um %1</translation>
+    </message>
+    <message>
+        <source>Command-line options</source>
+        <translation type="unfinished">Valkostir skipanalínu</translation>
+    </message>
+</context>
 <context>
     <name>Intro</name>
     <message>
@@ -650,6 +673,9 @@
         <source>Error</source>
         <translation>Villa</translation>
     </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -663,10 +689,26 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Vistfang</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Opna URI</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Valkostir</translation>
+    </message>
     <message>
         <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
         <translation>IP tala staðgengils (t.d. IPv4: 127.0.0.1 / IPv6: ::1)</translation>
@@ -674,6 +716,10 @@
     <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>URL frá þriðja aðila (t.d. blokkarskoðari) sem birtast í færsluflipanum sem samhengisatriði. %s í URL-inu skipt út fyrir færslutvíkross. Mörg URL eru aðskilin með lóðréttu striki |.</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Veski</translation>
     </message>
     <message>
         <source>Error</source>
@@ -708,6 +754,9 @@
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Invalid payment address %1</source>
@@ -729,9 +778,21 @@
     </context>
 <context>
     <name>QRImageWidget</name>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>URI varð of langt, reyndu að minnka texta í merki / skilaboðum.</translation>
+    </message>
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Upplýsingar</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Kembunargluggi</translation>
+    </message>
     <message>
         <source>Block chain</source>
         <translation>Blokkarkeðja</translation>
@@ -739,6 +800,10 @@
     <message>
         <source>Current number of blocks</source>
         <translation>Núverandi fjöldi blokka</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Veski: </translation>
     </message>
     <message>
         <source>Starting Block</source>
@@ -752,9 +817,17 @@
         <source>Last block time</source>
         <translation>Tími síðustu blokkar</translation>
     </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Slökkt á netumferð</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Upphæð:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Merki:</translation>
@@ -771,6 +844,10 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Afrita netfangið</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>Vistfang</translation>
     </message>
@@ -786,11 +863,7 @@
         <source>Wallet</source>
         <translation>Veski</translation>
     </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>URI varð of langt, reyndu að minnka texta í merki / skilaboðum.</translation>
-    </message>
-    </context>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
@@ -829,6 +902,10 @@
         <translation>Skiptimynt:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Veldu...</translation>
+    </message>
+    <message>
         <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
         <translation>(Smart gjald er ekki gangsett ennþá. Þetta tekur venjulega nokkrar blokkir...)</translation>
     </message>
@@ -837,12 +914,20 @@
         <translation>Ryk:</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Senda</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(ekkert merki)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Upphæð:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Merki:</translation>
@@ -868,6 +953,10 @@
     <message>
         <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
         <translation>Fullgerð mynt verður að nýta %1 blokkir. Þegar þú bjóst til þessa blokk, þá var jafnóðum tilkynnt á netinu að hún eigi að bætast við blokkakeðjuna. Ef hún kemst ekki í keðjuna þá mun staða hennar breytast í "ósamþykkt" og ekki verður hægt að nota hana. Þetta gerist annað slagið ef annar hnútpunktur klárar blokk nokkrum sekúndum á undan þinni.</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>færsla</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -944,6 +1033,10 @@
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Flytja gögn í flipanum í skrá</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Öryggisafrit á veski</translation>
     </message>
     </context>
 <context>

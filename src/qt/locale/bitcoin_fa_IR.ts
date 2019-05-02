@@ -70,10 +70,6 @@
         <translation>اینها آدرس‌های شما برای ارسال وجوه هستند. همیشه قبل از ارسال، مقدار و آدرس گیرنده را بررسی کنید.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>اینها آدرس‌های بیتکوین شما برای دریافت وجوه هستند. توصیه می‌شود برای هر دریافت از یک آدرس جدید استفاده کنید.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>کپی آدرس</translation>
     </message>
@@ -482,10 +478,6 @@
         <translation>باز کردن یک حساب</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>کیف پول پیش‌فرض</translation>
-    </message>
-    <message>
         <source>&amp;Window</source>
         <translation>پنجره</translation>
     </message>
@@ -724,10 +716,17 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
         <translation>نسخه</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">درباره %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -766,6 +765,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>موجود نیست</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -796,10 +802,27 @@
         <translation>در حال محاسبه...</translation>
     </message>
     <message>
+        <source>Estimated time left until synced</source>
+        <translation>زمان تقریبی باقی‌مانده تا همگام شدن</translation>
+    </message>
+    <message>
         <source>Hide</source>
         <translation>پنهان کردن</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>گونه</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>حساب</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -859,10 +882,6 @@
         <translation>شبکه</translation>
     </message>
     <message>
-        <source>GB</source>
-        <translation>گیگابایت</translation>
-    </message>
-    <message>
         <source>W&amp;allet</source>
         <translation>کیف پول</translation>
     </message>
@@ -885,6 +904,10 @@
     <message>
         <source>&amp;Port:</source>
         <translation>پورت:</translation>
+    </message>
+    <message>
+        <source>Port of the proxy (e.g. 9050)</source>
+        <translation>پورت پراکسی (مثال ۹۰۵۰)</translation>
     </message>
     <message>
         <source>IPv4</source>
@@ -919,6 +942,10 @@
         <translation>واحد نمایشگر مقادیر:</translation>
     </message>
     <message>
+        <source>Whether to show coin control features or not.</source>
+        <translation>که امکانات کنترل کوین‌ها نشان داده شود یا نه.</translation>
+    </message>
+    <message>
         <source>&amp;Third party transaction URLs</source>
         <translation>URLهای تراکنش شخص ثالث</translation>
     </message>
@@ -937,6 +964,10 @@
     <message>
         <source>none</source>
         <translation>خالی</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>هسته بیت کوین</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1039,6 +1070,9 @@
     </message>
     </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1068,7 +1102,11 @@
         <source>Network request error</source>
         <translation>درخواست از شبکه با خطا مواجه شد</translation>
     </message>
-    </context>
+    <message>
+        <source>Payment acknowledged</source>
+        <translation>پرداخت تایید شد</translation>
+    </message>
+</context>
 <context>
     <name>PeerTableModel</name>
     <message>
@@ -1110,6 +1148,16 @@
         <source>unknown</source>
         <translation>ناشناس</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>بلاک</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>تراکنش</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1123,6 +1171,14 @@
     <message>
         <source>&amp;Copy Image</source>
         <translation>&amp;کپی کردن image</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>متن وارد شده طولانی است، متنِ برچسب/پیام را کوتاه کنید</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>خطای تبدیل URI به کد QR</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -1230,6 +1286,10 @@
     <message>
         <source>Version</source>
         <translation>نسخه</translation>
+    </message>
+    <message>
+        <source>Synced Blocks</source>
+        <translation>بلاک‌های همگام‌سازی‌ شده</translation>
     </message>
     <message>
         <source>Decrease font size</source>
@@ -1449,7 +1509,7 @@
         <source>Wallet</source>
         <translation>کیف پول</translation>
     </message>
-    </context>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
@@ -1490,6 +1550,10 @@
     <message>
         <source>Coin Control Features</source>
         <translation>قابلیت های کنترل کوین</translation>
+    </message>
+    <message>
+        <source>Inputs...</source>
+        <translation type="unfinished">ورودی ها...</translation>
     </message>
     <message>
         <source>automatically selected</source>
@@ -1770,7 +1834,11 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Memo:</source>
         <translation>یادداشت:</translation>
     </message>
-    </context>
+    <message>
+        <source>Enter a label for this address to add it to your address book</source>
+        <translation>یک برچسب برای این آدرس بنویسید تا به دفترچه‌ آدرس‌های شما اضافه شود</translation>
+    </message>
+</context>
 <context>
     <name>SendConfirmationDialog</name>
     <message>
@@ -1820,6 +1888,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>امضا</translation>
     </message>
     <message>
+        <source>Sign the message to prove you own this Bitcoin address</source>
+        <translation>پیام را امضا کنید تا ثابت کنید این آدرس بیت‌کوین متعلق به شماست</translation>
+    </message>
+    <message>
         <source>Sign &amp;Message</source>
         <translation>ثبت &amp;پیام</translation>
     </message>
@@ -1832,6 +1904,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>تایید پیام</translation>
     </message>
     <message>
+        <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
+        <translation>پیام را تایید کنید تا مطمئن شوید که توسط آدرس بیت‌کوین مشخص شده امضا شده است.</translation>
+    </message>
+    <message>
         <source>Verify &amp;Message</source>
         <translation>تایید پیام</translation>
     </message>
@@ -1842,6 +1918,15 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>The entered address is invalid.</source>
         <translation>آدرس وارد شده نامعتبر است.</translation>
+    </message>
+    <message>
+        <source>Please check the address and try again.</source>
+        <translation>لطفاً آدرس را بررسی کرده و دوباره تلاش کنید.
+</translation>
+    </message>
+    <message>
+        <source>Wallet unlock was cancelled.</source>
+        <translation>قفل‌گشابی کیف‌پول لغو شد.</translation>
     </message>
     <message>
         <source>Message signed.</source>
@@ -1876,6 +1961,18 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Open until %1</source>
+        <translation>باز کن تا %1</translation>
+    </message>
+    <message>
+        <source>%1/unconfirmed</source>
+        <translation>%1 / تایید نشده</translation>
+    </message>
+    <message>
+        <source>%1 confirmations</source>
+        <translation>%1 تایید</translation>
+    </message>
     <message>
         <source>Status</source>
         <translation>وضعیت</translation>
@@ -1999,8 +2096,16 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>برچسب</translation>
     </message>
     <message>
+        <source>Open until %1</source>
+        <translation>باز کن تا %1</translation>
+    </message>
+    <message>
         <source>Unconfirmed</source>
         <translation>تایید نشده</translation>
+    </message>
+    <message>
+        <source>Confirmed (%1 confirmations)</source>
+        <translation>تایید شده (%1 تاییدها)</translation>
     </message>
     <message>
         <source>Generated but not accepted</source>
@@ -2037,6 +2142,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>(no label)</source>
         <translation>(برچسب ندارد)</translation>
+    </message>
+    <message>
+        <source>Transaction status. Hover over this field to show number of confirmations.</source>
+        <translation>وضعیت تراکنش. با اشاره به این بخش تعداد تاییدها نمایش داده می شود</translation>
     </message>
     <message>
         <source>Date and time that the transaction was received.</source>
@@ -2088,10 +2197,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Sent to</source>
         <translation>ارسال شده به</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>به خودت</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -2154,6 +2259,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>تایید شده</translation>
     </message>
     <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">فقط قابل-مشاهده</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>تاریخ</translation>
     </message>
@@ -2198,7 +2307,11 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </context>
 <context>
     <name>WalletFrame</name>
-    </context>
+    <message>
+        <source>No wallet has been loaded.</source>
+        <translation>کیف‌پولی بارگذاری نشد.</translation>
+    </message>
+</context>
 <context>
     <name>WalletModel</name>
     <message>
@@ -2241,8 +2354,16 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>&amp;صدور</translation>
     </message>
     <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>صدور داده نوار جاری به یک فایل</translation>
+    </message>
+    <message>
         <source>Backup Wallet</source>
         <translation>بازیابی یا پشتیبان گیری کیف پول</translation>
+    </message>
+    <message>
+        <source>Wallet Data (*.dat)</source>
+        <translation>داده های Wallet (*.dat)</translation>
     </message>
     <message>
         <source>Backup Failed</source>

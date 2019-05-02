@@ -66,10 +66,6 @@
         <translation>Hierdie is die adresse vanwaar u Bitcoin betalings stuur. U moet altyd die bedrag en die adres van die ontvanger nagaan voordat u enige munte stuur.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Hierdie is die adresse waar u Bitcoins sal ontvang. Ons beveel aan dat u 'n nuwe adres kies vir elke transaksie</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Dupliseer Adres</translation>
     </message>
@@ -306,6 +302,10 @@
         <translation>Oop &amp; URI...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Beursie:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Kliek om netwerkaktiwiteit af te skakel.</translation>
     </message>
@@ -421,6 +421,10 @@
         <source>Processing blocks on disk...</source>
         <translation>Blokke op skyf word geprosesseer...</translation>
     </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation><numerusform>%n blok van transaksiegeskiedenis geprosesseer.</numerusform><numerusform>%n blokke van transaksiegeskiedenis geprosesseer.</numerusform></translation>
+    </message>
     <message>
         <source>%1 behind</source>
         <translation>%1 agter</translation>
@@ -448,6 +452,14 @@
     <message>
         <source>Up to date</source>
         <translation>Op datum</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Versending adresse</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Ontvanger adresse</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -730,6 +742,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -784,6 +799,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>n.v.t.</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -821,7 +843,24 @@
         <source>Hide</source>
         <translation>Versteek</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown. Syncing Headers (%1, %2%)...</source>
+        <translation>Onbekend. Besig Met Sinchroniseer Van Hoofde (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipe</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -872,6 +911,10 @@
         <translation>Aantal skrip &amp;verifikasie drade</translation>
     </message>
     <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Versteek skinkbord ikoon</translation>
+    </message>
+    <message>
         <source>Open the %1 configuration file from the working directory.</source>
         <translation>Maak die %1 konfigurasie lêer oop van die werk gids.</translation>
     </message>
@@ -906,6 +949,14 @@
     <message>
         <source>&amp;Spend unconfirmed change</source>
         <translation>&amp;Spandeer onbevestigde kleingeld</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside.</source>
+        <translation>Verbindings van buite toelaat.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Inkomende verbindings toelaat</translation>
     </message>
     <message>
         <source>&amp;Port:</source>
@@ -952,6 +1003,10 @@
         <translation>Of om munt beheer funksies te wys of nie.</translation>
     </message>
     <message>
+        <source>&amp;Third party transaction URLs</source>
+        <translation type="unfinished">&amp;Derdeparty transaksie URL's</translation>
+    </message>
+    <message>
         <source>&amp;OK</source>
         <translation>&amp;OK</translation>
     </message>
@@ -966,6 +1021,10 @@
     <message>
         <source>none</source>
         <translation>geen</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Kern</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1046,6 +1105,9 @@
         <source>Recent transactions</source>
         <translation>Onlangse transaksies</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1151,9 +1213,25 @@
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n uur</numerusform><numerusform>%n ure</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n dag</numerusform><numerusform>%n dae</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n week</numerusform><numerusform>%n weke</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 en %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n jaar</numerusform><numerusform>%n jare</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1171,7 +1249,12 @@
         <source>%1 GB</source>
         <translation>%1 GB</translation>
     </message>
-    </context>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     <message>
@@ -1184,6 +1267,14 @@
     <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;Stoor beeld</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Gevolglike URI te lank, probeer teks verkort vir etiket/boodskap</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Fout met enkodering van URI na QR kode</translation>
     </message>
     </context>
 <context>
@@ -1199,6 +1290,10 @@
     <message>
         <source>&amp;Information</source>
         <translation>&amp;Informasie</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Ontfout venster</translation>
     </message>
     <message>
         <source>General</source>
@@ -1223,6 +1318,10 @@
     <message>
         <source>Current number of blocks</source>
         <translation>Huidige aantal blokke</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Beursie: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1364,6 +1463,10 @@
         <translation>Verwyder</translation>
     </message>
     <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Kopieer URI</translation>
+    </message>
+    <message>
         <source>Copy label</source>
         <translation>Kopieer etiket</translation>
     </message>
@@ -1425,14 +1528,6 @@
     <message>
         <source>Wallet</source>
         <translation>Beursie</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Gevolglike URI te lank, probeer teks verkort vir etiket/boodskap</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>Fout met enkodering van URI na QR kode</translation>
     </message>
 </context>
 <context>
@@ -1718,6 +1813,10 @@ Is u seker?</translation>
         <translation>B&amp;edrag:</translation>
     </message>
     <message>
+        <source>Pay &amp;To:</source>
+        <translation type="unfinished">&amp;Betaal Vir:</translation>
+    </message>
+    <message>
         <source>&amp;Label:</source>
         <translation>&amp;Etiket:</translation>
     </message>
@@ -1809,6 +1908,10 @@ word die fooi eweredig verdeel.</translation>
     <message>
         <source>Signature</source>
         <translation>Handtekening</translation>
+    </message>
+    <message>
+        <source>Sign &amp;Message</source>
+        <translation type="unfinished">&amp;Teken Boodskap</translation>
     </message>
     <message>
         <source>Clear &amp;All</source>
@@ -1904,6 +2007,10 @@ word die fooi eweredig verdeel.</translation>
         <translation>Transaksie</translation>
     </message>
     <message>
+        <source>Inputs</source>
+        <translation type="unfinished">Insette</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>Bedrag</translation>
     </message>
@@ -1977,6 +2084,10 @@ word die fooi eweredig verdeel.</translation>
         <translation>Bevestig</translation>
     </message>
     <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">Kyk-net</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>Datum</translation>
     </message>
@@ -2035,7 +2146,11 @@ word die fooi eweredig verdeel.</translation>
         <source>Export the data in the current tab to a file</source>
         <translation>Voer die inligting op hierdie bladsy uit na 'n leer</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Kanselleer</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>

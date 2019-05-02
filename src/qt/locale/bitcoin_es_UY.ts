@@ -70,10 +70,6 @@
         <translation>Estás son tus direcciones de Bitcoin para enviar pagos. Verifica siempre el monto y la dirección de recepción antes de enviar monedas.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Estas son tus direcciones de Bitcoin para recibir pagos. Es recomendable usar una nueva dirección de recepción para cada transacción.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Copiar Dirección</translation>
     </message>
@@ -196,10 +192,30 @@
         <translation>La encriptación de la billetera falló</translation>
     </message>
     <message>
+        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
+        <translation>Fallo en el cifrado del monedero a causa de un error interno. Su monedero no esta cifrado</translation>
+    </message>
+    <message>
+        <source>The supplied passphrases do not match.</source>
+        <translation>Las contraseñas suministradas no coinciden.</translation>
+    </message>
+    <message>
         <source>Wallet unlock failed</source>
         <translation>El desbloqueo de la billetera falló</translation>
     </message>
-    </context>
+    <message>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>La contraseña introducida para el descifrado del monedero es incorrecta.</translation>
+    </message>
+    <message>
+        <source>Wallet decryption failed</source>
+        <translation>Fallo en el descifrado del monedero</translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Atención: la tecla Mayusculas esta activa!</translation>
+    </message>
+</context>
 <context>
     <name>BanTableModel</name>
     </context>
@@ -250,6 +266,10 @@
         <translation>Cambiar contraseña</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Billetera:</translation>
+    </message>
+    <message>
         <source>Send coins to a Bitcoin address</source>
         <translation>Enviar monedas a una dirección Bitcoin</translation>
     </message>
@@ -296,6 +316,15 @@
     <message>
         <source>Up to date</source>
         <translation>A la fecha</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Enviando direcciones</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Recibiendo direcciones
+</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -348,6 +377,10 @@
         <translation>Cambio:</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>AMonto</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>Fecha</translation>
     </message>
@@ -374,9 +407,32 @@
         <source>&amp;Address</source>
         <translation>&amp;Direccion </translation>
     </message>
-    </context>
+    <message>
+        <source>New sending address</source>
+        <translation>Nueva dirección de envío </translation>
+    </message>
+    <message>
+        <source>Edit receiving address</source>
+        <translation>Editar dirección de recepcion </translation>
+    </message>
+    <message>
+        <source>Edit sending address</source>
+        <translation>Editar dirección de envío </translation>
+    </message>
+    <message>
+        <source>Could not unlock wallet.</source>
+        <translation>No se puede abrir el monedero.</translation>
+    </message>
+    <message>
+        <source>New key generation failed.</source>
+        <translation>Fallo en la nueva clave generada.</translation>
+    </message>
+</context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -393,12 +449,27 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Formulario</translation>
     </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">desconocido...</translation>
+    </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Direccion </translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -429,6 +500,9 @@
     </message>
     </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     </context>
 <context>
@@ -437,8 +511,22 @@
 <context>
     <name>QObject</name>
     <message>
+        <source>Amount</source>
+        <translation>AMonto</translation>
+    </message>
+    <message>
         <source>unknown</source>
         <translation>desconocido</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blq</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -453,9 +541,21 @@
         <source>&amp;Information</source>
         <translation>Información</translation>
     </message>
-    </context>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Billetera: </translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">desconocido</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation>A&amp;Monto:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Etiqueta:</translation>
@@ -472,6 +572,10 @@
         <translation>Dirección</translation>
     </message>
     <message>
+        <source>Amount</source>
+        <translation>AMonto</translation>
+    </message>
+    <message>
         <source>Label</source>
         <translation>Etiqueta</translation>
     </message>
@@ -479,9 +583,13 @@
         <source>Wallet</source>
         <translation>Billetera</translation>
     </message>
-    </context>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Fecha</translation>
+    </message>
     <message>
         <source>Label</source>
         <translation>Etiqueta</translation>
@@ -514,6 +622,10 @@
         <translation>Cambio:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Elegir...</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Enviar a varios destinatarios a la vez</translation>
     </message>
@@ -524,6 +636,14 @@
     <message>
         <source>Confirm the send action</source>
         <translation>Confirmar el envío</translation>
+    </message>
+    <message>
+        <source>Confirm send coins</source>
+        <translation>Confirmar el envio de monedas</translation>
+    </message>
+    <message>
+        <source>The amount to pay must be larger than 0.</source>
+        <translation>La cantidad a pagar debe ser mayor que 0.</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -560,7 +680,11 @@
         <source>Pay To:</source>
         <translation>Pagar A:</translation>
     </message>
-    </context>
+    <message>
+        <source>Enter a label for this address to add it to your address book</source>
+        <translation>Introduzca una etiqueta para esta dirección para añadirla a su libreta de direcciones</translation>
+    </message>
+</context>
 <context>
     <name>SendConfirmationDialog</name>
     </context>
@@ -594,6 +718,26 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Open until %1</source>
+        <translation>Abrir hasta %1</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Fecha</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation>desconocido</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Transaccion</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>AMonto</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -601,8 +745,16 @@
 <context>
     <name>TransactionTableModel</name>
     <message>
+        <source>Date</source>
+        <translation>Fecha</translation>
+    </message>
+    <message>
         <source>Label</source>
         <translation>Etiqueta</translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Abrir hasta %1</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -614,6 +766,14 @@
     <message>
         <source>Comma separated file (*.csv)</source>
         <translation>Archivo con valores separados por coma (*.csv)</translation>
+    </message>
+    <message>
+        <source>Confirmed</source>
+        <translation>Confirmado</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Fecha</translation>
     </message>
     <message>
         <source>Label</source>
@@ -639,9 +799,17 @@
     </context>
 <context>
     <name>WalletModel</name>
+    <message>
+        <source>Send Coins</source>
+        <translation>Enviar monedas</translation>
+    </message>
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>Exportar</translation>
+    </message>
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Exportar los datos en la pestaña actual a un archivo</translation>

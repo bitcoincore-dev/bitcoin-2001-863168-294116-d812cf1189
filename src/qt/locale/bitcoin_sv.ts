@@ -70,10 +70,6 @@
         <translation>Detta är dina Bitcoin-adresser för att skicka betalningar. Kontrollera alltid summan och den mottagande adressen innan du skickar bitcoin.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Detta är dina Bitcoin-adresser för att ta emot betalningar. Det rekommenderas att använda en ny mottagningsadress för varje transaktion.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Kopiera adress</translation>
     </message>
@@ -248,7 +244,7 @@ Var vänlig och försök igen.</translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
-        <translation>Synkroniserar med nätverk...</translation>
+        <translation>Synkroniserar med nätverket ...</translation>
     </message>
     <message>
         <source>&amp;Overview</source>
@@ -380,11 +376,11 @@ Var vänlig och försök igen.</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
-        <translation>&amp;Visa / Göm</translation>
+        <translation>&amp;Visa / Dölj</translation>
     </message>
     <message>
         <source>Show or hide the main Window</source>
-        <translation>Visa eller göm huvudfönstret</translation>
+        <translation>Visa eller dölj huvudfönstret</translation>
     </message>
     <message>
         <source>Encrypt the private keys that belong to your wallet</source>
@@ -505,10 +501,6 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Visa %1 hjälpmeddelande för att få en lista med möjliga Bitcoin kommandoradsalternativ.</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>Standardplånbok</translation>
     </message>
     <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
@@ -849,6 +841,9 @@ Var vänlig och försök igen.</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -879,19 +874,19 @@ Var vänlig och försök igen.</translation>
     </message>
     <message>
         <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
-        <translation>Eftersom detta är första gången programmet startas får du välja var %1 skall lagra sitt data.</translation>
+        <translation>Eftersom detta är första gången som programmet startas får du välja var %1 skall lagra sina data.</translation>
     </message>
     <message>
         <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
-        <translation>När du trycker OK kommer %1 påbörja nedladdning och bearbetning av den fulla %4-blockkedjan (%2GB), med start vid de första transaktionerna i %3 när %4 först lanserades.</translation>
+        <translation>När du trycker OK kommer %1 att börja ladda ner och bearbeta den fullständiga %4-blockkedjan (%2 GB), med början vid de första transaktionerna %3 när %4 först lanserades.</translation>
     </message>
     <message>
         <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
-        <translation>Denna första synkronisering är väldigt krävande, och kan påvisa hårdvaruproblem med din dator som tidigare inte visats sig. Varje gång du kör %1, kommer nerladdningen att fortsätta där den avslutades.</translation>
+        <translation>Denna första synkronisering är väldigt krävande, och kan påvisa hårdvaruproblem hos din dator som tidigare inte visat sig. Varje gång du kör %1, kommer nerladdningen att fortsätta där den avslutades.</translation>
     </message>
     <message>
         <source>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</source>
-        <translation>Om du valt att begränsa storleken på blockkedjan (pruning), måste historisk data fortfarande bli nedladdad och processerad, men kommer bli borttagen för att minimera hårddiskutrymme.</translation>
+        <translation>Om du valt att begränsa storleken på blockkedjan (pruning), måste historiska data fortfarande laddas ner och behandlas, men kommer därefter att tas bort för att spara lagringsutrymme.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -907,7 +902,7 @@ Var vänlig och försök igen.</translation>
     </message>
     <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
-        <translation>Minst %1 GB data kommer att lagras i den här katalogen, och den växer över tiden.</translation>
+        <translation>Minst %1 GB data kommer att sparas i den här katalogen, och de växer över tiden.</translation>
     </message>
     <message>
         <source>Approximately %1 GB of data will be stored in this directory.</source>
@@ -915,11 +910,11 @@ Var vänlig och försök igen.</translation>
     </message>
     <message>
         <source>%1 will download and store a copy of the Bitcoin block chain.</source>
-        <translation>%1 kommer att ladda ner och lagra en kopia av Bitcoin-blockkedjan.</translation>
+        <translation>%1 kommer att ladda ner och lagra en kopia av Bitcoins blockkedja.</translation>
     </message>
     <message>
         <source>The wallet will also be stored in this directory.</source>
-        <translation>Plånboken lagras också i den här katalogen.</translation>
+        <translation>Plånboken sparas också i den här katalogen.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -939,6 +934,13 @@ Var vänlig och försök igen.</translation>
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>ej tillgänglig</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -946,7 +948,7 @@ Var vänlig och försök igen.</translation>
     </message>
     <message>
         <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the bitcoin network, as detailed below.</source>
-        <translation>Nyligen gjorda transaktioner visas inte korrekt och därför kan din plånboks saldo visas felaktigt. Denna information kommer att visas korrekt så snart din plånbok har synkroniserat klart med Bitcoin-nätverket enligt detaljer nedan.</translation>
+        <translation>Nyligen gjorda transaktioner visas inte korrekt och därför kan din plånboks saldo visas felaktigt. Denna information kommer att visas korrekt så snart din plånbok har synkroniserats med Bitcoin-nätverket enligt informationen nedan.</translation>
     </message>
     <message>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -962,7 +964,7 @@ Var vänlig och försök igen.</translation>
     </message>
     <message>
         <source>Last block time</source>
-        <translation>Sista blocktid</translation>
+        <translation>Senaste blocktid</translation>
     </message>
     <message>
         <source>Progress</source>
@@ -970,7 +972,7 @@ Var vänlig och försök igen.</translation>
     </message>
     <message>
         <source>Progress increase per hour</source>
-        <translation>Framstegssökning per timme</translation>
+        <translation>Förloppsökning per timme</translation>
     </message>
     <message>
         <source>calculating...</source>
@@ -982,11 +984,24 @@ Var vänlig och försök igen.</translation>
     </message>
     <message>
         <source>Hide</source>
-        <translation>Göm</translation>
+        <translation>Dölj</translation>
     </message>
     <message>
         <source>Unknown. Syncing Headers (%1, %2%)...</source>
         <translation>Okänd. Synkar huvuden (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adress</translation>
     </message>
 </context>
 <context>
@@ -1052,11 +1067,11 @@ Var vänlig och försök igen.</translation>
     </message>
     <message>
         <source>Hide the icon from the system tray.</source>
-        <translation>Göm ikonen från aktivitetsfältet.</translation>
+        <translation>Dölj ikonen från systemfältet.</translation>
     </message>
     <message>
         <source>&amp;Hide tray icon</source>
-        <translation>&amp;Göm ikonen</translation>
+        <translation>&amp;Dölj ikonen</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
@@ -1093,10 +1108,6 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Trim- &amp; block-utrymme till</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1363,6 +1374,9 @@ Var vänlig och försök igen.</translation>
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1574,6 +1588,11 @@ Var vänlig och försök igen.</translation>
         <source>unknown</source>
         <translation>okänd</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1603,6 +1622,14 @@ Var vänlig och försök igen.</translation>
     <message>
         <source>&amp;Copy Image</source>
         <translation>&amp;Kopiera Bild</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>URI:n är för lång, försöka minska texten för etikett / meddelande.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Fel vid skapande av QR-kod från URI.</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -1793,7 +1820,7 @@ Var vänlig och försök igen.</translation>
     </message>
     <message>
         <source>Last block time</source>
-        <translation>Sista blocktid</translation>
+        <translation>Senaste blocktid</translation>
     </message>
     <message>
         <source>&amp;Open</source>
@@ -2057,14 +2084,6 @@ Var vänlig och försök igen.</translation>
         <source>Wallet</source>
         <translation>Plånbok</translation>
     </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>URI:n är för lång, försöka minska texten för etikett / meddelande.</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>Fel vid skapande av QR-kod från URI.</translation>
-    </message>
 </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -2185,7 +2204,7 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
     </message>
     <message>
         <source>Hide</source>
-        <translation>Göm</translation>
+        <translation>Dölj</translation>
     </message>
     <message>
         <source>Recommended:</source>
@@ -2958,10 +2977,6 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
         <translation>Skickad till</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Till dig själv</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Genererade</translation>
     </message>
@@ -3166,7 +3181,7 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
     </message>
     <message>
         <source>Wallet Data (*.dat)</source>
-        <translation>Plånboks-data (*.dat)</translation>
+        <translation>Plånboksdata (*.dat)</translation>
     </message>
     <message>
         <source>Backup Failed</source>
@@ -3201,7 +3216,7 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
     </message>
     <message>
         <source>Prune: last wallet synchronisation goes beyond pruned data. You need to -reindex (download the whole blockchain again in case of pruned node)</source>
-        <translation>Beskärning: sista plånbokssynkroniseringen ligger utanför beskuren data. Du måste använda -reindex (ladda ner hela blockkedjan igen eftersom noden beskurits)</translation>
+        <translation>Beskärning: senaste plånbokssynkroniseringen ligger utanför beskurna data. Du måste använda -reindex (ladda ner hela blockkedjan igen eftersom noden beskurits)</translation>
     </message>
     <message>
         <source>Rescans are not possible in pruned mode. You will need to use -reindex which will download the whole blockchain again.</source>
@@ -3229,7 +3244,7 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
     </message>
     <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
-        <translation>Kan inte låsa data-mappen %s. %s körs förmodligen redan.</translation>
+        <translation>Kan inte låsa datakatalogen %s. %s körs förmodligen redan.</translation>
     </message>
     <message>
         <source>Cannot provide specific connections and have addrman find outgoing connections at the same.</source>
@@ -3385,7 +3400,7 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
     </message>
     <message>
         <source>Upgrading txindex database</source>
-        <translation>Uppgraderar databas för txindex</translation>
+        <translation>Uppgraderar txindex-databasen</translation>
     </message>
     <message>
         <source>Loading P2P addresses...</source>
@@ -3465,7 +3480,7 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
     </message>
     <message>
         <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
-        <translation>Du måste bygga om databasen genom att använda -reindex för att återgå till obeskärt läge. Detta kommer att ladda ner hela blockkedjan på nytt.</translation>
+        <translation>Du måste bygga om databasen genom att använda -reindex för att återgå till obeskuret läge. Detta kommer att ladda ner hela blockkedjan på nytt.</translation>
     </message>
     <message>
         <source>Error reading from database, shutting down.</source>

@@ -83,10 +83,18 @@
         <translation>Exportar lista de direcciones</translation>
     </message>
     <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Archivo separado por coma (*.csv)</translation>
+    </message>
+    <message>
         <source>Exporting Failed</source>
         <translation>Exportar archivo</translation>
     </message>
-    </context>
+    <message>
+        <source>There was an error trying to save the address list to %1. Please try again.</source>
+        <translation>Hubo un error al tratar de guardar la lista de direcciones a %1. Por favor tratá de nuevo.</translation>
+    </message>
+</context>
 <context>
     <name>AddressTableModel</name>
     <message>
@@ -142,6 +150,10 @@
         <translation>Desbloquear la billetera</translation>
     </message>
     <message>
+        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
+        <translation>Esta operación necesita tu Frase de Contraseña de billetera para desencriptar la billetera.</translation>
+    </message>
+    <message>
         <source>Decrypt wallet</source>
         <translation>Desencriptar la billetera</translation>
     </message>
@@ -165,12 +177,56 @@
         <source>Are you sure you wish to encrypt your wallet?</source>
         <translation>¿Está usted seguro que desea cifrar su billetera?</translation>
     </message>
-    </context>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>Billetera encriptada</translation>
+    </message>
+    <message>
+        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
+        <translation>IMPORTANTE: Todos los backups que hayas hecho de tu billetera tendrían que ser reemplazados por el archivo encriptado de billetera que generaste. Por razones de seguridad, los backups anteriores del archivo de billetera no encriptado se inutilizan en el momento en que empezás a usar la nueva billetera encriptada</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed</source>
+        <translation>Falló la encriptación de la billetera</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
+        <translation>Falló la encriptación de la billetera por un error interno. Tu billetera no está encriptada.</translation>
+    </message>
+    <message>
+        <source>The supplied passphrases do not match.</source>
+        <translation>Las frases de contraseña no son iguales.</translation>
+    </message>
+    <message>
+        <source>Wallet unlock failed</source>
+        <translation>Falló el desbloqueo de la billetera</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>La frase de contraseña que ingresaste para desencriptar la billetera es incorrecta.</translation>
+    </message>
+    <message>
+        <source>Wallet decryption failed</source>
+        <translation>Falló la desencriptación de la billetera</translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Atención: Tenés puestas las mayúsculas!</translation>
+    </message>
+</context>
 <context>
     <name>BanTableModel</name>
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Direcciones de envío</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">Direcciones de &amp;recepción</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -181,9 +237,20 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Etiqueta</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;Dirección</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -192,8 +259,19 @@
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Dirección</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -204,6 +282,9 @@
     <name>OverviewPage</name>
     </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     </context>
 <context>
@@ -211,7 +292,17 @@
     </context>
 <context>
     <name>QObject</name>
-    </context>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blq</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -223,9 +314,17 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etiqueta:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Copiar Dirección</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Dirección
@@ -250,12 +349,20 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Elegir...</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(No etiqueta)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etiqueta:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -292,6 +399,10 @@
 <context>
     <name>TransactionView</name>
     <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Archivo separado por coma (*.csv)</translation>
+    </message>
+    <message>
         <source>Label</source>
         <translation>Etiqueta</translation>
     </message>
@@ -319,6 +430,14 @@
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Exportar</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Exportar los datos de la pestaña actual a un archivo</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>

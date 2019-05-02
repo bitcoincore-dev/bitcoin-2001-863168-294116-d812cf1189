@@ -70,10 +70,6 @@
         <translation>Ini adalah alamat Bitcoin anda untuk mengirim pembayaran. Selalu periksa jumlah dan alamat penerima sebelum mengirim koin</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Ini adalah alamat Bitcoin anda untuk menerima pembayaran. Disarankan untuk menggunakan alamat penerimaan baru untuk setiap transaksi</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Salin Alamat</translation>
     </message>
@@ -732,6 +728,10 @@
         <translation>&amp;Label</translation>
     </message>
     <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;Alamat</translation>
+    </message>
+    <message>
         <source>New sending address</source>
         <translation>Alamat pengirim baru</translation>
     </message>
@@ -760,6 +760,9 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -773,7 +776,11 @@
         <source>About %1</source>
         <translation>Tentang %1</translation>
     </message>
-    </context>
+    <message>
+        <source>Command-line options</source>
+        <translation type="unfinished">opsi Command-line</translation>
+    </message>
+</context>
 <context>
     <name>Intro</name>
     <message>
@@ -786,6 +793,9 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -793,10 +803,30 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Alamat</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Buka URI</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Pilihan</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Wallet</translation>
+    </message>
     <message>
         <source>&amp;Window</source>
         <translation>&amp;Jendela</translation>
@@ -822,6 +852,9 @@
     </message>
     </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     </context>
 <context>
@@ -833,7 +866,12 @@
         <source>Amount</source>
         <translation>Jumlah</translation>
     </message>
-    </context>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsi</translation>
+    </message>
+</context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -842,9 +880,33 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Informasi</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Debug window</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Dompet: </translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Aktifitas network tidak aktif</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Jumlah:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Label:</translation>
+    </message>
     <message>
         <source>Copy label</source>
         <translation>Salin label</translation>
@@ -856,6 +918,10 @@
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Salin Alamat</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Alamat</translation>
@@ -872,7 +938,7 @@
         <source>Wallet</source>
         <translation>Wallet</translation>
     </message>
-    </context>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
@@ -915,8 +981,16 @@
         <translation>Ganti:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Pilih...</translation>
+    </message>
+    <message>
         <source>Dust:</source>
         <translation>Dust:</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Kirim</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -925,6 +999,10 @@
     <message>
         <source>Copy amount</source>
         <translation>Salin jumla</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Salin biaya</translation>
     </message>
     <message>
         <source>Copy after fee</source>
@@ -949,6 +1027,14 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Jumlah:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Label:</translation>
+    </message>
     <message>
         <source>Alt+A</source>
         <translation>Alt+A</translation>
@@ -990,6 +1076,10 @@
     <message>
         <source>Date</source>
         <translation>Tanggal</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Transaksi</translation>
     </message>
     <message>
         <source>Amount</source>

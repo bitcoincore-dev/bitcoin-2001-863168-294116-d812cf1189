@@ -70,10 +70,6 @@
         <translation>이것은 비트코인 전송을 위한 주소입니다. 코인을 보내기 전에 항상 받는 주소와 수량을 확인하세요</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>이것은 비트코인 수신을 위한 주소입니다. 코인을 받을 때 마다 항상 다른 주소를 사용 하시는 것을 권장합니다.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;주소 복사</translation>
     </message>
@@ -326,8 +322,16 @@
         <translation>지갑 암호화에 사용될 암호문 바꾸기</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>기본 지갑</translation>
+        <source>Indexing blocks on disk...</source>
+        <translation>디스크에서 블럭 불러오는 중</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;보낼 주소</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;받을 주소</translation>
     </message>
     </context>
 <context>
@@ -340,22 +344,46 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">%1에 대해</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
+    </context>
+<context>
+    <name>NetWatchLogModel</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">설정</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;지갑</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -374,18 +402,38 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">지갑: </translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>네트워크 활동 중지</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
-    </context>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;주소 복사</translation>
+    </message>
+    <message>
+        <source>Wallet</source>
+        <translation type="unfinished">지갑</translation>
+    </message>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">선택하기...</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>
@@ -446,6 +494,10 @@
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>현재 탭의 데이터를 파일로 내보냅니다</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">지갑 백업</translation>
     </message>
     </context>
 <context>

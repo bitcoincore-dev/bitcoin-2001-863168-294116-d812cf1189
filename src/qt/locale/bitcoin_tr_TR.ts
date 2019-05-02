@@ -70,10 +70,6 @@
         <translation>Bunlar ödeme göndermek için gereken Bitcoin adreslerinizdir. Para göndermeden önce her zaman miktarı ve alıcı adresi kontrol edin.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Bunlar ödeme almak için kullanılacak Bitcoin adreslerinizdir. Her işlem için yeni bir ödeme alma adresi kullanılması tavsiye edilir.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>Adresi Kopyala</translation>
     </message>
@@ -274,6 +270,10 @@
         <translation>URI'yi aç</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Cüzdan:</translation>
+    </message>
+    <message>
         <source>Network activity disabled.</source>
         <translation>Ağ etkinliği devre dışı.</translation>
     </message>
@@ -292,6 +292,10 @@
     <message>
         <source>Backup wallet to another location</source>
         <translation>Cüzdanınızı başka bir lokasyona yedekleyin</translation>
+    </message>
+    <message>
+        <source>&amp;Debug window</source>
+        <translation type="unfinished">&amp;Hata giderme penceresi</translation>
     </message>
     <message>
         <source>Open debugging and diagnostic console</source>
@@ -349,6 +353,14 @@
     <message>
         <source>Information</source>
         <translation>Bilgi</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Gönderim adresleri</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Alınan Adresler</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -474,6 +486,9 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -505,6 +520,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Yok</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -532,7 +554,24 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tip</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>URI:</source>
+        <translation type="unfinished">URI:</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
@@ -591,6 +630,10 @@
     <message>
         <source>default</source>
         <translation>Varsayılan</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Çekirdeği</translation>
     </message>
     <message>
         <source>Client restart required to activate changes.</source>
@@ -677,6 +720,9 @@
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -723,6 +769,11 @@
     <message>
         <source>unknown</source>
         <translation>bilinmiyor</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>İşlem</translation>
     </message>
 </context>
 <context>
@@ -796,6 +847,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Bellek kullanımı</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Cüzdan: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -991,7 +1046,7 @@
         <source>Wallet</source>
         <translation>Cüzdan</translation>
     </message>
-    </context>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
@@ -1024,6 +1079,10 @@
     <message>
         <source>automatically selected</source>
         <translation>Otomatik seçildi</translation>
+    </message>
+    <message>
+        <source>Insufficient funds!</source>
+        <translation>Yetersiz Bakiye</translation>
     </message>
     <message>
         <source>Bytes:</source>
@@ -1064,6 +1123,10 @@
     <message>
         <source>Clear &amp;All</source>
         <translation>Hepsini sil</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">Gönder</translation>
     </message>
     <message>
         <source>Copy fee</source>
@@ -1130,6 +1193,10 @@
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
+        <source>&amp;Sign Message</source>
+        <translation type="unfinished">İmza &amp;Mesaj</translation>
+    </message>
+    <message>
         <source>Paste address from clipboard</source>
         <translation>Panodaki adresi yapıştırın</translation>
     </message>
@@ -1193,6 +1260,10 @@
     <message>
         <source>unknown</source>
         <translation>bilinmiyor</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>sadece görüntülenebilir</translation>
     </message>
     <message>
         <source>label</source>
@@ -1265,6 +1336,10 @@
         <translation>Kazıldı</translation>
     </message>
     <message>
+        <source>watch-only</source>
+        <translation>sadece görüntülenebilir</translation>
+    </message>
+    <message>
         <source>(n/a)</source>
         <translation>(yok)</translation>
     </message>
@@ -1328,6 +1403,10 @@
         <translation>Kabul edilen</translation>
     </message>
     <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">Sadece görüntülenebilir</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>Tarih</translation>
     </message>
@@ -1375,6 +1454,10 @@
         <translation>&amp;Çıkar</translation>
     </message>
     <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Seçili sekmedeki veriyi dosya olarak dışa aktar</translation>
+    </message>
+    <message>
         <source>Backup Wallet</source>
         <translation>Cüzdanı yedekle</translation>
     </message>
@@ -1386,7 +1469,11 @@
         <source>Backup Successful</source>
         <translation>Yedekleme tamamlandı</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">İptal</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -1428,6 +1515,10 @@
     <message>
         <source>Invalid -onion address or hostname: '%s'</source>
         <translation>Hatalı -onion adresi ya da host adı: '%s'</translation>
+    </message>
+    <message>
+        <source>Invalid -proxy address or hostname: '%s'</source>
+        <translation>Hatalı -proxy adresi ya da host adı: '%s'</translation>
     </message>
     <message>
         <source>This is experimental software.</source>

@@ -70,10 +70,6 @@
         <translation>Това са адресите на получателите на плащания. Винаги проверявайте размера на сумата и адреса на получателя, преди да изпратите монети.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Това са Вашите Биткойн адреси,благодарение на които ще получавате плащания.Препоръчително е да използвате нови адреси за получаване на всяка транзакция.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Копирай адрес</translation>
     </message>
@@ -425,6 +421,10 @@
         <source>&amp;Command-line options</source>
         <translation>&amp;Налични команди</translation>
     </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network</source>
+        <translation><numerusform>%n активна връзка към Биткойн мрежата</numerusform><numerusform>%n активни връзки към Биткойн мрежата</numerusform></translation>
+    </message>
     <message>
         <source>Indexing blocks on disk...</source>
         <translation>Индексиране на блокове на диска...</translation>
@@ -432,6 +432,10 @@
     <message>
         <source>Processing blocks on disk...</source>
         <translation>Обработване на блокове на диска...</translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation><numerusform>Преработен %n блок от историята с транзакции.</numerusform><numerusform>Преработени %n блокове от историята с транзакции.</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -462,12 +466,16 @@
         <translation>Синхронизиран</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Покажи %1 помощно съобщение за да получиш лист с възможни Биткойн команди</translation>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Изпращане на адресите</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>Портфейл по подразбиране</translation>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Получаване на адресите</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Покажи %1 помощно съобщение за да получиш лист с възможни Биткойн команди</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -754,6 +762,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -810,12 +821,31 @@
         <source>Error</source>
         <translation>Грешка</translation>
     </message>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation><numerusform>%n GB свободно пространство на разположение</numerusform><numerusform>%n GB свободно пространство на разположение</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation><numerusform>(%n GB е нужен)</numerusform><numerusform>(%n GB са нужни)</numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Несъществуващ</translation>
+    </message>
     </context>
 <context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Формуляр</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Неизвестен...</translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -830,6 +860,19 @@
         <translation>Скрий</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тип</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адрес</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -878,10 +921,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Мрежа</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>ГБ</translation>
     </message>
     <message>
         <source>W&amp;allet</source>
@@ -976,6 +1015,10 @@
         <translation>Дали да покаже възможностите за контрол на монетите или не.</translation>
     </message>
     <message>
+        <source>&amp;Third party transaction URLs</source>
+        <translation type="unfinished">&amp;URL адреси на трети страни</translation>
+    </message>
+    <message>
         <source>&amp;OK</source>
         <translation>ОК</translation>
     </message>
@@ -990,6 +1033,10 @@
     <message>
         <source>none</source>
         <translation>нищо</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Биткойн ядро</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1070,6 +1117,9 @@
         <source>Recent transactions</source>
         <translation>Скорошни транзакции</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1191,9 +1241,25 @@
         <source>%1 ms</source>
         <translation>%1 милисекунда</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n час</numerusform><numerusform>%n часа</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n ден</numerusform><numerusform>%n дни</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n седмица</numerusform><numerusform>%n седмици</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 и %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n година</numerusform><numerusform>%n години</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1215,6 +1281,16 @@
         <source>unknown</source>
         <translation>неизвестен</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакция</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1232,6 +1308,10 @@
     <message>
         <source>&amp;Copy Image</source>
         <translation>&amp;Копирай изображение</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Грешка при създаването на QR Code от URI.</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -1287,6 +1367,10 @@
     <message>
         <source>Current number of blocks</source>
         <translation>Текущ брой блокове</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Портфейл: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1373,6 +1457,10 @@
         <translation>Изчисти конзолата</translation>
     </message>
     <message>
+        <source>Network activity disabled</source>
+        <translation>Мрежата деактивирана</translation>
+    </message>
+    <message>
         <source>via %1</source>
         <translation>посредством %1</translation>
     </message>
@@ -1448,6 +1536,10 @@
         <translation>Премахване</translation>
     </message>
     <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Копиране на URI</translation>
+    </message>
+    <message>
         <source>Copy label</source>
         <translation>Копирай име</translation>
     </message>
@@ -1487,6 +1579,10 @@
         <translation>Данни за плащането</translation>
     </message>
     <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>Адрес</translation>
     </message>
@@ -1505,10 +1601,6 @@
     <message>
         <source>Wallet</source>
         <translation>Портфейл</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>Грешка при създаването на QR Code от URI.</translation>
     </message>
 </context>
 <context>
@@ -2171,10 +2263,6 @@
         <translation>Изпратени на</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Собствени</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Емитирани</translation>
     </message>
@@ -2325,7 +2413,11 @@
         <source>The wallet data was successfully saved to %1.</source>
         <translation>Информацията за портфейла беше успешно запазена в %1.</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Отказ</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -2353,6 +2445,10 @@
         <translation>Внасяне...</translation>
     </message>
     <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Зареждане на адреси...</translation>
+    </message>
+    <message>
         <source>Verifying blocks...</source>
         <translation>Проверка на блоковете...</translation>
     </message>
@@ -2371,6 +2467,10 @@
     <message>
         <source>Transaction too large</source>
         <translation>Транзакцията е твърде голяма</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Проверка на портфейла...</translation>
     </message>
     <message>
         <source>Warning</source>
