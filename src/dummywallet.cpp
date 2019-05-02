@@ -28,6 +28,9 @@ void DummyWalletInit::AddWalletOptions() const
         "-upgradewallet", "-wallet=<path>", "-walletbroadcast", "-walletdir=<dir>", "-walletnotify=<cmd>", "-walletrbf", "-zapwallettxes=<mode>",
         "-dblogsize=<n>", "-flushwallet", "-privdb", "-walletrejectlongchains"};
     gArgs.AddHiddenArgs(opts);
+    gArgs.AddHiddenArgs({
+        "-avoidpartialspends",
+    });
 }
 
 const WalletInitInterface& g_wallet_init_interface = DummyWalletInit();
