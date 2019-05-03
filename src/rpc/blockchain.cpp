@@ -2762,7 +2762,7 @@ return RPCHelpMan{
         data.pushKV("difficulty",            (double)GetDifficulty(tip));
         data.pushKV("mediantime",            (int64_t)tip->GetMedianTimePast());
         data.pushKV("verificationprogress",  GuessVerificationProgress(Params().TxData(), tip));
-        data.pushKV("snapshot_blockhash",    cs->m_from_snapshot_blockhash.ToString());
+        data.pushKV("snapshot_blockhash",    cs->m_from_snapshot_blockhash.value_or(uint256{}).ToString());
         data.pushKV("initialblockdownload",  cs->IsInitialBlockDownload());
         return data;
     };
