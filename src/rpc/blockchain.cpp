@@ -2756,17 +2756,18 @@ return RPCHelpMan{
         data.pushKV("difficulty",            (double)GetDifficulty(tip));
         data.pushKV("mediantime",            (int64_t)tip->GetMedianTimePast());
         data.pushKV("verificationprogress",  GuessVerificationProgress(Params().TxData(), tip));
-        data.pushKV("snapshot_blockhash",    cs->m_from_snapshot_blockhash.ToString());
+        data.pushKV("snapshot_blockhash",    cs->m_from_snapshot_blockhash.value_or(uint256{}).ToString());
         data.pushKV("initialblockdownload",  cs->IsInitialBlockDownload());
         return data;
     };
 
     obj.pushKV("active_chain_type",
-        chainman.ActiveChainstate().m_from_snapshot_blockhash.IsNull() ?
+        chainman.ActiveChainstate().m_from_snapshot_blockhash.value_or(uint256{}).IsNull() ?
         "ibd" : "snapshot");
 
     for (CChainState* chainstate : chainman.GetAll()) {
-        std::string cstype = chainstate->m_from_snapshot_blockhash.IsNull() ? "ibd" : "snapshot";
+        std::string cstype =
+            chainstate->m_from_snapshot_blockhash.value_or(uint256{}).IsNull() ? "ibd" : "snapshot";
         obj.pushKV(cstype, make_chain_data(chainstate));
     }
     obj.pushKV("headers", pindexBestHeader ? pindexBestHeader->nHeight : -1);
