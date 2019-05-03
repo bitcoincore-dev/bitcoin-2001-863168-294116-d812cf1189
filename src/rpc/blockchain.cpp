@@ -2456,6 +2456,14 @@ UniValue loadtxoutset(const JSONRPCRequest& request)
             }.ToString()
         );
 
+    // TODO jamesob: no real need to lock cs_main here, but during testing it makes it
+    // easier to follow the logs. We may want to remove this before merge.
+    //
+    // At the moment, this breaks the wait-for-headers part of ActivateSnapshot(), so
+    // we'll probably-definitely want to remove this later.
+    //
+    LOCK(::cs_main);
+
     fs::path path = request.params[0].get_str();
     if (path.is_relative()) {
         path = fs::absolute(path, GetDataDir());
