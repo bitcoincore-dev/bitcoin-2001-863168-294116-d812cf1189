@@ -2358,9 +2358,29 @@ static void AppendWarning(std::string& res, const std::string& warn)
 void static UpdateTip(const CBlockIndex *pindexNew, const CChainParams& chainParams, const CCoinsViewCache& coins_view)
     EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
 {
+    auto& func_name = __func__;
+    auto log_progress = [pindexNew, &coins_view, &chainParams, func_name](
+            const std::string& prefix,
+            const std::string& warning_messages)
+    {
+        LogPrintf("%s%s: new best=%s height=%d version=0x%08x log2_work=%.8g tx=%lu date='%s' progress=%f cache=%.1fMiB(%utxo)%s\n",
+            prefix, func_name,
+            pindexNew->GetBlockHash().ToString(), pindexNew->nHeight, pindexNew->nVersion,
+            log(pindexNew->nChainWork.getdouble())/log(2.0), (unsigned long)pindexNew->nChainTx,
+            FormatISO8601DateTime(pindexNew->GetBlockTime()),
+            GuessVerificationProgress(chainParams.TxData(), pindexNew),
+            coins_view.DynamicMemoryUsage() * (1.0 / (1<<20)),
+            coins_view.GetCacheSize(),
+            !warning_messages.empty() ? strprintf(" warning='%s'", warning_messages) : "");
+    };
+
     // The contents of this function are either not relevant if we're in IBD
     // or only pertains to the primary coins view, so bail otherwise.
     if (&coins_view != &::ChainstateActive().CoinsTip()) {
+        // Only log every so often so that we don't bury log messages at the tip.
+        if (pindexNew->nHeight % 2000 == 0) {
+            log_progress("[background validation] ", "");
+        }
         return;
     }
 
@@ -2401,12 +2421,7 @@ void static UpdateTip(const CBlockIndex *pindexNew, const CChainParams& chainPar
         if (nUpgraded > 0)
             AppendWarning(warningMessages, strprintf(_("%d of last 100 blocks have unexpected version").translated, nUpgraded));
     }
-    LogPrintf("%s: new best=%s height=%d version=0x%08x log2_work=%.8g tx=%lu date='%s' progress=%f cache=%.1fMiB(%utxo)%s\n", __func__,
-      pindexNew->GetBlockHash().ToString(), pindexNew->nHeight, pindexNew->nVersion,
-      log(pindexNew->nChainWork.getdouble())/log(2.0), (unsigned long)pindexNew->nChainTx,
-      FormatISO8601DateTime(pindexNew->GetBlockTime()),
-      GuessVerificationProgress(chainParams.TxData(), pindexNew), ::ChainstateActive().CoinsTip().DynamicMemoryUsage() * (1.0 / (1<<20)), ::ChainstateActive().CoinsTip().GetCacheSize(),
-      !warningMessages.empty() ? strprintf(" warning='%s'", warningMessages) : "");
+    log_progress("", warningMessages);
 
 }
 
