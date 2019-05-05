@@ -3777,6 +3777,10 @@ UniValue getaddressinfo(const JSONRPCRequest& request)
                                 {RPCResult::Type::STR, "purpose", "The purpose of the associated address (send or receive)."},
                             }},
                         }},
+                        {RPCResult::Type::ARR, "use_txids", "",
+                        {
+                            {RPCResult::Type::STR_HEX, "txid", "The ids of transactions involving this wallet which received with the address"},
+                        }},
                     }
                 },
                 RPCExamples{
@@ -3855,6 +3859,15 @@ UniValue getaddressinfo(const JSONRPCRequest& request)
         }
     }
     ret.pushKV("labels", std::move(labels));
+
+    // NOTE: Intentionally not special-casing a single txid: while addresses
+    // should never be reused, it's not unexpected to have RBF result in
+    // multiple txids for a single use.
+    UniValue use_txids(UniValue::VARR);
+    pwallet->FindScriptPubKeyUsed(std::set<CScript>{scriptPubKey}, [&use_txids](const CWalletTx& wtx){
+        use_txids.push_back(wtx.tx->GetHash().GetHex());
+    });
+    ret.pushKV("use_txids", std::move(use_txids));
 
     return ret;
 }
