@@ -323,7 +323,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsVi
 static FILE* OpenUndoFile(const FlatFilePos &pos, bool fReadOnly = false);
 static FlatFileSeq BlockFileSeq();
 static FlatFileSeq UndoFileSeq();
-bool RunCheckInputsMaybeParallel(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, unsigned int flags, bool cacheSigStore, bool cacheFullScriptStore, PrecomputedTransactionData& txdata);
+bool RunCheckInputsMaybeParallel(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, unsigned int flags, bool cacheSigStore, bool cacheFullScriptStore, PrecomputedTransactionData& txdata, bool single_threaded_validation=false);
 
 bool CheckFinalTx(const CTransaction &tx, int flags)
 {
@@ -571,7 +571,7 @@ static bool CheckInputsFromMempoolAndCache(const CTransaction& tx, CValidationSt
  */
 static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool& pool, CValidationState& state, const CTransactionRef& ptx,
                               bool* pfMissingInputs, int64_t nAcceptTime, std::list<CTransactionRef>* plTxnReplaced,
-                              bool bypass_limits, const CAmount& nAbsurdFee, std::vector<COutPoint>& coins_to_uncache, bool test_accept) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
+                              bool bypass_limits, const CAmount& nAbsurdFee, std::vector<COutPoint>& coins_to_uncache, bool test_accept, bool single_threaded_validation) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
     const CTransaction& tx = *ptx;
     const uint256 hash = tx.GetHash();
@@ -895,7 +895,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         // Check against previous transactions
         // This is done last to help prevent CPU exhaustion denial-of-service attacks.
         PrecomputedTransactionData txdata(tx);
-        if (!RunCheckInputsMaybeParallel(tx, state, view, scriptVerifyFlags, true, false, txdata)) {
+        if (!RunCheckInputsMaybeParallel(tx, state, view, scriptVerifyFlags, true, false, txdata, single_threaded_validation)) {
             // Assume that this is due to a policy violation, rather than
             // re-checking with the consensus flags. Separating policy rules
             // from consensus rules is tricky, because we want to be able to
@@ -989,10 +989,10 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
 /** (try to) add transaction to memory pool with a specified acceptance time **/
 static bool AcceptToMemoryPoolWithTime(const CChainParams& chainparams, CTxMemPool& pool, CValidationState &state, const CTransactionRef &tx,
                         bool* pfMissingInputs, int64_t nAcceptTime, std::list<CTransactionRef>* plTxnReplaced,
-                        bool bypass_limits, const CAmount nAbsurdFee, bool test_accept) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
+                        bool bypass_limits, const CAmount nAbsurdFee, bool test_accept, bool single_threaded_validation) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
     std::vector<COutPoint> coins_to_uncache;
-    bool res = AcceptToMemoryPoolWorker(chainparams, pool, state, tx, pfMissingInputs, nAcceptTime, plTxnReplaced, bypass_limits, nAbsurdFee, coins_to_uncache, test_accept);
+    bool res = AcceptToMemoryPoolWorker(chainparams, pool, state, tx, pfMissingInputs, nAcceptTime, plTxnReplaced, bypass_limits, nAbsurdFee, coins_to_uncache, test_accept, single_threaded_validation);
     if (!res) {
         // Remove coins that were not present in the coins cache before calling ATMPW;
         // this is to prevent memory DoS in case we receive a large number of
@@ -1010,10 +1010,10 @@ static bool AcceptToMemoryPoolWithTime(const CChainParams& chainparams, CTxMemPo
 
 bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransactionRef &tx,
                         bool* pfMissingInputs, std::list<CTransactionRef>* plTxnReplaced,
-                        bool bypass_limits, const CAmount nAbsurdFee, bool test_accept)
+                        bool bypass_limits, const CAmount nAbsurdFee, bool test_accept, bool single_threaded_validation)
 {
     const CChainParams& chainparams = Params();
-    return AcceptToMemoryPoolWithTime(chainparams, pool, state, tx, pfMissingInputs, GetTime(), plTxnReplaced, bypass_limits, nAbsurdFee, test_accept);
+    return AcceptToMemoryPoolWithTime(chainparams, pool, state, tx, pfMissingInputs, GetTime(), plTxnReplaced, bypass_limits, nAbsurdFee, test_accept, single_threaded_validation);
 }
 
 /**
@@ -1675,11 +1675,11 @@ void ThreadScriptCheck(int worker_num) {
     scriptcheckqueue.Thread();
 }
 
-bool RunCheckInputsMaybeParallel(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, unsigned int flags, bool cacheSigStore, bool cacheFullScriptStore, PrecomputedTransactionData& txdata) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
+bool RunCheckInputsMaybeParallel(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &inputs, unsigned int flags, bool cacheSigStore, bool cacheFullScriptStore, PrecomputedTransactionData& txdata, bool single_threaded_validation) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
-    CCheckQueueControl<CScriptCheck> control(nScriptCheckThreads ? &scriptcheckqueue : nullptr);
+    CCheckQueueControl<CScriptCheck> control((nScriptCheckThreads && !single_threaded_validation) ? &scriptcheckqueue : nullptr);
     std::vector<CScriptCheck> vChecks;
-    if (!CheckInputs(tx, state, inputs, true, flags, cacheSigStore, cacheFullScriptStore, txdata, nScriptCheckThreads ? &vChecks : nullptr)) {
+    if (!CheckInputs(tx, state, inputs, true, flags, cacheSigStore, cacheFullScriptStore, txdata, (nScriptCheckThreads && !single_threaded_validation) ? &vChecks : nullptr)) {
         return false;
     }
     control.Add(vChecks);
@@ -4800,7 +4800,7 @@ bool LoadMempool(CTxMemPool& pool)
                 LOCK(cs_main);
                 AcceptToMemoryPoolWithTime(chainparams, pool, state, tx, nullptr /* pfMissingInputs */, nTime,
                                            nullptr /* plTxnReplaced */, false /* bypass_limits */, 0 /* nAbsurdFee */,
-                                           false /* test_accept */);
+                                           false /* test_accept */, false /* single_threaded_validation */);
                 if (state.IsValid()) {
                     ++count;
                 } else {
