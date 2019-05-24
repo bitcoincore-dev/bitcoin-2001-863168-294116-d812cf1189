@@ -1323,9 +1323,8 @@ else
   build_multiprocess=no
 fi
 
-AM_CONDITIONAL([BUILD_MULTIPROCESS],[test x$build_multiprocess = xyes])
+AM_CONDITIONAL([BUILD_MULTIPROCESS],[test "x$build_multiprocess" = xyes])
 AM_CONDITIONAL([BUILD_BITCOIN_NODE], [test "x$build_multiprocess" = xyes])
-AM_CONDITIONAL([BUILD_BITCOIN_WALLET], [test "x$build_multiprocess$enable_wallet" = xyesyes])
 AM_CONDITIONAL([BUILD_BITCOIN_GUI], [test "x$build_multiprocess" = xyes])
 
 if test x$have_protobuf != xno &&
@@ -1514,7 +1513,6 @@ AM_CONDITIONAL([ENABLE_AVX2],[test x$enable_avx2 = xyes])
 AM_CONDITIONAL([ENABLE_SHANI],[test x$enable_shani = xyes])
 AM_CONDITIONAL([USE_ASM],[test x$use_asm = xyes])
 
-AC_DEFINE_UNQUOTED(BITCOIN_DAEMON_NAME, "$BITCOIN_DAEMON_NAME", [Base name of bitcoind executable])
 AC_DEFINE(CLIENT_VERSION_MAJOR, _CLIENT_VERSION_MAJOR, [Major version])
 AC_DEFINE(CLIENT_VERSION_MINOR, _CLIENT_VERSION_MINOR, [Minor version])
 AC_DEFINE(CLIENT_VERSION_REVISION, _CLIENT_VERSION_REVISION, [Build revision])
