@@ -135,7 +135,7 @@ public:
     const std::function<void()>* m_post_fn = nullptr;
 
     //! Callback functions to run on async thread.
-    std::list<std::function<void()>> m_async_fns;
+    CleanupList m_async_fns;
 
     //! Pipe read handle used to wake up the event loop thread.
     int m_wait_fd = -1;
@@ -280,8 +280,8 @@ struct Connection
     //! Cleanup functions to run if connection is broken unexpectedly.
     //! Lists will be empty if all ProxyClient and ProxyServer objects are
     //! destroyed cleanly before the connection is destroyed.
-    std::list<std::function<void()>> m_sync_cleanup_fns;
-    std::list<std::function<void()>> m_async_cleanup_fns;
+    CleanupList m_sync_cleanup_fns;
+    CleanupList m_async_cleanup_fns;
 };
 
 struct ThreadContext

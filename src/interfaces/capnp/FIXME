@@ -1,30 +1,30 @@
-- link to doc/multiprocess from pr description
-- src/bitcoin-wallet.cpp s/bitcoind/bitcoin-wallet/ in new comment
-- replace 'auto init' 'auto* process' with explicit types
-- replace X with Proxy X.proxy with Proxy.wrap
-- run iwyu
-- move stuff from common-types to node/chain/wallet depending on what is used
-- rename ReadMessage/BuildMessage to CustomReadMessage
-- common put univalue and globalargs above pair and pairstr
-- get rid of using Context = ServerContext boierpalte in custom method overloads
+- AA move ResultOf DestructorCatcher AsyncCallable to util.h
+- BA link to doc/multiprocess from pr description
+- BA src/bitcoin-wallet.cpp s/bitcoind/bitcoin-wallet/ in new comment
+- BA replace 'auto init' 'auto* process' with explicit types
+- AA replace X with Proxy X.proxy with Proxy.wrap
+- CC run iwyu
+- AB move stuff from common-types to node/chain/wallet depending on what is used
+- AA rename ReadMessage/BuildMessage to CustomReadMessage
+- AA common put univalue and globalargs above pair and pairstr
+- BC get rid of using Context = ServerContext boierpalte in custom method overloads
   - Add Params and Results typedefs to codegen ProxyMethod structs
   - Drop 'using Context =' and replace 'Context& context' with 'ServerContext<...Params>& context' in custom classes
-- get rid of proxy-inl.h
+- AB get rid of proxy-inl.h
   - move ipc structs and threadmap bullshit to proxy-io.h
   - move CustomReadField CustomPass stuff to proxy-types.h
-- drop '// For CharCast' include comment
-- simplify std::is_same<decltype... enable declarations
+- BA drop '// For CharCast' include comment
+- CB simplify std::is_same<decltype... enable declarations
   - should get rid of decltypes and just add proper typedefs to Accessor and Output classes
   - maybe simplify enable_if<is_same construction
-- s/in which case server ProxyServerBase::m_impl/ProxyServer::m_impl
-- document all classes with at least a single-sentence docstring. if needs more documentation and no time, write todos
-- group readfield/buildfield by type
-- s/struct Callback/ProxyCallFn/
-- get foo test working again (if 0)
-- "avoid having to write a template function when don't" -> when writing and overload and don't
-- maybe get rid of ReplaceVoid? has just one usage in serverinvoke
-- move TxDestination BuildMessage next to ReadMessage in wallet file
-
+- AA s/in which case server ProxyServerBase::m_impl/ProxyServer::m_impl
+- CC document all classes with at least a single-sentence docstring. if needs more documentation and no time, write todos
+- BB group readfield/buildfield by type
+- AA s/struct Callback/ProxyCallFn/
+- BC get foo test working again (if 0)
+- AA "avoid having to write a template function when don't" -> when writing and overload and don't
+- AA move ReplaceVoid to one usage in serverInvoke. Add todo to maybe remove altogether
+- AA move TxDestination BuildMessage next to ReadMessage in wallet file
 - [ ] AB proxy.capnp: document all annotations
 - [ ] BB change CustomBuildField param order to put values after output for consistency with BuildField and so varargs values are supported
 - [ ] BB get rid of messages namespace

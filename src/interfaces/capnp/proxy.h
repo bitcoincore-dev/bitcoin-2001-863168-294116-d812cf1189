@@ -78,6 +78,7 @@ kj::Own<typename Interface::Server> CustomMakeProxyServer(InvokeContext& context
 template <typename Fn>
 class ProxyCallback;
 
+//! Template specialization to separate Result and Arg types.
 template <typename Result, typename... Args>
 class ProxyCallback<std::function<Result(Args...)>> : public Base
 {
@@ -89,7 +90,7 @@ public:
 template <typename Callable>
 using ResultOf = decltype(std::declval<Callable>()());
 
-//! Needed for libc++/macOS compatibility:
+//! Needed for libc++/macOS compatibility. Lets code work with shared_ptr nothrow declaration
 //! https://github.com/capnproto/capnproto/issues/553#issuecomment-328554603
 template <typename T>
 struct DestructorCatcher
@@ -129,6 +130,8 @@ AsyncCallable<typename std::remove_reference<Callable>::type> MakeAsyncCallable(
     return std::move(callable);
 }
 
+//! Base class for generated ProxyClient classes that implement a C++ interface
+//! and forward calls to a capnp interface.
 template <typename Interface_, typename Impl_>
 class ProxyClientBase : public Impl_
 {
@@ -157,6 +160,8 @@ void clientInvoke(MethodTraits, const GetRequest& get_request, ProxyClient& prox
 void AddClient(EventLoop& loop);
 void RemoveClient(EventLoop& loop);
 
+//! Base class for generated ProxyServer classes that implement capnp server
+//! methods and forward calls to a wrapped c++ implementation class.
 template <typename Interface_, typename Impl_>
 struct ProxyServerBase : public virtual Interface_::Server
 {
@@ -268,7 +273,6 @@ struct ProxyServerMethodTraits : public ProxyMethodTraits<Method>
 {
 };
 
-
 template <typename ProxyServer, typename CallContext_>
 struct ServerInvokeContext : InvokeContext
 {
@@ -377,7 +381,6 @@ public:
     kj::Promise<void> makeThread(MakeThreadContext context) override;
     Connection& m_connection;
 };
-
 
 std::string LongThreadName(const char* exe_name);
 
