@@ -1299,6 +1299,7 @@ else
   AC_MSG_ERROR([--with-capnp=$with_capnp value does not point to a directory])
 fi
 if test "x$capnp_found" = xyes; then
+  CAPNP_RPC_CFLAGS="$CAPNP_RPC_CFLAGS -std=c++14"
   CAPNP_PARSER_CFLAGS="$CAPNP_RPC_CFLAGS"
   CAPNP_PARSER_LIBS="$CAPNP_RPC_LIBS -lcapnpc"
   CAPNP_PARSER_INCLUDE="$capnp_rpc_prefix/include"

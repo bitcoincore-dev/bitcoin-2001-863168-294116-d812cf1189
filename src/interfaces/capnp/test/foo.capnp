@@ -3,7 +3,7 @@
 using Cxx = import "/capnp/c++.capnp";
 $Cxx.namespace("interfaces::capnp::test::messages");
 
-using X = import "../proxy.capnp";
+using X = import "proxy.capnp";
 
 interface FooInterface $X.proxy("interfaces::capnp::test::FooInterface") {
     add @0 (a :Int32, b :Int32) -> (result :Int32);
