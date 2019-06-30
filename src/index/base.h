@@ -85,12 +85,12 @@ protected:
 
     virtual DB& GetDB() const = 0;
 
-    /// Get the name of the index for display in logs.
-    virtual const char* GetName() const = 0;
-
 public:
     /// Destructor interrupts sync thread if running and blocks until it exits.
     virtual ~BaseIndex();
+
+    /// Get the name of the index for display in logs.
+    virtual const char* GetName() const = 0;
 
     /// Returns whether index has completed the initial sync with the active chain.
     /// After returning true once, this function will return true on all subsequent calls.
@@ -101,7 +101,7 @@ public:
     /// sync once and only needs to process blocks in the ValidationInterface
     /// queue. If the index is catching up from far behind, this method does
     /// not block and immediately returns false.
-    bool BlockUntilSyncedToCurrentChain();
+    bool BlockUntilSyncedToCurrentChain() const;
 
     void Interrupt();
 
