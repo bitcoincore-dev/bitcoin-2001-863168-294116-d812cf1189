@@ -1923,6 +1923,25 @@ static bool PrepareBlockFilterRequest(CNode* pfrom, const CChainParams& chain_pa
     return true;
 }
 
+/**
+ * Do a lookup on the block filter index. The lookup may fail erroneously if the filter index, which
+ * is updated asynchronously, has not been synchronized with the net processing thread. In that
+ * case, block for a short time until the filter index is updated, then retry the lookup.
+ */
+static bool QueryFilterIndexWithRetry(BaseIndex* index, bool& in_sync, std::function<bool()> fn)
+{
+    while (!fn()) {
+        if (in_sync) {
+            return false;
+        }
+        if (!index->BlockUntilSyncedToCurrentChain()) {
+            return error("%s is not ready yet", index->GetName());
+        }
+        in_sync = true;
+    }
+    return true;
+}
+
 static bool ProcessGetCFilters(CNode* pfrom, CDataStream& vRecv, const CChainParams& chain_params,
                                CConnman* connman)
 {
@@ -1942,9 +1961,14 @@ static bool ProcessGetCFilters(CNode* pfrom, CDataStream& vRecv, const CChainPar
         return true;
     }
 
-    std::vector<BlockFilter> filters;
+    bool index_in_sync = false;
 
-    if (!filter_index->LookupFilterRange(start_height, stop_index, filters)) {
+    std::vector<BlockFilter> filters;
+    bool lookup_success = QueryFilterIndexWithRetry(
+        filter_index, index_in_sync,
+        [=, &filters]{ return filter_index->LookupFilterRange(start_height, stop_index, filters); }
+    );
+    if (!lookup_success) {
         return error("Failed to find block filter in index: filter_type=%s, start_height=%d, stop_hash=%s",
                      BlockFilterTypeName(filter_type), start_height, stop_hash.ToString());
     }
@@ -1977,17 +2001,27 @@ static bool ProcessGetCFHeaders(CNode* pfrom, CDataStream& vRecv, const CChainPa
         return true;
     }
 
+    bool index_in_sync = false;
+
     uint256 prev_header;
     if (start_height > 0) {
         const CBlockIndex* prev_block = stop_index->GetAncestor(start_height - 1);
-        if (!filter_index->LookupFilterHeader(prev_block, prev_header)) {
+        bool lookup_success = QueryFilterIndexWithRetry(
+            filter_index, index_in_sync,
+            [=, &prev_header]{ return filter_index->LookupFilterHeader(prev_block, prev_header); }
+        );
+        if (!lookup_success) {
             return error("Failed to find block filter header in index: filter_type=%s, block_hash=%s",
                          BlockFilterTypeName(filter_type), prev_block->GetBlockHash().ToString());
         }
     }
 
     std::vector<uint256> filter_hashes;
-    if (!filter_index->LookupFilterHashRange(start_height, stop_index, filter_hashes)) {
+    bool lookup_success = QueryFilterIndexWithRetry(
+        filter_index, index_in_sync,
+        [=, &filter_hashes]{ return filter_index->LookupFilterHashRange(start_height, stop_index, filter_hashes); }
+    );
+    if (!lookup_success) {
         return error("Failed to find block filter hashes in index: filter_type=%s, start_height=%d, stop_hash=%s",
                      BlockFilterTypeName(filter_type), start_height, stop_hash.ToString());
     }
@@ -2022,6 +2056,7 @@ static bool ProcessGetCFCheckPt(CNode* pfrom, CDataStream& vRecv, const CChainPa
         return true;
     }
 
+    bool index_in_sync = false;
     std::vector<uint256> headers(stop_index->nHeight / CFCHECKPT_INTERVAL);
 
     // Populate headers.
@@ -2031,7 +2066,11 @@ static bool ProcessGetCFCheckPt(CNode* pfrom, CDataStream& vRecv, const CChainPa
         block_index = block_index->GetAncestor(height);
 
         // Filter header requested for stale block.
-        if (!filter_index->LookupFilterHeader(block_index, headers[i])) {
+        bool lookup_success = QueryFilterIndexWithRetry(
+            filter_index, index_in_sync,
+            [=, &headers]{ return filter_index->LookupFilterHeader(block_index, headers[i]); }
+        );
+        if (!lookup_success) {
             return error("Failed to find block filter header in index: filter_type=%s, block_hash=%s",
                          BlockFilterTypeName(filter_type), block_index->GetBlockHash().ToString());
         }
