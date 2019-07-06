@@ -1623,9 +1623,10 @@ static bool AbortNode(const std::string& strMessage, const std::string& userMess
     SetMiscWarning(strMessage);
     LogPrintf("*** %s\n", strMessage);
     if (!userMessage.empty()) {
-        uiInterface.ThreadSafeMessageBox(userMessage, "", CClientUIInterface::MSG_ERROR | prefix);
+        // TODO: AbortNode should take a bilingual string.
+        uiInterface.ThreadSafeMessageBox(bilingual_str{userMessage, userMessage}, "", CClientUIInterface::MSG_ERROR | prefix);
     } else {
-        uiInterface.ThreadSafeMessageBox(_("Error: A fatal internal error occurred, see debug.log for details").translated, "", CClientUIInterface::MSG_ERROR | CClientUIInterface::MSG_NOPREFIX);
+        uiInterface.ThreadSafeMessageBox(_("Error: A fatal internal error occurred, see debug.log for details"), "", CClientUIInterface::MSG_ERROR | CClientUIInterface::MSG_NOPREFIX);
     }
     StartShutdown();
     return false;
