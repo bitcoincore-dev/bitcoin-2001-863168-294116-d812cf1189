@@ -90,7 +90,7 @@ bool WalletInit::ParameterInteraction() const
 
     if (gArgs.GetBoolArg("-salvagewallet", false)) {
         if (is_multiwallet) {
-            return InitError(strprintf("%s is only allowed with a single wallet file", "-salvagewallet"));
+            return InitError(strprintf(_("%s is only allowed with a single wallet file"), "-salvagewallet"));
         }
         // Rewrite just private keys: rescan to find transactions
         if (gArgs.SoftSetBoolArg("-rescan", true)) {
@@ -107,7 +107,7 @@ bool WalletInit::ParameterInteraction() const
     // -zapwallettxes implies a rescan
     if (zapwallettxes) {
         if (is_multiwallet) {
-            return InitError(strprintf("%s is only allowed with a single wallet file", "-zapwallettxes"));
+            return InitError(strprintf(_("%s is only allowed with a single wallet file"), "-zapwallettxes"));
         }
         if (gArgs.SoftSetBoolArg("-rescan", true)) {
             LogPrintf("%s: parameter interaction: -zapwallettxes enabled -> setting -rescan=1\n", __func__);
@@ -116,12 +116,12 @@ bool WalletInit::ParameterInteraction() const
 
     if (is_multiwallet) {
         if (gArgs.GetBoolArg("-upgradewallet", false)) {
-            return InitError(strprintf("%s is only allowed with a single wallet file", "-upgradewallet"));
+            return InitError(strprintf(_("%s is only allowed with a single wallet file"), "-upgradewallet"));
         }
     }
 
     if (gArgs.GetBoolArg("-sysperms", false))
-        return InitError("-sysperms is not allowed in combination with enabled wallet functionality");
+        return InitError(_("-sysperms is not allowed in combination with enabled wallet functionality"));
 
     return true;
 }
