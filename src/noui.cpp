@@ -5,8 +5,9 @@
 
 #include <noui.h>
 
+#include <logging.h>
 #include <ui_interface.h>
-#include <util/system.h>
+#include <util/translation.h>
 
 #include <cstdio>
 #include <stdint.h>
@@ -20,7 +21,7 @@ boost::signals2::connection noui_ThreadSafeMessageBoxConn;
 boost::signals2::connection noui_ThreadSafeQuestionConn;
 boost::signals2::connection noui_InitMessageConn;
 
-bool noui_ThreadSafeMessageBox(const std::string& message, const std::string& caption, unsigned int style)
+bool noui_ThreadSafeMessageBox(const bilingual_str& message, const std::string& caption, unsigned int style)
 {
     bool fSecure = style & CClientUIInterface::SECURE;
     style &= ~CClientUIInterface::SECURE;
@@ -45,15 +46,15 @@ bool noui_ThreadSafeMessageBox(const std::string& message, const std::string& ca
     }
 
     if (!fSecure) {
-        LogPrintf("%s%s\n", strCaption, message);
+        LogPrintf("%s%s\n", strCaption, message.original);
     }
-    tfm::format(std::cerr, "%s%s\n", strCaption.c_str(), message.c_str());
+    tfm::format(std::cerr, "%s%s\n", strCaption.c_str(), message.original.c_str());
     return false;
 }
 
-bool noui_ThreadSafeQuestion(const std::string& /* ignored interactive message */, const std::string& message, const std::string& caption, unsigned int style)
+bool noui_ThreadSafeQuestion(const bilingual_str& /* ignored interactive message */, const std::string& message, const std::string& caption, unsigned int style)
 {
-    return noui_ThreadSafeMessageBox(message, caption, style);
+    return noui_ThreadSafeMessageBox(bilingual_str{message, message}, caption, style);
 }
 
 void noui_InitMessage(const std::string& message)
@@ -68,12 +69,12 @@ void noui_connect()
     noui_InitMessageConn = uiInterface.InitMessage_connect(noui_InitMessage);
 }
 
-bool noui_ThreadSafeMessageBoxSuppressed(const std::string& message, const std::string& caption, unsigned int style)
+bool noui_ThreadSafeMessageBoxSuppressed(const bilingual_str& message, const std::string& caption, unsigned int style)
 {
     return false;
 }
 
-bool noui_ThreadSafeQuestionSuppressed(const std::string& /* ignored interactive message */, const std::string& message, const std::string& caption, unsigned int style)
+bool noui_ThreadSafeQuestionSuppressed(const bilingual_str& /* ignored interactive message */, const std::string& message, const std::string& caption, unsigned int style)
 {
     return false;
 }
