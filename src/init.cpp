@@ -1530,7 +1530,7 @@ bool AppInitMain(NodeContext& node)
 
                 ::ChainstateActive().CoinsErrorCatcher().AddReadErrCallback([]() {
                     uiInterface.ThreadSafeMessageBox(
-                        _("Error reading from database, shutting down.").translated,
+                        _("Error reading from database, shutting down."),
                         "", CClientUIInterface::MSG_ERROR);
                 });
 
@@ -1616,7 +1616,7 @@ bool AppInitMain(NodeContext& node)
             // first suggest a reindex
             if (!fReset) {
                 bool fRet = uiInterface.ThreadSafeQuestion(
-                    strLoadError + ".\n\n" + _("Do you want to rebuild the block database now?").translated,
+                    strprintf(_("%s.\n\nDo you want to rebuild the block database now?"), strLoadError),
                     strLoadError + ".\nPlease restart with -reindex or -reindex-chainstate to recover.",
                     "", CClientUIInterface::MSG_ERROR | CClientUIInterface::BTN_ABORT);
                 if (fRet) {
