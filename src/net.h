@@ -20,8 +20,8 @@
 #include <random.h>
 #include <streams.h>
 #include <sync.h>
-#include <uint256.h>
 #include <threadinterrupt.h>
+#include <uint256.h>
 
 #include <atomic>
 #include <deque>
@@ -38,6 +38,7 @@
 class CScheduler;
 class CNode;
 class BanMan;
+struct bilingual_str;
 
 /** Time between pings automatically sent out for latency probing and keepalive (in seconds). */
 static const int PING_INTERVAL = 2 * 60;
@@ -320,7 +321,7 @@ private:
         ListenSocket(SOCKET socket_, bool whitelisted_) : socket(socket_), whitelisted(whitelisted_) {}
     };
 
-    bool BindListenPort(const CService &bindAddr, std::string& strError, bool fWhitelisted = false);
+    bool BindListenPort(const CService& bindAddr, bilingual_str& strError, bool fWhitelisted = false);
     bool Bind(const CService &addr, unsigned int flags);
     bool InitBinds(const std::vector<CService>& binds, const std::vector<CService>& whiteBinds);
     void ThreadOpenAddedConnections();
