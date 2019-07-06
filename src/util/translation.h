@@ -34,7 +34,7 @@ const extern std::function<std::string(const char*)> G_TRANSLATION_FUN;
  * Translation function.
  * If no translation function is set, simply return the input.
  */
-inline bilingual_str _(const char* psz)
+inline static bilingual_str _(const char* psz)
 {
     return bilingual_str{psz, G_TRANSLATION_FUN ? (G_TRANSLATION_FUN)(psz) : psz};
 }
