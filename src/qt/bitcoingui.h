@@ -219,8 +219,9 @@ public Q_SLOTS:
        @param[in] message   the displayed text
        @param[in] style     modality and style definitions (icon and used buttons - buttons only for message boxes)
                             @see CClientUIInterface::MessageBoxFlags
+       @param[in] details   the text to be displayed in the details area
     */
-    void message(const QString& title, QString message, unsigned int style);
+    void message(const QString& title, QString message, unsigned int style, const QString& details);
 
 #ifdef ENABLE_WALLET
     void setCurrentWallet(WalletModel* wallet_model);

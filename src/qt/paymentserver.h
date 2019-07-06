@@ -82,7 +82,7 @@ Q_SIGNALS:
     void receivedPaymentRequest(SendCoinsRecipient);
 
     // Fired when a message should be reported to the user
-    void message(const QString &title, const QString &message, unsigned int style);
+    void message(const QString& title, const QString& message, unsigned int style, const QString& details);
 
 public Q_SLOTS:
     // Signal this when the main window's UI is ready

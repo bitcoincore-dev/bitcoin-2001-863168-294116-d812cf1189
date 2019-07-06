@@ -196,7 +196,7 @@ Q_SIGNALS:
     void requireUnlock();
 
     // Fired when a message should be reported to the user
-    void message(const QString &title, const QString &message, unsigned int style);
+    void message(const QString& title, const QString& message, unsigned int style, const QString& details);
 
     // Coins sent: from wallet, to recipient, in (serialized) transaction:
     void coinsSent(WalletModel* wallet, SendCoinsRecipient recipient, QByteArray transaction);

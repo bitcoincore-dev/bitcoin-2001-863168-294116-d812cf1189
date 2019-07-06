@@ -223,7 +223,7 @@ void PaymentServer::handleURIOrFile(const QString& s)
     if (s.startsWith("bitcoin://", Qt::CaseInsensitive))
     {
         Q_EMIT message(tr("URI handling"), tr("'bitcoin://' is not a valid URI. Use 'bitcoin:' instead."),
-            CClientUIInterface::MSG_ERROR);
+            CClientUIInterface::MSG_ERROR, /* details */ "");
     }
     else if (s.startsWith(BITCOIN_IPC_PREFIX, Qt::CaseInsensitive)) // bitcoin: URI
     {
@@ -239,10 +239,10 @@ void PaymentServer::handleURIOrFile(const QString& s)
                             tr("Cannot process payment request because BIP70 is not supported.")+
                             tr("Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.")+
                             tr("If you are receiving this error you should request the merchant provide a BIP21 compatible URI."),
-                            CClientUIInterface::ICON_WARNING);
+                            CClientUIInterface::ICON_WARNING, /* details */ "");
                     }
                     Q_EMIT message(tr("URI handling"), tr("Invalid payment address %1").arg(recipient.address),
-                        CClientUIInterface::MSG_ERROR);
+                        CClientUIInterface::MSG_ERROR, /* details */ "");
                 }
                 else
                     Q_EMIT receivedPaymentRequest(recipient);
@@ -250,7 +250,7 @@ void PaymentServer::handleURIOrFile(const QString& s)
             else
                 Q_EMIT message(tr("URI handling"),
                     tr("URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters."),
-                    CClientUIInterface::ICON_WARNING);
+                    CClientUIInterface::ICON_WARNING, /* details */ "");
 
             return;
         }
@@ -262,7 +262,7 @@ void PaymentServer::handleURIOrFile(const QString& s)
             tr("Cannot process payment request because BIP70 is not supported.")+
             tr("Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.")+
             tr("If you are receiving this error you should request the merchant provide a BIP21 compatible URI."),
-            CClientUIInterface::ICON_WARNING);
+            CClientUIInterface::ICON_WARNING, /* details */ "");
     }
 }
 

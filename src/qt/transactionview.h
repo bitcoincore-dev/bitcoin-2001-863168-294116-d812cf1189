@@ -106,7 +106,7 @@ Q_SIGNALS:
     void doubleClicked(const QModelIndex&);
 
     /**  Fired when a message should be reported to the user */
-    void message(const QString &title, const QString &message, unsigned int style);
+    void message(const QString& title, const QString& message, unsigned int style, const QString& details);
 
     void bumpedFee(const uint256& txid);
 

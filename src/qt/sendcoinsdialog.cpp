@@ -399,7 +399,7 @@ void SendCoinsDialog::on_sendButton_clicked()
         CDataStream ssTx(SER_NETWORK, PROTOCOL_VERSION);
         ssTx << psbtx;
         GUIUtil::setClipboard(EncodeBase64(ssTx.str()).c_str());
-        Q_EMIT message(tr("PSBT copied"), "Copied to clipboard", CClientUIInterface::MSG_INFORMATION);
+        Q_EMIT message(tr("PSBT copied"), "Copied to clipboard", CClientUIInterface::MSG_INFORMATION, /* details */ "");
     } else {
         // now send the prepared transaction
         WalletModel::SendCoinsReturn sendStatus = model->sendCoins(currentTransaction);
@@ -620,7 +620,7 @@ void SendCoinsDialog::processSendCoinsReturn(const WalletModel::SendCoinsReturn 
         return;
     }
 
-    Q_EMIT message(tr("Send Coins"), msgParams.first, msgParams.second);
+    Q_EMIT message(tr("Send Coins"), msgParams.first, msgParams.second, /* details */ "");
 }
 
 void SendCoinsDialog::minimizeFeeSection(bool fMinimize)

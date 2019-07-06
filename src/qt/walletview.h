@@ -116,7 +116,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     /**  Fired when a message should be reported to the user */
-    void message(const QString &title, const QString &message, unsigned int style);
+    void message(const QString& title, const QString& message, unsigned int style, const QString& details);
     /** Encryption status of wallet changed */
     void encryptionStatusChanged();
     /** HD-Enabled status of wallet changed (only possible during startup) */
