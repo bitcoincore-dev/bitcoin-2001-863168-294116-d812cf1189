@@ -182,6 +182,16 @@ jobs:
         BITCOIN_CONFIG="--enable-fuzz --with-sanitizers=fuzzer,address CC=clang CXX=clang++"
 
     - stage: test
+      name: 'x86_64 Linux [GOAL: install]  [bionic]  [multiprocess]'
+      env: >-
+        HOST=x86_64-unknown-linux-gnu
+        PACKAGES="cmake python3"
+        DEP_OPTS="MULTIPROCESS=1"
+        GOAL="install"
+        BITCOIN_CONFIG=""
+        TEST_RUNNER_ENV="BITCOIND=src/bitcoin-node"
+
+    - stage: test
       name: 'x86_64 Linux  [GOAL: install]  [bionic]  [no wallet]'
       env: >-
         HOST=x86_64-unknown-linux-gnu
