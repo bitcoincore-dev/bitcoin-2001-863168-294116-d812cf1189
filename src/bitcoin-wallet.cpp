@@ -8,6 +8,8 @@
 
 #include <chainparams.h>
 #include <chainparamsbase.h>
+#include <interfaces/config.h>
+#include <interfaces/init.h>
 #include <logging.h>
 #include <util/system.h>
 #include <util/strencodings.h>

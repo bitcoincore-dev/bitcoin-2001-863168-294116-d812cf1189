@@ -230,6 +230,20 @@ AC_ARG_ENABLE([bip70],
 
 AC_ARG_WITH([protoc-bindir],[AS_HELP_STRING([--with-protoc-bindir=BIN_DIR],[specify protoc bin path])], [protoc_bin_path=$withval], [])
 
+AC_ARG_WITH([libmultiprocess],
+  [AS_HELP_STRING([--with-libmultiprocess=PREFIX_DIR],
+  [specify libmultiprocess install path (default: detect with pkg-config)])],
+  [with_libmultiprocess=$withval],
+  [with_libmultiprocess=auto])
+AC_ARG_WITH([capnp-bin],[AS_HELP_STRING([--with-capnp-bin=CAPNP_BIN],[specify Cap'n Proto command line tool path])], [capnp_bin=$withval], [])
+AC_ARG_WITH([mpgen-bin],[AS_HELP_STRING([--with-mpgen-bin=MPGEN_BIN],[specify libmultiprocess code generation tool path])], [mpgen_bin=$withval], [])
+
+AC_ARG_ENABLE([multiprocess],
+  [AS_HELP_STRING([--enable-multiprocess],
+  [build multiprocess bitcoin-node, bitcoin-wallet, and bitcoin-gui executables in addition to monolithic bitcoind and bitcoin-qt executables. Requires libmultiprocess library. Experimental (default is no)])],
+  [enable_multiprocess=$enableval],
+  [enable_multiprocess=no])
+
 AC_ARG_ENABLE(man,
     [AS_HELP_STRING([--disable-man],
                     [do not install man pages (default is to install)])],,
@@ -1320,10 +1334,73 @@ AM_CONDITIONAL([EMBEDDED_UNIVALUE],[test x$need_bundled_univalue = xyes])
 AC_SUBST(UNIVALUE_CFLAGS)
 AC_SUBST(UNIVALUE_LIBS)
 
+dnl libmultiprocess library check
+
+libmultiprocess_found=no
+if test "x$with_libmultiprocess" = xyes || test "x$with_libmultiprocess" = xauto; then
+  if test "x$use_pkgconfig" = xyes; then
+    m4_ifdef([PKG_CHECK_MODULES], [PKG_CHECK_MODULES([LIBMULTIPROCESS], [libmultiprocess], [
+       libmultiprocess_found=yes;
+       LIBMULTIPROCESS_PREFIX=`$PKG_CONFIG --variable=prefix libmultiprocess`;
+       LIBMULTIPROCESS_CAPNP_PREFIX=`$PKG_CONFIG --variable=capnp_prefix libmultiprocess`;
+    ], [true])])
+  fi
+elif test "x$with_libmultiprocess" = xno; then
+  true
+elif test -d "$with_libmultiprocess"; then
+  libmultiprocess_found=yes
+  LIBMULTIPROCESS_PREFIX="$with_libmultiprocess"
+  LIBMULTIPROCESS_CAPNP_PREFIX="$LIBMULTIPROCESS_PREFIX"
+  LIBMULTIPROCESS_CFLAGS="-I$LIBMULTIPROCESS_PREFIX/include -std=c++14"
+  LIBMULTIPROCESS_LIBS="-L$LIBMULTIPROCESS_PREFIX/lib -lmultiprocess -lcapnp-rpc -lkj-async -lcapnp -lkj"
+else
+  AC_MSG_ERROR([--with-libmultiprocess=$with_libmultiprocess value does not point to a directory and is not yes, auto, or no])
+fi
+AC_SUBST(LIBMULTIPROCESS_PREFIX)
+AC_SUBST(LIBMULTIPROCESS_CAPNP_PREFIX)
+AC_SUBST(LIBMULTIPROCESS_CFLAGS)
+AC_SUBST(LIBMULTIPROCESS_LIBS)
+
+dnl Enable multiprocess check
+
+if test "x$enable_multiprocess" = xyes; then
+  if test "x$libmultiprocess_found" != xyes; then
+    AC_MSG_ERROR([--enable-multiprocess=yes option specified but libmultiprocess library was not found. May need to install libmultiprocess library, or specify install path with PKG_CONFIG_PATH environment variable or --with-libmultiprocess=prefix_dir option. Running 'pkg-config --debug libmultiprocess' may be helpful for debugging.])
+  fi
+  build_multiprocess=yes
+elif test "x$enable_multiprocess" = xauto; then
+  build_multiprocess=$libmultiprocess_found
+else
+  build_multiprocess=no
+fi
+
+AM_CONDITIONAL([BUILD_MULTIPROCESS],[test "x$build_multiprocess" = xyes])
+AM_CONDITIONAL([BUILD_BITCOIN_NODE], [test "x$build_multiprocess" = xyes])
+AM_CONDITIONAL([BUILD_BITCOIN_GUI], [test "x$build_multiprocess" = xyes])
+
+dnl codegen tools check
 
 if test x$have_protobuf != xno &&
    test x$enable_bip70 != xno; then
   BITCOIN_QT_PATH_PROGS([PROTOC], [protoc],$protoc_bin_path)
+fi
+if test x$build_multiprocess != xno; then
+  if test -n "$mpgen_bin"; then
+    MPGEN_BIN="$mpgen_bin";
+  elif test -n "$LIBMULTIPROCESS_PREFIX"; then
+    MPGEN_BIN="$LIBMULTIPROCESS_PREFIX/bin/mpgen"
+  else
+    AC_PATH_PROG(MPGEN_BIN, mpgen)
+  fi
+  if test -n "$capnp_bin"; then
+    CAPNP_BIN="$capnp_bin";
+  elif test -n "$LIBMULTIPROCESS_CAPNP_PREFIX"; then
+    CAPNP_BIN="$LIBMULTIPROCESS_CAPNP_PREFIX/bin/capnp"
+  else
+    AC_PATH_PROG(CAPNP_BIN, capnp)
+  fi
+  AC_SUBST(MPGEN_BIN)
+  AC_SUBST(CAPNP_BIN)
 fi
 
 AC_MSG_CHECKING([whether to build bitcoind])
@@ -1628,6 +1705,7 @@ esac
 
 echo
 echo "Options used to compile and link:"
+echo "  multiprocess  = $build_multiprocess"
 echo "  with wallet   = $enable_wallet"
 echo "  with gui / qt = $bitcoin_enable_qt"
 if test x$bitcoin_enable_qt != xno; then
