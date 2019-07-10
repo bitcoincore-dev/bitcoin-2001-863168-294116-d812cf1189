@@ -5,6 +5,8 @@
 src/bitcoin
 src/bitcoind
 src/bitcoin-cli
+src/bitcoin-gui
+src/bitcoin-node
 src/bitcoin-tx
 src/bitcoin-wallet
 src/test/test_bitcoin
@@ -89,6 +91,15 @@ Makefile
 bitcoin-qt
 Bitcoin-Qt.app
 background.tiff*
+
+# capnp generated files
+*.capnp.c++
+*.capnp.h
+*.capnp.proxy-types.h
+*.capnp.proxy-client.c++
+*.capnp.proxy-server.c++
+*.capnp.proxy-types.c++
+*.capnp.proxy.h
 
 # Unit-tests
 Makefile.test
