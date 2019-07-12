@@ -1778,7 +1778,7 @@ bool AppInitMain(InitInterfaces& interfaces)
     connOptions.nLocalServices = nLocalServices;
     connOptions.nMaxConnections = nMaxConnections;
     connOptions.nMaxOutbound = std::min(MAX_OUTBOUND_CONNECTIONS, connOptions.nMaxConnections);
-    connOptions.nMaxOutboundBlocksOnly = std::min(MAX_BLOCKS_ONLY_CONNECTIONS, std::max(connOptions.nMaxOutbound-6, 0));
+    connOptions.nMaxOutboundBlocksOnly = std::min(MAX_BLOCKS_ONLY_CONNECTIONS, connOptions.nMaxConnections-connOptions.nMaxOutbound);
     connOptions.nMaxAddnode = MAX_ADDNODE_CONNECTIONS;
     connOptions.nMaxFeeler = 1;
     connOptions.nBestHeight = chain_active_height;
