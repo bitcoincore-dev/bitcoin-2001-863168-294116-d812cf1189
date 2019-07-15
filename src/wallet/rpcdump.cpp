@@ -359,7 +359,7 @@ UniValue importprunedfunds(const JSONRPCRequest& request)
     }
 
     auto locked_chain = pwallet->chain().lock();
-    Optional<int> height = locked_chain->getBlockHeight(merkleBlock.header.GetHash());
+    Optional<int> height = pwallet->chain().getBlockHeight(merkleBlock.header.GetHash());
     if (height == nullopt) {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found in chain");
     }
