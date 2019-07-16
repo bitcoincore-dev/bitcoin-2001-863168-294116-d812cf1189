@@ -66,10 +66,6 @@ public:
     public:
         virtual ~Lock() {}
 
-        //! Return height of last block in the specified range which is pruned, or
-        //! nullopt if no block in the range is pruned. Range is inclusive.
-        virtual Optional<int> findPruned(int start_height = 0, Optional<int> stop_height = nullopt) = 0;
-
         //! Return height of the specified block if it is on the chain, otherwise
         //! return the height of the highest block on chain that's an ancestor
         //! of the specified block, or nullopt if there is no common ancestor.
@@ -124,6 +120,10 @@ public:
     //! timestamp and height. Also return the block hash as an optional output parameter
     //! (to avoid the cost of a second lookup in case this information is needed.)
     virtual Optional<int> findFirstBlockWithTimeAndHeight(int64_t time, int height, uint256* hash) = 0;
+
+    //! Return height of last block in the specified range which is pruned, or
+    //! nullopt if no block in the range is pruned. Range is inclusive.
+    virtual Optional<int> findPruned(int start_height = 0, Optional<int> stop_height = nullopt) = 0;
 
     //! Return whether node has the block and optionally return block metadata
     //! or contents.

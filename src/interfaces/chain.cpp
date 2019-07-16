@@ -40,20 +40,6 @@ namespace {
 
 class LockImpl : public Chain::Lock, public UniqueLock<CCriticalSection>
 {
-    Optional<int> findPruned(int start_height, Optional<int> stop_height) override
-    {
-        LockAssertion lock(::cs_main);
-        if (::fPruneMode) {
-            CBlockIndex* block = stop_height ? ::ChainActive()[*stop_height] : ::ChainActive().Tip();
-            while (block && block->nHeight >= start_height) {
-                if ((block->nStatus & BLOCK_HAVE_DATA) == 0) {
-                    return block->nHeight;
-                }
-                block = block->pprev;
-            }
-        }
-        return nullopt;
-    }
     Optional<int> findFork(const uint256& hash, Optional<int>* height) override
     {
         LockAssertion lock(::cs_main);
@@ -239,6 +225,20 @@ public:
         if (block) {
             if (hash) *hash = block->GetBlockHash();
             return block->nHeight;
+        }
+        return nullopt;
+    }
+    Optional<int> findPruned(int start_height, Optional<int> stop_height) override
+    {
+        LOCK(::cs_main);
+        if (::fPruneMode) {
+            CBlockIndex* block = stop_height ? ::ChainActive()[*stop_height] : ::ChainActive().Tip();
+            while (block && block->nHeight >= start_height) {
+                if ((block->nStatus & BLOCK_HAVE_DATA) == 0) {
+                    return block->nHeight;
+                }
+                block = block->pprev;
+            }
         }
         return nullopt;
     }

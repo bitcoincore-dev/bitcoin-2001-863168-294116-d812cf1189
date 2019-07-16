@@ -3547,7 +3547,7 @@ UniValue rescanblockchain(const JSONRPCRequest& request)
         }
 
         // We can't rescan beyond non-pruned blocks, stop and throw an error
-        if (locked_chain->findPruned(start_height, stop_height)) {
+        if (pwallet->chain().findPruned(start_height, stop_height)) {
             throw JSONRPCError(RPC_MISC_ERROR, "Can't rescan beyond pruned data. Use RPC call getblockchaininfo to determine your pruned height.");
         }
 
