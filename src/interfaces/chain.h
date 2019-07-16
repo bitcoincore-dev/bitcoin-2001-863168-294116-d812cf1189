@@ -66,9 +66,6 @@ public:
     public:
         virtual ~Lock() {}
 
-        //! Get locator for the current chain tip.
-        virtual CBlockLocator getTipLocator() = 0;
-
         //! Return height of the highest block on chain in common with the locator,
         //! which will either be the original block used to create the locator,
         //! or one of its ancestors.
@@ -124,6 +121,9 @@ public:
     //! parameter (to avoid the cost of a second hash lookup in case this
     //! information is desired).
     virtual Optional<int> findFork(const uint256& hash, Optional<int>* height) = 0;
+
+    //! Get locator for the current chain tip.
+    virtual CBlockLocator getTipLocator() = 0;
 
     //! Return whether node has the block and optionally return block metadata
     //! or contents.

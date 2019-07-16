@@ -40,11 +40,6 @@ namespace {
 
 class LockImpl : public Chain::Lock, public UniqueLock<CCriticalSection>
 {
-    CBlockLocator getTipLocator() override
-    {
-        LockAssertion lock(::cs_main);
-        return ::ChainActive().GetLocator();
-    }
     Optional<int> findLocatorFork(const CBlockLocator& locator) override
     {
         LockAssertion lock(::cs_main);
@@ -262,6 +257,11 @@ public:
             block->SetNull();
         }
         return true;
+    }
+    CBlockLocator getTipLocator() override
+    {
+        LOCK(::cs_main);
+        return ::ChainActive().GetLocator();
     }
     void findCoins(std::map<COutPoint, Coin>& coins) override { return FindCoins(coins); }
     double guessVerificationProgress(const uint256& block_hash) override
