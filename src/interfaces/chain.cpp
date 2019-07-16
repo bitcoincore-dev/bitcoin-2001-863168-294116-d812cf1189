@@ -40,13 +40,6 @@ namespace {
 
 class LockImpl : public Chain::Lock, public UniqueLock<CCriticalSection>
 {
-    int64_t getBlockTime(int height) override
-    {
-        LockAssertion lock(::cs_main);
-        CBlockIndex* block = ::ChainActive()[height];
-        assert(block != nullptr);
-        return block->GetBlockTime();
-    }
     int64_t getBlockMedianTimePast(int height) override
     {
         LockAssertion lock(::cs_main);
@@ -241,6 +234,13 @@ public:
         CBlockIndex* block = ::ChainActive()[height];
         assert(block != nullptr);
         return block->GetBlockHash();
+    }
+    int64_t getBlockTime(int height) override
+    {
+        LOCK(::cs_main);
+        CBlockIndex* block = ::ChainActive()[height];
+        assert(block != nullptr);
+        return block->GetBlockTime();
     }
     bool findBlock(const uint256& hash, CBlock* block, int64_t* time, int64_t* time_max) override
     {

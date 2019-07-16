@@ -332,7 +332,7 @@ public:
         }
         num_blocks = m_wallet->GetLastBlockHeight();
         if (num_blocks >= 0) {
-            block_time = locked_chain->getBlockTime(num_blocks);
+            block_time = m_wallet->chain().getBlockTime(num_blocks);
         } else {
             block_time = -1;
         }
