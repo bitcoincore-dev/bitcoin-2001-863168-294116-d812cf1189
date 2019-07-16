@@ -40,12 +40,6 @@ namespace {
 
 class LockImpl : public Chain::Lock, public UniqueLock<CCriticalSection>
 {
-    bool haveBlockOnDisk(int height) override
-    {
-        LockAssertion lock(::cs_main);
-        CBlockIndex* block = ::ChainActive()[height];
-        return block && ((block->nStatus & BLOCK_HAVE_DATA) != 0) && block->nTx > 0;
-    }
     Optional<int> findFirstBlockWithTimeAndHeight(int64_t time, int height, uint256* hash) override
     {
         LockAssertion lock(::cs_main);
@@ -241,6 +235,12 @@ public:
         CBlockIndex* block = ::ChainActive()[height];
         assert(block != nullptr);
         return block->GetMedianTimePast();
+    }
+    bool haveBlockOnDisk(int height) override
+    {
+        LOCK(::cs_main);
+        CBlockIndex* block = ::ChainActive()[height];
+        return block && ((block->nStatus & BLOCK_HAVE_DATA) != 0) && block->nTx > 0;
     }
     bool findBlock(const uint256& hash, CBlock* block, int64_t* time, int64_t* time_max) override
     {
