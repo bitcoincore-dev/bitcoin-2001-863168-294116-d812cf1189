@@ -40,23 +40,6 @@ namespace {
 
 class LockImpl : public Chain::Lock, public UniqueLock<CCriticalSection>
 {
-    Optional<int> findFork(const uint256& hash, Optional<int>* height) override
-    {
-        LockAssertion lock(::cs_main);
-        const CBlockIndex* block = LookupBlockIndex(hash);
-        const CBlockIndex* fork = block ? ::ChainActive().FindFork(block) : nullptr;
-        if (height) {
-            if (block) {
-                *height = block->nHeight;
-            } else {
-                height->reset();
-            }
-        }
-        if (fork) {
-            return fork->nHeight;
-        }
-        return nullopt;
-    }
     CBlockLocator getTipLocator() override
     {
         LockAssertion lock(::cs_main);
@@ -239,6 +222,23 @@ public:
                 }
                 block = block->pprev;
             }
+        }
+        return nullopt;
+    }
+    Optional<int> findFork(const uint256& hash, Optional<int>* height) override
+    {
+        LOCK(::cs_main);
+        const CBlockIndex* block = LookupBlockIndex(hash);
+        const CBlockIndex* fork = block ? ::ChainActive().FindFork(block) : nullptr;
+        if (height) {
+            if (block) {
+                *height = block->nHeight;
+            } else {
+                height->reset();
+            }
+        }
+        if (fork) {
+            return fork->nHeight;
         }
         return nullopt;
     }

@@ -1581,7 +1581,7 @@ static UniValue listsinceblock(const JSONRPCRequest& request)
     uint256 blockId;
     if (!request.params[0].isNull() && !request.params[0].get_str().empty()) {
         blockId = ParseHashV(request.params[0], "blockhash");
-        height = locked_chain->findFork(blockId, &altheight);
+        height = pwallet->chain().findFork(blockId, &altheight);
         if (!height) {
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found");
         }

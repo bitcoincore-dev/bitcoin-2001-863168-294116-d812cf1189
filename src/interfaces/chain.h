@@ -66,14 +66,6 @@ public:
     public:
         virtual ~Lock() {}
 
-        //! Return height of the specified block if it is on the chain, otherwise
-        //! return the height of the highest block on chain that's an ancestor
-        //! of the specified block, or nullopt if there is no common ancestor.
-        //! Also return the height of the specified block as an optional output
-        //! parameter (to avoid the cost of a second hash lookup in case this
-        //! information is desired).
-        virtual Optional<int> findFork(const uint256& hash, Optional<int>* height) = 0;
-
         //! Get locator for the current chain tip.
         virtual CBlockLocator getTipLocator() = 0;
 
@@ -124,6 +116,14 @@ public:
     //! Return height of last block in the specified range which is pruned, or
     //! nullopt if no block in the range is pruned. Range is inclusive.
     virtual Optional<int> findPruned(int start_height = 0, Optional<int> stop_height = nullopt) = 0;
+
+    //! Return height of the specified block if it is on the chain, otherwise
+    //! return the height of the highest block on chain that's an ancestor
+    //! of the specified block, or nullopt if there is no common ancestor.
+    //! Also return the height of the specified block as an optional output
+    //! parameter (to avoid the cost of a second hash lookup in case this
+    //! information is desired).
+    virtual Optional<int> findFork(const uint256& hash, Optional<int>* height) = 0;
 
     //! Return whether node has the block and optionally return block metadata
     //! or contents.
