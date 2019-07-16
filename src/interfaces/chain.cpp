@@ -40,12 +40,6 @@ namespace {
 
 class LockImpl : public Chain::Lock, public UniqueLock<CCriticalSection>
 {
-    bool checkFinalTx(const CTransaction& tx) override
-    {
-        LockAssertion lock(::cs_main);
-        return CheckFinalTx(tx);
-    }
-
     using UniqueLock::UniqueLock;
 };
 
@@ -262,6 +256,11 @@ public:
     {
         LOCK(::cs_main);
         return ::ChainActive().GetLocator();
+    }
+    bool checkFinalTx(const CTransaction& tx) override
+    {
+        LOCK(::cs_main);
+        return CheckFinalTx(tx);
     }
     void findCoins(std::map<COutPoint, Coin>& coins) override { return FindCoins(coins); }
     double guessVerificationProgress(const uint256& block_hash) override
