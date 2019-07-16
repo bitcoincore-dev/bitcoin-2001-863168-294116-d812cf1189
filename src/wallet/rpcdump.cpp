@@ -1366,7 +1366,7 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
 
         // Verify all timestamps are present before importing any keys.
         const Optional<int> tip_height = pwallet->chain().getHeight();
-        now = tip_height ? locked_chain->getBlockMedianTimePast(*tip_height) : 0;
+        now = tip_height ? pwallet->chain().getBlockMedianTimePast(*tip_height) : 0;
         for (const UniValue& data : requests.getValues()) {
             GetImportTimestamp(data, now);
         }
