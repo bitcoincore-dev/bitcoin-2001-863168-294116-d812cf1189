@@ -1635,7 +1635,7 @@ static UniValue listsinceblock(const JSONRPCRequest& request)
     }
 
     int last_height = tip_height >= 0 ? tip_height + 1 - target_confirms : -1;
-    uint256 lastblock = last_height >= 0 ? locked_chain->getBlockHash(last_height) : uint256();
+    uint256 lastblock = last_height >= 0 ? pwallet->chain().getBlockHash(last_height) : uint256();
 
     UniValue ret(UniValue::VOBJ);
     ret.pushKV("transactions", transactions);
@@ -3536,13 +3536,12 @@ UniValue rescanblockchain(const JSONRPCRequest& request)
             }
         }
 
-        Optional<int> stop_height;
+        int stop_height = -1;
         if (!request.params[1].isNull()) {
             stop_height = request.params[1].get_int();
-            if (*stop_height < 0 || !tip_height || *stop_height > *tip_height) {
+            if (stop_height < 0 || !tip_height || stop_height > tip_height) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid stop_height");
-            }
-            else if (*stop_height < start_height) {
+            } else if (stop_height < start_height) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "stop_height must be greater than start_height");
             }
         }
@@ -3553,14 +3552,14 @@ UniValue rescanblockchain(const JSONRPCRequest& request)
         }
 
         if (tip_height) {
-            start_block = locked_chain->getBlockHash(start_height);
+            start_block = pwallet->chain().getBlockHash(start_height);
             // If called with a stop_height, set the stop_height here to
             // trigger a rescan to that height.
             // If called without a stop height, leave stop_height as null here
             // so rescan continues to the tip (even if the tip advances during
             // rescan).
-            if (stop_height) {
-                stop_block = locked_chain->getBlockHash(*stop_height);
+            if (stop_height >= 0) {
+                stop_block = pwallet->chain().getBlockHash(stop_height);
             }
         }
     }
