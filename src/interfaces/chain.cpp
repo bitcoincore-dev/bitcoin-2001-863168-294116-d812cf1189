@@ -40,14 +40,6 @@ namespace {
 
 class LockImpl : public Chain::Lock, public UniqueLock<CCriticalSection>
 {
-    Optional<int> findLocatorFork(const CBlockLocator& locator) override
-    {
-        LockAssertion lock(::cs_main);
-        if (CBlockIndex* fork = FindForkInGlobalIndex(::ChainActive(), locator)) {
-            return fork->nHeight;
-        }
-        return nullopt;
-    }
     bool checkFinalTx(const CTransaction& tx) override
     {
         LockAssertion lock(::cs_main);
@@ -233,6 +225,14 @@ public:
             }
         }
         if (fork) {
+            return fork->nHeight;
+        }
+        return nullopt;
+    }
+    Optional<int> findLocatorFork(const CBlockLocator& locator) override
+    {
+        LOCK(::cs_main);
+        if (CBlockIndex* fork = FindForkInGlobalIndex(::ChainActive(), locator)) {
             return fork->nHeight;
         }
         return nullopt;
