@@ -28,6 +28,7 @@
 #include <txmempool.h>
 #include <ui_interface.h>
 #include <util/system.h>
+#include <util/translation.h>
 #include <validation.h>
 #include <warnings.h>
 
@@ -54,7 +55,7 @@ class NodeImpl : public Node
 {
 public:
     NodeImpl() { m_interfaces.chain = MakeChain(); }
-    void initError(const std::string& message) override { InitError(message); }
+    void initError(const std::string& message) override { InitError(DoNotTranslate(message)); }
     bool parseParameters(int argc, const char* const argv[], std::string& error) override
     {
         return gArgs.ParseParameters(argc, argv, error);

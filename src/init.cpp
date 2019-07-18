@@ -730,17 +730,15 @@ static void ThreadImport(std::vector<fs::path> vImportFiles)
  */
 static bool InitSanityCheck()
 {
-    if(!ECC_InitSanityCheck()) {
-        InitError("Elliptic curve cryptography sanity check failure. Aborting.");
-        return false;
+    if (!ECC_InitSanityCheck()) {
+        return InitError(DoNotTranslate("Elliptic curve cryptography sanity check failure. Aborting."));
     }
 
     if (!glibc_sanity_test() || !glibcxx_sanity_test())
         return false;
 
     if (!Random_SanityCheck()) {
-        InitError("OS cryptographic RNG sanity check failure. Aborting.");
-        return false;
+        return InitError(DoNotTranslate("OS cryptographic RNG sanity check failure. Aborting."));
     }
 
     return true;
@@ -894,8 +892,9 @@ bool AppInitBasicSetup()
     SetProcessDEPPolicy(PROCESS_DEP_ENABLE);
 #endif
 
-    if (!SetupNetworking())
-        return InitError("Initializing networking failed");
+    if (!SetupNetworking()) {
+        return InitError(DoNotTranslate("Initializing networking failed."));
+    }
 
 #ifndef WIN32
     if (!gArgs.GetBoolArg("-sysperms", false)) {
@@ -1786,14 +1785,14 @@ bool AppInitMain(InitInterfaces& interfaces)
     for (const std::string& strBind : gArgs.GetArgs("-whitebind")) {
         NetWhitebindPermissions whitebind;
         std::string error;
-        if (!NetWhitebindPermissions::TryParse(strBind, whitebind, error)) return InitError(error);
+        if (!NetWhitebindPermissions::TryParse(strBind, whitebind, error)) return InitError(DoNotTranslate(error));
         connOptions.vWhiteBinds.push_back(whitebind);
     }
 
     for (const auto& net : gArgs.GetArgs("-whitelist")) {
         NetWhitelistPermissions subnet;
         std::string error;
-        if (!NetWhitelistPermissions::TryParse(net, subnet, error)) return InitError(error);
+        if (!NetWhitelistPermissions::TryParse(net, subnet, error)) return InitError(DoNotTranslate(error));
         connOptions.vWhitelistedRange.push_back(subnet);
     }
 
