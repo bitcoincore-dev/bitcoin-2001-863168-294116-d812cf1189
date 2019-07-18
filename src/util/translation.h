@@ -38,4 +38,9 @@ inline static bilingual_str _(const char* psz)
     return bilingual_str{psz, G_TRANSLATION_FUN ? (G_TRANSLATION_FUN)(psz) : psz};
 }
 
+inline static bilingual_str Untranslated(std::string original)
+{
+    return {original, original};
+}
+
 #endif // BITCOIN_UTIL_TRANSLATION_H
