@@ -13,6 +13,7 @@
 
 #include <amount.h>
 
+#include <QAction>
 #include <QLabel>
 #include <QMainWindow>
 #include <QMap>
@@ -45,7 +46,6 @@ class Node;
 }
 
 QT_BEGIN_NAMESPACE
-class QAction;
 class QComboBox;
 class QMenu;
 class QProgressBar;
@@ -97,6 +97,8 @@ public:
 
     /** Disconnect core signals from GUI client */
     void unsubscribeFromCoreSignals();
+
+    bool isPrivacyModeActivated() const { return m_mask_values_action && m_mask_values_action->isChecked(); }
 
 protected:
     void changeEvent(QEvent *e);
@@ -153,6 +155,7 @@ private:
     QAction* m_close_wallet_action{nullptr};
     QAction* m_wallet_selector_label_action = nullptr;
     QAction* m_wallet_selector_action = nullptr;
+    QAction* m_mask_values_action{nullptr};
 
     QLabel *m_wallet_selector_label = nullptr;
     QComboBox* m_wallet_selector = nullptr;
@@ -205,6 +208,7 @@ Q_SIGNALS:
     void receivedURI(const QString &uri);
     /** Signal raised when RPC console shown */
     void consoleShown(RPCConsole* console);
+    void setPrivacy(bool privacy);
 
 public Q_SLOTS:
     /** Set number of connections shown in the UI */
