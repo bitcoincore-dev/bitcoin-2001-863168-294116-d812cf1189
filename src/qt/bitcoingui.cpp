@@ -347,6 +347,10 @@ void BitcoinGUI::createActions()
     showHelpMessageAction->setMenuRole(QAction::NoRole);
     showHelpMessageAction->setStatusTip(tr("Show the %1 help message to get a list with possible Bitcoin command-line options").arg(PACKAGE_NAME));
 
+    m_mask_values_action = new QAction(tr("&Mask values"), this);
+    m_mask_values_action->setStatusTip(tr("Cloak values on Overview tab"));
+    m_mask_values_action->setCheckable(true);
+
     connect(quitAction, &QAction::triggered, qApp, QApplication::quit);
     connect(aboutAction, &QAction::triggered, this, &BitcoinGUI::aboutClicked);
     connect(aboutQtAction, &QAction::triggered, qApp, QApplication::aboutQt);
@@ -408,6 +412,8 @@ void BitcoinGUI::createActions()
             connect(activity, &CreateWalletActivity::finished, activity, &QObject::deleteLater);
             activity->create();
         });
+
+        connect(m_mask_values_action, &QAction::toggled, walletFrame, &WalletFrame::setPrivacyMode);
     }
 #endif // ENABLE_WALLET
 
@@ -446,6 +452,8 @@ void BitcoinGUI::createMenuBar()
     {
         settings->addAction(encryptWalletAction);
         settings->addAction(changePassphraseAction);
+        settings->addSeparator();
+        settings->addAction(m_mask_values_action);
         settings->addSeparator();
     }
     settings->addAction(optionsAction);

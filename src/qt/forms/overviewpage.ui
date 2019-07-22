@@ -115,7 +115,7 @@
              <number>12</number>
             </property>
             <item row="2" column="2">
-             <widget class="QLabel" name="labelWatchPending">
+             <widget class="BitcoinAmountLabel" name="labelWatchPending">
               <property name="font">
                <font>
                 <weight>75</weight>
@@ -140,7 +140,7 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="labelUnconfirmed">
+             <widget class="BitcoinAmountLabel" name="labelUnconfirmed">
               <property name="font">
                <font>
                 <weight>75</weight>
@@ -165,7 +165,7 @@
              </widget>
             </item>
             <item row="3" column="2">
-             <widget class="QLabel" name="labelWatchImmature">
+             <widget class="BitcoinAmountLabel" name="labelWatchImmature">
               <property name="font">
                <font>
                 <weight>75</weight>
@@ -223,7 +223,7 @@
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QLabel" name="labelImmature">
+             <widget class="BitcoinAmountLabel" name="labelImmature">
               <property name="font">
                <font>
                 <weight>75</weight>
@@ -268,7 +268,7 @@
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="QLabel" name="labelTotal">
+             <widget class="BitcoinAmountLabel" name="labelTotal">
               <property name="font">
                <font>
                 <weight>75</weight>
@@ -293,7 +293,7 @@
              </widget>
             </item>
             <item row="5" column="2">
-             <widget class="QLabel" name="labelWatchTotal">
+             <widget class="BitcoinAmountLabel" name="labelWatchTotal">
               <property name="font">
                <font>
                 <weight>75</weight>
@@ -335,7 +335,7 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLabel" name="labelBalance">
+             <widget class="BitcoinAmountLabel" name="labelBalance">
               <property name="font">
                <font>
                 <weight>75</weight>
@@ -360,7 +360,7 @@
              </widget>
             </item>
             <item row="1" column="2">
-             <widget class="QLabel" name="labelWatchAvailable">
+             <widget class="BitcoinAmountLabel" name="labelWatchAvailable">
               <property name="font">
                <font>
                 <weight>75</weight>
@@ -536,6 +536,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BitcoinAmountLabel</class>
+   <extends>QLabel</extends>
+   <header>qt/bitcoinamountlabel.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

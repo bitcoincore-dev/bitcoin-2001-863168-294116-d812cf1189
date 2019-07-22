@@ -5,6 +5,7 @@
 #include <qt/overviewpage.h>
 #include <qt/forms/ui_overviewpage.h>
 
+#include <qt/bitcoinamountlabel.h>
 #include <qt/bitcoinunits.h>
 #include <qt/clientmodel.h>
 #include <qt/guiconstants.h>
@@ -16,7 +17,9 @@
 #include <qt/walletmodel.h>
 
 #include <QAbstractItemDelegate>
+#include <QApplication>
 #include <QPainter>
+#include <QStatusTipEvent>
 
 #define DECORATION_SIZE 54
 #define NUM_ITEMS 5
@@ -139,6 +142,15 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     showOutOfSyncWarning(true);
     connect(ui->labelWalletStatus, &QPushButton::clicked, this, &OverviewPage::handleOutOfSyncWarningClicks);
     connect(ui->labelTransactionsStatus, &QPushButton::clicked, this, &OverviewPage::handleOutOfSyncWarningClicks);
+
+    connect(this, &OverviewPage::setPrivacyMode, ui->labelBalance, &BitcoinAmountLabel::setPrivacyMode);
+    connect(this, &OverviewPage::setPrivacyMode, ui->labelUnconfirmed, &BitcoinAmountLabel::setPrivacyMode);
+    connect(this, &OverviewPage::setPrivacyMode, ui->labelImmature, &BitcoinAmountLabel::setPrivacyMode);
+    connect(this, &OverviewPage::setPrivacyMode, ui->labelTotal, &BitcoinAmountLabel::setPrivacyMode);
+    connect(this, &OverviewPage::setPrivacyMode, ui->labelWatchAvailable, &BitcoinAmountLabel::setPrivacyMode);
+    connect(this, &OverviewPage::setPrivacyMode, ui->labelWatchPending, &BitcoinAmountLabel::setPrivacyMode);
+    connect(this, &OverviewPage::setPrivacyMode, ui->labelWatchImmature, &BitcoinAmountLabel::setPrivacyMode);
+    connect(this, &OverviewPage::setPrivacyMode, ui->labelWatchTotal, &BitcoinAmountLabel::setPrivacyMode);
 }
 
 void OverviewPage::handleTransactionClicked(const QModelIndex &index)
@@ -152,6 +164,17 @@ void OverviewPage::handleOutOfSyncWarningClicks()
     Q_EMIT outOfSyncWarningClicked();
 }
 
+void OverviewPage::aboutToTogglePrivacy(bool privacy)
+{
+    Q_EMIT setPrivacyMode(privacy);
+    ui->listTransactions->setVisible(!privacy);
+
+    const QString status_tip = privacy ? tr("PRIVACY mode is activated. To reveal cloaked values uncheck Menu->Settings->Mask values") : "";
+    setStatusTip(status_tip);
+    QStatusTipEvent event(status_tip);
+    QApplication::sendEvent(this, &event);
+}
+
 OverviewPage::~OverviewPage()
 {
     delete ui;
@@ -162,19 +185,19 @@ void OverviewPage::setBalance(const interfaces::WalletBalances& balances)
     int unit = walletModel->getOptionsModel()->getDisplayUnit();
     m_balances = balances;
     if (walletModel->privateKeysDisabled()) {
-        ui->labelBalance->setText(BitcoinUnits::formatWithUnit(unit, balances.watch_only_balance, false, BitcoinUnits::separatorAlways));
-        ui->labelUnconfirmed->setText(BitcoinUnits::formatWithUnit(unit, balances.unconfirmed_watch_only_balance, false, BitcoinUnits::separatorAlways));
-        ui->labelImmature->setText(BitcoinUnits::formatWithUnit(unit, balances.immature_watch_only_balance, false, BitcoinUnits::separatorAlways));
-        ui->labelTotal->setText(BitcoinUnits::formatWithUnit(unit, balances.watch_only_balance + balances.unconfirmed_watch_only_balance + balances.immature_watch_only_balance, false, BitcoinUnits::separatorAlways));
+        ui->labelBalance->setValue(unit, balances.watch_only_balance);
+        ui->labelUnconfirmed->setValue(unit, balances.unconfirmed_watch_only_balance);
+        ui->labelImmature->setValue(unit, balances.immature_watch_only_balance);
+        ui->labelTotal->setValue(unit, balances.watch_only_balance + balances.unconfirmed_watch_only_balance + balances.immature_watch_only_balance);
     } else {
-        ui->labelBalance->setText(BitcoinUnits::formatWithUnit(unit, balances.balance, false, BitcoinUnits::separatorAlways));
-        ui->labelUnconfirmed->setText(BitcoinUnits::formatWithUnit(unit, balances.unconfirmed_balance, false, BitcoinUnits::separatorAlways));
-        ui->labelImmature->setText(BitcoinUnits::formatWithUnit(unit, balances.immature_balance, false, BitcoinUnits::separatorAlways));
-        ui->labelTotal->setText(BitcoinUnits::formatWithUnit(unit, balances.balance + balances.unconfirmed_balance + balances.immature_balance, false, BitcoinUnits::separatorAlways));
-        ui->labelWatchAvailable->setText(BitcoinUnits::formatWithUnit(unit, balances.watch_only_balance, false, BitcoinUnits::separatorAlways));
-        ui->labelWatchPending->setText(BitcoinUnits::formatWithUnit(unit, balances.unconfirmed_watch_only_balance, false, BitcoinUnits::separatorAlways));
-        ui->labelWatchImmature->setText(BitcoinUnits::formatWithUnit(unit, balances.immature_watch_only_balance, false, BitcoinUnits::separatorAlways));
-        ui->labelWatchTotal->setText(BitcoinUnits::formatWithUnit(unit, balances.watch_only_balance + balances.unconfirmed_watch_only_balance + balances.immature_watch_only_balance, false, BitcoinUnits::separatorAlways));
+        ui->labelBalance->setValue(unit, balances.balance);
+        ui->labelUnconfirmed->setValue(unit, balances.unconfirmed_balance);
+        ui->labelImmature->setValue(unit, balances.immature_balance);
+        ui->labelTotal->setValue(unit, balances.balance + balances.unconfirmed_balance + balances.immature_balance);
+        ui->labelWatchAvailable->setValue(unit, balances.watch_only_balance);
+        ui->labelWatchPending->setValue(unit, balances.unconfirmed_watch_only_balance);
+        ui->labelWatchImmature->setValue(unit, balances.immature_watch_only_balance);
+        ui->labelWatchTotal->setValue(unit, balances.watch_only_balance + balances.unconfirmed_watch_only_balance + balances.immature_watch_only_balance);
     }
     // only show immature (newly mined) balance if it's non-zero, so as not to complicate things
     // for the non-mining users
