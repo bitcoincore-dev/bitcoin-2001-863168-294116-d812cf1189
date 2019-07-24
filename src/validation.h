@@ -19,6 +19,7 @@
 #include <script/script_error.h>
 #include <sync.h>
 #include <txmempool.h> // For CTxMemPool::cs
+#include <txdb.h>
 #include <versionbits.h>
 
 #include <algorithm>
@@ -37,7 +38,6 @@ class CBlockIndex;
 class CBlockTreeDB;
 class CBlockUndo;
 class CChainParams;
-class CCoinsViewDB;
 class CInv;
 class CConnman;
 class CScriptCheck;
@@ -507,6 +507,24 @@ public:
 
 /** Global variable that points to the active CCoinsView (protected by cs_main) */
 extern std::unique_ptr<CCoinsViewCache> pcoinsTip;
+
+/**
+ * A convenience class for constructing the CCoinsView* hierarchy used
+ * to facilitate access to the UTXO set.
+ */
+class CoinsViews {
+
+public:
+    std::unique_ptr<CCoinsViewDB> m_dbview;
+    std::unique_ptr<CCoinsViewErrorCatcher> m_catcherview;
+    std::unique_ptr<CCoinsViewCache> m_cacheview;
+
+    CoinsViews(
+        std::string ldb_name,
+        size_t cache_size_bytes,
+        bool in_memory = false,
+        bool should_wipe = false);
+};
 
 /**
  * CChainState stores and provides an API to update our local knowledge of the
