@@ -1038,6 +1038,18 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
     return nSubsidy;
 }
 
+CoinsViews::CoinsViews(
+    std::string ldb_name,
+    size_t cache_size_bytes,
+    bool in_memory,
+    bool should_wipe)
+{
+    m_dbview.reset(new CCoinsViewDB(
+        GetDataDir() / ldb_name, cache_size_bytes, in_memory, should_wipe));
+    m_catcherview.reset(new CCoinsViewErrorCatcher(m_dbview.get()));
+    m_cacheview.reset(new CCoinsViewCache(m_catcherview.get()));
+}
+
 // Note that though this is marked const, we may end up modifying `m_cached_finished_ibd`, which
 // is a performance-related implementation detail. This function must be marked
 // `const` so that `CValidationInterface` clients (which are given a `const CChainState*`)
