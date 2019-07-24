@@ -19,6 +19,7 @@
 #include <script/script_error.h>
 #include <sync.h>
 #include <txmempool.h> // For CTxMemPool::cs
+#include <txdb.h>
 #include <versionbits.h>
 
 #include <algorithm>
@@ -37,7 +38,6 @@ class CBlockIndex;
 class CBlockTreeDB;
 class CBlockUndo;
 class CChainParams;
-class CCoinsViewDB;
 class CInv;
 class CConnman;
 class CScriptCheck;
@@ -505,8 +505,32 @@ public:
         CBlockIndex** ppindex) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 };
 
-/** Global variable that points to the active CCoinsView (protected by cs_main) */
-extern std::unique_ptr<CCoinsViewCache> pcoinsTip;
+/**
+ * A convenience class for constructing the CCoinsView* hierarchy used
+ * to facilitate access to the UTXO set.
+ *
+ * This class consists of an arrangement of layered CCoinsView objects,
+ * preferring to store and retrieve coins in memory via `m_cacheview` but
+ * ultimately falling back on cache misses to the canonical store of UTXOs on
+ * disk, `m_dbview`.
+ */
+class CoinsViews {
+
+public:
+    //! The lowest level of the CoinsViews cache hierarchy sits in a leveldb database on disk.
+    //! All unspent coins reside in this store.
+    std::unique_ptr<CCoinsViewDB> m_dbview;
+
+    //! This view wraps access to the leveldb instance and handles read errors gracefully.
+    std::unique_ptr<CCoinsViewErrorCatcher> m_catcherview;
+
+    //! This is the top layer of the cache hierarchy - it keeps as many coins in memory as
+    //! can fit per the dbcache setting.
+    std::unique_ptr<CCoinsViewCache> m_cacheview;
+
+    //! All arguments forwarded onto CCoinsViewDB.
+    CoinsViews(std::string ldb_name, size_t cache_size_bytes, bool in_memory, bool should_wipe);
+};
 
 /**
  * CChainState stores and provides an API to update our local knowledge of the
@@ -556,12 +580,21 @@ private:
     //! easily as opposed to referencing a global.
     BlockManager& m_blockman;
 
+    //! Manages the UTXO set, which is a reflection of the contents of `m_chain`.
+    std::unique_ptr<CoinsViews> m_coins_views;
+
 public:
-    CChainState(BlockManager& blockman) : m_blockman(blockman) { }
+    CChainState(
+        /* parameters forwarded to CoinsViews */
+        size_t cache_size_bytes,
+        bool in_memory,
+        bool should_wipe,
+        std::string leveldb_name = "chainstate");
 
     //! The current chain of blockheaders we consult and build on.
     //! @see CChain, CBlockIndex.
     CChain m_chain;
+
     /**
      * The set of all CBlockIndex entries with BLOCK_VALID_TRANSACTIONS (for itself and all ancestors) and
      * as good as our current tip or better. Entries may be failed, though, and pruning nodes may be
@@ -572,8 +605,27 @@ public:
     //! @returns A reference to the in-memory cache of the UTXO set.
     CCoinsViewCache& CoinsTip()
     {
-        return *::pcoinsTip;
+        assert(m_coins_views->m_cacheview);
+        return *m_coins_views->m_cacheview.get();
     }
+
+    //! @returns A reference to the on-disk UTXO set database.
+    CCoinsViewDB& CoinsDB()
+    {
+        assert(m_coins_views->m_dbview);
+        return *m_coins_views->m_dbview.get();
+    }
+
+    //! @returns A reference to a wrapped view of the in-memory UTXO set that
+    //!     handles disk read errors gracefully.
+    CCoinsViewErrorCatcher& CoinsErrorCatcher()
+    {
+        assert(m_coins_views->m_catcherview);
+        return *m_coins_views->m_catcherview.get();
+    }
+
+    //! Destructs all objects related to accessing the UTXO set.
+    void ResetCoinsViews() { m_coins_views.reset(); }
 
     /**
      * Update the on-disk chain state.
@@ -606,7 +658,7 @@ public:
     bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pindex,
                       CCoinsViewCache& view, const CChainParams& chainparams, bool fJustCheck = false) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
-    // Block disconnection on our pcoinsTip:
+    // Apply the effects of a block disconnection on the UTXO set.
     bool DisconnectTip(CValidationState& state, const CChainParams& chainparams, DisconnectedBlockTransactions* disconnectpool) EXCLUSIVE_LOCKS_REQUIRED(cs_main, ::mempool.cs);
 
     // Manual block validity manipulation:
@@ -668,8 +720,10 @@ CChain& ChainActive();
 /** @returns the global block index map. */
 BlockMap& BlockIndex();
 
-/** Global variable that points to the coins database (protected by cs_main) */
-extern std::unique_ptr<CCoinsViewDB> pcoinsdbview;
+// Most often ::ChainstateActive() should be used instead of this, but some code
+// may not be able to assume that this has been initialized yet and so must use it
+// directly, e.g. init.cpp.
+extern std::unique_ptr<CChainState> g_chainstate;
 
 /** Global variable that points to the active block tree (protected by cs_main) */
 extern std::unique_ptr<CBlockTreeDB> pblocktree;
