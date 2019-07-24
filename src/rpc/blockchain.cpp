@@ -1062,6 +1062,8 @@ static UniValue gettxoutsetinfo(const JSONRPCRequest& request)
 
     CCoinsStats stats;
     ::ChainstateActive().ForceFlushStateToDisk();
+
+    LOCK(::cs_main);
     if (GetUTXOStats(&::ChainstateActive().CoinsDB(), stats)) {
         ret.pushKV("height", (int64_t)stats.nHeight);
         ret.pushKV("bestblock", stats.hashBlock.GetHex());
