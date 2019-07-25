@@ -3,6 +3,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include <base58.h>
 #include <chain.h>
 #include <coins.h>
 #include <compat/byteswap.h>
@@ -949,6 +950,15 @@ UniValue decodepsbt(const JSONRPCRequest& request)
             "  \"tx\" : {                   (json object) The decoded network-serialized unsigned transaction.\n"
             "    ...                                      The layout is the same as the output of decoderawtransaction.\n"
             "  },\n"
+            "  \"global_xpubs\" : [          (array of json objects, optional)\n"
+            "    {\n"
+            "      \"xpub\" : \"xpub\",                         (string) The extended public key this path corresponds to\n"
+            "      \"master_fingerprint\" : \"fingerprint\"     (string) The fingerprint of the master key\n"
+            "      \"path\" : \"path\",                         (string) The path\n"
+            "      }\n"
+            "    }\n"
+            "    ,...\n"
+            "  ],\n"
             "  \"unknown\" : {                (json object) The unknown global fields\n"
             "    \"key\" : \"value\"            (key-value pair) An unknown key-value pair\n"
             "     ...\n"
@@ -1079,6 +1089,23 @@ UniValue decodepsbt(const JSONRPCRequest& request)
     UniValue tx_univ(UniValue::VOBJ);
     TxToUniv(CTransaction(*psbtx.tx), uint256(), tx_univ, false);
     result.pushKV("tx", tx_univ);
+
+    // Add the global xpubs
+    UniValue global_xpubs(UniValue::VARR);
+    for (std::pair<KeyOriginInfo, std::set<CExtPubKey>> xpub_pair : psbtx.xpubs) {
+        for (auto xpub : xpub_pair.second) {
+            std::vector<unsigned char> ser_xpub;
+            ser_xpub.assign(BIP32_EXTKEY_WITH_VERSION_SIZE, 0);
+            xpub.EncodeWithVersion(ser_xpub.data());
+
+            UniValue keypath(UniValue::VOBJ);
+            keypath.pushKV("xpub", EncodeBase58Check(ser_xpub));
+            keypath.pushKV("master_fingerprint", HexStr(xpub_pair.first.fingerprint, xpub_pair.first.fingerprint + 4));
+            keypath.pushKV("path", WriteHDKeypath(xpub_pair.first.path));
+            global_xpubs.push_back(keypath);
+        }
+    }
+    result.pushKV("global_xpubs", global_xpubs);
 
     // Proprietary
     UniValue proprietary(UniValue::VARR);
