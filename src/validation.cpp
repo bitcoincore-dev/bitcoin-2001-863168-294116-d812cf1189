@@ -1980,6 +1980,10 @@ bool CChainState::FlushStateToDisk(
 {
     int64_t nMempoolUsage = mempool.DynamicMemoryUsage();
     LOCK(cs_main);
+    if (m_chain.Tip() == nullptr || m_blockman.m_block_index.empty()) {
+        // Exit early in case this was called before genesis block could be loaded.
+        return state.Error(_("chainstate not fully initialized").translated);
+    }
     static int64_t nLastWrite = 0;
     static int64_t nLastFlush = 0;
     std::set<int> setFilesToPrune;
