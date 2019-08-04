@@ -129,12 +129,23 @@ class ArgsManager
 {
 public:
     enum Flags {
-        NONE = 0x00,
-        // Boolean options can accept negation syntax -noOPTION or -noOPTION=1
-        ALLOW_BOOL = 0x01,
-        ALLOW_INT = 0x02,
-        ALLOW_STRING = 0x04,
-        ALLOW_ANY = ALLOW_BOOL | ALLOW_INT | ALLOW_STRING,
+        NONE = 0x0, //<! Indicates flag lookup failed.
+
+        /* Low level validation flags. In most cases these should be avoided,
+         * and standard TYPE_* flag combinations below should be preferred. */
+        ALLOW_ANY      = 0x01, //!< disable validation
+        ALLOW_NEGATED  = 0x02, //!< allow -nofoo and -nofoo=1
+        ALLOW_EMPTY    = 0x04, //!< allow -foo and -foo=""
+        ALLOW_NONEMPTY = 0x08, //!< allow -foo=bar
+        ALLOW_INT      = 0x10, //!< allow -foo=123
+        ALLOW_BOOL     = 0x20, //!< allow -foo=
+
+        /* Standard value types. */
+        TYPE_STRING = ALLOW_NONEMPTY,
+        TYPE_OPTIONAL_STRING = ALLOW_NONEMPTY | ALLOW_NEGATED | ALLOW_EMPTY,
+        TYPE_INT = ALLOW_INT | ALLOW_NEGATED,
+        TYPE_BOOL = ALLOW_BOOL | ALLOW_NEGATED | ALLOW_EMPTY,
+
         DEBUG_ONLY = 0x100,
         /* Some options would cause cross-contamination if values for
          * mainnet were used while running on regtest/testnet (or vice-versa).
