@@ -260,7 +260,59 @@ public:
         }
         return InterpretBool(found_result.second); // is set, so evaluate
     }
+
+    static inline void CheckFlags(const ArgsManager& am, const std::string& key, unsigned int require_any)
+    {
+        unsigned int flags = am.FlagsOfKnownArg(key);
+        if (flags != ArgsManager::NONE && ((flags & require_any) == 0)) {
+            throw std::logic_error(strprintf("Bug: Option %s requiring 0x%x was registered with flags 0x%x", key, require_any, flags));
+        }
+    }
 };
+
+/**
+ * Return whether key is negated, and remove "no" prefix. Also return key name without section prefix.
+ */
+static bool InterpretNegated(std::string& key, std::string& key_name)
+{
+    assert(key[0] == '-');
+    size_t section_pos = key.find('.', 1);
+    size_t start = section_pos == std::string::npos ? 1 : section_pos + 1;
+    bool negated = key.compare(start, 2, "no") == 0;
+    if (negated) key.erase(start, 2);
+    key_name = key;
+    if (section_pos != std::string::npos) key_name.erase(1, section_pos);
+    return negated;
+}
+
+static bool CheckValue(const std::string& key, const std::string& value, bool negated, unsigned int flags, std::string& error)
+{
+    if (flags & ArgsManager::ALLOW_ANY) return true;
+
+    if (negated) {
+        if (!(flags & ArgsManager::ALLOW_NEGATED)) {
+            error = strprintf("Can not negate %s, it is required to have a value.", key);
+            return false;
+        } else if (!value.empty() && value != "1") {
+            error = strprintf("Can not negate %s at the same time as setting value '%s'.", key, value);
+            return false;
+        }
+        return true;
+    }
+
+    if ((flags & ArgsManager::ALLOW_EMPTY) && value.empty()) return true;
+    if ((flags & ArgsManager::ALLOW_NONEMPTY) && !value.empty()) return true;
+    if ((flags & ArgsManager::ALLOW_BOOL) && (value == "0" || value == "1")) return true;
+    if ((flags & ArgsManager::ALLOW_INT) && ParseInt64(value, nullptr)) return true;
+
+    error = strprintf("Can not set %s value to '%s'. %s", key, value,
+                      (flags & ArgsManager::ALLOW_NONEMPTY) ? "It must be set to a non-empty string." :
+                      (flags & ArgsManager::ALLOW_INT) ? "It must be set to an integer." :
+                      (flags & ArgsManager::ALLOW_BOOL) ? "It must be set to 0 or 1." :
+                      (flags & ArgsManager::ALLOW_EMPTY) ? "It must be set to an empty string (no value)." :
+                      "It must be left unset.");
+    return false;
+}
 
 /**
  * Interpret -nofoo as if the user supplied -foo=0.
@@ -283,21 +335,14 @@ public:
  * that debug log output is not sent to any file at all).
  */
 
-NODISCARD static bool InterpretOption(std::string key, std::string val, unsigned int flags,
+NODISCARD static bool InterpretOption(std::string key, std::string val, bool negated, unsigned int flags,
                                       std::map<std::string, std::vector<std::string>>& args,
                                       std::string& error)
 {
     assert(key[0] == '-');
 
-    size_t option_index = key.find('.');
-    if (option_index == std::string::npos) {
-        option_index = 1;
-    } else {
-        ++option_index;
-    }
-    if (key.substr(option_index, 2) == "no") {
-        key.erase(option_index, 2);
-        if (flags & ArgsManager::ALLOW_BOOL) {
+    if (CheckValue(key, val, negated, flags, error)) {
+        if (negated) {
             if (InterpretBool(val)) {
                 args[key].clear();
                 return true;
@@ -305,13 +350,11 @@ NODISCARD static bool InterpretOption(std::string key, std::string val, unsigned
             // Double negatives like -nofoo=0 are supported (but discouraged)
             LogPrintf("Warning: parsed potentially confusing double-negative %s=%s\n", key, val);
             val = "1";
-        } else {
-            error = strprintf("Negating of %s is meaningless and therefore forbidden", key.c_str());
-            return false;
         }
+        args[key].push_back(val);
+        return true;
     }
-    args[key].push_back(val);
-    return true;
+    return false;
 }
 
 ArgsManager::ArgsManager()
@@ -400,9 +443,11 @@ bool ArgsManager::ParseParameters(int argc, const char* const argv[], std::strin
         if (key.length() > 1 && key[1] == '-')
             key.erase(0, 1);
 
-        const unsigned int flags = FlagsOfKnownArg(key);
+        std::string key_name;
+        const bool negated = InterpretNegated(key, key_name);
+        const unsigned int flags = FlagsOfKnownArg(key_name);
         if (flags) {
-            if (!InterpretOption(key, val, flags, m_override_args, error)) {
+            if (!InterpretOption(key, val, negated, flags, m_override_args, error)) {
                 return false;
             }
         } else {
@@ -426,23 +471,9 @@ bool ArgsManager::ParseParameters(int argc, const char* const argv[], std::strin
 
 unsigned int ArgsManager::FlagsOfKnownArg(const std::string& key) const
 {
-    assert(key[0] == '-');
-
-    size_t option_index = key.find('.');
-    if (option_index == std::string::npos) {
-        option_index = 1;
-    } else {
-        ++option_index;
-    }
-    if (key.substr(option_index, 2) == "no") {
-        option_index += 2;
-    }
-
-    const std::string base_arg_name = '-' + key.substr(option_index);
-
     LOCK(cs_args);
     for (const auto& arg_map : m_available_args) {
-        const auto search = arg_map.second.find(base_arg_name);
+        const auto search = arg_map.second.find(key);
         if (search != arg_map.second.end()) {
             return search->second.m_flags;
         }
@@ -452,6 +483,7 @@ unsigned int ArgsManager::FlagsOfKnownArg(const std::string& key) const
 
 std::vector<std::string> ArgsManager::GetArgs(const std::string& strArg) const
 {
+    ArgsManagerHelper::CheckFlags(*this, strArg, ALLOW_ANY | ALLOW_NONEMPTY);
     std::vector<std::string> result = {};
     if (IsArgNegated(strArg)) return result; // special case
 
@@ -495,7 +527,8 @@ bool ArgsManager::IsArgNegated(const std::string& strArg) const
 
 std::string ArgsManager::GetArg(const std::string& strArg, const std::string& strDefault) const
 {
-    if (IsArgNegated(strArg)) return "0";
+    ArgsManagerHelper::CheckFlags(*this, strArg, ALLOW_ANY | ALLOW_NONEMPTY);
+    if (IsArgNegated(strArg)) return FlagsOfKnownArg(strArg) & ALLOW_EMPTY ? "" : "0";
     std::pair<bool,std::string> found_res = ArgsManagerHelper::GetArg(*this, strArg);
     if (found_res.first) return found_res.second;
     return strDefault;
@@ -503,6 +536,7 @@ std::string ArgsManager::GetArg(const std::string& strArg, const std::string& st
 
 int64_t ArgsManager::GetArg(const std::string& strArg, int64_t nDefault) const
 {
+    ArgsManagerHelper::CheckFlags(*this, strArg, ALLOW_ANY | ALLOW_INT);
     if (IsArgNegated(strArg)) return 0;
     std::pair<bool,std::string> found_res = ArgsManagerHelper::GetArg(*this, strArg);
     if (found_res.first) return atoi64(found_res.second);
@@ -511,6 +545,7 @@ int64_t ArgsManager::GetArg(const std::string& strArg, int64_t nDefault) const
 
 bool ArgsManager::GetBoolArg(const std::string& strArg, bool fDefault) const
 {
+    ArgsManagerHelper::CheckFlags(*this, strArg, ALLOW_ANY | ALLOW_BOOL);
     if (IsArgNegated(strArg)) return false;
     std::pair<bool,std::string> found_res = ArgsManagerHelper::GetArg(*this, strArg);
     if (found_res.first) return InterpretBool(found_res.second);
@@ -845,10 +880,11 @@ bool ArgsManager::ReadConfigStream(std::istream& stream, const std::string& file
         return false;
     }
     for (const std::pair<std::string, std::string>& option : options) {
-        const std::string strKey = std::string("-") + option.first;
-        const unsigned int flags = FlagsOfKnownArg(strKey);
+        std::string key{"-" + option.first}, key_name;
+        const bool negated = InterpretNegated(key, key_name);
+        const unsigned int flags = FlagsOfKnownArg(key_name);
         if (flags) {
-            if (!InterpretOption(strKey, option.second, flags, m_config_args, error)) {
+            if (!InterpretOption(key, option.second, negated, flags, m_config_args, error)) {
                 return false;
             }
         } else {

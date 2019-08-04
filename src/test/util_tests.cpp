@@ -5,6 +5,7 @@
 #include <util/system.h>
 
 #include <clientversion.h>
+#include <optional.h>
 #include <sync.h>
 #include <test/util.h>
 #include <util/strencodings.h>
@@ -165,6 +166,114 @@ struct TestArgsManager : public ArgsManager
     using ArgsManager::cs_args;
     using ArgsManager::m_network;
 };
+
+class CheckValueTest : public TestChain100Setup
+{
+public:
+    struct Expect {
+        const char* string_value;
+        Optional<int64_t> int_value;
+        Optional<bool> bool_value;
+        const char* error;
+
+        Expect& String(const char* s) { string_value = s; return *this; }
+        Expect& Int(int64_t i) { int_value = i; return *this; }
+        Expect& Bool(bool b) { bool_value = b; return *this; }
+        Expect& Error(const char* e) { error = e; return *this; }
+    };
+
+    void CheckValue(unsigned int flags, const char* arg, const Expect& expect)
+    {
+        TestArgsManager test;
+        test.SetupArgs({{"-value", flags}});
+        const char* argv[] = {"ignored", arg};
+        std::string error;
+        bool success = test.ParseParameters(2, (char**)argv, error);
+        if (expect.error) {
+            BOOST_CHECK(!success);
+            BOOST_CHECK_NE(error.find(expect.error), std::string::npos);
+        } else {
+            BOOST_CHECK(success);
+            BOOST_CHECK(test.IsArgSet("-value"));
+        }
+
+        if (expect.string_value) {
+            BOOST_CHECK_EQUAL(test.GetArg("-value", "zzzzz"), expect.string_value);
+        } else if (success) {
+            BOOST_CHECK_THROW(test.GetArg("-value", "zzzzz"), std::logic_error);
+        }
+
+        if (expect.int_value) {
+            BOOST_CHECK_EQUAL(test.GetArg("-value", 99999), *expect.int_value);
+        } else if (success) {
+            BOOST_CHECK_THROW(test.GetArg("-value", 99999), std::logic_error);
+        }
+
+        if (expect.bool_value) {
+            BOOST_CHECK_EQUAL(test.GetBoolArg("-value", false), *expect.bool_value);
+        } else if (success) {
+            BOOST_CHECK_THROW(test.GetBoolArg("-value", false), std::logic_error);
+        }
+    }
+};
+
+BOOST_FIXTURE_TEST_CASE(util_CheckValue, CheckValueTest)
+{
+    CheckValue(ArgsManager::TYPE_STRING, "-novalue", Expect{}.Error("Can not negate -value, it is required to have a value"));
+    CheckValue(ArgsManager::TYPE_STRING, "-novalue=0", Expect{}.Error("Can not negate -value, it is required to have a value"));
+    CheckValue(ArgsManager::TYPE_STRING, "-novalue=1", Expect{}.Error("Can not negate -value, it is required to have a value"));
+    CheckValue(ArgsManager::TYPE_STRING, "-novalue=2", Expect{}.Error("Can not negate -value, it is required to have a value"));
+    CheckValue(ArgsManager::TYPE_STRING, "-novalue=abc", Expect{}.Error("Can not negate -value, it is required to have a value"));
+    CheckValue(ArgsManager::TYPE_STRING, "-value", Expect{}.Error("It must be set to a non-empty string"));
+    CheckValue(ArgsManager::TYPE_STRING, "-value=0", Expect{}.String("0"));
+    CheckValue(ArgsManager::TYPE_STRING, "-value=1", Expect{}.String("1"));
+    CheckValue(ArgsManager::TYPE_STRING, "-value=2", Expect{}.String("2"));
+    CheckValue(ArgsManager::TYPE_STRING, "-value=abc", Expect{}.String("abc"));
+
+    CheckValue(ArgsManager::TYPE_OPTIONAL_STRING, "-novalue", Expect{}.String(""));
+    CheckValue(ArgsManager::TYPE_OPTIONAL_STRING, "-novalue=0", Expect{}.Error("Can not negate -value at the same time as setting value '0'"));
+    CheckValue(ArgsManager::TYPE_OPTIONAL_STRING, "-novalue=1", Expect{}.String(""));
+    CheckValue(ArgsManager::TYPE_OPTIONAL_STRING, "-novalue=2", Expect{}.Error("Can not negate -value at the same time as setting value '2'"));
+    CheckValue(ArgsManager::TYPE_OPTIONAL_STRING, "-novalue=abc", Expect{}.Error("Can not negate -value at the same time as setting value 'abc'"));
+    CheckValue(ArgsManager::TYPE_OPTIONAL_STRING, "-value", Expect{}.String(""));
+    CheckValue(ArgsManager::TYPE_OPTIONAL_STRING, "-value=0", Expect{}.String("0"));
+    CheckValue(ArgsManager::TYPE_OPTIONAL_STRING, "-value=1", Expect{}.String("1"));
+    CheckValue(ArgsManager::TYPE_OPTIONAL_STRING, "-value=2", Expect{}.String("2"));
+    CheckValue(ArgsManager::TYPE_OPTIONAL_STRING, "-value=abc", Expect{}.String("abc"));
+
+    CheckValue(ArgsManager::TYPE_INT, "-novalue", Expect{}.Int(0));
+    CheckValue(ArgsManager::TYPE_INT, "-novalue=0", Expect{}.Error("Can not negate -value at the same time as setting value '0'"));
+    CheckValue(ArgsManager::TYPE_INT, "-novalue=1", Expect{}.Int(0));
+    CheckValue(ArgsManager::TYPE_INT, "-novalue=2", Expect{}.Error("Can not negate -value at the same time as setting value '2'"));
+    CheckValue(ArgsManager::TYPE_INT, "-novalue=abc", Expect{}.Error("Can not negate -value at the same time as setting value 'abc'"));
+    CheckValue(ArgsManager::TYPE_INT, "-value", Expect{}.Error("It must be set to an integer"));
+    CheckValue(ArgsManager::TYPE_INT, "-value=0", Expect{}.Int(0));
+    CheckValue(ArgsManager::TYPE_INT, "-value=1", Expect{}.Int(1));
+    CheckValue(ArgsManager::TYPE_INT, "-value=2", Expect{}.Int(2));
+    CheckValue(ArgsManager::TYPE_INT, "-value=abc", Expect{}.Error("It must be set to an integer"));
+
+    CheckValue(ArgsManager::TYPE_BOOL, "-novalue", Expect{}.Bool(false));
+    CheckValue(ArgsManager::TYPE_BOOL, "-novalue=0", Expect{}.Error("Can not negate -value at the same time as setting value '0'"));
+    CheckValue(ArgsManager::TYPE_BOOL, "-novalue=1", Expect{}.Bool(false));
+    CheckValue(ArgsManager::TYPE_BOOL, "-novalue=2", Expect{}.Error("Can not negate -value at the same time as setting value '2'"));
+    CheckValue(ArgsManager::TYPE_BOOL, "-novalue=abc", Expect{}.Error("Can not negate -value at the same time as setting value 'abc'"));
+    CheckValue(ArgsManager::TYPE_BOOL, "-value", Expect{}.Bool(true));
+    CheckValue(ArgsManager::TYPE_BOOL, "-value=0", Expect{}.Bool(false));
+    CheckValue(ArgsManager::TYPE_BOOL, "-value=1", Expect{}.Bool(true));
+    CheckValue(ArgsManager::TYPE_BOOL, "-value=2", Expect{}.Error("It must be set to 0 or 1"));
+    CheckValue(ArgsManager::TYPE_BOOL, "-value=abc", Expect{}.Error("It must be set to 0 or 1"));
+
+    CheckValue(ArgsManager::ALLOW_ANY, "-novalue", Expect{}.String("0").Int(0).Bool(false));
+    CheckValue(ArgsManager::ALLOW_ANY, "-novalue=0", Expect{}.String("1").Int(1).Bool(true));
+    CheckValue(ArgsManager::ALLOW_ANY, "-novalue=1", Expect{}.String("0").Int(0).Bool(false));
+    CheckValue(ArgsManager::ALLOW_ANY, "-novalue=2", Expect{}.String("0").Int(0).Bool(false));
+    CheckValue(ArgsManager::ALLOW_ANY, "-novalue=abc", Expect{}.String("1").Int(1).Bool(true));
+    CheckValue(ArgsManager::ALLOW_ANY, "-value", Expect{}.String("").Int(0).Bool(true));
+    CheckValue(ArgsManager::ALLOW_ANY, "-value=0", Expect{}.String("0").Int(0).Bool(false));
+    CheckValue(ArgsManager::ALLOW_ANY, "-value=1", Expect{}.String("1").Int(1).Bool(true));
+    CheckValue(ArgsManager::ALLOW_ANY, "-value=2", Expect{}.String("2").Int(2).Bool(true));
+    CheckValue(ArgsManager::ALLOW_ANY, "-value=abc", Expect{}.String("abc").Int(0).Bool(false));
+}
 
 BOOST_AUTO_TEST_CASE(util_ParseParameters)
 {
