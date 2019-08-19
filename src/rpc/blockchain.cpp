@@ -1030,7 +1030,12 @@ static UniValue pruneblockchain(const JSONRPCRequest& request)
     }
 
     PruneBlockFilesManual(height);
-    return uint64_t(height);
+    const CBlockIndex* block = ::chainActive.Tip();
+    assert(block);
+    while (block->pprev && (block->pprev->nStatus & BLOCK_HAVE_DATA)) {
+        block = block->pprev;
+    }
+    return uint64_t(block->nHeight);
 }
 
 static UniValue gettxoutsetinfo(const JSONRPCRequest& request)
@@ -1583,15 +1588,15 @@ static UniValue invalidateblock(const JSONRPCRequest& request)
     uint256 hash(ParseHashV(request.params[0], "blockhash"));
     CValidationState state;
 
+    CBlockIndex* pblockindex;
     {
         LOCK(cs_main);
-        CBlockIndex* pblockindex = LookupBlockIndex(hash);
+        pblockindex = LookupBlockIndex(hash);
         if (!pblockindex) {
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found");
         }
-
-        InvalidateBlock(state, Params(), pblockindex);
     }
+    InvalidateBlock(state, Params(), pblockindex);
 
     if (state.IsValid()) {
         ActivateBestChain(state, Params());
