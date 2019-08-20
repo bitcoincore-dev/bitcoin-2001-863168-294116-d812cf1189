@@ -446,6 +446,8 @@ static UniValue sendtoaddress(const JSONRPCRequest& request)
             // default RBF to true for explicit fee rate mode
             coin_control.m_signal_bip125_rbf = (coin_control.m_signal_bip125_rbf ? *coin_control.m_signal_bip125_rbf : false) || request.params[5].isNull();
         }
+    } else if (coin_control.m_fee_mode == FeeEstimateMode::EXPLICIT) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Selected estimate_mode requires a confirmation target");
     }
 
     EnsureWalletIsUnlocked(pwallet);
@@ -896,6 +898,8 @@ static UniValue sendmany(const JSONRPCRequest& request)
             // default RBF to true for explicit fee rate mode
             coin_control.m_signal_bip125_rbf = (coin_control.m_signal_bip125_rbf ? *coin_control.m_signal_bip125_rbf : false) || request.params[5].isNull();
         }
+    } else if (coin_control.m_fee_mode == FeeEstimateMode::EXPLICIT) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Selected estimate_mode requires a confirmation target");
     }
 
     std::set<CTxDestination> destinations;
@@ -3085,11 +3089,16 @@ void FundTransaction(CWallet* const pwallet, CMutableTransaction& tx, CAmount& f
             coinControl.m_confirm_target = ParseConfirmTarget(options["conf_target"], pwallet->chain().estimateMaxBlocks());
         }
         if (options.exists("estimate_mode")) {
-            if (options.exists("feeRate")) {
-                throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot specify both estimate_mode and feeRate");
-            }
             if (!FeeModeFromString(options["estimate_mode"].get_str(), coinControl.m_fee_mode)) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid estimate_mode parameter");
+            }
+            if (coinControl.m_fee_mode == FeeEstimateMode::EXPLICIT) {
+                if (!options.exists("feeRate")) {
+                    throw JSONRPCError(RPC_INVALID_PARAMETER, "Selected estimate_mode requires feeRate");
+                }
+            } else
+            if (options.exists("feeRate")) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot specify both estimate_mode and feeRate");
             }
         }
       }
@@ -3422,6 +3431,15 @@ static UniValue bumpfee(const JSONRPCRequest& request)
         if (options.exists("estimate_mode")) {
             if (!FeeModeFromString(options["estimate_mode"].get_str(), coin_control.m_fee_mode)) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid estimate_mode parameter");
+            }
+            if (coin_control.m_fee_mode == FeeEstimateMode::EXPLICIT) {
+                if (!options.exists("fee_rate")) {
+                    throw JSONRPCError(RPC_INVALID_PARAMETER, "Selected estimate_mode requires fee_rate");
+                }
+            } else {
+                if (!conf_target_exists) {
+                    throw JSONRPCError(RPC_INVALID_PARAMETER, "Selected estimate_mode requires conf_target");
+                }
             }
         }
     }
