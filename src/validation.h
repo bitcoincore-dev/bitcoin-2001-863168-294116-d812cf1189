@@ -929,6 +929,12 @@ private:
      */
     CChainState* m_active_chainstate GUARDED_BY(m_cs_chainstates);
 
+    //! Internal helper for ActivateSnapshot().
+    NODISCARD bool PopulateAndValidateSnapshot(
+        CChainState& snapshot_chainstate,
+        CAutoFile* coins_file,
+        const SnapshotMetadata& metadata);
+
     // For access to m_active_chainstate.
     friend CChainState& ChainstateActive();
     friend CChain& ChainActive();
@@ -937,6 +943,14 @@ public:
     //! A single BlockManager instance is shared across each constructed
     //! chainstate to avoid duplicating block metadata.
     BlockManager m_blockman GUARDED_BY(::cs_main);
+
+    //! The total number of bytes available for us to use across all in-memory
+    //! coins caches. This will be split somehow across chainstates.
+    int64_t m_total_coinstip_cache{0};
+    //
+    //! The total number of bytes available for us to use across all leveldb
+    //! coins databases. This will be split somehow across chainstates.
+    int64_t m_total_coinsdb_cache{0};
 
     /**
      * Instantiate a new chainstate and assign it based upon whether it is
@@ -1069,6 +1083,15 @@ public:
     }
 
     /**
+     * @returns true if this chainstate is assumed valid.
+     */
+    bool IsSnapshotChainstate(CChainState* chainstate) const
+    {
+        LOCK(m_cs_chainstates);
+        return (m_snapshot_chainstate && chainstate == m_snapshot_chainstate.get());
+    }
+
+    /**
      * Return the most-work chainstate that has been fully validated.
      *
      * During background validation of a snapshot, this is the ibd chain. After
@@ -1116,6 +1139,10 @@ public:
     //! Check to see if any of the chainstates under management have signaled
     //! deletion. If so, unlink them.
     void DeleteStaleChainstates();
+
+    //! Check to see if caches are out of balance and if so, call
+    //! ResizeCoinsCaches() as needed.
+    void MaybeRebalanceCaches() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 };
 
 extern ChainstateManager g_chainman;

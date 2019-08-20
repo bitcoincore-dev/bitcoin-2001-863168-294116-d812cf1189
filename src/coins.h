@@ -216,6 +216,7 @@ protected:
     /* Cached dynamic memory usage for the inner Coin objects. */
     mutable size_t cachedCoinsUsage;
 
+    // Necessary so that we can write directly into cacheCoins during snapshot load.
     friend ChainstateManager;
 
 public:

@@ -2030,6 +2030,7 @@ CoinsCacheSizeState CChainState::GetCoinsCacheSizeState()
         std::max((9 * nTotalSpace) / 10, nTotalSpace - MAX_BLOCK_COINSDB_USAGE * 1024 * 1024);
 
     if (cacheSize > nTotalSpace) {
+        LogPrintf("Cache size (%s) exceeds total space (%s)\n", cacheSize, nTotalSpace);
         return CoinsCacheSizeState::CRITICAL;
     } else if (cacheSize > large_threshold) {
         return CoinsCacheSizeState::LARGE;
@@ -2449,7 +2450,6 @@ bool CChainState::ConnectTip(CValidationState& state, const CChainParams& chainp
             g_chainman.CompleteSnapshotValidation(this);
         }
     }
-
     connectTrace.BlockConnected(pindexNew, std::move(pthisBlock));
     return true;
 }
@@ -2675,6 +2675,7 @@ bool CChainState::ActivateBestChain(CValidationState &state, const CChainParams&
     // we use m_cs_chainstate to enforce mutual exclusion so that only one caller may execute this function at a time
     LOCK(m_cs_chainstate);
 
+    bool started_in_ibd = this->IsInitialBlockDownload();
     CBlockIndex *pindexMostWork = nullptr;
     CBlockIndex *pindexNewTip = nullptr;
     int nStopAtHeight = gArgs.GetArg("-stopatheight", DEFAULT_STOPATHEIGHT);
@@ -2757,6 +2758,11 @@ bool CChainState::ActivateBestChain(CValidationState &state, const CChainParams&
             break;
     } while (pindexNewTip != pindexMostWork);
     CheckBlockIndex(chainparams.GetConsensus());
+
+    if (started_in_ibd && !this->IsInitialBlockDownload()) {
+        // This chainstate has transitioned out of IBD, so consider rebalancing caches.
+        WITH_LOCK(::cs_main, g_chainman.MaybeRebalanceCaches());
+    }
 
     // Write changes periodically to disk, after relay.
     if (!FlushStateToDisk(chainparams, state, FlushStateMode::PERIODIC)) {
@@ -4825,12 +4831,24 @@ std::string CChainState::ToString()
 
 void CChainState::ResizeCoinsCaches(size_t coinstip_size, size_t coinsdb_size)
 {
+    if (coinstip_size == m_coinstip_cache_size_bytes &&
+            coinsdb_size == m_coinsdb_cache_size_bytes) {
+        // Cache sizes are unchanged, no need to continue.
+        return;
+    }
     m_coinstip_cache_size_bytes = coinstip_size;
     m_coinsdb_cache_size_bytes = coinsdb_size;
     CoinsDB().ResizeCache(coinsdb_size);
 
+    LogPrintf("[%s] resized coinsdb cache to %.1f MiB\n",
+        this->ToString(), coinsdb_size * (1.0 / 1024 / 1024));
+    LogPrintf("[%s] resized coinstip cache to %.1f MiB\n",
+        this->ToString(), coinstip_size * (1.0 / 1024 / 1024));
+
     CValidationState state;
     const CChainParams& chainparams = Params();
+
+    // Likely no need to flush if cache sizes have grown.
     FlushStateToDisk(chainparams, state, FlushStateMode::IF_NEEDED);
 }
 
@@ -5159,30 +5177,71 @@ bool ChainstateManager::ActivateSnapshot(
 
     // Can't activate a snapshot more than once.
     assert(m_snapshot_metadata == nullptr);
+    LOCK(m_cs_chainstates);
 
     // Resize the coins caches to ensure we're not exceeding memory limits.
-    // Allocate more to the validation cache because the snapshot chain shouldn't
-    // be IBDing for very long.
     //
-    // TODO: this is wrong. Snapshot IBD-to-tip in practice takes hours, so maybe we
-    // should figure out a way to fully allocate dbcache to that chain until we
-    // hit tip.
+    // Right now, just evenly halve the caches across both chainstates. We'll need to call
+    // `g_chainman.MaybeRebalanceCaches()` once we're done with this function to ensure
+    // the right allocation (including the possibility that no snapshot was activated
+    // and that we should restore the active chainstate caches to their original size).
+    //
     int64_t current_coinsdb_cache_size = ::ChainstateActive().m_coinsdb_cache_size_bytes;
-    int64_t snapshot_coinsdb_cache_size = 0.3 * current_coinsdb_cache_size;
-    int64_t validation_coinsdb_cache_size = 0.7 * current_coinsdb_cache_size;
-
     int64_t current_coinstip_cache_size = ::ChainstateActive().m_coinstip_cache_size_bytes;
-    int64_t snapshot_coinstip_cache_size = 0.3 * current_coinstip_cache_size;
-    int64_t validation_coinstip_cache_size = 0.7 * current_coinstip_cache_size;
 
-    LOCK(::cs_main);
+    {
+        LOCK(::cs_main);
+        // Temporarily resize the active coins cache to make room for the newly-created
+        // snapshot chain.
+        ::ChainstateActive().ResizeCoinsCaches(
+            current_coinstip_cache_size * 0.01, current_coinsdb_cache_size * 0.01);
+    }
+
     auto snapshot_chainstate = MakeUnique<CChainState>(m_blockman, base_blockhash);
-    snapshot_chainstate->InitCoinsDB(snapshot_coinsdb_cache_size, in_memory, false, "chainstate");
-    snapshot_chainstate->InitCoinsCache(snapshot_coinstip_cache_size);
 
-    CCoinsViewCache& coins_cache = snapshot_chainstate->CoinsTip();
+    {
+        LOCK(::cs_main);
+        snapshot_chainstate->InitCoinsDB(
+            current_coinsdb_cache_size * 0.99, in_memory, false, "chainstate");
+        snapshot_chainstate->InitCoinsCache(current_coinstip_cache_size * 0.99);
+    }
 
-    CCoinsMap coins_map;
+    bool snapshot_ok = this->PopulateAndValidateSnapshot(
+        *snapshot_chainstate, coins_file, metadata);
+
+    if (!snapshot_ok) {
+        WITH_LOCK(::cs_main, g_chainman.MaybeRebalanceCaches());
+        return false;
+    }
+
+    {
+        LOCK(::cs_main);
+        m_snapshot_chainstate.swap(snapshot_chainstate);
+        assert(m_snapshot_chainstate->LoadChainTip(::Params()));
+
+        m_active_chainstate = m_snapshot_chainstate.get();
+        m_snapshot_metadata = MakeUnique<SnapshotMetadata>(metadata);
+        this->SaveSnapshotMetadataToDisk();
+        // Don't rebalance disk or FlushStateToDisk
+    }
+    LogPrintf("[snapshot] successfully activated snapshot %s\n", base_blockhash.ToString());
+    {
+        LOCK(::cs_main);
+        LogPrintf("[snapshot] (%.2f MB)\n",
+            m_snapshot_chainstate->CoinsTip().DynamicMemoryUsage() / (1000 * 1000));
+    }
+    return true;
+}
+
+bool ChainstateManager::PopulateAndValidateSnapshot(
+    CChainState& snapshot_chainstate,
+    CAutoFile* coins_file,
+    const SnapshotMetadata& metadata)
+{
+    LOCK(::cs_main);
+    CCoinsViewCache& coins_cache = snapshot_chainstate.CoinsTip();
+    uint256 base_blockhash = metadata.m_base_blockheader.GetBlockHash();
+
     COutPoint outpoint;
     Coin coin;
     uint64_t coins_count = metadata.m_coins_count;
@@ -5190,6 +5249,7 @@ bool ChainstateManager::ActivateSnapshot(
     uint64_t coins_processed = 0;
 
     LogPrintf("[snapshot] loading coins from snapshot %s\n", base_blockhash.ToString());
+    int64_t nNow{0};
 
     while (coins_left > 0) {
         *coins_file >> outpoint;
@@ -5200,28 +5260,39 @@ bool ChainstateManager::ActivateSnapshot(
             std::forward_as_tuple(std::move(outpoint)),
             std::forward_as_tuple(std::move(coin), CCoinsCacheEntry::DIRTY));
         coins_left -= 1;
-        coins_processed = coins_count - coins_left;
+        coins_processed += 1;
 
         if (coins_processed % 1000000 == 0) {
-            LogPrintf("[snapshot] %d coins loaded (%.2f%%)\n",
-                coins_processed, (float) coins_processed * 100 / (float) coins_count);
+            LogPrintf("[snapshot] %d coins loaded (%.2f%%, %.2f MB)\n",
+                coins_processed,
+                (float) coins_processed * 100 / (float) coins_count,
+                coins_cache.DynamicMemoryUsage() / (1000 * 1000));
         }
 
         // Batch write and flush (if we need to) every so often.
         //
-        // If our average Coin size is roughly 41 bytes, flushing every 120,000 coins
-        // should consume (on average) <5MB of memory overhead in `coins_map`.
+        // If our average Coin size is roughly 41 bytes, checking every 120,000 coins
+        // means <5MB of memory imprecision.
         if (coins_processed % 120000 == 0) {
             if (ShutdownRequested()) {
                 return false;
             }
-            coins_cache.BatchWriteFromSnapshot(coins_map, base_blockhash);
-            coins_map.clear();
-            if (snapshot_chainstate->GetCoinsCacheSizeState() >= CoinsCacheSizeState::CRITICAL) {
+            if (snapshot_chainstate.GetCoinsCacheSizeState() >= CoinsCacheSizeState::CRITICAL) {
+                LogPrintf("[snapshot] flushing coins cache (%.2f MB)... ", /* Continued */
+                    coins_cache.DynamicMemoryUsage() / (1000 * 1000));
+                nNow = GetTimeMillis();
                 coins_cache.Flush();
+                LogPrintf("done (%.2fms)\n", GetTimeMillis() - nNow);
             }
         }
     }
+
+    // Important that we set this. This and the cacheCoins accesses above are
+    // sort of a layer violation, but either we reach into the innards of
+    // CCoinsViewCache here or we have to invert some of the CChainState to
+    // embed them in a snapshot-activation-specific CCoinsViewCache bulk load
+    // method.
+    coins_cache.hashBlock = base_blockhash;
 
     bool out_of_coins{false};
     try {
@@ -5236,17 +5307,18 @@ bool ChainstateManager::ActivateSnapshot(
         return false;
     }
 
-    LogPrintf("[snapshot] loaded %d coins from snapshot %s\n",
-        coins_count - coins_left, base_blockhash.ToString());
+    LogPrintf("[snapshot] loaded %d (%.2f MB) coins from snapshot %s\n",
+        coins_count - coins_left,
+        coins_cache.DynamicMemoryUsage() / (1000 * 1000),
+        base_blockhash.ToString());
 
     LogPrintf("[snapshot] flushing snapshot chainstate to disk\n");
     // No need to acquire cs_main since this chainstate isn't being used yet.
-    coins_cache.BatchWriteFromSnapshot(coins_map, base_blockhash);
-    coins_cache.Flush();
+    coins_cache.Flush(false); // Don't clear out the cacheCoins since we'll go right into IBD.
     assert(coins_cache.GetBestBlock() == base_blockhash);
 
     CCoinsStats stats;
-    if (!GetUTXOStats(&snapshot_chainstate->CoinsDB(), stats)) {
+    if (!GetUTXOStats(&snapshot_chainstate.CoinsDB(), stats)) {
         LogPrintf("[snapshot] failed to generate coins stats\n");
         return false;
     }
@@ -5294,7 +5366,7 @@ bool ChainstateManager::ActivateSnapshot(
         return false;
     }
 
-    snapshot_chainstate->m_chain.SetTip(snapshot_start_block);
+    snapshot_chainstate.m_chain.SetTip(snapshot_start_block);
 
     // Fake various pieces of CBlockIndex state:
     //
@@ -5307,8 +5379,8 @@ bool ChainstateManager::ActivateSnapshot(
     //       unwind the assumed-valid chain.
     //
     CBlockIndex* index = nullptr;
-    for (int i = 0; i <= snapshot_chainstate->m_chain.Height(); ++i) {
-        index = snapshot_chainstate->m_chain[i];
+    for (int i = 0; i <= snapshot_chainstate.m_chain.Height(); ++i) {
+        index = snapshot_chainstate.m_chain[i];
 
         if (!index->nTx) {
             index->nTx = 1;
@@ -5325,28 +5397,16 @@ bool ChainstateManager::ActivateSnapshot(
     assert(index);
     index->nChainTx = metadata.m_nchaintx;
 
-    int current_height = snapshot_chainstate->m_chain.Height();
+    int current_height = snapshot_chainstate.m_chain.Height();
     if (current_height != base_height) {
         LogPrintf("[snapshot] bad snapshot height: expected %d, got %d\n", base_height, current_height);
         return false;
     }
 
-    snapshot_chainstate->setBlockIndexCandidates.insert(snapshot_start_block);
+    snapshot_chainstate.setBlockIndexCandidates.insert(snapshot_start_block);
 
-    // Change cache sizes of the existing (validation) chainstate and flush.
-    ChainstateActive().ResizeCoinsCaches(
-        validation_coinstip_cache_size, validation_coinsdb_cache_size);
-
-    {
-        LOCK(m_cs_chainstates);
-        m_snapshot_chainstate.swap(snapshot_chainstate);
-        assert(m_snapshot_chainstate->LoadChainTip(::Params()));
-
-        m_active_chainstate = m_snapshot_chainstate.get();
-    }
-    m_snapshot_metadata = MakeUnique<SnapshotMetadata>(metadata);
-    this->SaveSnapshotMetadataToDisk();
-    LogPrintf("[snapshot] successfully activated snapshot %s\n", base_blockhash.ToString());
+    LogPrintf("[snapshot] validated snapshot (%.2f MB)\n",
+        coins_cache.DynamicMemoryUsage() / (1000 * 1000));
     return true;
 }
 
@@ -5492,4 +5552,36 @@ unsigned int ChainstateManager::PruneStartHeight(CChainState* chainstate)
         return m_ibd_chainstate->m_chain.Height();
     }
     return 0;
+}
+
+void ChainstateManager::MaybeRebalanceCaches()
+{
+    LOCK(m_cs_chainstates);
+
+    if (m_ibd_chainstate && !m_snapshot_chainstate) {
+        LogPrintf("[snapshot] allocating all cache to the IBD chainstate\n");
+        // Allocate everything to the IBD chainstate.
+        m_ibd_chainstate->ResizeCoinsCaches(m_total_coinstip_cache, m_total_coinsdb_cache);
+    }
+    else if (m_snapshot_chainstate && !m_ibd_chainstate) {
+        LogPrintf("[snapshot] allocating all cache to the snapshot chainstate\n");
+        // Allocate everything to the snapshot chainstate.
+        m_snapshot_chainstate->ResizeCoinsCaches(m_total_coinstip_cache, m_total_coinsdb_cache);
+    }
+    else if (m_ibd_chainstate && m_snapshot_chainstate) {
+        // If both chainstates exist, determine who needs more cache based on IBD status.
+        //
+        // Note: shrink caches first so that we don't inadvertently overwhelm available memory.
+        if (m_snapshot_chainstate->IsInitialBlockDownload()) {
+            m_ibd_chainstate->ResizeCoinsCaches(
+                m_total_coinstip_cache * 0.05, m_total_coinsdb_cache * 0.05);
+            m_snapshot_chainstate->ResizeCoinsCaches(
+                m_total_coinstip_cache * 0.95, m_total_coinsdb_cache * 0.95);
+        } else {
+            m_snapshot_chainstate->ResizeCoinsCaches(
+                m_total_coinstip_cache * 0.05, m_total_coinsdb_cache * 0.05);
+            m_ibd_chainstate->ResizeCoinsCaches(
+                m_total_coinstip_cache * 0.95, m_total_coinsdb_cache * 0.95);
+        }
+    }
 }
