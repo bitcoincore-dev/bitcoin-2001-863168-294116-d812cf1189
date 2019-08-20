@@ -1495,26 +1495,17 @@ bool AppInitMain(InitInterfaces& interfaces)
 
                 // Load snapshot metadata, if any exists.
                 g_chainman.LoadSnapshotMetadata();
+                g_chainman.m_total_coinstip_cache = nCoinCacheUsage;
+                g_chainman.m_total_coinsdb_cache = nCoinDBCache;
 
-                double snapshot_cache_multiplier = 1.;
-                double ibd_cache_multiplier = 1.;
+                // Conservative value that will ultimately be changed by
+                // a call to `g_chainman.MaybeRebalanceCaches()`.
+                double init_cache_fraction = 0.2;
 
                 // If we were using a chainstate snapshot, load and use it.
                 if (g_chainman.HasSnapshotMetadata()) {
                     LogPrintf("Loading chainstate from snapshot (%s)\n",
                         g_chainman.SnapshotBlockhash().ToString());
-
-                    // Determine how many chains we'll be initializing so that we
-                    // can divide up cache sizes properly. If we're working with a
-                    // snapshot and we haven't validated it yet, we'll have two
-                    // chains.
-                    if (!g_chainman.IsSnapshotValidated()) {
-                        // We'll have two chainstates.
-                        // Allocate more to the validation cache because the snapshot chain
-                        // shouldn't be IBDing for very long.
-                        snapshot_cache_multiplier = 0.3;
-                        ibd_cache_multiplier = 0.7;
-                    }
 
                     g_chainman.InitializeChainstate(
                         /*activate*/ true, g_chainman.SnapshotBlockhash());
@@ -1585,10 +1576,8 @@ bool AppInitMain(InitInterfaces& interfaces)
                 for (CChainState* chainstate : g_chainman.GetAll()) {
                     LogPrintf("Initializing chainstate %s\n", chainstate->ToString());
 
-                    double cache_fraction = chainstate->IsFromSnapshot() ?
-                        snapshot_cache_multiplier : ibd_cache_multiplier;
-                    size_t dbcache_size = nCoinDBCache * cache_fraction;
-                    size_t tipcache_size = nCoinCacheUsage * cache_fraction;
+                    size_t dbcache_size = nCoinDBCache * init_cache_fraction;
+                    size_t tipcache_size = nCoinCacheUsage * init_cache_fraction;
 
                     chainstate->InitCoinsDB(
                         /* cache_size_bytes */ dbcache_size,
@@ -1639,6 +1628,12 @@ bool AppInitMain(InitInterfaces& interfaces)
                     // are local to the per-chainstate loop.
                     break;
                 }
+
+                // Now that chainstates are loaded and we're able to flush to
+                // disk, rebalance the coins caches to desired levels based
+                // on the condition of each chainstate.
+                g_chainman.MaybeRebalanceCaches();
+
             } catch (const std::exception& e) {
                 LogPrintf("%s\n", e.what());
                 strLoadError = _("Error opening block database").translated;
