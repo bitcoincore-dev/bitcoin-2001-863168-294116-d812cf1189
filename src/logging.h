@@ -174,16 +174,6 @@ template <typename TimeType>
 class Timer
 {
 public:
-    //! Log prefix; usually the name of the function this was created in.
-    std::string m_prefix{};
-
-    //! A descriptive message of what is being timed.
-    std::string m_title{};
-
-    //! Forwarded on to LogPrint if specified - has the effect of only
-    //! outputing the timing log when a particular debug= category is specified.
-    BCLog::LogFlags m_log_category{};
-
     //! If log_category is left as the default, end_msg will log unconditionally
     //! (instead of being filtered by category).
     Timer(
@@ -192,10 +182,10 @@ public:
         BCLog::LogFlags log_category = BCLog::LogFlags::ALL) :
             m_prefix(std::move(prefix)),
             m_title(std::move(end_msg)),
-            m_start_t(GetTime<std::chrono::microseconds>()),
             m_log_category(log_category)
     {
-        this->Log(strprintf("%s started", m_title), false);
+        this->Log(strprintf("%s started", m_title));
+        m_start_t = GetTime<std::chrono::microseconds>();
     }
 
     ~Timer()
@@ -203,9 +193,9 @@ public:
         this->Log(strprintf("%s completed", m_title));
     }
 
-    void Log(const std::string& msg, bool show_elapsed_time = true)
+    void Log(const std::string& msg)
     {
-        const std::string full_msg = this->LogMsg(msg, show_elapsed_time);
+        const std::string full_msg = this->LogMsg(msg);
 
         if (m_log_category == BCLog::LogFlags::ALL) {
             LogPrintf("%s\n", full_msg);
@@ -214,10 +204,10 @@ public:
         }
     }
 
-    std::string LogMsg(const std::string& msg, bool show_elapsed_time = true)
+    std::string LogMsg(const std::string& msg)
     {
         const auto end_time = GetTime<std::chrono::microseconds>() - m_start_t;
-        if (!show_elapsed_time) {
+        if (m_start_t.count() <= 0) {
             return strprintf("%s: %s", m_prefix, msg);
         }
 
@@ -240,6 +230,17 @@ public:
 
 private:
     std::chrono::microseconds m_start_t{};
+
+    //! Log prefix; usually the name of the function this was created in.
+    const std::string m_prefix{};
+
+    //! A descriptive message of what is being timed.
+    const std::string m_title{};
+
+    //! Forwarded on to LogPrint if specified - has the effect of only
+    //! outputing the timing log when a particular debug= category is specified.
+    const BCLog::LogFlags m_log_category{};
+
 };
 
 } // namespace BCLog
