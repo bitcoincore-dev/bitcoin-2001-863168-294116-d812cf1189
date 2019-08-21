@@ -2049,6 +2049,22 @@ bool CChainState::FlushStateToDisk(
     static int64_t nLastFlush = 0;
     std::set<int> setFilesToPrune;
     bool full_flush_completed = false;
+
+    if (mode != FlushStateMode::NONE) {
+        LogPrint(BCLog::DISKFLUSH, "Considering disk flush for %s (%d coins, %.2fMB)\n",
+            this->ToString(),
+            CoinsTip().GetCacheSize(),
+            CoinsTip().DynamicMemoryUsage() / (1024 * 1024));
+    }
+
+    // Used for timing basis.
+    int64_t now{0};
+    auto timer_start = [&now]() { now = GetTimeMillis(); };
+    auto timer_stop = [&now](std::string title) {
+        LogPrint(BCLog::DISKFLUSH, "%s: %s completed (%.3fms)\n",
+            __func__, title, GetTimeMillis() - now);
+    };
+
     try {
     {
         bool fFlushForPrune = false;
@@ -2057,10 +2073,14 @@ bool CChainState::FlushStateToDisk(
         LOCK(cs_LastBlockFile);
         if (fPruneMode && (fCheckForPruning || nManualPruneHeight > 0) && !fReindex) {
             if (nManualPruneHeight > 0) {
+                timer_start();
                 FindFilesToPruneManual(setFilesToPrune, nManualPruneHeight);
+                timer_stop("find files to prune (manual)");
             } else {
+                timer_start();
                 FindFilesToPrune(setFilesToPrune, chainparams.PruneAfterHeight());
                 fCheckForPruning = false;
+                timer_stop("find files to prune");
             }
             if (!setFilesToPrune.empty()) {
                 fFlushForPrune = true;
@@ -2094,10 +2114,14 @@ bool CChainState::FlushStateToDisk(
             if (!CheckDiskSpace(GetBlocksDir())) {
                 return AbortNode(state, "Disk space is too low!", _("Error: Disk space is too low!").translated, CClientUIInterface::MSG_NOPREFIX);
             }
+            timer_start();
             // First make sure all block and undo data is flushed to disk.
             FlushBlockFile();
+            timer_stop("write block and undo data to disk");
+
             // Then update all block file information (which may refer to block and undo files).
             {
+                timer_start();
                 std::vector<std::pair<int, const CBlockFileInfo*> > vFiles;
                 vFiles.reserve(setDirtyFileInfo.size());
                 for (std::set<int>::iterator it = setDirtyFileInfo.begin(); it != setDirtyFileInfo.end(); ) {
@@ -2113,14 +2137,19 @@ bool CChainState::FlushStateToDisk(
                 if (!pblocktree->WriteBatchSync(vFiles, nLastBlockFile, vBlocks)) {
                     return AbortNode(state, "Failed to write to block index database");
                 }
+                timer_stop("write block index to disk");
             }
             // Finally remove any pruned files
-            if (fFlushForPrune)
+            if (fFlushForPrune) {
+                timer_start();
                 UnlinkPrunedFiles(setFilesToPrune);
+                timer_stop("unlink pruned files");
+            }
             nLastWrite = nNow;
         }
         // Flush best chain related state. This can only be done if the blocks / block index write was also done.
         if (fDoFullFlush && !CoinsTip().GetBestBlock().IsNull()) {
+            timer_start();
             // Typical Coin structures on disk are around 48 bytes in size.
             // Pushing a new one to the database can cause it to be written
             // twice (once in the log, and once in the tables). This is already
@@ -2134,6 +2163,9 @@ bool CChainState::FlushStateToDisk(
                 return AbortNode(state, "Failed to write to coin database");
             nLastFlush = nNow;
             full_flush_completed = true;
+            timer_stop("write coins cache to disk");
+        } else {
+            LogPrint(BCLog::DISKFLUSH, "Skipped flushing coins cache to disk\n");
         }
     }
     if (full_flush_completed) {
