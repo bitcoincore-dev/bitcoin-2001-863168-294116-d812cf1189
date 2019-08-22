@@ -915,25 +915,25 @@ private:
      * if a snapshot is in use, for background validation. Its contents will
      * be freed when background validation of the snapshot has completed.
      */
-    std::unique_ptr<CChainState> m_ibd_chainstate GUARDED_BY(m_cs_chainstates);
+    std::unique_ptr<CChainState> m_ibd_chainstate;
 
     /**
      * A chainstate initialized on the basis of a UTXO snapshot. If this is
      * non-null, it is always our active chainstate unless proven invalid.
      */
-    std::unique_ptr<CChainState> m_snapshot_chainstate GUARDED_BY(m_cs_chainstates);
+    std::unique_ptr<CChainState> m_snapshot_chainstate;
 
     /**
      * Points to either the ibd or snapshot chainstate; indicates our
      * most-work chain.
      */
-    CChainState* m_active_chainstate GUARDED_BY(m_cs_chainstates);
+    CChainState* m_active_chainstate;
 
     //! Internal helper for ActivateSnapshot().
     NODISCARD bool PopulateAndValidateSnapshot(
         CChainState& snapshot_chainstate,
         CAutoFile* coins_file,
-        const SnapshotMetadata& metadata) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+        const SnapshotMetadata& metadata);
 
     // For access to m_active_chainstate.
     friend CChainState& ChainstateActive();
