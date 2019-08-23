@@ -29,6 +29,7 @@ class QRImageWidget : public QLabel
 
 public:
     explicit QRImageWidget(QWidget *parent = nullptr);
+    bool setQR(const QString& data, const QString& text = "");
     QImage exportImage();
 
 public Q_SLOTS:
@@ -42,6 +43,8 @@ protected:
 private:
     QMenu *contextMenu;
 };
+
+#ifdef ENABLE_WALLET
 
 class ReceiveRequestDialog : public QDialog
 {
@@ -65,5 +68,7 @@ private:
     WalletModel *model;
     SendCoinsRecipient info;
 };
+
+#endif // ENABLE_WALLET
 
 #endif // BITCOIN_QT_RECEIVEREQUESTDIALOG_H
