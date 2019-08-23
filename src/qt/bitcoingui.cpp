@@ -403,7 +403,7 @@ void BitcoinGUI::createActions()
             std::vector<std::string> available_wallets = m_wallet_controller->getWalletsAvailableToOpen();
             std::vector<std::string> wallets = m_node.listWalletDir();
             for (const auto& path : wallets) {
-                QString name = path.empty() ? QString("["+tr("default wallet")+"]") : QString::fromStdString(path);
+                QString name = WalletModel::getDisplayName(QString::fromStdString(path));
                 // Menu items remove single &. Single & are shown when && is in the string, but only the first occurrence. So replace only the first & with &&
                 name.replace(name.indexOf(QChar('&')), 1, QString("&&"));
                 QAction* action = m_open_wallet_menu->addAction(name);
