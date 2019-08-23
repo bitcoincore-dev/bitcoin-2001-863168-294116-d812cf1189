@@ -159,6 +159,7 @@ BITCOIN_CORE_H = \
   merkleblock.h \
   miner.h \
   net.h \
+  net_permissions.h \
   net_processing.h \
   netaddress.h \
   netbase.h \
@@ -447,6 +448,7 @@ libbitcoin_common_a_SOURCES = \
   keystore.cpp \
   netaddress.cpp \
   netbase.cpp \
+  net_permissions.cpp \
   policy/feerate.cpp \
   psbt.cpp \
   protocol.cpp \
