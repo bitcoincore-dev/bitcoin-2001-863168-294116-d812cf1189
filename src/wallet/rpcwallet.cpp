@@ -1956,13 +1956,15 @@ static UniValue gettransaction(const JSONRPCRequest& request)
         return NullUniValue;
     }
 
-    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 3)
         throw std::runtime_error(
             RPCHelpMan{"gettransaction",
                 "\nGet detailed information about in-wallet transaction <txid>\n",
                 {
                     {"txid", RPCArg::Type::STR, RPCArg::Optional::NO, "The transaction id"},
                     {"include_watchonly", RPCArg::Type::BOOL, /* default */ "false", "Whether to include watch-only addresses in balance calculation and details[]"},
+                    {"verbose", RPCArg::Type::BOOL, /* default */ "false",
+                            "Whether to include a `decoded` field containing the decoded transaction (equivalent to RPC decoderawtransaction)"},
                 },
                 RPCResult{
             "{\n"
@@ -1998,11 +2000,14 @@ static UniValue gettransaction(const JSONRPCRequest& request)
             "    ,...\n"
             "  ],\n"
             "  \"hex\" : \"data\"         (string) Raw data for transaction\n"
+            "  \"decoded\" : transaction         (json object) Optional, the decoded transaction (only present when `verbose` is passed), equivalent to the\n"
+            "                                                RPC decoderawtransaction method, or the RPC getrawtransaction method when `verbose` is passed.\n"
             "}\n"
                 },
                 RPCExamples{
                     HelpExampleCli("gettransaction", "\"1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d\"")
             + HelpExampleCli("gettransaction", "\"1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d\" true")
+            + HelpExampleCli("gettransaction", "\"1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d\" false true")
             + HelpExampleRpc("gettransaction", "\"1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d\"")
                 },
             }.ToString());
@@ -2020,6 +2025,8 @@ static UniValue gettransaction(const JSONRPCRequest& request)
     if(!request.params[1].isNull())
         if(request.params[1].get_bool())
             filter = filter | ISMINE_WATCH_ONLY;
+
+    bool verbose = request.params[2].isNull() ? false : request.params[2].get_bool();
 
     UniValue entry(UniValue::VOBJ);
     auto it = pwallet->mapWallet.find(hash);
@@ -2045,6 +2052,12 @@ static UniValue gettransaction(const JSONRPCRequest& request)
 
     std::string strHex = EncodeHexTx(*wtx.tx, RPCSerializationFlags());
     entry.pushKV("hex", strHex);
+
+    if (verbose) {
+        UniValue decoded(UniValue::VOBJ);
+        TxToUniv(*wtx.tx, uint256(), decoded, false);
+        entry.pushKV("decoded", decoded);
+    }
 
     return entry;
 }
@@ -4524,7 +4537,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "getrawchangeaddress",              &getrawchangeaddress,           {"address_type"} },
     { "wallet",             "getreceivedbyaddress",             &getreceivedbyaddress,          {"address","minconf"} },
     { "wallet",             "getreceivedbylabel",               &getreceivedbylabel,            {"label","minconf"} },
-    { "wallet",             "gettransaction",                   &gettransaction,                {"txid","include_watchonly"} },
+    { "wallet",             "gettransaction",                   &gettransaction,                {"txid","include_watchonly","verbose"} },
     { "wallet",             "getunconfirmedbalance",            &getunconfirmedbalance,         {} },
     { "wallet",             "getwalletinfo",                    &getwalletinfo,                 {} },
     { "wallet",             "importaddress",                    &importaddress,                 {"address","label","rescan","p2sh"} },
