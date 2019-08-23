@@ -270,6 +270,7 @@ BITCOIN_QT_H = \
   qt/sendcoinsentry.h \
   qt/signverifymessagedialog.h \
   qt/splashscreen.h \
+  qt/tonalutils.h \
   qt/trafficgraphwidget.h \
   qt/transactiondesc.h \
   qt/transactiondescdialog.h \
@@ -370,6 +371,7 @@ BITCOIN_QT_BASE_CPP = \
   qt/receiverequestdialog.cpp \
   qt/rpcconsole.cpp \
   qt/splashscreen.cpp \
+  qt/tonalutils.cpp \
   qt/trafficgraphwidget.cpp \
   qt/utilitydialog.cpp
 
