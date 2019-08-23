@@ -16,4 +16,5 @@ fi
 vulture \
     --min-confidence 60 \
     --ignore-names "argtypes,connection_lost,connection_made,converter,data_received,daemon,errcheck,is_compressed,is_valid,verify_ecdsa,msg_generic,on_*,optionxform,restype,profile_with_perf" \
+    $(dirname "${BASH_SOURCE[0]}")/lint-python-dead-code-whitelist \
     $(git ls-files -- "*.py" ":(exclude)contrib/" ":(exclude)test/functional/data/invalid_txs.py")

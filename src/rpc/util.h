@@ -8,6 +8,7 @@
 #include <node/transaction.h>
 #include <outputtype.h>
 #include <pubkey.h>
+#include <protocol.h>
 #include <rpc/protocol.h>
 #include <script/standard.h>
 #include <univalue.h>
@@ -41,6 +42,9 @@ UniValue JSONRPCTransactionError(TransactionError terr, const std::string& err_s
 
 //! Parse a JSON range specified as int64, or [int64, int64]
 std::pair<int64_t, int64_t> ParseRange(const UniValue& value);
+
+/** Returns, given services flags, a list of humanly readable (known) network services */
+UniValue GetServicesNames(ServiceFlags services);
 
 struct RPCArg {
     enum class Type {

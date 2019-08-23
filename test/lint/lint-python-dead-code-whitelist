@@ -1,0 +1,2 @@
+NODE_BLOOM  # actually used (test/functional/test_framework/messages.py)
+NODE_GETUTXO  # actually used (test/functional/test_framework/messages.py)
