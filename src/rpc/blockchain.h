@@ -27,7 +27,7 @@ double GetDifficulty(const CBlockIndex* blockindex);
 void RPCNotifyBlockChange(bool ibd, const CBlockIndex *);
 
 /** Block description to JSON */
-UniValue blockToJSON(const CBlock& block, const CBlockIndex* tip, const CBlockIndex* blockindex, bool txDetails = false);
+UniValue blockToJSONv(const CBlock& block, const CBlockIndex* tip, const CBlockIndex* blockindex, int verbosity = 0);
 
 /** Mempool information to JSON */
 UniValue mempoolInfoToJSON(bool with_fee_histogram);
