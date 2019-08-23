@@ -34,6 +34,7 @@
 
 class CBlockIndex;
 class CBlockTreeDB;
+class CBlockUndo;
 class CChainParams;
 class CCoinsViewDB;
 class CInv;
@@ -393,6 +394,8 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
 bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus::Params& consensusParams, bool lowprio = false);
 bool ReadRawBlockFromDisk(std::vector<uint8_t>& block, const CDiskBlockPos& pos, const CMessageHeader::MessageStartChars& message_start, bool lowprio = false);
 bool ReadRawBlockFromDisk(std::vector<uint8_t>& block, const CBlockIndex* pindex, const CMessageHeader::MessageStartChars& message_start, bool lowprio = false);
+
+bool UndoReadFromDisk(CBlockUndo& blockundo, const CBlockIndex* pindex);
 
 /** Functions for validating blocks and updating the block tree */
 
