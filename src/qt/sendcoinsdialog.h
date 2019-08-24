@@ -47,8 +47,8 @@ public:
 
 public Q_SLOTS:
     void clear();
-    void reject();
-    void accept();
+    void reject() override;
+    void accept() override;
     SendCoinsEntry *addEntry();
     void updateTabsAndLabels();
     void setBalance(const interfaces::WalletBalances& balances);
@@ -109,7 +109,7 @@ class SendConfirmationDialog : public QMessageBox
 
 public:
     SendConfirmationDialog(const QString& title, const QString& text, const QString& informative_text = "", const QString& detailed_text = "", int secDelay = SEND_CONFIRM_DELAY, QWidget* parent = nullptr);
-    int exec();
+    int exec() override;
 
 private Q_SLOTS:
     void countDown();
