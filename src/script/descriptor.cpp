@@ -375,7 +375,7 @@ public:
         return true;
     }
 
-    bool IsRange() const final
+    bool IsRange() const override final
     {
         for (const auto& pubkey : m_pubkey_args) {
             if (pubkey->IsRange()) return true;
@@ -411,7 +411,7 @@ public:
         return true;
     }
 
-    std::string ToString() const final
+    std::string ToString() const override final
     {
         std::string ret;
         ToStringHelper(nullptr, ret, false);
@@ -477,18 +477,18 @@ public:
         return true;
     }
 
-    bool Expand(int pos, const SigningProvider& provider, std::vector<CScript>& output_scripts, FlatSigningProvider& out, std::vector<unsigned char>* cache = nullptr) const final
+    bool Expand(int pos, const SigningProvider& provider, std::vector<CScript>& output_scripts, FlatSigningProvider& out, std::vector<unsigned char>* cache = nullptr) const override final
     {
         return ExpandHelper(pos, provider, nullptr, output_scripts, out, cache);
     }
 
-    bool ExpandFromCache(int pos, const std::vector<unsigned char>& cache, std::vector<CScript>& output_scripts, FlatSigningProvider& out) const final
+    bool ExpandFromCache(int pos, const std::vector<unsigned char>& cache, std::vector<CScript>& output_scripts, FlatSigningProvider& out) const override final
     {
         Span<const unsigned char> span = MakeSpan(cache);
         return ExpandHelper(pos, DUMMY_SIGNING_PROVIDER, &span, output_scripts, out, nullptr) && span.size() == 0;
     }
 
-    void ExpandPrivate(int pos, const SigningProvider& provider, FlatSigningProvider& out) const final
+    void ExpandPrivate(int pos, const SigningProvider& provider, FlatSigningProvider& out) const override final
     {
         for (const auto& p : m_pubkey_args) {
             CKey key;
@@ -514,7 +514,7 @@ protected:
     std::vector<CScript> MakeScripts(const std::vector<CPubKey>&, const CScript*, FlatSigningProvider&) const override { return Vector(GetScriptForDestination(m_destination)); }
 public:
     AddressDescriptor(CTxDestination destination) : DescriptorImpl({}, {}, "addr"), m_destination(std::move(destination)) {}
-    bool IsSolvable() const final { return false; }
+    bool IsSolvable() const override final { return false; }
 
     Optional<OutputType> GetOutputType() const override
     {
@@ -539,7 +539,7 @@ protected:
     std::vector<CScript> MakeScripts(const std::vector<CPubKey>&, const CScript*, FlatSigningProvider&) const override { return Vector(m_script); }
 public:
     RawDescriptor(CScript script) : DescriptorImpl({}, {}, "raw"), m_script(std::move(script)) {}
-    bool IsSolvable() const final { return false; }
+    bool IsSolvable() const override final { return false; }
 
     Optional<OutputType> GetOutputType() const override
     {
