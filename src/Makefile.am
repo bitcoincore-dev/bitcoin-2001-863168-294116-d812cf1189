@@ -693,9 +693,15 @@ if HARDEN
 endif
 
 if ENABLE_BIP70
-%.pb.cc %.pb.h: %.proto
+%.pb.h: %.proto
 	@test -f $(PROTOC)
 	$(AM_V_GEN) $(PROTOC) --cpp_out=$(@D) --proto_path=$(<D) $<
+
+hash := \#
+%.pb.cc: %.proto
+	@test -f $(PROTOC)
+	$(AM_V_GEN) $(PROTOC) --cpp_out=$(@D) --proto_path=$(<D) $< && \
+    $(SED) -i -e '1i $(hash)pragma GCC diagnostic ignored "-Wsuggest-override"' $@
 endif
 
 if EMBEDDED_LEVELDB

@@ -8,7 +8,10 @@
 #include <random.h>
 
 #include <leveldb/cache.h>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsuggest-override"
 #include <leveldb/env.h>
+#pragma GCC diagnostic pop
 #include <leveldb/filter_policy.h>
 #include <memenv.h>
 #include <stdint.h>
