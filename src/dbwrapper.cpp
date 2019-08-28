@@ -8,7 +8,14 @@
 #include <random.h>
 
 #include <leveldb/cache.h>
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsuggest-override"
+#endif
 #include <leveldb/env.h>
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
 #include <leveldb/filter_policy.h>
 #include <memenv.h>
 #include <stdint.h>
