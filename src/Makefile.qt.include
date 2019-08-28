@@ -183,6 +183,12 @@ if ENABLE_BIP70
 PROTOBUF_CC = qt/paymentrequest.pb.cc
 PROTOBUF_H = qt/paymentrequest.pb.h
 PROTOBUF_PROTO = qt/paymentrequest.proto
+$(PROTOBUF_H): $(PROTOBUF_PROTO)
+	@test -f $(PROTOC)
+	$(AM_V_GEN) $(PROTOC) --cpp_out=$(@D) --proto_path=$(<D) $(PROTOBUF_PROTO)
+$(PROTOBUF_CC): $(PROTOBUF_PROTO)
+	@test -f $(PROTOC)
+	$(AM_V_GEN) $(PROTOC) --cpp_out=$(@D) --proto_path=$(<D) $(PROTOBUF_PROTO)
 else
 PROTOBUF_CC =
 PROTOBUF_H =
