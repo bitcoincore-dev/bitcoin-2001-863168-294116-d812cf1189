@@ -364,13 +364,8 @@ void SendCoinsDialog::on_sendButton_clicked()
     questionString.append(QString("<br /><span style='font-size:10pt; font-weight:normal;'>(=%1)</span>")
         .arg(alternativeUnits.join(" " + tr("or") + " ")));
 
-    SendConfirmationDialog confirmationDialog(tr("Confirm send coins"),
-        questionString.arg(formatted.join("<br />")), SEND_CONFIRM_DELAY, this);
-    confirmationDialog.exec();
-    QMessageBox::StandardButton retval = static_cast<QMessageBox::StandardButton>(confirmationDialog.result());
-
-    if(retval != QMessageBox::Yes)
-    {
+    SendConfirmationDialog confirmationDialog(QMessageBox::Question, tr("Confirm send coins"), questionString.arg(formatted.join("<br />")), QMessageBox::Yes, "", QMessageBox::Cancel, SEND_CONFIRM_DELAY, this);
+    if (!confirmationDialog.exec()) {
         fNewRecipientAllowed = true;
         return;
     }
@@ -881,12 +876,22 @@ void SendCoinsDialog::coinControlUpdateLabels()
     }
 }
 
-SendConfirmationDialog::SendConfirmationDialog(const QString &title, const QString &text, int _secDelay,
-    QWidget *parent) :
-    QMessageBox(QMessageBox::Question, title, text, QMessageBox::Yes | QMessageBox::Cancel, parent), secDelay(_secDelay)
+SendConfirmationDialog::SendConfirmationDialog(const QMessageBox::Icon icon, const QString &title, const QString &text, const QMessageBox::StandardButton yes_button, const QString &yes_button_text, const QMessageBox::StandardButton cancel_button, int _secDelay, QWidget *parent) :
+    QMessageBox(icon, title, text, yes_button | cancel_button, parent),
+    m_yes_button_text(yes_button_text),
+    secDelay(_secDelay)
 {
-    setDefaultButton(QMessageBox::Cancel);
-    yesButton = button(QMessageBox::Yes);
+    // We need to ensure the buttons have Yes/No roles, or they'll get ordered weird
+    QAbstractButton * const cancel_button_obj = button(cancel_button);
+    removeButton(cancel_button_obj);
+    addButton(cancel_button_obj, QMessageBox::NoRole);
+    setEscapeButton(cancel_button_obj);
+    setDefaultButton(cancel_button);
+
+    yesButton = button(yes_button);
+    removeButton(yesButton);
+    addButton(yesButton, QMessageBox::YesRole);
+    if (yes_button_text.isEmpty()) m_yes_button_text = tr("Yes");
     updateYesButton();
     connect(&countDownTimer, &QTimer::timeout, this, &SendConfirmationDialog::countDown);
 }
@@ -895,7 +900,8 @@ int SendConfirmationDialog::exec()
 {
     updateYesButton();
     countDownTimer.start(1000);
-    return QMessageBox::exec();
+    QMessageBox::exec();
+    return (buttonRole(clickedButton()) == QMessageBox::YesRole);
 }
 
 void SendConfirmationDialog::countDown()
@@ -914,11 +920,11 @@ void SendConfirmationDialog::updateYesButton()
     if(secDelay > 0)
     {
         yesButton->setEnabled(false);
-        yesButton->setText(tr("Yes") + " (" + QString::number(secDelay) + ")");
+        yesButton->setText(m_yes_button_text + " (" + QString::number(secDelay) + ")");
     }
     else
     {
         yesButton->setEnabled(true);
-        yesButton->setText(tr("Yes"));
+        yesButton->setText(m_yes_button_text);
     }
 }
