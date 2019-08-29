@@ -385,6 +385,12 @@ class WalletTest(BitcoinTestFramework):
             amount=1.0,
             conf_target=-1,
             estimate_mode='EXPLICIT')
+        assert_raises_rpc_error(-4, "Fee rate is too low for the current mempool. Increase it to 0.00001000 BTC/kB or modify -maxmempool",
+            self.nodes[2].sendtoaddress,
+            address=address,
+            amount=1.0,
+            conf_target=0.000002,
+            estimate_mode='EXPLICIT')
         txid = self.nodes[2].sendtoaddress(
             address=address,
             amount=1.0,
