@@ -473,6 +473,12 @@ class WalletTest(BitcoinTestFramework):
             amount=1.0,
             conf_target=-1,
             estimate_mode='SAT/b')
+        assert_raises_rpc_error(-4, "Fee rate (0.00000200 BTC/kB) is lower than the minimum fee rate setting (0.00001000 BTC/kB)",
+            self.nodes[2].sendtoaddress,
+            address=address,
+            amount=1.0,
+            conf_target=0.2,
+            estimate_mode='SAT/B')
         txid = self.nodes[2].sendtoaddress(
             address=address,
             amount=1.0,
