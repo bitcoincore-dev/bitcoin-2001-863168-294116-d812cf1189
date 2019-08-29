@@ -218,6 +218,17 @@ class WalletTest(BitcoinTestFramework):
         node_0_bal = self.check_fee_amount(self.nodes[0].getbalance(), node_0_bal + Decimal('10'), fee_per_byte, self.get_vsize(self.nodes[2].gettransaction(txid)['hex']))
 
         # Sendmany with explicit fee
+        # Throw if no conf_target provided
+        assert_raises_rpc_error(-8, "Selected estimate_mode requires a confirmation target",
+            self.nodes[2].sendmany,
+            amounts={ address: 10 },
+            estimate_mode='EXPLICIT')
+        # Throw if negative feerate
+        assert_raises_rpc_error(-3, "Amount out of range",
+            self.nodes[2].sendmany,
+            amounts={ address: 10 },
+            conf_target=-1,
+            estimate_mode='EXPLICIT')
         fee_per_kb = 0.0002500
         explicit_fee_per_byte = Decimal(fee_per_kb) / 1000
         txid = self.nodes[2].sendmany(
@@ -226,6 +237,7 @@ class WalletTest(BitcoinTestFramework):
             estimate_mode='EXPLICIT',
         )
         self.nodes[2].generate(1)
+
         self.sync_all(self.nodes[0:3])
         node_2_bal = self.check_fee_amount(self.nodes[2].getbalance(), node_2_bal - Decimal('10'), explicit_fee_per_byte, self.get_vsize(self.nodes[2].gettransaction(txid)['hex']))
         assert_equal(self.nodes[2].getbalance(), node_2_bal)
@@ -359,8 +371,22 @@ class WalletTest(BitcoinTestFramework):
         self.sync_all(self.nodes[0:3])
         prebalance = self.nodes[2].getbalance()
         assert prebalance > 2
+        address = self.nodes[1].getnewaddress()
+        # Throw if no conf_target provided
+        assert_raises_rpc_error(-8, "Selected estimate_mode requires a confirmation target",
+            self.nodes[2].sendtoaddress,
+            address=address,
+            amount=1.0,
+            estimate_mode='EXPLICIT')
+        # Throw if negative feerate
+        assert_raises_rpc_error(-3, "Amount out of range",
+            self.nodes[2].sendtoaddress,
+            address=address,
+            amount=1.0,
+            conf_target=-1,
+            estimate_mode='EXPLICIT')
         txid = self.nodes[2].sendtoaddress(
-            address=self.nodes[1].getnewaddress(),
+            address=address,
             amount=1.0,
             conf_target=0.00002500,
             estimate_mode='EXPLICIT',
