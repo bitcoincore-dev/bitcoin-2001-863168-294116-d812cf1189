@@ -121,7 +121,7 @@ static bool AppInit(int argc, char* argv[])
         }
 
         if (IsThisSoftwareExpired(GetTime())) {
-            fprintf(stderr, "This software is expired, and may be out of consensus. You must choose to upgrade or override this expiration.\n");
+            tfm::format(std::cerr, "This software is expired, and may be out of consensus. You must choose to upgrade or override this expiration.\n");
             exit(EXIT_FAILURE);
         }
 
