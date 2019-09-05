@@ -3,6 +3,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include <bech32.h>
 #include <httpserver.h>
 #include <key_io.h>
 #include <node/context.h>
@@ -42,6 +43,8 @@ static UniValue validateaddress(const JSONRPCRequest& request)
                         {RPCResult::Type::BOOL, "iswitness", "If the address is a witness address"},
                         {RPCResult::Type::NUM, "witness_version", /* optional */ true, "The version number of the witness program"},
                         {RPCResult::Type::STR_HEX, "witness_program", /* optional */ true, "The hex value of the witness program"},
+                        {RPCResult::Type::STR, "error", /* optional */ true, "The error message if the address is an invalid bech32 address"},
+                        {RPCResult::Type::NUM, "error_index", /* optional */ true, "The index of the first invalid character if the address is encoded with bech32"},
                     }
                 },
                 RPCExamples{
@@ -50,7 +53,8 @@ static UniValue validateaddress(const JSONRPCRequest& request)
                 },
             }.Check(request);
 
-    CTxDestination dest = DecodeDestination(request.params[0].get_str());
+    std::string address = request.params[0].get_str();
+    CTxDestination dest = DecodeDestination(address);
     bool isValid = IsValidDestination(dest);
 
     UniValue ret(UniValue::VOBJ);
@@ -65,6 +69,11 @@ static UniValue validateaddress(const JSONRPCRequest& request)
 
         UniValue detail = DescribeAddress(dest);
         ret.pushKVs(detail);
+    } else {
+        std::string error;
+        int pos = bech32::LocateError(address, error);
+        ret.pushKV("error", error);
+        ret.pushKV("error_index", pos);
     }
     return ret;
 }
