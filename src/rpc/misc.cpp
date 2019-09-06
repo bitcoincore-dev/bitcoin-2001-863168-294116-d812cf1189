@@ -30,6 +30,7 @@ static UniValue validateaddress(const JSONRPCRequest& request)
                 "\nReturn information about the given bitcoin address.\n",
                 {
                     {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The bitcoin address to validate"},
+                    {"address_type", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "The address type provided, used to detect errors. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\"."},
                 },
                 RPCResult{
             "{\n"
@@ -40,8 +41,8 @@ static UniValue validateaddress(const JSONRPCRequest& request)
             "  \"iswitness\" : true|false,     (boolean) If the address is a witness address\n"
             "  \"witness_version\" : version   (numeric, optional) The version number of the witness program\n"
             "  \"witness_program\" : \"hex\"     (string, optional) The hex value of the witness program\n"
-            "  \"error\" : \"message\"           (string, optional) The error message if the address is an invalid bech32 address\n"
-            "  \"error_index\" : xxxxx         (numeric, optional) The index of the first invalid character if the address is encoded with bech32\n"
+            "  \"error\" : \"message\"           (string, optional) The error message if the provided address is invalid and address type is provided\n"
+            "  \"error_index\" : xxxxx         (numeric, optional) The index of the first invalid character (if the address type provided is bech32)\n"
             "}\n"
                 },
                 RPCExamples{
@@ -66,11 +67,12 @@ static UniValue validateaddress(const JSONRPCRequest& request)
 
         UniValue detail = DescribeAddress(dest);
         ret.pushKVs(detail);
-    } else {
+    } else if (!request.params[1].isNull()) {
+        std::string address_type = request.params[1].get_str();
         std::string error;
-        int pos = bech32::LocateError(address, error);
-        ret.pushKV("error", error);
-        ret.pushKV("error_index", pos);
+        auto res = LocateErrorInDestinationString(address, address_type);
+        ret.pushKV("error", res.second);
+        if (address_type == "bech32") ret.pushKV("error_index", res.first);
     }
     return ret;
 }
