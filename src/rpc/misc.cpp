@@ -36,6 +36,7 @@ static RPCHelpMan validateaddress()
                 "\nReturn information about the given bitcoin address.\n",
                 {
                     {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The bitcoin address to validate"},
+                    {"address_type", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "The address type provided, used to detect errors. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\"."},
                 },
                 RPCResult{
                     RPCResult::Type::OBJ, "", "",
@@ -47,8 +48,8 @@ static RPCHelpMan validateaddress()
                         {RPCResult::Type::BOOL, "iswitness", "If the address is a witness address"},
                         {RPCResult::Type::NUM, "witness_version", /* optional */ true, "The version number of the witness program"},
                         {RPCResult::Type::STR_HEX, "witness_program", /* optional */ true, "The hex value of the witness program"},
-                        {RPCResult::Type::STR, "error", /* optional */ true, "The error message if the address is an invalid bech32 address"},
-                        {RPCResult::Type::NUM, "error_index", /* optional */ true, "The index of the first invalid character if the address is encoded with bech32"},
+                        {RPCResult::Type::STR, "error", /* optional */ true, "The error message if the provided address is invalid and address type is provided"},
+                        {RPCResult::Type::NUM, "error_index", /* optional */ true, "The index of the first invalid character (if the address type provided is bech32)"},
                     }
                 },
                 RPCExamples{
@@ -73,11 +74,12 @@ static RPCHelpMan validateaddress()
 
         UniValue detail = DescribeAddress(dest);
         ret.pushKVs(detail);
-    } else {
+    } else if (!request.params[1].isNull()) {
+        std::string address_type = request.params[1].get_str();
         std::string error;
-        int pos = bech32::LocateError(address, error);
-        ret.pushKV("error", error);
-        ret.pushKV("error_index", pos);
+        auto res = LocateErrorInDestinationString(address, address_type);
+        ret.pushKV("error", res.second);
+        if (address_type == "bech32") ret.pushKV("error_index", res.first);
     }
     return ret;
 },
@@ -709,7 +711,7 @@ static const CRPCCommand commands[] =
   //  --------------------- ------------------------  -----------------------  ----------
     { "control",            "getmemoryinfo",          &getmemoryinfo,          {"mode"} },
     { "control",            "logging",                &logging,                {"include", "exclude"}},
-    { "util",               "validateaddress",        &validateaddress,        {"address"} },
+    { "util",               "validateaddress",        &validateaddress,        {"address", "address_type"} },
     { "util",               "createmultisig",         &createmultisig,         {"nrequired","keys","address_type"} },
     { "util",               "deriveaddresses",        &deriveaddresses,        {"descriptor", "range"} },
     { "util",               "getdescriptorinfo",      &getdescriptorinfo,      {"descriptor"} },

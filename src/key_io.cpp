@@ -226,3 +226,54 @@ bool IsValidDestinationString(const std::string& str)
 {
     return IsValidDestinationString(str, Params());
 }
+
+std::pair<int, std::string> LocateErrorInDestinationString(const std::string& str, const std::string& address_type)
+{
+    std::vector<unsigned char> data;
+    if (address_type == "legacy" || address_type == "p2sh-segwit") {
+        uint160 hash;
+        const std::vector<unsigned char>& pubkey_prefix = Params().Base58Prefix(CChainParams::PUBKEY_ADDRESS);
+        const std::vector<unsigned char>& script_prefix = Params().Base58Prefix(CChainParams::SCRIPT_ADDRESS);
+
+        if (!DecodeBase58(str, data, 256)) {
+            return {0, "Invalid Base58 character in address"};
+        }
+        if (!DecodeBase58Check(str, data, 252)) {
+            return {0, "Invalid checksum for Base58 address"};
+        }
+        if (data.size() != hash.size() + pubkey_prefix.size() && data.size() != hash.size() + script_prefix.size()) {
+            return {0, "Invalid length for Base58 address"};
+        }
+        if (!std::equal(pubkey_prefix.begin(), pubkey_prefix.end(), data.begin()) &&
+            !std::equal(script_prefix.begin(), script_prefix.end(), data.begin())) {
+                return {0, "Invalid prefix for Base58 address"};
+        }
+    } else if (address_type == "bech32") {
+        auto bech = bech32::Decode(str);
+        if (bech.second.size() > 0) {
+            if (bech.first != Params().Bech32HRP()) {
+                return {0, "Invalid HRP for Bech32 address"};
+            }
+            int version = bech.second[0];
+            if (version > 16) {
+                return {0, "Invalid witness version"};
+            }
+            if (data.size() < 2) {
+                return {0, "Invalid data length"};
+            }
+            data.reserve(((bech.second.size() - 1) * 5) / 8);
+            if (ConvertBits<5, 8, false>([&](unsigned char c) { data.push_back(c); }, bech.second.begin() + 1, bech.second.end())) {
+                WitnessV0KeyHash keyid;
+                WitnessV0ScriptHash scriptid;
+                if (version == 0 && data.size() != keyid.size() && data.size() != scriptid.size())  {
+                    return {0, "Invalid data length for version 0 witness"};
+                }
+            }
+        } else {
+            std::string error;
+            int pos = bech32::LocateError(str, error);
+            return {pos, error};
+        }
+    }
+    return {0, "Unknown address type"};
+}
