@@ -2250,8 +2250,8 @@ void static UpdateTip(const CBlockIndex *pindexNew, const CChainParams& chainPar
             }
         }
         // Check the version of the last 100 blocks to see if we need to upgrade:
-        int unexpected_bit_count[VERSIONBITS_NUM_BITS + 1];
-        static constexpr int NONVERSIONBITS_UPGRADE = VERSIONBITS_NUM_BITS;
+        int unexpected_bit_count[VERSIONBITS_NUM_BITS], nonversionbit_count = 0;
+        for (size_t i = 0; i < VERSIONBITS_NUM_BITS; ++i) unexpected_bit_count[i] = 0;
         static constexpr int WARNING_THRESHOLD = 100/2;
         bool warning_threshold_hit = false;
         for (int i = 0; i < 100 && pindex != nullptr; i++)
@@ -2270,7 +2270,7 @@ void static UpdateTip(const CBlockIndex *pindexNew, const CChainParams& chainPar
                     }
                 } else {
                     // Non-versionbits upgrade
-                    if (++unexpected_bit_count[NONVERSIONBITS_UPGRADE] > WARNING_THRESHOLD) {
+                    if (++nonversionbit_count > WARNING_THRESHOLD) {
                         warning_threshold_hit = true;
                     }
                 }
