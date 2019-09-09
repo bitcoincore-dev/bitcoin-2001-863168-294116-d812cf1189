@@ -20,6 +20,8 @@ FALSE_POSITIVES = [
     ("src/wallet/wallet.h",  "WalletLogPrintf(std::string fmt, Params... parameters)"),
     ("src/wallet/wallet.h", "LogPrintf((\"%s \" + fmt).c_str(), GetDisplayName(), parameters...)"),
     ("src/logging.h", "LogPrintf(const char* fmt, const Args&... args)"),
+    ("src/logging.h", "LogPrint(m_log_category, full_msg.c_str())"),
+    ("src/logging.h", "LogPrintf(full_msg.c_str())"),
 ]
 
 
