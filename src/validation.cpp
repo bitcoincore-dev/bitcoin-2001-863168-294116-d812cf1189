@@ -5311,3 +5311,13 @@ std::optional<int> ChainstateManager::GetSnapshotHeight()
     }
     return (*base)->nHeight;
 }
+
+bool ChainstateManager::IsAnyChainInIBD()
+{
+    if (m_snapshot_chainstate && m_snapshot_chainstate->IsInitialBlockDownload()) {
+        return true;
+    } else if (m_ibd_chainstate && m_ibd_chainstate->IsInitialBlockDownload()) {
+        return true;
+    }
+    return false;
+}
