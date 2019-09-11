@@ -1140,6 +1140,10 @@ public:
     //! Check to see if caches are out of balance and if so, call
     //! ResizeCoinsCaches() as needed.
     void MaybeRebalanceCaches() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! Returns true if any chainstate in use is in initial block download.
+    bool IsAnyChainInIBD();
+
 };
 
 extern ChainstateManager g_chainman;

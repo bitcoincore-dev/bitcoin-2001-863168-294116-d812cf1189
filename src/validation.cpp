@@ -5603,3 +5603,15 @@ void ChainstateManager::MaybeRebalanceCaches()
         }
     }
 }
+
+
+bool ChainstateManager::IsAnyChainInIBD()
+{
+    LOCK(m_cs_chainstates);
+    if (m_snapshot_chainstate && m_snapshot_chainstate->IsInitialBlockDownload()) {
+        return true;
+    } else if (m_ibd_chainstate && m_ibd_chainstate->IsInitialBlockDownload()) {
+        return true;
+    }
+    return false;
+}
