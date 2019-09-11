@@ -1051,6 +1051,9 @@ public:
         m_snapshot_chainstate.reset();
         m_active_chainstate = nullptr;
     }
+
+    //! Returns true if any chainstate in use is in initial block download.
+    bool IsAnyChainInIBD();
 };
 
 extern ChainstateManager g_chainman;

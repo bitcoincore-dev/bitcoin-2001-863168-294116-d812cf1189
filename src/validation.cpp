@@ -5165,3 +5165,14 @@ CChain& ChainstateManager::ActiveChain() const
     LOCK(m_cs_chainstates);
     return m_active_chainstate->m_chain;
 }
+
+bool ChainstateManager::IsAnyChainInIBD()
+{
+    LOCK(m_cs_chainstates);
+    if (m_snapshot_chainstate && m_snapshot_chainstate->IsInitialBlockDownload()) {
+        return true;
+    } else if (m_ibd_chainstate && m_ibd_chainstate->IsInitialBlockDownload()) {
+        return true;
+    }
+    return false;
+}
