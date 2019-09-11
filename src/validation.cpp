@@ -5382,3 +5382,10 @@ std::optional<int> ChainstateManager::GetSnapshotBaseHeight() const
     auto base{this->GetSnapshotBaseBlock()};
     return base ? std::make_optional(base->nHeight) : std::nullopt;
 }
+
+bool ChainstateManager::IsAnyChainInIBD()
+{
+    return
+        (m_snapshot_chainstate && m_snapshot_chainstate->IsInitialBlockDownload()) ||
+        (m_ibd_chainstate && m_ibd_chainstate->IsInitialBlockDownload());
+}
