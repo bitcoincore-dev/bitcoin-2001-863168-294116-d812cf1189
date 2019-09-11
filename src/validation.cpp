@@ -5789,3 +5789,10 @@ bool ChainstateManager::ValidatedSnapshotCleanup()
     }
     return true;
 }
+
+bool ChainstateManager::IsAnyChainInIBD()
+{
+    return
+        (m_snapshot_chainstate && m_snapshot_chainstate->IsInitialBlockDownload()) ||
+        (m_ibd_chainstate && m_ibd_chainstate->IsInitialBlockDownload());
+}
