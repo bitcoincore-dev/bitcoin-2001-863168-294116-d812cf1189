@@ -2064,8 +2064,9 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         if (!pfrom->fInbound && pfrom->IsAddrRelayPeer())
         {
             bool is_ibd;
-            WITH_LOCK(::cs_main, is_ibd = ::ChainstateActive().IsInitialBlockDownload());
+            WITH_LOCK(::cs_main, is_ibd = g_chainman.IsAnyChainInIBD());
 
+            // Advertise our address
             if (fListen && !is_ibd)
             {
                 CAddress addr = GetLocalAddress(&pfrom->addr, pfrom->GetLocalServices());
@@ -2467,7 +2468,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         }
 
         LOCK(cs_main);
-        if (::ChainstateActive().IsInitialBlockDownload() && !pfrom->HasPermission(PF_NOBAN)) {
+        if (g_chainman.IsAnyChainInIBD() && !pfrom->HasPermission(PF_NOBAN)) {
             LogPrint(BCLog::NET, "Ignoring getheaders from peer=%d because node is in initial block download\n", pfrom->GetId());
             return true;
         }
@@ -3598,7 +3599,7 @@ bool PeerLogicValidation::SendMessages(CNode* pto)
             }
         }
 
-        TRY_LOCK(cs_main, lockMain);
+        TRY_LOCK(cs_main, lockMain); // Acquire cs_main for CNodeState()
         if (!lockMain)
             return true;
 
@@ -3610,7 +3611,7 @@ bool PeerLogicValidation::SendMessages(CNode* pto)
         int64_t nNow = GetTimeMicros();
         auto current_time = GetTime<std::chrono::microseconds>();
 
-        if (pto->IsAddrRelayPeer() && !::ChainstateActive().IsInitialBlockDownload() && pto->nNextLocalAddrSend < nNow) {
+        if (pto->IsAddrRelayPeer() && !g_chainman.IsAnyChainInIBD() && pto->nNextLocalAddrSend < nNow) {
             AdvertiseLocal(pto);
             pto->nNextLocalAddrSend = PoissonNextSend(nNow, AVG_LOCAL_ADDRESS_BROADCAST_INTERVAL);
         }
