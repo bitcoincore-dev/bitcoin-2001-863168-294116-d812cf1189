@@ -1030,6 +1030,9 @@ public:
     //! ResizeCoinsCaches() as needed.
     void MaybeRebalanceCaches() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
+    //! Returns true if any chainstate in use is in initial block download.
+    bool IsAnyChainInIBD() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
     //! @returns the chainstate that indexers should consult when ensuring that an
     //!   index is synced with a chain where we can expect block index entries to have
     //!   BLOCK_HAVE_DATA beneath the tip.
