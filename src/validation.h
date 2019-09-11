@@ -1053,6 +1053,9 @@ public:
     //! ResizeCoinsCaches() as needed.
     void MaybeRebalanceCaches() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
+    //! Returns true if any chainstate in use is in initial block download.
+    bool IsAnyChainInIBD() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
     //! If some region of the block index is assumed to be valid (as in the case of
     //! UTXO snapshot usage), return the last blockhash to be assumed valid (i.e. the
     //! base of the snapshot) and the correspondent nChainTx value associated with it.
