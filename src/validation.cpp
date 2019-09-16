@@ -66,6 +66,7 @@
 #include <optional>
 #include <string>
 #include <utility>
+#include <tuple>
 
 using kernel::CCoinsStats;
 using kernel::CoinStatsHashType;
@@ -2474,11 +2475,19 @@ bool Chainstate::FlushStateToDisk(
             if (nManualPruneHeight > 0) {
                 LOG_TIME_MILLIS_WITH_CATEGORY("find files to prune (manual)", BCLog::BENCH);
 
-                m_blockman.FindFilesToPruneManual(setFilesToPrune, std::min(last_prune, nManualPruneHeight), m_chain.Height());
+                m_blockman.FindFilesToPruneManual(
+                    setFilesToPrune,
+                    std::min(last_prune, nManualPruneHeight),
+                    m_chain.Height(),
+                    *this,
+                    m_chainman);
             } else {
                 LOG_TIME_MILLIS_WITH_CATEGORY("find files to prune", BCLog::BENCH);
 
-                m_blockman.FindFilesToPrune(setFilesToPrune, m_chainman.GetParams().PruneAfterHeight(), m_chain.Height(), last_prune, m_chainman.IsInitialBlockDownload());
+                m_blockman.FindFilesToPrune(
+                    setFilesToPrune,
+                    m_chainman.GetParams().PruneAfterHeight(),
+                    m_chain.Height(), last_prune, *this, m_chainman);
                 m_blockman.m_check_for_pruning = false;
             }
             if (!setFilesToPrune.empty()) {
@@ -5863,4 +5872,37 @@ Chainstate& ChainstateManager::GetChainstateForIndexing()
     // has completed, `m_snapshot_chainstate == m_active_chainstate`, but it can be
     // indexed.
     return (this->GetAll().size() > 1) ? *m_ibd_chainstate : *m_active_chainstate;
+}
+
+std::pair<unsigned int, unsigned int> ChainstateManager::GetPruneRange(
+    const Chainstate& chainstate, unsigned int prune_height)
+{
+    if (chainstate.m_chain.Height() <= 0) {
+        return {1, 0};
+    }
+    unsigned int prune_start{1};
+
+    if (this->GetAll().size() > 1 && m_snapshot_chainstate.get() == &chainstate) {
+        // Leave the blocks in the background IBD chain alone if we're pruning
+        // the snapshot chain.
+        prune_start = *Assert(GetSnapshotBaseHeight()) + 1;
+    }
+
+    unsigned int prune_end{0};
+    unsigned int chain_height{static_cast<unsigned int>(chainstate.m_chain.Height())};
+
+    if (MIN_BLOCKS_TO_KEEP > chain_height) {
+        // Prevent underflow.
+        prune_end = 0;
+    } else {
+        // last block to prune is the lesser of (user-specified height, MIN_BLOCKS_TO_KEEP from the tip)
+        //
+        // While you might be tempted to prune the background chainstate more
+        // aggressively (i.e. fewer MIN_BLOCKS_TO_KEEP), this won't work with index
+        // building - specifically blockfilterindex requires undo data, and if
+        // we don't maintain this trailing window, we hit indexation failures.
+        prune_end = std::min(prune_height, chain_height - MIN_BLOCKS_TO_KEEP);
+    }
+
+    return {prune_start, prune_end};
 }
