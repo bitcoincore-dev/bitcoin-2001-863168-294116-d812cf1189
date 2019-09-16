@@ -4611,18 +4611,18 @@ bool CChainState::RewindBlockIndex(const CChainParams& params)
     return true;
 }
 
-bool RewindBlockIndex(const CChainParams& params) {
-    if (!::ChainstateActive().RewindBlockIndex(params)) {
+bool RewindBlockIndex(CChainState& chainstate, const CChainParams& params) {
+    if (!chainstate.RewindBlockIndex(params)) {
         return false;
     }
 
     LOCK(cs_main);
-    if (::ChainActive().Tip() != nullptr) {
-        // FlushStateToDisk can possibly read ::ChainActive(). Be conservative
+    if (chainstate.m_chain.Tip() != nullptr) {
+        // FlushStateToDisk can possibly read m_chain. Be conservative
         // and skip it here, we're about to -reindex-chainstate anyway, so
         // it'll get called a bunch real soon.
         CValidationState state;
-        if (!::ChainstateActive().FlushStateToDisk(params, state, FlushStateMode::ALWAYS)) {
+        if (!chainstate.FlushStateToDisk(params, state, FlushStateMode::ALWAYS)) {
             LogPrintf("RewindBlockIndex: unable to flush state to disk (%s)\n", FormatStateMessage(state));
             return false;
         }
@@ -4643,6 +4643,7 @@ void UnloadBlockIndex()
 {
     LOCK(cs_main);
     g_chainman.Unload();
+
     pindexBestInvalid = nullptr;
     pindexBestHeader = nullptr;
     mempool.clear();
@@ -5315,7 +5316,8 @@ std::vector<CChainState*> ChainstateManager::GetAllForBlockDownload()
 }
 
 CChainState& ChainstateManager::InitializeChainstate(
-    bool activate, const uint256& snapshot_blockhash)
+    bool activate,
+    const uint256& snapshot_blockhash)
 {
     LOCK(m_cs_chainstates);
     std::unique_ptr<CChainState>& to_modify = (
