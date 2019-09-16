@@ -147,6 +147,7 @@ class LockImpl : public Chain::Lock, public UniqueLock<RecursiveMutex>
 
     int getLowestBlockDataHeight() override
     {
+        LockAssertion lock(::cs_main);
         if (g_chainman.IsSnapshotActive() && !g_chainman.IsSnapshotValidated()) {
             return g_chainman.SnapshotHeight();
         }
