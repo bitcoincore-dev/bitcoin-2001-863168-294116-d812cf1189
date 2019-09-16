@@ -3708,7 +3708,9 @@ bool ProcessNewBlockHeaders(const std::vector<CBlockHeader>& headers, BlockValid
             CBlockIndex *pindex = nullptr; // Use a temp pindex instead of ppindex to avoid a const_cast
             bool accepted = g_chainman.m_blockman.AcceptBlockHeader(
                 header, state, chainparams, &pindex);
-            ::ChainstateActive().CheckBlockIndex(chainparams.GetConsensus());
+            g_chainman.RunOnAll([&chainparams](CChainState& chainstate) {
+                chainstate.CheckBlockIndex(chainparams.GetConsensus());
+            });
 
             if (!accepted) {
                 return false;
