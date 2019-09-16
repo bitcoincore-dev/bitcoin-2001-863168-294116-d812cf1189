@@ -243,7 +243,7 @@ bool TestLockPointValidity(const LockPoints* lp)
     // If there are relative lock times then the maxInputBlock will be set
     // If there are no relative lock times, the LockPoints don't depend on the chain
     if (lp->maxInputBlock) {
-        // Check whether ::ChainActive() is an extension of the block at which the LockPoints
+        // Check whether the active chain is an extension of the block at which the LockPoints
         // calculation was valid.  If not LockPoints are no longer valid
         if (!::ChainActive().Contains(lp->maxInputBlock)) {
             return false;
@@ -279,7 +279,8 @@ bool CheckSequenceLocks(const CTxMemPool& pool, const CTransaction& tx, int flag
         lockPair.second = lp->time;
     }
     else {
-        // CoinsTip() contains the UTXO set for ::ChainActive().Tip()
+        // Since this function is only used for mempool maintenance, we don't
+        // need to be concerned with parameterizing the UTXO set.
         CCoinsViewMemPool viewMemPool(&::ChainstateActive().CoinsTip(), pool);
         std::vector<int> prevheights;
         prevheights.resize(tx.vin.size());
