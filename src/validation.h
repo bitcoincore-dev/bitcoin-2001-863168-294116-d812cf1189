@@ -713,6 +713,7 @@ private:
     void EraseBlockData(CBlockIndex* index) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
     friend ChainstateManager;
+    friend bool LoadGenesisBlock(const CChainParams&);
 };
 
 /** Mark a block as precious and reorganize.
