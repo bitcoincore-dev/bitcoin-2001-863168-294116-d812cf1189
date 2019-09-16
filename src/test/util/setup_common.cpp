@@ -178,8 +178,11 @@ TestingSetup::TestingSetup(const std::string& chainName, const std::vector<const
     assert(!::ChainstateActive().CanFlushToDisk());
     ::ChainstateActive().InitCoinsCache(1 << 23);
     assert(::ChainstateActive().CanFlushToDisk());
-    if (!LoadGenesisBlock(chainparams)) {
-        throw std::runtime_error("LoadGenesisBlock failed.");
+    {
+        LOCK(::cs_main);
+        if (!LoadGenesisBlock(chainparams)) {
+            throw std::runtime_error("LoadGenesisBlock failed.");
+        }
     }
 
     BlockValidationState state;
