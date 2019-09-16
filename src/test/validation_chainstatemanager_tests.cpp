@@ -74,9 +74,12 @@ BOOST_AUTO_TEST_CASE(chainstatemanager)
 
     c2.InitCoinsDB(
         /* cache_size_bytes */ 1 << 23, /* in_memory */ true, /* should_wipe */ false);
-    WITH_LOCK(::cs_main, c2.InitCoinsCache(1 << 23));
-    // Unlike c1, which doesn't have any blocks. Gets us different tip, height.
-    c2.LoadGenesisBlock(chainparams);
+    {
+        LOCK(::cs_main);
+        c2.InitCoinsCache(1 << 23);
+        // Unlike c1, which doesn't have any blocks. Gets us different tip, height.
+        c2.LoadGenesisBlock(chainparams);
+    }
     BlockValidationState _;
     BOOST_CHECK(c2.ActivateBestChain(_, chainparams, nullptr));
 
