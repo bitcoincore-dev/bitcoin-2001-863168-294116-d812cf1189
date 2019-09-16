@@ -1123,7 +1123,8 @@ static UniValue verifychain(const JSONRPCRequest& request)
 
     LOCK(cs_main);
 
-    return CVerifyDB().VerifyDB(Params(), &::ChainstateActive().CoinsTip(), check_level, check_depth);
+    return CVerifyDB().VerifyDB(
+        ::ChainstateActive(), Params(), ::ChainstateActive().CoinsTip(), check_level, check_depth);
 }
 
 static void BuriedForkDescPushBack(UniValue& softforks, const std::string &name, int height) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
