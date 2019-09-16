@@ -28,6 +28,7 @@ class CChain;
 class CChainParams;
 class Chainstate;
 class ChainstateManager;
+enum class ChainstateRole;
 struct CCheckpointData;
 struct FlatFilePos;
 namespace Consensus {
@@ -104,7 +105,12 @@ private:
     bool UndoWriteToDisk(const CBlockUndo& blockundo, FlatFilePos& pos, const uint256& hashBlock, const CMessageHeader::MessageStartChars& messageStart) const;
 
     /* Calculate the block/rev files to delete based on height specified by user with RPC command pruneblockchain */
-    void FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPruneHeight, int chain_tip_height);
+    void FindFilesToPruneManual(
+        std::set<int>& setFilesToPrune,
+        int nManualPruneHeight,
+        int chain_tip_height,
+        const Chainstate& chain,
+        ChainstateManager& chainman);
 
     /**
      * Prune block and undo files (blk???.dat and rev???.dat) so that the disk space used is less than a user-defined target.
@@ -121,7 +127,13 @@ private:
      *
      * @param[out]   setFilesToPrune   The set of file indices that can be unlinked will be returned
      */
-    void FindFilesToPrune(std::set<int>& setFilesToPrune, uint64_t nPruneAfterHeight, int chain_tip_height, int prune_height, bool is_ibd);
+    void FindFilesToPrune(
+        std::set<int>& setFilesToPrune,
+        uint64_t nPruneAfterHeight,
+        int chain_tip_height,
+        int prune_height,
+        const Chainstate& chain,
+        ChainstateManager& chainman);
 
     RecursiveMutex cs_LastBlockFile;
     std::vector<CBlockFileInfo> m_blockfile_info;
