@@ -523,7 +523,8 @@ void ThreadImport(ChainstateManager& chainman, std::vector<fs::path> vImportFile
             fReindex = false;
             LogPrintf("Reindexing finished\n");
             // To avoid ending up in a situation without genesis block, re-try initializing (no-op if reindexing worked):
-            chainman.ActiveChainstate().LoadGenesisBlock(chainparams);
+            WITH_LOCK(::cs_main,
+                chainman.ActiveChainstate().LoadGenesisBlock(chainparams));
         }
 
         // -loadblock=
