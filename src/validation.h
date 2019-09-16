@@ -890,10 +890,6 @@ private:
     /** Most recent headers presync progress update, for rate-limiting. */
     std::chrono::time_point<std::chrono::steady_clock> m_last_presync_update GUARDED_BY(::cs_main) {};
 
-    //! Return the height of the base block of the snapshot in use, if one exists, else
-    //! nullopt.
-    std::optional<int> GetSnapshotBaseHeight() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
-
     std::array<ThresholdConditionCache, VERSIONBITS_NUM_BITS> m_warningcache GUARDED_BY(::cs_main);
 
     //! Return true if a chainstate is considered usable.
@@ -1247,6 +1243,17 @@ public:
     //!   when using an assumed-valid chainstate based upon a snapshot, return only the
     //!   fully validated chain.
     Chainstate& GetChainstateForIndexing() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! Return the [start, end] (inclusive) of block heights we can prune.
+    //!
+    //! If we're pruning the snapshot chainstate, be sure not to
+    //! prune blocks being used by the background chainstate.
+    std::pair<unsigned int, unsigned int> GetPruneRange(
+        const Chainstate& chainstate, unsigned int prune_height) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! Return the height of the base block of the snapshot in use, if one exists, else
+    //! nullopt.
+    std::optional<int> GetSnapshotBaseHeight() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     ~ChainstateManager();
 };
