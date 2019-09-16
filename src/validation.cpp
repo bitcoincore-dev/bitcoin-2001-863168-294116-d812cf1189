@@ -3755,6 +3755,7 @@ bool ChainstateManager::ProcessNewBlockHeaders(const std::vector<CBlockHeader>& 
             CBlockIndex *pindex = nullptr; // Use a temp pindex instead of ppindex to avoid a const_cast
             bool accepted = m_blockman.AcceptBlockHeader(
                 header, state, chainparams, &pindex);
+
             for (CChainState* chainstate : g_chainman.GetAll()) {
                 chainstate->CheckBlockIndex(chainparams.GetConsensus());
             }
@@ -4797,6 +4798,9 @@ bool LoadGenesisBlock(const CChainParams& chainparams)
     return true;
 }
 
+// TODO jamesob: right now this only works in terms of the active chainstate,
+//   but it's only used during -reindex, -loadblock, and bootstrap.dat so maybe
+//   that's okay. Think more about how to handle reindexing when using snapshots.
 void LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, FlatFilePos *dbp)
 {
     // Map of disk positions for blocks with unknown parent (only used for reindex)
@@ -4872,7 +4876,12 @@ void LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, FlatFi
                 // Activate the genesis block so normal node progress can continue
                 if (hash == chainparams.GetConsensus().hashGenesisBlock) {
                     BlockValidationState state;
-                    if (!ActivateBestChain(state, chainparams, nullptr)) {
+
+                    // Can't hold cs_main going into ABC, but need cs_main to interact
+                    // with ChainstateActive().
+                    CChainState* active;
+                    WITH_LOCK(::cs_main, active = &::ChainstateActive());
+                    if (!active->ActivateBestChain(state, chainparams)) {
                         break;
                     }
                 }
