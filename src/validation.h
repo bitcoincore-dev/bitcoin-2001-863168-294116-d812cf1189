@@ -396,7 +396,12 @@ class CVerifyDB {
 public:
     CVerifyDB();
     ~CVerifyDB();
-    bool VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview, int nCheckLevel, int nCheckDepth);
+    bool VerifyDB(
+        CChainState& chainstate,
+        const CChainParams& chainparams,
+        CCoinsView& coinsview,
+        int nCheckLevel,
+        int nCheckDepth);
 };
 
 CBlockIndex* LookupBlockIndex(const uint256& hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
