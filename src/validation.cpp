@@ -4280,7 +4280,7 @@ void UnloadBlockIndex(CTxMemPool* mempool, ChainstateManager& chainman)
     fHavePruned = false;
 }
 
-bool ChainstateManager::LoadBlockIndex(const CChainParams& chainparams)
+bool ChainstateManager::LoadBlockIndex(const CChainParams& chainparams) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
     AssertLockHeld(cs_main);
     // Load block index from databases
