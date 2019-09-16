@@ -3705,9 +3705,10 @@ bool ProcessNewBlockHeaders(const std::vector<CBlockHeader>& headers, BlockValid
             CBlockIndex *pindex = nullptr; // Use a temp pindex instead of ppindex to avoid a const_cast
             bool accepted = g_chainman.m_blockman.AcceptBlockHeader(
                 header, state, chainparams, &pindex);
-            g_chainman.RunOnAll([&chainparams](CChainState& chainstate) {
-                chainstate.CheckBlockIndex(chainparams.GetConsensus());
-            });
+
+            for (CChainState* chainstate : g_chainman.GetAll()) {
+                chainstate->CheckBlockIndex(chainparams.GetConsensus());
+            }
 
             if (!accepted) {
                 return false;
@@ -3980,7 +3981,7 @@ static void FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPr
         // the latest block (since our prune allowance only applies to
         // immediately behind the tip, which lives on the snapshot chain).
         //
-        if (g_chainman.IsBackgroundValidationChainstate(chainstate)) {
+        if (g_chainman.IsBackgroundIBD(chainstate)) {
             nLastBlockWeCanPrune = std::min(
                 nManualPruneHeight,
                 // TODO jamesob: is this an off-by-one?
@@ -4050,7 +4051,7 @@ static void FindFilesToPrune(std::set<int>& setFilesToPrune, uint64_t nPruneAfte
         // the latest block (since our prune allowance only applies to
         // immediately behind the tip, which lives on the snapshot chain).
         //
-        if (g_chainman.IsBackgroundValidationChainstate(chainstate)) {
+        if (g_chainman.IsBackgroundIBD(chainstate)) {
             // TODO jamesob: is this an off-by-one?
             nLastBlockWeCanPrune = height - 1;
         }
@@ -4745,6 +4746,9 @@ bool LoadGenesisBlock(const CChainParams& chainparams)
     return true;
 }
 
+// TODO jamesob: right now this only works in terms of the active chainstate,
+//   but it's only used during -reindex, -loadblock, and bootstrap.dat so maybe
+//   that's okay. Think more about how to handle reindexing when using snapshots.
 bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, FlatFilePos *dbp)
 {
     // Map of disk positions for blocks with unknown parent (only used for reindex)
@@ -4821,7 +4825,12 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, FlatFi
                 // Activate the genesis block so normal node progress can continue
                 if (hash == chainparams.GetConsensus().hashGenesisBlock) {
                     BlockValidationState state;
-                    if (!ActivateBestChain(state, chainparams, nullptr)) {
+
+                    // Can't hold cs_main going into ABC, but need cs_main to interact
+                    // with ChainstateActive().
+                    CChainState* active;
+                    WITH_LOCK(::cs_main, active = &::ChainstateActive());
+                    if (!active->ActivateBestChain(state, chainparams)) {
                         break;
                     }
                 }
