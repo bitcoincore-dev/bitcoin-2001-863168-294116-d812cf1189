@@ -2849,6 +2849,7 @@ bool CChainState::ActivateBestChain(CValidationState &state, const CChainParams&
     // we use m_cs_chainstate to enforce mutual exclusion so that only one caller may execute this function at a time
     LOCK(m_cs_chainstate);
 
+    bool started_in_ibd = this->IsInitialBlockDownload();
     CBlockIndex *pindexMostWork = nullptr;
     CBlockIndex *pindexNewTip = nullptr;
     int nStopAtHeight = gArgs.GetArg("-stopatheight", DEFAULT_STOPATHEIGHT);
@@ -2939,6 +2940,11 @@ bool CChainState::ActivateBestChain(CValidationState &state, const CChainParams&
             break;
     } while (pindexNewTip != pindexMostWork);
     CheckBlockIndex(chainparams.GetConsensus());
+
+    if (started_in_ibd && !this->IsInitialBlockDownload()) {
+        // This chainstate has transitioned out of IBD, so consider rebalancing caches.
+        WITH_LOCK(::cs_main, g_chainman.MaybeRebalanceCaches());
+    }
 
     // Write changes periodically to disk, after relay.
     if (!FlushStateToDisk(chainparams, state, FlushStateMode::PERIODIC)) {
