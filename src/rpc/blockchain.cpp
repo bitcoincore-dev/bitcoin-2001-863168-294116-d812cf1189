@@ -1202,7 +1202,10 @@ static RPCHelpMan verifychain()
 
     LOCK(cs_main);
 
-    return CVerifyDB().VerifyDB(Params(), &::ChainstateActive().CoinsTip(), check_level, check_depth);
+    auto& chainstate_active = ::ChainstateActive();
+
+    return CVerifyDB().VerifyDB(
+        chainstate_active, Params(), chainstate_active.CoinsTip(), check_level, check_depth);
 },
     };
 }
