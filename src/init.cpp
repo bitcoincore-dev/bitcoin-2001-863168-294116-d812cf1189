@@ -1681,7 +1681,8 @@ bool AppInitMain(InitInterfaces& interfaces)
                         }
 
                         if (!CVerifyDB().VerifyDB(
-                                chainparams, &chainstate->CoinsDB(),
+                                *chainstate,
+                                chainparams, chainstate->CoinsDB(),
                                 gArgs.GetArg("-checklevel", DEFAULT_CHECKLEVEL),
                                 gArgs.GetArg("-checkblocks", DEFAULT_CHECKBLOCKS))) {
                             strLoadError = _("Corrupted block database detected").translated;
