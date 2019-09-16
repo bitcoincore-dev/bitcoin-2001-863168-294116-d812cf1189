@@ -2427,9 +2427,15 @@ static void AppendWarning(bilingual_str& res, const bilingual_str& warn)
 }
 
 /** Check warning conditions and do some notifications on new chain tip set. */
-void static UpdateTip(const CBlockIndex* pindexNew, const CChainParams& chainParams)
+void static UpdateTip(const CBlockIndex *pindexNew, const CChainParams& chainParams, const CCoinsViewCache& coins_view)
     EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
 {
+    // The contents of this function are either not relevant if we're in IBD
+    // or only pertains to the primary coins view, so bail otherwise.
+    if (&coins_view != &::ChainstateActive().CoinsTip()) {
+        return;
+    }
+
     // New best block
     mempool.AddTransactionsUpdated(1);
 
@@ -2525,7 +2531,7 @@ bool CChainState::DisconnectTip(BlockValidationState& state, const CChainParams&
 
     m_chain.SetTip(pindexDelete->pprev);
 
-    UpdateTip(pindexDelete->pprev, chainparams);
+    UpdateTip(pindexDelete->pprev, chainparams, CoinsTip());
     // Let wallets know transactions went from 1-confirmed to
     // 0-confirmed or conflicted:
     if (this == &::ChainstateActive()) {
@@ -2634,7 +2640,7 @@ bool CChainState::ConnectTip(BlockValidationState& state, const CChainParams& ch
     disconnectpool.removeForBlock(blockConnecting.vtx);
     // Update m_chain & related variables.
     m_chain.SetTip(pindexNew);
-    UpdateTip(pindexNew, chainparams);
+    UpdateTip(pindexNew, chainparams, CoinsTip());
 
     int64_t nTime6 = GetTimeMicros(); nTimePostConnect += nTime6 - nTime5; nTimeTotal += nTime6 - nTime1;
     LogPrint(BCLog::BENCH, "  - Connect postprocess: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime6 - nTime5) * MILLI, nTimePostConnect * MICRO, nTimePostConnect * MILLI / nBlocksTotal);
