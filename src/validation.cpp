@@ -3755,9 +3755,9 @@ bool ChainstateManager::ProcessNewBlockHeaders(const std::vector<CBlockHeader>& 
             CBlockIndex *pindex = nullptr; // Use a temp pindex instead of ppindex to avoid a const_cast
             bool accepted = m_blockman.AcceptBlockHeader(
                 header, state, chainparams, &pindex);
-            g_chainman.RunOnAll([&chainparams](CChainState& chainstate) {
-                chainstate.CheckBlockIndex(chainparams.GetConsensus());
-            });
+            for (CChainState* chainstate : g_chainman.GetAll()) {
+                chainstate->CheckBlockIndex(chainparams.GetConsensus());
+            }
 
             if (!accepted) {
                 return false;
@@ -4746,7 +4746,7 @@ void UnloadBlockIndex(CTxMemPool* mempool)
     fHavePruned = false;
 }
 
-bool ChainstateManager::LoadBlockIndex(const CChainParams& chainparams)
+bool ChainstateManager::LoadBlockIndex(const CChainParams& chainparams) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
     AssertLockHeld(cs_main);
     // Load block index from databases
