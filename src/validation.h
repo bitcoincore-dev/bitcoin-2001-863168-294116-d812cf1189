@@ -344,7 +344,12 @@ class CVerifyDB {
 public:
     CVerifyDB();
     ~CVerifyDB();
-    bool VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview, int nCheckLevel, int nCheckDepth);
+    bool VerifyDB(
+        CChainState& chainstate,
+        const CChainParams& chainparams,
+        CCoinsView& coinsview,
+        int nCheckLevel,
+        int nCheckDepth);
 };
 
 CBlockIndex* LookupBlockIndex(const uint256& hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
@@ -940,7 +945,11 @@ public:
 
     CBlockIndex* SnapshotBaseBlock() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
     {
-        return LookupBlockIndex(SnapshotBlockhash().value_or(uint256()));
+        if (auto blockhash = SnapshotBlockhash()) {
+            return LookupBlockIndex(*blockhash);
+        } else {
+            return nullptr;
+        }
     }
 
     //! @returns height at which the active UTXO snapshot was taken.

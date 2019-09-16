@@ -1734,11 +1734,9 @@ bool AppInitMain(NodeContext& node)
                             break;
                         }
 
-                        // Only verify the DB of the active chainstate. This is fixed in later
-                        // work when we allow VerifyDB to be parameterized by chainstate.
-                        if (&::ChainstateActive() == chainstate &&
-                                !CVerifyDB().VerifyDB(
-                                chainparams, &chainstate->CoinsDB(),
+                        if (!CVerifyDB().VerifyDB(
+                                *chainstate,
+                                chainparams, chainstate->CoinsDB(),
                                 gArgs.GetArg("-checklevel", DEFAULT_CHECKLEVEL),
                                 gArgs.GetArg("-checkblocks", DEFAULT_CHECKBLOCKS))) {
                             strLoadError = _("Corrupted block database detected").translated;
