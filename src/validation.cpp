@@ -117,7 +117,6 @@ bool fPruneMode = false;
 bool fRequireStandard = true;
 bool fCheckBlockIndex = false;
 bool fCheckpointsEnabled = DEFAULT_CHECKPOINTS_ENABLED;
-size_t nCoinCacheUsage = 5000 * 300;
 uint64_t nPruneTarget = 0;
 int64_t nMaxTipAge = DEFAULT_MAX_TIP_AGE;
 
@@ -1079,9 +1078,10 @@ void CChainState::InitCoinsDB(
         leveldb_name, cache_size_bytes, in_memory, should_wipe);
 }
 
-void CChainState::InitCoinsCache()
+void CChainState::InitCoinsCache(size_t cache_size_bytes)
 {
     assert(m_coins_views != nullptr);
+    m_coinstip_cache_size_bytes = cache_size_bytes;
     m_coins_views->InitCache();
 }
 
@@ -2024,7 +2024,7 @@ CoinsCacheSizeState CChainState::GetCoinsCacheSizeState()
     static int64_t nMempoolSizeMax = gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000;
     int64_t nMempoolUsage = mempool.DynamicMemoryUsage();
     int64_t cacheSize = CoinsTip().DynamicMemoryUsage();
-    int64_t nTotalSpace = nCoinCacheUsage + std::max<int64_t>(nMempoolSizeMax - nMempoolUsage, 0);
+    int64_t nTotalSpace = m_coinstip_cache_size_bytes + std::max<int64_t>(nMempoolSizeMax - nMempoolUsage, 0);
     int64_t large_threshold =
         std::max((9 * nTotalSpace) / 10, nTotalSpace - MAX_BLOCK_COINSDB_USAGE * 1024 * 1024);
 
@@ -4675,6 +4675,29 @@ std::string CChainState::ToString()
     return strprintf("Chainstate [%s] @ height %d (%s)",
         m_from_snapshot_blockhash.IsNull() ? "ibd" : "snapshot",
         tip ? tip->nHeight : -1, tip ? tip->GetBlockHash().ToString() : "null");
+}
+
+void CChainState::ResizeCoinsCaches(size_t coinstip_size, size_t coinsdb_size)
+{
+    if (coinstip_size == m_coinstip_cache_size_bytes &&
+            coinsdb_size == m_coinsdb_cache_size_bytes) {
+        // Cache sizes are unchanged, no need to continue.
+        return;
+    }
+    m_coinstip_cache_size_bytes = coinstip_size;
+    m_coinsdb_cache_size_bytes = coinsdb_size;
+    CoinsDB().ResizeCache(coinsdb_size);
+
+    LogPrintf("[%s] resized coinsdb cache to %.1f MiB\n",
+        this->ToString(), coinsdb_size * (1.0 / 1024 / 1024));
+    LogPrintf("[%s] resized coinstip cache to %.1f MiB\n",
+        this->ToString(), coinstip_size * (1.0 / 1024 / 1024));
+
+    CValidationState state;
+    const CChainParams& chainparams = Params();
+
+    // Likely no need to flush if cache sizes have grown.
+    FlushStateToDisk(chainparams, state, FlushStateMode::IF_NEEDED);
 }
 
 std::string CBlockFileInfo::ToString() const
