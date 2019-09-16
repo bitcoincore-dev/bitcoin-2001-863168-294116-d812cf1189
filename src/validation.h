@@ -1210,6 +1210,21 @@ public:
     //!   fully validated chain.
     Chainstate& GetChainstateForIndexing() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
+    //! Return the [start, end] (inclusive) of block heights we can prune.
+    //!
+    //! If we're pruning the snapshot chainstate, be sure not to
+    //! step on the toes of the background validation by pruning blocks it
+    //! might be currently using.
+    //!
+    //! @param[in]  prune_background_fully  if true, aggressively prune background
+    //!                                     chainstates up to tip. Typically set to false
+    //!                                     during manual pruning, when the user has specified a
+    //!                                     height to prune underneath.
+    std::pair<unsigned int, unsigned int> getPruneRange(
+        Chainstate* chainstate,
+        unsigned int prune_height,
+        bool prune_background_fully = true) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
     ~ChainstateManager();
 };
 

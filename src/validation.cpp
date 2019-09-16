@@ -67,6 +67,7 @@
 #include <optional>
 #include <string>
 #include <utility>
+#include <tuple>
 
 using kernel::CCoinsStats;
 using kernel::CoinStatsHashType;
@@ -2465,11 +2466,16 @@ bool Chainstate::FlushStateToDisk(
             if (nManualPruneHeight > 0) {
                 LOG_TIME_MILLIS_WITH_CATEGORY("find files to prune (manual)", BCLog::BENCH);
 
-                m_blockman.FindFilesToPruneManual(setFilesToPrune, std::min(last_prune, nManualPruneHeight), m_chain.Height());
+                m_blockman.FindFilesToPruneManual(
+                    setFilesToPrune,
+                    std::min(last_prune, nManualPruneHeight),
+                    m_chain.Height(),
+                    m_chainman);
             } else {
                 LOG_TIME_MILLIS_WITH_CATEGORY("find files to prune", BCLog::BENCH);
 
-                m_blockman.FindFilesToPrune(setFilesToPrune, m_chainman.GetParams().PruneAfterHeight(), m_chain.Height(), last_prune, IsInitialBlockDownload());
+                m_blockman.FindFilesToPrune(
+                    setFilesToPrune, m_chainman.GetParams().PruneAfterHeight(), m_chain.Height(), m_chainman);
                 m_blockman.m_check_for_pruning = false;
             }
             if (!setFilesToPrune.empty()) {
@@ -5835,4 +5841,43 @@ Chainstate& ChainstateManager::GetChainstateForIndexing()
 {
     return (IsSnapshotActive() && !IsSnapshotValidated()) ?
         *m_ibd_chainstate : *m_active_chainstate;
+}
+
+std::pair<unsigned int, unsigned int> ChainstateManager::getPruneRange(
+    Chainstate* chainstate,
+    unsigned int prune_height,
+    bool prune_background_fully)
+{
+    if (chainstate->m_chain.Height() < 0) {
+        return {0, 0};
+    }
+    unsigned int chain_height{static_cast<unsigned int>(chainstate->m_chain.Height())};
+    unsigned int prune_start{0};
+    std::optional<int> snapshot_height{GetSnapshotBaseHeight()};
+
+    if (this->IsSnapshotValidated()) {
+        // If we're using a snapshot and we've completed back validation, prune as normal.
+        prune_start = 0;
+    } else if (snapshot_height && chainstate == m_snapshot_chainstate.get()) {
+        // Otherwise leave the blocks in the background IBD chain alone if we're pruning
+        // the snapshot chain.
+        prune_start = *snapshot_height;
+    } else {
+        // In all other cases, prune as normal.
+        prune_start = 0;
+    }
+
+    // last block to prune is the lesser of (user-specified height, MIN_BLOCKS_TO_KEEP from the tip)
+    unsigned int prune_end{std::min(prune_height, chain_height - MIN_BLOCKS_TO_KEEP)};
+
+    // For background chainstates, aggressively prune up to the latest block
+    // since our prune allowance only applies to immediately behind the tip
+    // (which lives on the active chain) and we don't support or expect reorgs
+    // in the background chainstates anyway..
+    if (chainstate != &this->ActiveChainstate()) {
+        // TODO jamesob: is this an off-by-one?
+        prune_end = prune_background_fully ? chain_height : std::min(prune_height, chain_height);
+    }
+
+    return {prune_start, prune_end};
 }
