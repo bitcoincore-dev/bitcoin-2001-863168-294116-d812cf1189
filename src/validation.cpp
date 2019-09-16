@@ -3963,17 +3963,40 @@ static void FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPr
     if (::ChainActive().Tip() == nullptr)
         return;
 
-    // last block to prune is the lesser of (user-specified height, MIN_BLOCKS_TO_KEEP from the tip)
-    unsigned int nLastBlockWeCanPrune = std::min((unsigned)nManualPruneHeight, ::ChainActive().Tip()->nHeight - MIN_BLOCKS_TO_KEEP);
-    int count=0;
-    for (int fileNumber = 0; fileNumber < nLastBlockFile; fileNumber++) {
-        if (vinfoBlockFile[fileNumber].nSize == 0 || vinfoBlockFile[fileNumber].nHeightLast > nLastBlockWeCanPrune)
-            continue;
-        PruneOneBlockFile(fileNumber);
-        setFilesToPrune.insert(fileNumber);
-        count++;
+    for (CChainState* chainstate : g_chainman.GetAll()) {
+        // last block to prune is the lesser of (user-specified height, MIN_BLOCKS_TO_KEEP from the tip)
+        unsigned int nLastBlockWeCanPrune = std::min(
+            (unsigned)nManualPruneHeight,
+            chainstate->m_chain.Height() - MIN_BLOCKS_TO_KEEP);
+
+        // Depending on which chainstate we're pruning, we may have a differet
+        // start height.
+        unsigned int start_height = g_chainman.PruneStartHeight(chainstate);
+
+        // For the background validation chainstate, aggressively prune up to
+        // the latest block (since our prune allowance only applies to
+        // immediately behind the tip, which lives on the snapshot chain).
+        //
+        if (g_chainman.IsBackgroundValidationChainstate(chainstate)) {
+            nLastBlockWeCanPrune = std::min(
+                nManualPruneHeight,
+                // TODO jamesob: is this an off-by-one?
+                chainstate->m_chain.Height() - 1);
+        }
+
+        int count=0;
+        for (int fileNumber = 0; fileNumber < nLastBlockFile; fileNumber++) {
+            if (vinfoBlockFile[fileNumber].nSize == 0 ||
+                    vinfoBlockFile[fileNumber].nHeightLast > nLastBlockWeCanPrune ||
+                    vinfoBlockFile[fileNumber].nHeightFirst <= start_height)
+                continue;
+            PruneOneBlockFile(fileNumber);
+            setFilesToPrune.insert(fileNumber);
+            count++;
+        }
+        LogPrintf("Prune (Manual) (%s): prune_height=%d removed %d blk/rev pairs\n",
+                  chainstate->ToString(), nLastBlockWeCanPrune, count);
     }
-    LogPrintf("Prune (Manual): prune_height=%d removed %d blk/rev pairs\n", nLastBlockWeCanPrune, count);
 }
 
 /* This function is called from the RPC code for pruneblockchain */
@@ -4008,54 +4031,76 @@ static void FindFilesToPrune(std::set<int>& setFilesToPrune, uint64_t nPruneAfte
     if (::ChainActive().Tip() == nullptr || nPruneTarget == 0) {
         return;
     }
-    if ((uint64_t)::ChainActive().Tip()->nHeight <= nPruneAfterHeight) {
-        return;
-    }
 
-    unsigned int nLastBlockWeCanPrune = ::ChainActive().Tip()->nHeight - MIN_BLOCKS_TO_KEEP;
-    uint64_t nCurrentUsage = CalculateCurrentUsage();
-    // We don't check to prune until after we've allocated new space for files
-    // So we should leave a buffer under our target to account for another allocation
-    // before the next pruning.
-    uint64_t nBuffer = BLOCKFILE_CHUNK_SIZE + UNDOFILE_CHUNK_SIZE;
-    uint64_t nBytesToPrune;
-    int count=0;
-
-    if (nCurrentUsage + nBuffer >= nPruneTarget) {
-        // On a prune event, the chainstate DB is flushed.
-        // To avoid excessive prune events negating the benefit of high dbcache
-        // values, we should not prune too rapidly.
-        // So when pruning in IBD, increase the buffer a bit to avoid a re-prune too soon.
-        if (::ChainstateActive().IsInitialBlockDownload()) {
-            // Since this is only relevant during IBD, we use a fixed 10%
-            nBuffer += nPruneTarget / 10;
+    for (CChainState* chainstate : g_chainman.GetAll()) {
+        uint64_t height = chainstate->m_chain.Height();
+        if (height <= nPruneAfterHeight) {
+            continue;
         }
 
-        for (int fileNumber = 0; fileNumber < nLastBlockFile; fileNumber++) {
-            nBytesToPrune = vinfoBlockFile[fileNumber].nSize + vinfoBlockFile[fileNumber].nUndoSize;
+        unsigned int nLastBlockWeCanPrune = height - MIN_BLOCKS_TO_KEEP;
+        // Depending on which chainstate we're pruning, we may have a differet
+        // start height.
+        unsigned int start_height = g_chainman.PruneStartHeight(chainstate);
 
-            if (vinfoBlockFile[fileNumber].nSize == 0)
-                continue;
-
-            if (nCurrentUsage + nBuffer < nPruneTarget)  // are we below our target?
-                break;
-
-            // don't prune files that could have a block within MIN_BLOCKS_TO_KEEP of the main chain's tip but keep scanning
-            if (vinfoBlockFile[fileNumber].nHeightLast > nLastBlockWeCanPrune)
-                continue;
-
-            PruneOneBlockFile(fileNumber);
-            // Queue up the files for removal
-            setFilesToPrune.insert(fileNumber);
-            nCurrentUsage -= nBytesToPrune;
-            count++;
+        // For the background validation chainstate, allow aggressive pruning up to
+        // the latest block (since our prune allowance only applies to
+        // immediately behind the tip, which lives on the snapshot chain).
+        //
+        if (g_chainman.IsBackgroundValidationChainstate(chainstate)) {
+            // TODO jamesob: is this an off-by-one?
+            nLastBlockWeCanPrune = height - 1;
         }
-    }
 
-    LogPrint(BCLog::PRUNE, "Prune: target=%dMiB actual=%dMiB diff=%dMiB max_prune_height=%d removed %d blk/rev pairs\n",
-           nPruneTarget/1024/1024, nCurrentUsage/1024/1024,
-           ((int64_t)nPruneTarget - (int64_t)nCurrentUsage)/1024/1024,
-           nLastBlockWeCanPrune, count);
+        uint64_t nCurrentUsage = CalculateCurrentUsage();
+        // We don't check to prune until after we've allocated new space for files
+        // So we should leave a buffer under our target to account for another allocation
+        // before the next pruning.
+        uint64_t nBuffer = BLOCKFILE_CHUNK_SIZE + UNDOFILE_CHUNK_SIZE;
+        uint64_t nBytesToPrune;
+        int count=0;
+
+        if (nCurrentUsage + nBuffer >= nPruneTarget) {
+            // On a prune event, the chainstate DB is flushed.
+            // To avoid excessive prune events negating the benefit of high dbcache
+            // values, we should not prune too rapidly.
+            // So when pruning in IBD, increase the buffer a bit to avoid a re-prune too soon.
+            if (chainstate->IsInitialBlockDownload()) {
+                // Since this is only relevant during IBD, we use a fixed 10%
+                nBuffer += nPruneTarget / 10;
+            }
+
+            for (int fileNumber = 0; fileNumber < nLastBlockFile; fileNumber++) {
+                nBytesToPrune = vinfoBlockFile[fileNumber].nSize + vinfoBlockFile[fileNumber].nUndoSize;
+
+                if (vinfoBlockFile[fileNumber].nSize == 0)
+                    continue;
+
+                if (nCurrentUsage + nBuffer < nPruneTarget)  // are we below our target?
+                    break;
+
+                // don't prune files that could have a block within MIN_BLOCKS_TO_KEEP of the main chain's tip but keep scanning
+                if (vinfoBlockFile[fileNumber].nHeightLast > nLastBlockWeCanPrune)
+                    continue;
+
+                // can't start pruning yet
+                if (vinfoBlockFile[fileNumber].nHeightFirst <= start_height) {
+                    continue;
+                }
+
+                PruneOneBlockFile(fileNumber);
+                // Queue up the files for removal
+                setFilesToPrune.insert(fileNumber);
+                nCurrentUsage -= nBytesToPrune;
+                count++;
+            }
+        }
+
+        LogPrint(BCLog::PRUNE, "Prune: (%s) target=%dMiB actual=%dMiB diff=%dMiB max_prune_height=%d removed %d blk/rev pairs\n",
+               chainstate->ToString(), nPruneTarget/1024/1024, nCurrentUsage/1024/1024,
+               ((int64_t)nPruneTarget - (int64_t)nCurrentUsage)/1024/1024,
+               nLastBlockWeCanPrune, count);
+    }
 }
 
 static FlatFileSeq BlockFileSeq()
@@ -5737,4 +5782,12 @@ void ChainstateManager::CheckForUncleanShutdown()
         "[snapshot] unclean shutdown detected - background validation chain needs to " /* Continued */
         "be checked against the loaded snapshot and cleaned up.\n");
     this->CompleteSnapshotValidation(m_ibd_chainstate.get());
+}
+
+unsigned int ChainstateManager::PruneStartHeight(CChainState* chainstate)
+{
+    if (m_ibd_chainstate && chainstate == m_snapshot_chainstate.get()) {
+        return m_ibd_chainstate->m_chain.Height();
+    }
+    return 0;
 }
