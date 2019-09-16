@@ -2271,10 +2271,44 @@ static void AppendWarning(bilingual_str& res, const bilingual_str& warn)
     res += warn;
 }
 
-/** Check warning conditions and do some notifications on new chain tip set. */
-static void UpdateTip(CTxMemPool& mempool, const CBlockIndex* pindexNew, const CChainParams& chainParams, CChainState& active_chainstate)
+/** Check warning conditions and do some notifications on new chain tip set.
+ *
+ * Only perform certain functions when the active chainstate is passed, e.g.
+ * notifying getblocktemplate RPC of a new block (`g_best_block` and
+ * `mempool.AddTransactionsUpdated`). Doing this for the background
+ * chainstate would cause incorrect behavior.
+ */
+static void UpdateTip(CTxMemPool& mempool, const CBlockIndex* pindexNew, const CChainParams& chainParams, CChainState& chainstate)
     EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
 {
+    auto& func_name = __func__;
+    auto& coins_view = chainstate.CoinsTip();
+    auto log_progress = [pindexNew, &func_name, &coins_view, &chainParams](
+            const std::string& prefix,
+            const std::string& warning_messages)
+    {
+        LogPrintf("%s%s: new best=%s height=%d version=0x%08x log2_work=%f tx=%lu date='%s' progress=%f cache=%.1fMiB(%utxo)%s\n",
+            prefix, func_name,
+            pindexNew->GetBlockHash().ToString(), pindexNew->nHeight, pindexNew->nVersion,
+            log(pindexNew->nChainWork.getdouble())/log(2.0), (unsigned long)pindexNew->nChainTx,
+            FormatISO8601DateTime(pindexNew->GetBlockTime()),
+            GuessVerificationProgress(chainParams.TxData(), pindexNew),
+            coins_view.DynamicMemoryUsage() * (1.0 / (1<<20)),
+            coins_view.GetCacheSize(),
+            !warning_messages.empty() ? strprintf(" warning='%s'", warning_messages) : "");
+    };
+
+    // The contents of this function are either not relevant if we're not
+    // given the active chainstate, so return otherwise.
+    if (&chainstate != &::g_chainman.ActiveChainstate()) {
+        // Only log every so often so that we don't bury log messages at the tip.
+        constexpr int BACKGROUND_LOG_INTERVAL = 2000;
+        if (pindexNew->nHeight % BACKGROUND_LOG_INTERVAL == 0) {
+            log_progress("[background validation] ", "");
+        }
+        return;
+    }
+
     // New best block
     mempool.AddTransactionsUpdated(1);
 
@@ -2285,8 +2319,7 @@ static void UpdateTip(CTxMemPool& mempool, const CBlockIndex* pindexNew, const C
     }
 
     bilingual_str warning_messages;
-    assert(std::addressof(::ChainstateActive()) == std::addressof(active_chainstate));
-    if (!active_chainstate.IsInitialBlockDownload()) {
+    if (!chainstate.IsInitialBlockDownload()) {
         const CBlockIndex* pindex = pindexNew;
         for (int bit = 0; bit < VERSIONBITS_NUM_BITS; bit++) {
             WarningBitsConditionChecker checker(bit);
@@ -2301,13 +2334,7 @@ static void UpdateTip(CTxMemPool& mempool, const CBlockIndex* pindexNew, const C
             }
         }
     }
-    assert(std::addressof(::ChainstateActive()) == std::addressof(active_chainstate));
-    LogPrintf("%s: new best=%s height=%d version=0x%08x log2_work=%f tx=%lu date='%s' progress=%f cache=%.1fMiB(%utxo)%s\n", __func__,
-      pindexNew->GetBlockHash().ToString(), pindexNew->nHeight, pindexNew->nVersion,
-      log(pindexNew->nChainWork.getdouble())/log(2.0), (unsigned long)pindexNew->nChainTx,
-      FormatISO8601DateTime(pindexNew->GetBlockTime()),
-      GuessVerificationProgress(chainParams.TxData(), pindexNew), active_chainstate.CoinsTip().DynamicMemoryUsage() * (1.0 / (1<<20)), active_chainstate.CoinsTip().GetCacheSize(),
-      !warning_messages.empty() ? strprintf(" warning='%s'", warning_messages.original) : "");
+    log_progress("", warning_messages.original);
 }
 
 /** Disconnect m_chain's tip.
