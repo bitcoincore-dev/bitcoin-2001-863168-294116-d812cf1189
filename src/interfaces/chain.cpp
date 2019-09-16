@@ -147,6 +147,7 @@ class LockImpl : public Chain::Lock, public UniqueLock<CCriticalSection>
 
     int getLowestBlockDataHeight() override
     {
+        LOCK(::cs_main);
         if (g_chainman.IsSnapshotActive() && !g_chainman.IsSnapshotValidated()) {
             return g_chainman.SnapshotHeight();
         }
