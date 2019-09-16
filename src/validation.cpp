@@ -2410,9 +2410,13 @@ bool CChainState::ConnectTip(BlockValidationState& state, const CChainParams& ch
         return false;
     int64_t nTime5 = GetTimeMicros(); nTimeChainState += nTime5 - nTime4;
     LogPrint(BCLog::BENCH, "  - Writing chainstate: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime5 - nTime4) * MILLI, nTimeChainState * MICRO, nTimeChainState * MILLI / nBlocksTotal);
-    // Remove conflicting transactions from the mempool.;
-    m_mempool.removeForBlock(blockConnecting.vtx, pindexNew->nHeight);
-    disconnectpool.removeForBlock(blockConnecting.vtx);
+
+    // Remove conflicting transactions from the mempool if we are the active chain.
+    if (this == &::ChainstateActive()) {
+        m_mempool.removeForBlock(blockConnecting.vtx, pindexNew->nHeight);
+        disconnectpool.removeForBlock(blockConnecting.vtx);
+    }
+
     // Update m_chain & related variables.
     m_chain.SetTip(pindexNew);
     UpdateTip(m_mempool, pindexNew, chainparams, *this);
