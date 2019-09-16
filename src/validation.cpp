@@ -4449,7 +4449,7 @@ void UnloadBlockIndex()
     fHavePruned = false;
 }
 
-bool LoadBlockIndex(const CChainParams& chainparams)
+bool LoadBlockIndex(const CChainParams& chainparams) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
     // Load block index from databases
     bool needs_init = fReindex;
