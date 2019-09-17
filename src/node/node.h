@@ -22,6 +22,12 @@ struct Node
 {
     std::unique_ptr<interfaces::Chain> chain;
     std::vector<std::unique_ptr<interfaces::ChainClient>> chain_clients;
+
+    //! Declare default constructor and destructor that are not inline, so code
+    //! instantiating the Node struct doesn't need to #include class
+    //! definitions for all the unique_ptr members.
+    Node();
+    ~Node();
 };
 
 #endif // BITCOIN_NODE_NODE_H
