@@ -13,6 +13,7 @@
 #include <fs.h>
 #include <init.h>
 #include <interfaces/chain.h>
+#include <node/node.h>
 #include <noui.h>
 #include <shutdown.h>
 #include <ui_interface.h>
@@ -25,13 +26,13 @@
 
 const std::function<std::string(const char*)> G_TRANSLATION_FUN = nullptr;
 
-static void WaitForShutdown()
+static void WaitForShutdown(Node& node)
 {
     while (!ShutdownRequested())
     {
         MilliSleep(200);
     }
-    Interrupt();
+    Interrupt(node);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -41,7 +42,7 @@ static void WaitForShutdown()
 static bool AppInit(int argc, char* argv[])
 {
     Node node;
-    node.chain = interfaces::MakeChain();
+    node.chain = interfaces::MakeChain(node);
 
     bool fRet = false;
 
@@ -153,9 +154,9 @@ static bool AppInit(int argc, char* argv[])
 
     if (!fRet)
     {
-        Interrupt();
+        Interrupt(node);
     } else {
-        WaitForShutdown();
+        WaitForShutdown(node);
     }
     Shutdown(node);
 
