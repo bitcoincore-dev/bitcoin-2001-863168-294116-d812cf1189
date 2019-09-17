@@ -55,7 +55,7 @@ namespace {
 class NodeImpl : public Node
 {
 public:
-    NodeImpl() { m_interfaces.chain = MakeChain(); }
+    NodeImpl() { m_node.chain = MakeChain(); }
     void initError(const std::string& message) override { InitError(message); }
     bool parseParameters(int argc, const char* const argv[], std::string& error) override
     {
@@ -78,11 +78,11 @@ public:
         return AppInitBasicSetup() && AppInitParameterInteraction() && AppInitSanityChecks() &&
                AppInitLockDataDirectory();
     }
-    bool appInitMain() override { return AppInitMain(m_interfaces); }
+    bool appInitMain() override { return AppInitMain(m_node); }
     void appShutdown() override
     {
         Interrupt();
-        Shutdown(m_interfaces);
+        Shutdown(m_node);
     }
     void startShutdown() override { StartShutdown(); }
     bool shutdownRequested() override { return ShutdownRequested(); }
@@ -259,12 +259,12 @@ public:
     }
     std::unique_ptr<Wallet> loadWallet(const std::string& name, std::string& error, std::string& warning) override
     {
-        return MakeWallet(LoadWallet(*m_interfaces.chain, name, error, warning));
+        return MakeWallet(LoadWallet(*m_node.chain, name, error, warning));
     }
     WalletCreationStatus createWallet(const SecureString& passphrase, uint64_t wallet_creation_flags, const std::string& name, std::string& error, std::string& warning, std::unique_ptr<Wallet>& result) override
     {
         std::shared_ptr<CWallet> wallet;
-        WalletCreationStatus status = CreateWallet(*m_interfaces.chain, passphrase, wallet_creation_flags, name, error, warning, wallet);
+        WalletCreationStatus status = CreateWallet(*m_node.chain, passphrase, wallet_creation_flags, name, error, warning, wallet);
         result = MakeWallet(wallet);
         return status;
     }
@@ -319,7 +319,7 @@ public:
                     GuessVerificationProgress(Params().TxData(), block));
             }));
     }
-    InitInterfaces m_interfaces;
+    ::Node m_node;
 };
 
 } // namespace
