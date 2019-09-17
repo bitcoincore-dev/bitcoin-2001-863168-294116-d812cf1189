@@ -11,7 +11,6 @@
 #include <index/txindex.h>
 #include <key_io.h>
 #include <merkleblock.h>
-#include <net.h>
 #include <node/coin.h>
 #include <node/node.h>
 #include <node/psbt.h>
@@ -19,6 +18,7 @@
 #include <policy/rbf.h>
 #include <primitives/transaction.h>
 #include <psbt.h>
+#include <rpc/blockchain.h>
 #include <rpc/rawtransaction_util.h>
 #include <rpc/server.h>
 #include <rpc/util.h>
