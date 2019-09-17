@@ -6,9 +6,9 @@
 #include <amount.h>
 #include <consensus/validation.h>
 #include <core_io.h>
-#include <init.h>
 #include <interfaces/chain.h>
 #include <key_io.h>
+#include <node/node.h>
 #include <outputtype.h>
 #include <policy/feerate.h>
 #include <policy/fees.h>
