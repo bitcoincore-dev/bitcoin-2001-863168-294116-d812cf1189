@@ -8,6 +8,9 @@
 #include <memory>
 #include <vector>
 
+class BanMan;
+class CConnman;
+class PeerLogicValidation;
 namespace interfaces {
 class Chain;
 class ChainClient;
@@ -20,6 +23,9 @@ class ChainClient;
 //! and linking outside of bitcoind for simulation or testing.
 struct Node
 {
+    std::unique_ptr<CConnman> connman;
+    std::unique_ptr<PeerLogicValidation> peer_logic;
+    std::unique_ptr<BanMan> banman;
     std::unique_ptr<interfaces::Chain> chain;
     std::vector<std::unique_ptr<interfaces::ChainClient>> chain_clients;
 

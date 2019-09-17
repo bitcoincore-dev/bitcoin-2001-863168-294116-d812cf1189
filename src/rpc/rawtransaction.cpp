@@ -821,7 +821,7 @@ static UniValue sendrawtransaction(const JSONRPCRequest& request)
 
     std::string err_string;
     AssertLockNotHeld(cs_main);
-    const TransactionError err = BroadcastTransaction(tx, err_string, max_raw_tx_fee, /*relay*/ true, /*wait_callback*/ true, g_connman.get());
+    const TransactionError err = BroadcastTransaction(tx, err_string, max_raw_tx_fee, /*relay*/ true, /*wait_callback*/ true, g_rpc_node->connman.get());
     if (TransactionError::OK != err) {
         throw JSONRPCTransactionError(err, err_string);
     }
