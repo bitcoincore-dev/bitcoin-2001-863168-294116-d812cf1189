@@ -5,8 +5,8 @@
 #ifndef BITCOIN_NODE_NODE_H
 #define BITCOIN_NODE_NODE_H
 
+#include <list>
 #include <memory>
-#include <vector>
 
 class BanMan;
 class CConnman;
@@ -15,6 +15,7 @@ namespace interfaces {
 class Chain;
 class ChainClient;
 } // namespace interfaces
+using ChainClients = std::list<std::reference_wrapper<interfaces::ChainClient>>;
 
 //! Node struct containing chain state and connection state.
 //!
@@ -27,7 +28,8 @@ struct Node
     std::unique_ptr<PeerLogicValidation> peer_logic;
     std::unique_ptr<BanMan> banman;
     std::unique_ptr<interfaces::Chain> chain;
-    std::vector<std::unique_ptr<interfaces::ChainClient>> chain_clients;
+    std::unique_ptr<interfaces::ChainClient> wallet_client;
+    ChainClients chain_clients;
 
     //! Declare default constructor and destructor that are not inline, so code
     //! instantiating the Node struct doesn't need to #include class

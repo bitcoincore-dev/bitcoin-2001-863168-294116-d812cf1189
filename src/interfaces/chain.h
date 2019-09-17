@@ -28,6 +28,7 @@ struct Node;
 
 namespace interfaces {
 
+class ChainClient;
 class Handler;
 class Wallet;
 
@@ -258,6 +259,9 @@ public:
     //! to be prepared to handle this by ignoring notifications about unknown
     //! removed transactions and already added new transactions.
     virtual void requestMempoolTransactions(Notifications& notifications) = 0;
+
+    //! Add chain client interface, receives flush and stop.
+    virtual std::unique_ptr<Handler> addClient(ChainClient& client) = 0;
 };
 
 //! Interface to let node manage chain clients (wallets, or maybe tools for

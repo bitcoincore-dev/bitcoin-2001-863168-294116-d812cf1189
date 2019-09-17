@@ -377,6 +377,15 @@ public:
             notifications.TransactionAddedToMempool(entry.GetSharedTx());
         }
     }
+    std::unique_ptr<Handler> addClient(ChainClient& client) override
+    {
+        // Add client reference to list of clients, and remove from list when
+        // the handler is freed. chain_clients is a list so the iterator
+        // remains valid until the item is removed.
+        ChainClients& clients = m_node.chain_clients;
+        ChainClients::iterator it = clients.emplace(clients.end(), client);
+        return MakeHandler([&clients, it] { clients.erase(it); });
+    }
     ::Node& m_node;
 };
 } // namespace

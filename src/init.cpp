@@ -188,7 +188,7 @@ void Shutdown(Node& node)
     StopRPC();
     StopHTTPServer();
     for (const auto& client : node.chain_clients) {
-        client->flush();
+        client.get().flush();
     }
     StopMapPort();
 
@@ -260,7 +260,7 @@ void Shutdown(Node& node)
         pblocktree.reset();
     }
     for (const auto& client : node.chain_clients) {
-        client->stop();
+        client.get().stop();
     }
 
 #if ENABLE_ZMQ
@@ -278,7 +278,7 @@ void Shutdown(Node& node)
     } catch (const fs::filesystem_error& e) {
         LogPrintf("%s: Unable to remove PID file: %s\n", __func__, fsbridge::get_filesystem_error_message(e));
     }
-    node.chain_clients.clear();
+    node.wallet_client.reset();
     UnregisterAllValidationInterfaces();
     GetMainSignals().UnregisterBackgroundSignalScheduler();
     GetMainSignals().UnregisterWithMempoolSignals(mempool);
@@ -1281,7 +1281,7 @@ bool AppInitMain(Node& node)
      */
     RegisterAllCoreRPCCommands(tableRPC);
     for (const auto& client : node.chain_clients) {
-        client->registerRpcs();
+        client.get().registerRpcs();
     }
     g_rpc_node = &node;
 #if ENABLE_ZMQ
@@ -1302,7 +1302,7 @@ bool AppInitMain(Node& node)
 
     // ********************************************************* Step 5: verify wallet database integrity
     for (const auto& client : node.chain_clients) {
-        if (!client->verify()) {
+        if (!client.get().verify()) {
             return false;
         }
     }
@@ -1661,7 +1661,7 @@ bool AppInitMain(Node& node)
 
     // ********************************************************* Step 9: load wallet
     for (const auto& client : node.chain_clients) {
-        if (!client->load()) {
+        if (!client.get().load()) {
             return false;
         }
     }
@@ -1815,7 +1815,7 @@ bool AppInitMain(Node& node)
     uiInterface.InitMessage(_("Done loading").translated);
 
     for (const auto& client : node.chain_clients) {
-        client->start(scheduler);
+        client.get().start(scheduler);
     }
 
     BanMan* banman = node.banman.get();

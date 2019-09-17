@@ -3,7 +3,6 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <init.h>
 #include <interfaces/chain.h>
 #include <net.h>
 #include <node/node.h>
@@ -135,5 +134,6 @@ void WalletInit::Construct(Node& node) const
         return;
     }
     gArgs.SoftSetArg("-wallet", "");
-    node.chain_clients.emplace_back(interfaces::MakeWalletClient(*node.chain, gArgs.GetArgs("-wallet")));
+    assert(!node.wallet_client);
+    node.wallet_client = interfaces::MakeWalletClient(*node.chain, gArgs.GetArgs("-wallet"));
 }
