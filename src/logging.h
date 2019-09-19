@@ -8,8 +8,11 @@
 
 #include <fs.h>
 #include <tinyformat.h>
+#include <util/macros.h>
+#include <util/time.h>
 
 #include <atomic>
+#include <chrono>
 #include <cstdint>
 #include <list>
 #include <mutex>
