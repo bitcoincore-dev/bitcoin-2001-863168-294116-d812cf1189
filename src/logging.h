@@ -10,6 +10,7 @@
 #include <tinyformat.h>
 
 #include <atomic>
+#include <chrono>
 #include <cstdint>
 #include <list>
 #include <mutex>
