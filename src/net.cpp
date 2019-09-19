@@ -1954,6 +1954,21 @@ void CConnman::OpenNetworkConnection(const CAddress& addrConnect, bool fCountFai
     if (manual_connection)
         pnode->m_manual_connection = true;
 
+    NetPermissionFlags permissionFlags = NetPermissionFlags::PF_NONE;
+    AddWhitelistPermissionFlags(permissionFlags, pnode->addr);
+    bool legacyWhitelisted = false;
+    if (NetPermissions::HasFlag(permissionFlags, NetPermissionFlags::PF_ISIMPLICIT)) {
+        NetPermissions::ClearFlag(permissionFlags, PF_ISIMPLICIT);
+        if (gArgs.GetBoolArg("-whitelistforcerelay", DEFAULT_WHITELISTFORCERELAY)) NetPermissions::AddFlag(permissionFlags, PF_FORCERELAY);
+        if (gArgs.GetBoolArg("-whitelistrelay", DEFAULT_WHITELISTRELAY)) NetPermissions::AddFlag(permissionFlags, PF_RELAY);
+        NetPermissions::AddFlag(permissionFlags, PF_MEMPOOL);
+        NetPermissions::AddFlag(permissionFlags, PF_NOBAN);
+        legacyWhitelisted = true;
+    }
+    pnode->m_permissionFlags = permissionFlags;
+    // If this flag is present, the user probably expect that RPC and QT report it as whitelisted (backward compatibility)
+    pnode->m_legacyWhitelisted = legacyWhitelisted;
+
     m_msgproc->InitializeNode(pnode);
     {
         LOCK(cs_vNodes);
