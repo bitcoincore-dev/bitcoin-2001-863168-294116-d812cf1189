@@ -7,9 +7,12 @@
 #define BITCOIN_LOGGING_H
 
 #include <fs.h>
+#include <optional.h>
 #include <tinyformat.h>
+#include <util/time.h>
 
 #include <atomic>
+#include <chrono>
 #include <cstdint>
 #include <list>
 #include <mutex>
@@ -162,5 +165,85 @@ static inline void LogPrint(const BCLog::LogFlags& category, const Args&... args
         LogPrintf(args...);
     }
 }
+
+
+namespace BCLog {
+
+//! RAII-style object that outputs timing information to logs.
+template <typename TimeType>
+class Timer
+{
+public:
+    //! Log prefix; usually the name of the function this was created in.
+    std::string m_prefix{};
+
+    //! A descriptive message of what is being timed.
+    std::string m_title{};
+
+    //! Forwarded on to LogPrint if specified - has the effect of only
+    //! outputing the timing log when a particular debug= category is specified.
+    BCLog::LogFlags m_log_category{};
+
+    //! If log_category is left as the default, end_msg will log unconditionally
+    //! (instead of being filtered by category).
+    Timer(
+        std::string prefix,
+        std::string end_msg,
+        BCLog::LogFlags log_category = BCLog::LogFlags::ALL) :
+            m_prefix(prefix),
+            m_title(end_msg),
+            m_start_t(GetTime<std::chrono::microseconds>()),
+            m_log_category(log_category) { }
+
+    ~Timer()
+    {
+        this->Log(strprintf("%s completed", m_title));
+    }
+
+    void Log(const std::string& msg)
+    {
+        const std::string full_msg = this->LogMsg(msg);
+
+        if (m_log_category == BCLog::LogFlags::ALL) {
+            LogPrintf(full_msg.c_str()); /* No newline */
+        } else {
+            LogPrint(m_log_category, full_msg.c_str()); /* No newline */
+        }
+    }
+
+    std::string LogMsg(const std::string& msg)
+    {
+        std::string units = "";
+        float divisor = 1;
+
+        if (std::is_same<TimeType, std::chrono::microseconds>::value) {
+            units = "μs";
+        } else if (std::is_same<TimeType, std::chrono::milliseconds>::value) {
+            units = "ms";
+            divisor = 1000.;
+        } else if (std::is_same<TimeType, std::chrono::seconds>::value) {
+            units = "s";
+            divisor = 1000. * 1000.;
+        }
+
+        const auto end_time = GetTime<std::chrono::microseconds>() - m_start_t;
+        const float time_ms = end_time.count() / divisor;
+        return strprintf("%s: %s (%.2f%s)\n", m_prefix, msg, time_ms, units);
+    }
+
+private:
+    std::chrono::microseconds m_start_t{};
+};
+
+} // namespace BCLog
+
+#define PASTE(x, y) x ## y
+#define PASTE2(x, y) PASTE(x, y)
+#define LOG_TIME_MICROS(end_msg, ...) \
+    BCLog::Timer<std::chrono::microseconds> PASTE2(logging_timer, __COUNTER__)(__func__, end_msg, ## __VA_ARGS__)
+#define LOG_TIME_MILLIS(end_msg, ...) \
+    BCLog::Timer<std::chrono::milliseconds> PASTE2(logging_timer, __COUNTER__)(__func__, end_msg, ## __VA_ARGS__)
+#define LOG_TIME_SECONDS(end_msg, ...) \
+    BCLog::Timer<std::chrono::seconds> PASTE2(logging_timer, __COUNTER__)(__func__, end_msg, ## __VA_ARGS__)
 
 #endif // BITCOIN_LOGGING_H
