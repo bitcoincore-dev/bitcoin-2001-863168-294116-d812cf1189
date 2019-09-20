@@ -904,10 +904,6 @@ public:
 class ChainstateManager
 {
 private:
-    //! Guards manipulation of the chainstate pointers.
-    //! Nota bene: does not guard the chainstates themselves; that's for ::cs_main.
-    mutable CCriticalSection m_cs_chainstates;
-
     /**
      * If not empty, this points to metadata corresponding to the UTXO snapshot
      * currently in use.
@@ -919,19 +915,19 @@ private:
      * if a snapshot is in use, for background validation. Its contents will
      * be freed when background validation of the snapshot has completed.
      */
-    std::unique_ptr<CChainState> m_ibd_chainstate GUARDED_BY(m_cs_chainstates);
+    std::unique_ptr<CChainState> m_ibd_chainstate;
 
     /**
      * A chainstate initialized on the basis of a UTXO snapshot. If this is
      * non-null, it is always our active chainstate unless proven invalid.
      */
-    std::unique_ptr<CChainState> m_snapshot_chainstate GUARDED_BY(m_cs_chainstates);
+    std::unique_ptr<CChainState> m_snapshot_chainstate;
 
     /**
      * Points to either the ibd or snapshot chainstate; indicates our
      * most-work chain.
      */
-    CChainState* m_active_chainstate GUARDED_BY(m_cs_chainstates);
+    CChainState* m_active_chainstate;
 
     //! Internal helper for ActivateSnapshot().
     NODISCARD bool PopulateAndValidateSnapshot(
@@ -1050,7 +1046,6 @@ public:
 
     bool IsSnapshotActive() const
     {
-        LOCK(m_cs_chainstates);
         return m_snapshot_chainstate && m_active_chainstate == m_snapshot_chainstate.get();
     }
 
@@ -1082,7 +1077,6 @@ public:
      */
     bool IsBackgroundValidationChainstate(CChainState* chainstate) const
     {
-        LOCK(m_cs_chainstates);
         return (m_snapshot_chainstate && chainstate == m_ibd_chainstate.get());
     }
 
@@ -1094,7 +1088,6 @@ public:
      */
     CChainState& ValidatedChainstate() const
     {
-        LOCK(m_cs_chainstates);
         if (m_snapshot_chainstate && IsSnapshotValidated()) {
             return *m_snapshot_chainstate.get();
         }
@@ -1117,7 +1110,6 @@ public:
 
     void Reset()
     {
-        LOCK(m_cs_chainstates);
         m_ibd_chainstate.reset();
         m_snapshot_chainstate.reset();
         m_active_chainstate = nullptr;
