@@ -154,6 +154,7 @@ class LockImpl : public Chain::Lock, public UniqueLock<CCriticalSection>
 
     int getLowestBlockDataHeight() override
     {
+        LOCK(::cs_main);
         if (g_chainman.IsSnapshotActive() && !g_chainman.IsSnapshotValidated()) {
             return g_chainman.SnapshotHeight();
         }
@@ -341,7 +342,10 @@ public:
         return ::fHavePruned;
     }
     bool isReadyToBroadcast() override { return !::fImporting && !::fReindex && !isInitialBlockDownload(); }
-    bool isInitialBlockDownload() override { return ::ChainstateActive().IsInitialBlockDownload(); }
+    bool isInitialBlockDownload() override {
+        LOCK(::cs_main);
+        return ::ChainstateActive().IsInitialBlockDownload();
+    }
     bool shutdownRequested() override { return ShutdownRequested(); }
     int64_t getAdjustedTime() override { return GetAdjustedTime(); }
     void initMessage(const std::string& message) override { ::uiInterface.InitMessage(message); }
