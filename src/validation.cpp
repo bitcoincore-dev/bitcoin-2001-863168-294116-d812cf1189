@@ -83,7 +83,6 @@ ChainstateManager g_chainman;
 
 CChainState& ChainstateActive()
 {
-    LOCK(g_chainman.m_cs_chainstates);
     assert(g_chainman.m_active_chainstate);
     return *g_chainman.m_active_chainstate;
 }
@@ -5083,7 +5082,6 @@ bool ChainstateManager::LoadSnapshotMetadata()
 
 std::vector<CChainState*> ChainstateManager::GetAll()
 {
-    LOCK(m_cs_chainstates);
     std::vector<CChainState*> out;
 
     if (!IsSnapshotValidated() && m_ibd_chainstate) {
@@ -5099,7 +5097,6 @@ std::vector<CChainState*> ChainstateManager::GetAll()
 
 void ChainstateManager::RunOnAll(const std::function<void(CChainState&)> fn)
 {
-    LOCK(m_cs_chainstates);
     for (CChainState* chainstate : GetAll()) {
         fn(*chainstate);
     }
@@ -5107,7 +5104,6 @@ void ChainstateManager::RunOnAll(const std::function<void(CChainState&)> fn)
 
 std::vector<CChainState*> ChainstateManager::GetAllForBlockDownload()
 {
-    LOCK(m_cs_chainstates);
     std::vector<CChainState*> out;
 
     bool snapshot_in_ibd =
@@ -5127,7 +5123,6 @@ CChainState& ChainstateManager::InitializeChainstate(
     bool activate,
     const uint256& snapshot_blockhash)
 {
-    LOCK(m_cs_chainstates);
     std::unique_ptr<CChainState>& to_modify = (
         snapshot_blockhash.IsNull() ? m_ibd_chainstate : m_snapshot_chainstate);
 
@@ -5178,7 +5173,6 @@ bool ChainstateManager::ActivateSnapshot(
 
     // Can't activate a snapshot more than once.
     assert(m_snapshot_metadata == nullptr);
-    LOCK(m_cs_chainstates);
 
     // Resize the coins caches to ensure we're not exceeding memory limits.
     //
@@ -5415,7 +5409,6 @@ bool ChainstateManager::CompleteSnapshotValidation(CChainState* validation_chain
 {
     AssertLockHeld(cs_main);
     {
-        LOCK(m_cs_chainstates);
         assert(validation_chainstate == m_ibd_chainstate.get());
     }
 
@@ -5475,7 +5468,6 @@ bool ChainstateManager::CompleteSnapshotValidation(CChainState* validation_chain
         LogPrintf("[snapshot] deleting snapshot and reverting to validated chain\n");
 
         {
-            LOCK(m_cs_chainstates);
             m_active_chainstate = m_ibd_chainstate.get();
             m_snapshot_chainstate->m_should_delete = true;
         }
@@ -5502,7 +5494,6 @@ bool ChainstateManager::CompleteSnapshotValidation(CChainState* validation_chain
 
 CChainState& ChainstateManager::GetChainstateForNewBlock(const uint256& blockhash)
 {
-    LOCK(m_cs_chainstates);
     if (m_snapshot_chainstate &&
             !m_snapshot_chainstate->m_chain.Contains(LookupBlockIndex(blockhash))) {
         return *m_snapshot_chainstate.get();
@@ -5513,14 +5504,11 @@ CChainState& ChainstateManager::GetChainstateForNewBlock(const uint256& blockhas
 
 CChain& ChainstateManager::ActiveChain() const
 {
-    LOCK(m_cs_chainstates);
     return m_active_chainstate->m_chain;
 }
 
 void ChainstateManager::MaybeRebalanceCaches()
 {
-    LOCK(m_cs_chainstates);
-
     if (m_ibd_chainstate && !m_snapshot_chainstate) {
         LogPrintf("[snapshot] allocating all cache to the IBD chainstate\n");
         // Allocate everything to the IBD chainstate.
@@ -5551,7 +5539,6 @@ void ChainstateManager::MaybeRebalanceCaches()
 
 bool ChainstateManager::IsAnyChainInIBD()
 {
-    LOCK(m_cs_chainstates);
     if (m_snapshot_chainstate && m_snapshot_chainstate->IsInitialBlockDownload()) {
         return true;
     } else if (m_ibd_chainstate && m_ibd_chainstate->IsInitialBlockDownload()) {
@@ -5562,7 +5549,6 @@ bool ChainstateManager::IsAnyChainInIBD()
 
 void ChainstateManager::DeleteStaleChainstates()
 {
-    LOCK(m_cs_chainstates);
     // CChainState::Delete() will sync with the validation queue.
     AssertLockNotHeld(cs_main);
 
@@ -5580,7 +5566,6 @@ void ChainstateManager::DeleteStaleChainstates()
 
 unsigned int ChainstateManager::PruneStartHeight(CChainState* chainstate)
 {
-    LOCK(m_cs_chainstates);
     if (m_ibd_chainstate && chainstate == m_snapshot_chainstate.get()) {
         return m_ibd_chainstate->m_chain.Height();
     }
