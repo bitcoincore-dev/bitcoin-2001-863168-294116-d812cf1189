@@ -1148,10 +1148,6 @@ PeerLogicValidation::PeerLogicValidation(CConnman* connmanIn, BanMan* banman, CS
  */
 void PeerLogicValidation::BlockConnected(const CChainState& chainstate, const std::shared_ptr<const CBlock>& pblock, const CBlockIndex* pindex, const std::vector<CTransactionRef>& vtxConflicted) {
     LOCK(g_cs_orphans);
-    if (&chainstate != &::ChainstateActive()) {
-        // Only do mempool-based maintenance for the active chainstate.
-        return;
-    }
 
     std::vector<uint256> vOrphanErase;
 
@@ -1196,10 +1192,6 @@ static bool fWitnessesPresentInMostRecentCompactBlock GUARDED_BY(cs_most_recent_
  * to compatible peers.
  */
 void PeerLogicValidation::NewPoWValidBlock(const CChainState& chainstate, const CBlockIndex *pindex, const std::shared_ptr<const CBlock>& pblock) {
-    if (&chainstate != &::ChainstateActive()) {
-        // Only maintain best-seen data for the most-work chainstate.
-        return;
-    }
     std::shared_ptr<const CBlockHeaderAndShortTxIDs> pcmpctblock = std::make_shared<const CBlockHeaderAndShortTxIDs> (*pblock, true);
     const CNetMsgMaker msgMaker(PROTOCOL_VERSION);
 
@@ -1247,9 +1239,6 @@ void PeerLogicValidation::NewPoWValidBlock(const CChainState& chainstate, const 
  * in the active chain to our peers.
  */
 void PeerLogicValidation::UpdatedBlockTip(const CChainState& chainstate, const CBlockIndex *pindexNew, const CBlockIndex *pindexFork, bool fInitialDownload) {
-    if (&chainstate != &::ChainstateActive()) {
-        return;
-    }
     const int nNewHeight = pindexNew->nHeight;
     connman->SetBestHeight(nNewHeight);
 
@@ -1434,7 +1423,15 @@ void static ProcessGetBlockData(CNode* pfrom, const CChainParams& chainparams, c
     } // release cs_main before calling ActivateBestChain
     if (need_activate_chain) {
         CValidationState state;
-        if (!::ChainstateActive().ActivateBestChain(state, Params(), a_recent_block)) {
+
+        // XXX this is kind of a hack here to get around the fact that we can't
+        // hold cs_main going into ActivateBestChain. This is safe because the
+        // only place that we'll potentially deallocate anything pointed to by
+        // ChainstateActive is during shutdown.
+        CChainState* active;
+        WITH_LOCK(::cs_main, active = &::ChainstateActive());
+
+        if (!active->ActivateBestChain(state, Params(), a_recent_block)) {
             LogPrint(BCLog::NET, "failed to activate chain (%s)\n", FormatStateMessage(state));
         }
     }
@@ -2071,8 +2068,13 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
 
         if (!pfrom->fInbound)
         {
+            bool any_chain_in_ibd = false;
+            {
+                LOCK(::cs_main);
+                any_chain_in_ibd = g_chainman.IsAnyChainInIBD();
+            }
             // Advertise our address
-            if (fListen && !g_chainman.IsAnyChainInIBD())
+            if (fListen && !any_chain_in_ibd)
             {
                 CAddress addr = GetLocalAddress(&pfrom->addr, pfrom->GetLocalServices());
                 FastRandomContext insecure_rand;

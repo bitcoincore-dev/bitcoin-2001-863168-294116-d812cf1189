@@ -729,6 +729,8 @@ static void ThreadImport(std::vector<fs::path> vImportFiles)
 
     // scan for better chains in the block chain database, that are not yet connected in the active best chain
 
+    // XXX can't hold cs_main here even though we're accessing the g_chainman
+    // unique_ptrs since ABC requires us not to be holding cs_main.
     auto chainstates = g_chainman.GetAll();
 
     for (CChainState* chainstate : chainstates) {
@@ -1766,7 +1768,7 @@ bool AppInitMain(InitInterfaces& interfaces)
         nLocalServices = ServiceFlags(nLocalServices & ~NODE_NETWORK);
         if (!fReindex) {
             uiInterface.InitMessage(_("Pruning blockstore...").translated);
-            ::ChainstateActive().PruneAndFlush();
+            WITH_LOCK(::cs_main, ::ChainstateActive().PruneAndFlush());
         }
     }
 
@@ -1790,7 +1792,9 @@ bool AppInitMain(InitInterfaces& interfaces)
     // Either install a handler to notify us when genesis activates, or set fHaveGenesis directly.
     // No locking, as this happens before any background thread is started.
     boost::signals2::connection block_notify_genesis_wait_connection;
-    if (::ChainActive().Tip() == nullptr) {
+    bool is_tip_null = true;
+    WITH_LOCK(::cs_main, is_tip_null = ::ChainActive().Tip() == nullptr);
+    if (is_tip_null) {
         block_notify_genesis_wait_connection = uiInterface.NotifyBlockTip_connect(BlockNotifyGenesisWait);
     } else {
         fHaveGenesis = true;
