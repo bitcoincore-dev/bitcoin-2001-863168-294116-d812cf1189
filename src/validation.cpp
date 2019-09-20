@@ -2945,7 +2945,9 @@ bool CChainState::ActivateBestChain(BlockValidationState &state, const CChainPar
 }
 
 bool ActivateBestChain(BlockValidationState &state, const CChainParams& chainparams, std::shared_ptr<const CBlock> pblock) {
-    return ::ChainstateActive().ActivateBestChain(state, chainparams, std::move(pblock));
+    CChainState* active;
+    WITH_LOCK(::cs_main, active = &::ChainstateActive());
+    return active->ActivateBestChain(state, chainparams, std::move(pblock));
 }
 
 bool CChainState::PreciousBlock(BlockValidationState& state, const CChainParams& params, CBlockIndex *pindex)
@@ -2977,7 +2979,9 @@ bool CChainState::PreciousBlock(BlockValidationState& state, const CChainParams&
     return ActivateBestChain(state, params, std::shared_ptr<const CBlock>());
 }
 bool PreciousBlock(BlockValidationState& state, const CChainParams& params, CBlockIndex *pindex) {
-    return ::ChainstateActive().PreciousBlock(state, params, pindex);
+    CChainState* active;
+    WITH_LOCK(::cs_main, active = &::ChainstateActive());
+    return active->PreciousBlock(state, params, pindex);
 }
 
 bool CChainState::InvalidateBlock(BlockValidationState& state, const CChainParams& chainparams, CBlockIndex *pindex)
@@ -3117,7 +3121,9 @@ bool CChainState::InvalidateBlock(BlockValidationState& state, const CChainParam
 }
 
 bool InvalidateBlock(BlockValidationState& state, const CChainParams& chainparams, CBlockIndex *pindex) {
-    return ::ChainstateActive().InvalidateBlock(state, chainparams, pindex);
+    CChainState* active;
+    WITH_LOCK(::cs_main, active = &::ChainstateActive());
+    return active->InvalidateBlock(state, chainparams, pindex);
 }
 
 void CChainState::ResetBlockFailureFlags(CBlockIndex *pindex) {
@@ -3712,6 +3718,7 @@ bool ProcessNewBlockHeaders(const std::vector<CBlockHeader>& headers, BlockValid
         }
     }
     if (NotifyHeaderTip()) {
+        LOCK(::cs_main);
         if (::ChainstateActive().IsInitialBlockDownload() && ppindex && *ppindex) {
             LogPrintf("Synchronizing blockheaders, height: %d (~%.2f%%)\n", (*ppindex)->nHeight, 100.0/((*ppindex)->nHeight+(GetAdjustedTime() - (*ppindex)->GetBlockTime()) / Params().GetConsensus().nPowTargetSpacing) * (*ppindex)->nHeight);
         }
@@ -3832,6 +3839,8 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
         chainstate = &g_chainman.GetChainstateForNewBlock(pblock->GetHash());
     }
 
+    bool should_notify_tip{false};
+
     {
         CBlockIndex *pindex = nullptr;
         if (fNewBlock) *fNewBlock = false;
@@ -3852,9 +3861,14 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
             GetMainSignals().BlockChecked(*pblock, state);
             return error("%s: AcceptBlock FAILED (%s)", __func__, FormatStateMessage(state));
         }
+
+        if (chainstate == &::ChainstateActive()) {
+            should_notify_tip = true;
+        }
     }
 
-    if (chainstate == &::ChainstateActive()) {
+    // XXX separate here because we can't hold cs_main for this call.
+    if (should_notify_tip) {
         NotifyHeaderTip();
     }
 
@@ -4828,7 +4842,9 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, FlatFi
                 // Activate the genesis block so normal node progress can continue
                 if (hash == chainparams.GetConsensus().hashGenesisBlock) {
                     BlockValidationState state;
-                    if (!::ChainstateActive().ActivateBestChain(state, chainparams)) {
+                    CChainState* active;
+                    WITH_LOCK(::cs_main, active = &::ChainstateActive());
+                    if (!active->ActivateBestChain(state, chainparams)) {
                         break;
                     }
                 }
@@ -5408,19 +5424,21 @@ bool ChainstateManager::ActivateSnapshot(
 
     // Can't activate a snapshot more than once.
     assert(m_snapshot_metadata == nullptr);
+    int64_t current_coinsdb_cache_size{0};
+    int64_t current_coinstip_cache_size{0};
 
-    // Resize the coins caches to ensure we're not exceeding memory limits.
-    //
-    // Right now, just evenly halve the caches across both chainstates. We'll need to call
-    // `g_chainman.MaybeRebalanceCaches()` once we're done with this function to ensure
-    // the right allocation (including the possibility that no snapshot was activated
-    // and that we should restore the active chainstate caches to their original size).
-    //
-    int64_t current_coinsdb_cache_size = ::ChainstateActive().m_coinsdb_cache_size_bytes;
-    int64_t current_coinstip_cache_size = ::ChainstateActive().m_coinstip_cache_size_bytes;
-
-    {
+     {
         LOCK(::cs_main);
+        // Resize the coins caches to ensure we're not exceeding memory limits.
+        //
+        // Right now, just evenly halve the caches across both chainstates. We'll need to call
+        // `MaybeRebalanceCaches()` once we're done with this function to ensure
+        // the right allocation (including the possibility that no snapshot was activated
+        // and that we should restore the active chainstate caches to their original size).
+        //
+        current_coinsdb_cache_size = ::ChainstateActive().m_coinsdb_cache_size_bytes;
+        current_coinstip_cache_size = ::ChainstateActive().m_coinstip_cache_size_bytes;
+
         // Temporarily resize the active coins cache to make room for the newly-created
         // snapshot chain.
         ::ChainstateActive().ResizeCoinsCaches(
@@ -5440,7 +5458,7 @@ bool ChainstateManager::ActivateSnapshot(
         *snapshot_chainstate, coins_file, metadata);
 
     if (!snapshot_ok) {
-        WITH_LOCK(::cs_main, g_chainman.MaybeRebalanceCaches());
+        WITH_LOCK(::cs_main, MaybeRebalanceCaches());
         return false;
     }
 
