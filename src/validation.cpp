@@ -5,6 +5,7 @@
 
 #include <validation.h>
 
+#include <kernel/chain.h>
 #include <kernel/coinstats.h>
 #include <kernel/mempool_persist.h>
 
@@ -2563,7 +2564,7 @@ bool Chainstate::FlushStateToDisk(
     }
     if (full_flush_completed) {
         // Update best block in wallet (so we can detect restored wallets).
-        GetMainSignals().ChainStateFlushed(m_chain.GetLocator());
+        GetMainSignals().ChainStateFlushed(this->GetRole(), m_chain.GetLocator());
     }
     } catch (const std::runtime_error& e) {
         return FatalError(m_chainman.GetNotifications(), state, std::string("System error while flushing: ") + e.what());
@@ -3162,7 +3163,7 @@ bool Chainstate::ActivateBestChain(BlockValidationState& state, std::shared_ptr<
 
                 for (const PerBlockConnectTrace& trace : connectTrace.GetBlocksConnected()) {
                     assert(trace.pblock && trace.pindex);
-                    GetMainSignals().BlockConnected(trace.pblock, trace.pindex);
+                    GetMainSignals().BlockConnected(this->GetRole(), trace.pblock, trace.pindex);
                 }
 
                 // This will have been toggled in
@@ -4015,10 +4016,11 @@ bool ChainstateManager::AcceptBlock(const std::shared_ptr<const CBlock>& pblock,
         return error("%s: %s", __func__, state.ToString());
     }
 
+    const auto& active{ActiveChainstate()};
     // Header is valid/has work, merkle tree and segwit merkle tree are good...RELAY NOW
     // (but if it does not build on our best tip, let the SendMessages loop relay it)
     if (!IsInitialBlockDownload() && ActiveTip() == pindex->pprev)
-        GetMainSignals().NewPoWValidBlock(pindex, pblock);
+        GetMainSignals().NewPoWValidBlock(active.GetRole(), pindex, pblock);
 
     // Write block to history file
     if (fNewBlock) *fNewBlock = true;
