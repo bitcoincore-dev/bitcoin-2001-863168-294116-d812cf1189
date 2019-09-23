@@ -24,6 +24,7 @@
 #include <fs.h>
 #include <hash.h>
 #include <kernel/mempool_entry.h>
+#include <index/base.h>
 #include <logging.h>
 #include <logging/timer.h>
 #include <node/blockstorage.h>
@@ -5492,6 +5493,19 @@ SnapshotCompletionResult ChainstateManager::MaybeCompleteSnapshotValidation(
     m_ibd_chainstate->m_disabled = true;
     this->MaybeRebalanceCaches();
 
+    // Restart indexers to resume indexing for all blocks unique to the snapshot
+    // chain. This resumes indexing "in order" from where the indexation on the
+    // background validation chain left off.
+    for (auto* indexer : this->indexers) {
+        indexer->Interrupt();
+        indexer->Stop();
+        if (!indexer->Start()) {
+            // TODO I don't think we should halt here, but maybe do something
+            // more drastic?
+            LogPrintf("[snapshot] failed to restart indexer %s\n", indexer->GetName());
+        }
+    }
+
     return SnapshotCompletionResult::SUCCESS;
 }
 
@@ -5788,4 +5802,10 @@ bool ChainstateManager::IsAnyChainInIBD()
     return
         (m_snapshot_chainstate && m_snapshot_chainstate->IsInitialBlockDownload()) ||
         (m_ibd_chainstate && m_ibd_chainstate->IsInitialBlockDownload());
+}
+
+Chainstate& ChainstateManager::GetChainstateForIndexing()
+{
+    return (IsSnapshotActive() && !IsSnapshotValidated()) ?
+        *m_ibd_chainstate : *m_active_chainstate;
 }
