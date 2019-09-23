@@ -2680,10 +2680,12 @@ bool CChainState::ActivateBestChain(BlockValidationState &state, const CChainPar
                 }
                 pindexNewTip = m_chain.Tip();
 
-                if (this == &::ChainstateActive()) {
-                    for (const PerBlockConnectTrace& trace : connectTrace.GetBlocksConnected()) {
-                        assert(trace.pblock && trace.pindex);
+                for (const PerBlockConnectTrace& trace : connectTrace.GetBlocksConnected()) {
+                    assert(trace.pblock && trace.pindex);
+                    if (this == &::ChainstateActive()) {
                         GetMainSignals().BlockConnected(trace.pblock, trace.pindex);
+                    } else {
+                        GetMainSignals().BackgroundBlockConnected(trace.pblock, trace.pindex);
                     }
                 }
             } while (!m_chain.Tip() || (starting_tip && CBlockIndexWorkComparator()(m_chain.Tip(), starting_tip)));
