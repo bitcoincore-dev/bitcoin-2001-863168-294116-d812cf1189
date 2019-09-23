@@ -110,6 +110,16 @@ protected:
      */
     virtual void BlockConnected(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex, const std::vector<CTransactionRef> &txnConflicted) {}
     /**
+     * The equivalent of BlockConnected for non-active (i.e. background
+     * validation) chainstates.
+     *
+     * Called on a background thread.
+     */
+    virtual void BackgroundBlockConnected(
+        const std::shared_ptr<const CBlock> &block,
+        const CBlockIndex *pindex,
+        const std::vector<CTransactionRef> &txnConflicted) {}
+    /**
      * Notifies listeners of a block being disconnected
      *
      * Called on a background thread.
@@ -178,6 +188,10 @@ public:
     void UpdatedBlockTip(const CBlockIndex *, const CBlockIndex *, bool fInitialDownload);
     void TransactionAddedToMempool(const CTransactionRef &);
     void BlockConnected(const std::shared_ptr<const CBlock> &, const CBlockIndex *pindex, const std::shared_ptr<const std::vector<CTransactionRef>> &);
+    void BackgroundBlockConnected(
+        const std::shared_ptr<const CBlock> &,
+        const CBlockIndex *pindex,
+        const std::shared_ptr<const std::vector<CTransactionRef>> &);
     void BlockDisconnected(const std::shared_ptr<const CBlock> &);
     void ChainStateFlushed(const CBlockLocator &);
     void BlockChecked(const CBlock&, const CValidationState&);
