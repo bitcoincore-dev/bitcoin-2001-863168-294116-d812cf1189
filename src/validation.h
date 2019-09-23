@@ -1200,6 +1200,16 @@ public:
     //! Returns true if any chainstate in use is in initial block download.
     bool IsAnyChainInIBD() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
+    //! @returns the chainstate that indexers should consult when ensuring that an
+    //!   index is synced with a chain where we can expect block index entries to have
+    //!   BLOCK_HAVE_DATA beneath the tip.
+    //!
+    //!   In other words, give us the chainstate for which we can reasonably expect
+    //!   that all blocks beneath the tip have been indexed. In practice this means
+    //!   when using an assumed-valid chainstate based upon a snapshot, return only the
+    //!   fully validated chain.
+    Chainstate& GetChainstateForIndexing() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
     ~ChainstateManager();
 };
 
