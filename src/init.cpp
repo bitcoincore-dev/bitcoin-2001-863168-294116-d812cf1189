@@ -1480,6 +1480,21 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
         node.chainman = std::make_unique<ChainstateManager>(chainman_opts, blockman_opts);
         ChainstateManager& chainman = *node.chainman;
 
+        // This is defined and set here instead of inline in validation.h to avoid a hard
+        // dependency between validation and index/base, since the latter is not in
+        // libbitcoinkernel.
+        chainman.restart_indexers = [](const ChainstateManager& chainman) {
+            for (auto* indexer : chainman.indexers) {
+                indexer->Interrupt();
+                indexer->Stop();
+                if (!indexer->Start()) {
+                    // TODO I don't think we should halt here, but maybe do something
+                    // more drastic?
+                    LogPrintf("[snapshot] failed to restart indexer %s\n", indexer->GetName());
+                }
+            }
+        };
+
         node::ChainstateLoadOptions options;
         options.mempool = Assert(node.mempool.get());
         options.reindex = node::fReindex;
