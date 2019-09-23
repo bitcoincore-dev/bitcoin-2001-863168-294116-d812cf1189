@@ -1021,15 +1021,26 @@ public:
     //! Check to see if caches are out of balance and if so, call
     //! ResizeCoinsCaches() as needed.
     void MaybeRebalanceCaches() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
-    //! Return the cached nChainTx value for the snapshot (per the chainparams assumeutxo data),
-    //! if one exists
-    std::optional<unsigned int> GetSnapshotNChainTx() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     //! If some region of the block index is assumed to be valid (as in the case of
     //! UTXO snapshot usage), return the last blockhash to be assumed valid (i.e. the
     //! base of the snapshot) and the correspondent nChainTx value associated with it.
     std::pair<std::optional<uint256>, unsigned int> getAssumedValidEnd()
         EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! @returns the chainstate that indexers should consult when ensuring that an
+    //!   index is synced with a chain where we can expect block index entries to have
+    //!   BLOCK_HAVE_DATA beneath the tip.
+    //!
+    //!   In other words, give us the chainstate for which we can reasonably expect
+    //!   that all blocks beneath the tip have been indexed. In practice this means
+    //!   when using an assumed-valid chainstate based upon a snapshot, return only the
+    //!   fully validated chain.
+    CChainState& getChainstateForIndexing() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! @returns true if we have more than one chainstate in use. This means that a
+    //! background validation chainstate is running.
+    bool hasBgChainstateInUse();
 
     ~ChainstateManager() {
         LOCK(::cs_main);

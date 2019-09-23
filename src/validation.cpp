@@ -2682,10 +2682,12 @@ bool CChainState::ActivateBestChain(BlockValidationState& state, std::shared_ptr
                 }
                 pindexNewTip = m_chain.Tip();
 
-                if (this == &m_chainman.ActiveChainstate()) {
-                    for (const PerBlockConnectTrace& trace : connectTrace.GetBlocksConnected()) {
-                        assert(trace.pblock && trace.pindex);
+                for (const PerBlockConnectTrace& trace : connectTrace.GetBlocksConnected()) {
+                    assert(trace.pblock && trace.pindex);
+                    if (this == &m_chainman.ActiveChainstate()) {
                         GetMainSignals().BlockConnected(trace.pblock, trace.pindex);
+                    } else {
+                        GetMainSignals().BackgroundBlockConnected(trace.pblock, trace.pindex);
                     }
                 }
             } while (!m_chain.Tip() || (starting_tip && CBlockIndexWorkComparator()(m_chain.Tip(), starting_tip)));
@@ -5189,4 +5191,14 @@ std::pair<std::optional<uint256>, unsigned int> ChainstateManager::getAssumedVal
 
     if (!snapshotblockhash || !nchaintx) return {std::nullopt, 0};
     return {snapshotblockhash, *nchaintx};
+}
+
+CChainState& ChainstateManager::getChainstateForIndexing()
+{
+    return getSnapshotBaseBlock() ? *m_ibd_chainstate : *m_active_chainstate;
+}
+
+bool ChainstateManager::hasBgChainstateInUse()
+{
+    return this->SnapshotBlockhash() && !m_snapshot_validated;
 }
