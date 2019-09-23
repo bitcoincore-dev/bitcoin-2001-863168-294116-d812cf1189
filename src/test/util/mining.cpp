@@ -78,7 +78,7 @@ struct BlockValidationStateCatcher : public CValidationInterface {
           m_state{} {}
 
 protected:
-    void BlockChecked(const CBlock& block, const BlockValidationState& state) override
+    void BlockChecked(const ChainstateRole role, const CBlock& block, const BlockValidationState& state) override
     {
         if (block.GetHash() != m_hash) return;
         m_state = state;
