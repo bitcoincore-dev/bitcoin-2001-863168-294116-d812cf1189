@@ -70,10 +70,6 @@
         <translation>Ovo su vaše Bitcoin adrese za slanje novca. Uvijek provjerite iznos i adresu primaoca prije slanja novca.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Ovo su vaše Bitcoin adrese za primanje novca. Preporučljivo je da koristite novu adresu primaoca za svaku transakciju.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Kopirajte adresu</translation>
     </message>
@@ -117,6 +113,14 @@
         <source>Bitcoin</source>
         <translation>Bitcoin</translation>
     </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Adrese pošiljalaca</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Adrese primalaca</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -126,6 +130,9 @@
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -138,16 +145,29 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
+    </context>
+<context>
+    <name>NetWatchLogModel</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Jezrga</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -172,12 +192,20 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Kopirajte adresu</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Izaberite...</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>

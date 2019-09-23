@@ -70,10 +70,6 @@
         <translation>Toto je vaša Bitcoin adresa pre odosielanie platieb. Vždy si overte hodnotu a adresu prijímateľa pred odoslaním vaších mincí.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Toto je vaša Bitcoin adresa pre prijímanie platieb. Odporúčame Vám používať vždy novú adresu pre každú transakciu.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Skopírovať adresu</translation>
     </message>
@@ -470,12 +466,16 @@
         <translation>Aktuálne</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Ukázať %1 pomocnú správu na dostanie zoznamu s možnými možnosťami v Bitcoin príkazovom riadku</translation>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Adresy odosielateľov</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>Predvolená peňaženka</translation>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Adresy prijímateľov</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Ukázať %1 pomocnú správu na dostanie zoznamu s možnými možnosťami v Bitcoin príkazovom riadku</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -788,6 +788,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -878,6 +881,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Nie je dostupné</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -923,7 +933,24 @@
         <source>Hide</source>
         <translation>Skryť</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown. Syncing Headers (%1, %2%)...</source>
+        <translation>Neznáme. Synchronizujem Hlavičky (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresa</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -1024,10 +1051,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Zmenšiť &amp;blok úložisko na</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1174,6 +1197,10 @@
         <translation>žiadne</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Potvrdiť zresetovanie nastavení</translation>
     </message>
@@ -1285,6 +1312,9 @@
         <translation>Aktuálny celkový zostatok v adresách iba na sledovanie</translation>
     </message>
 </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1497,7 +1527,7 @@
         <source>unknown</source>
         <translation>neznáme</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject::QObject</name>
     <message>
@@ -1526,6 +1556,14 @@
     <message>
         <source>&amp;Copy Image</source>
         <translation>&amp;Kopírovať obrázok</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Výsledná URI je príliš dlhá, skúste zmenšiť text pre štítok / správu.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Chyba pri kódovaní URI do QR kódu</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -1971,14 +2009,6 @@
     <message>
         <source>Wallet</source>
         <translation>Peňaženka</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Výsledná URI je príliš dlhá, skúste zmenšiť text pre štítok / správu.</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>Chyba pri kódovaní URI do QR kódu</translation>
     </message>
 </context>
 <context>
@@ -2871,10 +2901,6 @@ Zapamätajte si: Keďže cena poplatku je počítaná za bajt, tak poplatok o ho
     <message>
         <source>Sent to</source>
         <translation>Odoslané do</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>Sebe</translation>
     </message>
     <message>
         <source>Mined</source>

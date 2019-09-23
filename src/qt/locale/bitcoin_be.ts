@@ -1,4 +1,4 @@
-<TS language="be_BY" version="2.1">
+<TS language="be" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -381,17 +381,9 @@
         <source>&amp;Command-line options</source>
         <translation>Опцыі каманднага радка</translation>
     </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n актыўнае злучэнне з сецівам Bitcoin</numerusform><numerusform>%n актыўных злучэнняў з сецівам Bitcoin</numerusform><numerusform>%n актыўных злучэнняў з сецівам Bitcoin</numerusform><numerusform>%n актыўных злучэнняў з сецівам Bitcoin</numerusform></translation>
-    </message>
     <message>
         <source>Indexing blocks on disk...</source>
         <translation>Пераіндэксацыя блокаў на дыску...</translation>
-    </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation><numerusform>Апрацаваны %n блок гісторыі транзакцый.</numerusform><numerusform>Апрацавана %n блокі гісторыі транзакцый.</numerusform><numerusform>Апрацавана %n блокаў гісторыі транзакцый.</numerusform><numerusform>Апрацавана %n блокаў гісторыі транзакцый.</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -423,15 +415,11 @@
     </message>
     <message>
         <source>&amp;Sending addresses</source>
-        <translation type="unfinished">Адрасы дасылання</translation>
+        <translation type="unfinished">&amp;адрасы Адпраўкі</translation>
     </message>
     <message>
         <source>&amp;Receiving addresses</source>
-        <translation type="unfinished">Адрасы прымання</translation>
-    </message>
-    <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Паказваць даведку %1 каб атрымаць спіс магчымых опцый каманднага радка</translation>
+        <translation type="unfinished">&amp;адрасы Прымання</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -681,15 +669,7 @@
         <source>Error</source>
         <translation>Памылка</translation>
     </message>
-    <message numerus="yes">
-        <source>%n GB of free space available</source>
-        <translation><numerusform>%n Гб вольнага месца даступна</numerusform><numerusform>%n Гб вольнага месца даступна</numerusform><numerusform>%n Гб вольнага месца даступна</numerusform><numerusform>%n Гб вольнага месца даступна</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>(of %n GB needed)</source>
-        <translation><numerusform>(з %n Гб патрэбна)</numerusform><numerusform>(з %n Гб патрэбна)</numerusform><numerusform>(з %n Гб патрэбна)</numerusform><numerusform>(з %n Гб патрэбна)</numerusform></translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>MempoolStats</name>
     </context>
@@ -698,10 +678,6 @@
     <message>
         <source>Form</source>
         <translation>Форма</translation>
-    </message>
-    <message>
-        <source>Unknown...</source>
-        <translation type="unfinished">невядома...</translation>
     </message>
     </context>
 <context>
@@ -765,41 +741,15 @@
         <source>Amount</source>
         <translation>Колькасць</translation>
     </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation><numerusform>%n гадзіна</numerusform><numerusform>%n гадзіны</numerusform><numerusform>%n гадзін</numerusform><numerusform>%n гадзін</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation><numerusform>%n дзень</numerusform><numerusform>%n дні</numerusform><numerusform>%n дзён</numerusform><numerusform>%n дзён</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation><numerusform>%n тыдзень</numerusform><numerusform>%n тыдні</numerusform><numerusform>%n тыдняў</numerusform><numerusform>%n тыдняў</numerusform></translation>
-    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 і %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation><numerusform>%n год</numerusform><numerusform>%n гады</numerusform><numerusform>%n гадоў</numerusform><numerusform>%n гадоў</numerusform></translation>
     </message>
     <message>
         <source>unknown</source>
         <translation>невядома</translation>
     </message>
-    <message>
-        <source>Blk</source>
-        <comment>Tx Watch: Block type abbreviation</comment>
-        <translation>блок</translation>
-    </message>
-    <message>
-        <source>Txn</source>
-        <comment>Tx Watch: Transaction type abbreviation</comment>
-        <translation>транзакцыі</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -820,11 +770,7 @@
         <source>Wallet: </source>
         <translation type="unfinished">Гаманец: </translation>
     </message>
-    <message>
-        <source>Unknown</source>
-        <translation type="unfinished">невядома</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -837,7 +783,7 @@
     </message>
     <message>
         <source>&amp;Message:</source>
-        <translation>&amp;Паведамленне:</translation>
+        <translation type="unfinished">&amp;Паведамленне:</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -1098,10 +1044,6 @@
         <translation>ID</translation>
     </message>
     <message>
-        <source>Transaction</source>
-        <translation>транзакцыі</translation>
-    </message>
-    <message>
         <source>Amount</source>
         <translation>Колькасць</translation>
     </message>
@@ -1357,10 +1299,6 @@
         <translation>Імпартаванне...</translation>
     </message>
     <message>
-        <source>Loading P2P addresses...</source>
-        <translation>Загружаем адрасы...</translation>
-    </message>
-    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Не хапае файлавых дэскрыптараў.</translation>
     </message>
@@ -1387,10 +1325,6 @@
     <message>
         <source>Transaction too large</source>
         <translation>Транзакцыя занадта вялікая</translation>
-    </message>
-    <message>
-        <source>Verifying wallet(s)...</source>
-        <translation>Праверка гаманца...</translation>
     </message>
     <message>
         <source>Warning</source>

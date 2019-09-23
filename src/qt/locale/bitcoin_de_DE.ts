@@ -10,8 +10,16 @@
         <translation>Eine neue Adresse erstellen</translation>
     </message>
     <message>
+        <source>&amp;New</source>
+        <translation>&amp;Neu</translation>
+    </message>
+    <message>
         <source>Copy the currently selected address to the system clipboard</source>
         <translation>Aktive Adresse in die Zwischenablage kopieren</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Kopieren</translation>
     </message>
     <message>
         <source>C&amp;lose</source>
@@ -30,6 +38,10 @@
         <translation>&amp;Exportieren</translation>
     </message>
     <message>
+        <source>&amp;Delete</source>
+        <translation>&amp;Löschen</translation>
+    </message>
+    <message>
         <source>Choose the address to send coins to</source>
         <translation>Wähle die Empfängeradresse</translation>
     </message>
@@ -42,8 +54,28 @@
         <translation>Auswählen</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Dies sind Ihre Bitcoin-Adressen für den Empfang von Zahlungen. Es wird empfohlen, für jede Transaktion eine neue Empfangsadresse zu verwenden.</translation>
+        <source>Sending addresses</source>
+        <translation>Sendeadressen</translation>
+    </message>
+    <message>
+        <source>Receiving addresses</source>
+        <translation>Empfangsadressen</translation>
+    </message>
+    <message>
+        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Dies sind Ihre Bitcoin-Adressen zum Senden von Zahlungen. Überprüfen Sie immer die Menge und die Empfangsadresse, bevor Sie Bitcoins senden.</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;Kopiere Adresse</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Label</source>
+        <translation>Kopiere &amp;Etikett</translation>
+    </message>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>&amp;Bearbeiten</translation>
     </message>
     <message>
         <source>Export Address List</source>
@@ -65,6 +97,10 @@
         <translation>Etikett</translation>
     </message>
     <message>
+        <source>Address</source>
+        <translation>Adresse</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(kein Etikett)</translation>
     </message>
@@ -76,8 +112,16 @@
         <translation>Passwort Dialog</translation>
     </message>
     <message>
+        <source>Enter passphrase</source>
+        <translation>Passwort eingeben</translation>
+    </message>
+    <message>
         <source>New passphrase</source>
         <translation>Neues Passwort</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>Neues Passwort wiederholen</translation>
     </message>
     <message>
         <source>Show password</source>
@@ -86,6 +130,10 @@
     <message>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
         <translation>Geben Sie das neue Passwort Ihrer digitalen Geldbörse ein.&lt;br/&gt;Verwenden Sie bitte ein Passwort bestehend aus &lt;b&gt;zehn oder mehr zufälligen Zeichen&lt;/b&gt;, oder aus &lt;b&gt;acht oder mehr Wörtern&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>Brieftasche verschlüsseln</translation>
     </message>
     <message>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
@@ -100,12 +148,28 @@
         <translation>Diese Operation benötigt Ihr Wallet-Passwort zum entschlüsseln der Wallet.</translation>
     </message>
     <message>
+        <source>Decrypt wallet</source>
+        <translation>Brieftasche entschlüsseln</translation>
+    </message>
+    <message>
         <source>Change passphrase</source>
         <translation>Passwort ändern</translation>
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
         <translation>Geben Sie das alte und neue Passwort Ihrer Wallet ein.</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>Brieftaschenverschlüsselung bestätigen</translation>
+    </message>
+    <message>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
+        <translation>Achtung: Wenn Sie Ihre Wallet verschlüsseln und das Passwort verlieren, gehen &lt;b&gt;alle Ihre Bitcoins verloren&lt;/b&gt;!</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to encrypt your wallet?</source>
+        <translation>Möchten Sie Ihre Wallet wirklich verschlüsseln?</translation>
     </message>
     <message>
         <source>Wallet encrypted</source>
@@ -116,12 +180,24 @@
         <translation>WICHTIG: Alle früheren Sicherungen, die Sie von Ihrer Wallet-Datei gemacht haben, sollten durch die neu erzeugte, verschlüsselte Wallet-Datei ersetzt werden. Sobald Sie die neue, verschlüsselte Wallet verwenden, werden frühere Sicherungen der unverschlüsselten Wallet-Datei aus Sicherheitsgründen nutzlos.</translation>
     </message>
     <message>
+        <source>Wallet encryption failed</source>
+        <translation>Brieftaschenverschlüsselung fehlgeschlagen</translation>
+    </message>
+    <message>
         <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
         <translation>Die Wallet-Verschlüsselung ist aufgrund eines internen Fehlers fehlgeschlagen. Ihre Wallet wurde nicht verschlüsselt.</translation>
     </message>
     <message>
         <source>The supplied passphrases do not match.</source>
         <translation>Die eingegebenen Passwörter stimmen nicht überein.</translation>
+    </message>
+    <message>
+        <source>Wallet unlock failed</source>
+        <translation>Brieftasche öffnen fehlgeschlagen</translation>
+    </message>
+    <message>
+        <source>The passphrase entered for the wallet decryption was incorrect.</source>
+        <translation>Inkorrektes Passwort um die Brieftasche zu entschlüsseln</translation>
     </message>
     <message>
         <source>Wallet decryption failed</source>
@@ -131,16 +207,28 @@
         <source>Wallet passphrase was successfully changed.</source>
         <translation>Brieftaschen Passwort erfolgreich geändert</translation>
     </message>
-    </context>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Achtung: Die Umschalttaste ist eingeschaltet!</translation>
+    </message>
+</context>
 <context>
     <name>BanTableModel</name>
     <message>
         <source>IP/Netmask</source>
         <translation>IP/Netzmaske</translation>
     </message>
-    </context>
+    <message>
+        <source>Banned Until</source>
+        <translation>Gesperrt bis</translation>
+    </message>
+</context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>Synchronizing with network...</source>
+        <translation>Über das Netzwerk abgleichen</translation>
+    </message>
     <message>
         <source>&amp;Overview</source>
         <translation>&amp;Übersicht</translation>
@@ -154,12 +242,28 @@
         <translation>&amp;Transaktionen</translation>
     </message>
     <message>
+        <source>Browse transaction history</source>
+        <translation>Zeige Transaktionsverlauf</translation>
+    </message>
+    <message>
         <source>E&amp;xit</source>
         <translation>Beenden</translation>
     </message>
     <message>
         <source>Quit application</source>
         <translation>Programm beenden</translation>
+    </message>
+    <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;Über %1</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Zeige Informationen zu %1</translation>
+    </message>
+    <message>
+        <source>About &amp;Qt</source>
+        <translation>Über &amp;Qt</translation>
     </message>
     <message>
         <source>Show information about Qt</source>
@@ -182,8 +286,16 @@
         <translation>Sicherungskopie der Brieftasche...</translation>
     </message>
     <message>
+        <source>&amp;Change Passphrase...</source>
+        <translation>&amp;Passwort ändern...</translation>
+    </message>
+    <message>
         <source>Open &amp;URI...</source>
         <translation>Öffne &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Brieftasche:</translation>
     </message>
     <message>
         <source>Click to disable network activity.</source>
@@ -194,12 +306,20 @@
         <translation>Netzwerkaktivität wurde deaktiviert.</translation>
     </message>
     <message>
+        <source>Click to enable network activity again.</source>
+        <translation>Klicken Sie, um die Netzwerkaktivität wieder zu aktivieren.</translation>
+    </message>
+    <message>
         <source>Syncing Headers (%1%)...</source>
         <translation>Synchronisiere Header (%1%)...</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
         <translation>Reindexiere Blöcke auf dem Datenträger...</translation>
+    </message>
+    <message>
+        <source>Send coins to a Bitcoin address</source>
+        <translation>Coins an eine Bitcoin-Adresse senden</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -270,12 +390,24 @@
         <translation>Registerkarten-Symbolleiste</translation>
     </message>
     <message>
+        <source>Show the list of used sending addresses and labels</source>
+        <translation>Liste der benutzten Sendeadressen und -etiketten</translation>
+    </message>
+    <message>
         <source>Show the list of used receiving addresses and labels</source>
         <translation>Zeige Liste der benutzten Empfangsadressen und -etiketten</translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
         <translation>Indexiere Blöcke auf dem Datenträger...</translation>
+    </message>
+    <message>
+        <source>Processing blocks on disk...</source>
+        <translation>Verarbeite Blöcke auf dem Datenträger...</translation>
+    </message>
+    <message>
+        <source>%1 behind</source>
+        <translation>%1 im Rückstand</translation>
     </message>
     <message>
         <source>Transactions after this will not yet be visible.</source>
@@ -292,6 +424,14 @@
     <message>
         <source>Up to date</source>
         <translation>Auf dem neuesten Stand</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Adressen senden</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Adressen empfangen</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -331,6 +471,14 @@
         <translation>Byte:</translation>
     </message>
     <message>
+        <source>Amount:</source>
+        <translation>Betrag:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Gebühr:</translation>
+    </message>
+    <message>
         <source>Dust:</source>
         <translation>Dust:</translation>
     </message>
@@ -351,12 +499,32 @@
         <translation>Bestätigungen</translation>
     </message>
     <message>
+        <source>Confirmed</source>
+        <translation>Bestätigt</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Adresse kopieren</translation>
+    </message>
+    <message>
         <source>Copy label</source>
         <translation>Etikett kopieren</translation>
     </message>
     <message>
+        <source>Copy amount</source>
+        <translation>Betrag kopieren</translation>
+    </message>
+    <message>
         <source>Copy transaction ID</source>
         <translation>Transaktions ID kopieren</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Menge kopieren</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>Ja</translation>
     </message>
     <message>
         <source>no</source>
@@ -402,10 +570,17 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
         <translation>Version</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Über %1</translation>
     </message>
     </context>
 <context>
@@ -424,17 +599,52 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Formular</translation>
     </message>
+    <message>
+        <source>Unknown...</source>
+        <translation>Unbekannt...</translation>
+    </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open URI</source>
+        <translation type="unfinished">Öffne URI</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Einstellungen</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Brieftasche</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Fehler</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
@@ -442,6 +652,9 @@
         <source>Form</source>
         <translation>Formular</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -480,9 +693,33 @@
         <source>N/A</source>
         <translation>N/A</translation>
     </message>
-    </context>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">Debug Fenster</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Brieftasche: </translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Netzwerkaktivität wurde deaktiviert</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">Unbekannt</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Betrag:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etikett:</translation>
+    </message>
     <message>
         <source>Copy label</source>
         <translation>Etikett kopieren</translation>
@@ -494,6 +731,10 @@
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Kopiere Adresse</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adresse</translation>
@@ -510,7 +751,7 @@
         <source>Wallet</source>
         <translation>Brieftasche</translation>
     </message>
-    </context>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
@@ -521,9 +762,17 @@
         <source>Label</source>
         <translation>Etikett</translation>
     </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(kein Etikett)</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Insufficient funds!</source>
+        <translation>Ungenügendes Guthaben</translation>
+    </message>
     <message>
         <source>Quantity:</source>
         <translation>Anzahl:</translation>
@@ -531,6 +780,10 @@
     <message>
         <source>Bytes:</source>
         <translation>Byte:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Betrag:</translation>
     </message>
     <message>
         <source>Fee:</source>
@@ -541,12 +794,25 @@
         <translation>Nach Gebühr:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Dies sind deine Bitcoin Adressen zum Senden von Zahlungsmitteln.
+Überprüfe immer die Menge, sowie die Empfänger-Adresse vor dem Senden von Coins....</translation>
+    </message>
+    <message>
         <source>Dust:</source>
         <translation>Dust:</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Senden</translation>
+    </message>
+    <message>
         <source>Copy quantity</source>
         <translation>Menge kopieren</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Betrag kopieren</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -555,6 +821,14 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Betrag:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etikett:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -576,6 +850,10 @@
     <message>
         <source>Date</source>
         <translation>Datum</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Überweisung</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -619,6 +897,10 @@
         <translation>Transaktions ID kopieren</translation>
     </message>
     <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>Komma getrenntes Dokument (*.csv)</translation>
+    </message>
+    <message>
         <source>Confirmed</source>
         <translation>Bestätigt</translation>
     </message>
@@ -654,6 +936,18 @@
 <context>
     <name>WalletView</name>
     <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Exportieren</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Daten des aktiven Fensters exportieren</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Sicherungskopie der Brieftasche</translation>
+    </message>
+    <message>
         <source>Backup Failed</source>
         <translation>Sicherung fehlgeschlagen</translation>
     </message>
@@ -665,12 +959,24 @@
 <context>
     <name>bitcoin-core</name>
     <message>
+        <source>Warning</source>
+        <translation>Achtung</translation>
+    </message>
+    <message>
         <source>Starting network threads...</source>
         <translation>Starte Netzwerk-Threads...</translation>
     </message>
     <message>
+        <source>This is the minimum transaction fee you pay on every transaction.</source>
+        <translation>Das ist die Mindestgebühr für jede Transaktion</translation>
+    </message>
+    <message>
         <source>This is the transaction fee you will pay if you send a transaction.</source>
         <translation>Das ist die Gebühr für die Überweisung</translation>
+    </message>
+    <message>
+        <source>Transaction amounts must not be negative</source>
+        <translation>Überweisungsbetrag kann nicht negativ sein</translation>
     </message>
     <message>
         <source>Transaction must have at least one recipient</source>

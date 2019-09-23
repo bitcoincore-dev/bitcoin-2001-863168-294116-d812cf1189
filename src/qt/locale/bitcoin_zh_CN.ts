@@ -70,10 +70,6 @@
         <translation>您可以给这些比特币地址付款。在付款之前，务必要检查金额和收款地址是否正确。</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>您可以用这些比特币地址收款。建议在每次交易时，都使用一个新的收款地址。</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>复制地址(&amp;C)</translation>
     </message>
@@ -506,16 +502,16 @@
         <translation>显示 %1 帮助信息，获取可用命令行选项列表</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>默认钱包</translation>
-    </message>
-    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
         <translation>正在打开钱包&lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
     <message>
         <source>Open Wallet Failed</source>
         <translation>打开钱包失败</translation>
+    </message>
+    <message>
+        <source>No wallets available</source>
+        <translation>没有可用的钱包</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -847,6 +843,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -882,6 +881,10 @@
     <message>
         <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
         <translation>当你点击确认后，%1 将会在 %4 启动时从  %3 中最早的交易开始，下载并处理完整的 %4 区块链 (%2GB)。</translation>
+    </message>
+    <message>
+        <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
+        <translation>最初的同步过程是非常吃力的，同时可能会暴露你电脑上的一些硬件方面的小毛病，尽管你可能之前没有注意过。你每跑 %1，它就会继续从之前中断的地方下载</translation>
     </message>
     <message>
         <source>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</source>
@@ -933,6 +936,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>不可用</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -981,6 +991,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1, %2%)...</source>
         <translation>未知。正在同步区块头 (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>种类</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>地址</translation>
     </message>
 </context>
 <context>
@@ -1087,10 +1110,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>将区块存储修剪至(&amp;B)</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1245,6 +1264,10 @@
         <translation>无</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>比特币核心</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>确认恢复缺省设置</translation>
     </message>
@@ -1357,6 +1380,9 @@
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1388,6 +1414,14 @@
         <translation>无法处理支付请求，因为编译时没有启用BIP70支持。</translation>
     </message>
     <message>
+        <source>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</source>
+        <translation>由于BIP70具有众所周知的安全缺陷，强烈建议您忽略任何要求更换钱包的商家指引。</translation>
+    </message>
+    <message>
+        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation>如果您看到了这个错误，您需要请求商家提供一个兼容BIP21的URI。</translation>
+    </message>
+    <message>
         <source>Invalid payment address %1</source>
         <translation>无效的付款地址 %1</translation>
     </message>
@@ -1414,6 +1448,10 @@
     <message>
         <source>Payment request expired.</source>
         <translation>付款请求已过期。</translation>
+    </message>
+    <message>
+        <source>Payment request is not initialized.</source>
+        <translation>付款请求未初始化。</translation>
     </message>
     <message>
         <source>Unverified payment requests to custom payment scripts are unsupported.</source>
@@ -1573,6 +1611,16 @@
         <source>unknown</source>
         <translation>未知</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>块</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>交易</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1602,6 +1650,18 @@
     <message>
         <source>&amp;Copy Image</source>
         <translation>复制图片</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>URI 太长，请试着精简标签或消息文本。</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>把 URI 编码成二维码时发生错误。</translation>
+    </message>
+    <message>
+        <source>QR code support not available.</source>
+        <translation>不支持二维码。</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -1749,6 +1809,10 @@
     <message>
         <source>User Agent</source>
         <translation>用户代理</translation>
+    </message>
+    <message>
+        <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>打开 %1 当前目录中的调试日志文件。日志文件大的话可能要等上几秒钟。</translation>
     </message>
     <message>
         <source>Decrease font size</source>
@@ -2063,14 +2127,6 @@
     <message>
         <source>Wallet</source>
         <translation>钱包</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>URI 太长，请试着精简标签或消息文本。</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>把 URI 编码成二维码时发生错误。</translation>
     </message>
 </context>
 <context>
@@ -2973,10 +3029,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>付款</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>给自己</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>挖矿所得</translation>
     </message>
@@ -3296,7 +3348,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
-        <translation>警告：我们的同行似乎不完全同意！您可能需要升级，或者其他节点可能需要升级。</translation>
+        <translation>警告：我们和其他节点似乎不完全意见一致！您可能需要升级，或者是其他节点可能需要升级。</translation>
     </message>
     <message>
         <source>%d of last 100 blocks have unexpected version</source>
@@ -3385,6 +3437,14 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
         <translation>不正确或没有找到起源区块。网络错误？</translation>
+    </message>
+    <message>
+        <source>Initialization sanity check failed. %s is shutting down.</source>
+        <translation>初始化完整性检查失败。%s 即将关闭。</translation>
+    </message>
+    <message>
+        <source>Invalid P2P permission: '%s'</source>
+        <translation>无效的 P2P 权限：'%s'</translation>
     </message>
     <message>
         <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>

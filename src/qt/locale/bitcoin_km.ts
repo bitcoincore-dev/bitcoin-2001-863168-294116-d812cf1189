@@ -1,4 +1,4 @@
-<TS language="km_KH" version="2.1">
+<TS language="km" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -151,8 +151,20 @@
 <context>
     <name>BitcoinGUI</name>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">កាបូប:</translation>
+    </message>
+    <message>
         <source>Send coins to a Bitcoin address</source>
         <translation>ផ្ញើកាក់ទៅកាន់ អាសយដ្ឋាន Bitcoin មួយ</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;អាសយដ្ឋានផ្ញើ</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;អាសយដ្ឋានទទួួល</translation>
     </message>
     </context>
 <context>
@@ -164,9 +176,20 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;ឡាបែល</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;អាសយដ្ឋាន</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -175,16 +198,34 @@
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>អាសយដ្ឋាន</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;កាបូប</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -203,12 +244,24 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">កាបូប: </translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ឡាបែល:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;ចម្លង​អាស្រយដ្ឋាន</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>អាសយដ្ឋាន</translation>
@@ -221,7 +274,7 @@
         <source>Wallet</source>
         <translation>កាបូប</translation>
     </message>
-    </context>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
@@ -236,12 +289,20 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">ជ្រើសរើស...</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(គ្មាន​ឡាបែល)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ឡាបែល:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>

@@ -70,10 +70,6 @@
         <translation>これらは、あなたが知っている支払い送り先の Bitcoin アドレスです。コインを送る前に、必ず金額と送金先アドレスを確認してください。</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>これらは支払いを受け取るための、あなたの Bitcoin アドレスです。トランザクションごとに新しい受け取り用アドレスを作成することが推奨されます。</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>アドレスをコピー(&amp;C)</translation>
     </message>
@@ -506,16 +502,16 @@
         <translation>%1 のヘルプ メッセージを表示して、使用可能な XPChain のコマンドライン オプションの一覧を見る。</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>デフォルトウォレット</translation>
-    </message>
-    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
         <translation>ウォレット &lt;b&gt;%1&lt;/b&gt;を開いています...</translation>
     </message>
     <message>
         <source>Open Wallet Failed</source>
         <translation>ウォレットを開くことに失敗しました</translation>
+    </message>
+    <message>
+        <source>No wallets available</source>
+        <translation>ウォレットは利用できません</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -848,6 +844,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -938,6 +937,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -983,7 +989,24 @@
         <source>Hide</source>
         <translation>隠す</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown. Syncing Headers (%1, %2%)...</source>
+        <translation>不明。ヘッダ (%1, %2%) の同期中...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>タイプ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>アドレス</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -1088,10 +1111,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>ブロックの保存容量を次の値までに剪定する(&amp;amp;B):</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1246,6 +1265,10 @@
         <translation>なし</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin のコア</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>設定リセットの確認</translation>
     </message>
@@ -1357,6 +1380,9 @@
         <translation>ウォッチ限定アドレスの現在の残高の総計</translation>
     </message>
 </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1577,6 +1603,16 @@
         <source>unknown</source>
         <translation>不明</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>ブロック</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>取引</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1606,6 +1642,14 @@
     <message>
         <source>&amp;Copy Image</source>
         <translation>画像をコピー(&amp;C)</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>生成されたURIが長すぎです。ラベルやメッセージのテキストを短くしてください。</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>URIをQRコードへ変換している際にエラーが発生しました。</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -2071,14 +2115,6 @@
     <message>
         <source>Wallet</source>
         <translation>ウォレット</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>生成されたURIが長すぎです。ラベルやメッセージのテキストを短くしてください。</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>URIをQRコードへ変換している際にエラーが発生しました。</translation>
     </message>
 </context>
 <context>
@@ -2981,10 +3017,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>送金</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>自己送金</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>発掘</translation>
     </message>
@@ -3549,6 +3581,18 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Signing transaction failed</source>
         <translation>取引の署名に失敗しました</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" does not exist</source>
+        <translation>指定された -walletdir "%s" は存在しません。</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is a relative path</source>
+        <translation>指定された -walletdir "%s" は相対パスです。</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is not a directory</source>
+        <translation>指定された-walletdir "%s" はディレクトリではありません。</translation>
     </message>
     <message>
         <source>The specified config file %s does not exist

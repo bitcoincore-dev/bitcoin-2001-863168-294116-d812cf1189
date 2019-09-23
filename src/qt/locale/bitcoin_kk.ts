@@ -1,4 +1,4 @@
-<TS language="kk_KZ" version="2.1">
+<TS language="kk" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -28,6 +28,14 @@
     </context>
 <context>
     <name>AddressTableModel</name>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">таңба</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished">Адрес</translation>
+    </message>
     </context>
 <context>
     <name>AskPassphraseDialog</name>
@@ -68,6 +76,10 @@
     <message>
         <source>&amp;Change Passphrase...</source>
         <translation>Құпия сөзді өзгерту</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Әмиян:</translation>
     </message>
     <message>
         <source>Bitcoin</source>
@@ -118,7 +130,7 @@
     </message>
     <message>
         <source>Fee:</source>
-        <translation>Комиссия</translation>
+        <translation>Комиссия:</translation>
     </message>
     <message>
         <source>Dust:</source>
@@ -160,6 +172,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
@@ -174,8 +189,19 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation type="unfinished">Адрес</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -192,6 +218,9 @@
     </context>
 <context>
     <name>OverviewPage</name>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -222,6 +251,10 @@
         <source>&amp;Information</source>
         <translation>Информация</translation>
     </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Әмиян: </translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -229,16 +262,40 @@
         <source>&amp;Amount:</source>
         <translation>Саны</translation>
     </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;таңба:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address</source>
+        <translation type="unfinished">Адрес</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Саны</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">таңба</translation>
+    </message>
+    <message>
         <source>Wallet</source>
         <translation>Әмиян</translation>
     </message>
-    </context>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Күні</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">таңба</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
@@ -252,11 +309,15 @@
     </message>
     <message>
         <source>After Fee:</source>
-        <translation>Комиссия алу кейін:</translation>
+        <translation>Комиссия алу кейін</translation>
     </message>
     <message>
         <source>Dust:</source>
         <translation>Шаң</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">Жіберу</translation>
     </message>
     </context>
 <context>
@@ -264,6 +325,10 @@
     <message>
         <source>A&amp;mount:</source>
         <translation>Саны</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;таңба:</translation>
     </message>
     </context>
 <context>
@@ -283,15 +348,47 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Date</source>
+        <translation>Күні</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Саны</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Күні</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">таңба</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Confirmed</source>
+        <translation>Растық</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>Күні</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">таңба</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished">Адрес</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -307,6 +404,10 @@
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>Экспорт</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>

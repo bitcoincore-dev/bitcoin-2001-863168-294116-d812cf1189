@@ -66,10 +66,6 @@
         <translation>पैसे पाठविण्यासाठीचे हे तुमचे बिटकॉईन पत्त्ते आहेत. नाणी पाठविण्यापूर्वी नेहमी रक्कम आणि प्राप्त होणारा पत्ता तपासून पहा.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>पैसे प्राप्त करण्यासाठीचे हे तुमचे बिटकॉईन पत्त्ते आहेत. प्रत्येक व्यवहारासाठी एक नवा स्वीकृती पत्ता वापरण्याची शिफारस सहसा केली जाते.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;पत्ता कॉपी करा</translation>
     </message>
@@ -93,6 +89,14 @@
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;प्रेषक पत्ते</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;स्वीकृती पत्ते</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -104,13 +108,22 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
+    </context>
+<context>
+    <name>NetWatchLogModel</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
@@ -120,6 +133,9 @@
     </context>
 <context>
     <name>OverviewPage</name>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -144,12 +160,20 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;पत्ता कॉपी करा</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">निवडा...</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>

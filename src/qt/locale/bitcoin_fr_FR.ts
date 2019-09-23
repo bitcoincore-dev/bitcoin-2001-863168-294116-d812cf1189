@@ -70,10 +70,6 @@
         <translation>Ceci sont vos addresses Bitcoin pour envoyer vos paiements. Il faut toujours verifier les montants et l'addresse de reception avant de valider la transaction.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Ceci sont vos addresses Bitcoin pour recevoir vos paiements. Il est recommandé d'utiliser une nouvelle adresse de recepetion pour chaque transaction</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Copie Adresse</translation>
     </message>
@@ -502,10 +498,6 @@
         <translation>Afficher le %1 message d'aide pour récupérer une liste des options de ligne de commande Bitcoin</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>portefeuille par défaut</translation>
-    </message>
-    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
         <translation>Ouverture portefeuille &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
@@ -816,6 +808,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -876,6 +871,17 @@
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation><numerusform>%n GO d'espace libre disponible</numerusform><numerusform>%n GO d'espace libre disponible</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation><numerusform>(%n GB nécessaire)</numerusform><numerusform>(%n GB nécessaire)</numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -884,10 +890,27 @@
         <translation>Formulaire</translation>
     </message>
     <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Inconnu...</translation>
+    </message>
+    <message>
         <source>Hide</source>
         <translation>Cacher</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -930,6 +953,14 @@
         <translation>Adresse IP du proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</translation>
     </message>
     <message>
+        <source>Hide the icon from the system tray.</source>
+        <translation type="unfinished">Cacher l'icône dans la zone de notification.</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Cacher l'icône de la zone de notification</translation>
+    </message>
+    <message>
         <source>Reset all client options to default.</source>
         <translation>Réinitialiser toutes les options du client par défaut.</translation>
     </message>
@@ -942,6 +973,10 @@
         <translation>&amp;Réseau</translation>
     </message>
     <message>
+        <source>W&amp;allet</source>
+        <translation>&amp;Portefeuille</translation>
+    </message>
+    <message>
         <source>Expert</source>
         <translation>Expert</translation>
     </message>
@@ -952,6 +987,14 @@
     <message>
         <source>Map port using &amp;UPnP</source>
         <translation>Ouvrir le port avec l'&amp;UPnP</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside.</source>
+        <translation>Accepter les connexions venant de l'extérieur.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Autoriser les connexions entrantes</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
@@ -1018,6 +1061,10 @@
         <translation>aucun</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Confirmer les options de réinitialisation </translation>
     </message>
@@ -1080,6 +1127,9 @@
         <source>Recent transactions</source>
         <translation>Transactions récentes </translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1177,9 +1227,25 @@
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n heure</numerusform><numerusform>%n heures</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n jour</numerusform><numerusform>%n jours</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n semaine</numerusform><numerusform>%n semaines</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 et %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n an</numerusform><numerusform>%n années</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1200,6 +1266,16 @@
     <message>
         <source>unknown</source>
         <translation>inconnu</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -1285,6 +1361,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Usage de la mémoire</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portefeuille: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1403,6 +1483,10 @@
         <translation>1 &amp;an</translation>
     </message>
     <message>
+        <source>Network activity disabled</source>
+        <translation>Activité réseau désactivée</translation>
+    </message>
+    <message>
         <source>via %1</source>
         <translation>via %1</translation>
     </message>
@@ -1460,6 +1544,10 @@
     <message>
         <source>Remove</source>
         <translation>Retirer</translation>
+    </message>
+    <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Copier URI</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -1524,7 +1612,7 @@
         <source>Wallet</source>
         <translation>Portefeuille</translation>
     </message>
-    </context>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
@@ -1871,6 +1959,10 @@
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Ouvert pour %n bloc de plus</numerusform><numerusform>Ouvert pour %n blocs de plus</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>Ouvert jusqu'à %1</translation>
@@ -2017,6 +2109,10 @@
         <source>Label</source>
         <translation>Étiquette</translation>
     </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>Ouvert pour %n bloc de plus</numerusform><numerusform>Ouvert pour %n blocs de plus</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>Ouvert jusqu'à %1</translation>
@@ -2125,10 +2221,6 @@
         <translation>Envoyées à</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>À vous-même</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Extraction</translation>
     </message>
@@ -2175,6 +2267,10 @@
     <message>
         <source>Confirmed</source>
         <translation>Confirmée</translation>
+    </message>
+    <message>
+        <source>Watch-only</source>
+        <translation>Regarder seulement</translation>
     </message>
     <message>
         <source>Date</source>
@@ -2267,7 +2363,11 @@
         <source>Backup Successful</source>
         <translation>Sauvegarde réussie</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Annuler </translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -2282,6 +2382,10 @@
         <source>Importing...</source>
         <translation>
 Importation ...</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Chargement des adresses...</translation>
     </message>
     <message>
         <source>Upgrading UTXO database</source>
@@ -2326,6 +2430,10 @@ Importation ...</translation>
     <message>
         <source>Unable to generate initial keys</source>
         <translation>Impossible de générer la clé initiale</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Vérification du portefeuille...</translation>
     </message>
     <message>
         <source>Warning</source>

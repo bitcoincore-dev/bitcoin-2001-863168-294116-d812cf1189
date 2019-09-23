@@ -67,10 +67,6 @@
         <translation>പേയ്മെന്റുകൾ അയയ്ക്കുന്നതിനുള്ള നിങ്ങളുടെ ബിറ്റ്കോയിൻ വിലാസങ്ങളാണ് ഇവ. നാണയങ്ങൾ അയയ്ക്കുന്നതിനുമുമ്പ് എല്ലായ്പ്പോഴും തുകയും സ്വീകരിക്കുന്ന വിലാസവും പരിശോധിക്കുക.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>പേയ്മെന്റ് സ്വീകരിക്കുന്നതിന് നിങ്ങളുടെ ബിറ്റ്കോയിൻ വിലാസങ്ങളാണ് ഇവ. ഓരോ ഇടപാടിനും പുതിയ സ്വീകരിക്കുന്ന വിലാസം ഉപയോഗിക്കുന്നതാണ് ഉചിതം.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;വിലാസം പകർത്തുക</translation>
     </message>
@@ -94,7 +90,11 @@
         <source>Exporting Failed</source>
         <translation>കയറ്റുമതി പരാജയപ്പെട്ടു</translation>
     </message>
-    </context>
+    <message>
+        <source>There was an error trying to save the address list to %1. Please try again.</source>
+        <translation>%1 ലേക്ക് വിലാസ ലിസ്റ്റ് സംരക്ഷിക്കാൻ ശ്രമിക്കുന്നതിൽ ഒരു പിശകുണ്ടായിരുന്നു. വീണ്ടും ശ്രമിക്കുക.</translation>
+    </message>
+</context>
 <context>
     <name>AddressTableModel</name>
     <message>
@@ -174,6 +174,14 @@
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;വിലാസങ്ങൾ അയയ്ക്കുന്നു</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;സ്വീകരിക്കുന്ന വിലാസങ്ങൾ</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -184,9 +192,20 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;ലേബൽ</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;വിലാസം</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -195,8 +214,19 @@
     <name>Intro</name>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>വിലാസം</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -205,6 +235,9 @@
     </context>
 <context>
     <name>OverviewPage</name>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -226,9 +259,17 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ലേബൽ:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;വിലാസം പകർത്തുക</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>വിലാസം</translation>
@@ -252,12 +293,20 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">തിരഞ്ഞെടുക്കുക...</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(ലേബൽ ഇല്ല)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ലേബൽ:</translation>
+    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>

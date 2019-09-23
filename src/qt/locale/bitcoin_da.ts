@@ -70,10 +70,6 @@
         <translation>Disse er dine Bitcoin-adresser til afsendelse af betalinger. Tjek altid beløb og modtagelsesadresse, inden du sender bitcoins.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Dette er dine Bitcoin-adresser til modtagelse af betalinger. Det anbefales at bruge en ny modtagelsesadresse for hver transaktion.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Kopiér adresse</translation>
     </message>
@@ -506,16 +502,16 @@
         <translation>Vis %1 hjælpebesked for at få en liste over mulige tilvalg for Bitcoin kommandolinje</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>Standard tegnebog</translation>
-    </message>
-    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
         <translation>Åbner Tegnebog &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
     <message>
         <source>Open Wallet Failed</source>
         <translation>Åben Tegnebog Fejlede</translation>
+    </message>
+    <message>
+        <source>No wallets available</source>
+        <translation>Ingen tegnebøger tilgængelige</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -848,6 +844,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -938,6 +937,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -986,6 +992,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1, %2%)...</source>
         <translation>Ukendt. Synkroniserer Hoveder (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
     </message>
 </context>
 <context>
@@ -1092,10 +1111,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Beskære &amp;blok opbevaring til</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1250,6 +1265,10 @@
         <translation>ingen</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Bekræft nulstilling af indstillinger</translation>
     </message>
@@ -1362,6 +1381,9 @@
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1390,6 +1412,14 @@
     <message>
         <source>Cannot process payment request because BIP70 support was not compiled in.</source>
         <translation>Kan ikke behandle betalingsanmodningen, da BIP70-understøttelse ikke er medtaget under programkodeoversættelsen.</translation>
+    </message>
+    <message>
+        <source>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</source>
+        <translation>På grund af vidtstrakte sikkerhedsfejl i BIP70 anbefales det kraftigt, at enhver instruktion til handlende om at skifte tegnebog ignoreres.</translation>
+    </message>
+    <message>
+        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation>Hvis du modtager denne fejl, bør du anmode den handlende om at give dig en BIP21-kompatibel URI.</translation>
     </message>
     <message>
         <source>Invalid payment address %1</source>
@@ -1581,6 +1611,11 @@
         <source>unknown</source>
         <translation>ukendt</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1610,6 +1645,18 @@
     <message>
         <source>&amp;Copy Image</source>
         <translation>&amp;Kopiér foto</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Resulterende URI var for lang; prøv at forkorte teksten til mærkaten/beskeden.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Fejl ved kodning fra URI til QR-kode.</translation>
+    </message>
+    <message>
+        <source>QR code support not available.</source>
+        <translation>QR-kode understøttelse er ikke tilgængelig.</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -2075,14 +2122,6 @@
     <message>
         <source>Wallet</source>
         <translation>Tegnebog</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Resulterende URI var for lang; prøv at forkorte teksten til mærkaten/beskeden.</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>Fejl ved kodning fra URI til QR-kode.</translation>
     </message>
 </context>
 <context>
@@ -2985,10 +3024,6 @@ Note: Siden gebyret er kalkuleret på en per-byte basis, et gebyr på "100 satos
         <translation>Sendt til</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Til dig selv</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Minet</translation>
     </message>
@@ -3403,6 +3438,10 @@ Note: Siden gebyret er kalkuleret på en per-byte basis, et gebyr på "100 satos
         <translation>Sundhedstjek under initialisering mislykkedes. %s lukker ned.</translation>
     </message>
     <message>
+        <source>Invalid P2P permission: '%s'</source>
+        <translation>Invalid P2P tilladelse: '%s'</translation>
+    </message>
+    <message>
         <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>
         <translation>Ugyldigt beløb for -%s=&lt;beløb&gt;: “%s”</translation>
     </message>
@@ -3417,6 +3456,12 @@ Note: Siden gebyret er kalkuleret på en per-byte basis, et gebyr på "100 satos
     <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>Angivet blokmappe “%s” eksisterer ikke.</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Den specificerede R/W konfigurationsfil %s eksisterer ikke.
+</translation>
     </message>
     <message>
         <source>Unable to create the PID file '%s': %s</source>
@@ -3553,6 +3598,18 @@ Note: Siden gebyret er kalkuleret på en per-byte basis, et gebyr på "100 satos
     <message>
         <source>Signing transaction failed</source>
         <translation>Signering af transaktion mislykkedes</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" does not exist</source>
+        <translation>Angivet -walletdir “%s” eksisterer ikke</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is a relative path</source>
+        <translation>Angivet -walletdir “%s” er en relativ sti</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is not a directory</source>
+        <translation>Angivet -walletdir “%s” er ikke en mappe</translation>
     </message>
     <message>
         <source>The specified config file %s does not exist

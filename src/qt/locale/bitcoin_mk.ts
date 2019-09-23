@@ -1,4 +1,4 @@
-<TS language="mk_MK" version="2.1">
+<TS language="mk" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -41,9 +41,21 @@
         <source>&amp;Delete</source>
         <translation>&amp;Избриши</translation>
     </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation type="unfinished">Копирај &amp;Адреса</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">Етикета</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished">Адреса</translation>
+    </message>
     </context>
 <context>
     <name>AskPassphraseDialog</name>
@@ -94,6 +106,10 @@
         <translation>Напушти ја апликацијата</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Прикажи информации за %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>За &amp;Qt</translation>
     </message>
@@ -120,6 +136,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Отвори &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Паричник:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -160,6 +180,10 @@
     <message>
         <source>&amp;Help</source>
         <translation>&amp;Помош</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Повторно индексирање на блокови од дискот...</translation>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
@@ -274,6 +298,9 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -296,8 +323,19 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation type="unfinished">Адреса</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -340,6 +378,10 @@
         <translation>нема</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Биткоин Core</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Грешка</translation>
     </message>
@@ -350,6 +392,9 @@
         <source>Total:</source>
         <translation>Вкупно:</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -413,6 +458,10 @@
     </context>
 <context>
     <name>QRImageWidget</name>
+    <message>
+        <source>&amp;Save Image...</source>
+        <translation>&amp;Сними Слика...</translation>
+    </message>
     </context>
 <context>
     <name>RPCConsole</name>
@@ -431,6 +480,10 @@
     <message>
         <source>Block chain</source>
         <translation>Block chain</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Паричник: </translation>
     </message>
     <message>
         <source>Sent</source>
@@ -463,6 +516,10 @@
         <source>Show</source>
         <translation>Прикажи</translation>
     </message>
+    <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Копирај URI</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -483,12 +540,44 @@
         <translation>&amp;Сними Слика...</translation>
     </message>
     <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished">Адреса</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Сума</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">Етикета</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished">Порака</translation>
+    </message>
+    <message>
         <source>Wallet</source>
         <translation>Паричник</translation>
     </message>
-    </context>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">Етикета</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished">Порака</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
@@ -515,6 +604,10 @@
     <message>
         <source>Dust:</source>
         <translation>Прашина:</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Испрати</translation>
     </message>
     </context>
 <context>
@@ -549,15 +642,47 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished">Порака</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>Сума</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">Етикета</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Date</source>
+        <translation>Дата</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">Етикета</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished">Адреса</translation>
+    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -573,7 +698,23 @@
     </context>
 <context>
     <name>WalletView</name>
-    </context>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Експорт</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Експортирај ги податоците од активното јазиче во датотека</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Бекап на Паричник</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Откажи</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>

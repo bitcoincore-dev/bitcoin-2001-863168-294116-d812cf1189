@@ -1,4 +1,4 @@
-<TS language="eu_ES" version="2.1">
+<TS language="eu" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
@@ -68,10 +68,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Hauek dira zuk dirua jaso dezaketen Bitcoin helbideak. Egiaztatu beti diru-kopurua eta dirua jasoko duen helbidea zuzen egon daitezen, txanponak bidali baino lehen.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Hauek dira zure dirua jasotzeko Bitcoin helbideak. Gomendagarria da, operazio bakoitza helbide berri batekin egitea.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -246,6 +242,10 @@
         <translation>Aplikaziotik irten</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Erakutsi %1-ren buruzko informazioa</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>&amp;Qt-ri buruz</translation>
     </message>
@@ -284,6 +284,14 @@
     <message>
         <source>Up to date</source>
         <translation>Eguneratua</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Helbideak bidaltzen</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Helbideak jasotzen</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -372,6 +380,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
@@ -382,12 +393,28 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Inprimakia</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Mota</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Helbidea</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -410,6 +437,9 @@
     </message>
     </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     </context>
 <context>
@@ -425,7 +455,7 @@
         <source>unknown</source>
         <translation>ezezaguna</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject::QObject</name>
     </context>
@@ -505,6 +535,10 @@
     <message>
         <source>Amount:</source>
         <translation>Kopurua:</translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Aukeratu...</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -747,10 +781,6 @@
     <message>
         <source>Sent to</source>
         <translation>Hona bidalia</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>Zeure buruari</translation>
     </message>
     <message>
         <source>Mined</source>

@@ -70,10 +70,6 @@
         <translation>Tukej sōm adresy Bitcoin na kere posyłŏsz płaty. Dycki wybaduj wielość i adresã ôdbiyrŏcza przed posłaniym mōnet.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Tukej sōm adresy Bitcoin do ôdbiyraniŏ płatōw. Zalycŏ sie używaniŏ nowych adres ôdbiorczych dlŏ kożdyj transakcyje.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Kopiyruj Adresã</translation>
     </message>
@@ -478,12 +474,12 @@
         <translation>&amp;Adresy posyłaniŏ</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Pokŏż pōmoc %1 coby zobŏczyć wykŏz wszyjskich ôpcyji piski nakŏzań.</translation>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Adresy ôdbiyraniŏ</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>wychodny portmanyj</translation>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Pokŏż pōmoc %1 coby zobŏczyć wykŏz wszyjskich ôpcyji piski nakŏzań.</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -788,6 +784,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -878,6 +877,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -923,7 +929,24 @@
         <source>Hide</source>
         <translation>Skryj</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown. Syncing Headers (%1, %2%)...</source>
+        <translation>Niyznōme. Synchrōnizowanie nŏgōwkōw (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Zorta</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresa</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -1008,10 +1031,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Przitnij skłŏd &amp;blokōw do</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1122,6 +1141,10 @@
         <translation>żŏdyn</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Configuration options</source>
         <translation>Ôpcyje kōnfiguracyje</translation>
     </message>
@@ -1160,6 +1183,9 @@
         <source>Your current total balance</source>
         <translation>Twoje terŏźne saldo</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1265,7 +1291,7 @@
         <source>unknown</source>
         <translation>niyznōme</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject::QObject</name>
     <message>
@@ -1301,6 +1327,10 @@
     <message>
         <source>Client version</source>
         <translation>Wersyjŏ klijynta</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Informacyjŏ</translation>
     </message>
     <message>
         <source>Debug window</source>
@@ -1430,12 +1460,24 @@
         <source>No</source>
         <translation>Niy</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">Niyznōme</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Kwota:</translation>
+    </message>
+    <message>
         <source>&amp;Label:</source>
         <translation>&amp;Etyketa:</translation>
+    </message>
+    <message>
+        <source>&amp;Message:</source>
+        <translation type="unfinished">&amp;Wiadōmość:</translation>
     </message>
     <message>
         <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
@@ -1520,7 +1562,7 @@
         <source>Wallet</source>
         <translation>Portmanyj</translation>
     </message>
-    </context>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
@@ -1603,6 +1645,10 @@
         <translation>Saldo:</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Poślij</translation>
+    </message>
+    <message>
         <source>Copy quantity</source>
         <translation>Kopiyruj wielość</translation>
     </message>
@@ -1657,6 +1703,10 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Kwota:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Etyketa:</translation>
@@ -1725,6 +1775,10 @@
     <message>
         <source>&amp;Verify Message</source>
         <translation>&amp;Weryfikuj Wiadōmość</translation>
+    </message>
+    <message>
+        <source>Verify &amp;Message</source>
+        <translation type="unfinished">&amp;Weryfikuj Wiadōmość</translation>
     </message>
     <message>
         <source>Message signing failed.</source>
@@ -1939,6 +1993,10 @@
 </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Eksportuj</translation>
+    </message>
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Eksportuj dane z aktywnyj szkarty do zbioru</translation>

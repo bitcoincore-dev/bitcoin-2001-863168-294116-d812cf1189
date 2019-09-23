@@ -70,10 +70,6 @@
         <translation>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Copy Address</translation>
     </message>
@@ -243,11 +239,11 @@
     <name>BitcoinGUI</name>
     <message>
         <source>Sign &amp;message...</source>
-        <translation>Sign &amp;message...</translation>
+        <translation>Sign &amp;message ...</translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
-        <translation>Synchronising with network...</translation>
+        <translation>Synchronising with network ...</translation>
     </message>
     <message>
         <source>&amp;Overview</source>
@@ -291,7 +287,7 @@
     </message>
     <message>
         <source>&amp;Options...</source>
-        <translation>&amp;Options...</translation>
+        <translation>&amp;Options ...</translation>
     </message>
     <message>
         <source>Modify configuration options for %1</source>
@@ -299,19 +295,19 @@
     </message>
     <message>
         <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Encrypt Wallet...</translation>
+        <translation>&amp;Encrypt Wallet ...</translation>
     </message>
     <message>
         <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Backup Wallet...</translation>
+        <translation>&amp;Backup Wallet ...</translation>
     </message>
     <message>
         <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Change Passphrase...</translation>
+        <translation>&amp;Change Passphrase ...</translation>
     </message>
     <message>
         <source>Open &amp;URI...</source>
-        <translation>Open &amp;URI...</translation>
+        <translation>Open &amp;URI ...</translation>
     </message>
     <message>
         <source>Wallet:</source>
@@ -331,11 +327,11 @@
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
-        <translation>Syncing Headers (%1%)...</translation>
+        <translation>Syncing Headers (%1%) ...</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
-        <translation>Reindexing blocks on disk...</translation>
+        <translation>Reindexing blocks on disk ...</translation>
     </message>
     <message>
         <source>Proxy is &lt;b&gt;enabled&lt;/b&gt;: %1</source>
@@ -363,7 +359,7 @@
     </message>
     <message>
         <source>&amp;Verify message...</source>
-        <translation>&amp;Verify message...</translation>
+        <translation>&amp;Verify message ...</translation>
     </message>
     <message>
         <source>Bitcoin</source>
@@ -439,11 +435,11 @@
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
-        <translation>Indexing blocks on disk...</translation>
+        <translation>Indexing blocks on disk ...</translation>
     </message>
     <message>
         <source>Processing blocks on disk...</source>
-        <translation>Processing blocks on disk...</translation>
+        <translation>Processing blocks on disk ...</translation>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
@@ -495,7 +491,7 @@
     </message>
     <message>
         <source>Close Wallet...</source>
-        <translation>Close Wallet...</translation>
+        <translation>Close Wallet ...</translation>
     </message>
     <message>
         <source>Close wallet</source>
@@ -506,16 +502,16 @@
         <translation>Show the %1 help message to get a list with possible Bitcoin command-line options</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>default wallet</translation>
-    </message>
-    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
-        <translation>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</translation>
+        <translation>Opening Wallet &lt;b&gt;%1&lt;/b&gt; ...</translation>
     </message>
     <message>
         <source>Open Wallet Failed</source>
         <translation>Open Wallet Failed</translation>
+    </message>
+    <message>
+        <source>No wallets available</source>
+        <translation>No wallets available</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -543,11 +539,11 @@
     </message>
     <message>
         <source>Connecting to peers...</source>
-        <translation>Connecting to peers...</translation>
+        <translation>Connecting to peers ...</translation>
     </message>
     <message>
         <source>Catching up...</source>
-        <translation>Catching up...</translation>
+        <translation>Catching up ...</translation>
     </message>
     <message>
         <source>Date: %1
@@ -848,6 +844,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -938,6 +937,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -957,7 +963,7 @@
     </message>
     <message>
         <source>Unknown...</source>
-        <translation>Unknown...</translation>
+        <translation>Unknown ...</translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -973,7 +979,7 @@
     </message>
     <message>
         <source>calculating...</source>
-        <translation>calculating...</translation>
+        <translation>calculating ...</translation>
     </message>
     <message>
         <source>Estimated time left until synced</source>
@@ -985,7 +991,20 @@
     </message>
     <message>
         <source>Unknown. Syncing Headers (%1, %2%)...</source>
-        <translation>Unknown. Syncing Headers (%1, %2%)...</translation>
+        <translation>Unknown. Syncing Headers (%1, %2%) ...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Address</translation>
     </message>
 </context>
 <context>
@@ -1092,10 +1111,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Prune &amp;block storage to</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1250,6 +1265,10 @@
         <translation>none</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Confirm options reset</translation>
     </message>
@@ -1361,6 +1380,9 @@
         <translation>Current total balance in watch-only addresses</translation>
     </message>
 </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1575,13 +1597,13 @@
     </message>
     <message>
         <source>%1 didn't yet exit safely...</source>
-        <translation>%1 didn't yet exit safely...</translation>
+        <translation>%1 didn't exit safely yet ...</translation>
     </message>
     <message>
         <source>unknown</source>
         <translation>unknown</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject::QObject</name>
     <message>
@@ -1605,11 +1627,19 @@
     <name>QRImageWidget</name>
     <message>
         <source>&amp;Save Image...</source>
-        <translation>&amp;Save Image...</translation>
+        <translation>&amp;Save Image ...</translation>
     </message>
     <message>
         <source>&amp;Copy Image</source>
         <translation>&amp;Copy Image</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Resulting URI too long, try to reduce the text for label / message.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Error encoding URI into QR Code.</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -2042,7 +2072,7 @@
     </message>
     <message>
         <source>&amp;Save Image...</source>
-        <translation>&amp;Save Image...</translation>
+        <translation>&amp;Save Image ...</translation>
     </message>
     <message>
         <source>Request payment to %1</source>
@@ -2075,14 +2105,6 @@
     <message>
         <source>Wallet</source>
         <translation>Wallet</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Resulting URI too long, try to reduce the text for label / message.</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>Error encoding URI into QR Code.</translation>
     </message>
 </context>
 <context>
@@ -2128,7 +2150,7 @@
     </message>
     <message>
         <source>Inputs...</source>
-        <translation>Inputs...</translation>
+        <translation>Inputs ...</translation>
     </message>
     <message>
         <source>automatically selected</source>
@@ -2176,7 +2198,7 @@
     </message>
     <message>
         <source>Choose...</source>
-        <translation>Choose...</translation>
+        <translation>Choose ...</translation>
     </message>
     <message>
         <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until you have validated the complete chain.</source>
@@ -2216,7 +2238,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
-        <translation>(Smart fee not initialised yet. This usually takes a few blocks...)</translation>
+        <translation>(Smart fee not initialised yet. This usually takes a few blocks ...)</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -2501,7 +2523,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <name>ShutdownWindow</name>
     <message>
         <source>%1 is shutting down...</source>
-        <translation>%1 is shutting down...</translation>
+        <translation>%1 is shutting down ...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -2974,7 +2996,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Range...</source>
-        <translation>Range...</translation>
+        <translation>Range ...</translation>
     </message>
     <message>
         <source>Received with</source>
@@ -2983,10 +3005,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Sent to</source>
         <translation>Sent to</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>To yourself</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3244,7 +3262,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Pruning blockstore...</source>
-        <translation>Pruning blockstore...</translation>
+        <translation>Pruning blockstore ...</translation>
     </message>
     <message>
         <source>Unable to start HTTP server. See debug log for details.</source>
@@ -3392,7 +3410,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Importing...</source>
-        <translation>Importing...</translation>
+        <translation>Importing ...</translation>
     </message>
     <message>
         <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
@@ -3428,11 +3446,11 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Loading P2P addresses...</source>
-        <translation>Loading P2P addresses...</translation>
+        <translation>Loading P2P addresses ...</translation>
     </message>
     <message>
         <source>Loading banlist...</source>
-        <translation>Loading banlist...</translation>
+        <translation>Loading banlist ...</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -3448,11 +3466,11 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Replaying blocks...</source>
-        <translation>Replaying blocks...</translation>
+        <translation>Replaying blocks ...</translation>
     </message>
     <message>
         <source>Rewinding blocks...</source>
-        <translation>Rewinding blocks...</translation>
+        <translation>Rewinding blocks ...</translation>
     </message>
     <message>
         <source>The source code is available from %s.</source>
@@ -3484,7 +3502,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Verifying blocks...</source>
-        <translation>Verifying blocks...</translation>
+        <translation>Verifying blocks ...</translation>
     </message>
     <message>
         <source>Wallet needed to be rewritten: restart %s to complete</source>
@@ -3602,7 +3620,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Verifying wallet(s)...</source>
-        <translation>Verifying wallet(s)...</translation>
+        <translation>Verifying wallet(s) ...</translation>
     </message>
     <message>
         <source>Wallet %s resides outside wallet directory %s</source>
@@ -3618,7 +3636,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Zapping all transactions from wallet...</source>
-        <translation>Zapping all transactions from wallet...</translation>
+        <translation>Zapping all transactions from wallet ...</translation>
     </message>
     <message>
         <source>-maxtxfee is set very high! Fees this large could be paid on a single transaction.</source>
@@ -3654,7 +3672,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Starting network threads...</source>
-        <translation>Starting network threads...</translation>
+        <translation>Starting network threads ...</translation>
     </message>
     <message>
         <source>The wallet will avoid paying less than the minimum relay fee.</source>
@@ -3706,11 +3724,11 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Loading block index...</source>
-        <translation>Loading block index...</translation>
+        <translation>Loading block index ...</translation>
     </message>
     <message>
         <source>Loading wallet...</source>
-        <translation>Loading wallet...</translation>
+        <translation>Loading wallet ...</translation>
     </message>
     <message>
         <source>Cannot downgrade wallet</source>
@@ -3718,7 +3736,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Rescanning...</source>
-        <translation>Rescanning...</translation>
+        <translation>Rescanning ...</translation>
     </message>
     <message>
         <source>Done loading</source>

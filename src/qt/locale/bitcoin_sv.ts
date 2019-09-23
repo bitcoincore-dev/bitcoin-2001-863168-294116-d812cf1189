@@ -70,10 +70,6 @@
         <translation>Detta är dina Bitcoin-adresser för att skicka betalningar. Kontrollera alltid belopp och mottagaradress innan du skickar bitcoin.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Detta är dina Bitcoin-adresser för att ta emot betalningar. Det rekommenderas att använda en ny mottagaradress för varje transaktion.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Kopiera adress</translation>
     </message>
@@ -507,16 +503,16 @@ Försök igen.</translation>
         <translation>Visa %1 hjälpmeddelande för att få en lista med möjliga Bitcoin kommandoradsalternativ.</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>Standardplånbok</translation>
-    </message>
-    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
         <translation>Öppnar plånboken &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
     <message>
         <source>Open Wallet Failed</source>
         <translation>Det gick inte att öppna plånboken</translation>
+    </message>
+    <message>
+        <source>No wallets available</source>
+        <translation>Inga plånböcker tillgängliga</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -849,6 +845,9 @@ Försök igen.</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -939,6 +938,13 @@ Försök igen.</translation>
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>ej tillgänglig</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -987,6 +993,19 @@ Försök igen.</translation>
     <message>
         <source>Unknown. Syncing Headers (%1, %2%)...</source>
         <translation>Okänd. Synkar huvuden (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adress</translation>
     </message>
 </context>
 <context>
@@ -1093,10 +1112,6 @@ Försök igen.</translation>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Gallra &amp;blocklagring till</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1363,6 +1378,9 @@ Försök igen.</translation>
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1582,6 +1600,11 @@ Försök igen.</translation>
         <source>unknown</source>
         <translation>okänd</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1611,6 +1634,14 @@ Försök igen.</translation>
     <message>
         <source>&amp;Copy Image</source>
         <translation>&amp;Kopiera Bild</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>URI:n är för lång, försöka minska texten för etikett / meddelande.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Fel vid skapande av QR-kod från URI.</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -2076,14 +2107,6 @@ Försök igen.</translation>
     <message>
         <source>Wallet</source>
         <translation>Plånbok</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>URI:n är för lång, försöka minska texten för etikett / meddelande.</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>Fel vid skapande av QR-kod från URI.</translation>
     </message>
 </context>
 <context>
@@ -2666,7 +2689,7 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
     <name>TransactionDesc</name>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Öppet för %n mer block</numerusform><numerusform>Öppet för %n fler block</numerusform></translation>
+        <translation><numerusform>Öppet för %n mer block</numerusform><numerusform>Öppet för %n mer block</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2984,10 +3007,6 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
     <message>
         <source>Sent to</source>
         <translation>Skickad till</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>Till dig själv</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3418,6 +3437,12 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
     <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>Den specificerade mappen för block "%s" existerar inte.</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Angiven R/W konfigurationsfil %s finns inte
+</translation>
     </message>
     <message>
         <source>Unable to create the PID file '%s': %s</source>

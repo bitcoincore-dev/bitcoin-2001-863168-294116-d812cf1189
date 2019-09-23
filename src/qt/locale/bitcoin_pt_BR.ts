@@ -70,10 +70,6 @@
         <translation>Estes são os seus endereços para enviar pagamentos. Sempre cheque a quantia e o endereço do destinatário antes de enviar moedas.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Estes são os seus endereços para receber pagamentos. É recomendado usar um novo para cada transação.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Copiar endereço</translation>
     </message>
@@ -506,16 +502,16 @@
         <translation>Mostrar a mensagem de ajuda do %1 para obter uma lista com possíveis opções de linha de comando Bitcoin</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>carteira padrão</translation>
-    </message>
-    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
         <translation>Abrindo carteira &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
     <message>
         <source>Open Wallet Failed</source>
         <translation>Falha ao abrir a carteira</translation>
+    </message>
+    <message>
+        <source>No wallets available</source>
+        <translation>Nenhuma carteira disponível</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -848,6 +844,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -938,6 +937,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -986,6 +992,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1, %2%)...</source>
         <translation>Desconhecido. Sincronizando cabeçalhos (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Endereço</translation>
     </message>
 </context>
 <context>
@@ -1092,10 +1111,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Fazer Prune &amp;da memória de blocos para</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1250,6 +1265,10 @@
         <translation>nenhum</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Confirmar redefinição de opções</translation>
     </message>
@@ -1361,6 +1380,9 @@
         <translation>Balanço total em endereços monitorados</translation>
     </message>
 </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1581,6 +1603,16 @@
         <source>unknown</source>
         <translation>desconhecido</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Bco</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tso</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1610,6 +1642,14 @@
     <message>
         <source>&amp;Copy Image</source>
         <translation>&amp;Copiar imagem</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>URI resultante muito longa. Tente reduzir o texto do rótulo ou da mensagem.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Erro ao codificar o URI em código QR</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -2076,14 +2116,6 @@
         <source>Wallet</source>
         <translation>Carteira</translation>
     </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>URI resultante muito longa. Tente reduzir o texto do rótulo ou da mensagem.</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>Erro ao codificar o URI em código QR</translation>
-    </message>
 </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -2380,7 +2412,7 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Confirmação em %n bloco.</numerusform><numerusform>Início estimado para confirmação em %n blocos.</numerusform></translation>
+        <translation><numerusform>Confirmação estimada em %n bloco.</numerusform><numerusform>Confirmação estimada em %n blocos.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2985,10 +3017,6 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
         <translation>Enviado para</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Para você mesmo</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Minerado</translation>
     </message>
@@ -3418,6 +3446,12 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>
 Diretório de blocos especificados "%s" não existe.</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>O Arquivo de R/W configuração especificado %s não existe
+</translation>
     </message>
     <message>
         <source>Unable to create the PID file '%s': %s</source>

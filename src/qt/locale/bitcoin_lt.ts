@@ -70,10 +70,6 @@
         <translation>Tai yra jūsų Bitcoin adresai išeinantiems mokėjimams. Visada pasitikrinkite sumą ir gavėjo adresą prieš siunčiant lėšas. </translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Tai yra Jūsų Bitcoin adresai įeinantiems mokėjimams. Kiekvienam mokėjimui rekomenduojama naudoti naują adresą. </translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Kopijuoti adresą</translation>
     </message>
@@ -506,10 +502,6 @@
         <translation>Rodyti %1 pagalbos žinutę su Bitcoin pasirinkimo komandomis</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>numatyta piniginė</translation>
-    </message>
-    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
         <translation>Atidaroma Piniginė &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
@@ -848,6 +840,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -938,6 +933,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>nėra</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -989,6 +991,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipas</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresas</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -1024,6 +1039,10 @@
     <message>
         <source>Automatically start %1 after logging in to the system.</source>
         <translation>Automatiškai paleisti %1 po prisijungimo prie sistemos.</translation>
+    </message>
+    <message>
+        <source>&amp;Start %1 on system login</source>
+        <translation>&amp;Pradėti %1 sistemos prisijungimo metu</translation>
     </message>
     <message>
         <source>Size of &amp;database cache</source>
@@ -1088,10 +1107,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>&amp;blokuokite saugyklą į</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1246,6 +1261,10 @@
         <translation>niekas</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin branduolys</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Patvirtinti nustatymų atstatymą</translation>
     </message>
@@ -1357,6 +1376,9 @@
         <translation>Dabartinis visas balansas tik stebimų adresų</translation>
     </message>
 </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1577,6 +1599,11 @@
         <source>unknown</source>
         <translation>nežinomas</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Sds</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1606,6 +1633,14 @@
     <message>
         <source>&amp;Copy Image</source>
         <translation>Kopijuoti nuotrauką</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Gautas URI per ilgas, pabandykite sumažinti etiketės / pranešimo tekstą.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Klaida koduojant URI į QR kodą.</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -1647,12 +1682,16 @@
         <translation>Datadir</translation>
     </message>
     <message>
+        <source>To specify a non-default location of the data directory use the '%1' option.</source>
+        <translation>Jei norite nurodyti duomenų katalogo vietą, naudokite parinktį „ %1“.</translation>
+    </message>
+    <message>
         <source>Blocksdir</source>
         <translation>Blocksdir</translation>
     </message>
     <message>
         <source>To specify a non-default location of the blocks directory use the '%1' option.</source>
-        <translation>Jei norite nurodyti blokų katalogo vietą, naudokite parinktį „%1“.</translation>
+        <translation>Jei norite nurodyti blokų katalogo vietą, naudokite parinktį "%1".</translation>
     </message>
     <message>
         <source>Startup time</source>
@@ -2067,14 +2106,6 @@
     <message>
         <source>Wallet</source>
         <translation>Piniginė</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Gautas URI per ilgas, pabandykite sumažinti etiketės / pranešimo tekstą.</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>Klaida koduojant URI į QR kodą.</translation>
     </message>
 </context>
 <context>
@@ -2744,12 +2775,20 @@ Pastaba: Kadangi mokestis apskaičiuojamas pagal baitą, mokestis už „100 sat
         <translation>Sandorio mokestis</translation>
     </message>
     <message>
+        <source>Net amount</source>
+        <translation>Neto suma</translation>
+    </message>
+    <message>
         <source>Message</source>
         <translation>Žinutė</translation>
     </message>
     <message>
         <source>Comment</source>
         <translation>Komentaras</translation>
+    </message>
+    <message>
+        <source>Transaction ID</source>
+        <translation>Sandorio ID</translation>
     </message>
     <message>
         <source>Merchant</source>
@@ -2931,10 +2970,6 @@ Pastaba: Kadangi mokestis apskaičiuojamas pagal baitą, mokestis už „100 sat
     <message>
         <source>Sent to</source>
         <translation>Išsiųsta</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>Skirta sau</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3175,6 +3210,10 @@ Pastaba: Kadangi mokestis apskaičiuojamas pagal baitą, mokestis už „100 sat
         <translation>%s kūrėjai</translation>
     </message>
     <message>
+        <source>%d of last 100 blocks have unexpected version</source>
+        <translation>%d iš paskutinių 100 blokų turi nenumatyą versiją</translation>
+    </message>
+    <message>
         <source>%s corrupt, salvage failed</source>
         <translation>%s sugadintas, išgelbėjimas nepavyko</translation>
     </message>
@@ -3189,6 +3228,10 @@ Pastaba: Kadangi mokestis apskaičiuojamas pagal baitą, mokestis už „100 sat
     <message>
         <source>Change index out of range</source>
         <translation>Pakeiskite indeksą iš diapazono</translation>
+    </message>
+    <message>
+        <source>Config setting for %s only applied on %s network when in [%s] section.</source>
+        <translation>%s konfigūravimo nustatymas taikomas tik %s tinkle, kai yra [%s] skiltyje.</translation>
     </message>
     <message>
         <source>Copyright (C) %i-%i</source>

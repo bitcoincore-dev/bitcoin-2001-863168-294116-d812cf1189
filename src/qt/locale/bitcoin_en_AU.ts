@@ -26,6 +26,10 @@
         <translation>Synchronising with network...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Wallet:</translation>
+    </message>
+    <message>
         <source>&amp;Window</source>
         <translation>&amp;Window</translation>
     </message>
@@ -40,10 +44,16 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
     <name>Intro</name>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -53,6 +63,9 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    </context>
+<context>
     <name>OpenURIDialog</name>
     </context>
 <context>
@@ -60,6 +73,14 @@
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
         <translation>Minimise instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Wallet</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Window</translation>
     </message>
     <message>
         <source>Show only a tray icon after minimizing the window.</source>
@@ -82,6 +103,9 @@
     </message>
     </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request is not initialized.</source>
@@ -102,6 +126,10 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Wallet: </translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -112,7 +140,7 @@
         <source>Wallet</source>
         <translation>Wallet</translation>
     </message>
-    </context>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     </context>
@@ -147,6 +175,10 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Transaction fee</source>
+        <translation>Transaction fee</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
@@ -175,6 +207,10 @@
 <context>
     <name>bitcoin-core</name>
     <message>
+        <source>Unable to rewind the database to a pre-fork state. You will need to redownload the blockchain</source>
+        <translation>Unable to rewind the database to a pre-fork state. You will need to re-download the blockchain</translation>
+    </message>
+    <message>
         <source>Error initializing block database</source>
         <translation>Error initialising block database</translation>
     </message>
@@ -189,6 +225,10 @@
     <message>
         <source>Initialization sanity check failed. %s is shutting down.</source>
         <translation>Initialisation sanity check failed. %s is shutting down.</translation>
+    </message>
+    <message>
+        <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
+        <translation>You need to rebuild the database using -reindex to go back to unpruned mode.  This will re-download the entire blockchain</translation>
     </message>
     </context>
 </TS>

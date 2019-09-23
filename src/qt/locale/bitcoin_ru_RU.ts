@@ -70,10 +70,6 @@
         <translation>Это ваши Bitcoin адреса для отправки платежа. Всегда проверяйте сумму и адрес получателя перед отправкой платежа.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Это ваши Bitcoin адреса для получения платежей. Настоятельно рекомендуем использовать новые адреса для получения каждой транзакции.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Копировать адрес</translation>
     </message>
@@ -506,10 +502,6 @@
         <translation>Показать помощь по %1, чтобы получить список доступных параметров командной строки</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>Кошелек по умолчанию</translation>
-    </message>
-    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
         <translation>Кошелек открывается &lt;b&gt;%1&lt;/b&gt;... </translation>
     </message>
@@ -848,6 +840,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -938,6 +933,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Н/Д</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -986,6 +988,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1, %2%)...</source>
         <translation>Не известно. Синхронизация заголовков (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тип</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адрес</translation>
     </message>
 </context>
 <context>
@@ -1092,10 +1107,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Сокращать объём хранимого блокчейна до</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>ГБ</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1250,6 +1261,10 @@
         <translation>ни один</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Подтвердить сброс опций</translation>
     </message>
@@ -1361,6 +1376,9 @@
         <translation>Текущий общий баланс на адресах наблюдения</translation>
     </message>
 </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1581,6 +1599,16 @@
         <source>unknown</source>
         <translation>неизвестно</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакция</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1610,6 +1638,14 @@
     <message>
         <source>&amp;Copy Image</source>
         <translation>&amp;Копировать изображение</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Получившийся URI слишком длинный, попробуйте сократить текст метки / сообщения.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Ошибка преобразования URI в QR-код.</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -2071,14 +2107,6 @@
     <message>
         <source>Wallet</source>
         <translation>Кошелек</translation>
-    </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Получившийся URI слишком длинный, попробуйте сократить текст метки / сообщения.</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>Ошибка преобразования URI в QR-код.</translation>
     </message>
 </context>
 <context>
@@ -2975,10 +3003,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Sent to</source>
         <translation>Отправить</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>Себе</translation>
     </message>
     <message>
         <source>Mined</source>

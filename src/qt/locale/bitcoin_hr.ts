@@ -70,10 +70,6 @@
         <translation>Ovo su vaše Bitcoin adrese za slanje novca. Uvijek provjerite iznos i adresu primatelja prije slanja novca.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Ovo su vaše Bitcoin adrese za primanje novca. Preporučeno je da koristite novu primateljsku adresu za svaku transakciju.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Kopirajte adresu</translation>
     </message>
@@ -186,6 +182,10 @@
     <message>
         <source>Wallet encrypted</source>
         <translation>Novčanik šifriran</translation>
+    </message>
+    <message>
+        <source>Your wallet is now encrypted. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>Novčanik vam je sad šifriran. Zapamtite da šifriranje vašeg novčanika ne može potpuno zaštititi vaše bitcoine od krađe uzrokovane napadom zloćudnog softvera na vaše računalo.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -474,16 +474,64 @@
         <translation>Ažurno</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation>Adrese za &amp;slanje</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation>Adrese za &amp;primanje</translation>
+    </message>
+    <message>
+        <source>Open Wallet</source>
+        <translation>Otvorite novčanik</translation>
+    </message>
+    <message>
+        <source>Open a wallet</source>
+        <translation>Otvorite neki novčanik</translation>
+    </message>
+    <message>
+        <source>Close Wallet...</source>
+        <translation>Zatvorite novčanik...</translation>
+    </message>
+    <message>
+        <source>Close wallet</source>
+        <translation>Zatvorite novčanik</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Prikažite pomoć programa %1 kako biste ispisali moguće opcije preko terminala</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>uobičajeni novčanik</translation>
+        <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <translation>Otvaranje novčanik &lt;b&gt;%1&lt;/b&gt;...</translation>
+    </message>
+    <message>
+        <source>Open Wallet Failed</source>
+        <translation>Neuspješno otvaranje novčanika</translation>
+    </message>
+    <message>
+        <source>No wallets available</source>
+        <translation>Nema dostupnih novčanika</translation>
     </message>
     <message>
         <source>&amp;Window</source>
         <translation>&amp;Prozor</translation>
+    </message>
+    <message>
+        <source>Minimize</source>
+        <translation>Minimizirajte</translation>
+    </message>
+    <message>
+        <source>Zoom</source>
+        <translation>Povećajte</translation>
+    </message>
+    <message>
+        <source>Restore</source>
+        <translation>Restorirajte</translation>
+    </message>
+    <message>
+        <source>Main Window</source>
+        <translation>Glavni prozor</translation>
     </message>
     <message>
         <source>%1 client</source>
@@ -547,6 +595,10 @@
     <message>
         <source>HD key generation is &lt;b&gt;disabled&lt;/b&gt;</source>
         <translation>Generiranje HD ključeva je &lt;b&gt;isključeno&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Private key &lt;b&gt;disabled&lt;/b&gt;</source>
+        <translation>Privatni ključ &lt;b&gt;onemogućen&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
@@ -791,6 +843,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -875,6 +930,17 @@
         <source>%n GB of free space available</source>
         <translation><numerusform>Dostupno %n GB slobodnog prostora</numerusform><numerusform>Dostupno %n GB slobodnog prostora</numerusform><numerusform>Dostupno %n GB slobodnog prostora</numerusform></translation>
     </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation><numerusform>(od potrebnog prostora od %n GB)</numerusform><numerusform>(od potrebnog prostora od %n GB)</numerusform><numerusform>(od potrebnog %n GB)</numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -922,7 +988,24 @@
         <source>Hide</source>
         <translation>Sakrijte</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown. Syncing Headers (%1, %2%)...</source>
+        <translation>Nepoznato. Sinkroniziranje zaglavlja (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tip</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresa</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -1029,12 +1112,12 @@
         <translation>Obrezujte pohranu &amp;blokova na</translation>
     </message>
     <message>
-        <source>GB</source>
-        <translation>GB</translation>
-    </message>
-    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
         <translation>Vraćanje na prijašnje stanje zahtijeva ponovo preuzimanje cijelog lanca blokova.</translation>
+    </message>
+    <message>
+        <source>MiB</source>
+        <translation>MiB</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1161,6 +1244,10 @@
         <translation>&amp;URL-ovi treće stranke o transakciji</translation>
     </message>
     <message>
+        <source>Options set in this dialog are overridden by the command line or in the configuration file:</source>
+        <translation>Opcije postavljene u ovom dijalogu nadglašene su naredbenom linijom ili konfiguracijskom datotekom:</translation>
+    </message>
+    <message>
         <source>&amp;OK</source>
         <translation>&amp;U redu</translation>
     </message>
@@ -1175,6 +1262,10 @@
     <message>
         <source>none</source>
         <translation>ništa</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1289,6 +1380,9 @@
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1307,8 +1401,16 @@
         <translation>'bitcoin://' nije ispravan URI. Koristite 'bitcoin:' umjesto toga.</translation>
     </message>
     <message>
+        <source>You are using a BIP70 URL which will be unsupported in the future.</source>
+        <translation>Koristite BIP70 URL koji će ubuduće biti nepodržan.</translation>
+    </message>
+    <message>
         <source>Payment request fetch URL is invalid: %1</source>
         <translation>URL za dohvatu zahtjeva za plaćanje neispravan: %1</translation>
+    </message>
+    <message>
+        <source>Cannot process payment request because BIP70 support was not compiled in.</source>
+        <translation>Ne može se obraditi zahtjev uplate jer podrška za BIP70 nije bila uključena tijekom prevođenja.</translation>
     </message>
     <message>
         <source>Invalid payment address %1</source>
@@ -1500,6 +1602,11 @@
         <source>unknown</source>
         <translation>nepoznato</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsa</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1525,6 +1632,18 @@
     <message>
         <source>&amp;Save Image...</source>
         <translation>&amp;Spremi sliku...</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Image</source>
+        <translation>&amp;Kopirajte sliku</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>URI je predug, probajte skratiti tekst za naslov / poruku.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Greška kod kodiranja URI adrese u QR kod.</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -1564,6 +1683,18 @@
     <message>
         <source>Datadir</source>
         <translation>Datadir (podatkovna mapa)</translation>
+    </message>
+    <message>
+        <source>To specify a non-default location of the data directory use the '%1' option.</source>
+        <translation>Koristite opciju '%1' ako želite zadati drugu lokaciju podatkovnoj mapi.</translation>
+    </message>
+    <message>
+        <source>Blocksdir</source>
+        <translation>Blocksdir</translation>
+    </message>
+    <message>
+        <source>To specify a non-default location of the blocks directory use the '%1' option.</source>
+        <translation>Koristite opciju '%1' ako želite zadati drugu lokaciju mapi u kojoj se nalaze blokovi.</translation>
     </message>
     <message>
         <source>Startup time</source>
@@ -1979,14 +2110,6 @@
         <source>Wallet</source>
         <translation>Novčanik</translation>
     </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>URI je predug, probajte skratiti tekst za naslov / poruku.</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>Greška kod kodiranja URI adrese u QR kod.</translation>
-    </message>
 </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -2136,6 +2259,14 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
     <message>
         <source>Dust:</source>
         <translation>Prah:</translation>
+    </message>
+    <message>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
+        <translation>Kada je kapacitet transakcija manja od prostora u blokovima, rudari i čvorovi prenositelji mogu zatražiti minimalnu naknadu. Prihvatljivo je platiti samo ovu minimalnu naknadu, ali budite svjesni da ovime može nastati transakcija koja se nikad ne potvrđuje čim je potražnja za korištenjem Bitcoina veća nego što mreža može obraditi.</translation>
+    </message>
+    <message>
+        <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
+        <translation>Preniska naknada može rezultirati transakcijom koja se nikad ne potvrđuje (vidite oblačić)</translation>
     </message>
     <message>
         <source>Confirmation time target:</source>
@@ -2880,10 +3011,6 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
         <translation>Poslano za</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Samom sebi</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Rudareno</translation>
     </message>
@@ -3009,7 +3136,19 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
 </context>
 <context>
     <name>WalletController</name>
-    </context>
+    <message>
+        <source>Close wallet</source>
+        <translation>Zatvorite novčanik</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to close wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>Jeste li sigurni da želite zatvoriti novčanik &lt;i&gt;%1&lt;/i&gt;?</translation>
+    </message>
+    <message>
+        <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
+        <translation>Držanje novčanik zatvorenim predugo može rezultirati ponovnom sinkronizacijom cijelog lanca ako je obrezivanje uključeno.</translation>
+    </message>
+</context>
 <context>
     <name>WalletFrame</name>
     <message>
@@ -3142,6 +3281,10 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
         <translation>Ekipa %s</translation>
     </message>
     <message>
+        <source>Can't generate a change-address key. No keys in the internal keypool and can't generate any keys.</source>
+        <translation>Ne može se generirati ključ adrese za ostatak. Nema ključeva u unutarnjem bazenu ključeva i ne mogu se generirati nikakvi ključevi.</translation>
+    </message>
+    <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
         <translation>Program ne može pristupiti podatkovnoj mapi %s. %s je vjerojatno već pokrenut.</translation>
     </message>
@@ -3208,6 +3351,10 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
     <message>
         <source>Change index out of range</source>
         <translation>Indeks ostatka izvan dosega</translation>
+    </message>
+    <message>
+        <source>Config setting for %s only applied on %s network when in [%s] section.</source>
+        <translation>Konfiguriranje postavki za %s primijenjeno je samo na %s mreži u odjeljku [%s].</translation>
     </message>
     <message>
         <source>Copyright (C) %i-%i</source>
@@ -3292,6 +3439,16 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
     <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>Zadana mapa blokova "%s" ne postoji.</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Navedena R/W konfiguracijska datoteka %s ne postoji
+</translation>
+    </message>
+    <message>
+        <source>Unable to create the PID file '%s': %s</source>
+        <translation>Nije moguće stvoriti PID datoteku '%s': %s</translation>
     </message>
     <message>
         <source>Upgrading txindex database</source>
@@ -3386,6 +3543,10 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
         <translation>Greška kod ažuriranja baze stanja lanca</translation>
     </message>
     <message>
+        <source>Error: Disk space is low for %s</source>
+        <translation>Pogreška: Malo diskovnog prostora za %s</translation>
+    </message>
+    <message>
         <source>Information</source>
         <translation>Informacija</translation>
     </message>
@@ -3414,6 +3575,10 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
         <translation>Smanjuje se -maxconnections sa %d na %d zbog sustavnih ograničenja.</translation>
     </message>
     <message>
+        <source>Section [%s] is not recognized.</source>
+        <translation>Odjeljak [%s] nije prepoznat.</translation>
+    </message>
+    <message>
         <source>Signing transaction failed</source>
         <translation>Potpisivanje transakcije neuspješno</translation>
     </message>
@@ -3428,6 +3593,12 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
     <message>
         <source>Specified -walletdir "%s" is not a directory</source>
         <translation>Zadan -walletdir "%s" nije mapa</translation>
+    </message>
+    <message>
+        <source>The specified config file %s does not exist
+</source>
+        <translation>Navedena konfiguracijska datoteka %s ne postoji
+</translation>
     </message>
     <message>
         <source>The transaction amount is too small to pay the fee</source>
@@ -3552,6 +3723,10 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
     <message>
         <source>Fee estimation failed. Fallbackfee is disabled. Wait a few blocks or enable -fallbackfee.</source>
         <translation>Neuspješno procjenjivanje naknada. Fallbackfee je isključena. Pričekajte nekoliko blokova ili uključite -fallbackfee.</translation>
+    </message>
+    <message>
+        <source>Warning: Private keys detected in wallet {%s} with disabled private keys</source>
+        <translation>Upozorenje: Privatni ključevi pronađeni u novčaniku {%s} s isključenim privatnim ključevima</translation>
     </message>
     <message>
         <source>Cannot write to data directory '%s'; check permissions.</source>

@@ -70,10 +70,6 @@
         <translation>Questi sono i tuoi indirizzi Bitcoin per l'invio di pagamenti. Controlla sempre l'importo e l'indirizzo del beneficiario prima di inviare bitcoin.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Questi sono i tuoi indirizzi Bitcoin per la ricezione di pagamenti. Si raccomanda di usare un nuovo indirizzo di ricezione per ogni transazione.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Copia indirizzo</translation>
     </message>
@@ -189,7 +185,7 @@
     </message>
     <message>
         <source>Your wallet is now encrypted. Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Adesso il tuo portafoglio è criptato. Ricorda che un portafoglio criptato non protegge pienamente contro il furto di bitcoin se il tuo computer viene infetto da malware.</translation>
+        <translation>Adesso il tuo portafoglio è cifrato. Ricorda che un portafoglio cifrato non protegge pienamente contro il furto di bitcoin se il tuo computer viene infettato da malware.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -225,7 +221,7 @@
     </message>
     <message>
         <source>Warning: The Caps Lock key is on!</source>
-        <translation>Attenzione: è attivo il tasto blocco maiuscole !</translation>
+        <translation>Attenzione: è attivo il tasto Blocco maiuscole (Caps lock)!</translation>
     </message>
 </context>
 <context>
@@ -506,16 +502,16 @@
         <translation>Mostra il messaggio di aiuto di %1 per ottenere una lista di opzioni di comando per Bitcoin </translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>Portafoglio predefinito:</translation>
-    </message>
-    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
         <translation>Aprendo il Portafoglio&lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
     <message>
         <source>Open Wallet Failed</source>
         <translation>Apertura Portafoglio Fallita</translation>
+    </message>
+    <message>
+        <source>No wallets available</source>
+        <translation>Nessun portafoglio disponibile</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -848,6 +844,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -938,6 +937,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -986,6 +992,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1, %2%)...</source>
         <translation>Sconosciuto. Sincronizzando Headers (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Indirizzo</translation>
     </message>
 </context>
 <context>
@@ -1093,10 +1112,6 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Eliminare e bloccare l'archiviazione su</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1228,7 +1243,7 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     </message>
     <message>
         <source>&amp;Third party transaction URLs</source>
-        <translation>&amp;URLs per transazioni terzi </translation>
+        <translation>&amp;URL di terze parti per transazioni</translation>
     </message>
     <message>
         <source>Options set in this dialog are overridden by the command line or in the configuration file:</source>
@@ -1249,6 +1264,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>none</source>
         <translation>nessuno</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1363,6 +1382,9 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1391,6 +1413,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>Cannot process payment request because BIP70 support was not compiled in.</source>
         <translation>Non posso completare la richiesta di pagamento perché il supporto per BIP70 non è stato incluso in fase di compilazione.</translation>
+    </message>
+    <message>
+        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation>Se stai ricevendo questo errore dovresti richiedere al venditore di fornirti un URI compatibile con BIP21.</translation>
     </message>
     <message>
         <source>Invalid payment address %1</source>
@@ -1582,6 +1608,16 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <source>unknown</source>
         <translation>sconosciuto</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tso</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1611,6 +1647,18 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>&amp;Copy Image</source>
         <translation>&amp;Copia immagine</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation> L'URI risultante è troppo lungo, prova a ridurre il testo nell'etichetta / messaggio.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation> Errore nella codifica dell'URI nel codice QR.</translation>
+    </message>
+    <message>
+        <source>QR code support not available.</source>
+        <translation>Supporto QR code non disponibile.</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -1893,7 +1941,7 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     </message>
     <message>
         <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.</source>
-        <translation>ATTENZIONE: I truffatori sono stati attivi in quest'area, cercando di convincere gli utenti a digitare linee di comando e rubando i contenuti dei loro portafogli. Non usare questa console senza la piena consapevolezza delle conseguenze di un comando.</translation>
+        <translation>ATTENZIONE: I truffatori sono stati attivi in quest'area, cercando di convincere gli utenti a digitare linee di comando rubando i contenuti dei loro portafogli. Non usare questa console senza la piena consapevolezza delle conseguenze di un comando.</translation>
     </message>
     <message>
         <source>Network activity disabled</source>
@@ -2077,14 +2125,6 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <source>Wallet</source>
         <translation>Portafoglio</translation>
     </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation> L'URI risultante è troppo lungo, prova a ridurre il testo nell'etichetta / messaggio.</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation> Errore nella codifica dell'URI nel codice QR.</translation>
-    </message>
 </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -2185,7 +2225,7 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     </message>
     <message>
         <source>Warning: Fee estimation is currently not possible.</source>
-        <translation>Attenzione: il calcolo delle commissioni non è attualmente disponibile.</translation>
+        <translation>Attenzione: Il calcolo delle commissioni non è attualmente disponibile.</translation>
     </message>
     <message>
         <source>collapse fee-settings</source>
@@ -2381,7 +2421,7 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Inizio delle conferme stimato entro %n blocchi.</numerusform><numerusform>Inizio delle conferme stimato entro %n blocchi.</numerusform></translation>
+        <translation><numerusform>Inizio delle conferme stimato entro %n blocco.</numerusform><numerusform>Inizio delle conferme stimato entro %n blocchi.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2666,7 +2706,11 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     <name>TransactionDesc</name>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Aperto per altri %n blocchi</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+        <translation><numerusform>Aperto per %n altro blocco</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Apri fino al %1</translation>
     </message>
     <message>
         <source>conflicted with a transaction with %1 confirmations</source>
@@ -2742,7 +2786,7 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>matura tra %n blocchi</numerusform><numerusform>matura tra %n blocchi</numerusform></translation>
+        <translation><numerusform>matura tra %n blocco</numerusform><numerusform>matura tra %n blocchi</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2852,11 +2896,15 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Aperto per altri %n blocchi</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+        <translation><numerusform>Aperto per %n altro blocco</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+    </message>
+    <message>
+        <source>Open until %1</source>
+        <translation>Apri fino al %1</translation>
     </message>
     <message>
         <source>Unconfirmed</source>
-        <translation>Non confermata</translation>
+        <translation>Non confermato</translation>
     </message>
     <message>
         <source>Abandoned</source>
@@ -2868,7 +2916,7 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     </message>
     <message>
         <source>Confirmed (%1 confirmations)</source>
-        <translation>Confermata (%1 conferme)</translation>
+        <translation>Confermato (%1 conferme)</translation>
     </message>
     <message>
         <source>Conflicted</source>
@@ -2976,10 +3024,6 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     <message>
         <source>Sent to</source>
         <translation>Inviato a</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>A te stesso</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3352,6 +3396,10 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
         <translation>Errore caricamento %s</translation>
     </message>
     <message>
+        <source>Error loading %s: Private keys can only be disabled during creation</source>
+        <translation>Errore durante il caricamento di %s: le chiavi private possono essere disabilitate solo durante la creazione</translation>
+    </message>
+    <message>
         <source>Error loading %s: Wallet corrupted</source>
         <translation>Errore caricamento %s: portafoglio corrotto</translation>
     </message>
@@ -3392,6 +3440,10 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
         <translation>Test di integrità iniziale fallito. %s si arresterà.</translation>
     </message>
     <message>
+        <source>Invalid P2P permission: '%s'</source>
+        <translation>Permesso P2P non valido: '%s'</translation>
+    </message>
+    <message>
         <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>
         <translation>Importo non valido per -%s=&lt;amount&gt;: '%s'</translation>
     </message>
@@ -3406,6 +3458,12 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>La cartella specificata "%s" non esiste.</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Lo specificato archivio di R/W configurazione %s non esiste
+</translation>
     </message>
     <message>
         <source>Unable to create the PID file '%s': %s</source>
@@ -3684,6 +3742,14 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     <message>
         <source>Fee estimation failed. Fallbackfee is disabled. Wait a few blocks or enable -fallbackfee.</source>
         <translation>Stima della commissione non riuscita. Fallbackfee è disabilitato. Attendi qualche blocco o abilita -fallbackfee.</translation>
+    </message>
+    <message>
+        <source>Warning: Private keys detected in wallet {%s} with disabled private keys</source>
+        <translation>Avviso: chiavi private rilevate nel portafoglio { %s} con chiavi private disabilitate</translation>
+    </message>
+    <message>
+        <source>Cannot write to data directory '%s'; check permissions.</source>
+        <translation>Impossibile scrivere nella directory dei dati ' %s'; controlla le autorizzazioni.</translation>
     </message>
     <message>
         <source>Loading block index...</source>

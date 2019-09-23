@@ -66,10 +66,6 @@
         <translation>Ezek az Ön kifizetéseinek küldésekor használandó Bitcoin-címek. Fizetés indítása előtt mindig ellenőrizze az összeget és a fogadó címet!</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Ezek az Ön fizetéseinek fogadásakor használandó Bitcoin-címek. Célszerű minden tranzakcióhoz új fogadó címet használni.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Cím másolása</translation>
     </message>
@@ -306,6 +302,10 @@
         <translation>&amp;URI... Megnyitása</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Tárca:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Kattintson a hálózati tevékenység felfüggesztéséhez.</translation>
     </message>
@@ -460,6 +460,14 @@
     <message>
         <source>Up to date</source>
         <translation>Naprakész</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Küldő címek</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Fogadó címek</translation>
     </message>
     <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
@@ -762,6 +770,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -848,6 +859,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -893,7 +911,24 @@
         <source>Hide</source>
         <translation>Elrejtés</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown. Syncing Headers (%1, %2%)...</source>
+        <translation>Ismeretlen. Fejlécek szinkronizálása (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Típus</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Cím</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -950,6 +985,10 @@
     <message>
         <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
         <translation>Megmutatja, hogy az alapértelmezett SOCKS5 proxy van-e használatban, hogy elérje a párokat ennél a hálózati típusnál.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor hidden services:</source>
+        <translation type="unfinished">&amp;Más SOCKS5 proxy használata a párokhoz, a Tor rejtett szolgáltatásain keresztül:</translation>
     </message>
     <message>
         <source>Hide the icon from the system tray.</source>
@@ -1128,6 +1167,10 @@
         <translation>semmi</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Mag</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Opciók visszaállításának megerősítése</translation>
     </message>
@@ -1239,6 +1282,9 @@
         <translation>A csak megfigyelt címek jelenlegi teljes egyenlege</translation>
     </message>
 </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1439,7 +1485,7 @@
         <source>unknown</source>
         <translation>ismeretlen</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject::QObject</name>
     <message>
@@ -1460,6 +1506,14 @@
     <message>
         <source>&amp;Copy Image</source>
         <translation>Kép má&amp;solása</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>A keletkezett URI túl hosszú, próbálja meg csökkenteni a cimke / üzenet szövegének méretét.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Hiba lépett fel az URI QR kóddá alakításakor.</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -1535,6 +1589,10 @@
     <message>
         <source>Memory usage</source>
         <translation>Memóriahasználat</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Tárca: </translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1882,14 +1940,6 @@
         <source>Wallet</source>
         <translation>Tárca</translation>
     </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>A keletkezett URI túl hosszú, próbálja meg csökkenteni a cimke / üzenet szövegének méretét.</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>Hiba lépett fel az URI QR kóddá alakításakor.</translation>
-    </message>
 </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -2205,6 +2255,10 @@
         <translation>&amp;Üzenet megerősítése</translation>
     </message>
     <message>
+        <source>Verify &amp;Message</source>
+        <translation type="unfinished">&amp;Üzenet megerősítése</translation>
+    </message>
+    <message>
         <source>The entered address is invalid.</source>
         <translation>A beírt cím érvénytelen.</translation>
     </message>
@@ -2328,6 +2382,10 @@
     <message>
         <source>Transaction</source>
         <translation>Tranzakció</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation type="unfinished">Bemenetek</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -2549,7 +2607,11 @@
         <source>Backup Successful</source>
         <translation>Biztonsági mentés sikeres</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Mégse</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>

@@ -182,6 +182,10 @@
         <translation>&amp;Možnosti...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Peněženka:</translation>
+    </message>
+    <message>
         <source>Change the passphrase used for wallet encryption</source>
         <translation>Změnit heslo k šifrování peněženky</translation>
     </message>
@@ -300,6 +304,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
@@ -310,8 +317,24 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresa</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -320,6 +343,10 @@
     <message>
         <source>Options</source>
         <translation>Možnosti</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Peněženka</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -336,6 +363,9 @@
     </context>
 <context>
     <name>OverviewPage</name>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -362,9 +392,17 @@
         <source>Name</source>
         <translation>Jméno</translation>
     </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Peněženka: </translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation>&amp;Množství:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Popisek:</translation>
@@ -380,6 +418,10 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Kopírovat adresu</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adresa</translation>
@@ -400,7 +442,7 @@
         <source>Wallet</source>
         <translation>Peněženka</translation>
     </message>
-    </context>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
@@ -427,6 +469,10 @@
         <translation>Množství:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Vybrat...</translation>
+    </message>
+    <message>
         <source>Balance:</source>
         <translation>Zůstatek:</translation>
     </message>
@@ -441,6 +487,10 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation>&amp;Množství:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Popisek:</translation>
@@ -589,10 +639,6 @@
         <translation>Odesláno na</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Sobě samému</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Vytěženo</translation>
     </message>
@@ -674,6 +720,10 @@
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Načítání P2P adres...</translation>
+    </message>
     <message>
         <source>Loading wallet...</source>
         <translation>Načítání peněženky...</translation>

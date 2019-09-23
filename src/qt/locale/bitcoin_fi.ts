@@ -70,10 +70,6 @@
         <translation>Nämä ovat Bitcoin-osoitteesi maksujen lähettämistä varten. Tarkista aina määrä ja vastaanotto-osoite ennen kolikoiden lähettämistä.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Tässä ovat Bitcoin vastaanotto-osoitteesi. On suositeltavaa käyttää uutta vastaanotto-osoitetta jokaista lähetystä varten.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Kopioi osoite</translation>
     </message>
@@ -478,12 +474,36 @@
         <translation>Rahansiirtohistoria on ajan tasalla</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Lähetysosoitteet</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Vastaanotto-osoitteet</translation>
+    </message>
+    <message>
+        <source>Open a wallet</source>
+        <translation>Avaa lompakko</translation>
+    </message>
+    <message>
+        <source>Close Wallet...</source>
+        <translation>Sulje lompakko...</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Näytä %1 ohjeet saadaksesi listan mahdollisista Bitcoinin komentorivivalinnoista</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>oletuslompakko</translation>
+        <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <translation>Avataan lompakkoa &lt;b&gt;%1&lt;/b&gt;...</translation>
+    </message>
+    <message>
+        <source>Open Wallet Failed</source>
+        <translation>Lompakon avaaminen epäonnistui</translation>
+    </message>
+    <message>
+        <source>No wallets available</source>
+        <translation>Lompakoita ei ole saatavilla</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -492,6 +512,10 @@
     <message>
         <source>Minimize</source>
         <translation>Pienennä</translation>
+    </message>
+    <message>
+        <source>Zoom</source>
+        <translation>Lähennä/loitonna</translation>
     </message>
     <message>
         <source>Restore</source>
@@ -812,6 +836,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -902,6 +929,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Ei saatavilla</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -947,7 +981,24 @@
         <source>Hide</source>
         <translation>Piilota</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown. Syncing Headers (%1, %2%)...</source>
+        <translation>Tuntematon. Synkronoidaan tunnisteita (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Laatu</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Osoite</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -1052,10 +1103,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Karsi lohkovaraston kooksi</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>Gt</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1186,6 +1233,10 @@
         <translation>&amp;Kolmannen osapuolen rahansiirto URL:t</translation>
     </message>
     <message>
+        <source>Options set in this dialog are overridden by the command line or in the configuration file:</source>
+        <translation>Seuraavat komentorivillä tai asetustiedostossa annetut määritykset menevät tässä ikkunassa asetettujen asetusten edelle:</translation>
+    </message>
+    <message>
         <source>&amp;OK</source>
         <translation>&amp;OK</translation>
     </message>
@@ -1200,6 +1251,10 @@
     <message>
         <source>none</source>
         <translation>ei mitään</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin-ydin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1314,6 +1369,9 @@
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1332,8 +1390,16 @@
         <translation>'bitcoin://' ei ole kelvollinen URI. Käytä 'bitcoin:' sen sijaan.</translation>
     </message>
     <message>
+        <source>You are using a BIP70 URL which will be unsupported in the future.</source>
+        <translation>Käytät BIP70 -URL:ia, jonka tuki päättyy lähitulevaisuudessa.</translation>
+    </message>
+    <message>
         <source>Payment request fetch URL is invalid: %1</source>
         <translation>Maksupyynnön haku URL on virheellinen: %1</translation>
+    </message>
+    <message>
+        <source>Cannot process payment request because BIP70 support was not compiled in.</source>
+        <translation>Maksupyyntöä ei voida käsitellä, sillä BIP70-tukea ei ole käännetty ohjelmaan.</translation>
     </message>
     <message>
         <source>Invalid payment address %1</source>
@@ -1525,6 +1591,16 @@
         <source>unknown</source>
         <translation>tuntematon</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Lko</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Rso</translation>
+    </message>
 </context>
 <context>
     <name>QObject::QObject</name>
@@ -1554,6 +1630,14 @@
     <message>
         <source>&amp;Copy Image</source>
         <translation>&amp;Kopioi kuva</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Tuloksen URI on liian pitkä, yritä lyhentää otsikon tai viestin tekstiä.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Virhe käännettäessä URI:a QR-koodiksi.</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -1595,6 +1679,14 @@
         <translation>Data-hakemisto</translation>
     </message>
     <message>
+        <source>To specify a non-default location of the data directory use the '%1' option.</source>
+        <translation>Käytä '%1' -valitsinta määritelläksesi muun kuin oletuksen data-hakemistolle.</translation>
+    </message>
+    <message>
+        <source>To specify a non-default location of the blocks directory use the '%1' option.</source>
+        <translation>Käytä '%1' -valitsinta määritelläksesi muun kuin oletuksen lohkohakemistolle.</translation>
+    </message>
+    <message>
         <source>Startup time</source>
         <translation>Käynnistysaika</translation>
     </message>
@@ -1633,6 +1725,10 @@
     <message>
         <source>Wallet: </source>
         <translation>Lompakko:</translation>
+    </message>
+    <message>
+        <source>(none)</source>
+        <translation>(tyhjä)</translation>
     </message>
     <message>
         <source>&amp;Reset</source>
@@ -1831,6 +1927,10 @@
         <translation>Suoritetaan komento ilman lomakkoa</translation>
     </message>
     <message>
+        <source>Executing command using "%1" wallet</source>
+        <translation>Suoritetaan komento käyttäen lompakkoa "%1"</translation>
+    </message>
+    <message>
         <source>(node id: %1)</source>
         <translation>(solmukohdan id: %1)</translation>
     </message>
@@ -2000,14 +2100,6 @@
         <source>Wallet</source>
         <translation>Lompakko</translation>
     </message>
-    <message>
-        <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Tuloksen URI on liian pitkä, yritä lyhentää otsikon tai viestin tekstiä.</translation>
-    </message>
-    <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>Virhe käännettäessä URI:a QR-koodiksi.</translation>
-    </message>
 </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -2115,6 +2207,14 @@
         <translation>pudota kulujen asetukset</translation>
     </message>
     <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis per kB" for a transaction size of 500 bytes (half of 1 kB) would ultimately yield a fee of only 50 satoshis.</source>
+        <translation>Määrittele siirtotapahtuman näennäiskooksi siirtomaksu kilotavua (1,000 tavua) kohti.
+
+Huom: Koska siirtomaksu lasketaan tavujen mukaan, niin määrittelemällä 500 tavun (puoli kt) siirrolle "100 sat / kt", johtaa tämä lopulta vain 50 satoshin maksuun.</translation>
+    </message>
+    <message>
         <source>per kilobyte</source>
         <translation>per kilotavu</translation>
     </message>
@@ -2149,6 +2249,14 @@
     <message>
         <source>Dust:</source>
         <translation>Tomu:</translation>
+    </message>
+    <message>
+        <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
+        <translation>Mikäli lohkoissa ei ole tilaa kaikille siirtotapahtumille, voi louhijat sekä välittävät solmut pakottaa vähimmäispalkkion. Tämän vähimmäispalkkion maksaminen on täysin OK, mutta huomaa, että se saattaa johtaa siirron jumiin jäämiseen (ei vahvistu koskaan), jos bitcoin-siirtoja on enemmän kuin mitä verkko pystyy käsittelemään.</translation>
+    </message>
+    <message>
+        <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
+        <translation>Liian alhainen maksu saattaa johtaa siirtoon, joka ei koskaan vahvistu (lue työkaluohje)</translation>
     </message>
     <message>
         <source>Confirmation time target:</source>
@@ -2692,6 +2800,10 @@
         <translation>Maksutapahtuman kokonaiskoko</translation>
     </message>
     <message>
+        <source>Transaction virtual size</source>
+        <translation>Tapahtuman näennäiskoko</translation>
+    </message>
+    <message>
         <source>Merchant</source>
         <translation>Kauppias</translation>
     </message>
@@ -2881,10 +2993,6 @@
         <translation>Lähetetty vastaanottajalle</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Itsellesi</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Louhittu</translation>
     </message>
@@ -3010,7 +3118,15 @@
 </context>
 <context>
     <name>WalletController</name>
-    </context>
+    <message>
+        <source>Are you sure you wish to close wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>Haluatko varmasti sulkea lompakon &lt;i&gt;%1&lt;/i&gt;?</translation>
+    </message>
+    <message>
+        <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
+        <translation>Lompakon sulkeminen liian pitkäksi aikaa saattaa johtaa tarpeeseen synkronoida koko ketju uudelleen, mikäli karsinta on käytössä.</translation>
+    </message>
+</context>
 <context>
     <name>WalletFrame</name>
     <message>
@@ -3143,6 +3259,10 @@
         <translation>%s kehittäjät</translation>
     </message>
     <message>
+        <source>Can't generate a change-address key. No keys in the internal keypool and can't generate any keys.</source>
+        <translation>Vaihtorahaosoitetta ei voida luoda. Sisäisessä varannossa ei ole avaimia, eikä uusia avaimia voida luoda.</translation>
+    </message>
+    <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
         <translation>Ei voida lukita data-hakemistoa %s. %s on luultavasti jo käynnissä.</translation>
     </message>
@@ -3165,6 +3285,10 @@
     <message>
         <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
         <translation>Tämä on esi-julkaistu kokeiluversio - Käyttö omalla vastuullasi - Ethän käytä louhimiseen tai kauppasovelluksiin.</translation>
+    </message>
+    <message>
+        <source>This is the transaction fee you may discard if change is smaller than dust at this level</source>
+        <translation>Voit ohittaa tämän siirtomaksun, mikäli vaihtoraha on pienempi kuin tomun arvo tällä hetkellä</translation>
     </message>
     <message>
         <source>Unable to replay blocks. You will need to rebuild the database using -reindex-chainstate.</source>
@@ -3247,6 +3371,10 @@
         <translation>Ei onnistuttu kuuntelemaan missään portissa. Käytä -listen=0 jos haluat tätä.</translation>
     </message>
     <message>
+        <source>Failed to rescan the wallet during initialization</source>
+        <translation>Lompakkoa ei voitu tarkastaa alustuksen yhteydessä.</translation>
+    </message>
+    <message>
         <source>Importing...</source>
         <translation>Tuodaan...</translation>
     </message>
@@ -3273,6 +3401,16 @@
     <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>Määrättyä lohkohakemistoa "%s" ei ole olemassa.</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Määriteltyä R/W asetustiedostoa %s ei löytynyt
+</translation>
+    </message>
+    <message>
+        <source>Unable to create the PID file '%s': %s</source>
+        <translation>PID-tiedostoa '%s' ei voitu luoda: %s</translation>
     </message>
     <message>
         <source>Upgrading txindex database</source>
@@ -3331,6 +3469,10 @@
         <translation>Päivitetään UTXO-tietokantaa</translation>
     </message>
     <message>
+        <source>User Agent comment (%s) contains unsafe characters.</source>
+        <translation>User Agent -kommentti (%s) sisältää turvattomia merkkejä.</translation>
+    </message>
+    <message>
         <source>Verifying blocks...</source>
         <translation>Varmistetaan lohkoja...</translation>
     </message>
@@ -3357,6 +3499,10 @@
     <message>
         <source>Error upgrading chainstate database</source>
         <translation>Virhe päivittäessä chainstate-tietokantaa</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is low for %s</source>
+        <translation>Virhe: levytila vähissä kohteessa %s</translation>
     </message>
     <message>
         <source>Information</source>
@@ -3401,6 +3547,12 @@
     <message>
         <source>Specified -walletdir "%s" is not a directory</source>
         <translation>Määritelty -walletdir "%s" ei ole hakemisto</translation>
+    </message>
+    <message>
+        <source>The specified config file %s does not exist
+</source>
+        <translation>Määriteltyä asetustiedostoa %s ei löytynyt
+</translation>
     </message>
     <message>
         <source>The transaction amount is too small to pay the fee</source>
@@ -3453,6 +3605,18 @@
     <message>
         <source>This is the transaction fee you may pay when fee estimates are not available.</source>
         <translation>Tämän siirtomaksun maksat, kun siirtomaksun arviointi ei ole käytettävissä.</translation>
+    </message>
+    <message>
+        <source>This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit %s and cryptographic software written by Eric Young and UPnP software written by Thomas Bernard.</source>
+        <translation>Tämä tuote sisältää ohjelmistoa, jonka on kehittänyt OpenSSL Project käytettäväksi OpenSSL Toolkit -ohjelmistossa %s, ja Eric Youngin kirjoittamaa salausohjelmistoa sekä Thomas Bernardin kirjoittamaa UPnP-ohjelmistoa.</translation>
+    </message>
+    <message>
+        <source>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</source>
+        <translation>Verkon versiokenttä (%i) ylittää sallitun pituuden (%i). Vähennä uacomments:in arvoa tai kokoa.</translation>
+    </message>
+    <message>
+        <source>Warning: Wallet file corrupt, data salvaged! Original %s saved as %s in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
+        <translation>Varoitus: Lompakkotiedosto on vahingoittunut, tiedot on korjattu. Alkuperäinen %s talletettu nimellä %s kohteeseen %s; mikäli taseesi tai siirtotapahtumat ovat virheellisiä, on suositeltavaa palauttaa lompakko varmuuskopioista.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>
