@@ -139,6 +139,15 @@ protected:
      */
     virtual void BlockConnected(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex) {}
     /**
+     * The equivalent of BlockConnected for non-active (i.e. background
+     * validation) chainstates.
+     *
+     * Called on a background thread.
+     */
+    virtual void BackgroundBlockConnected(
+        const std::shared_ptr<const CBlock> &block,
+        const CBlockIndex *pindex) {}
+    /**
      * Notifies listeners of a block being disconnected
      *
      * Called on a background thread.
@@ -200,6 +209,7 @@ public:
     void TransactionAddedToMempool(const CTransactionRef&);
     void TransactionRemovedFromMempool(const CTransactionRef&, MemPoolRemovalReason);
     void BlockConnected(const std::shared_ptr<const CBlock> &, const CBlockIndex *pindex);
+    void BackgroundBlockConnected(const std::shared_ptr<const CBlock> &, const CBlockIndex *pindex);
     void BlockDisconnected(const std::shared_ptr<const CBlock> &, const CBlockIndex* pindex);
     void ChainStateFlushed(const CBlockLocator &);
     void BlockChecked(const CBlock&, const BlockValidationState&);
