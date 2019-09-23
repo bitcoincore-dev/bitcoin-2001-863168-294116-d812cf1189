@@ -79,6 +79,10 @@ private:
 protected:
     void BlockConnected(const std::shared_ptr<const CBlock>& block, const CBlockIndex* pindex) override;
 
+    void BackgroundBlockConnected(
+        const std::shared_ptr<const CBlock>& block,
+        const CBlockIndex* pindex) override;
+
     void ChainStateFlushed(const CBlockLocator& locator) override;
 
     /// Initialize internal state from the database and block index.
