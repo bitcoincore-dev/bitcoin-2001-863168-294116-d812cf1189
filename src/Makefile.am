@@ -911,6 +911,7 @@ libbitcoinkernel_la_SOURCES = \
   deploymentstatus.cpp \
   flatfile.cpp \
   hash.cpp \
+  index/base.cpp \
   kernel/chain.cpp \
   kernel/checks.cpp \
   kernel/chainparams.cpp \
