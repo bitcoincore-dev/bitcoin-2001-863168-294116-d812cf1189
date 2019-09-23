@@ -1473,6 +1473,26 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
         node.chainman = std::make_unique<ChainstateManager>(node.kernel->interrupt, chainman_opts, blockman_opts);
         ChainstateManager& chainman = *node.chainman;
 
+        // This is defined and set here instead of inline in validation.h to avoid a hard
+        // dependency between validation and index/base, since the latter is not in
+        // libbitcoinkernel.
+        chainman.restart_indexers = [](const ChainstateManager& chainman) {
+            LogPrintf("[snapshot] restarting indexers\n");
+
+            // Drain the validation interface queue to ensure that the old indexers
+            // don't have any pending work.
+            SyncWithValidationInterfaceQueue();
+
+            for (auto* indexer : chainman.indexers) {
+                indexer->Interrupt();
+                indexer->Stop();
+                if (!(indexer->Init() && indexer->StartBackgroundSync())) {
+                    // TODO I don't think we should halt here, but maybe do something more drastic?
+                    LogPrintf("[snapshot] WARNING failed to restart indexer %s on snapshot chain\n", indexer->GetName());
+                }
+            }
+        };
+
         node::ChainstateLoadOptions options;
         options.mempool = Assert(node.mempool.get());
         options.reindex = node::fReindex;
@@ -1910,18 +1930,19 @@ bool StartIndexBackgroundSync(NodeContext& node)
     // indexes_start_block='nullptr' means "start from height 0".
     std::optional<const CBlockIndex*> indexes_start_block;
     std::string older_index_name;
-
     ChainstateManager& chainman = *Assert(node.chainman);
+    const Chainstate& chainstate = WITH_LOCK(::cs_main, return chainman.GetChainstateForIndexing());
+    const CChain& index_chain = chainstate.m_chain;
+
     for (auto index : node.indexes) {
         const IndexSummary& summary = index->GetSummary();
         if (summary.synced) continue;
 
         // Get the last common block between the index best block and the active chain
         LOCK(::cs_main);
-        const CChain& active_chain = chainman.ActiveChain();
         const CBlockIndex* pindex = chainman.m_blockman.LookupBlockIndex(summary.best_block_hash);
-        if (!active_chain.Contains(pindex)) {
-            pindex = active_chain.FindFork(pindex);
+        if (!index_chain.Contains(pindex)) {
+            pindex = index_chain.FindFork(pindex);
         }
 
         if (!indexes_start_block || !pindex || pindex->nHeight < indexes_start_block.value()->nHeight) {
@@ -1936,7 +1957,7 @@ bool StartIndexBackgroundSync(NodeContext& node)
         LOCK(::cs_main);
         const CBlockIndex* start_block = *indexes_start_block;
         if (!start_block) start_block = chainman.ActiveChain().Genesis();
-        if (!chainman.m_blockman.CheckBlockDataAvailability(*chainman.ActiveChain().Tip(), *Assert(start_block))) {
+        if (!chainman.m_blockman.CheckBlockDataAvailability(*index_chain.Tip(), *Assert(start_block))) {
             return InitError(strprintf(Untranslated("%s best block of the index goes beyond pruned data. Please disable the index or reindex (which will download the whole blockchain again)"), older_index_name));
         }
     }
