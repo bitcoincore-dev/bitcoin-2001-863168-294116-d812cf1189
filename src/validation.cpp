@@ -2328,7 +2328,7 @@ bool CChainState::FlushStateToDisk(
             full_flush_completed = true;
         }
     }
-    if (full_flush_completed) {
+    if (full_flush_completed && this == &::ChainstateActive()) {
         // Update best block in wallet (so we can detect restored wallets).
         GetMainSignals().ChainStateFlushed(m_chain.GetLocator());
     }
@@ -2475,7 +2475,9 @@ bool CChainState::DisconnectTip(CValidationState& state, const CChainParams& cha
     UpdateTip(pindexDelete->pprev, chainparams);
     // Let wallets know transactions went from 1-confirmed to
     // 0-confirmed or conflicted:
-    GetMainSignals().BlockDisconnected(pblock);
+    if (this == &::ChainstateActive()) {
+        GetMainSignals().BlockDisconnected(pblock);
+    }
     return true;
 }
 
@@ -2575,7 +2577,9 @@ bool CChainState::ConnectTip(CValidationState& state, const CChainParams& chainp
     {
         CCoinsViewCache view(&CoinsTip());
         bool rv = ConnectBlock(blockConnecting, state, pindexNew, view, chainparams);
-        GetMainSignals().BlockChecked(blockConnecting, state);
+        if (this == &::ChainstateActive()) {
+            GetMainSignals().BlockChecked(blockConnecting, state);
+        }
         if (!rv) {
             if (state.IsInvalid())
                 InvalidBlockFound(pindexNew, state);
@@ -2862,9 +2866,11 @@ bool CChainState::ActivateBestChain(CValidationState &state, const CChainParams&
                 }
                 pindexNewTip = m_chain.Tip();
 
-                for (const PerBlockConnectTrace& trace : connectTrace.GetBlocksConnected()) {
-                    assert(trace.pblock && trace.pindex);
-                    GetMainSignals().BlockConnected(trace.pblock, trace.pindex, trace.conflictedTxs);
+                if (this == &::ChainstateActive()) {
+                    for (const PerBlockConnectTrace& trace : connectTrace.GetBlocksConnected()) {
+                        assert(trace.pblock && trace.pindex);
+                        GetMainSignals().BlockConnected(trace.pblock, trace.pindex, trace.conflictedTxs);
+                    }
                 }
             } while (!m_chain.Tip() || (starting_tip && CBlockIndexWorkComparator()(m_chain.Tip(), starting_tip)));
             if (!blocks_connected) return true;
@@ -2875,11 +2881,13 @@ bool CChainState::ActivateBestChain(CValidationState &state, const CChainParams&
             // Notify external listeners about the new tip.
             // Enqueue while holding cs_main to ensure that UpdatedBlockTip is called in the order in which blocks are connected
             if (pindexFork != pindexNewTip) {
-                // Notify ValidationInterface subscribers
-                GetMainSignals().UpdatedBlockTip(pindexNewTip, pindexFork, fInitialDownload);
+                if (this == &::ChainstateActive()) {
+                    // Notify ValidationInterface subscribers
+                    GetMainSignals().UpdatedBlockTip(pindexNewTip, pindexFork, fInitialDownload);
 
-                // Always notify the UI if a new block tip was connected
-                uiInterface.NotifyBlockTip(fInitialDownload, pindexNewTip);
+                    // Always notify the UI if a new block tip was connected
+                    uiInterface.NotifyBlockTip(fInitialDownload, pindexNewTip);
+                }
             }
         }
         // When we reach this point, we switched to a new tip (stored in pindexNewTip).
@@ -3696,8 +3704,9 @@ bool CChainState::AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CVali
 
     // Header is valid/has work, merkle tree and segwit merkle tree are good...RELAY NOW
     // (but if it does not build on our best tip, let the SendMessages loop relay it)
-    if (!IsInitialBlockDownload() && m_chain.Tip() == pindex->pprev)
+    if (!IsInitialBlockDownload() && m_chain.Tip() == pindex->pprev && this == &::ChainstateActive()) {
         GetMainSignals().NewPoWValidBlock(pindex, pblock);
+    }
 
     // Write block to history file
     if (fNewBlock) *fNewBlock = true;
