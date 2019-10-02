@@ -17,6 +17,7 @@ static constexpr uint8_t PSBT_MAGIC_BYTES[5] = {'p', 's', 'b', 't', 0xff};
 // Global types
 static constexpr uint8_t PSBT_GLOBAL_UNSIGNED_TX = 0x00;
 static constexpr uint8_t PSBT_GLOBAL_VERSION = 0xFB;
+static constexpr uint8_t PSBT_GLOBAL_PROPRIETARY = 0xFC;
 
 // Input types
 static constexpr uint8_t PSBT_IN_NON_WITNESS_UTXO = 0x00;
@@ -28,11 +29,13 @@ static constexpr uint8_t PSBT_IN_WITNESSSCRIPT = 0x05;
 static constexpr uint8_t PSBT_IN_BIP32_DERIVATION = 0x06;
 static constexpr uint8_t PSBT_IN_SCRIPTSIG = 0x07;
 static constexpr uint8_t PSBT_IN_SCRIPTWITNESS = 0x08;
+static constexpr uint8_t PSBT_IN_PROPRIETARY = 0xFC;
 
 // Output types
 static constexpr uint8_t PSBT_OUT_REDEEMSCRIPT = 0x00;
 static constexpr uint8_t PSBT_OUT_WITNESSSCRIPT = 0x01;
 static constexpr uint8_t PSBT_OUT_BIP32_DERIVATION = 0x02;
+static constexpr uint8_t PSBT_OUT_PROPRIETARY = 0xFC;
 
 // The separator is 0x00. Reading this in means that the unserializer can interpret it
 // as a 0 length key which indicates that this is the separator. The separator has no value.
@@ -40,6 +43,22 @@ static constexpr uint8_t PSBT_SEPARATOR = 0x00;
 
 // PSBT version number
 static constexpr uint32_t PSBT_HIGHEST_VERSION = 0;
+
+/** A structure for PSBT proprietary types */
+struct PSBTProprietary
+{
+    uint64_t subtype;
+    std::vector<unsigned char> identifier;
+    std::vector<unsigned char> key;
+    std::vector<unsigned char> value;
+
+    bool operator<(const PSBTProprietary &b) const {
+        return key < b.key;
+    }
+    bool operator==(const PSBTProprietary &b) const {
+        return key == b.key;
+    }
+};
 
 /** A structure for PSBTs which contain per-input information */
 struct PSBTInput
@@ -53,6 +72,7 @@ struct PSBTInput
     std::map<CPubKey, KeyOriginInfo> hd_keypaths;
     std::map<CKeyID, SigPair> partial_sigs;
     std::map<std::vector<unsigned char>, std::vector<unsigned char>> unknown;
+    std::set<PSBTProprietary> proprietary;
     int sighash_type = 0;
 
     bool IsNull() const;
@@ -113,6 +133,12 @@ struct PSBTInput
         if (!final_script_witness.IsNull()) {
             SerializeToVector(s, CompactSizeWriter(PSBT_IN_SCRIPTWITNESS));
             SerializeToVector(s, final_script_witness.stack);
+        }
+
+        // Write proprietary things
+        for (const auto& entry : proprietary) {
+            s << entry.key;
+            s << entry.value;
         }
 
         // Write unknown things
@@ -243,6 +269,20 @@ struct PSBTInput
                     UnserializeFromVector(s, final_script_witness.stack);
                     break;
                 }
+                case PSBT_IN_PROPRIETARY:
+                {
+                    PSBTProprietary this_prop;
+                    skey >> this_prop.identifier;
+                    this_prop.subtype = ReadCompactSize(skey);
+                    this_prop.key = key;
+
+                    if (proprietary.count(this_prop) > 0) {
+                        throw std::ios_base::failure("Duplicate Key, proprietary key already found");
+                    }
+                    s >> this_prop.value;
+                    proprietary.insert(this_prop);
+                    break;
+                }
                 // Unknown stuff
                 default:
                     if (unknown.count(key) > 0) {
@@ -274,6 +314,7 @@ struct PSBTOutput
     CScript witness_script;
     std::map<CPubKey, KeyOriginInfo> hd_keypaths;
     std::map<std::vector<unsigned char>, std::vector<unsigned char>> unknown;
+    std::set<PSBTProprietary> proprietary;
 
     bool IsNull() const;
     void FillSignatureData(SignatureData& sigdata) const;
@@ -298,6 +339,12 @@ struct PSBTOutput
 
         // Write any hd keypaths
         SerializeHDKeypaths(s, hd_keypaths, CompactSizeWriter(PSBT_OUT_BIP32_DERIVATION));
+
+        // Write proprietary things
+        for (const auto& entry : proprietary) {
+            s << entry.key;
+            s << entry.value;
+        }
 
         // Write unknown things
         for (auto& entry : unknown) {
@@ -356,6 +403,20 @@ struct PSBTOutput
                     DeserializeHDKeypaths(s, key, hd_keypaths);
                     break;
                 }
+                case PSBT_OUT_PROPRIETARY:
+                {
+                    PSBTProprietary this_prop;
+                    skey >> this_prop.identifier;
+                    this_prop.subtype = ReadCompactSize(skey);
+                    this_prop.key = key;
+
+                    if (proprietary.count(this_prop) > 0) {
+                        throw std::ios_base::failure("Duplicate Key, proprietary key already found");
+                    }
+                    s >> this_prop.value;
+                    proprietary.insert(this_prop);
+                    break;
+                }
                 // Unknown stuff
                 default: {
                     if (unknown.count(key) > 0) {
@@ -388,6 +449,7 @@ struct PartiallySignedTransaction
     std::vector<PSBTInput> inputs;
     std::vector<PSBTOutput> outputs;
     std::map<std::vector<unsigned char>, std::vector<unsigned char>> unknown;
+    std::set<PSBTProprietary> proprietary;
     boost::optional<uint32_t> version;
 
     bool IsNull() const;
@@ -422,6 +484,12 @@ struct PartiallySignedTransaction
         // Write serialized tx to a stream
         OverrideStream<Stream> os(&s, s.GetType(), s.GetVersion() | SERIALIZE_TRANSACTION_NO_WITNESS);
         SerializeToVector(os, *tx);
+
+        // Write proprietary things
+        for (const auto& entry : proprietary) {
+            s << entry.key;
+            s << entry.value;
+        }
 
         // Write the unknown things
         for (auto& entry : unknown) {
@@ -505,6 +573,20 @@ struct PartiallySignedTransaction
                     if (version > PSBT_HIGHEST_VERSION) {
                         throw std::ios_base::failure("Unsupported version number");
                     }
+                    break;
+                }
+                case PSBT_GLOBAL_PROPRIETARY:
+                {
+                    PSBTProprietary this_prop;
+                    skey >> this_prop.identifier;
+                    this_prop.subtype = ReadCompactSize(skey);
+                    this_prop.key = key;
+
+                    if (proprietary.count(this_prop) > 0) {
+                        throw std::ios_base::failure("Duplicate Key, proprietary key already found");
+                    }
+                    s >> this_prop.value;
+                    proprietary.insert(this_prop);
                     break;
                 }
                 // Unknown stuff
