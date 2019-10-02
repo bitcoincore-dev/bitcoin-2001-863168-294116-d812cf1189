@@ -1013,12 +1013,15 @@ static RPCHelpMan decodepsbt()
                             }},
                         }},
                         {RPCResult::Type::NUM, "psbt_version", "The PSBT version number. Not to be confused with the unsigned transaction version"},
-                        {RPCResult::Type::OBJ, "proprietary", "The global proprietary map",
+                        {RPCResult::Type::ARR, "proprietary", "The global proprietary map",
                         {
-                            {RPCResult::Type::STR_HEX, "identifier", "The hex string for the proprietary identifier"},
-                            {RPCResult::Type::NUM, "subtype", "The number for the subtype"},
-                            {RPCResult::Type::STR_HEX, "key", "The hex for the key"},
-                            {RPCResult::Type::STR_HEX, "value", "The hex for the value"},
+                            {RPCResult::Type::OBJ, "", "",
+                            {
+                                {RPCResult::Type::STR_HEX, "identifier", "The hex string for the proprietary identifier"},
+                                {RPCResult::Type::NUM, "subtype", "The number for the subtype"},
+                                {RPCResult::Type::STR_HEX, "key", "The hex for the key"},
+                                {RPCResult::Type::STR_HEX, "value", "The hex for the value"},
+                            }},
                         }},
                         {RPCResult::Type::OBJ_DYN, "unknown", "The unknown global fields",
                         {
@@ -1081,12 +1084,15 @@ static RPCHelpMan decodepsbt()
                                 {
                                     {RPCResult::Type::STR_HEX, "key", "(key-value pair) An unknown key-value pair"},
                                 }},
-                                {RPCResult::Type::OBJ, "proprietary", "The global proprietary map",
+                                {RPCResult::Type::ARR, "proprietary", "The input proprietary map",
                                 {
-                                    {RPCResult::Type::STR_HEX, "identifier", "The hex string for the proprietary identifier"},
-                                    {RPCResult::Type::NUM, "subtype", "The number for the subtype"},
-                                    {RPCResult::Type::STR_HEX, "key", "The hex for the key"},
-                                    {RPCResult::Type::STR_HEX, "value", "The hex for the value"},
+                                    {RPCResult::Type::OBJ, "", "",
+                                    {
+                                        {RPCResult::Type::STR_HEX, "identifier", "The hex string for the proprietary identifier"},
+                                        {RPCResult::Type::NUM, "subtype", "The number for the subtype"},
+                                        {RPCResult::Type::STR_HEX, "key", "The hex for the key"},
+                                        {RPCResult::Type::STR_HEX, "value", "The hex for the value"},
+                                    }},
                                 }},
                             }},
                         }},
@@ -1119,12 +1125,15 @@ static RPCHelpMan decodepsbt()
                                 {
                                     {RPCResult::Type::STR_HEX, "key", "(key-value pair) An unknown key-value pair"},
                                 }},
-                                {RPCResult::Type::OBJ, "proprietary", "The global proprietary map",
+                                {RPCResult::Type::ARR, "proprietary", "The output proprietary map",
                                 {
-                                    {RPCResult::Type::STR_HEX, "identifier", "The hex string for the proprietary identifier"},
-                                    {RPCResult::Type::NUM, "subtype", "The number for the subtype"},
-                                    {RPCResult::Type::STR_HEX, "key", "The hex for the key"},
-                                    {RPCResult::Type::STR_HEX, "value", "The hex for the value"},
+                                    {RPCResult::Type::OBJ, "", "",
+                                    {
+                                        {RPCResult::Type::STR_HEX, "identifier", "The hex string for the proprietary identifier"},
+                                        {RPCResult::Type::NUM, "subtype", "The number for the subtype"},
+                                        {RPCResult::Type::STR_HEX, "key", "The hex for the key"},
+                                        {RPCResult::Type::STR_HEX, "value", "The hex for the value"},
+                                    }},
                                 }},
                             }},
                         }},
