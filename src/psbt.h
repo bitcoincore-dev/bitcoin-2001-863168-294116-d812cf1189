@@ -16,6 +16,7 @@ static constexpr uint8_t PSBT_MAGIC_BYTES[5] = {'p', 's', 'b', 't', 0xff};
 
 // Global types
 static constexpr uint8_t PSBT_GLOBAL_UNSIGNED_TX = 0x00;
+static constexpr uint8_t PSBT_GLOBAL_VERSION = 0xFB;
 
 // Input types
 static constexpr uint8_t PSBT_IN_NON_WITNESS_UTXO = 0x00;
@@ -36,6 +37,9 @@ static constexpr uint8_t PSBT_OUT_BIP32_DERIVATION = 0x02;
 // The separator is 0x00. Reading this in means that the unserializer can interpret it
 // as a 0 length key which indicates that this is the separator. The separator has no value.
 static constexpr uint8_t PSBT_SEPARATOR = 0x00;
+
+// PSBT version number
+static constexpr uint32_t PSBT_HIGHEST_VERSION = 0;
 
 /** A structure for PSBTs which contain per-input information */
 struct PSBTInput
@@ -384,6 +388,7 @@ struct PartiallySignedTransaction
     std::vector<PSBTInput> inputs;
     std::vector<PSBTOutput> outputs;
     std::map<std::vector<unsigned char>, std::vector<unsigned char>> unknown;
+    boost::optional<uint32_t> version;
 
     bool IsNull() const;
 
@@ -484,6 +489,21 @@ struct PartiallySignedTransaction
                         if (!txin.scriptSig.empty() || !txin.scriptWitness.IsNull()) {
                             throw std::ios_base::failure("Unsigned tx does not have empty scriptSigs and scriptWitnesses.");
                         }
+                    }
+                    break;
+                }
+                case PSBT_GLOBAL_VERSION:
+                {
+                    if (version) {
+                        throw std::ios_base::failure("Duplicate Key, version already provided");
+                    } else if (key.size() != 1) {
+                        throw std::ios_base::failure("Global version key is more than one byte type");
+                    }
+                    uint32_t v;
+                    UnserializeFromVector(s, v);
+                    version = v;
+                    if (version > PSBT_HIGHEST_VERSION) {
+                        throw std::ios_base::failure("Unsupported version number");
                     }
                     break;
                 }
