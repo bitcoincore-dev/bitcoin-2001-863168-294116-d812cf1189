@@ -208,7 +208,7 @@ isminetype LegacyScriptPubKeyMan::IsMine(const CScript& script) const
 bool LegacyScriptPubKeyMan::HasEncryptedData() const
 {
     LOCK(cs_KeyStore);
-    return m_storage.HasEncryptionKeys() || !mapCryptedKeys.empty();
+    return HasEncryptionKeys() || !mapCryptedKeys.empty();
 }
 
 bool LegacyScriptPubKeyMan::CheckDecryptionKey(const CKeyingMaterial& master_key, bool accept_no_keys)
@@ -330,7 +330,7 @@ void LegacyScriptPubKeyMan::MarkUnusedAddresses(const CScript& script)
 void LegacyScriptPubKeyMan::UpgradeKeyMetadata()
 {
     LOCK(cs_KeyStore);
-    if (m_storage.IsLocked() || m_storage.IsWalletFlagSet(WALLET_FLAG_KEY_ORIGIN_METADATA)) {
+    if (IsLocked() || IsWalletFlagSet(WALLET_FLAG_KEY_ORIGIN_METADATA)) {
         return;
     }
 
@@ -365,7 +365,7 @@ void LegacyScriptPubKeyMan::UpgradeKeyMetadata()
 
 bool LegacyScriptPubKeyMan::SetupGeneration(bool force)
 {
-    if ((CanGenerateKeys() && !force) || m_storage.IsLocked()) {
+    if ((CanGenerateKeys() && !force) || IsLocked()) {
         return false;
     }
 
@@ -386,7 +386,7 @@ bool LegacyScriptPubKeyMan::CanGetAddresses(bool internal)
     LOCK(cs_KeyStore);
     // Check if the keypool has keys
     bool keypool_has_keys;
-    if (internal && m_storage.CanSupportFeature(FEATURE_HD_SPLIT)) {
+    if (internal && CanSupportFeature(FEATURE_HD_SPLIT)) {
         keypool_has_keys = setInternalKeyPool.size() > 0;
     } else {
         keypool_has_keys = KeypoolCountExternalKeys() > 0;
@@ -404,18 +404,18 @@ bool LegacyScriptPubKeyMan::Upgrade(int prev_version, int new_version, std::stri
     error = "";
     bool hd_upgrade = false;
     bool split_upgrade = false;
-    if (m_storage.CanSupportFeature(FEATURE_HD) && !IsHDEnabled()) {
+    if (CanSupportFeature(FEATURE_HD) && !IsHDEnabled()) {
         WalletLogPrintf("Upgrading wallet to HD\n");
-        m_storage.SetMinVersion(FEATURE_HD);
+        SetMinVersion(FEATURE_HD);
 
         // generate a new master key
         SetHDSeed(GenerateNewSeed());
         hd_upgrade = true;
     }
     // Upgrade to HD chain split if necessary
-    if (m_storage.CanSupportFeature(FEATURE_HD_SPLIT) && hdChain.nVersion < 2 /* VERSION_HD_CHAIN_SPLIT */) {
+    if (CanSupportFeature(FEATURE_HD_SPLIT) && hdChain.nVersion < 2 /* VERSION_HD_CHAIN_SPLIT */) {
         WalletLogPrintf("Upgrading wallet to use HD chain split\n");
-        m_storage.SetMinVersion(FEATURE_PRE_SPLIT_KEYPOOL);
+        SetMinVersion(FEATURE_PRE_SPLIT_KEYPOOL);
         split_upgrade = FEATURE_HD_SPLIT > prev_version;
     }
     // Mark all keys currently in the keypool as pre-split
@@ -471,7 +471,7 @@ int64_t LegacyScriptPubKeyMan::GetOldestKeyPoolTime()
 
     // load oldest key from keypool, get time and return
     int64_t oldestKey = GetOldestKeyTimeInPool(setExternalKeyPool, batch);
-    if (IsHDEnabled() && m_storage.CanSupportFeature(FEATURE_HD_SPLIT)) {
+    if (IsHDEnabled() && CanSupportFeature(FEATURE_HD_SPLIT)) {
         oldestKey = std::max(GetOldestKeyTimeInPool(setInternalKeyPool, batch), oldestKey);
         if (!set_pre_split_keypool.empty()) {
             oldestKey = std::max(GetOldestKeyTimeInPool(set_pre_split_keypool, batch), oldestKey);
@@ -579,7 +579,7 @@ bool LegacyScriptPubKeyMan::AddKeyPubKeyWithDB(WalletBatch& batch, const CKey& s
     AssertLockHeld(cs_KeyStore);
 
     // Make sure we aren't adding private keys to private key disabled wallets
-    assert(!m_storage.IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS));
+    assert(!IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS));
 
     // FillableSigningProvider has no concept of wallet databases, but calls AddCryptedKey
     // which is overridden below.  To avoid flushes, the database handle is
@@ -610,7 +610,7 @@ bool LegacyScriptPubKeyMan::AddKeyPubKeyWithDB(WalletBatch& batch, const CKey& s
                                                  secret.GetPrivKey(),
                                                  mapKeyMetadata[pubkey.GetID()]);
     }
-    m_storage.UnsetWalletFlagWithDB(batch, WALLET_FLAG_BLANK_WALLET);
+    UnsetWalletFlagWithDB(batch, WALLET_FLAG_BLANK_WALLET);
     return true;
 }
 
@@ -650,13 +650,13 @@ bool LegacyScriptPubKeyMan::AddKeyPubKeyInner(const CKey& key, const CPubKey &pu
         return FillableSigningProvider::AddKeyPubKey(key, pubkey);
     }
 
-    if (m_storage.IsLocked()) {
+    if (IsLocked()) {
         return false;
     }
 
     std::vector<unsigned char> vchCryptedSecret;
     CKeyingMaterial vchSecret(key.begin(), key.end());
-    if (!EncryptSecret(m_storage.GetEncryptionKey(), vchSecret, pubkey.GetHash(), vchCryptedSecret)) {
+    if (!EncryptSecret(GetEncryptionKey(), vchSecret, pubkey.GetHash(), vchCryptedSecret)) {
         return false;
     }
 
@@ -766,7 +766,7 @@ bool LegacyScriptPubKeyMan::AddWatchOnlyWithDB(WalletBatch &batch, const CScript
     UpdateTimeFirstKey(meta.nCreateTime);
     NotifyWatchonlyChanged(true);
     if (batch.WriteWatchOnly(dest, meta)) {
-        m_storage.UnsetWalletFlagWithDB(batch, WALLET_FLAG_BLANK_WALLET);
+        UnsetWalletFlagWithDB(batch, WALLET_FLAG_BLANK_WALLET);
         return true;
     }
     return false;
@@ -820,7 +820,7 @@ bool LegacyScriptPubKeyMan::GetKey(const CKeyID &address, CKey& keyOut) const
     {
         const CPubKey &vchPubKey = (*mi).second.first;
         const std::vector<unsigned char> &vchCryptedSecret = (*mi).second.second;
-        return DecryptKey(m_storage.GetEncryptionKey(), vchCryptedSecret, vchPubKey, keyOut);
+        return DecryptKey(GetEncryptionKey(), vchCryptedSecret, vchPubKey, keyOut);
     }
     return false;
 }
@@ -877,10 +877,10 @@ bool LegacyScriptPubKeyMan::GetPubKey(const CKeyID &address, CPubKey& vchPubKeyO
 
 CPubKey LegacyScriptPubKeyMan::GenerateNewKey(WalletBatch &batch, bool internal)
 {
-    assert(!m_storage.IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS));
-    assert(!m_storage.IsWalletFlagSet(WALLET_FLAG_BLANK_WALLET));
+    assert(!IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS));
+    assert(!IsWalletFlagSet(WALLET_FLAG_BLANK_WALLET));
     AssertLockHeld(cs_KeyStore);
-    bool fCompressed = m_storage.CanSupportFeature(FEATURE_COMPRPUBKEY); // default to compressed public keys if we want 0.6.0 wallets
+    bool fCompressed = CanSupportFeature(FEATURE_COMPRPUBKEY); // default to compressed public keys if we want 0.6.0 wallets
 
     CKey secret;
 
@@ -890,14 +890,14 @@ CPubKey LegacyScriptPubKeyMan::GenerateNewKey(WalletBatch &batch, bool internal)
 
     // use HD key derivation if HD was enabled during wallet creation and a seed is present
     if (IsHDEnabled()) {
-        DeriveNewChildKey(batch, metadata, secret, (m_storage.CanSupportFeature(FEATURE_HD_SPLIT) ? internal : false));
+        DeriveNewChildKey(batch, metadata, secret, (CanSupportFeature(FEATURE_HD_SPLIT) ? internal : false));
     } else {
         secret.MakeNewKey(fCompressed);
     }
 
     // Compressed public keys were introduced in version 0.6.0
     if (fCompressed) {
-        m_storage.SetMinVersion(FEATURE_COMPRPUBKEY);
+        SetMinVersion(FEATURE_COMPRPUBKEY);
     }
 
     CPubKey pubkey = secret.GetPubKey();
@@ -934,7 +934,7 @@ void LegacyScriptPubKeyMan::DeriveNewChildKey(WalletBatch &batch, CKeyMetadata& 
     masterKey.Derive(accountKey, BIP32_HARDENED_KEY_LIMIT);
 
     // derive m/0'/0' (external chain) OR m/0'/1' (internal chain)
-    assert(internal ? m_storage.CanSupportFeature(FEATURE_HD_SPLIT) : true);
+    assert(internal ? CanSupportFeature(FEATURE_HD_SPLIT) : true);
     accountKey.Derive(chainChildKey, BIP32_HARDENED_KEY_LIMIT+(internal ? 1 : 0));
 
     // derive child key at next index, skip keys already known to the wallet
@@ -994,12 +994,12 @@ bool LegacyScriptPubKeyMan::CanGenerateKeys()
 {
     // A wallet can generate keys if it has an HD seed (IsHDEnabled) or it is a non-HD wallet (pre FEATURE_HD)
     LOCK(cs_KeyStore);
-    return IsHDEnabled() || !m_storage.CanSupportFeature(FEATURE_HD);
+    return IsHDEnabled() || !CanSupportFeature(FEATURE_HD);
 }
 
 CPubKey LegacyScriptPubKeyMan::GenerateNewSeed()
 {
-    assert(!m_storage.IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS));
+    assert(!IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS));
     CKey key;
     key.MakeNewKey(true);
     return DeriveNewSeed(key);
@@ -1040,12 +1040,12 @@ void LegacyScriptPubKeyMan::SetHDSeed(const CPubKey& seed)
     // the child index counter in the database
     // as a hdchain object
     CHDChain newHdChain;
-    newHdChain.nVersion = m_storage.CanSupportFeature(FEATURE_HD_SPLIT) ? CHDChain::VERSION_HD_CHAIN_SPLIT : CHDChain::VERSION_HD_BASE;
+    newHdChain.nVersion = CanSupportFeature(FEATURE_HD_SPLIT) ? CHDChain::VERSION_HD_CHAIN_SPLIT : CHDChain::VERSION_HD_BASE;
     newHdChain.seed_id = seed.GetID();
     SetHDChain(newHdChain, false);
     NotifyCanGetAddressesChanged();
     WalletBatch batch(m_storage.GetDatabase());
-    m_storage.UnsetWalletFlagWithDB(batch, WALLET_FLAG_BLANK_WALLET);
+    UnsetWalletFlagWithDB(batch, WALLET_FLAG_BLANK_WALLET);
 }
 
 /**
@@ -1054,7 +1054,7 @@ void LegacyScriptPubKeyMan::SetHDSeed(const CPubKey& seed)
  */
 bool LegacyScriptPubKeyMan::NewKeyPool()
 {
-    if (m_storage.IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS)) {
+    if (IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS)) {
         return false;
     }
     {
@@ -1094,7 +1094,7 @@ bool LegacyScriptPubKeyMan::TopUpKeyPool(unsigned int kpSize)
     {
         LOCK(cs_KeyStore);
 
-        if (m_storage.IsLocked()) return false;
+        if (IsLocked()) return false;
 
         // Top up key pool
         unsigned int nTargetSize;
@@ -1108,7 +1108,7 @@ bool LegacyScriptPubKeyMan::TopUpKeyPool(unsigned int kpSize)
         int64_t missingExternal = std::max(std::max((int64_t) nTargetSize, (int64_t) 1) - (int64_t)setExternalKeyPool.size(), (int64_t) 0);
         int64_t missingInternal = std::max(std::max((int64_t) nTargetSize, (int64_t) 1) - (int64_t)setInternalKeyPool.size(), (int64_t) 0);
 
-        if (!IsHDEnabled() || !m_storage.CanSupportFeature(FEATURE_HD_SPLIT))
+        if (!IsHDEnabled() || !CanSupportFeature(FEATURE_HD_SPLIT))
         {
             // don't create extra internal keys
             missingInternal = 0;
@@ -1184,8 +1184,8 @@ bool LegacyScriptPubKeyMan::GetKeyFromPool(CPubKey& result, bool internal)
     {
         LOCK(cs_KeyStore);
         int64_t nIndex;
-        if (!ReserveKeyFromKeyPool(nIndex, keypool, internal) && !m_storage.IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS)) {
-            if (m_storage.IsLocked()) return false;
+        if (!ReserveKeyFromKeyPool(nIndex, keypool, internal) && !IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS)) {
+            if (IsLocked()) return false;
             WalletBatch batch(m_storage.GetDatabase());
             result = GenerateNewKey(batch, internal);
             return true;
@@ -1206,7 +1206,7 @@ bool LegacyScriptPubKeyMan::ReserveKeyFromKeyPool(int64_t& nIndex, CKeyPool& key
         TopUpKeyPool();
 
         bool fReturningInternal = fRequestedInternal;
-        fReturningInternal &= (IsHDEnabled() && m_storage.CanSupportFeature(FEATURE_HD_SPLIT)) || m_storage.IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS);
+        fReturningInternal &= (IsHDEnabled() && CanSupportFeature(FEATURE_HD_SPLIT)) || IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS);
         bool use_split_keypool = set_pre_split_keypool.empty();
         std::set<int64_t>& setKeyPool = use_split_keypool ? (fReturningInternal ? setInternalKeyPool : setExternalKeyPool) : set_pre_split_keypool;
 
@@ -1325,7 +1325,7 @@ bool LegacyScriptPubKeyMan::AddCScriptWithDB(WalletBatch& batch, const CScript& 
     if (!FillableSigningProvider::AddCScript(redeemScript))
         return false;
     if (batch.WriteCScript(Hash160(redeemScript), redeemScript)) {
-        m_storage.UnsetWalletFlagWithDB(batch, WALLET_FLAG_BLANK_WALLET);
+        UnsetWalletFlagWithDB(batch, WALLET_FLAG_BLANK_WALLET);
         return true;
     }
     return false;
