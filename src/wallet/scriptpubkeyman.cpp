@@ -275,7 +275,7 @@ bool LegacyScriptPubKeyMan::Encrypt(const CKeyingMaterial& master_key, WalletBat
     return true;
 }
 
-bool LegacyScriptPubKeyMan::GetReservedDestination(const OutputType type, bool internal, int64_t& index, CKeyPool& keypool)
+bool LegacyScriptPubKeyMan::GetReservedDestination(const OutputType type, bool internal, CTxDestination& address, int64_t& index, CKeyPool& keypool)
 {
     if (!CanGetAddresses(internal)) {
         return false;
@@ -286,6 +286,8 @@ bool LegacyScriptPubKeyMan::GetReservedDestination(const OutputType type, bool i
         if (!ReserveKeyFromKeyPool(index, keypool, internal)) {
             return false;
         }
+        LearnRelatedScripts(keypool.vchPubKey, type);
+        address = GetDestinationForKey(keypool.vchPubKey, type);
     }
     return true;
 }
