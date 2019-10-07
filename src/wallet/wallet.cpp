@@ -213,9 +213,11 @@ WalletCreationStatus CreateWallet(interfaces::Chain& chain, const SecureString& 
             }
 
             // Set a seed for the wallet
-            CPubKey master_pub_key = wallet->m_spk_man->GenerateNewSeed();
-            wallet->m_spk_man->SetHDSeed(master_pub_key);
-            wallet->m_spk_man->NewKeyPool();
+            {
+                if (auto spk_man = wallet->m_spk_man.get()) {
+                    spk_man->SetupGeneration();
+                }
+            }
 
             // Relock the wallet
             wallet->Lock();
@@ -564,11 +566,11 @@ bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
         Unlock(strWalletPassphrase);
 
         // if we are using HD, replace the HD seed with a new one
-        if (m_spk_man->IsHDEnabled()) {
-            m_spk_man->SetHDSeed(m_spk_man->GenerateNewSeed());
+        if (auto spk_man = m_spk_man.get()) {
+            if (spk_man->IsHDEnabled()) {
+                spk_man->SetupGeneration(true);
+            }
         }
-
-        m_spk_man->NewKeyPool();
         Lock();
 
         // Need to completely rewrite the wallet file; if we don't, bdb might keep
@@ -3647,15 +3649,12 @@ std::shared_ptr<CWallet> CWallet::CreateWalletFromFile(interfaces::Chain& chain,
 
         walletInstance->SetWalletFlags(wallet_creation_flags, false);
         if (!(wallet_creation_flags & (WALLET_FLAG_DISABLE_PRIVATE_KEYS | WALLET_FLAG_BLANK_WALLET))) {
-            // generate a new seed
-            CPubKey seed = walletInstance->m_spk_man->GenerateNewSeed();
-            walletInstance->m_spk_man->SetHDSeed(seed);
-        }
-
-        // Top up the keypool
-        if (walletInstance->m_spk_man->CanGenerateKeys() && !walletInstance->m_spk_man->TopUp()) {
-            chain.initError(_("Unable to generate initial keys").translated);
-            return nullptr;
+            if (auto spk_man = walletInstance->m_spk_man.get()) {
+               if (!spk_man->SetupGeneration()) {
+                    chain.initError(_("Unable to generate initial keys").translated);
+                    return nullptr;
+                }
+            }
         }
 
         auto locked_chain = chain.lock();
