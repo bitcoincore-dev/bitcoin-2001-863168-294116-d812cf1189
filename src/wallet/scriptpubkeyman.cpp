@@ -208,7 +208,7 @@ isminetype LegacyScriptPubKeyMan::IsMine(const CScript& script) const
 bool LegacyScriptPubKeyMan::HasEncryptedData() const
 {
     LOCK(cs_KeyStore);
-    return !mapCryptedKeys.empty();
+    return m_storage.HasEncryptionKeys() || !mapCryptedKeys.empty();
 }
 
 bool LegacyScriptPubKeyMan::CheckDecryptionKey(const CKeyingMaterial& master_key, bool accept_no_keys)
@@ -605,7 +605,7 @@ bool LegacyScriptPubKeyMan::AddKeyPubKeyWithDB(WalletBatch& batch, const CKey& s
         RemoveWatchOnly(script);
     }
 
-    if (!m_storage.HasEncryptionKeys() && !HasEncryptedData()) {
+    if (!HasEncryptedData()) {
         return batch.WriteKey(pubkey,
                                                  secret.GetPrivKey(),
                                                  mapKeyMetadata[pubkey.GetID()]);
@@ -646,7 +646,7 @@ void LegacyScriptPubKeyMan::LoadScriptMetadata(const CScriptID& script_id, const
 bool LegacyScriptPubKeyMan::AddKeyPubKeyInner(const CKey& key, const CPubKey &pubkey)
 {
     LOCK(cs_KeyStore);
-    if (!m_storage.HasEncryptionKeys() && !HasEncryptedData()) {
+    if (!HasEncryptedData()) {
         return FillableSigningProvider::AddKeyPubKey(key, pubkey);
     }
 
@@ -802,7 +802,7 @@ void LegacyScriptPubKeyMan::SetHDChain(const CHDChain& chain, bool memonly)
 bool LegacyScriptPubKeyMan::HaveKey(const CKeyID &address) const
 {
     LOCK(cs_KeyStore);
-    if (!m_storage.HasEncryptionKeys() && !HasEncryptedData()) {
+    if (!HasEncryptedData()) {
         return FillableSigningProvider::HaveKey(address);
     }
     return mapCryptedKeys.count(address) > 0;
@@ -811,7 +811,7 @@ bool LegacyScriptPubKeyMan::HaveKey(const CKeyID &address) const
 bool LegacyScriptPubKeyMan::GetKey(const CKeyID &address, CKey& keyOut) const
 {
     LOCK(cs_KeyStore);
-    if (!m_storage.HasEncryptionKeys() && !HasEncryptedData()) {
+    if (!HasEncryptedData()) {
         return FillableSigningProvider::GetKey(address, keyOut);
     }
 
@@ -858,7 +858,7 @@ bool LegacyScriptPubKeyMan::GetWatchPubKey(const CKeyID &address, CPubKey &pubke
 bool LegacyScriptPubKeyMan::GetPubKey(const CKeyID &address, CPubKey& vchPubKeyOut) const
 {
     LOCK(cs_KeyStore);
-    if (!m_storage.HasEncryptionKeys() && !HasEncryptedData()) {
+    if (!HasEncryptedData()) {
         if (!FillableSigningProvider::GetPubKey(address, vchPubKeyOut)) {
             return GetWatchPubKey(address, vchPubKeyOut);
         }
@@ -1436,7 +1436,7 @@ bool LegacyScriptPubKeyMan::ImportScriptPubKeys(const std::set<CScript>& script_
 std::set<CKeyID> LegacyScriptPubKeyMan::GetKeys() const
 {
     LOCK(cs_KeyStore);
-    if (!m_storage.HasEncryptionKeys() && !HasEncryptedData()) {
+    if (!HasEncryptedData()) {
         return FillableSigningProvider::GetKeys();
     }
     std::set<CKeyID> set_address;
