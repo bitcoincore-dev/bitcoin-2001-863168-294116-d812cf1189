@@ -28,6 +28,8 @@ public:
     virtual void UnsetWalletFlagWithDB(WalletBatch&, uint64_t) = 0;
     virtual bool CanSupportFeature(enum WalletFeature) const = 0;
     virtual void SetMinVersion(enum WalletFeature, WalletBatch* = nullptr, bool = false) = 0;
+    virtual const CKeyingMaterial& GetEncryptionKey() const = 0;
+    virtual bool HasEncryptionKeys() const = 0;
     virtual bool IsLocked() const = 0;
 };
 
@@ -147,6 +149,9 @@ public:
     virtual bool GetNewDestination(const OutputType type, CTxDestination& dest, std::string& error) { return false; }
     virtual isminetype IsMine(const CScript& script) const { return ISMINE_NO; }
 
+    virtual bool CheckDecryptionKey(const CKeyingMaterial& master_key, bool accept_no_keys = false) { return false; }
+    virtual bool Encrypt(const CKeyingMaterial& master_key, WalletBatch* batch) { return false; }
+
     virtual bool GetReservedDestination(const OutputType type, bool internal, int64_t& index, CKeyPool& keypool) { return false; }
     virtual void KeepDestination(int64_t index) {}
     virtual void ReturnDestination(int64_t index, bool internal, const CPubKey& pubkey) {}
@@ -192,6 +197,9 @@ public:
 class LegacyScriptPubKeyMan : public ScriptPubKeyMan, public FillableSigningProvider
 {
 private:
+    //! keeps track of whether Unlock has run a thorough check before
+    bool fDecryptionThoroughlyChecked = false;
+
     using WatchOnlySet = std::set<CScript>;
     using WatchKeyMap = std::map<CKeyID, CPubKey>;
 
@@ -272,8 +280,8 @@ public:
     bool GetNewDestination(const OutputType type, CTxDestination& dest, std::string& error) override;
     isminetype IsMine(const CScript& script) const override;
 
-    //! will encrypt previously unencrypted keys
-    bool EncryptKeys(CKeyingMaterial& vMasterKeyIn);
+    bool CheckDecryptionKey(const CKeyingMaterial& master_key, bool accept_no_keys = false) override;
+    bool Encrypt(const CKeyingMaterial& master_key, WalletBatch* batch) override;
 
     bool GetReservedDestination(const OutputType type, bool internal, int64_t& index, CKeyPool& keypool) override;
     void KeepDestination(int64_t index) override;
@@ -403,16 +411,11 @@ public:
     friend class CWallet;
     friend class ReserveDestination;
     LegacyScriptPubKeyMan(CWallet& wallet);
-    bool SetCrypted();
-    bool IsCrypted() const;
     void NotifyWatchonlyChanged(bool fHaveWatchOnly) const;
     void NotifyCanGetAddressesChanged() const;
     template<typename... Params> void WalletLogPrintf(const std::string& fmt, const Params&... parameters) const;
     CWallet& m_wallet;
     CCriticalSection& cs_wallet;
-    CKeyingMaterial& vMasterKey GUARDED_BY(cs_KeyStore);
-    std::atomic<bool>& fUseCrypto;
-    bool& fDecryptionThoroughlyChecked;
 };
 
 #endif // BITCOIN_WALLET_SCRIPTPUBKEYMAN_H
