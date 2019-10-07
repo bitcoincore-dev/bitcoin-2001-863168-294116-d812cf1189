@@ -26,7 +26,7 @@ class WalletStorage
 public:
     virtual ~WalletStorage() = default;
     virtual const std::string GetDisplayName() const = 0;
-    virtual WalletDatabase& GetDatabase() = 0;
+    virtual std::shared_ptr<WalletDatabase> GetDatabase() = 0;
     virtual bool IsWalletFlagSet(uint64_t) const = 0;
     virtual void SetWalletFlag(uint64_t) = 0;
     virtual void UnsetWalletFlagWithDB(WalletBatch&, uint64_t) = 0;
@@ -146,9 +146,10 @@ class ScriptPubKeyMan
 {
 protected:
     WalletStorage& m_storage;
+    std::shared_ptr<WalletDatabase> m_database;
 
 public:
-    ScriptPubKeyMan(WalletStorage& storage) : m_storage(storage) {}
+    ScriptPubKeyMan(WalletStorage& storage) : m_storage(storage), m_database(storage.GetDatabase()) {}
 
     const std::string GetDisplayName() const { return m_storage.GetDisplayName(); }
     bool IsWalletFlagSet(uint64_t flag) const { return m_storage.IsWalletFlagSet(flag); }
