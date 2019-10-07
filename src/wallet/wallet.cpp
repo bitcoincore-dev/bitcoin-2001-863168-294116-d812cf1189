@@ -3085,8 +3085,6 @@ bool CWallet::GetNewChangeDestination(const OutputType type, CTxDestination& des
     LOCK(cs_wallet);
     error.clear();
 
-    m_spk_man->TopUp();
-
     ReserveDestination reservedest(this);
     if (!reservedest.GetReservedDestination(type, dest, true)) {
         error = "Error: Keypool ran out, please call keypoolrefill first";
@@ -3261,6 +3259,7 @@ bool ReserveDestination::GetReservedDestination(const OutputType type, CTxDestin
         return false;
     }
 
+    m_spk_man->TopUp();
 
     if (nIndex == -1)
     {
