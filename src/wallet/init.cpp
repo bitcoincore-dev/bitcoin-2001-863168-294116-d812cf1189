@@ -10,7 +10,6 @@
 #include <util/moneystr.h>
 #include <util/system.h>
 #include <util/translation.h>
-#include <wallet/scriptpubkeyman.h>
 #include <wallet/wallet.h>
 #include <wallet/walletutil.h>
 #include <walletinitinterface.h>
