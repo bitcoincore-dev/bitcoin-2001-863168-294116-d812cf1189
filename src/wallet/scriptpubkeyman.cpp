@@ -204,7 +204,7 @@ isminetype LegacyScriptPubKeyMan::IsMine(const CScript& script) const
 
 bool LegacyScriptPubKeyMan::HasEncryptedData() const
 {
-    AssertLockHeld(cs_KeyStore);
+    LOCK(cs_KeyStore);
     return !mapCryptedKeys.empty();
 }
 
