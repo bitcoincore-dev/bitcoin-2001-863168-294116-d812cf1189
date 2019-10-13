@@ -120,9 +120,6 @@ bool WalletInit::ParameterInteraction() const
         }
     }
 
-    if (gArgs.GetBoolArg("-sysperms", false))
-        return InitError("-sysperms is not allowed in combination with enabled wallet functionality");
-
     return true;
 }
 
