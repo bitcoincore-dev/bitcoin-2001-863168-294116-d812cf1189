@@ -213,6 +213,18 @@ class BlockchainTest(BitcoinTestFramework):
                 },
                 'height': 0,
                 'active': True
+            },
+            'checktemplateverify': {
+                'type': 'bip9',
+                'bip9': {
+                    'status': 'active',
+                    'start_time': -1,
+                    'timeout': 9223372036854775807,
+                    'since': 0,
+                    'min_activation_height': 0
+                    },
+                'height': 0,
+                'active': True
             }
         })
 
