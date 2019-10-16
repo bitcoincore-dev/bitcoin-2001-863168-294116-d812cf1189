@@ -504,6 +504,15 @@ void CConnman::AddWhitelistPermissionFlags(NetPermissionFlags& flags, const CNet
     }
 }
 
+void CConnman::InitializePermissionFlags(NetPermissionFlags& flags) {
+    if (NetPermissions::HasFlag(flags, NetPermissionFlags::PF_ISIMPLICIT)) {
+        if (gArgs.GetBoolArg("-whitelistforcerelay", DEFAULT_WHITELISTFORCERELAY)) NetPermissions::AddFlag(flags, PF_FORCERELAY);
+        if (gArgs.GetBoolArg("-whitelistrelay", DEFAULT_WHITELISTRELAY)) NetPermissions::AddFlag(flags, PF_RELAY);
+        NetPermissions::AddFlag(flags, PF_MEMPOOL);
+        NetPermissions::AddFlag(flags, PF_NOBAN);
+    }
+}
+
 std::string CNode::ConnectionTypeAsString() const
 {
     switch (m_conn_type) {
@@ -1059,13 +1068,9 @@ void CConnman::AcceptConnection(const ListenSocket& hListenSocket) {
     AddWhitelistPermissionFlags(permissionFlags, addr);
     bool legacyWhitelisted = false;
     if (NetPermissions::HasFlag(permissionFlags, NetPermissionFlags::PF_ISIMPLICIT)) {
-        NetPermissions::ClearFlag(permissionFlags, PF_ISIMPLICIT);
-        if (gArgs.GetBoolArg("-whitelistforcerelay", DEFAULT_WHITELISTFORCERELAY)) NetPermissions::AddFlag(permissionFlags, PF_FORCERELAY);
-        if (gArgs.GetBoolArg("-whitelistrelay", DEFAULT_WHITELISTRELAY)) NetPermissions::AddFlag(permissionFlags, PF_RELAY);
-        NetPermissions::AddFlag(permissionFlags, PF_MEMPOOL);
-        NetPermissions::AddFlag(permissionFlags, PF_NOBAN);
         legacyWhitelisted = true;
     }
+    InitializePermissionFlags(permissionFlags);
 
     {
         LOCK(cs_vNodes);
