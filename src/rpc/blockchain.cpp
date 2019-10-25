@@ -1159,7 +1159,7 @@ static void BIP9SoftForkDescPushBack(UniValue& softforks, const std::string &nam
     {
         bip9.pushKV("bit", consensusParams.vDeployments[id].bit);
     }
-    bip9.pushKV("startTime", consensusParams.vDeployments[id].nStartTime);
+    bip9.pushKV("start_time", consensusParams.vDeployments[id].nStartTime);
     bip9.pushKV("timeout", consensusParams.vDeployments[id].nTimeout);
     int64_t since_height = VersionBitsTipStateSinceHeight(consensusParams, id);
     bip9.pushKV("since", since_height);
@@ -1213,7 +1213,7 @@ UniValue getblockchaininfo(const JSONRPCRequest& request)
             "        \"bip9\": {               (object) status of bip9 softforks (only for \"bip9\" type)\n"
             "           \"status\": \"xxxx\",    (string) one of \"defined\", \"started\", \"locked_in\", \"active\", \"failed\"\n"
             "           \"bit\": xx,           (numeric) the bit (0-28) in the block version field used to signal this softfork (only for \"started\" status)\n"
-            "           \"startTime\": xx,     (numeric) the minimum median time past of a block at which the bit gains its meaning\n"
+            "           \"start_time\": xx,     (numeric) the minimum median time past of a block at which the bit gains its meaning\n"
             "           \"timeout\": xx,       (numeric) the median time past of a block at which the deployment is considered failed if not yet locked in\n"
             "           \"since\": xx,         (numeric) height of the first block to which the status applies\n"
             "           \"statistics\": {      (object) numeric statistics about BIP9 signalling for a softfork\n"
@@ -1569,6 +1569,7 @@ static UniValue getchaintxstats(const JSONRPCRequest& request)
             "  \"time\": xxxxx,                         (numeric) The timestamp for the final block in the window in UNIX format.\n"
             "  \"txcount\": xxxxx,                      (numeric) The total number of transactions in the chain up to that point.\n"
             "  \"window_final_block_hash\": \"...\",      (string) The hash of the final block in the window.\n"
+            "  \"window_final_block_height\": xxxxx,    (numeric) The height of the final block in the window.\n"
             "  \"window_block_count\": xxxxx,           (numeric) Size of the window in number of blocks.\n"
             "  \"window_tx_count\": xxxxx,              (numeric) The number of transactions in the window. Only returned if \"window_block_count\" is > 0.\n"
             "  \"window_interval\": xxxxx,              (numeric) The elapsed time in the window in seconds. Only returned if \"window_block_count\" is > 0.\n"
@@ -1619,6 +1620,7 @@ static UniValue getchaintxstats(const JSONRPCRequest& request)
     ret.pushKV("time", (int64_t)pindex->nTime);
     ret.pushKV("txcount", (int64_t)pindex->nChainTx);
     ret.pushKV("window_final_block_hash", pindex->GetBlockHash().GetHex());
+    ret.pushKV("window_final_block_height", pindex->nHeight);
     ret.pushKV("window_block_count", blockcount);
     if (blockcount > 0) {
         ret.pushKV("window_tx_count", nTxDiff);
@@ -2062,17 +2064,21 @@ UniValue scantxoutset(const JSONRPCRequest& request)
                 },
                 RPCResult{
             "{\n"
+            "  \"success\": true|false,         (boolean) Whether the scan was completed\n"
+            "  \"txouts\": n,                   (numeric) The number of unspent transaction outputs scanned\n"
+            "  \"height\": n,                   (numeric) The current block height (index)\n"
+            "  \"bestblock\": \"hex\",            (string) The hash of the block at the tip of the chain\n"
             "  \"unspents\": [\n"
-            "    {\n"
-            "    \"txid\" : \"transactionid\",     (string) The transaction id\n"
-            "    \"vout\": n,                    (numeric) the vout value\n"
-            "    \"scriptPubKey\" : \"script\",    (string) the script key\n"
-            "    \"desc\" : \"descriptor\",        (string) A specialized descriptor for the matched scriptPubKey\n"
-            "    \"amount\" : x.xxx,             (numeric) The total amount in " + CURRENCY_UNIT + " of the unspent output\n"
-            "    \"height\" : n,                 (numeric) Height of the unspent transaction output\n"
+            "   {\n"
+            "    \"txid\": \"hash\",              (string) The transaction id\n"
+            "    \"vout\": n,                   (numeric) The vout value\n"
+            "    \"scriptPubKey\": \"script\",    (string) The script key\n"
+            "    \"desc\": \"descriptor\",        (string) A specialized descriptor for the matched scriptPubKey\n"
+            "    \"amount\": x.xxx,             (numeric) The total amount in " + CURRENCY_UNIT + " of the unspent output\n"
+            "    \"height\": n,                 (numeric) Height of the unspent transaction output\n"
             "   }\n"
-            "   ,...], \n"
-            " \"total_amount\" : x.xxx,          (numeric) The total amount of all found unspent outputs in " + CURRENCY_UNIT + "\n"
+            "   ,...],\n"
+            "  \"total_amount\": x.xxx,          (numeric) The total amount of all found unspent outputs in " + CURRENCY_UNIT + "\n"
             "]\n"
                 },
                 RPCExamples{""},
@@ -2126,15 +2132,20 @@ UniValue scantxoutset(const JSONRPCRequest& request)
         g_scan_progress = 0;
         int64_t count = 0;
         std::unique_ptr<CCoinsViewCursor> pcursor;
+        CBlockIndex* tip;
         {
             LOCK(cs_main);
             ::ChainstateActive().ForceFlushStateToDisk();
             pcursor = std::unique_ptr<CCoinsViewCursor>(::ChainstateActive().CoinsDB().Cursor());
             assert(pcursor);
+            tip = ::ChainActive().Tip();
+            assert(tip);
         }
         bool res = FindScriptPubKey(g_scan_progress, g_should_abort_scan, count, pcursor.get(), needles, coins);
         result.pushKV("success", res);
-        result.pushKV("searched_items", count);
+        result.pushKV("txouts", count);
+        result.pushKV("height", tip->nHeight);
+        result.pushKV("bestblock", tip->GetBlockHash().GetHex());
 
         for (const auto& it : coins) {
             const COutPoint& outpoint = it.first;
