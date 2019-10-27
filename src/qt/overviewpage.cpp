@@ -153,6 +153,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     connect(this, &OverviewPage::aboutToTogglePrivacy, [this] {
         m_privacy = !m_privacy;
         Q_EMIT changePrivacyMode(m_privacy);
+        ui->listTransactions->setVisible(!m_privacy);
 
         const QString status_tip = m_privacy ? tr("PRIVACY mode is activated. To reveal cloaked fields click any of them") : "";
         setStatusTip(status_tip);
