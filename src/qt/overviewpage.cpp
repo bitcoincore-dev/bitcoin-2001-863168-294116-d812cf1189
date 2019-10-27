@@ -17,6 +17,7 @@
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
+#include <QStatusTipEvent>
 
 #define DECORATION_SIZE 54
 #define NUM_ITEMS 5
@@ -152,6 +153,11 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     connect(this, &OverviewPage::aboutToTogglePrivacy, [this] {
         m_privacy = !m_privacy;
         Q_EMIT changePrivacyMode(m_privacy);
+
+        const QString status_tip = m_privacy ? tr("PRIVACY mode is activated. To reveal cloaked fields click any of them") : "";
+        setStatusTip(status_tip);
+        QStatusTipEvent event(status_tip);
+        QCoreApplication::sendEvent(this, &event);
     });
 
     connect(this, &OverviewPage::changePrivacyMode, ui->labelBalance, &BitcoinAmountLabel::changePrivacyMode);
