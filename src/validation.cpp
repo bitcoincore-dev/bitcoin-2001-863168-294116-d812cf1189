@@ -147,6 +147,7 @@ bool fRequireStandard = true;
 bool fCheckBlockIndex = false;
 bool fCheckpointsEnabled = DEFAULT_CHECKPOINTS_ENABLED;
 int64_t nMaxTipAge = DEFAULT_MAX_TIP_AGE;
+bool fEnableReplacement = DEFAULT_ENABLE_REPLACEMENT;
 
 uint256 hashAssumeValid;
 arith_uint256 nMinimumChainWork;
@@ -753,7 +754,15 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
                 // Applications relying on first-seen mempool behavior should
                 // check all unconfirmed ancestors; otherwise an opt-in ancestor
                 // might be replaced, causing removal of this descendant.
-                if (!(ignore_rejects.count("txn-mempool-conflict") || SignalsOptInRBF(*ptxConflicting))) {
+                bool allow_replacement;
+                if (ignore_rejects.count("txn-mempool-conflict")) {
+                    allow_replacement = true;
+                } else if (!fEnableReplacement) {
+                    allow_replacement = false;
+                } else {
+                    allow_replacement = SignalsOptInRBF(*ptxConflicting);
+                }
+                if (!allow_replacement) {
                     return state.Invalid(TxValidationResult::TX_MEMPOOL_POLICY, "txn-mempool-conflict");
                 }
 
