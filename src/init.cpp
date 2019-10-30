@@ -600,6 +600,7 @@ void SetupServerArgs(ArgsManager& argsman)
                              MAX_OP_RETURN_RELAY),
                    ArgsManager::ALLOW_ANY, OptionsCategory::NODE_RELAY);
     argsman.AddArg("-mempoolfullrbf", strprintf("Accept transaction replace-by-fee without requiring replaceability signaling (default: %u)", DEFAULT_MEMPOOL_FULL_RBF), ArgsManager::ALLOW_ANY, OptionsCategory::NODE_RELAY);
+    argsman.AddArg("-mempoolreplacement", strprintf("Enable transaction replacement in the memory pool (default: %u)", DEFAULT_ENABLE_REPLACEMENT), ArgsManager::ALLOW_ANY, OptionsCategory::NODE_RELAY);
     argsman.AddArg("-permitbaremultisig", strprintf("Relay non-P2SH multisig (default: %u)", DEFAULT_PERMIT_BAREMULTISIG), ArgsManager::ALLOW_ANY,
                    OptionsCategory::NODE_RELAY);
     argsman.AddArg("-minrelaytxfee=<amt>", strprintf("Fees (in %s/kvB) smaller than this are considered zero fee for relaying, mining and transaction creation (default: %s)",
@@ -997,6 +998,14 @@ bool AppInitParameterInteraction(const ArgsManager& args)
 
     if (args.GetIntArg("-rpcserialversion", DEFAULT_RPC_SERIALIZE_VERSION) == 0 && !IsDeprecatedRPCEnabled("serialversion")) {
         return InitError(Untranslated("-rpcserialversion=0 is deprecated and will be removed in the future. Specify -deprecatedrpc=serialversion to allow anyway."));
+    }
+
+    gEnableReplacement = args.GetBoolArg("-mempoolreplacement", DEFAULT_ENABLE_REPLACEMENT);
+    if ((!gEnableReplacement) && args.IsArgSet("-mempoolreplacement")) {
+        // Minimal effort at forwards compatibility
+        std::string replacement_opt = args.GetArg("-mempoolreplacement", "");  // default is impossible
+        std::vector<std::string> replacement_modes = SplitString(replacement_opt, ",");
+        gEnableReplacement = (std::find(replacement_modes.begin(), replacement_modes.end(), "fee") != replacement_modes.end());
     }
 
     // Also report errors from parsing before daemonization
