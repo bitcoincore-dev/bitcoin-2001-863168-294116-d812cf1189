@@ -2411,6 +2411,7 @@ void CConnman::Stop()
     if (fAddressesInitialized)
     {
         DumpAddresses();
+        DumpAnchors(m_anchors_db_path, GetBlockRelayNodeAddresses());
         fAddressesInitialized = false;
     }
 
