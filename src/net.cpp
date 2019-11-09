@@ -2333,6 +2333,22 @@ bool CConnman::Start(CScheduler& scheduler, const Options& connOptions)
         }
     }
 
+    m_anchors_db_path = GetDataDir() / "anchors.dat";
+    m_anchors = ReadAnchors(m_anchors_db_path);
+    LogPrintf("Loaded %i addresses from %s\n", m_anchors.size(), m_anchors_db_path.filename());
+    if (m_anchors.size() > static_cast<size_t>(MAX_BLOCKS_ONLY_ANCHORS)) {
+        // Keep our policy safe.
+        m_anchors.clear();
+    }
+    // Peers added via -addnode are permanent connections too, therefore we could skip the same number of anchors.
+    if (static_cast<size_t>(connOptions.m_max_block_relay_anchor) < connOptions.m_added_nodes.size()) {
+        m_anchors.clear();
+    } else {
+        const size_t anchor_num_allowed = static_cast<size_t>(connOptions.m_max_block_relay_anchor) - connOptions.m_added_nodes.size();
+        if (anchor_num_allowed < m_anchors.size()) m_anchors.resize(anchor_num_allowed);
+    }
+    LogPrintf("%i block-relay-only anchors will be tried to connect to.\n", m_anchors.size());
+
     uiInterface.InitMessage(_("Starting network threads...").translated);
 
     fAddressesInitialized = true;
