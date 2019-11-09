@@ -2266,6 +2266,14 @@ bool CConnman::Start(CScheduler& scheduler, const Options& connOptions)
         }
     }
 
+    m_anchors_db_path = GetDataDir() / "anchors.dat";
+    m_anchors = ReadAnchors(m_anchors_db_path);
+    LogPrintf("Loaded %i addresses from %s\n", m_anchors.size(), m_anchors_db_path.filename());
+    if (m_anchors.size() > (size_t)m_max_outbound_block_relay) {
+        // Keep our policy safe.
+        m_anchors.clear();
+    }
+
     uiInterface.InitMessage(_("Starting network threads...").translated);
 
     fAddressesInitialized = true;
