@@ -165,3 +165,10 @@ std::vector<CAddress> ReadAnchors(const fs::path& anchors_db_path)
 
     return ret;
 }
+
+void DumpAnchors(const fs::path& anchors_db_path, const std::vector<CAddress>& anchors)
+{
+    int64_t start = GetTimeMillis();
+    SerializeFileDB("anchors", anchors_db_path, anchors);
+    LogPrintf("Flushed %d anchor outbound peer addresses to anchors.dat in %d ms\n", anchors.size(), GetTimeMillis() - start);
+}
