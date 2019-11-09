@@ -1863,6 +1863,10 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
             // well for sanity.)
             bool block_relay_only = nOutboundBlockRelay < m_max_outbound_block_relay && !fFeeler && nOutboundFullRelay >= m_max_outbound_full_relay;
 
+            if (block_relay_only && !m_anchors.empty()) {
+                addrConnect = m_anchors.back();
+                m_anchors.pop_back();
+            }
             OpenNetworkConnection(addrConnect, (int)setConnected.size() >= std::min(nMaxConnections - 1, 2), &grant, nullptr, false, fFeeler, false, block_relay_only);
         }
     }
@@ -2176,12 +2180,15 @@ void CConnman::SetNetworkActive(bool active)
     uiInterface.NotifyNetworkActiveChanged(fNetworkActive);
 }
 
-CConnman::CConnman(uint64_t nSeed0In, uint64_t nSeed1In) : nSeed0(nSeed0In), nSeed1(nSeed1In)
+CConnman::CConnman(uint64_t nSeed0In, uint64_t nSeed1In)
+    : m_anchors_db_path{GetDataDir() / "anchors.dat"}, nSeed0(nSeed0In), nSeed1(nSeed1In)
 {
     SetTryNewOutboundPeer(false);
 
     Options connOptions;
     Init(connOptions);
+
+    m_anchors = ReadAnchors(m_anchors_db_path);
 }
 
 NodeId CConnman::GetNewNodeId()
