@@ -2176,12 +2176,19 @@ void CConnman::SetNetworkActive(bool active)
     uiInterface.NotifyNetworkActiveChanged(fNetworkActive);
 }
 
-CConnman::CConnman(uint64_t nSeed0In, uint64_t nSeed1In) : nSeed0(nSeed0In), nSeed1(nSeed1In)
+CConnman::CConnman(uint64_t nSeed0In, uint64_t nSeed1In)
+    : m_anchors_db_path{GetDataDir() / "anchors.dat"}, nSeed0(nSeed0In), nSeed1(nSeed1In)
 {
     SetTryNewOutboundPeer(false);
 
     Options connOptions;
     Init(connOptions);
+
+    m_anchors = ReadAnchors(m_anchors_db_path);
+    if (m_anchors.size() > m_max_outbound_block_relay) {
+        // Keep our policy safe.
+        m_anchors.clear();
+    }
 }
 
 NodeId CConnman::GetNewNodeId()

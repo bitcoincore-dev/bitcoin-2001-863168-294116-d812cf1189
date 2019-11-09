@@ -129,6 +129,8 @@ public:
         CONNECTIONS_ALL = (CONNECTIONS_IN | CONNECTIONS_OUT),
     };
 
+    const fs::path m_anchors_db_path;
+
     struct Options
     {
         ServiceFlags nLocalServices = NODE_NONE;
@@ -452,6 +454,7 @@ private:
     CClientUIInterface* clientInterface;
     NetEventsInterface* m_msgproc;
     BanMan* m_banman;
+    std::vector<CAddress> m_anchors;
 
     /** SipHasher seeds for deterministic randomness */
     const uint64_t nSeed0, nSeed1;
