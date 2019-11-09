@@ -332,6 +332,7 @@ public:
     int64_t PoissonNextSendInbound(int64_t now, int average_interval_seconds);
 
     void SetAsmap(std::vector<bool> asmap) { addrman.m_asmap = std::move(asmap); }
+    fs::path GetAnchorsDbPath() const { return m_anchors_db_path; }
 
 private:
     struct ListenSocket {
@@ -455,6 +456,8 @@ private:
     CClientUIInterface* clientInterface;
     NetEventsInterface* m_msgproc;
     BanMan* m_banman;
+    fs::path m_anchors_db_path;
+    std::vector<CAddress> m_anchors;
 
     /** SipHasher seeds for deterministic randomness */
     const uint64_t nSeed0, nSeed1;
