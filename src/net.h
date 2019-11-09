@@ -67,6 +67,9 @@ static const int MAX_OUTBOUND_FULL_RELAY_CONNECTIONS = 8;
 static const int MAX_ADDNODE_CONNECTIONS = 8;
 /** Maximum number of block-relay-only outgoing connections */
 static const int MAX_BLOCKS_ONLY_CONNECTIONS = 2;
+/** Maximum number of block-relay-only anchor connections */
+static constexpr int MAX_BLOCKS_ONLY_ANCHORS = 2;
+static_assert (MAX_BLOCKS_ONLY_ANCHORS <= MAX_BLOCKS_ONLY_CONNECTIONS, "MAX_BLOCKS_ONLY_ANCHORS must not exceed MAX_BLOCKS_ONLY_CONNECTIONS.");
 /** -listen default */
 static const bool DEFAULT_LISTEN = true;
 /** -upnp default */
@@ -135,6 +138,7 @@ public:
         int nMaxConnections = 0;
         int m_max_outbound_full_relay = 0;
         int m_max_outbound_block_relay = 0;
+        int m_max_block_relay_anchor = 0;
         int nMaxAddnode = 0;
         int nMaxFeeler = 0;
         int nBestHeight = 0;
@@ -332,6 +336,8 @@ public:
     int64_t PoissonNextSendInbound(int64_t now, int average_interval_seconds);
 
     void SetAsmap(std::vector<bool> asmap) { addrman.m_asmap = std::move(asmap); }
+    fs::path GetAnchorsDbPath() const { return m_anchors_db_path; }
+    std::vector<CAddress> GetAnchors() const { return m_anchors; }
 
 private:
     struct ListenSocket {
@@ -455,6 +461,8 @@ private:
     CClientUIInterface* clientInterface;
     NetEventsInterface* m_msgproc;
     BanMan* m_banman;
+    fs::path m_anchors_db_path;
+    std::vector<CAddress> m_anchors;
 
     /** SipHasher seeds for deterministic randomness */
     const uint64_t nSeed0, nSeed1;
