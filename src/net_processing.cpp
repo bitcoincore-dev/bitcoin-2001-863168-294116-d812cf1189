@@ -2132,6 +2132,10 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                       pfrom->nVersion.load(), pfrom->nStartingHeight,
                       pfrom->GetId(), (fLogIPs ? strprintf(", peeraddr=%s", pfrom->addr.ToString()) : ""),
                       pfrom->m_tx_relay == nullptr ? "block-relay" : "full-relay");
+            if (!pfrom->m_tx_relay) {
+                std::vector<CAddress> anchors_to_save = connman->GetBlockRelayNodeAddresses();
+                DumpAnchors(connman->GetAnchorsDbPath(), anchors_to_save);
+            }
         }
 
         if (pfrom->nVersion >= SENDHEADERS_VERSION) {
