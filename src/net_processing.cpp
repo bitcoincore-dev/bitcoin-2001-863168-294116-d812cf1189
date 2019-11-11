@@ -84,7 +84,7 @@ static_assert(INBOUND_PEER_TX_DELAY >= MAX_GETDATA_RANDOM_DELAY,
 /** Limit to avoid sending big packets. Not used in processing incoming GETDATA for compatibility */
 static const unsigned int MAX_GETDATA_SZ = 1000;
 /** Maximum number of compact filters that may be requested with one getcfilters. See BIP 157. */
-constexpr uint32_t MAX_GETCFILTERS_SIZE = 100;
+constexpr uint32_t MAX_GETCFILTERS_SIZE = 1000;
 /** Maximum number of cf hashes that may be requested with one getcfheaders. See BIP 157. */
 constexpr uint32_t MAX_GETCFHEADERS_SIZE = 2000;
 /** Interval between compact filter checkpoints. See BIP 157. */
