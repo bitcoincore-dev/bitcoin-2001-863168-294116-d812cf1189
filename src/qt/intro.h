@@ -69,6 +69,7 @@ private:
     QString pathToCheck;
     uint64_t m_blockchain_size;
     uint64_t m_chain_state_size;
+    uint64_t m_required_space_gb; // Total required space (in GB) depending on user choice (prune, not prune).
 
     void startThread();
     void checkPath(const QString &dataDir);
