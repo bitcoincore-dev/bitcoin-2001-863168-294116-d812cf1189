@@ -133,9 +133,9 @@ Intro::Intro(QWidget *parent, uint64_t blockchain_size, uint64_t chain_state_siz
         ui->prune->setChecked(true);
         ui->prune->setEnabled(false);
     }
-    const int prune_target_gb = PruneMiBtoGB(prune_target_mib);
-    ui->prune->setText(tr("Discard blocks after verification, except most recent %1 GB (prune)").arg(prune_target_gb ? prune_target_gb : DEFAULT_PRUNE_TARGET_GB));
-    UpdatePruneLabels(prune_target_gb);
+    m_prune_target_gb = prune_target_mib ? PruneMiBtoGB(prune_target_mib) : DEFAULT_PRUNE_TARGET_GB;
+    ui->prune->setText(tr("Discard blocks after verification, except most recent %1 GB (prune)").arg(m_prune_target_gb));
+    UpdatePruneLabels(ui->prune->isChecked());
     startThread();
 }
 
@@ -302,7 +302,10 @@ void Intro::startThread()
 
     connect(executor, &FreespaceChecker::reply, this, &Intro::setStatus);
     connect(this, &Intro::requestCheck, executor, &FreespaceChecker::check);
-    /*  make sure executor object is deleted in its own thread */
+    connect(ui->prune, &QCheckBox::toggled, [this](bool prune_checked) {
+        UpdatePruneLabels(prune_checked);
+        Q_EMIT requestCheck();
+    });
     connect(thread, &QThread::finished, executor, &QObject::deleteLater);
 
     thread->start();
@@ -330,13 +333,13 @@ QString Intro::getPathToCheck()
     return retval;
 }
 
-void Intro::UpdatePruneLabels(int64_t prune_target_gb)
+void Intro::UpdatePruneLabels(bool prune_checked)
 {
     m_required_space_gb = m_blockchain_size;
     QString storageRequiresMsg = tr("At least %1 GB of data will be stored in this directory, and it will grow over time.");
-    if (prune_target_gb) {
-        if (prune_target_gb <= m_required_space_gb) {
-            m_required_space_gb = prune_target_gb;
+    if (prune_checked) {
+        if (m_prune_target_gb <= m_required_space_gb) {
+            m_required_space_gb = m_prune_target_gb;
             storageRequiresMsg = tr("Approximately %1 GB of data will be stored in this directory.");
         }
         ui->lblExplanation3->setVisible(true);
