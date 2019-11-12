@@ -18,6 +18,7 @@ extern const char *DEFAULT_GUI_PROXY_HOST;
 static constexpr unsigned short DEFAULT_GUI_PROXY_PORT = 9050;
 
 static inline uint64_t PruneGBtoMiB(unsigned int gb) { return (gb * GB_BYTES) >> 20; }
+static inline unsigned int PruneMiBtoGB(uint64_t mib) { return ((mib << 20) + GB_BYTES / 2) / GB_BYTES; }
 
 /** Interface from Qt to configuration data structure for Bitcoin client.
    To Qt, the options are presented as a list with the different options
