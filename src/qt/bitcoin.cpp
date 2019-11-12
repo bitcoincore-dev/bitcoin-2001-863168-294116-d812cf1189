@@ -282,7 +282,7 @@ void BitcoinApplication::parameterSetup()
 }
 
 void BitcoinApplication::SetPrune(bool prune, bool force) {
-     optionsModel->SetPrune(prune, force);
+    optionsModel->SetPrune(prune ? DEFAULT_PRUNE_SIZE_GB : 0, force);
 }
 
 void BitcoinApplication::requestInitialize()

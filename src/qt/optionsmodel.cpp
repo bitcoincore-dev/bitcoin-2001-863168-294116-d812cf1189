@@ -252,6 +252,16 @@ void OptionsModel::SetPrune(bool prune, bool force)
     }
 }
 
+void OptionsModel::SetPrune(unsigned int prune_size_gb, bool force)
+{
+    const bool prune = prune_size_gb > 0;
+    if (prune) {
+        QSettings settings;
+        settings.setValue("nPruneSize", prune_size_gb);
+    }
+    SetPrune(prune, force);
+}
+
 // read QSettings values and return them
 QVariant OptionsModel::data(const QModelIndex & index, int role) const
 {

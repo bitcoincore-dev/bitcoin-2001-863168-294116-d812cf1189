@@ -74,6 +74,7 @@ public:
 
     /* Explicit setters */
     void SetPrune(bool prune, bool force = false);
+    void SetPrune(unsigned int prune_size_gb, bool force = false);
 
     /* Restart flag helper */
     void setRestartRequired(bool fRequired);
