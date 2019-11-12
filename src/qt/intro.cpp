@@ -135,24 +135,7 @@ Intro::Intro(QWidget *parent, uint64_t blockchain_size, uint64_t chain_state_siz
     }
     const unsigned int prune_target_gb = PruneMiBtoGB(prune_target_mib);
     ui->prune->setText(tr("Discard blocks after verification, except most recent %1 GB (prune)").arg(prune_target_gb ? prune_target_gb : DEFAULT_PRUNE_SIZE_GB));
-    m_required_space_gb = m_blockchain_size;
-    QString storageRequiresMsg = tr("At least %1 GB of data will be stored in this directory, and it will grow over time.");
-    if (prune_target_gb) {
-        if (prune_target_gb <= m_required_space_gb) {
-            m_required_space_gb = prune_target_gb;
-            storageRequiresMsg = tr("Approximately %1 GB of data will be stored in this directory.");
-        }
-        ui->lblExplanation3->setVisible(true);
-    } else {
-        ui->lblExplanation3->setVisible(false);
-    }
-    m_required_space_gb += m_chain_state_size;
-    ui->sizeWarningLabel->setText(
-        tr("%1 will download and store a copy of the Bitcoin block chain.").arg(PACKAGE_NAME) + " " +
-        storageRequiresMsg.arg(m_required_space_gb) + " " +
-        tr("The wallet will also be stored in this directory.")
-    );
-    this->adjustSize();
+    UpdatePruneLabels(prune_target_gb);
     startThread();
 }
 
@@ -345,4 +328,26 @@ QString Intro::getPathToCheck()
     signalled = false; /* new request can be queued now */
     mutex.unlock();
     return retval;
+}
+
+void Intro::UpdatePruneLabels(uint64_t prune_target_gb)
+{
+    m_required_space_gb = m_blockchain_size;
+    QString storageRequiresMsg = tr("At least %1 GB of data will be stored in this directory, and it will grow over time.");
+    if (ui->prune->isChecked()) {
+        if (prune_target_gb <= m_required_space_gb) {
+            m_required_space_gb = prune_target_gb;
+            storageRequiresMsg = tr("Approximately %1 GB of data will be stored in this directory.");
+        }
+        ui->lblExplanation3->setVisible(true);
+    } else {
+        ui->lblExplanation3->setVisible(false);
+    }
+    m_required_space_gb += m_chain_state_size;
+    ui->sizeWarningLabel->setText(
+        tr("%1 will download and store a copy of the Bitcoin block chain.").arg(PACKAGE_NAME) + " " +
+        storageRequiresMsg.arg(m_required_space_gb) + " " +
+        tr("The wallet will also be stored in this directory.")
+    );
+    this->adjustSize();
 }
