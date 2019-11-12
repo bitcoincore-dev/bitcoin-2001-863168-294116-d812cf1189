@@ -240,9 +240,8 @@ void OptionsModel::SetPrune(bool prune, bool force)
 {
     QSettings settings;
     settings.setValue("bPrune", prune);
-    // Convert prune size from GB to MiB:
-    const uint64_t nPruneSizeMiB = (settings.value("nPruneSize").toInt() * GB_BYTES) >> 20;
-    std::string prune_val = prune ? std::to_string(nPruneSizeMiB) : "0";
+    const uint64_t prune_size_mib = PruneGBtoMiB(settings.value("nPruneSize").toUInt());
+    std::string prune_val = prune ? std::to_string(prune_size_mib) : "0";
     if (force) {
         m_node.forceSetArg("-prune", prune_val);
         return;
