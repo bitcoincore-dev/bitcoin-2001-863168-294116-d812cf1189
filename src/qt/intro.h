@@ -70,11 +70,12 @@ private:
     uint64_t m_blockchain_size;
     uint64_t m_chain_state_size;
     uint64_t m_required_space_gb; // Total required space (in GB) depending on user choice (prune, not prune).
+    uint64_t m_prune_target_gb;
 
     void startThread();
     void checkPath(const QString &dataDir);
     QString getPathToCheck();
-    void UpdatePruneLabels(uint64_t prune_target_gb);
+    void UpdatePruneLabels(bool prune_checked);
 
     friend class FreespaceChecker;
 };
