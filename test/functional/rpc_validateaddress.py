@@ -11,7 +11,6 @@ class ValidateaddressTest(BitcoinTestFramework):
         self.num_nodes = 1
 
     def run_test(self):
-
         # Valid address
         address = "bcrt1q049ldschfnwystcqnsvyfpj23mpsg3jcedq9xv"
         res = self.nodes[0].validateaddress(address, "bech32")
@@ -30,7 +29,7 @@ class ValidateaddressTest(BitcoinTestFramework):
         address = "bcrtq049ldschfnwystcqnsvyfpj23mpsg3jcedq9xv"
         res = self.nodes[0].validateaddress(address)
         assert_equal(res['isvalid'], False)
-        assert 'error' not in res
+        assert_equal(res['error'], "Invalid Base58 character in address")
         assert 'error_index' not in res
 
         # Address with no '1' separator
@@ -57,6 +56,13 @@ class ValidateaddressTest(BitcoinTestFramework):
         # Address with one error
         address = "bcrt1q049edschfnwystcqnsvyfpj23mpsg3jcedq9xv"
         res = self.nodes[0].validateaddress(address, "bech32")
+        assert_equal(res['isvalid'], False)
+        assert_equal(res['error_index'], 9)
+        assert_equal(res['error'], "Invalid")
+
+        # Address with one error, without type specified
+        address = "bcrt1q049edschfnwystcqnsvyfpj23mpsg3jcedq9xv"
+        res = self.nodes[0].validateaddress(address)
         assert_equal(res['isvalid'], False)
         assert_equal(res['error_index'], 9)
         assert_equal(res['error'], "Invalid")
@@ -102,6 +108,13 @@ class ValidateaddressTest(BitcoinTestFramework):
         # Legacy address with one error
         address = "muehQnn2P5NhiRCGg9HewAWrXLRy2d7TZE"
         res = self.nodes[0].validateaddress(address, "legacy")
+        assert_equal(res['isvalid'], False)
+        assert_equal(res['error'], "Invalid checksum for Base58 address")
+        assert 'error_index' not in res
+
+        # Legacy address with one error, without type specified
+        address = "muehQnn2P5NhiRCGg9HewAWrXLRy2d7TZE"
+        res = self.nodes[0].validateaddress(address)
         assert_equal(res['isvalid'], False)
         assert_equal(res['error'], "Invalid checksum for Base58 address")
         assert 'error_index' not in res
