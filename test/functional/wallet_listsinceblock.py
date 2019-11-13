@@ -1,18 +1,30 @@
 #!/usr/bin/env python3
-# Copyright (c) 2017-2018 The Bitcoin Core developers
+# Copyright (c) 2017-2019 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the listsincelast RPC."""
 
 from test_framework.test_framework import BitcoinTestFramework
-from test_framework.util import assert_equal, assert_array_result, assert_raises_rpc_error
+from test_framework.util import (
+    assert_array_result,
+    assert_equal,
+    assert_raises_rpc_error,
+    connect_nodes,
+)
 
-class ListSinceBlockTest (BitcoinTestFramework):
+
+class ListSinceBlockTest(BitcoinTestFramework):
     def set_test_params(self):
         self.num_nodes = 4
         self.setup_clean_chain = True
 
+    def skip_test_if_missing_module(self):
+        self.skip_if_no_wallet()
+
     def run_test(self):
+        # All nodes are in IBD from genesis, so they'll need the miner (node2) to be an outbound connection, or have
+        # only one connection. (See fPreferredDownload in net_processing)
+        connect_nodes(self.nodes[1], 2)
         self.nodes[2].generate(101)
         self.sync_all()
 
@@ -50,8 +62,10 @@ class ListSinceBlockTest (BitcoinTestFramework):
                                 "42759cde25462784395a337460bde75f58e73d3f08bd31fdc3507cbac856a2c4")
         assert_raises_rpc_error(-5, "Block not found", self.nodes[0].listsinceblock,
                                 "0000000000000000000000000000000000000000000000000000000000000000")
-        assert_raises_rpc_error(-5, "Block not found", self.nodes[0].listsinceblock,
+        assert_raises_rpc_error(-8, "blockhash must be of length 64 (not 11, for 'invalid-hex')", self.nodes[0].listsinceblock,
                                 "invalid-hex")
+        assert_raises_rpc_error(-8, "blockhash must be hexadecimal string (not 'Z000000000000000000000000000000000000000000000000000000000000000')", self.nodes[0].listsinceblock,
+                                "Z000000000000000000000000000000000000000000000000000000000000000")
 
     def test_reorg(self):
         '''
@@ -93,7 +107,8 @@ class ListSinceBlockTest (BitcoinTestFramework):
         self.nodes[2].generate(7)
         self.log.info('lastblockhash=%s' % (lastblockhash))
 
-        self.sync_all([self.nodes[:2], self.nodes[2:]])
+        self.sync_all(self.nodes[:2])
+        self.sync_all(self.nodes[2:])
 
         self.join_network()
 

@@ -2,6 +2,10 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#if defined(HAVE_CONFIG_H)
+#include <config/bitcoin-config.h>
+#endif
+
 #include <qt/paymentserver.h>
 
 #include <qt/bitcoinunits.h>
@@ -13,7 +17,7 @@
 #include <policy/policy.h>
 #include <key_io.h>
 #include <ui_interface.h>
-#include <util.h>
+#include <util/system.h>
 #include <wallet/wallet.h>
 
 #include <cstdlib>
@@ -37,14 +41,15 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QSslCertificate>
+#include <QSslConfiguration>
 #include <QSslError>
-#include <QSslSocket>
 #include <QStringList>
 #include <QTextDocument>
 #include <QUrlQuery>
 
 const int BITCOIN_IPC_CONNECT_TIMEOUT = 1000; // milliseconds
 const QString BITCOIN_IPC_PREFIX("bitcoin:");
+#ifdef ENABLE_BIP70
 // BIP70 payment protocol messages
 const char* BIP70_MESSAGE_PAYMENTACK = "PaymentACK";
 const char* BIP70_MESSAGE_PAYMENTREQUEST = "PaymentRequest";
@@ -52,21 +57,7 @@ const char* BIP70_MESSAGE_PAYMENTREQUEST = "PaymentRequest";
 const char* BIP71_MIMETYPE_PAYMENT = "application/bitcoin-payment";
 const char* BIP71_MIMETYPE_PAYMENTACK = "application/bitcoin-paymentack";
 const char* BIP71_MIMETYPE_PAYMENTREQUEST = "application/bitcoin-paymentrequest";
-
-struct X509StoreDeleter {
-      void operator()(X509_STORE* b) {
-          X509_STORE_free(b);
-      }
-};
-
-struct X509Deleter {
-      void operator()(X509* b) { X509_free(b); }
-};
-
-namespace // Anon namespace
-{
-    std::unique_ptr<X509_STORE, X509StoreDeleter> certStore;
-}
+#endif
 
 //
 // Create a name that is unique for:
@@ -92,94 +83,6 @@ static QString ipcServerName()
 // to send payment.
 
 static QList<QString> savedPaymentRequests;
-
-static void ReportInvalidCertificate(const QSslCertificate& cert)
-{
-    qDebug() << QString("%1: Payment server found an invalid certificate: ").arg(__func__) << cert.serialNumber() << cert.subjectInfo(QSslCertificate::CommonName) << cert.subjectInfo(QSslCertificate::DistinguishedNameQualifier) << cert.subjectInfo(QSslCertificate::OrganizationalUnitName);
-}
-
-//
-// Load OpenSSL's list of root certificate authorities
-//
-void PaymentServer::LoadRootCAs(X509_STORE* _store)
-{
-    // Unit tests mostly use this, to pass in fake root CAs:
-    if (_store)
-    {
-        certStore.reset(_store);
-        return;
-    }
-
-    // Normal execution, use either -rootcertificates or system certs:
-    certStore.reset(X509_STORE_new());
-
-    // Note: use "-system-" default here so that users can pass -rootcertificates=""
-    // and get 'I don't like X.509 certificates, don't trust anybody' behavior:
-    QString certFile = QString::fromStdString(gArgs.GetArg("-rootcertificates", "-system-"));
-
-    // Empty store
-    if (certFile.isEmpty()) {
-        qDebug() << QString("PaymentServer::%1: Payment request authentication via X.509 certificates disabled.").arg(__func__);
-        return;
-    }
-
-    QList<QSslCertificate> certList;
-
-    if (certFile != "-system-") {
-            qDebug() << QString("PaymentServer::%1: Using \"%2\" as trusted root certificate.").arg(__func__).arg(certFile);
-
-        certList = QSslCertificate::fromPath(certFile);
-        // Use those certificates when fetching payment requests, too:
-        QSslSocket::setDefaultCaCertificates(certList);
-    } else
-        certList = QSslSocket::systemCaCertificates();
-
-    int nRootCerts = 0;
-    const QDateTime currentTime = QDateTime::currentDateTime();
-
-    for (const QSslCertificate& cert : certList) {
-        // Don't log NULL certificates
-        if (cert.isNull())
-            continue;
-
-        // Not yet active/valid, or expired certificate
-        if (currentTime < cert.effectiveDate() || currentTime > cert.expiryDate()) {
-            ReportInvalidCertificate(cert);
-            continue;
-        }
-
-        // Blacklisted certificate
-        if (cert.isBlacklisted()) {
-            ReportInvalidCertificate(cert);
-            continue;
-        }
-        QByteArray certData = cert.toDer();
-        const unsigned char *data = (const unsigned char *)certData.data();
-
-        std::unique_ptr<X509, X509Deleter> x509(d2i_X509(0, &data, certData.size()));
-        if (x509 && X509_STORE_add_cert(certStore.get(), x509.get()))
-        {
-            // Note: X509_STORE increases the reference count to the X509 object,
-            // we still have to release our reference to it.
-            ++nRootCerts;
-        }
-        else
-        {
-            ReportInvalidCertificate(cert);
-            continue;
-        }
-    }
-    qWarning() << "PaymentServer::LoadRootCAs: Loaded " << nRootCerts << " root certificates";
-
-    // Project for another day:
-    // Fetch certificate revocation lists, and add them to certStore.
-    // Issues to consider:
-    //   performance (start a thread to fetch in background?)
-    //   privacy (fetch through tor/proxy so IP address isn't revealed)
-    //   would it be easier to just use a compiled-in blacklist?
-    //    or use Qt's blacklist?
-    //   "certificate stapling" with server-side caching is more efficient
-}
 
 //
 // Sending to the server is done synchronously, at startup.
@@ -221,6 +124,7 @@ void PaymentServer::ipcParseCommandLine(interfaces::Node& node, int argc, char* 
                 }
             }
         }
+#ifdef ENABLE_BIP70
         else if (QFile::exists(arg)) // Filename
         {
             savedPaymentRequests.append(arg);
@@ -244,6 +148,7 @@ void PaymentServer::ipcParseCommandLine(interfaces::Node& node, int argc, char* 
             // GUI hasn't started yet so we can't pop up a message box.
             qWarning() << "PaymentServer::ipcSendCommandLine: Payment request file does not exist: " << arg;
         }
+#endif
     }
 }
 
@@ -289,13 +194,17 @@ bool PaymentServer::ipcSendCommandLine()
 PaymentServer::PaymentServer(QObject* parent, bool startLocalServer) :
     QObject(parent),
     saveURIs(true),
-    uriServer(0),
-    netManager(0),
-    optionsModel(0)
+    uriServer(nullptr),
+    optionsModel(nullptr)
+#ifdef ENABLE_BIP70
+    ,netManager(nullptr)
+#endif
 {
+#ifdef ENABLE_BIP70
     // Verify that the version of the library that we linked against is
     // compatible with the version of the headers we compiled against.
     GOOGLE_PROTOBUF_VERIFY_VERSION;
+#endif
 
     // Install global event filter to catch QFileOpenEvents
     // on Mac: sent when you click bitcoin: links
@@ -314,19 +223,23 @@ PaymentServer::PaymentServer(QObject* parent, bool startLocalServer) :
 
         if (!uriServer->listen(name)) {
             // constructor is called early in init, so don't use "Q_EMIT message()" here
-            QMessageBox::critical(0, tr("Payment request error"),
+            QMessageBox::critical(nullptr, tr("Payment request error"),
                 tr("Cannot start bitcoin: click-to-pay handler"));
         }
         else {
-            connect(uriServer, SIGNAL(newConnection()), this, SLOT(handleURIConnection()));
-            connect(this, SIGNAL(receivedPaymentACK(QString)), this, SLOT(handlePaymentACK(QString)));
+            connect(uriServer, &QLocalServer::newConnection, this, &PaymentServer::handleURIConnection);
+#ifdef ENABLE_BIP70
+            connect(this, &PaymentServer::receivedPaymentACK, this, &PaymentServer::handlePaymentACK);
+#endif
         }
     }
 }
 
 PaymentServer::~PaymentServer()
 {
+#ifdef ENABLE_BIP70
     google::protobuf::ShutdownProtobufLibrary();
+#endif
 }
 
 //
@@ -349,35 +262,11 @@ bool PaymentServer::eventFilter(QObject *object, QEvent *event)
     return QObject::eventFilter(object, event);
 }
 
-void PaymentServer::initNetManager()
-{
-    if (!optionsModel)
-        return;
-    delete netManager;
-
-    // netManager is used to fetch paymentrequests given in bitcoin: URIs
-    netManager = new QNetworkAccessManager(this);
-
-    QNetworkProxy proxy;
-
-    // Query active SOCKS5 proxy
-    if (optionsModel->getProxySettings(proxy)) {
-        netManager->setProxy(proxy);
-
-        qDebug() << "PaymentServer::initNetManager: Using SOCKS5 proxy" << proxy.hostName() << ":" << proxy.port();
-    }
-    else
-        qDebug() << "PaymentServer::initNetManager: No active proxy server found.";
-
-    connect(netManager, SIGNAL(finished(QNetworkReply*)),
-            this, SLOT(netRequestFinished(QNetworkReply*)));
-    connect(netManager, SIGNAL(sslErrors(QNetworkReply*, const QList<QSslError> &)),
-            this, SLOT(reportSslErrors(QNetworkReply*, const QList<QSslError> &)));
-}
-
 void PaymentServer::uiReady()
 {
+#ifdef ENABLE_BIP70
     initNetManager();
+#endif
 
     saveURIs = false;
     for (const QString& s : savedPaymentRequests)
@@ -403,8 +292,12 @@ void PaymentServer::handleURIOrFile(const QString& s)
     else if (s.startsWith(BITCOIN_IPC_PREFIX, Qt::CaseInsensitive)) // bitcoin: URI
     {
         QUrlQuery uri((QUrl(s)));
+#ifdef ENABLE_BIP70
         if (uri.hasQueryItem("r")) // payment request URI
         {
+            Q_EMIT message(tr("URI handling"),
+                tr("You are using a BIP70 URL which will be unsupported in the future."),
+                CClientUIInterface::ICON_WARNING);
             QByteArray temp;
             temp.append(uri.queryItemValue("r"));
             QString decoded = QUrl::fromPercentEncoding(temp);
@@ -422,15 +315,25 @@ void PaymentServer::handleURIOrFile(const QString& s)
                     tr("Payment request fetch URL is invalid: %1").arg(fetchUrl.toString()),
                     CClientUIInterface::ICON_WARNING);
             }
-
             return;
         }
-        else // normal URI
+        else
+#endif
+        // normal URI
         {
             SendCoinsRecipient recipient;
             if (GUIUtil::parseBitcoinURI(s, &recipient))
             {
                 if (!IsValidDestinationString(recipient.address.toStdString())) {
+#ifndef ENABLE_BIP70
+                    if (uri.hasQueryItem("r")) {  // payment request
+                        Q_EMIT message(tr("URI handling"),
+                            tr("Cannot process payment request because BIP70 support was not compiled in.")+
+                            tr("Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.")+
+                            tr("If you are receiving this error you should request the merchant provide a BIP21 compatible URI."),
+                            CClientUIInterface::ICON_WARNING);
+                    }
+#endif
                     Q_EMIT message(tr("URI handling"), tr("Invalid payment address %1").arg(recipient.address),
                         CClientUIInterface::MSG_ERROR);
                 }
@@ -448,6 +351,7 @@ void PaymentServer::handleURIOrFile(const QString& s)
 
     if (QFile::exists(s)) // payment request file
     {
+#ifdef ENABLE_BIP70
         PaymentRequestPlus request;
         SendCoinsRecipient recipient;
         if (!readPaymentRequestFromFile(s, request))
@@ -460,6 +364,13 @@ void PaymentServer::handleURIOrFile(const QString& s)
             Q_EMIT receivedPaymentRequest(recipient);
 
         return;
+#else
+        Q_EMIT message(tr("Payment request file handling"),
+            tr("Cannot process payment request because BIP70 support was not compiled in.")+
+            tr("Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.")+
+            tr("If you are receiving this error you should request the merchant provide a BIP21 compatible URI."),
+            CClientUIInterface::ICON_WARNING);
+#endif
     }
 }
 
@@ -470,8 +381,7 @@ void PaymentServer::handleURIConnection()
     while (clientConnection->bytesAvailable() < (int)sizeof(quint32))
         clientConnection->waitForReadyRead();
 
-    connect(clientConnection, SIGNAL(disconnected()),
-            clientConnection, SLOT(deleteLater()));
+    connect(clientConnection, &QLocalSocket::disconnected, clientConnection, &QLocalSocket::deleteLater);
 
     QDataStream in(clientConnection);
     in.setVersion(QDataStream::Qt_4_0);
@@ -482,6 +392,140 @@ void PaymentServer::handleURIConnection()
     in >> msg;
 
     handleURIOrFile(msg);
+}
+
+void PaymentServer::setOptionsModel(OptionsModel *_optionsModel)
+{
+    this->optionsModel = _optionsModel;
+}
+
+#ifdef ENABLE_BIP70
+struct X509StoreDeleter {
+      void operator()(X509_STORE* b) {
+          X509_STORE_free(b);
+      }
+};
+
+struct X509Deleter {
+      void operator()(X509* b) { X509_free(b); }
+};
+
+namespace // Anon namespace
+{
+    std::unique_ptr<X509_STORE, X509StoreDeleter> certStore;
+}
+
+static void ReportInvalidCertificate(const QSslCertificate& cert)
+{
+    qDebug() << QString("%1: Payment server found an invalid certificate: ").arg(__func__) << cert.serialNumber() << cert.subjectInfo(QSslCertificate::CommonName) << cert.subjectInfo(QSslCertificate::DistinguishedNameQualifier) << cert.subjectInfo(QSslCertificate::OrganizationalUnitName);
+}
+
+//
+// Load OpenSSL's list of root certificate authorities
+//
+void PaymentServer::LoadRootCAs(X509_STORE* _store)
+{
+    // Unit tests mostly use this, to pass in fake root CAs:
+    if (_store)
+    {
+        certStore.reset(_store);
+        return;
+    }
+
+    // Normal execution, use either -rootcertificates or system certs:
+    certStore.reset(X509_STORE_new());
+
+    // Note: use "-system-" default here so that users can pass -rootcertificates=""
+    // and get 'I don't like X.509 certificates, don't trust anybody' behavior:
+    QString certFile = QString::fromStdString(gArgs.GetArg("-rootcertificates", "-system-"));
+
+    // Empty store
+    if (certFile.isEmpty()) {
+        qDebug() << QString("PaymentServer::%1: Payment request authentication via X.509 certificates disabled.").arg(__func__);
+        return;
+    }
+
+    QList<QSslCertificate> certList;
+
+    if (certFile != "-system-") {
+            qDebug() << QString("PaymentServer::%1: Using \"%2\" as trusted root certificate.").arg(__func__).arg(certFile);
+
+        certList = QSslCertificate::fromPath(certFile);
+        // Use those certificates when fetching payment requests, too:
+        QSslConfiguration::defaultConfiguration().setCaCertificates(certList);
+    } else
+        certList = QSslConfiguration::systemCaCertificates();
+
+    int nRootCerts = 0;
+    const QDateTime currentTime = QDateTime::currentDateTime();
+
+    for (const QSslCertificate& cert : certList) {
+        // Don't log NULL certificates
+        if (cert.isNull())
+            continue;
+
+        // Not yet active/valid, or expired certificate
+        if (currentTime < cert.effectiveDate() || currentTime > cert.expiryDate()) {
+            ReportInvalidCertificate(cert);
+            continue;
+        }
+
+        // Blacklisted certificate
+        if (cert.isBlacklisted()) {
+            ReportInvalidCertificate(cert);
+            continue;
+        }
+
+        QByteArray certData = cert.toDer();
+        const unsigned char *data = (const unsigned char *)certData.data();
+
+        std::unique_ptr<X509, X509Deleter> x509(d2i_X509(0, &data, certData.size()));
+        if (x509 && X509_STORE_add_cert(certStore.get(), x509.get()))
+        {
+            // Note: X509_STORE increases the reference count to the X509 object,
+            // we still have to release our reference to it.
+            ++nRootCerts;
+        }
+        else
+        {
+            ReportInvalidCertificate(cert);
+            continue;
+        }
+    }
+    qInfo() << "PaymentServer::LoadRootCAs: Loaded " << nRootCerts << " root certificates";
+
+    // Project for another day:
+    // Fetch certificate revocation lists, and add them to certStore.
+    // Issues to consider:
+    //   performance (start a thread to fetch in background?)
+    //   privacy (fetch through tor/proxy so IP address isn't revealed)
+    //   would it be easier to just use a compiled-in blacklist?
+    //    or use Qt's blacklist?
+    //   "certificate stapling" with server-side caching is more efficient
+}
+
+void PaymentServer::initNetManager()
+{
+    if (!optionsModel)
+        return;
+    delete netManager;
+
+    // netManager is used to fetch paymentrequests given in bitcoin: URIs
+    netManager = new QNetworkAccessManager(this);
+
+    QNetworkProxy proxy;
+
+    // Query active SOCKS5 proxy
+    if (optionsModel->getProxySettings(proxy)) {
+        netManager->setProxy(proxy);
+
+        qDebug() << "PaymentServer::initNetManager: Using SOCKS5 proxy" << proxy.hostName() << ":" << proxy.port();
+    }
+    else
+        qDebug() << "PaymentServer::initNetManager: No active proxy server found.";
+
+    connect(netManager, &QNetworkAccessManager::finished, this, &PaymentServer::netRequestFinished);
+    connect(netManager, &QNetworkAccessManager::sslErrors, this, &PaymentServer::reportSslErrors);
 }
 
 //
@@ -626,16 +670,14 @@ void PaymentServer::fetchPaymentACK(WalletModel* walletModel, const SendCoinsRec
     payment.add_transactions(transaction.data(), transaction.size());
 
     // Create a new refund address, or re-use:
-    CPubKey newKey;
-    if (walletModel->wallet().getKeyFromPool(false /* internal */, newKey)) {
+    CTxDestination dest;
+    const OutputType change_type = walletModel->wallet().getDefaultChangeType() != OutputType::CHANGE_AUTO ? walletModel->wallet().getDefaultChangeType() : walletModel->wallet().getDefaultAddressType();
+    if (walletModel->wallet().getNewDestination(change_type, "", dest)) {
         // BIP70 requests encode the scriptPubKey directly, so we are not restricted to address
         // types supported by the receiver. As a result, we choose the address format we also
         // use for change. Despite an actual payment and not change, this is a close match:
         // it's the output type we use subject to privacy issues, but not restricted by what
         // other software supports.
-        const OutputType change_type = walletModel->wallet().getDefaultChangeType() != OutputType::CHANGE_AUTO ? walletModel->wallet().getDefaultChangeType() : walletModel->wallet().getDefaultAddressType();
-        walletModel->wallet().learnRelatedScripts(newKey, change_type);
-        CTxDestination dest = GetDestinationForKey(newKey, change_type);
         std::string label = tr("Refund from %1").arg(recipient.authenticatedMerchant).toStdString();
         walletModel->wallet().setAddressBook(dest, label, "refund");
 
@@ -734,11 +776,6 @@ void PaymentServer::reportSslErrors(QNetworkReply* reply, const QList<QSslError>
     Q_EMIT message(tr("Network request error"), errString, CClientUIInterface::MSG_ERROR);
 }
 
-void PaymentServer::setOptionsModel(OptionsModel *_optionsModel)
-{
-    this->optionsModel = _optionsModel;
-}
-
 void PaymentServer::handlePaymentACK(const QString& paymentACKMsg)
 {
     // currently we don't further process or store the paymentACK message
@@ -797,3 +834,4 @@ X509_STORE* PaymentServer::getCertStore()
 {
     return certStore.get();
 }
+#endif
