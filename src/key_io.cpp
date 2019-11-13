@@ -227,8 +227,16 @@ bool IsValidDestinationString(const std::string& str)
     return IsValidDestinationString(str, Params());
 }
 
-std::pair<int, std::string> LocateErrorInDestinationString(const std::string& str, const std::string& address_type)
+std::pair<int, std::string> LocateErrorInDestinationString(const std::string& str, std::string& address_type)
 {
+    if (address_type.empty()) {
+        size_t hrp_end_pos = str.rfind('1');
+        if (hrp_end_pos != str.npos && ToLower(str.substr(0, hrp_end_pos)) == Params().Bech32HRP()) {
+            address_type = "bech32";
+        } else {
+            address_type = "legacy";
+        }
+    }
     std::vector<unsigned char> data;
     if (address_type == "legacy" || address_type == "p2sh-segwit") {
         uint160 hash;
