@@ -837,6 +837,9 @@ QString formatServicesStr(quint64 mask)
             case NODE_WITNESS:
                 strList.append("WITNESS");
                 break;
+            case NODE_COMPACT_FILTERS:
+                strList.append("COMPACT_FILTERS");
+                break;
             case NODE_NETWORK_LIMITED:
                 strList.append("NETWORK_LIMITED");
                 break;
