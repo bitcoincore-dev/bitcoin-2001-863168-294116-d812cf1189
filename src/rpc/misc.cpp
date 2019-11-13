@@ -74,8 +74,9 @@ static RPCHelpMan validateaddress()
 
         UniValue detail = DescribeAddress(dest);
         ret.pushKVs(detail);
-    } else if (!request.params[1].isNull()) {
-        std::string address_type = request.params[1].get_str();
+    } else {
+        std::string address_type;
+        if (!request.params[1].isNull()) address_type = request.params[1].get_str();
         std::string error;
         auto res = LocateErrorInDestinationString(address, address_type);
         ret.pushKV("error", res.second);
