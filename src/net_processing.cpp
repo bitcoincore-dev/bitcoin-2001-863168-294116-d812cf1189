@@ -89,6 +89,7 @@ constexpr uint32_t MAX_GETCFHEADERS_SIZE = 2000;
 /** Interval between compact filter checkpoints. See BIP 157. */
 constexpr uint32_t CFCHECKPT_INTERVAL = 1000;
 
+
 struct COrphanTx {
     // When modifying, adapt the copy of this definition in tests/DoS_tests.
     CTransactionRef tx;
