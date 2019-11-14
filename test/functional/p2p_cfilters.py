@@ -221,10 +221,13 @@ class CompactFiltersTest(BitcoinTestFramework):
                 stop_hash=int(main_block_hash, 16)
             ),
         ]
+        node1.sync_with_ping()  # ensure 'ping' has at least one message before we copy
+        node1_check_message_count = dict(node1.message_count)
+        node1_check_message_count['pong'] += 1
         for request in requests:
-            node1 = self.nodes[1].add_p2p_connection(CFiltersClient())
             node1.send_message(request)
-            node1.wait_for_disconnect()
+        node1.sync_with_ping()
+        assert_equal(node1_check_message_count, dict(node1.message_count))
 
         # Check that invalid requests result in disconnection.
         requests = [

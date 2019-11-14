@@ -1277,9 +1277,11 @@ void PeerLogicValidation::UpdatedBlockTip(const CBlockIndex *pindexNew, const CB
         connman->WakeMessageHandler();
     }
 
-    ForEachBlockFilterIndex(
-        [](BlockFilterIndex& index) { UpdateCFHeadersCache(index); }
-    );
+    if (gArgs.GetBoolArg("-peercfilters", DEFAULT_PEERCFILTERS)) {
+        ForEachBlockFilterIndex(
+            [](BlockFilterIndex& index) { UpdateCFHeadersCache(index); }
+        );
+    }
 }
 
 /**
@@ -3493,14 +3495,16 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
         return true;
     }
 
-    if (strCommand == NetMsgType::GETCFILTERS) {
-        return ProcessGetCFilters(pfrom, vRecv, chainparams, connman);
-    }
-    if (strCommand == NetMsgType::GETCFHEADERS) {
-        return ProcessGetCFHeaders(pfrom, vRecv, chainparams, connman);
-    }
-    if (strCommand == NetMsgType::GETCFCHECKPT) {
-        return ProcessGetCFCheckPt(pfrom, vRecv, chainparams, connman);
+    if (pfrom->GetLocalServices() & NODE_COMPACT_FILTERS) {
+        if (strCommand == NetMsgType::GETCFILTERS) {
+            return ProcessGetCFilters(pfrom, vRecv, chainparams, connman);
+        }
+        if (strCommand == NetMsgType::GETCFHEADERS) {
+            return ProcessGetCFHeaders(pfrom, vRecv, chainparams, connman);
+        }
+        if (strCommand == NetMsgType::GETCFCHECKPT) {
+            return ProcessGetCFCheckPt(pfrom, vRecv, chainparams, connman);
+        }
     }
 
     if (strCommand == NetMsgType::NOTFOUND) {
