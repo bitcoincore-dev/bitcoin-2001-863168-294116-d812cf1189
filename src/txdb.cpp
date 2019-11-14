@@ -28,6 +28,10 @@ static const char DB_FLAG = 'F';
 static const char DB_REINDEX_FLAG = 'R';
 static const char DB_LAST_BLOCK = 'l';
 
+//! Used to cache the nChainTx value for the base block of a UTXO snapshot.
+//! This only contains a value for chainstates created based on a snapshot.
+static constexpr char DB_NCHAINTX = 'n';
+
 namespace {
 
 struct CoinEntry {
@@ -406,4 +410,26 @@ bool CCoinsViewDB::Upgrade() {
     uiInterface.ShowProgress("", 100, false);
     LogPrintf("[%s].\n", ShutdownRequested() ? "CANCELLED" : "DONE");
     return !ShutdownRequested();
+}
+
+bool CCoinsViewDB::SetNChainTx(unsigned int n_chain_tx)
+{
+    return m_db->Write(DB_NCHAINTX, n_chain_tx, /*fsync*/ true);
+}
+
+unsigned int CCoinsViewDB::GetNChainTx()
+{
+    // We choose 1 and not 0 because, in the unlikely event that we can't read
+    // a value from this key, we don't want LoadBlockIndex() to malfunction for
+    // snapshot chainstates being loaded. Returning 1 here will break the
+    // progress= measure, but returning 0 would cause us to not be able to add
+    // chain tips for the snapshot chainstate. This shouldn't happen and is
+    // belt-and-suspenders.
+    unsigned int ret{1};
+
+    m_db->Read(DB_NCHAINTX, ret);
+    if (ret == 1) {
+        LogPrintf("no nChainTx value for chainstate - this is unexpected");
+    }
+    return ret;
 }

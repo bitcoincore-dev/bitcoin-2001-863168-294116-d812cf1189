@@ -68,6 +68,14 @@ public:
 
     //! Dynamically alter the underlying leveldb cache size.
     void ResizeCache(size_t new_cache_size) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
+    //! Sets the cached nChainTx value for the snapshot base block. Only used
+    //! by chainstates based on a UTXO snapshot.
+    bool SetNChainTx(unsigned int n_chain_tx);
+
+    //! @returns the cached nChainTx value for the snapshot base block (if one
+    //! applies).
+    unsigned int GetNChainTx();
 };
 
 /** Specialization of CCoinsViewCursor to iterate over a CCoinsViewDB */
