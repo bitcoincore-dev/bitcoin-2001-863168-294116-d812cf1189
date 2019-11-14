@@ -605,6 +605,9 @@ public:
         bool should_wipe,
         std::string leveldb_name = "chainstate");
 
+    //! @returns whether or not a CoinsDB object has been initialized.
+    bool HasCoinsDB() { return m_coins_views.get() != nullptr; }
+
     //! Initialize the in-memory coins cache (to be done after the health of the on-disk database
     //! is verified).
     void InitCoinsCache(size_t cache_size_bytes) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
@@ -936,6 +939,16 @@ public:
         m_ibd_chainstate.reset();
         m_snapshot_chainstate.reset();
         m_active_chainstate = nullptr;
+    }
+
+    unsigned int GetSnapshotNChainTx() EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+    {
+        if (m_snapshot_chainstate && m_snapshot_chainstate->HasCoinsDB()) {
+            return m_snapshot_chainstate->CoinsDB().GetNChainTx();
+        }
+        // See note in CCoinsViewDB::GetNChainTx() about why we return 1 and
+        // not 0.
+        return 1;
     }
 
     //! Check to see if caches are out of balance and if so, call
