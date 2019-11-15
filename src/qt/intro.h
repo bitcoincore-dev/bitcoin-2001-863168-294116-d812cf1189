@@ -50,10 +50,10 @@ public:
     static bool showIfNeeded(interfaces::Node& node, bool& did_show_intro, bool& prune);
 
 Q_SIGNALS:
-    void requestCheck();
+    void requestCheck(bool keep_prune);
 
 public Q_SLOTS:
-    void setStatus(int status, const QString &message, quint64 bytesAvailable);
+    void setStatus(int status, const QString& message, quint64 bytesAvailable, bool keep_prune);
 
 private Q_SLOTS:
     void on_dataDirectory_textChanged(const QString &arg1);

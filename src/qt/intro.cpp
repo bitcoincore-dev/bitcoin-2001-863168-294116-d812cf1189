@@ -46,10 +46,10 @@ public:
     };
 
 public Q_SLOTS:
-    void check();
+    void check(bool keep_prune);
 
 Q_SIGNALS:
-    void reply(int status, const QString &message, quint64 available);
+    void reply(int status, const QString& message, quint64 available, bool keep_prune);
 
 private:
     Intro *intro;
@@ -62,7 +62,7 @@ FreespaceChecker::FreespaceChecker(Intro *_intro)
     this->intro = _intro;
 }
 
-void FreespaceChecker::check()
+void FreespaceChecker::check(bool keep_prune)
 {
     QString dataDirStr = intro->getPathToCheck();
     fs::path dataDir = GUIUtil::qstringToBoostPath(dataDirStr);
@@ -104,7 +104,7 @@ void FreespaceChecker::check()
         replyStatus = ST_ERROR;
         replyMessage = tr("Cannot create data directory here.");
     }
-    Q_EMIT reply(replyStatus, replyMessage, freeBytesAvailable);
+    Q_EMIT reply(replyStatus, replyMessage, freeBytesAvailable, keep_prune);
 }
 
 
@@ -233,7 +233,7 @@ bool Intro::showIfNeeded(interfaces::Node& node, bool& did_show_intro, bool& pru
     return true;
 }
 
-void Intro::setStatus(int status, const QString &message, quint64 bytesAvailable)
+void Intro::setStatus(int status, const QString& message, quint64 bytesAvailable, bool keep_prune)
 {
     switch(status)
     {
@@ -255,11 +255,11 @@ void Intro::setStatus(int status, const QString &message, quint64 bytesAvailable
         if (bytesAvailable < m_required_space_gb * GB_BYTES) {
             freeString += " " + tr("(of %n GB needed)", "", m_required_space_gb);
             ui->freeSpace->setStyleSheet("QLabel { color: #800000 }");
-            ui->prune->setChecked(true);
+            if (!keep_prune) ui->prune->setChecked(true);
         } else if (bytesAvailable / GB_BYTES - m_required_space_gb < 10) {
             freeString += " " + tr("(%n GB needed for full chain)", "", m_required_space_gb);
             ui->freeSpace->setStyleSheet("QLabel { color: #999900 }");
-            ui->prune->setChecked(true);
+            if (!keep_prune) ui->prune->setChecked(true);
         } else {
             ui->freeSpace->setStyleSheet("");
         }
@@ -304,7 +304,7 @@ void Intro::startThread()
     connect(this, &Intro::requestCheck, executor, &FreespaceChecker::check);
     connect(ui->prune, &QCheckBox::toggled, [this](bool prune_checked) {
         UpdatePruneLabels(prune_checked);
-        Q_EMIT requestCheck();
+        Q_EMIT requestCheck(true);
     });
     connect(thread, &QThread::finished, executor, &QObject::deleteLater);
 
@@ -318,7 +318,7 @@ void Intro::checkPath(const QString &dataDir)
     if(!signalled)
     {
         signalled = true;
-        Q_EMIT requestCheck();
+        Q_EMIT requestCheck(false);
     }
     mutex.unlock();
 }
