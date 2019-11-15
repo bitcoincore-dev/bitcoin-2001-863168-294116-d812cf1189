@@ -549,14 +549,11 @@ BOOST_AUTO_TEST_CASE(util_GetBoolArgEdgeCases)
     BOOST_CHECK(testArgs.GetArg("-bar", "xxx") == "1");
 
     // Config test
-    const char *conf_test = "nofoo=1\nfoo=1\nnobar=0\n";
-    BOOST_CHECK(testArgs.ParseParameters(1, (char**)argv_test, error));
+    const char *conf_test = "foo=1\nnobar=0\n";
     testArgs.ReadConfigString(conf_test);
 
-    // This was passed twice, second one overrides the negative setting,
-    // and the value.
     BOOST_CHECK(!testArgs.IsArgNegated("-foo"));
-    BOOST_CHECK(testArgs.GetArg("-foo", "xxx") == "1");
+    BOOST_CHECK(testArgs.GetArg("-foo", "xxx") == "");
 
     // A double negative is a positive, and does not count as negated.
     BOOST_CHECK(!testArgs.IsArgNegated("-bar"));
@@ -608,13 +605,13 @@ BOOST_AUTO_TEST_CASE(util_ReadConfigStream)
     LOCK(test_args.cs_args);
     const auto a = std::make_pair("-a", ArgsManager::ALLOW_ANY);
     const auto b = std::make_pair("-b", ArgsManager::ALLOW_ANY);
-    const auto ccc = std::make_pair("-ccc", ArgsManager::ALLOW_ANY);
+    const auto ccc = std::make_pair("-ccc", ArgsManager::ALLOW_ANY | ArgsManager::ALLOW_LIST);
     const auto d = std::make_pair("-d", ArgsManager::ALLOW_ANY);
     const auto e = std::make_pair("-e", ArgsManager::ALLOW_ANY);
     const auto fff = std::make_pair("-fff", ArgsManager::ALLOW_ANY);
     const auto ggg = std::make_pair("-ggg", ArgsManager::ALLOW_ANY);
-    const auto h = std::make_pair("-h", ArgsManager::ALLOW_ANY);
-    const auto i = std::make_pair("-i", ArgsManager::ALLOW_ANY);
+    const auto h = std::make_pair("-h", ArgsManager::ALLOW_ANY | ArgsManager::ALLOW_LIST);
+    const auto i = std::make_pair("-i", ArgsManager::ALLOW_ANY | ArgsManager::ALLOW_LIST);
     const auto iii = std::make_pair("-iii", ArgsManager::ALLOW_ANY);
     test_args.SetupArgs({a, b, ccc, d, e, fff, ggg, h, i, iii});
 
@@ -657,7 +654,6 @@ BOOST_AUTO_TEST_CASE(util_ReadConfigStream)
 
     BOOST_CHECK(test_args.GetArg("-a", "xxx") == ""
                 && test_args.GetArg("-b", "xxx") == "1"
-                && test_args.GetArg("-ccc", "xxx") == "argument"
                 && test_args.GetArg("-d", "xxx") == "e"
                 && test_args.GetArg("-fff", "xxx") == "0"
                 && test_args.GetArg("-ggg", "xxx") == "1"
@@ -725,9 +721,7 @@ BOOST_AUTO_TEST_CASE(util_ReadConfigStream)
     BOOST_CHECK(test_args.GetArg("-d", "xxx") == "eee");
     // section-specific setting
     BOOST_CHECK(test_args.GetArg("-h", "xxx") == "1");
-    // section takes priority for multiple values
-    BOOST_CHECK(test_args.GetArg("-ccc", "xxx") == "extend1");
-    // check multiple values works
+    // check multiple values works and section takes priority
     const std::vector<std::string> sec1_ccc_expected = {"extend1","extend2","argument","multiple"};
     const auto& sec1_ccc_res = test_args.GetArgs("-ccc");
     BOOST_CHECK_EQUAL_COLLECTIONS(sec1_ccc_res.begin(), sec1_ccc_res.end(), sec1_ccc_expected.begin(), sec1_ccc_expected.end());
@@ -793,11 +787,11 @@ BOOST_AUTO_TEST_CASE(util_GetArg)
 
     // priorities
     testArgs.m_settings.command_line_options["pritest1"] = {"a", "b"};
-    testArgs.m_settings.ro_config[""]["pritest2"] = {"a", "b"};
+    testArgs.m_settings.ro_config[""]["pritest2"] = {"a"};
     testArgs.m_settings.command_line_options["pritest3"] = {"a"};
     testArgs.m_settings.ro_config[""]["pritest3"] = {"b"};
     testArgs.m_settings.command_line_options["pritest4"] = {"a","b"};
-    testArgs.m_settings.ro_config[""]["pritest4"] = {"c","d"};
+    testArgs.m_settings.ro_config[""]["pritest4"] = {"c"};
 
     BOOST_CHECK_EQUAL(testArgs.GetArg("strtest1", "default"), "string...");
     BOOST_CHECK_EQUAL(testArgs.GetArg("strtest2", "default"), "default");
@@ -917,18 +911,20 @@ BOOST_AUTO_TEST_CASE(util_GetChainName)
 struct ArgsMergeTestingSetup : public BasicTestingSetup {
     //! Max number of actions to sequence together. Can decrease this when
     //! debugging to make test results easier to understand.
-    static constexpr int MAX_ACTIONS = 3;
+    static constexpr int MAX_ARG_ACTIONS = 3;
+    static constexpr int MAX_CONF_ACTIONS = 1;
 
     enum Action { NONE, SET, NEGATE, SECTION_SET, SECTION_NEGATE };
-    using ActionList = Action[MAX_ACTIONS];
+    using ArgActionList = Action[MAX_ARG_ACTIONS];
+    using ConfActionList = Action[MAX_CONF_ACTIONS];
 
     //! Enumerate all possible test configurations.
     template <typename Fn>
     void ForEachMergeSetup(Fn&& fn)
     {
-        ActionList arg_actions = {};
+        ArgActionList arg_actions = {};
         ForEachNoDup(arg_actions, SET, SECTION_NEGATE, [&] {
-            ActionList conf_actions = {};
+            ConfActionList conf_actions = {};
             ForEachNoDup(conf_actions, SET, SECTION_NEGATE, [&] {
                 for (bool soft_set : {false, true}) {
                     for (bool force_set : {false, true}) {
@@ -946,10 +942,11 @@ struct ArgsMergeTestingSetup : public BasicTestingSetup {
     }
 
     //! Translate actions into a list of <key>=<value> setting strings.
-    std::vector<std::string> GetValues(const ActionList& actions,
+    std::vector<std::string> GetValues(Span<const Action> actions,
         const std::string& section,
         const std::string& name,
-        const std::string& value_prefix)
+        const std::string& value_prefix,
+        int num_values)
     {
         std::vector<std::string> values;
         int suffix = 0;
@@ -958,7 +955,7 @@ struct ArgsMergeTestingSetup : public BasicTestingSetup {
             std::string prefix;
             if (action == SECTION_SET || action == SECTION_NEGATE) prefix = section + ".";
             if (action == SET || action == SECTION_SET) {
-                for (int i = 0; i < 2; ++i) {
+                for (int i = 0; i < num_values; ++i) {
                     values.push_back(prefix + name + "=" + value_prefix + std::to_string(++suffix));
                 }
             }
@@ -983,7 +980,7 @@ BOOST_FIXTURE_TEST_CASE(util_ArgsMerge, ArgsMergeTestingSetup)
         if (!out_file) throw std::system_error(errno, std::generic_category(), "fopen failed");
     }
 
-    ForEachMergeSetup([&](const ActionList& arg_actions, const ActionList& conf_actions, bool soft_set, bool force_set,
+    ForEachMergeSetup([&](const ArgActionList& arg_actions, const ConfActionList& conf_actions, bool soft_set, bool force_set,
                           const std::string& section, const std::string& network, bool net_specific) {
         TestArgsManager parser;
         LOCK(parser.cs_args);
@@ -997,7 +994,7 @@ BOOST_FIXTURE_TEST_CASE(util_ArgsMerge, ArgsMergeTestingSetup)
         parser.AddArg(key, name, ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
         if (net_specific) parser.SetNetworkOnlyArg(key);
 
-        auto args = GetValues(arg_actions, section, name, "a");
+        auto args = GetValues(MakeSpan(arg_actions), section, name, "a", 2);
         std::vector<const char*> argv = {"ignored"};
         for (auto& arg : args) {
             arg.insert(0, "-");
@@ -1010,7 +1007,7 @@ BOOST_FIXTURE_TEST_CASE(util_ArgsMerge, ArgsMergeTestingSetup)
         BOOST_CHECK_EQUAL(error, "");
 
         std::string conf;
-        for (auto& conf_val : GetValues(conf_actions, section, name, "c")) {
+        for (auto& conf_val : GetValues(MakeSpan(conf_actions), section, name, "c", 1)) {
             desc += " ";
             desc += conf_val;
             conf += conf_val;
@@ -1087,23 +1084,25 @@ BOOST_FIXTURE_TEST_CASE(util_ArgsMerge, ArgsMergeTestingSetup)
     // Results file is formatted like:
     //
     //   <input> || <IsArgSet/IsArgNegated/GetArg output> | <GetArgs output> | <GetUnsuitable output>
-    BOOST_CHECK_EQUAL(out_sha_hex, "b835eef5977d69114eb039a976201f8c7121f34fe2b7ea2b73cafb516e5c9dc8");
+    BOOST_CHECK_EQUAL(out_sha_hex, "0d34fb6fda0f2f6dd9e84961852c2127e53cfc2a0d3bb6a5b71b53e7986c70fd");
 }
 
 // Similar test as above, but for ArgsManager::GetChainName function.
 struct ChainMergeTestingSetup : public BasicTestingSetup {
-    static constexpr int MAX_ACTIONS = 2;
+    static constexpr int MAX_ARG_ACTIONS = 2;
+    static constexpr int MAX_CONF_ACTIONS = 1;
 
     enum Action { NONE, ENABLE_TEST, DISABLE_TEST, NEGATE_TEST, ENABLE_REG, DISABLE_REG, NEGATE_REG };
-    using ActionList = Action[MAX_ACTIONS];
+    using ArgActionList = Action[MAX_ARG_ACTIONS];
+    using ConfActionList = Action[MAX_CONF_ACTIONS];
 
     //! Enumerate all possible test configurations.
     template <typename Fn>
     void ForEachMergeSetup(Fn&& fn)
     {
-        ActionList arg_actions = {};
+        ArgActionList arg_actions = {};
         ForEachNoDup(arg_actions, ENABLE_TEST, NEGATE_REG, [&] {
-            ActionList conf_actions = {};
+            ConfActionList conf_actions = {};
             ForEachNoDup(conf_actions, ENABLE_TEST, NEGATE_REG, [&] { fn(arg_actions, conf_actions); });
         });
     }
@@ -1118,7 +1117,7 @@ BOOST_FIXTURE_TEST_CASE(util_ChainMerge, ChainMergeTestingSetup)
         if (!out_file) throw std::system_error(errno, std::generic_category(), "fopen failed");
     }
 
-    ForEachMergeSetup([&](const ActionList& arg_actions, const ActionList& conf_actions) {
+    ForEachMergeSetup([&](const ArgActionList& arg_actions, const ConfActionList& conf_actions) {
         TestArgsManager parser;
         LOCK(parser.cs_args);
         parser.AddArg("-regtest", "regtest", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
@@ -1190,7 +1189,7 @@ BOOST_FIXTURE_TEST_CASE(util_ChainMerge, ChainMergeTestingSetup)
     // Results file is formatted like:
     //
     //   <input> || <output>
-    BOOST_CHECK_EQUAL(out_sha_hex, "f0b3a3c29869edc765d579c928f7f1690a71fbb673b49ccf39cbc4de18156a0d");
+    BOOST_CHECK_EQUAL(out_sha_hex, "9550030a63d0516dbb8d34b58c0c4ffecccc62fba6ab126c8a03d1a57978ddd3");
 }
 
 BOOST_AUTO_TEST_CASE(util_FormatMoney)
