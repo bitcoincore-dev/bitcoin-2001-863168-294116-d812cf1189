@@ -504,12 +504,19 @@ void CConnman::AddWhitelistPermissionFlags(NetPermissionFlags& flags, const CNet
     }
 }
 
-void CConnman::InitializePermissionFlags(NetPermissionFlags& flags) {
+void CConnman::InitializePermissionFlags(NetPermissionFlags& flags, ServiceFlags& service_flags) {
     if (NetPermissions::HasFlag(flags, NetPermissionFlags::PF_ISIMPLICIT)) {
         if (gArgs.GetBoolArg("-whitelistforcerelay", DEFAULT_WHITELISTFORCERELAY)) NetPermissions::AddFlag(flags, PF_FORCERELAY);
         if (gArgs.GetBoolArg("-whitelistrelay", DEFAULT_WHITELISTRELAY)) NetPermissions::AddFlag(flags, PF_RELAY);
         NetPermissions::AddFlag(flags, PF_MEMPOOL);
         NetPermissions::AddFlag(flags, PF_NOBAN);
+    }
+
+    if (NetPermissions::HasFlag(flags, PF_BLOOMFILTER)) {
+        service_flags = static_cast<ServiceFlags>(service_flags | NODE_BLOOM);
+    }
+    if (NetPermissions::HasFlag(flags, PF_BLOCKFILTERS)) {
+        service_flags = static_cast<ServiceFlags>(service_flags | NODE_COMPACT_FILTERS);
     }
 }
 
@@ -1064,13 +1071,14 @@ void CConnman::AcceptConnection(const ListenSocket& hListenSocket) {
     }
 
     NetPermissionFlags permissionFlags = NetPermissionFlags::PF_NONE;
+    ServiceFlags nodeServices = nLocalServices;
     hListenSocket.AddSocketPermissionFlags(permissionFlags);
     AddWhitelistPermissionFlags(permissionFlags, addr);
     bool legacyWhitelisted = false;
     if (NetPermissions::HasFlag(permissionFlags, NetPermissionFlags::PF_ISIMPLICIT)) {
         legacyWhitelisted = true;
     }
-    InitializePermissionFlags(permissionFlags);
+    InitializePermissionFlags(permissionFlags, nodeServices);
 
     {
         LOCK(cs_vNodes);
@@ -1135,14 +1143,6 @@ void CConnman::AcceptConnection(const ListenSocket& hListenSocket) {
     NodeId id = GetNewNodeId();
     uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
     CAddress addr_bind = GetBindAddress(hSocket);
-
-    ServiceFlags nodeServices = nLocalServices;
-    if (NetPermissions::HasFlag(permissionFlags, PF_BLOOMFILTER)) {
-        nodeServices = static_cast<ServiceFlags>(nodeServices | NODE_BLOOM);
-    }
-    if (NetPermissions::HasFlag(permissionFlags, PF_BLOCKFILTERS)) {
-        nodeServices = static_cast<ServiceFlags>(nodeServices | NODE_COMPACT_FILTERS);
-    }
 
     const bool inbound_onion = std::find(m_onion_binds.begin(), m_onion_binds.end(), addr_bind) != m_onion_binds.end();
     CNode* pnode = new CNode(id, nodeServices, GetBestHeight(), hSocket, addr, CalculateKeyedNetGroup(addr), nonce, addr_bind, "", ConnectionType::INBOUND, inbound_onion);
