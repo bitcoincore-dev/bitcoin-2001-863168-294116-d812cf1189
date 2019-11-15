@@ -1277,7 +1277,7 @@ void PeerLogicValidation::UpdatedBlockTip(const CBlockIndex *pindexNew, const CB
         connman->WakeMessageHandler();
     }
 
-    if (gArgs.GetBoolArg("-peercfilters", DEFAULT_PEERCFILTERS)) {
+    if (g_need_peercfilters) {
         ForEachBlockFilterIndex(
             [](BlockFilterIndex& index) { UpdateCFHeadersCache(index); }
         );

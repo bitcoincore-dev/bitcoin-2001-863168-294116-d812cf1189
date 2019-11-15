@@ -93,6 +93,7 @@ CCriticalSection cs_mapLocalHost;
 std::map<CNetAddr, LocalServiceInfo> mapLocalHost GUARDED_BY(cs_mapLocalHost);
 static bool vfLimited[NET_MAX] GUARDED_BY(cs_mapLocalHost) = {};
 std::string strSubVersion;
+bool g_need_peercfilters{false};
 
 void CConnman::AddOneShot(const std::string& strDest)
 {
@@ -492,6 +493,9 @@ void CConnman::InitializePermissionFlags(NetPermissionFlags& flags, ServiceFlags
 
     if (NetPermissions::HasFlag(flags, PF_BLOOMFILTER)) {
         service_flags = static_cast<ServiceFlags>(service_flags | NODE_BLOOM);
+    }
+    if (NetPermissions::HasFlag(flags, PF_CFILTERS) && g_need_peercfilters) {
+        service_flags = static_cast<ServiceFlags>(service_flags | NODE_COMPACT_FILTERS);
     }
 }
 

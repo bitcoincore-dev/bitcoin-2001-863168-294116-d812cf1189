@@ -975,6 +975,7 @@ bool AppInitParameterInteraction()
             return InitError(_("Cannot set -peercfilters without -blockfilterindex.").translated);
         }
 
+        g_need_peercfilters = true;
         nLocalServices = ServiceFlags(nLocalServices | NODE_COMPACT_FILTERS);
     }
 
@@ -1798,10 +1799,15 @@ bool AppInitMain(InitInterfaces& interfaces)
         }
         connOptions.vBinds.push_back(addrBind);
     }
+
+    {
+        NetPermissionFlags all_permission_flags = PF_NONE;
+
     for (const std::string& strBind : gArgs.GetArgs("-whitebind")) {
         NetWhitebindPermissions whitebind;
         std::string error;
         if (!NetWhitebindPermissions::TryParse(strBind, whitebind, error)) return InitError(error);
+        NetPermissions::AddFlag(all_permission_flags, whitebind.m_flags);
         connOptions.vWhiteBinds.push_back(whitebind);
     }
 
@@ -1810,11 +1816,22 @@ bool AppInitMain(InitInterfaces& interfaces)
         ConnectionDirection connection_direction;
         std::string error;
         if (!NetWhitelistPermissions::TryParse(net, subnet, connection_direction, error)) return InitError(error);
+        NetPermissions::AddFlag(all_permission_flags, subnet.m_flags);
         if (connection_direction & ConnectionDirection::In) {
             connOptions.vWhitelistedRange.push_back(subnet);
         }
         if (connection_direction & ConnectionDirection::Out) {
             connOptions.vWhitelistedRangeOutgoing.push_back(subnet);
+        }
+    }
+
+        if (NetPermissions::HasFlag(all_permission_flags, PF_CFILTERS)) {
+            bool index_enabled = std::find(g_enabled_filter_types.begin(), g_enabled_filter_types.end(), BlockFilterType::BASIC) != g_enabled_filter_types.end();
+            if (index_enabled) {
+                g_need_peercfilters = true;
+            } else if (NetPermissions::HasFlag(all_permission_flags, PF_CFILTERS_EXPLICIT)) {
+                return InitError(_("Cannot grant cfilters permission without -blockfilterindex.").translated);
+            }
         }
     }
 

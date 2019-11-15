@@ -22,6 +22,8 @@ static constexpr bool DEFAULT_ENABLE_BIP61{false};
 static const bool DEFAULT_PEERBLOOMFILTERS = false;
 static const bool DEFAULT_PEERCFILTERS = false;
 
+extern bool g_need_peercfilters;
+
 class PeerLogicValidation final : public CValidationInterface, public NetEventsInterface {
 private:
     CConnman* const connman;
