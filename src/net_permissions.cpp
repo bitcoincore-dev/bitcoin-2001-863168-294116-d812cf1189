@@ -34,6 +34,7 @@ bool TryParsePermissionFlags(const std::string str, NetPermissionFlags& output, 
             if (commaSeparator != std::string::npos) readen++; // We read ","
 
             if (permission == "bloomfilter" || permission == "bloom") NetPermissions::AddFlag(flags, PF_BLOOMFILTER);
+            else if (permission == "blockfilters" || permission == "compactfilters" || permission == "cfilters") NetPermissions::AddFlag(flags, PF_BLOCKFILTERS_EXPLICIT);
             else if (permission == "noban") NetPermissions::AddFlag(flags, PF_NOBAN);
             else if (permission == "forcerelay") NetPermissions::AddFlag(flags, PF_FORCERELAY);
             else if (permission == "mempool") NetPermissions::AddFlag(flags, PF_MEMPOOL);
