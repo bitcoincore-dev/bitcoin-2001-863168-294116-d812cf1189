@@ -2034,14 +2034,13 @@ void CConnman::OpenNetworkConnection(const CAddress& addrConnect, bool fCountFai
         return;
 
     CNode* pnode = ConnectNode(addrConnect, pszDest, fCountFailure, conn_type);
+
     if (!pnode)
         return;
-
     if (grantOutbound)
         grantOutbound->MoveTo(pnode->grantOutbound);
 
-    ServiceFlags nodeServices = nLocalServices;
-    m_msgproc->InitializeNode(*pnode, nodeServices);
+    m_msgproc->InitializeNode(*pnode, nLocalServices);
     {
         LOCK(m_nodes_mutex);
         m_nodes.push_back(pnode);
