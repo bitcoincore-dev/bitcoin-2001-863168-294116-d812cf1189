@@ -468,12 +468,16 @@ void CConnman::AddWhitelistPermissionFlags(NetPermissionFlags& flags, const CNet
     }
 }
 
-void CConnman::InitializePermissionFlags(NetPermissionFlags& flags) {
+void CConnman::InitializePermissionFlags(NetPermissionFlags& flags, ServiceFlags& service_flags) {
     if (NetPermissions::HasFlag(flags, NetPermissionFlags::PF_ISIMPLICIT)) {
         if (gArgs.GetBoolArg("-whitelistforcerelay", DEFAULT_WHITELISTFORCERELAY)) NetPermissions::AddFlag(flags, PF_FORCERELAY);
         if (gArgs.GetBoolArg("-whitelistrelay", DEFAULT_WHITELISTRELAY)) NetPermissions::AddFlag(flags, PF_RELAY);
         NetPermissions::AddFlag(flags, PF_MEMPOOL);
         NetPermissions::AddFlag(flags, PF_NOBAN);
+    }
+
+    if (NetPermissions::HasFlag(flags, PF_BLOOMFILTER)) {
+        service_flags = static_cast<ServiceFlags>(service_flags | NODE_BLOOM);
     }
 }
 
@@ -926,13 +930,14 @@ void CConnman::AcceptConnection(const ListenSocket& hListenSocket) {
     }
 
     NetPermissionFlags permissionFlags = NetPermissionFlags::PF_NONE;
+    ServiceFlags nodeServices = nLocalServices;
     hListenSocket.AddSocketPermissionFlags(permissionFlags);
     AddWhitelistPermissionFlags(permissionFlags, addr);
     bool legacyWhitelisted = false;
     if (NetPermissions::HasFlag(permissionFlags, NetPermissionFlags::PF_ISIMPLICIT)) {
         legacyWhitelisted = true;
     }
-    InitializePermissionFlags(permissionFlags);
+    InitializePermissionFlags(permissionFlags, nodeServices);
 
     {
         LOCK(cs_vNodes);
@@ -991,10 +996,6 @@ void CConnman::AcceptConnection(const ListenSocket& hListenSocket) {
     uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
     CAddress addr_bind = GetBindAddress(hSocket);
 
-    ServiceFlags nodeServices = nLocalServices;
-    if (NetPermissions::HasFlag(permissionFlags, PF_BLOOMFILTER)) {
-        nodeServices = static_cast<ServiceFlags>(nodeServices | NODE_BLOOM);
-    }
     CNode* pnode = new CNode(id, nodeServices, GetBestHeight(), hSocket, addr, CalculateKeyedNetGroup(addr), nonce, addr_bind, "", true);
     pnode->AddRef();
     pnode->m_permissionFlags = permissionFlags;
