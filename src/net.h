@@ -371,7 +371,7 @@ private:
     bool AttemptToEvictConnection();
     CNode* ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure, bool manual_connection, bool block_relay_only);
     void AddWhitelistPermissionFlags(NetPermissionFlags& flags, const CNetAddr &addr) const;
-    static void InitializePermissionFlags(NetPermissionFlags& flags);
+    static void InitializePermissionFlags(NetPermissionFlags& flags, ServiceFlags& service_flags);
 
     void DeleteNode(CNode* pnode);
 
