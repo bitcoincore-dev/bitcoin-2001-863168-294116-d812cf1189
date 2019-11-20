@@ -214,6 +214,18 @@ bool CCoinsViewCache::Flush(bool clear_cache) {
     if (clear_cache) {
         cacheCoins.clear();
         cachedCoinsUsage = 0;
+    } else {
+        // Instead of clearing the cache, just clear the FRESH/DIRTY
+        // flags, and erase any spent coins
+        for (auto it = cacheCoins.begin(); it != cacheCoins.end(); ) {
+            it->second.flags = 0;
+            if (it->second.coin.IsSpent()) {
+                cachedCoinsUsage -= it->second.coin.DynamicMemoryUsage();
+                it = cacheCoins.erase(it);
+            } else {
+                ++it;
+            }
+        }
     }
     return fOk;
 }
