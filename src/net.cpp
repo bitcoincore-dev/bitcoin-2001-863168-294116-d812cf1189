@@ -1810,6 +1810,13 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
         int nTries = 0;
         while (!interruptNet)
         {
+            // If we didn't find an appropriate destination after trying 100 addresses fetched from addrman,
+            // stop this loop, and let the outer loop run again (which sleeps, adds seed nodes, recalculates
+            // already-connected network ranges, ...) before trying new addrman addresses.
+            nTries++;
+            if (nTries > 100)
+                break;
+
             CAddrInfo addr = addrman.SelectTriedCollision();
 
             // SelectTriedCollision returns an invalid address if it is empty.
@@ -1826,13 +1833,6 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
             if (!addr.IsValid() || IsLocal(addr)) {
                 break;
             }
-
-            // If we didn't find an appropriate destination after trying 100 addresses fetched from addrman,
-            // stop this loop, and let the outer loop run again (which sleeps, adds seed nodes, recalculates
-            // already-connected network ranges, ...) before trying new addrman addresses.
-            nTries++;
-            if (nTries > 100)
-                break;
 
             if (!IsReachable(addr))
                 continue;
