@@ -1792,6 +1792,8 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
             }
         }
 
+        bool anchor{false};
+
         addrman.ResolveCollisions();
 
         int64_t nANow = GetAdjustedTime();
@@ -1805,11 +1807,24 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
             if (nTries > 100)
                 break;
 
-            CAddrInfo addr = addrman.SelectTriedCollision();
+            CAddress addr;
+            if (!m_anchors.empty() && (nOutboundBlockRelay < m_max_outbound_block_relay) && !fFeeler) {
+                anchor = true;
+                addr = m_anchors.back();
+                m_anchors.pop_back();
+            } else {
+                CAddrInfo addr_info = addrman.SelectTriedCollision();
 
-            // SelectTriedCollision returns an invalid address if it is empty.
-            if (!fFeeler || !addr.IsValid()) {
-                addr = addrman.Select(fFeeler);
+                // SelectTriedCollision returns an invalid address if it is empty.
+                if (!fFeeler || !addr_info.IsValid()) {
+                    addr_info = addrman.Select(fFeeler);
+                }
+
+                // only consider very recently tried nodes after 30 failed attempts
+                if (nANow - addr_info.nLastTry < 600 && nTries < 30)
+                    continue;
+
+                addr = static_cast<CAddress>(addr_info);
             }
 
             // Require outbound connections, other than feelers, to be to distinct network groups
@@ -1823,10 +1838,6 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
             }
 
             if (!IsReachable(addr))
-                continue;
-
-            // only consider very recently tried nodes after 30 failed attempts
-            if (nANow - addr.nLastTry < 600 && nTries < 30)
                 continue;
 
             // for non-feelers, require all the services we'll want,
@@ -1862,6 +1873,11 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
             // also at our block-relay peer limit, but check against that as
             // well for sanity.)
             bool block_relay_only = nOutboundBlockRelay < m_max_outbound_block_relay && !fFeeler && nOutboundFullRelay >= m_max_outbound_full_relay;
+
+            if (anchor) {
+                block_relay_only = true;
+                LogPrintf("Making anchor connection to %s\n", addrConnect.ToString());
+            }
 
             OpenNetworkConnection(addrConnect, (int)setConnected.size() >= std::min(nMaxConnections - 1, 2), &grant, nullptr, false, fFeeler, false, block_relay_only);
         }
