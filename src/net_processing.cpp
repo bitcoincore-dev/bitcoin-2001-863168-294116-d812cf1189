@@ -2368,6 +2368,8 @@ bool ProcessMessage(CNode* pfrom, const std::string& msg_type, CDataStream& vRec
                       pfrom->m_tx_relay == nullptr ? "block-relay" : "full-relay");
             if (!pfrom->m_tx_relay) {
                 std::vector<CAddress> anchors_to_save = connman->GetBlockRelayNodeAddresses();
+                const std::vector<CAddress> anchors_not_tried = connman->GetAnchors();
+                anchors_to_save.insert(anchors_to_save.end(), anchors_not_tried.begin(), anchors_not_tried.end());
                 DumpAnchors(connman->GetAnchorsDbPath(), anchors_to_save);
             }
         }
