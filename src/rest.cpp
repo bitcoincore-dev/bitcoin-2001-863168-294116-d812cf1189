@@ -334,7 +334,7 @@ static bool rest_filter_header(const util::Ref& context, HTTPRequest* req, const
 
     long count = strtol(uriParts[1].c_str(), nullptr, 10);
     if (count < 1 || count > 2000) {
-        return RESTERR(req, HTTP_BAD_REQUEST, "Header count out of range: " + uriParts[1]);
+        return RESTERR(req, HTTP_BAD_REQUEST, "Header count out of acceptable range (1-2000): " + uriParts[1]);
     }
 
     std::vector<const CBlockIndex *> headers;
@@ -406,7 +406,7 @@ static bool rest_filter_header(const util::Ref& context, HTTPRequest* req, const
         return true;
     }
     default: {
-        return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: .bin, .hex)");
+        return RESTERR(req, HTTP_NOT_FOUND, "output format not found (available: " + AvailableDataFormatsString() + ")");
     }
     }
 
