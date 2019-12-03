@@ -1352,6 +1352,14 @@ void BitcoinGUI::showModalOverlay()
         modalOverlay->toggleVisibility();
 }
 
+void BitcoinGUI::clearGUI()
+{
+    trayIconMenu->clear();
+    setTrayIconVisible(false);
+    rpcConsole->hide();
+    hide();
+}
+
 static bool ThreadSafeMessageBox(BitcoinGUI* gui, const std::string& message, const std::string& caption, unsigned int style)
 {
     bool modal = (style & CClientUIInterface::MODAL);
