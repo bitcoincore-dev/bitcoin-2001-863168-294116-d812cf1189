@@ -53,9 +53,9 @@ public:
 
     uint256 GetBestBlock() const override { return hashBestBlock_; }
 
-    bool BatchWrite(CCoinsMap& mapCoins, const uint256& hashBlock) override
+    bool BatchWrite(CCoinsMap& mapCoins, const uint256& hashBlock, bool erase = true) override
     {
-        for (CCoinsMap::iterator it = mapCoins.begin(); it != mapCoins.end(); ) {
+        for (CCoinsMap::iterator it = mapCoins.begin(); it != mapCoins.end(); it = erase ? mapCoins.erase(it) : ++it) {
             if (it->second.flags & CCoinsCacheEntry::DIRTY) {
                 // Same optimization used in CCoinsViewDB is to only write dirty entries.
                 map_[it->first] = it->second.coin;
@@ -64,7 +64,6 @@ public:
                     map_.erase(it->first);
                 }
             }
-            mapCoins.erase(it++);
         }
         if (!hashBlock.IsNull())
             hashBestBlock_ = hashBlock;
@@ -121,6 +120,7 @@ BOOST_AUTO_TEST_CASE(coins_cache_simulation_test)
     bool found_an_entry = false;
     bool missed_an_entry = false;
     bool uncached_an_entry = false;
+    bool flushed_without_erase = false;
 
     // A simple map to track what we expect the cache stack to represent.
     std::map<COutPoint, Coin> result;
@@ -223,14 +223,18 @@ BOOST_AUTO_TEST_CASE(coins_cache_simulation_test)
             // Every 100 iterations, flush an intermediate cache
             if (stack.size() > 1 && InsecureRandBool() == 0) {
                 unsigned int flushIndex = InsecureRandRange(stack.size() - 1);
-                BOOST_CHECK(stack[flushIndex]->Flush());
+                bool should_erase = InsecureRandRange(4) < 3;
+                BOOST_CHECK(should_erase ? stack[flushIndex]->Flush() : stack[flushIndex]->Sync());
+                flushed_without_erase |= !should_erase;
             }
         }
         if (InsecureRandRange(100) == 0) {
             // Every 100 iterations, change the cache stack.
             if (stack.size() > 0 && InsecureRandBool() == 0) {
                 //Remove the top cache
-                BOOST_CHECK(stack.back()->Flush());
+                bool should_erase = InsecureRandRange(4) < 3;
+                BOOST_CHECK(should_erase ? stack.back()->Flush() : stack.back()->Sync());
+                flushed_without_erase |= !should_erase;
                 delete stack.back();
                 stack.pop_back();
             }
@@ -266,6 +270,7 @@ BOOST_AUTO_TEST_CASE(coins_cache_simulation_test)
     BOOST_CHECK(found_an_entry);
     BOOST_CHECK(missed_an_entry);
     BOOST_CHECK(uncached_an_entry);
+    BOOST_CHECK(flushed_without_erase);
 }
 
 // Store of all necessary tx and undo data for next test
