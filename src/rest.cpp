@@ -316,8 +316,8 @@ static bool rest_filter_header(HTTPRequest* req, const std::string& strURIPart)
     }
 
     long count = strtol(uriParts[1].c_str(), nullptr, 10);
-    if (count < 1 || count > 2000) {
-        return RESTERR(req, HTTP_BAD_REQUEST, "Header count out of acceptable range (1-2000): " + uriParts[1]);
+    if (count < 1 || count > MAX_HEADERS_RESULTS) {
+        return RESTERR(req, HTTP_BAD_REQUEST, strprintf("Header count out of acceptable range (1-%u): %s",  MAX_HEADERS_RESULTS, uriParts[1]));
     }
 
     std::vector<const CBlockIndex *> headers;
