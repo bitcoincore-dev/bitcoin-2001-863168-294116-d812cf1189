@@ -6,22 +6,20 @@
 #include <config/bitcoin-config.h>
 #endif
 
-#include <fs.h>
 #include <qt/intro.h>
 #include <qt/forms/ui_intro.h>
 
+#include <fs.h>
+#include <interfaces/node.h>
 #include <qt/guiconstants.h>
 #include <qt/guiutil.h>
 #include <qt/optionsmodel.h>
-
-#include <interfaces/node.h>
 #include <util/system.h>
+#include <validation.h>
 
 #include <QFileDialog>
 #include <QSettings>
 #include <QMessageBox>
-
-#include <cmath>
 
 /* Check free space asynchronously to prevent hanging the UI thread.
 
@@ -128,14 +126,22 @@ Intro::Intro(QWidget *parent, uint64_t blockchain_size, uint64_t chain_state_siz
     );
     ui->lblExplanation2->setText(ui->lblExplanation2->text().arg(PACKAGE_NAME));
 
-    int64_t prune_target_mib = std::max<int64_t>(0, gArgs.GetArg("-prune", 0));
-    if (prune_target_mib > 1) { // -prune=1 means enabled, above that it's a size in MiB
+    connect(ui->prune, &QCheckBox::toggled, [this](bool prune_checked) {
+        UpdatePruneLabels(prune_checked);
+        UpdateFreeSpaceLabel();
+    });
+
+    int64_t prune_target_mib = gArgs.GetArg("-prune", 0);
+    if (prune_target_mib * 1024 * 1024 >= MIN_DISK_SPACE_FOR_BLOCK_FILES) {
         ui->prune->setChecked(true);
         ui->prune->setEnabled(false);
+        m_prune_target_gb = PruneMiBtoGB(prune_target_mib);
+    } else {
+        m_prune_target_gb = DEFAULT_PRUNE_TARGET_GB;
     }
-    const int prune_target_gb = PruneMiBtoGB(prune_target_mib);
-    ui->prune->setText(tr("Discard blocks after verification, except most recent %1 GB (prune)").arg(prune_target_gb ? prune_target_gb : DEFAULT_PRUNE_TARGET_GB));
-    UpdatePruneLabels(prune_target_gb);
+    ui->prune->setText(tr("Discard blocks after verification, except most recent %1 GB (prune)").arg(m_prune_target_gb));
+    UpdatePruneLabels(ui->prune->isChecked());
+
     startThread();
 }
 
@@ -335,13 +341,13 @@ QString Intro::getPathToCheck()
     return retval;
 }
 
-void Intro::UpdatePruneLabels(int64_t prune_target_gb)
+void Intro::UpdatePruneLabels(bool prune_checked)
 {
     m_required_space_gb = m_blockchain_size;
     QString storageRequiresMsg = tr("At least %1 GB of data will be stored in this directory, and it will grow over time.");
-    if (prune_target_gb) {
-        if (prune_target_gb <= m_required_space_gb) {
-            m_required_space_gb = prune_target_gb;
+    if (prune_checked) {
+        if (m_prune_target_gb <= m_required_space_gb) {
+            m_required_space_gb = m_prune_target_gb;
             storageRequiresMsg = tr("Approximately %1 GB of data will be stored in this directory.");
         }
         ui->lblExplanation3->setVisible(true);
