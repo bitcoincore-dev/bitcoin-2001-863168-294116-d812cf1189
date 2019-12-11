@@ -583,7 +583,7 @@ private:
 
 public:
     CChainState(BlockManager& blockman) : m_blockman(blockman) {}
-    CChainState();
+    CChainState(uint256 from_snapshot_blockhash = uint256());
 
     /**
      * Initialize the CoinsViews UTXO set database management data structures. The in-memory
@@ -610,6 +610,13 @@ public:
     //! The current chain of blockheaders we consult and build on.
     //! @see CChain, CBlockIndex.
     CChain m_chain;
+
+    /**
+     * The blockhash which is the base of the snapshot this chainstate was created from.
+     *
+     * IsNull() if this chainstate was not created from a snapshot.
+     */
+    uint256 m_from_snapshot_blockhash{};
 
     /**
      * The set of all CBlockIndex entries with BLOCK_VALID_TRANSACTIONS (for itself and all ancestors) and

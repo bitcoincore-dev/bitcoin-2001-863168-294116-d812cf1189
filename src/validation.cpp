@@ -1245,7 +1245,9 @@ void CoinsViews::InitCache()
 
 // NOTE: for now m_blockman is set to a global, but this will be changed
 // in a future commit.
-CChainState::CChainState() : m_blockman(g_blockman) {}
+CChainState::CChainState(uint256 from_snapshot_blockhash) :
+    m_blockman(g_blockman),
+    m_from_snapshot_blockhash(from_snapshot_blockhash) {}
 
 
 void CChainState::InitCoinsDB(
@@ -1254,6 +1256,10 @@ void CChainState::InitCoinsDB(
     bool should_wipe,
     std::string leveldb_name)
 {
+    if (!m_from_snapshot_blockhash.IsNull()) {
+        leveldb_name += "_" + m_from_snapshot_blockhash.ToString();
+    }
+
     m_coins_views = MakeUnique<CoinsViews>(
         leveldb_name, cache_size_bytes, in_memory, should_wipe);
 }
@@ -4911,7 +4917,8 @@ void CChainState::CheckBlockIndex(const Consensus::Params& consensusParams)
 std::string CChainState::ToString()
 {
     CBlockIndex* tip = m_chain.Tip();
-    return strprintf("Chainstate [%s] @ height %d",
+    return strprintf("Chainstate [%s] @ height %d (%s)",
+        m_from_snapshot_blockhash.IsNull() ? "ibd" : "snapshot",
         tip ? tip->nHeight : -1, tip ? tip->GetBlockHash().ToString() : "null");
 }
 
