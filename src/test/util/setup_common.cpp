@@ -109,7 +109,18 @@ TestingSetup::TestingSetup(const std::string& chainName) : BasicTestingSetup(cha
     GetMainSignals().RegisterBackgroundSignalScheduler(scheduler);
 
     pblocktree.reset(new CBlockTreeDB(1 << 20, true));
-    g_chainman.InitializeChainstate();
+
+    // During QT tests, we may end up calling this twice (e.g. during RPCNestedTests)
+    // which throws an excetion. Chainstates should otherwise never be overwritten
+    // during normal operation.
+    try {
+        g_chainman.InitializeChainstate();
+    } catch (const std::logic_error& e) {
+        std::string msg = e.what();
+        if (msg.find("overwriting a chainstate") == std::string::npos) {
+            throw;
+        }
+    }
     ::ChainstateActive().InitCoinsDB(
         /* cache_size_bytes */ 1 << 23, /* in_memory */ true, /* should_wipe */ false);
     assert(!::ChainstateActive().CanFlushToDisk());
