@@ -81,16 +81,17 @@ namespace {
 BlockManager g_blockman;
 } // anon namespace
 
-std::unique_ptr<CChainState> g_chainstate;
+ChainstateManager g_chainman;
 
-CChainState& ChainstateActive() {
-    assert(g_chainstate);
-    return *g_chainstate;
+CChainState& ChainstateActive()
+{
+    assert(g_chainman.m_active_chainstate);
+    return *g_chainman.m_active_chainstate;
 }
 
-CChain& ChainActive() {
-    assert(g_chainstate);
-    return g_chainstate->m_chain;
+CChain& ChainActive()
+{
+    return ::ChainstateActive().m_chain;
 }
 
 /**
@@ -4558,7 +4559,7 @@ void CChainState::UnloadBlockIndex() {
 void UnloadBlockIndex()
 {
     LOCK(cs_main);
-    ::ChainActive().SetTip(nullptr);
+    g_chainman.Unload();
     g_blockman.Unload();
     pindexBestInvalid = nullptr;
     pindexBestHeader = nullptr;
@@ -4572,8 +4573,6 @@ void UnloadBlockIndex()
         warningcache[b].clear();
     }
     fHavePruned = false;
-
-    ::ChainstateActive().UnloadBlockIndex();
 }
 
 bool LoadBlockIndex(const CChainParams& chainparams)
