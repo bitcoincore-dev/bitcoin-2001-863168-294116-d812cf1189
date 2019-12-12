@@ -530,6 +530,9 @@ public:
     void InitCache() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 };
 
+// Defined below, but needed for `friend` usage in CChainState.
+class ChainstateManager;
+
 /**
  * CChainState stores and provides an API to update our local knowledge of the
  * current best chain.
@@ -728,6 +731,8 @@ public:
     /** Update the chain tip based on database information, i.e. CoinsTip()'s best block. */
     bool LoadChainTip(const CChainParams& chainparams) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
+    std::string ToString() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
 private:
     bool ActivateBestChainStep(BlockValidationState& state, const CChainParams& chainparams, CBlockIndex* pindexMostWork, const std::shared_ptr<const CBlock>& pblock, bool& fInvalidFound, ConnectTrace& connectTrace) EXCLUSIVE_LOCKS_REQUIRED(cs_main, ::mempool.cs);
     bool ConnectTip(BlockValidationState& state, const CChainParams& chainparams, CBlockIndex* pindexNew, const std::shared_ptr<const CBlock>& pblock, ConnectTrace& connectTrace, DisconnectedBlockTransactions& disconnectpool) EXCLUSIVE_LOCKS_REQUIRED(cs_main, ::mempool.cs);
@@ -740,6 +745,8 @@ private:
 
     //! Mark a block as not having block data
     void EraseBlockData(CBlockIndex* index) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
+    friend ChainstateManager;
 };
 
 /** Mark a block as precious and reorganize.
@@ -754,6 +761,111 @@ bool InvalidateBlock(BlockValidationState& state, const CChainParams& chainparam
 
 /** Remove invalidity status from a block and its descendants. */
 void ResetBlockFailureFlags(CBlockIndex* pindex) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
+/**
+ * Provides an interface for creating and interacting with multiple
+ * chainstates, as well as a means to initialize chainstates from a
+ * UTXO snapshot. Managed chainstates can be maintained at different
+ * heights simultaneously.
+ *
+ * This class provides abstractions that allow the retrieval of the current
+ * most-work chainstate ("Active") as well as chainstates which may be in
+ * background use to validate UTXO snapshots.
+ *
+ * A few quick definitions:
+ *
+ * *IBD chainstate*: a chainstate populated via initial block download.
+ *
+ * *Snapshot chainstate*: a chainstate populated by loading in an
+ *    assumeutxo UTXO snapshot.
+ *
+ * *Active chainstate*: the chainstate containing the current most-work
+ *    chain. Consulted by most parts of the system (net_processing,
+ *    wallet) as a reflection of the current chain and UTXO set.
+ *    This may either be an IBD chainstate or a snapshot chainstate.
+ *
+ * *Background validation chainstate*: an IBD chainstate for which the
+ *    IBD process is happening in the background while use of the
+ *    active chainstate allows the rest of the system to function.
+ *
+ * *Validated chainstate*: a chainstate whose validity is not assumed.
+ *    This could be an IBD chainstate, or a snapshot chainstate for
+ *    which background validation (up to the base of the snapshot)
+ *    has completed.
+ */
+class ChainstateManager
+{
+private:
+    //! The chainstate used under normal operation (i.e. "regular" IBD) or, if
+    //! a snapshot is in use, for background validation.
+    //!
+    //! Its contents (including on-disk data) will be deleted *upon shutdown*
+    //! after background validation of the snapshot has completed. We do not
+    //! free the chainstate contents immediately after it finishes validation
+    //! to cautiously avoid a case where some other part of the system is still
+    //! using this pointer (e.g. net_processing).
+    std::unique_ptr<CChainState> m_ibd_chainstate;
+
+    //! A chainstate initialized on the basis of a UTXO snapshot. If this is
+    //! non-null, it is always our active chainstate unless proven invalid.
+    std::unique_ptr<CChainState> m_snapshot_chainstate;
+
+    //! Points to either the ibd or snapshot chainstate; indicates our
+    //! most-work chain.
+    CChainState* m_active_chainstate{nullptr};
+
+    //! If true, the assumed-valid chainstate has been fully validated
+    //! by the background validation chainstate.
+    bool m_snapshot_validated{false};
+
+    // For access to m_active_chainstate.
+    friend CChain& ChainActive();
+
+public:
+    //! Instantiate a new chainstate and assign it based upon whether it is
+    //! from a snapshot.
+    //!
+    //! @param[in] activate   If true, make this new chainstate the active one.
+    //! @param[in] snapshot_blockhash   If given, signify that this chainstate
+    //!                                 is based on a snapshot.
+    CChainState& InitializeChainstate(
+        bool activate, const uint256& snapshot_blockhash = uint256())
+        EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! Get all chainstates currently being used.
+    std::vector<CChainState*> GetAll();
+
+    //! The most-work chain.
+    CChain& ActiveChain() const;
+    int ActiveHeight() const { return ActiveChain().Height(); }
+    CBlockIndex* ActiveTip() const { return ActiveChain().Tip(); }
+
+    bool IsSnapshotActive() const;
+
+    uint256 SnapshotBlockhash() const;
+
+    //! Is there a snapshot in use and has it been fully validated?
+    bool IsSnapshotValidated() const { return m_snapshot_validated; }
+
+    //! @returns true if this chainstate is being used to validate an active
+    //!          snapshot in the background.
+    bool IsBackgroundValidationChainstate(CChainState* chainstate) const;
+
+    //! Return the most-work chainstate that has been fully validated.
+    //!
+    //! During background validation of a snapshot, this is the ibd chain. After
+    //! background validation has completed, this is the snapshot chain.
+    CChainState& ValidatedChainstate() const;
+
+    CChain& ValidatedChain() const { return ValidatedChainstate().m_chain; }
+    CBlockIndex* ValidatedTip() const { return ValidatedChain().Tip(); }
+
+    //! Unload block index and chain data before shutdown.
+    void Unload() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! Clear (deconstruct) chainstate data.
+    void Reset();
+};
 
 /** @returns the most-work valid chainstate. */
 CChainState& ChainstateActive();
