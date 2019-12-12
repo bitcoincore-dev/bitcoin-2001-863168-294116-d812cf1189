@@ -5116,3 +5116,68 @@ public:
     }
 };
 static CMainCleanup instance_of_cmaincleanup;
+
+std::vector<CChainState*> ChainstateManager::GetAll()
+{
+    std::vector<CChainState*> out;
+
+    if (!IsSnapshotValidated() && m_ibd_chainstate) {
+        out.push_back(m_ibd_chainstate.get());
+    }
+
+    if (m_snapshot_chainstate) {
+        out.push_back(m_snapshot_chainstate.get());
+    }
+
+    return out;
+}
+
+CChainState& ChainstateManager::InitializeChainstate(
+    bool activate, const uint256& snapshot_blockhash)
+{
+    std::unique_ptr<CChainState>& to_modify = (
+        snapshot_blockhash.IsNull() ? m_ibd_chainstate : m_snapshot_chainstate);
+
+    to_modify.reset(new CChainState(snapshot_blockhash));
+
+    if (activate) {
+        LogPrintf("Switching active chainstate to %s\n", snapshot_blockhash.ToString());
+        m_active_chainstate = to_modify.get();
+    }
+
+    return *to_modify.get();
+}
+
+CChain& ChainstateManager::ActiveChain() const
+{
+    return m_active_chainstate->m_chain;
+}
+
+bool ChainstateManager::IsSnapshotActive() const
+{
+    return m_snapshot_chainstate && m_active_chainstate == m_snapshot_chainstate.get();
+}
+
+CChainState& ChainstateManager::ValidatedChainstate() const
+{
+    if (m_snapshot_chainstate && IsSnapshotValidated()) {
+        return *m_snapshot_chainstate.get();
+    }
+    assert(m_ibd_chainstate);
+    return *m_ibd_chainstate.get();
+}
+
+void ChainstateManager::Unload()
+{
+    for (CChainState* chainstate : this->GetAll()) {
+        chainstate->m_chain.SetTip(nullptr);
+        chainstate->UnloadBlockIndex();
+    }
+}
+
+void ChainstateManager::Reset()
+{
+    m_ibd_chainstate.reset();
+    m_snapshot_chainstate.reset();
+    m_active_chainstate = nullptr;
+}
