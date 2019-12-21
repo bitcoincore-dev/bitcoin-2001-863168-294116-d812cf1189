@@ -7,7 +7,6 @@
 
 #include <clientversion.h>
 #include <streams.h>
-#include <txmempool.h>
 #include <txmempool_entry.h>
 #include <util/system.h>
 
