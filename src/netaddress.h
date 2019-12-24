@@ -78,8 +78,14 @@ class CNetAddr
         unsigned int GetByte(int n) const;
         uint64_t GetHash() const;
         bool GetInAddr(struct in_addr* pipv4Addr) const;
-        std::vector<unsigned char> GetGroup(const std::vector<bool> &asmap) const;
+        uint32_t GetNetClass() const;
 
+        // Critical (minimum-point-of-failure) AS on the BGP path to the node.
+        // The definition of "critical" depends on how asmap is constructed.
+        // Used for peer diversification in AddrMan bucketing.
+        uint32_t GetMappedAS(const std::vector<bool> &asmap) const;
+
+        std::vector<unsigned char> GetGroup(const std::vector<bool> &asmap) const;
         int GetReachabilityFrom(const CNetAddr *paddrPartner = nullptr) const;
 
         explicit CNetAddr(const struct in6_addr& pipv6Addr, const uint32_t scope = 0);
