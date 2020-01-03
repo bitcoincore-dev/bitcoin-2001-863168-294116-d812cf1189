@@ -119,7 +119,7 @@ private:
     QAbstractButton *yesButton;
     QTimer countDownTimer;
     int secDelay;
-    QString confirmButtonText;
+    QString m_yes_button_text;
 };
 
 #endif // BITCOIN_QT_SENDCOINSDIALOG_H
