@@ -6,8 +6,6 @@
 
 #include <QStringList>
 
-#include <cassert>
-
 BitcoinUnits::BitcoinUnits(QObject *parent):
         QAbstractListModel(parent),
         unitlist(availableUnits())
@@ -96,7 +94,7 @@ int BitcoinUnits::decimals(int unit)
     }
 }
 
-QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, SeparatorStyle separators, bool justify)
+QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, SeparatorStyle separators)
 {
     // Note: not using straight sprintf here because we do NOT want
     // localized number formatting.
@@ -108,7 +106,6 @@ QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, Separator
     qint64 n_abs = (n > 0 ? n : -n);
     qint64 quotient = n_abs / coin;
     QString quotient_str = QString::number(quotient);
-    if (justify) quotient_str = quotient_str.rightJustified(16 - num_decimals, ' ');
 
     // Use SI-style thin space separators as these are locale independent and can't be
     // confused with the decimal marker.
@@ -155,12 +152,11 @@ QString BitcoinUnits::formatHtmlWithUnit(int unit, const CAmount& amount, bool p
 
 QString BitcoinUnits::formatWithPrivacy(int unit, const CAmount& amount, SeparatorStyle separators, bool privacy)
 {
-    assert(amount >= 0);
-    QString value = format(unit, privacy ? 0 : amount, false, separators, true);
+    QString value = formatWithUnit(unit, privacy ? 0 : amount, false, separators);
     if (privacy) {
         value.replace('0', '#');
     }
-    return value + QString(" ") + shortName(unit);
+    return value;
 }
 
 bool BitcoinUnits::parse(int unit, const QString &value, CAmount *val_out)
