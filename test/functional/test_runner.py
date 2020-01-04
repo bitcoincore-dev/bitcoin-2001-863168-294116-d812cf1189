@@ -206,6 +206,7 @@ BASE_SCRIPTS = [
     'feature_includeconf.py',
     'rpc_deriveaddresses.py',
     'rpc_deriveaddresses.py --usecli',
+    'rpc_validateaddress.py',
     'rpc_scantxoutset.py',
     'feature_logging.py',
     'p2p_node_network_limited.py',
