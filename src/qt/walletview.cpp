@@ -4,6 +4,8 @@
 
 #include <qt/walletview.h>
 
+#include <node/psbt.h>
+#include <node/transaction.h>
 #include <qt/addressbookpage.h>
 #include <qt/askpassphrasedialog.h>
 #include <qt/bitcoingui.h>
@@ -21,6 +23,7 @@
 
 #include <interfaces/node.h>
 #include <ui_interface.h>
+#include <util/strencodings.h>
 
 #include <QAction>
 #include <QActionGroup>
@@ -220,6 +223,77 @@ void WalletView::gotoVerifyMessageTab(QString addr)
 
     if (!addr.isEmpty())
         signVerifyMessageDialog->setAddress_VM(addr);
+}
+
+void WalletView::gotoLoadPSBT()
+{
+    QString filename = GUIUtil::getOpenFileName(this,
+        tr("Load Transaction Data"), QString(),
+        tr("Partially Signed Transaction (*.psbt)"), nullptr);
+    if (filename.isEmpty()) return;
+    std::ifstream in(filename.toLocal8Bit().data(), std::ios::binary);
+    // https://stackoverflow.com/questions/116038/what-is-the-best-way-to-read-an-entire-file-into-a-stdstring-in-c
+    std::string data(std::istreambuf_iterator<char>{in}, {});
+
+    std::string error;
+    PartiallySignedTransaction psbtx;
+    if (!DecodeRawPSBT(psbtx, data, error)) {
+        Q_EMIT message(tr("Error"), tr("Unable to decode PSBT file") + "\n" + QString::fromStdString(error), CClientUIInterface::MSG_ERROR);
+        return;
+    }
+
+    CMutableTransaction mtx;
+    bool complete = false;
+    PSBTAnalysis analysis = AnalyzePSBT(psbtx);
+    QMessageBox msgBox;
+    msgBox.setText("PSBT");
+    switch (analysis.next) {
+    case PSBTRole::CREATOR:
+    case PSBTRole::UPDATER:
+        msgBox.setInformativeText("PSBT is incomplete. Copy to clipboard for manual inspection?");
+        break;
+    case PSBTRole::SIGNER:
+        msgBox.setInformativeText("Transaction needs more signatures. Copy to clipboard?");
+        break;
+    case PSBTRole::FINALIZER:
+    case PSBTRole::EXTRACTOR:
+        complete = FinalizeAndExtractPSBT(psbtx, mtx);
+        if (complete) {
+            msgBox.setInformativeText(tr("Would you like to send this transaction?"));
+        } else {
+            // The analyzer missed something, e.g. if there are final_scriptSig/final_scriptWitness
+            // but with invalid signatures.
+            msgBox.setInformativeText(tr("There was an unexpected problem processing the PSBT. Copy to clipboard for manual inspection?"));
+        }
+    }
+
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+    switch (msgBox.exec()) {
+    case QMessageBox::Yes: {
+        if (complete) {
+            std::string err_string;
+            CTransactionRef tx = MakeTransactionRef(mtx);
+
+            TransactionError result = BroadcastTransaction(tx, err_string, COIN / 10, /* relay */ true, /* await_callback */ false);
+            if (result == TransactionError::OK) {
+                Q_EMIT message(tr("Success"), tr("Broadcasted transaction sucessfully."), CClientUIInterface::MSG_INFORMATION | CClientUIInterface::MODAL);
+            } else {
+                Q_EMIT message(tr("Error"), QString::fromStdString(err_string), CClientUIInterface::MSG_ERROR);
+            }
+        } else {
+            // Serialize the PSBT
+            CDataStream ssTx(SER_NETWORK, PROTOCOL_VERSION);
+            ssTx << psbtx;
+            GUIUtil::setClipboard(EncodeBase64(ssTx.str()).c_str());
+            Q_EMIT message(tr("PSBT copied"), "Copied to clipboard", CClientUIInterface::MSG_INFORMATION);
+            return;
+        }
+    }
+    case QMessageBox::Cancel:
+        break;
+    default:
+        assert(false);
+    }
 }
 
 bool WalletView::handlePaymentRequest(const SendCoinsRecipient& recipient)
