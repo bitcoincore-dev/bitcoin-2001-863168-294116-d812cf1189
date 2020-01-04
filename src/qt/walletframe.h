@@ -64,6 +64,7 @@ public:
     WalletModel* currentWalletModel() const;
 
 public Q_SLOTS:
+    void setPrivacy(bool);
     /** Switch to overview (home) page */
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
