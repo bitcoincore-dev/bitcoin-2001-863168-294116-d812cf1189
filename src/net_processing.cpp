@@ -3385,13 +3385,13 @@ bool PeerLogicValidation::ProcessMessages(CNode* pfrom, std::atomic<bool>& inter
             // Allow exceptions from unknown witness encoding
             LogPrint(BCLog::NET, "%s(%s, %u bytes): Exception '%s' caught\n", __func__, SanitizeString(strCommand), nMessageSize, e.what());
         } else {
-            PrintExceptionContinue(&e, "ProcessMessages()");
+            LogPrint(BCLog::NET, "\n\n************************\n%s\n", FormatException(&e, "ProcessMessages()"));
         }
     }
     catch (const std::exception& e) {
-        PrintExceptionContinue(&e, "ProcessMessages()");
+        LogPrint(BCLog::NET, "\n\n************************\n%s\n", FormatException(&e, "ProcessMessages()"));
     } catch (...) {
-        PrintExceptionContinue(nullptr, "ProcessMessages()");
+        LogPrint(BCLog::NET, "\n\n************************\n%s\n", FormatException(nullptr, "ProcessMessages()"));
     }
 
     if (!fRet) {

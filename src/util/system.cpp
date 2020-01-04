@@ -669,7 +669,7 @@ std::string HelpMessageOpt(const std::string &option, const std::string &message
            std::string("\n\n");
 }
 
-static std::string FormatException(const std::exception* pex, const char* pszThread)
+std::string FormatException(const std::exception* pex, const char* pszThread)
 {
 #ifdef WIN32
     char pszModule[MAX_PATH] = "";
