@@ -50,6 +50,7 @@ bool error(const char* fmt, const Args&... args)
     return false;
 }
 
+std::string FormatException(const std::exception* pex, const char* pszThread);
 void PrintExceptionContinue(const std::exception *pex, const char* pszThread);
 bool FileCommit(FILE *file);
 bool TruncateFile(FILE *file, unsigned int length);
