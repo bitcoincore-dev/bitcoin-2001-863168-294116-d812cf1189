@@ -38,13 +38,13 @@ public:
     /** Bitcoin units.
       @note Source: https://en.bitcoin.it/wiki/Units . Please add only sensible ones
      */
-    enum Unit
-    {
+    enum class Unit {
         BTC,
         mBTC,
         uBTC,
         SAT
     };
+    Q_ENUM(Unit)
 
     enum class SeparatorStyle {
         NEVER,
@@ -59,27 +59,27 @@ public:
     //! Get list of units, for drop-down box
     static QList<Unit> availableUnits();
     //! Is unit ID valid?
-    static bool valid(int unit);
+    static bool valid(Unit unit);
     //! Long name
-    static QString longName(int unit);
+    static QString longName(Unit unit);
     //! Short name
-    static QString shortName(int unit);
+    static QString shortName(Unit unit);
     //! Longer description
-    static QString description(int unit);
+    static QString description(Unit unit);
     //! Number of Satoshis (1e-8) per unit
-    static qint64 factor(int unit);
+    static qint64 factor(Unit unit);
     //! Number of decimals left
-    static int decimals(int unit);
+    static int decimals(Unit unit);
     //! Format as string
-    static QString format(int unit, const CAmount& amount, bool plussign = false, SeparatorStyle separators = SeparatorStyle::STANDARD);
+    static QString format(Unit unit, const CAmount& amount, bool plussign = false, SeparatorStyle separators = SeparatorStyle::STANDARD);
     //! Format as string (with unit)
-    static QString formatWithUnit(int unit, const CAmount& amount, bool plussign = false, SeparatorStyle separators = SeparatorStyle::STANDARD);
+    static QString formatWithUnit(Unit unit, const CAmount& amount, bool plussign = false, SeparatorStyle separators = SeparatorStyle::STANDARD);
     //! Format as HTML string (with unit)
-    static QString formatHtmlWithUnit(int unit, const CAmount& amount, bool plussign = false, SeparatorStyle separators = SeparatorStyle::STANDARD);
+    static QString formatHtmlWithUnit(Unit unit, const CAmount& amount, bool plussign = false, SeparatorStyle separators = SeparatorStyle::STANDARD);
     //! Parse string to coin amount
-    static bool parse(int unit, const QString &value, CAmount *val_out);
+    static bool parse(Unit unit, const QString& value, CAmount* val_out);
     //! Gets title for amount column including current display unit if optionsModel reference available */
-    static QString getAmountColumnTitle(int unit);
+    static QString getAmountColumnTitle(Unit unit);
     ///@}
 
     //! @name AbstractListModel implementation
@@ -104,7 +104,7 @@ public:
     static CAmount maxMoney();
 
 private:
-    QList<BitcoinUnits::Unit> unitlist;
+    QList<Unit> unitlist;
 };
 typedef BitcoinUnits::Unit BitcoinUnit;
 
