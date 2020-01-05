@@ -6,6 +6,7 @@
 #define BITCOIN_QT_OPTIONSMODEL_H
 
 #include <amount.h>
+#include <qt/bitcoinunits.h>
 
 #include <QAbstractListModel>
 
@@ -41,7 +42,7 @@ public:
         ProxyUseTor,            // bool
         ProxyIPTor,             // QString
         ProxyPortTor,           // int
-        DisplayUnit,            // BitcoinUnits::Unit
+        DisplayUnit,            // BitcoinUnit
         ThirdPartyTxUrls,       // QString
         Language,               // QString
         CoinControlFeatures,    // bool
@@ -67,7 +68,7 @@ public:
     bool getHideTrayIcon() const { return fHideTrayIcon; }
     bool getMinimizeToTray() const { return fMinimizeToTray; }
     bool getMinimizeOnClose() const { return fMinimizeOnClose; }
-    int getDisplayUnit() const { return nDisplayUnit; }
+    BitcoinUnit getDisplayUnit() const { return nDisplayUnit; }
     QString getThirdPartyTxUrls() const { return strThirdPartyTxUrls; }
     bool getCoinControlFeatures() const { return fCoinControlFeatures; }
     const QString& getOverriddenByCommandLine() { return strOverriddenByCommandLine; }
@@ -88,7 +89,7 @@ private:
     bool fMinimizeToTray;
     bool fMinimizeOnClose;
     QString language;
-    int nDisplayUnit;
+    BitcoinUnit nDisplayUnit;
     QString strThirdPartyTxUrls;
     bool fCoinControlFeatures;
     /* settings that were overridden by command-line */
@@ -100,7 +101,7 @@ private:
     // Check settings version and upgrade default values if required
     void checkAndMigrate();
 Q_SIGNALS:
-    void displayUnitChanged(int unit);
+    void displayUnitChanged(BitcoinUnit unit);
     void coinControlFeaturesChanged(bool);
     void hideTrayIconChanged(bool);
 };

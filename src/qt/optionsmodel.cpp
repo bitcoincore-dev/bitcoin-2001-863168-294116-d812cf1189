@@ -67,9 +67,10 @@ void OptionsModel::Init(bool resetSettings)
     fMinimizeOnClose = settings.value("fMinimizeOnClose").toBool();
 
     // Display
+    // As BitcoinUnit does not provide its own stream operators, we cast it to int and back.
     if (!settings.contains("nDisplayUnit"))
-        settings.setValue("nDisplayUnit", BitcoinUnits::BTC);
-    nDisplayUnit = settings.value("nDisplayUnit").toInt();
+        settings.setValue("nDisplayUnit", static_cast<int>(BitcoinUnit::BTC));
+    nDisplayUnit = static_cast<BitcoinUnit>(settings.value("nDisplayUnit").toInt());
 
     if (!settings.contains("strThirdPartyTxUrls"))
         settings.setValue("strThirdPartyTxUrls", "");
@@ -296,7 +297,7 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("bSpendZeroConfChange");
 #endif
         case DisplayUnit:
-            return nDisplayUnit;
+            return QVariant::fromValue(nDisplayUnit);
         case ThirdPartyTxUrls:
             return strThirdPartyTxUrls;
         case Language:
@@ -477,8 +478,9 @@ void OptionsModel::setDisplayUnit(const QVariant &value)
     if (!value.isNull())
     {
         QSettings settings;
-        nDisplayUnit = value.toInt();
-        settings.setValue("nDisplayUnit", nDisplayUnit);
+        nDisplayUnit = value.value<BitcoinUnit>();
+        // As BitcoinUnit does not provide its own operator<<, we cast it to int.
+        settings.setValue("nDisplayUnit", static_cast<int>(nDisplayUnit));
         Q_EMIT displayUnitChanged(nDisplayUnit);
     }
 }
