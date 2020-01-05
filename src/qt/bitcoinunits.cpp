@@ -22,20 +22,6 @@ QList<BitcoinUnit> BitcoinUnits::availableUnits()
     return unitlist;
 }
 
-bool BitcoinUnits::valid(Unit unit)
-{
-    switch(unit)
-    {
-    case Unit::BTC:
-    case Unit::mBTC:
-    case Unit::uBTC:
-    case Unit::SAT:
-        return true;
-    default:
-        return false;
-    }
-}
-
 QString BitcoinUnits::longName(Unit unit)
 {
     switch(unit)
@@ -98,8 +84,6 @@ QString BitcoinUnits::format(Unit unit, const CAmount& nIn, bool fPlus, Separato
 {
     // Note: not using straight sprintf here because we do NOT want
     // localized number formatting.
-    if(!valid(unit))
-        return QString(); // Refuse to format invalid unit
     qint64 n = (qint64)nIn;
     qint64 coin = factor(unit);
     int num_decimals = decimals(unit);
@@ -153,8 +137,9 @@ QString BitcoinUnits::formatHtmlWithUnit(Unit unit, const CAmount& amount, bool 
 
 bool BitcoinUnits::parse(Unit unit, const QString& value, CAmount* val_out)
 {
-    if(!valid(unit) || value.isEmpty())
+    if (value.isEmpty()) {
         return false; // Refuse to parse invalid unit or empty string
+    }
     int num_decimals = decimals(unit);
 
     // Ignore spaces and thin spaces when parsing
@@ -192,12 +177,7 @@ bool BitcoinUnits::parse(Unit unit, const QString& value, CAmount* val_out)
 
 QString BitcoinUnits::getAmountColumnTitle(Unit unit)
 {
-    QString amountTitle = QObject::tr("Amount");
-    if (BitcoinUnits::valid(unit))
-    {
-        amountTitle += " ("+BitcoinUnits::shortName(unit) + ")";
-    }
-    return amountTitle;
+    return QObject::tr("Amount") + " (" + shortName(unit) + ")";
 }
 
 int BitcoinUnits::rowCount(const QModelIndex &parent) const
