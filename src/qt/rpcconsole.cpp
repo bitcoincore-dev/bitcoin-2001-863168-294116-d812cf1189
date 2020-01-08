@@ -1319,6 +1319,7 @@ QKeySequence RPCConsole::tabShortcut(TabTypes tab_type) const
     case TAB_INFO: return QKeySequence(Qt::CTRL + Qt::Key_I);
     case TAB_CONSOLE: return QKeySequence(Qt::CTRL + Qt::Key_T);
     case TAB_GRAPH: return QKeySequence(Qt::CTRL + Qt::Key_N);
+    case TAB_PAIRING: return QKeySequence(Qt::ALT + Qt::Key_5);  // Only used in disablewallet mode - matches wallet GUI's pairing shortcut
     case TAB_PEERS: return QKeySequence(Qt::CTRL + Qt::Key_P);
     }
 }
