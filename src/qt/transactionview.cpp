@@ -23,6 +23,7 @@
 #include <QDateTimeEdit>
 #include <QDesktopServices>
 #include <QDoubleValidator>
+#include <QGuiApplication>
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
@@ -396,8 +397,7 @@ void TransactionView::contextualMenu(const QPoint &point)
     abandonAction->setEnabled(model->wallet().transactionCanBeAbandoned(hash));
     bumpFeeAction->setEnabled(model->wallet().transactionCanBeBumped(hash));
 
-    if(index.isValid())
-    {
+    if (index.isValid() && QGuiApplication::platformName() != "minimal") {
         contextMenu->popup(transactionView->viewport()->mapToGlobal(point));
     }
 }
