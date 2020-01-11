@@ -44,10 +44,10 @@
 #include <QFont>
 #include <QFontDatabase>
 #include <QFontMetrics>
-#include <QGuiApplication>
 #include <QKeyEvent>
 #include <QLineEdit>
 #include <QList>
+#include <QMenu>
 #include <QMouseEvent>
 #include <QProgressDialog>
 #include <QScreen>
@@ -902,6 +902,13 @@ void LogQtInfo()
     for (const QScreen* s : QGuiApplication::screens()) {
         LogPrintf("Screen: %s %dx%d, pixel ratio=%.1f\n", s->name().toStdString(), s->size().width(), s->size().height(), s->devicePixelRatio());
     }
+}
+
+void QMenuPopup(QMenu* menu, const QPoint& point, QAction* atAction)
+{
+    // The qminimal plugin does not provide window system integration.
+    if (QGuiApplication::platformName() == "minimal") return;
+    menu->popup(point, atAction);
 }
 
 } // namespace GUIUtil
