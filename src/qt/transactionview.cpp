@@ -23,6 +23,7 @@
 #include <QDateTimeEdit>
 #include <QDesktopServices>
 #include <QDoubleValidator>
+#include <QGuiApplication>
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
@@ -396,8 +397,9 @@ void TransactionView::contextualMenu(const QPoint &point)
     abandonAction->setEnabled(model->wallet().transactionCanBeAbandoned(hash));
     bumpFeeAction->setEnabled(model->wallet().transactionCanBeBumped(hash));
 
-    if(index.isValid())
-    {
+    if (index.isValid() && QGuiApplication::platformName() != "minimal") {
+        // The qminimal plugin does not provide window system integration.
+        // Skip this call to suppress warnings during the tests with QT_QPA_PLATFORM=minimal.
         contextMenu->popup(transactionView->viewport()->mapToGlobal(point));
     }
 }
