@@ -41,6 +41,7 @@
 #include <script/sigcache.h>
 #include <script/standard.h>
 #include <shutdown.h>
+#include <stats/stats.h>
 #include <timedata.h>
 #include <torcontrol.h>
 #include <txdb.h>
@@ -545,6 +546,8 @@ void SetupServerArgs()
 #else
     hidden_args.emplace_back("-daemon");
 #endif
+
+    CStats::AddStatsOptions();
 
     // Add the hidden options
     gArgs.AddHiddenArgs(hidden_args);
@@ -1158,6 +1161,8 @@ bool AppInitParameterInteraction()
         return InitError("unknown rpcserialversion requested.");
 
     nMaxTipAge = gArgs.GetArg("-maxtipage", DEFAULT_MAX_TIP_AGE);
+
+    if (!CStats::parameterInteraction()) return false;
 
     return true;
 }
