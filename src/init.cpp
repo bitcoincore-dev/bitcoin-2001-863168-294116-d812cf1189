@@ -366,7 +366,7 @@ void SetupServerArgs()
     gArgs.AddArg("-blocknotify=<cmd>", "Execute command when the best block changes (%s in cmd is replaced by block hash)", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
 #endif
     gArgs.AddArg("-blockreconstructionextratxn=<n>", strprintf("Extra transactions to keep in memory for compact block reconstructions (default: %u)", DEFAULT_BLOCK_RECONSTRUCTION_EXTRA_TXN), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
-    gArgs.AddArg("-blocksonly", strprintf("Whether to reject transactions from network peers. Transactions from the wallet, RPC and relay whitelisted inbound peers are not affected. (default: %u)", DEFAULT_BLOCKSONLY), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-blocksonly", strprintf("Whether to reject transactions from network peers. Transactions from the wallet, RPC and relay whitelisted peers are not affected. (default: %u)", DEFAULT_BLOCKSONLY), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-conf=<file>", strprintf("Specify configuration file. Relative paths will be prefixed by datadir location. (default: %s)", BITCOIN_CONF_FILENAME), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-datadir=<dir>", "Specify data directory", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-dbbatchsize", strprintf("Maximum database write batch size in bytes (default: %u)", nDefaultDbBatchSize), ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::OPTIONS);
@@ -420,6 +420,7 @@ void SetupServerArgs()
     gArgs.AddArg("-onion=<ip:port>", "Use separate SOCKS5 proxy to reach peers via Tor hidden services, set -noonion to disable (default: -proxy)", ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
     gArgs.AddArg("-onlynet=<net>", "Make outgoing connections only through network <net> (ipv4, ipv6 or onion). Incoming connections are not affected by this option. This option can be specified multiple times to allow multiple networks.", ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
     gArgs.AddArg("-peerbloomfilters", strprintf("Support filtering of blocks and transaction with bloom filters (default: %u)", DEFAULT_PEERBLOOMFILTERS), ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
+    gArgs.AddArg("-peercfilters", strprintf("Serve compact block filters to peers per BIP 157 (default: %u)", DEFAULT_PEERCFILTERS), ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
     gArgs.AddArg("-permitbaremultisig", strprintf("Relay non-P2SH multisig (default: %u)", DEFAULT_PERMIT_BAREMULTISIG), ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
     gArgs.AddArg("-port=<port>", strprintf("Listen for connections on <port> (default: %u, testnet: %u, regtest: %u)", defaultChainParams->GetDefaultPort(), testnetChainParams->GetDefaultPort(), regtestChainParams->GetDefaultPort()), ArgsManager::ALLOW_ANY | ArgsManager::NETWORK_ONLY, OptionsCategory::CONNECTION);
     gArgs.AddArg("-proxy=<ip:port>", "Connect through SOCKS5 proxy, set -noproxy to disable (default: disabled)", ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
@@ -446,9 +447,11 @@ void SetupServerArgs()
         "and mempool (allow requesting BIP35 mempool contents). "
         "Specify multiple permissions separated by commas (default: noban,mempool,relay). Can be specified multiple times.", ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
 
-    gArgs.AddArg("-whitelist=<[permissions@]IP address or network>", "Whitelist peers connecting from the given IP address (e.g. 1.2.3.4) or "
+    gArgs.AddArg("-whitelist=<[permissions@]IP address or network>", strprintf("Whitelist peers using the given IP address (e.g. 1.2.3.4) or "
         "CIDR notated network(e.g. 1.2.3.0/24). Uses same permissions as "
-        "-whitebind. Can be specified multiple times." , ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
+        "-whitebind."
+        " Additional flags in and out control whether permissions apply to incoming connections and/or outgoing (default: %s)."
+        " Can be specified multiple times.", "both"), ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
 
     g_wallet_init_interface.AddWalletOptions();
 
@@ -518,8 +521,8 @@ void SetupServerArgs()
     gArgs.AddArg("-datacarriersize", strprintf("Maximum size of data in data carrier transactions we relay and mine (default: %u)", MAX_OP_RETURN_RELAY), ArgsManager::ALLOW_ANY, OptionsCategory::NODE_RELAY);
     gArgs.AddArg("-minrelaytxfee=<amt>", strprintf("Fees (in %s/kB) smaller than this are considered zero fee for relaying, mining and transaction creation (default: %s)",
         CURRENCY_UNIT, FormatMoney(DEFAULT_MIN_RELAY_TX_FEE)), ArgsManager::ALLOW_ANY, OptionsCategory::NODE_RELAY);
-    gArgs.AddArg("-whitelistforcerelay", strprintf("Add 'forcerelay' permission to whitelisted inbound peers with default permissions. This will relay transactions even if the transactions were already in the mempool or violate local relay policy. (default: %d)", DEFAULT_WHITELISTFORCERELAY), ArgsManager::ALLOW_ANY, OptionsCategory::NODE_RELAY);
-    gArgs.AddArg("-whitelistrelay", strprintf("Add 'relay' permission to whitelisted inbound peers with default permissions. The will accept relayed transactions even when not relaying transactions (default: %d)", DEFAULT_WHITELISTRELAY), ArgsManager::ALLOW_ANY, OptionsCategory::NODE_RELAY);
+    gArgs.AddArg("-whitelistforcerelay", strprintf("Add 'forcerelay' permission to whitelisted peers with default permissions. This will relay transactions even if the transactions were already in the mempool or violate local relay policy. (default: %d)", DEFAULT_WHITELISTFORCERELAY), ArgsManager::ALLOW_ANY, OptionsCategory::NODE_RELAY);
+    gArgs.AddArg("-whitelistrelay", strprintf("Add 'relay' permission to whitelisted peers with default permissions. The will accept relayed transactions even when not relaying transactions (default: %d)", DEFAULT_WHITELISTRELAY), ArgsManager::ALLOW_ANY, OptionsCategory::NODE_RELAY);
 
 
     gArgs.AddArg("-blockmaxweight=<n>", strprintf("Set maximum BIP141 block weight (default: %d)", DEFAULT_BLOCK_MAX_WEIGHT), ArgsManager::ALLOW_ANY, OptionsCategory::BLOCK_CREATION);
@@ -961,6 +964,19 @@ bool AppInitParameterInteraction()
             }
             g_enabled_filter_types.push_back(filter_type);
         }
+    }
+
+    // Signal NODE_COMPACT_FILTERS if peercfilters and required index are both enabled.
+    if (gArgs.GetBoolArg("-peercfilters", DEFAULT_PEERCFILTERS)) {
+        bool index_enabled = std::find(g_enabled_filter_types.begin(),
+                                       g_enabled_filter_types.end(),
+                                       BlockFilterType::BASIC) != g_enabled_filter_types.end();
+        if (!index_enabled) {
+            return InitError(_("Cannot set -peercfilters without -blockfilterindex.").translated);
+        }
+
+        g_need_peercfilters = true;
+        nLocalServices = ServiceFlags(nLocalServices | NODE_COMPACT_FILTERS);
     }
 
     // if using block pruning, then disallow txindex
@@ -1783,18 +1799,40 @@ bool AppInitMain(InitInterfaces& interfaces)
         }
         connOptions.vBinds.push_back(addrBind);
     }
+
+    {
+        NetPermissionFlags all_permission_flags = PF_NONE;
+
     for (const std::string& strBind : gArgs.GetArgs("-whitebind")) {
         NetWhitebindPermissions whitebind;
         std::string error;
         if (!NetWhitebindPermissions::TryParse(strBind, whitebind, error)) return InitError(error);
+        NetPermissions::AddFlag(all_permission_flags, whitebind.m_flags);
         connOptions.vWhiteBinds.push_back(whitebind);
     }
 
     for (const auto& net : gArgs.GetArgs("-whitelist")) {
         NetWhitelistPermissions subnet;
+        ConnectionDirection connection_direction;
         std::string error;
-        if (!NetWhitelistPermissions::TryParse(net, subnet, error)) return InitError(error);
-        connOptions.vWhitelistedRange.push_back(subnet);
+        if (!NetWhitelistPermissions::TryParse(net, subnet, connection_direction, error)) return InitError(error);
+        NetPermissions::AddFlag(all_permission_flags, subnet.m_flags);
+        if (connection_direction & ConnectionDirection::In) {
+            connOptions.vWhitelistedRange.push_back(subnet);
+        }
+        if (connection_direction & ConnectionDirection::Out) {
+            connOptions.vWhitelistedRangeOutgoing.push_back(subnet);
+        }
+    }
+
+        if (NetPermissions::HasFlag(all_permission_flags, PF_CFILTERS)) {
+            bool index_enabled = std::find(g_enabled_filter_types.begin(), g_enabled_filter_types.end(), BlockFilterType::BASIC) != g_enabled_filter_types.end();
+            if (index_enabled) {
+                g_need_peercfilters = true;
+            } else if (NetPermissions::HasFlag(all_permission_flags, PF_CFILTERS_EXPLICIT)) {
+                return InitError(_("Cannot grant cfilters permission without -blockfilterindex.").translated);
+            }
+        }
     }
 
     connOptions.vSeedNodes = gArgs.GetArgs("-seednode");

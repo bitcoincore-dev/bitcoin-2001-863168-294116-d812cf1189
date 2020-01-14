@@ -10,11 +10,13 @@
 #include <net.h>
 
 #include <banman.h>
+#include <blockfilter.h>
 #include <chainparams.h>
 #include <clientversion.h>
 #include <consensus/consensus.h>
 #include <crypto/common.h>
 #include <crypto/sha256.h>
+#include <index/blockfilterindex.h>
 #include <netbase.h>
 #include <net_permissions.h>
 #include <primitives/transaction.h>
@@ -91,6 +93,7 @@ CCriticalSection cs_mapLocalHost;
 std::map<CNetAddr, LocalServiceInfo> mapLocalHost GUARDED_BY(cs_mapLocalHost);
 static bool vfLimited[NET_MAX] GUARDED_BY(cs_mapLocalHost) = {};
 std::string strSubVersion;
+bool g_need_peercfilters{false};
 
 void CConnman::AddOneShot(const std::string& strDest)
 {
@@ -441,12 +444,24 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char *pszDest, bool fCo
         return nullptr;
     }
 
+    NetPermissionFlags permission_flags = NetPermissionFlags::PF_NONE;
+    ServiceFlags node_services = nLocalServices;
+    AddWhitelistPermissionFlags(permission_flags, addrConnect, vWhitelistedRangeOutgoing);
+    bool legacyWhitelisted = false;
+    if (NetPermissions::HasFlag(permission_flags, NetPermissionFlags::PF_ISIMPLICIT)) {
+        legacyWhitelisted = true;
+    }
+    InitializePermissionFlags(permission_flags, node_services);
+
     // Add node
     NodeId id = GetNewNodeId();
     uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
     CAddress addr_bind = GetBindAddress(hSocket);
-    CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), hSocket, addrConnect, CalculateKeyedNetGroup(addrConnect), nonce, addr_bind, pszDest ? pszDest : "", false, block_relay_only);
+    CNode* pnode = new CNode(id, node_services, GetBestHeight(), hSocket, addrConnect, CalculateKeyedNetGroup(addrConnect), nonce, addr_bind, pszDest ? pszDest : "", false, block_relay_only);
     pnode->AddRef();
+
+    pnode->m_permissionFlags = permission_flags;
+    pnode->m_legacyWhitelisted = legacyWhitelisted;
 
     return pnode;
 }
@@ -462,9 +477,25 @@ void CNode::CloseSocketDisconnect()
     }
 }
 
-void CConnman::AddWhitelistPermissionFlags(NetPermissionFlags& flags, const CNetAddr &addr) const {
-    for (const auto& subnet : vWhitelistedRange) {
+void CConnman::AddWhitelistPermissionFlags(NetPermissionFlags& flags, const CNetAddr &addr, const std::vector<NetWhitelistPermissions>& ranges) const {
+    for (const auto& subnet : ranges) {
         if (subnet.m_subnet.Match(addr)) NetPermissions::AddFlag(flags, subnet.m_flags);
+    }
+}
+
+void CConnman::InitializePermissionFlags(NetPermissionFlags& flags, ServiceFlags& service_flags) {
+    if (NetPermissions::HasFlag(flags, NetPermissionFlags::PF_ISIMPLICIT)) {
+        if (gArgs.GetBoolArg("-whitelistforcerelay", DEFAULT_WHITELISTFORCERELAY)) NetPermissions::AddFlag(flags, PF_FORCERELAY);
+        if (gArgs.GetBoolArg("-whitelistrelay", DEFAULT_WHITELISTRELAY)) NetPermissions::AddFlag(flags, PF_RELAY);
+        NetPermissions::AddFlag(flags, PF_MEMPOOL);
+        NetPermissions::AddFlag(flags, PF_NOBAN);
+    }
+
+    if (NetPermissions::HasFlag(flags, PF_BLOOMFILTER)) {
+        service_flags = static_cast<ServiceFlags>(service_flags | NODE_BLOOM);
+    }
+    if (NetPermissions::HasFlag(flags, PF_CFILTERS) && g_need_peercfilters) {
+        service_flags = static_cast<ServiceFlags>(service_flags | NODE_COMPACT_FILTERS);
     }
 }
 
@@ -917,17 +948,14 @@ void CConnman::AcceptConnection(const ListenSocket& hListenSocket) {
     }
 
     NetPermissionFlags permissionFlags = NetPermissionFlags::PF_NONE;
+    ServiceFlags nodeServices = nLocalServices;
     hListenSocket.AddSocketPermissionFlags(permissionFlags);
-    AddWhitelistPermissionFlags(permissionFlags, addr);
+    AddWhitelistPermissionFlags(permissionFlags, addr, vWhitelistedRange);
     bool legacyWhitelisted = false;
     if (NetPermissions::HasFlag(permissionFlags, NetPermissionFlags::PF_ISIMPLICIT)) {
-        NetPermissions::ClearFlag(permissionFlags, PF_ISIMPLICIT);
-        if (gArgs.GetBoolArg("-whitelistforcerelay", DEFAULT_WHITELISTFORCERELAY)) NetPermissions::AddFlag(permissionFlags, PF_FORCERELAY);
-        if (gArgs.GetBoolArg("-whitelistrelay", DEFAULT_WHITELISTRELAY)) NetPermissions::AddFlag(permissionFlags, PF_RELAY);
-        NetPermissions::AddFlag(permissionFlags, PF_MEMPOOL);
-        NetPermissions::AddFlag(permissionFlags, PF_NOBAN);
         legacyWhitelisted = true;
     }
+    InitializePermissionFlags(permissionFlags, nodeServices);
 
     {
         LOCK(cs_vNodes);
@@ -986,10 +1014,6 @@ void CConnman::AcceptConnection(const ListenSocket& hListenSocket) {
     uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
     CAddress addr_bind = GetBindAddress(hSocket);
 
-    ServiceFlags nodeServices = nLocalServices;
-    if (NetPermissions::HasFlag(permissionFlags, PF_BLOOMFILTER)) {
-        nodeServices = static_cast<ServiceFlags>(nodeServices | NODE_BLOOM);
-    }
     CNode* pnode = new CNode(id, nodeServices, GetBestHeight(), hSocket, addr, CalculateKeyedNetGroup(addr), nonce, addr_bind, "", true);
     pnode->AddRef();
     pnode->m_permissionFlags = permissionFlags;
@@ -2631,7 +2655,18 @@ uint64_t CConnman::GetTotalBytesSent()
 
 ServiceFlags CConnman::GetLocalServices() const
 {
-    return nLocalServices;
+    uint64_t local_services = nLocalServices;
+    if (local_services & NODE_COMPACT_FILTERS) {
+        BlockFilterIndex* basic_filter_index = GetBlockFilterIndex(BlockFilterType::BASIC);
+        if (!basic_filter_index) {
+            LogPrintf("WARNING: NODE_COMPACT_FILTERS is signaled, but filter index is not available\n");
+        }
+        if (!basic_filter_index || !basic_filter_index->IsSynced()) {
+            // If block filter index is still syncing, do not advertise the service bit.
+            local_services &= ~NODE_COMPACT_FILTERS;
+        }
+    }
+    return ServiceFlags(local_services);
 }
 
 void CConnman::SetBestHeight(int height)
