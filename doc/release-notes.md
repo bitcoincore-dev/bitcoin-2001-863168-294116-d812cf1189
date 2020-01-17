@@ -1,17 +1,17 @@
-Bitcoin Core version 0.19.0.1 is now available from:
+Bitcoin Knots version *0.19.0.1.knots20200104* is now available from:
 
-  <https://bitcoincore.org/bin/bitcoin-core-0.19.0.1/>
+  <https://bitcoinknots.org/files/0.19.x/0.19.0.1.knots20200104/>
 
 This release includes new features, various bug fixes and performance
 improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at GitHub:
 
-  <https://github.com/bitcoin/bitcoin/issues>
+  <https://github.com/bitcoinknots/bitcoin/issues>
 
 To receive security and update notifications, please subscribe to:
 
-  <https://bitcoincore.org/en/list/announcements/join/>
+  <https://bitcoinknots.org/list/announcements/join/>
 
 How to Upgrade
 ==============
@@ -21,28 +21,25 @@ shut down (which might take a few minutes for older versions), then run the
 installer (on Windows) or just copy over `/Applications/Bitcoin-Qt` (on Mac)
 or `bitcoind`/`bitcoin-qt` (on Linux).
 
-Upgrading directly from a version of Bitcoin Core that has reached its EOL is
+Upgrading directly from a version of Bitcoin Knots that has reached its EOL is
 possible, but might take some time if the datadir needs to be migrated.  Old
-wallet versions of Bitcoin Core are generally supported.
+wallet versions of Bitcoin Knots are generally supported.
 
 Compatibility
 ==============
 
-Bitcoin Core is supported and extensively tested on operating systems using
-the Linux kernel, macOS 10.10+, and Windows 7 and newer. It is not recommended
-to use Bitcoin Core on unsupported systems.
-
-Bitcoin Core should also work on most other Unix-like systems but is not
-as frequently tested on them.
+Bitcoin Knots is supported on operating systems using the Linux kernel,
+macOS 10.10+, and Windows 7 and newer. It is not recommended to use
+Bitcoin Knots on unsupported systems.
 
 From 0.17.0 onwards, macOS <10.10 is no longer supported. 0.17.0 is
 built using Qt 5.9.x, which doesn't support versions of macOS older than
-10.10. Additionally, Bitcoin Core does not yet change appearance when
+10.10. Additionally, Bitcoin Knots does not yet change appearance when
 macOS "dark mode" is activated.
 
 Users running macOS Catalina may need to "right-click" and then choose "Open"
-to open the Bitcoin Core .dmg. This is due to new signing requirements
-imposed by Apple, which the Bitcoin Core project does not yet adhere too.
+to open the Bitcoin Knots .dmg. This is due to new signing requirements
+imposed by Apple, which the Bitcoin Knots project does not implement.
 
 Notable changes
 ===============
@@ -51,7 +48,7 @@ New user documentation
 ----------------------
 
 - [Reduce memory](https://github.com/bitcoin/bitcoin/blob/master/doc/reduce-memory.md)
-  suggests configuration tweaks for running Bitcoin Core on systems with
+  suggests configuration tweaks for running Bitcoin Knots on systems with
   limited memory. (#16339)
 
 New RPCs
@@ -73,25 +70,28 @@ New RPCs
   RPC is only enabled if block filters have been created using the
   `-blockfilterindex` configuration option. (#14121)
 
+- A new REST endpoint `/rest/blockfilter/filtertype/requesttype/blockhash` (eg
+  `/rest/blockfilter/basic/header/000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f.hex`)
+  has been added which exposes either the compact filter "header" or the filter
+  data itself.
+
 New settings
 ------------
 
 - `-blockfilterindex` enables the creation of BIP158 block filters for
   the entire blockchain.  Filters will be created in the background and
-  currently use about 4 GiB of space.  Note: this version of Bitcoin
-  Core does not serve block filters over the P2P network, although the
-  local user may obtain block filters using the `getblockfilter` RPC.
-  (#14121)
+  currently use about 4 GiB of space. The local user may obtain block
+  filters using the `getblockfilter` RPC. (#14121)
+
+- `-peercfilters` enables serving BIP158 block filters to peers (BIP157).
+  This is only supported with `-blockfilterindex` also enabled.
+
+- Whether `-whitelist` permissions apply to inbound and/or outbound connections
+  can now be specified as "in" or "out". (By default, both directions is
+  assumed.)
 
 Updated settings
 ----------------
-
-- `whitebind` and `whitelist` now accept a list of permissions to
-  provide peers connecting using the indicated interfaces or IP
-  addresses.  If no permissions are specified with an address or CIDR
-  network, the implicit default permissions are the same as previous
-  releases.  See the `bitcoind -help` output for these two options for
-  details about the available permissions. (#16248)
 
 - Users setting custom `dbcache` values can increase their setting slightly
   without using any more real memory.  Recent changes reduced the memory use
@@ -129,11 +129,6 @@ Low-level Changes section below.
 - `listunspent` now returns a "reused" bool for each output if the
   wallet flag "avoid_reuse" is enabled. (#13756)
 
-- `getblockstats` now uses BlockUndo data instead of the transaction
-  index, making it much faster, no longer dependent on the `-txindex`
-  configuration option, and functional for all non-pruned blocks.
-  (#14802)
-
 - `utxoupdatepsbt` now accepts a `descriptors` parameter that will fill
   out input and output scripts and keys when known. P2SH-witness inputs
   will be filled in from the UTXO set when a descriptor is provided that
@@ -153,60 +148,40 @@ Low-level Changes section below.
   `vsize` field is returned with the transaction's virtual size
   (consistent with other RPCs such as `getrawtransaction`). (#15637)
 
-- `getwalletinfo` now includes a `scanning` field that is either `false`
-  (no scanning) or an object with information about the duration and
-  progress of the wallet's scanning historical blocks for transactions
-  affecting its balances. (#15730)
-
-- `gettransaction` now accepts a third (boolean) argument `verbose`. If
-  set to `true`, a new `decoded` field will be added to the response containing
-  the decoded transaction. This field is equivalent to RPC `decoderawtransaction`,
-  or RPC `getrawtransaction` when `verbose` is passed. (#16185, #16866, #16873)
-
 - `createwallet` accepts a new `passphrase` parameter.  If set, this
   will create the new wallet encrypted with the given passphrase.  If
   unset (the default) or set to an empty string, no encryption will be
   used. (#16394)
 
-- `getchaintxstats` RPC now returns the additional key of
-  `window_final_block_height`. (#16695)
-
-- `getmempoolentry` now provides a `weight` field containing the
-  transaction weight as defined in BIP141. (#16647)
-
 - The `getnetworkinfo` and `getpeerinfo` commands now contain a new field with decoded network service flags. (#16786)
-
-- `getdescriptorinfo` now returns an additional `checksum` field
-  containing the checksum for the unmodified descriptor provided by the
-  user (that is, before the descriptor is normalized for the
-  `descriptor` field). (#15986)
 
 - `joinpsbts` now shuffles the order of the inputs and outputs of the resulting
   joined PSBT. Previously, inputs and outputs were added in the order PSBTs were
   provided. This made it easy to correlate inputs to outputs, representing a
   privacy leak. (#16512)
 
-- `walletcreatefundedpsbt` now signals BIP125 Replace-by-Fee if the
-  `-walletrbf` configuration option is set to true. (#15911)
+- The `validateaddress` RPC now returns, for invalid addresses, an `error`
+  message with a reason for the invalidity. If it is a Bech32 address, an
+  `error_index` will also be returned, indicating the position of an error in
+  the address.
+
+- PSBT methods now support the new version and proprietary fields.
+
+- Methods returning wallet transaction information now also include a
+  `blockheight` key, with the height of the block first confirming it in the
+  active chain.
 
 GUI changes
 -----------
 
-- The GUI wallet now provides bech32 addresses by default.  The user may change the address type
-  during invoice generation using a GUI toggle, or the default address
-  type may be changed with the `-addresstype` configuration option.
-  (#15711, #16497)
+- In 0.18.0, a `./configure` flag was introduced to allow disabling BIP70 support in the GUI (support was enabled by default). In 0.19.0, this flag is now __disabled__ by default. If you want to compile Bitcoin Knots with BIP70 support in the GUI, you can pass `--enable-bip70` to `./configure`. (#15584)
 
-- In 0.18.0, a `./configure` flag was introduced to allow disabling BIP70 support in the GUI (support was enabled by default). In 0.19.0, this flag is now __disabled__ by default. If you want to compile Bitcoin Core with BIP70 support in the GUI, you can pass `--enable-bip70` to `./configure`. (#15584)
+- You can now change the path of the Qt settings via `-guisettingsdir=<path>`
 
-Deprecated or removed configuration options
--------------------------------------------
+- Watch-only wallets will now show their balance on the Send tab, and allow
+  "sending" to create an unsigned PSBT.
 
-- `-mempoolreplacement` is removed, although default node behavior
-  remains the same.  This option previously allowed the user to prevent
-  the node from accepting or relaying BIP125 transaction replacements.
-  This is different from the remaining configuration option
-  `-walletrbf`. (#16171)
+- The Overview tab now has the ability to hide private information.
 
 Deprecated or removed RPCs
 --------------------------
@@ -215,37 +190,26 @@ Deprecated or removed RPCs
   configuration parameter `deprecatedrpc=totalFee` is specified.  This
   parameter will be fully removed in a subsequent release. (#15996)
 
+- `bumpfee` no longer supports reducing an arbitrarily specified output. This
+  parameter may or may not be restored in the future.
+
 - `bumpfee` has a new `fee_rate` option as a replacement for the deprecated `totalFee`. (#16727)
 
 - `generate` is now removed after being deprecated in Bitcoin Core 0.18.
   Use the `generatetoaddress` RPC instead. (#15492)
+
+- The `/rest/blockhash/` REST endpoint has been removed, leaving only the newer
+  (but slightly different) `/rest/blockhashbyheight/` endpoint.
 
 P2P changes
 -----------
 
 - BIP 61 reject messages were deprecated in v0.18. They are now disabled
   by default, but can be enabled by setting the `-enablebip61` command
-  line option.  BIP 61 reject messages will be removed entirely in a
-  future version of Bitcoin Core. (#14054)
+  line option.  BIP 61 reject messages may be removed entirely in a
+  future version of Bitcoin Knots. (#14054)
 
-- To eliminate well-known denial-of-service vectors in Bitcoin Core,
-  especially for nodes with spinning disks, the default value for the
-  `-peerbloomfilters` configuration option has been changed to false.
-  This prevents Bitcoin Core from sending the BIP111 NODE_BLOOM service
-  flag, accepting BIP37 bloom filters, or serving merkle blocks or
-  transactions matching a bloom filter.  Users who still want to provide
-  bloom filter support may either set the configuration option to true
-  to re-enable both BIP111 and BIP37 support or enable just BIP37
-  support for specific peers using the updated `-whitelist` and
-  `-whitebind` configuration options described elsewhere in these
-  release notes.  For the near future, lightweight clients using public
-  BIP111/BIP37 nodes should still be able to connect to older versions
-  of Bitcoin Core and nodes that have manually enabled BIP37 support,
-  but developers of such software should consider migrating to either
-  using specific BIP37 nodes or an alternative transaction filtering
-  system. (#16152)
-
-- By default, Bitcoin Core will now make two additional outbound connections that are exclusively used for block-relay.  No transactions or addr messages will be processed on these connections. These connections are designed to add little additional memory or bandwidth resource requirements but should make some partitioning attacks more difficult to carry out. (#15759)
+- By default, Bitcoin Knots will now make two additional outbound connections that are exclusively used for block-relay.  No transactions or addr messages will be processed on these connections. These connections are designed to add little additional memory or bandwidth resource requirements but should make some partitioning attacks more difficult to carry out. (#15759)
 
 Miscellaneous CLI Changes
 -------------------------
@@ -262,16 +226,16 @@ RPC
 
 - `getblockchaininfo` no longer returns a `bip9_softforks` object.
   Instead, information has been moved into the `softforks` object and
-  an additional `type` field describes how Bitcoin Core determines
+  an additional `type` field describes how Bitcoin Knots determines
   whether that soft fork is active (e.g. BIP9 or BIP90).  See the RPC
   help for details. (#16060)
 
-- `getblocktemplate` no longer returns a `rules` array containing `CSV`
-  and `segwit` (the BIP9 deployments that are currently in active
-  state). (#16060)
-
 - `getrpcinfo` now returns a `logpath` field with the path to
   `debug.log`. (#15483)
+
+- A new descriptor type `sortedmulti(...)` has been added to support multisig
+  scripts where the public keys are sorted lexicographically in the resulting
+  script.
 
 Tests
 -----
@@ -301,18 +265,13 @@ Network
 -------
 
 - When fetching a transaction announced by multiple peers, previous versions of
-  Bitcoin Core would sequentially attempt to download the transaction from each
+  Bitcoin Knots would sequentially attempt to download the transaction from each
   announcing peer until the transaction is received, in the order that those
   peers' announcements were received.  In this release, the download logic has
   changed to randomize the fetch order across peers and to prefer sending
   download requests to outbound peers over inbound peers. This fixes an issue
   where inbound peers could prevent a node from getting a transaction.
   (#14897, #15834)
-
-- If a Tor hidden service is being used, Bitcoin Core will be bound to
-  the standard port 8333 even if a different port is configured for
-  clearnet connections.  This prevents leaking node identity through use
-  of identical non-default port numbers. (#15651)
 
 Mempool and transaction relay
 -----------------------------
@@ -328,14 +287,6 @@ Mempool and transaction relay
   immediately for Child-Pays-For-Parent (CPFP) fee bumping without
   allowing one malicious participant to fill the entire package and thus
   prevent the other participant from spending their output. (#15681)
-
-- Transactions with outputs paying v1 to v16 witness versions (future
-  segwit versions) are now accepted into the mempool, relayed, and
-  mined.  Attempting to spend those outputs remains forbidden by policy
-  ("non-standard").  When this change has been widely deployed, wallets
-  and services can accept any valid bech32 Bitcoin address without
-  concern that transactions paying future segwit versions will become
-  stuck in an unconfirmed state. (#15846)
 
 - Legacy transactions (transactions with no segwit inputs) must now be
   sent using the legacy encoding format, enforcing the rule specified in
@@ -367,6 +318,10 @@ Wallet
   sending small payments to a previously-paid address that would then
   be included with unrelated inputs in future payments. (#13756)
 
+- Deprecated support for remembering the source of individual keys has
+  been removed. Compatibility with wallets containing such information
+  (including preserving it as-is) is provided.
+
 Build system changes
 --------------------
 
@@ -385,13 +340,17 @@ Build system changes
 0.19.0 change log
 =================
 
+Detailed release notes follow. This overview includes changes that affect
+behavior, not code moves, refactors and string updates. Changes specific to
+Bitcoin Knots (beyond Core) are flagged with an asterisk ('*') before the
+description.
+
 ### Consensus
 - #16128 Delete error-prone CScript constructor only used with FindAndDelete (instagibbs)
 - #16060 Bury bip9 deployments (jnewbery)
 
 ### Policy
 - #15557 Enhance `bumpfee` to include inputs when targeting a feerate (instagibbs)
-- #15846 Make sending to future native witness outputs standard (sipa)
 
 ### Block and transaction handling
 - #15632 Remove ResendWalletTransactions from the Validation Interface (jnewbery)
@@ -402,7 +361,6 @@ Build system changes
 - #15999 init: Remove dead code in LoadChainTip (MarcoFalke)
 - #16015 validation: Hold cs_main when reading chainActive in RewindBlockIndex (practicalswift)
 - #16056 remove unused magic number from consistency check (instagibbs)
-- #16171 Remove -mempoolreplacement to prevent needless block prop slowness (TheBlueMatt)
 - #15894 Remove duplicated "Error: " prefix in logs (hebasto)
 - #14193 validation: Add missing mempool locks (MarcoFalke)
 - #15681 Allow one extra single-ancestor transaction per package (TheBlueMatt)
@@ -422,23 +380,19 @@ Build system changes
 - #15654 Remove unused unsanitized user agent string CNode::strSubVer (MarcoFalke)
 - #15689 netaddress: Update CNetAddr for ORCHIDv2 (dongcarl)
 - #15834 Fix transaction relay bugs introduced in #14897 and expire transactions from peer in-flight map (sdaftuar)
-- #15651 torcontrol: Use the default/standard network port for Tor hidden services, even if the internal port is set differently (luke-jr)
 - #16188 Document what happens to getdata of unknown type (MarcoFalke)
 - #15649 Add ChaCha20Poly1305@Bitcoin AEAD (jonasschnelli)
-- #16152 Disable bloom filtering by default (TheBlueMatt)
 - #15993 Drop support of the insecure miniUPnPc versions (hebasto)
 - #16197 Use mockable time for tx download (MarcoFalke)
-- #16248 Make whitebind/whitelist permissions more flexible (NicolasDorier)
-- #16618 [Fix] Allow connection of a noban banned peer (NicolasDorier)
-- #16631 Restore default whitelistrelay to true (NicolasDorier)
 - #15759 Add 2 outbound block-relay-only connections (sdaftuar)
-- #15558 Don't query all DNS seeds at once (sipa)
 - #16999 0.19 seeds update (laanwj)
+- #17762 *Log to net category for exceptions in ProcessMessages (luke-jr)
+- #17828 *Use log categories when logging events that P2P peers can trigger arbitrarily (practicalswift)
+- #16442 *Serve BIP 157 compact filters (jimpo)
 
 ### Wallet
 - #15288 Remove wallet -> node global function calls (ryanofsky)
 - #15491 Improve log output for errors during load (gwillen)
-- #13541 wallet/rpc: sendrawtransaction maxfeerate (kallewoof)
 - #15680 Remove resendwallettransactions RPC method (jnewbery)
 - #15508 Refactor analyzepsbt for use outside RPC code (gwillen)
 - #15747 Remove plethora of Get*Balance (MarcoFalke)
@@ -478,7 +432,6 @@ Build system changes
 - #15906 Move min_depth and max_depth to coin control (amitiuttarwar)
 - #16502 Drop unused OldKey (promag)
 - #16394 Allow createwallet to take empty passwords to make unencrypted wallets (achow101)
-- #15911 Use wallet RBF default for walletcreatefundedpsbt (Sjors)
 - #16503 Remove p2pEnabled from Chain interface (ariard)
 - #16557 restore coinbase and confirmed/conflicted checks in SubmitMemoryPoolAndRelay() (jnewbery)
 - #14934 Descriptor expansion cache clarifications (Sjors)
@@ -487,22 +440,21 @@ Build system changes
 - #16572 Fix Char as Bool in Wallet (JeremyRubin)
 - #16753 extract PubKey from P2PK script with Solver (theStack)
 - #16716 Use wallet name instead of pointer on unload/release (promag)
-- #16185 gettransaction: add an argument to decode the transaction (darosior)
 - #16745 Translate all initErrors in CreateWalletFromFile (MarcoFalke)
 - #16792 Assert that the HRP is lowercase in Bech32::Encode (meshcollider)
 - #16624 encapsulate transactions state (ariard)
 - #16830 Cleanup walletinitinterface.h (hebasto)
 - #16796 Fix segfault in CreateWalletFromFile (MarcoFalke)
-- #16866 Rename 'decode' argument in gettransaction method to 'verbose' (jnewbery)
 - #16727 Explicit feerate for bumpfee (instagibbs)
 - #16609 descriptor: fix missed m_script_arg arg renaming in #14934 (fanquake)
+- n/a    *Bugfix: wallet: GetLegacyBalance: Rather than include two conflicting unconfirmed transactions in the same balance, only include such transactions when they are in our mempool (which cannot have conflicts) (luke-jr)
+- #17621 *IsUsedDestination should count any known single-key address (instagibbs)
+- n/a    *Remove support for deprecated key origin flags while preserving existing wallet files (luke-jr)
 
 ### RPC and other APIs
 - #15492 remove deprecated generate method (Sjors)
-- #15566 cli: Replace testnet with chain and return network name as per bip70 (fanquake)
 - #15564 cli: Remove duplicate wallet fields from -getinfo (fanquake)
 - #15642 Remove deprecated rpc warnings (jnewbery)
-- #15637 Rename size to vsize in mempool related calls (fanquake)
 - #15620 Uncouple non-wallet rpcs from maxTxFee global (MarcoFalke)
 - #15616 Clarify decodescript RPCResult doc (MarcoFalke)
 - #15669 Fix help text for signtransactionwithXXX (torkelrogstad)
@@ -511,15 +463,10 @@ Build system changes
 - #15746 RPCHelpMan: Always name dictionary keys (MarcoFalke)
 - #15748 remove dead mining code (jnewbery)
 - #15751 Speed up deriveaddresses for large ranges (sipa)
-- #15770 Validate maxfeerate with AmountFromValue (promag)
 - #15474 rest/rpc: Make mempoolinfo atomic (promag)
 - #15463 Speedup getaddressesbylabel (promag)
 - #15784 Remove dependency on interfaces::Chain in SignTransaction (ariard)
-- #15323 Expose g_is_mempool_loaded via getmempoolinfo (Empact)
-- #15932 Serialize in getblock without cs_main (MarcoFalke)
 - #15930 Add balances RPC (MarcoFalke)
-- #15730 Show scanning details in getwalletinfo (promag)
-- #14802 faster getblockstats using BlockUndo data (FelixWeis)
 - #14984 Speedup getrawmempool when verbose=true (promag)
 - #16071 Hint for importmulti in help output of importpubkey and importaddress (kristapsk)
 - #16063 Mention getwalletinfo where a rescan is triggered (promag)
@@ -535,35 +482,36 @@ Build system changes
 - #15996 Deprecate totalfee argument in `bumpfee` (instagibbs)
 - #16467 sendrawtransaction help privacy note (jonatack)
 - #16596 Fix getblocktemplate CLI example (emilengler)
-- #15986 Add checksum to getdescriptorinfo (sipa)
-- #16647 add weight to getmempoolentry output (fanquake)
-- #16695 Add window final block height to getchaintxstats (leto)
 - #16798 Refactor rawtransaction_util's SignTransaction to separate prevtx parsing (achow101)
 - #16285 Improve scantxoutset response and help message (promag)
 - #16725 Don't show addresses or P2PK in decoderawtransaction (NicolasDorier)
-- #16787 Human readable network services (darosior)
 - #16251 Improve signrawtransaction error reporting (ajtowns)
-- #16873 fix regression in gettransaction (jonatack)
 - #16512 Shuffle inputs and outputs after joining psbts (achow101)
 - #16521 Use the default maxfeerate value as BTC/kB (Remagpie)
 - #16817 Fix casing in getblockchaininfo to be inline with other fields (dangershony)
 - #17131 fix -rpcclienttimeout 0 option (fjahr)
 - #17249 Add missing deque include to fix build (jbeich)
 - #17368 cli: fix -getinfo output when compiled with no wallet (fanquake)
+- #17258 *Fix issue with conflicted mempool tx in listsinceblock (Adam Jonas, Michael Chrostowski)
+- #17427 *Fix missing qRegisterMetaType for size_t (Hennadii Stepanov)
+- #17524 *Mark PSBTs spending unspendable outputs as invalid in analysis (achow101)
+- #17643 *Fix origfee return for bumpfee with feerate arg (instagibbs)
+- #17728 *require second argument only for scantxoutset start action (achow101)
+- #16807 *Add bech32 error location to validateaddress RPC (Samuel Dobson)
+- #17034 *PSBT versions and proprietary field (achow101)
+- #17056 *descriptors: Introduce sortedmulti descriptor (fanquake)
+- #17437 *Expose block height of wallet transactions (João Barbosa)
+- #17631 *Expose block filters over REST (TheBlueMatt)
 
 ### GUI
 - #15464 Drop unused return values in WalletFrame (promag)
 - #15614 Defer removeAndDeleteWallet when no modal widget is active (promag)
 - #15711 Generate bech32 addresses by default (MarcoFalke)
-- #15829 update request payment button text and tab description (fanquake)
+- #15829 update request payment tab description (fanquake)
 - #15874 Resolve the qt/guiutil <-> qt/optionsmodel CD (251Labs)
-- #15371 Uppercase bech32 addresses in qr codes (benthecarman)
-- #15928 Move QRImageWidget to its own file-pair (luke-jr)
 - #16113 move coin control "OK" to the right hand side of the dialog (fanquake)
-- #16090 Add vertical spacer to peer detail widget (JosuGZ)
 - #15886 qt, wallet: Revamp SendConfirmationDialog (hebasto)
 - #16263 Use qInfo() if no error occurs (hebasto)
-- #16153 Add antialiasing to traffic graph widget (JosuGZ)
 - #16350 Remove unused guard (hebasto)
 - #16106 Sort wallets in open wallet menu (promag)
 - #16291 Stop translating PACKAGE_NAME (MarcoFalke)
@@ -574,7 +522,6 @@ Build system changes
 - #16514 Remove unused RPCConsole::tabFocus (promag)
 - #16497 Generate bech32 addresses by default (take 2, fixup) (MarcoFalke)
 - #16349 Remove redundant WalletController::addWallet slot (hebasto)
-- #16578 Do not pass in command line arguments to QApplication (achow101)
 - #16612 Remove menu icons (laanwj)
 - #16677 remove unused PlatformStyle::TextColorIcon (fanquake)
 - #16694 Ensure transaction send error is always visible (fanquake)
@@ -584,27 +531,34 @@ Build system changes
 - #16706 Replace deprecated QSignalMapper by lambda expressions (hebasto)
 - #16707 Remove obsolete QModelIndex::child() (hebasto)
 - #16758 Replace QFontMetrics::width() with TextWidth() (hebasto)
-- #16760 Change uninstall icon on Windows (GChuf)
 - #16720 Replace objc_msgSend() function calls with the native Objective-C syntax (hebasto)
 - #16788 Update transifex slug for 0.19 (laanwj)
 - #15450 Create wallet menu option (achow101)
 - #16735 Remove unused menu items for Windows and Linux (GChuf)
-- #16826 Do additional character escaping for wallet names and address labels (achow101)
 - #15529 Add Qt programs to msvc build (updated, no code changes) (sipsorcery)
 - #16714 add prune to intro screen with smart default (Sjors)
-- #16858 advise users not to switch wallets when opening a BIP70 URI (jameshilliard)
 - #16822 Create wallet menu option follow-ups (jonatack)
 - #16882 Re-generate translations before 0.19.0 (MarcoFalke)
 - #16928 Rename address checkbox back to bech32 (MarcoFalke)
 - #16837 Fix {C{,XX},LD}FLAGS pickup (dongcarl)
 - #16971 Change default size of intro frame (emilengler)
 - #16988 Periodic translations update (laanwj)
-- #16852 When BIP70 is disabled, get PaymentRequest merchant using string search (achow101)
 - #16952 make sure to update the UI when deleting a transaction (jonasschnelli)
 - #17031 Prevent processing duplicate payment requests (promag)
 - #17135 Make polling in ClientModel asynchronous (promag)
 - #17120 Fix start timer from non QThread (promag)
 - #17257 disable font antialiasing for QR image address (fanquake)
+- #17474 *Bugfix: Recognise NETWORK_LIMITED in formatServicesStr (luke-jr)
+- #15084 *don't disable the sync overlay when wallet is disabled (Ben Carman)
+- #15756 *Add shortcuts for tab tools (João Barbosa)
+- n/a    *Add disablewallet mode shortcut for Pairing tab (luke-jr)
+- #15768 *Add close window shortcut (Miguel Herranz)
+- #17795 *Accept Ctrl-D as a shortcut to close the RPC console (luke-jr)
+- #16944 *create PSBT with watch-only wallet (Sjors)
+- #17587 *send: show watch-only balance in send screen (Sjors)
+- #16432 *Add privacy to the Overview page (Hennadii Stepanov)
+- #17636 *Add -guisettingsdir option (emilengler)
+- n/a    *Options: Expose peercfilters in GUI using rwconf (luke-jr)
 
 ### Build system
 - #14954 Require python 3.5 (MarcoFalke)
@@ -613,7 +567,6 @@ Build system changes
 - #15581 Make less assumptions about build env (dongcarl)
 - #14853 latest RapidCheck (fanquake)
 - #15446 Improve depends debuggability (dongcarl)
-- #13788 Fix --disable-asm for newer assembly checks/code (luke-jr)
 - #12051 add missing debian contrib file to tarball (puchu)
 - #15919 Remove unused OpenSSL includes to make it more clear where OpenSSL is used (practicalswift)
 - #15978 .gitignore: Don't ignore depends patches (dongcarl)
@@ -697,8 +650,6 @@ Build system changes
 - #15866 Add missing syncwithvalidationinterfacequeue to wallet_import_rescan (MarcoFalke)
 - #15697 Make swap_magic_bytes in p2p_invalid_messages atomic (MarcoFalke)
 - #15895 Avoid re-reading config.ini unnecessarily (luke-jr)
-- #15896 feature_filelock, interface_bitcoin_cli: Use PACKAGE_NAME in messages rather than hardcoding Bitcoin Core (luke-jr)
-- #15897 QA/mininode: Send all headers upfront in send_blocks_and_test to avoid sending an unconnected one (luke-jr)
 - #15696 test_runner: Move feature_pruning to base tests (MarcoFalke)
 - #15869 Add settings merge test to prevent regresssions (ryanofsky)
 - #15758 Add further tests to wallet_balance (MarcoFalke)
@@ -765,7 +716,6 @@ Build system changes
 - #16465 Test p2sh-witness and bech32 in wallet_import_rescan (MarcoFalke)
 - #16582 Rework ci (Use travis only as fallback env) (MarcoFalke)
 - #16633 travis: Fix test_runner.py timeouts (MarcoFalke)
-- #16646 Run tests with UPnP disabled (fanquake)
 - #16623 ci: Add environment files for all settings (MarcoFalke)
 - #16656 fix rpc_setban.py race (jonasschnelli)
 - #16570 Make descriptor tests deterministic (davereikher)
@@ -776,7 +726,6 @@ Build system changes
 - #16768 Make lint-includes.sh work from any directory (kristapsk)
 - #15257 Scripts and tools: Bump flake8 to 3.7.8 (Empact)
 - #16804 Remove unused try-block in assert_debug_log (MarcoFalke)
-- #16850 `servicesnames` field in `getpeerinfo` and `getnetworkinfo` (darosior)
 - #16551 Test that low difficulty chain fork is rejected (MarcoFalke)
 - #16737 Establish only one connection between nodes in rpc_invalidateblock (MarcoFalke)
 - #16845 Add notes on how to generate data/wallets/high_minversion (MarcoFalke)
@@ -803,6 +752,7 @@ Build system changes
 - #15903 appveyor: Write @PACKAGE_NAME@ to config (MarcoFalke)
 - #16742 test: add executable flag for wallet_watchonly.py (theStack)
 - #16740 qa: Relax so that the subscriber is ready before publishing zmq messages (#16740)
+- #15633 *Fix compact blocks test to not fail after disabling HB mode for non-witness peers (sdaftuar)
 
 ### Miscellaneous
 - #15335 Fix lack of warning of unrecognized section names (AkioNak)
@@ -811,13 +761,10 @@ Build system changes
 - #15519 Add Poly1305 implementation (jonasschnelli)
 - #15643 contrib: Gh-merge: include acks in merge commit (MarcoFalke)
 - #15838 scripts and tools: Fetch missing review comments in github-merge.py (nkostoulas)
-- #15920 lint: Check that all wallet args are hidden (MarcoFalke)
 - #15849 Thread names in logs and deadlock debug tools (jamesob)
-- #15650 Handle the result of posix_fallocate system call (lucayepa)
 - #15766 scripts and tools: Upgrade gitian image before signing (hebasto)
 - #15512 Add ChaCha20 encryption option (XOR) (jonasschnelli)
 - #15968 Fix portability issue with pthreads (grim-trigger)
-- #15970 Utils and libraries: fix static_assert for macro HAVE_THREAD_LOCAL (orientye)
 - #15863 scripts and tools: Ensure repos are up-to-date in gitian-build.py (hebasto)
 - #15224 Add RNG strengthening (10ms once every minute) (sipa)
 - #15840 Contrib scripts: Filter IPv6 by ASN (abitfan)
@@ -860,6 +807,7 @@ Build system changes
 - #17085 init: Change fallback locale to C.UTF-8 (laanwj)
 - #16957 9% less memory: make SaltedOutpointHasher noexcept (martinus)
 - #17449 fix uninitialized variable nMinerConfirmationWindow (bitcoinVBR)
+- n/a    *Accept "in" and "out" flags to -whitelist (luke-jr)
 
 ### Documentation
 - #15514 Update Transifex links (fanquake)
@@ -964,6 +912,7 @@ Thanks to everyone who directly contributed to this release:
 
 - 251
 - Aaron Clauson
+- Adam Jonas
 - Akio Nakamura
 - Alistair Mann
 - Amiti Uttarwar
@@ -998,7 +947,6 @@ Thanks to everyone who directly contributed to this release:
 - ezegom
 - Fabian Jahr
 - fanquake
-- Felix Weis
 - Ferdinando M. Ametrano
 - fridokus
 - gapeman
@@ -1012,9 +960,9 @@ Thanks to everyone who directly contributed to this release:
 - gwillen
 - Hennadii Stepanov
 - Jack Mallers
-- James Hilliard
 - James O'Beirne
 - Jan Beich
+- JeremyCrookshank
 - Jeremy Rubin
 - JeremyRand
 - Jim Posen
@@ -1023,12 +971,10 @@ Thanks to everyone who directly contributed to this release:
 - Jon Atack
 - Jon Layton
 - Jonas Schnelli
-- Jonathan "Duke" Leto
 - João Barbosa
 - Joonmo Yang
 - Jordan Baczuk
 - Jorge Timón
-- Josu Goñi
 - Julian Fleischer
 - Karl-Johan Alm
 - Kaz Wesley
@@ -1039,7 +985,6 @@ Thanks to everyone who directly contributed to this release:
 - Larry Ruane
 - Lenny Maiorani
 - LongShao007
-- Luca Venturini
 - lucash-dev
 - Luke Dashjr
 - marcoagner
@@ -1049,6 +994,7 @@ Thanks to everyone who directly contributed to this release:
 - Martin Zumsande
 - Matt Corallo
 - MeshCollider
+- Michael Chrostowski
 - Michael Folkson
 - Miguel Herranz
 - Nathan Marley
@@ -1057,7 +1003,6 @@ Thanks to everyone who directly contributed to this release:
 - Nils Loewen
 - nkostoulas
 - NullFunctor
-- orient
 - Patrick Strateman
 - Peter Bushnell
 - Peter Wagner
