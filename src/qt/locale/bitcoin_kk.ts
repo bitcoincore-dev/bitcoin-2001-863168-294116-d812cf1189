@@ -28,6 +28,14 @@
     </context>
 <context>
     <name>AddressTableModel</name>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">таңба</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished">Адрес</translation>
+    </message>
     </context>
 <context>
     <name>AskPassphraseDialog</name>
@@ -68,6 +76,10 @@
     <message>
         <source>&amp;Change Passphrase...</source>
         <translation>Құпия сөзді өзгерту</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Әмиян:</translation>
     </message>
     <message>
         <source>&amp;Send</source>
@@ -162,6 +174,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
@@ -176,8 +191,19 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation type="unfinished">Адрес</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -197,6 +223,9 @@
     </context>
 <context>
     <name>OverviewPage</name>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -224,6 +253,10 @@
         <source>&amp;Information</source>
         <translation>Информация</translation>
     </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Әмиян: </translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -231,12 +264,24 @@
         <source>&amp;Amount:</source>
         <translation>Саны</translation>
     </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;таңба:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address</source>
+        <translation type="unfinished">Адрес</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>Саны</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">таңба</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -248,6 +293,10 @@
     <message>
         <source>Date</source>
         <translation>Күні</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">таңба</translation>
     </message>
     </context>
 <context>
@@ -268,12 +317,24 @@
         <source>Dust:</source>
         <translation>Шаң</translation>
     </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">Жіберу</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">Жіберу</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>
     <message>
         <source>A&amp;mount:</source>
         <translation>Саны</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;таңба:</translation>
     </message>
     </context>
 <context>
@@ -308,6 +369,10 @@
         <source>Date</source>
         <translation>Күні</translation>
     </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">таңба</translation>
+    </message>
     </context>
 <context>
     <name>TransactionView</name>
@@ -318,6 +383,14 @@
     <message>
         <source>Date</source>
         <translation>Күні</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished">таңба</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished">Адрес</translation>
     </message>
     </context>
 <context>

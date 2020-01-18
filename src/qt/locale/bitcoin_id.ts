@@ -172,6 +172,14 @@
         <translation>Dompet terenkripsi</translation>
     </message>
     <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Masukan kata sandi baru ke dompet.&lt;br/&gt;Mohon gunakan kata sandi &lt;b&gt;sepuluh karakter acak atau lebih&lt;/b&gt;, atau &lt;b&gt; delapan atau lebih beberapa kata &lt;/​​b&gt;.</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>Masukkan kata sandi lama dan kata sandi baru ke dompet.</translation>
+    </message>
+    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>PENTING: Backup sebelumnya yang Anda buat dari file dompet Anda harus diganti dengan file dompet terenkripsi yang baru dibuat. Demi keamanan, backup file dompet sebelumnya yang tidak dienkripsi sebelumnya akan menjadi tidak berguna begitu Anda mulai menggunakan dompet terenkripsi yang baru.</translation>
     </message>
@@ -482,10 +490,6 @@
         <translation>Tampilkan %1 pesan bantuan untuk mendapatkan daftar opsi baris perintah Bitcoin yang memungkinkan</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>wallet default</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Tidak ada wallet tersedia</translation>
     </message>
@@ -746,6 +750,10 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation type="unfinished">Enkripsi Dompet</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -825,6 +833,9 @@
         <translation>Tidak bisa membuat direktori data disini.</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -914,6 +925,13 @@
         <source>(of %n GB needed)</source>
         <translation><numerusform>(dari %n GB yang dibutuhkan)</numerusform></translation>
     </message>
+</context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>T/S</translation>
+    </message>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -967,6 +985,14 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Alamat</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -991,6 +1017,14 @@
 </context>
 <context>
     <name>OpenWalletActivity</name>
+    <message>
+        <source>Open wallet failed</source>
+        <translation>Gagal membuka wallet</translation>
+    </message>
+    <message>
+        <source>Open wallet warning</source>
+        <translation>Peringatan membuka wallet</translation>
+    </message>
     <message>
         <source>default wallet</source>
         <translation>wallet default</translation>
@@ -1081,10 +1115,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Prune &amp;ruang penyimpan block ke</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1349,7 +1379,10 @@
         <source>Current total balance in watch-only addresses</source>
         <translation>Jumlah saldo di alamat hanya lihat</translation>
     </message>
-</context>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1582,6 +1615,11 @@
         <source>unknown</source>
         <translation>tidak diketahui</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsi</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -1592,6 +1630,18 @@
     <message>
         <source>&amp;Copy Image</source>
         <translation>&amp;Salin Gambar</translation>
+    </message>
+    <message>
+        <source>Resulting URI too long, try to reduce the text for label / message.</source>
+        <translation>Pembuatan tautan terlalu lama, coba kurangi teks untuk label / pesan.</translation>
+    </message>
+    <message>
+        <source>Error encoding URI into QR Code.</source>
+        <translation>Error saat menyandikan tautan ke dalam kode QR.</translation>
+    </message>
+    <message>
+        <source>QR code support not available.</source>
+        <translation>Dukungan kode QR tidak tersedia.</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -1875,6 +1925,38 @@
         <translation>Untuk informasi lebih gunakan konsol ini dengan ketik %1.</translation>
     </message>
     <message>
+        <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.</source>
+        <translation>PERHATIAN: Para penipu sedang aktif, memberi tahu pengguna untuk mengetik perintah di sini, mencuri isi dompet mereka. Mohon tidak mengunakan konsol ini tanpa sepenuhnya memahami konsekuensi dari suatu perintah.</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Aktivitas jaringan nonaktif</translation>
+    </message>
+    <message>
+        <source>Executing command without any wallet</source>
+        <translation>Menjalankan perintah tanpa dompet apa pun</translation>
+    </message>
+    <message>
+        <source>(node id: %1)</source>
+        <translation>(id simpul: %1)</translation>
+    </message>
+    <message>
+        <source>via %1</source>
+        <translation>via %1</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>tidak pernah</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>masuk</translation>
+    </message>
+    <message>
+        <source>Outbound</source>
+        <translation>keluar</translation>
+    </message>
+    <message>
         <source>Yes</source>
         <translation>Ya</translation>
     </message>
@@ -1902,6 +1984,10 @@
         <translation>&amp;Pesan:</translation>
     </message>
     <message>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
+        <translation>Pesan opsional untuk dilampirkan ke permintaan pembayaran, yang akan ditampilkan ketika permintaan dibuka. Catatan: Pesan tidak akan dikirim dengan pembayaran melalui jaringan Bitcoin.</translation>
+    </message>
+    <message>
         <source>An optional label to associate with the new receiving address.</source>
         <translation>Label opsional untuk mengasosiasikan dengan alamat penerima baru.</translation>
     </message>
@@ -1914,12 +2000,24 @@
         <translation>Nilai permintaan opsional. Biarkan ini kosong atau nol bila tidak meminta nilai tertentu.</translation>
     </message>
     <message>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Minta pembayaran</translation>
+    </message>
+    <message>
         <source>Clear all fields of the form.</source>
         <translation>Hapus informasi dari form.</translation>
     </message>
     <message>
         <source>Clear</source>
         <translation>Hapus</translation>
+    </message>
+    <message>
+        <source>Native segwit addresses (aka Bech32 or BIP-173) reduce your transaction fees later on and offer better protection against typos, but old wallets don't support them. When unchecked, an address compatible with older wallets will be created instead.</source>
+        <translation>Alamat segwit asli (alias Bech32 atau BIP-173) akan mengurangi biaya transaksi anda nantinya dan menawarkan perlindungan yang lebih baik terhadap kesalahan pengetikan, tetapi dompet lama tidak mendukungnya. Ketika tidak dicentang, alamat yang kompatibel dengan dompet lama akan dibuat sebagai gantinya.</translation>
+    </message>
+    <message>
+        <source>Generate native segwit (Bech32) address</source>
+        <translation>Hasilkan alamat asli segwit (Bech32)</translation>
     </message>
     <message>
         <source>Requested payments history</source>
@@ -1942,8 +2040,16 @@
         <translation>Menghapus</translation>
     </message>
     <message>
+        <source>Copy URI</source>
+        <translation>Salin tautan</translation>
+    </message>
+    <message>
         <source>Copy label</source>
         <translation>Salin label</translation>
+    </message>
+    <message>
+        <source>Copy message</source>
+        <translation>Salin pesan</translation>
     </message>
     <message>
         <source>Copy amount</source>
@@ -1969,6 +2075,18 @@
         <translation>&amp;Simpan Gambaran...</translation>
     </message>
     <message>
+        <source>Request payment to %1</source>
+        <translation>Minta pembayaran ke %1</translation>
+    </message>
+    <message>
+        <source>Payment information</source>
+        <translation>Informasi pembayaran</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation>Tautan</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>Alamat</translation>
     </message>
@@ -1979,6 +2097,10 @@
     <message>
         <source>Label</source>
         <translation>Label</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Pesan</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -1996,10 +2118,26 @@
         <translation>Label</translation>
     </message>
     <message>
+        <source>Message</source>
+        <translation>Pesan</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(tidak ada label)</translation>
     </message>
-    </context>
+    <message>
+        <source>(no message)</source>
+        <translation>(tidak ada pesan)</translation>
+    </message>
+    <message>
+        <source>(no amount requested)</source>
+        <translation>(tidak ada jumlah yang diminta)</translation>
+    </message>
+    <message>
+        <source>Requested</source>
+        <translation>Diminta</translation>
+    </message>
+</context>
 <context>
     <name>SendCoinsDialog</name>
     <message>
@@ -2059,12 +2197,44 @@
         <translation>Biaya Transaksi:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation>Pilih...</translation>
+    </message>
+    <message>
+        <source>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until you have validated the complete chain.</source>
+        <translation>Menggunakan fallbackfee dapat mengakibatkan pengiriman transaksi yang akan memakan waktu beberapa jam atau hari (atau tidak pernah) untuk dikonfirmasi. Pertimbangkan untuk memilih biaya anda secara manual atau tunggu hingga anda telah megesahkan rantai yang lengkap.</translation>
+    </message>
+    <message>
+        <source>Warning: Fee estimation is currently not possible.</source>
+        <translation>Peringatan: Perkiraan biaya saat ini tidak memungkinkan.</translation>
+    </message>
+    <message>
+        <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
+
+Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis per kB" for a transaction size of 500 bytes (half of 1 kB) would ultimately yield a fee of only 50 satoshis.</source>
+        <translation>Tentukan biaya khusus per kB (1.000 byte) dari ukuran transaksi maya.
+
+Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" untuk ukuran transaksi 500 byte (setengah dari 1 kB) pada akhirnya akan menghasilkan biaya hanya 50 satoshi.</translation>
+    </message>
+    <message>
+        <source>per kilobyte</source>
+        <translation>per kilobyte</translation>
+    </message>
+    <message>
         <source>Hide</source>
         <translation>Sembunyikan</translation>
     </message>
     <message>
         <source>Recommended:</source>
         <translation>Disarankan</translation>
+    </message>
+    <message>
+        <source>Custom:</source>
+        <translation>Khusus</translation>
+    </message>
+    <message>
+        <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
+        <translation>(Smart fee belum di-inisialisasi. Biasanya hal ini akan memerlukan beberapa block...)</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -2081,6 +2251,18 @@
     <message>
         <source>Dust:</source>
         <translation>Dust:</translation>
+    </message>
+    <message>
+        <source>A too low fee might result in a never confirming transaction (read the tooltip)</source>
+        <translation>Biaya yang terlalu rendah dapat menyebabkan transaksi tidak terkonfirmasi (baca tooltip)</translation>
+    </message>
+    <message>
+        <source>Confirmation time target:</source>
+        <translation>Target waktu konfirmasi:</translation>
+    </message>
+    <message>
+        <source>Enable Replace-By-Fee</source>
+        <translation>Izinkan Replace-By-Fee</translation>
     </message>
     <message>
         <source>Clear &amp;All</source>
@@ -2127,8 +2309,56 @@
         <translation>Salin Perubahan</translation>
     </message>
     <message>
+        <source>%1 (%2 blocks)</source>
+        <translation>%1 (%2 block)</translation>
+    </message>
+    <message>
+        <source>%1 to '%2'</source>
+        <translation>%1 ke '%2'</translation>
+    </message>
+    <message>
+        <source>%1 to %2</source>
+        <translation>%1 ke %2</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to send?</source>
+        <translation>Apakah anda yakin ingin mengirimkan?</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>atau</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction.</source>
+        <translation>Mohon periksa kembali transaksi anda.</translation>
+    </message>
+    <message>
         <source>Transaction fee</source>
         <translation>Biaya Transaksi</translation>
+    </message>
+    <message>
+        <source>Total Amount</source>
+        <translation>Jumlah Keseluruhan</translation>
+    </message>
+    <message>
+        <source>Confirm send coins</source>
+        <translation>Konfirmasi pengiriman koin</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">Kirim</translation>
+    </message>
+    <message>
+        <source>The recipient address is not valid. Please recheck.</source>
+        <translation>Alamat penerima tidak sesuai. Mohon periksa kembali.</translation>
+    </message>
+    <message>
+        <source>The amount to pay must be larger than 0.</source>
+        <translation>Jumlah pembayaran harus lebih besar daripada 0.</translation>
+    </message>
+    <message>
+        <source>The amount exceeds your balance.</source>
+        <translation>Jumlah melebihi saldo anda.</translation>
     </message>
     <message>
         <source>Payment request expired.</source>
@@ -2156,10 +2386,6 @@
     <message>
         <source>Choose previously used address</source>
         <translation>Pilih alamat yang telah digunakan sebelumnya</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>Ini adalah pembayaran normal</translation>
     </message>
     <message>
         <source>Alt+A</source>
@@ -2293,8 +2519,24 @@
         <translation>tidak diketahui</translation>
     </message>
     <message>
+        <source>watch-only</source>
+        <translation type="unfinished">Hanya lihat</translation>
+    </message>
+    <message>
         <source>Transaction fee</source>
         <translation>Biaya Transaksi</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>Pesan</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Transaksi</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation type="unfinished">Masukan</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -2317,6 +2559,10 @@
     <message>
         <source>Label</source>
         <translation>Label</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation type="unfinished">Hanya lihat</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -2348,6 +2594,10 @@
     <message>
         <source>Confirmed</source>
         <translation>Terkonfirmasi</translation>
+    </message>
+    <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">Hanya lihat</translation>
     </message>
     <message>
         <source>Date</source>
@@ -2400,7 +2650,15 @@
         <source>Export the data in the current tab to a file</source>
         <translation>Ekspor data dalam tab sekarang ke sebuah berkas</translation>
     </message>
-    </context>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Cadangkan Dompet</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Batal</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -2434,6 +2692,10 @@
     <message>
         <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
         <translation>Tidak bisa cari blok pertama, atau blok pertama salah. Salah direktori untuk jaringan?</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is too low!</source>
+        <translation>Gagal: Hard disk hampir terisi!</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>

@@ -132,6 +132,10 @@
         <translation>새로운 암호 재입력</translation>
     </message>
     <message>
+        <source>Show passphrase</source>
+        <translation>암호 보기</translation>
+    </message>
+    <message>
         <source>Encrypt wallet</source>
         <translation>지갑 암호화</translation>
     </message>
@@ -170,6 +174,14 @@
     <message>
         <source>Wallet encrypted</source>
         <translation>지갑 암호화 완료</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>새로운 지갑 비밀번호를 입력하세요. 암호는 10개 이상의 문자 또는 8개 이상의 단어로 입력하세요.</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>지갑의 이전 비밀번호와 새로운 비밀번호를 입력하세요.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -482,10 +494,6 @@
         <translation>사용할 수 있는 비트코인 명령줄 옵션 목록을 가져오기 위해 %1 도움말 메시지를 표시합니다</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>기본 지갑</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>사용 가능한 블록이 없습니다.</translation>
     </message>
@@ -746,6 +754,10 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation type="unfinished">지갑 암호화</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -825,6 +837,9 @@
         <translation>데이터 폴더를 여기에 생성할 수 없습니다.</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -914,6 +929,13 @@
         <source>(of %n GB needed)</source>
         <translation><numerusform>(%n GB가 필요)</numerusform></translation>
     </message>
+</context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>없음</translation>
+    </message>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -964,6 +986,19 @@
     <message>
         <source>Unknown. Syncing Headers (%1, %2%)...</source>
         <translation>알 수 없음. 헤더 동기화 중(%1,%2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>형식</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>주소</translation>
     </message>
 </context>
 <context>
@@ -1081,10 +1116,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>블록 데이터를 지정된 크기로 축소합니다:</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1239,6 +1270,10 @@
         <translation>없음</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>비트코인 코어</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>옵션 초기화를 확인</translation>
     </message>
@@ -1349,7 +1384,10 @@
         <source>Current total balance in watch-only addresses</source>
         <translation>조회전용 주소의 현재 잔액</translation>
     </message>
-</context>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1582,7 +1620,7 @@
         <source>unknown</source>
         <translation>알수없음</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     <message>
@@ -1960,6 +1998,10 @@
         <translation>요청할 금액 입력칸으로 선택 사항입니다. 빈 칸으로 두거나 특정 금액이 필요하지 않는 경우 0을 입력하세요.</translation>
     </message>
     <message>
+        <source>&amp;Request payment</source>
+        <translation>지불 요청(&amp;R)</translation>
+    </message>
+    <message>
         <source>Clear all fields of the form.</source>
         <translation>양식의 모든 필드를 지웁니다.</translation>
     </message>
@@ -2165,10 +2207,6 @@
         <translation>경고: 지금은 수수료 예측이 불가능합니다.</translation>
     </message>
     <message>
-        <source>collapse fee-settings</source>
-        <translation>수수료 설정 접기</translation>
-    </message>
-    <message>
         <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
 
 Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis per kB" for a transaction size of 500 bytes (half of 1 kB) would ultimately yield a fee of only 50 satoshis.</source>
@@ -2281,6 +2319,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>%1(%2 블록)</translation>
     </message>
     <message>
+        <source> from wallet '%1'</source>
+        <translation> '%1' 지갑에서</translation>
+    </message>
+    <message>
         <source>%1 to %2</source>
         <translation>%1을(를) %2(으)로</translation>
     </message>
@@ -2315,6 +2357,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Confirm send coins</source>
         <translation>코인 전송을 확인</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">보내기</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -2394,10 +2440,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Choose previously used address</source>
         <translation>이전에 사용한 주소를 선택하기</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>이것은 정상적인 지불입니다.</translation>
     </message>
     <message>
         <source>The Bitcoin address to send the payment to</source>
@@ -2952,10 +2994,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>보낸 주소</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>자기거래</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>채굴</translation>
     </message>
@@ -3084,6 +3122,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Close wallet</source>
         <translation>지갑 닫기</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to close the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>정말로 지갑 &lt;i&gt;%1&lt;/i&gt;을 닫겠습니까?</translation>
     </message>
     <message>
         <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
@@ -3380,6 +3422,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Loading P2P addresses...</source>
         <translation>P2P 주소 불러오는 중...</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is too low!</source>
+        <translation>오류: 디스크 공간이 부족합니다!</translation>
     </message>
     <message>
         <source>Loading banlist...</source>

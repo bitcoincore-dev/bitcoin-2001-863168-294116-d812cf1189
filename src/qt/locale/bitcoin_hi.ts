@@ -160,6 +160,14 @@
         <translation>वॉलेट को एन्क्रिप्ट किया गया है</translation>
     </message>
     <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>वॉलेट में नया सुरक्षा संवाद दर्ज करें | कृपया दस एवं उससे अधिक अव्यवस्थित या आठ एवं उससे अधिक अव्यवस्थित अंको से ही अपना सुरक्षा संवाद बनाएं </translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>वॉलेट में नया एवं पुराना सुरक्षा संवाद इंगित करें </translation>
+    </message>
+    <message>
         <source>Wallet encryption failed</source>
         <translation>वॉलेट एन्क्रिप्शन विफल रहा</translation>
     </message>
@@ -259,6 +267,14 @@
         <translation>नवीनतम</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;पता भेजा जा रहा है </translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;पता प्राप्त क़िया जा रहा है </translation>
+    </message>
+    <message>
         <source>Sent transaction</source>
         <translation>भेजी ट्रांजक्शन</translation>
     </message>
@@ -303,6 +319,10 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>वॉलेट एन्क्रिप्ट करें</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -323,6 +343,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -341,12 +364,28 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>लागू नही
+</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>फार्म</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>पता </translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -384,6 +423,9 @@
     </message>
     </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     </context>
 <context>
@@ -404,7 +446,7 @@
         <source>unknown</source>
         <translation>अज्ञात</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     </context>
@@ -418,6 +460,10 @@
     <message>
         <source>&amp;Information</source>
         <translation>जानकारी</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">तिजोरी  </translation>
     </message>
     </context>
 <context>
@@ -645,7 +691,11 @@
         <source>Export the data in the current tab to a file</source>
         <translation>डेटा को मौजूदा टैब से एक फ़ाइल में निर्यात करें</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">कैन्सल</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>

@@ -30,6 +30,10 @@
         <translation>ลบที่อยู่ที่เลือกไว้ออกจากรายการ</translation>
     </message>
     <message>
+        <source>Enter address or label to search</source>
+        <translation>ป้อนที่อยู่หรือฉลากเพื่อค้นหา</translation>
+    </message>
+    <message>
         <source>Export the data in the current tab to a file</source>
         <translation>ส่งออกข้อมูลที่อยู่ในแถบนี้ไปในไฟล์</translation>
     </message>
@@ -128,6 +132,10 @@
         <translation>ทำซ้ำข้อความรหัสใหม่</translation>
     </message>
     <message>
+        <source>Show passphrase</source>
+        <translation>ดูวลี</translation>
+    </message>
+    <message>
         <source>Encrypt wallet</source>
         <translation>กระเป๋าสตางค์ เข้ารหัส</translation>
     </message>
@@ -150,6 +158,14 @@
     <message>
         <source>Change passphrase</source>
         <translation>เปลี่ยน ข้อความรหัสผ่าน</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>ยืนยันการเข้ารหัสกระเป๋าเงิน</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to encrypt your wallet?</source>
+        <translation>คุณแน่ใจหรือว่าต้องการเข้ารหัสกระเป๋าเงินของคุณ?</translation>
     </message>
     </context>
 <context>
@@ -236,6 +252,14 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>เปิด &amp;URI</translation>
+    </message>
+    <message>
+        <source>Create Wallet...</source>
+        <translation>สร้าง Wallet</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">กระเป๋าเงิน:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -374,6 +398,14 @@
         <translation>ทันสมัย</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;ที่อยู่ในการส่ง</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;ที่อยู่ในการรับ</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>แสดง %1 ข้อความช่วยเหลือ เพื่อแสดงรายการ ตัวเลือกที่เป็นไปได้สำหรับ Bitcoin command-line</translation>
     </message>
@@ -435,7 +467,11 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>กระเป๋าเงินถูก &lt;b&gt;เข้ารหัส&lt;/b&gt; และในปัจจุบัน &lt;b&gt;ล็อค &lt;/b&gt;</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. Bitcoin can no longer continue safely and will quit.</source>
+        <translation>เกิดข้อผิดพลาดร้ายแรง Bitcoin ไม่สามารถดำเนินการต่อได้อย่างปลอดภัยอีกต่อไปและจะยกเลิก</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -507,6 +543,22 @@
         <translation>ยืนยันแล้ว</translation>
     </message>
     <message>
+        <source>Copy address</source>
+        <translation>คัดลอกที่อยู่</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>คัดลอกป้ายกำกับ</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>คัดลอกจำนวนเงิน</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>คัดลอก ID ธุรกรรม</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(ไม่มีฉลาก)</translation>
     </message>
@@ -516,7 +568,19 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
-    </context>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>เข้ารหัสกระเป๋าเงิน</translation>
+    </message>
+    <message>
+        <source>Make Blank Wallet</source>
+        <translation>ทำกระเป๋าเงินเปล่า</translation>
+    </message>
+    <message>
+        <source>Create</source>
+        <translation>สร้าง</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -564,6 +628,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -609,6 +676,14 @@
         <translation>Bitcoin</translation>
     </message>
     <message>
+        <source>Approximately %1 GB of data will be stored in this directory.</source>
+        <translation>ประมาณ %1 GB ของข้อมูลจะเก็บในไดเร็กทอรี่</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>The wallet เก็บใว้ในไดเร็กทอรี่</translation>
+    </message>
+    <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
         <translation>ข้อผิดพลาด: ไดเร็กทอรี่ข้อมูลที่ต้องการ "%1" ไม่สามารถสร้างได้</translation>
     </message>
@@ -624,6 +699,9 @@
         <source>(of %n GB needed)</source>
         <translation><numerusform>(ต้องการพื้นที่ %n GB)</numerusform></translation>
     </message>
+</context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -632,6 +710,14 @@
         <translation>รูป</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>ที่อยู่</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -797,6 +883,9 @@
     </message>
     </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     </context>
 <context>
@@ -818,16 +907,52 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;ข้อมูล</translation>
+    </message>
+    <message>
+        <source>Debug window</source>
+        <translation type="unfinished">หน้าต่าง Debug</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation type="unfinished">เน็ตเวิร์ก</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">กระเป๋าเงิน: </translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;จำนวน:</translation>
+    </message>
+    <message>
         <source>&amp;Label:</source>
         <translation>&amp;ชื่อ:</translation>
     </message>
-    </context>
+    <message>
+        <source>Copy label</source>
+        <translation>คัดลอกป้ายกำกับ</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>คัดลอกจำนวนเงิน</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">คัดลอกที่อยู่</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>ที่อยู่</translation>
@@ -891,8 +1016,24 @@
         <translation>เงินทอน:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">เลือก...</translation>
+    </message>
+    <message>
         <source>Dust:</source>
         <translation>เศษ:</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;ส่ง</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>คัดลอกจำนวนเงิน</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">ส่ง</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -901,6 +1042,10 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;จำนวน:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;ชื่อ:</translation>
@@ -949,6 +1094,22 @@
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>Copy address</source>
+        <translation>คัดลอกที่อยู่</translation>
+    </message>
+    <message>
+        <source>Copy label</source>
+        <translation>คัดลอกป้ายกำกับ</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>คัดลอกจำนวนเงิน</translation>
+    </message>
+    <message>
+        <source>Copy transaction ID</source>
+        <translation>คัดลอก ID ธุรกรรม</translation>
+    </message>
     <message>
         <source>Comma separated file (*.csv)</source>
         <translation>ไฟล์ที่คั่นด้วยจุลภาค (* .csv)</translation>
@@ -999,6 +1160,10 @@
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>ส่งออกข้อมูลที่อยู่ในแถบนี้ไปในไฟล์</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">สำรองกระเป๋าเงิน</translation>
     </message>
     </context>
 <context>

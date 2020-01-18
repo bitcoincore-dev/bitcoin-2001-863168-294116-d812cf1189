@@ -132,6 +132,10 @@
         <translation>新しいパスフレーズをもう一度</translation>
     </message>
     <message>
+        <source>Show passphrase</source>
+        <translation>パスフレーズを表示</translation>
+    </message>
+    <message>
         <source>Encrypt wallet</source>
         <translation>ウォレットを暗号化</translation>
     </message>
@@ -170,6 +174,31 @@
     <message>
         <source>Wallet encrypted</source>
         <translation>ウォレットの暗号化の完了</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>新しいウォレットのパスフレーズを入力してください。
+パスフレーズは、ランダムな10文字以上の文字か、８語以上の単語を使用してください。</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>ウォレット用の旧パスフレーズと新パスフレーズを入力してください。</translation>
+    </message>
+    <message>
+        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>ウォレットを暗号化しても、コンピュータに感染したマルウェアなどによる Bitcoin の盗難を完全に防ぐことはできないことにご注意ください。</translation>
+    </message>
+    <message>
+        <source>Wallet to be encrypted</source>
+        <translation>暗号化するウォレット</translation>
+    </message>
+    <message>
+        <source>Your wallet is about to be encrypted. </source>
+        <translation>ウォレットは暗号化されようとしています。</translation>
+    </message>
+    <message>
+        <source>Your wallet is now encrypted. </source>
+        <translation>ウォレットは暗号化されました。</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -292,6 +321,14 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>URI を開く(&amp;U)...</translation>
+    </message>
+    <message>
+        <source>Create Wallet...</source>
+        <translation>ウォレットを作成...</translation>
+    </message>
+    <message>
+        <source>Create a new wallet</source>
+        <translation>新しいウォレットを作成</translation>
     </message>
     <message>
         <source>Wallet:</source>
@@ -482,10 +519,6 @@
         <translation>%1 のヘルプ メッセージを表示して、使用可能な XPChain のコマンドライン オプションの一覧を見る。</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>デフォルトウォレット</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>ウォレットは利用できません</translation>
     </message>
@@ -520,6 +553,10 @@
     <message>
         <source>Error: %1</source>
         <translation>エラー: %1</translation>
+    </message>
+    <message>
+        <source>Warning: %1</source>
+        <translation>警告: %1</translation>
     </message>
     <message>
         <source>Date: %1
@@ -743,10 +780,58 @@
 </context>
 <context>
     <name>CreateWalletActivity</name>
-    </context>
+    <message>
+        <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <translation>ウォレット &lt;b&gt;%1&lt;/b&gt;を作成しています...</translation>
+    </message>
+    <message>
+        <source>Create wallet failed</source>
+        <translation>ウォレットの作成に失敗しました</translation>
+    </message>
+    <message>
+        <source>Create wallet warning</source>
+        <translation>ウォレットを作成 - 警告</translation>
+    </message>
+</context>
 <context>
     <name>CreateWalletDialog</name>
-    </context>
+    <message>
+        <source>Create Wallet</source>
+        <translation>ウォレットを作成する</translation>
+    </message>
+    <message>
+        <source>Wallet Name</source>
+        <translation>ウォレット名</translation>
+    </message>
+    <message>
+        <source>Encrypt the wallet. The wallet will be encrypted with a passphrase of your choice.</source>
+        <translation>ウォレットを暗号化。ウォレットは任意のパスフレーズによって暗号化されます。</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>ウォレットを暗号化する</translation>
+    </message>
+    <message>
+        <source>Disable private keys for this wallet. Wallets with private keys disabled will have no private keys and cannot have an HD seed or imported private keys. This is ideal for watch-only wallets.</source>
+        <translation>このウォレットの秘密鍵を無効にします。秘密鍵が無効になっているウォレットには秘密鍵はなく、HDシードまたはインポートされた秘密鍵を持つこともできません。これはウォッチ限定のウォレットに最適です。</translation>
+    </message>
+    <message>
+        <source>Disable Private Keys</source>
+        <translation>秘密鍵を無効化</translation>
+    </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported, or an HD seed can be set, at a later time.</source>
+        <translation>空ウォレットを作成。空ウォレットには、最初は秘密鍵やスクリプトがありません。後から秘密鍵やアドレスをインポート、またはHDシードを設定できます。</translation>
+    </message>
+    <message>
+        <source>Make Blank Wallet</source>
+        <translation>空ウォレットを作成</translation>
+    </message>
+    <message>
+        <source>Create</source>
+        <translation>作成</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -825,6 +910,9 @@
         <translation>ここにデータ ディレクトリを作成することはできません。</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -914,6 +1002,13 @@
         <source>(of %n GB needed)</source>
         <translation><numerusform>(%n GB必要)</numerusform></translation>
     </message>
+</context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -967,6 +1062,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>タイプ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>アドレス</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -991,6 +1099,14 @@
 </context>
 <context>
     <name>OpenWalletActivity</name>
+    <message>
+        <source>Open wallet failed</source>
+        <translation>ウォレットを開くことに失敗しました</translation>
+    </message>
+    <message>
+        <source>Open wallet warning</source>
+        <translation>ウォレットを開く - 警告</translation>
+    </message>
     <message>
         <source>default wallet</source>
         <translation>デフォルトウォレット</translation>
@@ -1081,10 +1197,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>ブロックの保存容量を次の値までに剪定する(&amp;amp;B):</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1239,6 +1351,10 @@
         <translation>なし</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin のコア</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>設定リセットの確認</translation>
     </message>
@@ -1349,7 +1465,10 @@
         <source>Current total balance in watch-only addresses</source>
         <translation>ウォッチ限定アドレスの現在の残高の総計</translation>
     </message>
-</context>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1379,6 +1498,10 @@
     <message>
         <source>Cannot process payment request because BIP70 support was not compiled in.</source>
         <translation>BIP70のサポートが組み込まれていないため、支払いリクエストを処理することができません。</translation>
+    </message>
+    <message>
+        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation>このエラーが発生する場合は、販売者にBIP21互換URIの提供を依頼するべきです。</translation>
     </message>
     <message>
         <source>Invalid payment address %1</source>
@@ -1582,6 +1705,16 @@
         <source>unknown</source>
         <translation>不明</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>ブロック</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>取引</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -1600,6 +1733,10 @@
     <message>
         <source>Error encoding URI into QR Code.</source>
         <translation>URIをQRコードへ変換している際にエラーが発生しました。</translation>
+    </message>
+    <message>
+        <source>QR code support not available.</source>
+        <translation>QRコードは利用できません。</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -1960,6 +2097,10 @@
         <translation>リクエストする金額（任意）。特定の金額をリクエストしない場合は、この欄は空白のままかゼロにしてください。</translation>
     </message>
     <message>
+        <source>&amp;Request payment</source>
+        <translation>支払いをリクエスト(&amp;R)</translation>
+    </message>
+    <message>
         <source>Clear all fields of the form.</source>
         <translation>全ての入力欄をクリア</translation>
     </message>
@@ -2165,10 +2306,6 @@
         <translation>警告: 手数料推定機能は現在利用できません。</translation>
     </message>
     <message>
-        <source>collapse fee-settings</source>
-        <translation>手数料設定を折りたたむ</translation>
-    </message>
-    <message>
         <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
 
 Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis per kB" for a transaction size of 500 bytes (half of 1 kB) would ultimately yield a fee of only 50 satoshis.</source>
@@ -2281,6 +2418,14 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>%1 (%2 ブロック)</translation>
     </message>
     <message>
+        <source> from wallet '%1'</source>
+        <translation>ウォレット '%1' から</translation>
+    </message>
+    <message>
+        <source>%1 to '%2'</source>
+        <translation>%1 から '%2'</translation>
+    </message>
+    <message>
         <source>%1 to %2</source>
         <translation>%1 送金先: %2</translation>
     </message>
@@ -2313,8 +2458,16 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>合計</translation>
     </message>
     <message>
+        <source>To review recipient list click "Show Details..."</source>
+        <translation>受信者の一覧を確認するには "詳細を表示..." をクリック</translation>
+    </message>
+    <message>
         <source>Confirm send coins</source>
         <translation>送金の確認</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">送金</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -2394,10 +2547,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Choose previously used address</source>
         <translation>これまでに送金したことがあるアドレスから選択</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>これは通常の支払いです。</translation>
     </message>
     <message>
         <source>The Bitcoin address to send the payment to</source>
@@ -2763,6 +2912,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>アウトプット インデックス数</translation>
     </message>
     <message>
+        <source> (Certificate was not verified)</source>
+        <translation>(証明書は検証されませんでした)</translation>
+    </message>
+    <message>
         <source>Merchant</source>
         <translation>リクエスト元</translation>
     </message>
@@ -2952,10 +3105,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>送金</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>自己送金</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>発掘</translation>
     </message>
@@ -3084,6 +3233,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Close wallet</source>
         <translation>ウォレットを閉じる</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to close the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>本当にウォレット&lt;i&gt;%1&lt;/i&gt;を閉じますか？</translation>
     </message>
     <message>
         <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
@@ -3358,6 +3511,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>初期化時の健全性検査に失敗しました。%s を終了します。</translation>
     </message>
     <message>
+        <source>Invalid P2P permission: '%s'</source>
+        <translation>無効なP2Pアクセス権: '%s'</translation>
+    </message>
+    <message>
         <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>
         <translation>-%s=&lt;amount&gt; オプションに対する不正な amount: '%s'</translation>
     </message>
@@ -3388,6 +3545,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Loading P2P addresses...</source>
         <translation>P2Pアドレスの読み込み中...</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is too low!</source>
+        <translation>エラー: ディスク容量が不足しています！</translation>
     </message>
     <message>
         <source>Loading banlist...</source>
@@ -3498,6 +3659,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>-whitebind オプションでポートを指定する必要があります: '%s'</translation>
     </message>
     <message>
+        <source>Prune mode is incompatible with -blockfilterindex.</source>
+        <translation>剪定モードは -blockfilterindex オプションと互換性がありません。</translation>
+    </message>
+    <message>
         <source>Reducing -maxconnections from %d to %d, because of system limitations.</source>
         <translation>システム上の制約から、-maxconnections を %d から %d に削減しました。</translation>
     </message>
@@ -3554,6 +3719,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Unable to generate initial keys</source>
         <translation>イニシャル鍵を生成できません</translation>
+    </message>
+    <message>
+        <source>Unknown -blockfilterindex value %s.</source>
+        <translation>不明な -blockfilterindex の値 %s。</translation>
     </message>
     <message>
         <source>Verifying wallet(s)...</source>

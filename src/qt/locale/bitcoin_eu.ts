@@ -70,10 +70,6 @@
         <translation>Hauek dira zuk dirua jaso dezaketen Bitcoin helbideak. Egiaztatu beti diru-kopurua eta dirua jasoko duen helbidea zuzen egon daitezen, txanponak bidali baino lehen.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.</source>
-        <translation>Hauek dira ordainketak jasotzeko zure Bitcoin helbideak. Jaso taulako 'Jasotzeko helbide berri bat sortu' botoia erabili helbide berri bat sortzeko.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Helbidea kopiatu</translation>
     </message>
@@ -235,7 +231,11 @@
         <source>Wallet passphrase was successfully changed.</source>
         <translation>Diruzorroaren pasahitza arrakastaz aldatu da.</translation>
     </message>
-    </context>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Abisua: Mayuskulak blokeatuak dituzu!</translation>
+    </message>
+</context>
 <context>
     <name>BanTableModel</name>
     <message>
@@ -310,8 +310,16 @@
         <translation>Diruzorroa &amp;enkriptatu...</translation>
     </message>
     <message>
+        <source>&amp;Backup Wallet...</source>
+        <translation>Diruzorroaren kopia bat gorde</translation>
+    </message>
+    <message>
         <source>&amp;Change Passphrase...</source>
         <translation>Pasahitza &amp;aldatu...</translation>
+    </message>
+    <message>
+        <source>Open &amp;URI...</source>
+        <translation>&amp;URLa zabaldu</translation>
     </message>
     <message>
         <source>Create Wallet...</source>
@@ -324,6 +332,26 @@
     <message>
         <source>Wallet:</source>
         <translation>Diruzorroa:</translation>
+    </message>
+    <message>
+        <source>Click to disable network activity.</source>
+        <translation>Sarea desaktibatzeko sakatu</translation>
+    </message>
+    <message>
+        <source>Network activity disabled.</source>
+        <translation>Sarea desaktibatua</translation>
+    </message>
+    <message>
+        <source>Click to enable network activity again.</source>
+        <translation>Sarea berriro aktibatzeko sakatu</translation>
+    </message>
+    <message>
+        <source>Syncing Headers (%1%)...</source>
+        <translation>Burukoak sinkronizatzen (%1)...</translation>
+    </message>
+    <message>
+        <source>Reindexing blocks on disk...</source>
+        <translation>Blokeak diskoan berriro zerrendatzen...</translation>
     </message>
     <message>
         <source>Change the passphrase used for wallet encryption</source>
@@ -366,6 +394,10 @@
         <translation>Fitxen tresna-barra</translation>
     </message>
     <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Blokeak diskoan berriro zerrendatzen...</translation>
+    </message>
+    <message>
         <source>%1 behind</source>
         <translation>%1 atzetik</translation>
     </message>
@@ -376,6 +408,14 @@
     <message>
         <source>Up to date</source>
         <translation>Eguneratua</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Helbideak bidaltzen</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Helbideak jasotzen</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -604,10 +644,17 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
         <translation>bertsioa</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">%1-ri buruz</translation>
     </message>
     </context>
 <context>
@@ -628,6 +675,9 @@
         <source>Error</source>
         <translation>Akatsa</translation>
     </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -652,6 +702,19 @@
         <translation>Izkutatu</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Mota</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Helbidea</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -687,6 +750,10 @@
     <message>
         <source>Size of &amp;database cache</source>
         <translation>Databasearen cache tamaina</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Diruzorroa</translation>
     </message>
     <message>
         <source>Tor</source>
@@ -745,6 +812,9 @@
     </message>
     </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     </context>
 <context>
@@ -764,17 +834,29 @@
         <source>unknown</source>
         <translation>ezezaguna</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     </context>
 <context>
     <name>RPCConsole</name>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Diruzorroa: </translation>
+    </message>
+    <message>
         <source>Last block time</source>
         <translation>Azken blokearen unea</translation>
     </message>
-    </context>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Sarea desaktibatua</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">Ezezaguna</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -816,7 +898,11 @@
         <source>Message</source>
         <translation>Mezua</translation>
     </message>
-    </context>
+    <message>
+        <source>Wallet</source>
+        <translation type="unfinished">Diruzorroa</translation>
+    </message>
+</context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
@@ -859,6 +945,10 @@
         <translation>Bueltak:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Aukeratu...</translation>
+    </message>
+    <message>
         <source>Hide</source>
         <translation>Izkutatu</translation>
     </message>
@@ -879,8 +969,16 @@
         <translation>Bidalketa berretsi</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Bidali</translation>
+    </message>
+    <message>
         <source>Confirm send coins</source>
         <translation>Txanponen bidalketa berretsi</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">Bidali</translation>
     </message>
     <message>
         <source>The amount to pay must be larger than 0.</source>
@@ -1102,10 +1200,6 @@
         <translation>Hona bidalia</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Zeure buruari</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Meatua</translation>
     </message>
@@ -1184,7 +1278,11 @@
         <source>Export the data in the current tab to a file</source>
         <translation>Uneko fitxategian datuak esportatu</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Ezeztatu</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>

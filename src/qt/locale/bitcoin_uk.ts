@@ -132,6 +132,10 @@
         <translation>Повторите новый пароль</translation>
     </message>
     <message>
+        <source>Show passphrase</source>
+        <translation>Показати парольну фразу</translation>
+    </message>
+    <message>
         <source>Encrypt wallet</source>
         <translation>Зашифровать электронный кошелёк</translation>
     </message>
@@ -172,8 +176,28 @@
         <translation>Кошелёк зашифрован</translation>
     </message>
     <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Введіть нову кодову фразу для гаманця.&lt;br/&gt;Будь ласка, використовуйте кодові фрази що містять &lt;b&gt; щонайменше десять випадкових символів &lt;/b&gt; або &lt;b&gt; щонайменше вісім слів &lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>Введіть стару та нову парольну фразу для гаманця.</translation>
+    </message>
+    <message>
         <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
         <translation>Пам’ятайте, що шифрування гаманця не може повністю захистити ваші біткоіни від кражі, у випадку якщо ваш комп’ютер буде інфіковано шкідливими програмами.</translation>
+    </message>
+    <message>
+        <source>Wallet to be encrypted</source>
+        <translation>Гаманець який потрібно зашифрувати</translation>
+    </message>
+    <message>
+        <source>Your wallet is about to be encrypted. </source>
+        <translation>Ваш гаманець буде зашифровано.</translation>
+    </message>
+    <message>
+        <source>Your wallet is now encrypted. </source>
+        <translation>Ваш гаманець зашифровано.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -296,6 +320,14 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Відкрити &amp;URI</translation>
+    </message>
+    <message>
+        <source>Create Wallet...</source>
+        <translation>Створити Гаманець...</translation>
+    </message>
+    <message>
+        <source>Create a new wallet</source>
+        <translation>Створити новий гаманець</translation>
     </message>
     <message>
         <source>Wallet:</source>
@@ -486,10 +518,6 @@
         <translation>Показати довідку %1 для отримання переліку можливих параметрів командного рядка.</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>гаманець за змовчуванням</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Гаманців немає</translation>
     </message>
@@ -524,6 +552,10 @@
     <message>
         <source>Error: %1</source>
         <translation>Помилка: %1</translation>
+    </message>
+    <message>
+        <source>Warning: %1</source>
+        <translation>Попередження: %1</translation>
     </message>
     <message>
         <source>Date: %1
@@ -747,10 +779,42 @@
 </context>
 <context>
     <name>CreateWalletActivity</name>
-    </context>
+    <message>
+        <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <translation>Створення Гаманця &lt;b&gt;%1&lt;/b&gt;...</translation>
+    </message>
+    <message>
+        <source>Create wallet failed</source>
+        <translation>Помилка створення гаманця</translation>
+    </message>
+    <message>
+        <source>Create wallet warning</source>
+        <translation>Попередження створення гаманця</translation>
+    </message>
+</context>
 <context>
     <name>CreateWalletDialog</name>
-    </context>
+    <message>
+        <source>Create Wallet</source>
+        <translation>Створити Гаманець</translation>
+    </message>
+    <message>
+        <source>Wallet Name</source>
+        <translation>Назва Гаманця</translation>
+    </message>
+    <message>
+        <source>Encrypt the wallet. The wallet will be encrypted with a passphrase of your choice.</source>
+        <translation>Зашифруйте гаманець. Гаманець буде зашифрований за допомогою пароля на ваш вибір.</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>Шифрувати Гаманець</translation>
+    </message>
+    <message>
+        <source>Create</source>
+        <translation>Створити</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -829,6 +893,9 @@
         <translation>Тут неможливо створити каталог даних.</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -918,6 +985,13 @@
         <source>(of %n GB needed)</source>
         <translation><numerusform>(в той час, як необхідно %n ГБ)</numerusform><numerusform>(в той час, як необхідно %n ГБ)</numerusform><numerusform>(в той час, як необхідно %n ГБ)</numerusform><numerusform>(в той час, як необхідно %n ГБ)</numerusform></translation>
     </message>
+</context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Н/Д</translation>
+    </message>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -971,6 +1045,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тип</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адреса</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -995,6 +1082,14 @@
 </context>
 <context>
     <name>OpenWalletActivity</name>
+    <message>
+        <source>Open wallet failed</source>
+        <translation>Помилка відкриття гаманця</translation>
+    </message>
+    <message>
+        <source>Open wallet warning</source>
+        <translation>Попередження відкриття гаманця</translation>
+    </message>
     <message>
         <source>default wallet</source>
         <translation>гаманець за змовчуванням</translation>
@@ -1085,10 +1180,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Скоротити місце під блоки...</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>ГБ</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1353,7 +1444,10 @@
         <source>Current total balance in watch-only addresses</source>
         <translation>Поточний сукупний баланс в адресах для спостереження</translation>
     </message>
-</context>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1587,6 +1681,16 @@
     <message>
         <source>unknown</source>
         <translation>невідомо</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакція</translation>
     </message>
 </context>
 <context>
@@ -1966,6 +2070,10 @@
         <translation>Необов'язкове поле для суми запиту. Залиште це поле пустим або впишіть нуль, щоб не надсилати у запиті конкретної суми.</translation>
     </message>
     <message>
+        <source>&amp;Request payment</source>
+        <translation>Н&amp;адіслати запит платежу</translation>
+    </message>
+    <message>
         <source>Clear all fields of the form.</source>
         <translation>Очистити всі поля в формі</translation>
     </message>
@@ -2171,10 +2279,6 @@
         <translation>Попередження: оцінка розміру комісії наразі неможлива.</translation>
     </message>
     <message>
-        <source>collapse fee-settings</source>
-        <translation>згорнути налаштування оплат</translation>
-    </message>
-    <message>
         <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
 
 Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis per kB" for a transaction size of 500 bytes (half of 1 kB) would ultimately yield a fee of only 50 satoshis.</source>
@@ -2287,6 +2391,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>%1 (%2 блоків)</translation>
     </message>
     <message>
+        <source> from wallet '%1'</source>
+        <translation> з гаманця '%1'</translation>
+    </message>
+    <message>
         <source>%1 to %2</source>
         <translation>%1 до %2</translation>
     </message>
@@ -2321,6 +2429,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Confirm send coins</source>
         <translation>Підтвердьте надсилання монет</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">Відправити</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -2400,10 +2512,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Choose previously used address</source>
         <translation>Обрати ранiш використовувану адресу</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>Це звичайний платіж.</translation>
     </message>
     <message>
         <source>The Bitcoin address to send the payment to</source>
@@ -2769,6 +2877,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Вихідний індекс</translation>
     </message>
     <message>
+        <source> (Certificate was not verified)</source>
+        <translation>(Сертифікат не підтверджено)</translation>
+    </message>
+    <message>
         <source>Merchant</source>
         <translation>Продавець</translation>
     </message>
@@ -2958,10 +3070,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Відправлені на</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Відправлені собі</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Добуті</translation>
     </message>
@@ -3090,6 +3198,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Close wallet</source>
         <translation>закрити Гаманець</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to close the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>Ви впевнені, що хочете закрити гаманець &lt;i&gt;%1&lt;/i&gt;?</translation>
     </message>
     <message>
         <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
@@ -3386,6 +3498,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Loading P2P addresses...</source>
         <translation>Завантаження P2P адрес...</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is too low!</source>
+        <translation>Помилка: замало дискового простору!</translation>
     </message>
     <message>
         <source>Loading banlist...</source>

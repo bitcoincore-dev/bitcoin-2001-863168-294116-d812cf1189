@@ -132,6 +132,10 @@
         <translation>Repita a nova frase de frase de segurança</translation>
     </message>
     <message>
+        <source>Show passphrase</source>
+        <translation>Mostrar Password</translation>
+    </message>
+    <message>
         <source>Encrypt wallet</source>
         <translation>Encriptar carteira</translation>
     </message>
@@ -170,6 +174,30 @@
     <message>
         <source>Wallet encrypted</source>
         <translation>Carteira encriptada</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Insira nova password para a carteira.&lt;br/&gt;Por favor use uma password de &lt;b&gt;dez ou mais caracteres&lt;/b&gt;, ou &lt;b&gt;oito ou mais palavras&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>Insira a password antiga e a nova para a carteira.</translation>
+    </message>
+    <message>
+        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>Lembra se que encrostar a sua carteira não o pode defender na totalidade os seus bitcoins de serem roubados por um malware que possa infectar o seu computador.</translation>
+    </message>
+    <message>
+        <source>Wallet to be encrypted</source>
+        <translation>Carteira a ser encriptada</translation>
+    </message>
+    <message>
+        <source>Your wallet is about to be encrypted. </source>
+        <translation>A sua carteira vai agora ser encriptada.</translation>
+    </message>
+    <message>
+        <source>Your wallet is now encrypted. </source>
+        <translation>A sua carteira está agora encriptada</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -292,6 +320,14 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Abrir &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Create Wallet...</source>
+        <translation>Criar Carteira...</translation>
+    </message>
+    <message>
+        <source>Create a new wallet</source>
+        <translation>Criar novo carteira</translation>
     </message>
     <message>
         <source>Wallet:</source>
@@ -482,10 +518,6 @@
         <translation>Mostrar a mensagem de ajuda %1 para obter uma lista com possíveis opções a usar na linha de comandos.</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>carteira predefinida</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Sem carteiras disponíveis</translation>
     </message>
@@ -520,6 +552,10 @@
     <message>
         <source>Error: %1</source>
         <translation>Erro: %1</translation>
+    </message>
+    <message>
+        <source>Warning: %1</source>
+        <translation>Aviso: %1</translation>
     </message>
     <message>
         <source>Date: %1
@@ -743,10 +779,58 @@
 </context>
 <context>
     <name>CreateWalletActivity</name>
-    </context>
+    <message>
+        <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <translation>A criar carteira &lt;b&gt;%1&lt;/b&gt;...</translation>
+    </message>
+    <message>
+        <source>Create wallet failed</source>
+        <translation>Falha a criar carteira</translation>
+    </message>
+    <message>
+        <source>Create wallet warning</source>
+        <translation>Aviso ao criar carteira</translation>
+    </message>
+</context>
 <context>
     <name>CreateWalletDialog</name>
-    </context>
+    <message>
+        <source>Create Wallet</source>
+        <translation>Criar Carteira</translation>
+    </message>
+    <message>
+        <source>Wallet Name</source>
+        <translation>Nome da Carteira</translation>
+    </message>
+    <message>
+        <source>Encrypt the wallet. The wallet will be encrypted with a passphrase of your choice.</source>
+        <translation>Encriptar carteira. A carteira vai ser encriptada com uma password de sua escolha.</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>Encriptar Carteira</translation>
+    </message>
+    <message>
+        <source>Disable private keys for this wallet. Wallets with private keys disabled will have no private keys and cannot have an HD seed or imported private keys. This is ideal for watch-only wallets.</source>
+        <translation>Desative chaves privadas para esta carteira. As carteiras com chaves privadas desativadas não terão chaves privadas e não poderão ter uma semente em HD ou chaves privadas importadas. Isso é ideal para carteiras sem movimentos.</translation>
+    </message>
+    <message>
+        <source>Disable Private Keys</source>
+        <translation>Desactivar Chaves Privadas</translation>
+    </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported, or an HD seed can be set, at a later time.</source>
+        <translation>Faça uma carteira em branco. As carteiras em branco não possuem inicialmente chaves ou scripts privados. Chaves e endereços privados podem ser importados ou uma semente HD pode ser configurada posteriormente.</translation>
+    </message>
+    <message>
+        <source>Make Blank Wallet</source>
+        <translation>Fazer Carteira em Branco</translation>
+    </message>
+    <message>
+        <source>Create</source>
+        <translation>Criar</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -825,6 +909,9 @@
         <translation>Não é possível criar aqui uma pasta de dados.</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -914,6 +1001,13 @@
         <source>(of %n GB needed)</source>
         <translation><numerusform>(de %n GB necessários)</numerusform><numerusform>(de %n GB necessário)</numerusform></translation>
     </message>
+</context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -967,6 +1061,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Endereço</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open URI</source>
@@ -991,6 +1098,14 @@
 </context>
 <context>
     <name>OpenWalletActivity</name>
+    <message>
+        <source>Open wallet failed</source>
+        <translation>Falha ao abrir a carteira</translation>
+    </message>
+    <message>
+        <source>Open wallet warning</source>
+        <translation>Aviso abertura carteira</translation>
+    </message>
     <message>
         <source>default wallet</source>
         <translation>carteira predefinida</translation>
@@ -1082,10 +1197,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Reduzir o armazenamento de &amp;bloco para</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>PT</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1350,7 +1461,10 @@
         <source>Current total balance in watch-only addresses</source>
         <translation>Saldo disponível em endereços de apenas vigiar</translation>
     </message>
-</context>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1380,6 +1494,14 @@
     <message>
         <source>Cannot process payment request because BIP70 support was not compiled in.</source>
         <translation>O pagamento não pode ser processado porque o suporte ao BIP70 foi desativado.</translation>
+    </message>
+    <message>
+        <source>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</source>
+        <translation>Devido a falhas de segurança generalizadas no BIP70, é altamente recomendável que todas as instruções do comerciante para trocar carteiras sejam ignoradas.</translation>
+    </message>
+    <message>
+        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation>Se está a receber este erro, deve pedir ao comerciante que lhe de um ULR compatível com BIP21.</translation>
     </message>
     <message>
         <source>Invalid payment address %1</source>
@@ -1583,7 +1705,7 @@
         <source>unknown</source>
         <translation>desconhecido</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     <message>
@@ -1601,6 +1723,10 @@
     <message>
         <source>Error encoding URI into QR Code.</source>
         <translation>Erro ao codificar URI em Código QR.</translation>
+    </message>
+    <message>
+        <source>QR code support not available.</source>
+        <translation>Suporte códigos QR não disponível</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -1961,6 +2087,10 @@
         <translation>Uma quantia opcional a solicitar. Deixe em branco ou zero para não solicitar uma quantidade específica.</translation>
     </message>
     <message>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Requisitar Pagamento</translation>
+    </message>
+    <message>
         <source>Clear all fields of the form.</source>
         <translation>Limpar todos os campos do formulário.</translation>
     </message>
@@ -2166,10 +2296,6 @@
         <translation>Aviso: atualmente, não é possível a estimativa da taxa.</translation>
     </message>
     <message>
-        <source>collapse fee-settings</source>
-        <translation>ocultar configurações de taxa</translation>
-    </message>
-    <message>
         <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
 
 Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis per kB" for a transaction size of 500 bytes (half of 1 kB) would ultimately yield a fee of only 50 satoshis.</source>
@@ -2282,6 +2408,14 @@ Nota: como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por u
         <translation>%1 (%2 blocos)</translation>
     </message>
     <message>
+        <source> from wallet '%1'</source>
+        <translation>da carteira '%1'</translation>
+    </message>
+    <message>
+        <source>%1 to '%2'</source>
+        <translation>%1 a '%2'</translation>
+    </message>
+    <message>
         <source>%1 to %2</source>
         <translation>%1 para %2</translation>
     </message>
@@ -2314,8 +2448,16 @@ Nota: como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por u
         <translation>Valor Total</translation>
     </message>
     <message>
+        <source>To review recipient list click "Show Details..."</source>
+        <translation>Para rever a lista de destinatários clique "Mostrar Detalhes..."</translation>
+    </message>
+    <message>
         <source>Confirm send coins</source>
         <translation>Confirme envio de moedas</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">Enviar</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -2396,10 +2538,6 @@ Nota: como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por u
     <message>
         <source>Choose previously used address</source>
         <translation>Escolha o endereço utilizado anteriormente</translation>
-    </message>
-    <message>
-        <source>This is a normal payment.</source>
-        <translation>Este é um pagamento normal.</translation>
     </message>
     <message>
         <source>The Bitcoin address to send the payment to</source>
@@ -2765,6 +2903,10 @@ Nota: como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por u
         <translation>Índex de saída</translation>
     </message>
     <message>
+        <source> (Certificate was not verified)</source>
+        <translation> (O certificado não foi verificado)</translation>
+    </message>
+    <message>
         <source>Merchant</source>
         <translation>Comerciante</translation>
     </message>
@@ -2954,10 +3096,6 @@ Nota: como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por u
         <translation>Enviado para</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Para si mesmo</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Minada</translation>
     </message>
@@ -3086,6 +3224,10 @@ Nota: como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por u
     <message>
         <source>Close wallet</source>
         <translation>Fechar a carteira</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to close the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>Tem a certeza que deseja fechar esta carteira &lt;i&gt;%1&lt;/i&gt;?</translation>
     </message>
     <message>
         <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
@@ -3360,6 +3502,10 @@ Nota: como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por u
         <translation>Verificação de integridade inicial falhou. O %s está a desligar-se.</translation>
     </message>
     <message>
+        <source>Invalid P2P permission: '%s'</source>
+        <translation>Permissões P2P inválidas : '%s'</translation>
+    </message>
+    <message>
         <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>
         <translation>Valor inválido para -%s=&lt;amount&gt;: '%s'</translation>
     </message>
@@ -3377,12 +3523,30 @@ Nota: como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por u
 A pasta de blocos especificados "%s" não existe.</translation>
     </message>
     <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>O ficheiro de R/W configuração especificado %s não existe
+</translation>
+    </message>
+    <message>
+        <source>Unknown address type '%s'</source>
+        <translation>Tipo de endereço desconhecido '%s'</translation>
+    </message>
+    <message>
+        <source>Unknown change type '%s'</source>
+        <translation>Tipo de mudança desconhecido '%s'</translation>
+    </message>
+    <message>
         <source>Upgrading txindex database</source>
         <translation>A atualizar a base de dados txindex</translation>
     </message>
     <message>
         <source>Loading P2P addresses...</source>
         <translation>A carregar endereços de P2P...</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is too low!</source>
+        <translation>Erro: O espaço disponível no disco é demasiado pequeno!</translation>
     </message>
     <message>
         <source>Loading banlist...</source>
@@ -3493,6 +3657,10 @@ A pasta de blocos especificados "%s" não existe.</translation>
         <translation>Necessário especificar uma porta com -whitebind: '%s'</translation>
     </message>
     <message>
+        <source>Prune mode is incompatible with -blockfilterindex.</source>
+        <translation>O modo de remoção é incompatível com -blockfilterindex.</translation>
+    </message>
+    <message>
         <source>Reducing -maxconnections from %d to %d, because of system limitations.</source>
         <translation>Reduzindo -maxconnections de %d para %d, devido a limitações no sistema.</translation>
     </message>
@@ -3549,6 +3717,10 @@ A pasta de blocos especificados "%s" não existe.</translation>
     <message>
         <source>Unable to generate initial keys</source>
         <translation>Incapaz de gerar as chaves iniciais</translation>
+    </message>
+    <message>
+        <source>Unknown -blockfilterindex value %s.</source>
+        <translation>Desconhecido -blockfilterindex valor %s.</translation>
     </message>
     <message>
         <source>Verifying wallet(s)...</source>
