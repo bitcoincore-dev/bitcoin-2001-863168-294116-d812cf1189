@@ -1830,8 +1830,8 @@ bool AppInitMain(InitInterfaces& interfaces)
             InitError(strprintf(_("Could not find or parse specified asmap: '%s'").translated, asmap_path));
             return false;
         }
-        g_connman->SetAsmap(asmap);
         const uint256 asmap_version = SerializeHash(asmap);
+        g_connman->SetAsmap(std::move(asmap));
         LogPrintf("Using asmap version %s for IP bucketing.\n", asmap_version.ToString());
     } else {
         LogPrintf("Using /16 prefix for IP bucketing.\n");
