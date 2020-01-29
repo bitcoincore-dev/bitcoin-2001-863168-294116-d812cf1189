@@ -81,12 +81,14 @@ ChainstateManager g_chainman;
 
 CChainState& ChainstateActive()
 {
+    LOCK(::cs_main);
     assert(g_chainman.m_active_chainstate);
     return *g_chainman.m_active_chainstate;
 }
 
 CChain& ChainActive()
 {
+    LOCK(::cs_main);
     return ::ChainstateActive().m_chain;
 }
 
@@ -1295,6 +1297,7 @@ static CBlockIndex *pindexBestForkTip = nullptr, *pindexBestForkBase = nullptr;
 
 BlockMap& BlockIndex()
 {
+    LOCK(::cs_main);
     return g_chainman.m_blockman.m_block_index;
 }
 
@@ -3818,7 +3821,7 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
     NotifyHeaderTip();
 
     BlockValidationState state; // Only used to report errors, not invalidity - ignore it
-    if (!::ChainstateActive().ActivateBestChain(state, chainparams, pblock))
+    if (!ActivateBestChain(state, chainparams, pblock))
         return error("%s: ActivateBestChain failed (%s)", __func__, FormatStateMessage(state));
 
     return true;
@@ -4698,7 +4701,7 @@ bool LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, FlatFi
                 // Activate the genesis block so normal node progress can continue
                 if (hash == chainparams.GetConsensus().hashGenesisBlock) {
                     BlockValidationState state;
-                    if (!ActivateBestChain(state, chainparams)) {
+                    if (!::ChainstateActive().ActivateBestChain(state, chainparams, nullptr)) {
                         break;
                     }
                 }
