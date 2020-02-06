@@ -18,12 +18,14 @@
 #include <compat/sanity.h>
 #include <consensus/validation.h>
 #include <fs.h>
+#include <hash.h>
 #include <httprpc.h>
 #include <httpserver.h>
 #include <index/blockfilterindex.h>
 #include <index/txindex.h>
 #include <interfaces/chain.h>
 #include <key.h>
+#include <mapport.h>
 #include <miner.h>
 #include <net.h>
 #include <net_permissions.h>
@@ -53,7 +55,6 @@
 #include <util/threadnames.h>
 #include <util/translation.h>
 #include <validation.h>
-#include <hash.h>
 
 
 #include <validationinterface.h>
