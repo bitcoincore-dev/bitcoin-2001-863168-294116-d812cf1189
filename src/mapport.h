@@ -12,7 +12,12 @@ static const bool DEFAULT_UPNP = USE_UPNP;
 static const bool DEFAULT_UPNP = false;
 #endif
 
-void StartMapPort();
+enum class MapPort {
+    NAT_PMP,
+    UPNP
+};
+
+void StartMapPort(MapPort proto = MapPort::UPNP);
 void InterruptMapPort();
 void StopMapPort();
 

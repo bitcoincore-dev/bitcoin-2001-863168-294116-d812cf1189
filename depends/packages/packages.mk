@@ -16,6 +16,7 @@ wallet_packages=bdb
 
 zmq_packages=zeromq
 
+natpmp_packages=libnatpmp
 upnp_packages=miniupnpc
 
 darwin_native_packages = native_biplist native_ds_store native_mac_alias
