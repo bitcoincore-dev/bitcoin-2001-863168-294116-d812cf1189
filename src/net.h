@@ -33,11 +33,6 @@
 #include <memory>
 #include <condition_variable>
 
-#ifndef WIN32
-#include <arpa/inet.h>
-#endif
-
-
 class CScheduler;
 class CNode;
 class BanMan;
@@ -68,12 +63,6 @@ static const int MAX_BLOCK_RELAY_ONLY_CONNECTIONS = 2;
 static const int MAX_FEELER_CONNECTIONS = 1;
 /** -listen default */
 static const bool DEFAULT_LISTEN = true;
-/** -upnp default */
-#ifdef USE_UPNP
-static const bool DEFAULT_UPNP = USE_UPNP;
-#else
-static const bool DEFAULT_UPNP = false;
-#endif
 /** The maximum number of peer connections to maintain. */
 static const unsigned int DEFAULT_MAX_PEER_CONNECTIONS = 125;
 /** The default for -maxuploadtarget. 0 = Unlimited */
@@ -596,9 +585,6 @@ private:
     friend struct ConnmanTestMsg;
 };
 void Discover();
-void StartMapPort();
-void InterruptMapPort();
-void StopMapPort();
 uint16_t GetListenPort();
 
 /**
