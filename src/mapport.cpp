@@ -16,6 +16,16 @@
 #include <threadinterrupt.h>
 #include <util/system.h>
 
+#ifdef WIN32
+#include <winsock2.h>
+#else
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#endif
+
+#ifdef USE_NATPMP
+#include <natpmp.h>
+#endif
 #ifdef USE_UPNP
 #include <miniupnpc/miniupnpc.h>
 #include <miniupnpc/upnpcommands.h>
@@ -31,9 +41,82 @@ static_assert(MINIUPNPC_API_VERSION >= 10, "miniUPnPc API version >= 10 assumed"
 #include <string>
 #include <thread>
 
-#ifdef USE_UPNP
+#if defined(USE_NATPMP) || defined(USE_UPNP)
 static CThreadInterrupt g_upnp_interrupt;
 static std::thread g_upnp_thread;
+
+#ifdef USE_NATPMP
+static void ThreadMapPort()
+{
+    int r;
+    natpmp_t natpmp;
+    natpmpresp_t response;
+
+    r = initnatpmp(&natpmp, /* detect gateway automatically */ 0, /* forced gateway - NOT APPLIED*/ 0);
+    if (r < 0) {
+        LogPrintf("NAT-PMP: initnatpmp() failed with %d error.\n", r);
+        closenatpmp(&natpmp);
+        return;
+    }
+
+    if (fDiscover) {
+        r = sendpublicaddressrequest(&natpmp);
+        if (r < 0) {
+            LogPrintf("NAT-PMP: sendpublicaddressrequest() failed with %d error.\n", r);
+        } else {
+            do {
+                r = readnatpmpresponseorretry(&natpmp, &response);
+            } while (r == NATPMP_TRYAGAIN);
+            if (r < 0 || response.type != NATPMP_RESPTYPE_PUBLICADDRESS) {
+                LogPrintf("NAT-PMP: readnatpmpresponseorretry() for public address failed with %d error.\n", r);
+            } else {
+                const char* public_address = inet_ntoa(response.pnu.publicaddress.addr);
+                if (public_address[0]) {
+                    CNetAddr resolved;
+                    if (LookupHost(public_address, resolved, false)) {
+                        LogPrintf("NAT-PMP: public address = %s\n", resolved.ToString());
+                        AddLocal(resolved, LOCAL_UPNP);
+                    }
+                } else {
+                    LogPrintf("NAT-PMP: sendpublicaddressrequest() failed.\n");
+                }
+            }
+        }
+    }
+
+    const uint16_t port = GetListenPort();
+    do {
+        r = sendnewportmappingrequest(&natpmp, NATPMP_PROTOCOL_TCP, port, port, 3600 /*seconds*/);
+        if (r < 0) {
+            LogPrintf("NAT-PMP: sendnewportmappingrequest() failed with %d error.\n", r);
+            break;
+        }
+
+        do {
+            r = readnatpmpresponseorretry(&natpmp, &response);
+        } while (r == NATPMP_TRYAGAIN);
+        if (r < 0 || response.type != NATPMP_RESPTYPE_TCPPORTMAPPING) {
+            LogPrintf("NAT-PMP: readnatpmpresponseorretry() for port mapping failed with %d error.\n", r);
+        } else {
+            auto pm = response.pnu.newportmapping;
+            if (port == pm.privateport && port == pm.mappedpublicport && pm.lifetime > 0) {
+                LogPrintf("NAT-PMP: port mapping successful.\n");
+            } else {
+                LogPrintf("NAT-PMP: sendnewportmappingrequest() failed.\n");
+            }
+        }
+
+    } while (g_upnp_interrupt.sleep_for(std::chrono::minutes(20)));
+
+    r = sendnewportmappingrequest(&natpmp, NATPMP_PROTOCOL_TCP, port, port, /* remove a port mapping */ 0);
+    if (r < 0) {
+        LogPrintf("NAT-PMP: sendnewportmappingrequest(0) failed with %d error.\n", r);
+    }
+
+    closenatpmp(&natpmp);
+}
+
+#else // USE_UPNP
 static void ThreadMapPort()
 {
     std::string port = strprintf("%u", GetListenPort());
@@ -97,31 +180,32 @@ static void ThreadMapPort()
             FreeUPNPUrls(&urls);
     }
 }
+#endif // ifdef USE_NATPMP
 
 void StartMapPort()
 {
     if (!g_upnp_thread.joinable()) {
         assert(!g_upnp_interrupt);
-        g_upnp_thread = std::thread((std::bind(&TraceThread<void (*)()>, "upnp", &ThreadMapPort)));
+        g_upnp_thread = std::thread((std::bind(&TraceThread<void (*)()>, "mapport", &ThreadMapPort)));
     }
 }
 
 void InterruptMapPort()
 {
-    if(g_upnp_thread.joinable()) {
+    if (g_upnp_thread.joinable()) {
         g_upnp_interrupt();
     }
 }
 
 void StopMapPort()
 {
-    if(g_upnp_thread.joinable()) {
+    if (g_upnp_thread.joinable()) {
         g_upnp_thread.join();
         g_upnp_interrupt.reset();
     }
 }
 
-#else
+#else // !defined(USE_NATPMP) && !defined(USE_UPNP)
 void StartMapPort()
 {
     // Intentionally left blank.
@@ -134,4 +218,4 @@ void StopMapPort()
 {
     // Intentionally left blank.
 }
-#endif
+#endif // defined(USE_NATPMP) || defined(USE_UPNP)
