@@ -154,6 +154,7 @@ BITCOIN_CORE_H = \
   limitedmap.h \
   logging.h \
   logging/timer.h \
+  mapport.h \
   memusage.h \
   merkleblock.h \
   miner.h \
@@ -299,6 +300,7 @@ libbitcoin_server_a_SOURCES = \
   init.cpp \
   interfaces/chain.cpp \
   interfaces/node.cpp \
+  mapport.cpp \
   miner.cpp \
   net.cpp \
   net_processing.cpp \
