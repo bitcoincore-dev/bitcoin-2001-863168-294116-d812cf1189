@@ -25,6 +25,7 @@
 #include <index/txindex.h>
 #include <interfaces/chain.h>
 #include <key.h>
+#include <mapport.h>
 #include <miner.h>
 #include <net.h>
 #include <net_permissions.h>
