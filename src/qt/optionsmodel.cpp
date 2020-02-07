@@ -117,6 +117,11 @@ void OptionsModel::Init(bool resetSettings)
 #endif
 
     // Network
+    if (!settings.contains("fUseNatpmp"))
+        settings.setValue("fUseNatpmp", DEFAULT_NATPMP);
+    if (!m_node.softSetBoolArg("-natpmp", settings.value("fUseNatpmp").toBool()))
+        addOverriddenOption("-natpmp");
+
     if (!settings.contains("fUseUPnP"))
         settings.setValue("fUseUPnP", DEFAULT_UPNP);
     if (!m_node.softSetBoolArg("-upnp", settings.value("fUseUPnP").toBool()))
@@ -276,6 +281,12 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return fHideTrayIcon;
         case MinimizeToTray:
             return fMinimizeToTray;
+        case MapPortNatpmp:
+#ifdef USE_NATPMP
+            return settings.value("fUseNatpmp");
+#else
+            return false;
+#endif
         case MapPortUPnP:
 #ifdef USE_UPNP
             return settings.value("fUseUPnP");
@@ -351,9 +362,13 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             fMinimizeToTray = value.toBool();
             settings.setValue("fMinimizeToTray", fMinimizeToTray);
             break;
+        case MapPortNatpmp: // core option - can be changed on-the-fly
+            settings.setValue("fUseNatpmp", value.toBool());
+            m_node.mapPort(value.toBool(), MapPort::NAT_PMP);
+            break;
         case MapPortUPnP: // core option - can be changed on-the-fly
             settings.setValue("fUseUPnP", value.toBool());
-            m_node.mapPort(value.toBool());
+            m_node.mapPort(value.toBool(), MapPort::UPNP);
             break;
         case MinimizeOnClose:
             fMinimizeOnClose = value.toBool();
