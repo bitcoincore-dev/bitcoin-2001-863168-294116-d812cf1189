@@ -6,6 +6,7 @@
 #define BITCOIN_INTERFACES_NODE_H
 
 #include <amount.h>     // For CAmount
+#include <mapport.h>    // For MapPort
 #include <net.h>        // For CConnman::NumConnections
 #include <net_types.h>  // For banmap_t
 #include <netaddress.h> // For Network
@@ -102,7 +103,7 @@ public:
     virtual void setupServerArgs() = 0;
 
     //! Map port.
-    virtual void mapPort(bool use_upnp) = 0;
+    virtual void mapPort(bool use_mapping, MapPort proto) = 0;
 
     //! Get proxy.
     virtual bool getProxy(Network net, proxyType& proxy_info) = 0;
