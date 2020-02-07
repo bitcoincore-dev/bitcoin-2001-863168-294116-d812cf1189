@@ -514,7 +514,7 @@ enum
     LOCAL_NONE,   // unknown
     LOCAL_IF,     // address a local interface listens on
     LOCAL_BIND,   // address explicit bound to
-    LOCAL_UPNP,   // address reported by UPnP
+    LOCAL_MAPPED, // address reported by NAT-PMP or UPnP
     LOCAL_MANUAL, // address explicitly specified (-externalip=)
 
     LOCAL_MAX
