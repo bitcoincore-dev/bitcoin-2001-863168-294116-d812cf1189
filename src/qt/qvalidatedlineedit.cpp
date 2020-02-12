@@ -39,7 +39,7 @@ void QValidatedLineEdit::setValid(bool _valid, bool with_warning)
     {
         m_has_warning = with_warning;
         if (with_warning) {
-            setStyleSheet(STYLE_INCORRECT);
+            setStyleSheet("QValidatedLineEdit { " STYLE_INCORRECT "}");
         } else {
             setStyleSheet("");
         }
