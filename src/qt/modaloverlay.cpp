@@ -12,6 +12,9 @@
 #include <QResizeEvent>
 #include <QPropertyAnimation>
 
+#include <tinyformat.h>
+int debug_counter = 0;
+
 ModalOverlay::ModalOverlay(bool enable_wallet, QWidget *parent) :
 QWidget(parent),
 ui(new Ui::ModalOverlay),
@@ -153,6 +156,7 @@ void ModalOverlay::UpdateHeaderSyncLabel() {
 
 void ModalOverlay::toggleVisibility()
 {
+    tfm::format(std::cerr, "HEBASTO-%s\n", __func__);
     showHide(layerIsVisible, true);
     if (!layerIsVisible)
         userClosed = true;
@@ -160,6 +164,11 @@ void ModalOverlay::toggleVisibility()
 
 void ModalOverlay::showHide(bool hide, bool userRequested)
 {
+    std::string h = hide ? "true" : "false";
+    std::string ur = userRequested ? "true" : "false";
+    std::string v = isVisible() ? "true" : "false";
+    tfm::format(std::cerr, "HEBASTO-%s-%s: hide=%s userRequested=%s isVisible()=%s\n", __func__, ++debug_counter, h, ur, v);
+
     if ( (layerIsVisible && !hide) || (!layerIsVisible && hide) || (!hide && userClosed && !userRequested))
         return;
 
@@ -169,16 +178,18 @@ void ModalOverlay::showHide(bool hide, bool userRequested)
     setGeometry(0, hide ? 0 : height(), width(), height());
 
     QPropertyAnimation* animation = new QPropertyAnimation(this, "pos");
-    animation->setDuration(300);
+    animation->setDuration(3000);
     animation->setStartValue(QPoint(0, hide ? 0 : this->height()));
     animation->setEndValue(QPoint(0, hide ? this->height() : 0));
     animation->setEasingCurve(QEasingCurve::OutQuad);
+    tfm::format(std::cerr, "HEBASTO-%s-animation\n", __func__);
     animation->start(QAbstractAnimation::DeleteWhenStopped);
     layerIsVisible = !hide;
 }
 
 void ModalOverlay::closeClicked()
 {
+    tfm::format(std::cerr, "HEBASTO-%s\n", __func__);
     showHide(true);
     userClosed = true;
 }

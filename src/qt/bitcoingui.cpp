@@ -979,6 +979,7 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
 #ifdef ENABLE_WALLET
         if(walletFrame)
         {
+            tfm::format(std::cerr, "HEBASTO-%s\n", __func__);
             walletFrame->showOutOfSyncWarning(false);
             modalOverlay->showHide(true, true);
         }
@@ -1010,6 +1011,7 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
 #ifdef ENABLE_WALLET
         if(walletFrame)
         {
+            tfm::format(std::cerr, "HEBASTO-%s\n", __func__);
             walletFrame->showOutOfSyncWarning(true);
             modalOverlay->showHide();
         }
