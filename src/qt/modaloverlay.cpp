@@ -5,12 +5,12 @@
 #include <qt/modaloverlay.h>
 #include <qt/forms/ui_modaloverlay.h>
 
-#include <qt/guiutil.h>
-
 #include <chainparams.h>
-
-#include <QResizeEvent>
+#include <qt/guiutil.h>
+ 
+#include <QEasingCurve>
 #include <QPropertyAnimation>
+#include <QResizeEvent>
 
 #include <tinyformat.h>
 int debug_counter = 0;
@@ -31,11 +31,19 @@ userClosed(false)
     }
 
     blockProcessTime.clear();
-    setVisible(false);
+    // setVisible(false);
     if (!enable_wallet) {
         ui->infoText->setVisible(false);
         ui->infoTextStrong->setText(tr("%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.").arg(PACKAGE_NAME));
     }
+
+    animation.setTargetObject(this);
+    animation.setPropertyName("pos");
+    animation.setDuration(3000 /* ms */);
+    animation.setEasingCurve(QEasingCurve::OutQuad);
+    // connect(&animation, &QPropertyAnimation::finished, [this] {
+    //     ui->closeButton->setEnabled(layerIsVisible);
+    // });
 }
 
 ModalOverlay::~ModalOverlay()
@@ -51,6 +59,9 @@ bool ModalOverlay::eventFilter(QObject * obj, QEvent * ev) {
             if (!layerIsVisible)
                 setGeometry(0, height(), width(), height());
 
+            if (animation.state() != QAbstractAnimation::Stopped && animation.endValue().toPoint().y()) {
+                animation.setEndValue(QPoint(0, height()));
+            }
         }
         else if (ev->type() == QEvent::ChildAdded) {
             raise();
@@ -172,19 +183,23 @@ void ModalOverlay::showHide(bool hide, bool userRequested)
     if ( (layerIsVisible && !hide) || (!layerIsVisible && hide) || (!hide && userClosed && !userRequested))
         return;
 
-    if (!isVisible() && !hide)
-        setVisible(true);
-
-    setGeometry(0, hide ? 0 : height(), width(), height());
-
-    QPropertyAnimation* animation = new QPropertyAnimation(this, "pos");
-    animation->setDuration(3000);
-    animation->setStartValue(QPoint(0, hide ? 0 : this->height()));
-    animation->setEndValue(QPoint(0, hide ? this->height() : 0));
-    animation->setEasingCurve(QEasingCurve::OutQuad);
-    tfm::format(std::cerr, "HEBASTO-%s-animation\n", __func__);
-    animation->start(QAbstractAnimation::DeleteWhenStopped);
+    // if (!isVisible() && !hide)
+    //     setVisible(true);
     layerIsVisible = !hide;
+
+    // setGeometry(0, hide ? 0 : height(), width(), height());
+    if (isVisible()) {
+        tfm::format(std::cerr, "HEBASTO-%s-animation\n", __func__);
+        if (animation.state() == QAbstractAnimation::Stopped) {
+            animation.setStartValue(QPoint(0, hide ? 0 : height()));
+        } else {
+            QVariant current = animation.currentValue();
+            animation.stop();
+            animation.setStartValue(current);
+        }
+        animation.setEndValue(QPoint(0, hide ? height() : 0));
+        animation.start(QAbstractAnimation::KeepWhenStopped);
+    }
 }
 
 void ModalOverlay::closeClicked()
