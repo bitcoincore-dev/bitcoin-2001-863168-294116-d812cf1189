@@ -34,6 +34,7 @@ private:
     const QValidator *m_warning_validator{nullptr};
 
 public Q_SLOTS:
+    void setText(const QString&);
     void setValid(bool valid, bool with_warning=false);
     void setEnabled(bool enabled);
 

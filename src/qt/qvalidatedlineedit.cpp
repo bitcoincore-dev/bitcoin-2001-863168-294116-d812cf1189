@@ -20,6 +20,12 @@ QValidatedLineEdit::~QValidatedLineEdit()
     delete m_warning_validator;
 }
 
+void QValidatedLineEdit::setText(const QString& text)
+{
+    QLineEdit::setText(text);
+    checkValidity();
+}
+
 void QValidatedLineEdit::setValid(bool _valid, bool with_warning)
 {
     if(_valid == this->valid)
@@ -40,7 +46,7 @@ void QValidatedLineEdit::setValid(bool _valid, bool with_warning)
     }
     else
     {
-        setStyleSheet(STYLE_INVALID);
+        setStyleSheet("QValidatedLineEdit { " STYLE_INVALID "}");
     }
     this->valid = _valid;
 }
@@ -119,6 +125,7 @@ void QValidatedLineEdit::checkValidity()
 void QValidatedLineEdit::setCheckValidator(const QValidator *v)
 {
     checkValidator = v;
+    checkValidity();
 }
 
 bool QValidatedLineEdit::isValid()
