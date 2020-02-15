@@ -49,6 +49,14 @@ public:
     explicit ClientModel(interfaces::Node& node, OptionsModel *optionsModel, QObject *parent = nullptr);
     ~ClientModel();
 
+    enum class NotificationStatus {
+        INIT_DOWNLOAD,
+        INIT_IMPORT,
+        INIT_REINDEX,
+        POST_INIT
+    };
+    Q_ENUM(NotificationStatus)
+
     interfaces::Node& node() const { return m_node; }
     OptionsModel *getOptionsModel();
     PeerTableModel *getPeerTableModel();

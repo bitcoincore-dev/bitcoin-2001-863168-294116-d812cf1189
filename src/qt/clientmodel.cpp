@@ -226,6 +226,14 @@ static void BannedListChanged(ClientModel *clientmodel)
     assert(invoked);
 }
 
+static ClientModel::NotificationStatus GetNotificationStatus (interfaces::Node& node, bool initial_sync)
+{
+    if (node.getImporting()) return ClientModel::NotificationStatus::INIT_IMPORT;
+    if (node.getReindex()) return ClientModel::NotificationStatus::INIT_REINDEX;
+    if (initial_sync) return ClientModel::NotificationStatus::INIT_DOWNLOAD;
+    return ClientModel::NotificationStatus::POST_INIT;
+}
+
 static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, int height, int64_t blockTime, double verificationProgress, bool fHeader)
 {
     // lock free async UI updates in case we have a new block tip
