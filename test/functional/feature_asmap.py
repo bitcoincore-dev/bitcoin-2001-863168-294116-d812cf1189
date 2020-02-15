@@ -27,7 +27,6 @@ import shutil
 from test_framework.test_framework import BitcoinTestFramework
 
 DEFAULT_ASMAP_FILENAME = 'ip_asn.map' # defined in src/init.cpp
-ASMAP = '../../src/test/data/asmap.raw' # path to unit test skeleton asmap
 VERSION = 'fec61fa21a9f46f3b17bdcd660d7f4cd90b966aad3aec593c99b35f0aca15853'
 
 def expected_messages(filename):
@@ -92,7 +91,9 @@ class AsmapTest(BitcoinTestFramework):
         self.node = self.nodes[0]
         self.datadir = os.path.join(self.node.datadir, self.chain)
         self.default_asmap = os.path.join(self.datadir, DEFAULT_ASMAP_FILENAME)
-        self.asmap_raw = os.path.join(os.path.dirname(os.path.realpath(__file__)), ASMAP)
+        self.asmap_raw = os.path.join(self.datadir, "test-asmap.raw")
+        with open(self.asmap_raw, "wb") as f:
+            f.write(b"\xfb\x03\xec\x0f\xb0\x3f\xc0\xfe\x00\xfb\x03\xec\x0f\xb0\x3f\xc0\xfe\x00\xfb\x03\xec\x0f\xb0\xff\xff\xfe\xff\xed\xb0\xff\xd4\x86\xe6\x28\x29\x00\x00\x40\x00\x00\x40\x00\x40\x99\x01\x00\x80\x01\x80\x04\x00\x00\x05\x00\x06\x00\x1c\xf0\x39")
 
         self.test_without_asmap_arg()
         self.test_asmap_with_absolute_path()
