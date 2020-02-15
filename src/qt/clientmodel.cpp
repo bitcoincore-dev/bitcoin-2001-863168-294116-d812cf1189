@@ -236,24 +236,23 @@ static ClientModel::NotificationStatus GetNotificationStatus (interfaces::Node& 
 
 static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, int height, int64_t blockTime, double verificationProgress, bool fHeader)
 {
-    // lock free async UI updates in case we have a new block tip
-    // during initial sync, only update the UI if the last update
-    // was > 250ms (MODEL_UPDATE_DELAY) ago
-    int64_t now = 0;
-    if (initialSync)
-        now = GetTimeMillis();
-
-    int64_t& nLastUpdateNotification = fHeader ? nLastHeaderTipUpdateNotification : nLastBlockTipUpdateNotification;
-
     if (fHeader) {
         // cache best headers time and height to reduce future cs_main locks
         clientmodel->cachedBestHeaderHeight = height;
         clientmodel->cachedBestHeaderTime = blockTime;
     }
 
-    // During initial sync, block notifications, and header notifications from reindexing are both throttled.
-    if (!initialSync || (fHeader && !clientmodel->node().getReindex()) || now - nLastUpdateNotification > MODEL_UPDATE_DELAY) {
-        //pass an async signal to the UI thread
+    const ClientModel::NotificationStatus status = GetNotificationStatus(clientmodel->node(), initialSync);
+    const bool throttle = (status == ClientModel::NotificationStatus::INIT_DOWNLOAD && !fHeader) ||
+                          status == ClientModel::NotificationStatus::INIT_REINDEX || status == ClientModel::NotificationStatus::INIT_IMPORT;
+
+    if (throttle) {
+        const int64_t now = GetTimeMillis();
+        int64_t& nLastUpdateNotification = fHeader ? nLastHeaderTipUpdateNotification : nLastBlockTipUpdateNotification;
+        if (now < nLastUpdateNotification + MODEL_UPDATE_DELAY) {
+            return;
+        }
+
         bool invoked = QMetaObject::invokeMethod(clientmodel, "numBlocksChanged", Qt::QueuedConnection,
                                   Q_ARG(int, height),
                                   Q_ARG(QDateTime, QDateTime::fromTime_t(blockTime)),
