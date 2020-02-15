@@ -254,10 +254,11 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, int heig
         }
 
         bool invoked = QMetaObject::invokeMethod(clientmodel, "numBlocksChanged", Qt::QueuedConnection,
-                                  Q_ARG(int, height),
-                                  Q_ARG(QDateTime, QDateTime::fromTime_t(blockTime)),
-                                  Q_ARG(double, verificationProgress),
-                                  Q_ARG(bool, fHeader));
+            Q_ARG(int, height),
+            Q_ARG(QDateTime, QDateTime::fromTime_t(blockTime)),
+            Q_ARG(double, verificationProgress),
+            Q_ARG(bool, fHeader),
+            Q_ARG(ClientModel::NotificationStatus, status));
         assert(invoked);
         nLastUpdateNotification = now;
     }
