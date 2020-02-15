@@ -9,6 +9,7 @@
 #include <config/bitcoin-config.h>
 #endif
 
+#include <qt/clientmodel.h>
 #include <qt/optionsdialog.h>
 
 #include <amount.h>
@@ -25,7 +26,6 @@
 
 #include <memory>
 
-class ClientModel;
 class NetworkStyle;
 class Notificator;
 class OptionsModel;
@@ -212,7 +212,8 @@ public Q_SLOTS:
     /** Set network state shown in the UI */
     void setNetworkActive(bool networkActive);
     /** Set number of blocks and last block date shown in the UI */
-    void setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool headers);
+    void setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool headers,
+        ClientModel::NotificationStatus status = ClientModel::NotificationStatus::INIT_DOWNLOAD);
 
     /** Notify the user of an event from the core network or transaction handling code.
        @param[in] title     the message box / notification title
