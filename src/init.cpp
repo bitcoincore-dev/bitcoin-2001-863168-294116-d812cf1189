@@ -1779,10 +1779,16 @@ bool AppInitMain(NodeContext& node)
     Discover();
 
     // Map ports with NAT-PMP (preferable) or UPnP.
-    if (gArgs.GetBoolArg("-natpmp", DEFAULT_NATPMP)) {
-        StartMapPort(MapPort::NAT_PMP);
-    } else if (gArgs.GetBoolArg("-upnp", DEFAULT_UPNP)) {
-        StartMapPort(MapPort::UPNP);
+    {
+        const bool natpmp = gArgs.GetBoolArg("-natpmp", DEFAULT_NATPMP);
+        const bool upnp = gArgs.GetBoolArg("-upnp", DEFAULT_UPNP);
+        if (natpmp && upnp) {
+            StartMapPort(MapPort::ANY_AVAILABLE);
+        } else if (natpmp) {
+            StartMapPort(MapPort::NAT_PMP);
+        } else if (upnp) {
+            StartMapPort(MapPort::UPNP);
+        }
     }
 
     CConnman::Options connOptions;
