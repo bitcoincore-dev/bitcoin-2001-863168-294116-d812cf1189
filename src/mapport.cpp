@@ -42,8 +42,8 @@ static_assert(MINIUPNPC_API_VERSION >= 10, "miniUPnPc API version >= 10 assumed"
 #include <thread>
 
 #if defined(USE_NATPMP) || defined(USE_UPNP)
-static CThreadInterrupt g_upnp_interrupt;
-static std::thread g_upnp_thread;
+static CThreadInterrupt g_mapport_interrupt;
+static std::thread g_mapport_thread;
 static constexpr auto PORT_MAPPING_REANNOUNCE_PERIOD = std::chrono::minutes(20);
 
 #ifdef USE_NATPMP
@@ -127,7 +127,7 @@ static void ThreadNatpmp()
 
     if (NatpmpInit(&natpmp) && NatpmpDiscover(&natpmp)) {
         const uint16_t port = GetListenPort();
-        while (NatpmpMapping(&natpmp, port) && g_upnp_interrupt.sleep_for(PORT_MAPPING_REANNOUNCE_PERIOD));
+        while (NatpmpMapping(&natpmp, port) && g_mapport_interrupt.sleep_for(PORT_MAPPING_REANNOUNCE_PERIOD));
 
         const int r_send = sendnewportmappingrequest(&natpmp, NATPMP_PROTOCOL_TCP, port, port, /* remove a port mapping */ 0);
         if (r_send == 12 /* OK */) {
@@ -174,7 +174,7 @@ static void ThreadUpnp()
                     CNetAddr resolved;
                     if (LookupHost(externalIPAddress, resolved, false)) {
                         LogPrintf("UPnP: ExternalIPAddress = %s\n", resolved.ToString());
-                        AddLocal(resolved, LOCAL_UPNP);
+                        AddLocal(resolved, LOCAL_MAPPED);
                     }
                 } else {
                     LogPrintf("UPnP: GetExternalIPAddress failed.\n");
@@ -192,7 +192,7 @@ static void ThreadUpnp()
             } else {
                 LogPrintf("UPnP Port Mapping successful.\n");
             }
-        } while (g_upnp_interrupt.sleep_for(PORT_MAPPING_REANNOUNCE_PERIOD));
+        } while (g_mapport_interrupt.sleep_for(PORT_MAPPING_REANNOUNCE_PERIOD));
 
         r = UPNP_DeletePortMapping(urls.controlURL, data.first.servicetype, port.c_str(), "TCP", 0);
         LogPrintf("UPNP_DeletePortMapping() returned: %d\n", r);
@@ -209,18 +209,18 @@ static void ThreadUpnp()
 
 void StartMapPort(MapPort proto)
 {
-    if (!g_upnp_thread.joinable()) {
-        assert(!g_upnp_interrupt);
+    if (!g_mapport_thread.joinable()) {
+        assert(!g_mapport_interrupt);
         switch (proto) {
         case MapPort::NAT_PMP: {
 #ifdef USE_NATPMP
-            g_upnp_thread = std::thread((std::bind(&TraceThread<void (*)()>, "natpmp", &ThreadNatpmp)));
+            g_mapport_thread = std::thread((std::bind(&TraceThread<void (*)()>, "natpmp", &ThreadNatpmp)));
 #endif // #ifdef USE_NATPMP
             return;
         }
         case MapPort::UPNP: {
 #ifdef USE_UPNP
-            g_upnp_thread = std::thread((std::bind(&TraceThread<void (*)()>, "upnp", &ThreadUpnp)));
+            g_mapport_thread = std::thread((std::bind(&TraceThread<void (*)()>, "upnp", &ThreadUpnp)));
 #endif // #ifdef USE_UPNP
             return;
         }
@@ -231,16 +231,16 @@ void StartMapPort(MapPort proto)
 
 void InterruptMapPort()
 {
-    if(g_upnp_thread.joinable()) {
-        g_upnp_interrupt();
+    if (g_mapport_thread.joinable()) {
+        g_mapport_interrupt();
     }
 }
 
 void StopMapPort()
 {
-    if(g_upnp_thread.joinable()) {
-        g_upnp_thread.join();
-        g_upnp_interrupt.reset();
+    if (g_mapport_thread.joinable()) {
+        g_mapport_thread.join();
+        g_mapport_interrupt.reset();
     }
 }
 
