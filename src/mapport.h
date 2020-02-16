@@ -5,14 +5,26 @@
 #ifndef BITCOIN_MAPPORT_H
 #define BITCOIN_MAPPORT_H
 
-/** -upnp default */
-#ifdef USE_UPNP
-static const bool DEFAULT_UPNP = USE_UPNP;
+/** -natpmp default */
+#ifdef USE_NATPMP
+static constexpr bool DEFAULT_NATPMP = USE_NATPMP;
 #else
-static const bool DEFAULT_UPNP = false;
+static constexpr bool DEFAULT_NATPMP = false;
 #endif
 
-void StartMapPort();
+/** -upnp default */
+#ifdef USE_UPNP
+static constexpr bool DEFAULT_UPNP = USE_UPNP;
+#else
+static constexpr bool DEFAULT_UPNP = false;
+#endif
+
+enum class MapPort {
+    NAT_PMP,
+    UPNP
+};
+
+void StartMapPort(MapPort proto);
 void InterruptMapPort();
 void StopMapPort();
 
