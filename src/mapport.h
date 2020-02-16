@@ -20,6 +20,7 @@ static constexpr bool DEFAULT_UPNP = false;
 #endif
 
 enum class MapPort {
+    ANY_AVAILABLE,
     NAT_PMP,
     UPNP
 };

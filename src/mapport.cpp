@@ -189,6 +189,7 @@ static void ThreadUpnp()
 
             if (r != UPNPCOMMAND_SUCCESS) {
                 LogPrintf("AddPortMapping(%s, %s, %s) failed with code %d (%s)\n", port, port, lanaddr, r, strupnperror(r));
+                break;
             } else {
                 LogPrintf("UPnP Port Mapping successful.\n");
             }
@@ -207,11 +208,29 @@ static void ThreadUpnp()
 }
 #endif // #ifdef USE_UPNP
 
+static void ThreadAnyAvailable()
+{
+    do {
+#ifdef USE_NATPMP
+        ThreadNatpmp();
+        if (g_mapport_interrupt) break;
+#endif // #ifdef USE_NATPMP
+#ifdef USE_UPNP
+        ThreadUpnp();
+        if (g_mapport_interrupt) break;
+#endif // #ifdef USE_UPNP
+    } while (g_mapport_interrupt.sleep_for(PORT_MAPPING_REANNOUNCE_PERIOD));
+}
+
 void StartMapPort(MapPort proto)
 {
     if (!g_mapport_thread.joinable()) {
         assert(!g_mapport_interrupt);
         switch (proto) {
+        case MapPort::ANY_AVAILABLE: {
+            g_mapport_thread = std::thread((std::bind(&TraceThread<void (*)()>, "mapport", &ThreadAnyAvailable)));
+            return;
+        }
         case MapPort::NAT_PMP: {
 #ifdef USE_NATPMP
             g_mapport_thread = std::thread((std::bind(&TraceThread<void (*)()>, "natpmp", &ThreadNatpmp)));
