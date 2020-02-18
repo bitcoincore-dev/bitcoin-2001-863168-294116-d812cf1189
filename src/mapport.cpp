@@ -35,9 +35,11 @@ static_assert(MINIUPNPC_API_VERSION >= 10, "miniUPnPc API version >= 10 assumed"
 static CThreadInterrupt g_upnp_interrupt;
 static std::thread g_upnp_thread;
 static constexpr auto PORT_MAPPING_REANNOUNCE_PERIOD = std::chrono::minutes(20);
+static constexpr auto PORT_MAPPING_RETRY_PERIOD = std::chrono::minutes(5);
 
-static void ThreadMapPort()
+static bool ProcessUpnp()
 {
+    bool ret = false;
     std::string port = strprintf("%u", GetListenPort());
     const char * multicastif = nullptr;
     const char * minissdpdpath = nullptr;
@@ -82,11 +84,15 @@ static void ThreadMapPort()
             r = UPNP_AddPortMapping(urls.controlURL, data.first.servicetype, port.c_str(), port.c_str(), lanaddr, strDesc.c_str(), "TCP", 0, "0");
 
             if (r != UPNPCOMMAND_SUCCESS) {
+                ret = false;
                 LogPrintf("AddPortMapping(%s, %s, %s) failed with code %d (%s)\n", port, port, lanaddr, r, strupnperror(r));
+                break;
             } else {
+                ret = true;
                 LogPrintf("UPnP Port Mapping successful.\n");
             }
         } while (g_upnp_interrupt.sleep_for(PORT_MAPPING_REANNOUNCE_PERIOD));
+        g_upnp_interrupt.reset();
 
         r = UPNP_DeletePortMapping(urls.controlURL, data.first.servicetype, port.c_str(), "TCP", 0);
         LogPrintf("UPNP_DeletePortMapping() returned: %d\n", r);
@@ -98,6 +104,15 @@ static void ThreadMapPort()
         if (r != 0)
             FreeUPNPUrls(&urls);
     }
+
+    return ret;
+}
+
+static void ThreadMapPort()
+{
+    do {
+        if (ProcessUpnp()) return;
+    } while (g_upnp_interrupt.sleep_for(PORT_MAPPING_RETRY_PERIOD));
 }
 
 void StartMapPort()
