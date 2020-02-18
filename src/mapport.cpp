@@ -34,10 +34,14 @@ static_assert(MINIUPNPC_API_VERSION >= 10, "miniUPnPc API version >= 10 assumed"
 #ifdef USE_UPNP
 static CThreadInterrupt g_upnp_interrupt;
 static std::thread g_upnp_thread;
+static MapPortProto g_mapport_current_proto = MapPortProto::NONE;
+static unsigned int g_mapport_target_proto = g_mapport_current_proto;
 static constexpr auto PORT_MAPPING_REANNOUNCE_PERIOD = std::chrono::minutes(20);
+static constexpr auto PORT_MAPPING_RETRY_PERIOD = std::chrono::minutes(5);
 
-static void ThreadMapPort()
+static bool ThreadUpnp()
 {
+    bool ret = false;
     std::string port = strprintf("%u", GetListenPort());
     const char * multicastif = nullptr;
     const char * minissdpdpath = nullptr;
@@ -78,12 +82,17 @@ static void ThreadMapPort()
 
         std::string strDesc = PACKAGE_NAME " " + FormatFullVersion();
 
+        g_mapport_interrupt.reset();
         do {
             r = UPNP_AddPortMapping(urls.controlURL, data.first.servicetype, port.c_str(), port.c_str(), lanaddr, strDesc.c_str(), "TCP", 0, "0");
 
             if (r != UPNPCOMMAND_SUCCESS) {
+                ret = false;
                 LogPrintf("AddPortMapping(%s, %s, %s) failed with code %d (%s)\n", port, port, lanaddr, r, strupnperror(r));
+                break;
             } else {
+                ret = true;
+                g_mapport_current_proto = MapPortProto::UPNP;
                 LogPrintf("UPnP Port Mapping successful.\n");
             }
         } while (g_upnp_interrupt.sleep_for(PORT_MAPPING_REANNOUNCE_PERIOD));
@@ -98,11 +107,54 @@ static void ThreadMapPort()
         if (r != 0)
             FreeUPNPUrls(&urls);
     }
+
+    return ret;
 }
 
-void StartMapPort()
+static void ThreadMapPort()
 {
-    if (!g_upnp_thread.joinable()) {
+    bool ok;
+    do {
+        ok = false;
+
+        if (g_mapport_target_proto & MapPortProto::UPNP) {
+            ok = ThreadUpnp();
+            if (ok) continue;
+        }
+
+        if (g_mapport_target_proto == MapPortProto::NONE) {
+            g_mapport_current_proto = MapPortProto::NONE;
+            return;
+        }
+
+    } while (ok || g_upnp_interrupt.sleep_for(PORT_MAPPING_RETRY_PERIOD));
+}
+
+void StartMapPort(bool use_upnp)
+{
+    if (use_upnp) {
+        g_mapport_target_proto |= MapPortProto::UPNP;
+    } else {
+        g_mapport_target_proto &= ~MapPortProto::UPNP;
+    }
+
+    if (g_mapport_current_proto == MapPortProto::NONE) {
+        if (g_mapport_target_proto == MapPortProto::NONE) {
+            return;
+        }
+    } else if (g_mapport_target_proto & g_mapport_current_proto) {
+        return;
+    }
+
+    if (g_mapport_target_proto == MapPortProto::NONE) {
+        InterruptMapPort();
+        StopMapPort();
+        return;
+    }
+
+    if (g_upnp_thread.joinable()) {
+        g_upnp_interrupt();
+    } else {
         assert(!g_upnp_interrupt);
         g_upnp_thread = std::thread((std::bind(&TraceThread<void (*)()>, "upnp", &ThreadMapPort)));
     }
@@ -110,6 +162,7 @@ void StartMapPort()
 
 void InterruptMapPort()
 {
+    g_mapport_target_proto = MapPortProto::NONE;
     if(g_upnp_thread.joinable()) {
         g_upnp_interrupt();
     }
@@ -124,7 +177,7 @@ void StopMapPort()
 }
 
 #else
-void StartMapPort()
+void StartMapPort(bool use_upnp)
 {
     // Intentionally left blank.
 }
