@@ -254,8 +254,14 @@ static void ThreadMapPort()
     } while (ok || g_mapport_interrupt.sleep_for(PORT_MAPPING_RETRY_PERIOD));
 }
 
-void StartMapPort(bool use_upnp)
+void StartMapPort(bool use_natpmp, bool use_upnp)
 {
+    if (use_natpmp) {
+        g_mapport_target_proto |= MapPortProto::NAT_PMP;
+    } else {
+        g_mapport_target_proto &= ~MapPortProto::NAT_PMP;
+    }
+
     if (use_upnp) {
         g_mapport_target_proto |= MapPortProto::UPNP;
     } else {
@@ -301,7 +307,7 @@ void StopMapPort()
 }
 
 #else  // #if defined(USE_NATPMP) || defined(USE_UPNP)
-void StartMapPort(bool use_upnp)
+void StartMapPort(bool use_natpmp, bool use_upnp)
 {
     // Intentionally left blank.
 }
