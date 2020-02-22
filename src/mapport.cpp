@@ -45,6 +45,7 @@ static_assert(MINIUPNPC_API_VERSION >= 10, "miniUPnPc API version >= 10 assumed"
 static CThreadInterrupt g_mapport_interrupt;
 static std::thread g_mapport_thread;
 static std::atomic_uint g_mapport_target_proto{MapPortProto::NONE};
+static std::atomic<MapPortProto> g_mapport_current_proto{MapPortProto::NONE};
 static constexpr auto PORT_MAPPING_REANNOUNCE_PERIOD = std::chrono::minutes(20);
 static constexpr auto PORT_MAPPING_RETRY_PERIOD = std::chrono::minutes(5);
 
@@ -226,9 +227,34 @@ static bool ThreadUpnp()
 
 static void ThreadMapPort()
 {
+    bool ok;
     do {
-        if (ThreadUpnp()) return;
-    } while (g_mapport_interrupt.sleep_for(PORT_MAPPING_RETRY_PERIOD));
+        ok = false;
+
+#ifdef USE_UPNP
+        // High priority protocol.
+        if (g_mapport_target_proto & MapPortProto::UPNP) {
+            g_mapport_current_proto = MapPortProto::UPNP;
+            ok = ThreadUpnp();
+            if (ok) continue;
+        }
+#endif // #ifdef USE_UPNP
+
+#ifdef USE_NATPMP
+        // Low priority protocol.
+        if (g_mapport_target_proto & MapPortProto::NAT_PMP) {
+            g_mapport_current_proto = MapPortProto::NAT_PMP;
+            ok = ThreadNatpmp();
+            if (ok) continue;
+        }
+#endif // #ifdef USE_NATPMP
+
+        g_mapport_current_proto = MapPortProto::NONE;
+        if (g_mapport_target_proto == MapPortProto::NONE) {
+            return;
+        }
+
+    } while (ok || g_mapport_interrupt.sleep_for(PORT_MAPPING_RETRY_PERIOD));
 }
 
 void StartThread()
@@ -241,12 +267,31 @@ void StartThread()
 
 static void DispatchMapPort()
 {
-    if (g_mapport_target_proto == MapPortProto::UPNP) {
+    if (g_mapport_current_proto == MapPortProto::NONE && g_mapport_target_proto == MapPortProto::NONE) {
+        return;
+    }
+
+    if (g_mapport_current_proto == MapPortProto::NONE && g_mapport_target_proto != MapPortProto::NONE) {
         StartThread();
-    } else {
+        return;
+    }
+
+    if (g_mapport_current_proto != MapPortProto::NONE && g_mapport_target_proto == MapPortProto::NONE) {
         InterruptMapPort();
         StopMapPort();
+        return;
     }
+
+    if (g_mapport_target_proto & g_mapport_current_proto) {
+        // Enabling another protocol does not cause switching from the currently used one.
+        return;
+    }
+
+    assert(g_mapport_thread.joinable());
+    assert(!g_mapport_interrupt);
+    // Interrupt a protocol-specific loop in the ThreadUpnp() or in the ThreadNatpmp()
+    // to force trying the next protocol in the ThreadMapPort() loop.
+    g_mapport_interrupt();
 }
 
 static void MapPortProtoSetEnabled(MapPortProto proto, bool enabled)
@@ -266,6 +311,7 @@ void StartMapPort(bool use_upnp)
 
 void InterruptMapPort()
 {
+    g_mapport_target_proto = MapPortProto::NONE;
     if (g_mapport_thread.joinable()) {
         g_mapport_interrupt();
     }
