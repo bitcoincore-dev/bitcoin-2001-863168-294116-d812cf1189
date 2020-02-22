@@ -1903,9 +1903,7 @@ bool AppInitMain(const util::Ref& context, NodeContext& node, interfaces::BlockA
     Discover();
 
     // Map ports with UPnP
-    if (args.GetBoolArg("-upnp", DEFAULT_UPNP)) {
-        StartMapPort();
-    }
+    StartMapPort(args.GetBoolArg("-upnp", DEFAULT_UPNP));
 
     CConnman::Options connOptions;
     connOptions.nLocalServices = nLocalServices;
