@@ -14,6 +14,7 @@ wallet_packages=bdb
 
 zmq_packages=zeromq
 
+natpmp_packages=libnatpmp
 upnp_packages=miniupnpc
 
 multiprocess_packages = libmultiprocess capnp
