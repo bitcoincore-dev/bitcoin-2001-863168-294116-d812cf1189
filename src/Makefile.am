@@ -576,7 +576,7 @@ bitcoin_common_ldadd = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-bitcoin_common_ldadd += $(BOOST_LIBS) $(BDB_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
+bitcoin_common_ldadd += $(BOOST_LIBS) $(BDB_LIBS) $(MINIUPNPC_LIBS) $(NATPMP_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
 
 bitcoind_SOURCES = $(bitcoin_common_sources)
 bitcoind_CPPFLAGS = $(bitcoin_common_cppflags)
@@ -640,6 +640,7 @@ bitcoin_wallet_LDADD = $(LIBBITCOIN_WALLET_TOOL) $(bitcoin_common_ldadd)
 if TARGET_WINDOWS
 bitcoin_wallet_SOURCES += bitcoin-wallet-res.rc
 endif
+
 #
 
 # bitcoinconsensus library #
