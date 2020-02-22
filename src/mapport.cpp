@@ -16,6 +16,15 @@
 #include <threadinterrupt.h>
 #include <util/system.h>
 
+#ifdef USE_NATPMP
+#include <natpmp.h>
+#ifdef WIN32
+#include <winsock2.h>
+#else
+#include <netinet/in.h>
+#endif // #ifdef WIN32
+#endif // #ifdef USE_NATPMP
+
 #ifdef USE_UPNP
 #include <miniupnpc/miniupnpc.h>
 #include <miniupnpc/upnpcommands.h>
@@ -23,7 +32,7 @@
 // The minimum supported miniUPnPc API version is set to 10. This keeps compatibility
 // with Ubuntu 16.04 LTS and Debian 8 libminiupnpc-dev packages.
 static_assert(MINIUPNPC_API_VERSION >= 10, "miniUPnPc API version >= 10 assumed");
-#endif
+#endif // #ifdef USE_UPNP
 
 #include <atomic>
 #include <cassert>
@@ -32,13 +41,117 @@ static_assert(MINIUPNPC_API_VERSION >= 10, "miniUPnPc API version >= 10 assumed"
 #include <string>
 #include <thread>
 
-#ifdef USE_UPNP
+#if defined(USE_NATPMP) || defined(USE_UPNP)
 static CThreadInterrupt g_mapport_interrupt;
 static std::thread g_mapport_thread;
 static std::atomic_uint g_mapport_target_proto{MapPortProtoFlag::NONE};
 static constexpr auto PORT_MAPPING_REANNOUNCE_PERIOD = std::chrono::minutes(20);
 static constexpr auto PORT_MAPPING_RETRY_PERIOD = std::chrono::minutes(5);
 
+#ifdef USE_NATPMP
+static uint16_t g_mapport_external_port = 0;
+static bool NatpmpInit(natpmp_t* natpmp)
+{
+    const int r_init = initnatpmp(natpmp, /* detect gateway automatically */ 0, /* forced gateway - NOT APPLIED*/ 0);
+    if (r_init == 0) return true;
+    LogPrintf("NAT-PMP: initnatpmp() failed with %d error.\n", r_init);
+    return false;
+}
+
+static bool NatpmpDiscover(natpmp_t* natpmp, struct in_addr& external_ipv4_addr)
+{
+    const int r_send = sendpublicaddressrequest(natpmp);
+    if (r_send == 2 /* OK */) {
+        int r_read;
+        natpmpresp_t response;
+        do {
+            r_read = readnatpmpresponseorretry(natpmp, &response);
+        } while (r_read == NATPMP_TRYAGAIN);
+
+        if (r_read == 0) {
+            external_ipv4_addr = response.pnu.publicaddress.addr;
+            return true;
+        } else if (r_read == NATPMP_ERR_NOGATEWAYSUPPORT) {
+            LogPrintf("NAT-PMP: The gateway does not support NAT-PMP.\n");
+        } else {
+            LogPrintf("NAT-PMP: readnatpmpresponseorretry() for public address failed with %d error.\n", r_read);
+        }
+
+    } else {
+        LogPrintf("NAT-PMP: sendpublicaddressrequest() failed with %d error.\n", r_send);
+    }
+
+    return false;
+}
+
+static bool NatpmpMapping(natpmp_t* natpmp, const struct in_addr& external_ipv4_addr, uint16_t private_port, bool& external_ip_discovered)
+{
+    const uint16_t suggested_external_port = g_mapport_external_port ? g_mapport_external_port : private_port;
+    const int r_send = sendnewportmappingrequest(natpmp, NATPMP_PROTOCOL_TCP, private_port, suggested_external_port, 3600 /*seconds*/);
+    if (r_send == 12 /* OK */) {
+        int r_read;
+        natpmpresp_t response;
+        do {
+            r_read = readnatpmpresponseorretry(natpmp, &response);
+        } while (r_read == NATPMP_TRYAGAIN);
+
+        if (r_read == 0) {
+            auto pm = response.pnu.newportmapping;
+            if (private_port == pm.privateport && pm.lifetime > 0) {
+                g_mapport_external_port = pm.mappedpublicport;
+                const CService external{external_ipv4_addr, pm.mappedpublicport};
+                if (!external_ip_discovered && fDiscover) {
+                    AddLocal(external, LOCAL_MAPPED);
+                    external_ip_discovered = true;
+                }
+
+                LogPrintf("NAT-PMP: Port mapping successful. External address = %s\n", external.ToString());
+                return true;
+            } else {
+                LogPrintf("NAT-PMP: Port mapping failed.\n");
+            }
+
+        } else if (r_read == NATPMP_ERR_NOGATEWAYSUPPORT) {
+            LogPrintf("NAT-PMP: The gateway does not support NAT-PMP.\n");
+        } else {
+            LogPrintf("NAT-PMP: readnatpmpresponseorretry() for port mapping failed with %d error.\n", r_read);
+        }
+
+    } else {
+        LogPrintf("NAT-PMP: sendnewportmappingrequest() failed with %d error.\n", r_send);
+    }
+
+    return false;
+}
+
+static bool ProcessNatpmp()
+{
+    bool ret = false;
+    natpmp_t natpmp;
+    struct in_addr external_ipv4_addr;
+    if (NatpmpInit(&natpmp) && NatpmpDiscover(&natpmp, external_ipv4_addr)) {
+        bool external_ip_discovered = false;
+        const uint16_t private_port = GetListenPort();
+        do {
+            ret = NatpmpMapping(&natpmp, external_ipv4_addr, private_port, external_ip_discovered);
+        } while (ret && g_mapport_interrupt.sleep_for(PORT_MAPPING_REANNOUNCE_PERIOD));
+        g_mapport_interrupt.reset();
+
+        const int r_send = sendnewportmappingrequest(&natpmp, NATPMP_PROTOCOL_TCP, private_port, g_mapport_external_port, /* remove a port mapping */ 0);
+        g_mapport_external_port = 0;
+        if (r_send == 12 /* OK */) {
+            LogPrintf("NAT-PMP: Port mapping removed successfully.\n");
+        } else {
+            LogPrintf("NAT-PMP: sendnewportmappingrequest(0) failed with %d error.\n", r_send);
+        }
+    }
+
+    closenatpmp(&natpmp);
+    return ret;
+}
+#endif // #ifdef USE_NATPMP
+
+#ifdef USE_UPNP
 static bool ProcessUpnp()
 {
     bool ret = false;
@@ -109,6 +222,7 @@ static bool ProcessUpnp()
 
     return ret;
 }
+#endif // #ifdef USE_UPNP
 
 static void ThreadMapPort()
 {
@@ -165,7 +279,7 @@ void StopMapPort()
     }
 }
 
-#else
+#else  // #if defined(USE_NATPMP) || defined(USE_UPNP)
 void StartMapPort(bool use_upnp)
 {
     // Intentionally left blank.
@@ -178,4 +292,4 @@ void StopMapPort()
 {
     // Intentionally left blank.
 }
-#endif
+#endif // #if defined(USE_NATPMP) || defined(USE_UPNP)
