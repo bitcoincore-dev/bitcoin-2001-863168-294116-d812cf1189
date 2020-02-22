@@ -242,7 +242,9 @@ std::pair<int, std::string> LocateErrorInDestinationString(const std::string& st
         uint160 hash;
         const std::vector<unsigned char>& pubkey_prefix = Params().Base58Prefix(CChainParams::PUBKEY_ADDRESS);
         const std::vector<unsigned char>& script_prefix = Params().Base58Prefix(CChainParams::SCRIPT_ADDRESS);
-
+        if (str.length() > 35) {
+            return {0, "Length exceeds maximum for legacy and P2SH addresses"};
+        }
         if (!DecodeBase58(str, data, 256)) {
             return {0, "Invalid Base58 character in address"};
         }

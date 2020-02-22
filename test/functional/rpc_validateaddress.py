@@ -29,7 +29,7 @@ class ValidateaddressTest(BitcoinTestFramework):
         address = "bcrtq049ldschfnwystcqnsvyfpj23mpsg3jcedq9xv"
         res = self.nodes[0].validateaddress(address)
         assert_equal(res['isvalid'], False)
-        assert_equal(res['error'], "Invalid Base58 character in address")
+        assert_equal(res['error'], "Length exceeds maximum for legacy and P2SH addresses")
         assert 'error_index' not in res
 
         # Address with no '1' separator
@@ -104,6 +104,12 @@ class ValidateaddressTest(BitcoinTestFramework):
         address = "muehQnn2P5NiiRCGg9HewAWrXLRy2d7TZE"
         res = self.nodes[0].validateaddress(address, "legacy")
         assert_equal(res['isvalid'], True)
+
+        # Legacy address which is too long
+        address = "muehQnn2P5NiiRCGO9HewAWrXLRy2d7TZEaaaaaaa"
+        res = self.nodes[0].validateaddress(address, "legacy")
+        assert_equal(res['isvalid'], False)
+        assert_equal(res['error'], "Length exceeds maximum for legacy and P2SH addresses")
 
         # Legacy address with one error
         address = "muehQnn2P5NhiRCGg9HewAWrXLRy2d7TZE"
