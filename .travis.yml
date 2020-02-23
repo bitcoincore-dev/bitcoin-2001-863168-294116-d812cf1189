@@ -187,6 +187,7 @@ jobs:
           - libtool
           - berkeley-db4
           - boost
+          - libnatpmp
           - miniupnpc
           - qt
           - qrencode
