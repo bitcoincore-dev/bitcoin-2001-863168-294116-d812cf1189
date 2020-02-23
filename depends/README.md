@@ -101,6 +101,8 @@ The following can be set when running make: `make FOO=bar`
 <dd>Don't download/build/cache libs needed to enable the wallet</dd>
 <dt>NO_UPNP</dt>
 <dd>Don't download/build/cache packages needed for enabling upnp</dd>
+<dt>NO_NATPMP</dt>
+<dd>Don't download/build/cache packages needed for enabling natpmp</dd>
 <dt>MULTIPROCESS</dt>
 <dd>build libmultiprocess (experimental, requires cmake)</dd>
 <dt>DEBUG</dt>
