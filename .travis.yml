@@ -130,6 +130,7 @@ jobs:
         homebrew:
           packages:
           - berkeley-db4
+          - libnatpmp
           - miniupnpc
           - qrencode
           - sqlite
