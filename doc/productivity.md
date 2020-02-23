@@ -50,6 +50,7 @@ You _must not_ set base_dir to "/", or anywhere that contains system headers (ac
 After running `./autogen.sh`, which generates the `./configure` file, use `./configure --help` to identify features that you can disable to save on compilation time. A few common flags:
 
 ```sh
+--without-natpmp
 --without-miniupnpc
 --disable-bench
 --disable-wallet
