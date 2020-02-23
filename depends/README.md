@@ -90,6 +90,7 @@ The following can be set when running make: make FOO=bar
     NO_QR: Don't download/build/cache packages needed for enabling qrencode
     NO_ZMQ: Don't download/build/cache packages needed for enabling zeromq
     NO_WALLET: Don't download/build/cache libs needed to enable the wallet
+    NO_NATPMP: Don't download/build/cache packages needed for enabling natpmp
     NO_UPNP: Don't download/build/cache packages needed for enabling upnp
     DEBUG: disable some optimizations and enable more runtime checking
     RAPIDCHECK: build rapidcheck (experimental, requires cmake)
