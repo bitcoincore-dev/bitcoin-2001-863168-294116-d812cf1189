@@ -105,6 +105,8 @@ The following can be set when running make: `make FOO=bar`
 <dd>Don't download/build/cache SQLite</dd>
 <dt>NO_UPNP</dt>
 <dd>Don't download/build/cache packages needed for enabling upnp</dd>
+<dt>NO_NATPMP</dt>
+<dd>Don't download/build/cache packages needed for enabling natpmp</dd>
 <dt>ALLOW_HOST_PACKAGES</dt>
 <dd>Packages that are missed in dependencies (due to `NO_*` option or
 build script logic) are searched for among the host system packages using
