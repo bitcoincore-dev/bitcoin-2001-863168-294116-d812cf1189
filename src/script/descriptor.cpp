@@ -367,14 +367,10 @@ protected:
 public:
     DescriptorImpl(std::vector<std::unique_ptr<PubkeyProvider>> pubkeys, std::unique_ptr<DescriptorImpl> script, const std::string& name) : m_pubkey_args(std::move(pubkeys)), m_name(name), m_subdescriptor_arg(std::move(script)) {}
 
-    bool IsSolvable() const override
-    {
-        if (m_subdescriptor_arg) {
-            if (!m_subdescriptor_arg->IsSolvable()) return false;
-        }
-        return true;
-    }
-
+#if GCC_VERSION < 90200
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsuggest-override" // See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78010
+#endif
     bool IsRange() const final
     {
         for (const auto& pubkey : m_pubkey_args) {
@@ -384,6 +380,56 @@ public:
             if (m_subdescriptor_arg->IsRange()) return true;
         }
         return false;
+    }
+
+    std::string ToString() const final
+    {
+        std::string ret;
+        ToStringHelper(nullptr, ret, false);
+        return AddChecksum(ret);
+    }
+
+    bool ToPrivateString(const SigningProvider& arg, std::string& out) const final
+    {
+        bool ret = ToStringHelper(&arg, out, true);
+        out = AddChecksum(out);
+        return ret;
+    }
+
+    bool Expand(int pos, const SigningProvider& provider, std::vector<CScript>& output_scripts, FlatSigningProvider& out, std::vector<unsigned char>* cache = nullptr) const final
+    {
+        return ExpandHelper(pos, provider, nullptr, output_scripts, out, cache);
+    }
+
+    bool ExpandFromCache(int pos, const std::vector<unsigned char>& cache, std::vector<CScript>& output_scripts, FlatSigningProvider& out) const final
+    {
+        Span<const unsigned char> span = MakeSpan(cache);
+        return ExpandHelper(pos, DUMMY_SIGNING_PROVIDER, &span, output_scripts, out, nullptr) && span.size() == 0;
+    }
+
+    void ExpandPrivate(int pos, const SigningProvider& provider, FlatSigningProvider& out) const final
+    {
+        for (const auto& p : m_pubkey_args) {
+            CKey key;
+            if (!p->GetPrivKey(pos, provider, key)) continue;
+            out.keys.emplace(key.GetPubKey().GetID(), key);
+        }
+        if (m_subdescriptor_arg) {
+            FlatSigningProvider subprovider;
+            m_subdescriptor_arg->ExpandPrivate(pos, provider, subprovider);
+            out = Merge(out, subprovider);
+        }
+    }
+#if GCC_VERSION < 90200
+#pragma GCC diagnostic pop
+#endif
+
+    bool IsSolvable() const override
+    {
+        if (m_subdescriptor_arg) {
+            if (!m_subdescriptor_arg->IsSolvable()) return false;
+        }
+        return true;
     }
 
     bool ToStringHelper(const SigningProvider* arg, std::string& out, bool priv) const
@@ -409,20 +455,6 @@ public:
         }
         out = std::move(ret) + ")";
         return true;
-    }
-
-    std::string ToString() const final
-    {
-        std::string ret;
-        ToStringHelper(nullptr, ret, false);
-        return AddChecksum(ret);
-    }
-
-    bool ToPrivateString(const SigningProvider& arg, std::string& out) const final
-    {
-        bool ret = ToStringHelper(&arg, out, true);
-        out = AddChecksum(out);
-        return ret;
     }
 
     bool ExpandHelper(int pos, const SigningProvider& arg, Span<const unsigned char>* cache_read, std::vector<CScript>& output_scripts, FlatSigningProvider& out, std::vector<unsigned char>* cache_write) const
@@ -477,31 +509,6 @@ public:
         return true;
     }
 
-    bool Expand(int pos, const SigningProvider& provider, std::vector<CScript>& output_scripts, FlatSigningProvider& out, std::vector<unsigned char>* cache = nullptr) const final
-    {
-        return ExpandHelper(pos, provider, nullptr, output_scripts, out, cache);
-    }
-
-    bool ExpandFromCache(int pos, const std::vector<unsigned char>& cache, std::vector<CScript>& output_scripts, FlatSigningProvider& out) const final
-    {
-        Span<const unsigned char> span = MakeSpan(cache);
-        return ExpandHelper(pos, DUMMY_SIGNING_PROVIDER, &span, output_scripts, out, nullptr) && span.size() == 0;
-    }
-
-    void ExpandPrivate(int pos, const SigningProvider& provider, FlatSigningProvider& out) const final
-    {
-        for (const auto& p : m_pubkey_args) {
-            CKey key;
-            if (!p->GetPrivKey(pos, provider, key)) continue;
-            out.keys.emplace(key.GetPubKey().GetID(), key);
-        }
-        if (m_subdescriptor_arg) {
-            FlatSigningProvider subprovider;
-            m_subdescriptor_arg->ExpandPrivate(pos, provider, subprovider);
-            out = Merge(out, subprovider);
-        }
-    }
-
     Optional<OutputType> GetOutputType() const override { return nullopt; }
 };
 
@@ -514,7 +521,15 @@ protected:
     std::vector<CScript> MakeScripts(const std::vector<CPubKey>&, const CScript*, FlatSigningProvider&) const override { return Vector(GetScriptForDestination(m_destination)); }
 public:
     AddressDescriptor(CTxDestination destination) : DescriptorImpl({}, {}, "addr"), m_destination(std::move(destination)) {}
+
+#if GCC_VERSION < 90200
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsuggest-override" // See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78010
+#endif
     bool IsSolvable() const final { return false; }
+#if GCC_VERSION < 90200
+#pragma GCC diagnostic pop
+#endif
 
     Optional<OutputType> GetOutputType() const override
     {
@@ -539,7 +554,15 @@ protected:
     std::vector<CScript> MakeScripts(const std::vector<CPubKey>&, const CScript*, FlatSigningProvider&) const override { return Vector(m_script); }
 public:
     RawDescriptor(CScript script) : DescriptorImpl({}, {}, "raw"), m_script(std::move(script)) {}
+
+#if GCC_VERSION < 90200
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsuggest-override" // See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78010
+#endif
     bool IsSolvable() const final { return false; }
+#if GCC_VERSION < 90200
+#pragma GCC diagnostic pop
+#endif
 
     Optional<OutputType> GetOutputType() const override
     {

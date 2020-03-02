@@ -37,6 +37,8 @@
 
 #include <boost/thread/condition_variable.hpp> // for boost::thread_interrupted
 
+#define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+
 // Application startup time (used for uptime calculation)
 int64_t GetStartupTime();
 
