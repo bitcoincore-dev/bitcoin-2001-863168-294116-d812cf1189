@@ -10,6 +10,12 @@
 
 class ValidationState;
 
+enum class SynchronizationState {
+    INIT_DOWNLOAD,
+    INIT_REINDEX,
+    POST_INIT
+};
+
 /** Convert ValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const ValidationState &state);
 
