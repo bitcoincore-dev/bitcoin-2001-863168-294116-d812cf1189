@@ -38,6 +38,10 @@ bool ParseMoney(const std::string& str, CAmount& nRet)
 
 bool ParseMoney(const char* pszIn, CAmount& nRet)
 {
+    if (!pszIn[0]) {
+        return false;
+    }
+
     std::string strWhole;
     int64_t nUnits = 0;
     const char* p = pszIn;
