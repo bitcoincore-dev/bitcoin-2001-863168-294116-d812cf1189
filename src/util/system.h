@@ -107,6 +107,12 @@ inline bool IsSwitchChar(char c)
 #endif
 }
 
+enum class SynchronizationState {
+    INIT_DOWNLOAD,
+    INIT_REINDEX,
+    POST_INIT
+};
+
 enum class OptionsCategory {
     OPTIONS,
     CONNECTION,
