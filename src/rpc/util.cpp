@@ -751,6 +751,9 @@ UniValue GetServicesNames(ServiceFlags services)
     }
     if (services & NODE_NETWORK_LIMITED)
         servicesNames.push_back("NETWORK_LIMITED");
+    if (services & NODE_REPLACE_BY_FEE) {
+        servicesNames.push_back("REPLACE_BY_FEE?");
+    }
 
     return servicesNames;
 }
