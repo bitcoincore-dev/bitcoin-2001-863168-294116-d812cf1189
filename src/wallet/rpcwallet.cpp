@@ -447,7 +447,7 @@ static UniValue sendtoaddress(const JSONRPCRequest& request)
             coin_control.m_signal_bip125_rbf = (coin_control.m_signal_bip125_rbf ? *coin_control.m_signal_bip125_rbf : false) || request.params[5].isNull();
         }
     } else if (coin_control.m_fee_mode == FeeEstimateMode::EXPLICIT) {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "Selected estimate_mode requires a confirmation target");
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Selected estimate_mode requires a fee rate");
     }
 
     EnsureWalletIsUnlocked(pwallet);
@@ -899,7 +899,7 @@ static UniValue sendmany(const JSONRPCRequest& request)
             coin_control.m_signal_bip125_rbf = (coin_control.m_signal_bip125_rbf ? *coin_control.m_signal_bip125_rbf : false) || request.params[5].isNull();
         }
     } else if (coin_control.m_fee_mode == FeeEstimateMode::EXPLICIT) {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "Selected estimate_mode requires a confirmation target");
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Selected estimate_mode requires a fee rate");
     }
 
     std::set<CTxDestination> destinations;

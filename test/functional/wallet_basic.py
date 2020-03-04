@@ -219,7 +219,7 @@ class WalletTest(BitcoinTestFramework):
 
         # Sendmany with explicit fee
         # Throw if no conf_target provided
-        assert_raises_rpc_error(-8, "Selected estimate_mode requires a confirmation target",
+        assert_raises_rpc_error(-8, "Selected estimate_mode requires a fee rate",
             self.nodes[2].sendmany,
             amounts={ address: 10 },
             estimate_mode='EXPLICIT')
@@ -373,7 +373,7 @@ class WalletTest(BitcoinTestFramework):
         assert prebalance > 2
         address = self.nodes[1].getnewaddress()
         # Throw if no conf_target provided
-        assert_raises_rpc_error(-8, "Selected estimate_mode requires a confirmation target",
+        assert_raises_rpc_error(-8, "Selected estimate_mode requires a fee rate",
             self.nodes[2].sendtoaddress,
             address=address,
             amount=1.0,
