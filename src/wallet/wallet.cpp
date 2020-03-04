@@ -3017,6 +3017,7 @@ bool CWallet::CreateTransaction(interfaces::Chain::Lock& locked_chain, const std
                          int& nChangePosInOut, std::string& strFailReason, const CCoinControl& coin_control, bool sign)
 {
     CAmount nValue = 0;
+    nFeeRet = 0;
     ReserveDestination reservedest(this);
     int nChangePosRequest = nChangePosInOut;
     unsigned int nSubtractFeeFromAmount = 0;
@@ -3093,6 +3094,12 @@ bool CWallet::CreateTransaction(interfaces::Chain::Lock& locked_chain, const std
 
             // Get the fee rate to use effective values in coin selection
             CFeeRate nFeeRateNeeded = GetMinimumFeeRate(*this, coin_control, &feeCalc);
+            // Do not, ever, assume that it's fine to change the fee rate if the user has explicitly
+            // provided one
+            if (coin_control.m_feerate && nFeeRateNeeded > *coin_control.m_feerate) {
+                strFailReason = strprintf("Fee rate is too low for the current mempool. Increase it to %s or modify -maxmempool", nFeeRateNeeded.ToString());
+                return false;
+            }
 
             nFeeRet = 0;
             bool pick_new_inputs = true;
