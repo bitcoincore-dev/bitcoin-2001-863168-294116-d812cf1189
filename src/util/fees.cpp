@@ -37,6 +37,8 @@ static const std::vector<std::pair<std::string, FeeEstimateMode>> FEE_MODES = {
     {"unset", FeeEstimateMode::UNSET},
     {"economical", FeeEstimateMode::ECONOMICAL},
     {"conservative", FeeEstimateMode::CONSERVATIVE},
+    {(CURRENCY_UNIT + "/kB"), FeeEstimateMode::BTC_KB},
+    {(CURRENCY_ATOM + "/B"), FeeEstimateMode::SAT_B},
 };
 
 std::string FeeModes(const std::string& delimiter)
