@@ -61,6 +61,7 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 // Declare meta types used for QMetaObject::invokeMethod
 Q_DECLARE_METATYPE(bool*)
 Q_DECLARE_METATYPE(CAmount)
+Q_DECLARE_METATYPE(SynchronizationState)
 Q_DECLARE_METATYPE(uint256)
 
 static QString GetLangTerritory()
@@ -435,6 +436,7 @@ int GuiMain(int argc, char* argv[])
 
     // Register meta types used for QMetaObject::invokeMethod and Qt::QueuedConnection
     qRegisterMetaType<bool*>();
+    qRegisterMetaType<SynchronizationState>();
 #ifdef ENABLE_WALLET
     qRegisterMetaType<WalletModel*>();
 #endif
