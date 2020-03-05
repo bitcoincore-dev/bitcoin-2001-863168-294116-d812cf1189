@@ -9,8 +9,7 @@ correctly to GET_CFILTERS, GET_CFHEADERS, GET_CFCHECKPT requests.
 """
 
 from test_framework.messages import (
-    FILTER_TYPE_BASIC,
-    NODE_COMPACT_FILTERS,
+    FILTER_TYPE_BASIC, NODE_COMPACT_FILTERS,
     msg_getcfilters, msg_getcfheaders, msg_getcfcheckpt,
     ser_uint256, uint256_from_str, hash256,
 )
@@ -90,17 +89,13 @@ class CompactFiltersTest(BitcoinTestFramework):
         main_block_hash = self.nodes[0].getblockhash(1000)
         assert main_block_hash != stale_block_hash, "node 0 chain did not reorganize"
 
-        default_services = node1.nServices
-
-        # Check that nodes have signalled expected services.
-        assert 0 == node1.nServices & NODE_COMPACT_FILTERS
-        assert_equal(node0.nServices, default_services | NODE_COMPACT_FILTERS)
+        # Check that nodes have signalled NODE_COMPACT_FILTERS correctly.
+        assert node0.nServices & NODE_COMPACT_FILTERS != 0
+        assert node1.nServices & NODE_COMPACT_FILTERS == 0
 
         # Check that the localservices is as expected.
-        assert_equal(int(self.nodes[0].getnetworkinfo()['localservices'], 16),
-                     default_services | NODE_COMPACT_FILTERS)
-        assert_equal(int(self.nodes[1].getnetworkinfo()['localservices'], 16),
-                     default_services)
+        assert int(self.nodes[0].getnetworkinfo()['localservices'], 16) & NODE_COMPACT_FILTERS != 0
+        assert int(self.nodes[1].getnetworkinfo()['localservices'], 16) & NODE_COMPACT_FILTERS == 0
 
         # Check that peers can fetch cfcheckpt on active chain.
         tip_hash = self.nodes[0].getbestblockhash()
