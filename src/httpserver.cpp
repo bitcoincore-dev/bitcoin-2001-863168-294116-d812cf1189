@@ -330,7 +330,7 @@ my_bind_socket_with_handle(struct evhttp *http, const char *address, ev_uint16_t
                 ignorable_error = true;
                 break;
             default:
-                LogPrintf("libevent: getaddrinfo: %s\n", strerror(errno));
+                LogPrintf("libevent: getaddrinfo: %s\n", evutil_gai_strerror(ai_result));
             }
             return nullptr;
         }
