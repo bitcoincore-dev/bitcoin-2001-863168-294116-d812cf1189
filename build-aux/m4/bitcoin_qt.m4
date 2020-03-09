@@ -53,15 +53,21 @@ dnl CAUTION: Do not use this inside of a conditional.
 AC_DEFUN([BITCOIN_QT_INIT],[
   dnl enable qt support
   AC_ARG_WITH([gui],
-    [AS_HELP_STRING([--with-gui@<:@=no|qt5|auto@:>@],
-    [build bitcoin-qt GUI (default=auto)])],
-    [
-     bitcoin_qt_want_version=$withval
-     if test "x$bitcoin_qt_want_version" = xyes; then
-       bitcoin_qt_want_version=auto
-     fi
-    ],
-    [bitcoin_qt_want_version=auto])
+              [AS_HELP_STRING([--with-gui@<:@=auto|qt5|no@:>@],
+                              [build bitcoin-qt GUI (default=auto)])])
+
+  AS_IF([test "x$with_gui" = xqt5_debug],
+        [AS_CASE([$host],
+                 [*darwin*], [QT_LIB_SUFFIX=_debug],
+                 [*mingw*], [QT_LIB_SUFFIX=d],
+                 [QT_LIB_SUFFIX= ])],
+        [QT_LIB_SUFFIX= ])
+
+  AS_CASE([$with_gui],
+          [""|yes|auto], [bitcoin_qt_want_version=auto],
+          [qt5|qt5_debug], [bitcoin_qt_want_version=qt5],
+          [no], [bitcoin_qt_want_version=no],
+          [AC_MSG_ERROR([--with-gui=$with_gui value is not auto, qt5, or no])])
 
   AC_ARG_WITH([qt-incdir],[AS_HELP_STRING([--with-qt-incdir=INC_DIR],[specify qt include path (overridden by pkgconfig)])], [qt_include_path=$withval], [])
   AC_ARG_WITH([qt-libdir],[AS_HELP_STRING([--with-qt-libdir=LIB_DIR],[specify qt lib path (overridden by pkgconfig)])], [qt_lib_path=$withval], [])
@@ -312,13 +318,13 @@ dnl Output: QT_LIBS is prepended or configure exits.
 AC_DEFUN([_BITCOIN_QT_CHECK_STATIC_PLUGINS],[
   AC_MSG_CHECKING(for static Qt plugins: $2)
   CHECK_STATIC_PLUGINS_TEMP_LIBS="$LIBS"
-  LIBS="$2 $QT_LIBS $LIBS"
+  LIBS="$2$QT_LIB_SUFFIX $QT_LIBS $LIBS"
   AC_LINK_IFELSE([AC_LANG_PROGRAM([[
     #define QT_STATICPLUGIN
     #include <QtPlugin>
     $1]],
     [[return 0;]])],
-    [AC_MSG_RESULT(yes); QT_LIBS="$2 $QT_LIBS"],
+    [AC_MSG_RESULT(yes); QT_LIBS="$2$QT_LIB_SUFFIX $QT_LIBS"],
     [AC_MSG_RESULT(no); BITCOIN_QT_FAIL(Could not resolve: $2)])
   LIBS="$CHECK_STATIC_PLUGINS_TEMP_LIBS"
 ])
@@ -339,19 +345,19 @@ AC_DEFUN([_BITCOIN_QT_FIND_STATIC_PLUGINS],[
         if test x$bitcoin_cv_qt58 = xno; then
           PKG_CHECK_MODULES([QTPLATFORM], [Qt5PlatformSupport], [QT_LIBS="$QTPLATFORM_LIBS $QT_LIBS"])
         else
-          PKG_CHECK_MODULES([QTFONTDATABASE], [Qt5FontDatabaseSupport], [QT_LIBS="-lQt5FontDatabaseSupport $QT_LIBS"])
-          PKG_CHECK_MODULES([QTEVENTDISPATCHER], [Qt5EventDispatcherSupport], [QT_LIBS="-lQt5EventDispatcherSupport $QT_LIBS"])
-          PKG_CHECK_MODULES([QTTHEME], [Qt5ThemeSupport], [QT_LIBS="-lQt5ThemeSupport $QT_LIBS"])
-          PKG_CHECK_MODULES([QTDEVICEDISCOVERY], [Qt5DeviceDiscoverySupport], [QT_LIBS="-lQt5DeviceDiscoverySupport $QT_LIBS"])
-          PKG_CHECK_MODULES([QTACCESSIBILITY], [Qt5AccessibilitySupport], [QT_LIBS="-lQt5AccessibilitySupport $QT_LIBS"])
-          PKG_CHECK_MODULES([QTFB], [Qt5FbSupport], [QT_LIBS="-lQt5FbSupport $QT_LIBS"])
+          PKG_CHECK_MODULES([QTFONTDATABASE], [Qt5FontDatabaseSupport$QT_LIB_SUFFIX], [QT_LIBS="-lQt5FontDatabaseSupport$QT_LIB_SUFFIX $QT_LIBS"])
+          PKG_CHECK_MODULES([QTEVENTDISPATCHER], [Qt5EventDispatcherSupport$QT_LIB_SUFFIX], [QT_LIBS="-lQt5EventDispatcherSupport$QT_LIB_SUFFIX $QT_LIBS"])
+          PKG_CHECK_MODULES([QTTHEME], [Qt5ThemeSupport$QT_LIB_SUFFIX], [QT_LIBS="-lQt5ThemeSupport$QT_LIB_SUFFIX $QT_LIBS"])
+          PKG_CHECK_MODULES([QTDEVICEDISCOVERY], [Qt5DeviceDiscoverySupport$QT_LIB_SUFFIX], [QT_LIBS="-lQt5DeviceDiscoverySupport$QT_LIB_SUFFIX $QT_LIBS"])
+          PKG_CHECK_MODULES([QTACCESSIBILITY], [Qt5AccessibilitySupport$QT_LIB_SUFFIX], [QT_LIBS="-lQt5AccessibilitySupport$QT_LIB_SUFFIX $QT_LIBS"])
+          PKG_CHECK_MODULES([QTFB], [Qt5FbSupport$QT_LIB_SUFFIX], [QT_LIBS="-lQt5FbSupport$QT_LIB_SUFFIX $QT_LIBS"])
         fi
         if test "x$TARGET_OS" = xlinux; then
           PKG_CHECK_MODULES([QTXCBQPA], [Qt5XcbQpa], [QT_LIBS="$QTXCBQPA_LIBS $QT_LIBS"])
         elif test "x$TARGET_OS" = xdarwin; then
-          PKG_CHECK_MODULES([QTCLIPBOARD], [Qt5ClipboardSupport], [QT_LIBS="-lQt5ClipboardSupport $QT_LIBS"])
-          PKG_CHECK_MODULES([QTGRAPHICS], [Qt5GraphicsSupport], [QT_LIBS="-lQt5GraphicsSupport $QT_LIBS"])
-          PKG_CHECK_MODULES([QTCGL], [Qt5CglSupport], [QT_LIBS="-lQt5CglSupport $QT_LIBS"])
+          PKG_CHECK_MODULES([QTCLIPBOARD], [Qt5ClipboardSupport$QT_LIB_SUFFIX], [QT_LIBS="-lQt5ClipboardSupport$QT_LIB_SUFFIX $QT_LIBS"])
+          PKG_CHECK_MODULES([QTGRAPHICS], [Qt5GraphicsSupport$QT_LIB_SUFFIX], [QT_LIBS="-lQt5GraphicsSupport$QT_LIB_SUFFIX $QT_LIBS"])
+          PKG_CHECK_MODULES([QTCGL], [Qt5CglSupport$QT_LIB_SUFFIX], [QT_LIBS="-lQt5CglSupport$QT_LIB_SUFFIX $QT_LIBS"])
         fi
       ])
     fi
@@ -363,7 +369,7 @@ dnl Outputs: have_qt_test and have_qt_dbus are set (if applicable) to yes|no.
 AC_DEFUN([_BITCOIN_QT_FIND_LIBS],[
   m4_ifdef([PKG_CHECK_MODULES],[
     QT_LIB_PREFIX=Qt5
-    qt5_modules="Qt5Core Qt5Gui Qt5Network Qt5Widgets"
+    qt5_modules="Qt5Core$QT_LIB_SUFFIX Qt5Gui$QT_LIB_SUFFIX Qt5Network$QT_LIB_SUFFIX Qt5Widgets$QT_LIB_SUFFIX"
     BITCOIN_QT_CHECK([
       PKG_CHECK_MODULES([QT5], [$qt5_modules], [QT_INCLUDES="$QT5_CFLAGS"; QT_LIBS="$QT5_LIBS" have_qt=yes],[have_qt=no])
 
