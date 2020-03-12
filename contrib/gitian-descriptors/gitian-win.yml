@@ -156,7 +156,7 @@ script: |
   done
 
   mkdir -p ${OUTDIR}/src
-  git archive --output=${OUTDIR}/src/${DISTNAME}.tar.gz HEAD
+  git archive --output=${OUTDIR}/src/${DISTNAME}.zip HEAD
 
   cp -rf contrib/windeploy $BUILD_DIR
   cd $BUILD_DIR/windeploy
