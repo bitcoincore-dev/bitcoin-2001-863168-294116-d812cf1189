@@ -400,4 +400,6 @@ public:
     bool static Rewrite(BerkeleyDatabase& database, const char* pszSkip = nullptr);
 };
 
+std::string BerkeleyDatabaseVersion();
+
 #endif // BITCOIN_WALLET_DB_H
