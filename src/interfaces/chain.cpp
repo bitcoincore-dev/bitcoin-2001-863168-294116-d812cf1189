@@ -216,6 +216,10 @@ public:
         ::tableRPC.appendCommand(m_command.name, &m_command);
     }
 
+#if defined(__GNUC__) && (GCC_VERSION < 90200) && !defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsuggest-override" // See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78010
+#endif
     void disconnect() final
     {
         if (m_wrapped_command) {
@@ -223,6 +227,9 @@ public:
             ::tableRPC.removeCommand(m_command.name, &m_command);
         }
     }
+#if defined(__GNUC__) && (GCC_VERSION < 90200) && !defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
 
     ~RpcHandlerImpl() override { disconnect(); }
 
