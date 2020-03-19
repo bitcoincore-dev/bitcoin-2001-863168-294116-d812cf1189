@@ -36,6 +36,7 @@
 #include <interfaces/node.h>
 #include <ui_interface.h>
 #include <util/system.h>
+#include <wallet/wallet.h>
 
 #include <QAction>
 #include <QApplication>
@@ -643,6 +644,11 @@ void BitcoinGUI::addWallet(WalletModel* walletModel)
         m_wallet_selector_label_action->setVisible(true);
         m_wallet_selector_action->setVisible(true);
     }
+
+    const std::lock_guard<std::mutex> lock(g_loading_wallet_models_mutex);
+    g_loading_wallet_models_set.erase(walletModel);
+    assert(g_loading_wallet_models_set.count(walletModel) == 0);
+    g_loading_wallet_models_cv.notify_all();
 }
 
 void BitcoinGUI::removeWallet(WalletModel* walletModel)
