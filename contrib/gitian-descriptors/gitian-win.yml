@@ -30,7 +30,7 @@ script: |
   set -e -o pipefail
 
   WRAP_DIR=$HOME/wrapped
-  HOSTS="x86_64-w64-mingw32"
+  HOSTS="i686-w64-mingw32 x86_64-w64-mingw32"
   CONFIGFLAGS="--enable-reduce-exports --disable-bench --disable-gui-tests"
   FAKETIME_HOST_PROGS="ar ranlib nm windres strip objcopy"
   FAKETIME_PROGS="date makensis zip"
@@ -143,8 +143,13 @@ script: |
     find ${DISTNAME}/bin -type f -executable -print0 | xargs -0 -n1 -I{} ../contrib/devtools/split-debug.sh {} {} {}.dbg
     find ${DISTNAME}/lib -type f -print0 | xargs -0 -n1 -I{} ../contrib/devtools/split-debug.sh {} {} {}.dbg
     cp ../doc/README_windows.txt ${DISTNAME}/readme.txt
-    find ${DISTNAME} -not -name "*.dbg"  -type f | sort | zip -X@ ${OUTDIR}/${DISTNAME}-${i//x86_64-w64-mingw32/win64}.zip
-    find ${DISTNAME} -name "*.dbg"  -type f | sort | zip -X@ ${OUTDIR}/${DISTNAME}-${i//x86_64-w64-mingw32/win64}-debug.zip
+    case $i in
+        i?86-*  ) bin_name=win32 ;;
+        x86_64-*) bin_name=win64 ;;
+        *) bin_name=$i ;;
+    esac
+    find ${DISTNAME} -not -name "*.dbg"  -type f | sort | zip -X@ ${OUTDIR}/${DISTNAME}-${bin_name}.zip
+    find ${DISTNAME} -name "*.dbg"  -type f | sort | zip -X@ ${OUTDIR}/${DISTNAME}-${bin_name}-debug.zip
     cd ../../
     rm -rf distsrc-${i}
   done
