@@ -66,8 +66,7 @@ fi
 if [[ $DOCKER_NAME_TAG == centos* ]]; then
   ${CI_RETRY_EXE} DOCKER_EXEC yum -y install epel-release
   ${CI_RETRY_EXE} DOCKER_EXEC yum -y install $DOCKER_PACKAGES $PACKAGES
-elif [ "$TRAVIS_OS_NAME" != "osx" ]; then
-  ${CI_RETRY_EXE} DOCKER_EXEC apt-get update
+elif [ $USE_TRAVIS_APT_ADDON != "yes" ]; then
   ${CI_RETRY_EXE} DOCKER_EXEC apt-get install --no-install-recommends --no-upgrade -y $PACKAGES $DOCKER_PACKAGES
 fi
 
@@ -77,6 +76,7 @@ if [ "$TRAVIS_OS_NAME" == "osx" ]; then
 else
   DOCKER_EXEC free -m -h
   DOCKER_EXEC echo "Number of CPUs \(nproc\):" \$\(nproc\)
+  DOCKER_EXEC echo $(lscpu | grep Endian)
   DOCKER_EXEC echo "Free disk space:"
   DOCKER_EXEC df -h
 fi
