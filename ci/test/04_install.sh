@@ -19,17 +19,6 @@ if [ "$TRAVIS_OS_NAME" == "osx" ]; then
   git reset --hard origin/master
   popd || exit 1
   set -o errexit
-  ${CI_RETRY_EXE} brew update
-  # brew upgrade returns an error if any of the packages is already up to date
-  # Failure is safe to ignore, unless we really need an update.
-  brew upgrade $BREW_PACKAGES || true
-
-  # install new packages (brew install returns an error if already installed)
-  for i in $BREW_PACKAGES; do
-    if ! brew list | grep -q $i; then
-      ${CI_RETRY_EXE} brew install $i
-    fi
-  done
 
   export PATH="/usr/local/opt/ccache/libexec:$PATH"
 
