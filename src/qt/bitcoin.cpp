@@ -30,6 +30,7 @@
 #include <interfaces/handler.h>
 #include <interfaces/node.h>
 #include <noui.h>
+#include <rpc/server.h>
 #include <ui_interface.h>
 #include <uint256.h>
 #include <util/system.h>
@@ -311,6 +312,11 @@ void BitcoinApplication::requestShutdown()
     // Request node shutdown, which can interrupt long operations, like
     // rescanning a wallet.
     m_node.startShutdown();
+    // Stop RPC for clean shutdown if waitfor* commands are executed.
+    if (gArgs.GetBoolArg("-server", false)) {
+        InterruptRPC();
+        StopRPC();
+    }
     // Unsetting the client model can cause the current thread to wait for node
     // to complete an operation, like wait for a RPC execution to complete.
     window->setClientModel(nullptr);
