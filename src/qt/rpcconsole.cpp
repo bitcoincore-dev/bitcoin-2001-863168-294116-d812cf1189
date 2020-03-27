@@ -687,7 +687,12 @@ void RPCConsole::setClientModel(ClientModel *model)
         startExecutor();
     }
     if (!model) {
-        // Client model is being set to 0, this means shutdown() is about to be called.
+        // Client model is being set to nullptr, this means shutdown() is about to be called.
+        if (gArgs.GetBoolArg("-server", false)) {
+            InterruptRPC();
+            StopRPC();
+        }
+
         thread.quit();
         thread.wait();
     }

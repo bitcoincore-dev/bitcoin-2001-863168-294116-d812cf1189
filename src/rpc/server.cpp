@@ -15,11 +15,13 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
 
+#include <cassert>
 #include <memory> // for unique_ptr
 #include <unordered_map>
 
 static RecursiveMutex cs_rpcWarmup;
 static std::atomic<bool> g_rpc_running{false};
+static std::atomic<bool> g_rpc_stopped{true};
 static bool fRPCInWarmup GUARDED_BY(cs_rpcWarmup) = true;
 static std::string rpcWarmupStatus GUARDED_BY(cs_rpcWarmup) = "RPC server started";
 /* Timer-creating functions */
@@ -285,11 +287,14 @@ void StartRPC()
 {
     LogPrint(BCLog::RPC, "Starting RPC\n");
     g_rpc_running = true;
+    g_rpc_stopped = false;
     g_rpcSignals.Started();
 }
 
 void InterruptRPC()
 {
+    // This function could be called twice if the GUI has been started with -server=1.
+    if (!g_rpc_running) return;
     LogPrint(BCLog::RPC, "Interrupting RPC\n");
     // Interrupt e.g. running longpolls
     g_rpc_running = false;
@@ -297,9 +302,13 @@ void InterruptRPC()
 
 void StopRPC()
 {
+    // This function could be called twice if the GUI has been started with -server=1.
+    assert(!g_rpc_running);
+    if (g_rpc_stopped) return;
     LogPrint(BCLog::RPC, "Stopping RPC\n");
     deadlineTimers.clear();
     DeleteAuthCookie();
+    g_rpc_stopped = true;
     g_rpcSignals.Stopped();
 }
 
