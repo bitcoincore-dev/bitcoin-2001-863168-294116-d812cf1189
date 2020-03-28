@@ -988,7 +988,7 @@ void Misbehaving(NodeId pnode, int howmuch, const std::string& message) EXCLUSIV
 
 #include <node/context.h>
 extern NodeContext* g_rpc_node;
-static void HandleBlockDoS(NodeId node_id, const int nDoS, const bool is_header) {
+static void HandleDoSPunishment(NodeId node_id, const int nDoS, const char * const what_is_it) {
     // We never actually DoS ban for invalid blocks, merely disconnect nodes if we're relying on them as a primary node
     std::string node_name = "(unknown)";
     {
@@ -998,7 +998,7 @@ static void HandleBlockDoS(NodeId node_id, const int nDoS, const bool is_header)
             node_name = nodestate->name;
         }
     }
-    const std::string msg = strprintf("%s peer=%d got DoS score %d on invalid block%s", node_name, node_id, nDoS, is_header ? " header" : "");
+    const std::string msg = strprintf("%s peer=%d got DoS score %d on invalid %s", node_name, node_id, nDoS, what_is_it);
     g_rpc_node/*HACK*/->connman->ForNode(node_id, [msg](CNode* node) {
         if (node->PunishInvalidBlocks()) {
             LogPrint(BCLog::NET, "%s; simply disconnecting\n", msg);
@@ -1028,7 +1028,7 @@ static bool MaybePunishNodeForBlock(NodeId nodeid, const BlockValidationState& s
     case BlockValidationResult::BLOCK_CONSENSUS:
     case BlockValidationResult::BLOCK_MUTATED:
         if (!via_compact_block) {
-            HandleBlockDoS(nodeid, 100, /*is_header=*/ false);
+            HandleDoSPunishment(nodeid, 100, "block");
             return true;
         }
         break;
@@ -1044,7 +1044,7 @@ static bool MaybePunishNodeForBlock(NodeId nodeid, const BlockValidationState& s
             // Exempt HB compact block peers and manual connections.
             if (!via_compact_block && !node_state->m_is_inbound && !node_state->m_is_manual_connection) {
                 // TODO: We could drop cs_main here
-                HandleBlockDoS(nodeid, 100, /*is_header=*/ false);
+                HandleDoSPunishment(nodeid, 100, "block");
                 return true;
             }
             break;
@@ -1053,14 +1053,14 @@ static bool MaybePunishNodeForBlock(NodeId nodeid, const BlockValidationState& s
     case BlockValidationResult::BLOCK_CHECKPOINT:
     case BlockValidationResult::BLOCK_INVALID_PREV:
         {
-            HandleBlockDoS(nodeid, 100, /*is_header=*/ true);
+            HandleDoSPunishment(nodeid, 100, "block header");
         }
         return true;
     // Conflicting (but not necessarily invalid) data or different policy:
     case BlockValidationResult::BLOCK_MISSING_PREV:
         {
             // TODO: Handle this much more gracefully (10 DoS points is super arbitrary)
-            HandleBlockDoS(nodeid, 10, /*is_header=*/ true);
+            HandleDoSPunishment(nodeid, 10, "block header");
         }
         return true;
     case BlockValidationResult::BLOCK_RECENT_CONSENSUS_CHANGE:
@@ -1086,8 +1086,7 @@ static bool MaybePunishNodeForTx(NodeId nodeid, const TxValidationState& state, 
     // The node is providing invalid data:
     case TxValidationResult::TX_CONSENSUS:
         {
-            LOCK(cs_main);
-            Misbehaving(nodeid, 100, message);
+            HandleDoSPunishment(nodeid, 100, "transaction");
             return true;
         }
     // Conflicting (but not necessarily invalid) data or different policy:
