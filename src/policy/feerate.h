@@ -11,7 +11,7 @@
 
 #include <string>
 
-const std::string CURRENCY_UNIT = "BTC"; // One formatted unit
+extern const std::string CURRENCY_UNIT;
 const std::string CURRENCY_ATOM = "sat"; // One indivisible minimum value unit
 
 /**

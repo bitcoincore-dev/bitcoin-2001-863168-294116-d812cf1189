@@ -13,8 +13,7 @@
 #include <vector>
 #include <utility>
 
-std::string StringForFeeReason(FeeReason reason)
-{
+std::string StringForFeeReason(FeeReason reason) {
     static const std::map<FeeReason, std::string> fee_reason_strings = {
         {FeeReason::NONE, "None"},
         {FeeReason::HALF_ESTIMATE, "Half Target 60% Threshold"},
@@ -34,12 +33,12 @@ std::string StringForFeeReason(FeeReason reason)
 }
 
 static const std::vector<std::pair<std::string, FeeEstimateMode>> FEE_MODES = {
-    {"unset", FeeEstimateMode::UNSET},
-    {"economical", FeeEstimateMode::ECONOMICAL},
-    {"conservative", FeeEstimateMode::CONSERVATIVE},
+        {"UNSET", FeeEstimateMode::UNSET},
+        {"ECONOMICAL", FeeEstimateMode::ECONOMICAL},
+        {"CONSERVATIVE", FeeEstimateMode::CONSERVATIVE},
     {(CURRENCY_UNIT + "/kB"), FeeEstimateMode::BTC_KB},
     {(CURRENCY_ATOM + "/B"), FeeEstimateMode::SAT_B},
-};
+    };
 
 std::string FeeModes(const std::string& delimiter)
 {
