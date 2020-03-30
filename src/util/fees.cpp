@@ -36,6 +36,7 @@ static const std::vector<std::pair<std::string, FeeEstimateMode>> FEE_MODES = {
         {"UNSET", FeeEstimateMode::UNSET},
         {"ECONOMICAL", FeeEstimateMode::ECONOMICAL},
         {"CONSERVATIVE", FeeEstimateMode::CONSERVATIVE},
+    {"EXPLICIT", FeeEstimateMode::BTC_KB},
     {(CURRENCY_UNIT + "/kB"), FeeEstimateMode::BTC_KB},
     {(CURRENCY_ATOM + "/B"), FeeEstimateMode::SAT_B},
     };
