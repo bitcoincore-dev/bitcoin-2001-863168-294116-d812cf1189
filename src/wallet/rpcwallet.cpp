@@ -3428,7 +3428,7 @@ static UniValue bumpfee(const JSONRPCRequest& request)
             true, true);
 
         if (options.exists("confTarget") && options.exists("conf_target")) {
-            throw JSONRPCError(RPC_INVALID_PARAMETER, "confTarget and conf_target options should not both be set. Use conf_target (confTarget is deprecated).");
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "confTarget and conf_target options should not both be set. Use confTarget for compatibility with Bitcoin Core.");
         }
 
         auto conf_target = options.exists("confTarget") ? options["confTarget"] : options["conf_target"];
