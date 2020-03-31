@@ -507,9 +507,9 @@ bool LegacyScriptPubKeyMan::CanProvide(const CScript& script, SignatureData& sig
     }
 }
 
-bool LegacyScriptPubKeyMan::SignTransaction(CMutableTransaction& tx, const std::map<COutPoint, Coin>& coins, int sighash, std::map<int, std::string>& input_errors) const
+bool LegacyScriptPubKeyMan::SignTransaction(CMutableTransaction& tx, const std::map<COutPoint, Coin>& coins, int sighash, std::map<int, std::string>& input_errors, Optional<CAmount>* inputs_amount_sum) const
 {
-    return ::SignTransaction(tx, this, coins, sighash, input_errors);
+    return ::SignTransaction(tx, this, coins, sighash, input_errors, inputs_amount_sum);
 }
 
 SigningResult LegacyScriptPubKeyMan::SignMessage(const std::string& message, const PKHash& pkhash, std::string& str_sig) const
