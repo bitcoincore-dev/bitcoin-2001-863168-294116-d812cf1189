@@ -176,6 +176,7 @@ BASE_SCRIPTS = [
     'feature_nulldummy.py',
     'mempool_accept.py',
     'mempool_expiry.py',
+    'mempool_updatefromblock.py',
     'wallet_import_rescan.py',
     'wallet_import_with_label.py',
     'rpc_bind.py --ipv4',
