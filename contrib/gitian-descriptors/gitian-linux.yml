@@ -144,7 +144,11 @@ script: |
   mkdir -p ${OUTDIR}/src
   RECENT_TAG=$(git describe --abbrev=0 HEAD)
   if [ $RECENT_TAG = $(git describe HEAD) ]; then
-    VERSION=$RECENT_TAG
+    if [[ $RECENT_TAG == v* ]]; then
+      VERSION=${RECENT_TAG:1}
+    else
+      VERSION=$RECENT_TAG
+    fi
   else
     VERSION=$(git rev-parse --short HEAD)
   fi
