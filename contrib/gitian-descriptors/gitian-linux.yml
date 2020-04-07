@@ -141,7 +141,15 @@ script: |
   export PATH=${WRAP_DIR}:${PATH}
 
   # Create the git archive
-  GIT_ARCHIVE=bitcoin.tar.gz
+  mkdir -p ${OUTDIR}/src
+  RECENT_TAG=$(git describe --abbrev=0 HEAD)
+  if [ $RECENT_TAG = $(git describe HEAD) ]; then
+    VERSION=$RECENT_TAG
+  else
+    VERSION=$(git rev-parse --short HEAD)
+  fi
+  VERSIONED_NAME=bitcoin-${VERSION}
+  GIT_ARCHIVE=${OUTDIR}/src/${VERSIONED_NAME}.tar.gz
   git archive --output=$GIT_ARCHIVE HEAD
 
   ORIGPATH="$PATH"
@@ -159,7 +167,7 @@ script: |
     cd distsrc-${i}
     INSTALLPATH="${PWD}/installed"
     mkdir -p ${INSTALLPATH}
-    tar -xf ../$GIT_ARCHIVE
+    tar -xf $GIT_ARCHIVE
 
     ./autogen.sh
     CONFIG_SITE=${BASEPREFIX}/${i}/share/config.site ./configure --prefix=/ --disable-ccache --disable-maintainer-mode --disable-dependency-tracking ${CONFIGFLAGS} CFLAGS="${HOST_CFLAGS}" CXXFLAGS="${HOST_CXXFLAGS}" LDFLAGS="${HOST_LDFLAGS}"
@@ -181,6 +189,3 @@ script: |
     cd ../../
     rm -rf distsrc-${i}
   done
-
-  mkdir -p ${OUTDIR}/src
-  cp $GIT_ARCHIVE ${OUTDIR}/src/
