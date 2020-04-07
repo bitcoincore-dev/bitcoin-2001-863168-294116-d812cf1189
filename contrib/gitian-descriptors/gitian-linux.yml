@@ -177,11 +177,11 @@ script: |
     make install DESTDIR=${INSTALLPATH}
     cd ${INSTALLPATH}
     find . -type f -print   # TEST ONLY
-    find . -name "lib*.la" -delete    # ???
-    find . -name "lib*.a" -delete     # ???
+    find lib -name "lib*.la" -delete
+    find lib -name "lib*.a" -delete
     rm -rf ./lib/pkgconfig
-    find ./bin -type f -executable -print0 | xargs -0 -n1 -I{} ../contrib/devtools/split-debug.sh {} {} {}.dbg
-    find ./lib -type f -print0 | xargs -0 -n1 -I{} ../contrib/devtools/split-debug.sh {} {} {}.dbg
+    find bin -type f -executable -print0 | xargs -0 -n1 -I{} ../contrib/devtools/split-debug.sh {} {} {}.dbg
+    find lib -type f -print0 | xargs -0 -n1 -I{} ../contrib/devtools/split-debug.sh {} {} {}.dbg
     cp ../README.md .
     find . -type f -print   # TEST ONLY
     find . -not -name "*.dbg" | sort | tar --mtime="$REFERENCE_DATETIME" --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ${OUTDIR}/${VERSIONED_NAME}-${i}.tar.gz
