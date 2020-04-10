@@ -738,6 +738,7 @@ bool ArgsManager::ReadConfigFiles(std::string& error, bool ignore_invalid_keys)
     {
         LOCK(cs_args);
         m_settings.ro_config.clear();
+        m_settings.rw_config.clear();
         m_config_sections.clear();
     }
 
@@ -885,6 +886,7 @@ void ArgsManager::LogArgs() const
     for (const auto& section : m_settings.ro_config) {
         logArgsPrefix("Config file arg:", section.first, section.second);
     }
+    logArgsPrefix("R/W config file arg:", "", m_settings.rw_config);
     logArgsPrefix("Command-line arg:", "", m_settings.command_line_options);
 }
 
