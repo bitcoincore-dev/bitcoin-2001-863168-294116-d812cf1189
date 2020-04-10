@@ -839,6 +839,7 @@ bool ArgsManager::ReadConfigFiles(std::string& error, bool ignore_invalid_keys)
     {
         LOCK(cs_args);
         m_settings.ro_config.clear();
+        m_settings.rw_config.clear();
         m_config_sections.clear();
         m_config_path = AbsPathForConfigVal(*this, GetPathArg("-conf", BITCOIN_CONF_FILENAME), /*net_specific=*/false);
     }
@@ -1002,6 +1003,7 @@ void ArgsManager::LogArgs() const
     for (const auto& setting : m_settings.rw_settings) {
         LogPrintf("Setting file arg: %s = %s\n", setting.first, setting.second.write());
     }
+    logArgsPrefix("R/W config file arg:", "", m_settings.rw_config);
     logArgsPrefix("Command-line arg:", "", m_settings.command_line_options);
 }
 
