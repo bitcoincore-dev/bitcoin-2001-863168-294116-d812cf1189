@@ -185,7 +185,16 @@ std::string LocksHeld()
     return result;
 }
 
-void AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs)
+void AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, RecursiveMutex* cs)
+{
+    for (const std::pair<void*, CLockLocation>& i : g_lockstack)
+        if (i.first == cs)
+            return;
+    tfm::format(std::cerr, "Assertion failed: lock %s not held in %s:%i; locks held:\n%s", pszName, pszFile, nLine, LocksHeld());
+    abort();
+}
+
+void AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, Mutex* cs)
 {
     for (const std::pair<void*, CLockLocation>& i : g_lockstack)
         if (i.first == cs)

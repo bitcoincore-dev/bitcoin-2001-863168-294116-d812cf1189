@@ -14,6 +14,11 @@
 #include <string>
 #include <thread>
 
+template <typename PARENT>
+class AnnotatedMixin;
+using RecursiveMutex = AnnotatedMixin<std::recursive_mutex>;
+using Mutex = AnnotatedMixin<std::mutex>;
+
 ////////////////////////////////////////////////
 //                                            //
 // THE SIMPLE DEFINITION, EXCLUDING DEBUG CODE //
@@ -52,7 +57,8 @@ void EnterCritical(const char* pszName, const char* pszFile, int nLine, void* cs
 void LeaveCritical();
 void CheckLastCritical(void* cs, std::string& lockname, const char* guardname, const char* file, int line);
 std::string LocksHeld();
-void AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs) ASSERT_EXCLUSIVE_LOCK(cs);
+void AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, RecursiveMutex* cs) ASSERT_EXCLUSIVE_LOCK(cs);
+void AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, Mutex* cs) ASSERT_EXCLUSIVE_LOCK(cs);
 void AssertLockNotHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs);
 void DeleteLock(void* cs);
 
@@ -66,7 +72,8 @@ extern bool g_debug_lockorder_abort;
 void static inline EnterCritical(const char* pszName, const char* pszFile, int nLine, void* cs, bool fTry = false) {}
 void static inline LeaveCritical() {}
 void static inline CheckLastCritical(void* cs, std::string& lockname, const char* guardname, const char* file, int line) {}
-void static inline AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs) ASSERT_EXCLUSIVE_LOCK(cs) {}
+void static inline AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, RecursiveMutex* cs) ASSERT_EXCLUSIVE_LOCK(cs) {}
+void static inline AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, Mutex* cs) ASSERT_EXCLUSIVE_LOCK(cs) {}
 void static inline AssertLockNotHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs) {}
 void static inline DeleteLock(void* cs) {}
 #endif
@@ -110,7 +117,7 @@ public:
 using RecursiveMutex = AnnotatedMixin<std::recursive_mutex>;
 
 /** Wrapped mutex: supports waiting but not recursive locking */
-typedef AnnotatedMixin<std::mutex> Mutex;
+using Mutex = AnnotatedMixin<std::mutex>;
 
 #ifdef DEBUG_LOCKCONTENTION
 void PrintLockContention(const char* pszName, const char* pszFile, int nLine);
