@@ -19,6 +19,9 @@ if [ -n "${FILE_ENV}" ]; then
   source "${FILE_ENV}"
 fi
 
+export DOCKER_DEB_PACKAGES="build-essential libtool autotools-dev automake pkg-config bsdmainutils curl ca-certificates ccache python3 rsync git procps"
+export DOCKER_RPM_PACKAGES="gcc-c++ glibc-devel.x86_64 libstdc++-devel.x86_64 glibc-devel.i686 libstdc++-devel.i686 ccache libtool make git python3 python36-zmq which patch lbzip2 dash"
+
 echo "Fallback to default values in env (if not yet set)"
 # The number of parallel jobs to pass down to make and test_runner.py
 export MAKEJOBS=${MAKEJOBS:--j4}
@@ -53,7 +56,6 @@ export DEPENDS_DIR=${DEPENDS_DIR:-$BASE_ROOT_DIR/depends}
 export BASE_OUTDIR=${BASE_OUTDIR:-$BASE_SCRATCH_DIR/out/$HOST}
 export PREVIOUS_RELEASES_DIR=${PREVIOUS_RELEASES_DIR:-$BASE_ROOT_DIR/releases/$HOST}
 export SDK_URL=${SDK_URL:-https://bitcoincore.org/depends-sources/sdks}
-export DOCKER_PACKAGES=${DOCKER_PACKAGES:-build-essential libtool autotools-dev automake pkg-config bsdmainutils curl ca-certificates ccache python3 rsync git procps}
 export GOAL=${GOAL:-install}
 export DIR_QA_ASSETS=${DIR_QA_ASSETS:-${BASE_SCRATCH_DIR}/qa-assets}
 export PATH=${BASE_ROOT_DIR}/ci/retry:$PATH
