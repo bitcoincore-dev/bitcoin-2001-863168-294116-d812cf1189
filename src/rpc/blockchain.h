@@ -16,6 +16,7 @@ extern RecursiveMutex cs_main;
 class CBlock;
 class CBlockIndex;
 class CTxMemPool;
+class ChainstateManager;
 class UniValue;
 struct NodeContext;
 
@@ -53,5 +54,6 @@ void CalculatePercentilesByWeight(CAmount result[NUM_GETBLOCKSTATS_PERCENTILES],
 extern NodeContext* g_rpc_node;
 
 CTxMemPool& EnsureMemPool();
+ChainstateManager& EnsureChainman();
 
 #endif
