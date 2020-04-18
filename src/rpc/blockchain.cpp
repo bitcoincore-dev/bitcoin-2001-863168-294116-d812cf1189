@@ -62,6 +62,12 @@ CTxMemPool& EnsureMemPool()
     return *g_rpc_node->mempool;
 }
 
+ChainstateManager& EnsureChainman()
+{
+    CHECK_NONFATAL(g_rpc_node);
+    return EnsureChainman(*g_rpc_node);
+}
+
 /* Calculate the difficulty for a given block index.
  */
 double GetDifficulty(const CBlockIndex* blockindex)
