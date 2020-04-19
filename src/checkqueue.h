@@ -6,8 +6,11 @@
 #define BITCOIN_CHECKQUEUE_H
 
 #include <sync.h>
+#include <tinyformat.h>
+#include <util/threadnames.h>
 
 #include <algorithm>
+#include <atomic>
 #include <vector>
 
 #include <boost/thread/condition_variable.hpp>
@@ -62,8 +65,11 @@ private:
     //! The maximum number of elements to be processed in one batch
     const unsigned int nBatchSize;
 
+    std::vector<std::thread> m_worker_threads;
+    std::atomic<bool> m_stopped{false};
+
     /** Internal function that does bulk of the verification work. */
-    bool Loop(bool fMaster = false)
+    bool Loop(bool fMaster)
     {
         boost::condition_variable& cond = fMaster ? condMaster : condWorker;
         std::vector<T> vChecks;
@@ -95,6 +101,7 @@ private:
                         return fRet;
                     }
                     nIdle++;
+                    if (m_stopped) return true; // TODO: This return value is unused.
                     cond.wait(lock); // wait
                     nIdle--;
                 }
@@ -132,16 +139,31 @@ public:
     {
     }
 
+    //! Create a pool of new worker threads.
+    void StartWorkerThreads(const int threads_num)
+    {
+        if (threads_num <= 0) return;
+        assert(m_worker_threads.empty());
+        m_stopped = false;
+        m_worker_threads.reserve(threads_num);
+        for (auto n = 0; n < threads_num; ++n) {
+            m_worker_threads.emplace_back([this, n]() {
+                util::ThreadRename(strprintf("scriptch.%i", n));
+                Loop(false /* worker thread */);
+            });
+        }
+    }
+
     //! Worker thread
     void Thread()
     {
-        Loop();
+        Loop(false /* worker thread */);
     }
 
     //! Wait until execution finishes, and return whether all evaluations were successful.
     bool Wait()
     {
-        return Loop(true);
+        return Loop(true /* master thread */);
     }
 
     //! Add a batch of checks to the queue
@@ -159,8 +181,20 @@ public:
             condWorker.notify_all();
     }
 
+    //! Stop all of the worker threads.
+    void StopWorkerThreads()
+    {
+        m_stopped = true;
+        condWorker.notify_all();
+        for (std::thread& t : m_worker_threads) {
+            t.join();
+        }
+        m_worker_threads.clear();
+    }
+
     ~CCheckQueue()
     {
+        assert(m_worker_threads.empty());
     }
 
 };

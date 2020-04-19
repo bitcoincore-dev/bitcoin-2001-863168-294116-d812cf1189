@@ -219,6 +219,7 @@ void Shutdown(NodeContext& node)
     if (node.scheduler) node.scheduler->stop();
     threadGroup.interrupt_all();
     threadGroup.join_all();
+    StopScriptCheckWorkerThreads();
 
     // After the threads that potentially access these pointers have been stopped,
     // destruct and reset all to nullptr.
@@ -1285,9 +1286,7 @@ bool AppInitMain(NodeContext& node)
     LogPrintf("Script verification uses %d additional threads\n", script_threads);
     if (script_threads >= 1) {
         g_parallel_script_checks = true;
-        for (int i = 0; i < script_threads; ++i) {
-            threadGroup.create_thread([i]() { return ThreadScriptCheck(i); });
-        }
+        StartScriptCheckWorkerThreads(script_threads);
     }
 
     assert(!node.scheduler);
