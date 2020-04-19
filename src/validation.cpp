@@ -1782,9 +1782,14 @@ static bool WriteUndoDataForBlock(const CBlockUndo& blockundo, BlockValidationSt
 
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
-void ThreadScriptCheck(int worker_num) {
-    util::ThreadRename(strprintf("scriptch.%i", worker_num));
-    scriptcheckqueue.Thread();
+void CreateScriptCheckWorkerThreads(int worker_threads)
+{
+    if (worker_threads >= 1) {
+        g_parallel_script_checks = true;
+        for (auto i = 0; i < worker_threads; ++i) {
+            scriptcheckqueue.AddWorkerThread();
+        }
+    }
 }
 
 VersionBitsCache versionbitscache GUARDED_BY(cs_main);

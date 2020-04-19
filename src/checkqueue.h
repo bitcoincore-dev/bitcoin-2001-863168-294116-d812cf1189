@@ -6,8 +6,11 @@
 #define BITCOIN_CHECKQUEUE_H
 
 #include <sync.h>
+#include <tinyformat.h>
+#include <util/threadnames.h>
 
 #include <algorithm>
+#include <atomic>
 #include <vector>
 
 #include <boost/thread/condition_variable.hpp>
@@ -62,8 +65,11 @@ private:
     //! The maximum number of elements to be processed in one batch
     const unsigned int nBatchSize;
 
+    std::vector<std::thread> m_worker_threads;
+    std::atomic<bool> m_destruction_in_progress{false};
+
     /** Internal function that does bulk of the verification work. */
-    bool Loop(bool fMaster = false)
+    bool Loop(bool fMaster)
     {
         boost::condition_variable& cond = fMaster ? condMaster : condWorker;
         std::vector<T> vChecks;
@@ -95,6 +101,7 @@ private:
                         return fRet;
                     }
                     nIdle++;
+                    if (m_destruction_in_progress) return true; // TODO: This return value is unused.
                     cond.wait(lock); // wait
                     nIdle--;
                 }
@@ -132,16 +139,28 @@ public:
     {
     }
 
+    //! Add a new worker thread to the pool.
+    void AddWorkerThread()
+    {
+        boost::unique_lock<boost::mutex> lock(mutex);
+        const int worker_num = m_worker_threads.size();
+        std::thread t([this, worker_num]() {
+            util::ThreadRename(strprintf("scriptch.%i", worker_num));
+            Loop(false /* worker thread */);
+        });
+        m_worker_threads.emplace_back(std::move(t));
+    }
+
     //! Worker thread
     void Thread()
     {
-        Loop();
+        Loop(false /* worker thread */);
     }
 
     //! Wait until execution finishes, and return whether all evaluations were successful.
     bool Wait()
     {
-        return Loop(true);
+        return Loop(true /* master thread */);
     }
 
     //! Add a batch of checks to the queue
@@ -161,6 +180,11 @@ public:
 
     ~CCheckQueue()
     {
+        m_destruction_in_progress = true;
+        condWorker.notify_all();
+        for (std::thread& t : m_worker_threads) {
+            t.join();
+        }
     }
 
 };
