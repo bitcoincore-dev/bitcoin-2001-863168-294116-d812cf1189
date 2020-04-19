@@ -6,8 +6,11 @@
 #define BITCOIN_CHECKQUEUE_H
 
 #include <sync.h>
+#include <tinyformat.h>
+#include <util/threadnames.h>
 
 #include <algorithm>
+#include <atomic>
 #include <vector>
 
 #include <boost/thread/condition_variable.hpp>
@@ -43,8 +46,8 @@ private:
     //! As the order of booleans doesn't matter, it is used as a LIFO (stack)
     std::vector<T> queue;
 
-    //! The number of workers (including the master) that are idle.
-    int nIdle{0};
+    //! The number of workers that are idle.
+    int m_idle_workers{0};
 
     //! The total number of workers (including the master).
     int nTotal{0};
@@ -62,10 +65,12 @@ private:
     //! The maximum number of elements to be processed in one batch
     const unsigned int nBatchSize;
 
+    std::vector<std::thread> m_worker_threads;
+    std::atomic<bool> m_request_stop{false};
+
     /** Internal function that does bulk of the verification work. */
-    bool Loop(bool fMaster = false)
+    bool Loop(bool fMaster)
     {
-        boost::condition_variable& cond = fMaster ? condMaster : condWorker;
         std::vector<T> vChecks;
         vChecks.reserve(nBatchSize);
         unsigned int nNow = 0;
@@ -86,24 +91,30 @@ private:
                 }
                 // logically, the do loop starts here
                 while (queue.empty()) {
-                    if (fMaster && nTodo == 0) {
-                        nTotal--;
-                        bool fRet = fAllOk;
-                        // reset the status for new work later
-                        fAllOk = true;
-                        // return the current status
-                        return fRet;
+                    if (fMaster) {
+                        if (nTodo == 0 && m_idle_workers == nTotal - 1) {
+                            nTotal--;
+                            bool fRet = fAllOk;
+                            // reset the status for new work later
+                            fAllOk = true;
+                            m_request_stop = false;
+                            // return the current status
+                            return fRet;
+                        }
+                        condMaster.wait(lock);
+                    } else {
+                        ++m_idle_workers;
+                        if (m_request_stop) return true; // TODO: This return value is unused.
+                        condWorker.wait(lock);
+                        --m_idle_workers;
                     }
-                    nIdle++;
-                    cond.wait(lock); // wait
-                    nIdle--;
                 }
                 // Decide how many work units to process now.
                 // * Do not try to do everything at once, but aim for increasingly smaller batches so
                 //   all workers finish approximately simultaneously.
                 // * Try to account for idle jobs which will instantly start helping.
                 // * Don't do batches smaller than 1 (duh), or larger than nBatchSize.
-                nNow = std::max(1U, std::min(nBatchSize, (unsigned int)queue.size() / (nTotal + nIdle + 1)));
+                nNow = std::max(1U, std::min(nBatchSize, (unsigned int)queue.size() / (nTotal + m_idle_workers + 1)));
                 vChecks.resize(nNow);
                 for (unsigned int i = 0; i < nNow; i++) {
                     // We want the lock on the mutex to be as short as possible, so swap jobs from the global
@@ -132,16 +143,28 @@ public:
     {
     }
 
+    //! Create a pool of new worker threads.
+    void StartWorkerThreads(const int threads_num)
+    {
+        assert(m_worker_threads.empty());
+        for (int n = 0; n < threads_num; ++n) {
+            m_worker_threads.emplace_back([this, n]() {
+                util::ThreadRename(strprintf("scriptch.%i", n));
+                Loop(false /* worker thread */);
+            });
+        }
+    }
+
     //! Worker thread
     void Thread()
     {
-        Loop();
+        Loop(false /* worker thread */);
     }
 
     //! Wait until execution finishes, and return whether all evaluations were successful.
     bool Wait()
     {
-        return Loop(true);
+        return Loop(true /* master thread */);
     }
 
     //! Add a batch of checks to the queue
@@ -159,8 +182,20 @@ public:
             condWorker.notify_all();
     }
 
+    //! Stop all of the worker threads.
+    void StopWorkerThreads()
+    {
+        m_request_stop = true;
+        condWorker.notify_all();
+        for (std::thread& t : m_worker_threads) {
+            t.join();
+        }
+        m_worker_threads.clear();
+    }
+
     ~CCheckQueue()
     {
+        assert(m_worker_threads.empty());
     }
 
 };
