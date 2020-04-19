@@ -1283,7 +1283,6 @@ bool AppInitMain(NodeContext& node)
     script_threads = std::min(script_threads, MAX_SCRIPTCHECK_THREADS);
 
     LogPrintf("Script verification uses %d additional threads\n", script_threads);
-    CreateScriptCheckWorkerThreads(script_threads);
 
     assert(!node.scheduler);
     node.scheduler = MakeUnique<CScheduler>();
@@ -1530,7 +1529,7 @@ bool AppInitMain(NodeContext& node)
             const int64_t load_block_index_start_time = GetTimeMillis();
             try {
                 LOCK(cs_main);
-                g_chainman.InitializeChainstate();
+                g_chainman.InitializeChainstate(uint256(), script_threads);
                 UnloadBlockIndex();
 
                 // new CBlockTreeDB tries to delete the existing file, which
