@@ -108,7 +108,6 @@ CBlockIndex *pindexBestHeader = nullptr;
 Mutex g_best_block_mutex;
 std::condition_variable g_best_block_cv;
 uint256 g_best_block;
-bool g_parallel_script_checks{false};
 std::atomic_bool fImporting(false);
 std::atomic_bool fReindex(false);
 bool fHavePruned = false;
@@ -1787,7 +1786,7 @@ static bool WriteUndoDataForBlock(const CBlockUndo& blockundo, BlockValidationSt
 void CChainState::CreateScriptCheckWorkerThreads(int worker_threads)
 {
     if (worker_threads >= 1) {
-        g_parallel_script_checks = true;
+        m_parallel_script_checks = true;
         for (auto i = 0; i < worker_threads; ++i) {
             m_script_check_queue->AddWorkerThread();
         }
@@ -2095,7 +2094,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
     // in multiple threads). Preallocate the vector size so a new allocation
     // doesn't invalidate pointers into the vector, and keep txsdata in scope
     // for as long as `control`.
-    CCheckQueueControl<CScriptCheck> control(fScriptChecks && g_parallel_script_checks ? m_script_check_queue.get() : nullptr);
+    CCheckQueueControl<CScriptCheck> control(fScriptChecks && m_parallel_script_checks ? m_script_check_queue.get() : nullptr);
     std::vector<PrecomputedTransactionData> txsdata(block.vtx.size());
 
     std::vector<int> prevheights;
@@ -2154,7 +2153,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
             std::vector<CScriptCheck> vChecks;
             bool fCacheResults = fJustCheck; /* Don't cache results if we're actually connecting blocks (still consult the cache, though) */
             TxValidationState tx_state;
-            if (fScriptChecks && !CheckInputScripts(tx, tx_state, view, flags, fCacheResults, fCacheResults, txsdata[i], g_parallel_script_checks ? &vChecks : nullptr)) {
+            if (fScriptChecks && !CheckInputScripts(tx, tx_state, view, flags, fCacheResults, fCacheResults, txsdata[i], m_parallel_script_checks ? &vChecks : nullptr)) {
                 // Any transaction validation failure in ConnectBlock is a block consensus failure
                 state.Invalid(BlockValidationResult::BLOCK_CONSENSUS,
                               tx_state.GetRejectReason(), tx_state.GetDebugMessage());
