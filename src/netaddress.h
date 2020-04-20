@@ -12,6 +12,8 @@
 #include <attributes.h>
 #include <compat.h>
 #include <prevector.h>
+#include <crypto/siphash.h>
+#include <random.h>
 #include <serialize.h>
 
 #include <array>
@@ -190,6 +192,7 @@ class CNetAddr
         }
 
         friend class CSubNet;
+        friend class CNetAddrHash;
 
     private:
         /**
@@ -272,6 +275,21 @@ class CNetAddr
 
             UnserializeV1Array(serialized);
         }
+};
+
+class CNetAddrHash
+{
+public:
+    size_t operator()(const CNetAddr& a) const noexcept
+    {
+        CSipHasher hasher(m_salt_k0, m_salt_k1);
+        hasher.Write(a.m_addr.data(), a.m_addr.size());
+        return (size_t)hasher.Finalize();
+    }
+
+private:
+    const uint64_t m_salt_k0 = GetRand(std::numeric_limits<uint64_t>::max());
+    const uint64_t m_salt_k1 = GetRand(std::numeric_limits<uint64_t>::max());
 };
 
 class CSubNet
