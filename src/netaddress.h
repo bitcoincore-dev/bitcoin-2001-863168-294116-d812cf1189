@@ -458,6 +458,7 @@ public:
     size_t operator()(const CNetAddr& a) const noexcept
     {
         CSipHasher hasher(m_salt_k0, m_salt_k1);
+        hasher.Write(a.m_net);
         hasher.Write(a.m_addr.data(), a.m_addr.size());
         return (size_t)hasher.Finalize();
     }
