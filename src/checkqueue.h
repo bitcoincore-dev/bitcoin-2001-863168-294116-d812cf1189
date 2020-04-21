@@ -66,7 +66,8 @@ private:
     std::atomic<bool> m_request_stop{false};
 
     /** Internal function that does bulk of the verification work. */
-    bool Loop(bool fMaster)
+    // result_for_master is set only in the master thread.
+    void Loop(bool fMaster, bool* result_for_master = nullptr)
     {
         std::condition_variable& cond = fMaster ? m_master_cv : m_worker_cv;
         std::vector<T> vChecks;
@@ -91,15 +92,14 @@ private:
                 while (queue.empty()) {
                     if (fMaster && nTodo == 0) {
                         nTotal--;
-                        bool fRet = fAllOk;
+                        if (result_for_master) *result_for_master = fAllOk;
                         // reset the status for new work later
                         fAllOk = true;
                         m_request_stop = false;
-                        // return the current status
-                        return fRet;
+                        return;
                     }
                     nIdle++;
-                    if (m_request_stop) return true; // TODO: This return value is unused.
+                    if (m_request_stop) return;
                     cond.wait(lock); // wait
                     nIdle--;
                 }
@@ -152,7 +152,9 @@ public:
     //! Wait until execution finishes, and return whether all evaluations were successful.
     bool Wait()
     {
-        return Loop(true /* master thread */);
+        bool result{false};
+        Loop(true /* master thread */, &result);
+        return result;
     }
 
     //! Add a batch of checks to the queue
