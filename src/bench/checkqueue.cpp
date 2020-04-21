@@ -10,8 +10,6 @@
 #include <random.h>
 #include <util/system.h>
 
-#include <boost/thread/thread.hpp>
-
 #include <vector>
 
 
@@ -43,10 +41,7 @@ static void CCheckQueueSpeedPrevectorJob(benchmark::Bench& bench)
         void swap(PrevectorJob& x){p.swap(x.p);};
     };
     CCheckQueue<PrevectorJob> queue {QUEUE_BATCH_SIZE};
-    boost::thread_group tg;
-    for (auto x = 0; x < std::max(MIN_CORES, GetNumCores()); ++x) {
-       tg.create_thread([&]{queue.Thread();});
-    }
+    queue.StartWorkerThreads(std::max(MIN_CORES, GetNumCores()));
 
     // create all the data once, then submit copies in the benchmark.
     FastRandomContext insecure_rand(true);
@@ -67,8 +62,7 @@ static void CCheckQueueSpeedPrevectorJob(benchmark::Bench& bench)
         // it is done explicitly here for clarity
         control.Wait();
     });
-    tg.interrupt_all();
-    tg.join_all();
+    queue.StopWorkerThreads();
     ECC_Stop();
 }
 BENCHMARK(CCheckQueueSpeedPrevectorJob);
