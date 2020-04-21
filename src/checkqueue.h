@@ -13,9 +13,6 @@
 #include <atomic>
 #include <vector>
 
-#include <boost/thread/condition_variable.hpp>
-#include <boost/thread/mutex.hpp>
-
 template <typename T>
 class CCheckQueueControl;
 
@@ -34,33 +31,33 @@ class CCheckQueue
 {
 private:
     //! Mutex to protect the inner state
-    boost::mutex mutex;
+    Mutex m_mutex;
 
     //! Worker threads block on this when out of work
-    boost::condition_variable condWorker;
+    std::condition_variable m_worker_cv;
 
     //! Master thread blocks on this when out of work
-    boost::condition_variable condMaster;
+    std::condition_variable m_master_cv;
 
     //! The queue of elements to be processed.
     //! As the order of booleans doesn't matter, it is used as a LIFO (stack)
-    std::vector<T> queue;
+    std::vector<T> queue GUARDED_BY(m_mutex);
 
     //! The number of workers that are idle.
-    int m_idle_workers{0};
+    int m_idle_workers GUARDED_BY(m_mutex){0};
 
     //! The total number of workers (including the master).
-    int nTotal{0};
+    int nTotal GUARDED_BY(m_mutex){0};
 
     //! The temporary evaluation result.
-    bool fAllOk{true};
+    bool fAllOk GUARDED_BY(m_mutex){true};
 
     /**
      * Number of verifications that haven't completed yet.
      * This includes elements that are no longer queued, but still in the
      * worker's own batches.
      */
-    unsigned int nTodo{0};
+    unsigned int nTodo GUARDED_BY(m_mutex){0};
 
     //! The maximum number of elements to be processed in one batch
     const unsigned int nBatchSize;
@@ -77,14 +74,14 @@ private:
         bool fOk = true;
         do {
             {
-                boost::unique_lock<boost::mutex> lock(mutex);
+                WAIT_LOCK(m_mutex, lock);
                 // first do the clean-up of the previous loop run (allowing us to do it in the same critsect)
                 if (nNow) {
                     fAllOk &= fOk;
                     nTodo -= nNow;
                     if (nTodo == 0 && !fMaster)
                         // We processed the last element; inform the master it can exit and return the result
-                        condMaster.notify_one();
+                        m_master_cv.notify_one();
                 } else {
                     // first iteration
                     nTotal++;
@@ -101,11 +98,11 @@ private:
                             // return the current status
                             return fRet;
                         }
-                        condMaster.wait(lock);
+                        m_master_cv.wait(lock);
                     } else {
                         ++m_idle_workers;
                         if (m_request_stop) return true; // TODO: This return value is unused.
-                        condWorker.wait(lock);
+                        m_worker_cv.wait(lock);
                         --m_idle_workers;
                     }
                 }
@@ -117,7 +114,7 @@ private:
                 nNow = std::max(1U, std::min(nBatchSize, (unsigned int)queue.size() / (nTotal + m_idle_workers + 1)));
                 vChecks.resize(nNow);
                 for (unsigned int i = 0; i < nNow; i++) {
-                    // We want the lock on the mutex to be as short as possible, so swap jobs from the global
+                    // We want the lock on the m_mutex to be as short as possible, so swap jobs from the global
                     // queue to the local batch vector instead of copying.
                     vChecks[i].swap(queue.back());
                     queue.pop_back();
@@ -135,7 +132,7 @@ private:
 
 public:
     //! Mutex to ensure only one concurrent CCheckQueueControl
-    boost::mutex ControlMutex;
+    Mutex m_control_mutex;
 
     //! Create a new check queue
     explicit CCheckQueue(unsigned int nBatchSizeIn)
@@ -164,23 +161,23 @@ public:
     //! Add a batch of checks to the queue
     void Add(std::vector<T>& vChecks)
     {
-        boost::unique_lock<boost::mutex> lock(mutex);
+        LOCK(m_mutex);
         for (T& check : vChecks) {
             queue.push_back(T());
             check.swap(queue.back());
         }
         nTodo += vChecks.size();
         if (vChecks.size() == 1)
-            condWorker.notify_one();
+            m_worker_cv.notify_one();
         else if (vChecks.size() > 1)
-            condWorker.notify_all();
+            m_worker_cv.notify_all();
     }
 
     //! Stop all of the worker threads.
     void StopWorkerThreads()
     {
         m_request_stop = true;
-        condWorker.notify_all();
+        m_worker_cv.notify_all();
         for (std::thread& t : m_worker_threads) {
             t.join();
         }
@@ -213,7 +210,7 @@ public:
     {
         // passed queue is supposed to be unused, or nullptr
         if (pqueue != nullptr) {
-            ENTER_CRITICAL_SECTION(pqueue->ControlMutex);
+            ENTER_CRITICAL_SECTION(pqueue->m_control_mutex);
         }
     }
 
@@ -237,7 +234,7 @@ public:
         if (!fDone)
             Wait();
         if (pqueue != nullptr) {
-            LEAVE_CRITICAL_SECTION(pqueue->ControlMutex);
+            LEAVE_CRITICAL_SECTION(pqueue->m_control_mutex);
         }
     }
 };
