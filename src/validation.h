@@ -11,6 +11,7 @@
 #endif
 
 #include <amount.h>
+#include <checkqueue.h>
 #include <coins.h>
 #include <crypto/common.h> // for ReadLE64
 #include <fs.h>
@@ -18,11 +19,11 @@
 #include <policy/feerate.h>
 #include <protocol.h> // For CMessageHeader::MessageStartChars
 #include <script/script_error.h>
-#include <sync.h>
-#include <txmempool.h> // For CTxMemPool::cs
-#include <txdb.h>
-#include <versionbits.h>
 #include <serialize.h>
+#include <sync.h>
+#include <txdb.h>
+#include <txmempool.h> // For CTxMemPool::cs
+#include <versionbits.h>
 
 #include <atomic>
 #include <map>
@@ -241,10 +242,6 @@ bool LoadGenesisBlock(const CChainParams& chainparams);
 bool LoadBlockIndex(const CChainParams& chainparams) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 /** Unload database information */
 void UnloadBlockIndex();
-/** Run instances of script checking worker threads */
-void StartScriptCheckWorkerThreads(int threads_num);
-/** Stop all of the script checking worker threads */
-void StopScriptCheckWorkerThreads();
 /** Retrieve a transaction (from memory pool, or from disk, if possible) */
 bool GetTransaction(const uint256& hash, CTransactionRef& tx, const Consensus::Params& params, uint256& hashBlock, const CBlockIndex* const blockIndex = nullptr);
 /**
@@ -593,8 +590,10 @@ private:
     //! Manages the UTXO set, which is a reflection of the contents of `m_chain`.
     std::unique_ptr<CoinsViews> m_coins_views;
 
+    const std::unique_ptr<CCheckQueue<CScriptCheck>> m_script_check_queue;
+
 public:
-    explicit CChainState(BlockManager& blockman, uint256 from_snapshot_blockhash = uint256());
+    explicit CChainState(BlockManager& blockman, uint256 from_snapshot_blockhash = uint256(), int script_threads = 0);
 
     /**
      * Initialize the CoinsViews UTXO set database management data structures. The in-memory
@@ -880,7 +879,9 @@ public:
     //!
     //! @param[in] snapshot_blockhash   If given, signify that this chainstate
     //!                                 is based on a snapshot.
-    CChainState& InitializeChainstate(const uint256& snapshot_blockhash = uint256())
+    //! @param[in] script_threads       Number of additional script checking
+    //!                                 worker threads.
+    CChainState& InitializeChainstate(const uint256& snapshot_blockhash = uint256(), int script_threads = 0)
         EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     //! Get all chainstates currently being used.

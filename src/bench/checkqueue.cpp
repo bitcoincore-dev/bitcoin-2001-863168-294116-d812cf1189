@@ -35,8 +35,7 @@ static void CCheckQueueSpeedPrevectorJob(benchmark::State& state)
         }
         void swap(PrevectorJob& x){p.swap(x.p);};
     };
-    CCheckQueue<PrevectorJob> queue {QUEUE_BATCH_SIZE};
-    queue.StartWorkerThreads(std::max(MIN_CORES, GetNumCores()));
+    CCheckQueue<PrevectorJob> queue {QUEUE_BATCH_SIZE, std::max(MIN_CORES, GetNumCores())};
     while (state.KeepRunning()) {
         // Make insecure_rand here so that each iteration is identical.
         FastRandomContext insecure_rand(true);
@@ -52,6 +51,5 @@ static void CCheckQueueSpeedPrevectorJob(benchmark::State& state)
         // it is done explicitly here for clarity
         control.Wait();
     }
-    queue.StopWorkerThreads();
 }
 BENCHMARK(CCheckQueueSpeedPrevectorJob, 1400);

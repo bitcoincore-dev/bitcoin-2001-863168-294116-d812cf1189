@@ -121,16 +121,6 @@ private:
         } while (true);
     }
 
-public:
-    //! Mutex to ensure only one concurrent CCheckQueueControl
-    Mutex m_control_mutex;
-
-    //! Create a new check queue
-    explicit CCheckQueue(unsigned int nBatchSizeIn)
-        : nBatchSize(nBatchSizeIn)
-    {
-    }
-
     //! Create a pool of new worker threads.
     void StartWorkerThreads(const int threads_num)
     {
@@ -144,6 +134,27 @@ public:
                 Loop(false /* worker thread */);
             });
         }
+    }
+
+    //! Stop all of the worker threads.
+    void StopWorkerThreads()
+    {
+        m_stopped = true;
+        m_worker_cv.notify_all();
+        for (std::thread& t : m_worker_threads) {
+            t.join();
+        }
+    }
+
+public:
+    //! Mutex to ensure only one concurrent CCheckQueueControl
+    Mutex m_control_mutex;
+
+    //! Create a new check queue
+    explicit CCheckQueue(unsigned int nBatchSizeIn, const int threads_num)
+        : nBatchSize(nBatchSizeIn)
+    {
+        StartWorkerThreads(threads_num);
     }
 
     //! Wait until execution finishes, and return whether all evaluations were successful.
@@ -169,20 +180,9 @@ public:
             m_worker_cv.notify_all();
     }
 
-    //! Stop all of the worker threads.
-    void StopWorkerThreads()
-    {
-        m_stopped = true;
-        m_worker_cv.notify_all();
-        for (std::thread& t : m_worker_threads) {
-            t.join();
-        }
-        m_worker_threads.clear();
-    }
-
     ~CCheckQueue()
     {
-        assert(m_worker_threads.empty());
+        StopWorkerThreads();
     }
 
 };
