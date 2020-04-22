@@ -283,7 +283,7 @@ void BitcoinApplication::parameterSetup()
 
 void BitcoinApplication::InitPruneSetting(int64_t prune_opt)
 {
-    optionsModel->SetPruneTargetGB(PruneMiBtoGB(prune_opt), true);
+    optionsModel->SetPruneMiB(prune_opt, true);
 }
 
 void BitcoinApplication::requestInitialize()
