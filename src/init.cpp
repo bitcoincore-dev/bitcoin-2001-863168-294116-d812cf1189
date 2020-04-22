@@ -1281,9 +1281,6 @@ bool AppInitMain(NodeContext& node)
     script_threads = std::min(script_threads, MAX_SCRIPTCHECK_THREADS);
 
     LogPrintf("Script verification uses %d additional threads\n", script_threads);
-    if (script_threads >= 1) {
-        g_parallel_script_checks = true;
-    }
 
     assert(!node.scheduler);
     node.scheduler = MakeUnique<CScheduler>();
