@@ -144,8 +144,8 @@ void BitcoinCore::initialize()
 {
     try
     {
-        qDebug() << __func__ << ": Running initialization in thread";
         util::ThreadRename("qt-init");
+        qDebug() << __func__ << ": Running initialization in thread";
         bool rv = m_node.appInitMain();
         Q_EMIT initializeResult(rv);
     } catch (const std::exception& e) {
