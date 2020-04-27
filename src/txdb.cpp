@@ -11,6 +11,7 @@
 #include <ui_interface.h>
 #include <uint256.h>
 #include <util/system.h>
+#include <util/threadnames.h>
 #include <util/translation.h>
 #include <util/vector.h>
 
@@ -248,6 +249,9 @@ bool CBlockTreeDB::ReadFlag(const std::string &name, bool &fValue) {
 
 bool CBlockTreeDB::LoadBlockIndexGuts(const Consensus::Params& consensusParams, std::function<CBlockIndex*(const uint256&)> insertBlockIndex)
 {
+    std::string thread_name = util::ThreadGetInternalName();
+    util::ThreadRename("leveldb");
+
     std::unique_ptr<CDBIterator> pcursor(NewIterator());
 
     pcursor->Seek(std::make_pair(DB_BLOCK_INDEX, uint256()));
@@ -287,6 +291,7 @@ bool CBlockTreeDB::LoadBlockIndexGuts(const Consensus::Params& consensusParams, 
         }
     }
 
+    util::ThreadRename(std::move(thread_name));
     return true;
 }
 
