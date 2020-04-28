@@ -10,6 +10,7 @@
 #include <util/threadnames.h>
 
 #include <algorithm>
+#include <atomic>
 #include <vector>
 
 template <typename T>
@@ -62,7 +63,7 @@ private:
     const unsigned int nBatchSize;
 
     std::vector<std::thread> m_worker_threads;
-    bool m_request_stop GUARDED_BY(m_mutex){false};
+    std::atomic<bool> m_request_stop{false};
 
     /** Internal function that does bulk of the verification work. */
     bool Loop(bool fMaster)
@@ -84,6 +85,9 @@ private:
                         m_master_cv.notify_one();
                 } else {
                     // first iteration
+                    if (!fMaster) {
+                        util::ThreadRename(strprintf("scriptch.%i", nTotal));
+                    }
                     nTotal++;
                 }
                 // logically, the do loop starts here
@@ -101,6 +105,7 @@ private:
                     nIdle--;
                 }
                 if (m_request_stop) {
+                    m_worker_cv.notify_all();
                     return false;
                 }
 
@@ -133,28 +138,16 @@ public:
     Mutex m_control_mutex;
 
     //! Create a new check queue
-    explicit CCheckQueue(unsigned int nBatchSizeIn)
+    explicit CCheckQueue(unsigned int nBatchSizeIn, const int threads_num = 0)
         : nBatchSize(nBatchSizeIn)
     {
+        for (int n = 0; n < threads_num; ++n) {
+            m_worker_threads.emplace_back(&CCheckQueue::Loop, this, false /* worker thread */);
+        }
     }
 
-    //! Create a pool of new worker threads.
-    void StartWorkerThreads(const int threads_num)
-    {
-        {
-            LOCK(m_mutex);
-            nIdle = 0;
-            nTotal = 0;
-            fAllOk = true;
-        }
-        assert(m_worker_threads.empty());
-        for (int n = 0; n < threads_num; ++n) {
-            m_worker_threads.emplace_back([this, n]() {
-                util::ThreadRename(strprintf("scriptch.%i", n));
-                Loop(false /* worker thread */);
-            });
-        }
-    }
+    CCheckQueue(CCheckQueue const&) = delete;
+    CCheckQueue& operator=(CCheckQueue const&) = delete;
 
     //! Wait until execution finishes, and return whether all evaluations were successful.
     bool Wait()
@@ -177,23 +170,14 @@ public:
             m_worker_cv.notify_all();
     }
 
-    //! Stop all of the worker threads.
-    void StopWorkerThreads()
+    ~CCheckQueue()
     {
-        WITH_LOCK(m_mutex, m_request_stop = true);
+        m_request_stop = true;
         m_worker_cv.notify_all();
         for (std::thread& t : m_worker_threads) {
             t.join();
         }
-        m_worker_threads.clear();
-        WITH_LOCK(m_mutex, m_request_stop = false);
     }
-
-    ~CCheckQueue()
-    {
-        assert(m_worker_threads.empty());
-    }
-
 };
 
 /**
