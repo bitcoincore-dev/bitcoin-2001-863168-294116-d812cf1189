@@ -35,8 +35,13 @@ static void LoggingNoCategory(benchmark::State& state)
 {
     Logging(state, {"-logthreadnames=0", "-debug=0"}, [] { LogPrint(BCLog::NET, "%s\n", "test"); });
 }
+static void LoggingNoFile(benchmark::State& state)
+{
+    Logging(state, {"-nodebuglogfile", "-debug=1"}, [] {LogPrintf("%s\n", "test"); LogPrint(BCLog::NET, "%s\n", "test"); });
+}
 
 BENCHMARK(LoggingYoThreadNames, 100000);
 BENCHMARK(LoggingNoThreadNames, 100000);
 BENCHMARK(LoggingYoCategory, 100000);
 BENCHMARK(LoggingNoCategory, 40000000);
+BENCHMARK(LoggingNoFile, 5000000);
