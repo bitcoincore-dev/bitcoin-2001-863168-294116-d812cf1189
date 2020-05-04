@@ -969,11 +969,13 @@ bool AppInitParameterInteraction()
         }
     }
 
-    // Basic filters are the only supported filters. The basic filters index must be enabled
-    // to serve compact filters
-    if (gArgs.GetBoolArg("-peerblockfilters", DEFAULT_PEERBLOCKFILTERS) &&
-        g_enabled_filter_types.count(BlockFilterType::BASIC) != 1) {
-        return InitError(_("Cannot set -peerblockfilters without -blockfilterindex.").translated);
+    // Signal NODE_COMPACT_FILTERS if peerblockfilters and basic filters index are both enabled.
+    if (gArgs.GetBoolArg("-peerblockfilters", DEFAULT_PEERBLOCKFILTERS)) {
+        if (g_enabled_filter_types.count(BlockFilterType::BASIC) != 1) {
+            return InitError(_("Cannot set -peerblockfilters without -blockfilterindex.").translated);
+        }
+
+        nLocalServices = ServiceFlags(nLocalServices | NODE_COMPACT_FILTERS);
     }
 
     // if using block pruning, then disallow txindex
@@ -1717,6 +1719,19 @@ bool AppInitMain(NodeContext& node)
     for (const auto& filter_type : g_enabled_filter_types) {
         InitBlockFilterIndex(filter_type, filter_index_cache, false, fReindex);
         GetBlockFilterIndex(filter_type)->Start();
+    }
+
+    if (nLocalServices & NODE_COMPACT_FILTERS) {
+        const BlockFilterIndex* const basic_filter_index =
+            GetBlockFilterIndex(BlockFilterType::BASIC);
+        if (!basic_filter_index) {
+            error("NODE_COMPACT_FILTERS is signaled, but filter index is not available");
+            return false;
+        }
+        if (!basic_filter_index->IsSynced()) {
+            InitError(strprintf(_("Cannot enable -peerblockfilters until basic block filter index is in sync. Please disable and reenable once filters have been indexed.").translated));
+            return false;
+        }
     }
 
     // ********************************************************* Step 9: load wallet
