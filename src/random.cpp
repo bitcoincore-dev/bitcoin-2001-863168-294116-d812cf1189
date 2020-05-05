@@ -436,8 +436,7 @@ public:
 
 RNGState& GetRNGState() noexcept
 {
-    // This C++11 idiom relies on the guarantee that static variable are initialized
-    // on first call, even when multiple parallel calls are permitted.
+    // See doc/developer-notes.md#construct-on-first-use
     static std::vector<RNGState, secure_allocator<RNGState>> g_rng(1);
     return g_rng[0];
 }
