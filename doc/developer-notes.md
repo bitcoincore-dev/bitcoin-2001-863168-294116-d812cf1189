@@ -34,6 +34,7 @@ Developer Notes
     - [Scripts](#scripts)
         - [Shebang](#shebang)
     - [Source code organization](#source-code-organization)
+    - [Construct On First Use](#construct-on-first-use)
     - [GUI](#gui)
     - [Subtrees](#subtrees)
     - [Upgrading LevelDB](#upgrading-leveldb)
@@ -838,6 +839,36 @@ namespace {
 ...
 #endif // BITCOIN_FOO_BAR_H
 ```
+
+Construct On First Use
+------------------------
+
+It is not possible to control the order in which non-local static objects in *different* translation units are initialized.
+This is the so-called "static initialization order problem". It could cause the use of an object:
+- before it is constructed (on program startup)
+- after it is destructed (at program exit)
+
+Both cases lead to undefined behavior.
+
+To prevent the static initialization order problem, be sure to Construct On First Use:
+
+```C++
+BCLog::Logger& LogInstance()
+{
+    // See doc/developer-notes.md#construct-on-first-use
+    static BCLog::Logger* g_logger{new BCLog::Logger()};
+    return *g_logger;
+}
+```
+
+*Rationale*: This approach guarantees that:
+
+- the object is constructed before its first use, and not destroyed until after its last use
+- the object initialization is thread-safe
+
+*Note 1*: Even though the object pointed to by a pointer is never deleted, the memory doesn't actually "leak" since the operating system automatically reclaims all the memory in a program's heap when that program exits.
+
+*Note 2*: If the destructor for an object needs to be called while the program is exiting, other approaches must be used.
 
 GUI
 -----
