@@ -94,6 +94,10 @@ void WalletFrame::removeWallet(WalletModel* wallet_model)
     WalletView *walletView = mapWalletViews.take(wallet_model);
     walletStack->removeWidget(walletView);
     delete walletView;
+
+    if (mapWalletViews.empty()) {
+        gui->gotoOverviewPage();
+    }
 }
 
 void WalletFrame::removeAllWallets()
