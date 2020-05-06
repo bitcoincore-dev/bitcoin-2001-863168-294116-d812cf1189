@@ -17,6 +17,7 @@
 #include <qt/walletmodel.h>
 
 #include <ui_interface.h>
+#include <util/check.h>
 
 #include <QApplication>
 #include <QComboBox>
@@ -420,7 +421,7 @@ void TransactionView::abandonTx()
     model->getTransactionTableModel()->updateTransaction(hashQStr, CT_UPDATED, false);
 }
 
-void TransactionView::bumpFee()
+void TransactionView::bumpFeeHelper()
 {
     if(!transactionView || !transactionView->selectionModel())
         return;
@@ -440,6 +441,15 @@ void TransactionView::bumpFee()
 
         qApp->processEvents();
         Q_EMIT bumpedFee(newHash);
+    }
+}
+
+void TransactionView::bumpFee()
+{
+    try {
+        bumpFeeHelper();
+    } catch (const NonFatalCheckError& e) {
+        Q_EMIT nonFatalCheckError(QString::fromStdString(e.what()));
     }
 }
 

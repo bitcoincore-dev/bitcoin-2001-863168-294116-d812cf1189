@@ -85,6 +85,7 @@ private:
     virtual void resizeEvent(QResizeEvent* event);
 
     bool eventFilter(QObject *obj, QEvent *event);
+    void bumpFeeHelper();
 
 private Q_SLOTS:
     void contextualMenu(const QPoint &);
@@ -107,6 +108,7 @@ Q_SIGNALS:
 
     /**  Fired when a message should be reported to the user */
     void message(const QString &title, const QString &message, unsigned int style);
+    void nonFatalCheckError(const QString& error);
 
     void bumpedFee(const uint256& txid);
 

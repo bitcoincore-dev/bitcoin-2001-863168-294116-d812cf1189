@@ -86,6 +86,7 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     connect(sendCoinsPage, &SendCoinsDialog::nonFatalCheckError, this, &WalletView::nonFatalCheckError);
     // Pass through messages from transactionView
     connect(transactionView, &TransactionView::message, this, &WalletView::message);
+    connect(transactionView, &TransactionView::nonFatalCheckError, this, &WalletView::nonFatalCheckError);
 }
 
 WalletView::~WalletView()
