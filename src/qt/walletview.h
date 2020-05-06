@@ -119,6 +119,7 @@ Q_SIGNALS:
     void coinsSent();
     /**  Fired when a message should be reported to the user */
     void message(const QString &title, const QString &message, unsigned int style);
+    void runawayException(const QString& error);
     /** Encryption status of wallet changed */
     void encryptionStatusChanged();
     /** HD-Enabled status of wallet changed (only possible during startup) */
