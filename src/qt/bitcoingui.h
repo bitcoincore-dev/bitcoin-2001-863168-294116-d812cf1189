@@ -224,6 +224,8 @@ public Q_SLOTS:
     */
     void message(const QString& title, QString message, unsigned int style, bool* ret = nullptr);
 
+    void handleRunawayException(const QString& error);
+
 #ifdef ENABLE_WALLET
     void setCurrentWallet(WalletModel* wallet_model);
     void setCurrentWalletBySelectorIndex(int index);

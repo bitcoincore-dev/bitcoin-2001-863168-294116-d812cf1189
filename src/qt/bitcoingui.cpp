@@ -1101,6 +1101,11 @@ void BitcoinGUI::message(const QString& title, QString message, unsigned int sty
     }
 }
 
+void BitcoinGUI::handleRunawayException(const QString& error)
+{
+    QMessageBox::warning(nullptr, "Internal error", error);
+}
+
 void BitcoinGUI::changeEvent(QEvent *e)
 {
     QMainWindow::changeEvent(e);
