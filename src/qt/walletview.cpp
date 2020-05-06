@@ -86,6 +86,7 @@ WalletView::WalletView(const PlatformStyle *_platformStyle, QWidget *parent):
     connect(sendCoinsPage, &SendCoinsDialog::runawayException, this, &WalletView::runawayException);
     // Pass through messages from transactionView
     connect(transactionView, &TransactionView::message, this, &WalletView::message);
+    connect(transactionView, &TransactionView::runawayException, this, &WalletView::runawayException);
 }
 
 WalletView::~WalletView()
