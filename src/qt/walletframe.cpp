@@ -70,6 +70,7 @@ bool WalletFrame::addWallet(WalletModel *walletModel)
     connect(walletView, &WalletView::message, [this](const QString& title, const QString& message, unsigned int style) {
         gui->message(title, message, style);
     });
+    connect(walletView, &WalletView::nonFatalCheckError, gui, &BitcoinGUI::handleNonFatalCheckError);
     connect(walletView, &WalletView::encryptionStatusChanged, gui, &BitcoinGUI::updateWalletStatus);
     connect(walletView, &WalletView::incomingTransaction, gui, &BitcoinGUI::incomingTransaction);
     connect(walletView, &WalletView::hdEnabledStatusChanged, gui, &BitcoinGUI::updateWalletStatus);

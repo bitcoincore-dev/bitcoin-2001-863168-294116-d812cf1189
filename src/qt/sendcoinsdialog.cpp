@@ -24,6 +24,7 @@
 #include <policy/fees.h>
 #include <txmempool.h>
 #include <ui_interface.h>
+#include <util/check.h>
 #include <wallet/coincontrol.h>
 #include <wallet/fees.h>
 #include <wallet/wallet.h>
@@ -370,7 +371,7 @@ bool SendCoinsDialog::PrepareSendText(QString& question_string, QString& informa
     return true;
 }
 
-void SendCoinsDialog::on_sendButton_clicked()
+void SendCoinsDialog::sendButtonClickedHelper()
 {
     if(!model || !model->getOptionsModel())
         return;
@@ -460,6 +461,16 @@ void SendCoinsDialog::on_sendButton_clicked()
     fNewRecipientAllowed = true;
     m_current_transaction.reset();
 }
+
+void SendCoinsDialog::on_sendButton_clicked()
+{
+    try {
+        sendButtonClickedHelper();
+    } catch (const NonFatalCheckError& e) {
+        Q_EMIT nonFatalCheckError(QString::fromStdString(e.what()));
+    }
+}
+
 
 void SendCoinsDialog::clear()
 {

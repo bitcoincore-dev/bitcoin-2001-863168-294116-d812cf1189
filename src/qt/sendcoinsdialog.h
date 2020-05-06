@@ -55,6 +55,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void coinsSent(const uint256& txid);
+    void nonFatalCheckError(const QString& error);
 
 private:
     Ui::SendCoinsDialog *ui;
@@ -75,6 +76,7 @@ private:
     void updateFeeMinimizedLabel();
     // Update the passed in CCoinControl with state from the GUI
     void updateCoinControlState(CCoinControl& ctrl);
+    void sendButtonClickedHelper();
 
 private Q_SLOTS:
     void on_sendButton_clicked();
