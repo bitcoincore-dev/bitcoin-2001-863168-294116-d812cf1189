@@ -1048,12 +1048,8 @@ FILE* AdviseSequential(FILE *file) {
     off_t start = lseek(fd, 0, SEEK_CUR);
     if (start == -1)
         return file;
-    off_t end = lseek(fd, 0, SEEK_END);
-    if (end != -1) {
-        posix_fadvise(fd, start, end - start, POSIX_FADV_WILLNEED);
-        posix_fadvise(fd, start, end - start, POSIX_FADV_SEQUENTIAL);
-    }
-    lseek(fd, start, SEEK_SET);
+    posix_fadvise(fd, start, 0, POSIX_FADV_WILLNEED);
+    posix_fadvise(fd, start, 0, POSIX_FADV_SEQUENTIAL);
 #endif
     return file;
 }
