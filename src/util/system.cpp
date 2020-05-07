@@ -1040,14 +1040,17 @@ FILE* AdviseSequential(FILE *file) {
     // encountered up to and including the posix_fadvise call. However, we must
     // rewind the file to the appropriate position if we've changed the seek
     // offset.
-    if (file == nullptr)
+    if (file == nullptr) {
         return nullptr;
-    int fd = fileno(file);
-    if (fd == -1)
+    }
+    const int fd = fileno(file);
+    if (fd == -1) {
         return file;
-    off_t start = lseek(fd, 0, SEEK_CUR);
-    if (start == -1)
+    }
+    const off_t start = lseek(fd, 0, SEEK_CUR);
+    if (start == -1) {
         return file;
+    }
     posix_fadvise(fd, start, 0, POSIX_FADV_WILLNEED);
     posix_fadvise(fd, start, 0, POSIX_FADV_SEQUENTIAL);
 #endif
