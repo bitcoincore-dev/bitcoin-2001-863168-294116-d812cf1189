@@ -10,6 +10,7 @@
 #include <qt/editaddressdialog.h>
 #include <qt/optionsmodel.h>
 #include <qt/platformstyle.h>
+#include <qt/shieldexception.h>
 #include <qt/transactiondescdialog.h>
 #include <qt/transactionfilterproxy.h>
 #include <qt/transactionrecord.h>
@@ -420,7 +421,7 @@ void TransactionView::abandonTx()
     model->getTransactionTableModel()->updateTransaction(hashQStr, CT_UPDATED, false);
 }
 
-void TransactionView::bumpFee()
+void TransactionView::bumpFeeHelper()
 {
     if(!transactionView || !transactionView->selectionModel())
         return;
@@ -441,6 +442,11 @@ void TransactionView::bumpFee()
         qApp->processEvents();
         Q_EMIT bumpedFee(newHash);
     }
+}
+
+void TransactionView::bumpFee()
+{
+    shieldException([&] { bumpFeeHelper(); });
 }
 
 void TransactionView::copyAddress()
