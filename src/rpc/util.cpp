@@ -751,7 +751,7 @@ std::string RPCArg::ToString(const bool oneline) const
     }
     case Type::OBJ:
     case Type::OBJ_USER_KEYS: {
-        const std::string res = Join(m_inner, ",", [&](const RPCArg& i) { return i.ToStringObj(oneline); });
+        const std::string res = Join(m_inner, std::string(","), [&](const RPCArg& i) { return i.ToStringObj(oneline); });
         if (m_type == Type::OBJ) {
             return "{" + res + "}";
         } else {
