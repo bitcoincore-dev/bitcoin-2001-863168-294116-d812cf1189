@@ -137,7 +137,7 @@ namespace BCLog {
         /** Returns a string with the log categories */
         std::string LogCategoriesString()
         {
-            return Join(LogCategoriesList(), ", ", [&](const LogCategory& i) { return i.category; });
+            return Join(LogCategoriesList(), std::string(", "), [&](const LogCategory& i) { return i.category; });
         };
 
         bool DefaultShrinkDebugFile() const;
