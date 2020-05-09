@@ -320,6 +320,9 @@ public Q_SLOTS:
     void setTrayIconVisible(bool);
 
     void showModalOverlay();
+
+    /** Hide all windows and tray icon. */
+    void hideAll();
 };
 
 class UnitDisplayStatusBarControl : public QLabel
