@@ -31,9 +31,10 @@ NODISCARD inline std::string TrimString(const std::string& str, const std::strin
  * @param unary_op   Apply this operator to each item in the list
  */
 template <typename T, typename UnaryOp>
-std::string Join(const std::vector<T>& list, const std::string& separator, UnaryOp unary_op)
+auto Join(const std::vector<T>& list, const std::string& separator, UnaryOp unary_op)
+    -> decltype(unary_op(list.at(0)))
 {
-    std::string ret;
+    decltype(unary_op(list.at(0))) ret;
     for (size_t i = 0; i < list.size(); ++i) {
         if (i > 0) ret += separator;
         ret += unary_op(list.at(i));
