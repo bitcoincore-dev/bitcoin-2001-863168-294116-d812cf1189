@@ -16,6 +16,11 @@
 struct bilingual_str {
     std::string original;
     std::string translated;
+
+    bool empty() const
+    {
+        return original.empty();
+    }
 };
 
 inline bilingual_str operator+(const bilingual_str& lhs, const bilingual_str& rhs)
