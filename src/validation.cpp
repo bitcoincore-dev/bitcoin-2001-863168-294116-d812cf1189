@@ -1651,23 +1651,22 @@ bool UndoReadFromDisk(CBlockUndo& blockundo, const CBlockIndex* pindex)
 }
 
 /** Abort with a message */
-static bool AbortNode(const std::string& strMessage, const bilingual_str& userMessage = bilingual_str())
+static bool AbortNode(const std::string& log_message, const bilingual_str& user_message = bilingual_str())
 {
-    SetMiscWarning(strMessage);
-    LogPrintf("*** %s\n", strMessage);
-    if (!userMessage.empty()) {
-        uiInterface.ThreadSafeMessageBox(userMessage, "", CClientUIInterface::MSG_ERROR);
-    } else {
-        uiInterface.ThreadSafeMessageBox(_("A fatal internal error occurred, see debug.log for details"), "", CClientUIInterface::MSG_ERROR);
+    SetMiscWarning(log_message);
+    LogPrintf("*** %s\n", log_message);
+    if (user_message.empty()) {
+        user_message = _("A fatal internal error occurred, see debug.log for details");
     }
+    uiInterface.ThreadSafeMessageBox(user_message, "", CClientUIInterface::MSG_ERROR);
     StartShutdown();
     return false;
 }
 
-static bool AbortNode(BlockValidationState& state, const std::string& strMessage, const bilingual_str& userMessage = bilingual_str())
+static bool AbortNode(BlockValidationState& state, const std::string& log_message, const bilingual_str& user_message = bilingual_str())
 {
-    AbortNode(strMessage, userMessage);
-    return state.Error(strMessage);
+    AbortNode(log_message, user_message);
+    return state.Error(log_message);
 }
 
 /**
