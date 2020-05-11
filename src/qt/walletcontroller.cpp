@@ -127,7 +127,19 @@ WalletModel* WalletController::getOrCreateWallet(std::unique_ptr<interfaces::Wal
     WalletModel* wallet_model = new WalletModel(std::move(wallet), m_client_model, m_platform_style, nullptr);
     // Handler callback runs in a different thread so fix wallet model thread affinity.
     wallet_model->moveToThread(thread());
-    wallet_model->setParent(this);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
+    QMetaObject::invokeMethod(this, [wallet_model, this] {
+        wallet_model->setParent(this);
+    }, GUIUtil::blockingGUIThreadConnection());
+#else
+    {
+        QEventLoop event_loop;
+        QTimer::singleShot(0, this, [wallet_model, this] {
+            wallet_model->setParent(this);
+        });
+    }
+#endif
+
     m_wallets.push_back(wallet_model);
 
     // WalletModel::startPollBalance needs to be called in a thread managed by
