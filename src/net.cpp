@@ -2489,9 +2489,18 @@ void CConnman::AddNewAddresses(const std::vector<CAddress>& vAddr, const CAddres
     addrman.Add(vAddr, addrFrom, nTimePenalty);
 }
 
-std::vector<CAddress> CConnman::GetAddresses()
+std::vector<CAddress> CConnman::GetAddresses(bool from_cache)
 {
-    return addrman.GetAddr();
+    if (from_cache) {
+        const std::chrono::microseconds current_time = GetTime<std::chrono::microseconds>();
+        if (m_update_addr_response < current_time) {
+            m_addrs_response_cache = addrman.GetAddr();
+            m_update_addr_response = current_time + std::chrono::hours(24) + GetRandMillis(std::chrono::hours(3));
+        }
+        return m_addrs_response_cache;
+    } else {
+        return addrman.GetAddr();
+    }
 }
 
 bool CConnman::AddNode(const std::string& strNode)
