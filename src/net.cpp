@@ -2489,15 +2489,17 @@ void CConnman::AddNewAddresses(const std::vector<CAddress>& vAddr, const CAddres
     addrman.Add(vAddr, addrFrom, nTimePenalty);
 }
 
-std::vector<CAddress> CConnman::GetAddresses(bool from_cache)
+std::vector<CAddress> CConnman::GetAddresses(Optional<Network> requestor_network)
 {
-    if (from_cache) {
+    if (requestor_network) {
         const std::chrono::microseconds current_time = GetTime<std::chrono::microseconds>();
-        if (m_update_addr_response < current_time) {
-            m_addrs_response_cache = addrman.GetAddr();
-            m_update_addr_response = current_time + std::chrono::hours(24) + GetRandMillis(std::chrono::hours(3));
+        const Network network = requestor_network.get();
+        if (m_addr_response_caches.find(network) == m_addr_response_caches.end() ||
+            m_addr_response_caches[network].m_update_addr_response < current_time) {
+            m_addr_response_caches[network].m_addrs_response_cache = addrman.GetAddr();
+            m_addr_response_caches[network].m_update_addr_response = current_time + std::chrono::hours(24) + GetRandMillis(std::chrono::hours(3));
         }
-        return m_addrs_response_cache;
+        return m_addr_response_caches[network].m_addrs_response_cache;
     } else {
         return addrman.GetAddr();
     }
