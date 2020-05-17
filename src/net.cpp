@@ -2498,7 +2498,7 @@ std::vector<CAddress> CConnman::GetAddresses(Optional<Network> requestor_network
         if (m_addr_response_caches.find(network) == m_addr_response_caches.end() ||
             m_addr_response_caches[network].m_update_addr_response < current_time) {
             m_addr_response_caches[network].m_addrs_response_cache = addrman.GetAddr();
-            m_addr_response_caches[network].m_update_addr_response = current_time + std::chrono::hours(24) + GetRandMillis(std::chrono::hours(3));
+            m_addr_response_caches[network].m_update_addr_response = current_time + std::chrono::hours(21) + GetRandMillis(std::chrono::hours(6));
         }
         return m_addr_response_caches[network].m_addrs_response_cache;
     } else {
