@@ -18,6 +18,8 @@ OpenURIDialog::OpenURIDialog(const PlatformStyle *platformStyle, QWidget *parent
     ui->setupUi(this);
     ui->pasteButton->setIcon(platformStyle->SingleColorIcon(":/icons/editpaste"));
     QObject::connect(ui->pasteButton, &QPushButton::clicked, [=] { ui->uriEdit->setText(QApplication::clipboard()->text()); });
+
+    GUIUtil::handleCloseWindowShortcut(this);
 }
 
 OpenURIDialog::~OpenURIDialog()
