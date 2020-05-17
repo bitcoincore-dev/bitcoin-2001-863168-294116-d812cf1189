@@ -59,6 +59,7 @@ void TestAddAddressesToSendBook(interfaces::Node& node)
 {
     TestChain100Setup test;
     std::shared_ptr<CWallet> wallet = std::make_shared<CWallet>(node.context()->chain.get(), WalletLocation(), WalletDatabase::CreateMock());
+    wallet->SetupLegacyScriptPubKeyMan();
     bool firstRun;
     wallet->LoadWallet(firstRun);
 
@@ -96,7 +97,7 @@ void TestAddAddressesToSendBook(interfaces::Node& node)
 
     auto check_addbook_size = [&wallet](int expected_size) {
         LOCK(wallet->cs_wallet);
-        QCOMPARE(static_cast<int>(wallet->mapAddressBook.size()), expected_size);
+        QCOMPARE(static_cast<int>(wallet->m_address_book.size()), expected_size);
     };
 
     // We should start with the two addresses we added earlier and nothing else.

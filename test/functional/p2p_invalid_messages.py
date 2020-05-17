@@ -78,7 +78,7 @@ class InvalidMessagesTest(BitcoinTestFramework):
 
         # Peer 1, despite serving up a bunch of nonsense, should still be connected.
         self.log.info("Waiting for node to drop junk messages.")
-        node.p2p.sync_with_ping(timeout=320)
+        node.p2p.sync_with_ping(timeout=400)
         assert node.p2p.is_connected
 
         #
@@ -140,7 +140,6 @@ class InvalidMessagesTest(BitcoinTestFramework):
 
         # Node is still up.
         conn = node.add_p2p_connection(P2PDataStore())
-        conn.sync_with_ping()
 
     def test_magic_bytes(self):
         conn = self.nodes[0].add_p2p_connection(P2PDataStore())

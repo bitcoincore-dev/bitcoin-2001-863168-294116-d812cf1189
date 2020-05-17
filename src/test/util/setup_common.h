@@ -13,6 +13,7 @@
 #include <random.h>
 #include <scheduler.h>
 #include <txmempool.h>
+#include <util/string.h>
 
 #include <type_traits>
 
@@ -85,7 +86,6 @@ private:
 struct TestingSetup : public BasicTestingSetup {
     NodeContext m_node;
     boost::thread_group threadGroup;
-    CScheduler scheduler;
 
     explicit TestingSetup(const std::string& chainName = CBaseChainParams::MAIN);
     ~TestingSetup();

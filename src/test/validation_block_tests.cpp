@@ -32,7 +32,7 @@ struct MinerTestingSetup : public RegTestingSetup {
 
 BOOST_FIXTURE_TEST_SUITE(validation_block_tests, MinerTestingSetup)
 
-struct TestSubscriber : public CValidationInterface {
+struct TestSubscriber final : public CValidationInterface {
     uint256 m_expected_tip;
 
     explicit TestSubscriber(uint256 tip) : m_expected_tip(tip) {}
@@ -42,7 +42,7 @@ struct TestSubscriber : public CValidationInterface {
         BOOST_CHECK_EQUAL(m_expected_tip, pindexNew->GetBlockHash());
     }
 
-    void BlockConnected(const std::shared_ptr<const CBlock>& block, const CBlockIndex* pindex, const std::vector<CTransactionRef>& txnConflicted) override
+    void BlockConnected(const std::shared_ptr<const CBlock>& block, const CBlockIndex* pindex) override
     {
         BOOST_CHECK_EQUAL(m_expected_tip, block->hashPrevBlock);
         BOOST_CHECK_EQUAL(m_expected_tip, pindex->pprev->GetBlockHash());
@@ -175,8 +175,8 @@ BOOST_AUTO_TEST_CASE(processnewblock_signals_ordering)
         LOCK(cs_main);
         initial_tip = ::ChainActive().Tip();
     }
-    TestSubscriber sub(initial_tip->GetBlockHash());
-    RegisterValidationInterface(&sub);
+    auto sub = std::make_shared<TestSubscriber>(initial_tip->GetBlockHash());
+    RegisterSharedValidationInterface(sub);
 
     // create a bunch of threads that repeatedly process a block generated above at random
     // this will create parallelism and randomness inside validation - the ValidationInterface
@@ -205,13 +205,13 @@ BOOST_AUTO_TEST_CASE(processnewblock_signals_ordering)
         t.join();
     }
     while (GetMainSignals().CallbacksPending() > 0) {
-        MilliSleep(100);
+        UninterruptibleSleep(std::chrono::milliseconds{100});
     }
 
-    UnregisterValidationInterface(&sub);
+    UnregisterSharedValidationInterface(sub);
 
     LOCK(cs_main);
-    BOOST_CHECK_EQUAL(sub.m_expected_tip, ::ChainActive().Tip()->GetBlockHash());
+    BOOST_CHECK_EQUAL(sub->m_expected_tip, ::ChainActive().Tip()->GetBlockHash());
 }
 
 /**

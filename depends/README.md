@@ -46,7 +46,7 @@ The paths are automatically configured and no other options are needed unless ta
 
     sudo apt-get install curl librsvg2-bin libtiff-tools bsdmainutils cmake imagemagick libcap-dev libz-dev libbz2-dev python3-setuptools
 
-#### For Win32/Win64 cross compilation
+#### For Win64 cross compilation
 
 - see [build-windows.md](../doc/build-windows.md#cross-compilation-for-ubuntu-and-windows-subsystem-for-linux)
 
@@ -92,7 +92,6 @@ The following can be set when running make: make FOO=bar
     NO_WALLET: Don't download/build/cache libs needed to enable the wallet
     NO_UPNP: Don't download/build/cache packages needed for enabling upnp
     DEBUG: disable some optimizations and enable more runtime checking
-    RAPIDCHECK: build rapidcheck (experimental, requires cmake)
     HOST_ID_SALT: Optional salt to use when generating host package ids
     BUILD_ID_SALT: Optional salt to use when generating build package ids
 
