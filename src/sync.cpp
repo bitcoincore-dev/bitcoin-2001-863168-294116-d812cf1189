@@ -89,7 +89,12 @@ LockData& GetLockData() {
     return *lockdata;
 }
 
-static thread_local LockStack g_lockstack;
+LockStack& GetLockStack() {
+    // This approach guarantees that the *lockstack object is not destroyed until after its last use.
+    // The operating system automatically reclaims all the memory in a program's heap when that program exits.
+    static thread_local LockStack* lockstack{new LockStack()};
+    return *lockstack;
+}
 
 static void potential_deadlock_detected(const std::pair<void*, void*>& mismatch, const LockStack& s1, const LockStack& s2)
 {
@@ -126,16 +131,17 @@ static void push_lock(void* c, const CLockLocation& locklocation)
     LockData& lockdata = GetLockData();
     std::lock_guard<std::mutex> lock(lockdata.dd_mutex);
 
-    g_lockstack.push_back(std::make_pair(c, locklocation));
+    LockStack& lockstack = GetLockStack();
+    lockstack.push_back(std::make_pair(c, locklocation));
 
-    for (const std::pair<void*, CLockLocation>& i : g_lockstack) {
+    for (const std::pair<void*, CLockLocation>& i : lockstack) {
         if (i.first == c)
             break;
 
         std::pair<void*, void*> p1 = std::make_pair(i.first, c);
         if (lockdata.lockorders.count(p1))
             continue;
-        lockdata.lockorders.emplace(p1, g_lockstack);
+        lockdata.lockorders.emplace(p1, lockstack);
 
         std::pair<void*, void*> p2 = std::make_pair(c, i.first);
         lockdata.invlockorders.insert(p2);
@@ -146,7 +152,7 @@ static void push_lock(void* c, const CLockLocation& locklocation)
 
 static void pop_lock()
 {
-    g_lockstack.pop_back();
+    GetLockStack().pop_back();
 }
 
 void EnterCritical(const char* pszName, const char* pszFile, int nLine, void* cs, bool fTry)
@@ -156,8 +162,9 @@ void EnterCritical(const char* pszName, const char* pszFile, int nLine, void* cs
 
 void CheckLastCritical(void* cs, std::string& lockname, const char* guardname, const char* file, int line)
 {
-    if (!g_lockstack.empty()) {
-        const auto& lastlock = g_lockstack.back();
+    LockStack& lockstack = GetLockStack();
+    if (!lockstack.empty()) {
+        const auto& lastlock = lockstack.back();
         if (lastlock.first == cs) {
             lockname = lastlock.second.Name();
             return;
@@ -174,14 +181,16 @@ void LeaveCritical()
 std::string LocksHeld()
 {
     std::string result;
-    for (const std::pair<void*, CLockLocation>& i : g_lockstack)
+    LockStack& lockstack = GetLockStack();
+    for (const std::pair<void*, CLockLocation>& i : lockstack)
         result += i.second.ToString() + std::string("\n");
     return result;
 }
 
 void AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs)
 {
-    for (const std::pair<void*, CLockLocation>& i : g_lockstack)
+    LockStack& lockstack = GetLockStack();
+    for (const std::pair<void*, CLockLocation>& i : lockstack)
         if (i.first == cs)
             return;
     tfm::format(std::cerr, "Assertion failed: lock %s not held in %s:%i; locks held:\n%s", pszName, pszFile, nLine, LocksHeld());
@@ -190,7 +199,8 @@ void AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine,
 
 void AssertLockNotHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs)
 {
-    for (const std::pair<void*, CLockLocation>& i : g_lockstack) {
+    LockStack& lockstack = GetLockStack();
+    for (const std::pair<void*, CLockLocation>& i : lockstack) {
         if (i.first == cs) {
             tfm::format(std::cerr, "Assertion failed: lock %s held in %s:%i; locks held:\n%s", pszName, pszFile, nLine, LocksHeld());
             abort();
