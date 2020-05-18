@@ -50,7 +50,7 @@ LEAVE_CRITICAL_SECTION(mutex); // no RAII
 #ifdef DEBUG_LOCKORDER
 void EnterCritical(const char* pszName, const char* pszFile, int nLine, void* cs, bool fTry = false);
 void LeaveCritical();
-void CheckLastCritical(void* cs, std::string& lockname, const char* guardname, const char* file, int line);
+std::string CheckLastCritical(void* cs, const char* guardname, const char* file, int line);
 std::string LocksHeld();
 void AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs) ASSERT_EXCLUSIVE_LOCK(cs);
 void AssertLockNotHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs);
@@ -65,7 +65,7 @@ extern bool g_debug_lockorder_abort;
 #else
 void static inline EnterCritical(const char* pszName, const char* pszFile, int nLine, void* cs, bool fTry = false) {}
 void static inline LeaveCritical() {}
-void static inline CheckLastCritical(void* cs, std::string& lockname, const char* guardname, const char* file, int line) {}
+std::string static inline CheckLastCritical(void* cs, const char* guardname, const char* file, int line) {}
 void static inline AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs) ASSERT_EXCLUSIVE_LOCK(cs) {}
 void static inline AssertLockNotHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs) {}
 void static inline DeleteLock(void* cs) {}
@@ -184,8 +184,12 @@ public:
      */
     class reverse_lock {
     public:
-        explicit reverse_lock(UniqueLock& _lock, const char* _guardname, const char* _file, int _line) : lock(_lock), file(_file), line(_line) {
-            CheckLastCritical((void*)lock.mutex(), lockname, _guardname, _file, _line);
+        explicit reverse_lock(UniqueLock& _lock, const char* _guardname, const char* _file, int _line)
+            : lock(_lock),
+              m_lock_name(CheckLastCritical((void*)lock.mutex(), _guardname, _file, _line)),
+              file(_file),
+              line(_line)
+        {
             lock.unlock();
             LeaveCritical();
             lock.swap(templock);
@@ -193,7 +197,7 @@ public:
 
         ~reverse_lock() {
             templock.swap(lock);
-            EnterCritical(lockname.c_str(), file.c_str(), line, (void*)lock.mutex());
+            EnterCritical(m_lock_name.c_str(), file.c_str(), line, (void*)lock.mutex());
             lock.lock();
         }
 
@@ -203,7 +207,7 @@ public:
 
         UniqueLock& lock;
         UniqueLock templock;
-        std::string lockname;
+        const std::string m_lock_name;
         const std::string file;
         const int line;
      };

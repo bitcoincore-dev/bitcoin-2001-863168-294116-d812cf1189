@@ -170,7 +170,7 @@ void EnterCritical(const char* pszName, const char* pszFile, int nLine, void* cs
     push_lock(cs, CLockLocation(pszName, pszFile, nLine, fTry, util::ThreadGetInternalName()));
 }
 
-void CheckLastCritical(void* cs, std::string& lockname, const char* guardname, const char* file, int line)
+std::string CheckLastCritical(void* cs, const char* guardname, const char* file, int line)
 {
     {
         LockData& lockdata = GetLockData();
@@ -180,8 +180,7 @@ void CheckLastCritical(void* cs, std::string& lockname, const char* guardname, c
         if (!lock_stack.empty()) {
             const auto& lastlock = lock_stack.back();
             if (lastlock.first == cs) {
-                lockname = lastlock.second.Name();
-                return;
+                return lastlock.second.Name();
             }
         }
     }
