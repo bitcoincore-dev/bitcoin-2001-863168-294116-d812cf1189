@@ -1595,7 +1595,7 @@ void CConnman::ThreadDNSAddressSeed()
         // creating fewer identifying DNS requests, reduces trust by giving seeds
         // less influence on the network topology, and reduces traffic to the seeds.
         if (addrman.size() > 0 && seeds_right_now == 0) {
-            if (!interruptNet.sleep_for(std::chrono::seconds(11))) return;
+            if (!g_interrupt_dnsseed_thread.sleep_for(std::chrono::seconds(11))) return;
 
             LOCK(cs_vNodes);
             int nRelevant = 0;
@@ -1609,7 +1609,7 @@ void CConnman::ThreadDNSAddressSeed()
             seeds_right_now += DNSSEEDS_TO_QUERY_AT_ONCE;
         }
 
-        if (interruptNet) {
+        if (g_interrupt_dnsseed_thread) {
             return;
         }
         LogPrintf("Loading addresses from DNS seed %s\n", seed);
@@ -2309,6 +2309,7 @@ bool CConnman::Start(CScheduler& scheduler, const Options& connOptions)
     //
     assert(m_msgproc);
     InterruptSocks5(false);
+    g_interrupt_dnsseed_thread.reset();
     interruptNet.reset();
     flagInterruptMsgProc = false;
 
@@ -2371,6 +2372,7 @@ void CConnman::Interrupt()
     }
     condMsgProc.notify_all();
 
+    g_interrupt_dnsseed_thread();
     interruptNet();
     InterruptSocks5(true);
 
