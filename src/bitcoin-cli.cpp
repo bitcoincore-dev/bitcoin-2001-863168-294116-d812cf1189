@@ -371,9 +371,10 @@ static UniValue CallRPC(BaseRequestHandler* rh, const std::string& strMethod, co
     if (rpcwallet) {
         char* encodedURI = evhttp_uriencode(rpcwallet->data(), rpcwallet->size(), false);
         if (encodedURI) {
-            endpoint = "/wallet/" + std::string(encodedURI);
+            endpoint = "/wallet/"+ std::string(encodedURI);
             free(encodedURI);
-        } else {
+        }
+        else {
             throw CConnectionFailed("uri-encode failed");
         }
     }
@@ -532,6 +533,7 @@ static int CommandLineRPC(int argc, char *argv[])
         std::string method;
         if (gArgs.GetBoolArg("-getinfo", false)) {
             rh.reset(new GetinfoRequestHandler());
+            method = "";
         } else {
             rh.reset(new DefaultRequestHandler());
             if (args.size() < 1) {
@@ -544,42 +546,45 @@ static int CommandLineRPC(int argc, char *argv[])
         if (gArgs.IsArgSet("-rpcwallet")) wallet_name = gArgs.GetArg("-rpcwallet", "");
         const UniValue reply = ConnectAndCallRPC(rh.get(), method, args, wallet_name);
 
-        // Parse reply
-        UniValue result = find_value(reply, "result");
-        const UniValue& error = find_value(reply, "error");
-        if (!error.isNull()) {
-            // Error
-            strPrint = "error: " + error.write();
-            nRet = abs(error["code"].get_int());
-            if (error.isObject()) {
-                const UniValue& errCode = find_value(error, "code");
-                const UniValue& errMsg = find_value(error, "message");
-                strPrint = errCode.isNull() ? "" : ("error code: " + errCode.getValStr() + "\n");
+                // Parse reply
+                UniValue result = find_value(reply, "result");
+                const UniValue& error  = find_value(reply, "error");
+                if (!error.isNull()) {
+                    // Error
+                    int code = error["code"].get_int();
+                    strPrint = "error: " + error.write();
+                    nRet = abs(code);
+                    if (error.isObject())
+                    {
+                        UniValue errCode = find_value(error, "code");
+                        UniValue errMsg  = find_value(error, "message");
+                        strPrint = errCode.isNull() ? "" : "error code: "+errCode.getValStr()+"\n";
 
-                if (errMsg.isStr()) {
-                    strPrint += ("error message:\n" + errMsg.get_str());
+                        if (errMsg.isStr())
+                            strPrint += "error message:\n"+errMsg.get_str();
+
+                        if (errCode.isNum() && errCode.get_int() == RPC_WALLET_NOT_SPECIFIED) {
+                            strPrint += "\nTry adding \"-rpcwallet=<filename>\" option to bitcoin-cli command line.";
+                        }
+                    }
+                } else {
+                    if (gArgs.GetBoolArg("-getinfo", false) && !gArgs.IsArgSet("-rpcwallet")) {
+                        GetWalletBalances(result); // fetch multiwallet balances and append to result
+                    }
+                    // Result
+                    if (result.isNull())
+                        strPrint = "";
+                    else if (result.isStr())
+                        strPrint = result.get_str();
+                    else
+                        strPrint = result.write(2);
                 }
-                if (errCode.isNum() && errCode.get_int() == RPC_WALLET_NOT_SPECIFIED) {
-                    strPrint += "\nTry adding \"-rpcwallet=<filename>\" option to bitcoin-cli command line.";
-                }
-            }
-        } else {
-            if (gArgs.GetBoolArg("-getinfo", false) && !gArgs.IsArgSet("-rpcwallet")) {
-                GetWalletBalances(result); // fetch multiwallet balances and append to result
-            }
-            // Result
-            if (result.isNull()) {
-                strPrint = "";
-            } else if (result.isStr()) {
-                strPrint = result.get_str();
-            } else {
-                strPrint = result.write(2);
-            }
-        }
-    } catch (const std::exception& e) {
+    }
+    catch (const std::exception& e) {
         strPrint = std::string("error: ") + e.what();
         nRet = EXIT_FAILURE;
-    } catch (...) {
+    }
+    catch (...) {
         PrintExceptionContinue(nullptr, "CommandLineRPC()");
         throw;
     }
