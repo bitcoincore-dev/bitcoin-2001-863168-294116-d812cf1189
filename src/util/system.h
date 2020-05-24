@@ -24,7 +24,6 @@
 #include <tinyformat.h>
 #include <util/memory.h>
 #include <util/settings.h>
-#include <util/threadnames.h>
 #include <util/time.h>
 
 #include <exception>
@@ -34,8 +33,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-
-#include <boost/thread/condition_variable.hpp> // for boost::thread_interrupted
 
 class UniValue;
 
@@ -425,33 +422,6 @@ std::string HelpMessageOpt(const std::string& option, const std::string& message
  * @note This does count virtual cores, such as those provided by HyperThreading.
  */
 int GetNumCores();
-
-/**
- * .. and a wrapper that just calls func once
- */
-template <typename Callable> void TraceThread(const char* name,  Callable func)
-{
-    util::ThreadRename(name);
-    try
-    {
-        LogPrintf("%s thread start\n", name);
-        func();
-        LogPrintf("%s thread exit\n", name);
-    }
-    catch (const boost::thread_interrupted&)
-    {
-        LogPrintf("%s thread interrupt\n", name);
-        throw;
-    }
-    catch (const std::exception& e) {
-        PrintExceptionContinue(&e, name);
-        throw;
-    }
-    catch (...) {
-        PrintExceptionContinue(nullptr, name);
-        throw;
-    }
-}
 
 std::string CopyrightHolders(const std::string& strPrefix);
 
