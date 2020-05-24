@@ -5,12 +5,13 @@
 
 #include <script/sigcache.h>
 
+#include <cuckoocache.h>
 #include <pubkey.h>
 #include <random.h>
 #include <uint256.h>
 #include <util/system.h>
 
-#include <cuckoocache.h>
+#include <boost/thread/lock_types.hpp>
 #include <boost/thread/shared_mutex.hpp>
 
 namespace {
