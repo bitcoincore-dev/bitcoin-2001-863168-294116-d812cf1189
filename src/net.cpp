@@ -2318,15 +2318,15 @@ bool CConnman::Start(CScheduler& scheduler, const Options& connOptions)
     }
 
     // Send and receive from sockets, accept connections
-    threadSocketHandler = std::thread(&TraceThread, "net", std::bind(&CConnman::ThreadSocketHandler, this));
+    threadSocketHandler = std::thread(&TraceThread, "net", [this] { ThreadSocketHandler(); });
 
     if (!gArgs.GetBoolArg("-dnsseed", true))
         LogPrintf("DNS seeding disabled\n");
     else
-        threadDNSAddressSeed = std::thread(&TraceThread, "dnsseed", std::bind(&CConnman::ThreadDNSAddressSeed, this));
+        threadDNSAddressSeed = std::thread(&TraceThread, "dnsseed", [this] { ThreadDNSAddressSeed(); });
 
     // Initiate outbound connections from -addnode
-    threadOpenAddedConnections = std::thread(&TraceThread, "addcon", std::bind(&CConnman::ThreadOpenAddedConnections, this));
+    threadOpenAddedConnections = std::thread(&TraceThread, "addcon", [this] { ThreadOpenAddedConnections(); });
 
     if (connOptions.m_use_addrman_outgoing && !connOptions.m_specified_outgoing.empty()) {
         if (clientInterface) {
@@ -2337,10 +2337,10 @@ bool CConnman::Start(CScheduler& scheduler, const Options& connOptions)
         return false;
     }
     if (connOptions.m_use_addrman_outgoing || !connOptions.m_specified_outgoing.empty())
-        threadOpenConnections = std::thread(&TraceThread, "opencon", std::bind(&CConnman::ThreadOpenConnections, this, connOptions.m_specified_outgoing));
+        threadOpenConnections = std::thread(&TraceThread, "opencon", [this, connOptions] { ThreadOpenConnections(connOptions.m_specified_outgoing); });
 
     // Process messages
-    threadMessageHandler = std::thread(&TraceThread, "msghand", std::bind(&CConnman::ThreadMessageHandler, this));
+    threadMessageHandler = std::thread(&TraceThread, "msghand", [this] { ThreadMessageHandler(); });
 
     // Dump network addresses
     scheduler.scheduleEvery([this] { DumpAddresses(); }, DUMP_PEERS_INTERVAL);
