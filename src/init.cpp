@@ -53,6 +53,7 @@
 #include <util/moneystr.h>
 #include <util/string.h>
 #include <util/system.h>
+#include <util/thread.h>
 #include <util/threadnames.h>
 #include <util/translation.h>
 #include <validation.h>
@@ -1316,7 +1317,7 @@ bool AppInitMain(const util::Ref& context, NodeContext& node)
 
     // Start the lightweight task scheduler thread
     CScheduler::Function serviceLoop = [&node]{ node.scheduler->serviceQueue(); };
-    threadGroup.create_thread(std::bind(&TraceThread<CScheduler::Function>, "scheduler", serviceLoop));
+    threadGroup.create_thread(std::bind(&util::TraceThread, "scheduler", serviceLoop));
 
     // Gather some entropy once per minute.
     node.scheduler->scheduleEvery([]{
