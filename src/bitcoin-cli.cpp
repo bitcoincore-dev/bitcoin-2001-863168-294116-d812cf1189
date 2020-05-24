@@ -19,6 +19,7 @@
 #include <util/translation.h>
 #include <util/url.h>
 
+#include <cmath>
 #include <functional>
 #include <memory>
 #include <stdio.h>
