@@ -381,31 +381,9 @@ std::string HelpMessageOpt(const std::string& option, const std::string& message
 int GetNumCores();
 
 /**
- * .. and a wrapper that just calls func once
+ * A wrapper for do-something-once thread functions.
  */
-template <typename Callable> void TraceThread(const char* name,  Callable func)
-{
-    util::ThreadRename(name);
-    try
-    {
-        LogPrintf("%s thread start\n", name);
-        func();
-        LogPrintf("%s thread exit\n", name);
-    }
-    catch (const boost::thread_interrupted&)
-    {
-        LogPrintf("%s thread interrupt\n", name);
-        throw;
-    }
-    catch (const std::exception& e) {
-        PrintExceptionContinue(&e, name);
-        throw;
-    }
-    catch (...) {
-        PrintExceptionContinue(nullptr, name);
-        throw;
-    }
-}
+void TraceThread(const char* thread_name, std::function<void()> thread_func);
 
 std::string CopyrightHolders(const std::string& strPrefix);
 

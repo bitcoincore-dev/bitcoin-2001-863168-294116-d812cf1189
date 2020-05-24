@@ -1132,6 +1132,25 @@ int GetNumCores()
     return std::thread::hardware_concurrency();
 }
 
+void TraceThread(const char* thread_name, std::function<void()> thread_func)
+{
+    util::ThreadRename(thread_name);
+    try {
+        LogPrintf("%s thread start\n", thread_name);
+        thread_func();
+        LogPrintf("%s thread exit\n", thread_name);
+    } catch (const boost::thread_interrupted&) {
+        LogPrintf("%s thread interrupt\n", thread_name);
+        throw;
+    } catch (const std::exception& e) {
+        PrintExceptionContinue(&e, thread_name);
+        throw;
+    } catch (...) {
+        PrintExceptionContinue(nullptr, thread_name);
+        throw;
+    }
+}
+
 std::string CopyrightHolders(const std::string& strPrefix)
 {
     const auto copyright_devs = strprintf(_(COPYRIGHT_HOLDERS).translated, COPYRIGHT_HOLDERS_SUBSTITUTION);
