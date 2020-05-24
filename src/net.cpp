@@ -1642,7 +1642,7 @@ void StartMapPort()
 {
     if (!g_upnp_thread.joinable()) {
         assert(!g_upnp_interrupt);
-        g_upnp_thread = std::thread((std::bind(&util::TraceThread, "upnp", &ThreadMapPort)));
+        g_upnp_thread = std::thread(&util::TraceThread, "upnp", &ThreadMapPort);
     }
 }
 
