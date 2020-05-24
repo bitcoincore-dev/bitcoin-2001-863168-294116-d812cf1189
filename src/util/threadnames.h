@@ -5,6 +5,7 @@
 #ifndef BITCOIN_UTIL_THREADNAMES_H
 #define BITCOIN_UTIL_THREADNAMES_H
 
+#include <functional>
 #include <string>
 
 namespace util {
@@ -20,6 +21,11 @@ void ThreadSetInternalName(std::string&&);
 //! Get the thread's internal (in-memory) name; used e.g. for identification in
 //! logging.
 const std::string& ThreadGetInternalName();
+
+/**
+ * A wrapper for do-something-once thread functions.
+ */
+void TraceThread(const char* thread_name, std::function<void()> thread_func);
 
 } // namespace util
 

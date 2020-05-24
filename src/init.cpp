@@ -1319,7 +1319,7 @@ bool AppInitMain(const util::Ref& context, NodeContext& node)
 
     // Start the lightweight task scheduler thread
     CScheduler::Function serviceLoop = [&node]{ node.scheduler->serviceQueue(); };
-    threadGroup.create_thread(std::bind(&TraceThread<CScheduler::Function>, "scheduler", serviceLoop));
+    threadGroup.create_thread(std::bind(&util::TraceThread, "scheduler", serviceLoop));
 
     // Gather some entropy once per minute.
     node.scheduler->scheduleEvery([]{

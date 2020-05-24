@@ -4,12 +4,12 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <chainparams.h>
+#include <crypto/hmac_sha256.h>
+#include <net.h>
+#include <netbase.h>
 #include <torcontrol.h>
 #include <util/strencodings.h>
-#include <netbase.h>
-#include <net.h>
-#include <util/system.h>
-#include <crypto/hmac_sha256.h>
+#include <util/threadnames.h>
 
 #include <vector>
 #include <deque>
@@ -752,7 +752,7 @@ void StartTorControl()
         return;
     }
 
-    torControlThread = std::thread(std::bind(&TraceThread<void (*)()>, "torcontrol", &TorControlThread));
+    torControlThread = std::thread(std::bind(&util::TraceThread, "torcontrol", &TorControlThread));
 }
 
 void InterruptTorControl()

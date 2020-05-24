@@ -19,6 +19,11 @@
 #include <sys/prctl.h> // For prctl, PR_SET_NAME, PR_GET_NAME
 #endif
 
+#include <logging.h>
+#include <util/system.h>
+
+#include <boost/thread/condition_variable.hpp>
+
 //! Set the thread's name at the process level. Does not affect the
 //! internal name.
 static void SetThreadName(const char* name)
@@ -63,4 +68,23 @@ void util::ThreadRename(std::string&& name)
 void util::ThreadSetInternalName(std::string&& name)
 {
     SetInternalName(std::move(name));
+}
+
+void util::TraceThread(const char* thread_name, std::function<void()> thread_func)
+{
+    util::ThreadRename(thread_name);
+    try {
+        LogPrintf("%s thread start\n", thread_name);
+        thread_func();
+        LogPrintf("%s thread exit\n", thread_name);
+    } catch (const boost::thread_interrupted&) {
+        LogPrintf("%s thread interrupt\n", thread_name);
+        throw;
+    } catch (const std::exception& e) {
+        PrintExceptionContinue(&e, thread_name);
+        throw;
+    } catch (...) {
+        PrintExceptionContinue(nullptr, thread_name);
+        throw;
+    }
 }
