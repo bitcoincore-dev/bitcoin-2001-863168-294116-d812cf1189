@@ -1851,7 +1851,7 @@ bool AppInitMain(const util::Ref& context, NodeContext& node, interfaces::BlockA
         vImportFiles.push_back(strFile);
     }
 
-    g_load_block = std::thread(&util::TraceThread, "loadblk", [=, &chainman] { ThreadImport(chainman, vImportFiles, args); });
+    g_load_block = std::thread(&util::TraceThread, "loadblk", [=, &chainman, &args] { ThreadImport(chainman, vImportFiles, args); });
 
     // Wait for genesis block to be processed
     {
