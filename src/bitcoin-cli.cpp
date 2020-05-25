@@ -530,7 +530,7 @@ static int CommandLineRPC(int argc, char *argv[])
         }
         std::unique_ptr<BaseRequestHandler> rh;
         std::string method;
-        if (gArgs.IsArgSet("-getinfo")) {
+        if (gArgs.GetBoolArg("-getinfo", false)) {
             rh.reset(new GetinfoRequestHandler());
         } else {
             rh.reset(new DefaultRequestHandler());
@@ -564,7 +564,7 @@ static int CommandLineRPC(int argc, char *argv[])
                 }
             }
         } else {
-            if (gArgs.IsArgSet("-getinfo") && !gArgs.IsArgSet("-rpcwallet")) {
+            if (gArgs.GetBoolArg("-getinfo", false) && !gArgs.IsArgSet("-rpcwallet")) {
                 GetWalletBalances(result); // fetch multiwallet balances and append to result
             }
             // Result
