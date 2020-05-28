@@ -80,9 +80,8 @@ class TestBitcoinCli(BitcoinTestFramework):
         self.generate(self.nodes[0], BLOCKS)
 
         self.log.info("Compare responses from getblockchaininfo RPC and `bitcoin-cli getblockchaininfo`")
-        cli_response = self.nodes[0].cli.getblockchaininfo()
-        rpc_response = self.nodes[0].getblockchaininfo()
-        assert_equal(cli_response, rpc_response)
+        blockchain_info = self.nodes[0].getblockchaininfo()
+        assert_equal(blockchain_info, self.nodes[0].cli.getblockchaininfo())
 
         user, password = get_auth_cookie(self.nodes[0].datadir, self.chain)
 
@@ -119,7 +118,7 @@ class TestBitcoinCli(BitcoinTestFramework):
         cli_get_info = cli_get_info_string_to_dict(cli_get_info_string)
 
         network_info = self.nodes[0].getnetworkinfo()
-        blockchain_info = self.nodes[0].getblockchaininfo()
+        assert_equal(cli_get_info['Chain'], self.chain)
         assert_equal(int(cli_get_info['Version']), network_info['version'])
         assert_equal(cli_get_info['Verification progress'], "%.4f%%" % (blockchain_info['verificationprogress'] * 100))
         assert_equal(int(cli_get_info['Blocks']), blockchain_info['blocks'])
