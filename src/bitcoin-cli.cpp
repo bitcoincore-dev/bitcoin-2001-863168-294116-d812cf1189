@@ -915,8 +915,9 @@ static UniValue ValueFromAmount(const CAmount& amount)
 }
 
 /**
- * GetWalletBalances calls listwallets; if more than one wallet is loaded, it then
- * fetches mine.trusted balances for each loaded wallet and pushes them to `result`.
+ * GetWalletBalances calls listwallets; if more than one wallet is loaded, it
+ * then fetches mine.trusted balances for each loaded wallet and pushes all the
+ * balances, followed by the total balance, to `result`.
  *
  * @param result  Reference to UniValue object the wallet names and balances are pushed to.
  */
@@ -929,13 +930,17 @@ static void GetWalletBalances(UniValue& result)
     if (wallets.size() <= 1) return;
 
     UniValue balances(UniValue::VOBJ);
+    CAmount total_balance{0};
     for (const UniValue& wallet : wallets.getValues()) {
         const std::string wallet_name = wallet.get_str();
         const UniValue getbalances = ConnectAndCallRPC(&rh, "getbalances", /* args=*/{}, wallet_name);
+        if (!find_value(getbalances, "error").isNull()) continue;
         const UniValue& balance = find_value(getbalances, "result")["mine"]["trusted"];
+        total_balance += AmountFromValue(balance);
         balances.pushKV(wallet_name, balance);
     }
     result.pushKV("balances", balances);
+    result.pushKV("total_balance", ValueFromAmount(total_balance));
 }
 
 /**
@@ -1077,6 +1082,7 @@ static void ParseGetInfoResult(UniValue& result)
                                        wallet.empty() ? "\"\"" : wallet);
         }
         result_string += "\n";
+        result_string += strprintf("%sTotal balance:%s %s\n\n", CYAN, RESET, result["total_balance"].getValStr());
     }
 
     result_string += strprintf("%sWarnings:%s %s", YELLOW, RESET, result["warnings"].getValStr());
