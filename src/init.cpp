@@ -50,7 +50,7 @@
 #include <util/asmap.h>
 #include <util/moneystr.h>
 #include <util/system.h>
-#include <util/threadnames.h>
+#include <util/thread.h>
 #include <util/translation.h>
 #include <validation.h>
 #include <hash.h>

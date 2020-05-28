@@ -21,7 +21,7 @@
 #include <scheduler.h>
 #include <ui_interface.h>
 #include <util/strencodings.h>
-#include <util/threadnames.h>
+#include <util/thread.h>
 #include <util/translation.h>
 
 #ifdef WIN32

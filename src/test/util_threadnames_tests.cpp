@@ -4,7 +4,7 @@
 
 #include <test/util/setup_common.h>
 #include <util/string.h>
-#include <util/threadnames.h>
+#include <util/thread.h>
 
 #include <mutex>
 #include <set>

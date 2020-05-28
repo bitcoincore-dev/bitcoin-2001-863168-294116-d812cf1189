@@ -19,7 +19,7 @@
 #include <util/ref.h>
 #include <util/strencodings.h>
 #include <util/system.h>
-#include <util/threadnames.h>
+#include <util/thread.h>
 #include <util/translation.h>
 #include <util/url.h>
 

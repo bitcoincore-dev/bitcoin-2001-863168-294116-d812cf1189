@@ -9,7 +9,7 @@
 #include <netbase.h>
 #include <torcontrol.h>
 #include <util/strencodings.h>
-#include <util/threadnames.h>
+#include <util/thread.h>
 
 #include <vector>
 #include <deque>

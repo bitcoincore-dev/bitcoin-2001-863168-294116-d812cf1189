@@ -13,7 +13,7 @@
 #include <ui_interface.h>
 #include <util/strencodings.h>
 #include <util/system.h>
-#include <util/threadnames.h>
+#include <util/thread.h>
 #include <util/translation.h>
 
 #include <deque>

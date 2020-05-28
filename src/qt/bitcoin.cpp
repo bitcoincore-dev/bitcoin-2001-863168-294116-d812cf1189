@@ -33,7 +33,7 @@
 #include <ui_interface.h>
 #include <uint256.h>
 #include <util/system.h>
-#include <util/threadnames.h>
+#include <util/thread.h>
 #include <validation.h>
 
 #include <memory>

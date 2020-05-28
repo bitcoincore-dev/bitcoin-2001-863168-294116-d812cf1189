@@ -13,7 +13,7 @@
 #include <pthread_np.h>
 #endif
 
-#include <util/threadnames.h>
+#include <util/thread.h>
 
 #ifdef HAVE_SYS_PRCTL_H
 #include <sys/prctl.h> // For prctl, PR_SET_NAME, PR_GET_NAME
