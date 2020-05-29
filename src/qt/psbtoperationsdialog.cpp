@@ -48,6 +48,7 @@ void PSBTOperationsDialog::openWithPSBT(PartiallySignedTransaction psbtx)
 
     bool complete;
     size_t n_could_sign;
+    FinalizePSBT(psbtx);  // Make sure all existing signatures are fully combined before checking for completeness.
     TransactionError err = m_wallet_model->wallet().fillPSBT(SIGHASH_ALL, false /* sign */, true /* bip32derivs */, m_transaction_data, complete, &n_could_sign);
     if (err != TransactionError::OK) {
         showStatus(tr("Failed to load transaction: %1")
@@ -182,8 +183,9 @@ std::string PSBTOperationsDialog::renderTransaction(const PartiallySignedTransac
         QStringList alternativeUnits;
         for (const BitcoinUnits::Unit u : BitcoinUnits::availableUnits())
         {
-            if(u != m_client_model->getOptionsModel()->getDisplayUnit())
+            if(u != m_client_model->getOptionsModel()->getDisplayUnit()) {
                 alternativeUnits.append(BitcoinUnits::formatHtmlWithUnit(u, totalAmount));
+            }
         }
         tx_description.append(QString("<b>%1</b>: <b>%2</b>").arg(tr("Total Amount"))
             .arg(BitcoinUnits::formatHtmlWithUnit(m_client_model->getOptionsModel()->getDisplayUnit(), totalAmount)));
