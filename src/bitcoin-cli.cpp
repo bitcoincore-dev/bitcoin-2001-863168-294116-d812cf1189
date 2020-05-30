@@ -48,7 +48,7 @@ static void SetupCliArgs()
     gArgs.AddArg("-version", "Print version and exit", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-conf=<file>", strprintf("Specify configuration file. Relative paths will be prefixed by datadir location. (default: %s)", BITCOIN_CONF_FILENAME), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-datadir=<dir>", "Specify data directory", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
-    gArgs.AddArg("-getinfo", "Get general information from the remote server, including the balances of each loaded wallet when in multiwallet mode. Note that -getinfo is the combined result of several RPCs (getnetworkinfo, getblockchaininfo, getwalletinfo, getbalances, and in multiwallet mode, listwallets), each with potentially different state.", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-getinfo", "Get general information from the remote server, including the total balance and the balances of each loaded wallet when in multiwallet mode. Note that -getinfo is the combined result of several RPCs (getnetworkinfo, getblockchaininfo, getwalletinfo, getbalances, and in multiwallet mode, listwallets), each with potentially different state.", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     SetupChainParamsBaseOptions();
     gArgs.AddArg("-named", strprintf("Pass named instead of positional arguments (default: %s)", DEFAULT_NAMED), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-rpcclienttimeout=<n>", strprintf("Timeout in seconds during HTTP requests, or 0 for no timeout. (default: %d)", DEFAULT_HTTP_CLIENT_TIMEOUT), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
