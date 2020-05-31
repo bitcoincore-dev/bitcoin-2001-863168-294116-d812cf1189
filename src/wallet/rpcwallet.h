@@ -30,6 +30,8 @@ extern interfaces::Chain* g_rpc_chain;
 
 void RegisterWalletRPCCommands(interfaces::Chain& chain, std::vector<std::unique_ptr<interfaces::Handler>>& handlers);
 
+bool GetWalletRestrictionFromJSONRPCRequest(const JSONRPCRequest&, std::string& out_wallet_allowed);
+
 /**
  * Figures out what wallet, if any, to use for a JSONRPCRequest.
  *
