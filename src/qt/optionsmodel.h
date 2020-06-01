@@ -6,6 +6,7 @@
 #define BITCOIN_QT_OPTIONSMODEL_H
 
 #include <amount.h>
+#include <qt/bitcoinunits.h>
 #include <qt/guiconstants.h>
 
 #include <QAbstractListModel>
@@ -78,7 +79,7 @@ public:
     bool getHideTrayIcon() const { return fHideTrayIcon; }
     bool getMinimizeToTray() const { return fMinimizeToTray; }
     bool getMinimizeOnClose() const { return fMinimizeOnClose; }
-    int getDisplayUnit() const { return nDisplayUnit; }
+    int getDisplayUnit() const { return static_cast<int>(m_display_unit); }
     QString getThirdPartyTxUrls() const { return strThirdPartyTxUrls; }
     bool getCoinControlFeatures() const { return fCoinControlFeatures; }
     const QString& getOverriddenByCommandLine() { return strOverriddenByCommandLine; }
@@ -100,7 +101,7 @@ private:
     bool fMinimizeToTray;
     bool fMinimizeOnClose;
     QString language;
-    int nDisplayUnit;
+    BitcoinUnit m_display_unit;
     QString strThirdPartyTxUrls;
     bool fCoinControlFeatures;
     /* settings that were overridden by command-line */
