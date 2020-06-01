@@ -81,6 +81,8 @@ static void RegisterMetaTypes()
 
     qRegisterMetaType<std::function<void()>>("std::function<void()>");
     qRegisterMetaType<QMessageBox::Icon>("QMessageBox::Icon");
+
+    qRegisterMetaTypeStreamOperators<BitcoinUnit>("BitcoinUnit");
 }
 
 static QString GetLangTerritory()
