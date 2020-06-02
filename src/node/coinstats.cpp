@@ -41,6 +41,17 @@ static void ApplyStats(CCoinsStats &stats, CHashWriter& ss, const uint256& hash,
     ss << VARINT(0u);
 }
 
+static void ApplyStats(CCoinsStats& stats, std::nullptr_t, const uint256& hash, const std::map<uint32_t, Coin>& outputs)
+{
+    assert(!outputs.empty());
+    stats.nTransactions++;
+    for (const auto& output : outputs) {
+        stats.nTransactionOutputs++;
+        stats.nTotalAmount += output.second.out.nValue;
+        stats.nBogoSize += GetBogoSize(output.second.out.scriptPubKey);
+    }
+}
+
 //! Calculate statistics about the unspent transaction output set
 template <typename T>
 static bool GetUTXOStats(CCoinsView* view, CCoinsStats& stats, T hash_obj)
@@ -92,6 +103,9 @@ bool GetUTXOStats(CCoinsView* view, CCoinsStats& stats, CoinStatsHashType hash_t
         CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
         return GetUTXOStats(view, stats, ss);
     }
+    case(CoinStatsHashType::NONE): {
+        return GetUTXOStats(view, stats, nullptr);
+    }
     } // no default case, so the compiler can warn about missing cases
     assert(false);
 }
@@ -101,8 +115,10 @@ static void PrepareHash(CHashWriter& ss, CCoinsStats& stats)
 {
     ss << stats.hashBlock;
 }
+static void PrepareHash(std::nullptr_t, CCoinsStats& stats) {}
 
 static void FinalizeHash(CHashWriter& ss, CCoinsStats& stats)
 {
     stats.hashSerialized = ss.GetHash();
 }
+static void FinalizeHash(std::nullptr_t, CCoinsStats& stats) {}
