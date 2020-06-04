@@ -206,6 +206,56 @@ namespace {
 } // namespace
 
 namespace {
+
+/** "reject" message codes */
+static const unsigned char REJECT_MALFORMED = 0x01;
+static const unsigned char REJECT_INVALID = 0x10;
+static const unsigned char REJECT_OBSOLETE = 0x11;
+static const unsigned char REJECT_DUPLICATE = 0x12;
+static const unsigned char REJECT_NONSTANDARD = 0x40;
+static const unsigned char REJECT_CHECKPOINT = 0x43;
+static const unsigned int REJECT_INTERNAL = 0x100;  // not sent on network!
+
+unsigned int GetRejectCode(const BlockValidationState& state) {
+    switch (state.GetResult()) {
+        case BlockValidationResult::BLOCK_RESULT_UNSET:
+            return REJECT_INTERNAL;
+        case BlockValidationResult::BLOCK_CONSENSUS:
+        case BlockValidationResult::BLOCK_RECENT_CONSENSUS_CHANGE:
+        case BlockValidationResult::BLOCK_CACHED_INVALID:
+        case BlockValidationResult::BLOCK_INVALID_HEADER:
+        case BlockValidationResult::BLOCK_MUTATED:
+        case BlockValidationResult::BLOCK_INVALID_PREV:
+        case BlockValidationResult::BLOCK_TIME_FUTURE:
+        case BlockValidationResult::BLOCK_MISSING_PREV:
+            return REJECT_INVALID;
+        case BlockValidationResult::BLOCK_CHECKPOINT:
+            return REJECT_CHECKPOINT;
+    }
+    // This is a bug, but avoid sending the wrong thing anyway
+    return REJECT_INTERNAL;
+}
+
+unsigned int GetRejectCode(const TxValidationState& state) {
+    switch (state.GetResult()) {
+        case TxValidationResult::TX_RESULT_UNSET:
+            return REJECT_INTERNAL;
+        case TxValidationResult::TX_CONSENSUS:
+        case TxValidationResult::TX_RECENT_CONSENSUS_CHANGE:
+        case TxValidationResult::TX_MISSING_INPUTS:
+            return REJECT_INVALID;
+        case TxValidationResult::TX_NOT_STANDARD:
+        case TxValidationResult::TX_PREMATURE_SPEND:
+        case TxValidationResult::TX_WITNESS_MUTATED:
+        case TxValidationResult::TX_MEMPOOL_POLICY:
+            return REJECT_NONSTANDARD;
+        case TxValidationResult::TX_CONFLICT:
+            return REJECT_DUPLICATE;
+    }
+    // This is a bug, but avoid sending the wrong thing anyway
+    return REJECT_INTERNAL;
+}
+
 /**
  * Maintain validation-specific state about nodes, protected by cs_main, instead
  * by CNode's own locks. This simplifies asynchronous operation, where
