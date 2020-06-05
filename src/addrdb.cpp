@@ -156,3 +156,13 @@ bool CAddrDB::Read(CAddrMan& addr, CDataStream& ssPeers)
     }
     return ret;
 }
+
+std::vector<CAddress> ReadAnchors(const fs::path& anchors_db_path)
+{
+    std::vector<CAddress> ret;
+    if (!DeserializeFileDB(anchors_db_path, ret)) {
+        ret.clear();
+    }
+
+    return ret;
+}
