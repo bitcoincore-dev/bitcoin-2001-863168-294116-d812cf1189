@@ -43,10 +43,11 @@
 static_assert(MINIUPNPC_API_VERSION >= 10, "miniUPnPc API version >= 10 assumed");
 #endif
 
+#include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <unordered_map>
-
-#include <math.h>
+#include <vector>
 
 const char* const ANCHORS_DATABASE_FILENAME = "anchors.dat";
 
@@ -1895,6 +1896,7 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
 
         ConnectionType conn_type = ConnectionType::OUTBOUND_FULL_RELAY;
         int64_t nTime = GetTimeMicros();
+        bool anchor = false;
         bool fFeeler = false;
 
         // Determine what type of connection to open. Opening
@@ -1906,7 +1908,10 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
         // these conditions are met, check the nNextFeeler timer to decide if
         // we should open a FEELER.
 
-        if (nOutboundFullRelay < m_max_outbound_full_relay) {
+        if (!m_anchors.empty() && (nOutboundBlockRelay < m_max_outbound_block_relay)) {
+            conn_type = ConnectionType::BLOCK_RELAY;
+            anchor = true;
+        } else if (nOutboundFullRelay < m_max_outbound_full_relay) {
             // OUTBOUND_FULL_RELAY
         } else if (nOutboundBlockRelay < m_max_outbound_block_relay) {
             conn_type = ConnectionType::BLOCK_RELAY;
@@ -1933,6 +1938,15 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
             nTries++;
             if (nTries > 100)
                 break;
+
+            if (anchor) {
+                const CAddress addr = m_anchors.back();
+                m_anchors.pop_back();
+                if (!addr.IsValid() || IsLocal(addr) || !IsReachable(addr)) continue;
+                addrConnect = addr;
+                LogPrint(BCLog::NET, "Trying to make an anchor connection to %s\n", addrConnect.ToString());
+                break;
+            }
 
             CAddrInfo addr = addrman.SelectTriedCollision();
 
