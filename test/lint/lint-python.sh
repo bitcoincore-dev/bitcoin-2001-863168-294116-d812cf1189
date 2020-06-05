@@ -44,7 +44,6 @@ enabled=(
     E743 # do not define functions named "l", "O", or "I"
     E901 # SyntaxError: invalid syntax
     E902 # TokenError: EOF in multi-line string
-    F401 # module imported but unused
     F402 # import module from line N shadowed by loop variable
     F403 # 'from foo_module import *' used; unable to detect undefined names
     F404 # future import(s) name after other statements
@@ -90,12 +89,20 @@ elif PYTHONWARNINGS="ignore" flake8 --version | grep -q "Python 2"; then
     exit 0
 fi
 
-PYTHONWARNINGS="ignore" flake8 --ignore=B,C,E,F,I,N,W --select=$(IFS=","; echo "${enabled[*]}") $(
+EXIT_CODE=0
+
+if ! PYTHONWARNINGS="ignore" flake8 --ignore=B,C,E,F,I,N,W --select=$(IFS=","; echo "${enabled[*]}") $(
     if [[ $# == 0 ]]; then
         git ls-files "*.py"
     else
         echo "$@"
     fi
-)
+); then
+    EXIT_CODE=1
+fi
 
-mypy --ignore-missing-imports $(git ls-files "test/functional/*.py")
+if ! mypy --ignore-missing-imports $(git ls-files "test/functional/*.py"); then
+    EXIT_CODE=1
+fi
+
+exit $EXIT_CODE
