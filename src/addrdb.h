@@ -81,4 +81,7 @@ public:
  */
 std::vector<CAddress> ReadAnchors(const fs::path& anchors_db_path);
 
+/** Dump the anchor IP address database (anchors.dat) */
+void DumpAnchors(const fs::path& anchors_db_path, const std::vector<CAddress> anchors);
+
 #endif // BITCOIN_ADDRDB_H
