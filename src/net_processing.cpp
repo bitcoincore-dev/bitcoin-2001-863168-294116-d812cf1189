@@ -2392,8 +2392,6 @@ void ProcessMessage(
 
     if (msg_type == NetMsgType::VERACK)
     {
-        pfrom.SetCommonVersion(std::min(pfrom.nVersion.load(), PROTOCOL_VERSION));
-
         if (!pfrom.fInbound) {
             // Mark this node as currently connected, so we update its timestamp later.
             LOCK(cs_main);
