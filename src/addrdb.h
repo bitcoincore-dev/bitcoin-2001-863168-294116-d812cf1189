@@ -11,9 +11,9 @@
 #include <serialize.h>
 
 #include <string>
-#include <map>
+#include <vector>
 
-class CSubNet;
+class CAddress;
 class CAddrMan;
 class CDataStream;
 
@@ -72,5 +72,13 @@ public:
     bool Write(const banmap_t& banSet);
     bool Read(banmap_t& banSet);
 };
+
+/**
+ * Reads the anchor IP address database (anchors.dat)
+ *
+ * Anchors are last known outgoing block-relay-only peers that are
+ * tried to re-connect to on startup.
+ */
+std::vector<CAddress> ReadAnchors(const fs::path& anchors_db_path);
 
 #endif // BITCOIN_ADDRDB_H
