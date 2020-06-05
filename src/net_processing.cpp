@@ -2528,8 +2528,6 @@ void PeerLogicValidation::ProcessMessage(CNode& pfrom, const std::string& msg_ty
 
     if (msg_type == NetMsgType::VERACK)
     {
-        pfrom.SetCommonVersion(std::min(pfrom.nVersion.load(), PROTOCOL_VERSION));
-
         if (!pfrom.IsInboundConn()) {
             // Mark this node as currently connected, so we update its timestamp later.
             LOCK(cs_main);
