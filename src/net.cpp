@@ -42,10 +42,11 @@
 static_assert(MINIUPNPC_API_VERSION >= 10, "miniUPnPc API version >= 10 assumed");
 #endif
 
+#include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <unordered_map>
-
-#include <math.h>
+#include <vector>
 
 // How often to dump addresses to peers.dat
 static constexpr std::chrono::minutes DUMP_PEERS_INTERVAL{15};
@@ -1892,6 +1893,7 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
 
         ConnectionType conn_type = ConnectionType::OUTBOUND_FULL_RELAY;
         int64_t nTime = GetTimeMicros();
+        bool anchor = false;
         bool fFeeler = false;
 
         // Determine what type of connection to open. Opening
@@ -1903,7 +1905,10 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
         // these conditions are met, check the nNextFeeler timer to decide if
         // we should open a FEELER.
 
-        if (nOutboundFullRelay < m_max_outbound_full_relay) {
+        if (!m_anchors.empty() && (nOutboundBlockRelay < m_max_outbound_block_relay)) {
+            conn_type = ConnectionType::BLOCK_RELAY;
+            anchor = true;
+        } else if (nOutboundFullRelay < m_max_outbound_full_relay) {
             // OUTBOUND_FULL_RELAY
         } else if (nOutboundBlockRelay < m_max_outbound_block_relay) {
             conn_type = ConnectionType::BLOCK_RELAY;
@@ -1931,11 +1936,23 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
             if (nTries > 100)
                 break;
 
-            CAddrInfo addr = addrman.SelectTriedCollision();
+            CAddress addr;
+            if (anchor) {
+                addr = m_anchors.back();
+                m_anchors.pop_back();
+            } else {
+                CAddrInfo addr_info = addrman.SelectTriedCollision();
 
-            // SelectTriedCollision returns an invalid address if it is empty.
-            if (!fFeeler || !addr.IsValid()) {
-                addr = addrman.Select(fFeeler);
+                // SelectTriedCollision returns an invalid address if it is empty.
+                if (!fFeeler || !addr_info.IsValid()) {
+                    addr_info = addrman.Select(fFeeler);
+                }
+
+                // only consider very recently tried nodes after 30 failed attempts
+                if (nANow - addr_info.nLastTry < 600 && nTries < 30)
+                    continue;
+
+                addr = static_cast<CAddress>(addr_info);
             }
 
             // Require outbound connections, other than feelers, to be to distinct network groups
@@ -1949,10 +1966,6 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
             }
 
             if (!IsReachable(addr))
-                continue;
-
-            // only consider very recently tried nodes after 30 failed attempts
-            if (nANow - addr.nLastTry < 600 && nTries < 30)
                 continue;
 
             // for non-feelers, require all the services we'll want,
@@ -1973,8 +1986,9 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
         }
 
         if (addrConnect.IsValid()) {
-
-            if (fFeeler) {
+            if (anchor) {
+                LogPrintf("Trying to make an anchor connection to %s\n", addrConnect.ToString());
+            } else if (fFeeler) {
                 // Add small amount of random noise before connection to avoid synchronization.
                 int randsleep = GetRandInt(FEELER_SLEEP_WINDOW * 1000);
                 if (!interruptNet.sleep_for(std::chrono::milliseconds(randsleep)))
@@ -1983,6 +1997,13 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
             }
 
             OpenNetworkConnection(addrConnect, (int)setConnected.size() >= std::min(nMaxConnections - 1, 2), &grant, nullptr, conn_type);
+
+            if (anchor) {
+                const auto v = GetCurrentAnchors();
+                if (std::find(v.begin(), v.end(), addrConnect) == v.end()) {
+                    LogPrintf("The anchor connection to %s FAILED\n", addrConnect.ToString());
+                }
+            }
         }
     }
 }
@@ -2943,6 +2964,10 @@ uint64_t CConnman::CalculateKeyedNetGroup(const CAddress& ad) const
 
 void CConnman::DumpAnchors() const
 {
+    // The node dumps:
+    // - current anchors; and
+    // - anchors that were known at startup but have not tried for connections yet
     auto anchors_to_save = GetCurrentAnchors();
+    anchors_to_save.insert(anchors_to_save.end(), m_anchors.begin(), m_anchors.end());
     ::DumpAnchors(m_anchors_db_path, anchors_to_save);
 }
