@@ -1964,6 +1964,19 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
     }
 }
 
+std::vector<CAddress> CConnman::GetCurrentAnchors() const
+{
+    std::vector<CAddress> ret;
+    LOCK(cs_vNodes);
+    for (const CNode* pnode : vNodes) {
+        if (pnode->IsBlockOnlyConn()) {
+            ret.push_back(pnode->addr);
+        }
+    }
+
+    return ret;
+}
+
 std::vector<AddedNodeInfo> CConnman::GetAddedNodeInfo()
 {
     std::vector<AddedNodeInfo> ret;
