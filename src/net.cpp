@@ -47,6 +47,8 @@ static_assert(MINIUPNPC_API_VERSION >= 10, "miniUPnPc API version >= 10 assumed"
 
 #include <math.h>
 
+const char* const ANCHORS_DATABASE_FILENAME = "anchors.dat";
+
 // How often to dump addresses to peers.dat
 static constexpr std::chrono::minutes DUMP_PEERS_INTERVAL{15};
 
@@ -2376,6 +2378,22 @@ bool CConnman::Start(CScheduler& scheduler, const Options& connOptions)
             DumpAddresses();
         }
     }
+
+    const fs::path& anchors_db_path = GetDataDir() / ANCHORS_DATABASE_FILENAME;
+    m_anchors = ReadAnchors(anchors_db_path);
+    LogPrintf("Loaded %i addresses from %s\n", m_anchors.size(), ANCHORS_DATABASE_FILENAME);
+    // Peers added via -addnode are permanent connections too, therefore we could skip the same number of anchors.
+    const size_t max_anchor_num = std::min(MAX_BLOCK_RELAY_ONLY_ANCHORS, connOptions.m_max_outbound_block_relay);
+    if (max_anchor_num <= connOptions.m_added_nodes.size()) {
+        m_anchors.clear();
+    } else {
+        const size_t anchor_num_allowed = max_anchor_num - connOptions.m_added_nodes.size();
+        if (anchor_num_allowed < m_anchors.size()) {
+            m_anchors.resize(anchor_num_allowed);
+        }
+    }
+
+    LogPrintf("%i block-relay-only anchors will be tried for connections.\n", m_anchors.size());
 
     uiInterface.InitMessage(_("Starting network threads...").translated);
 
