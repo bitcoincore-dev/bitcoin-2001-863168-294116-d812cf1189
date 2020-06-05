@@ -2406,6 +2406,10 @@ void ProcessMessage(
                       pfrom.nVersion.load(), pfrom.nStartingHeight,
                       pfrom.GetId(), (fLogIPs ? strprintf(", peeraddr=%s", pfrom.addr.ToString()) : ""),
                       pfrom.m_tx_relay == nullptr ? "block-relay" : "full-relay");
+            if (!pfrom.m_tx_relay) {
+                auto anchors_to_save = connman->GetCurrentAnchors();
+                DumpAnchors(connman->GetAnchorsDbPath(), anchors_to_save);
+            }
         }
 
         if (pfrom.nVersion >= SENDHEADERS_VERSION) {
