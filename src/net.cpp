@@ -2940,3 +2940,9 @@ uint64_t CConnman::CalculateKeyedNetGroup(const CAddress& ad) const
 
     return GetDeterministicRandomizer(RANDOMIZER_ID_NETGROUP).Write(vchNetGroup.data(), vchNetGroup.size()).Finalize();
 }
+
+void CConnman::DumpAnchors() const
+{
+    auto anchors_to_save = GetCurrentAnchors();
+    ::DumpAnchors(m_anchors_db_path, anchors_to_save);
+}

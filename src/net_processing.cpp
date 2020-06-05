@@ -2542,6 +2542,7 @@ void PeerLogicValidation::ProcessMessage(CNode& pfrom, const std::string& msg_ty
         pfrom.SetRecvVersion(std::min(pfrom.nVersion.load(), PROTOCOL_VERSION));
 
         if (!pfrom.IsInboundConn()) {
+            {
             // Mark this node as currently connected, so we update its timestamp later.
             LOCK(cs_main);
             State(pfrom.GetId())->fCurrentlyConnected = true;
@@ -2549,6 +2550,10 @@ void PeerLogicValidation::ProcessMessage(CNode& pfrom, const std::string& msg_ty
                       pfrom.nVersion.load(), pfrom.nStartingHeight,
                       pfrom.GetId(), (fLogIPs ? strprintf(", peeraddr=%s", pfrom.addr.ToString()) : ""),
                       pfrom.m_tx_relay == nullptr ? "block-relay" : "full-relay");
+            }
+            if (pfrom.IsBlockOnlyConn()) {
+                m_connman.DumpAnchors();
+            }
         }
 
         if (pfrom.nVersion >= SENDHEADERS_VERSION) {
