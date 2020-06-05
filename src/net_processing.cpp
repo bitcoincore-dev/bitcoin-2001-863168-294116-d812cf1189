@@ -2543,12 +2543,14 @@ void PeerLogicValidation::ProcessMessage(CNode& pfrom, const std::string& msg_ty
 
         if (!pfrom.IsInboundConn()) {
             // Mark this node as currently connected, so we update its timestamp later.
-            LOCK(cs_main);
-            State(pfrom.GetId())->fCurrentlyConnected = true;
+            WITH_LOCK(cs_main, State(pfrom.GetId())->fCurrentlyConnected = true);
             LogPrintf("New outbound peer connected: version: %d, blocks=%d, peer=%d%s (%s)\n",
                       pfrom.nVersion.load(), pfrom.nStartingHeight,
                       pfrom.GetId(), (fLogIPs ? strprintf(", peeraddr=%s", pfrom.addr.ToString()) : ""),
                       pfrom.m_tx_relay == nullptr ? "block-relay" : "full-relay");
+            if (pfrom.IsBlockOnlyConn()) {
+                m_connman.DumpAnchors();
+            }
         }
 
         if (pfrom.nVersion >= SENDHEADERS_VERSION) {
