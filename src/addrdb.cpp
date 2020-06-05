@@ -10,6 +10,7 @@
 #include <clientversion.h>
 #include <cstdint>
 #include <hash.h>
+#include <logging/timer.h>
 #include <random.h>
 #include <streams.h>
 #include <tinyformat.h>
@@ -165,4 +166,10 @@ std::vector<CAddress> ReadAnchors(const fs::path& anchors_db_path)
     }
 
     return ret;
+}
+
+void DumpAnchors(const fs::path& anchors_db_path, const std::vector<CAddress> anchors)
+{
+    LOG_TIME_SECONDS(strprintf("Flush %d outbound block-relay-only peer addresses to anchors.dat", anchors.size()));
+    SerializeFileDB("anchors", anchors_db_path, anchors);
 }
