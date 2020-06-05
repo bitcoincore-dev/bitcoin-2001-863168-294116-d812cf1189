@@ -2507,7 +2507,12 @@ void ProcessMessage(
                       pfrom.GetId(), (fLogIPs ? strprintf(", peeraddr=%s", pfrom.addr.ToString()) : ""),
                       pfrom.m_tx_relay == nullptr ? "block-relay" : "full-relay");
             if (pfrom.IsBlockOnlyConn()) {
+                // The node dumps:
+                // - current anchors; and
+                // - anchors that were known at startup but have not tried for connections yet
                 auto anchors_to_save = connman.GetCurrentAnchors();
+                const auto anchors_not_tried = connman.GetAnchors();
+                anchors_to_save.insert(anchors_to_save.end(), anchors_not_tried.begin(), anchors_not_tried.end());
                 DumpAnchors(connman.GetAnchorsDbPath(), anchors_to_save);
             }
         }
