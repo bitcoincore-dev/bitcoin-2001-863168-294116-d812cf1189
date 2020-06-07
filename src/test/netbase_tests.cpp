@@ -400,7 +400,8 @@ BOOST_AUTO_TEST_CASE(netpermissions_test)
     BOOST_CHECK_EQUAL(connection_direction, ConnectionDirection::Both);
 
     const auto strings = NetPermissions::ToStrings(PF_ALL);
-    BOOST_CHECK_EQUAL(strings.size(), 5);
+    BOOST_CHECK_EQUAL(strings.size(), 6);
+    BOOST_CHECK(std::find(strings.begin(), strings.end(), "blockfilters") != strings.end());
     BOOST_CHECK(std::find(strings.begin(), strings.end(), "bloomfilter") != strings.end());
     BOOST_CHECK(std::find(strings.begin(), strings.end(), "forcerelay") != strings.end());
     BOOST_CHECK(std::find(strings.begin(), strings.end(), "relay") != strings.end());
