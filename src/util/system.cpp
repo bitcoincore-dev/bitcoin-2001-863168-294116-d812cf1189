@@ -587,13 +587,13 @@ fs::path GetDefaultDataDir()
 #endif
 }
 
-static fs::path g_blocks_path_cache_net_specific;
-static fs::path pathCached;
-static fs::path pathCachedNetSpecific;
 static Mutex g_path_cache_mutex;
+static fs::path g_blocks_path_cache_net_specific GUARDED_BY(g_path_cache_mutex);
+static fs::path pathCached GUARDED_BY(g_path_cache_mutex);
+static fs::path pathCachedNetSpecific GUARDED_BY(g_path_cache_mutex);
 
 namespace {
-const fs::path& GetDataDirHelper(bool fNetSpecific)
+const fs::path& GetDataDirHelper(bool fNetSpecific) EXCLUSIVE_LOCKS_REQUIRED(g_path_cache_mutex)
 {
     fs::path &path = fNetSpecific ? pathCachedNetSpecific : pathCached;
 
