@@ -590,36 +590,11 @@ fs::path GetDefaultDataDir()
 static fs::path g_blocks_path_cache_net_specific;
 static fs::path pathCached;
 static fs::path pathCachedNetSpecific;
-static RecursiveMutex csPathCached;
+static Mutex g_path_cache_mutex;
 
-const fs::path &GetBlocksDir()
+namespace {
+const fs::path& GetDataDirHelper(bool fNetSpecific)
 {
-    LOCK(csPathCached);
-    fs::path &path = g_blocks_path_cache_net_specific;
-
-    // Cache the path to avoid calling fs::create_directories on every call of
-    // this function
-    if (!path.empty()) return path;
-
-    if (gArgs.IsArgSet("-blocksdir")) {
-        path = fs::system_complete(gArgs.GetArg("-blocksdir", ""));
-        if (!fs::is_directory(path)) {
-            path = "";
-            return path;
-        }
-    } else {
-        path = GetDataDir(false);
-    }
-
-    path /= BaseParams().DataDir();
-    path /= "blocks";
-    fs::create_directories(path);
-    return path;
-}
-
-const fs::path &GetDataDir(bool fNetSpecific)
-{
-    LOCK(csPathCached);
     fs::path &path = fNetSpecific ? pathCachedNetSpecific : pathCached;
 
     // Cache the path to avoid calling fs::create_directories on every call of
@@ -646,6 +621,38 @@ const fs::path &GetDataDir(bool fNetSpecific)
 
     return path;
 }
+} // namespace
+
+const fs::path &GetBlocksDir()
+{
+    LOCK(g_path_cache_mutex);
+    fs::path &path = g_blocks_path_cache_net_specific;
+
+    // Cache the path to avoid calling fs::create_directories on every call of
+    // this function
+    if (!path.empty()) return path;
+
+    if (gArgs.IsArgSet("-blocksdir")) {
+        path = fs::system_complete(gArgs.GetArg("-blocksdir", ""));
+        if (!fs::is_directory(path)) {
+            path = "";
+            return path;
+        }
+    } else {
+        path = GetDataDirHelper(false);
+    }
+
+    path /= BaseParams().DataDir();
+    path /= "blocks";
+    fs::create_directories(path);
+    return path;
+}
+
+const fs::path &GetDataDir(bool fNetSpecific)
+{
+    LOCK(g_path_cache_mutex);
+    return GetDataDirHelper(fNetSpecific);
+}
 
 bool CheckDataDirOption()
 {
@@ -655,7 +662,7 @@ bool CheckDataDirOption()
 
 void ClearDatadirCache()
 {
-    LOCK(csPathCached);
+    LOCK(g_path_cache_mutex);
 
     pathCached = fs::path();
     pathCachedNetSpecific = fs::path();
