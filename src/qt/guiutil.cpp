@@ -450,6 +450,25 @@ bool ToolTipToRichTextFilter::eventFilter(QObject *obj, QEvent *evt)
     return QObject::eventFilter(obj, evt);
 }
 
+LabelOutOfFocusEventFilter::LabelOutOfFocusEventFilter(QObject* parent)
+    : QObject(parent)
+{
+}
+
+bool LabelOutOfFocusEventFilter::eventFilter(QObject* watched, QEvent* event)
+{
+    if (event->type() == QEvent::FocusOut) {
+        QLabel* label = qobject_cast<QLabel*>(watched);
+        if (label) {
+            const QString content = label->text();
+            label->clear();
+            label->setText(content);
+        }
+    }
+
+    return QObject::eventFilter(watched, event);
+}
+
 void TableViewLastColumnResizingFixer::connectViewHeadersSignals()
 {
     connect(tableView->horizontalHeader(), &QHeaderView::sectionResized, this, &TableViewLastColumnResizingFixer::on_sectionResized);
