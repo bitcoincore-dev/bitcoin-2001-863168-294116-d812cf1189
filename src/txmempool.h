@@ -465,7 +465,7 @@ public:
     int64_t m_max_size_bytes;
     std::chrono::seconds m_expiry;
     const CFeeRate m_incremental_relay_feerate;
-    const CFeeRate m_min_relay_feerate;
+    CFeeRate m_min_relay_feerate;
     const CFeeRate m_dust_relay_feerate;
     bool m_permit_bare_multisig;
     std::optional<unsigned> m_max_datacarrier_bytes;
