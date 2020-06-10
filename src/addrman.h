@@ -244,6 +244,11 @@ private:
         mapAddr.clear();
     }
 
+    size_t sizeNonLockerHelper() const EXCLUSIVE_LOCKS_REQUIRED(cs)
+    {
+        return vRandom.size();
+    }
+
 protected:
     //! secret key to randomize bucket select with
     uint256 nKey;
@@ -552,7 +557,7 @@ public:
     size_t size() const
     {
         LOCK(cs); // TODO: Cache this in an atomic to avoid this overhead
-        return vRandom.size();
+        return sizeNonLockerHelper();
     }
 
     //! Consistency check
