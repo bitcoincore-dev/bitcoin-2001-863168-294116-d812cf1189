@@ -276,7 +276,7 @@ protected:
     bool Add_(const CAddress &addr, const CNetAddr& source, int64_t nTimePenalty) EXCLUSIVE_LOCKS_REQUIRED(cs);
 
     //! Mark an entry as attempted to connect.
-    void Attempt_(const CService &addr, bool fCountFailure, int64_t nTime) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    void Attempt_cs(const CService &addr, bool fCountFailure, int64_t nTime) EXCLUSIVE_LOCKS_REQUIRED(cs);
 
     //! Select an address to connect to, if newOnly is set to true, only the new table is selected from.
     CAddrInfo Select_(bool newOnly) EXCLUSIVE_LOCKS_REQUIRED(cs);
@@ -610,11 +610,12 @@ public:
     }
 
     //! Mark an entry as connection attempted to.
-    void Attempt(const CService &addr, bool fCountFailure, int64_t nTime = GetAdjustedTime())
+    void Attempt(const CService &addr, bool fCountFailure, int64_t nTime = GetAdjustedTime()) EXCLUSIVE_LOCKS_REQUIRED(!cs)
     {
+        AssertLockNotHeld(cs);
         LOCK(cs);
         Check_cs();
-        Attempt_(addr, fCountFailure, nTime);
+        Attempt_cs(addr, fCountFailure, nTime);
         Check_cs();
     }
 
