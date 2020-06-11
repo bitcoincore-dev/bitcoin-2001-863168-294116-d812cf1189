@@ -616,8 +616,9 @@ public:
     }
 
     //! Mark an entry as connection attempted to.
-    void Attempt(const CService &addr, bool fCountFailure, int64_t nTime = GetAdjustedTime())
+    void Attempt(const CService &addr, bool fCountFailure, int64_t nTime = GetAdjustedTime()) EXCLUSIVE_LOCKS_REQUIRED(!cs)
     {
+        AssertLockNotHeld(cs);
         LOCK(cs);
         CheckNonLockHelper();
         Attempt_(addr, fCountFailure, nTime);
