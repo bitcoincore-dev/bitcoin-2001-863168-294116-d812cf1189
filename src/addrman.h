@@ -238,6 +238,11 @@ private:
         mapAddr.clear();
     }
 
+    size_t size_cs() const EXCLUSIVE_LOCKS_REQUIRED(cs)
+    {
+        return vRandom.size();
+    }
+
 protected:
     //! secret key to randomize bucket select with
     uint256 nKey;
@@ -546,10 +551,11 @@ public:
     }
 
     //! Return the number of (unique) addresses in all tables.
-    size_t size() const
+    size_t size() const EXCLUSIVE_LOCKS_REQUIRED(!cs)
     {
-        LOCK(cs); // TODO: Cache this in an atomic to avoid this overhead
-        return vRandom.size();
+        AssertLockNotHeld(cs);
+        LOCK(cs);
+        return size_cs();
     }
 
     //! Consistency check
