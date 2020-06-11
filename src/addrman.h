@@ -215,6 +215,29 @@ private:
 #endif // DEBUG_ADDRMAN
     }
 
+    void Clear_cs() EXCLUSIVE_LOCKS_REQUIRED(cs)
+    {
+        std::vector<int>().swap(vRandom);
+        nKey = insecure_rand.rand256();
+        for (size_t bucket = 0; bucket < ADDRMAN_NEW_BUCKET_COUNT; bucket++) {
+            for (size_t entry = 0; entry < ADDRMAN_BUCKET_SIZE; entry++) {
+                vvNew[bucket][entry] = -1;
+            }
+        }
+        for (size_t bucket = 0; bucket < ADDRMAN_TRIED_BUCKET_COUNT; bucket++) {
+            for (size_t entry = 0; entry < ADDRMAN_BUCKET_SIZE; entry++) {
+                vvTried[bucket][entry] = -1;
+            }
+        }
+
+        nIdCount = 0;
+        nTried = 0;
+        nNew = 0;
+        nLastGood = 1; //Initially at 1 so that "never" is strictly worse.
+        mapInfo.clear();
+        mapAddr.clear();
+    }
+
 protected:
     //! secret key to randomize bucket select with
     uint256 nKey;
@@ -387,7 +410,7 @@ public:
         AssertLockNotHeld(cs);
         LOCK(cs);
 
-        Clear();
+        Clear_cs();
         unsigned char nVersion;
         s >> nVersion;
         unsigned char nKeySize;
@@ -505,28 +528,11 @@ public:
         Check_cs();
     }
 
-    void Clear()
+    void Clear() EXCLUSIVE_LOCKS_REQUIRED(!cs)
     {
+        AssertLockNotHeld(cs);
         LOCK(cs);
-        std::vector<int>().swap(vRandom);
-        nKey = insecure_rand.rand256();
-        for (size_t bucket = 0; bucket < ADDRMAN_NEW_BUCKET_COUNT; bucket++) {
-            for (size_t entry = 0; entry < ADDRMAN_BUCKET_SIZE; entry++) {
-                vvNew[bucket][entry] = -1;
-            }
-        }
-        for (size_t bucket = 0; bucket < ADDRMAN_TRIED_BUCKET_COUNT; bucket++) {
-            for (size_t entry = 0; entry < ADDRMAN_BUCKET_SIZE; entry++) {
-                vvTried[bucket][entry] = -1;
-            }
-        }
-
-        nIdCount = 0;
-        nTried = 0;
-        nNew = 0;
-        nLastGood = 1; //Initially at 1 so that "never" is strictly worse.
-        mapInfo.clear();
-        mapAddr.clear();
+        Clear_cs();
     }
 
     CAddrMan()
