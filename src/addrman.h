@@ -205,6 +205,16 @@ private:
     //! Holds addrs inserted into tried table that collide with existing entries. Test-before-evict discipline used to resolve these collisions.
     std::set<int> m_tried_collisions;
 
+    void Check_cs() EXCLUSIVE_LOCKS_REQUIRED(cs)
+    {
+#ifdef DEBUG_ADDRMAN
+        const int err = Check_();
+        if (err) {
+            LogPrintf("ADDRMAN CONSISTENCY CHECK FAILED!!! err=%i\n", err);
+        }
+#endif // DEBUG_ADDRMAN
+    }
+
 protected:
     //! secret key to randomize bucket select with
     uint256 nKey;
@@ -492,7 +502,7 @@ public:
             LogPrint(BCLog::ADDRMAN, "addrman lost %i new and %i tried addresses due to collisions\n", nLostUnk, nLost);
         }
 
-        Check();
+        Check_cs();
     }
 
     void Clear()
@@ -537,16 +547,13 @@ public:
     }
 
     //! Consistency check
-    void Check()
+    void Check() EXCLUSIVE_LOCKS_REQUIRED(!cs)
     {
+        AssertLockNotHeld(cs);
 #ifdef DEBUG_ADDRMAN
-        {
-            LOCK(cs);
-            int err;
-            if ((err=Check_()))
-                LogPrintf("ADDRMAN CONSISTENCY CHECK FAILED!!! err=%i\n", err);
-        }
-#endif
+        LOCK(cs);
+        Check_cs();
+#endif // DEBUG_ADDRMAN
     }
 
     //! Add a single address.
@@ -555,9 +562,9 @@ public:
         AssertLockNotHeld(cs);
         LOCK(cs);
         bool fRet = false;
-        Check();
+        Check_cs();
         fRet |= Add_(addr, source, nTimePenalty);
-        Check();
+        Check_cs();
         if (fRet) {
             LogPrint(BCLog::ADDRMAN, "Added %s from %s: %i tried, %i new\n", addr.ToStringIPPort(), source.ToString(), nTried, nNew);
         }
@@ -570,10 +577,10 @@ public:
         AssertLockNotHeld(cs);
         LOCK(cs);
         int nAdd = 0;
-        Check();
+        Check_cs();
         for (std::vector<CAddress>::const_iterator it = vAddr.begin(); it != vAddr.end(); it++)
             nAdd += Add_(*it, source, nTimePenalty) ? 1 : 0;
-        Check();
+        Check_cs();
         if (nAdd) {
             LogPrint(BCLog::ADDRMAN, "Added %i addresses from %s: %i tried, %i new\n", nAdd, source.ToString(), nTried, nNew);
         }
@@ -585,18 +592,18 @@ public:
     {
         AssertLockNotHeld(cs);
         LOCK(cs);
-        Check();
+        Check_cs();
         Good_(addr, test_before_evict, nTime);
-        Check();
+        Check_cs();
     }
 
     //! Mark an entry as connection attempted to.
     void Attempt(const CService &addr, bool fCountFailure, int64_t nTime = GetAdjustedTime())
     {
         LOCK(cs);
-        Check();
+        Check_cs();
         Attempt_(addr, fCountFailure, nTime);
-        Check();
+        Check_cs();
     }
 
     //! See if any to-be-evicted tried table entries have been tested and if so resolve the collisions.
@@ -604,9 +611,9 @@ public:
     {
         AssertLockNotHeld(cs);
         LOCK(cs);
-        Check();
+        Check_cs();
         ResolveCollisions_();
-        Check();
+        Check_cs();
     }
 
     //! Randomly select an address in tried that another address is attempting to evict.
@@ -616,9 +623,9 @@ public:
         {
             AssertLockNotHeld(cs);
             LOCK(cs);
-            Check();
+            Check_cs();
             ret = SelectTriedCollision_();
-            Check();
+            Check_cs();
         }
         return ret;
     }
@@ -632,9 +639,9 @@ public:
         {
             AssertLockNotHeld(cs);
             LOCK(cs);
-            Check();
+            Check_cs();
             addrRet = Select_(newOnly);
-            Check();
+            Check_cs();
         }
         return addrRet;
     }
@@ -658,18 +665,18 @@ public:
     {
         AssertLockNotHeld(cs);
         LOCK(cs);
-        Check();
+        Check_cs();
         Connected_(addr, nTime);
-        Check();
+        Check_cs();
     }
 
     void SetServices(const CService &addr, ServiceFlags nServices) EXCLUSIVE_LOCKS_REQUIRED(!cs)
     {
         AssertLockNotHeld(cs);
         LOCK(cs);
-        Check();
+        Check_cs();
         SetServices_(addr, nServices);
-        Check();
+        Check_cs();
     }
 
 };
