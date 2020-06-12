@@ -18,6 +18,7 @@ else
     exit 1
 fi
 
+# This checks that we are actually part of the intended git repository, and not just getting info about some unrelated git repository that the code happens to be in a directory under
 git_check_in_repo() {
     ! { git status --porcelain -uall --ignored "$@" 2>/dev/null || echo '??'; } | grep -q '?'
 }
@@ -44,7 +45,9 @@ if [ -n "$DESC" ]; then
 elif [ -n "$SUFFIX" ]; then
     NEWINFO="#define BUILD_SUFFIX $SUFFIX"
 else
-    NEWINFO="// No build information available"
+    # NOTE: The NEWINFO line below this comment gets replaced by a string-match in contrib/gitian-descriptors/make_release_tarball
+    # If changing it, update the script too!
+    NEWINFO='// No build information available'
 fi
 
 # only update build.h if necessary
