@@ -69,6 +69,8 @@ private:
     // Additional parameter msgArg can be used via .arg(msgArg).
     void processSendCoinsReturn(const WalletModel::SendCoinsReturn &sendCoinsReturn, const QString &msgArg = QString());
     void minimizeFeeSection(bool fMinimize);
+    // Format confirmation message
+    void PrepareSendText(bool& ok, std::unique_ptr<WalletModelTransaction>& current_transaction, QString& question_string, QString& informative_text, QString& detailed_text);
     void updateFeeMinimizedLabel();
     // Update the passed in CCoinControl with state from the GUI
     void updateCoinControlState(CCoinControl& ctrl);
@@ -108,7 +110,7 @@ class SendConfirmationDialog : public QMessageBox
     Q_OBJECT
 
 public:
-    SendConfirmationDialog(const QString& title, const QString& text, const QString& informative_text = "", const QString& detailed_text = "", int secDelay = SEND_CONFIRM_DELAY, const QString& confirmText = "Send", QWidget* parent = nullptr);
+    SendConfirmationDialog(const QString& title, const QString& text, QMessageBox::StandardButton yes_button = QMessageBox::Yes, const QString &yes_button_text = "", QMessageBox::StandardButton cancel_button = QMessageBox::Cancel, const QString& informative_text = "", const QString& detailed_text = "", int secDelay = SEND_CONFIRM_DELAY, QWidget* parent = nullptr);
     int exec();
 
 private Q_SLOTS:
@@ -119,7 +121,7 @@ private:
     QAbstractButton *yesButton;
     QTimer countDownTimer;
     int secDelay;
-    QString confirmButtonText;
+    QString m_yes_button_text;
 };
 
 #endif // BITCOIN_QT_SENDCOINSDIALOG_H
