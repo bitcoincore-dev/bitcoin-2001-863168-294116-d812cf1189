@@ -4082,13 +4082,13 @@ bool PeerLogicValidation::SendMessages(CNode* pto)
             !pto->HasPermission(PF_FORCERELAY)) {
             CAmount currentFilter = m_mempool.GetMinFee(gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000).GetFeePerK();
             int64_t timeNow = GetTimeMicros();
-            static FeeFilterRounder g_filter_rounder{CFeeRate{DEFAULT_MIN_RELAY_TX_FEE}};
+            static FeeFilterRounder filterRounder{CFeeRate{DEFAULT_MIN_RELAY_TX_FEE}};
             if (::ChainstateActive().IsInitialBlockDownload()) {
                 // Received tx-inv messages are discarded when the active
                 // chainstate is in IBD, so tell the peer to not send them.
                 currentFilter = MAX_MONEY;
             } else {
-                static const CAmount MAX_FILTER{g_filter_rounder.round(MAX_MONEY)};
+                static const CAmount MAX_FILTER{filterRounder.round(MAX_MONEY)};
                 if (pto->m_tx_relay->lastSentFeeFilter == MAX_FILTER) {
                     // Send the current filter if we sent MAX_FILTER previously
                     // and made it out of IBD.
@@ -4096,7 +4096,7 @@ bool PeerLogicValidation::SendMessages(CNode* pto)
                 }
             }
             if (timeNow > pto->m_tx_relay->nextSendTimeFeeFilter) {
-                CAmount filterToSend = g_filter_rounder.round(currentFilter);
+                CAmount filterToSend = filterRounder.round(currentFilter);
                 // We always have a fee filter of at least minRelayTxFee
                 filterToSend = std::max(filterToSend, ::minRelayTxFee.GetFeePerK());
                 if (filterToSend != pto->m_tx_relay->lastSentFeeFilter) {
