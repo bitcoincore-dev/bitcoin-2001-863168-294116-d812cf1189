@@ -281,11 +281,12 @@ public:
     explicit FeeFilterRounder(const CFeeRate& minIncrementalFee);
 
     /** Quantize a minimum fee for privacy purpose before broadcast **/
-    CAmount round(CAmount currentMinFee);
+    CAmount round(CAmount currentMinFee) const;
 
 private:
     std::set<double> feeset;
-    FastRandomContext insecure_rand;
+    mutable Mutex m_random_context_mutex;
+    mutable FastRandomContext m_insecure_rand GUARDED_BY(m_random_context_mutex);
 };
 
 #endif // BITCOIN_POLICY_FEES_H

@@ -968,10 +968,11 @@ FeeFilterRounder::FeeFilterRounder(const CFeeRate& minIncrementalFee)
     }
 }
 
-CAmount FeeFilterRounder::round(CAmount currentMinFee)
+CAmount FeeFilterRounder::round(CAmount currentMinFee) const
 {
     std::set<double>::iterator it = feeset.lower_bound(currentMinFee);
-    if ((it != feeset.begin() && insecure_rand.rand32() % 3 != 0) || it == feeset.end()) {
+    const uint32_t rand = WITH_LOCK(m_random_context_mutex, return m_insecure_rand.rand32());
+    if ((it != feeset.begin() && rand % 3 != 0) || it == feeset.end()) {
         it--;
     }
     return static_cast<CAmount>(*it);
