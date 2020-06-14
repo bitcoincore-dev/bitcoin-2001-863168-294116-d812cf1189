@@ -499,6 +499,7 @@ void CConnman::InitializePermissionFlags(NetPermissionFlags& flags, ServiceFlags
         if (gArgs.GetBoolArg("-whitelistrelay", DEFAULT_WHITELISTRELAY)) NetPermissions::AddFlag(flags, PF_RELAY);
         NetPermissions::AddFlag(flags, PF_MEMPOOL);
         NetPermissions::AddFlag(flags, PF_NOBAN);
+        NetPermissions::AddFlag(flags, PF_ADDR);
     }
 
     if (NetPermissions::HasFlag(flags, PF_BLOOMFILTER)) {
@@ -2500,9 +2501,20 @@ void CConnman::AddNewAddresses(const std::vector<CAddress>& vAddr, const CAddres
     addrman.Add(vAddr, addrFrom, nTimePenalty);
 }
 
-std::vector<CAddress> CConnman::GetAddresses()
+std::vector<CAddress> CConnman::GetAddresses(Optional<Network> requestor_network)
 {
-    return addrman.GetAddr();
+    if (requestor_network) {
+        const std::chrono::microseconds current_time = GetTime<std::chrono::microseconds>();
+        const Network network = requestor_network.get_value_or(NET_UNROUTABLE);
+        if (m_addr_response_caches.find(network) == m_addr_response_caches.end() ||
+            m_addr_response_caches[network].m_update_addr_response < current_time) {
+            m_addr_response_caches[network].m_addrs_response_cache = addrman.GetAddr();
+            m_addr_response_caches[network].m_update_addr_response = current_time + std::chrono::hours(21) + GetRandMicros(std::chrono::hours(6));
+        }
+        return m_addr_response_caches[network].m_addrs_response_cache;
+    } else {
+        return addrman.GetAddr();
+    }
 }
 
 bool CConnman::AddNode(const std::string& strNode)
