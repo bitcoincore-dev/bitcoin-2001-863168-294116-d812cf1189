@@ -41,6 +41,7 @@
 int64_t GetStartupTime();
 
 extern const char * const BITCOIN_CONF_FILENAME;
+extern const char * const BITCOIN_RW_CONF_FILENAME;
 
 void SetupEnvironment();
 bool SetupNetworking();
@@ -114,6 +115,7 @@ bool CheckDataDirOption();
 /** Tests only */
 void ClearDatadirCache();
 fs::path GetConfigFile(const std::string& confPath);
+fs::path GetRWConfigFile(const std::string& confPath);
 #ifdef WIN32
 fs::path GetSpecialFolderPath(int nFolder, bool fCreate = true);
 #endif
@@ -167,6 +169,8 @@ struct SectionInfo
     int m_line;
 };
 
+void ModifyRWConfigStream(std::istream& stream_in, std::ostream& stream_out, const std::map<std::string, std::string>& settings_to_change);
+
 class ArgsManager
 {
 public:
@@ -202,7 +206,7 @@ protected:
     std::map<OptionsCategory, std::map<std::string, Arg>> m_available_args GUARDED_BY(cs_args);
     std::list<SectionInfo> m_config_sections GUARDED_BY(cs_args);
 
-    NODISCARD bool ReadConfigStream(std::istream& stream, const std::string& filepath, std::string& error, bool ignore_invalid_keys = false);
+    NODISCARD bool ReadConfigStream(std::istream& stream, const std::string& filepath, std::string& error, bool ignore_invalid_keys = false, std::map<std::string, std::vector<util::SettingsValue>>* settings_target = nullptr);
 
     /**
      * Returns true if settings values from the default section should be used,
@@ -225,6 +229,9 @@ protected:
      */
     std::vector<util::SettingsValue> GetSettingsList(const std::string& arg) const;
 
+private:
+    fs::path rwconf_path GUARDED_BY(cs_args);
+
 public:
     ArgsManager();
 
@@ -235,6 +242,10 @@ public:
 
     NODISCARD bool ParseParameters(int argc, const char* const argv[], std::string& error);
     NODISCARD bool ReadConfigFiles(std::string& error, bool ignore_invalid_keys = false);
+
+    void ModifyRWConfigFile(const std::map<std::string, std::string>& settings_to_change);
+    void ModifyRWConfigFile(const std::string& setting_to_change, const std::string& new_value);
+    void EraseRWConfigFile();
 
     /**
      * Log warnings for options in m_section_only_args when
