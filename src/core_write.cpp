@@ -177,7 +177,7 @@ void ScriptPubKeyToUniv(const CScript& scriptPubKey,
     out.pushKV("addresses", a);
 }
 
-void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry, bool include_hex, int serialize_flags, const CTxUndo* txundo)
+void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry, bool include_hex, int serialize_flags, const CTxUndo* txundo, const int verbosity)
 {
     entry.pushKV("txid", tx.GetHash().GetHex());
     entry.pushKV("hash", tx.GetWitnessHash().GetHex());
@@ -216,6 +216,16 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry,
             if (txundo) {
                 auto prevout = txundo->vprevout[i];
                 amt_total_in += prevout.out.nValue;
+                if (verbosity >= 3) {
+                    UniValue p(UniValue::VOBJ);
+                    p.pushKV("height", (int64_t)prevout.nHeight);
+                    p.pushKV("value", ValueFromAmount(prevout.out.nValue));
+                    p.pushKV("generated", (bool)prevout.fCoinBase);
+                    UniValue spk_uv(UniValue::VOBJ);
+                    ScriptPubKeyToUniv(prevout.out.scriptPubKey, spk_uv, true);
+                    p.pushKV("scriptPubKey", spk_uv);
+                    in.pushKV("prevout", p);
+                }
             }
         }
         in.pushKV("sequence", (int64_t)txin.nSequence);
