@@ -235,7 +235,7 @@ void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry,
         out.pushKV("scriptPubKey", o);
         vout.push_back(out);
 
-        amt_total_out += txout.nValue;
+        if (txundo) amt_total_out += txout.nValue;
     }
     entry.pushKV("vout", vout);
 
