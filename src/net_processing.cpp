@@ -2257,6 +2257,8 @@ bool ProcessMessage(CNode* pfrom, const std::string& msg_type, CDataStream& vRec
                 State(pfrom->GetId())->fProvidesHeaderAndIDs = true;
                 State(pfrom->GetId())->fWantsCmpctWitness = nCMPCTBLOCKVersion == 2;
             }
+            // ignore HB requests from peers without witness support
+            fAnnounceUsingCMPCTBLOCK = fAnnounceUsingCMPCTBLOCK && (nCMPCTBLOCKVersion == 2);
             if (State(pfrom->GetId())->fWantsCmpctWitness == (nCMPCTBLOCKVersion == 2)) // ignore later version announces
                 State(pfrom->GetId())->fPreferHeaderAndIDs = fAnnounceUsingCMPCTBLOCK;
             if (!State(pfrom->GetId())->fSupportsDesiredCmpctVersion) {
