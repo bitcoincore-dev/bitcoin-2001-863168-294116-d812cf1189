@@ -32,6 +32,8 @@ std::string StringForFeeReason(FeeReason reason) {
     return reason_string->second;
 }
 
+static const std::vector<std::pair<std::string, FeeEstimateMode>>& FeeModes()
+{
 static const std::vector<std::pair<std::string, FeeEstimateMode>> FEE_MODES = {
         {"UNSET", FeeEstimateMode::UNSET},
         {"ECONOMICAL", FeeEstimateMode::ECONOMICAL},
@@ -40,12 +42,14 @@ static const std::vector<std::pair<std::string, FeeEstimateMode>> FEE_MODES = {
     {(CURRENCY_UNIT + "/kB"), FeeEstimateMode::BTC_KB},
     {(CURRENCY_ATOM + "/B"), FeeEstimateMode::SAT_B},
     };
+    return FEE_MODES;
+}
 
 std::string FeeModes(const std::string& delimiter)
 {
     std::string r;
     std::string prefix = "";
-    for (const auto& pair : FEE_MODES) {
+    for (const auto& pair : FeeModes()) {
         r += prefix + pair.first;
         prefix = delimiter;
     }
@@ -55,7 +59,7 @@ std::string FeeModes(const std::string& delimiter)
 bool FeeModeFromString(const std::string& mode_string, FeeEstimateMode& fee_estimate_mode)
 {
     auto searchkey = ToUpper(mode_string);
-    for (const auto& pair : FEE_MODES) {
+    for (const auto& pair : FeeModes()) {
         if (ToUpper(pair.first) == searchkey) {
             fee_estimate_mode = pair.second;
             return true;
