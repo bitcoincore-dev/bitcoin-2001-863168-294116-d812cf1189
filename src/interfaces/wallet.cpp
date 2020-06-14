@@ -380,9 +380,10 @@ public:
         bool sign,
         bool bip32derivs,
         PartiallySignedTransaction& psbtx,
-        bool& complete) override
+        bool& complete,
+        size_t* n_signed = nullptr) override
     {
-        return m_wallet->FillPSBT(psbtx, complete, sighash_type, sign, bip32derivs);
+        return m_wallet->FillPSBT(psbtx, complete, sighash_type, sign, bip32derivs, n_signed);
     }
     WalletBalances getBalances() override
     {
