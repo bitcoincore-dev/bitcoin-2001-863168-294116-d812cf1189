@@ -34,13 +34,13 @@ std::string StringForFeeReason(FeeReason reason) {
 
 static const std::vector<std::pair<std::string, FeeEstimateMode>>& FeeModes()
 {
-static const std::vector<std::pair<std::string, FeeEstimateMode>> FEE_MODES = {
+    static const std::vector<std::pair<std::string, FeeEstimateMode>> FEE_MODES = {
         {"UNSET", FeeEstimateMode::UNSET},
         {"ECONOMICAL", FeeEstimateMode::ECONOMICAL},
         {"CONSERVATIVE", FeeEstimateMode::CONSERVATIVE},
-    {"EXPLICIT", FeeEstimateMode::BTC_KB},
-    {(CURRENCY_UNIT + "/kB"), FeeEstimateMode::BTC_KB},
-    {(CURRENCY_ATOM + "/B"), FeeEstimateMode::SAT_B},
+        {"EXPLICIT", FeeEstimateMode::BTC_KB},
+        {(CURRENCY_UNIT + "/kB"), FeeEstimateMode::BTC_KB},
+        {(CURRENCY_ATOM + "/B"), FeeEstimateMode::SAT_B},
     };
     return FEE_MODES;
 }
