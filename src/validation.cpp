@@ -20,6 +20,7 @@
 #include <index/txindex.h>
 #include <logging.h>
 #include <logging/timer.h>
+#include <policy/coin_age_priority.h>
 #include <policy/fees.h>
 #include <policy/policy.h>
 #include <policy/settings.h>
@@ -709,7 +710,12 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
 
     // nModifiedFees includes any fee deltas from PrioritiseTransaction
     nModifiedFees = nFees;
-    m_pool.ApplyDelta(hash, nModifiedFees);
+    double nPriorityDummy = 0;
+    m_pool.ApplyDeltas(hash, nPriorityDummy, nModifiedFees);
+
+    CAmount inChainInputValue;
+    // Since entries arrive *after* the tip's height, their priority is for the height+1
+    double dPriority = GetPriority(tx, m_view, ::ChainActive().Height() + 1, inChainInputValue);
 
     // Keep track of transactions that spend a coinbase, which we re-scan
     // during reorgs to ensure COINBASE_MATURITY is still met.
@@ -722,8 +728,8 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
         }
     }
 
-    entry.reset(new CTxMemPoolEntry(ptx, nFees, nAcceptTime, ::ChainActive().Height(),
-            fSpendsCoinbase, nSigOpsCost, lp));
+    entry.reset(new CTxMemPoolEntry(ptx, nFees, nAcceptTime, dPriority, ::ChainActive().Height(),
+            inChainInputValue, fSpendsCoinbase, nSigOpsCost, lp));
     unsigned int nSize = entry->GetTxSize();
 
     if (nSigOpsCost > MAX_STANDARD_TX_SIGOPS_COST)
@@ -2555,6 +2561,7 @@ bool CChainState::DisconnectTip(BlockValidationState& state, const CChainParams&
     if (disconnectpool) {
         // Save transactions to re-add to mempool at end of reorg
         for (auto it = block.vtx.rbegin(); it != block.vtx.rend(); ++it) {
+            mempool.UpdateDependentPriorities(*(*it), pindexDelete->nHeight, false);
             disconnectpool->addTransaction(*it);
         }
         while (disconnectpool->DynamicMemoryUsage() > MAX_DISCONNECTED_TX_POOL_SIZE * 1000) {
@@ -5080,14 +5087,8 @@ bool LoadMempool(CTxMemPool& pool)
         if (it != mapData.end()) {
             try {
                 CDataStream ss(it->second, SER_DISK, CLIENT_VERSION);
-                std::map<uint256, std::pair<double, CAmount>> mapDeltas;
-                ss >> mapDeltas;
                 LOCK(pool.cs);
-                for (const auto& it : mapDeltas) {
-                    const uint256& txid = it.first;
-                    const CAmount& amountdelta = it.second.second;
-                    pool.PrioritiseTransaction(txid, amountdelta);
-                }
+                ss >> pool.mapDeltas;
             } catch (const std::exception& e) {
                 LogPrintf("Failed to deserialize mempool %s from disk: %s. Continuing anyway.\n", "deltas", e.what());
             }
@@ -5176,9 +5177,7 @@ bool DumpMempool(const CTxMemPool& pool)
 
     {
         LOCK(pool.cs);
-        for (const auto &i : pool.mapDeltas) {
-            mapDeltas[i.first] = std::make_pair(0.0, i.second);
-        }
+        mapDeltas = pool.mapDeltas;
         vinfo = pool.infoAll();
     }
 
