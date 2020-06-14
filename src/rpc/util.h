@@ -219,6 +219,7 @@ struct RPCResult {
         ARR_FIXED,  //!< Special array that has a fixed number of entries
         NUM_TIME,   //!< Special numeric to denote unix epoch time
         ELISION,    //!< Special type to denote elision (...)
+        HIDDEN,     //!< Special type to hide the RPCResult entirely
     };
 
     const Type m_type;
