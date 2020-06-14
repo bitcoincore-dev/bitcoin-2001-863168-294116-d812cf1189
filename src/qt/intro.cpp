@@ -16,6 +16,7 @@
 
 #include <interfaces/node.h>
 #include <util/system.h>
+#include <validation.h>
 
 #include <QFileDialog>
 #include <QSettings>
@@ -138,16 +139,25 @@ Intro::Intro(QWidget *parent, int64_t blockchain_size_gb, int64_t chain_state_si
     );
     ui->lblExplanation2->setText(ui->lblExplanation2->text().arg(PACKAGE_NAME));
 
+    const int min_prune_target = std::ceil(MIN_DISK_SPACE_FOR_BLOCK_FILES / 1e9);
+    ui->pruneGB->setRange(min_prune_target, std::numeric_limits<int>::max());
     if (gArgs.GetArg("-prune", 0) > 1) { // -prune=1 means enabled, above that it's a size in MiB
         ui->prune->setChecked(true);
         ui->prune->setEnabled(false);
     }
-    ui->prune->setText(tr("Discard blocks after verification, except most recent %1 GB (prune)").arg(m_prune_target_gb));
+    ui->pruneGB->setValue(m_prune_target_gb);
+    ui->pruneGB->setToolTip(ui->prune->toolTip());
+    ui->lblPruneSuffix->setToolTip(ui->prune->toolTip());
     UpdatePruneLabels(ui->prune->isChecked());
 
     connect(ui->prune, &QCheckBox::toggled, [this](bool prune_checked) {
         m_prune_checkbox_is_default = false;
         UpdatePruneLabels(prune_checked);
+        UpdateFreeSpaceLabel();
+    });
+    connect(ui->pruneGB, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [this](int prune_GB) {
+        m_prune_target_gb = prune_GB;
+        UpdatePruneLabels(ui->prune->isChecked());
         UpdateFreeSpaceLabel();
     });
 
@@ -182,7 +192,17 @@ void Intro::setDataDirectory(const QString &dataDir)
     }
 }
 
-bool Intro::showIfNeeded(interfaces::Node& node, bool& did_show_intro, bool& prune)
+int64_t Intro::getPrune() const
+{
+    switch (ui->prune->checkState()) {
+    case Qt::Checked:
+         return PruneGBtoMiB(m_prune_target_gb);
+    case Qt::Unchecked: default:
+        return 0;
+    }
+}
+
+bool Intro::showIfNeeded(interfaces::Node& node, bool& did_show_intro, int64_t& prune)
 {
     did_show_intro = false;
 
@@ -233,7 +253,7 @@ bool Intro::showIfNeeded(interfaces::Node& node, bool& did_show_intro, bool& pru
         }
 
         // Additional preferences:
-        prune = intro.ui->prune->isChecked();
+        prune = intro.getPrune();
 
         settings.setValue("strDataDir", dataDir);
         settings.setValue("fReset", false);
@@ -362,6 +382,10 @@ void Intro::UpdatePruneLabels(bool prune_checked)
         storageRequiresMsg = tr("Approximately %1 GB of data will be stored in this directory.");
     }
     ui->lblExplanation3->setVisible(prune_checked);
+    ui->pruneGB->setEnabled(prune_checked);
+    static const uint64_t nPowTargetSpacing = 10 * 60;  // from chainparams, which we don't have at this stage
+    static const uint32_t expected_block_data_size = 2250000;  // includes undo data
+    ui->lblPruneSuffix->setText(tr("(sufficient to restore backups %n day(s) old)", "block chain pruning", m_prune_target_gb * 1e9 / (uint64_t(expected_block_data_size) * 86400 / nPowTargetSpacing)));
     ui->sizeWarningLabel->setText(
         tr("%1 will download and store a copy of the Bitcoin block chain.").arg(PACKAGE_NAME) + " " +
         storageRequiresMsg.arg(m_required_space_gb) + " " +
