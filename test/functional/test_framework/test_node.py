@@ -110,6 +110,7 @@ class TestNode():
 
         if self.version is None:
             self.args += [
+                "-softwareexpiry=0",
                 "-walletimplicitsegwit",
             ]
 
