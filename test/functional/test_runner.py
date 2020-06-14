@@ -225,6 +225,7 @@ BASE_SCRIPTS = [
     'rpc_getaddressinfo_label_deprecation.py',
     'rpc_getblock_fee.py',
     'rpc_getdescriptorinfo.py',
+    'rpc_getgeneralinfo.py',
     'rpc_help.py',
     'feature_help.py',
     'feature_shutdown.py',
