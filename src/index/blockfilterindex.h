@@ -41,9 +41,9 @@ protected:
 
     BaseIndex::DB& GetDB() const override { return *m_db; }
 
+public:
     const char* GetName() const override { return m_name.c_str(); }
 
-public:
     /** Constructs the index, which becomes available to be queried. */
     explicit BlockFilterIndex(BlockFilterType filter_type,
                               size_t n_cache_size, bool f_memory = false, bool f_wipe = false);
