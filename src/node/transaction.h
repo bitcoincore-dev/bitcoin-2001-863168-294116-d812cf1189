@@ -7,6 +7,7 @@
 
 #include <attributes.h>
 #include <primitives/transaction.h>
+#include <policy/policy.h>
 #include <util/error.h>
 
 struct NodeContext;
@@ -28,6 +29,6 @@ struct NodeContext;
  * @param[in]  wait_callback wait until callbacks have been processed to avoid stale result due to a sequentially RPC.
  * return error
  */
-NODISCARD TransactionError BroadcastTransaction(NodeContext& node, CTransactionRef tx, std::string& err_string, const CAmount& max_tx_fee, bool relay, bool wait_callback);
+NODISCARD TransactionError BroadcastTransaction(NodeContext& node, CTransactionRef tx, std::string& err_string, const CAmount& max_tx_fee, bool relay, bool wait_callback, const ignore_rejects_type& ignore_rejects=empty_ignore_rejects);
 
 #endif // BITCOIN_NODE_TRANSACTION_H
