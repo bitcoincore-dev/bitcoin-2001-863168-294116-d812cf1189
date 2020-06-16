@@ -731,10 +731,16 @@ public:
         return totalTxSize;
     }
 
-    bool exists(const uint256& hash) const
+    bool existsNonLockHelper(const uint256& hash) const EXCLUSIVE_LOCKS_REQUIRED(cs)
     {
-        LOCK(cs);
         return (mapTx.count(hash) != 0);
+    }
+
+    bool exists(const uint256& hash) const EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    {
+        AssertLockNotHeld(cs);
+        LOCK(cs);
+        return existsNonLockHelper(hash);
     }
 
     CTransactionRef get(const uint256& hash) const;
@@ -749,7 +755,7 @@ public:
         AssertLockNotHeld(cs);
         LOCK(cs);
         // Sanity Check: the transaction should also be in the mempool
-        if (exists(txid)) {
+        if (existsNonLockHelper(txid)) {
             m_unbroadcast_txids.insert(txid);
         }
     }
