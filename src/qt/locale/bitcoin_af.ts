@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Regs-klik om die adres of etiket te wysig</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Skep 'n nuwe adres</translation>
     </message>
@@ -168,6 +164,14 @@
         <translation>Beursie enkriptasie voltooi</translation>
     </message>
     <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Tik die nuwe wagwoord vir u beursie.&lt;br/&gt;Gerbuik asseblief 'n wagwoord met &lt;b&gt;tien of meer lukrake karakters&lt;/b&gt;, of &lt;b&gt;agt of meer woorde&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>Tik die ou en die nuwe wagwoorde vir die beursie.</translation>
+    </message>
+    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>BELANGRIK: Enige vorige rugsteune wat u gemaak het van u beursie-lêer moet vervang word met die nuut-gegenereerde, versleutelde beursie-lêer. Vir sekuriteitsredes sal vorige rugsteune van die onversleutelde beursie-lêer onbruikbaar word sodra u die nuwe, versleutelde beursie begin gebruik.</translation>
     </message>
@@ -290,6 +294,10 @@
         <translation>Maak &amp;URI oop...</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Beursie:</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>Klik om netwerk aktiwiteit af te skakel.</translation>
     </message>
@@ -393,6 +401,10 @@
         <source>Processing blocks on disk...</source>
         <translation>Prosesseer tans blokke op skyf...</translation>
     </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation><numerusform>%n blok van transaksiegeskiedenis geprosesseer.</numerusform><numerusform>%n blokke van transaksiegeskiedenis geprosesseer.</numerusform></translation>
+    </message>
     <message>
         <source>%1 behind</source>
         <translation>%1 agter</translation>
@@ -420,6 +432,18 @@
     <message>
         <source>Up to date</source>
         <translation>Op datum</translation>
+    </message>
+    <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Maak ontfouting en diagnostiese konsole oop</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Versending adresse</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Ontvanger adresse</translation>
     </message>
     <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
@@ -660,6 +684,10 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation type="unfinished">Enkripteer Beursie</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -732,6 +760,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -782,6 +813,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>n.v.t.</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -819,14 +857,35 @@
         <source>Hide</source>
         <translation>Steek weg</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown. Syncing Headers (%1, %2%)...</source>
+        <translation>Onbekend. Besig Met Sinchroniseer Van Hoofde (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipe</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
     </message>
-</context>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Plak adres van aanknipbord af</translation>
+    </message>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     </context>
@@ -855,6 +914,10 @@
     <message>
         <source>Number of script &amp;verification threads</source>
         <translation>Aantal skrip &amp;verifikasie drade</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Versteek skinkbord ikoon</translation>
     </message>
     <message>
         <source>Open the %1 configuration file from the working directory.</source>
@@ -891,6 +954,14 @@
     <message>
         <source>&amp;Spend unconfirmed change</source>
         <translation>&amp;Spandeer onbevestigde kleingeld</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside.</source>
+        <translation>Verbindings van buite toelaat.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Inkomende verbindings toelaat</translation>
     </message>
     <message>
         <source>&amp;Port:</source>
@@ -937,6 +1008,10 @@
         <translation>Of om munt beheer funksies te wys of nie.</translation>
     </message>
     <message>
+        <source>&amp;Third party transaction URLs</source>
+        <translation type="unfinished">&amp;Derdeparty transaksie URL's</translation>
+    </message>
+    <message>
         <source>&amp;OK</source>
         <translation>&amp;OK</translation>
     </message>
@@ -951,6 +1026,10 @@
     <message>
         <source>none</source>
         <translation>niks</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Kern</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1033,6 +1112,20 @@
     </message>
     </context>
 <context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Sluit</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>of</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1100,9 +1193,25 @@
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n uur</numerusform><numerusform>%n ure</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n dag</numerusform><numerusform>%n dae</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n week</numerusform><numerusform>%n weke</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 en %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n jaar</numerusform><numerusform>%n jare</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1127,6 +1236,11 @@
     <message>
         <source>unknown</source>
         <translation>onbekend</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
     </message>
 </context>
 <context>
@@ -1181,6 +1295,10 @@
     <message>
         <source>Current number of blocks</source>
         <translation>Huidige aantal blokke</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Beursie: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -1302,6 +1420,10 @@
         <translation>&amp;Boodskap:</translation>
     </message>
     <message>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Versoek betaling</translation>
+    </message>
+    <message>
         <source>Clear all fields of the form.</source>
         <translation>Vee alle velde op die vorm skoon</translation>
     </message>
@@ -1316,6 +1438,10 @@
     <message>
         <source>Remove</source>
         <translation>Verwyder</translation>
+    </message>
+    <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Kopieer URI</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -1603,6 +1729,10 @@ transaksievertragingsrisiko.</translation>
         <translation>Bevestig versending van munte</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">Stuur</translation>
+    </message>
+    <message>
         <source>The recipient address is not valid. Please recheck.</source>
         <translation>Die ontvangeradres is ongeldig. Kyk asseblief weer mooi.</translation>
     </message>
@@ -1716,6 +1846,13 @@ word die fooi eweredig verdeel.</translation>
         <translation>Betaal Vir:</translation>
     </message>
     </context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+</context>
 <context>
     <name>ShutdownWindow</name>
     </context>
@@ -1852,6 +1989,10 @@ word die fooi eweredig verdeel.</translation>
         <translation>Transaksie</translation>
     </message>
     <message>
+        <source>Inputs</source>
+        <translation type="unfinished">Insette</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>Bedrag</translation>
     </message>
@@ -1961,10 +2102,6 @@ word die fooi eweredig verdeel.</translation>
         <translation>Gestuur na</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Aan/na jouself</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Gemyn</translation>
     </message>
@@ -1999,6 +2136,10 @@ word die fooi eweredig verdeel.</translation>
     <message>
         <source>Confirmed</source>
         <translation>Bevestig</translation>
+    </message>
+    <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">Kyk-net</translation>
     </message>
     <message>
         <source>Date</source>
@@ -2063,7 +2204,19 @@ word die fooi eweredig verdeel.</translation>
         <source>Export the data in the current tab to a file</source>
         <translation>Voer inligting uit van die huidige blad na n lêer</translation>
     </message>
-    </context>
+    <message>
+        <source>Error</source>
+        <translation>Fout</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Rugsteun Beursie</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Kanselleer</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -2073,6 +2226,10 @@ word die fooi eweredig verdeel.</translation>
     <message>
         <source>Importing...</source>
         <translation>Invoer proses tans besig..</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is too low!</source>
+        <translation>Fout: Hardeskyf spasie is baie laag!</translation>
     </message>
     <message>
         <source>Signing transaction failed</source>

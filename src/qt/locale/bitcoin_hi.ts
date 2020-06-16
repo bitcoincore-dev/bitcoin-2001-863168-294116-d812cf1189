@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>एड्रेस या लेबल को बदलने के लिए राइट-क्लिक करें </translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>नया एड्रेस बनाएं</translation>
     </message>
@@ -68,10 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>भुगतान करने के लिए ये आपके बिटकॉइन एड्रेस हैं। कॉइन भेजने से पहले राशि और गंतव्य एड्रेस की हमेशा जाँच करें </translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.</source>
-        <translation>भुगतान प्राप्त करने के लिए ये आपके बिटकॉइन एड्रेस हैं। नया एड्रेस बनाने के लिए रिसीव टैब में 'नया एड्रेस बनाएं' बटन का प्रयोग करें</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -180,6 +172,14 @@
         <translation>वॉलेट को एन्क्रिप्ट किया गया है</translation>
     </message>
     <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>वॉलेट में नया सुरक्षा संवाद दर्ज करें | कृपया दस एवं उससे अधिक अव्यवस्थित या आठ एवं उससे अधिक अव्यवस्थित अंको से ही अपना सुरक्षा संवाद बनाएं </translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>वॉलेट में नया एवं पुराना सुरक्षा संवाद इंगित करें </translation>
+    </message>
+    <message>
         <source>Wallet encryption failed</source>
         <translation>वॉलेट एन्क्रिप्शन विफल रहा</translation>
     </message>
@@ -231,6 +231,10 @@
         <translation>&amp;विकल्प</translation>
     </message>
     <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">&amp;वॉलेट एन्क्रिप्ट करें...</translation>
+    </message>
+    <message>
         <source>&amp;Backup Wallet...</source>
         <translation>&amp;बैकप वॉलेट</translation>
     </message>
@@ -279,6 +283,14 @@
         <translation>नवीनतम</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;पता भेजा जा रहा है </translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;पता प्राप्त क़िया जा रहा है </translation>
+    </message>
+    <message>
         <source>Sent transaction</source>
         <translation>भेजी ट्रांजक्शन</translation>
     </message>
@@ -323,6 +335,10 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>वॉलेट एन्क्रिप्ट करें</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -343,6 +359,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -361,6 +380,14 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>लागू नही
+</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -368,8 +395,24 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>पता </translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
-    </context>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Clipboard से एड्रेस paste करें</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt-P</translation>
+    </message>
+</context>
 <context>
     <name>OpenWalletActivity</name>
     </context>
@@ -404,6 +447,16 @@
     </message>
     </context>
 <context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">सीलूज़</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     </context>
 <context>
@@ -424,7 +477,7 @@
         <source>unknown</source>
         <translation>अज्ञात</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     </context>
@@ -438,6 +491,10 @@
     <message>
         <source>&amp;Information</source>
         <translation>जानकारी</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">तिजोरी  </translation>
     </message>
     </context>
 <context>
@@ -500,6 +557,10 @@
         <translation>राशि :</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">चुनें...</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>एक साथ कई प्राप्तकर्ताओं को भेजें</translation>
     </message>
@@ -546,6 +607,9 @@
         <source>Pay To:</source>
         <translation>प्राप्तकर्ता:</translation>
     </message>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -662,7 +726,15 @@
         <source>Export the data in the current tab to a file</source>
         <translation>डेटा को मौजूदा टैब से एक फ़ाइल में निर्यात करें</translation>
     </message>
-    </context>
+    <message>
+        <source>Error</source>
+        <translation>भूल</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">कैन्सल</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>

@@ -50,6 +50,10 @@
 <context>
     <name>BitcoinGUI</name>
     <message>
+        <source>&amp;Options...</source>
+        <translation type="unfinished">&amp;هەڵبژاردنەکان...</translation>
+    </message>
+    <message>
         <source>&amp;Send</source>
         <translation>&amp;ناردن</translation>
     </message>
@@ -117,6 +121,10 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;ناوونیشان</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -124,6 +132,9 @@
         <source>name</source>
         <translation>ناو</translation>
     </message>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -144,8 +155,24 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>جۆر</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>ناوونیشان</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -159,6 +186,10 @@
         <translation>هەڵبژاردنەکان</translation>
     </message>
     <message>
+        <source>&amp;Network</source>
+        <translation type="unfinished">&amp;تۆڕ</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>هەڵە</translation>
     </message>
@@ -169,6 +200,20 @@
         <source>Total:</source>
         <translation>گشتی</translation>
     </message>
+    </context>
+<context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Cداخستن</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>یان</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -291,6 +336,10 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;ڕوونووسکردن ناوونیشان</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>ناوونیشان</translation>
     </message>
@@ -325,17 +374,36 @@
         <translation>تێچوون:</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;ناردن</translation>
+    </message>
+    <message>
         <source>or</source>
         <translation>یان</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">ناردن</translation>
     </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>
     <message>
+        <source>A&amp;mount:</source>
+        <translation>&amp;سەرجەم:</translation>
+    </message>
+    <message>
         <source>Message:</source>
         <translation>پەیام:</translation>
     </message>
     </context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>بەڵێ</translation>
+    </message>
+</context>
 <context>
     <name>ShutdownWindow</name>
     </context>
@@ -446,6 +514,10 @@
     <message>
         <source>&amp;Export</source>
         <translation>&amp;هەناردن</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>هەڵە</translation>
     </message>
     </context>
 <context>

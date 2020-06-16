@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Click derecho para editar tu dirección o etiqueta</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Crear una dirección nueva</translation>
     </message>
@@ -132,6 +128,10 @@
         <translation>Repita la nueva contraseña</translation>
     </message>
     <message>
+        <source>Show passphrase</source>
+        <translation>Mostrar contraseña</translation>
+    </message>
+    <message>
         <source>Encrypt wallet</source>
         <translation>Encriptar cartera</translation>
     </message>
@@ -170,6 +170,14 @@
     <message>
         <source>Wallet encrypted</source>
         <translation>Cartera encriptada</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Introduzca una nueva contraseña a la cartera&lt;br.&gt;Por favor use una contraseña de&lt;b&gt;10 o más caracteres aleatorios&lt;b&gt; o &lt;b&gt;ocho o más palabras&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>Ingrese la contraseña antigua y la nueva contraseña en la cartera.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -255,7 +263,7 @@
     </message>
     <message>
         <source>&amp;About %1</source>
-        <translation>%Acerca de%1</translation>
+        <translation>&amp;Acerca de %1</translation>
     </message>
     <message>
         <source>Show information about %1</source>
@@ -292,6 +300,14 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Abrir &amp;URL...</translation>
+    </message>
+    <message>
+        <source>Create Wallet...</source>
+        <translation>Crear cartera</translation>
+    </message>
+    <message>
+        <source>Create a new wallet</source>
+        <translation>Crear una nueva cartera</translation>
     </message>
     <message>
         <source>Wallet:</source>
@@ -393,6 +409,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation>opciones de la &amp;Linea de comandos</translation>
     </message>
     <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Indexando bloques en el disco...</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Error</translation>
     </message>
@@ -409,8 +429,66 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation>Actualizado al dia </translation>
     </message>
     <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Abrir consola de depuración y diagnostico</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">Direcciones de &amp;envío</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">Direcciones de &amp;recepción</translation>
+    </message>
+    <message>
+        <source>Open Wallet</source>
+        <translation>Abrir Cartera</translation>
+    </message>
+    <message>
+        <source>Open a wallet</source>
+        <translation>Abrir una cartera</translation>
+    </message>
+    <message>
+        <source>Close Wallet...</source>
+        <translation>Cerrar Cartera...</translation>
+    </message>
+    <message>
+        <source>Close wallet</source>
+        <translation>Cerrar cartera</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Mostrar mensaje de ayuda del %1 para optener una lista con los posibles comandos  de Bitcoin</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Ventana</translation>
+    </message>
+    <message>
+        <source>Minimize</source>
+        <translation>Minimizar</translation>
+    </message>
+    <message>
+        <source>Main Window</source>
+        <translation>Ventana Principal</translation>
+    </message>
+    <message>
         <source>Catching up...</source>
         <translation>Recibiendo...</translation>
+    </message>
+    <message>
+        <source>Error: %1</source>
+        <translation>Error: %1</translation>
+    </message>
+    <message>
+        <source>Warning: %1</source>
+        <translation>Alerta: %1</translation>
+    </message>
+    <message>
+        <source>Date: %1
+</source>
+        <translation>Fecha: %1
+</translation>
     </message>
     <message>
         <source>Sent transaction</source>
@@ -462,6 +540,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     <message>
         <source>Date</source>
         <translation>Fecha</translation>
+    </message>
+    <message>
+        <source>Confirmations</source>
+        <translation>Confirmaciones</translation>
     </message>
     <message>
         <source>Confirmed</source>
@@ -525,7 +607,15 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     </context>
 <context>
     <name>CreateWalletDialog</name>
-    </context>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>Encriptar cartera</translation>
+    </message>
+    <message>
+        <source>Create</source>
+        <translation>Crear</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -569,10 +659,17 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
         <translation>versión</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation>Acerca de %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -581,6 +678,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
 </context>
 <context>
     <name>Intro</name>
+    <message>
+        <source>Welcome</source>
+        <translation>Bienvenido</translation>
+    </message>
     <message>
         <source>Bitcoin</source>
         <translation>Bitcoin</translation>
@@ -591,17 +692,49 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Formulario</translation>
     </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">desconocido...</translation>
+    </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Dirección</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
-    </context>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Pegar dirección  del portapapeles</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+</context>
 <context>
     <name>OpenWalletActivity</name>
+    <message>
+        <source>default wallet</source>
+        <translation>cartera predeterminada</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
@@ -614,8 +747,16 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation>Cartera</translation>
     </message>
     <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Ventana</translation>
+    </message>
+    <message>
         <source>none</source>
         <translation>Ninguno </translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>nucleo Bitcoin</translation>
     </message>
     <message>
         <source>Error</source>
@@ -630,6 +771,20 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     </message>
     </context>
 <context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Cerrar</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>o</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     </context>
 <context>
@@ -642,8 +797,22 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation>Monto</translation>
     </message>
     <message>
+        <source>Error: %1</source>
+        <translation>Error: %1</translation>
+    </message>
+    <message>
         <source>unknown</source>
         <translation>desconocido</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blq</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -651,7 +820,23 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     </context>
 <context>
     <name>RPCConsole</name>
-    </context>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Información </translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Cartera: </translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation type="unfinished">Actividad de red deshabilitada</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">desconocido</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -764,6 +949,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation>Cambio</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Elegir...</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Enviar a múltiples receptores a la vez</translation>
     </message>
@@ -774,6 +963,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     <message>
         <source>Confirm the send action</source>
         <translation>Confirme la acción de enviar</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Enviar</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -806,6 +999,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     <message>
         <source>Confirm send coins</source>
         <translation>Confirme para enviar monedas</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">Enviar</translation>
     </message>
     <message>
         <source>The amount to pay must be larger than 0.</source>
@@ -866,6 +1063,9 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <source>Pay To:</source>
         <translation>Pago para:</translation>
     </message>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -1060,10 +1260,6 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation>Enviar a</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Para ti mismo</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Minado </translation>
     </message>
@@ -1153,6 +1349,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     </context>
 <context>
     <name>WalletController</name>
+    <message>
+        <source>Close wallet</source>
+        <translation>Cerrar cartera</translation>
+    </message>
     </context>
 <context>
     <name>WalletFrame</name>
@@ -1167,7 +1367,11 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <source>Send Coins</source>
         <translation>Enviar monedas</translation>
     </message>
-    </context>
+    <message>
+        <source>default wallet</source>
+        <translation>cartera predeterminada</translation>
+    </message>
+</context>
 <context>
     <name>WalletView</name>
     <message>
@@ -1177,6 +1381,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Exportar la información en la pestaña actual a un archivo</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Error</translation>
     </message>
     <message>
         <source>There was an error trying to save the wallet data to %1.</source>
@@ -1190,8 +1398,16 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
 <context>
     <name>bitcoin-core</name>
     <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Cargando p2p direcciones...</translation>
+    </message>
+    <message>
         <source>Verifying blocks...</source>
         <translation>Verificando bloques...</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Verificando cartera...</translation>
     </message>
     <message>
         <source>Loading block index...</source>

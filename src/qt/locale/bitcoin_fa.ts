@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>برای ویرایش آدرس یا برچسب روی آن راست کلیک کنید</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>گشایش آدرس جدید</translation>
     </message>
@@ -172,6 +168,14 @@
         <translation>کیف پول رمزگذاری شده است</translation>
     </message>
     <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>رمز جدید را در کیف‌پول وارد کنید. &lt;br/&gt;لطفا از رمزی استفاده کنید که&lt;b&gt; حداقل ۱۰ کاراکتر راندوم&lt;/b&gt;یا&lt;b&gt;حداقل ۸ کلمه داشته باشد&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>رمز عبور قدیمی و رمز عبور جدید کیف پول خود را وارد کنید.</translation>
+    </message>
+    <message>
         <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
         <translation>والت رمز بندی شد . 
 یاد داشته باشید که پنجره رمز شده نمی تواند کلا از سرقت نرم افزارهای مخرب محافظ کند</translation>
@@ -297,6 +301,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>بازکردن آدرس...</translation>
+    </message>
+    <message>
+        <source>Create a new wallet</source>
+        <translation>ساخت کیف پول جدید</translation>
     </message>
     <message>
         <source>Wallet:</source>
@@ -447,6 +455,10 @@
         <translation>به روز</translation>
     </message>
     <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>باز کردن کنسول دی باگ و تشخیص</translation>
+    </message>
+    <message>
         <source>&amp;Sending addresses</source>
         <translation>ادرس ارسال</translation>
     </message>
@@ -461,10 +473,6 @@
     <message>
         <source>Open a wallet</source>
         <translation>باز کردن یک حساب</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>کیف پول پیش‌فرض</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -699,6 +707,10 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation type="unfinished">رمزنگاری کیف پول</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -767,6 +779,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -833,6 +848,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>ناموجود</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -872,10 +894,31 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>نوع</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>آدرس</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>URI:</source>
         <translation>آدرس:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>استفاده از آدرس کلیپ بورد</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -923,10 +966,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>شبکه</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>گیگابایت</translation>
     </message>
     <message>
         <source>W&amp;allet</source>
@@ -1037,6 +1076,10 @@
         <translation>خالی</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation> هسته Bitcoin </translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>تایید ریست تنظیمات</translation>
     </message>
@@ -1139,6 +1182,24 @@
         <source>Mined balance in watch-only addresses that has not yet matured</source>
         <translation>موجودی استخراج شده در آدرس های فقط قابل مشاهده هنوز کامل نشده است</translation>
     </message>
+    </context>
+<context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">بستن</translation>
+    </message>
+    <message>
+        <source>Total Amount</source>
+        <translation>میزان کل</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>یا</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1279,6 +1340,16 @@
     <message>
         <source>unknown</source>
         <translation>ناشناس</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>بلوک</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>تراکنش</translation>
     </message>
 </context>
 <context>
@@ -1560,6 +1631,10 @@
     <message>
         <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
         <translation>از این فرم استفاده کنید برای درخواست پرداخت ها.تمامی گزینه ها &lt;b&gt;اختیاری&lt;/b&gt;هستند.</translation>
+    </message>
+    <message>
+        <source>&amp;Request payment</source>
+        <translation>&amp;درخواست پرداخت</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -1847,6 +1922,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>%1(%2 بلاک ها)</translation>
     </message>
     <message>
+        <source> from wallet '%1'</source>
+        <translation>'%1'از کیف پول  </translation>
+    </message>
+    <message>
         <source>%1 to %2</source>
         <translation>%1 به %2</translation>
     </message>
@@ -1877,6 +1956,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Confirm send coins</source>
         <translation>تایید کردن ارسال کوین ها</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">و ارسال</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -1988,6 +2071,13 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Memo:</source>
         <translation>یادداشت:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>بله</translation>
     </message>
 </context>
 <context>
@@ -2142,6 +2232,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>باز برای %n بلوک دیگر</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>باز تا %1</translation>
@@ -2197,6 +2291,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Credit</source>
         <translation>اعتبار</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation><numerusform>بلوغ در %n بلوک دیگر</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2283,6 +2381,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Label</source>
         <translation>برچسب</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>باز برای %n بلوک دیگر</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2388,10 +2490,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>ارسال شده به</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>به خودت</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>استخراج شده</translation>
     </message>
@@ -2450,6 +2548,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Confirmed</source>
         <translation>تایید شده</translation>
+    </message>
+    <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">فقط قابل-مشاهده</translation>
     </message>
     <message>
         <source>Date</source>
@@ -2547,6 +2649,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>صدور داده نوار جاری به یک فایل</translation>
     </message>
     <message>
+        <source>Error</source>
+        <translation>خطا</translation>
+    </message>
+    <message>
         <source>Backup Wallet</source>
         <translation>بازیابی یا پشتیبان گیری کیف پول</translation>
     </message>
@@ -2628,6 +2734,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Loading P2P addresses...</source>
         <translation>در حال بارگذاری آدرس های همتا-به-همتا یا P2P</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is too low!</source>
+        <translation>حطا:فضای دیسک کم است!</translation>
     </message>
     <message>
         <source>Loading banlist...</source>

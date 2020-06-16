@@ -198,6 +198,10 @@
         <translation>Exi applicatione</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Monstra informationem de %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Informatio de &amp;Qt</translation>
     </message>
@@ -220,6 +224,10 @@
     <message>
         <source>&amp;Change Passphrase...</source>
         <translation>&amp;Muta tesseram...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Cassidile:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -290,6 +298,10 @@
         <translation>Optiones mandati initiantis</translation>
     </message>
     <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Creans indicem frustorum in disco...</translation>
+    </message>
+    <message>
         <source>%1 behind</source>
         <translation>%1 post</translation>
     </message>
@@ -316,6 +328,10 @@
     <message>
         <source>Up to date</source>
         <translation>Recentissimo</translation>
+    </message>
+    <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Aperi terminalem debug et diagnosticalem</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -390,6 +406,10 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation type="unfinished">Cifra Cassidile</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -434,6 +454,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -456,10 +479,21 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Schema</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">ignotum...</translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -467,8 +501,29 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typus</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Inscriptio</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
-    </context>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Glutina inscriptionem ex latibulo</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+</context>
 <context>
     <name>OpenWalletActivity</name>
     </context>
@@ -563,6 +618,10 @@
         <translation>praedefinitum</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Nucleus</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Confirma optionum reconstituere</translation>
     </message>
@@ -595,6 +654,12 @@
     </message>
     </context>
 <context>
+    <name>PSBTOperationsDialog</name>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Cannot start bitcoin: click-to-pay handler</source>
@@ -621,6 +686,16 @@
     <message>
         <source>unknown</source>
         <translation>ignotum</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Fsm</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tso</translation>
     </message>
 </context>
 <context>
@@ -673,6 +748,10 @@
         <translation>Numerus frustorum iam nunc</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Cassidile: </translation>
+    </message>
+    <message>
         <source>Last block time</source>
         <translation>Hora postremi frusti</translation>
     </message>
@@ -692,7 +771,11 @@
         <source>Clear console</source>
         <translation>Vacuefac terminale</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">ignotum</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -769,6 +852,10 @@
         <translation>Mitte Nummos</translation>
     </message>
     <message>
+        <source>Inputs...</source>
+        <translation type="unfinished">Lectenda...</translation>
+    </message>
+    <message>
         <source>Insufficient funds!</source>
         <translation>Inopia nummorum</translation>
     </message>
@@ -815,6 +902,10 @@
     <message>
         <source>Confirm send coins</source>
         <translation>Confirma mittendum nummorum</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">Mitte</translation>
     </message>
     <message>
         <source>The amount to pay must be larger than 0.</source>
@@ -867,6 +958,9 @@
         <source>Pay To:</source>
         <translation>Pensa Ad:</translation>
     </message>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -1217,10 +1311,6 @@
         <translation>Missum ad</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Ad te ipsum</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Fossa</translation>
     </message>
@@ -1320,6 +1410,10 @@
         <translation>Exporta data in hac tabella in plicam</translation>
     </message>
     <message>
+        <source>Error</source>
+        <translation>Error</translation>
+    </message>
+    <message>
         <source>Backup Wallet</source>
         <translation>Conserva cassidile</translation>
     </message>
@@ -1335,12 +1429,20 @@
         <source>Backup Successful</source>
         <translation>Successum in conservando</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancella</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
         <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
         <translation>Hoc est prae-dimittum experimentala aedes - utere eo periculo tuo proprio - nolite utere fodendo vel applicationibus mercatoriis</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>Non posse resolvere -%s inscriptionem: '%s'</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
@@ -1371,6 +1473,14 @@
         <translation>Non potuisse auscultare in ulla porta.  Utere -listen=0 si hoc vis.</translation>
     </message>
     <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Legens p2p inscriptiones...</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is too low!</source>
+        <translation>Error: Inopia spatii disci!</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Inopia descriptorum plicarum.</translation>
     </message>
@@ -1389,6 +1499,10 @@
     <message>
         <source>Transaction too large</source>
         <translation>Transactio nimis magna</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Verificante cassidilem...</translation>
     </message>
     <message>
         <source>Unknown network specified in -onlynet: '%s'</source>

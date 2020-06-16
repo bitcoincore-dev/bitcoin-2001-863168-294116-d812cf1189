@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Kliko me të djathtën për të ndryshuar adresën ose etiketen.</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Krijo një adresë të re</translation>
     </message>
@@ -152,6 +148,10 @@
         <translation>Portofoli u enkriptua</translation>
     </message>
     <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>Fusni fjalëkalimin e vjetër dhe fjalëkalimin e ri që të hapni portofolin.</translation>
+    </message>
+    <message>
         <source>Wallet encryption failed</source>
         <translation>Enkriptimi i portofolit dështoi</translation>
     </message>
@@ -210,6 +210,10 @@
         <translation>&amp;Opsione</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portofol:</translation>
+    </message>
+    <message>
         <source>Change the passphrase used for wallet encryption</source>
         <translation>Ndrysho frazkalimin e përdorur per enkriptimin e portofolit</translation>
     </message>
@@ -256,6 +260,14 @@
     <message>
         <source>Up to date</source>
         <translation>I azhornuar</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Duke derguar adresen</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Duke marr adresen</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -318,6 +330,10 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>Kripto portofolin</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -362,6 +378,9 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -384,15 +403,43 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Formilarë</translation>
     </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">i/e panjohur...</translation>
+    </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Lloji</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresë</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
-    </context>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Ngjit nga memorja e sistemit</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+</context>
 <context>
     <name>OpenWalletActivity</name>
     </context>
@@ -407,6 +454,10 @@
         <translation>Portofol</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Berthama Bitcoin</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Problem</translation>
     </message>
@@ -417,6 +468,12 @@
         <source>Form</source>
         <translation>Formilarë</translation>
     </message>
+    </context>
+<context>
+    <name>PSBTOperationsDialog</name>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -438,6 +495,11 @@
         <source>unknown</source>
         <translation>i/e panjohur</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>tst</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -447,6 +509,10 @@
     <message>
         <source>&amp;Information</source>
         <translation>Informacion</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portofol: </translation>
     </message>
     <message>
         <source>&amp;Open</source>
@@ -529,6 +595,10 @@
         <translation>Shuma:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Zgjidh...</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Dërgo marrësve të ndryshëm njëkohësisht</translation>
     </message>
@@ -541,8 +611,16 @@
         <translation>Konfirmo veprimin e dërgimit</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Dergo</translation>
+    </message>
+    <message>
         <source>Confirm send coins</source>
         <translation>konfirmo dërgimin e monedhave</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">Dergo</translation>
     </message>
     <message>
         <source>The amount to pay must be larger than 0.</source>
@@ -583,6 +661,9 @@
         <source>Pay To:</source>
         <translation>Paguaj drejt:</translation>
     </message>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -758,6 +839,10 @@
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Eksporto të dhënat e skedës korrente në një skedar</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Problem</translation>
     </message>
     </context>
 <context>

@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>ලිපිනය හෝ ලේබලය සංස්කරණය කිරීමට දකුණු මූසික බොත්තම  ක්ලික් කරන්න</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>නව ලිපිනයක් සාදන්න</translation>
     </message>
@@ -52,10 +48,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>මේවා ඔබගේ ගෙවීම් යැවීම සඳහා වන බිට්කොයින් ලිපින වේ. කාසි යැවීමට පෙර සෑම විටම මුදල සහ ලැබීමේ ලිපිනය පරීක්ෂා කරන්න.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.</source>
-        <translation> මේවා ඔබගේ ගෙවීම් ලැබීම සඳහා වන බිට්කොයින් ලිපින වේ. නව ලිපින සෑදීම සඳහා ලැබීම් ටැබ් එකෙහි ඇති 'නව ලැබීමේ ලිපිනයක් සාදන්න' බොත්තම භාවිතා කරන්න.</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
@@ -225,6 +217,14 @@
         <source>Information</source>
         <translation>තොරතුර</translation>
     </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;යවන ලිපින</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;ලබන ලිපින</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -274,9 +274,21 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>පසුම්බිය සංකේතනය කරන්න</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;ලේබලය</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;ලිපිනය</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -284,6 +296,9 @@
         <source>name</source>
         <translation>නම</translation>
     </message>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -296,6 +311,9 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>calculating...</source>
@@ -303,12 +321,20 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>ලිපිනය</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     </context>
@@ -331,6 +357,16 @@
     <name>OverviewPage</name>
     </context>
 <context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">වසා දමන්න</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     </context>
 <context>
@@ -348,12 +384,28 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;තොරතුර</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;අගය:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ලේබලය:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>ලිපිනය</translation>
@@ -407,6 +459,17 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;අගය:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ලේබලය:</translation>
+    </message>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
     </context>
 <context>
     <name>ShutdownWindow</name>

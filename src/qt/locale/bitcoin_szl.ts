@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Kliknij prawy knefel mysze, coby edytować adresã abo etyketã</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Zrychtuj nowõ adresã</translation>
     </message>
@@ -170,6 +166,14 @@
     <message>
         <source>Wallet encrypted</source>
         <translation>Portmanyj zaszyfrowany</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Wkludź nowe hasło do portmanyja.&lt;br/&gt;Proszã używać hasła słożōnego z &lt;b&gt;10 abo wiyncyj losowych liter&lt;/b&gt; abo &lt;b&gt;8 abo wiyncyj słōw.&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>Podej stare i nowe hasło do portmanyja.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -442,16 +446,20 @@
         <translation>Terŏźny</translation>
     </message>
     <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Ôdewrzij kōnsolã debugowaniŏ i diagnostyki</translation>
+    </message>
+    <message>
         <source>&amp;Sending addresses</source>
         <translation>&amp;Adresy posyłaniŏ</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Pokŏż pōmoc %1 coby zobŏczyć wykŏz wszyjskich ôpcyji piski nakŏzań.</translation>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Adresy ôdbiyraniŏ</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>wychodny portmanyj</translation>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Pokŏż pōmoc %1 coby zobŏczyć wykŏz wszyjskich ôpcyji piski nakŏzań.</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -690,6 +698,10 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation type="unfinished">Zaszyfruj Portmanyj</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -765,6 +777,9 @@
         <translation>Niy idzie było tukej zrychtować folderu datōw.</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -852,6 +867,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -897,12 +919,33 @@
         <source>Hide</source>
         <translation>Skryj</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown. Syncing Headers (%1, %2%)...</source>
+        <translation>Niyznōme. Synchrōnizowanie nŏgōwkōw (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Zorta</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresa</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -973,10 +1016,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Przitnij skłŏd &amp;blokōw do</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1127,6 +1166,20 @@
     </message>
     </context>
 <context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Zawrzij</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>abo</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1214,7 +1267,7 @@
         <source>unknown</source>
         <translation>niyznōme</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     <message>
@@ -1243,6 +1296,10 @@
     <message>
         <source>Client version</source>
         <translation>Wersyjŏ klijynta</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Informacyjŏ</translation>
     </message>
     <message>
         <source>Using BerkeleyDB version</source>
@@ -1368,12 +1425,24 @@
         <source>No</source>
         <translation>Niy</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">Niyznōme</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Kwota:</translation>
+    </message>
+    <message>
         <source>&amp;Label:</source>
         <translation>&amp;Etyketa:</translation>
+    </message>
+    <message>
+        <source>&amp;Message:</source>
+        <translation type="unfinished">&amp;Wiadōmość:</translation>
     </message>
     <message>
         <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Bitcoin network.</source>
@@ -1541,6 +1610,10 @@
         <translation>Saldo:</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Poślij</translation>
+    </message>
+    <message>
         <source>Copy quantity</source>
         <translation>Kopiyruj wielość</translation>
     </message>
@@ -1577,6 +1650,10 @@
         <translation>abo</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">Poślij</translation>
+    </message>
+    <message>
         <source>Transaction creation failed!</source>
         <translation>Utworzynie transakcyje niy podarziło sie!</translation>
     </message>
@@ -1595,6 +1672,10 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Kwota:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;Etyketa:</translation>
@@ -1625,6 +1706,13 @@
     </message>
     </context>
 <context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+</context>
+<context>
     <name>ShutdownWindow</name>
     </context>
 <context>
@@ -1652,6 +1740,10 @@
     <message>
         <source>&amp;Verify Message</source>
         <translation>&amp;Weryfikuj Wiadōmość</translation>
+    </message>
+    <message>
+        <source>Verify &amp;Message</source>
+        <translation type="unfinished">&amp;Weryfikuj Wiadōmość</translation>
     </message>
     <message>
         <source>Message signing failed.</source>
@@ -1868,6 +1960,10 @@
         <translation>Eksportuj dane z aktywnyj szkarty do zbioru</translation>
     </message>
     <message>
+        <source>Error</source>
+        <translation>Feler</translation>
+    </message>
+    <message>
         <source>Backup Failed</source>
         <translation>Backup niy podarził sie</translation>
     </message>
@@ -1913,6 +2009,10 @@
     <message>
         <source>Loading P2P addresses...</source>
         <translation>Wgrŏwanie adres P2P...</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is too low!</source>
+        <translation>Feler: Za mało wolnego placu na dysku!</translation>
     </message>
     <message>
         <source>Loading banlist...</source>
