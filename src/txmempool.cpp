@@ -1100,9 +1100,8 @@ void CTxMemPool::GetTransactionAncestry(const uint256& txid, size_t& ancestors, 
     }
 }
 
-bool CTxMemPool::IsLoaded() const
+bool CTxMemPool::IsLoadedNonLockHelper() const
 {
-    LOCK(cs);
     return m_is_loaded;
 }
 
