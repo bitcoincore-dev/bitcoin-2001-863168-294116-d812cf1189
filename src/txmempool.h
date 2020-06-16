@@ -773,12 +773,19 @@ public:
         return existsNonLockHelper(hash, wtxid);
     }
 
-    CTransactionRef get(const uint256& hash) const;
+    CTransactionRef getNonLockHelper(const uint256& hash) const EXCLUSIVE_LOCKS_REQUIRED(cs);
+    CTransactionRef get(const uint256& hash) const EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    {
+        AssertLockNotHeld(cs);
+        LOCK(cs);
+        return getNonLockHelper(hash);
+    }
     txiter get_iter_from_wtxid(const uint256& wtxid) const EXCLUSIVE_LOCKS_REQUIRED(cs)
     {
         AssertLockHeld(cs);
         return mapTx.project<0>(mapTx.get<index_by_wtxid>().find(wtxid));
     }
+
     TxMempoolInfo info(const uint256& hash, bool wtxid = false) const EXCLUSIVE_LOCKS_REQUIRED(!cs);
     std::vector<TxMempoolInfo> infoAll() const;
 
