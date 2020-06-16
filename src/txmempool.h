@@ -743,7 +743,14 @@ public:
         return existsNonLockHelper(hash);
     }
 
-    CTransactionRef get(const uint256& hash) const;
+    CTransactionRef getNonLockHelper(const uint256& hash) const EXCLUSIVE_LOCKS_REQUIRED(cs);
+    CTransactionRef get(const uint256& hash) const EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    {
+        AssertLockNotHeld(cs);
+        LOCK(cs);
+        return getNonLockHelper(hash);
+    }
+
     TxMempoolInfo info(const uint256& hash) const EXCLUSIVE_LOCKS_REQUIRED(!cs);
     std::vector<TxMempoolInfo> infoAll() const;
 
