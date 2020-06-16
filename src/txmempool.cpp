@@ -885,7 +885,7 @@ CTxMemPool::setEntries CTxMemPool::GetIterSet(const std::set<uint256>& hashes) c
 bool CTxMemPool::HasNoInputsOf(const CTransaction &tx) const
 {
     for (unsigned int i = 0; i < tx.vin.size(); i++)
-        if (exists(tx.vin[i].prevout.hash))
+        if (existsNonLockHelper(tx.vin[i].prevout.hash))
             return false;
     return true;
 }
@@ -1056,7 +1056,7 @@ void CTxMemPool::TrimToSize(size_t sizelimit, std::vector<COutPoint>* pvNoSpends
         if (pvNoSpendsRemaining) {
             for (const CTransaction& tx : txn) {
                 for (const CTxIn& txin : tx.vin) {
-                    if (exists(txin.prevout.hash)) continue;
+                    if (existsNonLockHelper(txin.prevout.hash)) continue;
                     pvNoSpendsRemaining->push_back(txin.prevout);
                 }
             }

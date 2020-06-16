@@ -758,13 +758,19 @@ public:
         return totalTxSize;
     }
 
-    bool exists(const uint256& hash, bool wtxid=false) const
+    bool existsNonLockHelper(const uint256& hash, bool wtxid = false) const EXCLUSIVE_LOCKS_REQUIRED(cs)
     {
-        LOCK(cs);
         if (wtxid) {
             return (mapTx.get<index_by_wtxid>().count(hash) != 0);
         }
         return (mapTx.count(hash) != 0);
+    }
+
+    bool exists(const uint256& hash, bool wtxid = false) const EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    {
+        AssertLockNotHeld(cs);
+        LOCK(cs);
+        return existsNonLockHelper(hash, wtxid);
     }
 
     CTransactionRef get(const uint256& hash) const;
@@ -784,7 +790,7 @@ public:
         AssertLockNotHeld(cs);
         LOCK(cs);
         // Sanity Check: the transaction should also be in the mempool
-        if (exists(txid)) {
+        if (existsNonLockHelper(txid)) {
             m_unbroadcast_txids[txid] = wtxid;
         }
     }
