@@ -296,8 +296,10 @@ public:
         // that Chain clients do not need to know about.
         return TransactionError::OK == err;
     }
-    void getTransactionAncestry(const uint256& txid, size_t& ancestors, size_t& descendants) override
+    void getTransactionAncestry(const uint256& txid, size_t& ancestors, size_t& descendants) override EXCLUSIVE_LOCKS_REQUIRED(!::mempool.cs)
     {
+        AssertLockNotHeld(::mempool.cs);
+        LOCK(::mempool.cs);
         ::mempool.GetTransactionAncestry(txid, ancestors, descendants);
     }
     void getPackageLimits(unsigned int& limit_ancestor_count, unsigned int& limit_descendant_count) override
