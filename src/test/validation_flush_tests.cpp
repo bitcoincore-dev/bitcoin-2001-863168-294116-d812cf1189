@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE(getcoinscachesizestate)
     for (int i{0}; i < 1000; ++i) {
         add_coin(view);
         BOOST_CHECK_EQUAL(
-            chainstate.GetCoinsCacheSizeState(tx_pool),
+            chainstate.GetCoinsCacheSizeState(tx_pool.DynamicMemoryUsage()),
             CoinsCacheSizeState::OK);
     }
 
