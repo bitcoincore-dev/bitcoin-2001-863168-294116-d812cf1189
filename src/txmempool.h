@@ -754,7 +754,13 @@ public:
     TxMempoolInfo info(const uint256& hash) const EXCLUSIVE_LOCKS_REQUIRED(!cs);
     std::vector<TxMempoolInfo> infoAll() const EXCLUSIVE_LOCKS_REQUIRED(cs);
 
-    size_t DynamicMemoryUsage() const;
+    size_t DynamicMemoryUsageNonLockHelper() const EXCLUSIVE_LOCKS_REQUIRED(cs);
+    size_t DynamicMemoryUsage() const EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    {
+        AssertLockNotHeld(cs);
+        LOCK(cs);
+        return DynamicMemoryUsageNonLockHelper();
+    }
 
     /** Adds a transaction to the unbroadcast set */
     void AddUnbroadcastTx(const uint256& txid) EXCLUSIVE_LOCKS_REQUIRED(!cs)
