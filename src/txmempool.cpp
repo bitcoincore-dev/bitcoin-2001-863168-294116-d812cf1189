@@ -728,6 +728,7 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const
 
 bool CTxMemPool::CompareDepthAndScore(const uint256& hasha, const uint256& hashb)
 {
+    AssertLockNotHeld(cs);
     LOCK(cs);
     indexed_transaction_set::const_iterator i = mapTx.find(hasha);
     if (i == mapTx.end()) return false;
@@ -812,6 +813,7 @@ CTransactionRef CTxMemPool::get(const uint256& hash) const
 
 TxMempoolInfo CTxMemPool::info(const uint256& hash) const
 {
+    AssertLockNotHeld(cs);
     LOCK(cs);
     indexed_transaction_set::const_iterator i = mapTx.find(hash);
     if (i == mapTx.end())
@@ -821,6 +823,7 @@ TxMempoolInfo CTxMemPool::info(const uint256& hash) const
 
 void CTxMemPool::PrioritiseTransaction(const uint256& hash, const CAmount& nFeeDelta)
 {
+    AssertLockNotHeld(cs);
     {
         LOCK(cs);
         CAmount &delta = mapDeltas[hash];
@@ -1112,6 +1115,7 @@ bool CTxMemPool::IsLoaded() const
 
 void CTxMemPool::SetIsLoaded(bool loaded)
 {
+    AssertLockNotHeld(cs);
     LOCK(cs);
     m_is_loaded = loaded;
 }
