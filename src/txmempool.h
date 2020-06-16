@@ -787,7 +787,7 @@ public:
     }
 
     TxMempoolInfo info(const uint256& hash, bool wtxid = false) const EXCLUSIVE_LOCKS_REQUIRED(!cs);
-    std::vector<TxMempoolInfo> infoAll() const;
+    std::vector<TxMempoolInfo> infoAll() const EXCLUSIVE_LOCKS_REQUIRED(cs);
 
     size_t DynamicMemoryUsage() const;
 
