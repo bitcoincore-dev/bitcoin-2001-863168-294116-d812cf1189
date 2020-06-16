@@ -2291,9 +2291,9 @@ bool CChainState::FlushStateToDiskHelper(
     const CChainParams& chainparams,
     BlockValidationState &state,
     FlushStateMode mode,
-    int nManualPruneHeight)
+    int nManualPruneHeight,
+    const CoinsCacheSizeState cache_state)
 {
-    LOCK(cs_main);
     assert(this->CanFlushToDisk());
     static std::chrono::microseconds nLastWrite{0};
     static std::chrono::microseconds nLastFlush{0};
@@ -2307,7 +2307,6 @@ bool CChainState::FlushStateToDiskHelper(
     {
         bool fFlushForPrune = false;
         bool fDoFullFlush = false;
-        CoinsCacheSizeState cache_state = GetCoinsCacheSizeState(&::mempool);
         LOCK(cs_LastBlockFile);
         if (fPruneMode && (fCheckForPruning || nManualPruneHeight > 0) && !fReindex) {
             if (nManualPruneHeight > 0) {
