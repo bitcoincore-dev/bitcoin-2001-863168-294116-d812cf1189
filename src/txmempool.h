@@ -614,7 +614,7 @@ public:
 
     bool CompareDepthAndScore(const uint256& hasha, const uint256& hashb) EXCLUSIVE_LOCKS_REQUIRED(!cs);
     void queryHashes(std::vector<uint256>& vtxid) const EXCLUSIVE_LOCKS_REQUIRED(cs);
-    bool isSpent(const COutPoint& outpoint) const;
+    bool isSpent(const COutPoint& outpoint) const; // EXCLUSIVE_LOCKS_REQUIRED(cs);
     unsigned int GetTransactionsUpdated() const;
     void AddTransactionsUpdated(unsigned int n);
     /**
