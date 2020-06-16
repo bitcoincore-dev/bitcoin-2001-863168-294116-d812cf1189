@@ -783,8 +783,8 @@ public:
     }
 
     /** Returns transactions in unbroadcast set */
-    std::set<uint256> GetUnbroadcastTxs() const {
-        LOCK(cs);
+    std::set<uint256> GetUnbroadcastTxs() const EXCLUSIVE_LOCKS_REQUIRED(cs)
+    {
         return m_unbroadcast_txids;
     }
 
