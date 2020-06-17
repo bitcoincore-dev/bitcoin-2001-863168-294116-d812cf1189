@@ -9,6 +9,7 @@
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <threadinterrupt.h>
+#include <ui_interface.h>
 #include <validationinterface.h>
 
 class CBlockIndex;
@@ -107,5 +108,7 @@ public:
     /// Stops the instance from staying in sync with blockchain updates.
     void Stop();
 };
+
+constexpr auto AbortError = InitError;
 
 #endif // BITCOIN_INDEX_BASE_H
