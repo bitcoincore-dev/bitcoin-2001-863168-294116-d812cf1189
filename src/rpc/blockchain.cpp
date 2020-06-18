@@ -997,7 +997,7 @@ static UniValue gettxoutsetinfo(const JSONRPCRequest& request)
     ::ChainstateActive().ForceFlushStateToDisk();
 
     CCoinsView* coins_view = WITH_LOCK(cs_main, return &ChainstateActive().CoinsDB());
-    if (GetUTXOStats(coins_view, stats, RpcInterruptionPoint)) {
+    if (GetUTXOStats(coins_view, stats, IsRPCRunning() ? RpcInterruptionPoint : [] {})) {
         ret.pushKV("height", (int64_t)stats.nHeight);
         ret.pushKV("bestblock", stats.hashBlock.GetHex());
         ret.pushKV("transactions", (int64_t)stats.nTransactions);
