@@ -56,6 +56,7 @@ template <typename MutexType>
 void AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, MutexType* cs) ASSERT_EXCLUSIVE_LOCK(cs);
 void AssertLockNotHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs);
 void DeleteLock(void* cs);
+bool LockStackEmpty();
 
 /**
  * Call abort() if a potential lock order deadlock bug is detected, instead of
@@ -71,6 +72,7 @@ template <typename MutexType>
 void static inline AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, MutexType* cs) ASSERT_EXCLUSIVE_LOCK(cs) {}
 void static inline AssertLockNotHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs) {}
 void static inline DeleteLock(void* cs) {}
+inline bool LockStackEmpty() { return true; }
 #endif
 #define AssertLockHeld(cs) AssertLockHeldInternal(#cs, __FILE__, __LINE__, &cs)
 #define AssertLockNotHeld(cs) AssertLockNotHeldInternal(#cs, __FILE__, __LINE__, &cs)
