@@ -131,7 +131,7 @@ static void potential_deadlock_detected(const LockPair& mismatch, const LockStac
     throw std::logic_error("potential deadlock detected");
 }
 
-static void push_lock(void* c, const CLockLocation& locklocation)
+static void push_lock(void* c, const CLockLocation& locklocation, const bool lock_within_ctor = false)
 {
     LockData& lockdata = GetLockData();
     std::lock_guard<std::mutex> lock(lockdata.dd_mutex);
@@ -149,8 +149,12 @@ static void push_lock(void* c, const CLockLocation& locklocation)
 
         const LockPair p2 = std::make_pair(c, i.first);
         lockdata.invlockorders.insert(p2);
-        if (lockdata.lockorders.count(p2))
+        if (lockdata.lockorders.count(p2)) {
+            if (lock_within_ctor) {
+                lock_stack.pop_back();
+            }
             potential_deadlock_detected(p1, lockdata.lockorders[p2], lockdata.lockorders[p1]);
+        }
     }
 }
 
@@ -164,6 +168,11 @@ static void pop_lock()
     if (lock_stack.empty()) {
         lockdata.m_lock_stacks.erase(std::this_thread::get_id());
     }
+}
+
+void EnterInternal(const char* mutex_name, const char* source_file_name, int source_line_num, void* mutex, bool try_lock)
+{
+    push_lock(mutex, CLockLocation(mutex_name, source_file_name, source_line_num, try_lock, util::ThreadGetInternalName()), true /* lock within ctor */);
 }
 
 void EnterCritical(const char* pszName, const char* pszFile, int nLine, void* cs, bool fTry)

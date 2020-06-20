@@ -56,6 +56,7 @@ template <typename MutexType>
 void AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, MutexType* cs) ASSERT_EXCLUSIVE_LOCK(cs);
 void AssertLockNotHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs);
 void DeleteLock(void* cs);
+void EnterInternal(const char* mutex_name, const char* source_file_name, int source_line_num, void* mutex, bool try_lock);
 
 /**
  * Call abort() if a potential lock order deadlock bug is detected, instead of
@@ -71,6 +72,7 @@ template <typename MutexType>
 void static inline AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, MutexType* cs) ASSERT_EXCLUSIVE_LOCK(cs) {}
 void static inline AssertLockNotHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs) {}
 void static inline DeleteLock(void* cs) {}
+inline void EnterInternal(const char* mutex_name, const char* source_file_name, int source_line_num, void* mutex, bool try_lock) {}
 #endif
 #define AssertLockHeld(cs) AssertLockHeldInternal(#cs, __FILE__, __LINE__, &cs)
 #define AssertLockNotHeld(cs) AssertLockNotHeldInternal(#cs, __FILE__, __LINE__, &cs)
@@ -131,7 +133,7 @@ class SCOPED_LOCKABLE UniqueLock : public Base
 private:
     void Enter(const char* pszName, const char* pszFile, int nLine)
     {
-        EnterCritical(pszName, pszFile, nLine, (void*)(Base::mutex()));
+        EnterInternal(pszName, pszFile, nLine, (void*)(Base::mutex()), false);
 #ifdef DEBUG_LOCKCONTENTION
         if (!Base::try_lock()) {
             PrintLockContention(pszName, pszFile, nLine);
@@ -144,7 +146,7 @@ private:
 
     bool TryEnter(const char* pszName, const char* pszFile, int nLine)
     {
-        EnterCritical(pszName, pszFile, nLine, (void*)(Base::mutex()), true);
+        EnterInternal(pszName, pszFile, nLine, (void*)(Base::mutex()), true);
         Base::try_lock();
         if (!Base::owns_lock())
             LeaveCritical();
