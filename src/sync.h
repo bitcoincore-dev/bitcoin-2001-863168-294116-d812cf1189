@@ -57,6 +57,7 @@ void AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine,
 void AssertLockNotHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs);
 void DeleteLock(void* cs);
 void EnterInternal(const char* mutex_name, const char* source_file_name, int source_line_num, void* mutex, bool try_lock);
+bool LockStackEmpty();
 
 /**
  * Call abort() if a potential lock order deadlock bug is detected, instead of
@@ -73,6 +74,7 @@ void static inline AssertLockHeldInternal(const char* pszName, const char* pszFi
 void static inline AssertLockNotHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs) {}
 void static inline DeleteLock(void* cs) {}
 inline void EnterInternal(const char* mutex_name, const char* source_file_name, int source_line_num, void* mutex, bool try_lock) {}
+inline bool LockStackEmpty() { return true; }
 #endif
 #define AssertLockHeld(cs) AssertLockHeldInternal(#cs, __FILE__, __LINE__, &cs)
 #define AssertLockNotHeld(cs) AssertLockNotHeldInternal(#cs, __FILE__, __LINE__, &cs)
