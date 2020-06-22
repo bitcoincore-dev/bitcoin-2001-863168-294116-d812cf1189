@@ -60,7 +60,7 @@ struct CLockLocation {
     std::string ToString() const
     {
         return strprintf(
-            "%s %s:%s%s (in thread %s)",
+            "'%s' in %s:%s%s (in thread '%s')",
             mutexName, sourceFile, sourceLine, (fTry ? " (TRY)" : ""), m_thread_name);
     }
 
@@ -101,7 +101,8 @@ LockData& GetLockData() {
     return lock_data;
 }
 
-static void potential_deadlock_detected(const LockPair& mismatch, const LockStack& s1, const LockStack& s2)
+namespace {
+void potential_deadlock_detected(const LockPair& mismatch, const LockStack& s1, const LockStack& s2, const CLockLocation& lock_location)
 {
     LogPrintf("POTENTIAL DEADLOCK DETECTED\n");
     LogPrintf("Previous lock order was:\n");
@@ -129,13 +130,13 @@ static void potential_deadlock_detected(const LockPair& mismatch, const LockStac
         LogPrintf(" %s\n", i.second.ToString());
     }
     if (g_debug_lockorder_abort) {
-        tfm::format(std::cerr, "Assertion failed: detected inconsistent lock order at %s:%i, details in debug log.\n", __FILE__, __LINE__);
+        tfm::format(std::cerr, "Assertion failed: detected inconsistent lock order for %s, details in debug log.\n", lock_location.ToString());
         abort();
     }
     throw std::logic_error(strprintf("potential deadlock detected: %s -> %s -> %s", mutex_b, mutex_a, mutex_b));
 }
 
-static void push_lock(void* c, const CLockLocation& locklocation)
+void push_lock(void* c, const CLockLocation& locklocation)
 {
     LockData& lockdata = GetLockData();
     std::lock_guard<std::mutex> lock(lockdata.dd_mutex);
@@ -154,11 +155,11 @@ static void push_lock(void* c, const CLockLocation& locklocation)
         const LockPair p2 = std::make_pair(c, i.first);
         lockdata.invlockorders.insert(p2);
         if (lockdata.lockorders.count(p2))
-            potential_deadlock_detected(p1, lockdata.lockorders[p2], lockdata.lockorders[p1]);
+            potential_deadlock_detected(p1, lockdata.lockorders[p2], lockdata.lockorders[p1], locklocation);
     }
 }
 
-static void pop_lock()
+void pop_lock()
 {
     LockData& lockdata = GetLockData();
     std::lock_guard<std::mutex> lock(lockdata.dd_mutex);
@@ -169,6 +170,7 @@ static void pop_lock()
         lockdata.m_lock_stacks.erase(std::this_thread::get_id());
     }
 }
+} // namespace
 
 void EnterCritical(const char* pszName, const char* pszFile, int nLine, void* cs, bool fTry)
 {
