@@ -234,7 +234,7 @@ void TransactionRecord::updateStatus(const interfaces::WalletTxStatus& wtx, cons
 
 bool TransactionRecord::statusUpdateNeeded(const uint256& block_hash) const
 {
-    return status.m_cur_block_hash != block_hash || status.needsUpdate;
+    return (!block_hash.IsNull() && status.m_cur_block_hash != block_hash) || status.needsUpdate;
 }
 
 QString TransactionRecord::getTxHash() const
