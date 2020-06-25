@@ -16,11 +16,13 @@
 #include <util/string.h>
 #include <util/system.h>
 #include <util/time.h>
+#include <util/uint256hash.h>
 #include <validation.h>
 
 #include <test/util/setup_common.h>
 
 #include <stdint.h>
+#include <unordered_map>
 
 #include <boost/test/unit_test.hpp>
 
@@ -52,7 +54,7 @@ struct COrphanTx {
     NodeId fromPeer;
     int64_t nTimeExpire;
 };
-extern std::map<uint256, COrphanTx> mapOrphanTransactions GUARDED_BY(g_cs_orphans);
+extern std::unordered_map<uint256, COrphanTx, uint256Hash> mapOrphanTransactions GUARDED_BY(g_cs_orphans);
 
 static CService ip(uint32_t i)
 {
@@ -358,12 +360,8 @@ BOOST_AUTO_TEST_CASE(DoS_bantime)
 
 static CTransactionRef RandomOrphan()
 {
-    std::map<uint256, COrphanTx>::iterator it;
     LOCK2(cs_main, g_cs_orphans);
-    it = mapOrphanTransactions.lower_bound(InsecureRand256());
-    if (it == mapOrphanTransactions.end())
-        it = mapOrphanTransactions.begin();
-    return it->second.tx;
+    return mapOrphanTransactions.begin()->second.tx;
 }
 
 BOOST_AUTO_TEST_CASE(DoS_mapOrphans)

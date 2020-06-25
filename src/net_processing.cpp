@@ -28,9 +28,11 @@
 #include <txmempool.h>
 #include <util/system.h>
 #include <util/strencodings.h>
+#include <util/uint256hash.h>
 
 #include <memory>
 #include <typeinfo>
+#include <unordered_map>
 
 #if defined(NDEBUG)
 # error "Bitcoin cannot be compiled without assertions."
@@ -142,7 +144,8 @@ struct COrphanTx {
     size_t list_pos;
 };
 RecursiveMutex g_cs_orphans;
-std::map<uint256, COrphanTx> mapOrphanTransactions GUARDED_BY(g_cs_orphans);
+using OrphanTxPool = std::unordered_map<uint256, COrphanTx, uint256Hash>;
+OrphanTxPool mapOrphanTransactions GUARDED_BY(g_cs_orphans);
 
 void EraseOrphansFor(NodeId peer);
 
@@ -230,9 +233,9 @@ namespace {
             return &(*a) < &(*b);
         }
     };
-    std::map<COutPoint, std::set<std::map<uint256, COrphanTx>::iterator, IteratorComparator>> mapOrphanTransactionsByPrev GUARDED_BY(g_cs_orphans);
+    std::map<COutPoint, std::set<OrphanTxPool::iterator, IteratorComparator>> mapOrphanTransactionsByPrev GUARDED_BY(g_cs_orphans);
 
-    std::vector<std::map<uint256, COrphanTx>::iterator> g_orphan_list GUARDED_BY(g_cs_orphans); //! For random eviction
+    std::vector<OrphanTxPool::iterator> g_orphan_list GUARDED_BY(g_cs_orphans); //! For random eviction
 
     static size_t vExtraTxnForCompactIt GUARDED_BY(g_cs_orphans) = 0;
     static std::vector<std::pair<uint256, CTransactionRef>> vExtraTxnForCompact GUARDED_BY(g_cs_orphans);
@@ -937,7 +940,7 @@ bool AddOrphanTx(const CTransactionRef& tx, NodeId peer) EXCLUSIVE_LOCKS_REQUIRE
 
 int static EraseOrphanTx(uint256 hash) EXCLUSIVE_LOCKS_REQUIRED(g_cs_orphans)
 {
-    std::map<uint256, COrphanTx>::iterator it = mapOrphanTransactions.find(hash);
+    const auto it = mapOrphanTransactions.find(hash);
     if (it == mapOrphanTransactions.end())
         return 0;
     for (const CTxIn& txin : it->second.tx->vin)
@@ -969,10 +972,10 @@ void EraseOrphansFor(NodeId peer)
 {
     LOCK(g_cs_orphans);
     int nErased = 0;
-    std::map<uint256, COrphanTx>::iterator iter = mapOrphanTransactions.begin();
+    auto iter = mapOrphanTransactions.begin();
     while (iter != mapOrphanTransactions.end())
     {
-        std::map<uint256, COrphanTx>::iterator maybeErase = iter++; // increment to avoid iterator becoming invalid
+        const auto maybeErase = iter++;
         if (maybeErase->second.fromPeer == peer)
         {
             nErased += EraseOrphanTx(maybeErase->second.tx->GetHash());
@@ -993,10 +996,10 @@ unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans)
         // Sweep out expired orphan pool entries:
         int nErased = 0;
         int64_t nMinExpTime = nNow + ORPHAN_TX_EXPIRE_TIME - ORPHAN_TX_EXPIRE_INTERVAL;
-        std::map<uint256, COrphanTx>::iterator iter = mapOrphanTransactions.begin();
+        auto iter = mapOrphanTransactions.begin();
         while (iter != mapOrphanTransactions.end())
         {
-            std::map<uint256, COrphanTx>::iterator maybeErase = iter++;
+            const auto maybeErase = iter++;
             if (maybeErase->second.nTimeExpire <= nNow) {
                 nErased += EraseOrphanTx(maybeErase->second.tx->GetHash());
             } else {
