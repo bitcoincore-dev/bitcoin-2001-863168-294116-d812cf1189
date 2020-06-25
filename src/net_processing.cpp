@@ -982,11 +982,8 @@ void EraseOrphansFor(NodeId peer)
 }
 
 
-unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans)
+void SweepOutExpiredOrphans() EXCLUSIVE_LOCKS_REQUIRED(g_cs_orphans)
 {
-    LOCK(g_cs_orphans);
-
-    unsigned int nEvicted = 0;
     static int64_t nNextSweep;
     int64_t nNow = GetTime();
     if (nNextSweep <= nNow) {
@@ -1007,15 +1004,26 @@ unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans)
         nNextSweep = nMinExpTime + ORPHAN_TX_EXPIRE_INTERVAL;
         if (nErased > 0) LogPrint(BCLog::MEMPOOL, "Erased %d orphan tx due to expiration\n", nErased);
     }
+}
+
+unsigned int EvictOrphanTxs(unsigned int nMaxOrphans) EXCLUSIVE_LOCKS_REQUIRED(g_cs_orphans)
+{
+    unsigned int nEvicted = 0;
     FastRandomContext rng;
-    while (mapOrphanTransactions.size() > nMaxOrphans)
-    {
+    while (mapOrphanTransactions.size() > nMaxOrphans) {
         // Evict a random orphan:
         size_t randompos = rng.randrange(g_orphan_list.size());
         EraseOrphanTx(g_orphan_list[randompos]->first);
         ++nEvicted;
     }
     return nEvicted;
+}
+
+unsigned int LimitOrphanTxSize(unsigned int nMaxOrphans)
+{
+    LOCK(g_cs_orphans);
+    SweepOutExpiredOrphans();
+    return EvictOrphanTxs(nMaxOrphans);
 }
 
 /**
