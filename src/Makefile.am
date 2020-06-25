@@ -234,6 +234,7 @@ BITCOIN_CORE_H = \
   util/threadnames.h \
   util/time.h \
   util/translation.h \
+  util/uint256hash.h \
   util/url.h \
   util/vector.h \
   validation.h \
@@ -535,6 +536,7 @@ libbitcoin_util_a_SOURCES = \
   util/strencodings.cpp \
   util/string.cpp \
   util/time.cpp \
+  util/uint256hash.cpp \
   $(BITCOIN_CORE_H)
 
 if USE_LIBEVENT
