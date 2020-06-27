@@ -194,6 +194,34 @@ class InvalidTxRequestTest(BitcoinTestFramework):
         with node.assert_debug_log(["Erased 1 orphan tx included or conflicted by block"]):
             node.p2p.send_blocks_and_test([blockA], node, success=True)
 
+        self.log.info('Test erase of orphan tx conflicted by block')
+        tx_withhold_until_blockB = CTransaction()
+        tx_withhold_until_blockB.vin.append(CTxIn(outpoint=COutPoint(tx_withhold_until_blockA.sha256, 1)))
+        tx_withhold_until_blockB.vout.append(CTxOut(nValue=11 * COIN, scriptPubKey=SCRIPT_PUB_KEY_OP_TRUE))
+        tx_withhold_until_blockB.calc_sha256()
+
+        tx_orphan_include_by_blockB = CTransaction()
+        tx_orphan_include_by_blockB.vin.append(CTxIn(outpoint=COutPoint(tx_withhold_until_blockB.sha256, 0)))
+        tx_orphan_include_by_blockB.vout.append(CTxOut(nValue=10 * COIN, scriptPubKey=SCRIPT_PUB_KEY_OP_TRUE))
+        tx_orphan_include_by_blockB.calc_sha256()
+
+        tx_orphan_conflict_by_blockB = CTransaction()
+        tx_orphan_conflict_by_blockB.vin.append(CTxIn(outpoint=COutPoint(tx_withhold_until_blockB.sha256, 0)))
+        tx_orphan_conflict_by_blockB.vout.append(CTxOut(nValue=9 * COIN, scriptPubKey=SCRIPT_PUB_KEY_OP_TRUE))
+        tx_orphan_conflict_by_blockB.calc_sha256()
+        self.log.info('Send the tx_orphan_conflict_by_blockB ... ')
+        node.p2p.send_txs_and_test([tx_orphan_conflict_by_blockB], node, success=False)
+
+        tip = int(node.getbestblockhash(), 16)
+        height = node.getblockcount() + 1
+        blockB = create_block(tip, create_coinbase(height))
+        blockB.vtx.extend([tx_withhold_until_blockB, tx_orphan_include_by_blockB])
+        blockB.hashMerkleRoot = blockB.calc_merkle_root()
+        blockB.solve()
+
+        with node.assert_debug_log(["Erased 1 orphan tx included or conflicted by block"]):
+            node.p2p.send_blocks_and_test([blockB], node, success=True)
+
 
 if __name__ == '__main__':
     InvalidTxRequestTest().main()
