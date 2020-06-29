@@ -94,8 +94,12 @@ class NetTest(BitcoinTestFramework):
             assert_greater_than_or_equal(after['bytessent_per_msg'].get('ping', 0), before['bytessent_per_msg'].get('ping', 0) + 32)
 
     def _test_getnetworkinfo(self):
-        assert_equal(self.nodes[0].getnetworkinfo()['networkactive'], True)
-        assert_equal(self.nodes[0].getnetworkinfo()['connections'], 2)
+        self.log.info("Test getnetworkinfo")
+        info = self.nodes[0].getnetworkinfo()
+        assert_equal(info['networkactive'], True)
+        assert_equal(info['connections'], 2)
+        assert_equal(info['connections_in'], 1)
+        assert_equal(info['connections_out'], 1)
 
         self.nodes[0].setnetworkactive(state=False)
         assert_equal(self.nodes[0].getnetworkinfo()['networkactive'], False)
@@ -103,12 +107,14 @@ class NetTest(BitcoinTestFramework):
         wait_until(lambda: self.nodes[0].getnetworkinfo()['connections'] == 0, timeout=3)
 
         self.nodes[0].setnetworkactive(state=True)
-        self.log.info('Connect nodes both way')
         connect_nodes(self.nodes[0], 1)
         connect_nodes(self.nodes[1], 0)
 
-        assert_equal(self.nodes[0].getnetworkinfo()['networkactive'], True)
-        assert_equal(self.nodes[0].getnetworkinfo()['connections'], 2)
+        info = self.nodes[0].getnetworkinfo()
+        assert_equal(info['networkactive'], True)
+        assert_equal(info['connections'], 2)
+        assert_equal(info['connections_in'], 1)
+        assert_equal(info['connections_out'], 1)
 
         # check the `servicesnames` field
         network_info = [node.getnetworkinfo() for node in self.nodes]
