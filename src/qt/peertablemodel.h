@@ -67,7 +67,8 @@ public:
     };
 
     enum {
-        StatsRole = Qt::UserRole
+        StatsRole = Qt::UserRole,
+        CompareRole
     };
 
     /** @name Methods overridden from QAbstractTableModel
