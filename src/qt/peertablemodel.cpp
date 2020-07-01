@@ -167,6 +167,21 @@ QVariant PeerTableModel::data(const QModelIndex &index, int role) const
         case Received:
             return GUIUtil::formatBytes(rec->nodeStats.nRecvBytes);
         }
+    } else if (role == Qt::UserRole) {
+        switch (index.column()) {
+        case NetNodeId:
+            return (qint64)rec->nodeStats.nodeid;
+        case Address:
+            return QString::fromStdString(rec->nodeStats.addrName);
+        case Subversion:
+            return QString::fromStdString(rec->nodeStats.cleanSubVer);
+        case Ping:
+            return (qint64)rec->nodeStats.m_min_ping_usec;
+        case Sent:
+            return (quint64)rec->nodeStats.nSendBytes;
+        case Received:
+            return (quint64)rec->nodeStats.nRecvBytes;
+        }
     } else if (role == Qt::TextAlignmentRole) {
         switch (index.column()) {
             case Ping:
