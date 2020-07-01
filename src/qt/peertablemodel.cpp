@@ -181,6 +181,16 @@ QVariant PeerTableModel::data(const QModelIndex &index, int role) const
         case NetNodeId: return QVariant::fromValue(rec);
         default: return QVariant();
         }
+    } else if (role == CompareRole) {
+        switch (index.column()) {
+        case NetNodeId: return (qint64)rec->nodeStats.nodeid;
+        case Address: return QString::fromStdString(rec->nodeStats.addrName);
+        case Ping: return (qint64)rec->nodeStats.m_min_ping_usec;
+        case Sent: return (quint64)rec->nodeStats.nSendBytes;
+        case Received: return (quint64)rec->nodeStats.nRecvBytes;
+        case Subversion: return QString::fromStdString(rec->nodeStats.cleanSubVer);
+        }
+        assert(false);
     }
 
     return QVariant();
