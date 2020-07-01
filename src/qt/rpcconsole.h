@@ -94,7 +94,7 @@ private Q_SLOTS:
     /** Hides ban table if no bans are present */
     void showOrHideBanTableIfRequired();
     /** clear the selected node */
-    void clearSelectedNode();
+    void clearSelectedNode(const QModelIndex& peer);
     /** show detailed information on ui about selected node */
     void updateDetailWidget();
 

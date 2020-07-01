@@ -647,7 +647,7 @@ void RPCConsole::setClientModel(ClientModel *model, int bestblock_height, int64_
         connect(unbanAction, &QAction::triggered, this, &RPCConsole::unbanSelectedNode);
 
         // ban table signal handling - clear peer details when clicking a peer in the ban table
-        connect(ui->banlistWidget, &QTableView::clicked, this, &RPCConsole::clearSelectedNode);
+        connect(ui->banlistWidget, &QTableView::clicked, ui->peerWidget->selectionModel(), &QItemSelectionModel::clearSelection);
         // ban table signal handling - ensure ban table is shown or hidden (if empty)
         connect(model->getBanTableModel(), &BanTableModel::layoutChanged, this, &RPCConsole::showOrHideBanTableIfRequired);
         showOrHideBanTableIfRequired();
@@ -1125,8 +1125,9 @@ void RPCConsole::disconnectSelectedNode()
         // Get currently selected peer address
         NodeId id = nodes.at(i).data().toLongLong();
         // Find the node, disconnect it and clear the selected node
-        if(m_node.disconnectById(id))
-            clearSelectedNode();
+        if (m_node.disconnectById(id)) {
+            clearSelectedNode(nodes.at(i));
+        }
     }
 }
 
@@ -1140,10 +1141,11 @@ void RPCConsole::banSelectedNode(int bantime)
         const CNodeCombinedStats* stats = clientModel->getPeerTableModel()->getNodeStats(peer.row());
         if (stats) {
             m_node.ban(stats->nodeStats.addr, bantime);
-            m_node.disconnectByAddress(stats->nodeStats.addr);
+            if (m_node.disconnectByAddress(stats->nodeStats.addr)) {
+                clearSelectedNode(peer);
+            }
         }
     }
-    clearSelectedNode();
     clientModel->getBanTableModel()->refresh();
 }
 
@@ -1168,11 +1170,10 @@ void RPCConsole::unbanSelectedNode()
     }
 }
 
-void RPCConsole::clearSelectedNode()
+void RPCConsole::clearSelectedNode(const QModelIndex& peer)
 {
-    ui->peerWidget->selectionModel()->clearSelection();
-    cachedNodeids.clear();
-    updateDetailWidget();
+    auto selection = ui->peerWidget->selectionModel();
+    selection->select(peer, QItemSelectionModel::Deselect | QItemSelectionModel::Rows);
 }
 
 void RPCConsole::showOrHideBanTableIfRequired()
