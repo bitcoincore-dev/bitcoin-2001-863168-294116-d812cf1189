@@ -29,6 +29,7 @@ struct bilingual_str;
 struct CBlockLocator;
 struct FeeCalculation;
 struct NodeContext;
+struct PruneLockInfo;
 
 namespace interfaces {
 
@@ -101,6 +102,10 @@ public:
     //! Check that the block is available on disk (i.e. has not been
     //! pruned), and contains transactions.
     virtual bool haveBlockOnDisk(int height) = 0;
+
+    virtual bool pruneLockExists(const std::string& lockid) = 0;
+    virtual void setPruneLock(const std::string& lockid, const PruneLockInfo&) = 0;
+    virtual void deletePruneLock(const std::string& lockid) = 0;
 
     //! Return height of the first block in the chain with timestamp equal
     //! or greater than the given time and height equal or greater than the
