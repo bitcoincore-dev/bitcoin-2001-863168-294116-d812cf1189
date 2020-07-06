@@ -118,6 +118,8 @@ bool fCheckBlockIndex = false;
 bool fCheckpointsEnabled = DEFAULT_CHECKPOINTS_ENABLED;
 size_t nCoinCacheUsage = 5000 * 300;
 uint64_t nPruneTarget = 0;
+Mutex g_prune_locks_mutex;
+std::unordered_map<std::string, PruneLockInfo> g_prune_locks;
 int64_t nMaxTipAge = DEFAULT_MAX_TIP_AGE;
 
 uint256 hashAssumeValid;
@@ -3893,6 +3895,32 @@ void UnlinkPrunedFiles(const std::set<int>& setFilesToPrune)
     }
 }
 
+static bool DoPruneLocksForbidPruning(const CBlockFileInfo& block_file_info)
+{
+    LOCK(g_prune_locks_mutex);
+    for (const auto& prune_lock : g_prune_locks) {
+        if (block_file_info.nHeightFirst > prune_lock.second.m_height_last) continue;
+        if (block_file_info.nHeightLast < prune_lock.second.m_height_first) continue;
+        // TODO: Check each block within the file against the prune_lock range
+        return true;
+    }
+    return false;
+}
+
+bool PruneLockExists(const std::string& lockid) {
+    return g_prune_locks.count(lockid);
+}
+
+void SetPruneLock(const std::string& lockid, const PruneLockInfo& lockinfo)
+{
+    g_prune_locks[lockid] = lockinfo;
+}
+
+void DeletePruneLock(const std::string& lockid)
+{
+    g_prune_locks.erase(lockid);
+}
+
 /* Calculate the block/rev files to delete based on height specified by user with RPC command pruneblockchain */
 static void FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPruneHeight)
 {
@@ -3908,6 +3936,9 @@ static void FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPr
     for (int fileNumber = 0; fileNumber < nLastBlockFile; fileNumber++) {
         if (vinfoBlockFile[fileNumber].nSize == 0 || vinfoBlockFile[fileNumber].nHeightLast > nLastBlockWeCanPrune)
             continue;
+
+        if (DoPruneLocksForbidPruning(vinfoBlockFile[fileNumber])) continue;
+
         PruneOneBlockFile(fileNumber);
         setFilesToPrune.insert(fileNumber);
         count++;
@@ -3982,6 +4013,8 @@ static void FindFilesToPrune(std::set<int>& setFilesToPrune, uint64_t nPruneAfte
             // don't prune files that could have a block within MIN_BLOCKS_TO_KEEP of the main chain's tip but keep scanning
             if (vinfoBlockFile[fileNumber].nHeightLast > nLastBlockWeCanPrune)
                 continue;
+
+            if (DoPruneLocksForbidPruning(vinfoBlockFile[fileNumber])) continue;
 
             PruneOneBlockFile(fileNumber);
             // Queue up the files for removal
