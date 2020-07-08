@@ -115,6 +115,18 @@ inline bool IsSwitchChar(char c)
 #endif
 }
 
+struct DefaultArgHints {
+    constexpr DefaultArgHints() = default;
+    constexpr DefaultArgHints(bool gui_, bool printtoconsole_, bool server_)
+        : gui{gui_}, printtoconsole{printtoconsole_}, server{server_}
+    {
+    }
+
+    const bool gui = false;
+    const bool printtoconsole = true;
+    const bool server = true;
+};
+
 enum class OptionsCategory {
     OPTIONS,
     CONNECTION,
