@@ -10,6 +10,7 @@
 #include <net_types.h>  // For banmap_t
 #include <netaddress.h> // For Network
 #include <support/allocators/secure.h> // For SecureString
+#include <util/system.h>
 #include <util/translation.h>
 
 #include <functional>
@@ -103,7 +104,7 @@ public:
     virtual bool shutdownRequested() = 0;
 
     //! Setup arguments
-    virtual void setupServerArgs() = 0;
+    virtual void setupServerArgs(DefaultArgHints hints) = 0;
 
     //! Map port.
     virtual void mapPort(bool use_upnp) = 0;
