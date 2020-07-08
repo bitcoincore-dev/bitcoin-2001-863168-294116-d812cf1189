@@ -13,6 +13,7 @@
 #include <qt/test/uritests.h>
 #include <qt/test/compattests.h>
 #include <test/util/setup_common.h>
+#include <util/system.h>
 
 #ifdef ENABLE_WALLET
 #include <qt/test/addressbooktests.h>
@@ -38,6 +39,7 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 #endif
 
 const std::function<void(const std::string&)> G_TEST_LOG_FUN{};
+constexpr DefaultArgHints DEFAULT_ARG_HINTS{/*gui*/ true, /*printtoconsole*/ false, /*server*/ false};
 
 // This is all you need to run all the tests
 int main(int argc, char* argv[])
@@ -70,7 +72,7 @@ int main(int argc, char* argv[])
     BitcoinApplication app(*node);
     app.setApplicationName("Bitcoin-Qt-test");
 
-    node->setupServerArgs();            // Make gArgs available in the NodeContext
+    node->setupServerArgs(DEFAULT_ARG_HINTS); // Make gArgs available in the NodeContext
     node->context()->args->ClearArgs(); // Clear added args again
     AppTests app_tests(app);
     if (QTest::qExec(&app_tests) != 0) {
