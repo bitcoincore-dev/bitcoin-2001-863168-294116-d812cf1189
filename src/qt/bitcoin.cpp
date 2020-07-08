@@ -60,6 +60,8 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 #endif
 #endif
 
+constexpr DefaultArgHints DEFAULT_ARG_HINTS{/*gui*/ true, /*printtoconsole*/ false, /*server*/ false};
+
 // Declare meta types used for QMetaObject::invokeMethod
 Q_DECLARE_METATYPE(bool*)
 Q_DECLARE_METATYPE(CAmount)
@@ -292,9 +294,8 @@ void BitcoinApplication::startThread()
 
 void BitcoinApplication::parameterSetup()
 {
-    // Default printtoconsole to false for the GUI. GUI programs should not
-    // print to the console unnecessarily.
-    gArgs.SoftSetBoolArg("-printtoconsole", false);
+    gArgs.SoftSetBoolArg("-printtoconsole", DEFAULT_ARG_HINTS.printtoconsole);
+    gArgs.SoftSetBoolArg("-server", DEFAULT_ARG_HINTS.server);
 
     m_node.initLogging();
     m_node.initParameterInteraction();
@@ -455,7 +456,7 @@ int GuiMain(int argc, char* argv[])
 
     /// 2. Parse command-line options. We do this after qt in order to show an error if there are problems parsing these
     // Command-line options take precedence:
-    node->setupServerArgs();
+    node->setupServerArgs(DEFAULT_ARG_HINTS);
     SetupUIArgs(gArgs);
     std::string error;
     if (!node->parseParameters(argc, argv, error)) {
