@@ -2251,14 +2251,12 @@ void Discover()
 
 void CConnman::SetNetworkActive(bool active)
 {
-    LogPrint(BCLog::NET, "SetNetworkActive: %s\n", active);
-
     if (fNetworkActive == active) {
         return;
     }
 
     fNetworkActive = active;
-
+    LogPrintf("%s: %s\n", __func__, fNetworkActive);
     uiInterface.NotifyNetworkActiveChanged(fNetworkActive);
 }
 
