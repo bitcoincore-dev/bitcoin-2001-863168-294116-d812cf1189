@@ -100,6 +100,7 @@ class TestNode():
             "-debugexclude=libevent",
             "-debugexclude=leveldb",
             "-uacomment=testnode%d" % i,
+            "-uniformintervaltest",
         ]
         if use_valgrind:
             default_suppressions_file = os.path.join(
