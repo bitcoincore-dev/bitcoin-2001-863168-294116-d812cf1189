@@ -7,6 +7,8 @@
 #include <logging.h>
 #include <util/system.h>
 
+#include <set>
+
 fs::path GetWalletDir()
 {
     fs::path path;
@@ -64,7 +66,7 @@ std::vector<fs::path> ListWalletDir()
 
     // Here we place the top level dirs we want to skip in case walletdir is datadir or blocksdir
     // Those directory's are referenced in doc/files.md
-    const std::vector<fs::path> ignore_paths = {
+    const std::set<fs::path> ignore_paths = {
                                         blocks_dir,
                                         data_dir / "blktree",
                                         data_dir / "chainstate",
@@ -82,7 +84,7 @@ std::vector<fs::path> ListWalletDir()
         }
 
         // We dont want to iterate trough those special node dirs
-        if (std::count(ignore_paths.begin(), ignore_paths.end(), it->path())) {
+        if (ignore_paths.count(it->path())) {
             it.disable_recursion_pending();
             continue;
         }
