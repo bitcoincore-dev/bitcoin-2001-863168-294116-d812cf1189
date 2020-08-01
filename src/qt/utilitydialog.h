@@ -1,15 +1,20 @@
-// Copyright (c) 2011-2014 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2011-2018 The Bitcoin Core developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef BITCOIN_QT_UTILITYDIALOG_H
 #define BITCOIN_QT_UTILITYDIALOG_H
 
 #include <QDialog>
-#include <QObject>
+#include <QWidget>
 
-class BitcoinGUI;
-class ClientModel;
+QT_BEGIN_NAMESPACE
+class QMainWindow;
+QT_END_NAMESPACE
+
+namespace interfaces {
+    class Node;
+}
 
 namespace Ui {
     class HelpMessageDialog;
@@ -21,7 +26,7 @@ class HelpMessageDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit HelpMessageDialog(QWidget *parent, bool about);
+    explicit HelpMessageDialog(interfaces::Node& node, QWidget *parent, bool about);
     ~HelpMessageDialog();
 
     void printToConsole();
@@ -31,7 +36,7 @@ private:
     Ui::HelpMessageDialog *ui;
     QString text;
 
-private slots:
+private Q_SLOTS:
     void on_okButton_accepted();
 };
 
@@ -42,8 +47,8 @@ class ShutdownWindow : public QWidget
     Q_OBJECT
 
 public:
-    ShutdownWindow(QWidget *parent=0, Qt::WindowFlags f=0);
-    static void showShutdownWindow(BitcoinGUI *window);
+    explicit ShutdownWindow(QWidget *parent=nullptr, Qt::WindowFlags f=Qt::Widget);
+    static QWidget* showShutdownWindow(QMainWindow* window);
 
 protected:
     void closeEvent(QCloseEvent *event);
