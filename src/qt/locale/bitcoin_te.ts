@@ -31,11 +31,11 @@
     </message>
     <message>
         <source>Enter address or label to search</source>
-        <translation>చిరునామా లేదా ఏదైనా పేరును వెతకండి </translation>
+        <translation>చిరునామా లేదా ఏదైనా పేరును వెతకండి</translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
-        <translation>ప్రస్తుతం ఉన్న సమాచారాన్ని ఫైల్ లోనికి ఎగుమతి చేసుకోండి </translation>
+        <translation>ప్రస్తుతం ఉన్న సమాచారాన్ని ఫైల్ లోనికి ఎగుమతి చేసుకోండి</translation>
     </message>
     <message>
         <source>&amp;Export</source>
@@ -51,7 +51,7 @@
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
-        <translation>నాణెం అందుకోవటానికి చిరునామాను ఎంచుకోండి </translation>
+        <translation>నాణెం అందుకోవటానికి చిరునామాను ఎంచుకోండి</translation>
     </message>
     <message>
         <source>C&amp;hoose</source>
@@ -68,6 +68,10 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>ఇవి మీరు పంపే చెల్లింపుల బిట్‌కాయిన్ చిరునామాలు. నాణేలు పంపే ముందు ప్రతిసారి అందుకునే చిరునామా మరియు చెల్లింపు మొత్తం సరిచూసుకోండి.</translation>
+    </message>
+    <message>
+        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.</source>
+        <translation>చెల్లింపులు స్వీకరించడానికి ఇవి మీ బిట్‌కాయిన్ చిరునామాలు. క్రొత్త చిరునామాలను సృష్టించడానికి స్వీకరించు ట్యాబ్‌లోని 'క్రొత్త స్వీకరించే చిరునామాను సృష్టించండి' బటన్‌ను ఉపయోగించండి.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -130,6 +134,14 @@
     <message>
         <source>Repeat new passphrase</source>
         <translation>క్రొత్త సంకేతపదము మరలా ఇవ్వండి</translation>
+    </message>
+    <message>
+        <source>Show passphrase</source>
+        <translation>సంకేతపదమును చూపించు</translation>
+    </message>
+    <message>
+        <source>Encrypt wallet</source>
+        <translation>వాలెట్‌ను గుప్తీకరించండి</translation>
     </message>
     <message>
         <source>Unlock wallet</source>
@@ -325,9 +337,6 @@
     <name>SendCoinsEntry</name>
     </context>
 <context>
-    <name>SendConfirmationDialog</name>
-    </context>
-<context>
     <name>ShutdownWindow</name>
     </context>
 <context>
@@ -432,7 +441,7 @@
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
-        <translation>ప్రస్తుతం ఉన్న సమాచారాన్ని ఫైల్ లోనికి ఎగుమతి చేసుకోండి </translation>
+        <translation>ప్రస్తుతం ఉన్న సమాచారాన్ని ఫైల్ లోనికి ఎగుమతి చేసుకోండి</translation>
     </message>
     </context>
 <context>

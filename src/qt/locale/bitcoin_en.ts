@@ -885,7 +885,7 @@
         <translation type="unfinished">Confirmed</translation>
     </message>
     <message>
-        <location filename="../coincontroldialog.cpp" line="+53"/>
+        <location filename="../coincontroldialog.cpp" line="+54"/>
         <source>Copy address</source>
         <translation type="unfinished"></translation>
     </message>
@@ -946,7 +946,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+313"/>
+        <location line="+308"/>
         <source>(%1 locked)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -971,7 +971,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+45"/>
+        <location line="+38"/>
         <location line="+54"/>
         <source>(no label)</source>
         <translation type="unfinished"></translation>
@@ -990,7 +990,7 @@
 <context>
     <name>CreateWalletActivity</name>
     <message>
-        <location filename="../walletcontroller.cpp" line="+209"/>
+        <location filename="../walletcontroller.cpp" line="+217"/>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2147,11 +2147,13 @@
         <location line="+26"/>
         <location line="+23"/>
         <location line="+23"/>
+        <location line="+26"/>
+        <location filename="../rpcconsole.cpp" line="+1121"/>
         <source>N/A</source>
         <translation>N/A</translation>
     </message>
     <message>
-        <location line="-1430"/>
+        <location line="-1456"/>
         <source>Client version</source>
         <translation>Client version</translation>
     </message>
@@ -2274,8 +2276,8 @@
     </message>
     <message>
         <location line="+65"/>
-        <location filename="../rpcconsole.cpp" line="+497"/>
-        <location line="+755"/>
+        <location filename="../rpcconsole.cpp" line="-624"/>
+        <location line="+756"/>
         <source>Select a peer to view detailed information.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2310,7 +2312,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-1164"/>
+        <location line="+256"/>
+        <source>The mapped Autonomous System used for diversifying peer selection.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Mapped AS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-1423"/>
         <location line="+1072"/>
         <source>User Agent</source>
         <translation type="unfinished"></translation>
@@ -2326,12 +2338,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+84"/>
         <source>Decrease font size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="+32"/>
         <source>Increase font size</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2411,7 +2423,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../rpcconsole.cpp" line="-407"/>
+        <location filename="../rpcconsole.cpp" line="-408"/>
         <source>In:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2545,7 +2557,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+12"/>
+        <location line="+13"/>
         <location line="+6"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
@@ -2775,7 +2787,7 @@
     <name>SendCoinsDialog</name>
     <message>
         <location filename="../forms/sendcoinsdialog.ui" line="+14"/>
-        <location filename="../sendcoinsdialog.cpp" line="+622"/>
+        <location filename="../sendcoinsdialog.cpp" line="+618"/>
         <source>Send Coins</source>
         <translation>Send Coins</translation>
     </message>
@@ -2962,7 +2974,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of &quot;100 satos
         <translation>S&amp;end</translation>
     </message>
     <message>
-        <location filename="../sendcoinsdialog.cpp" line="-533"/>
+        <location filename="../sendcoinsdialog.cpp" line="-528"/>
         <source>Copy quantity</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3012,7 +3024,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of &quot;100 satos
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+100"/>
+        <location line="+95"/>
         <source> from wallet &apos;%1&apos;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3147,7 +3159,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of &quot;100 satos
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location line="+125"/>
+        <location line="+118"/>
         <source>Estimated to begin confirmation within %n block(s).</source>
         <translation>
             <numerusform>Estimated to begin confirmation within %n block.</numerusform>
@@ -3155,7 +3167,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of &quot;100 satos
         </translation>
     </message>
     <message>
-        <location line="+101"/>
+        <location line="+100"/>
         <source>Warning: Invalid Bitcoin address</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3506,7 +3518,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of &quot;100 satos
 <context>
     <name>TrafficGraphWidget</name>
     <message>
-        <location filename="../trafficgraphwidget.cpp" line="+81"/>
+        <location filename="../trafficgraphwidget.cpp" line="+82"/>
         <source>KB/s</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4103,7 +4115,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of &quot;100 satos
 <context>
     <name>WalletController</name>
     <message>
-        <location filename="../walletcontroller.cpp" line="-211"/>
+        <location filename="../walletcontroller.cpp" line="-219"/>
         <source>Close wallet</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4129,7 +4141,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of &quot;100 satos
 <context>
     <name>WalletModel</name>
     <message>
-        <location filename="../walletmodel.cpp" line="+198"/>
+        <location filename="../walletmodel.cpp" line="+195"/>
         <source>Send Coins</source>
         <translation type="unfinished">Send Coins</translation>
     </message>
@@ -4197,7 +4209,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of &quot;100 satos
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+30"/>
+        <location line="+20"/>
         <source>default wallet</source>
         <translation type="unfinished"></translation>
     </message>

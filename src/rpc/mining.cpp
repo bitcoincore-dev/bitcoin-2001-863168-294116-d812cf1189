@@ -637,6 +637,8 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     result.pushKV("capabilities", aCaps);
 
     UniValue aRules(UniValue::VARR);
+    aRules.push_back("csv");
+    if (!fPreSegWit) aRules.push_back("!segwit");
     UniValue vbavailable(UniValue::VOBJ);
     for (int j = 0; j < (int)Consensus::MAX_VERSION_BITS_DEPLOYMENTS; ++j) {
         Consensus::DeploymentPos pos = Consensus::DeploymentPos(j);
@@ -724,7 +726,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     return result;
 }
 
-class submitblock_StateCatcher : public CValidationInterface
+class submitblock_StateCatcher final : public CValidationInterface
 {
 public:
     uint256 hash;
@@ -792,17 +794,17 @@ static UniValue submitblock(const JSONRPCRequest& request)
     }
 
     bool new_block;
-    submitblock_StateCatcher sc(block.GetHash());
-    RegisterValidationInterface(&sc);
+    auto sc = std::make_shared<submitblock_StateCatcher>(block.GetHash());
+    RegisterSharedValidationInterface(sc);
     bool accepted = ProcessNewBlock(Params(), blockptr, /* fForceProcessing */ true, /* fNewBlock */ &new_block);
-    UnregisterValidationInterface(&sc);
+    UnregisterSharedValidationInterface(sc);
     if (!new_block && accepted) {
         return "duplicate";
     }
-    if (!sc.found) {
+    if (!sc->found) {
         return "inconclusive";
     }
-    return BIP22ValidationResult(sc.state);
+    return BIP22ValidationResult(sc->state);
 }
 
 static UniValue submitheader(const JSONRPCRequest& request)
@@ -1022,6 +1024,8 @@ static UniValue estimaterawfee(const JSONRPCRequest& request)
     return result;
 }
 
+void RegisterMiningRPCCommands(CRPCTable &t)
+{
 // clang-format off
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         argNames
@@ -1043,8 +1047,6 @@ static const CRPCCommand commands[] =
 };
 // clang-format on
 
-void RegisterMiningRPCCommands(CRPCTable &t)
-{
     for (unsigned int vcidx = 0; vcidx < ARRAYLEN(commands); vcidx++)
         t.appendCommand(commands[vcidx].name, &commands[vcidx]);
 }

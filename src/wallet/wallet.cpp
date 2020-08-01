@@ -21,6 +21,7 @@
 #include <script/descriptor.h>
 #include <script/script.h>
 #include <script/signingprovider.h>
+#include <txmempool.h>
 #include <util/bip32.h>
 #include <util/error.h>
 #include <util/fees.h>
@@ -62,8 +63,10 @@ bool AddWallet(const std::shared_ptr<CWallet>& wallet)
 
 bool RemoveWallet(const std::shared_ptr<CWallet>& wallet)
 {
-    LOCK(cs_wallets);
     assert(wallet);
+    // Unregister with the validation interface which also drops shared ponters.
+    wallet->m_chain_notifications_handler.reset();
+    LOCK(cs_wallets);
     std::vector<std::shared_ptr<CWallet>>::iterator i = std::find(vpwallets.begin(), vpwallets.end(), wallet);
     if (i == vpwallets.end()) return false;
     vpwallets.erase(i);
@@ -98,20 +101,18 @@ std::unique_ptr<interfaces::Handler> HandleLoadWallet(LoadWalletFn load_wallet)
     return interfaces::MakeHandler([it] { LOCK(cs_wallets); g_load_wallet_fns.erase(it); });
 }
 
+static Mutex g_loading_wallet_mutex;
 static Mutex g_wallet_release_mutex;
 static std::condition_variable g_wallet_release_cv;
-static std::set<std::string> g_unloading_wallet_set;
+static std::set<std::string> g_loading_wallet_set GUARDED_BY(g_loading_wallet_mutex);
+static std::set<std::string> g_unloading_wallet_set GUARDED_BY(g_wallet_release_mutex);
 
 // Custom deleter for shared_ptr<CWallet>.
 static void ReleaseWallet(CWallet* wallet)
 {
-    // Unregister and delete the wallet right after BlockUntilSyncedToCurrentChain
-    // so that it's in sync with the current chainstate.
     const std::string name = wallet->GetName();
     wallet->WalletLogPrintf("Releasing wallet\n");
-    wallet->BlockUntilSyncedToCurrentChain();
     wallet->Flush();
-    wallet->m_chain_notifications_handler.reset();
     delete wallet;
     // Wallet is now released, notify UnloadWallet, if any.
     {
@@ -137,6 +138,7 @@ void UnloadWallet(std::shared_ptr<CWallet>&& wallet)
     // Notify the unload intent so that all remaining shared pointers are
     // released.
     wallet->NotifyUnload();
+
     // Time to ditch our shared_ptr and wait for ReleaseWallet call.
     wallet.reset();
     {
@@ -147,20 +149,39 @@ void UnloadWallet(std::shared_ptr<CWallet>&& wallet)
     }
 }
 
+namespace {
+std::shared_ptr<CWallet> LoadWalletInternal(interfaces::Chain& chain, const WalletLocation& location, std::string& error, std::vector<std::string>& warnings)
+{
+    try {
+        if (!CWallet::Verify(chain, location, false, error, warnings)) {
+            error = "Wallet file verification failed: " + error;
+            return nullptr;
+        }
+
+        std::shared_ptr<CWallet> wallet = CWallet::CreateWalletFromFile(chain, location, error, warnings);
+        if (!wallet) {
+            error = "Wallet loading failed: " + error;
+            return nullptr;
+        }
+        AddWallet(wallet);
+        wallet->postInitProcess();
+        return wallet;
+    } catch (const std::runtime_error& e) {
+        error = e.what();
+        return nullptr;
+    }
+}
+} // namespace
+
 std::shared_ptr<CWallet> LoadWallet(interfaces::Chain& chain, const WalletLocation& location, std::string& error, std::vector<std::string>& warnings)
 {
-    if (!CWallet::Verify(chain, location, false, error, warnings)) {
-        error = "Wallet file verification failed: " + error;
+    auto result = WITH_LOCK(g_loading_wallet_mutex, return g_loading_wallet_set.insert(location.GetName()));
+    if (!result.second) {
+        error = "Wallet already being loading.";
         return nullptr;
     }
-
-    std::shared_ptr<CWallet> wallet = CWallet::CreateWalletFromFile(chain, location, error, warnings);
-    if (!wallet) {
-        error = "Wallet loading failed: " + error;
-        return nullptr;
-    }
-    AddWallet(wallet);
-    wallet->postInitProcess();
+    auto wallet = LoadWalletInternal(chain, location, error, warnings);
+    WITH_LOCK(g_loading_wallet_mutex, g_loading_wallet_set.erase(result.first));
     return wallet;
 }
 
@@ -1089,23 +1110,51 @@ void CWallet::SyncTransaction(const CTransactionRef& ptx, CWalletTx::Confirmatio
     MarkInputsDirty(ptx);
 }
 
-void CWallet::transactionAddedToMempool(const CTransactionRef& ptx) {
-    auto locked_chain = chain().lock();
+void CWallet::transactionAddedToMempool(const CTransactionRef& tx) {
     LOCK(cs_wallet);
-    CWalletTx::Confirmation confirm(CWalletTx::Status::UNCONFIRMED, /* block_height */ 0, {}, /* nIndex */ 0);
-    SyncTransaction(ptx, confirm);
+    SyncTransaction(tx, {CWalletTx::Status::UNCONFIRMED, /* block height */ 0, /* block hash */ {}, /* index */ 0});
 
-    auto it = mapWallet.find(ptx->GetHash());
+    auto it = mapWallet.find(tx->GetHash());
     if (it != mapWallet.end()) {
         it->second.fInMempool = true;
     }
 }
 
-void CWallet::transactionRemovedFromMempool(const CTransactionRef &ptx) {
+void CWallet::transactionRemovedFromMempool(const CTransactionRef& tx, MemPoolRemovalReason reason) {
     LOCK(cs_wallet);
-    auto it = mapWallet.find(ptx->GetHash());
+    auto it = mapWallet.find(tx->GetHash());
     if (it != mapWallet.end()) {
         it->second.fInMempool = false;
+    }
+    // Handle transactions that were removed from the mempool because they
+    // conflict with transactions in a newly connected block.
+    if (reason == MemPoolRemovalReason::CONFLICT) {
+        // Call SyncNotifications, so external -walletnotify notifications will
+        // be triggered for these transactions. Set Status::UNCONFIRMED instead
+        // of Status::CONFLICTED for a few reasons:
+        //
+        // 1. The transactionRemovedFromMempool callback does not currently
+        //    provide the conflicting block's hash and height, and for backwards
+        //    compatibility reasons it may not be not safe to store conflicted
+        //    wallet transactions with a null block hash. See
+        //    https://github.com/bitcoin/bitcoin/pull/18600#discussion_r420195993.
+        // 2. For most of these transactions, the wallet's internal conflict
+        //    detection in the blockConnected handler will subsequently call
+        //    MarkConflicted and update them with CONFLICTED status anyway. This
+        //    applies to any wallet transaction that has inputs spent in the
+        //    block, or that has ancestors in the wallet with inputs spent by
+        //    the block.
+        // 3. Longstanding behavior since the sync implementation in
+        //    https://github.com/bitcoin/bitcoin/pull/9371 and the prior sync
+        //    implementation before that was to mark these transactions
+        //    unconfirmed rather than conflicted.
+        //
+        // Nothing described above should be seen as an unchangeable requirement
+        // when improving this code in the future. The wallet's heuristics for
+        // distinguishing between conflicted and unconfirmed transactions are
+        // imperfect, and could be improved in general, see
+        // https://github.com/bitcoin-core/bitcoin-devwiki/wiki/Wallet-Transaction-Conflict-Tracking
+        SyncTransaction(tx, {CWalletTx::Status::UNCONFIRMED, /* block height */ 0, /* block hash */ {}, /* index */ 0});
     }
 }
 
@@ -1118,9 +1167,8 @@ void CWallet::blockConnected(const CBlock& block, int height)
     m_last_block_processed_height = height;
     m_last_block_processed = block_hash;
     for (size_t index = 0; index < block.vtx.size(); index++) {
-        CWalletTx::Confirmation confirm(CWalletTx::Status::CONFIRMED, height, block_hash, index);
-        SyncTransaction(block.vtx[index], confirm);
-        transactionRemovedFromMempool(block.vtx[index]);
+        SyncTransaction(block.vtx[index], {CWalletTx::Status::CONFIRMED, height, block_hash, (int)index});
+        transactionRemovedFromMempool(block.vtx[index], MemPoolRemovalReason::BLOCK);
     }
 }
 
@@ -1136,8 +1184,7 @@ void CWallet::blockDisconnected(const CBlock& block, int height)
     m_last_block_processed_height = height - 1;
     m_last_block_processed = block.hashPrevBlock;
     for (const CTransactionRef& ptx : block.vtx) {
-        CWalletTx::Confirmation confirm(CWalletTx::Status::UNCONFIRMED, /* block_height */ 0, {}, /* nIndex */ 0);
-        SyncTransaction(ptx, confirm);
+        SyncTransaction(ptx, {CWalletTx::Status::UNCONFIRMED, /* block height */ 0, /* block hash */ {}, /* index */ 0});
     }
 }
 
@@ -1238,8 +1285,9 @@ bool CWallet::IsChange(const CScript& script) const
             return true;
 
         LOCK(cs_wallet);
-        if (!mapAddressBook.count(address))
+        if (!FindAddressBookEntry(address)) {
             return true;
+        }
     }
     return false;
 }
@@ -1685,8 +1733,7 @@ CWallet::ScanResult CWallet::ScanForWalletTransactions(const uint256& start_bloc
                 break;
             }
             for (size_t posInBlock = 0; posInBlock < block.vtx.size(); ++posInBlock) {
-                CWalletTx::Confirmation confirm(CWalletTx::Status::CONFIRMED, *block_height, block_hash, posInBlock);
-                SyncTransaction(block.vtx[posInBlock], confirm, fUpdate);
+                SyncTransaction(block.vtx[posInBlock], {CWalletTx::Status::CONFIRMED, *block_height, block_hash, (int)posInBlock}, fUpdate);
             }
             // scan succeeded, record block as most recent successfully scanned
             result.last_scanned_block = block_hash;
@@ -2486,13 +2533,8 @@ TransactionError CWallet::FillPSBT(PartiallySignedTransaction& psbtx, bool& comp
             continue;
         }
 
-        // Verify input looks sane. This will check that we have at most one uxto, witness or non-witness.
-        if (!input.IsSane()) {
-            return TransactionError::INVALID_PSBT;
-        }
-
         // If we have no utxo, grab it from the wallet.
-        if (!input.non_witness_utxo && input.witness_utxo.IsNull()) {
+        if (!input.non_witness_utxo) {
             const uint256& txhash = txin.prevout.hash;
             const auto it = mapWallet.find(txhash);
             if (it != mapWallet.end()) {
@@ -3192,11 +3234,11 @@ bool CWallet::SetAddressBookWithDB(WalletBatch& batch, const CTxDestination& add
     bool fUpdated = false;
     {
         LOCK(cs_wallet);
-        std::map<CTxDestination, CAddressBookData>::iterator mi = mapAddressBook.find(address);
-        fUpdated = mi != mapAddressBook.end();
-        mapAddressBook[address].name = strName;
+        std::map<CTxDestination, CAddressBookData>::iterator mi = m_address_book.find(address);
+        fUpdated = (mi != m_address_book.end() && !mi->second.IsChange());
+        m_address_book[address].SetLabel(strName);
         if (!strPurpose.empty()) /* update purpose only if requested */
-            mapAddressBook[address].purpose = strPurpose;
+            m_address_book[address].purpose = strPurpose;
     }
     NotifyAddressBookChanged(this, address, strName, IsMine(address) != ISMINE_NO,
                              strPurpose, (fUpdated ? CT_UPDATED : CT_NEW) );
@@ -3213,16 +3255,24 @@ bool CWallet::SetAddressBook(const CTxDestination& address, const std::string& s
 
 bool CWallet::DelAddressBook(const CTxDestination& address)
 {
+    // If we want to delete receiving addresses, we need to take care that DestData "used" (and possibly newer DestData) gets preserved (and the "deleted" address transformed into a change entry instead of actually being deleted)
+    // NOTE: This isn't a problem for sending addresses because they never have any DestData yet!
+    // When adding new DestData, it should be considered here whether to retain or delete it (or move it?).
+    if (IsMine(address)) {
+        WalletLogPrintf("%s called with IsMine address, NOT SUPPORTED. Please report this bug! %s\n", __func__, PACKAGE_BUGREPORT);
+        return false;
+    }
+
     {
         LOCK(cs_wallet);
 
         // Delete destdata tuples associated with address
         std::string strAddress = EncodeDestination(address);
-        for (const std::pair<const std::string, std::string> &item : mapAddressBook[address].destdata)
+        for (const std::pair<const std::string, std::string> &item : m_address_book[address].destdata)
         {
             WalletBatch(*database).EraseDestData(strAddress, item.first);
         }
-        mapAddressBook.erase(address);
+        m_address_book.erase(address);
     }
 
     NotifyAddressBookChanged(this, address, "", IsMine(address) != ISMINE_NO, "", CT_DELETED);
@@ -3458,10 +3508,11 @@ std::set<CTxDestination> CWallet::GetLabelAddresses(const std::string& label) co
 {
     LOCK(cs_wallet);
     std::set<CTxDestination> result;
-    for (const std::pair<const CTxDestination, CAddressBookData>& item : mapAddressBook)
+    for (const std::pair<const CTxDestination, CAddressBookData>& item : m_address_book)
     {
+        if (item.second.IsChange()) continue;
         const CTxDestination& address = item.first;
-        const std::string& strName = item.second.name;
+        const std::string& strName = item.second.GetLabel();
         if (strName == label)
             result.insert(address);
     }
@@ -3662,26 +3713,26 @@ bool CWallet::AddDestData(WalletBatch& batch, const CTxDestination &dest, const 
     if (boost::get<CNoDestination>(&dest))
         return false;
 
-    mapAddressBook[dest].destdata.insert(std::make_pair(key, value));
+    m_address_book[dest].destdata.insert(std::make_pair(key, value));
     return batch.WriteDestData(EncodeDestination(dest), key, value);
 }
 
 bool CWallet::EraseDestData(WalletBatch& batch, const CTxDestination &dest, const std::string &key)
 {
-    if (!mapAddressBook[dest].destdata.erase(key))
+    if (!m_address_book[dest].destdata.erase(key))
         return false;
     return batch.EraseDestData(EncodeDestination(dest), key);
 }
 
 void CWallet::LoadDestData(const CTxDestination &dest, const std::string &key, const std::string &value)
 {
-    mapAddressBook[dest].destdata.insert(std::make_pair(key, value));
+    m_address_book[dest].destdata.insert(std::make_pair(key, value));
 }
 
 bool CWallet::GetDestData(const CTxDestination &dest, const std::string &key, std::string *value) const
 {
-    std::map<CTxDestination, CAddressBookData>::const_iterator i = mapAddressBook.find(dest);
-    if(i != mapAddressBook.end())
+    std::map<CTxDestination, CAddressBookData>::const_iterator i = m_address_book.find(dest);
+    if(i != m_address_book.end())
     {
         CAddressBookData::StringMap::const_iterator j = i->second.destdata.find(key);
         if(j != i->second.destdata.end())
@@ -3697,7 +3748,7 @@ bool CWallet::GetDestData(const CTxDestination &dest, const std::string &key, st
 std::vector<std::string> CWallet::GetDestValues(const std::string& prefix) const
 {
     std::vector<std::string> values;
-    for (const auto& address : mapAddressBook) {
+    for (const auto& address : m_address_book) {
         for (const auto& data : address.second.destdata) {
             if (!data.first.compare(0, prefix.size(), prefix)) {
                 values.emplace_back(data.second);
@@ -4092,22 +4143,27 @@ std::shared_ptr<CWallet> CWallet::CreateWalletFromFile(interfaces::Chain& chain,
     }
 
     // Register with the validation interface. It's ok to do this after rescan since we're still holding locked_chain.
-    walletInstance->handleNotifications();
+    walletInstance->m_chain_notifications_handler = walletInstance->chain().handleNotifications(walletInstance);
 
     walletInstance->SetBroadcastTransactions(gArgs.GetBoolArg("-walletbroadcast", DEFAULT_WALLETBROADCAST));
 
     {
         walletInstance->WalletLogPrintf("setKeyPool.size() = %u\n",      walletInstance->GetKeyPoolSize());
         walletInstance->WalletLogPrintf("mapWallet.size() = %u\n",       walletInstance->mapWallet.size());
-        walletInstance->WalletLogPrintf("mapAddressBook.size() = %u\n",  walletInstance->mapAddressBook.size());
+        walletInstance->WalletLogPrintf("m_address_book.size() = %u\n",  walletInstance->m_address_book.size());
     }
 
     return walletInstance;
 }
 
-void CWallet::handleNotifications()
+const CAddressBookData* CWallet::FindAddressBookEntry(const CTxDestination& dest, bool allow_change) const
 {
-    m_chain_notifications_handler = m_chain->handleNotifications(*this);
+    const auto& address_book_it = m_address_book.find(dest);
+    if (address_book_it == m_address_book.end()) return nullptr;
+    if ((!allow_change) && address_book_it->second.IsChange()) {
+        return nullptr;
+    }
+    return &address_book_it->second;
 }
 
 void CWallet::postInitProcess()

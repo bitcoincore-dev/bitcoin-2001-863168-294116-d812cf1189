@@ -6,6 +6,7 @@
 #define BITCOIN_TEST_FUZZ_UTIL_H
 
 #include <amount.h>
+#include <arith_uint256.h>
 #include <attributes.h>
 #include <optional.h>
 #include <script/script.h>
@@ -91,6 +92,11 @@ NODISCARD inline uint256 ConsumeUInt256(FuzzedDataProvider& fuzzed_data_provider
     return uint256{v256};
 }
 
+NODISCARD inline arith_uint256 ConsumeArithUInt256(FuzzedDataProvider& fuzzed_data_provider) noexcept
+{
+    return UintToArith256(ConsumeUInt256(fuzzed_data_provider));
+}
+
 template <typename T>
 NODISCARD bool MultiplicationOverflow(const T i, const T j) noexcept
 {
@@ -112,6 +118,17 @@ NODISCARD bool MultiplicationOverflow(const T i, const T j) noexcept
     } else {
         return j != 0 && i > std::numeric_limits<T>::max() / j;
     }
+}
+
+template <class T>
+NODISCARD bool AdditionOverflow(const T i, const T j) noexcept
+{
+    static_assert(std::is_integral<T>::value, "Integral required.");
+    if (std::numeric_limits<T>::is_signed) {
+        return (i > 0 && j > std::numeric_limits<T>::max() - i) ||
+               (i < 0 && j < std::numeric_limits<T>::min() - i);
+    }
+    return std::numeric_limits<T>::max() - i < j;
 }
 
 #endif // BITCOIN_TEST_FUZZ_UTIL_H

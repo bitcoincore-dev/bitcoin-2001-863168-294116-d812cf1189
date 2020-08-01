@@ -14,6 +14,7 @@
 class CTxMemPool;
 
 extern RecursiveMutex cs_main;
+extern RecursiveMutex g_cs_orphans;
 
 /** Default for -maxorphantx, maximum number of orphan transactions kept in memory */
 static const unsigned int DEFAULT_MAX_ORPHAN_TRANSACTIONS = 100;
@@ -27,7 +28,7 @@ private:
     BanMan* const m_banman;
     CTxMemPool& m_mempool;
 
-    bool CheckIfBanned(CNode* pnode) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+    bool MaybeDiscourageAndDisconnect(CNode* pnode) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
 public:
     PeerLogicValidation(CConnman* connman, BanMan* banman, CScheduler& scheduler, CTxMemPool& pool);

@@ -131,6 +131,7 @@ def main():
             build_dir=config["environment"]["BUILDDIR"],
             merge_dir=args.m_dir,
         )
+        return
 
     run_once(
         corpus=args.seed_dir,
@@ -146,6 +147,7 @@ def merge_inputs(*, corpus, test_list, build_dir, merge_dir):
         args = [
             os.path.join(build_dir, 'src', 'test', 'fuzz', t),
             '-merge=1',
+            '-use_value_profile=1',  # Also done by oss-fuzz https://github.com/google/oss-fuzz/issues/1406#issuecomment-387790487
             os.path.join(corpus, t),
             os.path.join(merge_dir, t),
         ]
