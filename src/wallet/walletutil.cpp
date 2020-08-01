@@ -69,6 +69,7 @@ std::vector<fs::path> ListWalletDir()
     const std::set<fs::path> ignore_paths = {
                                         blocks_dir,
                                         data_dir / "blktree",
+                                        data_dir / "blocks",
                                         data_dir / "chainstate",
                                         data_dir / "coins",
                                         data_dir / "database",
