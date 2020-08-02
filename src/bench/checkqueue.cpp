@@ -14,8 +14,6 @@
 
 #include <vector>
 
-
-static const int MIN_CORES = 2;
 static const size_t BATCHES = 101;
 static const size_t BATCH_SIZE = 30;
 static const int PREVECTOR_SIZE = 28;
@@ -44,7 +42,7 @@ static void CCheckQueueSpeedPrevectorJob(benchmark::Bench& bench)
     };
     CCheckQueue<PrevectorJob> queue {QUEUE_BATCH_SIZE};
     boost::thread_group tg;
-    for (auto x = 0; x < std::max(MIN_CORES, GetNumCores()); ++x) {
+    for (auto x = 0; x < GetNumCores() - 1; ++x) {
        tg.create_thread([&]{queue.Thread();});
     }
 
