@@ -161,8 +161,10 @@ void LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, FlatFi
 bool LoadGenesisBlock(const CChainParams& chainparams);
 /** Unload database information */
 void UnloadBlockIndex(CTxMemPool* mempool);
-/** Run an instance of the script checking thread */
-void ThreadScriptCheck(int worker_num);
+/** Run instances of script checking worker threads */
+void StartScriptCheckWorkerThreads(int threads_num);
+/** Stop all of the script checking worker threads */
+void StopScriptCheckWorkerThreads();
 /**
  * Return transaction from the block at block_index.
  * If block_index is not provided, fall back to mempool.
