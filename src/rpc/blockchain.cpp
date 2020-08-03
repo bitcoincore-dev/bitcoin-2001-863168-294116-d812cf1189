@@ -485,6 +485,8 @@ static void entryToJSON(const CTxMemPool& pool, UniValue& info, const CTxMemPool
 
 UniValue MempoolToJSON(const CTxMemPool& pool, bool verbose)
 {
+    AssertLockNotHeld(pool.cs);
+
     if (verbose) {
         LOCK(pool.cs);
         UniValue o(UniValue::VOBJ);
@@ -1403,6 +1405,8 @@ static UniValue getchaintips(const JSONRPCRequest& request)
 
 UniValue MempoolInfoToJSON(const CTxMemPool& pool)
 {
+    AssertLockNotHeld(pool.cs);
+
     // Make sure this call is atomic in the pool.
     LOCK(pool.cs);
     UniValue ret(UniValue::VOBJ);
