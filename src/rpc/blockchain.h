@@ -7,6 +7,7 @@
 
 #include <amount.h>
 #include <sync.h>
+#include <txmempool.h>
 
 #include <stdint.h>
 #include <vector>
@@ -15,7 +16,6 @@ extern RecursiveMutex cs_main;
 
 class CBlock;
 class CBlockIndex;
-class CTxMemPool;
 class ChainstateManager;
 class UniValue;
 struct NodeContext;
@@ -40,10 +40,10 @@ void RPCNotifyBlockChange(const CBlockIndex*);
 UniValue blockToJSON(const CBlock& block, const CBlockIndex* tip, const CBlockIndex* blockindex, bool txDetails = false) LOCKS_EXCLUDED(cs_main);
 
 /** Mempool information to JSON */
-UniValue MempoolInfoToJSON(const CTxMemPool& pool);
+UniValue MempoolInfoToJSON(const CTxMemPool& pool) EXCLUSIVE_LOCKS_REQUIRED(!pool.cs);
 
 /** Mempool to JSON */
-UniValue MempoolToJSON(const CTxMemPool& pool, bool verbose = false, bool include_mempool_sequence = false);
+UniValue MempoolToJSON(const CTxMemPool& pool, bool verbose = false, bool include_mempool_sequence = false) EXCLUSIVE_LOCKS_REQUIRED(!pool.cs);
 
 /** Block header to JSON */
 UniValue blockheaderToJSON(const CBlockIndex* tip, const CBlockIndex* blockindex) LOCKS_EXCLUDED(cs_main);

@@ -502,6 +502,8 @@ static void entryToJSON(const CTxMemPool& pool, UniValue& info, const CTxMemPool
 
 UniValue MempoolToJSON(const CTxMemPool& pool, bool verbose, bool include_mempool_sequence)
 {
+    AssertLockNotHeld(pool.cs);
+
     if (verbose) {
         if (include_mempool_sequence) {
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Verbose results cannot contain mempool sequence values.");
@@ -1477,6 +1479,8 @@ static RPCHelpMan getchaintips()
 
 UniValue MempoolInfoToJSON(const CTxMemPool& pool)
 {
+    AssertLockNotHeld(pool.cs);
+
     // Make sure this call is atomic in the pool.
     LOCK(pool.cs);
     UniValue ret(UniValue::VOBJ);
