@@ -801,8 +801,9 @@ void V1TransportSerializer::prepareForTransport(CSerializedNetMsg& msg, std::vec
     CVectorWriter{SER_NETWORK, INIT_PROTO_VERSION, header, 0, hdr};
 }
 
-size_t CConnman::SocketSendData(CNode *pnode) const EXCLUSIVE_LOCKS_REQUIRED(pnode->cs_vSend)
+size_t CConnman::SocketSendData(CNode *pnode) const
 {
+    LOCK(pnode->cs_vSend);
     auto it = pnode->vSendMsg.begin();
     size_t nSentSize = 0;
 
@@ -1534,11 +1535,8 @@ void CConnman::SocketHandler()
         //
         if (sendSet)
         {
-            LOCK(pnode->cs_vSend);
-            size_t nBytes = SocketSendData(pnode);
-            if (nBytes) {
-                RecordBytesSent(nBytes);
-            }
+            const size_t bytes_sent{SocketSendData(pnode)};
+            if (bytes_sent) RecordBytesSent(bytes_sent);
         }
 
         InactivityCheck(pnode);
@@ -3004,10 +3002,10 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
     pnode->m_serializer->prepareForTransport(msg, serialized_header);
     const size_t total_size{message_size + serialized_header.size()};
 
-    size_t bytes_sent{0};
+    bool optimistic_send{false};
     {
         LOCK(pnode->cs_vSend);
-        bool optimistic_send{pnode->vSendMsg.empty()};
+        optimistic_send = pnode->vSendMsg.empty();
 
         //log total amount of bytes per message type
         pnode->mapSendBytesPerMsgCmd[msg.m_type] += total_size;
@@ -3020,13 +3018,12 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
         if (message_size) {
             pnode->vSendMsg.push_back(std::move(msg.data));
         }
-
-        // If write queue empty, attempt "optimistic write"
-        if (optimistic_send) {
-            bytes_sent = SocketSendData(pnode);
-        }
     }
-    if (bytes_sent) RecordBytesSent(bytes_sent);
+    // If write queue was empty, attempt "optimistic write"
+    if (optimistic_send) {
+        const size_t bytes_sent{SocketSendData(pnode)};
+        if (bytes_sent) RecordBytesSent(bytes_sent);
+    }
 }
 
 bool CConnman::ForNode(NodeId id, std::function<bool(CNode* pnode)> func)
