@@ -42,6 +42,8 @@ class CNode;
 class BanMan;
 struct bilingual_str;
 
+extern RecursiveMutex cs_main;
+
 /** Default for -whitelistrelay. */
 static const bool DEFAULT_WHITELISTRELAY = true;
 /** Default for -whitelistforcerelay. */
@@ -208,8 +210,8 @@ public:
 
     void PushMessage(CNode* pnode, CSerializedNetMsg&& msg);
 
-    template<typename Callable>
-    void ForEachNode(Callable&& func)
+    template <typename Callable>
+    void ForEachNodeUnlocked(Callable&& func) EXCLUSIVE_LOCKS_REQUIRED(!::cs_main)
     {
         LOCK(cs_vNodes);
         for (auto&& node : vNodes) {
@@ -218,8 +220,18 @@ public:
         }
     };
 
-    template<typename Callable>
-    void ForEachNode(Callable&& func) const
+    template <typename Callable>
+    void ForEachNode(Callable&& func) EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+    {
+        LOCK(cs_vNodes);
+        for (auto&& node : vNodes) {
+            if (NodeFullyConnected(node))
+                func(node);
+        }
+    };
+
+    template <typename Callable>
+    void ForEachNode(Callable&& func) const EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
     {
         LOCK(cs_vNodes);
         for (auto&& node : vNodes) {

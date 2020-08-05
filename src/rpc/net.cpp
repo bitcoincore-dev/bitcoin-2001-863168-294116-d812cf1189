@@ -69,7 +69,7 @@ static UniValue ping(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
 
     // Request that each node send a ping during next message processing pass
-    node.connman->ForEachNode([](CNode* pnode) {
+    node.connman->ForEachNodeUnlocked([](CNode* pnode) {
         pnode->fPingQueued = true;
     });
     return NullUniValue;
