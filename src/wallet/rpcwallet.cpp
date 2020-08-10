@@ -3514,6 +3514,11 @@ static UniValue bumpfee(const JSONRPCRequest& request)
     return result;
 }
 
+static UniValue psbtbumpfee(const JSONRPCRequest& request)
+{
+    return bumpfee(request);
+}
+
 UniValue rescanblockchain(const JSONRPCRequest& request)
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
@@ -4276,7 +4281,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "addmultisigaddress",               &addmultisigaddress,            {"nrequired","keys","label","address_type"} },
     { "wallet",             "backupwallet",                     &backupwallet,                  {"destination"} },
     { "wallet",             "bumpfee",                          &bumpfee,                       {"txid", "options"} },
-    { "wallet",             "psbtbumpfee",                      &bumpfee,                       {"txid", "options"} },
+    { "wallet",             "psbtbumpfee",                      &psbtbumpfee,                   {"txid", "options"} },
     { "wallet",             "createwallet",                     &createwallet,                  {"wallet_name", "disable_private_keys", "blank", "passphrase", "avoid_reuse"} },
     { "wallet",             "dumpprivkey",                      &dumpprivkey,                   {"address"}  },
     { "wallet",             "dumpwallet",                       &dumpwallet,                    {"filename"} },
