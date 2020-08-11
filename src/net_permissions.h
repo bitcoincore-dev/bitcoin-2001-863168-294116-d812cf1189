@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <netaddress.h>
+#include <netbase.h>
 
 #ifndef BITCOIN_NET_PERMISSIONS_H
 #define BITCOIN_NET_PERMISSIONS_H
@@ -22,10 +23,17 @@ enum NetPermissionFlags
     PF_NOBAN = (1U << 4),
     // Can query the mempool
     PF_MEMPOOL = (1U << 5),
+    // Can request addrs without hitting a privacy-preserving cache
+    PF_ADDR = (1U << 6),
+
+    // Can query compact filters even if -peerblockfilters is false
+    PF_BLOCKFILTERS = (1U << 16),
+    // Used to avoid an error when PF_ALL is used to set PF_CFILTERS
+    PF_BLOCKFILTERS_EXPLICIT = PF_BLOCKFILTERS | (1U << 17),
 
     // True if the user did not specifically set fine grained permissions
     PF_ISIMPLICIT = (1U << 31),
-    PF_ALL = PF_BLOOMFILTER | PF_FORCERELAY | PF_RELAY | PF_NOBAN | PF_MEMPOOL,
+    PF_ALL = PF_BLOOMFILTER | PF_FORCERELAY | PF_RELAY | PF_NOBAN | PF_MEMPOOL | PF_ADDR | PF_BLOCKFILTERS,
 };
 class NetPermissions
 {
@@ -55,7 +63,11 @@ public:
 class NetWhitelistPermissions : public NetPermissions
 {
 public:
-    static bool TryParse(const std::string str, NetWhitelistPermissions& output, std::string& error);
+    static bool TryParse(const std::string str, NetWhitelistPermissions& output, ConnectionDirection& output_connection_direction, std::string& error);
+    static inline bool TryParse(const std::string str, NetWhitelistPermissions& output, std::string& error) {
+        ConnectionDirection connection_direction_ignored;
+        return TryParse(str, output, connection_direction_ignored, error);
+    }
     CSubNet m_subnet;
 };
 
