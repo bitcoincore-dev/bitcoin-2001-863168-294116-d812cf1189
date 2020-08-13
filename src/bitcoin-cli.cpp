@@ -284,6 +284,18 @@ public:
 class NetinfoRequestHandler : public BaseRequestHandler
 {
 private:
+    bool IsAddrIPv6(const std::string& addr) const
+    {
+        return addr.front() == '[';
+    }
+    bool IsInboundOnion(int mapped_as, const std::string& addr, const std::string& addr_local) const
+    {
+        return mapped_as == 0 && addr.find("127.0.0.1") == 0 && addr_local.find(".onion") != std::string::npos;
+    }
+    bool IsOutboundOnion(const std::string& addr) const
+    {
+        return addr.find(".onion") != std::string::npos;
+    }
     bool m_verbose{false}; //!< Whether user requested verbose -netinfo report
 public:
     const int ID_PEERINFO = 0;
