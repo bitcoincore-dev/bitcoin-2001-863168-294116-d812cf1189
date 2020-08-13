@@ -6,12 +6,13 @@
 #include <config/bitcoin-config.h>
 #endif
 
+#include <init.h>
 #include <interfaces/node.h>
 #include <qt/bitcoin.h>
 #include <qt/test/apptests.h>
+#include <qt/test/compattests.h>
 #include <qt/test/rpcnestedtests.h>
 #include <qt/test/uritests.h>
-#include <qt/test/compattests.h>
 #include <test/util/setup_common.h>
 
 #ifdef ENABLE_WALLET
@@ -38,6 +39,7 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 #endif
 
 const std::function<void(const std::string&)> G_TEST_LOG_FUN{};
+constexpr ServerArgsOptions SERVER_ARGS_OPTIONS{/*gui*/ true, /*printtoconsole_default*/ false, /*server_default*/ false};
 
 // This is all you need to run all the tests
 int main(int argc, char* argv[])
@@ -71,7 +73,7 @@ int main(int argc, char* argv[])
     BitcoinApplication app(*node);
     app.setApplicationName("Bitcoin-Qt-test");
 
-    node->setupServerArgs();            // Make gArgs available in the NodeContext
+    node->setupServerArgs(SERVER_ARGS_OPTIONS); // Make gArgs available in the NodeContext
     node->context()->args->ClearArgs(); // Clear added args again
     AppTests app_tests(app);
     if (QTest::qExec(&app_tests) != 0) {
