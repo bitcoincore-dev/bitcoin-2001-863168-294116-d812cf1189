@@ -33,6 +33,7 @@ enum class WalletCreationStatus;
 struct CNodeStateStats;
 struct NodeContext;
 struct bilingual_str;
+struct ServerArgsOptions;
 
 namespace interfaces {
 class Handler;
