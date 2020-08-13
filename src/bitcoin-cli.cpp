@@ -318,6 +318,36 @@ public:
         const std::vector<UniValue> batch{JSONRPCProcessBatchReply(batch_in, batch_in.size())};
         if (!batch[ID_PEERINFO]["error"].isNull()) return batch[ID_PEERINFO];
         if (!batch[ID_NETWORKINFO]["error"].isNull()) return batch[ID_NETWORKINFO];
+        // Count peer connection totals.
+        int ipv4_i{0}, ipv6_i{0}, onion_i{0}, block_relay_i{0}; // inbound conn counters
+        int ipv4_o{0}, ipv6_o{0}, onion_o{0}, block_relay_o{0}; // outbound conn counters
+        const UniValue& getpeerinfo{batch[ID_PEERINFO]["result"]};
+        for (const UniValue& peer : getpeerinfo.getValues()) {
+            const std::string addr{peer["addr"].get_str()};
+            const std::string addr_local{peer["addrlocal"].isNull() ? "" : peer["addrlocal"].get_str()};
+            const int mapped_as{peer["mapped_as"].isNull() ? 0 : peer["mapped_as"].get_int()};
+            const bool is_block_relay{!peer["relaytxes"].get_bool()};
+            const bool is_inbound{peer["inbound"].get_bool()};
+            if (is_inbound) {
+                if (IsAddrIPv6(addr)) {
+                    ipv6_i += 1;
+                } else if (IsInboundOnion(mapped_as, addr, addr_local)) {
+                    onion_i += 1;
+                } else {
+                    ipv4_i += 1;
+                }
+                if (is_block_relay) block_relay_i += 1;
+            } else {
+                if (IsAddrIPv6(addr)) {
+                    ipv6_o += 1;
+                } else if (IsOutboundOnion(addr)) {
+                    onion_o += 1;
+                } else {
+                    ipv4_o += 1;
+                }
+                if (is_block_relay) block_relay_o += 1;
+            }
+        }
         std::string result;
         return JSONRPCReplyObj(UniValue{result}, NullUniValue, 1);
     }
