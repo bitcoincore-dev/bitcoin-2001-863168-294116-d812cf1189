@@ -6,6 +6,7 @@
 #define BITCOIN_INTERFACES_NODE_H
 
 #include <amount.h>     // For CAmount
+#include <init.h>
 #include <net.h>        // For CConnman::NumConnections
 #include <net_types.h>  // For banmap_t
 #include <netaddress.h> // For Network
@@ -108,7 +109,7 @@ public:
     virtual bool shutdownRequested() = 0;
 
     //! Setup arguments
-    virtual void setupServerArgs() = 0;
+    virtual void setupServerArgs(ServerArgsOptions options) = 0;
 
     //! Map port.
     virtual void mapPort(bool use_upnp) = 0;

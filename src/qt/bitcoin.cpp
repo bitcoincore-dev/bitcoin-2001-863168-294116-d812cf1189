@@ -27,6 +27,7 @@
 #include <qt/walletmodel.h>
 #endif // ENABLE_WALLET
 
+#include <init.h>
 #include <interfaces/handler.h>
 #include <interfaces/node.h>
 #include <node/context.h>
@@ -59,6 +60,8 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 #endif
 #endif
+
+constexpr ServerArgsOptions SERVER_ARGS_OPTIONS{/*gui*/ true, /*printtoconsole_default*/ false, /*server_default*/ false};
 
 // Declare meta types used for QMetaObject::invokeMethod
 Q_DECLARE_METATYPE(bool*)
@@ -292,9 +295,8 @@ void BitcoinApplication::startThread()
 
 void BitcoinApplication::parameterSetup()
 {
-    // Default printtoconsole to false for the GUI. GUI programs should not
-    // print to the console unnecessarily.
-    gArgs.SoftSetBoolArg("-printtoconsole", false);
+    gArgs.SoftSetBoolArg("-printtoconsole", SERVER_ARGS_OPTIONS.printtoconsole_default);
+    gArgs.SoftSetBoolArg("-server", SERVER_ARGS_OPTIONS.server_default);
 
     m_node.initLogging();
     m_node.initParameterInteraction();
@@ -455,7 +457,7 @@ int GuiMain(int argc, char* argv[])
 
     /// 2. Parse command-line options. We do this after qt in order to show an error if there are problems parsing these
     // Command-line options take precedence:
-    node->setupServerArgs();
+    node->setupServerArgs(SERVER_ARGS_OPTIONS);
     SetupUIArgs(gArgs);
     std::string error;
     if (!node->parseParameters(argc, argv, error)) {
