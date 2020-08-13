@@ -297,6 +297,23 @@ private:
         return addr.find(".onion") != std::string::npos;
     }
     bool m_verbose{false}; //!< Whether user requested verbose -netinfo report
+
+    enum struct m_conn_type {
+        ipv4,
+        ipv6,
+        onion,
+    };
+
+    std::string ConnTypeEnumToString(m_conn_type t)
+    {
+        switch (t) {
+        case m_conn_type::ipv4: return "ipv4";
+        case m_conn_type::ipv6: return "ipv6";
+        case m_conn_type::onion: return "onion";
+        } // no default case, so the compiler can warn about missing cases
+        assert(false);
+    }
+
 public:
     const int ID_PEERINFO = 0;
     const int ID_NETWORKINFO = 1;
@@ -328,10 +345,13 @@ public:
             const int mapped_as{peer["mapped_as"].isNull() ? 0 : peer["mapped_as"].get_int()};
             const bool is_block_relay{!peer["relaytxes"].get_bool()};
             const bool is_inbound{peer["inbound"].get_bool()};
+            m_conn_type conn_type{m_conn_type::ipv4};
             if (is_inbound) {
                 if (IsAddrIPv6(addr)) {
+                    conn_type = m_conn_type::ipv6;
                     ipv6_i += 1;
                 } else if (IsInboundOnion(mapped_as, addr, addr_local)) {
+                    conn_type = m_conn_type::onion;
                     onion_i += 1;
                 } else {
                     ipv4_i += 1;
@@ -339,8 +359,10 @@ public:
                 if (is_block_relay) block_relay_i += 1;
             } else {
                 if (IsAddrIPv6(addr)) {
+                    conn_type = m_conn_type::ipv6;
                     ipv6_o += 1;
                 } else if (IsOutboundOnion(addr)) {
+                    conn_type = m_conn_type::onion;
                     onion_o += 1;
                 } else {
                     ipv4_o += 1;
