@@ -360,6 +360,13 @@ public:
         result += strprintf("out: ipv4 %3i  |  ipv6 %3i  |  onion %3i  |  total %3i  (%i block-relay)\n", ipv4_o, ipv6_o, onion_o, total_o, block_relay_o);
         result += strprintf("all: %i\n", total_i + total_o);
 
+        // Report local addresses, ports, and scores.
+        result += "\nLocal addresses";
+        const UniValue& local_addrs{networkinfo["localaddresses"]};
+        for (const UniValue& addr : local_addrs.getValues()) {
+            result += strprintf("\n%-37i  |  port %5i  |  score %6i", addr["address"].get_str(), addr["port"].get_int(), addr["score"].get_int());
+        }
+
         return JSONRPCReplyObj(UniValue{result}, NullUniValue, 1);
     }
 };
