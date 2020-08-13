@@ -354,8 +354,11 @@ public:
         if (!batch[ID_PEERINFO]["error"].isNull()) return batch[ID_PEERINFO];
         if (!batch[ID_NETWORKINFO]["error"].isNull()) return batch[ID_NETWORKINFO];
         // Count peer connection totals, and if m_verbose is true, store peer data in a vector of structs.
+        int64_t time_now{GetSystemTimeInSeconds()};
         int ipv4_i{0}, ipv6_i{0}, onion_i{0}, block_relay_i{0}, total_i{0}; // inbound conn counters
         int ipv4_o{0}, ipv6_o{0}, onion_o{0}, block_relay_o{0}, total_o{0}; // outbound conn counters
+        int max_peer_id_length{2}, max_version_length{1};
+        bool is_asmap_on{false};
         std::vector<m_peer> peers;
         const UniValue& getpeerinfo{batch[ID_PEERINFO]["result"]};
         for (const UniValue& peer : getpeerinfo.getValues()) {
@@ -399,11 +402,43 @@ public:
                 const double min_ping{peer["minping"].isNull() ? 0 : peer["minping"].get_real()};
                 const double ping{peer["pingtime"].isNull() ? 0 : peer["pingtime"].get_real()};
                 peers.push_back({peer_id, mapped_as, version, conn_time, last_recv, last_send, min_ping, ping, addr, sub_version, conn_type, is_block_relay, !is_inbound});
+
+                is_asmap_on |= (mapped_as != 0);
+                max_peer_id_length = std::max(int(ToString(peer_id).length()), max_peer_id_length);
+                max_version_length = std::max(int((ToString(version) + sub_version).length()), max_version_length);
             }
         }
         // Generate reports.
         const UniValue& networkinfo{batch[ID_NETWORKINFO]["result"]};
         std::string result{strprintf("%s %s - %i%s\n\n", PACKAGE_NAME, FormatFullVersion(), networkinfo["protocolversion"].get_int(), networkinfo["subversion"].get_str())};
+
+        // Report detailed peer connections list sorted by direction and minimum ping time.
+        if (m_verbose) {
+            std::sort(peers.begin(), peers.end());
+            result += "Peer connections sorted by direction and min ping\n<-> relay  conn minping   ping lastsend lastrecv uptime ";
+            if (is_asmap_on) result += " asmap ";
+            result += strprintf("%*s %-*s address\n", max_peer_id_length, "id", max_version_length, "version");
+            for (const m_peer& peer : peers) {
+                result += strprintf(
+                    "%3s %5s %5s%8d%7d %8s %8s%7s%*i %*s %-*s %s\n",
+                    peer.is_outbound ? "out" : "in",
+                    peer.is_block_relay ? "block" : "full",
+                    ConnTypeEnumToString(peer.conn_type),
+                    round(1000 * peer.min_ping),
+                    round(1000 * peer.ping),
+                    peer.last_send == 0 ? "" : ToString(time_now - peer.last_send),
+                    peer.last_recv == 0 ? "" : ToString(time_now - peer.last_recv),
+                    peer.conn_time == 0 ? "" : ToString((time_now - peer.conn_time) / 60),
+                    is_asmap_on ? 7 : 0, // variable spacing
+                    is_asmap_on && peer.mapped_as != 0 ? ToString(peer.mapped_as) : "",
+                    max_peer_id_length, // variable spacing
+                    peer.id,
+                    max_version_length, // variable spacing
+                    ToString(peer.version) + peer.sub_version,
+                    peer.addr);
+            }
+            result += "                     ms     ms      sec      sec    min\n\n";
+        }
 
         // Report peer connection totals by type.
         total_i = ipv4_i + ipv6_i + onion_i;
