@@ -33,6 +33,7 @@ enum class WalletCreationStatus;
 struct CNodeStateStats;
 struct NodeContext;
 struct bilingual_str;
+struct ServerArgsOptions;
 
 namespace interfaces {
 class Handler;
@@ -118,7 +119,7 @@ public:
     virtual bool shutdownRequested() = 0;
 
     //! Setup arguments
-    virtual void setupServerArgs() = 0;
+    virtual void setupServerArgs(ServerArgsOptions options) = 0;
 
     //! Map port.
     virtual void mapPort(bool use_upnp) = 0;

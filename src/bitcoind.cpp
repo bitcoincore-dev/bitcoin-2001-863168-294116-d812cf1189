@@ -27,6 +27,7 @@
 
 const std::function<std::string(const char*)> G_TRANSLATION_FUN = nullptr;
 UrlDecodeFn* const URL_DECODE = urlDecode;
+constexpr ServerArgsOptions SERVER_ARGS_OPTIONS{/*gui*/ false, /*printtoconsole_default*/ true, /*server_default*/ true};
 
 static void WaitForShutdown(NodeContext& node)
 {
@@ -54,7 +55,7 @@ static bool AppInit(int argc, char* argv[])
     // Parameters
     //
     // If Qt is used, parameters/bitcoin.conf are parsed in qt/bitcoin.cpp's main()
-    SetupServerArgs(node);
+    SetupServerArgs(node, SERVER_ARGS_OPTIONS);
     std::string error;
     if (!gArgs.ParseParameters(argc, argv, error)) {
         return InitError(Untranslated(strprintf("Error parsing command line arguments: %s\n", error)));
@@ -106,8 +107,9 @@ static bool AppInit(int argc, char* argv[])
             return false;
         }
 
-        // -server defaults to true for bitcoind but not for the GUI so do this here
-        gArgs.SoftSetBoolArg("-server", true);
+        gArgs.SoftSetBoolArg("-printtoconsole", SERVER_ARGS_OPTIONS.printtoconsole_default);
+        gArgs.SoftSetBoolArg("-server", SERVER_ARGS_OPTIONS.server_default);
+
         // Set this early so that parameter interactions go to console
         InitLogging();
         InitParameterInteraction();
