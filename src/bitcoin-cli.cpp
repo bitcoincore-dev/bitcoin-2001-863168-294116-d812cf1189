@@ -348,7 +348,10 @@ public:
                 if (is_block_relay) block_relay_o += 1;
             }
         }
-        std::string result;
+        // Generate reports.
+        const UniValue& networkinfo{batch[ID_NETWORKINFO]["result"]};
+        std::string result{strprintf("%s %s - %i%s\n\n", PACKAGE_NAME, FormatFullVersion(), networkinfo["protocolversion"].get_int(), networkinfo["subversion"].get_str())};
+
         return JSONRPCReplyObj(UniValue{result}, NullUniValue, 1);
     }
 };
