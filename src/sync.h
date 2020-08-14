@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2018 The Bitcoin Core developers
+// Copyright (c) 2009-2020 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,6 +7,7 @@
 #define BITCOIN_SYNC_H
 
 #include <threadsafety.h>
+#include <util/macros.h>
 
 #include <condition_variable>
 #include <thread>
@@ -105,7 +106,6 @@ public:
  * TODO: We should move away from using the recursive lock by default.
  */
 using RecursiveMutex = AnnotatedMixin<std::recursive_mutex>;
-typedef AnnotatedMixin<std::recursive_mutex> CCriticalSection;
 
 /** Wrapped mutex: supports waiting but not recursive locking */
 typedef AnnotatedMixin<std::mutex> Mutex;
@@ -176,9 +176,6 @@ public:
 template<typename MutexArg>
 using DebugLock = UniqueLock<typename std::remove_reference<typename std::remove_pointer<MutexArg>::type>::type>;
 
-#define PASTE(x, y) x ## y
-#define PASTE2(x, y) PASTE(x, y)
-
 #define LOCK(cs) DebugLock<decltype(cs)> PASTE2(criticalblock, __COUNTER__)(cs, #cs, __FILE__, __LINE__)
 #define LOCK2(cs1, cs2)                                               \
     DebugLock<decltype(cs1)> criticalblock1(cs1, #cs1, __FILE__, __LINE__); \
@@ -197,6 +194,16 @@ using DebugLock = UniqueLock<typename std::remove_reference<typename std::remove
         (cs).unlock();             \
         LeaveCritical();           \
     }
+
+//! Run code while locking a mutex.
+//!
+//! Examples:
+//!
+//!   WITH_LOCK(cs, shared_val = shared_val + 1);
+//!
+//!   int val = WITH_LOCK(cs, return shared_val);
+//!
+#define WITH_LOCK(cs, code) [&] { LOCK(cs); code; }()
 
 class CSemaphore
 {
@@ -292,6 +299,20 @@ public:
     {
         return fHaveGrant;
     }
+};
+
+// Utility class for indicating to compiler thread analysis that a mutex is
+// locked (when it couldn't be determined otherwise).
+struct SCOPED_LOCKABLE LockAssertion
+{
+    template <typename Mutex>
+    explicit LockAssertion(Mutex& mutex) EXCLUSIVE_LOCK_FUNCTION(mutex)
+    {
+#ifdef DEBUG_LOCKORDER
+        AssertLockHeld(mutex);
+#endif
+    }
+    ~LockAssertion() UNLOCK_FUNCTION() {}
 };
 
 #endif // BITCOIN_SYNC_H
