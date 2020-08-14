@@ -26,6 +26,10 @@ static const unsigned int QUEUE_BATCH_SIZE = 128;
 // and there is a little bit of work done between calls to Add.
 static void CCheckQueueSpeedPrevectorJob(benchmark::Bench& bench)
 {
+    if (GetNumCores() < MIN_CORES) {
+        return;
+    }
+
     const ECCVerifyHandle verify_handle;
     ECC_Start();
 
@@ -44,7 +48,9 @@ static void CCheckQueueSpeedPrevectorJob(benchmark::Bench& bench)
     };
     CCheckQueue<PrevectorJob> queue {QUEUE_BATCH_SIZE};
     boost::thread_group tg;
-    for (auto x = 0; x < std::max(MIN_CORES, GetNumCores()); ++x) {
+    // The main thread should be count to prevent thread oversubscription, and
+    // to decrease the variance of benchmark results.
+    for (auto x = 0; x < GetNumCores() - 1; ++x) {
        tg.create_thread([&]{queue.Thread();});
     }
 
