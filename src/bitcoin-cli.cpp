@@ -48,6 +48,7 @@ static void SetupCliArgs()
 
     gArgs.AddArg("-version", "Print version and exit", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-conf=<file>", strprintf("Specify configuration file. Relative paths will be prefixed by datadir location. (default: %s)", BITCOIN_CONF_FILENAME), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-confrw=<file>", strprintf("Specify read/write configuration file. Relative paths will be prefixed by the network-specific datadir location. (default: %s)", BITCOIN_RW_CONF_FILENAME), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-datadir=<dir>", "Specify data directory", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-getinfo", "Get general information from the remote server, including the total balance and the balances of each loaded wallet when in multiwallet mode. Note that -getinfo is the combined result of several RPCs (getnetworkinfo, getblockchaininfo, getwalletinfo, getbalances, and in multiwallet mode, listwallets), each with potentially different state.", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     SetupChainParamsBaseOptions();
@@ -136,13 +137,6 @@ static int AppInitRPC(int argc, char* argv[])
     }
     if (!gArgs.ReadConfigFiles(error, true)) {
         tfm::format(std::cerr, "Error reading configuration file: %s\n", error);
-        return EXIT_FAILURE;
-    }
-    // Check for -chain, -testnet or -regtest parameter (BaseParams() calls are only valid after this clause)
-    try {
-        SelectBaseParams(gArgs.GetChainName());
-    } catch (const std::exception& e) {
-        tfm::format(std::cerr, "Error: %s\n", e.what());
         return EXIT_FAILURE;
     }
     return CONTINUE_EXECUTION;

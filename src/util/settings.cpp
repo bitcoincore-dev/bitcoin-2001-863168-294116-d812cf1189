@@ -12,6 +12,7 @@ namespace {
 enum class Source {
    FORCED,
    COMMAND_LINE,
+   CONFIG_FILE_RW,
    CONFIG_FILE_NETWORK_SECTION,
    CONFIG_FILE_DEFAULT_SECTION
 };
@@ -31,6 +32,10 @@ static void MergeSettings(const Settings& settings, const std::string& section, 
     // Merge in the command-line options
     if (auto* values = FindKey(settings.command_line_options, name)) {
         fn(SettingsSpan(*values), Source::COMMAND_LINE);
+    }
+    // Merge in the rw config file
+    if (auto* values = FindKey(settings.rw_config, name)) {
+        fn(SettingsSpan(*values), Source::CONFIG_FILE_RW);
     }
     // Merge in the network-specific section of the config file
     if (!section.empty()) {
@@ -70,7 +75,7 @@ SettingsValue GetSetting(const Settings& settings,
         // the config file the precedence is reversed for all settings except
         // chain name settings.
         const bool reverse_precedence =
-            (source == Source::CONFIG_FILE_NETWORK_SECTION || source == Source::CONFIG_FILE_DEFAULT_SECTION) &&
+            (source == Source::CONFIG_FILE_RW || source == Source::CONFIG_FILE_NETWORK_SECTION || source == Source::CONFIG_FILE_DEFAULT_SECTION) &&
             !get_chain_name;
 
         // Weird behavior preserved for backwards compatibility: Negated
@@ -119,7 +124,7 @@ std::vector<SettingsValue> GetSettingsList(const Settings& settings,
         // settings will be brought back from the dead (but earlier command
         // line settings will still be ignored).
         const bool add_zombie_config_values =
-            (source == Source::CONFIG_FILE_NETWORK_SECTION || source == Source::CONFIG_FILE_DEFAULT_SECTION) &&
+            (source == Source::CONFIG_FILE_RW || source == Source::CONFIG_FILE_NETWORK_SECTION || source == Source::CONFIG_FILE_DEFAULT_SECTION) &&
             !prev_negated_empty;
 
         // Ignore settings in default config section if requested.
