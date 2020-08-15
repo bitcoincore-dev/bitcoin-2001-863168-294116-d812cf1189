@@ -56,10 +56,8 @@ CZMQNotificationInterface* CZMQNotificationInterface::Create()
     for (const auto& entry : factories)
     {
         std::string arg("-zmq" + entry.first);
-        if (gArgs.IsArgSet(arg))
-        {
-            CZMQNotifierFactory factory = entry.second;
-            std::string address = gArgs.GetArg(arg, "");
+        CZMQNotifierFactory factory = entry.second;
+        for (const std::string& address : gArgs.GetArgs(arg)) {
             CZMQAbstractNotifier *notifier = factory();
             notifier->SetType(entry.first);
             notifier->SetAddress(address);
