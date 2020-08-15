@@ -6,9 +6,12 @@
 #include <util/fees.h>
 
 #include <policy/fees.h>
+#include <util/strencodings.h>
 
 #include <map>
 #include <string>
+#include <vector>
+#include <utility>
 
 std::string StringForFeeReason(FeeReason reason) {
     static const std::map<FeeReason, std::string> fee_reason_strings = {
@@ -29,16 +32,38 @@ std::string StringForFeeReason(FeeReason reason) {
     return reason_string->second;
 }
 
-bool FeeModeFromString(const std::string& mode_string, FeeEstimateMode& fee_estimate_mode) {
-    static const std::map<std::string, FeeEstimateMode> fee_modes = {
+static const std::vector<std::pair<std::string, FeeEstimateMode>>& FeeModes()
+{
+    static const std::vector<std::pair<std::string, FeeEstimateMode>> FEE_MODES = {
         {"UNSET", FeeEstimateMode::UNSET},
         {"ECONOMICAL", FeeEstimateMode::ECONOMICAL},
         {"CONSERVATIVE", FeeEstimateMode::CONSERVATIVE},
+        {"EXPLICIT", FeeEstimateMode::BTC_KB},
+        {(CURRENCY_UNIT + "/kB"), FeeEstimateMode::BTC_KB},
+        {(CURRENCY_ATOM + "/B"), FeeEstimateMode::SAT_B},
     };
-    auto mode = fee_modes.find(mode_string);
+    return FEE_MODES;
+}
 
-    if (mode == fee_modes.end()) return false;
+std::string FeeModes(const std::string& delimiter)
+{
+    std::string r;
+    std::string prefix = "";
+    for (const auto& pair : FeeModes()) {
+        r += prefix + pair.first;
+        prefix = delimiter;
+    }
+    return r;
+}
 
-    fee_estimate_mode = mode->second;
-    return true;
+bool FeeModeFromString(const std::string& mode_string, FeeEstimateMode& fee_estimate_mode)
+{
+    auto searchkey = ToUpper(mode_string);
+    for (const auto& pair : FeeModes()) {
+        if (ToUpper(pair.first) == searchkey) {
+            fee_estimate_mode = pair.second;
+            return true;
+        }
+    }
+    return false;
 }
