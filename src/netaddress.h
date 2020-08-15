@@ -10,6 +10,8 @@
 #endif
 
 #include <compat.h>
+#include <crypto/siphash.h>
+#include <random.h>
 #include <serialize.h>
 
 #include <stdint.h>
@@ -108,6 +110,22 @@ class CNetAddr
         }
 
         friend class CSubNet;
+        friend class CNetAddrHash;
+};
+
+class CNetAddrHash
+{
+public:
+    size_t operator()(const CNetAddr& a) const noexcept
+    {
+        CSipHasher hasher(salt_k0, salt_k1);
+        hasher.Write(a.ip, sizeof(a.ip));
+        return (size_t)hasher.Finalize();
+    }
+
+private:
+    const uint64_t salt_k0 = GetRand(std::numeric_limits<uint64_t>::max());
+    const uint64_t salt_k1 = GetRand(std::numeric_limits<uint64_t>::max());
 };
 
 class CSubNet
