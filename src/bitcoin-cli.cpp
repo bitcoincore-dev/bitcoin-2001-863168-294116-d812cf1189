@@ -7,6 +7,7 @@
 #include <config/bitcoin-config.h>
 #endif
 
+#include <amount.h>
 #include <chainparamsbase.h>
 #include <clientversion.h>
 #include <optional.h>
@@ -47,7 +48,7 @@ static void SetupCliArgs()
     gArgs.AddArg("-version", "Print version and exit", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-conf=<file>", strprintf("Specify configuration file. Relative paths will be prefixed by datadir location. (default: %s)", BITCOIN_CONF_FILENAME), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-datadir=<dir>", "Specify data directory", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
-    gArgs.AddArg("-getinfo", "Get general information from the remote server, including the balances of each loaded wallet when in multiwallet mode. Note that -getinfo is the combined result of several RPCs (getnetworkinfo, getblockchaininfo, getwalletinfo, getbalances, and in multiwallet mode, listwallets), each with potentially different state.", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+    gArgs.AddArg("-getinfo", "Get general information from the remote server, including the total balance and the balances of each loaded wallet when in multiwallet mode. Note that -getinfo is the combined result of several RPCs (getnetworkinfo, getblockchaininfo, getwalletinfo, getbalances, and in multiwallet mode, listwallets), each with potentially different state.", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     SetupChainParamsBaseOptions();
     gArgs.AddArg("-named", strprintf("Pass named instead of positional arguments (default: %s)", DEFAULT_NAMED), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-rpcclienttimeout=<n>", strprintf("Timeout in seconds during HTTP requests, or 0 for no timeout. (default: %d)", DEFAULT_HTTP_CLIENT_TIMEOUT), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
@@ -453,9 +454,29 @@ static UniValue ConnectAndCallRPC(BaseRequestHandler* rh, const std::string& str
     return response;
 }
 
+static CAmount AmountFromValue(const UniValue& value)
+{
+    CAmount amount{0};
+    if (!ParseFixedPoint(value.getValStr(), 8, &amount))
+        throw std::runtime_error("Invalid amount");
+    if (!MoneyRange(amount))
+        throw std::runtime_error("Amount out of range");
+    return amount;
+}
+
+static UniValue ValueFromAmount(const CAmount& amount)
+{
+    bool sign{amount < 0};
+    int64_t n_abs{sign ? -amount : amount};
+    int64_t quotient{n_abs / COIN};
+    int64_t remainder{n_abs % COIN};
+    return UniValue(UniValue::VNUM, strprintf("%s%d.%08d", sign ? "-" : "", quotient, remainder));
+}
+
 /**
  * GetWalletBalances calls listwallets; if more than one wallet is loaded, it then
- * fetches mine.trusted balances for each loaded wallet and pushes them to `result`.
+ * fetches mine.trusted balances for each loaded wallet and pushes them to `result`,
+ * preceded by the total balance.
  *
  * @param result  Reference to UniValue object the wallet names and balances are pushed to.
  */
@@ -468,13 +489,17 @@ static void GetWalletBalances(UniValue& result)
     if (wallets.size() <= 1) return;
 
     UniValue balances(UniValue::VOBJ);
+    CAmount total_balance{0};
     for (const UniValue& wallet : wallets.getValues()) {
         const std::string wallet_name = wallet.get_str();
         const UniValue getbalances = ConnectAndCallRPC(rh.get(), "getbalances", /* args=*/{}, wallet_name);
+        if (!find_value(getbalances, "error").isNull()) continue;
         const UniValue& balance = find_value(getbalances, "result")["mine"]["trusted"];
+        total_balance += AmountFromValue(balance);
         balances.pushKV(wallet_name, balance);
     }
     result.pushKV("balances", balances);
+    result.pushKV("total_balance", ValueFromAmount(total_balance));
 }
 
 static int CommandLineRPC(int argc, char *argv[])
