@@ -31,6 +31,7 @@
 #include <util/strencodings.h>
 
 #include <memory>
+#include <mutex>
 #include <typeinfo>
 
 #if defined(NDEBUG)
@@ -114,6 +115,10 @@ static constexpr unsigned int INVENTORY_BROADCAST_MAX = 7 * INVENTORY_BROADCAST_
 static constexpr unsigned int AVG_FEEFILTER_BROADCAST_INTERVAL = 10 * 60;
 /** Maximum feefilter broadcast delay after significant change. */
 static constexpr unsigned int MAX_FEEFILTER_CHANGE_DELAY = 5 * 60;
+/** Maximum number of compact filters that may be requested with one getcfilters. See BIP 157. */
+static constexpr uint32_t MAX_GETCFILTERS_SIZE = 1000;
+/** Maximum number of cf hashes that may be requested with one getcfheaders. See BIP 157. */
+static constexpr uint32_t MAX_GETCFHEADERS_SIZE = 2000;
 /** Interval between compact filter checkpoints. See BIP 157. */
 static constexpr int CFCHECKPT_INTERVAL = 1000;
 
@@ -401,6 +406,10 @@ limitedmap<uint256, std::chrono::microseconds> g_already_asked_for GUARDED_BY(cs
 
 /** Map maintaining per-node state. */
 static std::map<NodeId, CNodeState> mapNodeState GUARDED_BY(cs_main);
+
+/** In-memory cache of all BIP157 compact filter checkpoints for the active chain. */
+static std::vector<std::pair<const CBlockIndex*, uint256>> active_chain_cf_headers;
+static std::mutex active_chain_cf_headers_mtx;
 
 static CNodeState *State(NodeId pnode) EXCLUSIVE_LOCKS_REQUIRED(cs_main) {
     std::map<NodeId, CNodeState>::iterator it = mapNodeState.find(pnode);
@@ -1274,6 +1283,40 @@ void PeerLogicValidation::NewPoWValidBlock(const CBlockIndex *pindex, const std:
     });
 }
 
+static bool UpdateCFHeadersCache(const BlockFilterIndex& filter_index)
+{
+    LOCK(cs_main);
+    std::lock_guard<std::mutex> _lock(active_chain_cf_headers_mtx);
+
+    const CChain& active_chain = ::ChainActive();
+
+    // Drop any entries in the checkpoint cache that have been reorganized off the active chain.
+    int new_size = active_chain_cf_headers.size();
+    for (; new_size > 0; new_size--) {
+        if (active_chain.Contains(active_chain_cf_headers[new_size - 1].first)) {
+            break;
+        }
+    }
+    active_chain_cf_headers.resize(new_size);
+
+    // Populate the checkpoint cache with headers for blocks on the active chain.
+    for (uint32_t height = (new_size + 1) * CFCHECKPT_INTERVAL;
+         height <= static_cast<uint32_t>(active_chain.Height());
+         height += CFCHECKPT_INTERVAL) {
+        const CBlockIndex* const block_index = active_chain[height];
+        uint256 filter_header;
+
+        if (!filter_index.LookupFilterHeader(block_index, filter_header)) {
+            return error("Failed to find block filter header in index: filter_type=%s, block_hash=%s",
+                         BlockFilterTypeName(filter_index.GetFilterType()),
+                         block_index->GetBlockHash().ToString());
+        }
+        active_chain_cf_headers.emplace_back(block_index, filter_header);
+    }
+
+    return true;
+}
+
 /**
  * Update our best height and announce any block hashes which weren't previously
  * in ::ChainActive() to our peers.
@@ -1957,20 +2000,22 @@ void static ProcessOrphanTx(CConnman* connman, CTxMemPool& mempool, std::set<uin
  * @param[in]   pfrom           The peer that we received the request from
  * @param[in]   chain_params    Chain parameters
  * @param[in]   filter_type     The filter type the request is for. Must be basic filters.
+ * @param[in]   start_height    The start height for the request
  * @param[in]   stop_hash       The stop_hash for the request
+ * @param[in]   max_height_diff The maximum number of items permitted to request, as specified in BIP 157
  * @param[out]  stop_index      The CBlockIndex for the stop_hash block, if the request can be serviced.
  * @param[out]  filter_index    The filter index, if the request can be serviced.
  * @return                      True if the request can be serviced.
  */
 static bool PrepareBlockFilterRequest(CNode* pfrom, const CChainParams& chain_params,
-                                      BlockFilterType filter_type,
-                                      const uint256& stop_hash,
+                                      BlockFilterType filter_type, uint32_t start_height,
+                                      const uint256& stop_hash, uint32_t max_height_diff,
                                       const CBlockIndex*& stop_index,
                                       const BlockFilterIndex*& filter_index)
 {
     const bool supported_filter_type =
         (filter_type == BlockFilterType::BASIC &&
-         gArgs.GetBoolArg("-peerblockfilters", DEFAULT_PEERBLOCKFILTERS));
+         (pfrom->GetLocalServices() & NODE_COMPACT_FILTERS));
     if (!supported_filter_type) {
         LogPrint(BCLog::NET, "peer %d requested unsupported block filter type: %d\n",
                  pfrom->GetId(), static_cast<uint8_t>(filter_type));
@@ -1991,13 +2036,130 @@ static bool PrepareBlockFilterRequest(CNode* pfrom, const CChainParams& chain_pa
         }
     }
 
+    uint32_t stop_height = stop_index->nHeight;
+    if (start_height > stop_height) {
+        LogPrint(BCLog::NET, "peer %d sent invalid getcfilters/getcfheaders with " /* Continued */
+                 "start height %d and stop height %d\n",
+                 pfrom->GetId(), start_height, stop_height);
+        pfrom->fDisconnect = true;
+        return false;
+    }
+    if (stop_height - start_height >= max_height_diff) {
+        LogPrint(BCLog::NET, "peer %d requested too many cfilters/cfheaders: %d / %d\n",
+                 pfrom->GetId(), stop_height - start_height + 1, max_height_diff);
+        pfrom->fDisconnect = true;
+        return false;
+    }
+
     filter_index = GetBlockFilterIndex(filter_type);
     if (!filter_index) {
         LogPrint(BCLog::NET, "Filter index for supported type %s not found\n", BlockFilterTypeName(filter_type));
         return false;
     }
+    if (!filter_index->BlockUntilSyncedToCurrentChain()) {
+        LogPrint(BCLog::NET, "%s is not ready yet\n", filter_index->GetName());
+        return false;
+    }
 
     return true;
+}
+
+/**
+ * Handle a cffilters request.
+ *
+ * May disconnect from the peer in the case of a bad request.
+ *
+ * @param[in]   pfrom           The peer that we received the request from
+ * @param[in]   vRecv           The raw message received
+ * @param[in]   chain_params    Chain parameters
+ * @param[in]   connman         Pointer to the connection manager
+ */
+static void ProcessGetCFilters(CNode* pfrom, CDataStream& vRecv, const CChainParams& chain_params,
+                               CConnman* connman)
+{
+    uint8_t filter_type_ser;
+    uint32_t start_height;
+    uint256 stop_hash;
+
+    vRecv >> filter_type_ser >> start_height >> stop_hash;
+
+    const BlockFilterType filter_type = static_cast<BlockFilterType>(filter_type_ser);
+
+    const CBlockIndex* stop_index;
+    const BlockFilterIndex* filter_index;
+    if (!PrepareBlockFilterRequest(pfrom, chain_params, filter_type, start_height, stop_hash,
+                                   MAX_GETCFILTERS_SIZE, stop_index, filter_index)) {
+        return;
+    }
+
+    std::vector<BlockFilter> filters;
+
+    if (!filter_index->LookupFilterRange(start_height, stop_index, filters)) {
+        LogPrint(BCLog::NET, "Failed to find block filter in index: filter_type=%s, start_height=%d, stop_hash=%s\n",
+                     BlockFilterTypeName(filter_type), start_height, stop_hash.ToString());
+        return;
+    }
+
+    for (const auto& filter : filters) {
+        CSerializedNetMsg msg = CNetMsgMaker(pfrom->GetSendVersion())
+            .Make(NetMsgType::CFILTER, filter);
+        connman->PushMessage(pfrom, std::move(msg));
+    }
+}
+
+/**
+ * Handle a cfheaders request.
+ *
+ * May disconnect from the peer in the case of a bad request.
+ *
+ * @param[in]   pfrom           The peer that we received the request from
+ * @param[in]   vRecv           The raw message received
+ * @param[in]   chain_params    Chain parameters
+ * @param[in]   connman         Pointer to the connection manager
+ */
+static void ProcessGetCFHeaders(CNode* pfrom, CDataStream& vRecv, const CChainParams& chain_params,
+                                CConnman* connman)
+{
+    uint8_t filter_type_ser;
+    uint32_t start_height;
+    uint256 stop_hash;
+
+    vRecv >> filter_type_ser >> start_height >> stop_hash;
+
+    const BlockFilterType filter_type = static_cast<BlockFilterType>(filter_type_ser);
+
+    const CBlockIndex* stop_index;
+    const BlockFilterIndex* filter_index;
+    if (!PrepareBlockFilterRequest(pfrom, chain_params, filter_type, start_height, stop_hash,
+                                   MAX_GETCFHEADERS_SIZE, stop_index, filter_index)) {
+        return;
+    }
+
+    uint256 prev_header;
+    if (start_height > 0) {
+        const CBlockIndex* const prev_block =
+            stop_index->GetAncestor(static_cast<int>(start_height - 1));
+        if (!filter_index->LookupFilterHeader(prev_block, prev_header)) {
+            LogPrint(BCLog::NET, "Failed to find block filter header in index: filter_type=%s, block_hash=%s\n",
+                         BlockFilterTypeName(filter_type), prev_block->GetBlockHash().ToString());
+            return;
+        }
+    }
+
+    std::vector<uint256> filter_hashes;
+    if (!filter_index->LookupFilterHashRange(start_height, stop_index, filter_hashes)) {
+        LogPrint(BCLog::NET, "Failed to find block filter hashes in index: filter_type=%s, start_height=%d, stop_hash=%s\n",
+                     BlockFilterTypeName(filter_type), start_height, stop_hash.ToString());
+        return;
+    }
+
+    CSerializedNetMsg msg = CNetMsgMaker(pfrom->GetSendVersion())
+        .Make(NetMsgType::CFHEADERS,
+              filter_type_ser,
+              stop_index->GetBlockHash(),
+              prev_header,
+              filter_hashes);
+    connman->PushMessage(pfrom, std::move(msg));
 }
 
 /**
@@ -2022,23 +2184,39 @@ static void ProcessGetCFCheckPt(CNode* pfrom, CDataStream& vRecv, const CChainPa
 
     const CBlockIndex* stop_index;
     const BlockFilterIndex* filter_index;
-    if (!PrepareBlockFilterRequest(pfrom, chain_params, filter_type, stop_hash,
+    if (!PrepareBlockFilterRequest(pfrom, chain_params, filter_type, /*start_height=*/0, stop_hash,
+                                   /*max_height_diff=*/std::numeric_limits<uint32_t>::max(),
                                    stop_index, filter_index)) {
         return;
     }
 
+    UpdateCFHeadersCache(*filter_index);
+
     std::vector<uint256> headers(stop_index->nHeight / CFCHECKPT_INTERVAL);
+    {
+        std::lock_guard<std::mutex> _lock(active_chain_cf_headers_mtx);
 
-    // Populate headers.
-    const CBlockIndex* block_index = stop_index;
-    for (int i = headers.size() - 1; i >= 0; i--) {
-        int height = (i + 1) * CFCHECKPT_INTERVAL;
-        block_index = block_index->GetAncestor(height);
+        // Populate headers.
+        int i = headers.size() - 1;
+        const CBlockIndex* block_index = stop_index;
+        for (; i >= 0; i--) {
+            int height = (i + 1) * CFCHECKPT_INTERVAL;
+            block_index = block_index->GetAncestor(height);
 
-        if (!filter_index->LookupFilterHeader(block_index, headers[i])) {
-            LogPrint(BCLog::NET, "Failed to find block filter header in index: filter_type=%s, block_hash=%s\n",
+            if (static_cast<size_t>(i) < active_chain_cf_headers.size() &&
+                active_chain_cf_headers[i].first == block_index) {
+                break;
+            }
+
+            if (!filter_index->LookupFilterHeader(block_index, headers[i])) {
+                LogPrint(BCLog::NET, "Failed to find block filter header in index: " /* Continued */
+                         "filter_type=%s, block_hash=%s\n",
                          BlockFilterTypeName(filter_type), block_index->GetBlockHash().ToString());
-            return;
+                return;
+            }
+        }
+        for (; i >= 0; i--) {
+            headers[i] = active_chain_cf_headers[i].second;
         }
     }
 
@@ -3363,9 +3541,22 @@ bool ProcessMessage(CNode* pfrom, const std::string& msg_type, CDataStream& vRec
         return true;
     }
 
-    if (msg_type == NetMsgType::GETCFCHECKPT) {
-        ProcessGetCFCheckPt(pfrom, vRecv, chainparams, connman);
-        return true;
+    if (pfrom->GetLocalServices() & NODE_COMPACT_FILTERS) {
+        if (msg_type == NetMsgType::GETCFILTERS) {
+            ProcessGetCFilters(pfrom, vRecv, chainparams, connman);
+            return true;
+        }
+
+
+        if (msg_type == NetMsgType::GETCFHEADERS) {
+            ProcessGetCFHeaders(pfrom, vRecv, chainparams, connman);
+            return true;
+        }
+
+        if (msg_type == NetMsgType::GETCFCHECKPT) {
+            ProcessGetCFCheckPt(pfrom, vRecv, chainparams, connman);
+            return true;
+        }
     }
 
     if (msg_type == NetMsgType::NOTFOUND) {
