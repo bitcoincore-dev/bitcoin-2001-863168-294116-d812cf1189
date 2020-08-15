@@ -992,6 +992,13 @@ UniValue decodepsbt(const JSONRPCRequest& request)
                         {
                              {RPCResult::Type::STR_HEX, "key", "(key-value pair) An unknown key-value pair"},
                         }},
+                        {RPCResult::Type::OBJ, "proprietary", "The global proprietary map",
+                        {
+                            {RPCResult::Type::STR_HEX, "identifier", "The hex string for the proprietary identifier"},
+                            {RPCResult::Type::NUM, "subtype", "The number for the subtype"},
+                            {RPCResult::Type::STR_HEX, "key", "The hex for the key"},
+                            {RPCResult::Type::STR_HEX, "value", "The hex for the value"},
+                        }},
                         {RPCResult::Type::ARR, "inputs", "",
                         {
                             {RPCResult::Type::OBJ, "", "",
@@ -1049,6 +1056,13 @@ UniValue decodepsbt(const JSONRPCRequest& request)
                                 {
                                     {RPCResult::Type::STR_HEX, "key", "(key-value pair) An unknown key-value pair"},
                                 }},
+                                {RPCResult::Type::OBJ, "proprietary", "The global proprietary map",
+                                {
+                                    {RPCResult::Type::STR_HEX, "identifier", "The hex string for the proprietary identifier"},
+                                    {RPCResult::Type::NUM, "subtype", "The number for the subtype"},
+                                    {RPCResult::Type::STR_HEX, "key", "The hex for the key"},
+                                    {RPCResult::Type::STR_HEX, "value", "The hex for the value"},
+                                }},
                             }},
                         }},
                         {RPCResult::Type::ARR, "outputs", "",
@@ -1080,6 +1094,13 @@ UniValue decodepsbt(const JSONRPCRequest& request)
                                 {
                                     {RPCResult::Type::STR_HEX, "key", "(key-value pair) An unknown key-value pair"},
                                 }},
+                                {RPCResult::Type::OBJ, "proprietary", "The global proprietary map",
+                                {
+                                    {RPCResult::Type::STR_HEX, "identifier", "The hex string for the proprietary identifier"},
+                                    {RPCResult::Type::NUM, "subtype", "The number for the subtype"},
+                                    {RPCResult::Type::STR_HEX, "key", "The hex for the key"},
+                                    {RPCResult::Type::STR_HEX, "value", "The hex for the value"},
+                                }},
                             }},
                         }},
                         {RPCResult::Type::STR_AMOUNT, "fee", /* optional */ true, "The transaction fee paid if all UTXOs slots in the PSBT have been filled."},
@@ -1105,6 +1126,18 @@ UniValue decodepsbt(const JSONRPCRequest& request)
     UniValue tx_univ(UniValue::VOBJ);
     TxToUniv(CTransaction(*psbtx.tx), uint256(), tx_univ, false);
     result.pushKV("tx", tx_univ);
+
+    // Proprietary
+    UniValue proprietary(UniValue::VARR);
+    for (const auto& entry : psbtx.proprietary) {
+        UniValue this_prop(UniValue::VOBJ);
+        this_prop.pushKV("identifier", HexStr(entry.identifier));
+        this_prop.pushKV("subtype", entry.subtype);
+        this_prop.pushKV("key", HexStr(entry.key));
+        this_prop.pushKV("value", HexStr(entry.value));
+        proprietary.push_back(this_prop);
+    }
+    result.pushKV("proprietary", proprietary);
 
     // Unknown data
     UniValue unknowns(UniValue::VOBJ);
@@ -1212,6 +1245,20 @@ UniValue decodepsbt(const JSONRPCRequest& request)
             in.pushKV("final_scriptwitness", txinwitness);
         }
 
+        // Proprietary
+        if (!input.proprietary.empty()) {
+            UniValue proprietary(UniValue::VARR);
+            for (const auto& entry : input.proprietary) {
+                UniValue this_prop(UniValue::VOBJ);
+                this_prop.pushKV("identifier", HexStr(entry.identifier));
+                this_prop.pushKV("subtype", entry.subtype);
+                this_prop.pushKV("key", HexStr(entry.key));
+                this_prop.pushKV("value", HexStr(entry.value));
+                proprietary.push_back(this_prop);
+            }
+            in.pushKV("proprietary", proprietary);
+        }
+
         // Unknown data
         if (input.unknown.size() > 0) {
             UniValue unknowns(UniValue::VOBJ);
@@ -1254,6 +1301,20 @@ UniValue decodepsbt(const JSONRPCRequest& request)
                 keypaths.push_back(keypath);
             }
             out.pushKV("bip32_derivs", keypaths);
+        }
+
+        // Proprietary
+        if (!output.proprietary.empty()) {
+            UniValue proprietary(UniValue::VARR);
+            for (const auto& entry : output.proprietary) {
+                UniValue this_prop(UniValue::VOBJ);
+                this_prop.pushKV("identifier", HexStr(entry.identifier));
+                this_prop.pushKV("subtype", entry.subtype);
+                this_prop.pushKV("key", HexStr(entry.key));
+                this_prop.pushKV("value", HexStr(entry.value));
+                proprietary.push_back(this_prop);
+            }
+            out.pushKV("proprietary", proprietary);
         }
 
         // Unknown data
