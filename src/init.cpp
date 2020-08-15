@@ -472,6 +472,7 @@ void SetupServerArgs()
 #endif
     gArgs.AddArg("-whitebind=<[permissions@]addr>", "Bind to given address and whitelist peers connecting to it. "
         "Use [host]:port notation for IPv6. Allowed permissions are bloomfilter (allow requesting BIP37 filtered blocks and transactions), "
+        "addr (responses to GETADDR avoid hitting the cache and contain random records with the most up-to-date info), "
         "blockfilters (serve compact block filters to peers per BIP 157), "
         "noban (do not ban for misbehavior), "
         "forcerelay (relay transactions that are already in the mempool; implies relay), "
