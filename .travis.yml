@@ -165,6 +165,9 @@ jobs:
       addons:
         homebrew:
           packages:
+          - imagemagick
+          - libicns
+          - librsvg
           - libtool
           - berkeley-db4
           - boost
