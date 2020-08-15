@@ -853,6 +853,8 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[ ]], [[
  [ AC_MSG_RESULT(no)]
 )
 
+AC_CHECK_FUNCS([fdatasync])
+
 dnl Check for malloc_info (for memory statistics information in getmemoryinfo)
 AC_MSG_CHECKING(for getmemoryinfo)
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <malloc.h>]],
