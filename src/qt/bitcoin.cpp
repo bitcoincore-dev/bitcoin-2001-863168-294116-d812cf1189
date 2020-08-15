@@ -283,11 +283,9 @@ void BitcoinApplication::parameterSetup()
     m_node.initParameterInteraction();
 }
 
-void BitcoinApplication::InitializePruneSetting(bool prune)
+void BitcoinApplication::InitPruneSetting(int64_t prune_opt)
 {
-    // If prune is set, intentionally override existing prune size with
-    // the default size since this is called when choosing a new datadir.
-    optionsModel->SetPruneTargetGB(prune ? DEFAULT_PRUNE_TARGET_GB : 0, true);
+    optionsModel->SetPruneTargetGB(PruneMiBtoGB(prune_opt), true);
 }
 
 void BitcoinApplication::requestInitialize()
@@ -497,7 +495,7 @@ int GuiMain(int argc, char* argv[])
     /// 5. Now that settings and translations are available, ask user for data directory
     // User language is set up: pick a data directory
     bool did_show_intro = false;
-    bool prune = false; // Intro dialog prune check box
+    int64_t prune = 0;  // Intro dialog prune configuration
     // Gracefully exit if the user cancels
     if (!Intro::showIfNeeded(*node, did_show_intro, prune)) return EXIT_SUCCESS;
 
@@ -574,7 +572,7 @@ int GuiMain(int argc, char* argv[])
 
     if (did_show_intro) {
         // Store intro dialog settings other than datadir (network specific)
-        app.InitializePruneSetting(prune);
+        app.InitPruneSetting(prune);
     }
 
     // Enable mempool stats by default
