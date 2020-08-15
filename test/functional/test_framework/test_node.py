@@ -108,6 +108,11 @@ class TestNode():
                          "--gen-suppressions=all", "--exit-on-first-error=yes",
                          "--error-exitcode=1", "--quiet"] + self.args
 
+        if self.version is None:
+            self.args += [
+                "-walletimplicitsegwit",
+            ]
+
         if self.version is None or self.version >= 190000:
             self.args.append("-logthreadnames")
 
