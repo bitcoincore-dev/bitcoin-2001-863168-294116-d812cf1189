@@ -74,6 +74,8 @@ std::vector<fs::path> ListWalletDir()
             continue;
         }
 
+        try {
+
         // Get wallet path relative to walletdir by removing walletdir from the wallet path.
         // This can be replaced by boost::filesystem::lexically_relative once boost is bumped to 1.60.
         const fs::path path = it->path().string().substr(offset);
@@ -93,6 +95,10 @@ std::vector<fs::path> ListWalletDir()
                 // Add it to the list of available wallets.
                 paths.emplace_back(path);
             }
+        }
+
+        } catch (const std::exception& e) {
+            LogPrintf("%s: Error scanning %s: %s\n", __func__, it->path().string(), e.what());
         }
     }
 
