@@ -7,6 +7,8 @@
 #include <logging.h>
 #include <util/system.h>
 
+#include <set>
+
 fs::path GetWalletDir()
 {
     fs::path path;
@@ -58,10 +60,27 @@ static bool IsBerkeleyBtree(const fs::path& path)
 std::vector<fs::path> ListWalletDir()
 {
     const fs::path wallet_dir = GetWalletDir();
+    const fs::path data_dir = GetDataDir();
+    const fs::path blocks_dir = GetBlocksDir();
+
     const size_t offset = wallet_dir.string().size() + 1;
     std::vector<fs::path> paths;
     boost::system::error_code ec;
     boost::system::error_code eci;
+
+    // Here we place the top level dirs we want to skip in case walletdir is datadir or blocksdir
+    // Those directory's are referenced in doc/files.md
+    const std::set<fs::path> ignore_paths = {
+                                        blocks_dir,
+                                        data_dir / "blktree",
+                                        data_dir / "blocks",
+                                        data_dir / "chainstate",
+                                        data_dir / "coins",
+                                        data_dir / "database",
+                                        data_dir / "indexes",
+                                        data_dir / "regtest",
+                                        data_dir / "testnet3"
+                                        };
 
     for (auto it = fs::recursive_directory_iterator(wallet_dir, ec); it != fs::recursive_directory_iterator(); it.increment(eci)) {
         if (ec) {
@@ -74,15 +93,19 @@ std::vector<fs::path> ListWalletDir()
             continue;
         }
 
+        // We dont want to iterate trough those special node dirs
+        if (ignore_paths.count(it->path())) {
+            it.disable_recursion_pending();
+            continue;
+        }
+
         try {
 
         // Get wallet path relative to walletdir by removing walletdir from the wallet path.
         // This can be replaced by boost::filesystem::lexically_relative once boost is bumped to 1.60.
-        const fs::path path = it->path().string().substr(offset);
-
         if (it->status().type() == fs::directory_file && IsBerkeleyBtree(it->path() / "wallet.dat")) {
             // Found a directory which contains wallet.dat btree file, add it as a wallet.
-            paths.emplace_back(path);
+            paths.emplace_back(it->path().string().substr(offset));
         } else if (it.level() == 0 && it->symlink_status().type() == fs::regular_file && IsBerkeleyBtree(it->path())) {
             if (it->path().filename() == "wallet.dat") {
                 // Found top-level wallet.dat btree file, add top level directory ""
@@ -93,7 +116,7 @@ std::vector<fs::path> ListWalletDir()
                 // software will never create these files but will allow them to be
                 // opened in a shared database environment for backwards compatibility.
                 // Add it to the list of available wallets.
-                paths.emplace_back(path);
+                paths.emplace_back(it->path().filename());
             }
         }
 
