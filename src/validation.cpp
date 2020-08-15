@@ -121,6 +121,8 @@ bool fCheckBlockIndex = false;
 bool fCheckpointsEnabled = DEFAULT_CHECKPOINTS_ENABLED;
 size_t nCoinCacheUsage = 5000 * 300;
 uint64_t nPruneTarget = 0;
+Mutex g_prune_locks_mutex;
+std::unordered_map<std::string, PruneLockInfo> g_prune_locks;
 int64_t nMaxTipAge = DEFAULT_MAX_TIP_AGE;
 
 uint256 hashAssumeValid;
@@ -2337,7 +2339,8 @@ bool CChainState::FlushStateToDisk(
                     vBlocks.push_back(*it);
                     setDirtyBlockIndex.erase(it++);
                 }
-                if (!pblocktree->WriteBatchSync(vFiles, nLastBlockFile, vBlocks)) {
+                LOCK(g_prune_locks_mutex);
+                if (!pblocktree->WriteBatchSync(vFiles, nLastBlockFile, vBlocks, g_prune_locks)) {
                     return AbortNode(state, "Failed to write to block index database");
                 }
             }
@@ -2519,6 +2522,17 @@ bool CChainState::DisconnectTip(BlockValidationState& state, const CChainParams&
         assert(flushed);
     }
     LogPrint(BCLog::BENCH, "- Disconnect block: %.2fms\n", (GetTimeMicros() - nStart) * MILLI);
+
+    {
+        // Prune locks that began around the tip should get rolled backward so they get a chance to reorg
+        LOCK(g_prune_locks_mutex);
+        for (auto& prune_lock : g_prune_locks) {
+            if (prune_lock.second.m_height_first < uint64_t(pindexDelete->nHeight) - 1) continue;
+            --prune_lock.second.m_height_first;
+            // NOTE: Don't need to write to db here, since it will get synced when the rest of the chainstate
+        }
+    }
+
     // Write the chain state to disk, if necessary.
     if (!FlushStateToDisk(chainparams, state, FlushStateMode::IF_NEEDED))
         return false;
@@ -3948,6 +3962,48 @@ void UnlinkPrunedFiles(const std::set<int>& setFilesToPrune)
     }
 }
 
+static bool DoPruneLocksForbidPruning(const CBlockFileInfo& block_file_info)
+{
+    LOCK(g_prune_locks_mutex);
+    for (const auto& prune_lock : g_prune_locks) {
+        if (block_file_info.nHeightFirst > prune_lock.second.m_height_last) continue;
+        if (block_file_info.nHeightLast < prune_lock.second.m_height_first) continue;
+        // TODO: Check each block within the file against the prune_lock range
+        return true;
+    }
+    return false;
+}
+
+bool PruneLockExists(const std::string& lockid) {
+    return g_prune_locks.count(lockid);
+}
+
+bool SetPruneLock(const std::string& lockid, const PruneLockInfo& lockinfo, const bool sync)
+{
+    if (sync) {
+        if (!pblocktree->WritePruneLock(lockid, lockinfo)) {
+            return error("%s: failed to %s prune lock '%s'", __func__, "write", lockid);
+        }
+    } else if (lockinfo.m_temporary && g_prune_locks.count(lockid) && !g_prune_locks.at(lockid).m_temporary) {
+        // Erase non-temporary lock from disk
+        if (!pblocktree->DeletePruneLock(lockid)) {
+            return error("%s: failed to %s prune lock '%s'", __func__, "erase", lockid);
+        }
+    }
+    g_prune_locks[lockid] = lockinfo;
+    return true;
+}
+
+bool DeletePruneLock(const std::string& lockid)
+{
+    g_prune_locks.erase(lockid);
+    // Since there is no reasonable expectation for any follow-up to this prune lock, actually ensure it gets committed to disk immediately
+    if (!pblocktree->DeletePruneLock(lockid)) {
+        return error("%s: failed to %s prune lock '%s'", __func__, "erase", lockid);
+    }
+    return true;
+}
+
 /* Calculate the block/rev files to delete based on height specified by user with RPC command pruneblockchain */
 static void FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPruneHeight)
 {
@@ -3963,6 +4019,9 @@ static void FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPr
     for (int fileNumber = 0; fileNumber < nLastBlockFile; fileNumber++) {
         if (vinfoBlockFile[fileNumber].nSize == 0 || vinfoBlockFile[fileNumber].nHeightLast > nLastBlockWeCanPrune)
             continue;
+
+        if (DoPruneLocksForbidPruning(vinfoBlockFile[fileNumber])) continue;
+
         PruneOneBlockFile(fileNumber);
         setFilesToPrune.insert(fileNumber);
         count++;
@@ -4038,6 +4097,8 @@ static void FindFilesToPrune(std::set<int>& setFilesToPrune, uint64_t nPruneAfte
             if (vinfoBlockFile[fileNumber].nHeightLast > nLastBlockWeCanPrune)
                 continue;
 
+            if (DoPruneLocksForbidPruning(vinfoBlockFile[fileNumber])) continue;
+
             PruneOneBlockFile(fileNumber);
             // Queue up the files for removal
             setFilesToPrune.insert(fileNumber);
@@ -4103,6 +4164,10 @@ bool BlockManager::LoadBlockIndex(
 {
     if (!blocktree.LoadBlockIndexGuts(consensus_params, [this](const uint256& hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main) { return this->InsertBlockIndex(hash); }))
         return false;
+    {
+        LOCK(g_prune_locks_mutex);
+        if (!blocktree.LoadPruneLocks(g_prune_locks)) return false;
+    }
 
     // Calculate nChainWork
     std::vector<std::pair<int, CBlockIndex*> > vSortedByHeight;
