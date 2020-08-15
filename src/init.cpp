@@ -425,6 +425,7 @@ void SetupServerArgs()
                  " If <type> is not supplied or if <type> = 1, indexes for all known types are enabled.",
                  ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
 
+    gArgs.AddArg("-startupnotify=<cmd>", "Execute command on startup.", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     gArgs.AddArg("-addnode=<ip>", "Add a node to connect to and attempt to keep the connection open (see the `addnode` RPC command help for more info). This option can be specified multiple times to add multiple nodes.", ArgsManager::ALLOW_ANY | ArgsManager::NETWORK_ONLY, OptionsCategory::CONNECTION);
     gArgs.AddArg("-asmap=<file>", strprintf("Specify asn mapping used for bucketing of the peers (default: %s). Relative paths will be prefixed by the net-specific datadir location.", DEFAULT_ASMAP_FILENAME), ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
     gArgs.AddArg("-banscore=<n>", strprintf("Threshold for disconnecting and discouraging misbehaving peers (default: %u)", DEFAULT_BANSCORE_THRESHOLD), ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
@@ -695,6 +696,15 @@ static void CleanupBlockRevFiles()
             continue;
         }
         remove(item.second);
+    }
+}
+
+static void StartupNotify()
+{
+    std::string strCmd = gArgs.GetArg("-startupnotify", "");
+    if (!strCmd.empty()) {
+        std::thread t(runCommand, strCmd);
+        t.detach(); // thread runs free
     }
 }
 
@@ -1948,6 +1958,8 @@ bool AppInitMain(NodeContext& node)
     }, DUMP_BANS_INTERVAL);
 
     node.scheduler->scheduleFromNow([&node]{ FlushAfterSync(node); }, SYNC_CHECK_INTERVAL);
+
+    StartupNotify();
 
     return true;
 }
