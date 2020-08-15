@@ -604,6 +604,9 @@ void RPCResult::ToSections(Sections& sections, const OuterType outer_type, const
     };
 
     switch (m_type) {
+    case Type::HIDDEN: {
+        return;
+    }
     case Type::ELISION: {
         // If the inner result is empty, use three dots for elision
         sections.PushSection({indent + "..." + maybe_separator, m_description});
