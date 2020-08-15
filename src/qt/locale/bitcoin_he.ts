@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>לחץ על הכפתור הימני בעכבר כדי לערוך את הכתובת או התווית</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>צור כתובת חדשה</translation>
     </message>
@@ -68,10 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>אלו הן כתובות הביטקוין שלך לשליחת תשלומים. חשוב לבדוק את הסכום ואת הכתובת המקבלת לפני שליחת מטבעות.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.</source>
-        <translation>אלה כתובות הביטקוין שלך לקבלת תשלומים. השתמש בלחצן 'צור כתובת קבלה חדשה' בכרטיסייה קבלה כדי ליצור כתובות חדשות.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -141,7 +133,7 @@
     </message>
     <message>
         <source>Encrypt wallet</source>
-        <translation>הצפנת הארנק</translation>
+        <translation>הצפן ארנק</translation>
     </message>
     <message>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
@@ -181,13 +173,12 @@
     </message>
     <message>
         <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation>הקש את הסיסמא בשביל הארנק.
-השתמש בסיסמא הכוללת עשר או יותר תווים אקראים, או שמונה או יותר מילים
-</translation>
+        <translation>הקש סיסמה חדשה לארנק.
+השתמש בסיסמה הכוללת עשרה או יותר תווים אקראים, או שמונה או יותר מילים.</translation>
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase for the wallet.</source>
-        <translation>הקש את הסיסמא הישנה והחדשה בשביל הארנק.</translation>
+        <translation>הקש את הסיסמא הישנה והחדשה לארנק.</translation>
     </message>
     <message>
         <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
@@ -195,15 +186,15 @@
     </message>
     <message>
         <source>Wallet to be encrypted</source>
-        <translation>הארנק הוא מוצפן</translation>
+        <translation>הארנק המיועד להצפנה</translation>
     </message>
     <message>
         <source>Your wallet is about to be encrypted. </source>
-        <translation>הארנק שלך עומד להיות מוצפן</translation>
+        <translation>הארנק שלך עומד להיות מוצפן/</translation>
     </message>
     <message>
         <source>Your wallet is now encrypted. </source>
-        <translation>הארנק שלך מוצפן כעת</translation>
+        <translation>הארנק שלך מוצפן כעת/</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -524,10 +515,6 @@
         <translation>יש להציג את הודעת העזרה של %1 כדי להציג רשימה עם אפשרויות שורת פקודה לביטקוין</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>ארנק בררת מחדל</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>אין ארנקים זמינים</translation>
     </message>
@@ -805,6 +792,10 @@
         <translation>שם הארנק</translation>
     </message>
     <message>
+        <source>Encrypt the wallet. The wallet will be encrypted with a passphrase of your choice.</source>
+        <translation>הצפן את הארנק. הארנק יהיה מוצפן באמצעות סיסמא לבחירתך.</translation>
+    </message>
+    <message>
         <source>Encrypt Wallet</source>
         <translation>הצפנת ארנק</translation>
     </message>
@@ -900,6 +891,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -986,6 +980,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>לא זמין</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -1037,6 +1038,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>סוג</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>כתובת</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1045,6 +1059,14 @@
     <message>
         <source>URI:</source>
         <translation>כתובת משאב:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>הדבקת כתובת מלוח הגזירים</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1094,7 +1116,7 @@
     </message>
     <message>
         <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
-        <translation>כתובת ה־IP של המתווך (לדוגמה IPv4: 127.0.0.1‏ / IPv6: ::1)</translation>
+        <translation>כתובת ה־IP של הפרוקסי (לדוגמה IPv4: 127.0.0.1‏ / IPv6: ::1)</translation>
     </message>
     <message>
         <source>Shows if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
@@ -1147,10 +1169,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>יש לגזום את &amp;מאגר הבלוקים אל</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>ג״ב</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1305,6 +1323,10 @@
         <translation>ללא</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>ליבת ביטקוין</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>אישור איפוס האפשרויות</translation>
     </message>
@@ -1415,7 +1437,25 @@
         <source>Current total balance in watch-only addresses</source>
         <translation>המאזן הכולל הנוכחי בכתובות לצפייה בלבד</translation>
     </message>
-</context>
+    </context>
+<context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">סגור</translation>
+    </message>
+    <message>
+        <source>Total Amount</source>
+        <translation>סכום כולל</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>או</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1576,6 +1616,16 @@
         <source>unknown</source>
         <translation>לא ידוע</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>מקטע</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>העברה</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -1713,10 +1763,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>נא לבחור בעמית כדי להציג מידע מפורט.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>ברשימה הלבנה</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -1919,14 +1965,6 @@
         <translation>תעבורה יוצאת</translation>
     </message>
     <message>
-        <source>Yes</source>
-        <translation>כן</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>לא</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>לא ידוע</translation>
     </message>
@@ -1962,8 +2000,8 @@
         <translation>סכום כרשות לבקשה. ניתן להשאיר זאת ריק כדי לא לבקש סכום מסוים.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;יצירת כתובת קבלה חדשה</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;בקשת תשלום</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2311,6 +2349,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>לשלוח?</translation>
     </message>
     <message>
+        <source>Create Unsigned</source>
+        <translation type="unfinished">יצירת לא חתום</translation>
+    </message>
+    <message>
         <source>or</source>
         <translation>או</translation>
     </message>
@@ -2339,16 +2381,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>אימות שליחת מטבעות</translation>
     </message>
     <message>
-        <source>Copy PSBT to clipboard</source>
-        <translation>העתקת PSBT אל לוח הגזירים</translation>
-    </message>
-    <message>
         <source>Send</source>
         <translation>שלח</translation>
-    </message>
-    <message>
-        <source>PSBT copied</source>
-        <translation>PSBT הועתקה</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -2484,6 +2518,13 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Memo:</source>
         <translation>תזכורת:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>כן</translation>
     </message>
 </context>
 <context>
@@ -2979,10 +3020,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>נשלח אל</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>לעצמך</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>נכרו</translation>
     </message>
@@ -3120,7 +3157,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
         <translation>סגירת הארנק למשך זמן רב מדי יכול לגרור את הצורך לסינכרון מחדש של כל השרשרת אם אופצית הגיזום אקטיבית.</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletFrame</name>
     <message>
@@ -3188,6 +3225,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>יצוא הנתונים בלשונית הנוכחית לקובץ</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>שגיאה</translation>
     </message>
     <message>
         <source>Backup Wallet</source>

@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>คลิกขวาเพื่อแก้ไขที่อยู่หรือชื่อ</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>สร้างที่อยู่ใหม่</translation>
     </message>
@@ -258,6 +254,10 @@
         <translation>สร้าง Wallet</translation>
     </message>
     <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">กระเป๋าเงิน:</translation>
+    </message>
+    <message>
         <source>Reindexing blocks on disk...</source>
         <translation>กำลังทำดัชนี ที่เก็บบล็อก ใหม่ ในดิสก์...</translation>
     </message>
@@ -380,6 +380,18 @@
     <message>
         <source>Up to date</source>
         <translation>ทันสมัย</translation>
+    </message>
+    <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>เปิด แผลงควบคุม debugging และ diagnostic</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;ที่อยู่ในการส่ง</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;ที่อยู่ในการรับ</translation>
     </message>
     <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
@@ -604,6 +616,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -670,6 +685,9 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -677,12 +695,20 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>ที่อยู่</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     </context>
@@ -829,6 +855,16 @@
     </message>
     </context>
 <context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">ปิด</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     </context>
 <context>
@@ -850,9 +886,25 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;ข้อมูล</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation type="unfinished">เน็ตเวิร์ก</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">กระเป๋าเงิน: </translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;จำนวน:</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;ชื่อ:</translation>
@@ -868,6 +920,14 @@
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">คัดลอกที่อยู่</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>ที่อยู่</translation>
@@ -931,12 +991,24 @@
         <translation>เงินทอน:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">เลือก...</translation>
+    </message>
+    <message>
         <source>Dust:</source>
         <translation>เศษ:</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;ส่ง</translation>
+    </message>
+    <message>
         <source>Copy amount</source>
         <translation>คัดลอกจำนวนเงิน</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">ส่ง</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -946,9 +1018,16 @@
 <context>
     <name>SendCoinsEntry</name>
     <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;จำนวน:</translation>
+    </message>
+    <message>
         <source>&amp;Label:</source>
         <translation>&amp;ชื่อ:</translation>
     </message>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -1056,6 +1135,14 @@
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>ส่งออกข้อมูลที่อยู่ในแถบนี้ไปในไฟล์</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>ข้อผิดพลาด</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">สำรองกระเป๋าเงิน</translation>
     </message>
     </context>
 <context>

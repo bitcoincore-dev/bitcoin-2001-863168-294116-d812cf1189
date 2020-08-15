@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Haga clic con el botón derecho para editar una dirección o etiqueta</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Crear una nueva dirección</translation>
     </message>
@@ -172,6 +168,14 @@
         <translation>Monedero cifrado</translation>
     </message>
     <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Introduzca la nueva contraseña para el monedero. &lt;br/&gt;Por favor use una contraseña de &lt;b&gt;diez o más caracteres aleatorios&lt;/b&gt;, u &lt;b&gt;ocho o más palabras&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>Introduzca la contraseña anterior y la contraseña nueva para este monedero.</translation>
+    </message>
+    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>IMPORTANTE: Algunas copias de seguridad que hayas hecho de tu archivo de billetera deberían ser reemplazadas con la billetera encriptada generada recientemente. Por razones de seguridad, las copias de seguridad previas del archivo de billetera sin cifrar serán inútiles tan pronto uses la nueva billetera encriptada.</translation>
     </message>
@@ -246,6 +250,10 @@
         <translation>Salir de la aplicación</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Mostrar información acerca de %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Acerca de &amp;Qt</translation>
     </message>
@@ -272,6 +280,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Abrir URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Billetera:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -354,6 +366,10 @@
         <translation>&amp;Opciones de linea de comando</translation>
     </message>
     <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Indexando bloques en el disco...</translation>
+    </message>
+    <message>
         <source>%1 behind</source>
         <translation>%1 atrás</translation>
     </message>
@@ -380,6 +396,18 @@
     <message>
         <source>Up to date</source>
         <translation>Actualizado</translation>
+    </message>
+    <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Abrir la consola de depuración y diagnóstico</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Envío de direcciones</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Direcciones de recepción</translation>
     </message>
     <message>
         <source>Close wallet</source>
@@ -562,6 +590,10 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>Cifrar monedero</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -634,6 +666,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -667,12 +702,31 @@
         <translation>Bitcoin</translation>
     </message>
     <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Al menos %1GB de datos serán almacenados en este directorio, y crecerá con el tiempo.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 descargará y almacenará una copia de la cadena de bloques Bitcoin.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>La billetera será también almacenada en este directorio.</translation>
+    </message>
+    <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
         <translation>Error: Directorio de datos especificado "%1" no puede ser creado.</translation>
     </message>
     <message>
         <source>Error</source>
         <translation>Error</translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
     </message>
     </context>
 <context>
@@ -687,10 +741,26 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Dirección</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Pegar dirección desde portapapeles</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -803,6 +873,10 @@
         <translation>ninguno</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Núcleo de Bitcoin</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Confirme el restablecimiento de las opciones</translation>
     </message>
@@ -867,6 +941,16 @@
     </message>
     </context>
 <context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Cerrar</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     </context>
 <context>
@@ -913,6 +997,16 @@
     <message>
         <source>unknown</source>
         <translation>desconocido</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blq</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -963,6 +1057,10 @@
     <message>
         <source>Current number of blocks</source>
         <translation>Número actual de bloques</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Billetera: </translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -1016,6 +1114,10 @@
         <translation>Mensaje:</translation>
     </message>
     <message>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Solicitar pago</translation>
+    </message>
+    <message>
         <source>Clear all fields of the form.</source>
         <translation>Limpiar todos los campos del formulario</translation>
     </message>
@@ -1038,6 +1140,10 @@
     <message>
         <source>Remove</source>
         <translation>Eliminar</translation>
+    </message>
+    <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Copiar URI</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -1071,6 +1177,10 @@
         <translation>Guardar Imagen...</translation>
     </message>
     <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
+    </message>
+    <message>
         <source>Address</source>
         <translation>Dirección</translation>
     </message>
@@ -1081,6 +1191,10 @@
     <message>
         <source>Label</source>
         <translation>Etiqueta</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished">Mensaje</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -1096,6 +1210,10 @@
     <message>
         <source>Label</source>
         <translation>Etiqueta</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished">Mensaje</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -1161,6 +1279,10 @@
         <translation>Comisión de transacción:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Escoger...</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Enviar a múltiples destinatarios de una vez</translation>
     </message>
@@ -1221,6 +1343,10 @@
         <translation>Comisión de transacción</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">Enviar</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(sin etiqueta)</translation>
     </message>
@@ -1276,6 +1402,9 @@
         <translation>Memo:</translation>
     </message>
 </context>
+<context>
+    <name>SendConfirmationDialog</name>
+    </context>
 <context>
     <name>ShutdownWindow</name>
     </context>
@@ -1372,8 +1501,16 @@
         <translation>Comisión de transacción</translation>
     </message>
     <message>
+        <source>Message</source>
+        <translation type="unfinished">Mensaje</translation>
+    </message>
+    <message>
         <source>Transaction</source>
         <translation>Transacción</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation type="unfinished">Entradas</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -1476,6 +1613,14 @@
         <translation>Exportar a un archivo los datos de esta pestaña</translation>
     </message>
     <message>
+        <source>Error</source>
+        <translation>Error</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Copia de respaldo del monedero</translation>
+    </message>
+    <message>
         <source>Backup Failed</source>
         <translation>Copia de seguridad fallida</translation>
     </message>
@@ -1491,7 +1636,11 @@
         <source>The wallet data was successfully saved to %1.</source>
         <translation>Los datos de la billetera fueron guardados exitosamente al %1</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancelar</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -1539,8 +1688,16 @@
         <translation>Incorrecto o bloque de génesis no encontrado. Datadir equivocada para la red?</translation>
     </message>
     <message>
+        <source>Error: Disk space is too low!</source>
+        <translation>Error: ¡Espacio en disco bajo!</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>No hay suficientes descriptores de archivo disponibles.</translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer. %s is probably already running.</source>
+        <translation>Deshabilitar para enlezar a %s en esta computadora. %s probablemente ya está ejecutándose.</translation>
     </message>
     <message>
         <source>Verifying blocks...</source>

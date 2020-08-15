@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Høyreklikk for å redigere adressen eller beskrivelsen</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Opprett en ny adresse</translation>
     </message>
@@ -68,10 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Dette er dine Bitcoin adresser for å sende  å sende betalinger. Husk å sjekke beløp og mottager adresser før du sender mynter.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.</source>
-        <translation>Dette er dine Bitcoin adresse for å betalinger. Det er anbefalt å bruke en my mottager adresse for hver transakjon.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -522,10 +514,6 @@
         <translation>Vis %1-hjelpemeldingen for å få en liste over mulige Bitcoin-kommandolinjealternativer</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>standard lommebok</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Ingen lommebøker tilgjengelig</translation>
     </message>
@@ -918,6 +906,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -975,10 +966,6 @@
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Kast blokker etter bekreftelse, bortsett fra de siste %1 GB (sviske)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Minst %1 GB data vil bli lagret i denne mappen og den vil vokse over tid.</translation>
     </message>
@@ -1009,6 +996,13 @@
     <message numerus="yes">
         <source>(of %n GB needed)</source>
         <translation><numerusform>(av %n GB som trengs)</numerusform><numerusform>(av %n GB som trengs)</numerusform></translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>-</translation>
     </message>
     </context>
 <context>
@@ -1071,6 +1065,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1079,6 +1086,14 @@
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Lim inn adresse fra utklippstavlen</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1181,10 +1196,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Beskjær og blokker lagring til</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1449,7 +1460,25 @@
         <source>Current total balance in watch-only addresses</source>
         <translation>Nåværende totale balanse i kun observerbare adresser</translation>
     </message>
-</context>
+    </context>
+<context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Lukk</translation>
+    </message>
+    <message>
+        <source>Total Amount</source>
+        <translation>Totalbeløp</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>eller</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1618,6 +1647,11 @@
         <source>unknown</source>
         <translation>ukjent</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -1747,10 +1781,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Velg en node for å vise detaljert informasjon.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>Hvitelistet</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -1957,14 +1987,6 @@
         <translation>Utgående</translation>
     </message>
     <message>
-        <source>Yes</source>
-        <translation>Ja</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Nei</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Ukjent</translation>
     </message>
@@ -2008,8 +2030,8 @@
         <translation>En valgfri melding som er knyttet til betalingsforespørselen og kan vises til avsenderen.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Lag ny mottakeradresse</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Etterspør betaling</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2337,6 +2359,10 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
         <translation>Cr &amp; eate Usignert</translation>
     </message>
     <message>
+        <source> from wallet '%1'</source>
+        <translation> fra lommebok '%1'</translation>
+    </message>
+    <message>
         <source>%1 to %2</source>
         <translation>%1 til %2</translation>
     </message>
@@ -2347,6 +2373,10 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
     <message>
         <source>Are you sure you want to send?</source>
         <translation>Er du sikker på at du vil sende?</translation>
+    </message>
+    <message>
+        <source>Create Unsigned</source>
+        <translation type="unfinished">Cr  eate Usignert</translation>
     </message>
     <message>
         <source>or</source>
@@ -2385,16 +2415,8 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
         <translation>Bekreft transaksjonsforslaget</translation>
     </message>
     <message>
-        <source>Copy PSBT to clipboard</source>
-        <translation>Kopier PSBT til utklippstavlen</translation>
-    </message>
-    <message>
         <source>Send</source>
         <translation>Send</translation>
-    </message>
-    <message>
-        <source>PSBT copied</source>
-        <translation>PSBT kopiert</translation>
     </message>
     <message>
         <source>Watch-only balance:</source>
@@ -2538,6 +2560,13 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
     <message>
         <source>Memo:</source>
         <translation>Memo:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
     </message>
 </context>
 <context>
@@ -3037,10 +3066,6 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
         <translation>Sendt til</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Til deg selv</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Utvunnet</translation>
     </message>
@@ -3174,7 +3199,7 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
         <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
         <translation>Å lukke lommeboken for lenge kan føre til at du må synkronisere hele kjeden hvis beskjæring er aktivert.</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletFrame</name>
     <message>
@@ -3250,6 +3275,10 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Eksporter data i den valgte fliken til en fil</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Feilmelding</translation>
     </message>
     <message>
         <source>Backup Wallet</source>
@@ -3461,6 +3490,12 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
     <message>
         <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
         <translation>Ugyldig beløp for -fallbackfee=&lt;amount&gt;: "%s"</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>R/W Konfigurasjonsfilen %s eksisterer ikke
+</translation>
     </message>
     <message>
         <source>Upgrading txindex database</source>

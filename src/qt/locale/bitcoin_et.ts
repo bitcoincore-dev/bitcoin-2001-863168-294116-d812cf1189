@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Paremkliki aadressi või sildi muutmiseks</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Loo uus aadress</translation>
     </message>
@@ -450,6 +446,18 @@
         <translation>Ajakohane</translation>
     </message>
     <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Ava debugimise ja diagnostika konsool</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Saatvad aadressid</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Vastuvõtvad aadressid</translation>
+    </message>
+    <message>
         <source>&amp;Window</source>
         <translation>&amp;Aken</translation>
     </message>
@@ -636,6 +644,10 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>Krüpteeri rahakott</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -684,10 +696,17 @@
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
         <translation>versioon</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Teave %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -710,10 +729,21 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Vorm</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Teadmata...</translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -725,10 +755,31 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tüüp</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Aadress</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Kleebi aadress vahemälust</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -743,6 +794,10 @@
     <message>
         <source>&amp;Main</source>
         <translation>&amp;Peamine</translation>
+    </message>
+    <message>
+        <source>&amp;Hide tray icon</source>
+        <translation type="unfinished">&amp;Peida tegumiriba ikoon</translation>
     </message>
     <message>
         <source>Reset all client options to default.</source>
@@ -845,6 +900,10 @@
         <translation>puudub</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoini tuumik</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Kinnita valikute algseadistamine</translation>
     </message>
@@ -887,6 +946,20 @@
         <source>Recent transactions</source>
         <translation>Hiljutised transaktsioonid</translation>
     </message>
+    </context>
+<context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Sulge</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>või</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -968,6 +1041,16 @@
         <source>unknown</source>
         <translation>tundmatu</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Plk</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Thg</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -1043,6 +1126,10 @@
         <translation>Mälu kasutus</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Rahakott: </translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Lähtesta</translation>
     </message>
@@ -1115,14 +1202,6 @@
         <translation>Väljuv</translation>
     </message>
     <message>
-        <source>Yes</source>
-        <translation>Jah</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Ei</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Teadmata</translation>
     </message>
@@ -1183,6 +1262,10 @@
     <message>
         <source>Payment information</source>
         <translation>Makse Informatsioon</translation>
+    </message>
+    <message>
+        <source>URI</source>
+        <translation type="unfinished">URI</translation>
     </message>
     <message>
         <source>Address</source>
@@ -1363,6 +1446,10 @@
         <translation>Müntide saatmise kinnitamine</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">Saada</translation>
+    </message>
+    <message>
         <source>The recipient address is not valid. Please recheck.</source>
         <translation>Saaja aadress ei ole korrektne. Palun kontrolli üle.</translation>
     </message>
@@ -1434,6 +1521,13 @@
         <translation>Maksa :</translation>
     </message>
     </context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Jah</translation>
+    </message>
+</context>
 <context>
     <name>ShutdownWindow</name>
     <message>
@@ -1815,10 +1909,6 @@
         <translation>Saadetud</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Iseendale</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Mine'itud</translation>
     </message>
@@ -1922,6 +2012,10 @@
         <translation>Ekspordi kuvatava vahelehe sisu faili</translation>
     </message>
     <message>
+        <source>Error</source>
+        <translation>Viga</translation>
+    </message>
+    <message>
         <source>Backup Wallet</source>
         <translation>Varunda Rahakott</translation>
     </message>
@@ -1937,12 +2031,20 @@
         <source>Backup Successful</source>
         <translation>Varundamine õnnestus</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Katkesta</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
         <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
         <translation>See on test-versioon - kasutamine omal riisikol - ära kasuta mining'uks ega kaupmeeste programmides</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>Tundmatu -%s aadress: '%s'</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
@@ -1973,6 +2075,14 @@
         <translation>Pordi kuulamine nurjus. Soovikorral kasuta -listen=0.</translation>
     </message>
     <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Aadresside p2p laadimine...</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is too low!</source>
+        <translation>Tõrge: liiga vähe kettaruumi!</translation>
+    </message>
+    <message>
         <source>Verifying blocks...</source>
         <translation>Kontrollin blokke...</translation>
     </message>
@@ -1991,6 +2101,10 @@
     <message>
         <source>Transaction too large</source>
         <translation>Tehing liiga suur</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Kontrollin rahakotti...</translation>
     </message>
     <message>
         <source>Unknown network specified in -onlynet: '%s'</source>

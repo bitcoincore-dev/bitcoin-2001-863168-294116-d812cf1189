@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>지갑 주소나 라벨을 수정/변경하려면 우클릭을 하십시오.</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>새로운 지갑 주소 생성하기.</translation>
     </message>
@@ -68,10 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>비트코인을 보내는 계좌 주소입니다. 코인을 보내기 전에 금액과 받는 주소를 항상 확인하세요.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.</source>
-        <translation>지불 수신용 비트코인주소. 신규 주소를 만들려면 'Create new receiving address' 버튼을 사용하세요.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -522,10 +514,6 @@
         <translation>사용할 수 있는 비트코인 명령줄 옵션 목록을 가져오기 위해 %1 도움말 메시지를 표시합니다</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>기본 지갑</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>사용 가능한 블록이 없습니다.</translation>
     </message>
@@ -910,6 +898,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1000,6 +991,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>없음</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -1055,6 +1053,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>형식</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>주소</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1063,6 +1074,14 @@
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>클립보드에서 주소 복사</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1165,10 +1184,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>블록 데이터를 지정된 크기로 축소합니다:</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1323,6 +1338,10 @@
         <translation>없음</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>비트코인 코어</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>옵션 초기화를 확인</translation>
     </message>
@@ -1433,7 +1452,25 @@
         <source>Current total balance in watch-only addresses</source>
         <translation>조회전용 주소의 현재 잔액</translation>
     </message>
-</context>
+    </context>
+<context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">닫기</translation>
+    </message>
+    <message>
+        <source>Total Amount</source>
+        <translation>총액</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>또는</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1606,7 +1643,7 @@
         <source>unknown</source>
         <translation>알수없음</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     <message>
@@ -1743,10 +1780,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>자세한 정보를 보려면 피어를 선택하세요.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>화이트리스트에 포함</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -1945,14 +1978,6 @@
         <translation>아웃바운드</translation>
     </message>
     <message>
-        <source>Yes</source>
-        <translation>예</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>아니오</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>알수없음</translation>
     </message>
@@ -1988,8 +2013,8 @@
         <translation>요청할 금액 입력칸으로 선택 사항입니다. 빈 칸으로 두거나 특정 금액이 필요하지 않는 경우 0을 입력하세요.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;새 받을 주소 생성하기</translation>
+        <source>&amp;Request payment</source>
+        <translation>지불 요청(&amp;R)</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2357,16 +2382,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>코인 전송을 확인</translation>
     </message>
     <message>
-        <source>Copy PSBT to clipboard</source>
-        <translation>PSBT를 클립보드에 복사</translation>
-    </message>
-    <message>
         <source>Send</source>
         <translation>보내기</translation>
-    </message>
-    <message>
-        <source>PSBT copied</source>
-        <translation>PSBT 복사됨</translation>
     </message>
     <message>
         <source>Watch-only balance:</source>
@@ -2506,6 +2523,13 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Memo:</source>
         <translation>메모:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>예</translation>
     </message>
 </context>
 <context>
@@ -2997,10 +3021,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>보낸 주소</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>자기거래</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>채굴</translation>
     </message>
@@ -3138,7 +3158,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
         <translation>블록축소를 하고 지갑을 너무 오랫동안 닫으면 체인 전체를 다시 동기화해야 할 수도 있습니다.</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletFrame</name>
     <message>
@@ -3206,6 +3226,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>현재 탭에 있는 데이터를 파일로 내보내기</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>오류</translation>
     </message>
     <message>
         <source>Backup Wallet</source>

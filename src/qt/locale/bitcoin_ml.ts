@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>വിലാസം അല്ലെങ്കിൽ ലേബൽ എഡിറ്റുചെയ്യാൻ വലത് ക്ലിക്കുചെയ്യുക</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>ഒരു പുതിയ വിലാസം സൃഷ്ടിക്കുക</translation>
     </message>
@@ -65,10 +61,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>പേയ്മെന്റുകൾ അയയ്ക്കുന്നതിനുള്ള നിങ്ങളുടെ ബിറ്റ്കോയിൻ വിലാസങ്ങളാണ് ഇവ. നാണയങ്ങൾ അയയ്ക്കുന്നതിനുമുമ്പ് എല്ലായ്പ്പോഴും തുകയും സ്വീകരിക്കുന്ന വിലാസവും പരിശോധിക്കുക.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.</source>
-        <translation>ഇവയാണ് പണം  സ്വീകരിയ്ക്കുന്നതിനായുള്ള താങ്കളുടെ വിലാസങ്ങൾ. പുതിയ വിലാസങ്ങൾ കൂട്ടിച്ചേർക്കുന്നതിനായി ' പുതിയ വിലാസം സൃഷ്ടിയ്ക്കുക ' എന്ന ബട്ടൺ അമർത്തുക.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -173,6 +165,10 @@
         <translation>വാലറ്റ് എന്ക്രിപ്റ് ചെയ്തു കഴിഞ്ഞു .</translation>
     </message>
     <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>വാലറ്റിൽ പുതിയ രഹസ്യപദപ്രയോഗം നൽകുക. &lt;br/&gt; &lt;b&gt; പത്തോ അതിലധികമോ റാൻഡം പ്രതീകങ്ങൾ &lt;/ b&gt; അല്ലെങ്കിൽ &lt;b&gt; എട്ട് അല്ലെങ്കിൽ അതിൽ കൂടുതൽ വാക്കുകൾ &lt;/ b&gt; ഒരു രഹസ്യപദപ്രയോഗം ഉപയോഗിക്കുക.</translation>
+    </message>
+    <message>
         <source>Enter the old passphrase and new passphrase for the wallet.</source>
         <translation>വാലെറ്റിന്റെ പഴയ രഹസ്യപദവും പുതിയ രഹസ്യപദവും നൽകുക.</translation>
     </message>
@@ -187,6 +183,14 @@
         <translation>ഇടപാടുകളുടെ ചരിത്രം പരിശോധിയ്ക്കുക</translation>
     </message>
     <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">&amp;വാലറ്റ് എൻക്രിപ്റ്റ് ചെയ്യുക...</translation>
+    </message>
+    <message>
+        <source>Create Wallet...</source>
+        <translation type="unfinished">വാലറ്റ് / പണസഞ്ചി സൃഷ്ടിക്കുക :...</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>പിശക് </translation>
     </message>
@@ -197,6 +201,14 @@
     <message>
         <source>Information</source>
         <translation>വിവരം </translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;വിലാസങ്ങൾ അയയ്ക്കുന്നു</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;സ്വീകരിക്കുന്ന വിലാസങ്ങൾ</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -213,10 +225,6 @@
     <message>
         <source>Close wallet</source>
         <translation>വാലറ്റ് പൂട്ടുക </translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>സ്ഥിരം ആയ വാലറ്റ്</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -349,9 +357,21 @@
         <source>Create Wallet</source>
         <translation>വാലറ്റ് / പണസഞ്ചി സൃഷ്ടിക്കുക :</translation>
     </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>വാലറ്റ് എൻക്രിപ്റ്റ് ചെയ്യുക</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;ലേബൽ</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;വിലാസം</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -359,6 +379,9 @@
         <source>name</source>
         <translation>നാമധേയം / പേര് </translation>
     </message>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -369,6 +392,9 @@
         <source>Error</source>
         <translation>പിശക് </translation>
     </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -385,6 +411,14 @@
         <translation>കണക്കായ്ക്കിക്കൊണ്ടിരിക്കുന്നു</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>വിലാസം</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -418,6 +452,16 @@
     </message>
     </context>
 <context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">അടയ്ക്കുക</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     </context>
 <context>
@@ -439,12 +483,28 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;വിവരം </translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;തുക :</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ലേബൽ:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;വിലാസം പകർത്തുക</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>വിലാസം</translation>
@@ -492,6 +552,10 @@
         <translation>ഫീസ്‌ / പ്രതിഫലം :</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">തിരഞ്ഞെടുക്കുക...</translation>
+    </message>
+    <message>
         <source>Payment request expired.</source>
         <translation>പെയ്മെന്റിനുള്ള അഭ്യർത്ഥന  കാലഹരണപ്പെട്ടു പോയിരിക്കുന്നു. </translation>
     </message>
@@ -502,6 +566,17 @@
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;തുക :</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ലേബൽ:</translation>
+    </message>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -597,6 +672,10 @@
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>നിലവിലെ ടാബിൽ ഒരു ഫയലിൽ ഡാറ്റ എക്സ്പോർട്ട് ചെയ്യുക</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>പിശക് </translation>
     </message>
     </context>
 <context>

@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Десни клик за измену адресе или ознаке</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Направи нову адресу</translation>
     </message>
@@ -68,10 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Ово су твоје Биткоин адресе за слање уплата. Увек добро провери износ и адресу на коју шаљеш пре него што пошаљеш уплату.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.</source>
-        <translation>Ово су твоје Биткоин адресе за примање уплата. Користи дугме „Направи нову адресу за примање” у картици за примање за креирање нових адреса.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -522,10 +514,6 @@
         <translation>Прикажи  поруку помоћи %1 за листу са могућим опцијама Биткоин командне линије</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>подразумевани новчаник</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Нема доступних новчаника</translation>
     </message>
@@ -914,6 +902,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -971,10 +962,6 @@
         <translation>Биткоин</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Обриши блокове након верификације, осим најновије %1 GB (скраћено)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Најмање %1 GB подататака биће складиштен у овај директорјиум који ће временом порасти.</translation>
     </message>
@@ -1011,6 +998,13 @@
         <translation><numerusform>(%n GB потребно за цео ланац)</numerusform><numerusform>(%n GB потребно за цео ланац)</numerusform><numerusform>(%n GB потребно за цео ланац)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Није применљиво</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1071,6 +1065,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>tip</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адреса</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1079,6 +1086,14 @@
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Налепите адресу из базе за копирање</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+П</translation>
     </message>
 </context>
 <context>
@@ -1181,10 +1196,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Сакрати &amp;block складиштење на</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1445,7 +1456,25 @@
         <source>Current total balance in watch-only addresses</source>
         <translation>Тренутни укупни салдо у адресама у опцији само-гледај</translation>
     </message>
-</context>
+    </context>
+<context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Затвори</translation>
+    </message>
+    <message>
+        <source>Total Amount</source>
+        <translation>Укупан износ</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>или</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1556,7 +1585,7 @@
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
-        <translation><numerusform>%n секунда</numerusform><numerusform>%n секунди</numerusform><numerusform>%n секунди</numerusform></translation>
+        <translation><numerusform>%n секунда</numerusform><numerusform>%n секунде</numerusform><numerusform>%n секунди</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
@@ -1613,6 +1642,11 @@
     <message>
         <source>unknown</source>
         <translation>непознато</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
     </message>
 </context>
 <context>
@@ -1751,10 +1785,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Одабери колегу да би видели детаљне информације</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>На списку познатих</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -1961,14 +1991,6 @@
         <translation>Одлазеће</translation>
     </message>
     <message>
-        <source>Yes</source>
-        <translation>Да</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Не</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Непознато</translation>
     </message>
@@ -2010,10 +2032,6 @@
     <message>
         <source>An optional message that is attached to the payment request and may be displayed to the sender.</source>
         <translation>Опциона порука која је придодата захтеву за плаћање и може бити приказана пошиљаоцу.</translation>
-    </message>
-    <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Направи нову адресу за примање</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2365,8 +2383,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Да ли сте сигурни да желите да пошаљете?</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation>Молим, проверите ваш предлог трансакције. Ово ће произвести делимично потписану Биткоин трансакцију (PSBT) коју можете копирати и онда потписати са нпр. офлајн %1 новчаником, или PSBT компатибилним хардверским новчаником.</translation>
+        <source>Create Unsigned</source>
+        <translation type="unfinished">Креирај непотписано</translation>
     </message>
     <message>
         <source>or</source>
@@ -2375,6 +2393,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>Можете повећати провизију касније (сигнали Замени-са-Провизијом, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation>Молим, проверите ваш предлог трансакције. Ово ће произвести делимично потписану Биткоин трансакцију (PSBT) коју можете копирати и онда потписати са нпр. офлајн %1 новчаником, или PSBT компатибилним хардверским новчаником.</translation>
     </message>
     <message>
         <source>Please, review your transaction.</source>
@@ -2405,16 +2427,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Потврдите предлог трансакције</translation>
     </message>
     <message>
-        <source>Copy PSBT to clipboard</source>
-        <translation>Копирајте PSBT у базу за копирање</translation>
-    </message>
-    <message>
         <source>Send</source>
         <translation>Пошаљи</translation>
-    </message>
-    <message>
-        <source>PSBT copied</source>
-        <translation>PSBT је копиран</translation>
     </message>
     <message>
         <source>Watch-only balance:</source>
@@ -2561,6 +2575,13 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
 </context>
 <context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Da</translation>
+    </message>
+</context>
+<context>
     <name>ShutdownWindow</name>
     <message>
         <source>%1 is shutting down...</source>
@@ -2576,6 +2597,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Signatures - Sign / Verify a Message</source>
         <translation>Потписи - Потпиши / Потврди поруку</translation>
+    </message>
+    <message>
+        <source>&amp;Sign Message</source>
+        <translation type="unfinished">Потпис &amp;Порука</translation>
     </message>
     <message>
         <source>You can sign messages/agreements with your addresses to prove you can receive bitcoins sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
@@ -3049,10 +3074,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Послат ка</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Теби</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Рударено</translation>
     </message>
@@ -3190,7 +3211,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
         <translation>Услед затварања новчаника на дугачки период времена може се десити да је потребна поновна синхронизација комплетног ланца, уколико је дозвољено резање.</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletFrame</name>
     <message>
@@ -3266,6 +3287,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Извези податке из одабране картице у фајлj</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Greška</translation>
     </message>
     <message>
         <source>Backup Wallet</source>

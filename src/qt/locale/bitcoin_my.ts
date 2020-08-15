@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>လိပ်စာ သို့မဟုတ် ခေါင်းစဉ်တပ်ရန် Right-click နှိပ်ပါ။</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>လိပ်စာအသစ်ယူမယ်။</translation>
     </message>
@@ -49,6 +45,18 @@
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>Error</source>
+        <translation>အမှား</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>သတိပေးချက်</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>အချက်အလက်</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -66,13 +74,26 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
     <name>Intro</name>
+    <message>
+        <source>Error</source>
+        <translation>အမှား</translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
+    </context>
+<context>
+    <name>NetWatchLogModel</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
@@ -82,9 +103,19 @@
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Error</source>
+        <translation>အမှား</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
+    </context>
+<context>
+    <name>PSBTOperationsDialog</name>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -100,6 +131,10 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;အချက်အလက်</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -115,6 +150,9 @@
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -158,6 +196,10 @@
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>လက်ရှိ tab မှာရှိတဲ့ဒေတာတွေကို ဖိုင်လ်မှာသိမ်းမယ်။</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>အမှား</translation>
     </message>
     </context>
 <context>

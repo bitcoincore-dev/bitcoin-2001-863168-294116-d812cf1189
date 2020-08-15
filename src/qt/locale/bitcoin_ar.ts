@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>أنقر بزر الماوس الأيمن لتحرير العنوان أو التصنيف</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>إنشاء عنوان جديد</translation>
     </message>
@@ -70,10 +66,6 @@
         <translation>هذه هي عناوين البيتكوين لإرسال المدفوعات. دائما تحقق من المبلغ وعنوان المستلم قبل الإرسال.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.</source>
-        <translation>هذه هي عناوين البيتكوين الخاصة بك لإستلام المدفوعات. استخدم زر "إنشاء عنوان استلام جديد" في علامة التبويب "إستلام" لإنشاء عناوين جديدة.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>نسخ العنوان</translation>
     </message>
@@ -97,7 +89,11 @@
         <source>Exporting Failed</source>
         <translation>لقد فشل التصدير</translation>
     </message>
-    </context>
+    <message>
+        <source>There was an error trying to save the address list to %1. Please try again.</source>
+        <translation>لقد حدث خطأ أثناء  حفظ قائمة العناوين إلى %1. يرجى المحاولة مرة أخرى.</translation>
+    </message>
+</context>
 <context>
     <name>AddressTableModel</name>
     <message>
@@ -433,6 +429,10 @@
         <source>&amp;Command-line options</source>
         <translation>&amp;خيارات سطر الأوامر</translation>
     </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network</source>
+        <translation><numerusform>%n اتصال نشطة بشبكة بتكوين</numerusform><numerusform>%n اتصال نشطة بشبكة بتكوين</numerusform><numerusform>%n اتصال نشطة بشبكة بتكوين</numerusform><numerusform>%n اتصالات نشطة بشبكة بتكوين</numerusform><numerusform>%n اتصالات نشطة بشبكة بتكوين</numerusform><numerusform>%n اتصالات نشطة بشبكة بتكوين</numerusform></translation>
+    </message>
     <message>
         <source>Indexing blocks on disk...</source>
         <translation>ترتيب فهرسة الكتل على القرص...</translation>
@@ -440,6 +440,10 @@
     <message>
         <source>Processing blocks on disk...</source>
         <translation>معالجة الكتل على القرص...</translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation><numerusform>تمت معالجة %n كتلة من محفوظات المعاملة.</numerusform><numerusform>تمت معالجة %n كتلة من محفوظات المعاملة.</numerusform><numerusform>تمت معالجة %n كتلة من محفوظات المعاملة.</numerusform><numerusform>تمت معالجة %n كتلات من محفوظات المعاملة.</numerusform><numerusform>تمت معالجة %n كتلات من محفوظات المعاملة.</numerusform><numerusform>تمت معالجة %n كتلات من محفوظات المعاملة.</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -470,6 +474,10 @@
         <translation>محدث</translation>
     </message>
     <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>إفتح وحدة التصحيح و التشخيص</translation>
+    </message>
+    <message>
         <source>&amp;Sending addresses</source>
         <translation>&amp;عناوين الإرسال</translation>
     </message>
@@ -496,10 +504,6 @@
     <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>بين اشارة المساعدة %1 للحصول على قائمة من خيارات اوامر البت كوين المحتملة </translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>المحفظة الإفتراضية</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -764,6 +768,14 @@
 <context>
     <name>CreateWalletDialog</name>
     <message>
+        <source>Create Wallet</source>
+        <translation type="unfinished">إنشاء محفظة</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>تشفير المحفظة</translation>
+    </message>
+    <message>
         <source>Create</source>
         <translation>إنشاء</translation>
     </message>
@@ -838,6 +850,9 @@
         <translation>لا يمكن انشاء دليل بيانات هنا .</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -915,6 +930,21 @@
         <source>Error</source>
         <translation>خطأ</translation>
     </message>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation><numerusform>%n جيجابايت من المساحة المتوفرة</numerusform><numerusform>%n جيجابايت من المساحة المتوفرة</numerusform><numerusform>%n جيجابايت من المساحة المتوفرة</numerusform><numerusform>%n جيجابايت من المساحة المتوفرة</numerusform><numerusform>%n جيجابايت من المساحة المتوفرة</numerusform><numerusform>%n جيجابايت من المساحة المتوفرة</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation><numerusform>(من %n جيجابايت اللازمة)</numerusform><numerusform>(من %n جيجابايت اللازمة)</numerusform><numerusform>(من %n جيجابايت اللازمة)</numerusform><numerusform>(من %n جيجابايت اللازمة)</numerusform><numerusform>(من %n جيجابايت اللازمة)</numerusform><numerusform>(من %n جيجابايت اللازمة)</numerusform></translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>غير معروف</translation>
+    </message>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -962,12 +992,37 @@
         <source>Hide</source>
         <translation>إخفاء</translation>
     </message>
-    </context>
+    <message>
+        <source>Unknown. Syncing Headers (%1, %2%)...</source>
+        <translation>غير معروف. مزامنة الرؤوس (%1, %2%) ...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>النوع</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>عنوان</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
         <source>URI:</source>
         <translation>العنوان:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>انسخ العنوان من لوحة المفاتيح</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1046,10 +1101,6 @@
     <message>
         <source>&amp;Network</source>
         <translation>&amp;الشبكة</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>جب</translation>
     </message>
     <message>
         <source>MiB</source>
@@ -1180,6 +1231,10 @@
         <translation>لا شيء</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>جوهر البيت كوين</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>تأكيد استعادة الخيارات</translation>
     </message>
@@ -1286,7 +1341,21 @@
         <source>Current total balance in watch-only addresses</source>
         <translation>الرصيد الإجمالي الحالي في العناوين المشاهدة فقط</translation>
     </message>
-</context>
+    </context>
+<context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">غلق</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>أو</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1379,9 +1448,33 @@
         <source>%1 ms</source>
         <translation>%1 جزء من الثانية</translation>
     </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation><numerusform>%n ثانية</numerusform><numerusform>%n ثانية</numerusform><numerusform>%n ثانية</numerusform><numerusform>%n ثواني</numerusform><numerusform>%n ثانية</numerusform><numerusform>%n ثانية</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation><numerusform>%n دقيقة</numerusform><numerusform>%n دقيقة</numerusform><numerusform>%n دقيقة</numerusform><numerusform>%n دقائق</numerusform><numerusform>%n دقيقة</numerusform><numerusform>%n دقيقة</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>0 ساعة</numerusform><numerusform>%n ساعة</numerusform><numerusform>%n ساعتين</numerusform><numerusform>%n ساعات</numerusform><numerusform>%n ساعة</numerusform><numerusform>%n ساعات</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n يوم</numerusform><numerusform>%n يوم</numerusform><numerusform>%n يوم</numerusform><numerusform>%n أيام</numerusform><numerusform>%n يوم</numerusform><numerusform>%n يوم</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n أسبوع</numerusform><numerusform>%n أسبوع</numerusform><numerusform>%n أسبوع</numerusform><numerusform>%n أسابيع</numerusform><numerusform>%n أسابيع</numerusform><numerusform>%n أسابيع</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 و %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n يوم</numerusform><numerusform>%n يوم</numerusform><numerusform>%n يوم</numerusform><numerusform>%n أيام</numerusform><numerusform>%n أيام</numerusform><numerusform>%n أيام</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1414,6 +1507,11 @@
     <message>
         <source>unknown</source>
         <translation>غير معروف</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>معاملة</translation>
     </message>
 </context>
 <context>
@@ -1506,6 +1604,10 @@
         <translation>استخدام الذاكرة</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">محفظة: </translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>إعادة تعيين</translation>
     </message>
@@ -1528,10 +1630,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>حدد نظير لعرض معلومات مفصلة.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>اللائحة البيضاء</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -1714,14 +1812,6 @@
         <translation>خارجي</translation>
     </message>
     <message>
-        <source>Yes</source>
-        <translation>نعم</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>لا</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>غير معرف</translation>
     </message>
@@ -1755,6 +1845,10 @@
     <message>
         <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
         <translation>مبلغ اختياري للطلب. اترك هذا فارغًا أو صفراً لعدم طلب مبلغ محدد.</translation>
+    </message>
+    <message>
+        <source>&amp;Request payment</source>
+        <translation>&amp;طلب دفعة</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2074,6 +2168,10 @@
         <translation>تأكيد الإرسال Coins</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">ارسال</translation>
+    </message>
+    <message>
         <source>The recipient address is not valid. Please recheck.</source>
         <translation>عنوان المستلم غير صالح. يرجى إعادة الفحص.</translation>
     </message>
@@ -2104,6 +2202,10 @@
     <message>
         <source>Payment request expired.</source>
         <translation>انتهاء صلاحية طلب الدفع.</translation>
+    </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>يقدر أن يبدأ التأكيد ضمن %n من الكتل.</numerusform><numerusform>يقدر أن يبدأ التأكيد ضمن %n من الكتل.</numerusform><numerusform>يقدر أن يبدأ التأكيد ضمن %n من الكتل.</numerusform><numerusform>يقدر أن يبدأ التأكيد ضمن %n من الكتل.</numerusform><numerusform>يقدر أن يبدأ التأكيد ضمن %n من الكتل.</numerusform><numerusform>يقدر أن يبدأ التأكيد ضمن %n من الكتل.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2199,6 +2301,13 @@
     <message>
         <source>Memo:</source>
         <translation>مذكرة:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>نعم</translation>
     </message>
 </context>
 <context>
@@ -2352,6 +2461,10 @@
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>مفتوح ل %n كتلة إضافية</numerusform><numerusform>مفتوح ل %n كتلة إضافية</numerusform><numerusform>مفتوح ل %n كتلة إضافية</numerusform><numerusform>مفتوح ل %n كتلات إضافية</numerusform><numerusform>مفتوح ل %n كتلة إضافية</numerusform><numerusform>مفتوح ل %n كتلة إضافية</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>مفتوح حتى %1</translation>
@@ -2423,6 +2536,10 @@
     <message>
         <source>Credit</source>
         <translation>رصيد</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation><numerusform>تنضج خلال %n كتل إضافية</numerusform><numerusform>تنضج خلال %n كتل إضافية</numerusform><numerusform>تنضج خلال %n كتل إضافية</numerusform><numerusform>تنضج خلال %n كتل إضافية</numerusform><numerusform>تنضج خلال %n كتل إضافية</numerusform><numerusform>تنضج خلال %n كتل إضافية</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -2521,6 +2638,10 @@
     <message>
         <source>Label</source>
         <translation>وسم</translation>
+    </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>مفتوح لـ %n كتلة إضافية</numerusform><numerusform>مفتوح لـ %n كتلة إضافية</numerusform><numerusform>مفتوح لـ %n كتلة إضافية</numerusform><numerusform>مفتوح لـ %n كتلة إضافية</numerusform><numerusform>مفتوح لـ %n كتلة إضافية</numerusform><numerusform>مفتوح لـ %n كتلة إضافية</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2644,10 +2765,6 @@
     <message>
         <source>Sent to</source>
         <translation>أرسل إلى</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>إليك</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -2845,6 +2962,10 @@
         <translation>استخراج البيانات في علامة التبويب الحالية إلى ملف</translation>
     </message>
     <message>
+        <source>Error</source>
+        <translation>خطأ</translation>
+    </message>
+    <message>
         <source>Backup Wallet</source>
         <translation>نسخ احتياط للمحفظة</translation>
     </message>
@@ -2971,6 +3092,10 @@
     <message>
         <source>Loading P2P addresses...</source>
         <translation>تحميل عناوين P2P...</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is too low!</source>
+        <translation>تحذير: مساحة القرص منخفضة</translation>
     </message>
     <message>
         <source>Loading banlist...</source>

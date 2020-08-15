@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Feu clic dret per a editar l'adreça o l'etiqueta</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Crea una adreça nova</translation>
     </message>
@@ -68,10 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Aquestes són les vostres adreces de Bitcoin per enviar els pagaments. Sempre reviseu l'import i l'adreça del destinatari abans de transferir monedes.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.</source>
-        <translation>Aquestes són les teves adreces Bitcoin per rebre pagaments. Utilitza el botó "Crear nova adreça de recepció" de la pestanya de recepció per crear noves adreces.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -189,7 +181,7 @@
     </message>
     <message>
         <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
-        <translation>Recorda que tot i xifrant la teva cartera, els teus bitcoins no estan completament protegits de robatori a través de programari maliciós que està infectant el teu ordinador.</translation>
+        <translation>Recorda que tot i xifrant la teva cartera, els teus bitcoins no estan completament protegits de robatori a través de programari maliciós que estigui infectant el teu ordinador.</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -291,7 +283,7 @@
     </message>
     <message>
         <source>Show information about %1</source>
-        <translation>Mosta informació sobre el %1</translation>
+        <translation>Mostra informació sobre el %1</translation>
     </message>
     <message>
         <source>About &amp;Qt</source>
@@ -507,7 +499,7 @@
     </message>
     <message>
         <source>Open a wallet</source>
-        <translation>Obre la cartera</translation>
+        <translation>Obre una cartera</translation>
     </message>
     <message>
         <source>Close Wallet...</source>
@@ -520,10 +512,6 @@
     <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Mostra el missatge d'ajuda del %1 per obtenir una llista amb les possibles opcions de línia d'ordres de Bitcoin</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>cartera predeterminada</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -919,6 +907,9 @@ Això és ideal per a carteres de mode només lectura.</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -945,7 +936,7 @@ Això és ideal per a carteres de mode només lectura.</translation>
     </message>
     <message>
         <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
-        <translation>Com és la primera vegada que s'executa el programa, podeu triar on %1 emmagatzemarà les dades.</translation>
+        <translation>Com és la primera vegada que s'executa el programa, podeu triar on %1 emmagatzemaran les dades.</translation>
     </message>
     <message>
         <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
@@ -976,10 +967,6 @@ Això és ideal per a carteres de mode només lectura.</translation>
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Descarta blocs després de la verificació, excepte el més recent %1 GB (podar)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Almenys %1 GB de dades s'emmagatzemaran en aquest directori, i creixerà amb el temps.</translation>
     </message>
@@ -1005,7 +992,7 @@ Això és ideal per a carteres de mode només lectura.</translation>
     </message>
     <message numerus="yes">
         <source>%n GB of free space available</source>
-        <translation><numerusform>Un GB d'espai lliure disponible.</numerusform><numerusform>%n GB d'espai lliure disponibles</numerusform></translation>
+        <translation><numerusform>Un GB d'espai lliure disponible</numerusform><numerusform>%n GB d'espai lliure disponibles</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
@@ -1016,6 +1003,13 @@ Això és ideal per a carteres de mode només lectura.</translation>
         <translation><numerusform>(Un GB necessari per a la cadena completa)</numerusform><numerusform>(Un GB necessari per a la cadena completa)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1076,6 +1070,19 @@ Això és ideal per a carteres de mode només lectura.</translation>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipus</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adreça</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1084,6 +1091,14 @@ Això és ideal per a carteres de mode només lectura.</translation>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Enganxa l'adreça del porta-retalls</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1186,10 +1201,6 @@ Això és ideal per a carteres de mode només lectura.</translation>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Prunar emmagatzemament de &amp;block a</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1344,6 +1355,10 @@ Això és ideal per a carteres de mode només lectura.</translation>
         <translation>cap</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Nucli de Bitcoin</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Confirmeu el reestabliment de les opcions</translation>
     </message>
@@ -1454,7 +1469,25 @@ Això és ideal per a carteres de mode només lectura.</translation>
         <source>Current total balance in watch-only addresses</source>
         <translation>Balanç total actual en adreces de només lectura</translation>
     </message>
-</context>
+    </context>
+<context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Tanca</translation>
+    </message>
+    <message>
+        <source>Total Amount</source>
+        <translation>Import total</translation>
+    </message>
+    <message>
+        <source>or</source>
+        <translation>o</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1627,6 +1660,16 @@ Això és ideal per a carteres de mode només lectura.</translation>
         <source>unknown</source>
         <translation>desconegut</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsó</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -1764,10 +1807,6 @@ Això és ideal per a carteres de mode només lectura.</translation>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Seleccioneu un igual per mostrar informació detallada.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>A la llista blanca</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -1974,14 +2013,6 @@ Això és ideal per a carteres de mode només lectura.</translation>
         <translation>Sortint</translation>
     </message>
     <message>
-        <source>Yes</source>
-        <translation>Sí</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>No</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Desconegut</translation>
     </message>
@@ -2025,8 +2056,8 @@ Això és ideal per a carteres de mode només lectura.</translation>
         <translation>Un missatge opcional adjunt a la sol·licitud de pagament i que es pot mostrar al remitent.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Creeu una nova adreça de recepció</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Sol·licitud de pagament</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2378,8 +2409,8 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
         <translation>Esteu segur que ho voleu enviar?</translation>
     </message>
     <message>
-        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation>Revisa la teva proposta de transacció. Es produirà una transacció de Bitcoin amb signatura parcial (PSBT) que podeu copiar i després signar, per exemple, amb una cartera %1 de tipus fora de línia o una cartera física compatible amb PSBT.</translation>
+        <source>Create Unsigned</source>
+        <translation type="unfinished">Creació sense firmar</translation>
     </message>
     <message>
         <source>or</source>
@@ -2388,6 +2419,10 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation>Pot incrementar la comissió més tard (senyala Replace-By-Fee o substitució per comissió, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation>Revisa la teva proposta de transacció. Es produirà una transacció de Bitcoin amb signatura parcial (PSBT) que podeu copiar i després signar, per exemple, amb una cartera %1 de tipus fora de línia o una cartera física compatible amb PSBT.</translation>
     </message>
     <message>
         <source>Please, review your transaction.</source>
@@ -2418,16 +2453,8 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
         <translation>Confirmeu la proposta de transacció</translation>
     </message>
     <message>
-        <source>Copy PSBT to clipboard</source>
-        <translation>Copiar PSBT al porta-retalls.</translation>
-    </message>
-    <message>
         <source>Send</source>
         <translation>Enviar</translation>
-    </message>
-    <message>
-        <source>PSBT copied</source>
-        <translation>PSBT copiada</translation>
     </message>
     <message>
         <source>Watch-only balance:</source>
@@ -2571,6 +2598,13 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
     <message>
         <source>Memo:</source>
         <translation>Memo:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Sí</translation>
     </message>
 </context>
 <context>
@@ -3070,10 +3104,6 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
         <translation>Enviada a</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>A un mateix</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Minada</translation>
     </message>
@@ -3211,7 +3241,7 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
         <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
         <translation>Si tanqueu la cartera durant massa temps, es pot haver de tornar a sincronitzar tota la cadena si teniu el sistema de poda habilitat.</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletFrame</name>
     <message>
@@ -3287,6 +3317,10 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Exporta les dades de la pestanya actual a un fitxer</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Error</translation>
     </message>
     <message>
         <source>Backup Wallet</source>
@@ -3514,6 +3548,12 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
     <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>El directori de blocs especificat "%s" no existeix.</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>El fitxer de R/W configuració especificat %s no existeix
+</translation>
     </message>
     <message>
         <source>Unknown address type '%s'</source>
