@@ -2534,7 +2534,7 @@ bool CWallet::SignTransaction(CMutableTransaction& tx) const
     return SignTransaction(tx, coins, SIGHASH_ALL, input_errors);
 }
 
-bool CWallet::SignTransaction(CMutableTransaction& tx, const std::map<COutPoint, Coin>& coins, int sighash, std::map<int, std::string>& input_errors) const
+bool CWallet::SignTransaction(CMutableTransaction& tx, const std::map<COutPoint, Coin>& coins, int sighash, std::map<int, std::string>& input_errors, Optional<CAmount>* inputs_amount_sum) const
 {
     // Sign the tx with ScriptPubKeyMans
     // Because each ScriptPubKeyMan can sign more than one input, we need to keep track of each ScriptPubKeyMan that has signed this transaction.
@@ -2572,7 +2572,7 @@ bool CWallet::SignTransaction(CMutableTransaction& tx, const std::map<COutPoint,
             // Sign the tx.
             // spk_man->SignTransaction will return true if the transaction is complete,
             // so we can exit early and return true if that happens.
-            if (spk_man->SignTransaction(tx, coins, sighash, input_errors)) {
+            if (spk_man->SignTransaction(tx, coins, sighash, input_errors, inputs_amount_sum)) {
                 return true;
             }
 
