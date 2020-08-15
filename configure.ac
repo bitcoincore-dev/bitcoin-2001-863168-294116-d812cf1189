@@ -689,6 +689,7 @@ fi
 AX_GCC_FUNC_ATTRIBUTE([visibility])
 AX_GCC_FUNC_ATTRIBUTE([dllexport])
 AX_GCC_FUNC_ATTRIBUTE([dllimport])
+AX_GCC_FUNC_ATTRIBUTE([weak_import])
 
 if test x$use_glibc_compat != xno; then
 
