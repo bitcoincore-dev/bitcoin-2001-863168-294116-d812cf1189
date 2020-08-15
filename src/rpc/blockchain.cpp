@@ -2007,6 +2007,7 @@ public:
         if (m_could_reserve) {
             std::lock_guard<std::mutex> lock(g_utxosetscan);
             g_scan_in_progress = false;
+            g_scan_progress = 0;
         }
     }
 };
