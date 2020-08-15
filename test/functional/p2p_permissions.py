@@ -89,6 +89,7 @@ class P2PPermissionsTests(BitcoinTestFramework):
         self.checkpermission(
             # all permission added
             ["-whitelist=all@127.0.0.1"],
+            ["blockfilters"] +
             ["forcerelay", "noban", "mempool", "bloomfilter", "relay"],
             False)
 
