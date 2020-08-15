@@ -171,8 +171,7 @@ class CAddrMan
 {
 friend class CAddrManTest;
 protected:
-    //! critical section to protect the inner data structures
-    mutable RecursiveMutex cs;
+    mutable Mutex cs;
 
 private:
     //! last used nId
@@ -207,6 +206,7 @@ private:
 
     void Check_cs() EXCLUSIVE_LOCKS_REQUIRED(cs)
     {
+        AssertLockHeld(cs);
 #ifdef DEBUG_ADDRMAN
         const int err = Check_();
         if (err) {
@@ -217,6 +217,7 @@ private:
 
     void Clear_cs() EXCLUSIVE_LOCKS_REQUIRED(cs)
     {
+        AssertLockHeld(cs);
         std::vector<int>().swap(vRandom);
         nKey = insecure_rand.rand256();
         for (size_t bucket = 0; bucket < ADDRMAN_NEW_BUCKET_COUNT; bucket++) {
@@ -240,6 +241,7 @@ private:
 
     size_t size_cs() const EXCLUSIVE_LOCKS_REQUIRED(cs)
     {
+        AssertLockHeld(cs);
         return vRandom.size();
     }
 
