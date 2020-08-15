@@ -39,13 +39,13 @@ class P2PPermissionsTests(BitcoinTestFramework):
         self.checkpermission(
             # default permissions (no specific permissions)
             ["-whitelist=127.0.0.1"],
-            ["relay", "noban", "mempool", "addr", 'download'],
+            ["relay", "noban", "mempool", "addr"],
             True)
 
         self.checkpermission(
             # relay permission removed (no specific permissions)
             ["-whitelist=127.0.0.1", "-whitelistrelay=0"],
-            ["noban", "mempool", "addr", 'download'],
+            ["noban", "mempool", "addr"],
             True)
 
         self.checkpermission(
@@ -53,7 +53,7 @@ class P2PPermissionsTests(BitcoinTestFramework):
             # Legacy parameter interaction which set whitelistrelay to true
             # if whitelistforcerelay is true
             ["-whitelist=127.0.0.1", "-whitelistforcerelay"],
-            ["forcerelay", "relay", "noban", "mempool", "addr", 'download'],
+            ["forcerelay", "relay", "noban", "mempool", "addr"],
             True)
 
         # Let's make sure permissions are merged correctly
@@ -64,32 +64,32 @@ class P2PPermissionsTests(BitcoinTestFramework):
         self.checkpermission(
             ["-whitelist=noban@127.0.0.1"],
             # Check parameter interaction forcerelay should activate relay
-            ["noban", "bloomfilter", "forcerelay", "relay", 'download'],
+            ["noban", "bloomfilter", "forcerelay", "relay"],
             False)
         self.replaceinconfig(1, "whitebind=bloomfilter,forcerelay@" + ip_port, "bind=127.0.0.1")
 
         self.checkpermission(
             # legacy whitelistrelay should be ignored
             ["-whitelist=noban,mempool@127.0.0.1", "-whitelistrelay"],
-            ["noban", "mempool", 'download'],
+            ["noban", "mempool"],
             False)
 
         self.checkpermission(
             # legacy whitelistforcerelay should be ignored
             ["-whitelist=noban,mempool@127.0.0.1", "-whitelistforcerelay"],
-            ["noban", "mempool", 'download'],
+            ["noban", "mempool"],
             False)
 
         self.checkpermission(
             # missing mempool permission to be considered legacy whitelisted
             ["-whitelist=noban@127.0.0.1"],
-            ["noban", 'download'],
+            ["noban"],
             False)
 
         self.checkpermission(
             # all permission added
             ["-whitelist=all@127.0.0.1"],
-            ["blockfilters", "addr", 'download'] +
+            ["blockfilters", "addr"] +
             ["forcerelay", "noban", "mempool", "bloomfilter", "relay"],
             False)
 

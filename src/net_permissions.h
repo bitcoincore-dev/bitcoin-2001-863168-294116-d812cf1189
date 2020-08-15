@@ -19,10 +19,8 @@ enum NetPermissionFlags
     // Always relay transactions from this peer, even if already in mempool
     // Keep parameter interaction: forcerelay implies relay
     PF_FORCERELAY = (1U << 2) | PF_RELAY,
-    // Allow getheaders during IBD and block-download after maxuploadtarget limit
-    PF_DOWNLOAD = (1U << 18),
     // Can't be banned for misbehavior
-    PF_NOBAN = (1U << 4) | PF_DOWNLOAD,
+    PF_NOBAN = (1U << 4),
     // Can query the mempool
     PF_MEMPOOL = (1U << 5),
     // Can request addrs without hitting a privacy-preserving cache
@@ -35,7 +33,7 @@ enum NetPermissionFlags
 
     // True if the user did not specifically set fine grained permissions
     PF_ISIMPLICIT = (1U << 31),
-    PF_ALL = PF_BLOOMFILTER | PF_FORCERELAY | PF_RELAY | PF_NOBAN | PF_MEMPOOL | PF_ADDR | PF_BLOCKFILTERS | PF_DOWNLOAD,
+    PF_ALL = PF_BLOOMFILTER | PF_FORCERELAY | PF_RELAY | PF_NOBAN | PF_MEMPOOL | PF_ADDR | PF_BLOCKFILTERS,
 };
 class NetPermissions
 {

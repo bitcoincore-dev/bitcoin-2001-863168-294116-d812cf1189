@@ -23,8 +23,8 @@ longer serving historic blocks (blocks older than one week).
 Keep in mind that new nodes require other nodes that are willing to serve
 historic blocks.
 
-Peers with the `download` permission will never be disconnected, although their
-traffic counts for calculating the target.
+Whitelisted peers will never be disconnected, although their traffic counts for
+calculating the target.
 
 ## 2. Disable "listening" (`-listen=0`)
 
