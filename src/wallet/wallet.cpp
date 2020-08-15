@@ -2632,8 +2632,11 @@ bool CWallet::SignTransaction(CMutableTransaction& tx, const std::map<COutPoint,
     return false;
 }
 
-TransactionError CWallet::FillPSBT(PartiallySignedTransaction& psbtx, bool& complete, int sighash_type, bool sign, bool bip32derivs) const
+TransactionError CWallet::FillPSBT(PartiallySignedTransaction& psbtx, bool& complete, int sighash_type, bool sign, bool bip32derivs, size_t * n_signed) const
 {
+    if (n_signed) {
+        *n_signed = 0;
+    }
     LOCK(cs_wallet);
     // Get all of the previous transactions
     for (unsigned int i = 0; i < psbtx.tx->vin.size(); ++i) {
@@ -2704,6 +2707,14 @@ TransactionError CWallet::FillPSBT(PartiallySignedTransaction& psbtx, bool& comp
 
             // Add this spk_man to visited_spk_mans so we can skip it later
             visited_spk_mans.insert(spk_man->GetID());
+        }
+
+        bool signed_one = PSBTInputSigned(input);
+        if (n_signed && (signed_one || !sign)) {
+            // If sign is false, we assume that we _could_ sign if we get here. This
+            // will never have false negatives; it is hard to tell under what i
+            // circumstances it could have false positives.
+            (*n_signed)++;
         }
     }
 
