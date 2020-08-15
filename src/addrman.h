@@ -279,7 +279,7 @@ protected:
     void Attempt_cs(const CService &addr, bool fCountFailure, int64_t nTime) EXCLUSIVE_LOCKS_REQUIRED(cs);
 
     //! Select an address to connect to, if newOnly is set to true, only the new table is selected from.
-    CAddrInfo Select_(bool newOnly) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    CAddrInfo Select_cs(bool newOnly) EXCLUSIVE_LOCKS_REQUIRED(cs);
 
     //! See if any to-be-evicted tried table entries have been tested and if so resolve the collisions.
     void ResolveCollisions_() EXCLUSIVE_LOCKS_REQUIRED(cs);
@@ -653,7 +653,7 @@ public:
             AssertLockNotHeld(cs);
             LOCK(cs);
             Check_cs();
-            addrRet = Select_(newOnly);
+            addrRet = Select_cs(newOnly);
             Check_cs();
         }
         return addrRet;

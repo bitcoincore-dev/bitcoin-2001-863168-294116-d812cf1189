@@ -354,7 +354,7 @@ void CAddrMan::Attempt_cs(const CService& addr, bool fCountFailure, int64_t nTim
     }
 }
 
-CAddrInfo CAddrMan::Select_(bool newOnly)
+CAddrInfo CAddrMan::Select_cs(bool newOnly)
 {
     if (size_cs() == 0)
         return CAddrInfo();
