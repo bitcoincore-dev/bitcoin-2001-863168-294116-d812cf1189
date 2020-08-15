@@ -18,9 +18,14 @@ else
     exit 1
 fi
 
+# This checks that we are actually part of the intended git repository, and not just getting info about some unrelated git repository that the code happens to be in a directory under
+git_check_in_repo() {
+    ! { git status --porcelain -uall --ignored "$@" 2>/dev/null || echo '??'; } | grep -q '?'
+}
+
 DESC=""
 SUFFIX=""
-if [ "${BITCOIN_GENBUILD_NO_GIT}" != "1" ] && [ -e "$(command -v git)" ] && [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+if [ "${BITCOIN_GENBUILD_NO_GIT}" != "1" ] && [ -e "$(command -v git)" ] && [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ] && git_check_in_repo share/genbuild.sh; then
     # clean 'dirty' status of touched files that haven't been modified
     git diff >/dev/null 2>/dev/null
 
@@ -40,7 +45,9 @@ if [ -n "$DESC" ]; then
 elif [ -n "$SUFFIX" ]; then
     NEWINFO="#define BUILD_SUFFIX $SUFFIX"
 else
-    NEWINFO="// No build information available"
+    # NOTE: The NEWINFO line below this comment gets replaced by a string-match in contrib/gitian-descriptors/make_release_tarball
+    # If changing it, update the script too!
+    NEWINFO='// No build information available'
 fi
 
 # only update build.h if necessary
