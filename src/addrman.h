@@ -171,42 +171,42 @@ class CAddrMan
 {
 friend class CAddrManTest;
 protected:
-    mutable Mutex cs;
+    mutable Mutex m_mutex;
 
 private:
     //! last used nId
-    int nIdCount GUARDED_BY(cs);
+    int nIdCount GUARDED_BY(m_mutex);
 
     //! table with information about all nIds
-    std::map<int, CAddrInfo> mapInfo GUARDED_BY(cs);
+    std::map<int, CAddrInfo> mapInfo GUARDED_BY(m_mutex);
 
     //! find an nId based on its network address
-    std::map<CNetAddr, int> mapAddr GUARDED_BY(cs);
+    std::map<CNetAddr, int> mapAddr GUARDED_BY(m_mutex);
 
     //! randomly-ordered vector of all nIds
-    std::vector<int> vRandom GUARDED_BY(cs);
+    std::vector<int> vRandom GUARDED_BY(m_mutex);
 
     // number of "tried" entries
-    int nTried GUARDED_BY(cs);
+    int nTried GUARDED_BY(m_mutex);
 
     //! list of "tried" buckets
-    int vvTried[ADDRMAN_TRIED_BUCKET_COUNT][ADDRMAN_BUCKET_SIZE] GUARDED_BY(cs);
+    int vvTried[ADDRMAN_TRIED_BUCKET_COUNT][ADDRMAN_BUCKET_SIZE] GUARDED_BY(m_mutex);
 
     //! number of (unique) "new" entries
-    int nNew GUARDED_BY(cs);
+    int nNew GUARDED_BY(m_mutex);
 
     //! list of "new" buckets
-    int vvNew[ADDRMAN_NEW_BUCKET_COUNT][ADDRMAN_BUCKET_SIZE] GUARDED_BY(cs);
+    int vvNew[ADDRMAN_NEW_BUCKET_COUNT][ADDRMAN_BUCKET_SIZE] GUARDED_BY(m_mutex);
 
     //! last time Good was called (memory only)
-    int64_t nLastGood GUARDED_BY(cs);
+    int64_t nLastGood GUARDED_BY(m_mutex);
 
     //! Holds addrs inserted into tried table that collide with existing entries. Test-before-evict discipline used to resolve these collisions.
     std::set<int> m_tried_collisions;
 
-    void Check_cs() EXCLUSIVE_LOCKS_REQUIRED(cs)
+    void Check_cs() EXCLUSIVE_LOCKS_REQUIRED(m_mutex)
     {
-        AssertLockHeld(cs);
+        AssertLockHeld(m_mutex);
 #ifdef DEBUG_ADDRMAN
         const int err = Check_();
         if (err) {
@@ -215,9 +215,9 @@ private:
 #endif // DEBUG_ADDRMAN
     }
 
-    void Clear_cs() EXCLUSIVE_LOCKS_REQUIRED(cs)
+    void Clear_cs() EXCLUSIVE_LOCKS_REQUIRED(m_mutex)
     {
-        AssertLockHeld(cs);
+        AssertLockHeld(m_mutex);
         std::vector<int>().swap(vRandom);
         nKey = insecure_rand.rand256();
         for (size_t bucket = 0; bucket < ADDRMAN_NEW_BUCKET_COUNT; bucket++) {
@@ -239,9 +239,9 @@ private:
         mapAddr.clear();
     }
 
-    size_t size_cs() const EXCLUSIVE_LOCKS_REQUIRED(cs)
+    size_t size_cs() const EXCLUSIVE_LOCKS_REQUIRED(m_mutex)
     {
-        AssertLockHeld(cs);
+        AssertLockHeld(m_mutex);
         return vRandom.size();
     }
 
@@ -253,55 +253,55 @@ protected:
     FastRandomContext insecure_rand;
 
     //! Find an entry.
-    CAddrInfo* Find(const CNetAddr& addr, int *pnId = nullptr) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    CAddrInfo* Find(const CNetAddr& addr, int *pnId = nullptr) EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 
     //! find an entry, creating it if necessary.
     //! nTime and nServices of the found node are updated, if necessary.
-    CAddrInfo* Create(const CAddress &addr, const CNetAddr &addrSource, int *pnId = nullptr) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    CAddrInfo* Create(const CAddress &addr, const CNetAddr &addrSource, int *pnId = nullptr) EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 
     //! Swap two elements in vRandom.
-    void SwapRandom(unsigned int nRandomPos1, unsigned int nRandomPos2) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    void SwapRandom(unsigned int nRandomPos1, unsigned int nRandomPos2) EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 
     //! Move an entry from the "new" table(s) to the "tried" table
-    void MakeTried(CAddrInfo& info, int nId) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    void MakeTried(CAddrInfo& info, int nId) EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 
     //! Delete an entry. It must not be in tried, and have refcount 0.
-    void Delete(int nId) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    void Delete(int nId) EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 
     //! Clear a position in a "new" table. This is the only place where entries are actually deleted.
-    void ClearNew(int nUBucket, int nUBucketPos) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    void ClearNew(int nUBucket, int nUBucketPos) EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 
     //! Mark an entry "good", possibly moving it from "new" to "tried".
-    void Good_(const CService &addr, bool test_before_evict, int64_t time) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    void Good_(const CService &addr, bool test_before_evict, int64_t time) EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 
     //! Add an entry to the "new" table.
-    bool Add_(const CAddress &addr, const CNetAddr& source, int64_t nTimePenalty) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    bool Add_(const CAddress &addr, const CNetAddr& source, int64_t nTimePenalty) EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 
     //! Mark an entry as attempted to connect.
-    void Attempt_cs(const CService &addr, bool fCountFailure, int64_t nTime) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    void Attempt_cs(const CService &addr, bool fCountFailure, int64_t nTime) EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 
     //! Select an address to connect to, if newOnly is set to true, only the new table is selected from.
-    CAddrInfo Select_cs(bool newOnly) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    CAddrInfo Select_cs(bool newOnly) EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 
     //! See if any to-be-evicted tried table entries have been tested and if so resolve the collisions.
-    void ResolveCollisions_() EXCLUSIVE_LOCKS_REQUIRED(cs);
+    void ResolveCollisions_() EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 
     //! Return a random to-be-evicted tried table address.
-    CAddrInfo SelectTriedCollision_() EXCLUSIVE_LOCKS_REQUIRED(cs);
+    CAddrInfo SelectTriedCollision_() EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 
 #ifdef DEBUG_ADDRMAN
     //! Perform consistency check. Returns an error code or zero.
-    int Check_() EXCLUSIVE_LOCKS_REQUIRED(cs);
+    int Check_() EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 #endif
 
     //! Select several addresses at once.
-    void GetAddr_(std::vector<CAddress> &vAddr, size_t max_addresses, size_t max_pct) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    void GetAddr_(std::vector<CAddress> &vAddr, size_t max_addresses, size_t max_pct) EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 
     //! Mark an entry as currently-connected-to.
-    void Connected_(const CService &addr, int64_t nTime) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    void Connected_(const CService &addr, int64_t nTime) EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 
     //! Update an entry's service bits.
-    void SetServices_(const CService &addr, ServiceFlags nServices) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    void SetServices_(const CService &addr, ServiceFlags nServices) EXCLUSIVE_LOCKS_REQUIRED(m_mutex);
 
 public:
     // Compressed IP->ASN mapping, loaded from a file when a node starts.
@@ -354,10 +354,10 @@ public:
      * very little in common.
      */
     template<typename Stream>
-    void Serialize(Stream &s) const EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    void Serialize(Stream &s) const EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
-        AssertLockNotHeld(cs);
-        LOCK(cs);
+        AssertLockNotHeld(m_mutex);
+        LOCK(m_mutex);
 
         unsigned char nVersion = 2;
         s << nVersion;
@@ -412,10 +412,10 @@ public:
     }
 
     template<typename Stream>
-    void Unserialize(Stream& s) EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    void Unserialize(Stream& s) EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
-        AssertLockNotHeld(cs);
-        LOCK(cs);
+        AssertLockNotHeld(m_mutex);
+        LOCK(m_mutex);
 
         Clear_cs();
         unsigned char nVersion;
@@ -535,10 +535,10 @@ public:
         Check_cs();
     }
 
-    void Clear() EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    void Clear() EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
-        AssertLockNotHeld(cs);
-        LOCK(cs);
+        AssertLockNotHeld(m_mutex);
+        LOCK(m_mutex);
         Clear_cs();
     }
 
@@ -553,28 +553,28 @@ public:
     }
 
     //! Return the number of (unique) addresses in all tables.
-    size_t size() const EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    size_t size() const EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
-        AssertLockNotHeld(cs);
-        LOCK(cs);
+        AssertLockNotHeld(m_mutex);
+        LOCK(m_mutex);
         return size_cs();
     }
 
     //! Consistency check
-    void Check() EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    void Check() EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
-        AssertLockNotHeld(cs);
+        AssertLockNotHeld(m_mutex);
 #ifdef DEBUG_ADDRMAN
-        LOCK(cs);
+        LOCK(m_mutex);
         Check_cs();
 #endif // DEBUG_ADDRMAN
     }
 
     //! Add a single address.
-    bool Add(const CAddress &addr, const CNetAddr& source, int64_t nTimePenalty = 0) EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    bool Add(const CAddress &addr, const CNetAddr& source, int64_t nTimePenalty = 0) EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
-        AssertLockNotHeld(cs);
-        LOCK(cs);
+        AssertLockNotHeld(m_mutex);
+        LOCK(m_mutex);
         bool fRet = false;
         Check_cs();
         fRet |= Add_(addr, source, nTimePenalty);
@@ -586,10 +586,10 @@ public:
     }
 
     //! Add multiple addresses.
-    bool Add(const std::vector<CAddress> &vAddr, const CNetAddr& source, int64_t nTimePenalty = 0) EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    bool Add(const std::vector<CAddress> &vAddr, const CNetAddr& source, int64_t nTimePenalty = 0) EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
-        AssertLockNotHeld(cs);
-        LOCK(cs);
+        AssertLockNotHeld(m_mutex);
+        LOCK(m_mutex);
         int nAdd = 0;
         Check_cs();
         for (std::vector<CAddress>::const_iterator it = vAddr.begin(); it != vAddr.end(); it++)
@@ -602,42 +602,42 @@ public:
     }
 
     //! Mark an entry as accessible.
-    void Good(const CService &addr, bool test_before_evict = true, int64_t nTime = GetAdjustedTime()) EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    void Good(const CService &addr, bool test_before_evict = true, int64_t nTime = GetAdjustedTime()) EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
-        AssertLockNotHeld(cs);
-        LOCK(cs);
+        AssertLockNotHeld(m_mutex);
+        LOCK(m_mutex);
         Check_cs();
         Good_(addr, test_before_evict, nTime);
         Check_cs();
     }
 
     //! Mark an entry as connection attempted to.
-    void Attempt(const CService &addr, bool fCountFailure, int64_t nTime = GetAdjustedTime()) EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    void Attempt(const CService &addr, bool fCountFailure, int64_t nTime = GetAdjustedTime()) EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
-        AssertLockNotHeld(cs);
-        LOCK(cs);
+        AssertLockNotHeld(m_mutex);
+        LOCK(m_mutex);
         Check_cs();
         Attempt_cs(addr, fCountFailure, nTime);
         Check_cs();
     }
 
     //! See if any to-be-evicted tried table entries have been tested and if so resolve the collisions.
-    void ResolveCollisions() EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    void ResolveCollisions() EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
-        AssertLockNotHeld(cs);
-        LOCK(cs);
+        AssertLockNotHeld(m_mutex);
+        LOCK(m_mutex);
         Check_cs();
         ResolveCollisions_();
         Check_cs();
     }
 
     //! Randomly select an address in tried that another address is attempting to evict.
-    CAddrInfo SelectTriedCollision() EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    CAddrInfo SelectTriedCollision() EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
         CAddrInfo ret;
         {
-            AssertLockNotHeld(cs);
-            LOCK(cs);
+            AssertLockNotHeld(m_mutex);
+            LOCK(m_mutex);
             Check_cs();
             ret = SelectTriedCollision_();
             Check_cs();
@@ -648,12 +648,12 @@ public:
     /**
      * Choose an address to connect to.
      */
-    CAddrInfo Select(bool newOnly = false) EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    CAddrInfo Select(bool newOnly = false) EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
         CAddrInfo addrRet;
         {
-            AssertLockNotHeld(cs);
-            LOCK(cs);
+            AssertLockNotHeld(m_mutex);
+            LOCK(m_mutex);
             Check_cs();
             addrRet = Select_cs(newOnly);
             Check_cs();
@@ -662,13 +662,13 @@ public:
     }
 
     //! Return a bunch of addresses, selected at random.
-    std::vector<CAddress> GetAddr(size_t max_addresses, size_t max_pct) EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    std::vector<CAddress> GetAddr(size_t max_addresses, size_t max_pct) EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
         Check();
         std::vector<CAddress> vAddr;
         {
-            AssertLockNotHeld(cs);
-            LOCK(cs);
+            AssertLockNotHeld(m_mutex);
+            LOCK(m_mutex);
             GetAddr_(vAddr, max_addresses, max_pct);
         }
         Check();
@@ -676,19 +676,19 @@ public:
     }
 
     //! Mark an entry as currently-connected-to.
-    void Connected(const CService &addr, int64_t nTime = GetAdjustedTime()) EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    void Connected(const CService &addr, int64_t nTime = GetAdjustedTime()) EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
-        AssertLockNotHeld(cs);
-        LOCK(cs);
+        AssertLockNotHeld(m_mutex);
+        LOCK(m_mutex);
         Check_cs();
         Connected_(addr, nTime);
         Check_cs();
     }
 
-    void SetServices(const CService &addr, ServiceFlags nServices) EXCLUSIVE_LOCKS_REQUIRED(!cs)
+    void SetServices(const CService &addr, ServiceFlags nServices) EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
-        AssertLockNotHeld(cs);
-        LOCK(cs);
+        AssertLockNotHeld(m_mutex);
+        LOCK(m_mutex);
         Check_cs();
         SetServices_(addr, nServices);
         Check_cs();
