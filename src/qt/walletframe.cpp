@@ -68,6 +68,7 @@ bool WalletFrame::addWallet(WalletModel *walletModel)
     } else {
         walletView->gotoOverviewPage();
     }
+    walletView->setPrivacy(gui->isPrivacyModeActivated());
 
     walletStack->addWidget(walletView);
     mapWalletViews[walletModel] = walletView;
@@ -81,6 +82,8 @@ bool WalletFrame::addWallet(WalletModel *walletModel)
     connect(walletView, &WalletView::encryptionStatusChanged, gui, &BitcoinGUI::updateWalletStatus);
     connect(walletView, &WalletView::incomingTransaction, gui, &BitcoinGUI::incomingTransaction);
     connect(walletView, &WalletView::hdEnabledStatusChanged, gui, &BitcoinGUI::updateWalletStatus);
+
+    connect(gui, &BitcoinGUI::setPrivacy, walletView, &WalletView::setPrivacy);
 
     return true;
 }
@@ -127,6 +130,13 @@ void WalletFrame::showOutOfSyncWarning(bool fShow)
     QMap<WalletModel*, WalletView*>::const_iterator i;
     for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
         i.value()->showOutOfSyncWarning(fShow);
+}
+
+void WalletFrame::setPrivacy(const bool nv)
+{
+    for (auto i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i) {
+        i.value()->setPrivacy(nv);
+    }
 }
 
 void WalletFrame::gotoOverviewPage()
