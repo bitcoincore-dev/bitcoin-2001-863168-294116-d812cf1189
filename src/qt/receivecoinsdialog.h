@@ -49,9 +49,6 @@ public Q_SLOTS:
     void reject();
     void accept();
 
-protected:
-    virtual void keyPressEvent(QKeyEvent *event);
-
 private:
     Ui::ReceiveCoinsDialog *ui;
     GUIUtil::TableViewLastColumnResizingFixer *columnResizingFixer;
