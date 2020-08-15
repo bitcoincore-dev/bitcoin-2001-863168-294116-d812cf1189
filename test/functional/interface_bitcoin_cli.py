@@ -81,12 +81,21 @@ class TestBitcoinCli(BitcoinTestFramework):
         assert_equal(cli_get_info['blocks'], blockchain_info['blocks'])
         assert_equal(cli_get_info['headers'], blockchain_info['headers'])
         assert_equal(cli_get_info['timeoffset'], network_info['timeoffset'])
-        assert_equal(cli_get_info['connections'], network_info['connections'])
+        assert_equal(
+            cli_get_info['connections'],
+            {
+                'in': network_info['connections_in'],
+                'out': network_info['connections_out'],
+                'total': network_info['connections']
+            }
+        )
         assert_equal(cli_get_info['proxy'], network_info['networks'][0]['proxy'])
         assert_equal(cli_get_info['difficulty'], blockchain_info['difficulty'])
         assert_equal(cli_get_info['chain'], blockchain_info['chain'])
-        for field in ['blocks', 'connections', 'headers', 'timeoffset', 'version']:
+        for field in ['blocks', 'headers', 'timeoffset', 'version']:
             assert_scale(cli_get_info[field], expected_scale=0)
+        for field in ('in', 'out', 'total'):
+            assert_scale(cli_get_info['connections'][field], expected_scale=0)
 
         if self.is_wallet_compiled():
             self.log.info("Test -getinfo and bitcoin-cli getwalletinfo return expected wallet info")
