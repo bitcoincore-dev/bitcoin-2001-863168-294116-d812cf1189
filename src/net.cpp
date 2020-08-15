@@ -2272,19 +2272,19 @@ void Discover()
 
 void CConnman::SetNetworkActive(bool active)
 {
-    LogPrint(BCLog::NET, "SetNetworkActive: %s\n", active);
-
     if (fNetworkActive == active) {
         return;
     }
 
     fNetworkActive = active;
-
+    LogPrintf("%s: %s\n", __func__, fNetworkActive);
     uiInterface.NotifyNetworkActiveChanged(fNetworkActive);
 }
 
-CConnman::CConnman(uint64_t nSeed0In, uint64_t nSeed1In) : nSeed0(nSeed0In), nSeed1(nSeed1In)
+CConnman::CConnman(uint64_t nSeed0In, uint64_t nSeed1In, bool network_active)
+    : nSeed0(nSeed0In), nSeed1(nSeed1In)
 {
+    SetNetworkActive(network_active);
     SetTryNewOutboundPeer(false);
 
     Options connOptions;
