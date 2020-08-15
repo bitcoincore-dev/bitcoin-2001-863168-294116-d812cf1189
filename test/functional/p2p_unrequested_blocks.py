@@ -81,7 +81,7 @@ class AcceptBlockTest(BitcoinTestFramework):
     def run_test(self):
         # Setup the p2p connections
         # test_node connects to node0 (not whitelisted)
-        test_node = self.nodes[0].add_p2p_connection(P2PInterface())
+        test_node = self.nodes[0].add_p2p_connection(P2PInterface(), node_outgoing=True)
         # min_work_node connects to node1 (whitelisted)
         min_work_node = self.nodes[1].add_p2p_connection(P2PInterface())
 
@@ -167,7 +167,9 @@ class AcceptBlockTest(BitcoinTestFramework):
             tip = next_block
 
         # Now send the block at height 5 and check that it wasn't accepted (missing header)
-        test_node.send_and_ping(msg_block(all_blocks[1]))
+        test_node.send_message(msg_block(all_blocks[1]))
+        test_node.wait_for_disconnect()
+        test_node = self.nodes[0].add_p2p_connection(P2PInterface(), node_outgoing=True)
         assert_raises_rpc_error(-5, "Block not found", self.nodes[0].getblock, all_blocks[1].hash)
         assert_raises_rpc_error(-5, "Block not found", self.nodes[0].getblockheader, all_blocks[1].hash)
 
@@ -198,7 +200,7 @@ class AcceptBlockTest(BitcoinTestFramework):
         self.nodes[0].disconnect_p2ps()
         self.nodes[1].disconnect_p2ps()
 
-        test_node = self.nodes[0].add_p2p_connection(P2PInterface())
+        test_node = self.nodes[0].add_p2p_connection(P2PInterface(), node_outgoing=True)
 
         test_node.send_and_ping(msg_block(block_h1f))
         assert_equal(self.nodes[0].getblockcount(), 2)
@@ -276,7 +278,7 @@ class AcceptBlockTest(BitcoinTestFramework):
             test_node.wait_for_disconnect()
 
             self.nodes[0].disconnect_p2ps()
-            test_node = self.nodes[0].add_p2p_connection(P2PInterface())
+            test_node = self.nodes[0].add_p2p_connection(P2PInterface(), node_outgoing=True)
 
         # We should have failed reorg and switched back to 290 (but have block 291)
         assert_equal(self.nodes[0].getblockcount(), 290)
