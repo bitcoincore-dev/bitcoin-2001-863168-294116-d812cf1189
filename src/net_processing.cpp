@@ -248,6 +248,7 @@ unsigned int GetRejectCode(const TxValidationState& state) {
         case TxValidationResult::TX_RECENT_CONSENSUS_CHANGE:
         case TxValidationResult::TX_MISSING_INPUTS:
             return REJECT_INVALID;
+        case TxValidationResult::TX_INPUTS_NOT_STANDARD:
         case TxValidationResult::TX_NOT_STANDARD:
         case TxValidationResult::TX_PREMATURE_SPEND:
         case TxValidationResult::TX_WITNESS_MUTATED:
