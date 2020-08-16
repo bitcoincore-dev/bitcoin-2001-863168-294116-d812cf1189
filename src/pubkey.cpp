@@ -73,7 +73,6 @@ static int ecdsa_signature_parse_der_lax(const secp256k1_context* ctx, secp256k1
             pos++;
             lenbyte--;
         }
-        static_assert(sizeof(size_t) >= 4, "size_t too small");
         if (lenbyte >= 4) {
             return 0;
         }
@@ -112,7 +111,6 @@ static int ecdsa_signature_parse_der_lax(const secp256k1_context* ctx, secp256k1
             pos++;
             lenbyte--;
         }
-        static_assert(sizeof(size_t) >= 4, "size_t too small");
         if (lenbyte >= 4) {
             return 0;
         }
