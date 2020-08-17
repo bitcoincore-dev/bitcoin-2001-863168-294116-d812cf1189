@@ -147,7 +147,6 @@ def check_ELF_separate_code(executable):
     EXPECTED_FLAGS = {
         # Read + execute
         '.init': 'R E',
-        '.plt': 'R E',
         '.plt.got': 'R E',
         '.plt.sec': 'R E',
         '.text': 'R E',
