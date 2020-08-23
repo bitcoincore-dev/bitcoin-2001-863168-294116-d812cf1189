@@ -22,7 +22,7 @@ packages:
 - "cmake"
 - "imagemagick"
 - "libcap-dev"
-- "libz-dev"
+- "zlib1g-dev"
 - "libbz2-dev"
 - "python3"
 - "python3-dev"
