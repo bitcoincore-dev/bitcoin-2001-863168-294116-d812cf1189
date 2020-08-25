@@ -5216,7 +5216,8 @@ double GuessVerificationProgress(const ChainTxData& data, const CBlockIndex *pin
 }
 
 Optional<uint256> ChainstateManager::SnapshotBlockhash() const {
-    if (m_active_chainstate != nullptr) {
+    if (m_active_chainstate != nullptr &&
+            !m_active_chainstate->m_from_snapshot_blockhash.IsNull()) {
         // If a snapshot chainstate exists, it will always be our active.
         return m_active_chainstate->m_from_snapshot_blockhash;
     }
@@ -5277,9 +5278,8 @@ bool ChainstateManager::ActivateSnapshot(
         bool in_memory)
 {
     uint256 base_blockhash = metadata.m_base_blockhash;
-    uint256 existing_blockhash = this->SnapshotBlockhash().value_or(uint256());
 
-    if (!existing_blockhash.IsNull()) {
+    if (this->SnapshotBlockhash()) {
         LogPrintf("[snapshot] can't activate a snapshot-based chainstate more than once\n");
         return false;
     }
