@@ -78,7 +78,6 @@ struct BasicTestingSetup {
     explicit BasicTestingSetup(const std::string& chainName = CBaseChainParams::MAIN, const std::vector<const char*>& extra_args = {});
     ~BasicTestingSetup();
 
-private:
     const fs::path m_path_root;
 };
 
@@ -113,6 +112,9 @@ struct TestChain100Setup : public RegTestingSetup {
     // scriptPubKey, and try to add it to the current chain.
     CBlock CreateAndProcessBlock(const std::vector<CMutableTransaction>& txns,
                                  const CScript& scriptPubKey);
+
+    //! Mine a series of new blocks on the active chain.
+    void mineBlocks(int num_blocks);
 
     ~TestChain100Setup();
 
