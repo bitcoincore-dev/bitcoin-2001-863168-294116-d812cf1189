@@ -5422,7 +5422,8 @@ bool ChainstateManager::PopulateAndValidateSnapshot(
     CBlockIndex* snapshot_start_block = nullptr;
 
     while (max_secs_to_wait_for_headers > 0) {
-        snapshot_start_block = WITH_LOCK(::cs_main, return LookupBlockIndex(base_blockhash));
+        snapshot_start_block = WITH_LOCK(
+            ::cs_main, return m_blockman.LookupBlockIndex(base_blockhash));
         --max_secs_to_wait_for_headers;
 
         if (!snapshot_start_block) {
