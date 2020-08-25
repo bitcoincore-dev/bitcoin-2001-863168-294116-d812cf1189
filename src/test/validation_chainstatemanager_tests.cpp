@@ -7,6 +7,7 @@
 #include <random.h>
 #include <sync.h>
 #include <test/util/setup_common.h>
+#include <optional.h>
 #include <uint256.h>
 #include <validation.h>
 #include <validationinterface.h>
@@ -14,6 +15,7 @@
 #include <vector>
 
 #include <boost/test/unit_test.hpp>
+#include <boost/optional/optional_io.hpp>
 
 BOOST_FIXTURE_TEST_SUITE(validation_chainstatemanager_tests, ChainTestingSetup)
 
@@ -27,6 +29,8 @@ BOOST_AUTO_TEST_CASE(chainstatemanager)
 
     std::vector<CChainState*> chainstates;
     const CChainParams& chainparams = Params();
+
+    BOOST_CHECK(!manager.SnapshotBlockhash().has_value());
 
     // Create a legacy (IBD) chainstate.
     //
@@ -54,10 +58,17 @@ BOOST_AUTO_TEST_CASE(chainstatemanager)
     auto& validated_cs = manager.ValidatedChainstate();
     BOOST_CHECK_EQUAL(&validated_cs, &c1);
 
+    BOOST_CHECK(!manager.SnapshotBlockhash().has_value());
+
     // Create a snapshot-based chainstate.
     //
-    CChainState& c2 = *WITH_LOCK(::cs_main, return &manager.InitializeChainstate(mempool, GetRandHash()));
+    const uint256 snapshot_blockhash = GetRandHash();
+    CChainState& c2 = *WITH_LOCK(::cs_main, return &manager.InitializeChainstate(
+        mempool, snapshot_blockhash));
     chainstates.push_back(&c2);
+
+    BOOST_CHECK_EQUAL(manager.SnapshotBlockhash().value(), snapshot_blockhash);
+
     c2.InitCoinsDB(
         /* cache_size_bytes */ 1 << 23, /* in_memory */ true, /* should_wipe */ false);
     WITH_LOCK(::cs_main, c2.InitCoinsCache(1 << 23));
