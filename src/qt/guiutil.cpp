@@ -77,7 +77,7 @@ QString dateTimeStr(qint64 nTime)
 
 QFont fixedPitchFont()
 {
-    return QFontDatabase::systemFont(QFontDatabase::FixedFont);
+    return QFont("IBM Plex Mono");
 }
 
 // Just some dummy data to generate a convincing random-looking (but consistent) address
