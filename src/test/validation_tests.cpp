@@ -74,4 +74,43 @@ BOOST_AUTO_TEST_CASE(test_combiner_all)
     Test.disconnect(&ReturnTrue);
     BOOST_CHECK(Test());
 }
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_FIXTURE_TEST_SUITE(validation_tests_regtest, RegTestingSetup)
+
+//! Test retrieval of valid assumeutxo values.
+BOOST_AUTO_TEST_CASE(assumeutxo_test)
+{
+    uint256 expected_hash;
+    expected_hash.SetNull();
+    const CChainParams& params = ::Params();
+
+    BOOST_CHECK(!ExpectedAssumeutxo(0, expected_hash, params));
+    BOOST_CHECK(expected_hash.IsNull());
+
+    BOOST_CHECK(!ExpectedAssumeutxo(100, expected_hash, params));
+    BOOST_CHECK(expected_hash.IsNull());
+
+    BOOST_CHECK(ExpectedAssumeutxo(110, expected_hash, params));
+    BOOST_CHECK_EQUAL(
+        expected_hash.ToString(),
+        "76fd7334ac7c1baf57ddc0c626f073a655a35d98a4258cd1382c8cc2b8392e10");
+    expected_hash.SetNull();
+
+    BOOST_CHECK(!ExpectedAssumeutxo(115, expected_hash, params));
+    BOOST_CHECK(expected_hash.IsNull());
+
+    BOOST_CHECK(ExpectedAssumeutxo(210, expected_hash, params));
+    BOOST_CHECK_EQUAL(
+        expected_hash.ToString(),
+        "9c5ed99ef98544b34f8920b6d1802f72ac28ae6e2bd2bd4c316ff10c230df3f2");
+    expected_hash.SetNull();
+
+    BOOST_CHECK(!ExpectedAssumeutxo(211, expected_hash, params));
+    BOOST_CHECK(expected_hash.IsNull());
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
