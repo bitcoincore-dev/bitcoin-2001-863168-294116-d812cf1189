@@ -511,6 +511,8 @@ private:
 };
 #endif
 
+bool SystemNeedsMemoryReleased();
+
 } // namespace util
 
 #endif // BITCOIN_UTIL_SYSTEM_H
