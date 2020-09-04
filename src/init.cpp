@@ -231,7 +231,8 @@ void Shutdown(NodeContext& node)
     node.connman.reset();
     node.banman.reset();
 
-    if (::mempool.IsLoaded() && node.args->GetArg("-persistmempool", DEFAULT_PERSIST_MEMPOOL)) {
+    const bool loaded = WITH_LOCK(::mempool.cs, return ::mempool.IsLoaded());
+    if (loaded && node.args->GetArg("-persistmempool", DEFAULT_PERSIST_MEMPOOL)) {
         DumpMempool(::mempool);
     }
 
