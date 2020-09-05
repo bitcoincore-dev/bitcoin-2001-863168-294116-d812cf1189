@@ -131,9 +131,6 @@ $(1)_config_env+=$($(1)_config_env_$(host_arch)_$(host_os)) $($(1)_config_env_$(
 $(1)_config_env+=PKG_CONFIG_LIBDIR=$($($(1)_type)_prefix)/lib/pkgconfig
 $(1)_config_env+=PKG_CONFIG_PATH=$($($(1)_type)_prefix)/share/pkgconfig
 $(1)_config_env+=CMAKE_MODULE_PATH=$($($(1)_type)_prefix)/lib/cmake
-$(1)_config_env+=PATH=$(build_prefix)/bin:$(PATH)
-$(1)_build_env+=PATH=$(build_prefix)/bin:$(PATH)
-$(1)_stage_env+=PATH=$(build_prefix)/bin:$(PATH)
 $(1)_autoconf=./configure --host=$($($(1)_type)_host) --prefix=$($($(1)_type)_prefix) $$($(1)_config_opts) CC="$$($(1)_cc)" CXX="$$($(1)_cxx)"
 ifneq ($($(1)_nm),)
 $(1)_autoconf += NM="$$($(1)_nm)"
@@ -195,17 +192,17 @@ $($(1)_configured): | $($(1)_dependencies) $($(1)_preprocessed)
 	$(AT)echo Configuring $(1)...
 	$(AT)rm -rf $(host_prefix); mkdir -p $(host_prefix)/lib; cd $(host_prefix); $(foreach package,$($(1)_all_dependencies), tar --no-same-owner -xf $($(package)_cached); )
 	$(AT)mkdir -p $$(@D)
-	$(AT)+cd $$(@D); $($(1)_config_env) $(call $(1)_config_cmds, $(1))
+	$(AT)+cd $$(@D); export PATH=$(build_prefix)/bin:$(PATH); $($(1)_config_env) $(call $(1)_config_cmds, $(1))
 	$(AT)touch $$@
 $($(1)_built): | $($(1)_configured)
 	$(AT)echo Building $(1)...
 	$(AT)mkdir -p $$(@D)
-	$(AT)+cd $$(@D); $($(1)_build_env) $(call $(1)_build_cmds, $(1))
+	$(AT)+cd $$(@D); export PATH=$(build_prefix)/bin:$(PATH); $($(1)_build_env) $(call $(1)_build_cmds, $(1))
 	$(AT)touch $$@
 $($(1)_staged): | $($(1)_built)
 	$(AT)echo Staging $(1)...
 	$(AT)mkdir -p $($(1)_staging_dir)/$(host_prefix)
-	$(AT)cd $($(1)_build_dir); $($(1)_stage_env) $(call $(1)_stage_cmds, $(1))
+	$(AT)cd $($(1)_build_dir); export PATH=$(build_prefix)/bin:$(PATH); $($(1)_stage_env) $(call $(1)_stage_cmds, $(1))
 	$(AT)rm -rf $($(1)_extract_dir)
 	$(AT)touch $$@
 $($(1)_postprocessed): | $($(1)_staged)
