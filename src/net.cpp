@@ -2281,8 +2281,9 @@ void CConnman::SetNetworkActive(bool active)
     }
 
     fNetworkActive = active;
-
-    uiInterface.NotifyNetworkActiveChanged(fNetworkActive);
+    if (clientInterface) {
+        clientInterface->NotifyNetworkActiveChanged(fNetworkActive);
+    }
 }
 
 CConnman::CConnman(uint64_t nSeed0In, uint64_t nSeed1In, bool network_active)
@@ -2377,7 +2378,9 @@ bool CConnman::Start(CScheduler& scheduler, const Options& connOptions)
         }
     }
 
-    uiInterface.InitMessage(_("Starting network threads...").translated);
+    if (clientInterface) {
+        clientInterface->InitMessage(_("Starting network threads...").translated);
+    }
 
     fAddressesInitialized = true;
 
