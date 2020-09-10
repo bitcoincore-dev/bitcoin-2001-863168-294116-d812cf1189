@@ -2908,3 +2908,8 @@ uint64_t CConnman::CalculateKeyedNetGroup(const CAddress& ad) const
 
     return GetDeterministicRandomizer(RANDOMIZER_ID_NETGROUP).Write(vchNetGroup.data(), vchNetGroup.size()).Finalize();
 }
+
+bool HasTorOnlyConnections()
+{
+    return !fListen && !IsReachable(NET_IPV4) && !IsReachable(NET_IPV6) && IsReachable(NET_ONION);
+}

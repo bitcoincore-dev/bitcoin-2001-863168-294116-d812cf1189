@@ -1155,4 +1155,6 @@ inline std::chrono::microseconds PoissonNextSend(std::chrono::microseconds now, 
     return std::chrono::microseconds{PoissonNextSend(now.count(), average_interval.count())};
 }
 
+bool HasTorOnlyConnections();
+
 #endif // BITCOIN_NET_H

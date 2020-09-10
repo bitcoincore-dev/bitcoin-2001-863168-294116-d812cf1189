@@ -545,6 +545,7 @@ static UniValue getnetworkinfo(const JSONRPCRequest& request)
         obj.pushKV("connections_out", (int)node.connman->GetNodeCount(CConnman::CONNECTIONS_OUT));
     }
     obj.pushKV("networks",      GetNetworksInfo());
+    obj.pushKV("tor_only_connections", HasTorOnlyConnections());
     obj.pushKV("relayfee",      ValueFromAmount(::minRelayTxFee.GetFeePerK()));
     obj.pushKV("incrementalfee", ValueFromAmount(::incrementalRelayFee.GetFeePerK()));
     UniValue localAddresses(UniValue::VARR);
