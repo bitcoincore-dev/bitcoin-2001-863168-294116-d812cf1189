@@ -2282,7 +2282,7 @@ void CConnman::SetNetworkActive(bool active)
 
     fNetworkActive = active;
     if (clientInterface) {
-        clientInterface->NotifyNetworkActiveChanged(fNetworkActive);
+        clientInterface->NotifyNetworkActiveChanged();
     }
 }
 

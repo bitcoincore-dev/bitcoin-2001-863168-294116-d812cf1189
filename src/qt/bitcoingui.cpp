@@ -925,7 +925,7 @@ void BitcoinGUI::setNumConnections(int count)
     updateNetworkState();
 }
 
-void BitcoinGUI::setNetworkActive(bool networkActive)
+void BitcoinGUI::setNetworkActive()
 {
     updateNetworkState();
 }
