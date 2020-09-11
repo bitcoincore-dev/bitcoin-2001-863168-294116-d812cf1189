@@ -544,6 +544,7 @@ static UniValue getnetworkinfo(const JSONRPCRequest& request)
         obj.pushKV("connections", conn_counts.all);
         obj.pushKV("connections_in", conn_counts.in);
         obj.pushKV("connections_out", conn_counts.out);
+        obj.pushKV("connections_tor_only", conn_counts.tor_only);
     }
     obj.pushKV("networks",      GetNetworksInfo());
     obj.pushKV("relayfee",      ValueFromAmount(::minRelayTxFee.GetFeePerK()));
