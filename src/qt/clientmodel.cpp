@@ -64,20 +64,6 @@ ClientModel::~ClientModel()
     m_thread->wait();
 }
 
-int ClientModel::getNumConnections(unsigned int flags) const
-{
-    CConnman::NumConnections connections = CConnman::CONNECTIONS_NONE;
-
-    if(flags == CONNECTIONS_IN)
-        connections = CConnman::CONNECTIONS_IN;
-    else if (flags == CONNECTIONS_OUT)
-        connections = CConnman::CONNECTIONS_OUT;
-    else if (flags == CONNECTIONS_ALL)
-        connections = CConnman::CONNECTIONS_ALL;
-
-    return m_node.getNodeCount(connections);
-}
-
 int ClientModel::getHeaderTipHeight() const
 {
     if (cachedBestHeaderHeight == -1) {
@@ -158,7 +144,7 @@ enum BlockSource ClientModel::getBlockSource() const
         return BlockSource::REINDEX;
     else if (m_node.getImporting())
         return BlockSource::DISK;
-    else if (getNumConnections() > 0)
+    else if (m_node.peerCount() > 0)
         return BlockSource::NETWORK;
 
     return BlockSource::NONE;
