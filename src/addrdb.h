@@ -76,4 +76,12 @@ public:
 /** Dump the anchor IP address database (anchors.dat) */
 void DumpAnchors(const fs::path& anchors_db_path, const std::vector<CAddress>& anchors);
 
+/**
+ * Reads the anchor IP address database (anchors.dat)
+ *
+ * Anchors are last known outgoing block-relay-only peers that are
+ * tried to re-connect to on startup.
+ */
+std::vector<CAddress> ReadAnchors(const fs::path& anchors_db_path);
+
 #endif // BITCOIN_ADDRDB_H
