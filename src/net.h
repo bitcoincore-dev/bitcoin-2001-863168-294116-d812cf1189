@@ -312,6 +312,7 @@ public:
      * call the function without a parameter to avoid using the cache.
      */
     std::vector<CAddress> GetAddresses(Network requestor_network, size_t max_addresses, size_t max_pct);
+    std::vector<CAddress> GetCurrentBlockRelayOnlyConns() const;
 
     // This allows temporarily exceeding m_max_outbound_full_relay, with the goal of finding
     // a peer that is better than all our current peers.
