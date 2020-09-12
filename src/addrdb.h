@@ -11,9 +11,9 @@
 #include <serialize.h>
 
 #include <string>
-#include <map>
+#include <vector>
 
-class CSubNet;
+class CAddress;
 class CAddrMan;
 class CDataStream;
 
@@ -72,5 +72,8 @@ public:
     bool Write(const banmap_t& banSet);
     bool Read(banmap_t& banSet);
 };
+
+/** Dump the anchor IP address database (anchors.dat) */
+void DumpAnchors(const fs::path& anchors_db_path, const std::vector<CAddress>& anchors);
 
 #endif // BITCOIN_ADDRDB_H
