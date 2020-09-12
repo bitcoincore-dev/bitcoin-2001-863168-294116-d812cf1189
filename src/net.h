@@ -535,6 +535,13 @@ private:
     /** Pointer to this node's banman. May be nullptr - check existence before dereferencing. */
     BanMan* m_banman;
 
+    /**
+     * This vector stores addresses that we should attempt to make block-relay-only
+     * connections to, not connections that we'll necessarily store as anchor connections
+     * next time we shut down.
+     */
+    std::vector<CAddress> m_anchors;
+
     /** SipHasher seeds for deterministic randomness */
     const uint64_t nSeed0, nSeed1;
 
