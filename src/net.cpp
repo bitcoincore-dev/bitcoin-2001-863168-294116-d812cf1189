@@ -20,6 +20,7 @@
 #include <protocol.h>
 #include <random.h>
 #include <scheduler.h>
+#include <util/check.h>
 #include <util/strencodings.h>
 #include <util/translation.h>
 
@@ -46,6 +47,8 @@ static_assert(MINIUPNPC_API_VERSION >= 10, "miniUPnPc API version >= 10 assumed"
 #include <unordered_map>
 
 #include <math.h>
+
+const char* const ANCHORS_DATABASE_FILENAME = "anchors.dat";
 
 // How often to dump addresses to peers.dat
 static constexpr std::chrono::minutes DUMP_PEERS_INTERVAL{15};
@@ -2390,6 +2393,17 @@ bool CConnman::Start(CScheduler& scheduler, const Options& connOptions)
         }
     }
 
+    m_anchors = ReadAnchors(GetDataDir() / ANCHORS_DATABASE_FILENAME);
+    Assert(MAX_BLOCK_RELAY_ONLY_ANCHORS >= 0);
+    constexpr size_t max_anchor_num = static_cast<size_t>(MAX_BLOCK_RELAY_ONLY_ANCHORS);
+    if (max_anchor_num < m_anchors.size()) {
+        m_anchors.resize(max_anchor_num);
+    }
+
+    if (m_use_addrman_outgoing) {
+        LogPrintf("%i block-relay-only anchors will be tried for connections.\n", m_anchors.size());
+    }
+
     uiInterface.InitMessage(_("Starting network threads...").translated);
 
     fAddressesInitialized = true;
@@ -2505,6 +2519,14 @@ void CConnman::StopNodes()
     if (fAddressesInitialized) {
         DumpAddresses();
         fAddressesInitialized = false;
+
+        auto anchors_to_dump = GetCurrentBlockRelayOnlyConns();
+        Assert(MAX_BLOCK_RELAY_ONLY_ANCHORS >= 0);
+        constexpr size_t max_anchor_num = static_cast<size_t>(MAX_BLOCK_RELAY_ONLY_ANCHORS);
+        if (max_anchor_num < anchors_to_dump.size()) {
+            anchors_to_dump.resize(max_anchor_num);
+        }
+        DumpAnchors(GetDataDir() / ANCHORS_DATABASE_FILENAME, anchors_to_dump);
     }
 
     // Close sockets
