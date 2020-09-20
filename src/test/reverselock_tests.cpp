@@ -48,12 +48,22 @@ BOOST_AUTO_TEST_CASE(reverselock_errors)
     WAIT_LOCK(mutex, lock);
 
 #ifdef DEBUG_LOCKORDER
+    bool prev = g_debug_lockorder_abort;
+    g_debug_lockorder_abort = false;
+
     // Make sure trying to reverse lock a previous lock fails
+    bool error_thrown = false;
     try {
         REVERSE_LOCK(lock2);
         BOOST_CHECK(false); // REVERSE_LOCK(lock2) succeeded
-    } catch(...) { }
+    } catch(const std::logic_error& e) {
+        BOOST_CHECK_EQUAL(e.what(), "lock2 was not most recent critical section locked");
+        error_thrown = true;
+    }
+    BOOST_CHECK(error_thrown);
     BOOST_CHECK(lock2.owns_lock());
+
+    g_debug_lockorder_abort = prev;
 #endif
 
     // Make sure trying to reverse lock an unlocked lock fails
