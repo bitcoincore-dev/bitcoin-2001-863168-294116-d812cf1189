@@ -29,6 +29,30 @@ void TestPotentialDeadLockDetected(MutexType& mutex1, MutexType& mutex2)
     BOOST_CHECK(!error_thrown);
     #endif
 }
+
+template <typename MutexType>
+void TestInconsistentLockOrderDetected(MutexType& mutex) NO_THREAD_SAFETY_ANALYSIS
+{
+    ENTER_CRITICAL_SECTION(mutex);
+    #ifdef DEBUG_LOCKORDER
+    BOOST_CHECK(!LockStackEmpty());
+    #endif
+    LEAVE_CRITICAL_SECTION(mutex);
+    BOOST_CHECK(LockStackEmpty());
+    bool error_thrown = false;
+    try {
+        LEAVE_CRITICAL_SECTION(mutex);
+    } catch (const std::logic_error& e) {
+        BOOST_CHECK_EQUAL(e.what(), "mutex was not most recent critical section locked");
+        error_thrown = true;
+    }
+    BOOST_CHECK(LockStackEmpty());
+    #ifdef DEBUG_LOCKORDER
+    BOOST_CHECK(error_thrown);
+    #else
+    BOOST_CHECK(!error_thrown);
+    #endif
+}
 } // namespace
 
 BOOST_FIXTURE_TEST_SUITE(sync_tests, BasicTestingSetup)
@@ -49,6 +73,28 @@ BOOST_AUTO_TEST_CASE(potential_deadlock_detected)
     TestPotentialDeadLockDetected(mutex1, mutex2);
     // The second test ensures that lock tracking data have not been broken by exception.
     TestPotentialDeadLockDetected(mutex1, mutex2);
+
+    #ifdef DEBUG_LOCKORDER
+    g_debug_lockorder_abort = prev;
+    #endif
+}
+
+BOOST_AUTO_TEST_CASE(inconsistent_lock_order_detected)
+{
+    #ifdef DEBUG_LOCKORDER
+    bool prev = g_debug_lockorder_abort;
+    g_debug_lockorder_abort = false;
+    #endif
+
+    RecursiveMutex rm;
+    TestInconsistentLockOrderDetected(rm);
+    // The second test ensures that lock tracking data have not been broken by exception.
+    TestInconsistentLockOrderDetected(rm);
+
+    Mutex m;
+    TestInconsistentLockOrderDetected(m);
+    // The second test ensures that lock tracking data have not been broken by exception.
+    TestInconsistentLockOrderDetected(m);
 
     #ifdef DEBUG_LOCKORDER
     g_debug_lockorder_abort = prev;
