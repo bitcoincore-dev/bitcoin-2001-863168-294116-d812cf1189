@@ -161,6 +161,9 @@ class MaxUploadTest(BitcoinTestFramework):
         assert_equal(len(peer_info), 1)  # node is still connected
         assert_equal(peer_info[0]['permissions'], ['download'])
 
+        # Ignore non-critical TSan warnings.
+        self.stop_node(0, ignored_stderr="WARNING: too long mutex cycle found")
+
 
 if __name__ == '__main__':
     MaxUploadTest().main()
