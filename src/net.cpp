@@ -11,6 +11,7 @@
 
 #include <banman.h>
 #include <chainparams.h>
+#include <chainparamsbase.h>
 #include <clientversion.h>
 #include <consensus/consensus.h>
 #include <crypto/sha256.h>
@@ -510,6 +511,15 @@ void CNode::SetAddrLocal(const CService& addrLocalIn) {
         error("Addr local already set for node: %i. Refusing to change from %s to %s", id, addrLocal.ToString(), addrLocalIn.ToString());
     } else {
         addrLocal = addrLocalIn;
+    }
+}
+
+bool CNode::ConnectedViaTor() const
+{
+    if (m_conn_type == ConnectionType::INBOUND) {
+        return addrBind.ToStringIP() == "127.0.0.1" && addrBind.GetPort() == BaseParams().OnionServiceTargetPort();
+    } else {
+        return addr.IsTor();
     }
 }
 
