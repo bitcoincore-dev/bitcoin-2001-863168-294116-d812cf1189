@@ -18,7 +18,7 @@ const std::string CBaseChainParams::REGTEST = "regtest";
 
 uint16_t CBaseChainParams::OnionServiceTargetPort() const
 {
-    return m_onion_service_target_port;
+    return gArgs.GetArg("-onionservicetargetport", m_onion_service_target_port);
 }
 
 void SetupChainParamsBaseOptions(ArgsManager& argsman)
