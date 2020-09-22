@@ -98,7 +98,7 @@ struct AddedNodeInfo
     bool fInbound;
 };
 
-class CNodeStats;
+struct CNodeStats;
 class CClientUIInterface;
 
 struct CSerializedNetMsg
@@ -657,9 +657,8 @@ extern std::map<CNetAddr, LocalServiceInfo> mapLocalHost GUARDED_BY(cs_mapLocalH
 extern const std::string NET_MESSAGE_COMMAND_OTHER;
 typedef std::map<std::string, uint64_t> mapMsgCmdSize; //command, total bytes
 
-class CNodeStats
+struct CNodeStats
 {
-public:
     NodeId nodeid;
     ServiceFlags nServices;
     bool fRelayTxes;
@@ -692,6 +691,7 @@ public:
     // Bind address of our side of the connection
     CAddress addrBind;
     uint32_t m_mapped_as;
+    bool via_tor;
 };
 
 

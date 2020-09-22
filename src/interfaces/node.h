@@ -23,7 +23,7 @@
 class BanMan;
 class CCoinControl;
 class CFeeRate;
-class CNodeStats;
+struct CNodeStats;
 class Coin;
 class RPCTimerInterface;
 class UniValue;
