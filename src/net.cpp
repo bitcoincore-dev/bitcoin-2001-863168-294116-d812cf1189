@@ -591,6 +591,8 @@ void CNode::copyStats(CNodeStats &stats, const std::vector<bool> &m_asmap)
     // Leave string empty if addrLocal invalid (not filled in yet)
     CService addrLocalUnlocked = GetAddrLocal();
     stats.addrLocal = addrLocalUnlocked.IsValid() ? addrLocalUnlocked.ToString() : "";
+
+    stats.via_tor = ConnectedViaTor();
 }
 #undef X
 
