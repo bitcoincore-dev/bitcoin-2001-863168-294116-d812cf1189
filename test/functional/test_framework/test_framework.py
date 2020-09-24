@@ -436,7 +436,7 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
         if self.bind_to_localhost_only:
             extra_confs = [["bind=127.0.0.1"]] * num_nodes
         else:
-            extra_confs = [[]] * num_nodes
+            extra_confs = [["listenonion=0"]] * num_nodes
         if extra_args is None:
             extra_args = [[]] * num_nodes
         if versions is None:
