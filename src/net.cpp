@@ -2190,8 +2190,9 @@ bool CConnman::BindListenPort(const CService& addrBind, bilingual_str& strError,
 
     vhListenSocket.push_back(ListenSocket(hListenSocket, permissions));
 
-    if (addrBind.IsRoutable() && fDiscover && (permissions & PF_NOBAN) == 0)
+    if (addrBind.IsRoutable() && fDiscover && (permissions & PF_NOBAN) == 0 && (permissions & PF_ONION) == 0) {
         AddLocal(addrBind, LOCAL_BIND);
+    }
 
     return true;
 }
@@ -2289,7 +2290,10 @@ bool CConnman::Bind(const CService &addr, unsigned int flags, NetPermissionFlags
     return true;
 }
 
-bool CConnman::InitBinds(const std::vector<CService>& binds, const std::vector<NetWhitebindPermissions>& whiteBinds)
+bool CConnman::InitBinds(
+    const std::vector<CService>& binds,
+    const std::vector<NetWhitebindPermissions>& whiteBinds,
+    const Optional<CService> onion_bind)
 {
     bool fBound = false;
     for (const auto& addrBind : binds) {
@@ -2305,6 +2309,11 @@ bool CConnman::InitBinds(const std::vector<CService>& binds, const std::vector<N
         fBound |= Bind(CService(inaddr6_any, GetListenPort()), BF_NONE, NetPermissionFlags::PF_NONE);
         fBound |= Bind(CService(inaddr_any, GetListenPort()), !fBound ? BF_REPORT_ERROR : BF_NONE, NetPermissionFlags::PF_NONE);
     }
+
+    if (m_listen_onion && onion_bind) {
+        fBound |= Bind(onion_bind.get(), BF_EXPLICIT, NetPermissionFlags::PF_ONION);
+    }
+
     return fBound;
 }
 
@@ -2323,7 +2332,7 @@ bool CConnman::Start(CScheduler& scheduler, const Options& connOptions)
         nMaxOutboundCycleStartTime = 0;
     }
 
-    if (fListen && !InitBinds(connOptions.vBinds, connOptions.vWhiteBinds)) {
+    if (fListen && !InitBinds(connOptions.vBinds, connOptions.vWhiteBinds, connOptions.onion_bind)) {
         if (clientInterface) {
             clientInterface->ThreadSafeMessageBox(
                 _("Failed to listen on any port. Use -listen=0 if you want this."),
