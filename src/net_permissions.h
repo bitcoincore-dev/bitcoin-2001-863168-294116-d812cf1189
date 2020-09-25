@@ -35,6 +35,9 @@ enum NetPermissionFlags {
     // True if the user did not specifically set fine grained permissions
     PF_ISIMPLICIT = (1U << 31),
     PF_ALL = PF_BLOOMFILTER | PF_FORCERELAY | PF_RELAY | PF_NOBAN | PF_MEMPOOL | PF_DOWNLOAD | PF_ADDR,
+
+    // Special flag for incoming onion connections.
+    PF_ONION = (1U << 8),
 };
 
 class NetPermissions
