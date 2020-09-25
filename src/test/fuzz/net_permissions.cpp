@@ -27,6 +27,7 @@ void test_one_input(const std::vector<uint8_t>& buffer)
                                                                                              NetPermissionFlags::PF_ADDR,
                                                                                              NetPermissionFlags::PF_ISIMPLICIT,
                                                                                              NetPermissionFlags::PF_ALL,
+                                                                                             NetPermissionFlags::PF_ONION,
                                                                                          }) :
                                                                                          static_cast<NetPermissionFlags>(fuzzed_data_provider.ConsumeIntegral<uint32_t>());
 
