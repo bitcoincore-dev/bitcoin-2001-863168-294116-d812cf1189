@@ -961,6 +961,16 @@ public:
         assert(false);
     }
 
+    /**
+     * Get network the peer connected through.
+     *
+     * CNetAddr::GetNetClass() is used excluding inbound connections that are
+     * explicitly tagged as connections from the Tor onion service(s).
+     *
+     * @return network the peer connected through.
+     */
+    Network ConnectedThroughNetwork() const;
+
 protected:
     mapMsgCmdSize mapSendBytesPerMsgCmd;
     mapMsgCmdSize mapRecvBytesPerMsgCmd GUARDED_BY(cs_vRecv);
