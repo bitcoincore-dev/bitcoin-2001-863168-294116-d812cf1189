@@ -536,6 +536,14 @@ void CNode::SetAddrLocal(const CService& addrLocalIn) {
     }
 }
 
+Network CNode::ConnectedThroughNetwork() const
+{
+    if (IsInboundConn() && m_inbound_onion) {
+        return NET_ONION;
+    }
+    return addr.GetNetClass();
+}
+
 #undef X
 #define X(name) stats.name = name
 void CNode::copyStats(CNodeStats &stats, const std::vector<bool> &m_asmap)
