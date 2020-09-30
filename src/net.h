@@ -958,6 +958,8 @@ public:
         assert(false);
     }
 
+    Network ConnectedThroughNetwork() const;
+
 protected:
     mapMsgCmdSize mapSendBytesPerMsgCmd;
     mapMsgCmdSize mapRecvBytesPerMsgCmd GUARDED_BY(cs_vRecv);
