@@ -945,6 +945,8 @@ public:
         assert(false);
     }
 
+    Network GetNetwork() const;
+
 protected:
     mapMsgCmdSize mapSendBytesPerMsgCmd;
     mapMsgCmdSize mapRecvBytesPerMsgCmd GUARDED_BY(cs_vRecv);
