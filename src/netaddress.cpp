@@ -8,6 +8,7 @@
 #include <crypto/common.h>
 #include <crypto/sha3.h>
 #include <hash.h>
+#include <netaddress.h>
 #include <prevector.h>
 #include <tinyformat.h>
 #include <util/asmap.h>
