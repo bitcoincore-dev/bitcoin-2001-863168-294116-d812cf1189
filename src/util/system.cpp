@@ -711,6 +711,7 @@ const fs::path &GetDataDir(bool fNetSpecific)
             path = "";
             return path;
         }
+        path = fs::canonical(path);
     } else {
         path = GetDefaultDataDir();
     }
