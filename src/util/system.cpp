@@ -523,7 +523,7 @@ void ArgsManager::AddHiddenArgs(const std::vector<std::string>& names)
 
 std::string ArgsManager::GetHelpMessage() const
 {
-    const bool show_debug = gArgs.GetBoolArg("-help-debug", false);
+    const bool show_debug = GetBoolArg("-help-debug", false);
 
     std::string usage = "";
     LOCK(cs_args);
