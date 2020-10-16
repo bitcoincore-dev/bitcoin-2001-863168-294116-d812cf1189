@@ -42,6 +42,45 @@ namespace BCLog {
 
 BOOST_FIXTURE_TEST_SUITE(util_tests, BasicTestingSetup)
 
+BOOST_AUTO_TEST_CASE(util_datadir)
+{
+    ClearDatadirCache();
+    const fs::path dd_norm = GetDataDir();
+
+    gArgs.ForceSetArg("-datadir", dd_norm.string() + "/");
+    ClearDatadirCache();
+    BOOST_CHECK_EQUAL(dd_norm, GetDataDir());
+
+    gArgs.ForceSetArg("-datadir", dd_norm.string() + "/.");
+    ClearDatadirCache();
+    BOOST_CHECK_EQUAL(dd_norm, GetDataDir());
+
+    gArgs.ForceSetArg("-datadir", dd_norm.string() + "/./");
+    ClearDatadirCache();
+    BOOST_CHECK_EQUAL(dd_norm, GetDataDir());
+
+    gArgs.ForceSetArg("-datadir", dd_norm.string() + "/.//");
+    ClearDatadirCache();
+    BOOST_CHECK_EQUAL(dd_norm, GetDataDir());
+
+    const fs::path root("/");
+    gArgs.ForceSetArg("-datadir", "/");
+    ClearDatadirCache();
+    BOOST_CHECK_EQUAL(root, GetDataDir());
+
+    gArgs.ForceSetArg("-datadir", "/.");
+    ClearDatadirCache();
+    BOOST_CHECK_EQUAL(root, GetDataDir());
+
+    gArgs.ForceSetArg("-datadir", "/./");
+    ClearDatadirCache();
+    BOOST_CHECK_EQUAL(root, GetDataDir());
+
+    gArgs.ForceSetArg("-datadir", "/.//");
+    ClearDatadirCache();
+    BOOST_CHECK_EQUAL(root, GetDataDir());
+}
+
 BOOST_AUTO_TEST_CASE(util_check)
 {
     // Check that Assert can forward
