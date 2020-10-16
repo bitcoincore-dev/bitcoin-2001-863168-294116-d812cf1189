@@ -34,6 +34,7 @@
 #endif // __linux__
 
 #include <algorithm>
+#include <cassert>
 #include <fcntl.h>
 #include <sched.h>
 #include <sys/resource.h>
@@ -665,6 +666,28 @@ fs::path GetDefaultDataDir()
 #endif
 }
 
+namespace {
+fs::path StripLastElementOfPath(const fs::path& path)
+{
+    fs::path result;
+    for (auto it = path.begin(); it != --path.end(); ++it) {
+        result /= *it;
+    }
+    return result;
+}
+
+fs::path StripRedundantLastElementsOfPath(const fs::path& path)
+{
+    auto result = path;
+    while (result.filename().string() == ".") {
+        result = StripLastElementOfPath(result);
+    }
+
+    assert(fs::equivalent(result, path));
+    return result;
+}
+} // namespace
+
 static fs::path g_blocks_path_cache_net_specific;
 static fs::path pathCached;
 static fs::path pathCachedNetSpecific;
@@ -692,6 +715,7 @@ const fs::path &GetBlocksDir()
     path /= BaseParams().DataDir();
     path /= "blocks";
     fs::create_directories(path);
+    path = StripRedundantLastElementsOfPath(path);
     return path;
 }
 
@@ -722,6 +746,7 @@ const fs::path &GetDataDir(bool fNetSpecific)
         fs::create_directories(path / "wallets");
     }
 
+    path = StripRedundantLastElementsOfPath(path);
     return path;
 }
 
