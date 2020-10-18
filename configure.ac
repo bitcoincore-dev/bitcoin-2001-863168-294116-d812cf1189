@@ -420,6 +420,10 @@ if test "x$depends_prefix" != "x" || test "x$CXXFLAGS_overridden" = "xno"; then
   AX_CHECK_COMPILE_FLAG([-Wdeprecated-register],[NOWARN_CXXFLAGS="$NOWARN_CXXFLAGS -Wno-deprecated-register"],,[[$CXXFLAG_WERROR]])
   AX_CHECK_COMPILE_FLAG([-Wimplicit-fallthrough],[NOWARN_CXXFLAGS="$NOWARN_CXXFLAGS -Wno-implicit-fallthrough"],,[[$CXXFLAG_WERROR]])
   AX_CHECK_COMPILE_FLAG([-Wdeprecated-copy],[NOWARN_CXXFLAGS="$NOWARN_CXXFLAGS -Wno-deprecated-copy"],,[[$CXXFLAG_WERROR]])
+  if test -z "${host##*darwin*}"; then
+    dnl This is a temporary workaround. See https://github.com/bitcoin/bitcoin/pull/17919#issuecomment-674404780
+    AX_CHECK_COMPILE_FLAG([-Wunused-command-line-argument],[NOWARN_CXXFLAGS="$NOWARN_CXXFLAGS -Wno-unused-command-line-argument"],,[[$CXXFLAG_WERROR]])
+  fi
 fi
 
 dnl Don't allow extended (non-ASCII) symbols in identifiers. This is easier for code review.
