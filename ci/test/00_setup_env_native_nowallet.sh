@@ -12,3 +12,8 @@ export PACKAGES="python3-zmq clang-3.8 llvm-3.8"  # Use clang-3.8 to test C++11 
 export DEP_OPTS="NO_WALLET=1"
 export GOAL="install"
 export BITCOIN_CONFIG="--enable-glibc-back-compat --enable-reduce-exports CC=clang-3.8 CXX=clang++-3.8 --with-boost-process"
+
+# clang < 6 emits the -Wmissing-braces warning when initializing an std::array with only one pair of braces:
+#  - https://reviews.llvm.org/rL314838
+#  - https://stackoverflow.com/a/48413842
+export NO_WERROR=1
