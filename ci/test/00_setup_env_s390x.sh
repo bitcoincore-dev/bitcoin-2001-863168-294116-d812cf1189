@@ -23,3 +23,4 @@ export RUN_UNIT_TESTS=true
 export RUN_FUNCTIONAL_TESTS=true
 export GOAL="install"
 export BITCOIN_CONFIG="--enable-reduce-exports --with-incompatible-bdb --with-boost-process"
+export NO_WERROR=1

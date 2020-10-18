@@ -13,3 +13,7 @@ export DOCKER_PACKAGES="gcc-c++ glibc-devel.x86_64 libstdc++-devel.x86_64 glibc-
 export GOAL="install"
 export BITCOIN_CONFIG="--enable-zmq --with-gui=qt5 --enable-reduce-exports --with-boost-process"
 export CONFIG_SHELL="/bin/dash"
+
+# gcc-c++-4.8.5 is buggy, e.g.,
+#  - https://gcc.gnu.org/bugzilla/show_bug.cgi?id=36750
+export NO_WERROR=1
