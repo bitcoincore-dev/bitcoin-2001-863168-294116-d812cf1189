@@ -74,5 +74,4 @@ AC_DEFUN([BITCOIN_FIND_BDB48],[
         AC_MSG_ERROR([libdb_cxx missing, ]AC_PACKAGE_NAME[ requires this library for wallet functionality (--disable-wallet to disable wallet functionality)])
     fi
   fi
-  AC_SUBST(BDB_LIBS)
 ])
