@@ -6,10 +6,9 @@
 
 #include <logging.h>
 #include <util/system.h>
-
-bool ExistsBerkeleyDatabase(const fs::path& path);
+#include <wallet/bdb.h>
 #ifdef USE_SQLITE
-bool ExistsSQLiteDatabase(const fs::path& path);
+#include <wallet/sqlite.h>
 #else
 #   define ExistsSQLiteDatabase(path)  (false)
 #endif
