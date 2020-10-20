@@ -6,9 +6,8 @@
 
 #include <logging.h>
 #include <util/system.h>
-
-bool ExistsBerkeleyDatabase(const fs::path& path);
-bool ExistsSQLiteDatabase(const fs::path& path);
+#include <wallet/bdb.h>
+#include <wallet/sqlite.h>
 
 fs::path GetWalletDir()
 {
