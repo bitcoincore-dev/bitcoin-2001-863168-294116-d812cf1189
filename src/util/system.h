@@ -511,6 +511,8 @@ private:
 };
 #endif
 
+extern size_t g_low_memory_threshold;
+
 bool SystemNeedsMemoryReleased();
 
 } // namespace util
