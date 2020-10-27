@@ -481,11 +481,17 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
 
     // set library version labels
 #ifdef ENABLE_WALLET
-    ui->berkeleyDBVersion->setText(QString::fromStdString(BerkeleyDatabaseVersion()));
+    bool enable_wallet{WalletModel::isWalletEnabled()};
 #else
-    ui->label_berkeleyDBVersion->hide();
-    ui->berkeleyDBVersion->hide();
-#endif
+    bool enable_wallet{false};
+#endif // ENABLE_WALLET
+    if (enable_wallet) {
+        ui->berkeleyDBVersion->setText(QString::fromStdString(BerkeleyDatabaseVersion()));
+    } else {
+        ui->label_berkeleyDBVersion->hide();
+        ui->berkeleyDBVersion->hide();
+    }
+
     // Register RPC timer interface
     rpcTimerInterface = new QtRPCTimerInterface();
     // avoid accidentally overwriting an existing, non QTThread
