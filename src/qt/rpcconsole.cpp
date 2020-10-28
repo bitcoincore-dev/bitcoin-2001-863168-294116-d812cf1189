@@ -770,19 +770,16 @@ void RPCConsole::setFontSize(int newSize)
 void RPCConsole::clear(bool clearHistory)
 {
     ui->messagesWidget->clear();
-    if(clearHistory)
-    {
+    if (clearHistory) {
         history.clear();
         historyPtr = 0;
     }
-    ui->lineEdit->clear();
-    ui->lineEdit->setEnabled(true);
-    ui->lineEdit->setFocus();
+
+    clearAndFocusPrompt();
 
     // Add smoothly scaled icon images.
     // (when using width/height on an img, Qt uses nearest instead of linear interpolation)
-    for(int i=0; ICON_MAPPING[i].url; ++i)
-    {
+    for (int i = 0; ICON_MAPPING[i].url; ++i) {
         ui->messagesWidget->document()->addResource(
                     QTextDocument::ImageResource,
                     QUrl(ICON_MAPPING[i].url),
@@ -971,9 +968,7 @@ void RPCConsole::startExecutor()
     // Replies from executor object must go to this object
     connect(executor, &RPCExecutor::reply, this, [this](int category, const QString& command) {
         message(category, command);
-        ui->lineEdit->clear();
-        ui->lineEdit->setEnabled(true);
-        ui->lineEdit->setFocus();
+        clearAndFocusPrompt();
     });
 
     // Requests from this object must go to executor
@@ -1306,4 +1301,11 @@ void RPCConsole::updateAlerts(const QString& warnings)
 {
     this->ui->label_alerts->setVisible(!warnings.isEmpty());
     this->ui->label_alerts->setText(warnings);
+}
+
+void RPCConsole::clearAndFocusPrompt()
+{
+    ui->lineEdit->clear();
+    ui->lineEdit->setEnabled(true);
+    ui->lineEdit->setFocus();
 }

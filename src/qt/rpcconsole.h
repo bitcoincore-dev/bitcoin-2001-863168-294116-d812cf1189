@@ -169,6 +169,11 @@ private:
     /** Update UI with latest network info from model. */
     void updateNetworkState();
 
+    /**
+     * Clear the prompt line on the Console tab, and set focus on it.
+     */
+    void clearAndFocusPrompt();
+
 private Q_SLOTS:
     void updateAlerts(const QString& warnings);
 };
