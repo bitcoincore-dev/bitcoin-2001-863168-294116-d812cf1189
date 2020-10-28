@@ -776,6 +776,7 @@ void RPCConsole::clear(bool clearHistory)
         historyPtr = 0;
     }
     ui->lineEdit->clear();
+    ui->lineEdit->setEnabled(true);
     ui->lineEdit->setFocus();
 
     // Add smoothly scaled icon images.
@@ -890,8 +891,10 @@ void RPCConsole::on_lineEdit_returnPressed()
 {
     QString cmd = ui->lineEdit->text();
 
-    if(!cmd.isEmpty())
-    {
+    if (!cmd.isEmpty()) {
+        ui->lineEdit->setEnabled(false);
+        ui->lineEdit->setText("executing...");
+
         std::string strFilteredCmd;
         try {
             std::string dummy;
@@ -903,8 +906,6 @@ void RPCConsole::on_lineEdit_returnPressed()
             QMessageBox::critical(this, "Error", QString("Error: ") + QString::fromStdString(e.what()));
             return;
         }
-
-        ui->lineEdit->clear();
 
         cmdBeforeBrowsing = QString();
 
@@ -968,7 +969,12 @@ void RPCConsole::startExecutor()
     executor->moveToThread(&thread);
 
     // Replies from executor object must go to this object
-    connect(executor, &RPCExecutor::reply, this, static_cast<void (RPCConsole::*)(int, const QString&)>(&RPCConsole::message));
+    connect(executor, &RPCExecutor::reply, this, [this](int category, const QString& command) {
+        message(category, command);
+        ui->lineEdit->clear();
+        ui->lineEdit->setEnabled(true);
+        ui->lineEdit->setFocus();
+    });
 
     // Requests from this object must go to executor
     connect(this, &RPCConsole::cmdRequest, executor, &RPCExecutor::request);
