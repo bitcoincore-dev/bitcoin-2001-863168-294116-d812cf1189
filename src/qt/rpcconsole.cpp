@@ -834,12 +834,14 @@ void RPCConsole::message(int category, const QString &message, bool html)
     out += "<table><tr><td class=\"time\" width=\"65\">" + timeString + "</td>";
     out += "<td class=\"icon\" width=\"32\"><img src=\"" + categoryClass(category) + "\"></td>";
     out += "<td class=\"message " + categoryClass(category) + "\" valign=\"middle\">";
-    if(html)
+    if (html) {
         out += message;
-    else
+    } else {
         out += GUIUtil::HtmlEscape(message, false);
+    }
     out += "</td></tr></table>";
     ui->messagesWidget->append(out);
+    scrollToEnd();
 }
 
 void RPCConsole::updateNetworkState()
@@ -922,6 +924,7 @@ void RPCConsole::on_lineEdit_returnPressed()
 #endif
 
         message(CMD_REQUEST, QString::fromStdString(strFilteredCmd));
+        message(CMD_REPLY, "Executing...");
         Q_EMIT cmdRequest(cmd, m_last_wallet_model);
 
         cmd = QString::fromStdString(strFilteredCmd);
@@ -935,9 +938,6 @@ void RPCConsole::on_lineEdit_returnPressed()
             history.removeFirst();
         // Set pointer to end of history
         historyPtr = history.size();
-
-        // Scroll console view to end
-        scrollToEnd();
     }
 }
 
@@ -968,7 +968,10 @@ void RPCConsole::startExecutor()
     executor->moveToThread(&thread);
 
     // Replies from executor object must go to this object
-    connect(executor, &RPCExecutor::reply, this, static_cast<void (RPCConsole::*)(int, const QString&)>(&RPCConsole::message));
+    connect(executor, &RPCExecutor::reply, this, [this](int category, const QString& command) {
+        ui->messagesWidget->undo();
+        message(category, command);
+    });
 
     // Requests from this object must go to executor
     connect(this, &RPCConsole::cmdRequest, executor, &RPCExecutor::request);
