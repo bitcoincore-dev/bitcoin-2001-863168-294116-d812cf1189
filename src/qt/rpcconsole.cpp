@@ -892,7 +892,7 @@ void RPCConsole::on_lineEdit_returnPressed()
 {
     QString cmd = ui->lineEdit->text();
 
-    if (cmd.isEmpty() || m_is_executing) {
+    if (cmd.isEmpty()) {
         return;
     }
 
@@ -905,6 +905,16 @@ void RPCConsole::on_lineEdit_returnPressed()
         }
     } catch (const std::exception& e) {
         QMessageBox::critical(this, "Error", QString("Error: ") + QString::fromStdString(e.what()));
+        return;
+    }
+
+    if (cmd.startsWith("stop")) {
+        std::string dummy;
+        RPCExecuteCommandLine(m_node, dummy, cmd.toStdString());
+        return;
+    }
+
+    if (m_is_executing) {
         return;
     }
 
