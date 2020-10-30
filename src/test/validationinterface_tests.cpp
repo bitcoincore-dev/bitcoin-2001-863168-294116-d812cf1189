@@ -7,7 +7,6 @@
 #include <primitives/block.h>
 #include <scheduler.h>
 #include <test/util/setup_common.h>
-#include <util/check.h>
 #include <validationinterface.h>
 
 BOOST_FIXTURE_TEST_SUITE(validationinterface_tests, TestingSetup)

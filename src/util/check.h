@@ -42,10 +42,6 @@ class NonFatalCheckError : public std::runtime_error
         }                                                         \
     } while (false)
 
-#if defined(NDEBUG)
-#error "Cannot compile without assertions!"
-#endif
-
 /** Helper for Assert(). TODO remove in C++14 and replace `decltype(get_pure_r_value(val))` with `T` (templated lambda) */
 template <typename T>
 T get_pure_r_value(T&& val)

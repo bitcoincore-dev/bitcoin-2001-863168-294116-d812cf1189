@@ -26,7 +26,6 @@
 #include <streams.h>
 #include <tinyformat.h>
 #include <txmempool.h>
-#include <util/check.h> // For NDEBUG compile time check
 #include <util/strencodings.h>
 #include <util/system.h>
 #include <validation.h>

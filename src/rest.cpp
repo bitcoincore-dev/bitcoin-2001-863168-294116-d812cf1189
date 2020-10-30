@@ -17,7 +17,6 @@
 #include <streams.h>
 #include <sync.h>
 #include <txmempool.h>
-#include <util/check.h>
 #include <util/ref.h>
 #include <util/strencodings.h>
 #include <validation.h>
