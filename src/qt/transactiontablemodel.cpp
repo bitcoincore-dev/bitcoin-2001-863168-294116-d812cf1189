@@ -726,14 +726,12 @@ static void ShowProgress(TransactionTableModel *ttm, const std::string &title, i
     {
         fQueueNotifications = false;
         if (vQueueNotifications.size() > 10) { // prevent balloon spam, show maximum 10 balloons
-            bool invoked = QMetaObject::invokeMethod(ttm, "setProcessingQueuedTransactions", Qt::QueuedConnection, Q_ARG(bool, true));
-            assert(invoked);
+            ttm->setProcessingQueuedTransactions(true);
         }
         for (unsigned int i = 0; i < vQueueNotifications.size(); ++i)
         {
             if (vQueueNotifications.size() - i <= 10) {
-                bool invoked = QMetaObject::invokeMethod(ttm, "setProcessingQueuedTransactions", Qt::QueuedConnection, Q_ARG(bool, false));
-                assert(invoked);
+                ttm->setProcessingQueuedTransactions(false);
             }
 
             vQueueNotifications[i].invoke(ttm);
