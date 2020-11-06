@@ -253,6 +253,7 @@ BASE_SCRIPTS = [
     'rpc_getblockstats.py',
     'wallet_create_tx.py',
     'wallet_send.py',
+    'wallet_send.py --descriptors',
     'wallet_create_tx.py --descriptors',
     'p2p_fingerprint.py',
     'feature_uacomment.py',
