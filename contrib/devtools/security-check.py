@@ -38,7 +38,14 @@ def check_ELF_PIE(executable) -> bool:
     '''
     Check for position independent executable (PIE), allowing for address space randomization.
     '''
-    return get_ELF_header(executable).get('Type') == 'DYN'
+    stdout = run_command([READELF_CMD, '-h', '-W', executable])
+
+    ok = False
+    for line in stdout.splitlines():
+        tokens = line.split()
+        if len(line)>=2 and tokens[0] == 'Type:' and tokens[1] == 'DYN':
+            ok = True
+    return ok
 
 def get_ELF_program_headers(executable):
     '''Return type and flags for ELF program headers'''
