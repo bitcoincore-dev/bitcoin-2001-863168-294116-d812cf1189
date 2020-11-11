@@ -977,10 +977,6 @@ public:
      */
     Network ConnectedThroughNetwork() const;
 
-protected:
-    mapMsgCmdSize mapSendBytesPerMsgCmd GUARDED_BY(cs_vSend);
-    mapMsgCmdSize mapRecvBytesPerMsgCmd GUARDED_BY(cs_vRecv);
-
 public:
     uint256 hashContinue;
     std::atomic<int> nStartingHeight{-1};
@@ -1097,6 +1093,9 @@ private:
 
     //! Whether this peer connected via our Tor onion service.
     const bool m_inbound_onion{false};
+
+    mapMsgCmdSize mapSendBytesPerMsgCmd GUARDED_BY(cs_vSend);
+    mapMsgCmdSize mapRecvBytesPerMsgCmd GUARDED_BY(cs_vRecv);
 
 public:
 
