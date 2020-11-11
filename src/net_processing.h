@@ -80,6 +80,10 @@ public:
     void CheckForStaleTipAndEvictPeers();
     /** If we have extra outbound peers, try to disconnect the one with the oldest block announcement */
     void EvictExtraOutboundPeers(int64_t time_in_seconds) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+    /** Attempt to manually fetch block from a given node.
+      * A refactor of in flight block tracking could remove the need for passing CTxMemPool in
+      */
+    bool FetchBlock(const NodeId nodeid, const CBlockIndex* pindex, CTxMemPool& mempool);
     /** Retrieve unbroadcast transactions from the mempool and reattempt sending to peers */
     void ReattemptInitialBroadcast(CScheduler& scheduler) const;
 
