@@ -712,6 +712,7 @@ static const CRPCCommand commands[] =
     { "wallet",             &send,                           },
     { "wallet",             &sendmany,                       },
     { "wallet",             &sendtoaddress,                  },
+    { "wallet",             &setfeerate,                     },
     { "wallet",             &sethdseed,                      },
     { "wallet",             &setlabel,                       },
     { "wallet",             &settxfee,                       },
