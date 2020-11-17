@@ -540,6 +540,7 @@ public:
 
         // Prune new entries with refcount 0 (as a result of collisions).
         int nLostUnk = 0;
+#if __cplusplus >= 201402L // C++14 or higher, erasing from unordered_map is guaranteed to preserve the order of not deleted elements
         for (MapInfo::const_iterator it = mapInfo.begin(); it != mapInfo.end(); ) {
             if (it->second.fInTried == false && it->second.nRefCount == 0) {
                 auto itCopy = it++;
@@ -549,6 +550,18 @@ public:
                 ++it;
             }
         }
+#else // pre C++14, drop this once we switch to C++14 or higher
+        std::vector<MapInfo::const_iterator> to_delete;
+        for (MapInfo::const_iterator it = mapInfo.begin(); it != mapInfo.end(); ++it) {
+            if (it->second.fInTried == false && it->second.nRefCount == 0) {
+                to_delete.push_back(it);
+                nLostUnk++;
+            }
+        }
+        for (auto& it : to_delete) {
+            Delete(it->first);
+        }
+#endif
         if (nLost + nLostUnk > 0) {
             LogPrint(BCLog::ADDRMAN, "addrman lost %i new and %i tried addresses due to collisions\n", nLostUnk, nLost);
         }
