@@ -2158,9 +2158,14 @@ static RPCHelpMan scantxoutset()
                         },
                         "[scanobjects,...]"},
                 },
-                RPCResult{
-                    RPCResult::Type::OBJ, "", "",
-                    {
+        {
+            RPCResult{"When action=='abort'", RPCResult::Type::BOOL, "", ""},
+            RPCResult{"When action=='status' and no scan is in progress", RPCResult::Type::NONE, "", ""},
+            RPCResult{"When action=='status' and scan is in progress", RPCResult::Type::OBJ, "", "",
+            {
+                {RPCResult::Type::NUM, "progress", "The scan progress"},
+            }},
+            RPCResult{"When action=='start'", RPCResult::Type::OBJ, "", "", {
                         {RPCResult::Type::BOOL, "success", "Whether the scan was completed"},
                         {RPCResult::Type::NUM, "txouts", "The number of unspent transaction outputs scanned"},
                         {RPCResult::Type::NUM, "height", "The current block height (index)"},
@@ -2179,6 +2184,7 @@ static RPCHelpMan scantxoutset()
                             }},
                         {RPCResult::Type::STR_AMOUNT, "total_amount", "The total amount of all found unspent outputs in " + CURRENCY_UNIT},
                     }},
+        },
         RPCExamples{
             HelpExampleCli("scantxoutset", "start \'[\"" + EXAMPLE_DESCRIPTOR_RAW + "\"]\'") +
             HelpExampleCli("scantxoutset", "status") +
