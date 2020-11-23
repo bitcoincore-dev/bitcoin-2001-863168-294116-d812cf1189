@@ -535,8 +535,10 @@ static RPCHelpMan getblocktemplate()
                         },
                         "\"template_request\""},
                 },
-                RPCResult{
-                    RPCResult::Type::OBJ, "", "",
+        {
+            RPCResult{"If the proposal was accepted with mode=='proposal'", RPCResult::Type::NONE, "", ""},
+            RPCResult{"If the proposal was not accepted with mode=='proposal'", RPCResult::Type::STR, "", "According to BIP22"},
+            RPCResult{"Otherwise", RPCResult::Type::OBJ, "", "",
                     {
                         {RPCResult::Type::NUM, "version", "The preferred block version"},
                         {RPCResult::Type::ARR, "rules", "specific block rules that are to be enforced",
@@ -586,6 +588,7 @@ static RPCHelpMan getblocktemplate()
                         {RPCResult::Type::NUM, "height", "The height of the next block"},
                         {RPCResult::Type::STR, "default_witness_commitment", /* optional */ true, "a valid witness commitment for the unmodified block template"}
                     }},
+        },
                 RPCExamples{
                     HelpExampleCli("getblocktemplate", "'{\"rules\": [\"segwit\"]}'")
             + HelpExampleRpc("getblocktemplate", "{\"rules\": [\"segwit\"]}")
