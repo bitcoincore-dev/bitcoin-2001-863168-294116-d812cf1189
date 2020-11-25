@@ -4111,7 +4111,8 @@ bool CWallet::UpgradeWallet(int version, bilingual_str& error)
     } else {
         WalletLogPrintf("Allowing wallet upgrade up to %i\n", version);
     }
-    if (version < prev_version) {
+    if (version < prev_version)
+    {
         error = strprintf(_("Cannot downgrade wallet from version %i to version %i. Wallet version unchanged."), prev_version, version);
         return false;
     }

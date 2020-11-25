@@ -22,7 +22,9 @@ from test_framework.messages import deser_compact_size, deser_string
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
+    assert_greater_than,
     assert_is_hex_string,
+    assert_raises_rpc_error,
     sha256sum_file,
 )
 
@@ -196,7 +198,7 @@ class UpgradeWalletTest(BitcoinTestFramework):
         # after conversion master key hash should be present
         assert_is_hex_string(wallet.getwalletinfo()['hdseedid'])
 
-        self.log.info("Intermediary versions don't effect anything")
+        self.log.info('Intermediary versions don\'t effect anything')
         copy_non_hd()
         # Wallet starts with 60000
         assert_equal(60000, wallet.getwalletinfo()['walletversion'])
@@ -350,7 +352,6 @@ class UpgradeWalletTest(BitcoinTestFramework):
         # 0.16.3 doesn't have a default key
         v16_3_kvs = dump_bdb_kv(v16_3_wallet)
         assert b'\x0adefaultkey' not in v16_3_kvs
-
 
 if __name__ == '__main__':
     UpgradeWalletTest().main()
