@@ -24,3 +24,4 @@ export TEST_RUNNER_ENV="LC_ALL=C"
 export RUN_FUNCTIONAL_TESTS=true
 export GOAL="install"
 export BITCOIN_CONFIG="--enable-reduce-exports --with-incompatible-bdb --with-boost-process"
+export NO_WERROR=1
