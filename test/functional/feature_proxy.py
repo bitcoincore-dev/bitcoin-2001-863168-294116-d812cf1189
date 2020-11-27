@@ -51,7 +51,7 @@ NET_IPV6 = "ipv6"
 NET_ONION = "onion"
 
 # Networks returned by RPC getnetworkinfo, defined in src/rpc/net.cpp::GetNetworksInfo()
-NETWORKS = frozenset({NET_IPV4, NET_IPV6, NET_ONION})
+NETWORKS = frozenset({NET_IPV4, NET_IPV6, NET_ONION, NET_I2P})
 
 
 class ProxyTest(BitcoinTestFramework):
@@ -198,7 +198,7 @@ class ProxyTest(BitcoinTestFramework):
         self.log.info("Test RPC getnetworkinfo")
         n0 = networks_dict(self.nodes[0].getnetworkinfo())
         assert_equal(NETWORKS, n0.keys())
-        for net in NETWORKS:
+        for net in NETWORKS - {NET_I2P}:
             assert_equal(n0[net]['proxy'], '%s:%i' % (self.conf1.addr))
             assert_equal(n0[net]['proxy_randomize_credentials'], True)
         assert_equal(n0['onion']['reachable'], True)
@@ -214,7 +214,7 @@ class ProxyTest(BitcoinTestFramework):
 
         n2 = networks_dict(self.nodes[2].getnetworkinfo())
         assert_equal(NETWORKS, n2.keys())
-        for net in NETWORKS:
+        for net in NETWORKS - {NET_I2P}:
             assert_equal(n2[net]['proxy'], '%s:%i' % (self.conf2.addr))
             assert_equal(n2[net]['proxy_randomize_credentials'], True)
         assert_equal(n2['onion']['reachable'], True)
@@ -222,7 +222,7 @@ class ProxyTest(BitcoinTestFramework):
         if self.have_ipv6:
             n3 = networks_dict(self.nodes[3].getnetworkinfo())
             assert_equal(NETWORKS, n3.keys())
-            for net in NETWORKS:
+            for net in NETWORKS - {NET_I2P}:
                 assert_equal(n3[net]['proxy'], '[%s]:%i' % (self.conf3.addr))
                 assert_equal(n3[net]['proxy_randomize_credentials'], False)
             assert_equal(n3['onion']['reachable'], False)
