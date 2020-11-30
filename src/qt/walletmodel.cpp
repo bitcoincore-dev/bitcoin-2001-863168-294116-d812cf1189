@@ -143,6 +143,22 @@ bool WalletModel::validateAddress(const QString &address)
     return IsValidDestinationString(address.toStdString());
 }
 
+bool WalletModel::checkAddressForUsage(const std::vector<std::string>& addresses) const
+{
+    return m_wallet->checkAddressForUsage(addresses);
+}
+
+bool WalletModel::findAddressUsage(const QStringList& addresses, std::function<void(const QString&, const interfaces::WalletTx&, uint32_t)> callback) const
+{
+    std::vector<std::string> std_addresses;
+    for (const auto& address : addresses) {
+        std_addresses.push_back(address.toStdString());
+    }
+    return m_wallet->findAddressUsage(std_addresses, [&callback](const std::string& address, const interfaces::WalletTx& wtx, uint32_t output_index){
+        callback(QString::fromStdString(address), wtx, output_index);
+    });
+}
+
 WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransaction &transaction, const CCoinControl& coinControl)
 {
     CAmount total = 0;
@@ -517,12 +533,10 @@ bool WalletModel::bumpFee(uint256 hash, uint256& new_hash)
     questionString.append("</td><td>");
     questionString.append(BitcoinUnits::formatHtmlWithUnit(getOptionsModel()->getDisplayUnit(), new_fee));
     questionString.append("</td></tr></table>");
-    SendConfirmationDialog confirmationDialog(tr("Confirm fee bump"), questionString);
-    confirmationDialog.exec();
-    QMessageBox::StandardButton retval = static_cast<QMessageBox::StandardButton>(confirmationDialog.result());
 
+    SendConfirmationDialog confirmationDialog(tr("Confirm fee bump"), questionString);
     // cancel sign&broadcast if user doesn't want to bump the fee
-    if (retval != QMessageBox::Yes) {
+    if (!confirmationDialog.exec()) {
         return false;
     }
 
@@ -592,4 +606,19 @@ void WalletModel::refresh(bool pk_hash_only)
 uint256 WalletModel::getLastBlockProcessed() const
 {
     return m_client_model ? m_client_model->getBestBlockHash() : uint256{};
+}
+
+BitcoinAddressUnusedInWalletValidator::BitcoinAddressUnusedInWalletValidator(const WalletModel& wallet_model, QObject *parent) :
+    QValidator(parent),
+    m_wallet_model(wallet_model)
+{
+}
+
+QValidator::State BitcoinAddressUnusedInWalletValidator::validate(QString &input, int &pos) const
+{
+    Q_UNUSED(pos);
+    if (m_wallet_model.checkAddressForUsage(std::vector<std::string>{input.toStdString()})) {
+        return QValidator::Invalid;
+    }
+    return QValidator::Acceptable;
 }
