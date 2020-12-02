@@ -62,6 +62,7 @@ class HelpRpcTest(BitcoinTestFramework):
         mapping_client = process_mapping(file_conversion_table)
         # Ignore echojson in client table
         mapping_client = [m for m in mapping_client if m[0] != 'echojson']
+        mapping_client.append( ('addnode', 2, 'privileged') )  # deprecated and never supported by client
 
         mapping_server = self.nodes[0].help("dump_all_command_conversions")
         # Filter all RPCs whether they need conversion
