@@ -270,6 +270,7 @@ BASE_SCRIPTS = [
     'rpc_deriveaddresses.py',
     'rpc_deriveaddresses.py --usecli',
     'p2p_ping.py',
+    'rpc_validateaddress.py',
     'rpc_scantxoutset.py',
     'feature_logging.py',
     'p2p_node_network_limited.py',
