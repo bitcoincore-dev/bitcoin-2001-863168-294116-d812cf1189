@@ -315,7 +315,7 @@ bool CNetAddr::IsRFC2544() const
 
 bool CNetAddr::IsRFC3927() const
 {
-    return IsIPv4() && HasPrefix(m_addr, std::array<uint8_t, 2>{169, 254});
+    return IsIPv4() && HasPrefix(m_addr, std::array{169_u8, 254_u8});
 }
 
 bool CNetAddr::IsRFC6598() const
@@ -325,37 +325,37 @@ bool CNetAddr::IsRFC6598() const
 
 bool CNetAddr::IsRFC5737() const
 {
-    return IsIPv4() && (HasPrefix(m_addr, std::array<uint8_t, 3>{192, 0, 2}) ||
-                        HasPrefix(m_addr, std::array<uint8_t, 3>{198, 51, 100}) ||
-                        HasPrefix(m_addr, std::array<uint8_t, 3>{203, 0, 113}));
+    return IsIPv4() && (HasPrefix(m_addr, std::array{192_u8, 0_u8, 2_u8}) ||
+                        HasPrefix(m_addr, std::array{198_u8, 51_u8, 100_u8}) ||
+                        HasPrefix(m_addr, std::array{203_u8, 0_u8, 113_u8}));
 }
 
 bool CNetAddr::IsRFC3849() const
 {
-    return IsIPv6() && HasPrefix(m_addr, std::array<uint8_t, 4>{0x20, 0x01, 0x0D, 0xB8});
+    return IsIPv6() && HasPrefix(m_addr, std::array{0x20_u8, 0x01_u8, 0x0D_u8, 0xB8_u8});
 }
 
 bool CNetAddr::IsRFC3964() const
 {
-    return IsIPv6() && HasPrefix(m_addr, std::array<uint8_t, 2>{0x20, 0x02});
+    return IsIPv6() && HasPrefix(m_addr, std::array{0x20_u8, 0x02_u8});
 }
 
 bool CNetAddr::IsRFC6052() const
 {
     return IsIPv6() &&
-           HasPrefix(m_addr, std::array<uint8_t, 12>{0x00, 0x64, 0xFF, 0x9B, 0x00, 0x00,
-                                                     0x00, 0x00, 0x00, 0x00, 0x00, 0x00});
+           HasPrefix(m_addr, std::array{0x00_u8, 0x64_u8, 0xFF_u8, 0x9B_u8, 0x00_u8, 0x00_u8,
+                                        0x00_u8, 0x00_u8, 0x00_u8, 0x00_u8, 0x00_u8, 0x00_u8});
 }
 
 bool CNetAddr::IsRFC4380() const
 {
-    return IsIPv6() && HasPrefix(m_addr, std::array<uint8_t, 4>{0x20, 0x01, 0x00, 0x00});
+    return IsIPv6() && HasPrefix(m_addr, std::array{0x20_u8, 0x01_u8, 0x00_u8, 0x00_u8});
 }
 
 bool CNetAddr::IsRFC4862() const
 {
-    return IsIPv6() && HasPrefix(m_addr, std::array<uint8_t, 8>{0xFE, 0x80, 0x00, 0x00,
-                                                                0x00, 0x00, 0x00, 0x00});
+    return IsIPv6() && HasPrefix(m_addr, std::array{0xFE_u8, 0x80_u8, 0x00_u8, 0x00_u8,
+                                                    0x00_u8, 0x00_u8, 0x00_u8, 0x00_u8});
 }
 
 bool CNetAddr::IsRFC4193() const
@@ -366,25 +366,25 @@ bool CNetAddr::IsRFC4193() const
 bool CNetAddr::IsRFC6145() const
 {
     return IsIPv6() &&
-           HasPrefix(m_addr, std::array<uint8_t, 12>{0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                                                     0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00});
+           HasPrefix(m_addr, std::array{0x00_u8, 0x00_u8, 0x00_u8, 0x00_u8, 0x00_u8, 0x00_u8,
+                                        0x00_u8, 0x00_u8, 0xFF_u8, 0xFF_u8, 0x00_u8, 0x00_u8});
 }
 
 bool CNetAddr::IsRFC4843() const
 {
-    return IsIPv6() && HasPrefix(m_addr, std::array<uint8_t, 3>{0x20, 0x01, 0x00}) &&
+    return IsIPv6() && HasPrefix(m_addr, std::array{0x20_u8, 0x01_u8, 0x00_u8}) &&
            (m_addr[3] & 0xF0) == 0x10;
 }
 
 bool CNetAddr::IsRFC7343() const
 {
-    return IsIPv6() && HasPrefix(m_addr, std::array<uint8_t, 3>{0x20, 0x01, 0x00}) &&
+    return IsIPv6() && HasPrefix(m_addr, std::array{0x20_u8, 0x01_u8, 0x00_u8}) &&
            (m_addr[3] & 0xF0) == 0x20;
 }
 
 bool CNetAddr::IsHeNet() const
 {
-    return IsIPv6() && HasPrefix(m_addr, std::array<uint8_t, 4>{0x20, 0x01, 0x04, 0x70});
+    return IsIPv6() && HasPrefix(m_addr, std::array{0x20_u8, 0x01_u8, 0x04_u8, 0x70_u8});
 }
 
 /**

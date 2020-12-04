@@ -87,4 +87,9 @@ template <typename T1, size_t PREFIX_LEN>
            std::equal(std::begin(prefix), std::end(prefix), std::begin(obj));
 }
 
+/**
+ * User-defined literal for byte constants.
+ */
+constexpr uint8_t operator ""_u8(unsigned long long byte) { return byte; }
+
 #endif // BITCOIN_UTIL_STRENCODINGS_H
