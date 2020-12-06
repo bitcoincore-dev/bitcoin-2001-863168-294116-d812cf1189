@@ -147,11 +147,11 @@ std::string get_filesystem_error_message(const fs::filesystem_error& e)
 #ifdef WIN32
 #ifdef __GLIBCXX__
 
-// reference: https://github.com/gcc-mirror/gcc/blob/gcc-7_3_0-release/libstdc%2B%2B-v3/include/std/fstream#L270
+// reference: https://github.com/gcc-mirror/gcc/blob/releases%2Fgcc-7.3.0/libstdc%2B%2B-v3/include/std/fstream#L270
 
 static std::string openmodeToStr(std::ios_base::openmode mode)
 {
-    switch (mode & ~std::ios_base::ate) {
+    switch (static_cast<int>(mode & ~std::ios_base::ate)) { // casting is required to suppress -Wswitch warnings
     case std::ios_base::out:
     case std::ios_base::out | std::ios_base::trunc:
         return "w";
