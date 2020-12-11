@@ -58,7 +58,9 @@ endef
 define $(package)_build_cmds
   ln -s $(host_prefix)/lib/libQt*.a lib/ &&\
   ln -s $(host_prefix)/native/bin/* bin/ &&\
-  $(MAKE) -C ../qtwinextras
+  cd ../qtwinextras &&\
+  $(MAKE) &&\
+  sed -i 's/qtbase/qtwinextras/g' lib/pkgconfig/Qt5WinExtras.pc
 endef
 
 define $(package)_stage_cmds
