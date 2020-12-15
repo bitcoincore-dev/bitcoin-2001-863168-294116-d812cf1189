@@ -1278,6 +1278,13 @@ void ArgsManager::ModifyRWConfigFile(const std::map<std::string, std::string>& s
         fs::remove(rwconf_new_path);
         throw std::ios_base::failure(strprintf("Failed to replace %s", fs::PathToString(rwconf_new_path)));
     }
+    if (!IsArgNegated("-settings")) {
+        // Also save to settings.json for Core (0.21+) compatibility
+        for (const auto& setting_change : settings_to_change) {
+            m_settings.rw_settings[setting_change.first] = setting_change.second;
+        }
+        WriteSettingsFile();
+    }
 }
 
 void ArgsManager::ModifyRWConfigFile(const std::string& setting_to_change, const std::string& new_value)
@@ -1293,6 +1300,23 @@ void ArgsManager::EraseRWConfigFile()
     assert(!m_rwconf_path.empty());
     if (!fs::exists(m_rwconf_path)) {
         return;
+    }
+    if (!IsArgNegated("-settings")) {
+        // Also remove from settings.json (stored for Core (0.21+) compatibility)
+        const std::string rwconf_path_str = fs::PathToString(m_rwconf_path);
+        std::ifstream rwconf_stream(m_rwconf_path);
+        if (!rwconf_stream.good()) {
+            throw std::ios_base::failure(strprintf("%s: Failed to open %s", __func__, rwconf_path_str));
+        }
+        std::string error;
+        std::map<std::string, std::vector<util::SettingsValue>> current_rwconf_settings;
+        if (!ReadConfigStream(rwconf_stream, rwconf_path_str, error, /* ignore_invalid_keys= */ true, &current_rwconf_settings)) {
+            throw std::ios_base::failure(strprintf("%s: Failed to read %s: %s", __func__, rwconf_path_str, error));
+        }
+        for (const auto& setting : current_rwconf_settings) {
+            m_settings.rw_settings.erase(setting.first);
+        }
+        WriteSettingsFile();
     }
     fs::path rwconf_reset_path = m_rwconf_path;
     rwconf_reset_path += ".reset";
