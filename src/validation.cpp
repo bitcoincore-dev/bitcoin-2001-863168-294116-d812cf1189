@@ -5051,6 +5051,36 @@ int VersionBitsTipStateSinceHeight(const Consensus::Params& params, Consensus::D
 }
 
 static const uint64_t MEMPOOL_DUMP_VERSION = 1;
+static constexpr uint64_t MEMPOOL_KNOTS_DUMP_VERSION = 0;
+
+bool LoadMempoolKnots(CTxMemPool& pool)
+{
+    const auto knots_filepath = GetDataDir() / "mempool-knots.dat";
+    CAutoFile file(fsbridge::fopen(knots_filepath, "rb"), SER_DISK, CLIENT_VERSION);
+    if (file.IsNull()) {
+        // Typically missing if there's nothing to save
+        return false;
+    }
+
+    try {
+        uint64_t version;
+        file >> version;
+        if (version != MEMPOOL_KNOTS_DUMP_VERSION) {
+            return false;
+        }
+        std::map<uint256, double> priority_deltas;
+        file >> priority_deltas;
+
+        for (const auto& i : priority_deltas) {
+            pool.PrioritiseTransaction(i.first, i.second, 0);
+        }
+    } catch (const std::exception& e) {
+        LogPrintf("Failed to deserialize mempool-knots data on disk: %s. Continuing anyway.\n", e.what());
+        return false;
+    }
+
+    return true;
+}
 
 bool LoadMempool(CTxMemPool& pool)
 {
@@ -5141,6 +5171,8 @@ bool LoadMempool(CTxMemPool& pool)
         return false;
     }
 
+    LoadMempoolKnots(pool);
+
     LogPrintf("Imported mempool transactions from disk: %i succeeded, %i failed, %i expired, %i already there, %i waiting for initial broadcast\n", count, failed, expired, already_there, unbroadcast);
     return true;
 }
@@ -5150,6 +5182,7 @@ bool DumpMempool(const CTxMemPool& pool)
     int64_t start = GetTimeMicros();
 
     std::map<uint256, CAmount> mapDeltas;
+    std::map<uint256, double> priority_deltas;
     std::vector<TxMempoolInfo> vinfo;
     std::set<uint256> unbroadcast_txids;
 
@@ -5159,6 +5192,9 @@ bool DumpMempool(const CTxMemPool& pool)
     {
         LOCK(pool.cs);
         for (const auto &i : pool.mapDeltas) {
+            if (i.second.first) {   // priority delta
+                priority_deltas[i.first] = i.second.first;
+            }
             if (i.second.second) {  // fee delta
                 mapDeltas[i.first] = i.second.second;
             }
@@ -5196,6 +5232,25 @@ bool DumpMempool(const CTxMemPool& pool)
         if (!FileCommit(file.Get()))
             throw std::runtime_error("FileCommit failed");
         file.fclose();
+
+        const auto knots_filepath = GetDataDir() / "mempool-knots.dat";
+        if (priority_deltas.size()) {
+            auto knots_tmppath = knots_filepath;
+            knots_tmppath += ".new";
+            CAutoFile file(fsbridge::fopen(knots_tmppath, "wb"), SER_DISK, CLIENT_VERSION);
+
+            uint64_t version = MEMPOOL_KNOTS_DUMP_VERSION;
+            file << version;
+
+            file << priority_deltas;
+
+            if (!FileCommit(file.Get())) throw std::runtime_error("FileCommit failed");
+            file.fclose();
+            RenameOver(knots_tmppath, knots_filepath);
+        } else {
+            fs::remove(knots_filepath);
+        }
+
         RenameOver(GetDataDir() / "mempool.dat.new", GetDataDir() / "mempool.dat");
         int64_t last = GetTimeMicros();
         LogPrintf("Dumped mempool: %gs to copy, %gs to dump\n", (mid-start)*MICRO, (last-mid)*MICRO);
