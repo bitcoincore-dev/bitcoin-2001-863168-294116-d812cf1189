@@ -6,4 +6,5 @@
 
 export LC_ALL=C
 
-git fetch
+git fetch origin
+git branch $CIRRUS_BASE_BRANCH origin/$CIRRUS_BASE_BRANCH
