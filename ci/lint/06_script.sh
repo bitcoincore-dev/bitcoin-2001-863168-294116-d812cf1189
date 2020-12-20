@@ -6,8 +6,9 @@
 
 export LC_ALL=C
 
+GIT_HEAD=$(git rev-parse HEAD)
 if [ -n "$CIRRUS_PR" ]; then
-  COMMIT_RANGE="$(git merge-base $CIRRUS_BASE_SHA $CIRRUS_CHANGE_IN_REPO)..HEAD"
+  COMMIT_RANGE="$(git merge-base $CIRRUS_BASE_SHA $CIRRUS_CHANGE_IN_REPO)..$GIT_HEAD"
   test/lint/commit-script-check.sh $COMMIT_RANGE
 fi
 export COMMIT_RANGE
@@ -28,3 +29,6 @@ if [ "$CIRRUS_REPO_FULL_NAME" = "bitcoin/bitcoin" ] && [ -n "$CIRRUS_CRON" ]; th
     ${CI_RETRY_EXE}  gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys $(<contrib/verify-commits/trusted-keys) &&
     ./contrib/verify-commits/verify-commits.py --clean-merge=2;
 fi
+
+echo "COMMIT_RANGE = $COMMIT_RANGE"
+git log --oneline $COMMIT_RANGE
