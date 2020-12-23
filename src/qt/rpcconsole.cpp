@@ -1201,19 +1201,9 @@ void RPCConsole::banSelectedNode(int bantime)
     if (!clientModel)
         return;
 
-    // Get selected peer addresses
-    QList<QModelIndex> nodes = GUIUtil::getEntryData(ui->peerWidget, PeerTableModel::NetNodeId);
-    for(int i = 0; i < nodes.count(); i++)
-    {
-        // Get currently selected peer address
-        NodeId id = nodes.at(i).data().toLongLong();
-
-        // Get currently selected peer address
-        int detailNodeRow = clientModel->getPeerTableModel()->getRowByNodeId(id);
-        if (detailNodeRow < 0) return;
-
+    for (const auto& peer : GUIUtil::getEntryData(ui->peerWidget, PeerTableModel::NetNodeId)) {
         // Find possible nodes, ban it and clear the selected node
-        const CNodeCombinedStats *stats = clientModel->getPeerTableModel()->getNodeStats(detailNodeRow);
+        const CNodeCombinedStats* stats = clientModel->getPeerTableModel()->getNodeStats(peer.row());
         if (stats) {
             m_node.ban(stats->nodeStats.addr, bantime);
             m_node.disconnectByAddress(stats->nodeStats.addr);
