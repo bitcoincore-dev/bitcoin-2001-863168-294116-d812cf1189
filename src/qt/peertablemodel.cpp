@@ -14,52 +14,12 @@
 #include <QList>
 #include <QTimer>
 
-// private implementation
-class PeerTablePriv
-{
-public:
-    /** Local cache of peer information */
-    QList<CNodeCombinedStats> cachedNodeStats;
-
-    /** Pull a full list of peers from vNodes into our cache */
-    void refreshPeers(interfaces::Node& node)
-    {
-            cachedNodeStats.clear();
-
-            interfaces::Node::NodesStats nodes_stats;
-            node.getNodesStats(nodes_stats);
-            cachedNodeStats.reserve(nodes_stats.size());
-            for (const auto& node_stats : nodes_stats)
-            {
-                CNodeCombinedStats stats;
-                stats.nodeStats = std::get<0>(node_stats);
-                stats.fNodeStateStatsAvailable = std::get<1>(node_stats);
-                stats.nodeStateStats = std::get<2>(node_stats);
-                cachedNodeStats.append(stats);
-            }
-    }
-
-    int size() const
-    {
-        return cachedNodeStats.size();
-    }
-
-    CNodeCombinedStats *index(int idx)
-    {
-        if (idx >= 0 && idx < cachedNodeStats.size())
-            return &cachedNodeStats[idx];
-
-        return nullptr;
-    }
-};
-
 PeerTableModel::PeerTableModel(interfaces::Node& node, QObject* parent) :
     QAbstractTableModel(parent),
     m_node(node),
     timer(nullptr)
 {
     columns << tr("NodeId") << tr("Node/Service") << tr("Ping") << tr("Sent") << tr("Received") << tr("User Agent");
-    priv.reset(new PeerTablePriv());
 
     // set up timer for auto refresh
     timer = new QTimer(this);
@@ -88,7 +48,7 @@ void PeerTableModel::stopAutoRefresh()
 int PeerTableModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return priv->size();
+    return m_peers_data.size();
 }
 
 int PeerTableModel::columnCount(const QModelIndex& parent) const
@@ -173,16 +133,29 @@ Qt::ItemFlags PeerTableModel::flags(const QModelIndex &index) const
 QModelIndex PeerTableModel::index(int row, int column, const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    CNodeCombinedStats *data = priv->index(row);
 
-    if (data)
-        return createIndex(row, column, data);
+    if (0 <= row && row < rowCount() && 0 <= column && column < columnCount()) {
+        return createIndex(row, column, const_cast<CNodeCombinedStats*>(&m_peers_data[row]));
+    }
+
     return QModelIndex();
 }
 
 void PeerTableModel::refresh()
 {
+    interfaces::Node::NodesStats nodes_stats;
+    m_node.getNodesStats(nodes_stats);
+    decltype(m_peers_data) new_peers_data;
+    new_peers_data.reserve(nodes_stats.size());
+    for (const auto& node_stats : nodes_stats) {
+        CNodeCombinedStats stats;
+        stats.nodeStats = std::get<0>(node_stats);
+        stats.fNodeStateStatsAvailable = std::get<1>(node_stats);
+        stats.nodeStateStats = std::get<2>(node_stats);
+        new_peers_data.append(stats);
+    }
+
     Q_EMIT layoutAboutToBeChanged();
-    priv->refreshPeers(m_node);
+    m_peers_data.swap(new_peers_data);
     Q_EMIT layoutChanged();
 }
