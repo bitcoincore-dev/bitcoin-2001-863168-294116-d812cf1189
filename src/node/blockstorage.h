@@ -165,6 +165,9 @@ public:
     //! Returns last CBlockIndex* that is a checkpoint
     const CBlockIndex* GetLastCheckpoint(const CCheckpointData& data) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
+    /** Best header we've seen so far (used for getheaders queries' starting points). */
+    CBlockIndex* pindexBestHeader = nullptr;
+
     ~BlockManager()
     {
         Unload();
