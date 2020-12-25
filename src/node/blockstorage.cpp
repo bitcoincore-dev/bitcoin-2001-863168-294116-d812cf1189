@@ -25,17 +25,6 @@ bool fHavePruned = false;
 bool fPruneMode = false;
 uint64_t nPruneTarget = 0;
 
-// TODO make namespace {
-RecursiveMutex cs_LastBlockFile;
-std::vector<CBlockFileInfo> vinfoBlockFile GUARDED_BY(cs_LastBlockFile);
-int nLastBlockFile GUARDED_BY(cs_LastBlockFile) = 0;
-/** Global flag to indicate we should check to see if there are
-*  block/undo files that should be deleted.  Set on startup
-*  or if we allocate more file space when we're in prune mode
-*/
-bool fCheckForPruning GUARDED_BY(cs_LastBlockFile) = false;
-// } // namespace
-
 static FILE* OpenUndoFile(const FlatFilePos& pos, bool fReadOnly = false);
 static FlatFileSeq BlockFileSeq();
 static FlatFileSeq UndoFileSeq();
@@ -92,7 +81,7 @@ std::string CBlockFileInfo::ToString() const
     return strprintf("CBlockFileInfo(blocks=%u, size=%u, heights=%u...%u, time=%s...%s)", nBlocks, nSize, nHeightFirst, nHeightLast, FormatISO8601Date(nTimeFirst), FormatISO8601Date(nTimeLast));
 }
 
-CBlockFileInfo* GetBlockFileInfo(size_t n)
+CBlockFileInfo* BlockManager::GetBlockFileInfo(size_t n)
 {
     LOCK(cs_LastBlockFile);
 
@@ -160,7 +149,7 @@ bool UndoReadFromDisk(CBlockUndo& blockundo, const CBlockIndex* pindex)
     return true;
 }
 
-static void FlushUndoFile(int block_file, bool finalize = false)
+void BlockManager::FlushUndoFile(int block_file, bool finalize)
 {
     LOCK(cs_LastBlockFile);
     FlatFilePos undo_pos_old(block_file, vinfoBlockFile[block_file].nUndoSize);
@@ -169,7 +158,7 @@ static void FlushUndoFile(int block_file, bool finalize = false)
     }
 }
 
-void FlushBlockFile(bool fFinalize = false, bool finalize_undo = false)
+void BlockManager::FlushBlockFile(bool fFinalize, bool finalize_undo)
 {
     LOCK(cs_LastBlockFile);
     FlatFilePos block_pos_old(nLastBlockFile, vinfoBlockFile[nLastBlockFile].nSize);
@@ -181,7 +170,7 @@ void FlushBlockFile(bool fFinalize = false, bool finalize_undo = false)
     if (!fFinalize || finalize_undo) FlushUndoFile(nLastBlockFile, finalize_undo);
 }
 
-uint64_t CalculateCurrentUsage()
+uint64_t BlockManager::CalculateCurrentUsage()
 {
     LOCK(cs_LastBlockFile);
 
