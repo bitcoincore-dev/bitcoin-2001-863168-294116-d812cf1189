@@ -236,6 +236,7 @@ protected:
     //! Source of random numbers for randomization in inner loops
     FastRandomContext insecure_rand;
 
+private:
     //! Find an entry.
     CAddrInfo* Find(const CNetAddr& addr, int *pnId = nullptr) EXCLUSIVE_LOCKS_REQUIRED(cs);
 
