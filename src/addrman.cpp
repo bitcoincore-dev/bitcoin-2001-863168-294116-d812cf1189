@@ -357,8 +357,10 @@ void CAddrMan::AttemptWithLockHeld(const CService& addr, bool fCountFailure, int
 
 CAddrInfo CAddrMan::Select_(bool newOnly)
 {
-    if (size() == 0)
+    AssertLockHeld(cs);
+    if (vRandom.empty()) {
         return CAddrInfo();
+    }
 
     if (newOnly && nNew == 0)
         return CAddrInfo();
