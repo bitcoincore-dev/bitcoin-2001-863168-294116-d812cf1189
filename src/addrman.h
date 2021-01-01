@@ -229,6 +229,16 @@ private:
     //! Holds addrs inserted into tried table that collide with existing entries. Test-before-evict discipline used to resolve these collisions.
     std::set<int> m_tried_collisions;
 
+    void CheckWithLockHeld() EXCLUSIVE_LOCKS_REQUIRED(cs)
+    {
+#ifdef DEBUG_ADDRMAN
+        AssertLockHeld(cs);
+        if (const int err = Check_(); err != 0) {
+            LogPrintf("ADDRMAN CONSISTENCY CHECK FAILED!!! err=%i\n", err);
+        }
+#endif // DEBUG_ADDRMAN
+    }
+
 protected:
     //! secret key to randomize bucket select with
     uint256 nKey;
@@ -561,7 +571,7 @@ public:
             LogPrint(BCLog::ADDRMAN, "addrman lost %i new and %i tried addresses due to collisions\n", nLostUnk, nLost);
         }
 
-        Check();
+        CheckWithLockHeld();
     }
 
     void Clear()
@@ -609,13 +619,9 @@ public:
     void Check()
     {
 #ifdef DEBUG_ADDRMAN
-        {
-            LOCK(cs);
-            int err;
-            if ((err=Check_()))
-                LogPrintf("ADDRMAN CONSISTENCY CHECK FAILED!!! err=%i\n", err);
-        }
-#endif
+        LOCK(cs);
+        CheckWithLockHeld();
+#endif // DEBUG_ADDRMAN
     }
 
     //! Add a single address.
@@ -623,9 +629,9 @@ public:
     {
         LOCK(cs);
         bool fRet = false;
-        Check();
+        CheckWithLockHeld();
         fRet |= Add_(addr, source, nTimePenalty);
-        Check();
+        CheckWithLockHeld();
         if (fRet) {
             LogPrint(BCLog::ADDRMAN, "Added %s from %s: %i tried, %i new\n", addr.ToStringIPPort(), source.ToString(), nTried, nNew);
         }
@@ -637,10 +643,10 @@ public:
     {
         LOCK(cs);
         int nAdd = 0;
-        Check();
+        CheckWithLockHeld();
         for (std::vector<CAddress>::const_iterator it = vAddr.begin(); it != vAddr.end(); it++)
             nAdd += Add_(*it, source, nTimePenalty) ? 1 : 0;
-        Check();
+        CheckWithLockHeld();
         if (nAdd) {
             LogPrint(BCLog::ADDRMAN, "Added %i addresses from %s: %i tried, %i new\n", nAdd, source.ToString(), nTried, nNew);
         }
@@ -651,27 +657,27 @@ public:
     void Good(const CService &addr, bool test_before_evict = true, int64_t nTime = GetAdjustedTime())
     {
         LOCK(cs);
-        Check();
+        CheckWithLockHeld();
         Good_(addr, test_before_evict, nTime);
-        Check();
+        CheckWithLockHeld();
     }
 
     //! Mark an entry as connection attempted to.
     void Attempt(const CService &addr, bool fCountFailure, int64_t nTime = GetAdjustedTime())
     {
         LOCK(cs);
-        Check();
+        CheckWithLockHeld();
         Attempt_(addr, fCountFailure, nTime);
-        Check();
+        CheckWithLockHeld();
     }
 
     //! See if any to-be-evicted tried table entries have been tested and if so resolve the collisions.
     void ResolveCollisions()
     {
         LOCK(cs);
-        Check();
+        CheckWithLockHeld();
         ResolveCollisions_();
-        Check();
+        CheckWithLockHeld();
     }
 
     //! Randomly select an address in tried that another address is attempting to evict.
@@ -680,9 +686,9 @@ public:
         CAddrInfo ret;
         {
             LOCK(cs);
-            Check();
+            CheckWithLockHeld();
             ret = SelectTriedCollision_();
-            Check();
+            CheckWithLockHeld();
         }
         return ret;
     }
@@ -695,9 +701,9 @@ public:
         CAddrInfo addrRet;
         {
             LOCK(cs);
-            Check();
+            CheckWithLockHeld();
             addrRet = Select_(newOnly);
-            Check();
+            CheckWithLockHeld();
         }
         return addrRet;
     }
@@ -719,17 +725,17 @@ public:
     void Connected(const CService &addr, int64_t nTime = GetAdjustedTime())
     {
         LOCK(cs);
-        Check();
+        CheckWithLockHeld();
         Connected_(addr, nTime);
-        Check();
+        CheckWithLockHeld();
     }
 
     void SetServices(const CService &addr, ServiceFlags nServices)
     {
         LOCK(cs);
-        Check();
+        CheckWithLockHeld();
         SetServices_(addr, nServices);
-        Check();
+        CheckWithLockHeld();
     }
 
 };
