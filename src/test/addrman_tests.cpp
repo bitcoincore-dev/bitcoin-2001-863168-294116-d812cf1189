@@ -79,7 +79,7 @@ public:
 
          bool count_failure = false;
          int64_t nLastTry = GetAdjustedTime()-61;
-         Attempt(addr, count_failure, nLastTry);
+         AttemptWithLockHeld(addr, count_failure, nLastTry);
      }
 
     void Clear()

@@ -332,8 +332,9 @@ bool CAddrMan::Add_(const CAddress& addr, const CNetAddr& source, int64_t nTimeP
     return fNew;
 }
 
-void CAddrMan::Attempt_(const CService& addr, bool fCountFailure, int64_t nTime)
+void CAddrMan::AttemptWithLockHeld(const CService& addr, bool fCountFailure, int64_t nTime)
 {
+    AssertLockHeld(cs);
     CAddrInfo* pinfo = Find(addr);
 
     // if not found, bail out
