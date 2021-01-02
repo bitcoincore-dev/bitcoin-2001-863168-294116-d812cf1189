@@ -192,7 +192,7 @@ QVariant AddressTableModel::data(const QModelIndex &index, int role) const
     if(!index.isValid())
         return QVariant();
 
-    AddressTableEntry *rec = static_cast<AddressTableEntry*>(index.internalPointer());
+    const AddressTableEntry* rec{priv->index(index.row())};
 
     if(role == Qt::DisplayRole || role == Qt::EditRole)
     {
@@ -238,7 +238,8 @@ bool AddressTableModel::setData(const QModelIndex &index, const QVariant &value,
 {
     if(!index.isValid())
         return false;
-    AddressTableEntry *rec = static_cast<AddressTableEntry*>(index.internalPointer());
+
+    const AddressTableEntry* rec{priv->index(index.row())};
     std::string strPurpose = (rec->type == AddressTableEntry::Sending ? "send" : "receive");
     editStatus = OK;
 
@@ -306,7 +307,7 @@ Qt::ItemFlags AddressTableModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid()) return Qt::NoItemFlags;
 
-    AddressTableEntry *rec = static_cast<AddressTableEntry*>(index.internalPointer());
+    const AddressTableEntry* rec{priv->index(index.row())};
 
     Qt::ItemFlags retval = Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     // Can edit address and label for sending addresses,
@@ -317,20 +318,6 @@ Qt::ItemFlags AddressTableModel::flags(const QModelIndex &index) const
         retval |= Qt::ItemIsEditable;
     }
     return retval;
-}
-
-QModelIndex AddressTableModel::index(int row, int column, const QModelIndex &parent) const
-{
-    Q_UNUSED(parent);
-    AddressTableEntry *data = priv->index(row);
-    if(data)
-    {
-        return createIndex(row, column, priv->index(row));
-    }
-    else
-    {
-        return QModelIndex();
-    }
 }
 
 void AddressTableModel::updateEntry(const QString &address,
