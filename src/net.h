@@ -1095,6 +1095,7 @@ private:
     CService addrLocal GUARDED_BY(cs_addrLocal);
     mutable RecursiveMutex cs_addrLocal;
 
+public:
     //! Whether this peer connected via our Tor onion service.
     const bool m_inbound_onion{false};
 
