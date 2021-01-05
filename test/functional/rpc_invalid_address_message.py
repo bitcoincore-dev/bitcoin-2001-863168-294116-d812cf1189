@@ -44,6 +44,14 @@ class InvalidAddressErrorMessageTest(BitcoinTestFramework):
         assert not info['isvalid']
         assert_equal(info['error'], 'Invalid prefix for Bech32 address')
 
+        info = node.validateaddress(BECH32_INVALID_BECH32)
+        assert not info['isvalid']
+        assert_equal(info['error'], 'Version 1+ witness address must use Bech32m checksum')
+
+        info = node.validateaddress(BECH32_INVALID_BECH32M)
+        assert not info['isvalid']
+        assert_equal(info['error'], 'Version 0 witness address must use Bech32 checksum')
+
         info = node.validateaddress(BECH32_INVALID_V0_SIZE)
         assert not info['isvalid']
         assert_equal(info['error'], 'Invalid Bech32 v0 address data size')

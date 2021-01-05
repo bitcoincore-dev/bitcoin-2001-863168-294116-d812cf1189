@@ -101,19 +101,19 @@ CTxDestination DecodeDestination(const std::string& str, const CChainParams& par
     data.clear();
     const auto dec = bech32::Decode(str);
     if ((dec.encoding == bech32::Encoding::BECH32 || dec.encoding == bech32::Encoding::BECH32M) && dec.data.size() > 0) {
+        // Bech32 decoding
         error_str = "";
-
         if (dec.hrp != params.Bech32HRP()) {
             error_str = "Invalid prefix for Bech32 address";
             return CNoDestination();
         }
-
-        // Bech32 decoding
         int version = dec.data[0]; // The first 5 bit symbol is the witness version (0-16)
         if (version == 0 && dec.encoding != bech32::Encoding::BECH32) {
+            error_str = "Version 0 witness address must use Bech32 checksum";
             return CNoDestination();
         }
         if (version != 0 && dec.encoding != bech32::Encoding::BECH32M) {
+            error_str = "Version 1+ witness address must use Bech32m checksum";
             return CNoDestination();
         }
         // The rest of the symbols are converted witness program bytes.
