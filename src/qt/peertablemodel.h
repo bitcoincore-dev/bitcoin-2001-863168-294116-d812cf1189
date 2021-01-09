@@ -61,6 +61,7 @@ public:
         NetNodeId = 0,
         Address = 1,
         Direction,
+        ConnectionType,
         Ping,
         Sent,
         Received,
