@@ -319,22 +319,6 @@ bool BlockManager::LoadBlockIndex(
     return true;
 }
 
-void BlockManager::Unload()
-{
-    m_blocks_unlinked.clear();
-
-    m_block_index.clear();
-
-    m_blockfile_info.clear();
-    m_last_blockfile = 0;
-    m_dirty_blockindex.clear();
-    m_dirty_fileinfo.clear();
-
-    pindexBestHeader = nullptr;
-
-    fHavePruned = false;
-}
-
 bool BlockManager::WriteBlockIndexDB()
 {
     AssertLockHeld(::cs_main);
