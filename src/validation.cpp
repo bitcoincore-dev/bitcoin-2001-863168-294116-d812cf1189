@@ -3622,26 +3622,6 @@ bool BlockManager::LoadBlockIndex(
     return true;
 }
 
-void BlockManager::Unload() {
-    m_failed_blocks.clear();
-    m_blocks_unlinked.clear();
-
-    m_block_index.clear();
-
-    pindexBestInvalid = nullptr;
-    pindexBestHeader = nullptr;
-
-    setDirtyBlockIndex.clear();
-    setDirtyFileInfo.clear();
-
-    vinfoBlockFile.clear();
-    {
-        LOCK(cs_LastBlockFile);
-        nLastBlockFile = 0;
-        // TODO: reset fCheckForPruning?
-    }
-}
-
 bool BlockManager::LoadBlockIndexDB(std::set<CBlockIndex*, CBlockIndexWorkComparator>& setBlockIndexCandidates)
 {
     if (!LoadBlockIndex(
@@ -3959,21 +3939,6 @@ bool CChainState::NeedsRedownload() const
     }
 
     return false;
-}
-
-void CChainState::UnloadBlockIndex() {
-    nBlockSequenceId = 1;
-    setBlockIndexCandidates.clear();
-}
-
-// May NOT be used after any connections are up as much
-// of the peer-processing logic assumes a consistent
-// block index state
-void UnloadBlockIndex(CTxMemPool* mempool, ChainstateManager& chainman)
-{
-    LOCK(cs_main);
-    chainman.Unload();
-    if (mempool) mempool->clear();
 }
 
 bool ChainstateManager::LoadBlockIndex()
@@ -4883,16 +4848,6 @@ bool ChainstateManager::IsBackgroundIBD(CChainState* chainstate) const
 {
     LOCK(::cs_main);
     return (m_snapshot_chainstate && chainstate == m_ibd_chainstate.get());
-}
-
-void ChainstateManager::Unload()
-{
-    for (CChainState* chainstate : this->GetAll()) {
-        chainstate->m_chain.SetTip(nullptr);
-        chainstate->UnloadBlockIndex();
-    }
-
-    m_blockman.Unload();
 }
 
 void ChainstateManager::Reset()
