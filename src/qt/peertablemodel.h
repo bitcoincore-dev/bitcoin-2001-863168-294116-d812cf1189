@@ -11,6 +11,7 @@
 #include <memory>
 
 #include <QAbstractTableModel>
+#include <QIcon>
 #include <QStringList>
 
 class PeerTablePriv;
@@ -60,8 +61,8 @@ public:
 
     enum ColumnIndex {
         NetNodeId = 0,
-        Address = 1,
         Direction,
+        Address,
         ConnectionType,
         Ping,
         Sent,
@@ -86,6 +87,8 @@ public Q_SLOTS:
 private:
     interfaces::Node& m_node;
     const PlatformStyle& m_platform_style;
+    void DrawIcons();
+    QIcon m_icon_conn_in, m_icon_conn_out;
     QStringList columns;
     std::unique_ptr<PeerTablePriv> priv;
     QTimer *timer;
