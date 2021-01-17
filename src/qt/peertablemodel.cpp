@@ -116,7 +116,7 @@ PeerTableModel::PeerTableModel(interfaces::Node& node, const PlatformStyle& plat
     m_platform_style(platform_style),
     timer(nullptr)
 {
-    columns << tr("NodeId") << "" << tr("Node/Service") << tr("Type") << tr("Ping") << tr("Sent") << tr("Received") << tr("User Agent");
+    columns << tr("id", "Peer table, referring to node id") << "" << tr("Node/Service") << tr("Type") << tr("Ping") << tr("Sent") << tr("Received") << tr("User Agent");
     priv.reset(new PeerTablePriv());
 
     // set up timer for auto refresh

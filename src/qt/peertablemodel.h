@@ -59,6 +59,7 @@ public:
     void startAutoRefresh();
     void stopAutoRefresh();
 
+    // See also RPCConsole::ColumnWidths in rpcconsole.h
     enum ColumnIndex {
         NetNodeId = 0,
         Direction,
