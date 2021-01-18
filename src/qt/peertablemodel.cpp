@@ -6,6 +6,7 @@
 
 #include <qt/guiconstants.h>
 #include <qt/guiutil.h>
+#include <qt/platformstyle.h>
 
 #include <interfaces/node.h>
 
@@ -103,9 +104,10 @@ public:
     }
 };
 
-PeerTableModel::PeerTableModel(interfaces::Node& node, QObject* parent) :
+PeerTableModel::PeerTableModel(interfaces::Node& node, const PlatformStyle& platform_style, QObject* parent) :
     QAbstractTableModel(parent),
     m_node(node),
+    m_platform_style(platform_style),
     timer(nullptr)
 {
     columns << tr("NodeId") << tr("Node/Service") << tr("Direction") << tr("Type") << tr("Ping") << tr("Sent") << tr("Received") << tr("User Agent");
