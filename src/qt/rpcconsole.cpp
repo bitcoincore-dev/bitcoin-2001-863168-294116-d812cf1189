@@ -455,12 +455,12 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
             // Restore failed (perhaps missing setting), center the window
             move(QGuiApplication::primaryScreen()->availableGeometry().center() - frameGeometry().center());
         }
-        ui->splitter->restoreState(settings.value("RPCConsoleWindowPeersTabSplitterSizes").toByteArray());
+        ui->splitter->restoreState(settings.value("RPCConsoleWindowPeersTabSplitterSizes_Knots21").toByteArray());
     } else
 #endif // ENABLE_WALLET
     {
         // RPCConsole is a child widget.
-        ui->splitter->restoreState(settings.value("RPCConsoleWidgetPeersTabSplitterSizes").toByteArray());
+        ui->splitter->restoreState(settings.value("RPCConsoleWidgetPeersTabSplitterSizes_Knots21").toByteArray());
     }
 
     QChar nonbreaking_hyphen(8209);
@@ -520,12 +520,12 @@ RPCConsole::~RPCConsole()
     if (WalletModel::isWalletEnabled()) {
         // RPCConsole widget is a window.
         settings.setValue("RPCConsoleWindowGeometry", saveGeometry());
-        settings.setValue("RPCConsoleWindowPeersTabSplitterSizes", ui->splitter->saveState());
+        settings.setValue("RPCConsoleWindowPeersTabSplitterSizes_Knots21", ui->splitter->saveState());
     } else
 #endif // ENABLE_WALLET
     {
         // RPCConsole is a child widget.
-        settings.setValue("RPCConsoleWidgetPeersTabSplitterSizes", ui->splitter->saveState());
+        settings.setValue("RPCConsoleWidgetPeersTabSplitterSizes_Knots21", ui->splitter->saveState());
     }
 
     m_node.rpcUnsetTimerInterface(rpcTimerInterface);
