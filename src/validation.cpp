@@ -5078,7 +5078,8 @@ int VersionBitsTipStateSinceHeight(const Consensus::Params& params, Consensus::D
     return VersionBitsStateSinceHeight(::ChainActive().Tip(), params, pos, versionbitscache);
 }
 
-static const uint64_t MEMPOOL_DUMP_VERSION = 2;
+static const uint64_t MEMPOOL_DUMP_VERSION_CORE = 1;
+static const uint64_t MEMPOOL_DUMP_VERSION_KNOTS_014 = 2;  // Knots 0.14-0.21
 static constexpr uint64_t MEMPOOL_KNOTS_DUMP_VERSION = 0;
 
 bool LoadMempoolKnots(CTxMemPool& pool)
@@ -5110,16 +5111,10 @@ bool LoadMempoolKnots(CTxMemPool& pool)
     return true;
 }
 
-bool LoadMempool(CTxMemPool& pool)
+bool LoadMempoolKnots014(CTxMemPool& pool, CAutoFile& file)
 {
     const CChainParams& chainparams = Params();
     int64_t nExpiryTimeout = gArgs.GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY) * 60 * 60;
-    FILE* filestr = fsbridge::fopen(GetDataDir() / "mempool.dat", "rb");
-    CAutoFile file(filestr, SER_DISK, CLIENT_VERSION);
-    if (file.IsNull()) {
-        LogPrintf("Failed to open mempool file from disk. Continuing anyway.\n");
-        return false;
-    }
 
     int64_t count = 0;
     int64_t expired = 0;
@@ -5129,11 +5124,6 @@ bool LoadMempool(CTxMemPool& pool)
     int64_t nNow = GetTime();
 
     try {
-        uint64_t version;
-        file >> version;
-        if (version != MEMPOOL_DUMP_VERSION) {
-            return false;
-        }
         std::map<std::string, std::vector<unsigned char>> mapData;
         file >> mapData;
 
@@ -5235,8 +5225,103 @@ bool LoadMempool(CTxMemPool& pool)
         return false;
     }
 
-    // NOTE: Removed to avoid double-prioritisation
-    //LoadMempoolKnots(pool);
+    LogPrintf("Imported mempool transactions from disk: %i succeeded, %i failed, %i expired, %i already there, %i waiting for initial broadcast\n", count, failed, expired, already_there, unbroadcast);
+    return true;
+}
+
+bool LoadMempool(CTxMemPool& pool)
+{
+    const CChainParams& chainparams = Params();
+    int64_t nExpiryTimeout = gArgs.GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY) * 60 * 60;
+    FILE* filestr = fsbridge::fopen(GetDataDir() / "mempool.dat", "rb");
+    CAutoFile file(filestr, SER_DISK, CLIENT_VERSION);
+    if (file.IsNull()) {
+        LogPrintf("Failed to open mempool file from disk. Continuing anyway.\n");
+        return false;
+    }
+
+    int64_t count = 0;
+    int64_t expired = 0;
+    int64_t failed = 0;
+    int64_t already_there = 0;
+    int64_t unbroadcast = 0;
+    int64_t nNow = GetTime();
+
+    try {
+        uint64_t version;
+        file >> version;
+        if (version != MEMPOOL_DUMP_VERSION_CORE) {
+            if (version == MEMPOOL_DUMP_VERSION_KNOTS_014) {
+                return LoadMempoolKnots014(pool, file);
+            }
+            return false;
+        }
+        uint64_t num;
+        file >> num;
+        while (num--) {
+            CTransactionRef tx;
+            int64_t nTime;
+            int64_t nFeeDelta;
+            file >> tx;
+            file >> nTime;
+            file >> nFeeDelta;
+
+            CAmount amountdelta = nFeeDelta;
+            if (amountdelta) {
+                pool.PrioritiseTransaction(tx->GetHash(), amountdelta);
+            }
+            TxValidationState state;
+            if (nTime > nNow - nExpiryTimeout) {
+                LOCK(cs_main);
+                AcceptToMemoryPoolWithTime(chainparams, pool, state, tx, nTime,
+                                           nullptr /* plTxnReplaced */, empty_ignore_rejects,
+                                           false /* test_accept */);
+                if (state.IsValid()) {
+                    ++count;
+                } else {
+                    // mempool may contain the transaction already, e.g. from
+                    // wallet(s) having loaded it while we were processing
+                    // mempool transactions; consider these as valid, instead of
+                    // failed, but mark them as 'already there'
+                    if (pool.exists(tx->GetHash())) {
+                        ++already_there;
+                    } else {
+                        ++failed;
+                    }
+                }
+            } else {
+                ++expired;
+            }
+            if (ShutdownRequested())
+                return false;
+        }
+        std::map<uint256, CAmount> mapDeltas;
+        file >> mapDeltas;
+
+        for (const auto& i : mapDeltas) {
+            pool.PrioritiseTransaction(i.first, i.second);
+        }
+
+        // TODO: remove this try except in v0.22
+        std::set<uint256> unbroadcast_txids;
+        try {
+          file >> unbroadcast_txids;
+          unbroadcast = unbroadcast_txids.size();
+        } catch (const std::exception&) {
+          // mempool.dat files created prior to v0.21 will not have an
+          // unbroadcast set. No need to log a failure if parsing fails here.
+        }
+        for (const auto& txid : unbroadcast_txids) {
+            // Ensure transactions were accepted to mempool then add to
+            // unbroadcast set.
+            if (pool.get(txid) != nullptr) pool.AddUnbroadcastTx(txid);
+        }
+    } catch (const std::exception& e) {
+        LogPrintf("Failed to deserialize mempool data on disk: %s. Continuing anyway.\n", e.what());
+        return false;
+    }
+
+    LoadMempoolKnots(pool);
 
     LogPrintf("Imported mempool transactions from disk: %i succeeded, %i failed, %i expired, %i already there, %i waiting for initial broadcast\n", count, failed, expired, already_there, unbroadcast);
     return true;
@@ -5297,7 +5382,7 @@ bool DumpMempool(const CTxMemPool& pool)
 
         CAutoFile file(filestr, SER_DISK, CLIENT_VERSION);
 
-        uint64_t version = MEMPOOL_DUMP_VERSION;
+        uint64_t version = MEMPOOL_DUMP_VERSION_KNOTS_014;
         file << version;
 
         file << mapData;
