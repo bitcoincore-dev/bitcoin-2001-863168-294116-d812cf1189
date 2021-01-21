@@ -57,7 +57,7 @@ public:
         ProxyUseTor,            // bool
         ProxyIPTor,             // QString
         ProxyPortTor,           // int
-        DisplayUnit,            // BitcoinUnits::Unit
+        DisplayUnit,            // BitcoinUnit
         ThirdPartyTxUrls,       // QString
         Language,               // QString
         CoinControlFeatures,    // bool
@@ -83,7 +83,7 @@ public:
     bool getShowTrayIcon() const { return m_show_tray_icon; }
     bool getMinimizeToTray() const { return fMinimizeToTray; }
     bool getMinimizeOnClose() const { return fMinimizeOnClose; }
-    int getDisplayUnit() const { return static_cast<int>(m_display_unit); }
+    BitcoinUnit getDisplayUnit() const { return m_display_unit; }
     QString getThirdPartyTxUrls() const { return strThirdPartyTxUrls; }
     bool getCoinControlFeatures() const { return fCoinControlFeatures; }
     const QString& getOverriddenByCommandLine() { return strOverriddenByCommandLine; }
@@ -118,7 +118,7 @@ private:
     // Check settings version and upgrade default values if required
     void checkAndMigrate();
 Q_SIGNALS:
-    void displayUnitChanged(int unit);
+    void displayUnitChanged(BitcoinUnit unit);
     void coinControlFeaturesChanged(bool);
     void showTrayIconChanged(bool);
 };
