@@ -452,12 +452,17 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
 {
     ui->setupUi(this);
     QSettings settings;
-    if (!restoreGeometry(settings.value("RPCConsoleWindowGeometry").toByteArray())) {
-        // Restore failed (perhaps missing setting), center the window
-        move(QGuiApplication::primaryScreen()->availableGeometry().center() - frameGeometry().center());
+    if (WalletModel::isWalletEnabled()) {
+        // RPCConsole widget is a window.
+        if (!restoreGeometry(settings.value("RPCConsoleWindowGeometry").toByteArray())) {
+            // Restore failed (perhaps missing setting), center the window
+            move(QGuiApplication::primaryScreen()->availableGeometry().center() - frameGeometry().center());
+        }
+        ui->splitter->restoreState(settings.value("RPCConsoleWindowPeersTabSplitterSizes").toByteArray());
+    } else {
+        // RPCConsole is a child widget.
+        ui->splitter->restoreState(settings.value("RPCConsoleWidgetPeersTabSplitterSizes").toByteArray());
     }
-
-    ui->splitter->restoreState(settings.value("PeersTabSplitterSizes").toByteArray());
 
     QChar nonbreaking_hyphen(8209);
     ui->dataDir->setToolTip(ui->dataDir->toolTip().arg(QString(nonbreaking_hyphen) + "datadir"));
@@ -504,8 +509,15 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
 RPCConsole::~RPCConsole()
 {
     QSettings settings;
-    settings.setValue("RPCConsoleWindowGeometry", saveGeometry());
-    settings.setValue("PeersTabSplitterSizes", ui->splitter->saveState());
+    if (WalletModel::isWalletEnabled()) {
+        // RPCConsole widget is a window.
+        settings.setValue("RPCConsoleWindowGeometry", saveGeometry());
+        settings.setValue("RPCConsoleWindowPeersTabSplitterSizes", ui->splitter->saveState());
+    } else {
+        // RPCConsole is a child widget.
+        settings.setValue("RPCConsoleWidgetPeersTabSplitterSizes", ui->splitter->saveState());
+    }
+
     m_node.rpcUnsetTimerInterface(rpcTimerInterface);
     delete rpcTimerInterface;
     delete ui;
