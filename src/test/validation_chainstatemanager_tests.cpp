@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(chainstatemanager)
     std::vector<CChainState*> chainstates;
     const CChainParams& chainparams = Params();
 
-    BOOST_CHECK(!manager.SnapshotBlockhash().has_value());
+    WITH_LOCK(::cs_main, BOOST_CHECK(!manager.SnapshotBlockhash().has_value()));
 
     // Create a legacy (IBD) chainstate.
     //
@@ -41,27 +41,35 @@ BOOST_AUTO_TEST_CASE(chainstatemanager)
     chainstates.push_back(&c1);
     c1.InitCoinsDB(
         /* cache_size_bytes */ 1 << 23, /* in_memory */ true, /* should_wipe */ false);
-    WITH_LOCK(::cs_main, c1.InitCoinsCache(1 << 23));
+    {
+        LOCK(::cs_main);
+        c1.InitCoinsCache(1 << 23);
 
-    BOOST_CHECK(!manager.IsSnapshotActive());
-    BOOST_CHECK(!manager.IsSnapshotValidated());
-    BOOST_CHECK(!manager.IsBackgroundIBD(&c1));
+        BOOST_CHECK(!manager.IsSnapshotActive());
+        BOOST_CHECK(!manager.IsSnapshotValidated());
+        BOOST_CHECK(!manager.IsBackgroundIBD(&c1));
+    }
+
     auto all = manager.GetAll();
     BOOST_CHECK_EQUAL_COLLECTIONS(all.begin(), all.end(), chainstates.begin(), chainstates.end());
 
-    auto& active_chain = manager.ActiveChain();
+    auto& active_chain = WITH_LOCK(::cs_main, return manager.ActiveChain());
     BOOST_CHECK_EQUAL(&active_chain, &c1.m_chain);
 
-    BOOST_CHECK_EQUAL(manager.ActiveHeight(), -1);
+    CBlockIndex* exp_tip;
+    {
+        LOCK(::cs_main);
+        BOOST_CHECK_EQUAL(manager.ActiveHeight(), -1);
 
-    auto active_tip = manager.ActiveTip();
-    auto exp_tip = c1.m_chain.Tip();
-    BOOST_CHECK_EQUAL(active_tip, exp_tip);
+        auto active_tip = manager.ActiveTip();
+        exp_tip = c1.m_chain.Tip();
+        BOOST_CHECK_EQUAL(active_tip, exp_tip);
+    }
 
     auto& validated_cs = manager.ValidatedChainstate();
     BOOST_CHECK_EQUAL(&validated_cs, &c1);
 
-    BOOST_CHECK(!manager.SnapshotBlockhash().has_value());
+    WITH_LOCK(::cs_main, BOOST_CHECK(!manager.SnapshotBlockhash().has_value()));
 
     // Create a snapshot-based chainstate.
     //
@@ -70,7 +78,7 @@ BOOST_AUTO_TEST_CASE(chainstatemanager)
         mempool, snapshot_blockhash));
     chainstates.push_back(&c2);
 
-    BOOST_CHECK_EQUAL(manager.SnapshotBlockhash().value(), snapshot_blockhash);
+    WITH_LOCK(::cs_main, BOOST_CHECK_EQUAL(manager.SnapshotBlockhash().value(), snapshot_blockhash));
 
     c2.InitCoinsDB(
         /* cache_size_bytes */ 1 << 23, /* in_memory */ true, /* should_wipe */ false);
@@ -80,21 +88,28 @@ BOOST_AUTO_TEST_CASE(chainstatemanager)
     BlockValidationState _;
     BOOST_CHECK(c2.ActivateBestChain(_, chainparams, nullptr));
 
-    BOOST_CHECK(manager.IsSnapshotActive());
-    BOOST_CHECK(!manager.IsSnapshotValidated());
-    BOOST_CHECK(manager.IsBackgroundIBD(&c1));
-    BOOST_CHECK(!manager.IsBackgroundIBD(&c2));
+    {
+        LOCK(::cs_main);
+        BOOST_CHECK(manager.IsSnapshotActive());
+        BOOST_CHECK(!manager.IsSnapshotValidated());
+        BOOST_CHECK(manager.IsBackgroundIBD(&c1));
+        BOOST_CHECK(!manager.IsBackgroundIBD(&c2));
+    }
     auto all2 = manager.GetAll();
     BOOST_CHECK_EQUAL_COLLECTIONS(all2.begin(), all2.end(), chainstates.begin(), chainstates.end());
 
-    auto& active_chain2 = manager.ActiveChain();
+    auto& active_chain2 = WITH_LOCK(::cs_main, return manager.ActiveChain());
     BOOST_CHECK_EQUAL(&active_chain2, &c2.m_chain);
 
-    BOOST_CHECK_EQUAL(manager.ActiveHeight(), 0);
+    CBlockIndex* exp_tip2;
+    {
+        LOCK(::cs_main);
+        BOOST_CHECK_EQUAL(manager.ActiveHeight(), 0);
 
-    auto active_tip2 = manager.ActiveTip();
-    auto exp_tip2 = c2.m_chain.Tip();
-    BOOST_CHECK_EQUAL(active_tip2, exp_tip2);
+        auto active_tip2 = manager.ActiveTip();
+        exp_tip2 = c2.m_chain.Tip();
+        BOOST_CHECK_EQUAL(active_tip2, exp_tip2);
+    }
 
     // Ensure that these pointers actually correspond to different
     // CCoinsViewCache instances.
@@ -183,7 +198,8 @@ CreateAndActivateUTXOSnapshot(NodeContext& node, const fs::path root, F malleati
     FILE* outfile{fsbridge::fopen(snapshot_path, "wb")};
     CAutoFile auto_outfile{outfile, SER_DISK, CLIENT_VERSION};
 
-    UniValue result = CreateUTXOSnapshot(node, node.chainman->ActiveChainstate(), auto_outfile);
+    auto& chainstate = WITH_LOCK(::cs_main, return node.chainman->ActiveChainstate());
+    UniValue result = CreateUTXOSnapshot(node, chainstate, auto_outfile);
     BOOST_TEST_MESSAGE(
         "Wrote UTXO snapshot to " << snapshot_path.make_preferred().string() << ": " << result.write());
 
@@ -226,10 +242,15 @@ BOOST_FIXTURE_TEST_CASE(chainstatemanager_activate_snapshot, TestChain100Determi
 
     // Snapshot should refuse to load at this height.
     BOOST_REQUIRE(!CreateAndActivateUTXOSnapshot(m_node, m_path_root));
-    BOOST_CHECK(chainman.ActiveChainstate().m_from_snapshot_blockhash.IsNull());
-    BOOST_CHECK_EQUAL(
-        chainman.ActiveChainstate().m_from_snapshot_blockhash,
-        chainman.SnapshotBlockhash().value_or(uint256()));
+
+    {
+
+        LOCK(::cs_main);
+        BOOST_CHECK(chainman.ActiveChainstate().m_from_snapshot_blockhash.IsNull());
+        BOOST_CHECK_EQUAL(
+            chainman.ActiveChainstate().m_from_snapshot_blockhash,
+            chainman.SnapshotBlockhash().value_or(uint256()));
+    }
 
     // Mine 10 more blocks, putting at us height 110 where a valid assumeutxo value can
     // be found.
@@ -262,14 +283,18 @@ BOOST_FIXTURE_TEST_CASE(chainstatemanager_activate_snapshot, TestChain100Determi
 
     BOOST_REQUIRE(CreateAndActivateUTXOSnapshot(m_node, m_path_root));
 
-    // Ensure our active chain is the snapshot chainstate.
-    BOOST_CHECK(!chainman.ActiveChainstate().m_from_snapshot_blockhash.IsNull());
-    BOOST_CHECK_EQUAL(
-        chainman.ActiveChainstate().m_from_snapshot_blockhash,
-        *chainman.SnapshotBlockhash());
+    {
+        LOCK(::cs_main);
+        // Ensure our active chain is the snapshot chainstate.
+        BOOST_CHECK(!chainman.ActiveChainstate().m_from_snapshot_blockhash.IsNull());
+        BOOST_CHECK_EQUAL(
+            chainman.ActiveChainstate().m_from_snapshot_blockhash,
+            *chainman.SnapshotBlockhash());
+    }
 
     // To be checked against later when we try loading a subsequent snapshot.
-    uint256 loaded_snapshot_blockhash{*chainman.SnapshotBlockhash()};
+    auto blockhash = WITH_LOCK(::cs_main, return chainman.SnapshotBlockhash());
+    uint256 loaded_snapshot_blockhash{*blockhash};
 
     // Make some assertions about the both chainstates. These checks ensure the
     // legacy chainstate hasn't changed and that the newly created chainstate
@@ -334,10 +359,14 @@ BOOST_FIXTURE_TEST_CASE(chainstatemanager_activate_snapshot, TestChain100Determi
     // Snapshot should refuse to load after one has already loaded.
     BOOST_REQUIRE(!CreateAndActivateUTXOSnapshot(m_node, m_path_root));
 
-    // Snapshot blockhash should be unchanged.
-    BOOST_CHECK_EQUAL(
-        chainman.ActiveChainstate().m_from_snapshot_blockhash,
-        loaded_snapshot_blockhash);
+    {
+
+        LOCK(::cs_main);
+        // Snapshot blockhash should be unchanged.
+        BOOST_CHECK_EQUAL(
+            chainman.ActiveChainstate().m_from_snapshot_blockhash,
+            loaded_snapshot_blockhash);
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -2414,7 +2414,8 @@ static RPCHelpMan dumptxoutset()
     FILE* file{fsbridge::fopen(temppath, "wb")};
     CAutoFile afile{file, SER_DISK, CLIENT_VERSION};
     NodeContext& node = EnsureNodeContext(request.context);
-    UniValue result = CreateUTXOSnapshot(node, node.chainman->ActiveChainstate(), afile);
+    auto& chainstate = WITH_LOCK(::cs_main, return node.chainman->ActiveChainstate());
+    UniValue result = CreateUTXOSnapshot(node, chainstate, afile);
     fs::rename(temppath, path);
 
     result.pushKV("path", path.string());

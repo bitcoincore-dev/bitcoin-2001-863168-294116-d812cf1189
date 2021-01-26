@@ -817,15 +817,15 @@ private:
     //! Points to either the ibd or snapshot chainstate; indicates our
     //! most-work chain.
     //!
-    //! Once this pointer is set to a corresponding chainstate, it will not
-    //! be reset until init.cpp:Shutdown(). This means it is safe to acquire
-    //! the contents of this pointer with ::cs_main held, release the lock,
-    //! and then use the reference without concern of it being deconstructed.
+    //! It is safe to acquire the contents of this pointer with ::cs_main held,
+    //! release the lock, and then use the reference without concern of it
+    //! being deconstructed, though its contents may have changed in the
+    //! meantime.
     //!
-    //! This is especially important when, e.g., calling ActivateBestChain()
-    //! on all chainstates because we are not able to hold ::cs_main going into
+    //! This is especially important when, e.g., calling ActivateBestChain() on
+    //! all chainstates because we are not able to hold ::cs_main going into
     //! that call.
-    CChainState* m_active_chainstate{nullptr};
+    CChainState* m_active_chainstate GUARDED_BY(::cs_main) {nullptr};
 
     //! If true, the assumed-valid chainstate has been fully validated
     //! by the background validation chainstate.
@@ -884,19 +884,25 @@ public:
         CAutoFile& coins_file, const SnapshotMetadata& metadata, bool in_memory);
 
     //! The most-work chain.
-    CChainState& ActiveChainstate() const;
-    CChain& ActiveChain() const { return ActiveChainstate().m_chain; }
-    int ActiveHeight() const { return ActiveChain().Height(); }
-    CBlockIndex* ActiveTip() const { return ActiveChain().Tip(); }
+    CChainState& ActiveChainstate() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+    CChain& ActiveChain() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
+        return ActiveChainstate().m_chain;
+    }
+    int ActiveHeight() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
+        return ActiveChain().Height();
+    }
+    CBlockIndex* ActiveTip() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
+        return ActiveChain().Tip();
+    }
 
     BlockMap& BlockIndex() EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
     {
         return m_blockman.m_block_index;
     }
 
-    bool IsSnapshotActive() const;
+    bool IsSnapshotActive() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
-    Optional<uint256> SnapshotBlockhash() const;
+    Optional<uint256> SnapshotBlockhash() const EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     //! Is there a snapshot in use and has it been fully validated?
     bool IsSnapshotValidated() const { return m_snapshot_validated; }
@@ -956,7 +962,7 @@ public:
     void Unload() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     //! Clear (deconstruct) chainstate data.
-    void Reset();
+    void Reset() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     //! Check to see if caches are out of balance and if so, call
     //! ResizeCoinsCaches() as needed.
