@@ -752,7 +752,8 @@ static void ThreadImport(ChainstateManager& chainman, std::vector<fs::path> vImp
         return;
     }
     } // End scope of CImportingNow
-    chainman.ActiveChainstate().LoadMempool(args);
+    auto& chainstate = WITH_LOCK(::cs_main, return chainman.ActiveChainstate());
+    chainstate.LoadMempool(args);
 }
 
 /** Sanity checks

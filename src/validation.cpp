@@ -3803,7 +3803,11 @@ bool ChainstateManager::ProcessNewBlock(const CChainParams& chainparams, const s
     NotifyHeaderTip(is_in_ibd);
 
     BlockValidationState state; // Only used to report errors, not invalidity - ignore it
-    if (!ActiveChainstate().ActivateBestChain(state, chainparams, pblock))
+
+    // TODO: ensure this is safe for the longterm; in any case, it isn't a regression on the
+    // current state of affairs since we acquire ::cs_main when switching the active chainstate.
+    CChainState& active_chainstate = WITH_LOCK(::cs_main, return ActiveChainstate());
+    if (!active_chainstate.ActivateBestChain(state, chainparams, pblock))
         return error("%s: ActivateBestChain failed (%s)", __func__, state.ToString());
 
     return true;
@@ -5166,7 +5170,6 @@ double GuessVerificationProgress(const ChainTxData& data, const CBlockIndex *pin
 }
 
 Optional<uint256> ChainstateManager::SnapshotBlockhash() const {
-    LOCK(::cs_main);
     if (m_active_chainstate != nullptr &&
             !m_active_chainstate->m_from_snapshot_blockhash.IsNull()) {
         // If a snapshot chainstate exists, it will always be our active.
@@ -5232,7 +5235,7 @@ bool ChainstateManager::ActivateSnapshot(
 {
     uint256 base_blockhash = metadata.m_base_blockhash;
 
-    if (this->SnapshotBlockhash()) {
+    if (WITH_LOCK(::cs_main, return this->SnapshotBlockhash())) {
         LogPrintf("[snapshot] can't activate a snapshot-based chainstate more than once\n");
         return false;
     }
@@ -5504,14 +5507,12 @@ bool ChainstateManager::PopulateAndValidateSnapshot(
 
 CChainState& ChainstateManager::ActiveChainstate() const
 {
-    LOCK(::cs_main);
     assert(m_active_chainstate);
     return *m_active_chainstate;
 }
 
 bool ChainstateManager::IsSnapshotActive() const
 {
-    LOCK(::cs_main);
     return m_snapshot_chainstate && m_active_chainstate == m_snapshot_chainstate.get();
 }
 
