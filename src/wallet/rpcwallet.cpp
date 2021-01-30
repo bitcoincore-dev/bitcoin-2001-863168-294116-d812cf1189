@@ -4697,6 +4697,7 @@ static RPCHelpMan upgradewallet()
 
 RPCHelpMan abortrescan();
 RPCHelpMan dumpprivkey();
+UniValue dumpmasterprivkey(const JSONRPCRequest& request);
 RPCHelpMan importprivkey();
 RPCHelpMan importaddress();
 RPCHelpMan importpubkey();
@@ -4723,6 +4724,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "psbtbumpfee",                      &psbtbumpfee,                   {"txid", "options"} },
     { "wallet",             "createwallet",                     &createwallet,                  {"wallet_name", "disable_private_keys", "blank", "passphrase", "avoid_reuse", "descriptors", "load_on_startup"} },
     { "wallet",             "dumpprivkey",                      &dumpprivkey,                   {"address"}  },
+    { "wallet",             "dumpmasterprivkey",                &dumpmasterprivkey,             {} },
     { "wallet",             "dumpwallet",                       &dumpwallet,                    {"filename"} },
     { "wallet",             "encryptwallet",                    &encryptwallet,                 {"passphrase"} },
     { "wallet",             "getaddressesbylabel",              &getaddressesbylabel,           {"label"} },
