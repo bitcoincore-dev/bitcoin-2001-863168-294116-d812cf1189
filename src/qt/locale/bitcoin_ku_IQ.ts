@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>کرتەی-ڕاست بکە بۆ دەسکاری کردنی ناونیشان یان پێناسە</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>ناوونیشانێکی نوێ دروست بکە</translation>
     </message>
@@ -70,12 +66,6 @@
         <translation>ئەمانە ناونیشانی بیتکۆبیتەکانی تۆنە بۆ ناردنی پارەدانەکان. هەمیشە بڕی و ناونیشانی وەرگرەکان بپشکنە پێش ناردنی دراوەکان.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>ئەمانە ناونیشانی بیتکۆبیتەکانی تۆنە بۆ وەرگرتنی پارەدانەکان. دوگمەی 'دروستکردنیناونیشانی وەرگرتنی نوێ' لە تابی وەرگرتندا بۆ دروستکردنی ناونیشانی نوێ بەکاربێنە.
-واژووکردن تەنها دەکرێت لەگەڵ ناونیشانەکانی جۆری 'میرات'.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;ڕوونووسکردن ناوونیشان</translation>
     </message>
@@ -120,6 +110,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>BitcoinGUI</name>
     <message>
+        <source>&amp;Options...</source>
+        <translation type="unfinished">&amp;هەڵبژاردنەکان...</translation>
+    </message>
+    <message>
         <source>Click to disable network activity.</source>
         <translation>کرتە بکە بۆ ناچالاککردنی چالاکی تۆڕ.</translation>
     </message>
@@ -154,6 +148,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Information</source>
         <translation>زانیاری</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;ناردنی ناونیشانەکان</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;وەرگرتنی ناونیشانەکان</translation>
     </message>
     </context>
 <context>
@@ -232,6 +234,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>EditAddressDialog</name>
     <message>
+        <source>&amp;Address</source>
+        <translation>&amp;ناوونیشان</translation>
+    </message>
+    <message>
         <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
         <translation>ناونیشان "%1" پێشتر هەبوو وەک ناونیشانی وەرگرتن لەگەڵ ناونیشانی "%2" و بۆیە ناتوانرێت زیاد بکرێت وەک ناونیشانی ناردن.</translation>
     </message>
@@ -251,6 +257,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>ناتوانیت لێرە داتا دروست بکەیت.</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -290,12 +299,28 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.</source>
         <translation>%1 لە ئێستادا هاوکات دەکرێت.  سەرپەڕ و بلۆکەکان لە هاوتەمەنەکان دابەزێنێت و کارایان دەکات تا گەیشتن بە سەرەی زنجیرەی بلۆک.</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>جۆر</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>ناوونیشان</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -311,6 +336,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
         <translation>یو ئێڕ ئێڵەکانی لایەنی سێیەم. (بۆ وێنە گەڕاڵی بلۆک) کە لە تابی مامەڵەکان وەک بڕگەکان پێرستی دەق دەردەکەوێت. %s لە URL دا جێگەی دەگۆڕدرێتەوە بە هاش.. چەندین URL جیاکراونەتەوە بە شریتی ستوونی |.</translation>
+    </message>
+    <message>
+        <source>&amp;Network</source>
+        <translation type="unfinished">&amp;تۆڕ</translation>
     </message>
     <message>
         <source>Disables some advanced features but all blocks will still be fully validated. Reverting this setting requires re-downloading the entire blockchain. Actual disk usage may be somewhat higher.</source>
@@ -355,9 +384,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Copy to Clipboard</translation>
     </message>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">Cداخستن</translation>
+    </message>
+    <message>
         <source>or</source>
         <translation>یان</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -371,6 +407,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Sent</source>
         <translation>نێدرا</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>جۆر</translation>
     </message>
     </context>
 <context>
@@ -508,6 +548,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">ناوونیشان:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>کۆ:</translation>
     </message>
@@ -546,12 +590,20 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>تێچوون:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">هەڵبژێرە...</translation>
+    </message>
+    <message>
         <source>Hide transaction fee settings</source>
         <translation>شاردنەوەی ڕێکخستنەکانی باجی مامەڵە</translation>
     </message>
     <message>
         <source>When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for bitcoin transactions than the network can process.</source>
         <translation>کاتێک قەبارەی مامەڵە کەمتر بێت لە بۆشایی بلۆکەکان، لەوانەیە کانەکان و گرێکانی گواستنەوە کەمترین کرێ جێبەجێ بکەن. پێدانی تەنیا ئەم کەمترین کرێیە تەنیا باشە، بەڵام ئاگاداربە کە ئەمە دەتوانێت ببێتە هۆی ئەوەی کە هەرگیز مامەڵەیەکی پشتڕاستکردنەوە ئەنجام بدرێت جارێک داواکاری زیاتر هەیە بۆ مامەڵەکانی بیت کۆبیتکۆ لەوەی کە تۆڕەکە دەتوانێت ئەنجامی بدات.</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;ناردن</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -598,6 +650,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>بۆ پێداچوونەوەی لیستی وەرگرتن کرتە بکە لەسەر "پیشاندانی وردەکاریەکان..."</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">ناردن</translation>
+    </message>
+    <message>
         <source>The recipient address is not valid. Please recheck.</source>
         <translation>ناونیشانی وەرگرتنەکە دروست نییە. تکایە دووبارە پشکنین بکەوە.</translation>
     </message>
@@ -605,10 +661,21 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>SendCoinsEntry</name>
     <message>
+        <source>A&amp;mount:</source>
+        <translation>&amp;سەرجەم:</translation>
+    </message>
+    <message>
         <source>Message:</source>
         <translation>پەیام:</translation>
     </message>
     </context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>بەڵێ</translation>
+    </message>
+</context>
 <context>
     <name>ShutdownWindow</name>
     </context>
@@ -810,10 +877,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Could not find asmap file %s</source>
         <translation>ئاسماپ بدۆزرێتەوە %s نەتوانرا فایلی</translation>
-    </message>
-    <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>ناتوانێت جزدانی دابەشکردنی نا ئێج دی بەرزبکرێتەوە بەبێ بەرزکردنەوەی بۆ پشتگیری پێشوەخت دابەشکردنی کلیلەکە. تکایە وەشانی 169900 بەکاربێنە یان هیچ وەشانێکی دیاری کراو.</translation>
     </message>
     <message>
         <source>This error could occur if this wallet was not shutdown cleanly and was last loaded using a build with a newer version of Berkeley DB. If so, please use the software that last loaded this wallet</source>

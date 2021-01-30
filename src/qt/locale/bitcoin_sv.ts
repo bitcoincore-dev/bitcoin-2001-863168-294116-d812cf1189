@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Högerklicka för att redigera adressen eller etiketten.</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Skapa ny adress</translation>
     </message>
@@ -543,10 +539,6 @@ Försök igen.</translation>
         <translation>Dölj värden i översiktsfliken</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>Standardplånbok</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Inga plånböcker tillgängliga</translation>
     </message>
@@ -654,7 +646,11 @@ Försök igen.</translation>
         <source>Original message:</source>
         <translation>Ursprungligt meddelande:</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>Ett kritiskt fel uppstod. %1 kan inte fortsätta att köra säkert och kommer att avslutas.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -828,6 +824,10 @@ Försök igen.</translation>
         <translation>Skapa plånbok</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Plånbok</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Namn på plånboken</translation>
     </message>
@@ -939,6 +939,9 @@ Försök igen.</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -996,10 +999,6 @@ Försök igen.</translation>
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Släng block efter verifiering, förutom de senaste %1 GB (gallra).</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Minst %1 GB data kommer att sparas i den här katalogen, och de växer över tiden.</translation>
     </message>
@@ -1036,6 +1035,13 @@ Försök igen.</translation>
         <translation><numerusform>(%n GB behövs för hela kedjan)</numerusform><numerusform>(%n GB behövs för hela kedjan)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>ej tillgänglig</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1092,6 +1098,19 @@ Försök igen.</translation>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adress</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1100,6 +1119,14 @@ Försök igen.</translation>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Klistra in adress från Urklipp</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1198,10 +1225,6 @@ Försök igen.</translation>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Gallra &amp;blocklagring till</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1328,6 +1351,14 @@ Försök igen.</translation>
         <translation>Om myntkontrollfunktioner skall visas eller inte</translation>
     </message>
     <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Anslut till Bitcoin-nätverket genom en separat SOCKS5-proxy för dolda tjänster i Tor.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Använd separat SOCKS&amp;5-proxy för att nå noder via Tors dolda tjänster:</translation>
+    </message>
+    <message>
         <source>&amp;Third party transaction URLs</source>
         <translation>&amp;URL:er för tredjepartstransaktioner</translation>
     </message>
@@ -1350,6 +1381,10 @@ Försök igen.</translation>
     <message>
         <source>none</source>
         <translation>inget</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Kärna</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1470,6 +1505,10 @@ Försök igen.</translation>
         <translation>Dialog</translation>
     </message>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">Stäng</translation>
+    </message>
+    <message>
         <source>Total Amount</source>
         <translation>Totalt belopp</translation>
     </message>
@@ -1477,6 +1516,9 @@ Försök igen.</translation>
         <source>or</source>
         <translation>eller</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1528,10 +1570,6 @@ Försök igen.</translation>
         <translation>Nod/Tjänst</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>Nod-ID</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1543,7 +1581,11 @@ Försök igen.</translation>
         <source>Received</source>
         <translation>Mottaget</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Typ</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1645,6 +1687,11 @@ Försök igen.</translation>
     <message>
         <source>unknown</source>
         <translation>okänd</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -1757,6 +1804,10 @@ Försök igen.</translation>
         <translation>(ingen)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Räckvidd</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Återställ</translation>
     </message>
@@ -1779,10 +1830,6 @@ Försök igen.</translation>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Välj en klient för att se detaljerad information.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Riktning</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1965,14 +2012,6 @@ Försök igen.</translation>
         <translation>aldrig</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Inkommande</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Utgående</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Okänd</translation>
     </message>
@@ -2012,8 +2051,8 @@ Försök igen.</translation>
         <translation>An optional label to associate with the new receiving address (used by you to identify an invoice).  It is also attached to the payment request.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>S&amp;kapa ny mottagaradress</translation>
+        <source>&amp;Request payment</source>
+        <translation>Begä&amp;r betalning</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2074,6 +2113,10 @@ Försök igen.</translation>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">Adress:</translation>
+    </message>
     <message>
         <source>Amount:</source>
         <translation>Belopp:</translation>
@@ -2353,6 +2396,10 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
         <translation>Är du säker på att du vill skicka?</translation>
     </message>
     <message>
+        <source>Create Unsigned</source>
+        <translation type="unfinished">Skapa Osignerad</translation>
+    </message>
+    <message>
         <source>or</source>
         <translation>eller</translation>
     </message>
@@ -2530,6 +2577,13 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
     <message>
         <source>Memo:</source>
         <translation>PM:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
     </message>
 </context>
 <context>
@@ -3025,10 +3079,6 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
         <translation>Skickad till</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Till dig själv</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Grävda</translation>
     </message>
@@ -3451,6 +3501,12 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
         <translation>Den specificerade mappen för block "%s" existerar inte.</translation>
     </message>
     <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Angiven R/W konfigurationsfil %s finns inte
+</translation>
+    </message>
+    <message>
         <source>Unknown address type '%s'</source>
         <translation>Okänd adress-typ '%s'</translation>
     </message>
@@ -3543,6 +3599,10 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
         <translation>Du måste bygga om databasen genom att använda -reindex för att återgå till ogallrat läge. Detta kommer att ladda ner hela blockkedjan på nytt.</translation>
     </message>
     <message>
+        <source>A fatal internal error occurred, see debug.log for details</source>
+        <translation>Ett kritiskt internt fel uppstod, se debug.log för detaljer</translation>
+    </message>
+    <message>
         <source>Error reading from database, shutting down.</source>
         <translation>Fel vid läsning från databas, avslutar.</translation>
     </message>
@@ -3553,6 +3613,10 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
     <message>
         <source>Error: Disk space is low for %s</source>
         <translation>Fel: Diskutrymme är lågt för %s</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>Nyckelpoolen har tagit slut. Anropa keypoolrefill först.</translation>
     </message>
     <message>
         <source>Invalid -onion address or hostname: '%s'</source>
@@ -3719,10 +3783,6 @@ Notera: Då avgiften beräknas per byte kommer en avgift på 50 satoshi tas ut f
     <message>
         <source>Loading wallet...</source>
         <translation>Läser in plånbok...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Kan inte nedgradera plånboken</translation>
     </message>
     <message>
         <source>Rescanning...</source>

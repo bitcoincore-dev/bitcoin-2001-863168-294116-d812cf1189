@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>ঠিকানা কিংবা লেভেল সম্পাদনার জন্য রাইট-ক্লিক করুন</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>নতুন একটি ঠিকানা তৈরি করুন</translation>
     </message>
@@ -478,6 +474,22 @@
         <translation>Up to date</translation>
     </message>
     <message>
+        <source>&amp;Load PSBT from file...</source>
+        <translation>ফাইল থেকে পিএসবিটি লোড করুন ...</translation>
+    </message>
+    <message>
+        <source>Load Partially Signed Bitcoin Transaction</source>
+        <translation>আংশিক স্বাক্ষরিত বিটকয়েন লেনদেন লোড করুন</translation>
+    </message>
+    <message>
+        <source>Load PSBT from clipboard...</source>
+        <translation>ক্লিপবোর্ড থেকে পিএসবিটি লোড করুন ...</translation>
+    </message>
+    <message>
+        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
+        <translation>ক্লিপবোর্ড থেকে আংশিক স্বাক্ষরিত বিটকয়েন লেনদেন লোড করুন</translation>
+    </message>
+    <message>
         <source>Node window</source>
         <translation>Node window</translation>
     </message>
@@ -516,10 +528,6 @@
     <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Show the %1 help message to get a list with possible Bitcoin command-line options</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>default wallet</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -799,6 +807,10 @@
         <translation>Create Wallet</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation type="unfinished">Wallet</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Wallet Name</translation>
     </message>
@@ -910,6 +922,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -967,10 +982,6 @@
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Discard blocks after verification, except most recent %1 GB (prune)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>At least %1 GB of data will be stored in this directory, and it will grow over time.</translation>
     </message>
@@ -1007,6 +1018,13 @@
         <translation><numerusform>(%n GB needed for full chain)</numerusform><numerusform>(%n GB needed for full chain)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1067,6 +1085,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>ঠিকানা </translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1075,6 +1106,14 @@
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Paste address from clipboard</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1173,10 +1212,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Prune &amp;block storage to</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1441,6 +1476,10 @@
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">কপি/প্রতিলিপি</translation>
+    </message>
+    <message>
         <source>Total Amount</source>
         <translation>Total Amount</translation>
     </message>
@@ -1448,6 +1487,9 @@
         <source>or</source>
         <translation>or</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1503,10 +1545,6 @@
         <translation>Node/Service</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeId</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1518,7 +1556,11 @@
         <source>Received</source>
         <translation>Received</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Type</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1621,7 +1663,7 @@
         <source>unknown</source>
         <translation>unknown</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     <message>
@@ -1732,6 +1774,10 @@
         <translation>(none)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Range</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Reset</translation>
     </message>
@@ -1754,10 +1800,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Select a peer to view detailed information.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Direction</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1948,14 +1990,6 @@
         <translation>never</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Inbound</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Outbound</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Unknown</translation>
     </message>
@@ -1997,10 +2031,6 @@
     <message>
         <source>An optional message that is attached to the payment request and may be displayed to the sender.</source>
         <translation>An optional message that is attached to the payment request and may be displayed to the sender.</translation>
-    </message>
-    <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Create new receiving address</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2062,8 +2092,16 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">ঠিকানা :</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>Amount:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">লেবেল:</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -2340,6 +2378,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Are you sure you want to send?</translation>
     </message>
     <message>
+        <source>Create Unsigned</source>
+        <translation type="unfinished">Create Unsigned</translation>
+    </message>
+    <message>
         <source>or</source>
         <translation>or</translation>
     </message>
@@ -2523,6 +2565,9 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Memo:</translation>
     </message>
 </context>
+<context>
+    <name>SendConfirmationDialog</name>
+    </context>
 <context>
     <name>ShutdownWindow</name>
     <message>
@@ -3018,10 +3063,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Sent to</source>
         <translation>Sent to</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>To yourself</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3722,10 +3763,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Loading wallet...</source>
         <translation>Loading wallet...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Cannot downgrade wallet</translation>
     </message>
     <message>
         <source>Rescanning...</source>

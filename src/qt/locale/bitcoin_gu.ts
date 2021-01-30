@@ -1,108 +1,120 @@
-<TS language="mr_IN" version="2.1">
+<TS language="gu" version="2.1">
 <context>
     <name>AddressBookPage</name>
     <message>
         <source>Create a new address</source>
-        <translation>एक नवीन पत्ता तयार करा</translation>
+        <translation>નવું સરનામું બનાવો</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>&amp;नवा</translation>
+        <translation>નવું</translation>
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>सध्याचा निवडलेला पत्ता सिस्टीम क्लिपबोर्डावर कॉपी करा</translation>
+        <translation>હાલમાં પસંદ કરેલા સરનામાંને સિસ્ટમ ક્લિપબોર્ડ પર નકલ કરો</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation>&amp;कॉपी</translation>
+        <translation>&amp; નકલ કરો</translation>
     </message>
     <message>
         <source>C&amp;lose</source>
-        <translation>&amp;बंद करा</translation>
+        <translation>&amp; બંધ કરો</translation>
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
-        <translation>सध्याचा निवडलेला पत्ता यादीमधून काढून टाका</translation>
+        <translation>સૂચિમાંથી હાલમાં પસંદ કરેલું સરનામું કાઢી નાખો</translation>
     </message>
     <message>
         <source>Enter address or label to search</source>
-        <translation>शोधण्यासाठी पत्ता किंवा लेबल दाखल करा</translation>
+        <translation>શોધવા માટે સરનામું અથવા લેબલ દાખલ કરો</translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
-        <translation>सध्याच्या टॅबमधील डेटा एका फाईलमध्ये एक्स्पोर्ट करा</translation>
+        <translation>હાલ માં પસંદ કરેલ માહિતી ને ફાઇલમાં નિકાસ કરો</translation>
     </message>
     <message>
         <source>&amp;Export</source>
-        <translation>&amp;एक्स्पोर्ट</translation>
+        <translation>&amp; નિકાસ કરો</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
-        <translation>&amp;काढून टाका</translation>
+        <translation>&amp; કાઢી નાખો</translation>
     </message>
     <message>
         <source>Choose the address to send coins to</source>
-        <translation>ज्या पत्त्यावर नाणी पाठवायची आहेत तो निवडा</translation>
+        <translation>સિક્કા મોકલવા માટે સરનામું પસંદ કરો</translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
-        <translation>ज्या पत्त्यावर नाणी प्राप्त करायची आहेत तो</translation>
+        <translation>સિક્કા મેળવવા માટે સરનામું પસંદ કરો</translation>
     </message>
     <message>
         <source>C&amp;hoose</source>
-        <translation>&amp;निवडा</translation>
+        <translation>&amp; પસંદ કરો</translation>
     </message>
     <message>
         <source>Sending addresses</source>
-        <translation>प्रेषक पत्ते</translation>
+        <translation>મોકલવા માટે ના સરનામાં</translation>
     </message>
     <message>
         <source>Receiving addresses</source>
-        <translation>स्वीकृती पत्ते</translation>
+        <translation>મેળવવા માટે ના સરનામાં</translation>
     </message>
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>पैसे पाठविण्यासाठीचे हे तुमचे बिटकॉईन पत्त्ते आहेत. नाणी पाठविण्यापूर्वी नेहमी रक्कम आणि प्राप्त होणारा पत्ता तपासून पहा.</translation>
+        <translation>આ તમારા ચુકવણી કરવા માટે ના સરનામાં છે, હંમેશા કિંમત અને મોકલવાના ના સરનામાં ચકાસી લેવા સિક્કા આપતા પહેલા.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
-        <translation>&amp;पत्ता कॉपी करा</translation>
-    </message>
-    <message>
-        <source>Copy &amp;Label</source>
-        <translation>शिक्का कॉपी करा</translation>
+        <translation>&amp; સરનામુ નકલ કરો</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation>&amp;संपादित</translation>
+        <translation>&amp; બદલો</translation>
     </message>
     <message>
         <source>Export Address List</source>
-        <translation>पत्त्याची निर्यात करा</translation>
+        <translation>સરનામાં ની સૂચિ નો નિકાસ કરો</translation>
+    </message>
+    <message>
+        <source>Comma separated file (*.csv)</source>
+        <translation>અલ્પવિરામ થી જુદા પડલી માહિતી ની યાદી (*.csv)</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
-        <translation>निर्यात अयशस्वी</translation>
+        <translation>નિકાસ ની પ્ર્રાક્રિયા નિષ્ફળ ગયેલ છે</translation>
     </message>
     </context>
 <context>
     <name>AddressTableModel</name>
     <message>
-        <source>Label</source>
-        <translation>शिक्का</translation>
-    </message>
-    <message>
         <source>Address</source>
-        <translation>पत्ता</translation>
+        <translation>સરનામુ</translation>
     </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(शिक्का नाही)</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>AskPassphraseDialog</name>
+    <message>
+        <source>Passphrase Dialog</source>
+        <translation>ગુપ્ત શબ્દ માટે નુ ડાયલોગ</translation>
+    </message>
+    <message>
+        <source>Enter passphrase</source>
+        <translation>ગુપ્ત શબ્દ દાખલ કરો </translation>
+    </message>
+    <message>
+        <source>New passphrase</source>
+        <translation>નવો ગુપ્ત શબ્દ</translation>
+    </message>
+    <message>
+        <source>Repeat new passphrase</source>
+        <translation>ગુપ્ત શબ્દ ફરી નાખો</translation>
+    </message>
+    <message>
+        <source>Show passphrase</source>
+        <translation>ગુપ્ત શબ્દ જોવો</translation>
+    </message>
     </context>
 <context>
     <name>BanTableModel</name>
@@ -111,19 +123,15 @@
     <name>BitcoinGUI</name>
     <message>
         <source>&amp;Sending addresses</source>
-        <translation type="unfinished">&amp;प्रेषक पत्ते</translation>
+        <translation type="unfinished">&amp;મોકલવા માટે ના સરનામાં</translation>
     </message>
     <message>
         <source>&amp;Receiving addresses</source>
-        <translation type="unfinished">&amp;स्वीकृती पत्ते</translation>
+        <translation type="unfinished">&amp;મેળવવા માટે ના સરનામાં</translation>
     </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
-    <message>
-        <source>(no label)</source>
-        <translation>(लेबल नाही)</translation>
-    </message>
     </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -134,12 +142,8 @@
 <context>
     <name>EditAddressDialog</name>
     <message>
-        <source>&amp;Label</source>
-        <translation type="unfinished">&amp;लेबल</translation>
-    </message>
-    <message>
         <source>&amp;Address</source>
-        <translation type="unfinished">&amp;पत्ता</translation>
+        <translation type="unfinished">&amp;સરનામુ</translation>
     </message>
     </context>
 <context>
@@ -165,7 +169,7 @@
     <message>
         <source>Address</source>
         <comment>NetWatch: Address header</comment>
-        <translation>पत्ता</translation>
+        <translation>સરનામુ</translation>
     </message>
 </context>
 <context>
@@ -184,7 +188,7 @@
     <name>PSBTOperationsDialog</name>
     <message>
         <source>Close</source>
-        <translation type="unfinished">बंद करा</translation>
+        <translation type="unfinished"> બંધ કરો</translation>
     </message>
     </context>
 <context>
@@ -207,54 +211,30 @@
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation type="unfinished">&amp;लेबल:</translation>
-    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
         <source>Address:</source>
-        <translation type="unfinished">पत्ता:</translation>
-    </message>
-    <message>
-        <source>Label:</source>
-        <translation type="unfinished">लेबल:</translation>
+        <translation type="unfinished">સરનામુ:</translation>
     </message>
     <message>
         <source>Copy &amp;Address</source>
-        <translation type="unfinished">&amp;पत्ता कॉपी करा</translation>
+        <translation type="unfinished">&amp; સરનામુ નકલ કરો</translation>
     </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
-    <message>
-        <source>Label</source>
-        <translation>लेबल</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(लेबल नाही)</translation>
-    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
     <message>
         <source>Choose...</source>
-        <translation type="unfinished">निवडा...</translation>
+        <translation type="unfinished"> પસંદ કરો...</translation>
     </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(लेबल नाही)</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>SendCoinsEntry</name>
-    <message>
-        <source>&amp;Label:</source>
-        <translation type="unfinished">&amp;शिक्का:</translation>
-    </message>
     </context>
 <context>
     <name>SendConfirmationDialog</name>
@@ -276,28 +256,20 @@
     </context>
 <context>
     <name>TransactionTableModel</name>
-    <message>
-        <source>Label</source>
-        <translation>लेबल</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(लेबल नाही)</translation>
-    </message>
     </context>
 <context>
     <name>TransactionView</name>
     <message>
-        <source>Label</source>
-        <translation>शिक्का</translation>
+        <source>Comma separated file (*.csv)</source>
+        <translation>અલ્પવિરામ થી જુદા પડલી માહિતી ની યાદી (*.csv)</translation>
     </message>
     <message>
         <source>Address</source>
-        <translation>पत्ता</translation>
+        <translation>સરનામુ</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
-        <translation>निर्यात अयशस्वी</translation>
+        <translation>નિકાસ ની પ્ર્રાક્રિયા નિષ્ફળ ગયેલ છે</translation>
     </message>
     </context>
 <context>
@@ -316,11 +288,11 @@
     <name>WalletView</name>
     <message>
         <source>&amp;Export</source>
-        <translation>निर्यात</translation>
+        <translation>&amp; નિકાસ કરો</translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
-        <translation>सध्याच्या टॅबमधील माहिती एका फाईलमध्ये निर्यात करा</translation>
+        <translation>હાલ માં પસંદ કરેલ માહિતી ને ફાઇલમાં નિકાસ કરો</translation>
     </message>
     </context>
 <context>

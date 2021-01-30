@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>చిరునామా లేదా లేబుల్ సవరించు -క్లిక్ చేయండి</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>క్రొత్త చిరునామా సృష్టించు</translation>
     </message>
@@ -196,8 +192,24 @@
         <translation>మీ వాలెట్ గుప్తీకరించబోతోంది.</translation>
     </message>
     <message>
+        <source>Your wallet is now encrypted. </source>
+        <translation>cheraveyu chirunama</translation>
+    </message>
+    <message>
+        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
+        <translation>ముఖ్యమైనది: మీరు మీ వాలెట్ ఫైల్‌తో చేసిన మునుపటి బ్యాకప్‌లను కొత్తగా రూపొందించిన, గుప్తీకరించిన వాలెట్ ఫైల్‌తో భర్తీ చేయాలి. భద్రతా కారణాల దృష్ట్యా, మీరు క్రొత్త, గుప్తీకరించిన వాలెట్ ఉపయోగించడం ప్రారంభించిన వెంటనే గుప్తీకరించని వాలెట్ ఫైల్ యొక్క మునుపటి బ్యాకప్‌లు నిరుపయోగంగా మారతాయి.</translation>
+    </message>
+    <message>
         <source>Wallet encryption failed</source>
         <translation>జోలె సంకేతపరచడం విఫలమయ్యింది</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
+        <translation>lopali tappidam valla mee yokka wallet encryption samapthamu avaledu</translation>
+    </message>
+    <message>
+        <source>The supplied passphrases do not match.</source>
+        <translation>సరఫరా చేసిన పాస్‌ఫ్రేజ్‌లు సరిపోలడం లేదు.</translation>
     </message>
     </context>
 <context>
@@ -206,8 +218,32 @@
 <context>
     <name>BitcoinGUI</name>
     <message>
+        <source>Sign &amp;message...</source>
+        <translation>సంతకము మరియు సమాచారం</translation>
+    </message>
+    <message>
+        <source>Synchronizing with network...</source>
+        <translation>సమూహము తో సమకాలీకరణ చేయబడినది</translation>
+    </message>
+    <message>
+        <source>&amp;Overview</source>
+        <translation>&amp;అవలోకనం</translation>
+    </message>
+    <message>
         <source>E&amp;xit</source>
         <translation>నిష్క్రమించు</translation>
+    </message>
+    <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">&amp;వాలెట్‌ను గుప్తీకరించండి...</translation>
+    </message>
+    <message>
+        <source>Create a new wallet</source>
+        <translation>&lt;div&gt;&lt;/div&gt;</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation>ధనమును తీసుకొనిపోవు సంచి</translation>
     </message>
     <message>
         <source>&amp;Send</source>
@@ -230,6 +266,14 @@
         <translation>తాజాగా ఉంది</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;పంపించే చిరునామాలు</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;అందుకునే చిరునామాలు</translation>
+    </message>
+    <message>
         <source>Connecting to peers...</source>
         <translation>తోటివాళ్లతో అనుసంధానం కుదురుస్తుంది</translation>
     </message>
@@ -245,6 +289,14 @@
         <translation>పరిమాణం</translation>
     </message>
     <message>
+        <source>Amount:</source>
+        <translation type="unfinished">మొత్తం:</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>మొత్తం</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>తేదీ</translation>
     </message>
@@ -258,12 +310,31 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Wallet</source>
+        <translation>వాలెట్</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>వాలెట్‌ను గుప్తీకరించండి</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;ఉల్లాకు</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;చిరునామా</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GuiNetWatch</name>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -280,8 +351,19 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>చిరునామా</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -290,6 +372,14 @@
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;వాలెట్</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>బిట్కోయిన్ కోర్</translation>
+    </message>
     <message>
         <source>Error</source>
         <translation>లోపం</translation>
@@ -300,6 +390,13 @@
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Cకోల్పోవు</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -310,21 +407,69 @@
 <context>
     <name>QObject</name>
     <message>
+        <source>Amount</source>
+        <translation>మొత్తం</translation>
+    </message>
+    <message>
         <source>unknown</source>
         <translation>తెలియదు</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;వర్తమానము</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">వాలెట్: </translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;మొత్తం:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ఉల్లాకు:</translation>
+    </message>
+    <message>
+        <source>&amp;Message:</source>
+        <translation type="unfinished">&amp;సందేశం:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">చిరునామా:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation type="unfinished">మొత్తం:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">ఉల్లాకు:</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished">సందేశం:</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation>ధనమును తీసుకొనిపోవు సంచి</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">చిరునామాను కాపీ చెయ్యండి</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -352,12 +497,43 @@
         <translation>పరిమాణం</translation>
     </message>
     <message>
+        <source>Amount:</source>
+        <translation type="unfinished">మొత్తం:</translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">ఎంచుకోండి...</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">పంపు</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">పంపు</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>( ఉల్లాకు లేదు )</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;మొత్తం:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ఉల్లాకు:</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished">సందేశం:</translation>
+    </message>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -397,6 +573,10 @@
     <message>
         <source>Merchant</source>
         <translation>వర్తకుడు</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>మొత్తం</translation>
     </message>
     </context>
 <context>
@@ -452,7 +632,11 @@
     </context>
 <context>
     <name>WalletFrame</name>
-    </context>
+    <message>
+        <source>Create a new wallet</source>
+        <translation>&lt;div&gt;&lt;/div&gt;</translation>
+    </message>
+</context>
 <context>
     <name>WalletModel</name>
     </context>

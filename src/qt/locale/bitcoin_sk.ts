@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Kliknutím pravým tlačidlom upraviť adresu alebo popis</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Vytvoriť novú adresu</translation>
     </message>
@@ -518,10 +514,6 @@
         <translation>Ukáž %1 zoznam možných nastavení Bitcoinu pomocou príkazového riadku</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>predvolená peňaženka</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Nie je dostupná žiadna peňaženka</translation>
     </message>
@@ -625,7 +617,11 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Peňaženka je &lt;b&gt;zašifrovaná&lt;/b&gt; a momentálne &lt;b&gt;zamknutá&lt;/b&gt;</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>Vyskytla sa kritická chyba. %1 nemôže ďalej bezpečne pokračovať a ukončí sa.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -799,6 +795,10 @@
         <translation>Vytvoriť peňaženku</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Peňaženka</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Názov peňaženky</translation>
     </message>
@@ -910,6 +910,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -967,10 +970,6 @@
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Zahodiť bloky po ich overení, okrem posledných %1 GB (redukovanie)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>V tejto zložke bude uložených aspoň %1 GB dát a postupom času sa bude zväčšovať.</translation>
     </message>
@@ -1007,6 +1006,13 @@
         <translation><numerusform>(%n GB potrebný pre plný reťazec)</numerusform><numerusform>(%n GB potrebné pre plný reťazec)</numerusform><numerusform>(%n GB potrebných pre plný reťazec)</numerusform><numerusform>(%n GB potrebných pre plný reťazec)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>nie je k dispozícii</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1067,6 +1073,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresa</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1075,6 +1094,14 @@
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Vložiť adresu zo schránky</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1173,10 +1200,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Redukovať priestor pre &amp;bloky na</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1303,6 +1326,14 @@
         <translation>Či zobrazovať možnosti kontroly mincí alebo nie.</translation>
     </message>
     <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Pripojiť k Bitcoinovej sieti cez separované SOCKS5 proxy pre skrytú službu Tor.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Použiť samostatný SOCKS&amp;5 proxy server na dosiahnutie počítačov cez skryté služby Tor:</translation>
+    </message>
+    <message>
         <source>&amp;Third party transaction URLs</source>
         <translation>URL transakcií tretích strán</translation>
     </message>
@@ -1325,6 +1356,10 @@
     <message>
         <source>none</source>
         <translation>žiadne</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Jadro Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1449,6 +1484,10 @@
         <translation>Uložiť...</translation>
     </message>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">Zatvoriť</translation>
+    </message>
+    <message>
         <source>Total Amount</source>
         <translation>Celková suma</translation>
     </message>
@@ -1456,6 +1495,9 @@
         <source>or</source>
         <translation>alebo</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1511,10 +1553,6 @@
         <translation>Uzol/Služba</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>ID uzlu</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Odozva</translation>
     </message>
@@ -1526,7 +1564,11 @@
         <source>Received</source>
         <translation>Prijaté</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Typ</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1628,6 +1670,11 @@
     <message>
         <source>unknown</source>
         <translation>neznámy</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
     </message>
 </context>
 <context>
@@ -1740,6 +1787,10 @@
         <translation>(žiadna)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Rozsah</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Vynulovať</translation>
     </message>
@@ -1762,10 +1813,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Vyberte počítač pre zobrazenie podrobností.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Smer</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1957,14 +2004,6 @@
         <translation>nikdy</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Prichádzajúce</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Odchádzajúce</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>neznámy</translation>
     </message>
@@ -2008,8 +2047,8 @@
         <translation>Voliteľná správa ktorá bude pridaná k tejto platobnej výzve a môže byť zobrazená odosielateľovi.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Vytvoriť novú príjmaciu adresu</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Vyžiadať platbu</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2070,6 +2109,10 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">Adresa:</translation>
+    </message>
     <message>
         <source>Amount:</source>
         <translation>Suma:</translation>
@@ -2353,6 +2396,10 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok o hodnote "100 sato
         <translation>Určite chcete odoslať transakciu?</translation>
     </message>
     <message>
+        <source>Create Unsigned</source>
+        <translation type="unfinished">Vytvoriť bez podpisu</translation>
+    </message>
+    <message>
         <source>or</source>
         <translation>alebo</translation>
     </message>
@@ -2534,6 +2581,13 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok o hodnote "100 sato
     <message>
         <source>Memo:</source>
         <translation>Poznámka:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Áno</translation>
     </message>
 </context>
 <context>
@@ -3033,10 +3087,6 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok o hodnote "100 sato
         <translation>Odoslané na</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Ku mne</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Vyťažené</translation>
     </message>
@@ -3467,6 +3517,12 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok o hodnote "100 sato
         <translation>Zadaný adresár blokov "%s" neexistuje.</translation>
     </message>
     <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Zadaný R/W konfiguračný súbor %s neexistuje
+</translation>
+    </message>
+    <message>
         <source>Unknown address type '%s'</source>
         <translation>Neznámy typ adresy '%s'</translation>
     </message>
@@ -3559,6 +3615,10 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok o hodnote "100 sato
         <translation>K návratu k neredukovanému režimu je potrebné prestavať databázu použitím -reindex. Tiež sa znova stiahne celý reťazec blokov</translation>
     </message>
     <message>
+        <source>A fatal internal error occurred, see debug.log for details</source>
+        <translation>Vyskytla sa interná chyba, pre viac informácií zobrazte debug.log</translation>
+    </message>
+    <message>
         <source>Error reading from database, shutting down.</source>
         <translation>Chyba pri načítaní z databázy, ukončuje sa.</translation>
     </message>
@@ -3569,6 +3629,10 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok o hodnote "100 sato
     <message>
         <source>Error: Disk space is low for %s</source>
         <translation>Chyba: Málo miesta na disku pre %s</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>Vyčerpal sa zásobník kľúčov, zavolať najskôr keypoolrefill</translation>
     </message>
     <message>
         <source>Invalid -onion address or hostname: '%s'</source>
@@ -3735,10 +3799,6 @@ Poznámka: Keďže poplatok je počítaný za bajt, poplatok o hodnote "100 sato
     <message>
         <source>Loading wallet...</source>
         <translation>Načítavam peňaženku...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Nie je možné prejsť na nižšiu verziu peňaženky</translation>
     </message>
     <message>
         <source>Rescanning...</source>

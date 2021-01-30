@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Clique com o botão direito para editar endereço ou rótulo</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Criar um novo endereço</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Estes são os seus endereços para enviar pagamentos. Sempre cheque a quantia e o endereço do destinatário antes de enviar moedas.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Estes são seus endereços Bitcoin para receber pagamentos. Use o botão 'Criar novos endereços de recebimento' na barra receber para criar novos endereços.
-Somente é possível assinar com endereços do tipo 'legado'.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -556,10 +546,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Mascarar os valores na barra Resumo</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>carteira padrão</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Nenhuma carteira disponível</translation>
     </message>
@@ -845,6 +831,10 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Criar Carteira</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Carteira</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Nome da Carteira</translation>
     </message>
@@ -968,6 +958,9 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1025,10 +1018,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Descartar os blocos após verificação, exceto os mais recentes %1 GB (prune)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>No mínimo %1 GB de dados serão armazenados neste diretório, e isso irá crescer com o tempo.</translation>
     </message>
@@ -1065,6 +1054,13 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation><numerusform>(%n GB necessário para o blockchain completo)</numerusform><numerusform>(%n GB necessário para o blockchain completo)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1125,6 +1121,19 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Endereço</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1133,6 +1142,14 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Colar o endereço da área de transferência</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1231,10 +1248,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Fazer Prune &amp;da memória de blocos para</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1391,6 +1404,10 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
     <message>
         <source>none</source>
         <translation>nenhum</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1632,6 +1649,9 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1685,10 +1705,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Nó/Serviço</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>ID do nó</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1700,7 +1716,11 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <source>Received</source>
         <translation>Recebido</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tipo</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1806,6 +1826,16 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
     <message>
         <source>unknown</source>
         <translation>desconhecido</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Bco</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tso</translation>
     </message>
 </context>
 <context>
@@ -1918,6 +1948,10 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>(nada)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Intervalo</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Limpar</translation>
     </message>
@@ -1940,10 +1974,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Selecione um nó para ver informações detalhadas.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Direção</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2142,14 +2172,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>nunca</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Entrada</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Saída</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Desconhecido</translation>
     </message>
@@ -2193,8 +2215,8 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Uma mensagem opcional que será anexada na cobrança e será mostrada ao remetente. </translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Criar novo endereço de recebimento</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Requisitar Pagamento</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2647,7 +2669,7 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Confirmação em %n bloco.</numerusform><numerusform>Início estimado para confirmação em %n blocos.</numerusform></translation>
+        <translation><numerusform>Confirmação estimada em %n bloco.</numerusform><numerusform>Confirmação estimada em %n blocos.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2751,6 +2773,13 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
     <message>
         <source>Memo:</source>
         <translation>Memorizar:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Sim</translation>
     </message>
 </context>
 <context>
@@ -3248,10 +3277,6 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
     <message>
         <source>Sent to</source>
         <translation>Enviado para</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>Para você mesmo</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3767,6 +3792,12 @@ Go to File &gt; Open Wallet to load a wallet.
 Diretório de blocos especificados "%s" não existe.</translation>
     </message>
     <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>O Arquivo de R/W configuração especificado %s não existe
+</translation>
+    </message>
+    <message>
         <source>Unknown address type '%s'</source>
         <translation>Tipo de endereço desconhecido '%s'</translation>
     </message>
@@ -3849,10 +3880,6 @@ Diretório de blocos especificados "%s" não existe.</translation>
     <message>
         <source>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</source>
         <translation>%s está corrompido. Tente usar a ferramenta de carteira bitcoin-wallet para salvamento ou restauração de backup.</translation>
-    </message>
-    <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>Não é possível fazer upgrade de uma carteira dividida não HD sem fazer upgrade para ser compatível com a keypool antes da divisão. Use -upgradewallet=169900 ou -upgradewallet sem especificar nenhuma versão.</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
@@ -4079,10 +4106,6 @@ Diretório de blocos especificados "%s" não existe.</translation>
     <message>
         <source>Loading wallet...</source>
         <translation>Carregando carteira...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Não é possível fazer downgrade da carteira</translation>
     </message>
     <message>
         <source>Rescanning...</source>

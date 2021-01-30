@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Clic derecho para editar la dirección o etiqueta</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Crea una nueva dirección</translation>
     </message>
@@ -170,6 +166,14 @@
     <message>
         <source>Wallet encrypted</source>
         <translation>Billetera codificada</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Ingrese la nueva frase de contraseña a la billetera.&lt;br/&gt; Por favor utilice una frase de contraseña&lt;b&gt;diez o más caracteres aleatorios &lt;/b&gt; o &lt;b&gt;ocho o más palabras&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>Ingrese la anterior y la nueva frase de contraseña en la billetera.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -442,6 +446,18 @@
         <translation>Actualizado</translation>
     </message>
     <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Abre consola de depuración y diagnóstico</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Enviando Direcciones</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Recibiendo Direcciones</translation>
+    </message>
+    <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Mostrar el mensaje de ayuda %1 para obtener una lista de los posibles comandos de Bitcoin</translation>
     </message>
@@ -537,7 +553,11 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>La billetera esta &lt;b&gt;codificada&lt;/b&gt; y actualmente &lt;b&gt;bloqueda&lt;/b&gt;</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>Ha ocurrido un error fatal. %1 no puede seguir seguro y se cerrará.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -696,6 +716,14 @@
 <context>
     <name>CreateWalletDialog</name>
     <message>
+        <source>Wallet</source>
+        <translation>Cartera</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation type="unfinished">Codificar la billetera</translation>
+    </message>
+    <message>
         <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported, or an HD seed can be set, at a later time.</source>
         <translation>Crea una billetera en blanco. Las billeteras en blanco inicialmente no tienen llaves privadas o texto. Las llaves privadas y las direcciones pueden ser importadas, o se puede establecer una semilla HD, más tarde.</translation>
     </message>
@@ -770,6 +798,9 @@
         <translation>Es imposible crear la carpeta de datos aquí.</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -861,6 +892,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -912,10 +950,31 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Dirección</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Pega dirección desde portapapeles</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1109,6 +1168,14 @@
         <translation>Mostrar o no funcionalidad de Coin Control</translation>
     </message>
     <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Conectar a la red de Bitcoin a través de un proxy SOCKS5 diferente para los servicios anónimos de Tor.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Use SOCKS&amp;5 y proxy por separado para llegar a sus compañeros a través de los servicios ocultos de Tor:</translation>
+    </message>
+    <message>
         <source>&amp;Third party transaction URLs</source>
         <translation>URLs de transacciones de terceros</translation>
     </message>
@@ -1127,6 +1194,10 @@
     <message>
         <source>none</source>
         <translation>Nada</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>bitcoin core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1243,9 +1314,16 @@
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">Cerrar</translation>
+    </message>
+    <message>
         <source>or</source>
         <translation>o</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1285,10 +1363,6 @@
         <translation>Nodo/Servicio</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>ID del nodo</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1300,7 +1374,11 @@
         <source>Received</source>
         <translation>Recibido</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tipo</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1399,6 +1477,16 @@
         <source>unknown</source>
         <translation>desconocido</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blq</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -1482,6 +1570,14 @@
         <translation>Memoria utilizada</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Billetera: </translation>
+    </message>
+    <message>
+        <source>Range</source>
+        <translation type="unfinished">Rango</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Reestablecer</translation>
     </message>
@@ -1504,10 +1600,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Selecciona un peer para ver la información detallada.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Dirección</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1675,14 +1767,6 @@
         <translation>nunca</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Entrante</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Saliente</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Desconocido</translation>
     </message>
@@ -1716,6 +1800,10 @@
     <message>
         <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
         <translation>Monto opcional a solicitar. Deja este campo vacío o en cero si no quieres definir un monto específico.</translation>
+    </message>
+    <message>
+        <source>&amp;Request payment</source>
+        <translation>Solicitar pago</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -1769,8 +1857,16 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">Dirección:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>Cantidad:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">Etiqueta:</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -2000,6 +2096,10 @@
         <translation>Confirmar el envió de monedas</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">Enviar</translation>
+    </message>
+    <message>
         <source>The recipient address is not valid. Please recheck.</source>
         <translation>La dirección de envío no es válida. Por favor revisala.</translation>
     </message>
@@ -2113,6 +2213,13 @@
     <message>
         <source>Memo:</source>
         <translation>Memo:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Si</translation>
     </message>
 </context>
 <context>
@@ -2560,10 +2667,6 @@
         <translation>Enviado a</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>A ti mismo</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Minado</translation>
     </message>
@@ -2766,7 +2869,11 @@
         <source>The wallet data was successfully saved to %1.</source>
         <translation>Los datos del monedero se han guardado con éxito en %1.</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancelar</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -2910,12 +3017,20 @@
         <translation>Verificando bloques...</translation>
     </message>
     <message>
+        <source>A fatal internal error occurred, see debug.log for details</source>
+        <translation>Un error interno fatal ha ocurrido, ver debug.log para detalles</translation>
+    </message>
+    <message>
         <source>Error reading from database, shutting down.</source>
         <translation>Error al leer la base de datos, cerrando aplicación.</translation>
     </message>
     <message>
         <source>Error upgrading chainstate database</source>
         <translation>Error actualizando la base de datos chainstate</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>Keypool se ha agotado, llame a keypoolrefill primero</translation>
     </message>
     <message>
         <source>Invalid -onion address or hostname: '%s'</source>
@@ -3032,10 +3147,6 @@
     <message>
         <source>Loading wallet...</source>
         <translation>Cargando cartera...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>No es posible desactualizar la billetera</translation>
     </message>
     <message>
         <source>Rescanning...</source>

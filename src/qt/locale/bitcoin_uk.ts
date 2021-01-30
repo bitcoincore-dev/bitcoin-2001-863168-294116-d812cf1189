@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Right-click to edit address or label</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Create a new address</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -441,7 +431,7 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n active connection to Bitcoin network</numerusform><numerusform>%n active connections to Bitcoin network</numerusform><numerusform>%n active connections to Bitcoin network</numerusform><numerusform>%n active connections to Bitcoin network</numerusform></translation>
+        <translation><numerusform>%n активне з'єднання з мережею Bitcoin</numerusform><numerusform>%n активні з'єднання з мережею Bitcoin</numerusform><numerusform>%n активних з'єднань з мережею Bitcoin</numerusform><numerusform>%n активних з'єднань з мережею Bitcoin</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -453,7 +443,7 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
-        <translation><numerusform>Processed %n block of transaction history.</numerusform><numerusform>Processed %n blocks of transaction history.</numerusform><numerusform>Processed %n blocks of transaction history.</numerusform><numerusform>Processed %n blocks of transaction history.</numerusform></translation>
+        <translation><numerusform>Оброблено %n блок історії транзакцій.</numerusform><numerusform>Оброблено %n блоки історії транзакцій.</numerusform><numerusform>Оброблено %n блоків історії транзакцій.</numerusform><numerusform>Оброблено %n блоків історії транзакцій.</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -554,10 +544,6 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     <message>
         <source>Mask the values in the Overview tab</source>
         <translation>Mask the values in the Overview tab</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>default wallet</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -845,6 +831,10 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
         <translation>Create Wallet</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Гаманець</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Wallet Name</translation>
     </message>
@@ -968,6 +958,9 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1025,10 +1018,6 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Discard blocks after verification, except most recent %1 GB (prune)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>At least %1 GB of data will be stored in this directory, and it will grow over time.</translation>
     </message>
@@ -1054,17 +1043,24 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     </message>
     <message numerus="yes">
         <source>%n GB of free space available</source>
-        <translation><numerusform>%n GB of free space available</numerusform><numerusform>%n GB of free space available</numerusform><numerusform>%n GB of free space available</numerusform><numerusform>%n GB of free space available</numerusform></translation>
+        <translation><numerusform>Доступно %n ГБ вільного простору</numerusform><numerusform>Доступно %n ГБ вільного простору</numerusform><numerusform>Доступно %n ГБ вільного простору</numerusform><numerusform>Доступно %n ГБ вільного простору</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
-        <translation><numerusform>(of %n GB needed)</numerusform><numerusform>(of %n GB needed)</numerusform><numerusform>(of %n GB needed)</numerusform><numerusform>(of %n GB needed)</numerusform></translation>
+        <translation><numerusform>(в той час, як необхідно %n ГБ)</numerusform><numerusform>(в той час, як необхідно %n ГБ)</numerusform><numerusform>(в той час, як необхідно %n ГБ)</numerusform><numerusform>(в той час, як необхідно %n ГБ)</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>(%n GB needed for full chain)</source>
         <translation><numerusform>(%n GB needed for full chain)</numerusform><numerusform>(%n GB needed for full chain)</numerusform><numerusform>(%n GB needed for full chain)</numerusform><numerusform>(%n GB needed for full chain)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Н/Д</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1125,6 +1121,19 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тип</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адреса</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1133,6 +1142,14 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Вставити адресу</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1231,10 +1248,6 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Prune &amp;block storage to</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1632,6 +1645,9 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1685,10 +1701,6 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
         <translation>Node/Service</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeId</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1700,7 +1712,11 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
         <source>Received</source>
         <translation>Received</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Тип</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1741,23 +1757,23 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
-        <translation><numerusform>%n second</numerusform><numerusform>%n seconds</numerusform><numerusform>%n seconds</numerusform><numerusform>%n seconds</numerusform></translation>
+        <translation><numerusform>%n секунда</numerusform><numerusform>%n секунд</numerusform><numerusform>%n секунд</numerusform><numerusform>%n секунд</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
-        <translation><numerusform>%n minute</numerusform><numerusform>%n minutes</numerusform><numerusform>%n minutes</numerusform><numerusform>%n minutes</numerusform></translation>
+        <translation><numerusform>%n хвилина</numerusform><numerusform>%n хвилин</numerusform><numerusform>%n хвилин</numerusform><numerusform>%n хвилин</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation><numerusform>%n hour</numerusform><numerusform>%n hours</numerusform><numerusform>%n hours</numerusform><numerusform>%n hours</numerusform></translation>
+        <translation><numerusform>%n година</numerusform><numerusform>%n годин</numerusform><numerusform>%n годин</numerusform><numerusform>%n годин</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation><numerusform>%n day</numerusform><numerusform>%n days</numerusform><numerusform>%n days</numerusform><numerusform>%n days</numerusform></translation>
+        <translation><numerusform>%n день</numerusform><numerusform>%n днів</numerusform><numerusform>%n днів</numerusform><numerusform>%n днів</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation><numerusform>%n week</numerusform><numerusform>%n weeks</numerusform><numerusform>%n weeks</numerusform><numerusform>%n weeks</numerusform></translation>
+        <translation><numerusform>%n тиждень</numerusform><numerusform>%n тижнів</numerusform><numerusform>%n тижнів</numerusform><numerusform>%n тижнів</numerusform></translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -1765,7 +1781,7 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation><numerusform>%n year</numerusform><numerusform>%n years</numerusform><numerusform>%n years</numerusform><numerusform>%n years</numerusform></translation>
+        <translation><numerusform>%n рік</numerusform><numerusform>%n років</numerusform><numerusform>%n років</numerusform><numerusform>%n років</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1806,6 +1822,16 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     <message>
         <source>unknown</source>
         <translation>unknown</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакція</translation>
     </message>
 </context>
 <context>
@@ -1918,6 +1944,10 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
         <translation>(none)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Діапазон</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Reset</translation>
     </message>
@@ -1940,10 +1970,6 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Select a peer to view detailed information.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Direction</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2142,14 +2168,6 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
         <translation>never</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Inbound</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Outbound</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Unknown</translation>
     </message>
@@ -2193,8 +2211,8 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
         <translation>An optional message that is attached to the payment request and may be displayed to the sender.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Create new receiving address</translation>
+        <source>&amp;Request payment</source>
+        <translation>Н&amp;адіслати запит платежу</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2647,7 +2665,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Estimated to begin confirmation within %n block.</numerusform><numerusform>Estimated to begin confirmation within %n blocks.</numerusform><numerusform>Estimated to begin confirmation within %n blocks.</numerusform><numerusform>Estimated to begin confirmation within %n blocks.</numerusform></translation>
+        <translation><numerusform>Очікуваний початок підтвердження через %n блок.</numerusform><numerusform>Очікуваний початок підтвердження протягом %n блоків.</numerusform><numerusform>Очікуваний початок підтвердження протягом %n блоків.</numerusform><numerusform>Очікуваний початок підтвердження протягом %n блоків.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2751,6 +2769,13 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Memo:</source>
         <translation>Memo:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Так</translation>
     </message>
 </context>
 <context>
@@ -2926,7 +2951,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <name>TransactionDesc</name>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Open for %n more block</numerusform><numerusform>Open for %n more blocks</numerusform><numerusform>Open for %n more blocks</numerusform><numerusform>Open for %n more blocks</numerusform></translation>
+        <translation><numerusform>Відкрито на %n блок</numerusform><numerusform>Відкрито на %n блоків</numerusform><numerusform>Відкрито на %n блоків</numerusform><numerusform>Відкрито на %n блоків</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -3006,7 +3031,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>matures in %n more block</numerusform><numerusform>matures in %n more blocks</numerusform><numerusform>matures in %n more blocks</numerusform><numerusform>matures in %n more blocks</numerusform></translation>
+        <translation><numerusform>дозріє через %n блок</numerusform><numerusform>дозріє через %n блоків</numerusform><numerusform>дозріє через %n блоків</numerusform><numerusform>дозріє через %n блоків</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -3120,7 +3145,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Open for %n more block</numerusform><numerusform>Open for %n more blocks</numerusform><numerusform>Open for %n more blocks</numerusform><numerusform>Open for %n more blocks</numerusform></translation>
+        <translation><numerusform>Відкрито на %n блок</numerusform><numerusform>Відкрито на %n блоків</numerusform><numerusform>Відкрито на %n блоків</numerusform><numerusform>Відкрито на %n блоків</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -3248,10 +3273,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Sent to</source>
         <translation>Sent to</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>To yourself</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3852,10 +3873,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</translation>
     </message>
     <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</translation>
-    </message>
-    <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
         <translation>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</translation>
     </message>
@@ -4080,10 +4097,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Loading wallet...</source>
         <translation>Loading wallet...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Cannot downgrade wallet</translation>
     </message>
     <message>
         <source>Rescanning...</source>

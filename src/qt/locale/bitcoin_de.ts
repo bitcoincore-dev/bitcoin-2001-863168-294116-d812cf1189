@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Rechtsklick zum Bearbeiten der Adresse oder der Beschreibung</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Neue Adresse erstellen</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Dies sind Ihre Bitcoin-Adressen zum Tätigen von Überweisungen. Bitte prüfen Sie den Betrag und die Adresse des Empfängers, bevor Sie Bitcoins überweisen.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Dies sind Ihre Bitcoin-Adressen für den Empfang von Zahlungen. Verwenden Sie die 'Neue Empfangsadresse erstellen' Taste auf der Registerkarte "Empfangen", um neue Adressen zu erstellen.
-Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -556,10 +546,6 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
         <translation>Blende die Werte im Übersichtsreiter aus</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>Standard Wallet</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Keine Wallets verfügbar</translation>
     </message>
@@ -845,6 +831,10 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
         <translation>Wallet erstellen</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation type="unfinished">Brieftasche</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Wallet-Name</translation>
     </message>
@@ -968,6 +958,9 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1025,10 +1018,6 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Verwerfe Blöcke nachdem sie verifiziert worden sind, ausser die %1 GB (prune)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Mindestens %1 GB Daten werden in diesem Verzeichnis gespeichert, und sie werden mit der Zeit zunehmen.</translation>
     </message>
@@ -1062,9 +1051,16 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
     </message>
     <message numerus="yes">
         <source>(%n GB needed for full chain)</source>
-        <translation><numerusform>(%n GB benötigt für komplette Blockchain)</numerusform><numerusform>(%n GB wird die komplette Blockchain benötigen)</numerusform></translation>
+        <translation><numerusform>(%n GB benötigt für komplette Blockchain)</numerusform><numerusform>(%n GB benötigt für komplette Blockchain)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>k.A.</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1125,6 +1121,19 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1133,6 +1142,14 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Adresse aus der Zwischenablage einfügen</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1231,10 +1248,6 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>&amp;Blockspeicher kürzen auf</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1363,6 +1376,10 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
     <message>
         <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
         <translation>Verbinde mit dem Bitcoin-Netzwerk über einen separaten SOCKS5-Proxy für Tor-Onion-Dienste.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Separaten SOCKS5-Proxy verwenden, um Gegenstellen über versteckte Tor-Dienste zu erreichen:</translation>
     </message>
     <message>
         <source>&amp;Third party transaction URLs</source>
@@ -1628,6 +1645,9 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1681,10 +1701,6 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
         <translation>Knoten/Dienst</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>Knotenkennung</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1696,7 +1712,11 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
         <source>Received</source>
         <translation>Empfangen</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Typ</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1802,6 +1822,11 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
     <message>
         <source>unknown</source>
         <translation>unbekannt</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -1914,6 +1939,10 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
         <translation>(keine)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Zeitraum</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Zurücksetzen</translation>
     </message>
@@ -1936,10 +1965,6 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Gegenstelle auswählen, um detaillierte Informationen zu erhalten.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Richtung</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2138,14 +2163,6 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
         <translation>nie</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Eingehend</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>ausgehend</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Unbekannt</translation>
     </message>
@@ -2189,8 +2206,8 @@ Das Signieren ist nur mit Adressen vom Typ 'Legacy' möglich.</translation>
         <translation>Eine optionale Nachricht, die der Zahlungsanforderung beigefügt wird und dem Absender angezeigt werden kann.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>Neue Empfangsadresse erstellen</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Zahlung anfordern</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2570,6 +2587,10 @@ Hinweis: Eine Gebühr von "100 Satoshis pro kB" bei einer Größe der Transaktio
         <translation>Sie können die Gebühr später erhöhen (zeigt Replace-By-Fee, BIP-125).</translation>
     </message>
     <message>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation>Bitte überprüfe deinen Transaktionsentwurf. Es wird eine teilsignierte Bitcoin Transaktion (PSBT) erzeugt, die du kopieren und dann mit z.B. einem Offline %1 Wallet oder einem PSBT-kompatiblen Hardware Wallet signieren kannst.</translation>
+    </message>
+    <message>
         <source>Please, review your transaction.</source>
         <translation>Bitte überprüfen sie ihre Transaktion.</translation>
     </message>
@@ -2639,7 +2660,7 @@ Hinweis: Eine Gebühr von "100 Satoshis pro kB" bei einer Größe der Transaktio
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Voraussichtlicher Beginn der Bestätigung innerhalb von %n Block</numerusform><numerusform>Voraussichtlicher Beginn der Bestätigung innerhalb von %n Blöcken.</numerusform></translation>
+        <translation><numerusform>Voraussichtlicher Beginn der Bestätigung innerhalb von %n Block.</numerusform><numerusform>Voraussichtlicher Beginn der Bestätigung innerhalb von %n Blöcken.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2743,6 +2764,13 @@ Hinweis: Eine Gebühr von "100 Satoshis pro kB" bei einer Größe der Transaktio
     <message>
         <source>Memo:</source>
         <translation>Memo:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
     </message>
 </context>
 <context>
@@ -3240,10 +3268,6 @@ Hinweis: Eine Gebühr von "100 Satoshis pro kB" bei einer Größe der Transaktio
     <message>
         <source>Sent to</source>
         <translation>Überwiesen an</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>Eigenüberweisung</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3762,6 +3786,12 @@ Verifikations-Error: %s</translation>
         <translation>Angegebener Blöcke-Ordner "%s" existiert nicht.</translation>
     </message>
     <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Die spezifische R/W Konfigurationsdatei %s existiert nicht.
+</translation>
+    </message>
+    <message>
         <source>Unknown address type '%s'</source>
         <translation>Unbekannter Adresstyp '%s'</translation>
     </message>
@@ -3844,10 +3874,6 @@ Verifikations-Error: %s</translation>
     <message>
         <source>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</source>
         <translation>%s korrupt. Versuche mit dem Wallet-Werkzeug bitcoin-wallet zu retten, oder eine Sicherung wiederherzustellen.</translation>
-    </message>
-    <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>Ein Upgrade auf eine Nicht-HD-Split-Brieftasche ist nicht möglich, ohne ein Upgrade zur Unterstützung des Pre-Split-Keypools durchzuführen. Verwenden Sie bitte die Version 169900 oder keine angegebene Version.</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
@@ -4074,10 +4100,6 @@ Verifikations-Error: %s</translation>
     <message>
         <source>Loading wallet...</source>
         <translation>Lade Wallet...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Wallet kann nicht auf eine ältere Version herabgestuft werden</translation>
     </message>
     <message>
         <source>Rescanning...</source>

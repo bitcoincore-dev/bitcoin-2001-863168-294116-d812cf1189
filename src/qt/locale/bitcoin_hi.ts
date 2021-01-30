@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>पता व नामपत्र बदलने के लिए दायीं कुंजी दबाइए </translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>नया एड्रेस बनाएं</translation>
     </message>
@@ -399,6 +395,10 @@
         <translation>टैबस टूलबार</translation>
     </message>
     <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>डिस्क पर ब्लॉक्स री-इंडेक्सिंग हो रहे हैं...</translation>
+    </message>
+    <message>
         <source>%1 behind</source>
         <translation>%1 पीछे</translation>
     </message>
@@ -419,6 +419,18 @@
         <translation>नवीनतम</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation>&amp;पते भेजे जा रहे हैं</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation>&amp;पते प्राप्त किए जा रहे हैं</translation>
+    </message>
+    <message>
+        <source>Open Wallet</source>
+        <translation>बटुआ खोलें</translation>
+    </message>
+    <message>
         <source>Open a wallet</source>
         <translation>बटुआ खोलें</translation>
     </message>
@@ -433,6 +445,10 @@
     <message>
         <source>Close All Wallets...</source>
         <translation>सारे बटुएँ बंद करें...</translation>
+    </message>
+    <message>
+        <source>Close all wallets</source>
+        <translation>सारे बटुएँ बंद करें</translation>
     </message>
     <message>
         <source>Sent transaction</source>
@@ -491,6 +507,14 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Wallet</source>
+        <translation>वॉलेट</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>वॉलेट एन्क्रिप्ट करें</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -511,10 +535,17 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
         <translation>संस्करण</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">और %1 के बारे में</translation>
     </message>
     </context>
 <context>
@@ -529,6 +560,14 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>लागू नही
+</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -536,8 +575,24 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>पता </translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
-    </context>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Clipboard से एड्रेस paste करें</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt-P</translation>
+    </message>
+</context>
 <context>
     <name>OpenWalletActivity</name>
     </context>
@@ -573,6 +628,13 @@
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">सीलूज़</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -595,7 +657,7 @@
         <source>unknown</source>
         <translation>अज्ञात</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     </context>
@@ -609,6 +671,14 @@
     <message>
         <source>&amp;Information</source>
         <translation>जानकारी</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">तिजोरी  </translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation type="unfinished">नेटवर्क एक्टिविटी बंद हो गई है</translation>
     </message>
     </context>
 <context>
@@ -625,8 +695,16 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">पता:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>राशि :</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">परचा:</translation>
     </message>
     <message>
         <source>Wallet:</source>
@@ -667,6 +745,10 @@
         <translation>राशि :</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">चुनें...</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>एक साथ कई प्राप्तकर्ताओं को भेजें</translation>
     </message>
@@ -677,6 +759,14 @@
     <message>
         <source>Confirm the send action</source>
         <translation>भेजने की पुष्टि करें</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;भेजें</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">भेजें</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -713,6 +803,9 @@
         <source>Pay To:</source>
         <translation>प्राप्तकर्ता:</translation>
     </message>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -820,6 +913,10 @@
         <source>Close wallet</source>
         <translation>बटुआ बंद करें</translation>
     </message>
+    <message>
+        <source>Close all wallets</source>
+        <translation>सारे बटुएँ बंद करें</translation>
+    </message>
     </context>
 <context>
     <name>WalletFrame</name>
@@ -849,7 +946,11 @@
         <source>Error</source>
         <translation>भूल</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">कैन्सल</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -867,10 +968,6 @@
     <message>
         <source>Loading wallet...</source>
         <translation>वॉलेट आ रहा है...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>वॉलेट को डाउनग्रेड नहीं कर सकते</translation>
     </message>
     <message>
         <source>Rescanning...</source>

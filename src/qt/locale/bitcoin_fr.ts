@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Cliquer à droite pour modifier l’adresse ou l’étiquette</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Créer une nouvelle adresse</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Ce sont vos adresses Bitcoin pour envoyer des paiements. Vérifiez toujours le montant et l’adresse du destinataire avant d’envoyer des pièces.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Ce sont vos adresses Bitcoin pour recevoir des paiements. Utilisez le bouton « Créer une nouvelle adresse de réception » dans l’onglet Recevoir afin de créer de nouvelles adresses.
-Il n’est possible de signer qu’avec les adresses de type « legacy ».</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -441,7 +431,7 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n connexion active avec le réseau Bitcoin</numerusform><numerusform>%n connexions actives avec le réseau Bitcoin</numerusform></translation>
+        <translation><numerusform>%n connexion active avec le réseau Bitcoin</numerusform><numerusform>%n connexions actives avec le réseau Bitcoin</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -554,10 +544,6 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
     <message>
         <source>Mask the values in the Overview tab</source>
         <translation>Dissimuler les montants dans l’onglet Vue d’ensemble</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>porte-monnaie par défaut</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -845,6 +831,10 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
         <translation>Créer un porte-monnaie</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Porte-monnaie</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Nom du porte-monnaie</translation>
     </message>
@@ -968,6 +958,9 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1025,10 +1018,6 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Jeter les blocs après vérification, à l’exception des %1 Go les plus récents (élagage)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Au moins %1 Go de données seront stockés dans ce répertoire et sa taille augmentera avec le temps.</translation>
     </message>
@@ -1062,9 +1051,16 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
     </message>
     <message numerus="yes">
         <source>(%n GB needed for full chain)</source>
-        <translation><numerusform>(%n Go nécessaire pour la chaîne complète)</numerusform><numerusform>(%n Go nécessaires pour la chaîne complète)</numerusform></translation>
+        <translation><numerusform>(%n Go nécessaire pour la chaîne complète)</numerusform><numerusform>(%n Go nécessaires pour la chaîne complète)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N.D.</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1125,6 +1121,14 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1133,6 +1137,14 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
     <message>
         <source>URI:</source>
         <translation>URI :</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Coller une adresse du presse-papiers</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1231,10 +1243,6 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Élaguer l’espace de stockage des &amp;blocs jusqu’à</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>Go</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1632,6 +1640,9 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1685,10 +1696,6 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
         <translation>Nœud/service</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>ID de nœud</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1700,7 +1707,7 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
         <source>Received</source>
         <translation>Reçu</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1806,6 +1813,16 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
     <message>
         <source>unknown</source>
         <translation>inconnue</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -1918,6 +1935,10 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
         <translation>(aucun)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Plage </translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Réinitialiser</translation>
     </message>
@@ -1940,10 +1961,6 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Sélectionnez un pair pour afficher des renseignements détaillés.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Direction</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2142,14 +2159,6 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
         <translation>jamais</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Entrant</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Sortant</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Inconnu</translation>
     </message>
@@ -2193,8 +2202,8 @@ Il n’est possible de signer qu’avec les adresses de type « legacy ».</tr
         <translation>Un message facultatif joint à la demande de paiement et qui peut être présenté à l’expéditeur.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Créer une nouvelle adresse de réception</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Demander un paiement</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2754,6 +2763,13 @@ Note : Les frais étant calculés par octet, des frais de « 100 satoshis par
     </message>
 </context>
 <context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Oui</translation>
+    </message>
+</context>
+<context>
     <name>ShutdownWindow</name>
     <message>
         <source>%1 is shutting down...</source>
@@ -3248,10 +3264,6 @@ Note : Les frais étant calculés par octet, des frais de « 100 satoshis par
     <message>
         <source>Sent to</source>
         <translation>Envoyée à</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>À vous-même</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3768,6 +3780,12 @@ Accédez à Fichier &gt; Ouvrir un porte-monnaie pour en charger un.
         <translation>Le répertoire des blocs indiqué « %s » n’existe pas.</translation>
     </message>
     <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Le fichier de R/W configuration indiqué %s n’existe pas
+</translation>
+    </message>
+    <message>
         <source>Unknown address type '%s'</source>
         <translation>Le type d’adresse est inconnu « %s »</translation>
     </message>
@@ -3850,10 +3868,6 @@ Accédez à Fichier &gt; Ouvrir un porte-monnaie pour en charger un.
     <message>
         <source>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</source>
         <translation>%s est corrompu. Essayez l’outil bitcoin-wallet pour le sauver ou restaurez une sauvegarde.</translation>
-    </message>
-    <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>Impossible de mettre à niveau un porte-monnaie divisé non-HD sans mettre à niveau pour prendre en charge la réserve de clés antérieure à la division. Veuillez utiliser la version 169900 ou ne pas indiquer de version.</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
@@ -4080,10 +4094,6 @@ Accédez à Fichier &gt; Ouvrir un porte-monnaie pour en charger un.
     <message>
         <source>Loading wallet...</source>
         <translation>Chargement du porte-monnaie…</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Impossible de revenir à une version inférieure du porte-monnaie</translation>
     </message>
     <message>
         <source>Rescanning...</source>

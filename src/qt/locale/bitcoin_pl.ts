@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Kliknij prawym przyciskiem myszy, aby edytować adres lub etykietę</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Utwórz nowy adres</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>To są twoje adresy Bitcoin do wysyłania płatności. Zawsze sprawdź kwotę i adres odbiorcy przed wysłaniem monet.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>To są twoje adresy Bitcoin do otrzymywania płatności. Użyj przycisku „Utwórz nowy adres odbiorcy” na karcie odbioru, aby utworzyć nowe adresy.
-Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -548,10 +538,6 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
         <translation>Pokaż pomoc %1 aby zobaczyć listę wszystkich opcji lnii poleceń.</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>domyślny portfel</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Brak dostępnych portfeli</translation>
     </message>
@@ -659,7 +645,11 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
         <source>Original message:</source>
         <translation>Wiadomość oryginalna:</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>Wystąpił krytyczny błąd. %1 nie jest w stanie kontynuować bezpiecznie i zostanie zamknięty.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -833,6 +823,10 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
         <translation>Stwórz portfel</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Portfel</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Nazwa portfela</translation>
     </message>
@@ -948,6 +942,9 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1005,10 +1002,6 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Skasuj bloki po weryfikacji, oprócz najnowszych %1 GB (prune)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Co najmniej %1 GB danych, zostanie zapisane w tym katalogu, dane te będą przyrastały w czasie.</translation>
     </message>
@@ -1045,6 +1038,13 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
         <translation><numerusform>(%n GB potrzebny na pełny łańcuch)</numerusform><numerusform>(%n GB potrzebne na pełny łańcuch)</numerusform><numerusform>(%n GB potrzebnych na pełny łańcuch)</numerusform><numerusform>(%n GB potrzebnych na pełny łańcuch)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>NIEDOSTĘPNE</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1105,6 +1105,19 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1113,6 +1126,14 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Wklej adres ze schowka</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1211,10 +1232,6 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Przytnij magazyn &amp;bloków do</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1371,6 +1388,10 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
     <message>
         <source>none</source>
         <translation>żaden</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Rdzeń Bitcoina</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1592,6 +1613,9 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1645,10 +1669,6 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
         <translation>Węzeł/Usługi</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>Identyfikator węzła</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1660,7 +1680,11 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
         <source>Received</source>
         <translation>Otrzymane</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Typ</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1766,6 +1790,11 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
     <message>
         <source>unknown</source>
         <translation>nieznane</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsa</translation>
     </message>
 </context>
 <context>
@@ -1878,6 +1907,10 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
         <translation>(brak)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Zakres</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Reset</translation>
     </message>
@@ -1900,10 +1933,6 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Wybierz węzeł żeby zobaczyć szczegóły.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Kierunek</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2102,14 +2131,6 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
         <translation>nigdy</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Wejściowy</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Wyjściowy</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Nieznany</translation>
     </message>
@@ -2153,8 +2174,8 @@ Podpisywanie jest możliwe tylko z adresami typu „legacy”.</translation>
         <translation>Dodatkowa wiadomość dołączana do żądania zapłaty, która może być odczytana przez płacącego.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Stwórz nowy adres odbiorczy</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Żądaj płatności</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2711,6 +2732,13 @@ Uwaga: Ponieważ opłata jest naliczana za każdy bajt, opłata "100 satoshi za 
     </message>
 </context>
 <context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Tak</translation>
+    </message>
+</context>
+<context>
     <name>ShutdownWindow</name>
     <message>
         <source>%1 is shutting down...</source>
@@ -3208,10 +3236,6 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
         <translation>Wysłane do</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Do siebie</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Wydobyto</translation>
     </message>
@@ -3360,6 +3384,14 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
 </context>
 <context>
     <name>WalletFrame</name>
+    <message>
+        <source>No wallet has been loaded.
+Go to File &gt; Open Wallet to load a wallet.
+- OR -</source>
+        <translation>Portfel nie został wybrany.
+Przejdź do Plik &gt; Otwórz Portfel aby wgrać portfel.
+</translation>
+    </message>
     <message>
         <source>Create a new wallet</source>
         <translation>Stwórz nowy portfel</translation>
@@ -3642,6 +3674,10 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
         <translation>Nie udało się zweryfikować bazy danych</translation>
     </message>
     <message>
+        <source>Ignoring duplicate -wallet %s.</source>
+        <translation>Ignorowanie duplikatu -wallet %s</translation>
+    </message>
+    <message>
         <source>Importing...</source>
         <translation>Importowanie…</translation>
     </message>
@@ -3696,6 +3732,12 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
     <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>Podany folder bloków "%s" nie istnieje.
+</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Podany plik R/W konfiguracyjny %s nie istnieje
 </translation>
     </message>
     <message>
@@ -3795,6 +3837,10 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
         <translation>Błąd: Wystąpił fatalny błąd wewnętrzny, sprawdź szczegóły w debug.log</translation>
     </message>
     <message>
+        <source>Cannot set -peerblockfilters without -blockfilterindex.</source>
+        <translation>Nie można ustawić -peerblockfilters bez -blockfilterindex.</translation>
+    </message>
+    <message>
         <source>Disk space is too low!</source>
         <translation>Zbyt mało miejsca na dysku!</translation>
     </message>
@@ -3833,6 +3879,10 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
     <message>
         <source>Need to specify a port with -whitebind: '%s'</source>
         <translation>Musisz określić port z -whitebind: '%s'</translation>
+    </message>
+    <message>
+        <source>No proxy server specified. Use -proxy=&lt;ip&gt; or -proxy=&lt;ip:port&gt;.</source>
+        <translation>Żaden serwer proxy nie jest ustawiony. Użyj -proxy=&lt;ip&gt; lub -proxy=&lt;ip:port&gt;.</translation>
     </message>
     <message>
         <source>Prune mode is incompatible with -blockfilterindex.</source>
@@ -3979,10 +4029,6 @@ Zwróć uwagę, że poprawnie zweryfikowana wiadomość potwierdza to, że nadaw
     <message>
         <source>Loading wallet...</source>
         <translation>Wczytywanie portfela...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Nie można dezaktualizować portfela</translation>
     </message>
     <message>
         <source>Rescanning...</source>

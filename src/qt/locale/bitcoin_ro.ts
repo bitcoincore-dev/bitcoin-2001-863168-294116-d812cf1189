@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Click-dreapta pentru a edita adresa sau eticheta</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Creează o adresă nouă</translation>
     </message>
@@ -47,11 +43,11 @@
     </message>
     <message>
         <source>Choose the address to send coins to</source>
-        <translation>Alege $adresa unde să trimiteţi monede</translation>
+        <translation>Alege adresa unde să trimiteţi monede</translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
-        <translation>Alege adresa la care sa primesti monedele cu</translation>
+        <translation>Alege adresa la care să primești monedele</translation>
     </message>
     <message>
         <source>C&amp;hoose</source>
@@ -174,6 +170,19 @@
     <message>
         <source>Wallet encrypted</source>
         <translation>Portofel criptat</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Introduceti o parola noua pentru portofel. &lt;br/&gt;Va rugam sa folositi o parola de &lt;b&gt; zece sau mai multe caractere&lt;/b&gt;, sau &lt;b&gt;mai mult de opt cuvinte&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>Introduceţi vechea şi noua parolă pentru portofel.
+ </translation>
+    </message>
+    <message>
+        <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
+        <translation>Reţineti: criptarea portofelului dvs. nu vă poate proteja în totalitate bitcoin-urile împotriva furtului de malware care vă infectează computerul.</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -482,6 +491,10 @@
         <translation>&amp;Adresele de primire</translation>
     </message>
     <message>
+        <source>Open a bitcoin: URI</source>
+        <translation>Deschidere bitcoin: o adresa URI sau o cerere de plată</translation>
+    </message>
+    <message>
         <source>Open Wallet</source>
         <translation>Deschide portofel</translation>
     </message>
@@ -500,10 +513,6 @@
     <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Arată mesajul de ajutor %1 pentru a obţine o listă cu opţiunile posibile de linii de comandă Bitcoin</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>portofel implicit</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -609,7 +618,11 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Portofelul este &lt;b&gt;criptat&lt;/b&gt; iar în momentul de faţă este &lt;b&gt;blocat&lt;/b&gt;</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>A survenit o eroare fatală. %1 nu mai poate continua în siguranţă şi se va opri.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -764,6 +777,10 @@
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <translation>Creare Portofel &lt;b&gt;%1&lt;/b&gt;...</translation>
+    </message>
+    <message>
         <source>Create wallet failed</source>
         <translation>Crearea portofelului a eşuat</translation>
     </message>
@@ -777,6 +794,10 @@
     <message>
         <source>Create Wallet</source>
         <translation>Crează portofel</translation>
+    </message>
+    <message>
+        <source>Wallet</source>
+        <translation>Portofel</translation>
     </message>
     <message>
         <source>Wallet Name</source>
@@ -882,6 +903,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -968,6 +992,13 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Nespecificat</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -1015,14 +1046,47 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>tip</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresă</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open bitcoin URI</source>
+        <translation>Deschidere bitcoin: o adresa URI sau o cerere de plată</translation>
+    </message>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
     </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Lipeşte adresa copiată din clipboard</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
 </context>
 <context>
     <name>OpenWalletActivity</name>
+    <message>
+        <source>Open wallet failed</source>
+        <translation>Deschiderea portofelului a eșuat</translation>
+    </message>
+    <message>
+        <source>Open wallet warning</source>
+        <translation>Atenționare la deschiderea portofelului</translation>
+    </message>
     <message>
         <source>default wallet</source>
         <translation>portofel implicit</translation>
@@ -1105,10 +1169,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Reductie &amp;block storage la</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1231,6 +1291,14 @@
         <translation>Arată controlul caracteristicilor monedei sau nu.</translation>
     </message>
     <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Conectare la reteaua Bitcoin printr-un proxy SOCKS5 separat pentru serviciile TOR ascunse.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Foloseste un proxy SOCKS&amp;5 separat pentru a gasi parteneri via servicii TOR ascunse</translation>
+    </message>
+    <message>
         <source>&amp;Third party transaction URLs</source>
         <translation>URL-uri tranzacţii &amp;terţe părţi</translation>
     </message>
@@ -1249,6 +1317,10 @@
     <message>
         <source>none</source>
         <translation>nimic</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Nucleul Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1365,6 +1437,10 @@
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">Închide</translation>
+    </message>
+    <message>
         <source>Total Amount</source>
         <translation>Suma totală</translation>
     </message>
@@ -1372,6 +1448,9 @@
         <source>or</source>
         <translation>sau</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1415,10 +1494,6 @@
         <translation>Nod/Serviciu</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeID</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1430,7 +1505,11 @@
         <source>Received</source>
         <translation>Recepţionat</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tip</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1533,6 +1612,16 @@
         <source>unknown</source>
         <translation>necunoscut</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tze</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -1628,6 +1717,10 @@
         <translation>(nimic)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Interval</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Resetare</translation>
     </message>
@@ -1650,10 +1743,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Selectaţi un partener pentru a vedea informaţiile detaliate.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Direcţie</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1836,14 +1925,6 @@
         <translation>niciodată</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Intrare</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Ieşire</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Necunoscut</translation>
     </message>
@@ -1877,6 +1958,10 @@
     <message>
         <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
         <translation>O sumă opţională de cerut. Lăsaţi gol sau zero pentru a nu cere o sumă anume.</translation>
+    </message>
+    <message>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Cerere plată</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -1938,8 +2023,16 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">Adresă:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>Sumă:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">Etichetă:</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -2216,6 +2309,10 @@ Nota: Cum taxa este calculata per byte, o taxa de "100 satoshi per kB" pentru o 
         <translation>Confirmă trimiterea monedelor</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">Trimite</translation>
+    </message>
+    <message>
         <source>The recipient address is not valid. Please recheck.</source>
         <translation>Adresa destinatarului nu este validă. Rugăm să reverificaţi.</translation>
     </message>
@@ -2349,6 +2446,13 @@ Nota: Cum taxa este calculata per byte, o taxa de "100 satoshi per kB" pentru o 
     <message>
         <source>Memo:</source>
         <translation>Memo:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Da</translation>
     </message>
 </context>
 <context>
@@ -2836,10 +2940,6 @@ Nota: Cum taxa este calculata per byte, o taxa de "100 satoshi per kB" pentru o 
         <translation>Trimis către</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Către dvs.</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Minat</translation>
     </message>
@@ -3318,12 +3418,24 @@ Nota: Cum taxa este calculata per byte, o taxa de "100 satoshi per kB" pentru o 
         <translation>Trebuie reconstruita intreaga baza de date folosind -reindex pentru a va intoarce la modul non-redus. Aceasta va determina descarcarea din nou a intregului blockchain</translation>
     </message>
     <message>
+        <source>A fatal internal error occurred, see debug.log for details</source>
+        <translation>S-a produs o eroare interna fatala, vedeti debug.log pentru detalii</translation>
+    </message>
+    <message>
         <source>Error reading from database, shutting down.</source>
         <translation>Eroare la citirea bazei de date. Oprire.</translation>
     </message>
     <message>
         <source>Error upgrading chainstate database</source>
         <translation>Eroare la actualizarea bazei de date chainstate</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is low for %s</source>
+        <translation>Eroare: Spațiul pe disc este redus pentru %s</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>Keypool epuizat, folositi intai functia keypoolrefill</translation>
     </message>
     <message>
         <source>Invalid -onion address or hostname: '%s'</source>
@@ -3364,6 +3476,12 @@ Nota: Cum taxa este calculata per byte, o taxa de "100 satoshi per kB" pentru o 
     <message>
         <source>Specified -walletdir "%s" is not a directory</source>
         <translation>-walletdir "%s" specificat nu este un director</translation>
+    </message>
+    <message>
+        <source>The specified config file %s does not exist
+</source>
+        <translation>Fișierul de configurare specificat %s nu există
+</translation>
     </message>
     <message>
         <source>The transaction amount is too small to pay the fee</source>
@@ -3468,10 +3586,6 @@ Nota: Cum taxa este calculata per byte, o taxa de "100 satoshi per kB" pentru o 
     <message>
         <source>Loading wallet...</source>
         <translation>Încărcare portofel...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Nu se poate retrograda portofelul</translation>
     </message>
     <message>
         <source>Rescanning...</source>

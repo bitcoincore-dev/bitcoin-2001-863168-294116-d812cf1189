@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Feu clic al botó dret per a editar l'adreça o l'etiqueta</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Crea una adreça nova</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Aquestes són les vostres adreces de Bitcoin per enviar els pagaments. Sempre reviseu l'import i l'adreça del destinatari abans de transferir monedes.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Aquestes son les teves adreces de Bitcoin per rebre pagaments. Utilitza el botó "Crear nova adreça de recepció" de la pestanya de recepció per crear una nova adreça.
-Només és possible firmar amb adreces del tipus "legacy".</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -556,10 +546,6 @@ Només és possible firmar amb adreces del tipus "legacy".</translation>
         <translation>Emmascara els valors en la pestanya Visió general</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>cartera predeterminada</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>No hi ha cap cartera disponible</translation>
     </message>
@@ -845,6 +831,10 @@ Només és possible firmar amb adreces del tipus "legacy".</translation>
         <translation>Crear cartera</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Cartera</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Nom de la cartera</translation>
     </message>
@@ -969,6 +959,9 @@ Això és ideal per a carteres de mode només lectura.</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1026,10 +1019,6 @@ Això és ideal per a carteres de mode només lectura.</translation>
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Descarta blocs després de la verificació, excepte el més recent %1 GB (podar)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Almenys %1 GB de dades s'emmagatzemaran en aquest directori, i creixerà amb el temps.</translation>
     </message>
@@ -1055,7 +1044,7 @@ Això és ideal per a carteres de mode només lectura.</translation>
     </message>
     <message numerus="yes">
         <source>%n GB of free space available</source>
-        <translation><numerusform>Un GB d'espai lliure disponible.</numerusform><numerusform>%n GB d'espai lliure disponibles</numerusform></translation>
+        <translation><numerusform>Un GB d'espai lliure disponible</numerusform><numerusform>%n GB d'espai lliure disponibles</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
@@ -1066,6 +1055,13 @@ Això és ideal per a carteres de mode només lectura.</translation>
         <translation><numerusform>(Un GB necessari per a la cadena completa)</numerusform><numerusform>(Un GB necessari per a la cadena completa)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1126,6 +1122,19 @@ Això és ideal per a carteres de mode només lectura.</translation>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipus</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adreça</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1134,6 +1143,14 @@ Això és ideal per a carteres de mode només lectura.</translation>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Enganxa l'adreça del porta-retalls</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1232,10 +1249,6 @@ Això és ideal per a carteres de mode només lectura.</translation>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Prunar emmagatzemament de &amp;block a</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1392,6 +1405,10 @@ Això és ideal per a carteres de mode només lectura.</translation>
     <message>
         <source>none</source>
         <translation>cap</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Nucli de Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1629,6 +1646,9 @@ Això és ideal per a carteres de mode només lectura.</translation>
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1682,10 +1702,6 @@ Això és ideal per a carteres de mode només lectura.</translation>
         <translation>Node/Servei</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeId</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1697,7 +1713,11 @@ Això és ideal per a carteres de mode només lectura.</translation>
         <source>Received</source>
         <translation>Rebut</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tipus</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1803,6 +1823,16 @@ Això és ideal per a carteres de mode només lectura.</translation>
     <message>
         <source>unknown</source>
         <translation>desconegut</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsó</translation>
     </message>
 </context>
 <context>
@@ -1915,6 +1945,10 @@ Això és ideal per a carteres de mode només lectura.</translation>
         <translation>(cap)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Rang</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Reinicialitza</translation>
     </message>
@@ -1937,10 +1971,6 @@ Això és ideal per a carteres de mode només lectura.</translation>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Seleccioneu un igual per mostrar informació detallada.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Direcció</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2139,14 +2169,6 @@ Això és ideal per a carteres de mode només lectura.</translation>
         <translation>mai</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Entrant</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Sortint</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Desconegut</translation>
     </message>
@@ -2190,8 +2212,8 @@ Això és ideal per a carteres de mode només lectura.</translation>
         <translation>Un missatge opcional adjunt a la sol·licitud de pagament i que es pot mostrar al remitent.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Creeu una nova adreça de recepció</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Sol·licitud de pagament</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2751,6 +2773,13 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
     </message>
 </context>
 <context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Sí</translation>
+    </message>
+</context>
+<context>
     <name>ShutdownWindow</name>
     <message>
         <source>%1 is shutting down...</source>
@@ -3247,10 +3276,6 @@ Nota: Com que la comissió es calcula en funció dels bytes, una comissió de "1
         <translation>Enviada a</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>A un mateix</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Minada</translation>
     </message>
@@ -3585,6 +3610,14 @@ Ves a Arxiu &gt; Obrir Cartera per a carregar cartera.
         <translation>Contribueix si trobes %s útil. Visita %s per obtenir més informació sobre el programari.</translation>
     </message>
     <message>
+        <source>SQLiteDatabase: Failed to prepare the statement to fetch sqlite wallet schema version: %s</source>
+        <translation>SQLiteDatabase: No s'ha pogut preparar la sentència per obtenir la versió de l'esquema de la cartera sqlite: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to prepare the statement to fetch the application id: %s</source>
+        <translation>SQLiteDatabase: No s'ha pogut preparar la sentència per obtenir l'identificador de l'aplicació: %s</translation>
+    </message>
+    <message>
         <source>SQLiteDatabase: Unknown sqlite wallet schema version %d. Only version %d is supported</source>
         <translation>SQLiteDatabase: esquema de cartera sqlite de versió %d desconegut. Només és compatible la versió %d</translation>
     </message>
@@ -3697,6 +3730,10 @@ Ves a Arxiu &gt; Obrir Cartera per a carregar cartera.
         <translation>Ha fallat la verificació de la base de dades</translation>
     </message>
     <message>
+        <source>Ignoring duplicate -wallet %s.</source>
+        <translation>Ignorant -cartera duplicada %s.</translation>
+    </message>
+    <message>
         <source>Importing...</source>
         <translation>S'està important...</translation>
     </message>
@@ -3725,12 +3762,38 @@ Ves a Arxiu &gt; Obrir Cartera per a carregar cartera.
         <translation>Import invàlid per -fallbackfee=&lt;amount&gt;: '%s'</translation>
     </message>
     <message>
+        <source>SQLiteDatabase: Failed to execute statement to verify database: %s</source>
+        <translation>SQLiteDatabase: No s'ha pogut executar la sentència per verificar la base de dades: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to fetch sqlite wallet schema version: %s</source>
+        <translation>SQLiteDatabase: No s'ha pogut obtenir la versió d'esquema de cartera sqlite: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to fetch the application id: %s</source>
+        <translation>SQLiteDatabase: No s'ha pogut obtenir l'identificador de l'aplicació: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to prepare statement to verify database: %s</source>
+        <translation>SQLiteDatabase: No s'ha pogut preparar la sentència per verificar la base de dades: %s</translation>
+    </message>
+    <message>
         <source>SQLiteDatabase: Failed to read database verification error: %s</source>
         <translation>SQLiteDatabase: ha fallat la lectura de la base de dades. Error de verificació: %s</translation>
     </message>
     <message>
+        <source>SQLiteDatabase: Unexpected application id. Expected %u, got %u</source>
+        <translation>SQLiteDatabase: Identificador d’aplicació inesperat. S'esperava %u, s'ha obtingut  %u</translation>
+    </message>
+    <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>El directori de blocs especificat "%s" no existeix.</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>El fitxer de R/W configuració especificat %s no existeix
+</translation>
     </message>
     <message>
         <source>Unknown address type '%s'</source>
@@ -3813,6 +3876,10 @@ Ves a Arxiu &gt; Obrir Cartera per a carregar cartera.
         <translation>Error: ha fallat escoltar les connexions entrants (l'escoltament ha retornat l'error %s)</translation>
     </message>
     <message>
+        <source>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</source>
+        <translation>%s està malmès. Proveu d’utilitzar l’eina bitcoin-wallet per recuperar o restaurar una còpia de seguretat.</translation>
+    </message>
+    <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
         <translation>Import no vàlid per a -maxtxfee=&lt;amount&gt;: '%s' (cal que sigui com a mínim la comissió de minrelay de %s per evitar que les comissions s'encallin)</translation>
     </message>
@@ -3821,12 +3888,28 @@ Ves a Arxiu &gt; Obrir Cartera per a carregar cartera.
         <translation>L'import de la transacció és massa petit per enviar-la després que se'n dedueixi la comissió</translation>
     </message>
     <message>
+        <source>This error could occur if this wallet was not shutdown cleanly and was last loaded using a build with a newer version of Berkeley DB. If so, please use the software that last loaded this wallet</source>
+        <translation>Aquest error es podria produir si la cartera no es va tancar netament i es va carregar per última vegada mitjançant una més nova de Berkeley DB. Si és així, utilitzeu el programari que va carregar aquesta cartera per última vegada</translation>
+    </message>
+    <message>
+        <source>This is the maximum transaction fee you pay (in addition to the normal fee) to prioritize partial spend avoidance over regular coin selection.</source>
+        <translation>Aquesta és la comissió màxima de transacció que pagueu (a més de la tarifa normal) per prioritzar l'evitació parcial de la despesa per sobre de la selecció regular de monedes.</translation>
+    </message>
+    <message>
+        <source>Transaction needs a change address, but we can't generate it. Please call keypoolrefill first.</source>
+        <translation>La transacció necessita una adreça de canvi, però no la podem generar. Si us plau, visiteu primer a keypoolrefill.</translation>
+    </message>
+    <message>
         <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
         <translation>Cal que torneu a construir la base de dades fent servir -reindex per tornar al mode no podat. Això tornarà a baixar la cadena de blocs sencera</translation>
     </message>
     <message>
         <source>A fatal internal error occurred, see debug.log for details</source>
         <translation>S'ha produït un error intern fatal. Consulteu debug.log per a més detalls</translation>
+    </message>
+    <message>
+        <source>Cannot set -peerblockfilters without -blockfilterindex.</source>
+        <translation>No es poden configurar -peerblockfilters sense -blockfilterindex.</translation>
     </message>
     <message>
         <source>Disk space is too low!</source>
@@ -3843,6 +3926,14 @@ Ves a Arxiu &gt; Obrir Cartera per a carregar cartera.
     <message>
         <source>Error: Disk space is low for %s</source>
         <translation>Error: l'espai del disc és insuficient per a %s</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>Error: Keypool s’ha esgotat. Visiteu primer keypoolrefill</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s)</source>
+        <translation>La taxa de tarifa (%s) és inferior a la configuració de la tarifa mínima (%s)</translation>
     </message>
     <message>
         <source>Invalid -onion address or hostname: '%s'</source>
@@ -3863,6 +3954,10 @@ Ves a Arxiu &gt; Obrir Cartera per a carregar cartera.
     <message>
         <source>Need to specify a port with -whitebind: '%s'</source>
         <translation>Cal especificar un port amb -whitebind: «%s»</translation>
+    </message>
+    <message>
+        <source>No proxy server specified. Use -proxy=&lt;ip&gt; or -proxy=&lt;ip:port&gt;.</source>
+        <translation>No s'ha especificat cap servidor intermediari. Utilitzeu -proxy =&lt;ip&gt; o -proxy =&lt;ip:port&gt;.</translation>
     </message>
     <message>
         <source>Prune mode is incompatible with -blockfilterindex.</source>
@@ -4009,10 +4104,6 @@ Ves a Arxiu &gt; Obrir Cartera per a carregar cartera.
     <message>
         <source>Loading wallet...</source>
         <translation>S'està carregant la cartera...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>No es pot reduir la versió de la cartera</translation>
     </message>
     <message>
         <source>Rescanning...</source>

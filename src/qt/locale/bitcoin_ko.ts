@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>지갑 주소나 라벨을 수정하려면 우클릭을 하십시오.</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>새로운 지갑 주소 생성</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>비트코인을 보내는 계좌 주소입니다. 코인을 보내기 전에 금액과 받는 주소를 항상 확인하십시오.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>비트코인을 받는 계좌 주소입니다. 신규 주소를 만들려면 수신 탭의 '새 수신 주소를 생성하기' 버튼을 사용하십시오.
-서명은 '레거시' 타입의 주소만 가능합니다.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -556,10 +546,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>개요 탭에서 값을 마스킹합니다.</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>기본 지갑</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>사용 가능한 블록이 없습니다.</translation>
     </message>
@@ -845,6 +831,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>지갑 생성하기</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>지갑</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>지갑 이름</translation>
     </message>
@@ -968,6 +958,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1025,10 +1018,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>비트코인</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>가장 최근의 %1 GB를 제외하고 확인 후 블록 폐기 (정리)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>최소 %1 GB의 데이터가 이 디렉토리에 저장되며 시간이 지남에 따라 증가할 것입니다.</translation>
     </message>
@@ -1065,6 +1054,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation><numerusform>(Full 체인이 되려면 %n GB 가 필요합니다.)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>없음</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1125,6 +1121,19 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>형식</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>주소</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1133,6 +1142,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>클립보드에서 주소 복사</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1231,10 +1248,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>블록 데이터를 지정된 크기로 축소합니다.(&amp;b) :</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1391,6 +1404,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>none</source>
         <translation>없음</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>비트코인 코어</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1628,6 +1645,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1681,10 +1701,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>노드/서비스</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>노드 ID</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>핑</translation>
     </message>
@@ -1696,7 +1712,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Received</source>
         <translation>받음</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>형식</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1803,7 +1823,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>unknown</source>
         <translation>알 수 없음</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     <message>
@@ -1914,6 +1934,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>(없음)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">범위</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>리셋(&amp;R)</translation>
     </message>
@@ -1936,10 +1960,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>자세한 정보를 보려면 피어를 선택하세요.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>방향</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2138,14 +2158,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>없음</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>인바운드</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>아웃바운드</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>알수없음</translation>
     </message>
@@ -2189,8 +2201,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>지불 요청에 첨부되고 발신자에게 표시 될 수있는 선택적 메시지입니다.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>새로운 수신 주소 생성(&amp;C)</translation>
+        <source>&amp;Request payment</source>
+        <translation>지불 요청(&amp;R)</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2750,6 +2762,13 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
 </context>
 <context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>예</translation>
+    </message>
+</context>
+<context>
     <name>ShutdownWindow</name>
     <message>
         <source>%1 is shutting down...</source>
@@ -3244,10 +3263,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Sent to</source>
         <translation>보낸 주소 :</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>자기 거래</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3836,10 +3851,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>%s가 손상되었습니다. '비트 코인-지갑'을 사용하여 백업을 구제하거나 복원하십시오.</translation>
     </message>
     <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>HD 분할을 하지 않은 지갑은 pre split keypool로 업그레이드 하지 않고는 업그레이드를 진행할 수 없습니다. 버전 169900나 버전을 지정하지 않는 것을 사용해주십시오.</translation>
-    </message>
-    <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
         <translation>유효하지 않은 금액 -maxtxfee=&lt;amount&gt;: '%s' (거래가 막히는 상황을 방지하게 위해 적어도 %s 의 중계 수수료를 지정해야 합니다)</translation>
     </message>
@@ -4060,10 +4071,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Loading wallet...</source>
         <translation>지갑을 불러오는 중...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>지갑을 다운그레이드 할 수 없습니다</translation>
     </message>
     <message>
         <source>Rescanning...</source>

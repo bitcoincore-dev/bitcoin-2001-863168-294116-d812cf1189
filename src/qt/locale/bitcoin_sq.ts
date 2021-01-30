@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Kliko me të djathtën për të ndryshuar adresën ose etiketen.</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Krijo një adresë të re</translation>
     </message>
@@ -68,11 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Këto janë Bitcoin adresat e juaja për të dërguar pagesa. Gjithmon kontrolloni shumën dhe adresën pranuese para se të dërgoni monedha.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Këto janë adresat tuaja të Bitcoin për të marrë pagesa. Përdorni butonin 'Krijo adresë të re marrëse' në skedën e marrjes për të krijuar adresa të reja. Nënshkrimi është i mundur vetëm me adresa të tipit 'trashëgimi'.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -251,12 +242,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Mbyllni aplikacionin</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Shfaq informacion rreth %1</translation>
+    </message>
+    <message>
         <source>Show information about Qt</source>
         <translation>Shfaq informacion rreth Qt</translation>
     </message>
     <message>
         <source>&amp;Options...</source>
         <translation>&amp;Opsione</translation>
+    </message>
+    <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">&amp;Kripto portofolin...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portofol:</translation>
     </message>
     <message>
         <source>Change the passphrase used for wallet encryption</source>
@@ -305,6 +308,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Up to date</source>
         <translation>I azhornuar</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Duke derguar adresen</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Duke marr adresen</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -367,6 +378,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Wallet</source>
+        <translation>Portofol</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>Kripto portofolin</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -411,6 +430,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -433,15 +455,43 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Formilarë</translation>
     </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">i/e panjohur...</translation>
+    </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Lloji</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresë</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
-    </context>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Ngjit nga memorja e sistemit</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+</context>
 <context>
     <name>OpenWalletActivity</name>
     </context>
@@ -454,6 +504,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>W&amp;allet</source>
         <translation>Portofol</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Berthama Bitcoin</translation>
     </message>
     <message>
         <source>Error</source>
@@ -469,12 +523,23 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">afer</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
     </context>
 <context>
     <name>PeerTableModel</name>
+    <message>
+        <source>Type</source>
+        <translation>Lloji</translation>
+    </message>
     </context>
 <context>
     <name>QObject</name>
@@ -490,6 +555,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>unknown</source>
         <translation>i/e panjohur</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>tst</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -499,6 +569,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>&amp;Information</source>
         <translation>Informacion</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Portofol: </translation>
     </message>
     <message>
         <source>&amp;Open</source>
@@ -535,8 +609,20 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">Adresë:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>Shuma:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">Etiketë:</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Portofol:</translation>
     </message>
     <message>
         <source>Copy &amp;Address</source>
@@ -573,6 +659,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Shuma:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Zgjidh...</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Dërgo marrësve të ndryshëm njëkohësisht</translation>
     </message>
@@ -585,8 +675,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Konfirmo veprimin e dërgimit</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Dergo</translation>
+    </message>
+    <message>
         <source>Confirm send coins</source>
         <translation>konfirmo dërgimin e monedhave</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">Dergo</translation>
     </message>
     <message>
         <source>The amount to pay must be larger than 0.</source>
@@ -627,6 +725,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Pay To:</source>
         <translation>Paguaj drejt:</translation>
     </message>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
     </context>
 <context>
     <name>ShutdownWindow</name>

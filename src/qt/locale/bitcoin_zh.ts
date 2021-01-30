@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>右键单击来编辑地址或者标签</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>创建一个新地址</translation>
     </message>
@@ -514,10 +510,6 @@
         <translation>显示%1帮助消息以获得可能包含Bitcoin命令行选项的列表</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>默认钱包</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>无可用钱包</translation>
     </message>
@@ -763,6 +755,10 @@
         <translation>创建钱包</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>钱包</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>钱包名称</translation>
     </message>
@@ -870,6 +866,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -910,6 +909,13 @@
         <source>Error</source>
         <translation>错误</translation>
     </message>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation><numerusform>%n GB 可用空间</numerusform></translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -939,12 +945,24 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>地址</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open bitcoin URI</source>
+        <translation>打开比特币: URI</translation>
+    </message>
     <message>
         <source>URI:</source>
         <translation>URI: </translation>
     </message>
-</context>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1040,6 +1058,13 @@
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">关闭</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1053,12 +1078,29 @@
         <source>Amount</source>
         <translation>总计</translation>
     </message>
-    </context>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>转账</translation>
+    </message>
+</context>
 <context>
     <name>QRImageWidget</name>
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;消息</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation type="unfinished">网络</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">钱包： </translation>
+    </message>
     <message>
         <source>Node window</source>
         <translation>结点窗口</translation>
@@ -1087,7 +1129,15 @@
         <source>&amp;Disconnect</source>
         <translation>&amp;断开连接</translation>
     </message>
-    </context>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>禁用网络活动</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">未知</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -1118,12 +1168,28 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">地址:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>总计：</translation>
     </message>
     <message>
+        <source>Label:</source>
+        <translation type="unfinished">标签:</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished">消息：</translation>
+    </message>
+    <message>
         <source>Wallet:</source>
         <translation>钱包：</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;复制地址</translation>
     </message>
     </context>
 <context>
@@ -1135,6 +1201,10 @@
     <message>
         <source>Label</source>
         <translation>标签</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>消息</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -1170,6 +1240,10 @@
     <message>
         <source>Change:</source>
         <translation>变化：</translation>
+    </message>
+    <message>
+        <source>Transaction Fee:</source>
+        <translation>手续费：</translation>
     </message>
     <message>
         <source>Choose...</source>
@@ -1215,6 +1289,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>通过 Replace-By-Fee (BIP-125) 您可以在交易发送后增加交易费用。没有这个，可能会建议收取更高的费用，以补偿交易延迟风险的增加。</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;发送</translation>
+    </message>
+    <message>
         <source>Copy quantity</source>
         <translation>复制数量</translation>
     </message>
@@ -1255,6 +1333,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>手续费</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">发送</translation>
+    </message>
+    <message>
         <source>The recipient address is not valid. Please recheck.</source>
         <translation>收款人地址无效，请再次确认。</translation>
     </message>
@@ -1286,6 +1368,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Payment request expired.</source>
         <translation>支付请求已过期。</translation>
     </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>估计在%n块内确认。</numerusform></translation>
+    </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
         <translation>警告：比特币地址无效</translation>
@@ -1301,6 +1387,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;总计：</translation>
+    </message>
     <message>
         <source>&amp;Label:</source>
         <translation>&amp;标签：</translation>
@@ -1318,6 +1408,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>手续费将从发出的总额中扣除。接受者收到的比特币将少于你输入的金额字段。如果选择了多个接受者，手续费将平均分配。</translation>
     </message>
     <message>
+        <source>Message:</source>
+        <translation type="unfinished">消息：</translation>
+    </message>
+    <message>
         <source>This is an unauthenticated payment request.</source>
         <translation>这是一个未经身份验证的付款请求。</translation>
     </message>
@@ -1329,6 +1423,9 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
         <translation>附在比特币上的消息:URI将与交易一起存储，供参考。注意：此信息不会通过比特币网络发送。</translation>
     </message>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -1352,6 +1449,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Transaction fee</source>
         <translation>手续费</translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation>消息</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -1457,9 +1558,17 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Error</source>
         <translation>错误</translation>
     </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">备份钱包</translation>
+    </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>正在载入地址...</translation>
+    </message>
     <message>
         <source>Transaction too large</source>
         <translation>超额转账</translation>

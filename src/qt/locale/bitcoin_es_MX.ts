@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Haga clic derecho para editar la dirección o la etiqueta</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Crear una dirección nueva</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Estas son tus direcciones de Bitcoin para enviar pagos. Siempre revisa el monto y la dirección de envío antes de enviar monedas.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -286,6 +276,10 @@ Signing is only possible with addresses of the type 'legacy'.</translation>
     <message>
         <source>Quit application</source>
         <translation>Salir de la aplicación</translation>
+    </message>
+    <message>
+        <source>&amp;About %1</source>
+        <translation>&amp;Acerca de %1</translation>
     </message>
     <message>
         <source>Show information about %1</source>
@@ -553,10 +547,6 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     <message>
         <source>Mask the values in the Overview tab</source>
         <translation>Mask the values in the Overview tab</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>cartera predeterminada</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -844,6 +834,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation>Crear una cartera </translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Cartera</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Nombre de la cartera </translation>
     </message>
@@ -963,6 +957,9 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1020,10 +1017,6 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Discard blocks after verification, except most recent %1 GB (prune)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>At least %1 GB of data will be stored in this directory, and it will grow over time.</translation>
     </message>
@@ -1060,6 +1053,13 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation><numerusform>(%n GB needed for full chain)</numerusform><numerusform>(%n GB needed for full chain)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1120,6 +1120,19 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Dirección</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1128,6 +1141,14 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Pegar dirección  del portapapeles</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1226,10 +1247,6 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Prune &amp;block storage to</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1386,6 +1403,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     <message>
         <source>none</source>
         <translation>Ninguno </translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>nucleo Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1627,6 +1648,9 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1680,10 +1704,6 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation>Node/Service</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeId</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1695,7 +1715,11 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <source>Received</source>
         <translation>Recibido</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tipo</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1801,6 +1825,16 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     <message>
         <source>unknown</source>
         <translation>desconocido</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blq</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -1913,6 +1947,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation>(ninguno)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Range</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Reset</translation>
     </message>
@@ -1935,10 +1973,6 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Select a peer to view detailed information.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Direction</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2137,14 +2171,6 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation>nunca</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Entrada</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Salida</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Desconocido</translation>
     </message>
@@ -2186,10 +2212,6 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     <message>
         <source>An optional message that is attached to the payment request and may be displayed to the sender.</source>
         <translation>Un mensaje opcional que se adjunta a la solicitud de pago y que puede mostrarse al remitente.</translation>
-    </message>
-    <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Crear una nueva dirección de recepción</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2749,6 +2771,13 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
 </context>
 <context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Sí</translation>
+    </message>
+</context>
+<context>
     <name>ShutdownWindow</name>
     <message>
         <source>%1 is shutting down...</source>
@@ -3243,10 +3272,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Sent to</source>
         <translation>Enviar a</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>Para ti mismo</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3811,10 +3836,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</translation>
     </message>
     <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</translation>
-    </message>
-    <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
         <translation>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</translation>
     </message>
@@ -4039,10 +4060,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Loading wallet...</source>
         <translation>Cargando billetera...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Cannot downgrade wallet</translation>
     </message>
     <message>
         <source>Rescanning...</source>

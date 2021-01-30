@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>לעריכת הכתובת או התווית יש ללחוץ על הלחצן הימני בעכבר</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>יצירת כתובת חדשה</translation>
     </message>
@@ -70,12 +66,6 @@
         <translation>אלו הן כתובות הביטקוין שלך לשליחת תשלומים. חשוב לבדוק את הסכום ואת הכתובת המקבלת לפני שליחת מטבעות.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>אלו כתובת ביטקוין שלך לקבלת תשלומים. ניתן להשתמש בכפתור 'יצירת כתובת קבלה חדשה' בלשונית הקבלה ליצירת כתובות חדשות.
-חתימה אפשרית רק עבור כתובות מסוג 'legacy'.</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;העתקת כתובת</translation>
     </message>
@@ -135,7 +125,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Repeat new passphrase</source>
-        <translation>חזור על הסיסמה החדשה</translation>
+        <translation>נא לחזור על הסיסמה החדשה</translation>
     </message>
     <message>
         <source>Show passphrase</source>
@@ -167,7 +157,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Confirm wallet encryption</source>
-        <translation>אשר הצפנת ארנק</translation>
+        <translation>אישור הצפנת הארנק</translation>
     </message>
     <message>
         <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
@@ -175,7 +165,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
-        <translation>האם אתה בטוח שברצונך להצפין את הארנק?</translation>
+        <translation>האם אכן ברצונך להצפין את הארנק שלך?</translation>
     </message>
     <message>
         <source>Wallet encrypted</source>
@@ -322,7 +312,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>&amp;Change Passphrase...</source>
-        <translation>&amp;שנה סיסמה...</translation>
+        <translation>&amp;שינוי סיסמה...</translation>
     </message>
     <message>
         <source>Open &amp;URI...</source>
@@ -342,7 +332,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Click to disable network activity.</source>
-        <translation>לחץ כדי לנטרל את פעילות הרשת.</translation>
+        <translation>יש ללחוץ כדי לנטרל את פעילות הרשת.</translation>
     </message>
     <message>
         <source>Network activity disabled.</source>
@@ -350,7 +340,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Click to enable network activity again.</source>
-        <translation>לחץ כדי לחדש את פעילות הרשת.</translation>
+        <translation>יש ללחוץ כדי להפעיל את פעילות הרשת מחדש.</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -556,10 +546,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Mask the values in the Overview tab</source>
         <translation>הסווה את הערכים בלשונית התיאור הכללי
 </translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>ארנק בררת מחדל</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -825,7 +811,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <name>CreateWalletActivity</name>
     <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
-        <translation>יצירת הארנק &lt;b&gt;%1&lt;/b&gt; מתבצעת...</translation>
+        <translation>כעת ביצירת הארנק &lt;b&gt;%1&lt;/b&gt; ...</translation>
     </message>
     <message>
         <source>Create wallet failed</source>
@@ -841,6 +827,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Create Wallet</source>
         <translation>יצירת ארנק</translation>
+    </message>
+    <message>
+        <source>Wallet</source>
+        <translation>ארנק</translation>
     </message>
     <message>
         <source>Wallet Name</source>
@@ -868,7 +858,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Make Blank Wallet</source>
-        <translation>צור ארנק ריק</translation>
+        <translation>יצירת ארנק ריק</translation>
     </message>
     <message>
         <source>Use descriptors for scriptPubKey management</source>
@@ -962,6 +952,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1019,10 +1012,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>ביטקוין</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>התעלם בלוקים לאחר ווריפיקציה, למעט %1 GB המאוחרים ביותר (המקוצצים)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>לפחות %1 ג״ב של נתונים יאוחסנו בתיקייה זו, והם יגדלו עם הזמן.</translation>
     </message>
@@ -1053,6 +1042,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
         <translation><numerusform>(מתוך %n ג״ב נדרשים)</numerusform><numerusform>(מתוך %n ג״ב נדרשים)</numerusform><numerusform>(מתוך %n ג״ב נדרשים)</numerusform><numerusform>(מתוך %n ג״ב נדרשים)</numerusform></translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>לא זמין</translation>
     </message>
     </context>
 <context>
@@ -1115,6 +1111,19 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>סוג</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>כתובת</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1123,6 +1132,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>URI:</source>
         <translation>כתובת משאב:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>הדבקת כתובת מלוח הגזירים</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1221,10 +1238,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>יש לגזום את &amp;מאגר הבלוקים אל</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>ג״ב</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1381,6 +1394,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>none</source>
         <translation>ללא</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>ליבת ביטקוין</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1622,6 +1639,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1675,10 +1695,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>צומת/שירות</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>מזהה צומת</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>פינג</translation>
     </message>
@@ -1690,7 +1706,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Received</source>
         <translation>התקבלו</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>סוג</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1797,6 +1817,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>unknown</source>
         <translation>לא ידוע</translation>
     </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>מקטע</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>העברה</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -1818,7 +1848,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>QR code support not available.</source>
-        <translation>תמיכה בקוד QR לא זמינה.</translation>
+        <translation>קוד QR אינו נתמך.</translation>
     </message>
     <message>
         <source>Save QR Code</source>
@@ -1908,6 +1938,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>(אין)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">טווח</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;איפוס</translation>
     </message>
@@ -1930,10 +1964,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>נא לבחור בעמית כדי להציג מידע מפורט.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>כיוון</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2132,14 +2162,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>לעולם לא</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>תעבורה נכנסת</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>תעבורה יוצאת</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>לא ידוע</translation>
     </message>
@@ -2183,8 +2205,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>הודעה אוצפציונלית מצורפת לבקשת התשלום אשר ניתן להציגה לשולח.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;יצירת כתובת קבלה חדשה</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;בקשת תשלום</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2521,11 +2543,11 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source> from wallet '%1'</source>
-        <translation>מתוך ארנק '%1'</translation>
+        <translation>מתוך ארנק "%1"</translation>
     </message>
     <message>
         <source>%1 to '%2'</source>
-        <translation>%1 אל '%2'</translation>
+        <translation>%1 אל "%2"</translation>
     </message>
     <message>
         <source>%1 to %2</source>
@@ -2537,7 +2559,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Are you sure you want to send?</source>
-        <translation>לשלוח?</translation>
+        <translation>האם אכן ברצונך לשלוח?</translation>
     </message>
     <message>
         <source>Create Unsigned</source>
@@ -2569,7 +2591,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Please, review your transaction.</source>
-        <translation>אנא עברו שוב על העסקה שלכם.</translation>
+        <translation>נא לעבור על העסקה שלך, בבקשה.</translation>
     </message>
     <message>
         <source>Transaction fee</source>
@@ -2593,7 +2615,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Confirm transaction proposal</source>
-        <translation>אישור הצעת עיסקה</translation>
+        <translation>אישור הצעת עסקה</translation>
     </message>
     <message>
         <source>Send</source>
@@ -2653,7 +2675,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>The address you selected for change is not part of this wallet. Any or all funds in your wallet may be sent to this address. Are you sure?</source>
-        <translation>הכתובת שבחרת עבור ההחלפה אינה חלק מארנק זה. כל ההסכום שבארנק שלך עשוי להישלח לכתובת זו. מקובל עליך?</translation>
+        <translation>הכתובת שבחרת עבור ההחלפה אינה חלק מארנק זה. כל הסכום שבארנק שלך עשוי להישלח לכתובת זו. האם אכן זהו רצונך?</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -2744,6 +2766,13 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
 </context>
 <context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>כן</translation>
+    </message>
+</context>
+<context>
     <name>ShutdownWindow</name>
     <message>
         <source>%1 is shutting down...</source>
@@ -2822,7 +2851,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Enter the receiver's address, message (ensure you copy line breaks, spaces, tabs, etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!</source>
-        <translation>יש להזין את כתובת הנמען, ההודעה (נא לוודא שמעתיקים במדויק את תווי קפיצות השורה, רווחים, טאבים וכדומה). והחותימה מתחת אשר מאמתת את ההודעה. יש להזהר שלא לקרוא לתוך החתימה יותר מאשר בהודעה החתומה עצמה, כדי להמנע מניצול לרעה של המתווך שבדרך. יש לשים לב שהדגר רק מוכיח שהצד החותם מקבל עם הכתובת. הדבר אינו מוכיח משלוח כלשהו של עיסקה!</translation>
+        <translation>יש להזין את כתובת הנמען, ההודעה (נא לוודא שהעתקת במדויק את תווי קפיצות השורה, רווחים, טאבים וכדומה). והחתימה מתחת אשר מאמתת את ההודעה. יש להיזהר שלא לקרוא לתוך החתימה יותר מאשר בהודעה החתומה עצמה, כדי להימנע מניצול לרעה של המתווך שבדרך. יש לשים לב שהדבר רק מוכיח שהצד החותם מקבל עם הכתובת. הדבר אינו מוכיח משלוח כלשהו של עסקה!</translation>
     </message>
     <message>
         <source>The Bitcoin address the message was signed with</source>
@@ -3240,10 +3269,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>נשלח אל</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>לעצמך</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>נכרו</translation>
     </message>
@@ -3554,6 +3579,10 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>ה %s מפתחים</translation>
     </message>
     <message>
+        <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
+        <translation>לא מצליח לנעול את תיקית הנתונים %s. %s כנראה כבר רץ.</translation>
+    </message>
+    <message>
         <source>Cannot provide specific connections and have addrman find outgoing connections at the same.</source>
         <translation>לא מצליח לספק קשרים ספציפיים ולגרום ל addrman למצוא קשרים חיצוניים יחדיו.</translation>
     </message>
@@ -3564,6 +3593,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
         <translation>נא בדקו שהתאריך והשעה במחשב שלכם נכונים! אם השעון שלכם לא מסונכרן, %s לא יעבוד כהלכה.</translation>
+    </message>
+    <message>
+        <source>Please contribute if you find %s useful. Visit %s for further information about the software.</source>
+        <translation>אנא שקלו תרומה אם מצאתם את %s שימושי. בקרו ב %s למידע נוסף על התוכנה.</translation>
     </message>
     <message>
         <source>The block database contains a block which appears to be from the future. This may be due to your computer's date and time being set incorrectly. Only rebuild the block database if you are sure that your computer's date and time are correct</source>
@@ -3670,6 +3703,10 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>כשל בסריקה מחדש של הארנק בזמן האתחול</translation>
     </message>
     <message>
+        <source>Failed to verify database</source>
+        <translation>אימות מסד הנתונים נכשל</translation>
+    </message>
+    <message>
         <source>Importing...</source>
         <translation>מתבצע יבוא…</translation>
     </message>
@@ -3771,7 +3808,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Verifying blocks...</source>
-        <translation>באימות הבלוקים…</translation>
+        <translation>כעת באימות הבלוקים…</translation>
     </message>
     <message>
         <source>Wallet needed to be rewritten: restart %s to complete</source>
@@ -3786,8 +3823,8 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>%s משובש. נסו להשתמש בכלי הארנק bitcoin-wallet כדי להציל או לשחזר מגיבוי..</translation>
     </message>
     <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>אין אפשרות לשדרג ארנק מפוצל שאינו HD מבלי לתמוך במאגר המפתחות טרם הפיצול. בבקשה להשתמש בגירסת 169900 או שלא צויינה גירסה.</translation>
+        <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
+        <translation>כמות שגויה של -maxtxfee=&lt;amount&gt;: '%s' (נדרש לפחות minrelay עמלה של %s כדי למנוע עסקאות מלהתקע</translation>
     </message>
     <message>
         <source>The transaction amount is too small to send after the fee has been deducted</source>
@@ -3921,11 +3958,11 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Unable to create the PID file '%s': %s</source>
-        <translation>לא ניתן ליצור את קובץ PID‏ '%s':‏ %s</translation>
+        <translation>אין אפשרות ליצור את קובץ PID‏ '%s':‏ %s</translation>
     </message>
     <message>
         <source>Unable to generate initial keys</source>
-        <translation>לא ניתן ליצור מפתחות ראשוניים</translation>
+        <translation>אין אפשרות ליצור מפתחות ראשוניים</translation>
     </message>
     <message>
         <source>Unknown -blockfilterindex value %s.</source>
@@ -3933,7 +3970,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Verifying wallet(s)...</source>
-        <translation>באימות הארנק(ים)...</translation>
+        <translation>כעת באימות הארנק(ים)...</translation>
     </message>
     <message>
         <source>Warning: unknown new rules activated (versionbit %i)</source>
@@ -4009,19 +4046,15 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Loading wallet...</source>
-        <translation>הארנק בטעינה…</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>לא ניתן להחזיר את גרסת הארנק</translation>
+        <translation>כעת בטעינת הארנק…</translation>
     </message>
     <message>
         <source>Rescanning...</source>
-        <translation>סריקה מחדש…</translation>
+        <translation>כעת בסריקה מחדש…</translation>
     </message>
     <message>
         <source>Done loading</source>
-        <translation>טעינה הושלמה</translation>
+        <translation>הטעינה הושלמה</translation>
     </message>
 </context>
 </TS>

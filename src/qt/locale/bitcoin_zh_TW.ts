@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>右鍵點擊來編輯地址或標籤</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>產生一個新地址</translation>
     </message>
@@ -68,11 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>這些是你要發送過去的 比特幣地址。在發送幣之前，務必要檢查金額和接收地址是否正確。</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>這些是您的比特幣接收地址。使用“接收”標籤中的“產生新的接收地址”按鈕產生新的地址。只能使用“傳統”類型的地址進行簽名。</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -285,6 +276,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Quit application</source>
         <translation>結束應用程式</translation>
+    </message>
+    <message>
+        <source>&amp;About %1</source>
+        <translation>關於%1(&amp;A)</translation>
     </message>
     <message>
         <source>Show information about %1</source>
@@ -551,10 +546,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>遮蔽“概述”選項卡中的值</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>預設錢包</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>没有可用的钱包</translation>
     </message>
@@ -662,7 +653,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation>原始訊息：</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>發生了致命的錯誤。%1 軟體沒辦法再繼續安全執行，只好結束。</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -832,6 +827,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>新增錢包</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>錢包</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>錢包名稱</translation>
     </message>
@@ -911,6 +910,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>輸入的地址 %1 並不是有效的比特幣地址。</translation>
     </message>
     <message>
+        <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
+        <translation>%1 已經是標記為 %2 的收款位址了，不可以又是付款位址。</translation>
+    </message>
+    <message>
         <source>The entered address "%1" is already in the address book with label "%2".</source>
         <translation>輸入的地址 %1 已經在地址簿中了，標籤為 "%2"。</translation>
     </message>
@@ -946,6 +949,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>沒辦法在這裡造出資料目錄。</translation>
     </message>
 </context>
+<context>
+    <name>GuiNetWatch</name>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
@@ -1041,6 +1047,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>未知</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -1096,6 +1109,19 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>種類</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>位址</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1104,6 +1130,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>貼上剪貼簿裡的位址</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1202,10 +1236,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>修剪區塊資料大小到</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB (十億位元組)</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1575,6 +1605,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1628,10 +1661,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>節點/服務</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>節點識別碼</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping  時間</translation>
     </message>
@@ -1643,7 +1672,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Received</source>
         <translation>收到</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>種類</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1745,6 +1778,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>unknown</source>
         <translation>未知</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>塊</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>交易</translation>
     </message>
 </context>
 <context>
@@ -1857,6 +1900,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>(無)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">範圍</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>重置(&amp;R)</translation>
     </message>
@@ -1879,10 +1926,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>選一個節點來看詳細資訊</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>方向</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2081,14 +2124,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>沒有過</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>進來</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>出去</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>不明</translation>
     </message>
@@ -2132,8 +2167,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>附加在支付請求上的可選的訊息，可以顯示給發送者。</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;產生新的接收地址</translation>
+        <source>&amp;Request payment</source>
+        <translation>要求付款(&amp;R)</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2681,6 +2716,13 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
 </context>
 <context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>是</translation>
+    </message>
+</context>
+<context>
     <name>ShutdownWindow</name>
     <message>
         <source>%1 is shutting down...</source>
@@ -3177,10 +3219,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>付款</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>給自己</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>開採所得</translation>
     </message>
@@ -3309,6 +3347,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Close wallet</source>
         <translation>關閉錢包</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to close the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>確定要關上錢包&lt;i&gt;%1&lt;/i&gt;嗎？</translation>
     </message>
     <message>
         <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
@@ -3715,10 +3757,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>錯誤: 聽候外來連線失敗(回傳錯誤 %s)</translation>
     </message>
     <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>如果不升級以支援預拆分keypool，則無法升級非HD拆分錢包。請使用169900版本或沒有版本。</translation>
-    </message>
-    <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
         <translation>-maxtxfee=&lt;amount&gt;: '%s' 的金額無效 (必須大於最低轉發手續費 %s 以避免交易無法確認)</translation>
     </message>
@@ -3939,10 +3977,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Loading wallet...</source>
         <translation>正在載入錢包資料...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>沒辦法把錢包格式降級</translation>
     </message>
     <message>
         <source>Rescanning...</source>

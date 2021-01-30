@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Desni klik za uređivanje adrese ili oznake</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Stvoriti  novu adresu</translation>
     </message>
@@ -542,10 +538,6 @@
         <translation>Prikažite pomoć programa %1 kako biste ispisali moguće opcije preko terminala</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>uobičajeni novčanik</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Nema dostupnih novčanika</translation>
     </message>
@@ -648,7 +640,11 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Novčanik je &lt;b&gt;šifriran&lt;/b&gt; i trenutno &lt;b&gt;zaključan&lt;/b&gt;</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>Dogodila se kobna greška. %1 ne može više sigurno nastaviti te će se zatvoriti.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -822,6 +818,10 @@
         <translation>Stvorite novčanik</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Novčanik</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Ime novčanika</translation>
     </message>
@@ -933,6 +933,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -990,10 +993,6 @@
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Odbacite blokove nakon provjere osim one najnovije do %1 GB-a (obrezujte)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Bit će spremljeno barem %1 GB podataka u ovoj mapi te će se povećati tijekom vremena.</translation>
     </message>
@@ -1030,6 +1029,13 @@
         <translation><numerusform>(potreban je %n GB za cijeli lanac)</numerusform><numerusform>(potrebna su %n GB-a za cijeli lanac)</numerusform><numerusform>(potrebno je %n GB-a za cijeli lanac)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1086,10 +1092,35 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tip</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresa</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open bitcoin URI</source>
+        <translation>Otvori bitcoin: URI</translation>
+    </message>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Zalijepi adresu iz međuspremnika</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1188,10 +1219,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Obrezujte pohranu &amp;blokova na</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1316,6 +1343,14 @@
     <message>
         <source>Whether to show coin control features or not.</source>
         <translation>Ovisi želite li prikazati mogućnosti kontroliranja inputa ili ne.</translation>
+    </message>
+    <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Spojite se na Bitcoin mrežu kroz zaseban SOCKS5 proxy za povezivanje na Tor.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Koristite zaseban SOCKS&amp;5 proxy kako biste dohvatili klijente preko Tora:</translation>
     </message>
     <message>
         <source>&amp;Third party transaction URLs</source>
@@ -1460,6 +1495,10 @@
         <translation>Dijalog</translation>
     </message>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">Zatvorite</translation>
+    </message>
+    <message>
         <source>Total Amount</source>
         <translation>Ukupni iznos</translation>
     </message>
@@ -1467,6 +1506,9 @@
         <source>or</source>
         <translation>ili</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1518,10 +1560,6 @@
         <translation>Čvor/Servis</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeId (ID čvora)</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1533,7 +1571,11 @@
         <source>Received</source>
         <translation>Primljeno</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tip</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1635,6 +1677,11 @@
     <message>
         <source>unknown</source>
         <translation>nepoznato</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsa</translation>
     </message>
 </context>
 <context>
@@ -1747,6 +1794,10 @@
         <translation>(ništa)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Raspon</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Resetirajte</translation>
     </message>
@@ -1769,10 +1820,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Odaberite klijent kako biste vidjeli detaljne informacije.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Smjer</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1955,14 +2002,6 @@
         <translation>nikad</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Dolazni</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Izlazni</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Nepoznato</translation>
     </message>
@@ -1998,8 +2037,8 @@
         <translation>Opcionalan iznos koji možete zahtijevati. Ostavite ovo prazno ili unesite nulu ako ne želite zahtijevati specifičan iznos.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Stvorite novu primateljsku adresu</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Zatraži plaćanje</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2060,6 +2099,10 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">Adresa:</translation>
+    </message>
     <message>
         <source>Amount:</source>
         <translation>Iznos:</translation>
@@ -2505,6 +2548,13 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
     <message>
         <source>Memo:</source>
         <translation>Zapis:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Da</translation>
     </message>
 </context>
 <context>
@@ -2996,10 +3046,6 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
         <translation>Poslano za</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Samom sebi</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Rudareno</translation>
     </message>
@@ -3414,6 +3460,12 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
         <translation>Zadana mapa blokova "%s" ne postoji.</translation>
     </message>
     <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Navedena R/W konfiguracijska datoteka %s ne postoji
+</translation>
+    </message>
+    <message>
         <source>Unknown address type '%s'</source>
         <translation>Nepoznat tip adrese '%s'</translation>
     </message>
@@ -3506,6 +3558,10 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
         <translation>Morat ćete ponovno složiti bazu koristeći -reindex kako biste se vratili na neobrezivan način (unpruned mode). Ovo će ponovno preuzeti cijeli lanac blokova.</translation>
     </message>
     <message>
+        <source>A fatal internal error occurred, see debug.log for details</source>
+        <translation>Dogodila se kobna interna greška. Vidite debug.log za detalje</translation>
+    </message>
+    <message>
         <source>Error reading from database, shutting down.</source>
         <translation>Greška kod iščitanja baze. Zatvara se klijent.</translation>
     </message>
@@ -3516,6 +3572,10 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
     <message>
         <source>Error: Disk space is low for %s</source>
         <translation>Pogreška: Malo diskovnog prostora za %s</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>Ispraznio se bazen ključeva. Molim pozovite keypoolrefill najprije</translation>
     </message>
     <message>
         <source>Invalid -onion address or hostname: '%s'</source>
@@ -3682,10 +3742,6 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
     <message>
         <source>Loading wallet...</source>
         <translation>Učitavanje novčanika...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Nije moguće novčanik vratiti na prijašnju verziju.</translation>
     </message>
     <message>
         <source>Rescanning...</source>

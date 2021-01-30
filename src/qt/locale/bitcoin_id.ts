@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Klik-kanan untuk mengubah alamat atau label</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Buat alamat baru</translation>
     </message>
@@ -518,10 +514,6 @@
         <translation>Tampilkan %1 pesan bantuan untuk mendapatkan daftar opsi baris perintah Bitcoin yang memungkinkan</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>wallet default</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Tidak ada wallet tersedia</translation>
     </message>
@@ -625,7 +617,11 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Dompet saat ini &lt;b&gt;terenkripsi&lt;/b&gt; dan &lt;b&gt;terkunci&lt;/b&gt;</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>Terjadi Kesalahan Fatal. %1 Tidak Dapat Melanjutkan Dengan Aman Dan Akan Keluar</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -799,6 +795,10 @@
         <translation>Bikin dompet</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Dompet</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Nama Dompet</translation>
     </message>
@@ -910,6 +910,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -967,10 +970,6 @@
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Buang blok setelah verifikasi, kecuali %1 GB terbaru (prune)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Setidaknya %1 GB data akan disimpan di direktori ini dan akan berkembang seiring berjalannya waktu.</translation>
     </message>
@@ -1007,6 +1006,13 @@
         <translation><numerusform>(%n GB dibutuhkan untuk rantai penuh)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>T/S</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1067,6 +1073,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipe</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Alamat</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1075,6 +1094,14 @@
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Tempel alamat dari salinan</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+B</translation>
     </message>
 </context>
 <context>
@@ -1173,10 +1200,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Prune &amp;ruang penyimpan block ke</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1301,6 +1324,14 @@
     <message>
         <source>Whether to show coin control features or not.</source>
         <translation>Ingin menunjukkan cara pengaturan koin atau tidak.</translation>
+    </message>
+    <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Koneksi ke jaringan bitcoin melalui proxy SOCKS5 yang berbeda untuk layanan Tor tersembunyi.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Menggunakan proxy SOCKS5 tersendiri untuk berhubungan dengan orang lain melalui layanan Tor:</translation>
     </message>
     <message>
         <source>&amp;Third party transaction URLs</source>
@@ -1441,6 +1472,10 @@
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">Tutup</translation>
+    </message>
+    <message>
         <source>Total Amount</source>
         <translation>Jumlah Keseluruhan</translation>
     </message>
@@ -1448,6 +1483,9 @@
         <source>or</source>
         <translation>atau</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1503,10 +1541,6 @@
         <translation>Node/Service</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeID</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1518,7 +1552,11 @@
         <source>Received</source>
         <translation>Diterima</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tipe</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1620,6 +1658,11 @@
     <message>
         <source>unknown</source>
         <translation>tidak diketahui</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsi</translation>
     </message>
 </context>
 <context>
@@ -1732,6 +1775,10 @@
         <translation>(tidak ada)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Jarak</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Reset</translation>
     </message>
@@ -1754,10 +1801,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Pilih satu peer untuk melihat informasi detail.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Panduan</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1946,14 +1989,6 @@
         <translation>tidak pernah</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>masuk</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>keluar</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Tidak diketahui</translation>
     </message>
@@ -1997,8 +2032,8 @@
         <translation>Pesan opsional yang dilampirkan di permintaan pembayaran dan dapat ditampilkan ke pengirim.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Create alamat penerima baru</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Minta pembayaran</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2060,8 +2095,16 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">Alamat:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>Nilai:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">Label:</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -2338,6 +2381,10 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
         <translation>Apakah anda yakin ingin mengirimkan?</translation>
     </message>
     <message>
+        <source>Create Unsigned</source>
+        <translation type="unfinished">buat Tidak ditandai</translation>
+    </message>
+    <message>
         <source>or</source>
         <translation>atau</translation>
     </message>
@@ -2515,6 +2562,13 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
     <message>
         <source>Memo:</source>
         <translation>Catatan Peringatan:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Ya</translation>
     </message>
 </context>
 <context>
@@ -2996,10 +3050,6 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
     <message>
         <source>Sent to</source>
         <translation>Dikirim ke</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>Untuk diri sendiri</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3516,6 +3566,10 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
         <translation>Anda perlu membangun kembali basis data menggunakan -reindex untuk kembali ke mode tidak dipangkas. Ini akan mengunduh ulang seluruh blockchain</translation>
     </message>
     <message>
+        <source>A fatal internal error occurred, see debug.log for details</source>
+        <translation>Kesalahan internal fatal terjadi, lihat debug.log untuk detailnya</translation>
+    </message>
+    <message>
         <source>Error reading from database, shutting down.</source>
         <translation>Kesalahan membaca dari basis data, mematikan.</translation>
     </message>
@@ -3692,10 +3746,6 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
     <message>
         <source>Loading wallet...</source>
         <translation>Memuat dompet...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Tidak dapat menurunkan versi dompet</translation>
     </message>
     <message>
         <source>Rescanning...</source>

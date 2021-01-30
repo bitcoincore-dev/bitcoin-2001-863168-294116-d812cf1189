@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Nhấn chuột phải để sửa địa chỉ hoặc nhãn</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Tạo một địa chỉ mới</translation>
     </message>
@@ -435,7 +431,7 @@
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n kết nối đến Bitcoin network</numerusform></translation>
+        <translation><numerusform>%n kết nối đến hệ thống Bitcoin</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -476,6 +472,14 @@
     <message>
         <source>Up to date</source>
         <translation>Đã cập nhật</translation>
+    </message>
+    <message>
+        <source>&amp;Load PSBT from file...</source>
+        <translation>&amp;Tải dữ liệu PSBT từ tệp...</translation>
+    </message>
+    <message>
+        <source>Load PSBT from clipboard...</source>
+        <translation>Tải dữ liệu PSBT từ bộ nhớ tạm...</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -524,10 +528,6 @@
     <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Hiển thị %1 tin nhắn hỗ trợ để nhận được danh sách Bitcoin command-line khả dụng</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>ví mặc định</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -811,6 +811,10 @@
         <translation>Tạo Ví</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Ví</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Tên Ví</translation>
     </message>
@@ -922,6 +926,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1004,17 +1011,24 @@
     </message>
     <message numerus="yes">
         <source>%n GB of free space available</source>
-        <translation><numerusform>%n GB of free space available</numerusform></translation>
+        <translation><numerusform>Có %n GB trống</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
-        <translation><numerusform>(of %n GB cần thiết)</numerusform></translation>
+        <translation><numerusform>(cần %n GB)</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>(%n GB needed for full chain)</source>
         <translation><numerusform>(%n GB cần cho toàn blockchain)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1075,6 +1089,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Địa chỉ</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1083,6 +1110,14 @@
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Paste address từ clipboard</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1181,10 +1216,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Cắt tỉa và lưu trữ khối tới</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1309,6 +1340,14 @@
     <message>
         <source>Whether to show coin control features or not.</source>
         <translation>Cho hiển thị tính năng coin control hoặc không.</translation>
+    </message>
+    <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Kết nối đến Bitcoin network qua một nhánh rời SOCKS5 proxy của Tor hidden services.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Dùng riêng lẻ  proxy  SOCKS&amp;5 để nối tới nốt mạng khác qua dịch vị ẩn Tor:</translation>
     </message>
     <message>
         <source>&amp;Third party transaction URLs</source>
@@ -1473,8 +1512,16 @@
         <translation>Đăng ký giao dịch thất bại :%1</translation>
     </message>
     <message>
+        <source>PSBT copied to clipboard.</source>
+        <translation>Dữ liệu PSBT được sao chép vào bộ nhớ tạm.</translation>
+    </message>
+    <message>
         <source>Save Transaction Data</source>
         <translation>Lưu trữ giao dịch</translation>
+    </message>
+    <message>
+        <source>PSBT saved to disk.</source>
+        <translation>Dữ liệu PSBT được lưu vào ổ đĩa.</translation>
     </message>
     <message>
         <source> * Sends %1 to %2</source>
@@ -1504,6 +1551,9 @@
         <source>Transaction is fully signed and ready for broadcast.</source>
         <translation>Giao dịch đã được đăng ký và chuẩn bị để phát lên</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1559,10 +1609,6 @@
         <translation>Node/Dịch vụ</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeID</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1574,7 +1620,11 @@
         <source>Received</source>
         <translation>Nhận</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Type</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1677,7 +1727,7 @@
         <source>unknown</source>
         <translation>unknown</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     <message>
@@ -1788,6 +1838,10 @@
         <translation>(không)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Range</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Reset</translation>
     </message>
@@ -1810,10 +1864,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Chọn một peer để xem thông tin chi tiết.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Direction</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1846,6 +1896,10 @@
     <message>
         <source>Node window</source>
         <translation>Cửa sổ node</translation>
+    </message>
+    <message>
+        <source>Current block height</source>
+        <translation>Kích thước khối hiện tại</translation>
     </message>
     <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
@@ -2008,14 +2062,6 @@
         <translation>không bao giờ</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Inbound</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Outbound</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Không biết</translation>
     </message>
@@ -2057,10 +2103,6 @@
     <message>
         <source>An optional message that is attached to the payment request and may be displayed to the sender.</source>
         <translation>Một thông báo tùy chọn được đính kèm với yêu cầu thanh toán và có thể được hiển thị cho người gửi.</translation>
-    </message>
-    <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Tạo địa chỉ nhận mới</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2412,6 +2454,10 @@ Lưu ý: Vì phí được tính trên cơ sở mỗi byte, nên phí "100 satos
         <translation>Bạn chắc chắn muốn gửi chứ?</translation>
     </message>
     <message>
+        <source>Create Unsigned</source>
+        <translation type="unfinished">Create không được ký</translation>
+    </message>
+    <message>
         <source>Save Transaction Data</source>
         <translation>Lưu trữ giao dịch</translation>
     </message>
@@ -2603,6 +2649,9 @@ Lưu ý: Vì phí được tính trên cơ sở mỗi byte, nên phí "100 satos
         <translation>Bản ghi nhớ:</translation>
     </message>
 </context>
+<context>
+    <name>SendConfirmationDialog</name>
+    </context>
 <context>
     <name>ShutdownWindow</name>
     <message>
@@ -3098,10 +3147,6 @@ Lưu ý: Vì phí được tính trên cơ sở mỗi byte, nên phí "100 satos
     <message>
         <source>Sent to</source>
         <translation>Sent to</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>To yourself</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3830,10 +3875,6 @@ Lưu ý: Vì phí được tính trên cơ sở mỗi byte, nên phí "100 satos
     <message>
         <source>Loading wallet...</source>
         <translation>Loading wallet...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Không thể downgrade wallet</translation>
     </message>
     <message>
         <source>Rescanning...</source>

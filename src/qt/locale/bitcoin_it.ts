@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Fai clic con il tasto destro del mouse per modificare l'indirizzo oppure l'etichetta</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Crea un nuovo indirizzo</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Questi sono i tuoi indirizzi Bitcoin per l'invio di pagamenti. Controlla sempre l'importo e l'indirizzo del beneficiario prima di inviare bitcoin.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Questi sono i tuoi indirizzi Bitcoin per ricevere pagamenti. Usa il tasto "Crea nuovo indirizzo ricevente" nella schermata "Ricevi" per creare nuovi indirizzi.
-E' possibile firmare solo con indirizzi di tipo "legacy".</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -549,15 +539,11 @@ E' possibile firmare solo con indirizzi di tipo "legacy".</translation>
     </message>
     <message>
         <source>&amp;Mask values</source>
-        <translation>&amp;Valori della maschera</translation>
+        <translation>&amp;Mascherare gli importi</translation>
     </message>
     <message>
         <source>Mask the values in the Overview tab</source>
-        <translation>Maschera i valori nella sezione "Panoramica"</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>Portafoglio predefinito:</translation>
+        <translation>Maschera gli importi nella sezione "Panoramica"</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -845,6 +831,10 @@ E' possibile firmare solo con indirizzi di tipo "legacy".</translation>
         <translation>Crea Portafoglio.</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Portafoglio</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Nome Portafoglio</translation>
     </message>
@@ -884,7 +874,11 @@ E' possibile firmare solo con indirizzi di tipo "legacy".</translation>
         <source>Create</source>
         <translation>Crea</translation>
     </message>
-    </context>
+    <message>
+        <source>Compiled without sqlite support (required for descriptor wallets)</source>
+        <translation>Compilato senza il supporto a sqlite (richiesto per i wallet descrittori)</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -964,6 +958,9 @@ E' possibile firmare solo con indirizzi di tipo "legacy".</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1021,10 +1018,6 @@ E' possibile firmare solo con indirizzi di tipo "legacy".</translation>
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Scarta blocchi dopo la verifica, eccetto i più recenti %1 GB(prune)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Almeno %1 GB di dati verrà salvato in questa cartella e continuerà ad aumentare col tempo.</translation>
     </message>
@@ -1061,6 +1054,13 @@ E' possibile firmare solo con indirizzi di tipo "legacy".</translation>
         <translation><numerusform>(%n GB richiesti per la catena completa)</numerusform><numerusform>(%n GB richiesti per la catena completa)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1121,6 +1121,19 @@ E' possibile firmare solo con indirizzi di tipo "legacy".</translation>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Indirizzo</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1129,6 +1142,14 @@ E' possibile firmare solo con indirizzi di tipo "legacy".</translation>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Incollare l'indirizzo dagli appunti</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1228,10 +1249,6 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Eliminare e bloccare l'archiviazione su</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1502,7 +1519,7 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     </message>
     <message>
         <source>Privacy mode activated for the Overview tab. To unmask the values, uncheck Settings-&gt;Mask values.</source>
-        <translation>Modalità privacy attivata per la scheda "Panoramica". Per smascherare i valori, deseleziona Impostazioni-&gt; Valori maschera.</translation>
+        <translation>Modalità privacy attivata per la scheda "Panoramica". Per mostrare gli importi, deseleziona Impostazioni-&gt; Mascherare gli importi.</translation>
     </message>
 </context>
 <context>
@@ -1629,6 +1646,9 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1682,10 +1702,6 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>Nodo/Servizio</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>Nodeld</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1697,7 +1713,11 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <source>Received</source>
         <translation>Ricevuto</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tipo</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1803,6 +1823,16 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>unknown</source>
         <translation>sconosciuto</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blc</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tso</translation>
     </message>
 </context>
 <context>
@@ -1915,6 +1945,10 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>(nessuno)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Intervallo</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Ripristina</translation>
     </message>
@@ -1937,10 +1971,6 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Seleziona un peer per visualizzare informazioni più dettagliate.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Direzione</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2139,14 +2169,6 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>mai</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>In entrata</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>In uscita</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Sconosciuto</translation>
     </message>
@@ -2190,8 +2212,8 @@ Per specificare più URL separarli con una barra verticale "|".</translation>
         <translation>Un messaggio facoltativo che è allegato alla richiesta di pagamento e può essere visualizzato dal mittente.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>Crea nuovo indirizzo ricevente.</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Richiedi pagamento</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2644,7 +2666,7 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Inizio delle conferme stimato entro %n blocchi.</numerusform><numerusform>Inizio delle conferme stimato entro %n blocchi.</numerusform></translation>
+        <translation><numerusform>Inizio delle conferme stimato entro %n blocco.</numerusform><numerusform>Inizio delle conferme stimato entro %n blocchi.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2748,6 +2770,13 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     <message>
         <source>Memo:</source>
         <translation>Memo:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Si</translation>
     </message>
 </context>
 <context>
@@ -2923,7 +2952,7 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     <name>TransactionDesc</name>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Aperto per altri %n blocchi</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+        <translation><numerusform>Aperto per %n altro blocco</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -3003,7 +3032,7 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>matura tra %n blocchi</numerusform><numerusform>matura tra %n blocchi</numerusform></translation>
+        <translation><numerusform>matura tra %n blocco</numerusform><numerusform>matura tra %n blocchi</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -3117,7 +3146,7 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Aperto per altri %n blocchi</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
+        <translation><numerusform>Aperto per %n altro blocco</numerusform><numerusform>Aperto per altri %n blocchi</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -3245,10 +3274,6 @@ Nota: poiché la commissione è calcolata su base per byte, una commissione di "
     <message>
         <source>Sent to</source>
         <translation>Inviato a</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>A te stesso</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3585,6 +3610,14 @@ Vai su File &gt; Apri Portafoglio per caricare un portafoglio.
         <translation>Per favore contribuite se ritenete %s utile. Visitate %s per maggiori informazioni riguardo il software.</translation>
     </message>
     <message>
+        <source>SQLiteDatabase: Failed to prepare the statement to fetch the application id: %s</source>
+        <translation>SQLiteDatabase: Impossibile preparare l'istruzione per recuperare l'id dell'applicazione: %s </translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unknown sqlite wallet schema version %d. Only version %d is supported</source>
+        <translation>SQLiteDatabase: Versione dello schema del portafoglio sqlite sconosciuta %d. Solo la versione %d è supportata</translation>
+    </message>
+    <message>
         <source>The block database contains a block which appears to be from the future. This may be due to your computer's date and time being set incorrectly. Only rebuild the block database if you are sure that your computer's date and time are correct</source>
         <translation>Il database dei blocchi contiene un blocco che sembra provenire dal futuro. Questo può essere dovuto alla data e ora del tuo computer impostate in modo scorretto. Ricostruisci il database dei blocchi se sei certo che la data e l'ora sul tuo computer siano corrette</translation>
     </message>
@@ -3725,6 +3758,10 @@ Vai su File &gt; Apri Portafoglio per caricare un portafoglio.
         <translation>SQLiteDatabase: Errore nell'eseguire l'operazione di verifica del database: %s</translation>
     </message>
     <message>
+        <source>SQLiteDatabase: Failed to fetch sqlite wallet schema version: %s</source>
+        <translation>SQLiteDatabase: Impossibile recuperare la versione dello schema del portafoglio sqlite: %s </translation>
+    </message>
+    <message>
         <source>SQLiteDatabase: Failed to prepare statement to verify database: %s</source>
         <translation>SQLiteDatabase: Errore nel verificare il database: %s</translation>
     </message>
@@ -3739,6 +3776,12 @@ Vai su File &gt; Apri Portafoglio per caricare un portafoglio.
     <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>La cartella specificata "%s" non esiste.</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Lo specificato archivio di R/W configurazione %s non esiste
+</translation>
     </message>
     <message>
         <source>Unknown address type '%s'</source>
@@ -3825,10 +3868,6 @@ Vai su File &gt; Apri Portafoglio per caricare un portafoglio.
         <translation>%s corrotto. Prova a usare la funzione del portafoglio  bitcoin-wallet per salvare o recuperare il backup</translation>
     </message>
     <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>Impossibile aggiornare un portafoglio diviso non HD senza aggiornamento per supportare il keypool pre-split. Si prega di utilizzare -upgradewallet = 169900 o -upgradewallet senza specificare la versione.</translation>
-    </message>
-    <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
         <translation>Importo non valido per -maxtxfee=&lt;amount&gt;: '%s' (deve essere almeno pari alla commissione 'minrelay fee' di %s per prevenire transazioni bloccate)</translation>
     </message>
@@ -3839,6 +3878,10 @@ Vai su File &gt; Apri Portafoglio per caricare un portafoglio.
     <message>
         <source>This error could occur if this wallet was not shutdown cleanly and was last loaded using a build with a newer version of Berkeley DB. If so, please use the software that last loaded this wallet</source>
         <translation>Questo errore potrebbe essersi verificato se questo portafoglio non è stato chiuso in modo pulito ed è stato caricato l'ultima volta utilizzando una build con una versione più recente di Berkeley DB. In tal caso, utilizza il software che ha caricato per ultimo questo portafoglio</translation>
+    </message>
+    <message>
+        <source>This is the maximum transaction fee you pay (in addition to the normal fee) to prioritize partial spend avoidance over regular coin selection.</source>
+        <translation>Questa è la commissione di transazione massima che puoi pagare (in aggiunta alla normale commissione) per dare la priorità ad una spesa parziale rispetto alla classica selezione delle monete.</translation>
     </message>
     <message>
         <source>Transaction needs a change address, but we can't generate it. Please call keypoolrefill first.</source>
@@ -4045,10 +4088,6 @@ Vai su File &gt; Apri Portafoglio per caricare un portafoglio.
     <message>
         <source>Loading wallet...</source>
         <translation>Caricamento portafoglio...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Non è possibile effettuare il downgrade del portafoglio</translation>
     </message>
     <message>
         <source>Rescanning...</source>

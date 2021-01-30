@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Right-click to edit address or label</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Create a new address</translation>
     </message>
@@ -447,7 +443,7 @@
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
-        <translation><numerusform>Processed %n block of transaction history.</numerusform><numerusform>Processed %n blocks of transaction history.</numerusform></translation>
+        <translation><numerusform>%n blok van transaksiegeskiedenis geprosesseer.</numerusform><numerusform>%n blokke van transaksiegeskiedenis geprosesseer.</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -516,10 +512,6 @@
     <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Show the %1 help message to get a list with possible Bitcoin command-line options</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>default wallet</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -625,7 +617,11 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>'n Noodlottige fout het voorgekom. %1 kan nie langer voortgaan nie en sal afsluit.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -799,6 +795,10 @@
         <translation>Create Wallet</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Beursie</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Wallet Name</translation>
     </message>
@@ -910,6 +910,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -967,10 +970,6 @@
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Discard blocks after verification, except most recent %1 GB (prune)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>At least %1 GB of data will be stored in this directory, and it will grow over time.</translation>
     </message>
@@ -1007,6 +1006,13 @@
         <translation><numerusform>(%n GB needed for full chain)</numerusform><numerusform>(%n GB needed for full chain)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>n.v.t.</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1067,6 +1073,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipe</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adres</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1075,6 +1094,14 @@
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Plak adres van aanknipbord af</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1173,10 +1200,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Prune &amp;block storage to</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1327,6 +1350,10 @@
         <translation>none</translation>
     </message>
     <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Kern</translation>
+    </message>
+    <message>
         <source>Confirm options reset</source>
         <translation>Confirm options reset</translation>
     </message>
@@ -1441,6 +1468,10 @@
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">Sluit</translation>
+    </message>
+    <message>
         <source>Total Amount</source>
         <translation>Total Amount</translation>
     </message>
@@ -1448,6 +1479,9 @@
         <source>or</source>
         <translation>or</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1503,10 +1537,6 @@
         <translation>Node/Service</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeId</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1518,7 +1548,11 @@
         <source>Received</source>
         <translation>Received</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tipe</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1567,15 +1601,15 @@
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation><numerusform>%n hour</numerusform><numerusform>%n hours</numerusform></translation>
+        <translation><numerusform>%n uur</numerusform><numerusform>%n ure</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation><numerusform>%n day</numerusform><numerusform>%n days</numerusform></translation>
+        <translation><numerusform>%n dag</numerusform><numerusform>%n dae</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation><numerusform>%n week</numerusform><numerusform>%n weeks</numerusform></translation>
+        <translation><numerusform>%n week</numerusform><numerusform>%n weke</numerusform></translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -1583,7 +1617,7 @@
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation><numerusform>%n year</numerusform><numerusform>%n years</numerusform></translation>
+        <translation><numerusform>%n jaar</numerusform><numerusform>%n jare</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1620,6 +1654,11 @@
     <message>
         <source>unknown</source>
         <translation>unknown</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
     </message>
 </context>
 <context>
@@ -1732,6 +1771,10 @@
         <translation>(none)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Reeks</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Reset</translation>
     </message>
@@ -1754,10 +1797,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Select a peer to view detailed information.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Direction</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1948,14 +1987,6 @@
         <translation>never</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Inbound</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Outbound</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Unknown</translation>
     </message>
@@ -1999,8 +2030,8 @@
         <translation>An optional message that is attached to the payment request and may be displayed to the sender.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Create new receiving address</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Versoek betaling</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2062,8 +2093,16 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">Adres:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>Amount:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">Etiket:</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -2340,6 +2379,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Are you sure you want to send?</translation>
     </message>
     <message>
+        <source>Create Unsigned</source>
+        <translation type="unfinished">Create Unsigned</translation>
+    </message>
+    <message>
         <source>or</source>
         <translation>or</translation>
     </message>
@@ -2521,6 +2564,13 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Memo:</source>
         <translation>Memo:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
     </message>
 </context>
 <context>
@@ -3018,10 +3068,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Sent to</source>
         <translation>Sent to</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>To yourself</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3722,10 +3768,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Loading wallet...</source>
         <translation>Loading wallet...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Cannot downgrade wallet</translation>
     </message>
     <message>
         <source>Rescanning...</source>

@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Кликните правой кнопкой для редактирования адреса или метки</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Создать новый адрес</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Это ваши Биткойн-адреса для отправки платежей. Всегда проверяйте количество и адрес получателя перед отправкой перевода.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Это ваши Биткойн адреса для получения платежей. Используйте кнопку «Создать новый адрес для получения» на вкладке Получить, чтобы создать новые адреса.
-Подписание возможно только с адресами типа "legacy".</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -556,10 +546,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Скрыть значения на вкладке Обзор</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>Кошелёк по умолчанию</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Нет доступных кошельков</translation>
     </message>
@@ -846,6 +832,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Создать кошелёк</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Кошелёк</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Название кошелька</translation>
     </message>
@@ -969,6 +959,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1026,10 +1019,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Bitcoin Core</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Отменить блоки после проверки, кроме самых последних %1 ГБ (обрезать)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Как минимум %1 ГБ данных будет сохранен в эту директорию. Со временем размер будет увеличиваться.</translation>
     </message>
@@ -1066,6 +1055,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation><numerusform>(%n ГБ необходимо для полного блокчейна)</numerusform><numerusform>(%n ГБ необходимо для полного блокчейна)</numerusform><numerusform>(%n ГБ необходимо для полного блокчейна)</numerusform><numerusform>(%n ГБ необходимо для полного блокчейна)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Н/Д</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1126,6 +1122,19 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тип</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адрес</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1134,6 +1143,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Вставить адрес из буфера обмена</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1232,10 +1249,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Сокращать объём хранимого блокчейна до</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>ГБ</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1633,6 +1646,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1686,10 +1702,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Узел/служба</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>Идентификатор узла</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Время отклика</translation>
     </message>
@@ -1701,7 +1713,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Received</source>
         <translation>Получено</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Тип</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1807,6 +1823,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>unknown</source>
         <translation>неизвестно</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакция</translation>
     </message>
 </context>
 <context>
@@ -1919,6 +1945,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>(ни один)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Диапазон</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Сбросить</translation>
     </message>
@@ -1941,10 +1971,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Выберите пира для просмотра детальной информации.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Направление</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2143,14 +2169,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>никогда</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Входящий</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Исходящий</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Неизвестно</translation>
     </message>
@@ -2194,8 +2212,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Необязательное сообщение, которое присоединяется к запросу платежа и может быть показано отправителю.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Создать новый адрес для получения</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Запросить платёж</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2755,6 +2773,13 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
 </context>
 <context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Да</translation>
+    </message>
+</context>
+<context>
     <name>ShutdownWindow</name>
     <message>
         <source>%1 is shutting down...</source>
@@ -3249,10 +3274,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Sent to</source>
         <translation>Отправить</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>Себе</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3853,10 +3874,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>%s испорчен. Попробуйте восстановить с помощью инструмента bitcoin-wallet, или используйте резервную копию.</translation>
     </message>
     <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>Невозможно обновить не разделенный HD кошелёк без обновления для поддержки предварительно разделенного пула ключей. Пожалуйста, используйте версию 169900 или повторите без указания версии.</translation>
-    </message>
-    <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
         <translation>Неверное значение для -maxtxfee=&lt;amount&gt;: '%s' (минимальная комиссия трансляции %s для предотвращения зависания транзакций)</translation>
     </message>
@@ -4081,10 +4098,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Loading wallet...</source>
         <translation>Загрузка электронного кошелька...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Не удаётся понизить версию электронного кошелька</translation>
     </message>
     <message>
         <source>Rescanning...</source>

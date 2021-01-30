@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Δεξί-κλικ για επεξεργασία της διεύθυνσης ή της ετικέτας</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Δημιουργία νέας διεύθυνσης</translation>
     </message>
@@ -526,10 +522,6 @@
         <translation>Εμφάνισε το %1 βοηθητικό μήνυμα για λήψη μιας λίστας με διαθέσιμες επιλογές για Bitcoin εντολές </translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>Προεπιλεγμένο πορτοφόλι</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Κανένα πορτοφόλι διαθέσιμο</translation>
     </message>
@@ -637,7 +629,11 @@
         <source>Original message:</source>
         <translation>Αρχικό Μήνυμα:</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>Συνέβη ενα μοιραίο σφάλμα. %1 δε μπορεί να συνεχιστεί με ασφάλεια και θα σταματήσει</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -658,7 +654,7 @@
     </message>
     <message>
         <source>Fee:</source>
-        <translation>Ταρίφα:</translation>
+        <translation>Τέλη:</translation>
     </message>
     <message>
         <source>Dust:</source>
@@ -666,7 +662,7 @@
     </message>
     <message>
         <source>After Fee:</source>
-        <translation>Ταρίφα αλλαγής:</translation>
+        <translation>Τέλη αλλαγής:</translation>
     </message>
     <message>
         <source>Change:</source>
@@ -811,6 +807,10 @@
         <translation>Δημιουργία Πορτοφολιού</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Πορτοφόλι</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Όνομα Πορτοφολιού</translation>
     </message>
@@ -842,7 +842,11 @@
         <source>Create</source>
         <translation>Δημιουργία</translation>
     </message>
-    </context>
+    <message>
+        <source>Compiled without sqlite support (required for descriptor wallets)</source>
+        <translation>Μεταγλωτίστηκε χωρίς την υποστήριξη sqlite (απαραίτητη για περιγραφικά πορτοφόλια )</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -922,6 +926,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -945,6 +952,10 @@
     <message>
         <source>Welcome to %1.</source>
         <translation>Καλωσήρθες στο %1.</translation>
+    </message>
+    <message>
+        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
+        <translation>Όταν κάνετε κλικ στο OK, το %1 θα ξεκινήσει τη λήψη και την επεξεργασία της πλήρους αλυσίδας μπλοκ %4 (%2GB) αρχίζοντας από τις πρώτες συναλλαγές στο %3 όταν αρχικά ξεκίνησε το %4.</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
@@ -1008,6 +1019,13 @@
     </message>
 </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Μη διαθέσιμο</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
@@ -1067,6 +1085,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Τύπος</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Διεύθυνση</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1075,6 +1106,14 @@
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Επικόλληση διεύθυνσης από το βιβλίο διευθύνσεων</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1173,10 +1212,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Αποκοπή &amp;αποκλεισμός αποθήκευσης στο</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1301,6 +1336,14 @@
     <message>
         <source>Whether to show coin control features or not.</source>
         <translation>Επιλογή κατά πόσο να αναδείχνονται οι δυνατότητες ελέγχου κερμάτων.</translation>
+    </message>
+    <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Συνδεθείτε στο δίκτυο Bitcoin μέσω ενός ξεχωριστού διακομιστή μεσολάβησης SOCKS5 για κρυφές υπηρεσίες Tor.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Χρησιμοποιήστε χωριστό SOCKS&amp;5 proxy για να προσεγγίσετε συνομηλίκους μέσω κρυφών υπηρεσιών Tor:</translation>
     </message>
     <message>
         <source>Options set in this dialog are overridden by the command line or in the configuration file:</source>
@@ -1450,6 +1493,10 @@
         <translation>Αποθήκευση...</translation>
     </message>
     <message>
+        <source>Close</source>
+        <translation>Κλείσιμο</translation>
+    </message>
+    <message>
         <source>Failed to load transaction: %1</source>
         <translation>Αποτυχία φόρτωσης μεταφοράς: %1</translation>
     </message>
@@ -1458,8 +1505,21 @@
         <translation>Αποτυχία εκπλήρωσης συναλλαγής: %1</translation>
     </message>
     <message>
+        <source>Signed transaction successfully. Transaction is ready to broadcast.</source>
+        <translation>Η συναλλαγή υπογράφηκε με επιτυχία. Η συναλλαγή είναι έτοιμη για μετάδοση.</translation>
+    </message>
+    <message>
         <source>Unknown error processing transaction.</source>
         <translation>Άγνωστο λάθος  επεξεργασίας μεταφοράς.</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast successfully! Transaction ID: %1</source>
+        <translation>Έγινε επιτυχής αναμετάδοση της συναλλαγής! 
+ID Συναλλαγής: %1</translation>
+    </message>
+    <message>
+        <source>Transaction broadcast failed: %1</source>
+        <translation>Η αναμετάδοση της συναλαγής απέτυχε: %1</translation>
     </message>
     <message>
         <source>PSBT copied to clipboard.</source>
@@ -1494,6 +1554,9 @@
         <translation>Η κατάσταση της συναλλαγής είναι άγνωστη.</translation>
     </message>
 </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1548,10 +1611,6 @@
         <translation>Κόμβος / Υπηρεσία</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>Ταυτότητα Κόμβου</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1563,7 +1622,11 @@
         <source>Received</source>
         <translation>Παραλήφθησαν</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Τύπος</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1665,6 +1728,16 @@
     <message>
         <source>unknown</source>
         <translation>Άγνωστο</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>μπλοκ</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Συναλλαγή</translation>
     </message>
 </context>
 <context>
@@ -1773,6 +1846,10 @@
         <translation>(κενό)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Πεδίο</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Επαναφορά</translation>
     </message>
@@ -1795,10 +1872,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Επιλέξτε ένα χρήστη για να δείτε αναλυτικές πληροφορίες.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Κατεύθυνση</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1998,14 +2071,6 @@
         <translation>ποτέ</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Εισερχόμενα</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Εξερχόμενα</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Άγνωστο(α)</translation>
     </message>
@@ -2049,8 +2114,8 @@
         <translation>Ένα προαιρετικό μήνυμα που επισυνάπτεται στην αίτηση πληρωμής και μπορεί να εμφανιστεί στον αποστολέα.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Δημιουργία νέας διεύθυνσης λήψης</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Αίτηση πληρωμής</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2122,6 +2187,10 @@
     <message>
         <source>Amount:</source>
         <translation>Ποσό:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">Ετικέτα:</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -2395,6 +2464,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Είστε βέβαιοι ότι θέλετε να στείλετε;</translation>
     </message>
     <message>
+        <source>Create Unsigned</source>
+        <translation type="unfinished">Δημιουργία Ανυπόγραφου</translation>
+    </message>
+    <message>
         <source>Save Transaction Data</source>
         <translation>Αποθήκευση Δεδομένων Συναλλαγής</translation>
     </message>
@@ -2405,6 +2478,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>You can increase the fee later (signals Replace-By-Fee, BIP-125).</source>
         <translation> Μπορείτε να αυξήσετε αργότερα την αμοιβή (σήματα Αντικατάσταση-By-Fee, BIP-125).</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation>Παρακαλώ ελέγξτε την πρόταση συναλλαγής. Αυτό θα παράγει μια συναλλαγή Bitcoin με μερική υπογραφή (PSBT), την οποία μπορείτε να αντιγράψετε και στη συνέχεια να υπογράψετε με π.χ. ένα πορτοφόλι %1 εκτός σύνδεσης ή ένα πορτοφόλι υλικού συμβατό με το PSBT.</translation>
     </message>
     <message>
         <source>Please, review your transaction.</source>
@@ -2577,6 +2654,13 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Memo:</source>
         <translation>Σημείωση:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Ναι</translation>
     </message>
 </context>
 <context>
@@ -3074,10 +3158,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Sent to</source>
         <translation>Αποστέλλονται προς</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>Στον εαυτό σου</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3602,6 +3682,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Πρέπει να ξαναφτιάξετε τη βάση δεδομένων χρησιμοποιώντας το -reindex για να επιστρέψετε στη λειτουργία χωρίς εκτύπωση. Αυτό θα ξαναφορτώσει ολόκληρο το blockchain</translation>
     </message>
     <message>
+        <source>A fatal internal error occurred, see debug.log for details</source>
+        <translation>Παρουσιάστηκε θανάσιμο εσωτερικό σφάλμα, ανατρέξτε στην ενότητα debug.log για λεπτομέρειες</translation>
+    </message>
+    <message>
         <source>Disk space is too low!</source>
         <translation>Αποθηκευτικός χώρος πολύ μικρός!</translation>
     </message>
@@ -3770,10 +3854,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Loading wallet...</source>
         <translation>Φόρτωση πορτοφολιού...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Δεν μπορώ να υποβαθμίσω το πορτοφόλι</translation>
     </message>
     <message>
         <source>Rescanning...</source>

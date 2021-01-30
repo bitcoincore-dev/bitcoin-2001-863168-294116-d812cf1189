@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>ចុចម៉ៅស្តាំ ដើម្បីកែសម្រួលអាសយដ្ឋាន រឺស្លាក</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>បង្កើតអាស្រយដ្ឋានថ្មីមួយ</translation>
     </message>
@@ -390,8 +386,24 @@
         <translation>ការកំណត់</translation>
     </message>
     <message>
+        <source>&amp;Help</source>
+        <translation>ជំនួយ</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>កំពុងធ្ចើសន្ទស្សន៍ប្លុកឡើងវិញលើថាស...</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>បញ្ហា</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;អាសយដ្ឋានផ្ញើ</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;អាសយដ្ឋានទទួួល</translation>
     </message>
     </context>
 <context>
@@ -411,18 +423,41 @@
         <translation>បង្កើតកាបូប</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>កាបូប</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>ឈ្មោះកាបូប</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>កាបូប​អែនក្រីព</translation>
     </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;ឡាបែល</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;អាសយដ្ឋាន</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">អំពី %1</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
@@ -440,8 +475,19 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    </context>
+<context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>អាសយដ្ឋាន</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -450,6 +496,14 @@
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">ជម្រើស</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;កាបូប</translation>
+    </message>
     <message>
         <source>Error</source>
         <translation>បញ្ហា</translation>
@@ -460,6 +514,13 @@
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">បិទ</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -475,15 +536,39 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">កាបូប: </translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>សកម្មភាពបណ្ដាញត្រូវបានផ្ដាច់។</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ឡាបែល:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">អាសយដ្ឋាន:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">ឡាបែល:</translation>
+    </message>
+    <message>
         <source>Wallet:</source>
         <translation>កាបូបចល័ត៖</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;ចម្លង​អាស្រយដ្ឋាន</translation>
     </message>
     </context>
 <context>
@@ -500,12 +585,31 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">ជ្រើសរើស...</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">ផ្ងើ</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">ផ្ងើ</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(គ្មាន​ឡាបែល)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ឡាបែល:</translation>
+    </message>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -581,6 +685,10 @@
     <message>
         <source>Error</source>
         <translation>បញ្ហា</translation>
+    </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">បម្រុងទុកកាបូបចល័ត</translation>
     </message>
     </context>
 <context>

@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>አድራሻ ወይም መለያ ስም ለመቀየር ቀኙን ጠቅ ያድርጉ</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>አዲስ አድራሻ ፍጠር</translation>
     </message>
@@ -75,7 +71,7 @@
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation> &amp;ቀይር</translation>
+        <translation> &amp;አርም</translation>
     </message>
     <message>
         <source>Export Address List</source>
@@ -166,6 +162,14 @@
     <message>
         <source>Wallet encrypted</source>
         <translation>ቦርሳዎ ምስጢር ተደርጓል</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>አዲስ የይለፍ ሐረግዎን ወደ ቢትኮይን ቦርሳዎ ያስገቡ:: &lt;br/&gt;እባክዎ ለየይለፍ ሐረግዎ&lt;b&gt;አስር ወይም ከዚያ በላይ የዘፈቀደ ዓይነተ-ፊደላት&lt;/b&gt;, ወይም&lt;b&gt;ስምንት ወይም ከዚያ በላይ ቃላት&lt;/b&gt; ይጠቀሙ ::</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>የድሮውን የይለፍ-ሐረግ እና አዲሱን የይለፍ-ሐረግ ወደ ቢትኮይን ቦርሳዎ ያስገቡ::</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -269,9 +273,107 @@
         <source>&amp;Options...</source>
         <translation>&amp;አማራጮች...</translation>
     </message>
+    <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">&amp;የቢትኮይን ቦርሳውን አመስጥር...</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation>&amp;ላክ</translation>
+    </message>
+    <message>
+        <source>&amp;Receive</source>
+        <translation>&amp;ተቀበል</translation>
+    </message>
+    <message>
+        <source>&amp;Show / Hide</source>
+        <translation>&amp;አሳይ/ ደብቅ</translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation>&amp;ፋይል</translation>
+    </message>
+    <message>
+        <source>&amp;Settings</source>
+        <translation>&amp;ቅንብሮች</translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation>&amp;እርዳታ</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>ስህተት</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation>መረጃ</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;የመላኪያ አድራሻዎች</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;የመቀበያ አድራሻዎች</translation>
+    </message>
+    <message>
+        <source>Date: %1
+</source>
+        <translation>ቀን፥ %1
+</translation>
+    </message>
+    <message>
+        <source>Amount: %1
+</source>
+        <translation>መጠን፥ %1
+</translation>
+    </message>
+    <message>
+        <source>Address: %1
+</source>
+        <translation>አድራሻ፥ %1
+</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
+    <message>
+        <source>Amount:</source>
+        <translation type="unfinished">መጠን:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>ክፍያ፥</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>መጠን</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation>ቀን</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>አድራሻ ቅዳ</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>መጠኑ ገልብጥ</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>ክፍያው ቅዳ</translation>
+    </message>
+    <message>
+        <source>yes</source>
+        <translation>አዎ</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>አይ</translation>
+    </message>
     <message>
         <source>(no label)</source>
         <translation>(መለያ ስም የለም)</translation>
@@ -282,22 +384,60 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>የቢትኮይን ቦርሳውን አመስጥር</translation>
+    </message>
+    <message>
+        <source>Create</source>
+        <translation>ፍጠር</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;መለያ ስም</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;አድራሻ</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">ስለ %1</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
+    <message>
+        <source>Error</source>
+        <translation>ስህተት</translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>አድራሻ</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -306,12 +446,27 @@
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">አማራጮች</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>ስህተት</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">ዝጋ</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -321,21 +476,61 @@
     </context>
 <context>
     <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>መጠን</translation>
+    </message>
     </context>
 <context>
     <name>QRImageWidget</name>
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;መረጃ</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;መጠን:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;መለያ ስም:</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>መጠኑ ገልብጥ</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">አድራሻ:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation type="unfinished">መጠን:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">መለያ ስም:</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;አድራሻ ቅዳ</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>ቀን</translation>
+    </message>
     <message>
         <source>Label</source>
         <translation>መለያ ስም</translation>
@@ -348,12 +543,51 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Amount:</source>
+        <translation type="unfinished">መጠን:</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>ክፍያ፥</translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">ምረጥ...</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;ላክ</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>መጠኑ ገልብጥ</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>ክፍያው ቅዳ</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">ላክ</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(መለያ ስም የለም)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;መጠን:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;መለያ ስም:</translation>
+    </message>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -366,12 +600,24 @@
     </context>
 <context>
     <name>TransactionDesc</name>
+    <message>
+        <source>Date</source>
+        <translation>ቀን</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation>መጠን</translation>
+    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
+    <message>
+        <source>Date</source>
+        <translation>ቀን</translation>
+    </message>
     <message>
         <source>Label</source>
         <translation>መለያ ስም</translation>
@@ -384,12 +630,24 @@
 <context>
     <name>TransactionView</name>
     <message>
+        <source>Copy address</source>
+        <translation>አድራሻ ቅዳ</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>መጠኑ ገልብጥ</translation>
+    </message>
+    <message>
         <source>Comma separated file (*.csv)</source>
         <translation>ኮማ ሴፓሬትድ ፋይል (*.csv)</translation>
     </message>
     <message>
+        <source>Date</source>
+        <translation>ቀን</translation>
+    </message>
+    <message>
         <source>Label</source>
-        <translation>መለያ ስም</translation>
+        <translation>መለዮ</translation>
     </message>
     <message>
         <source>Address</source>
@@ -397,7 +655,7 @@
     </message>
     <message>
         <source>Exporting Failed</source>
-        <translation>ወደ ውጪ መላክ አልተሳካም</translation>
+        <translation>መላክ አልተሳካም</translation>
     </message>
     </context>
 <context>
@@ -421,6 +679,10 @@
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>በአሁኑ ማውጫ ውስጥ ያለውን መረጃ ወደ አንድ ፋይል ላክ</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>ስህተት</translation>
     </message>
     </context>
 <context>

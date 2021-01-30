@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>右クリックでアドレスまたはラベルを編集</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>アドレスの新規作成</translation>
     </message>
@@ -68,11 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>これらは、あなたが知っている送信先の Bitcoin アドレスです。コインを送る前に必ず、金額と受取用アドレスを確認してください。</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>これらは支払いを受け取るための、あなたの Bitcoin アドレスです。新しいアドレスを作成するには受取タブ内の「新しい受取用アドレスを作成」ボタンを使用します。</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -488,6 +479,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>PSBTをファイルから読込 (&amp;L)</translation>
     </message>
     <message>
+        <source>Load Partially Signed Bitcoin Transaction</source>
+        <translation>部分的に署名されたビットコインのトランザクションを読み込み</translation>
+    </message>
+    <message>
         <source>Load PSBT from clipboard...</source>
         <translation>PSBTをクリップボードから読み込み</translation>
     </message>
@@ -544,8 +539,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>%1 のヘルプ メッセージを表示し、使用可能な Bitcoin のコマンドラインオプション一覧を見る。</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>デフォルトウォレット</translation>
+        <source>&amp;Mask values</source>
+        <translation>&amp;値を隠す</translation>
+    </message>
+    <message>
+        <source>Mask the values in the Overview tab</source>
+        <translation>概要タブにある値を隠す</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -655,7 +654,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Original message:</source>
         <translation>オリジナルメッセージ：</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>致命的なエラーが発生しました。%1 は安全に継続することができず終了するでしょう。</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -829,6 +832,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>ウォレットを作成する</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>ウォレット</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>ウォレット名</translation>
     </message>
@@ -940,6 +947,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -997,10 +1007,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>最新の%1 GBを除き、検証後にブロックを破棄する（剪定する）</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>最低でも%1 GBのデータをこのディレクトリに保存する必要があります。またこのデータは時間とともに増加していきます。</translation>
     </message>
@@ -1037,6 +1043,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation><numerusform>(完全なチェーンには%n GB必要です)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1097,6 +1110,19 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>タイプ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>アドレス</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1105,6 +1131,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>クリップボードからアドレスを貼り付け</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1203,10 +1237,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>ブロックの保存容量を次の値までに剪定する(&amp;amp;B):</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1333,6 +1363,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>コインコントロール機能を表示するかどうか。</translation>
     </message>
     <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Tor秘匿サービスを利用するため、専用の SOCKS5 プロキシ経由で Bitcoin ネットワークに接続する。</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Tor秘匿サービス経由でピアに接続するために専用の SOCKS5 プロキシを利用する(&amp;5):</translation>
+    </message>
+    <message>
         <source>&amp;Third party transaction URLs</source>
         <translation>サードパーティの取引確認URL(&amp;T)</translation>
     </message>
@@ -1355,6 +1393,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>none</source>
         <translation>なし</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin のコア</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1503,6 +1545,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>トランザクションへの署名が成功しました。トランザクションのブロードキャストの準備ができています。</translation>
     </message>
     <message>
+        <source>Unknown error processing transaction.</source>
+        <translation>トランザクション処理中の不明なエラー</translation>
+    </message>
+    <message>
         <source>PSBT copied to clipboard.</source>
         <translation>PSBTをクリップボードにコピーしました.</translation>
     </message>
@@ -1539,6 +1585,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>トランザクションの状態が不明です.</translation>
     </message>
 </context>
+<context>
+    <name>PairingPage</name>
+    </context>
 <context>
     <name>PaymentServer</name>
     <message>
@@ -1593,10 +1642,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>ノード/サービス</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>ノードID</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1608,7 +1653,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Received</source>
         <translation>受信</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>種別</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1710,6 +1759,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>unknown</source>
         <translation>不明</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>ブロック</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>取引</translation>
     </message>
 </context>
 <context>
@@ -1822,6 +1881,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>(なし)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">期間</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>リセット(&amp;R)</translation>
     </message>
@@ -1844,10 +1907,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>詳しい情報を見たいピアを選択してください。</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>方向</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2042,14 +2101,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>まだ無し</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>内向き</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>外向き</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>不明</translation>
     </message>
@@ -2093,8 +2144,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>支払いリクエストに任意で添付できるメッセージで、送り主に表示されます。</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>新しい受取用アドレスを作成</translation>
+        <source>&amp;Request payment</source>
+        <translation>支払いをリクエスト(&amp;R)</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2466,6 +2517,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>手数料は後から上乗せ可能です(Replace-By-Fee(手数料の上乗せ: BIP-125)機能が有効)。</translation>
     </message>
     <message>
+        <source>Please, review your transaction proposal. This will produce a Partially Signed Bitcoin Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <translation>トランザクション提案を確認してください。これにより、部分的に署名されたビットコイン・トランザクション（PSBT）が作成されます。これをコピーして例えばオフラインの %1 ウォレットやPSBTを扱えるハードウェアウォレットで残りの署名が出来ます。</translation>
+    </message>
+    <message>
         <source>Please, review your transaction.</source>
         <translation>取引内容の最終確認をしてください。</translation>
     </message>
@@ -2639,6 +2694,13 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Memo:</source>
         <translation>メモ:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>はい</translation>
     </message>
 </context>
 <context>
@@ -3136,10 +3198,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Sent to</source>
         <translation>送金</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>自己送金</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3692,6 +3750,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>非剪定モードに戻るためには -reindex オプションを指定してデータベースを再構築する必要があります。 ブロックチェーン全体の再ダウンロードが必要となります。</translation>
     </message>
     <message>
+        <source>A fatal internal error occurred, see debug.log for details</source>
+        <translation>致命的な内部エラーが発生しました。詳細は debug.log を参照してください</translation>
+    </message>
+    <message>
         <source>Disk space is too low!</source>
         <translation>ディスク容量不足!</translation>
     </message>
@@ -3706,6 +3768,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Error: Disk space is low for %s</source>
         <translation>エラー: %s 用のディスク容量が不足しています</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>鍵プールが枯渇しました。まずはじめに keypoolrefill を呼び出してください</translation>
     </message>
     <message>
         <source>Invalid -onion address or hostname: '%s'</source>
@@ -3876,10 +3942,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Loading wallet...</source>
         <translation>ウォレットの読み込み中...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>ウォレットのダウングレードはできません</translation>
     </message>
     <message>
         <source>Rescanning...</source>

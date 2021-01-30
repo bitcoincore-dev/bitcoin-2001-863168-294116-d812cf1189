@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Haz click con el botón derecho para editar una dirección o etiqueta</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Crear una dirección nueva</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Estas son sus direcciones Bitcoin para enviar pagos. Compruebe siempre la cantidad y la dirección de recibo antes de transferir monedas.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Estas son sus direcciones Bitcoin para la recepción de pagos. Use el botón 'Crear una nueva dirección para recepción' en la pestaña Recibir para crear nuevas direcciones.
-Firmar solo es posible con correos del tipo Legacy.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -556,10 +546,6 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
         <translation>Esconder los valores de la ventana de previsualización</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>Billetera predeterminada</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>No hay billeteras disponibles</translation>
     </message>
@@ -845,6 +831,10 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
         <translation>Crear monedero</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Monedero</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Nombre de monedero</translation>
     </message>
@@ -968,6 +958,9 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1025,10 +1018,6 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Descartar los bloques después de la verificación, excepto los %1 GB más recientes (prune)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Al menos %1 GB de información será almacenada en este directorio, y seguirá creciendo a través del tiempo.</translation>
     </message>
@@ -1065,6 +1054,13 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
         <translation><numerusform>(%n GB necesarios para la cadena completa)</numerusform><numerusform>(%n GB necesarios para la cadena completa)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1125,6 +1121,19 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Dirección</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1133,6 +1142,14 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Pegar dirección desde el portapapeles</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1231,10 +1248,6 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Podar el almacenamiento de &amp;bloques para</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1632,6 +1645,9 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1685,10 +1701,6 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
         <translation>Nodo / Servicio</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeId</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1700,7 +1712,11 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
         <source>Received</source>
         <translation>Recibido</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tipo</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1741,23 +1757,23 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
-        <translation><numerusform>%n segundos</numerusform><numerusform>%n segundos</numerusform></translation>
+        <translation><numerusform>%n segundo</numerusform><numerusform>%n segundos</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
-        <translation><numerusform>%n minutos</numerusform><numerusform>%n minutos</numerusform></translation>
+        <translation><numerusform>%n minuto</numerusform><numerusform>%n minutos</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation><numerusform>%n horas</numerusform><numerusform>%n horas</numerusform></translation>
+        <translation><numerusform>%n hora</numerusform><numerusform>%n horas</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation><numerusform>%n días </numerusform><numerusform>%n días </numerusform></translation>
+        <translation><numerusform>%n día</numerusform><numerusform>%n días</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation><numerusform>%n semanas</numerusform><numerusform>%n semanas</numerusform></translation>
+        <translation><numerusform>%n semana</numerusform><numerusform>%n semanas</numerusform></translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -1765,7 +1781,7 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation><numerusform>%n años</numerusform><numerusform>%n años</numerusform></translation>
+        <translation><numerusform>%n año</numerusform><numerusform>%n años</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1802,6 +1818,16 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
     <message>
         <source>unknown</source>
         <translation>desconocido</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blq</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -1914,6 +1940,10 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
         <translation>(ninguno)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Rango</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>Reiniciar</translation>
     </message>
@@ -1936,10 +1966,6 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Seleccione un par para ver información detallada.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Dirección</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2138,14 +2164,6 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
         <translation>nunca </translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Entrante</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Salida</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Desconocido</translation>
     </message>
@@ -2189,8 +2207,8 @@ Firmar solo es posible con correos del tipo Legacy.</translation>
         <translation>Mensaje opcional asociado a la solicitud de pago que podría ser presentado al remitente </translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>Crear nueva dirección para recepción</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Solicitar pago</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2742,6 +2760,13 @@ Nota: Dado que la comisión se calcula por byte, una comisión de "100 satoshis 
     </message>
 </context>
 <context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Sí</translation>
+    </message>
+</context>
+<context>
     <name>ShutdownWindow</name>
     <message>
         <source>%1 is shutting down...</source>
@@ -3236,10 +3261,6 @@ Nota: Dado que la comisión se calcula por byte, una comisión de "100 satoshis 
     <message>
         <source>Sent to</source>
         <translation>Enviado a</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>A usted mismo</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3756,6 +3777,12 @@ Vaya a Archivo&gt; Abrir monedero para cargar un monedero.
         <translation>El directorio de bloques «%s» especificado no existe.</translation>
     </message>
     <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>El fichero de R/W configuración %s especificado no existe
+</translation>
+    </message>
+    <message>
         <source>Unknown address type '%s'</source>
         <translation>Dirección tipo '%s' desconocida</translation>
     </message>
@@ -3813,7 +3840,7 @@ Vaya a Archivo&gt; Abrir monedero para cargar un monedero.
     </message>
     <message>
         <source>Unsupported logging category %s=%s.</source>
-        <translation>Categoría de registro no soportada %s=%s.</translation>
+        <translation>Categoría de registro no soportada %s=%s. </translation>
     </message>
     <message>
         <source>Upgrading UTXO database</source>
@@ -3838,10 +3865,6 @@ Vaya a Archivo&gt; Abrir monedero para cargar un monedero.
     <message>
         <source>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</source>
         <translation>%s corrupto. Intente utilizar la monedero herramienta de bitcoin-monedero para salvar o restaurar una copia de seguridad.</translation>
-    </message>
-    <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>No es posible actualizar un monedero HD dividido sin actualizar el soporte para admitir el keypool pre dividido. Porfavor usa -upgradewallet=169900 o -upgradewallet sin especificar una versión.</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
@@ -4068,10 +4091,6 @@ Vaya a Archivo&gt; Abrir monedero para cargar un monedero.
     <message>
         <source>Loading wallet...</source>
         <translation>Cargando monedero...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>No se puede actualizar a una versión mas antigua el monedero.</translation>
     </message>
     <message>
         <source>Rescanning...</source>

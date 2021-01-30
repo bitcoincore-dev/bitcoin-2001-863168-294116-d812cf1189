@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Dekstre-klaku por redakti adreson aŭ etikedon</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Krei novan adreson</translation>
     </message>
@@ -68,11 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Jen viaj Bitmon-adresoj por sendi pagojn. Zorge kontrolu la sumon kaj la alsendan adreson antaŭ ol sendi.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Jen viaj bitmonaj adresoj por ricevi pagojn. Estas konsilinde uzi apartan ricevan adreson por ĉiu transakcio.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -423,6 +414,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>&amp;Komandliniaj agordaĵoj</translation>
     </message>
     <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Indeksado de blokoj sur disko...</translation>
+    </message>
+    <message>
         <source>%1 behind</source>
         <translation>mankas %1</translation>
     </message>
@@ -451,6 +446,22 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Ĝisdata</translation>
     </message>
     <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Malfermi konzolon de sencimigo kaj diagnozo</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Sendaj adresoj</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Ricevaj adresoj</translation>
+    </message>
+    <message>
+        <source>Open a bitcoin: URI</source>
+        <translation>Malfermi na la URI de bitmono</translation>
+    </message>
+    <message>
         <source>Open Wallet</source>
         <translation>Malfermi la Monujon</translation>
     </message>
@@ -473,10 +484,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Close all wallets</source>
         <translation>Fermi ĉiujn monujojn</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>defaŭlta monujo</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -724,6 +731,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Krei Monujon</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Monujo</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Monujo-Nomo</translation>
     </message>
@@ -815,6 +826,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -840,6 +854,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Bonvenon al %1.</translation>
     </message>
     <message>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Dum tiu ĉi unua uzo de la programo, vi povas elekti lokon, kie %1 stokos siajn datumojn.</translation>
+    </message>
+    <message>
         <source>Use the default data directory</source>
         <translation>Uzi la defaŭltan dosierujon por datumoj</translation>
     </message>
@@ -852,12 +870,31 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Bitmono</translation>
     </message>
     <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Almenaŭ %1GB da datumoj konserviĝos en tiu loko, kaj tio poiome kreskos.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 elŝutos kaj konservos kopion de la bitmona blokĉeno.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>Ankaŭ via monujo konserviĝos en tiu dosierujo.</translation>
+    </message>
+    <message>
         <source>Error</source>
         <translation>Eraro</translation>
     </message>
     <message numerus="yes">
         <source>%n GB of free space available</source>
         <translation><numerusform>%n gigabajto de libera loko disponeble</numerusform><numerusform>%n gigabajtoj de libera loko disponebla.</numerusform></translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>neaplikebla</translation>
     </message>
     </context>
 <context>
@@ -900,6 +937,19 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adreso</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -908,6 +958,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Alglui adreson de tondejo</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -988,6 +1046,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Mapigi pordon per &amp;UPnP</translation>
     </message>
     <message>
+        <source>Accept connections from outside.</source>
+        <translation>Akcepti konektojn el ekstere.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Permesi envenantajn konektojn</translation>
+    </message>
+    <message>
         <source>Proxy &amp;IP:</source>
         <translation>Prokurila &amp;IP:</translation>
     </message>
@@ -1058,6 +1124,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>none</source>
         <translation>neniu</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Kerno de Bitmono</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1143,6 +1213,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1175,7 +1248,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Received</source>
         <translation>Ricevita</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tipo</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1254,6 +1331,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>unknown</source>
         <translation>nekonata</translation>
     </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tso</translation>
+    </message>
 </context>
 <context>
     <name>QRImageWidget</name>
@@ -1323,6 +1405,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Wallet: </source>
         <translation>Monujo:</translation>
+    </message>
+    <message>
+        <source>Range</source>
+        <translation type="unfinished">Intervalo</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1409,6 +1495,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>&amp;Malekzili</translation>
     </message>
     <message>
+        <source>Network activity disabled</source>
+        <translation type="unfinished">Retaj agadoj malebliĝas</translation>
+    </message>
+    <message>
         <source>never</source>
         <translation>neniam</translation>
     </message>
@@ -1432,6 +1522,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>&amp;Mesaĝo:</translation>
     </message>
     <message>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Peti pagon</translation>
+    </message>
+    <message>
         <source>Clear all fields of the form.</source>
         <translation>Malplenigi ĉiujn kampojn de la formularo.</translation>
     </message>
@@ -1446,6 +1540,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Remove</source>
         <translation>Forigi</translation>
+    </message>
+    <message>
+        <source>Copy URI</source>
+        <translation type="unfinished">Kopii URI</translation>
     </message>
     <message>
         <source>Copy label</source>
@@ -1575,6 +1673,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Transaction Fee:</source>
         <translation>Krompago:</translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Elekti...</translation>
     </message>
     <message>
         <source>Hide</source>
@@ -1744,6 +1846,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Memorando:</translation>
     </message>
 </context>
+<context>
+    <name>SendConfirmationDialog</name>
+    </context>
 <context>
     <name>ShutdownWindow</name>
     <message>
@@ -2117,10 +2222,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Sendita al</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Al vi mem</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Minita</translation>
     </message>
@@ -2259,7 +2360,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Backup Successful</source>
         <translation>Sukcesis krei sekurkopion</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Nuligi</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -2273,6 +2378,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
         <translation>Averto: ŝajne ni ne tute konsentas kun niaj samtavolanoj! Eble vi devas ĝisdatigi vian klienton, aŭ eble aliaj nodoj faru same.</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>Ne eblas trovi la adreson -%s: '%s'</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
@@ -2307,6 +2416,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Geneza bloko aŭ netrovita aŭ neĝusta. Ĉu eble la datadir de la reto malĝustas?</translation>
     </message>
     <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Ŝarĝante adresojn...</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Nesufiĉa nombro de dosierpriskribiloj disponeblas.</translation>
     </message>
@@ -2331,6 +2444,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Transakcio estas tro granda</translation>
     </message>
     <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Kontrolado de monujo...</translation>
+    </message>
+    <message>
         <source>Unknown network specified in -onlynet: '%s'</source>
         <translation>Nekonata reto specifita en -onlynet: '%s'</translation>
     </message>
@@ -2345,10 +2462,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Loading wallet...</source>
         <translation>Ŝargado de monujo...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Ne eblas malpromocii monujon</translation>
     </message>
     <message>
         <source>Rescanning...</source>

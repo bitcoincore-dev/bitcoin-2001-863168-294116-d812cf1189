@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Højreklik for at redigere adresse eller mærkat</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Opret en ny adresse</translation>
     </message>
@@ -518,10 +514,6 @@
         <translation>Vis %1 hjælpebesked for at få en liste over mulige tilvalg for Bitcoin kommandolinje</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>Standard tegnebog</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Ingen tegnebøger tilgængelige</translation>
     </message>
@@ -625,7 +617,11 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Tegnebog er &lt;b&gt;krypteret&lt;/b&gt; og i øjeblikket &lt;b&gt;låst&lt;/b&gt;</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>Der opstod en fatal fejl. %1 kan ikke længere fortsætte sikkert og vil afslutte.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -799,6 +795,10 @@
         <translation>Opret tegnebog</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Tegnebog</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Navn på tegnebog</translation>
     </message>
@@ -910,6 +910,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -967,10 +970,6 @@
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Kassér blokke efter verificering, undtaget de seneste %1 GB (beskær)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Mindst %1 GB data vil blive gemt i denne mappe, og det vil vokse over tid.</translation>
     </message>
@@ -1007,6 +1006,13 @@
         <translation><numerusform>(%n GB nødvendig for komplet kæde)</numerusform><numerusform>(%n GB nødvendig for komplet kæde)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1067,6 +1073,19 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Type</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1075,6 +1094,14 @@
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Indsæt adresse fra udklipsholderen</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1173,10 +1200,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Beskære &amp;blok opbevaring til</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1301,6 +1324,14 @@
     <message>
         <source>Whether to show coin control features or not.</source>
         <translation>Hvorvidt egenskaber for coin-styring skal vises eller ej.</translation>
+    </message>
+    <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Forbind til Bitcoin-netværket gennem en separat SOCKS5-proxy for Tors skjulte tjenester.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Brug separat SOCKS&amp;5-proxy for at nå knuder via Tors skjulte tjenester:</translation>
     </message>
     <message>
         <source>&amp;Third party transaction URLs</source>
@@ -1445,6 +1476,10 @@
         <translation>Dialog</translation>
     </message>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">Luk</translation>
+    </message>
+    <message>
         <source>Total Amount</source>
         <translation>Total Mængde</translation>
     </message>
@@ -1452,6 +1487,9 @@
         <source>or</source>
         <translation>eller</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1507,10 +1545,6 @@
         <translation>Knude/tjeneste</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>Knude-id</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1522,7 +1556,11 @@
         <source>Received</source>
         <translation>Modtaget</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Type</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1624,6 +1662,11 @@
     <message>
         <source>unknown</source>
         <translation>ukendt</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -1736,6 +1779,10 @@
         <translation>(ingen)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Interval</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Nulstil</translation>
     </message>
@@ -1758,10 +1805,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Vælg en anden knude for at se detaljeret information.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Retning</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1952,14 +1995,6 @@
         <translation>aldrig</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Indkommende</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Udgående</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Ukendt</translation>
     </message>
@@ -2003,8 +2038,8 @@
         <translation>En valgfri meddelelse som er indlejret i betalingsanmodningen og som kan blive vist til afsenderen.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Opret ny modtager adresse</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Anmod om betaling</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2065,6 +2100,10 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">Adresse:</translation>
+    </message>
     <message>
         <source>Amount:</source>
         <translation>Beløb:</translation>
@@ -2344,6 +2383,10 @@ Note: Siden gebyret er kalkuleret på en per-byte basis, et gebyr på "100 satos
         <translation>Er du sikker på, at du vil sende?</translation>
     </message>
     <message>
+        <source>Create Unsigned</source>
+        <translation type="unfinished">Lav usigneret</translation>
+    </message>
+    <message>
         <source>or</source>
         <translation>eller</translation>
     </message>
@@ -2525,6 +2568,13 @@ Note: Siden gebyret er kalkuleret på en per-byte basis, et gebyr på "100 satos
     <message>
         <source>Memo:</source>
         <translation>Memo:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Ja</translation>
     </message>
 </context>
 <context>
@@ -3024,10 +3074,6 @@ Note: Siden gebyret er kalkuleret på en per-byte basis, et gebyr på "100 satos
         <translation>Sendt til</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Til dig selv</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Minet</translation>
     </message>
@@ -3458,6 +3504,12 @@ Note: Siden gebyret er kalkuleret på en per-byte basis, et gebyr på "100 satos
         <translation>Angivet blokmappe “%s” eksisterer ikke.</translation>
     </message>
     <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Den specificerede R/W konfigurationsfil %s eksisterer ikke.
+</translation>
+    </message>
+    <message>
         <source>Unknown address type '%s'</source>
         <translation>Ukendt adressetype ‘%s’</translation>
     </message>
@@ -3550,6 +3602,10 @@ Note: Siden gebyret er kalkuleret på en per-byte basis, et gebyr på "100 satos
         <translation>Du er nødt til at genopbygge databasen ved hjælp af -reindex for at gå tilbage til ikke-beskåret tilstand. Dette vil downloade hele blokkæden igen</translation>
     </message>
     <message>
+        <source>A fatal internal error occurred, see debug.log for details</source>
+        <translation>En alvorlig intern fejl er opstået. Se debug.log for detaljer</translation>
+    </message>
+    <message>
         <source>Error reading from database, shutting down.</source>
         <translation>Fejl under læsning fra database; lukker ned.</translation>
     </message>
@@ -3560,6 +3616,10 @@ Note: Siden gebyret er kalkuleret på en per-byte basis, et gebyr på "100 satos
     <message>
         <source>Error: Disk space is low for %s</source>
         <translation>Fejl: Disk plads er lavt for %s</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>Nøglepulje løb tør; kald venligst keypoolrefill først</translation>
     </message>
     <message>
         <source>Invalid -onion address or hostname: '%s'</source>
@@ -3726,10 +3786,6 @@ Note: Siden gebyret er kalkuleret på en per-byte basis, et gebyr på "100 satos
     <message>
         <source>Loading wallet...</source>
         <translation>Indlæser tegnebog…</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Kan ikke nedgradere tegnebog</translation>
     </message>
     <message>
         <source>Rescanning...</source>

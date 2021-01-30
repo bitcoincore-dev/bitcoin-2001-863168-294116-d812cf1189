@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Desni klik za urejanje naslova ali oznake</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Ustvari nov naslov</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>To so vaši bitcoin-naslovi za pošiljanje. Pred pošiljanjem vedno preverite količino in prejemnikov naslov.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>To so vaši bitcoin-naslovi, ki jih uporabljate za prejemanje plačil. Za tvorbo novega naslova uporabite gumb "Ustvari nov prejemni naslov" v zavihku Prejmi.
-Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -556,10 +546,6 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation>Zamaskiraj vrednosti v zavihku Pregled</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>privzeta denarnica</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Ni denarnic na voljo</translation>
     </message>
@@ -845,6 +831,10 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation>Ustvari denarnico</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Denarnica</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Ime denarnice</translation>
     </message>
@@ -968,6 +958,9 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1025,10 +1018,6 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Po verifikaciji zavrzite vse bloke, razen zadnjih %1 GB (obrezava)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Vsaj %1 GB podatkov bo shranjenih v tem direktoriju, velikost podatkov pa bo s časom naraščala.</translation>
     </message>
@@ -1054,7 +1043,7 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
     </message>
     <message numerus="yes">
         <source>%n GB of free space available</source>
-        <translation><numerusform>%n GiB prostega prostora na voljo</numerusform><numerusform>%n GiB prostega prostora na voljo</numerusform><numerusform>%n GiB prostega prostora na voljo</numerusform><numerusform>%n GB prostega prostora na voljo</numerusform></translation>
+        <translation><numerusform>%n GiB prostega prostora na voljo</numerusform><numerusform>%n GiB prostega prostora na voljo</numerusform><numerusform>%n GiB prostega prostora na voljo</numerusform><numerusform>%n GiB prostega prostora na voljo</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
@@ -1065,6 +1054,13 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation><numerusform>(%n GB potreben za celotno verigo blokov)</numerusform><numerusform>(%n GB potrebna za celotno verigo blokov)</numerusform><numerusform>(%n GB potrebni za celotno verigo blokov)</numerusform><numerusform>(%n GB potrebnih za celotno verigo blokov)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Neznano</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1125,6 +1121,19 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Vrsta</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Naslov</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1133,6 +1142,14 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Prilepite naslov iz odložišča</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1231,10 +1248,6 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>Obreži velikost podatkovne &amp;baze na</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1632,6 +1645,9 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
     </message>
 </context>
 <context>
+    <name>PairingPage</name>
+    </context>
+<context>
     <name>PaymentServer</name>
     <message>
         <source>Payment request error</source>
@@ -1685,10 +1701,6 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation>Naslov</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeId</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Odzivni čas (Ping)</translation>
     </message>
@@ -1700,7 +1712,11 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <source>Received</source>
         <translation>Prejeto</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Vrsta</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1807,7 +1823,7 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <source>unknown</source>
         <translation>neznano</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     <message>
@@ -1918,6 +1934,10 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation>(nič)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Območje</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Ponastavi</translation>
     </message>
@@ -1940,10 +1960,6 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Izberite soležnika, o katerem si želite ogledati podrobnejše informacije.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Smer povezave</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2142,14 +2158,6 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation>nikoli</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Dohodna</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Odhodna</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Neznano</translation>
     </message>
@@ -2193,8 +2201,8 @@ Podpisovanje je možno le s podedovanimi ("legacy") naslovi.</translation>
         <translation>Neobvezna oznaka, ki se shrani v zahtevek za plačilo in se lahko prikaže plačniku.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Ustvari nov prejemni naslov</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Zahtevaj plačilo</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2754,6 +2762,13 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kB" 
     </message>
 </context>
 <context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Da</translation>
+    </message>
+</context>
+<context>
     <name>ShutdownWindow</name>
     <message>
         <source>%1 is shutting down...</source>
@@ -3248,10 +3263,6 @@ Opomba: Ker se provizija izračuna na bajt, bi provizija "100 satoshijev na kB" 
     <message>
         <source>Sent to</source>
         <translation>Poslano na </translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>Sebi</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3760,6 +3771,12 @@ Za odpiranje denarnice kliknite Datoteka &gt; Odpri denarnico
         <translation>Vnešena podatkovna mapa za bloke "%s" ne obstaja.</translation>
     </message>
     <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Določena R/W konfiguracijska datoteka %s ne obstaja
+</translation>
+    </message>
+    <message>
         <source>Unknown address type '%s'</source>
         <translation>Neznan tip naslova '%s'</translation>
     </message>
@@ -4060,10 +4077,6 @@ Za odpiranje denarnice kliknite Datoteka &gt; Odpri denarnico
     <message>
         <source>Loading wallet...</source>
         <translation>Nalagam denarnico ...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Ne morem</translation>
     </message>
     <message>
         <source>Rescanning...</source>

@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>முகவரியை மாற்ற ரைட் கிளிக் செய்யவும்</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>புதிய முகவரியை உருவாக்கு</translation>
     </message>
@@ -527,10 +523,6 @@
         <translation>சாத்தியமான Bitcoin கட்டளை-வரி விருப்பங்களைக் கொண்ட பட்டியலைப் பெற %1 உதவிச் செய்தியைக் காட்டு</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>அடிப்படை வாலட்</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>வாலட் எதுவும் இல்லை</translation>
     </message>
@@ -808,6 +800,10 @@
         <translation>வாலட்டை உருவாக்கு</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>பணப்பை</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>வாலட் பெயர்</translation>
     </message>
@@ -919,6 +915,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -976,10 +975,6 @@
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>சமீபத்திய %1 ஜிபி ப்லாக்கை தவிர (ப்ரூன்), சரிபார்ப்புக்குப் பிறகு மற்ற ப்லாக்கை நிராகரிக்கவும்</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>குறைந்தது %1 ஜிபி தரவு இந்த அடைவில் சேமிக்கப்படும், மேலும் காலப்போக்கில் அது வளரும்.</translation>
     </message>
@@ -1010,6 +1005,13 @@
     <message numerus="yes">
         <source>(of %n GB needed)</source>
         <translation><numerusform>(%n ஜிபி தேவை)</numerusform><numerusform>(%n ஜிபி தேவை)</numerusform></translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/A</translation>
     </message>
     </context>
 <context>
@@ -1064,10 +1066,35 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>வகை</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>முகவரி</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Open bitcoin URI</source>
+        <translation>திற பிட்காயின்: URI</translation>
+    </message>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>கிளிப்போர்டிலிருந்து முகவரியை பேஸ்ட் செய்யவும்</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1166,10 +1193,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>பிரவுன் &amp; தடுப்பு சேமிப்பு</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>ஜிபி</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1296,6 +1319,14 @@
         <translation>நாணயக் கட்டுப்பாட்டு அம்சங்களைக் காட்டலாமா அல்லது இல்லையா.</translation>
     </message>
     <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>டார் மறைக்கப்பட்ட சேவைகளை தனித்த SOCKS5 ப்ராக்ஸி மூலம் பிட்கோடு நெட்வொர்க்குடன் இணைக்கவும்.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Tor மறைக்கப்பட்ட சேவைகளை வழியாக சகலரையும் அணுக தனித்த SOCKS &amp; 5 ப்ராக்ஸி பயன்படுத்தவும்</translation>
+    </message>
+    <message>
         <source>&amp;Third party transaction URLs</source>
         <translation>&amp; மூன்றாம் தரப்பு பரிவர்த்தனை URL கள்</translation>
     </message>
@@ -1318,6 +1349,10 @@
     <message>
         <source>none</source>
         <translation>none</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin மையம்</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1434,6 +1469,10 @@
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">மூடு</translation>
+    </message>
+    <message>
         <source>Total Amount</source>
         <translation>முழு தொகை</translation>
     </message>
@@ -1441,6 +1480,9 @@
         <source>or</source>
         <translation>அல்லது</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1496,10 +1538,6 @@
         <translation>கணு / சேவை</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeId</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>பிங்</translation>
     </message>
@@ -1511,7 +1549,11 @@
         <source>Received</source>
         <translation>பெறப்பட்டது</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>வகை</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1549,6 +1591,10 @@
     <message>
         <source>%1 ms</source>
         <translation>%1 ms</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n மணி</numerusform><numerusform>%n மணி</numerusform></translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -1589,6 +1635,11 @@
     <message>
         <source>unknown</source>
         <translation>தெரியாத</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>பரிவர்த்தனை</translation>
     </message>
 </context>
 <context>
@@ -1701,6 +1752,10 @@
         <translation>(ஏதுமில்லை)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">எல்லை</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp; மீட்டமை</translation>
     </message>
@@ -1723,10 +1778,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>விரிவான தகவலைப் பார்வையிட ஒரு சகவரைத் தேர்ந்தெடுக்கவும்.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>திசை</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1909,14 +1960,6 @@
         <translation>ஒருபோதும்</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>உள்வரும்</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>வெளி செல்லும்</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>அறியப்படாத</translation>
     </message>
@@ -1952,8 +1995,8 @@
         <translation>கோரிக்கைக்கு விருப்பமான தொகை. ஒரு குறிப்பிட்ட தொகையை கோர வேண்டாம் இந்த வெற்று அல்லது பூஜ்ஜியத்தை விடு.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;புதிய பிட்காயின் பெறும் முகவரியை உருவாக்கு</translation>
+        <source>&amp;Request payment</source>
+        <translation>கட்டணம் மற்றும் கோரிக்கை கட்டணம்</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2015,8 +2058,16 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">முகவரி:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>விலை</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">லேபிள்:</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -2442,6 +2493,13 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Memo:</source>
         <translation>குறிப்பாணை:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>ஆம்</translation>
     </message>
 </context>
 <context>
@@ -2903,10 +2961,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Sent to</source>
         <translation>அனுப்பப்பட்டது</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>உங்களுக்கே</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3379,6 +3433,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>கட்டணம் கழிக்கப்பட்ட பின்னர் பரிவர்த்தனை தொகை அனுப்ப மிகவும் சிறியது</translation>
     </message>
     <message>
+        <source>A fatal internal error occurred, see debug.log for details</source>
+        <translation>ஆபத்தான உள் பிழை ஏற்பட்டது, விவரங்களுக்கு debug.log ஐ பார்க்கவும்</translation>
+    </message>
+    <message>
         <source>Error reading from database, shutting down.</source>
         <translation>டேட்டாபேசிலிருந்து படிப்பதில் பிழை, ஷட் டவுன் செய்யப்படுகிறது.</translation>
     </message>
@@ -3501,10 +3559,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Loading wallet...</source>
         <translation>வாலட் லோடிங் செய்யப்படுகிறது...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>வாலட்டை தரமிறக்க முடியாது</translation>
     </message>
     <message>
         <source>Rescanning...</source>

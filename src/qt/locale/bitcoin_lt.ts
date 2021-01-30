@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Spustelėkite dešinįjį klavišą norint keisti adresą arba etiketę</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Sukurti naują adresą</translation>
     </message>
@@ -174,6 +170,10 @@
     <message>
         <source>Wallet encrypted</source>
         <translation>Piniginė užšifruota</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Įveskite naują piniginės slaptafrazę.&lt;br/&gt;Prašome naudoti slaptafrazę iš &lt;b&gt; 10 ar daugiau atsitiktinių simbolių&lt;/b&gt; arba &lt;b&gt;aštuonių ar daugiau žodžių&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase for the wallet.</source>
@@ -458,6 +458,10 @@
         <translation>Atnaujinta</translation>
     </message>
     <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Atverti derinimo ir diagnostikos konsolę</translation>
+    </message>
+    <message>
         <source>&amp;Sending addresses</source>
         <translation>&amp;Siunčiami adresai</translation>
     </message>
@@ -484,10 +488,6 @@
     <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
         <translation>Rodyti %1 pagalbos žinutę su Bitcoin pasirinkimo komandomis</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>numatyta piniginė</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -593,7 +593,11 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Piniginė &lt;b&gt;užšifruota&lt;/b&gt; ir šiuo metu &lt;b&gt;užrakinta&lt;/b&gt;</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>Kritinė klaida. %1 nebegali tęsti saugiai ir bus išjungtas.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -767,6 +771,10 @@
         <translation>Sukurti Piniginę</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Piniginė</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Piniginės Pavadinimas</translation>
     </message>
@@ -870,6 +878,9 @@
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -923,10 +934,6 @@
         <translation>Bitcoin</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Ištrinti blokus po patikrinimo, išskyrus paskutinius %1 GB (nukarpimas)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Šiame kataloge bus saugomi bent %1 GB duomenų, kurie laikui bėgant didės.</translation>
     </message>
@@ -957,6 +964,13 @@
     <message numerus="yes">
         <source>(of %n GB needed)</source>
         <translation><numerusform>(reikalinga %n GB)</numerusform><numerusform>(reikalinga %n GB)</numerusform><numerusform>(reikalinga %n GB)</numerusform><numerusform>(reikalinga %n GB)</numerusform></translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>nėra</translation>
     </message>
     </context>
 <context>
@@ -1011,10 +1025,31 @@
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipas</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresas</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>URI:</source>
         <translation>URI:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Įvesti adresą iš mainų atminties</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
     </message>
 </context>
 <context>
@@ -1113,10 +1148,6 @@
     <message>
         <source>Prune &amp;block storage to</source>
         <translation>&amp;blokuokite saugyklą į</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
@@ -1243,6 +1274,14 @@
         <translation>Rodyti monetų valdymo funkcijas, ar ne.</translation>
     </message>
     <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Prisijunkite prie „Bitcoin“ tinklo per atskirą „SOCKS5“ proxy „Tor“ paslėptas paslaugas.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Naudokite atskirą SOCKS&amp;5 tarpinius serverius, kad pasiektumėte Peers per „Tor“ paslėptas paslaugas:</translation>
+    </message>
+    <message>
         <source>&amp;Third party transaction URLs</source>
         <translation>&amp;Trečiųjų šalių sandorių URL</translation>
     </message>
@@ -1265,6 +1304,10 @@
     <message>
         <source>none</source>
         <translation>niekas</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin branduolys</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1385,6 +1428,10 @@
         <translation>Dialogas</translation>
     </message>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">Užverti</translation>
+    </message>
+    <message>
         <source>Total Amount</source>
         <translation>Visas kiekis</translation>
     </message>
@@ -1392,6 +1439,9 @@
         <source>or</source>
         <translation>ar</translation>
     </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -1435,10 +1485,6 @@
         <translation>Mazgas/Paslaugos</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>MazgoId</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Ping</translation>
     </message>
@@ -1450,7 +1496,11 @@
         <source>Received</source>
         <translation>Gauta</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tipas</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1552,6 +1602,11 @@
     <message>
         <source>unknown</source>
         <translation>nežinomas</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Sds</translation>
     </message>
 </context>
 <context>
@@ -1664,6 +1719,10 @@
         <translation>(niekas)</translation>
     </message>
     <message>
+        <source>Range</source>
+        <translation type="unfinished">Diapazonas</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Perkrauti</translation>
     </message>
@@ -1686,10 +1745,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Pasirinkite peer, kad galėtumėte peržiūrėti išsamią informaciją.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Kryptis</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1868,14 +1923,6 @@
         <translation>Niekada</translation>
     </message>
     <message>
-        <source>Inbound</source>
-        <translation>Gaunamas</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Išsiunčiamas</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Nežinomas</translation>
     </message>
@@ -1909,6 +1956,10 @@
     <message>
         <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
         <translation>Neprivaloma suma, kurios prašote. Palikite šį lauką tuščią, kad neprašytumėte konkrečios sumos.</translation>
+    </message>
+    <message>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Reikalauti mokėjimo</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -1969,6 +2020,10 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">Adresas:</translation>
+    </message>
     <message>
         <source>Amount:</source>
         <translation>Suma:</translation>
@@ -2260,6 +2315,10 @@ Pastaba: Kadangi mokestis apskaičiuojamas pagal baitą, mokestis už „100 sat
         <translation>Patvirtinti monetų siuntimą</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">Siųsti</translation>
+    </message>
+    <message>
         <source>The recipient address is not valid. Please recheck.</source>
         <translation>Gavėjo adresas negalioja. Patikrinkite dar kartą.</translation>
     </message>
@@ -2393,6 +2452,13 @@ Pastaba: Kadangi mokestis apskaičiuojamas pagal baitą, mokestis už „100 sat
     <message>
         <source>Memo:</source>
         <translation>Atmintinė:</translation>
+    </message>
+</context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Yes</source>
+        <translation>Taip</translation>
     </message>
 </context>
 <context>
@@ -2844,10 +2910,6 @@ Pastaba: Kadangi mokestis apskaičiuojamas pagal baitą, mokestis už „100 sat
         <translation>Išsiųsta</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Skirta sau</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Išgauta</translation>
     </message>
@@ -3256,10 +3318,6 @@ Pastaba: Kadangi mokestis apskaičiuojamas pagal baitą, mokestis už „100 sat
     <message>
         <source>Loading wallet...</source>
         <translation>Užkraunama piniginė...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Negalima sumažinti piniginės versijos</translation>
     </message>
     <message>
         <source>Rescanning...</source>
