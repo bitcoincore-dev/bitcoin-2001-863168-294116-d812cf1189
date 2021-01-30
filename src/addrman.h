@@ -6,23 +6,22 @@
 #ifndef BITCOIN_ADDRMAN_H
 #define BITCOIN_ADDRMAN_H
 
+#include <clientversion.h>
 #include <netaddress.h>
 #include <protocol.h>
 #include <random.h>
 #include <sync.h>
 #include <timedata.h>
 #include <util/system.h>
-#include <clientversion.h>
 
+#include <fs.h>
+#include <hash.h>
+#include <iostream>
 #include <map>
 #include <set>
 #include <stdint.h>
-#include <vector>
-#include <iostream>
 #include <streams.h>
-#include <fs.h>
-#include <hash.h>
-
+#include <vector>
 
 /**
  * Extended statistics about a CAddress
@@ -158,7 +157,7 @@ public:
 #define ADDRMAN_GETADDR_MAX_PCT 23
 
 //! the maximum number of nodes to return in a getaddr call
-#define ADDRMAN_GETADDR_MAX 2500
+#define ADDRMAN_GETADDR_MAX 1000
 
 //! Convenience
 #define ADDRMAN_TRIED_BUCKET_COUNT (1 << ADDRMAN_TRIED_BUCKET_COUNT_LOG2)

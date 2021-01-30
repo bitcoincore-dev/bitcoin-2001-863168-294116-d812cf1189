@@ -16,7 +16,7 @@
   * provider of the transaction should be banned/ignored/disconnected/etc.
   */
 enum class TxValidationResult {
-    TX_RESULT_UNSET,         //!< initial value. Tx has not yet been rejected
+    TX_RESULT_UNSET = 0,     //!< initial value. Tx has not yet been rejected
     TX_CONSENSUS,            //!< invalid by consensus rules
     /**
      * Invalid by a change to consensus rules more recent than SegWit.
@@ -26,15 +26,20 @@ enum class TxValidationResult {
      * is uninteresting.
      */
     TX_RECENT_CONSENSUS_CHANGE,
-    TX_NOT_STANDARD,          //!< didn't meet our local policy rules
+    TX_INPUTS_NOT_STANDARD,   //!< inputs (covered by txid) failed policy rules
+    TX_NOT_STANDARD,          //!< otherwise didn't meet our local policy rules
     TX_MISSING_INPUTS,        //!< transaction was missing some of its inputs
     TX_PREMATURE_SPEND,       //!< transaction spends a coinbase too early, or violates locktime/sequence locks
     /**
-     * Transaction might be missing a witness, have a witness prior to SegWit
+     * Transaction might have a witness prior to SegWit
      * activation, or witness may have been malleated (which includes
      * non-standard witnesses).
      */
     TX_WITNESS_MUTATED,
+    /**
+     * Transaction is missing a witness.
+     */
+    TX_WITNESS_STRIPPED,
     /**
      * Tx already in mempool or conflicts with a tx in the chain
      * (if it conflicts with another tx in mempool, we use MEMPOOL_POLICY as it failed to reach the RBF threshold)
@@ -50,7 +55,7 @@ enum class TxValidationResult {
   * useful for some other use-cases.
   */
 enum class BlockValidationResult {
-    BLOCK_RESULT_UNSET,      //!< initial value. Block has not yet been rejected
+    BLOCK_RESULT_UNSET = 0,  //!< initial value. Block has not yet been rejected
     BLOCK_CONSENSUS,         //!< invalid by consensus rules (excluding any below reasons)
     /**
      * Invalid by a change to consensus rules more recent than SegWit.
@@ -71,75 +76,62 @@ enum class BlockValidationResult {
 
 
 
-/** Base class for capturing information about block/transaction validation. This is subclassed
+/** Template for capturing information about block/transaction validation. This is instantiated
  *  by TxValidationState and BlockValidationState for validation information on transactions
  *  and blocks respectively. */
-class ValidationState {
+template <typename Result>
+class ValidationState
+{
 private:
-    enum mode_state {
-        MODE_VALID,   //!< everything ok
-        MODE_INVALID, //!< network rule violation (DoS value may be set)
-        MODE_ERROR,   //!< run-time error
-    } m_mode;
+    enum class ModeState {
+        M_VALID,   //!< everything ok
+        M_INVALID, //!< network rule violation (DoS value may be set)
+        M_ERROR,   //!< run-time error
+    } m_mode{ModeState::M_VALID};
+    Result m_result{};
     std::string m_reject_reason;
     std::string m_debug_message;
-protected:
-    void Invalid(const std::string &reject_reason="",
-                 const std::string &debug_message="")
+
+public:
+    bool Invalid(Result result,
+                 const std::string& reject_reason = "",
+                 const std::string& debug_message = "")
     {
+        m_result = result;
         m_reject_reason = reject_reason;
         m_debug_message = debug_message;
-        if (m_mode != MODE_ERROR) m_mode = MODE_INVALID;
+        if (m_mode != ModeState::M_ERROR) m_mode = ModeState::M_INVALID;
+        return false;
     }
-public:
-    // ValidationState is abstract. Have a pure virtual destructor.
-    virtual ~ValidationState() = 0;
-
-    ValidationState() : m_mode(MODE_VALID) {}
     bool Error(const std::string& reject_reason)
     {
-        if (m_mode == MODE_VALID)
+        if (m_mode == ModeState::M_VALID)
             m_reject_reason = reject_reason;
-        m_mode = MODE_ERROR;
+        m_mode = ModeState::M_ERROR;
         return false;
     }
-    bool IsValid() const { return m_mode == MODE_VALID; }
-    bool IsInvalid() const { return m_mode == MODE_INVALID; }
-    bool IsError() const { return m_mode == MODE_ERROR; }
+    bool IsValid() const { return m_mode == ModeState::M_VALID; }
+    bool IsInvalid() const { return m_mode == ModeState::M_INVALID; }
+    bool IsError() const { return m_mode == ModeState::M_ERROR; }
+    Result GetResult() const { return m_result; }
     std::string GetRejectReason() const { return m_reject_reason; }
     std::string GetDebugMessage() const { return m_debug_message; }
-};
-
-inline ValidationState::~ValidationState() {};
-
-class TxValidationState : public ValidationState {
-private:
-    TxValidationResult m_result = TxValidationResult::TX_RESULT_UNSET;
-public:
-    bool Invalid(TxValidationResult result,
-                 const std::string &reject_reason="",
-                 const std::string &debug_message="")
+    std::string ToString() const
     {
-        m_result = result;
-        ValidationState::Invalid(reject_reason, debug_message);
-        return false;
+        if (IsValid()) {
+            return "Valid";
+        }
+
+        if (!m_debug_message.empty()) {
+            return m_reject_reason + ", " + m_debug_message;
+        }
+
+        return m_reject_reason;
     }
-    TxValidationResult GetResult() const { return m_result; }
 };
 
-class BlockValidationState : public ValidationState {
-private:
-    BlockValidationResult m_result = BlockValidationResult::BLOCK_RESULT_UNSET;
-public:
-    bool Invalid(BlockValidationResult result,
-                 const std::string &reject_reason="",
-                 const std::string &debug_message="") {
-        m_result = result;
-        ValidationState::Invalid(reject_reason, debug_message);
-        return false;
-    }
-    BlockValidationResult GetResult() const { return m_result; }
-};
+class TxValidationState : public ValidationState<TxValidationResult> {};
+class BlockValidationState : public ValidationState<BlockValidationResult> {};
 
 // These implement the weight = (stripped_size * 4) + witness_size formula,
 // using only serialization with and without witness data. As witness_size

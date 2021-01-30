@@ -23,7 +23,7 @@ class ConfArgsTest(BitcoinTestFramework):
             conf.write('includeconf={}\n'.format(inc_conf_file_path))
 
         self.nodes[0].assert_start_raises_init_error(
-            expected_msg='Error: Error parsing command line arguments: Invalid parameter -dash_cli',
+            expected_msg='Error: Error parsing command line arguments: Invalid parameter -dash_cli=1',
             extra_args=['-dash_cli=1'],
         )
         with open(inc_conf_file_path, 'w', encoding='utf-8') as conf:
@@ -71,7 +71,7 @@ class ConfArgsTest(BitcoinTestFramework):
         with open(inc_conf_file2_path, 'w', encoding='utf-8') as conf:
             conf.write('[testnet]\n')
         self.restart_node(0)
-        self.nodes[0].stop_node(expected_stderr='Warning: ' + inc_conf_file_path + ':1 Section [testnot] is not recognized.' + os.linesep + 'Warning: ' + inc_conf_file2_path + ':1 Section [testnet] is not recognized.')
+        self.nodes[0].stop_node(expected_stderr='Warning: ' + inc_conf_file_path + ':1 Section [testnot] is not recognized.' + os.linesep + inc_conf_file2_path + ':1 Section [testnet] is not recognized.')
 
         with open(inc_conf_file_path, 'w', encoding='utf-8') as conf:
             conf.write('')  # clear
@@ -112,11 +112,38 @@ class ConfArgsTest(BitcoinTestFramework):
             ])
         self.stop_node(0)
 
+    def test_networkactive(self):
+        self.log.info('Test -networkactive option')
+        with self.nodes[0].assert_debug_log(expected_msgs=['SetNetworkActive: true\n']):
+            self.start_node(0)
+        self.stop_node(0)
+
+        with self.nodes[0].assert_debug_log(expected_msgs=['SetNetworkActive: true\n']):
+            self.start_node(0, extra_args=['-networkactive'])
+        self.stop_node(0)
+
+        with self.nodes[0].assert_debug_log(expected_msgs=['SetNetworkActive: true\n']):
+            self.start_node(0, extra_args=['-networkactive=1'])
+        self.stop_node(0)
+
+        with self.nodes[0].assert_debug_log(expected_msgs=['SetNetworkActive: false\n']):
+            self.start_node(0, extra_args=['-networkactive=0'])
+        self.stop_node(0)
+
+        with self.nodes[0].assert_debug_log(expected_msgs=['SetNetworkActive: false\n']):
+            self.start_node(0, extra_args=['-nonetworkactive'])
+        self.stop_node(0)
+
+        with self.nodes[0].assert_debug_log(expected_msgs=['SetNetworkActive: false\n']):
+            self.start_node(0, extra_args=['-nonetworkactive=1'])
+        self.stop_node(0)
+
     def run_test(self):
         self.stop_node(0)
 
         self.test_log_buffer()
         self.test_args_log()
+        self.test_networkactive()
 
         self.test_config_file_parser()
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2019 The Bitcoin Core developers
+// Copyright (c) 2009-2020 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -12,25 +12,54 @@
 #include <compat.h>
 #include <serialize.h>
 
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include <vector>
 
+/**
+ * A network type.
+ * @note An address may belong to more than one network, for example `10.0.0.1`
+ * belongs to both `NET_UNROUTABLE` and `NET_IPV4`.
+ * Keep these sequential starting from 0 and `NET_MAX` as the last entry.
+ * We have loops like `for (int i = 0; i < NET_MAX; i++)` that expect to iterate
+ * over all enum values and also `GetExtNetwork()` "extends" this enum by
+ * introducing standalone constants starting from `NET_MAX`.
+ */
 enum Network
 {
+    /// Addresses from these networks are not publicly routable on the global Internet.
     NET_UNROUTABLE = 0,
+
+    /// IPv4
     NET_IPV4,
+
+    /// IPv6
     NET_IPV6,
+
+    /// TORv2
     NET_ONION,
+
+    /// A set of dummy addresses that map a name to an IPv6 address. These
+    /// addresses belong to RFC4193's fc00::/7 subnet (unique-local addresses).
+    /// We use them to map a string or FQDN to an IPv6 address in CAddrMan to
+    /// keep track of which DNS seeds were used.
     NET_INTERNAL,
 
+    /// Dummy value to indicate the number of NET_* constants.
     NET_MAX,
 };
 
-/** IP address (IPv6, or IPv4 using mapped IPv6 range (::FFFF:0:0/96)) */
+/**
+ * Network address.
+ */
 class CNetAddr
 {
     protected:
+        /**
+         * Network to which this address belongs.
+         */
+        Network m_net{NET_IPV6};
+
         unsigned char ip[16]; // in network byte order
         uint32_t scopeId{0}; // for scoped/link-local ipv6 addresses
 
@@ -40,12 +69,19 @@ class CNetAddr
         void SetIP(const CNetAddr& ip);
 
         /**
+         * Set from a legacy IPv6 address.
+         * Legacy IPv6 address may be a normal IPv6 address, or another address
+         * (e.g. IPv4) disguised as IPv6. This encoding is used in the legacy
+         * `addr` encoding.
+         */
+        void SetLegacyIPv6(const uint8_t ipv6[16]);
+
+        /**
          * Set raw IPv4 or IPv6 address (in network byte order)
          * @note Only NET_IPV4 and NET_IPV6 are allowed for network.
          */
         void SetRaw(Network network, const uint8_t *data);
 
-    public:
         bool SetInternal(const std::string& name);
 
         bool SetSpecial(const std::string &strName); // for Tor addresses
@@ -66,6 +102,7 @@ class CNetAddr
         bool IsRFC4862() const; // IPv6 autoconfig (FE80::/64)
         bool IsRFC6052() const; // IPv6 well-known prefix for IPv4-embedded address (64:FF9B::/96)
         bool IsRFC6145() const; // IPv6 IPv4-translated address (::FFFF:0:0:0/96) (actually defined in RFC2765)
+        bool IsHeNet() const;   // IPv6 Hurricane Electric - https://he.net (2001:0470::/36)
         bool IsTor() const;
         bool IsLocal() const;
         bool IsRoutable() const;
@@ -90,6 +127,7 @@ class CNetAddr
         uint32_t GetMappedAS(const std::vector<bool> &asmap) const;
 
         std::vector<unsigned char> GetGroup(const std::vector<bool> &asmap) const;
+        std::vector<unsigned char> GetAddrBytes() const { return {std::begin(ip), std::end(ip)}; }
         int GetReachabilityFrom(const CNetAddr *paddrPartner = nullptr) const;
 
         explicit CNetAddr(const struct in6_addr& pipv6Addr, const uint32_t scope = 0);
@@ -99,11 +137,26 @@ class CNetAddr
         friend bool operator!=(const CNetAddr& a, const CNetAddr& b) { return !(a == b); }
         friend bool operator<(const CNetAddr& a, const CNetAddr& b);
 
-        ADD_SERIALIZE_METHODS;
+        /**
+         * Serialize to a stream.
+         */
+        template <typename Stream>
+        void Serialize(Stream& s) const
+        {
+            s << ip;
+        }
 
-        template <typename Stream, typename Operation>
-        inline void SerializationOp(Stream& s, Operation ser_action) {
-            READWRITE(ip);
+        /**
+         * Unserialize from a stream.
+         */
+        template <typename Stream>
+        void Unserialize(Stream& s)
+        {
+            unsigned char ip_temp[sizeof(ip)];
+            s >> ip_temp;
+            // Use SetLegacyIPv6() so that m_net is set correctly. For example
+            // ::FFFF:0102:0304 should be set as m_net=NET_IPV4 (1.2.3.4).
+            SetLegacyIPv6(ip_temp);
         }
 
         friend class CSubNet;
@@ -136,14 +189,7 @@ class CSubNet
         friend bool operator!=(const CSubNet& a, const CSubNet& b) { return !(a == b); }
         friend bool operator<(const CSubNet& a, const CSubNet& b);
 
-        ADD_SERIALIZE_METHODS;
-
-        template <typename Stream, typename Operation>
-        inline void SerializationOp(Stream& s, Operation ser_action) {
-            READWRITE(network);
-            READWRITE(netmask);
-            READWRITE(valid);
-        }
+        SERIALIZE_METHODS(CSubNet, obj) { READWRITE(obj.network, obj.netmask, obj.valid); }
 };
 
 /** A combination of a network address (CNetAddr) and a (TCP) port */
@@ -154,10 +200,10 @@ class CService : public CNetAddr
 
     public:
         CService();
-        CService(const CNetAddr& ip, unsigned short port);
-        CService(const struct in_addr& ipv4Addr, unsigned short port);
+        CService(const CNetAddr& ip, uint16_t port);
+        CService(const struct in_addr& ipv4Addr, uint16_t port);
         explicit CService(const struct sockaddr_in& addr);
-        unsigned short GetPort() const;
+        uint16_t GetPort() const;
         bool GetSockAddr(struct sockaddr* paddr, socklen_t *addrlen) const;
         bool SetSockAddr(const struct sockaddr* paddr);
         friend bool operator==(const CService& a, const CService& b);
@@ -168,16 +214,16 @@ class CService : public CNetAddr
         std::string ToStringPort() const;
         std::string ToStringIPPort() const;
 
-        CService(const struct in6_addr& ipv6Addr, unsigned short port);
+        CService(const struct in6_addr& ipv6Addr, uint16_t port);
         explicit CService(const struct sockaddr_in6& addr);
 
-        ADD_SERIALIZE_METHODS;
-
-        template <typename Stream, typename Operation>
-        inline void SerializationOp(Stream& s, Operation ser_action) {
-            READWRITE(ip);
-            READWRITE(WrapBigEndian(port));
+        SERIALIZE_METHODS(CService, obj)
+        {
+            READWRITEAS(CNetAddr, obj);
+            READWRITE(Using<BigEndianFormatter<2>>(obj.port));
         }
 };
+
+bool SanityCheckASMap(const std::vector<bool>& asmap);
 
 #endif // BITCOIN_NETADDRESS_H
