@@ -60,6 +60,7 @@ public:
         DisplayAddresses,       // bool
         ThirdPartyTxUrls,       // QString
         Language,               // QString
+        walletrbf,              // bool
         CoinControlFeatures,    // bool
         ThreadsScriptVerif,     // int
         PruneMiB,               // int
@@ -70,6 +71,29 @@ public:
         maxuploadtarget,
         peerbloomfilters,       // bool
         peerblockfilters,       // bool
+        mempoolreplacement,
+        maxorphantx,
+        maxmempool,
+        incrementalrelayfee,
+        mempoolexpiry,
+        rejectunknownscripts,   // bool
+        rejectspkreuse,         // bool
+        minrelaytxfee,
+        bytespersigop,
+        bytespersigopstrict,
+        limitancestorcount,
+        limitancestorsize,
+        limitdescendantcount,
+        limitdescendantsize,
+        rejectbaremultisig,     // bool
+        datacarriersize,
+        dustrelayfee,
+        blockmintxfee,
+        blockmaxsize,
+        blockprioritysize,
+        blockmaxweight,
+        blockreconstructionextratxn,
+        corepolicy,
         OptionIDRowCount,
     };
 
@@ -118,6 +142,7 @@ private:
 
     /* rwconf settings that require a restart */
     bool f_peerbloomfilters;
+    bool f_rejectspkreuse;
 
     // Add option to list of GUI options overridden through command line/config file
     void addOverriddenOption(const std::string &option);
