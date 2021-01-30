@@ -3797,7 +3797,7 @@ bool PeerManager::MaybeDiscourageAndDisconnect(CNode& pnode)
     if (pnode.addr.IsLocal()) {
         // We disconnect local peers for bad behavior but don't discourage (since that would discourage
         // all peers on the same local address)
-        LogPrintf("Warning: disconnecting but not discouraging local peer %d!\n", peer_id);
+        LogPrint(BCLog::NET, "Warning: disconnecting but not discouraging local peer %d!\n", peer_id);
         pnode.fDisconnect = true;
         return true;
     }
