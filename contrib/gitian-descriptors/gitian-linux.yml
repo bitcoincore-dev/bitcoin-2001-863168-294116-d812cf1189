@@ -118,7 +118,7 @@ script: |
       break
     fi
   done
-  \$REAL \$@
+  exec "\$REAL" "\$@"
   EOF
   chmod +x ${WRAP_DIR}/${prog}
   done
