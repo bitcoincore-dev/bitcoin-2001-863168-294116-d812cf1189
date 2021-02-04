@@ -2771,9 +2771,8 @@ static SynchronizationState GetSynchronizationState(bool init)
     return SynchronizationState::INIT_DOWNLOAD;
 }
 
-static bool NotifyHeaderTip(CChainState& chainstate) LOCKS_EXCLUDED(cs_main) {
+static bool NotifyHeaderTip(const bool is_in_ibd) LOCKS_EXCLUDED(cs_main) {
     bool fNotify = false;
-    bool fInitialBlockDownload = false;
     static CBlockIndex* pindexHeaderOld = nullptr;
     CBlockIndex* pindexHeader = nullptr;
     {
@@ -2782,14 +2781,12 @@ static bool NotifyHeaderTip(CChainState& chainstate) LOCKS_EXCLUDED(cs_main) {
 
         if (pindexHeader != pindexHeaderOld) {
             fNotify = true;
-            assert(std::addressof(::ChainstateActive()) == std::addressof(chainstate));
-            fInitialBlockDownload = chainstate.IsInitialBlockDownload();
             pindexHeaderOld = pindexHeader;
         }
     }
     // Send block tip changed notifications without cs_main
     if (fNotify) {
-        uiInterface.NotifyHeaderTip(GetSynchronizationState(fInitialBlockDownload), pindexHeader);
+        uiInterface.NotifyHeaderTip(GetSynchronizationState(is_in_ibd), pindexHeader);
     }
     return fNotify;
 }
@@ -3643,10 +3640,12 @@ bool BlockManager::AcceptBlockHeader(const CBlockHeader& block, BlockValidationS
 // Exposed wrapper for AcceptBlockHeader
 bool ChainstateManager::ProcessNewBlockHeaders(const std::vector<CBlockHeader>& headers, BlockValidationState& state, const CChainParams& chainparams, const CBlockIndex** ppindex)
 {
-    assert(std::addressof(::ChainstateActive()) == std::addressof(ActiveChainstate()));
+    bool is_in_ibd{false};
+
     AssertLockNotHeld(cs_main);
     {
         LOCK(cs_main);
+        assert(std::addressof(::ChainstateActive()) == std::addressof(ActiveChainstate()));
         for (const CBlockHeader& header : headers) {
             CBlockIndex *pindex = nullptr; // Use a temp pindex instead of ppindex to avoid a const_cast
             bool accepted = m_blockman.AcceptBlockHeader(
@@ -3660,9 +3659,10 @@ bool ChainstateManager::ProcessNewBlockHeaders(const std::vector<CBlockHeader>& 
                 *ppindex = pindex;
             }
         }
+        is_in_ibd = ActiveChainstate().IsInitialBlockDownload();
     }
-    if (NotifyHeaderTip(ActiveChainstate())) {
-        if (ActiveChainstate().IsInitialBlockDownload() && ppindex && *ppindex) {
+    if (NotifyHeaderTip(is_in_ibd)) {
+        if (is_in_ibd && ppindex && *ppindex) {
             LogPrintf("Synchronizing blockheaders, height: %d (~%.2f%%)\n", (*ppindex)->nHeight, 100.0/((*ppindex)->nHeight+(GetAdjustedTime() - (*ppindex)->GetBlockTime()) / Params().GetConsensus().nPowTargetSpacing) * (*ppindex)->nHeight);
         }
     }
@@ -3774,7 +3774,7 @@ bool CChainState::AcceptBlock(const std::shared_ptr<const CBlock>& pblock, Block
 bool ChainstateManager::ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<const CBlock> pblock, bool fForceProcessing, bool* fNewBlock)
 {
     AssertLockNotHeld(cs_main);
-    assert(std::addressof(::ChainstateActive()) == std::addressof(ActiveChainstate()));
+    bool is_in_ibd{false};
 
     {
         CBlockIndex *pindex = nullptr;
@@ -3796,9 +3796,11 @@ bool ChainstateManager::ProcessNewBlock(const CChainParams& chainparams, const s
             GetMainSignals().BlockChecked(*pblock, state);
             return error("%s: AcceptBlock FAILED (%s)", __func__, state.ToString());
         }
+
+        is_in_ibd = ActiveChainstate().IsInitialBlockDownload();
     }
 
-    NotifyHeaderTip(ActiveChainstate());
+    NotifyHeaderTip(is_in_ibd);
 
     BlockValidationState state; // Only used to report errors, not invalidity - ignore it
     if (!ActiveChainstate().ActivateBestChain(state, chainparams, pblock))
@@ -4694,7 +4696,9 @@ void CChainState::LoadExternalBlockFile(const CChainParams& chainparams, FILE* f
                 }
 
                 assert(std::addressof(::ChainstateActive()) == std::addressof(*this));
-                NotifyHeaderTip(*this);
+                bool is_in_ibd = WITH_LOCK(
+                    ::cs_main, return ::ChainstateActive().IsInitialBlockDownload());
+                NotifyHeaderTip(is_in_ibd);
 
                 // Recursively process earlier encountered successors of this block
                 std::deque<uint256> queue;
@@ -4722,7 +4726,9 @@ void CChainState::LoadExternalBlockFile(const CChainParams& chainparams, FILE* f
                         range.first++;
                         mapBlocksUnknownParent.erase(it);
                         assert(std::addressof(::ChainstateActive()) == std::addressof(*this));
-                        NotifyHeaderTip(*this);
+                        is_in_ibd = WITH_LOCK(
+                            ::cs_main, return ::ChainstateActive().IsInitialBlockDownload());
+                        NotifyHeaderTip(is_in_ibd);
                     }
                 }
             } catch (const std::exception& e) {
