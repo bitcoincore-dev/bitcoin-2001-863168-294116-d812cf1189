@@ -310,6 +310,7 @@ private:
         return UNKNOWN_NETWORK;
     }
     uint8_t m_details_level{0}; //!< Optional user-supplied arg to set dashboard details level
+    const uint8_t MAX_DETAIL_LEVEL{4};
     bool DetailsRequested() const { return m_details_level > 0 && m_details_level < 5; }
     bool IsAddressSelected() const { return m_details_level == 2 || m_details_level == 4; }
     bool IsVersionSelected() const { return m_details_level == 3 || m_details_level == 4; }
@@ -360,7 +361,7 @@ public:
         if (!args.empty()) {
             uint8_t n{0};
             if (ParseUInt8(args.at(0), &n)) {
-                m_details_level = n;
+                m_details_level = std::min(n, MAX_DETAIL_LEVEL);
             }
         }
         UniValue result(UniValue::VARR);
