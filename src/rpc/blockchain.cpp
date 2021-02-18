@@ -2140,7 +2140,7 @@ static RPCHelpMan scantxoutset()
                     {"action", RPCArg::Type::STR, RPCArg::Optional::NO, "The action to execute\n"
             "                                      \"start\" for starting a scan\n"
             "                                      \"abort\" for aborting the current scan (returns true when abort was successful)\n"
-            "                                      \"status\" for progress report (in %) of the current scan"},
+            "                                      \"status\" for progress report (in %) of the current scan (returns Null if there is no ongoing scan)"},
                     {"scanobjects", RPCArg::Type::ARR, RPCArg::Optional::OMITTED, "Array of scan objects. Required for \"start\" action\n"
             "                                  Every scan object is either a string descriptor or an object:",
                         {
