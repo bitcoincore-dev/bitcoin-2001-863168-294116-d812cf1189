@@ -57,6 +57,9 @@ private:
     GUIUtil::TableViewLastColumnResizingFixer *columnResizingFixer;
     WalletModel *model;
     QMenu *contextMenu;
+    QAction* copyLabelAction;
+    QAction* copyMessageAction;
+    QAction* copyAmountAction;
     const PlatformStyle *platformStyle;
 
     QModelIndex selectedRow();
