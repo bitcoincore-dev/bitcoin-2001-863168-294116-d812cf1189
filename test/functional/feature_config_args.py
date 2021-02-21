@@ -8,6 +8,7 @@ import os
 import time
 
 from test_framework.test_framework import BitcoinTestFramework
+from test_framework import util
 
 
 class ConfArgsTest(BitcoinTestFramework):
@@ -159,7 +160,13 @@ class ConfArgsTest(BitcoinTestFramework):
                 "Loaded 0 addresses from peers.dat",
                 "0 addresses found from DNS seeds",
                 "Adding fixed seeds as 60 seconds have passed and addrman is empty"], timeout=80):
-            self.start_node(0, extra_args=['-dnsseed=1'])
+            self.start_node(0, extra_args=['-dnsseed=1', '-fixedseeds=1'])
+
+            # Only regtest has no fixed seeds. To avoid connections to random
+            # nodes, regtest is the only network where it is safe to enable
+            # -fixedseeds in tests
+            util.assert_equal(self.nodes[0].getblockchaininfo()['chain'],'regtest')
+
         assert time.time() - start >= 60
         self.stop_node(0)
 
@@ -171,7 +178,7 @@ class ConfArgsTest(BitcoinTestFramework):
                 "Loaded 0 addresses from peers.dat",
                 "DNS seeding disabled",
                 "Adding fixed seeds as -dnsseed=0, -addnode is not provided and and all -seednode(s) attempted\n"]):
-            self.start_node(0, extra_args=['-dnsseed=0'])
+            self.start_node(0, extra_args=['-dnsseed=0', '-fixedseeds=1'])
         assert time.time() - start < 60
         self.stop_node(0)
 
@@ -196,7 +203,7 @@ class ConfArgsTest(BitcoinTestFramework):
                 "DNS seeding disabled",
                 "Adding fixed seeds as 60 seconds have passed and addrman is empty"],
                 timeout=80):
-            self.start_node(0, extra_args=['-dnsseed=0', '-addnode=fakenodeaddr'])
+            self.start_node(0, extra_args=['-dnsseed=0', '-fixedseeds=1', '-addnode=fakenodeaddr'])
         assert time.time() - start >= 60
         self.stop_node(0)
 
