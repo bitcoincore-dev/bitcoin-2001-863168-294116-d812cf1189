@@ -8,10 +8,11 @@
 #include <net_processing.h> // For CNodeStateStats
 #include <net.h>
 
-#include <memory>
-
 #include <QAbstractTableModel>
+#include <QList>
+#include <QModelIndex>
 #include <QStringList>
+#include <QVariant>
 
 class PeerTablePriv;
 
@@ -73,9 +74,10 @@ public Q_SLOTS:
     void refresh();
 
 private:
+    //! Internal peer data structure.
+    QList<CNodeCombinedStats> m_peers_data{};
     interfaces::Node& m_node;
     const QStringList columns{tr("Peer Id"), tr("Address"), tr("Type"), tr("Network"), tr("Ping"), tr("Sent"), tr("Received"), tr("User Agent")};
-    std::unique_ptr<PeerTablePriv> priv;
     QTimer *timer;
 };
 
