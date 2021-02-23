@@ -139,9 +139,12 @@ void PSBTOperationsDialog::saveTransaction() {
         first = false;
     }
     filename_suggestion.append(".psbt");
-    QString filename = GUIUtil::getSaveFileName(this,
+    QString filename = GUIUtil::getSaveFileName(
+        this,
         tr("Save Transaction Data"), filename_suggestion,
-        tr("Partially Signed Transaction (Binary) (*.psbt)"), &selected_filter);
+        // TODO: Replace QStringLiteral with QLatin1String when Qt minimum version >= 5.10.
+        tr("Partially Signed Transaction (Binary) (%1)").arg(QStringLiteral("*.psbt")),
+        &selected_filter);
     if (filename.isEmpty()) {
         return;
     }

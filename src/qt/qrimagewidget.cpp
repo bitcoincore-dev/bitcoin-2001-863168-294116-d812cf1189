@@ -120,7 +120,10 @@ void QRImageWidget::saveImage()
 {
     if (!GUIUtil::HasPixmap(this))
         return;
-    QString fn = GUIUtil::getSaveFileName(this, tr("Save QR Code"), QString(), tr("PNG Image (*.png)"), nullptr);
+    QString fn = GUIUtil::getSaveFileName(
+        this, tr("Save QR Code"), QString(),
+        // TODO: Replace QStringLiteral with QLatin1String when Qt minimum version >= 5.10.
+        tr("PNG Image (%1)").arg(QStringLiteral("*.png")), nullptr);
     if (!fn.isEmpty())
     {
         exportImage().save(fn);

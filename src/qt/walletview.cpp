@@ -271,9 +271,11 @@ void WalletView::encryptWallet()
 
 void WalletView::backupWallet()
 {
-    QString filename = GUIUtil::getSaveFileName(this,
+    QString filename = GUIUtil::getSaveFileName(
+        this,
         tr("Backup Wallet"), QString(),
-        tr("Wallet Data (*.dat)"), nullptr);
+        // TODO: Replace QStringLiteral with QLatin1String when Qt minimum version >= 5.10.
+        tr("Wallet Data (%1)").arg(QStringLiteral("*.dat")), nullptr);
 
     if (filename.isEmpty())
         return;

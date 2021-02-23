@@ -293,9 +293,11 @@ void AddressBookPage::done(int retval)
 void AddressBookPage::on_exportButton_clicked()
 {
     // CSV is currently the only supported format
-    QString filename = GUIUtil::getSaveFileName(this,
+    QString filename = GUIUtil::getSaveFileName(
+        this,
         tr("Export Address List"), QString(),
-        tr("Comma separated file (*.csv)"), nullptr);
+        // TODO: Replace QStringLiteral with QLatin1String when Qt minimum version >= 5.10.
+        tr("Comma separated file (%1)").arg(QStringLiteral("*.csv")), nullptr);
 
     if (filename.isNull())
         return;
