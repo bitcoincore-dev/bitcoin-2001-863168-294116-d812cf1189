@@ -70,8 +70,7 @@ public:
     // will be called so we startup in the right mode.
     static bool ipcSendCommandLine();
 
-    // parent should be QApplication object
-    explicit PaymentServer(QObject* parent, bool startLocalServer = true);
+    explicit PaymentServer(QApplication* parent, bool startLocalServer = true);
     ~PaymentServer();
 
     // OptionsModel is used for getting proxy settings and display unit
