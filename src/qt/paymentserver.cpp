@@ -13,7 +13,6 @@
 #include <qt/optionsmodel.h>
 
 #include <chainparams.h>
-#include <interfaces/node.h>
 #include <key_io.h>
 #include <node/ui_interface.h>
 #include <policy/policy.h>
@@ -26,14 +25,15 @@
 #include <QApplication>
 #include <QByteArray>
 #include <QDataStream>
-#include <QDebug>
+#include <QEvent>
 #include <QFile>
 #include <QFileOpenEvent>
 #include <QHash>
-#include <QList>
 #include <QLocalServer>
 #include <QLocalSocket>
-#include <QStringList>
+#include <QSet>
+#include <QString>
+#include <QUrl>
 #include <QUrlQuery>
 
 const int BITCOIN_IPC_CONNECT_TIMEOUT = 1000; // milliseconds
@@ -57,14 +57,11 @@ static QString ipcServerName()
     return name;
 }
 
-//
 // We store payment URIs and requests received before
 // the main GUI window is up and ready to ask the user
 // to send payment.
-
 static QSet<QString> savedPaymentRequests;
 
-//
 // Sending to the server is done synchronously, at startup.
 // If the server isn't already running, startup continues,
 // and the items in savedPaymentRequest will be handled

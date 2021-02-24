@@ -39,19 +39,14 @@
 #include <qt/sendcoinsrecipient.h>
 
 #include <QObject>
-#include <QString>
 
 class OptionsModel;
 
-namespace interfaces {
-class Node;
-} // namespace interfaces
-
 QT_BEGIN_NAMESPACE
 class QApplication;
-class QByteArray;
+class QEvent;
 class QLocalServer;
-class QUrl;
+class QString;
 QT_END_NAMESPACE
 
 class PaymentServer : public QObject
