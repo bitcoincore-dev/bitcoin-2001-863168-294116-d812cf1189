@@ -10,7 +10,6 @@
 
 #include <qt/bitcoinunits.h>
 #include <qt/guiutil.h>
-#include <qt/paymentserver.h>
 #include <qt/transactionrecord.h>
 
 #include <consensus/consensus.h>
