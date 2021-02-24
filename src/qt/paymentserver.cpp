@@ -224,8 +224,7 @@ void PaymentServer::handleURIOrFile(const QString& s)
         // normal URI
         {
             SendCoinsRecipient recipient;
-            if (GUIUtil::parseBitcoinURI(s, &recipient))
-            {
+            if (GUIUtil::parseBitcoinURI(s, &recipient)) {
                 if (!IsValidDestinationString(recipient.address.toStdString())) {
                     if (uri.hasQueryItem("r")) {  // payment request
                         Q_EMIT message(tr("URI handling"),
@@ -236,14 +235,14 @@ void PaymentServer::handleURIOrFile(const QString& s)
                     }
                     Q_EMIT message(tr("URI handling"), tr("Invalid payment address %1").arg(recipient.address),
                         CClientUIInterface::MSG_ERROR);
-                }
-                else
+                } else {
                     Q_EMIT receivedPaymentRequest(recipient);
-            }
-            else
+                }
+            } else {
                 Q_EMIT message(tr("URI handling"),
-                    tr("URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters."),
+                    tr("URI cannot be parsed! This can be caused by malformed URI parameters."),
                     CClientUIInterface::ICON_WARNING);
+            }
 
             return;
         }
