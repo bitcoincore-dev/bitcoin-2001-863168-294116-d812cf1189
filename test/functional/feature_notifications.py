@@ -5,11 +5,12 @@
 """Test the -alertnotify, -blocknotify and -walletnotify options."""
 import os
 
-from test_framework.address import ADDRESS_BCRT1_UNSPENDABLE
+from test_framework.address import ADDRESS_BCRT1_UNSPENDABLE, keyhash_to_p2pkh
 from test_framework.descriptors import descsum_create
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
+    hex_str_to_bytes,
 )
 
 # Linux allow all characters other than \x00
