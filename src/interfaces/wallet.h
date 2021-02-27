@@ -43,6 +43,7 @@ using isminefilter = std::underlying_type<isminetype>::type;
 
 enum class WalletBackupFormat {
     Raw,   // Literal db copy
+    DbDump,  // DumpWallet plaintext low-level db dump
 };
 
 namespace interfaces {
