@@ -27,6 +27,7 @@
 #include <support/allocators/secure.h>
 #include <sync.h>
 #include <txmempool.h>
+#include <util/check.h>
 #include <util/ref.h>
 #include <util/system.h>
 #include <util/translation.h>
@@ -41,48 +42,24 @@
 
 #include <boost/signals2/signal.hpp>
 
-class CWallet;
-fs::path GetWalletDir();
-std::vector<fs::path> ListWalletDir();
-std::vector<std::shared_ptr<CWallet>> GetWallets();
-std::shared_ptr<CWallet> LoadWallet(interfaces::Chain& chain, const std::string& name, bilingual_str& error, std::vector<bilingual_str>& warnings);
-WalletCreationStatus CreateWallet(interfaces::Chain& chain, const SecureString& passphrase, uint64_t wallet_creation_flags, const std::string& name, bilingual_str& error, std::vector<bilingual_str>& warnings, std::shared_ptr<CWallet>& result);
-std::unique_ptr<interfaces::Handler> HandleLoadWallet(interfaces::Node::LoadWalletFn load_wallet);
-
 namespace interfaces {
-
 namespace {
 
 class NodeImpl : public Node
 {
 public:
     NodeImpl(NodeContext* context) { setContext(context); }
-    void initError(const bilingual_str& message) override { InitError(message); }
-    bool parseParameters(int argc, const char* const argv[], std::string& error) override
-    {
-        return gArgs.ParseParameters(argc, argv, error);
-    }
-    bool readConfigFiles(std::string& error) override { return gArgs.ReadConfigFiles(error, true); }
-    void forceSetArg(const std::string& arg, const std::string& value) override { gArgs.ForceSetArg(arg, value); }
-    bool softSetArg(const std::string& arg, const std::string& value) override { return gArgs.SoftSetArg(arg, value); }
-    bool softSetBoolArg(const std::string& arg, bool value) override { return gArgs.SoftSetBoolArg(arg, value); }
-    void selectParams(const std::string& network) override { SelectParams(network); }
-    bool initSettings(std::string& error) override { return gArgs.InitSettings(error); }
-    uint64_t getAssumedBlockchainSize() override { return Params().AssumedBlockchainSize(); }
-    uint64_t getAssumedChainStateSize() override { return Params().AssumedChainStateSize(); }
-    std::string getNetwork() override { return Params().NetworkIDString(); }
-    void initLogging() override { InitLogging(); }
-    void initParameterInteraction() override { InitParameterInteraction(); }
+    void initLogging() override { InitLogging(*Assert(m_context->args)); }
+    void initParameterInteraction() override { InitParameterInteraction(*Assert(m_context->args)); }
     bilingual_str getWarnings() override { return GetWarnings(true); }
     uint32_t getLogCategories() override { return LogInstance().GetCategoryMask(); }
     bool baseInitialize() override
     {
-        return AppInitBasicSetup() && AppInitParameterInteraction() && AppInitSanityChecks() &&
-               AppInitLockDataDirectory();
+        return AppInitBasicSetup(gArgs) && AppInitParameterInteraction(gArgs) && AppInitSanityChecks() &&
+               AppInitLockDataDirectory() && AppInitInterfaces(*m_context);
     }
     bool appInitMain(interfaces::BlockAndHeaderTipInfo* tip_info) override
     {
-        m_context->chain = MakeChain(*m_context);
         return AppInitMain(m_context_ref, *m_context, tip_info);
     }
     void appShutdown() override
@@ -109,7 +86,6 @@ public:
             StopMapPort();
         }
     }
-    void setupServerArgs() override { return SetupServerArgs(*m_context); }
     bool getProxy(Network net, proxyType& proxy_info) override { return GetProxy(net, proxy_info); }
     size_t getNodeCount(CConnman::NumConnections flags) override
     {
@@ -255,36 +231,9 @@ public:
         LOCK(::cs_main);
         return ::ChainstateActive().CoinsTip().GetCoin(output, coin);
     }
-    std::string getWalletDir() override
+    WalletClient& walletClient() override
     {
-        return GetWalletDir().string();
-    }
-    std::vector<std::string> listWalletDir() override
-    {
-        std::vector<std::string> paths;
-        for (auto& path : ListWalletDir()) {
-            paths.push_back(path.string());
-        }
-        return paths;
-    }
-    std::vector<std::unique_ptr<Wallet>> getWallets() override
-    {
-        std::vector<std::unique_ptr<Wallet>> wallets;
-        for (auto& client : m_context->chain_clients) {
-            auto client_wallets = client->getWallets();
-            std::move(client_wallets.begin(), client_wallets.end(), std::back_inserter(wallets));
-        }
-        return wallets;
-    }
-    std::unique_ptr<Wallet> loadWallet(const std::string& name, bilingual_str& error, std::vector<bilingual_str>& warnings) override
-    {
-        return MakeWallet(LoadWallet(*m_context->chain, name, error, warnings));
-    }
-    std::unique_ptr<Wallet> createWallet(const SecureString& passphrase, uint64_t wallet_creation_flags, const std::string& name, bilingual_str& error, std::vector<bilingual_str>& warnings, WalletCreationStatus& status) override
-    {
-        std::shared_ptr<CWallet> wallet;
-        status = CreateWallet(*m_context->chain, passphrase, wallet_creation_flags, name, error, warnings, wallet);
-        return MakeWallet(wallet);
+        return *Assert(m_context->wallet_client);
     }
     std::unique_ptr<Handler> handleInitMessage(InitMessageFn fn) override
     {
@@ -301,10 +250,6 @@ public:
     std::unique_ptr<Handler> handleShowProgress(ShowProgressFn fn) override
     {
         return MakeHandler(::uiInterface.ShowProgress_connect(fn));
-    }
-    std::unique_ptr<Handler> handleLoadWallet(LoadWalletFn fn) override
-    {
-        return HandleLoadWallet(std::move(fn));
     }
     std::unique_ptr<Handler> handleNotifyNumConnectionsChanged(NotifyNumConnectionsChangedFn fn) override
     {

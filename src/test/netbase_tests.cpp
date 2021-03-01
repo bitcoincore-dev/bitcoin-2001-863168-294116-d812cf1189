@@ -4,9 +4,13 @@
 
 #include <net_permissions.h>
 #include <netbase.h>
+#include <protocol.h>
+#include <serialize.h>
+#include <streams.h>
 #include <test/util/setup_common.h>
 #include <util/strencodings.h>
 #include <util/translation.h>
+#include <version.h>
 
 #include <string>
 
@@ -185,6 +189,7 @@ BOOST_AUTO_TEST_CASE(subnet_test)
     BOOST_CHECK(!ResolveSubNet("1.2.3.0/-1").IsValid());
     BOOST_CHECK(ResolveSubNet("1.2.3.0/32").IsValid());
     BOOST_CHECK(!ResolveSubNet("1.2.3.0/33").IsValid());
+    BOOST_CHECK(!ResolveSubNet("1.2.3.0/300").IsValid());
     BOOST_CHECK(ResolveSubNet("1:2:3:4:5:6:7:8/0").IsValid());
     BOOST_CHECK(ResolveSubNet("1:2:3:4:5:6:7:8/33").IsValid());
     BOOST_CHECK(!ResolveSubNet("1:2:3:4:5:6:7:8/-1").IsValid());
@@ -216,6 +221,25 @@ BOOST_AUTO_TEST_CASE(subnet_test)
     BOOST_CHECK(CSubNet(ResolveIP("1:2:3:4:5:6:7:8")).Match(ResolveIP("1:2:3:4:5:6:7:8")));
     BOOST_CHECK(!CSubNet(ResolveIP("1:2:3:4:5:6:7:8")).Match(ResolveIP("1:2:3:4:5:6:7:9")));
     BOOST_CHECK(CSubNet(ResolveIP("1:2:3:4:5:6:7:8")).ToString() == "1:2:3:4:5:6:7:8/128");
+    // IPv4 address with IPv6 netmask or the other way around.
+    BOOST_CHECK(!CSubNet(ResolveIP("1.1.1.1"), ResolveIP("ffff::")).IsValid());
+    BOOST_CHECK(!CSubNet(ResolveIP("::1"), ResolveIP("255.0.0.0")).IsValid());
+
+    // Create Non-IP subnets.
+
+    const CNetAddr tor_addr{
+        ResolveIP("pg6mmjiyjmcrsslvykfwnntlaru7p5svn6y2ymmju6nubxndf4pscryd.onion")};
+
+    subnet = CSubNet(tor_addr);
+    BOOST_CHECK(subnet.IsValid());
+    BOOST_CHECK_EQUAL(subnet.ToString(), tor_addr.ToString());
+    BOOST_CHECK(subnet.Match(tor_addr));
+    BOOST_CHECK(
+        !subnet.Match(ResolveIP("kpgvmscirrdqpekbqjsvw5teanhatztpp2gl6eee4zkowvwfxwenqaid.onion")));
+    BOOST_CHECK(!subnet.Match(ResolveIP("1.2.3.4")));
+
+    BOOST_CHECK(!CSubNet(tor_addr, 200).IsValid());
+    BOOST_CHECK(!CSubNet(tor_addr, ResolveIP("255.0.0.0")).IsValid());
 
     subnet = ResolveSubNet("1.2.3.4/255.255.255.255");
     BOOST_CHECK_EQUAL(subnet.ToString(), "1.2.3.4/32");
@@ -290,11 +314,13 @@ BOOST_AUTO_TEST_CASE(subnet_test)
     BOOST_CHECK_EQUAL(subnet.ToString(), "1::/16");
     subnet = ResolveSubNet("1:2:3:4:5:6:7:8/0000:0000:0000:0000:0000:0000:0000:0000");
     BOOST_CHECK_EQUAL(subnet.ToString(), "::/0");
+    // Invalid netmasks (with 1-bits after 0-bits)
     subnet = ResolveSubNet("1.2.3.4/255.255.232.0");
-    BOOST_CHECK_EQUAL(subnet.ToString(), "1.2.0.0/255.255.232.0");
+    BOOST_CHECK(!subnet.IsValid());
+    subnet = ResolveSubNet("1.2.3.4/255.0.255.255");
+    BOOST_CHECK(!subnet.IsValid());
     subnet = ResolveSubNet("1:2:3:4:5:6:7:8/ffff:ffff:ffff:fffe:ffff:ffff:ffff:ff0f");
-    BOOST_CHECK_EQUAL(subnet.ToString(), "1:2:3:4:5:6:7:8/ffff:ffff:ffff:fffe:ffff:ffff:ffff:ff0f");
-
+    BOOST_CHECK(!subnet.IsValid());
 }
 
 BOOST_AUTO_TEST_CASE(netbase_getgroup)
@@ -432,6 +458,107 @@ BOOST_AUTO_TEST_CASE(netbase_dont_resolve_strings_with_embedded_nul_characters)
     BOOST_CHECK(!LookupSubNet(std::string("5wyqrzbvrdsumnok.onion\0", 23), ret));
     BOOST_CHECK(!LookupSubNet(std::string("5wyqrzbvrdsumnok.onion\0example.com", 34), ret));
     BOOST_CHECK(!LookupSubNet(std::string("5wyqrzbvrdsumnok.onion\0example.com\0", 35), ret));
+}
+
+// Since CNetAddr (un)ser is tested separately in net_tests.cpp here we only
+// try a few edge cases for port, service flags and time.
+
+static const std::vector<CAddress> fixture_addresses({
+    CAddress(
+        CService(CNetAddr(in6_addr(IN6ADDR_LOOPBACK_INIT)), 0 /* port */),
+        NODE_NONE,
+        0x4966bc61U /* Fri Jan  9 02:54:25 UTC 2009 */
+    ),
+    CAddress(
+        CService(CNetAddr(in6_addr(IN6ADDR_LOOPBACK_INIT)), 0x00f1 /* port */),
+        NODE_NETWORK,
+        0x83766279U /* Tue Nov 22 11:22:33 UTC 2039 */
+    ),
+    CAddress(
+        CService(CNetAddr(in6_addr(IN6ADDR_LOOPBACK_INIT)), 0xf1f2 /* port */),
+        static_cast<ServiceFlags>(NODE_WITNESS | NODE_COMPACT_FILTERS | NODE_NETWORK_LIMITED),
+        0xffffffffU /* Sun Feb  7 06:28:15 UTC 2106 */
+    )
+});
+
+// fixture_addresses should equal to this when serialized in V1 format.
+// When this is unserialized from V1 format it should equal to fixture_addresses.
+static constexpr const char* stream_addrv1_hex =
+    "03" // number of entries
+
+    "61bc6649"                         // time, Fri Jan  9 02:54:25 UTC 2009
+    "0000000000000000"                 // service flags, NODE_NONE
+    "00000000000000000000000000000001" // address, fixed 16 bytes (IPv4 embedded in IPv6)
+    "0000"                             // port
+
+    "79627683"                         // time, Tue Nov 22 11:22:33 UTC 2039
+    "0100000000000000"                 // service flags, NODE_NETWORK
+    "00000000000000000000000000000001" // address, fixed 16 bytes (IPv6)
+    "00f1"                             // port
+
+    "ffffffff"                         // time, Sun Feb  7 06:28:15 UTC 2106
+    "4804000000000000"                 // service flags, NODE_WITNESS | NODE_COMPACT_FILTERS | NODE_NETWORK_LIMITED
+    "00000000000000000000000000000001" // address, fixed 16 bytes (IPv6)
+    "f1f2";                            // port
+
+// fixture_addresses should equal to this when serialized in V2 format.
+// When this is unserialized from V2 format it should equal to fixture_addresses.
+static constexpr const char* stream_addrv2_hex =
+    "03" // number of entries
+
+    "61bc6649"                         // time, Fri Jan  9 02:54:25 UTC 2009
+    "00"                               // service flags, COMPACTSIZE(NODE_NONE)
+    "02"                               // network id, IPv6
+    "10"                               // address length, COMPACTSIZE(16)
+    "00000000000000000000000000000001" // address
+    "0000"                             // port
+
+    "79627683"                         // time, Tue Nov 22 11:22:33 UTC 2039
+    "01"                               // service flags, COMPACTSIZE(NODE_NETWORK)
+    "02"                               // network id, IPv6
+    "10"                               // address length, COMPACTSIZE(16)
+    "00000000000000000000000000000001" // address
+    "00f1"                             // port
+
+    "ffffffff"                         // time, Sun Feb  7 06:28:15 UTC 2106
+    "fd4804"                           // service flags, COMPACTSIZE(NODE_WITNESS | NODE_COMPACT_FILTERS | NODE_NETWORK_LIMITED)
+    "02"                               // network id, IPv6
+    "10"                               // address length, COMPACTSIZE(16)
+    "00000000000000000000000000000001" // address
+    "f1f2";                            // port
+
+BOOST_AUTO_TEST_CASE(caddress_serialize_v1)
+{
+    CDataStream s(SER_NETWORK, PROTOCOL_VERSION);
+
+    s << fixture_addresses;
+    BOOST_CHECK_EQUAL(HexStr(s), stream_addrv1_hex);
+}
+
+BOOST_AUTO_TEST_CASE(caddress_unserialize_v1)
+{
+    CDataStream s(ParseHex(stream_addrv1_hex), SER_NETWORK, PROTOCOL_VERSION);
+    std::vector<CAddress> addresses_unserialized;
+
+    s >> addresses_unserialized;
+    BOOST_CHECK(fixture_addresses == addresses_unserialized);
+}
+
+BOOST_AUTO_TEST_CASE(caddress_serialize_v2)
+{
+    CDataStream s(SER_NETWORK, PROTOCOL_VERSION | ADDRV2_FORMAT);
+
+    s << fixture_addresses;
+    BOOST_CHECK_EQUAL(HexStr(s), stream_addrv2_hex);
+}
+
+BOOST_AUTO_TEST_CASE(caddress_unserialize_v2)
+{
+    CDataStream s(ParseHex(stream_addrv2_hex), SER_NETWORK, PROTOCOL_VERSION | ADDRV2_FORMAT);
+    std::vector<CAddress> addresses_unserialized;
+
+    s >> addresses_unserialized;
+    BOOST_CHECK(fixture_addresses == addresses_unserialized);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
