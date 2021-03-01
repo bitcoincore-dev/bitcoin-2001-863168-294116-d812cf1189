@@ -166,8 +166,8 @@ void BitcoinCore::initialize()
 {
     try
     {
-        qDebug() << __func__ << ": Running initialization in thread";
         util::ThreadRename("qt-init");
+        qDebug() << __func__ << ": Running initialization in thread";
         interfaces::BlockAndHeaderTipInfo tip_info;
         bool rv = m_node.appInitMain(&tip_info);
         Q_EMIT initializeResult(rv, tip_info);
@@ -267,6 +267,7 @@ void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
     // We don't hold a direct pointer to the splash screen after creation, but the splash
     // screen will take care of deleting itself when finish() happens.
     m_splash->show();
+    connect(this, &BitcoinApplication::requestedInitialize, m_splash, &SplashScreen::handleLoadWallet);
     connect(this, &BitcoinApplication::splashFinished, m_splash, &SplashScreen::finish);
     connect(this, &BitcoinApplication::requestedShutdown, m_splash, &QWidget::close);
 }
@@ -504,6 +505,9 @@ int GuiMain(int argc, char* argv[])
         return EXIT_SUCCESS;
     }
 
+    // Install global event filter that makes sure that long tooltips can be word-wrapped
+    app.installEventFilter(new GUIUtil::ToolTipToRichTextFilter(TOOLTIP_WRAP_THRESHOLD, &app));
+
     /// 5. Now that settings and translations are available, ask user for data directory
     // User language is set up: pick a data directory
     bool did_show_intro = false;
@@ -532,7 +536,7 @@ int GuiMain(int argc, char* argv[])
     // - QSettings() will use the new application name after this, resulting in network-specific settings
     // - Needs to be done before createOptionsModel
 
-    // Check for -chain, -testnet or -regtest parameter (Params() calls are only valid after this clause)
+    // Check for chain settings (Params() calls are only valid after this clause)
     try {
         SelectParams(gArgs.GetChainName());
     } catch(std::exception &e) {
@@ -575,8 +579,6 @@ int GuiMain(int argc, char* argv[])
 #endif // ENABLE_WALLET
 
     /// 9. Main GUI initialization
-    // Install global event filter that makes sure that long tooltips can be word-wrapped
-    app.installEventFilter(new GUIUtil::ToolTipToRichTextFilter(TOOLTIP_WRAP_THRESHOLD, &app));
     // Install global event filter that makes sure that out-of-focus labels do not contain text cursor.
     app.installEventFilter(new GUIUtil::LabelOutOfFocusEventFilter(&app));
 #if defined(Q_OS_WIN)

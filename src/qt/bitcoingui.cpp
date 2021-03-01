@@ -660,18 +660,24 @@ void BitcoinGUI::setWalletController(WalletController* wallet_controller)
     }
 }
 
+WalletController* BitcoinGUI::getWalletController()
+{
+    return m_wallet_controller;
+}
+
 void BitcoinGUI::addWallet(WalletModel* walletModel)
 {
     if (!walletFrame) return;
     if (!walletFrame->addWallet(walletModel)) return;
-    const QString display_name = walletModel->getDisplayName();
-    setWalletActionsEnabled(true);
     rpcConsole->addWallet(walletModel);
-    m_wallet_selector->addItem(display_name, QVariant::fromValue(walletModel));
-    if (m_wallet_selector->count() == 2) {
+    if (m_wallet_selector->count() == 0) {
+        setWalletActionsEnabled(true);
+    } else if (m_wallet_selector->count() == 1) {
         m_wallet_selector_label_action->setVisible(true);
         m_wallet_selector_action->setVisible(true);
     }
+    const QString display_name = walletModel->getDisplayName();
+    m_wallet_selector->addItem(display_name, QVariant::fromValue(walletModel));
 }
 
 void BitcoinGUI::removeWallet(WalletModel* walletModel)
@@ -1189,7 +1195,7 @@ void BitcoinGUI::incomingTransaction(const QString& date, int unit, const CAmoun
     // On new transaction, make an info balloon
     QString msg = tr("Date: %1\n").arg(date) +
                   tr("Amount: %1\n").arg(BitcoinUnits::formatWithUnit(unit, amount, true));
-    if (m_node.getWallets().size() > 1 && !walletName.isEmpty()) {
+    if (m_node.walletClient().getWallets().size() > 1 && !walletName.isEmpty()) {
         msg += tr("Wallet: %1\n").arg(walletName);
     }
     msg += tr("Type: %1\n").arg(type);

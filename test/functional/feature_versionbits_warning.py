@@ -12,7 +12,7 @@ import re
 
 from test_framework.blocktools import create_block, create_coinbase
 from test_framework.messages import msg_block
-from test_framework.p2p import p2p_lock, P2PInterface
+from test_framework.p2p import P2PInterface
 from test_framework.test_framework import BitcoinTestFramework
 
 VB_PERIOD = 144           # versionbits period length for regtest
@@ -61,7 +61,7 @@ class VersionBitsWarningTest(BitcoinTestFramework):
 
     def run_test(self):
         node = self.nodes[0]
-        node.add_p2p_connection(P2PInterface())
+        peer = node.add_p2p_connection(P2PInterface())
 
         node_deterministic_address = node.get_deterministic_priv_key().address
         # Mine one period worth of blocks
@@ -69,7 +69,7 @@ class VersionBitsWarningTest(BitcoinTestFramework):
 
         self.log.info("Check that there is no warning if previous VB_BLOCKS have <VB_THRESHOLD blocks with unknown versionbits version.")
         # Build one period of blocks with < VB_THRESHOLD blocks signaling some unknown bit
-        self.send_blocks_with_version(node.p2p, VB_THRESHOLD - 1, VB_UNKNOWN_VERSION)
+        self.send_blocks_with_version(peer, VB_THRESHOLD - 1, VB_UNKNOWN_VERSION)
         node.generatetoaddress(VB_PERIOD - VB_THRESHOLD + 1, node_deterministic_address)
 
         # Check that we're not getting any versionbit-related errors in get*info()
@@ -77,7 +77,7 @@ class VersionBitsWarningTest(BitcoinTestFramework):
         assert not VB_PATTERN.match(node.getnetworkinfo()["warnings"])
 
         # Build one period of blocks with VB_THRESHOLD blocks signaling some unknown bit
-        self.send_blocks_with_version(node.p2p, VB_THRESHOLD, VB_UNKNOWN_VERSION)
+        self.send_blocks_with_version(peer, VB_THRESHOLD, VB_UNKNOWN_VERSION)
         node.generatetoaddress(VB_PERIOD - VB_THRESHOLD, node_deterministic_address)
 
         self.log.info("Check that there is a warning if previous VB_BLOCKS have >=VB_THRESHOLD blocks with unknown versionbits version.")
@@ -90,7 +90,7 @@ class VersionBitsWarningTest(BitcoinTestFramework):
 
         # Generating one block guarantees that we'll get out of IBD
         node.generatetoaddress(1, node_deterministic_address)
-        self.wait_until(lambda: not node.getblockchaininfo()['initialblockdownload'], timeout=10, lock=p2p_lock)
+        self.wait_until(lambda: not node.getblockchaininfo()['initialblockdownload'])
         # Generating one more block will be enough to generate an error.
         node.generatetoaddress(1, node_deterministic_address)
         # Check that get*info() shows the versionbits unknown rules warning

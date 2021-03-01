@@ -37,14 +37,9 @@ static void WaitForShutdown(NodeContext& node)
     Interrupt(node);
 }
 
-//////////////////////////////////////////////////////////////////////////////
-//
-// Start
-//
 static bool AppInit(int argc, char* argv[])
 {
     NodeContext node;
-    node.chain = interfaces::MakeChain(node);
 
     bool fRet = false;
 
@@ -82,7 +77,7 @@ static bool AppInit(int argc, char* argv[])
         if (!args.ReadConfigFiles(error, true)) {
             return InitError(Untranslated(strprintf("Error reading configuration file: %s\n", error)));
         }
-        // Check for -chain, -testnet or -regtest parameter (Params() calls are only valid after this clause)
+        // Check for chain settings (Params() calls are only valid after this clause)
         try {
             SelectParams(args.GetChainName());
         } catch (const std::exception& e) {
@@ -144,7 +139,7 @@ static bool AppInit(int argc, char* argv[])
             // If locking the data directory failed, exit immediately
             return false;
         }
-        fRet = AppInitMain(context, node);
+        fRet = AppInitInterfaces(node) && AppInitMain(context, node);
     }
     catch (const std::exception& e) {
         PrintExceptionContinue(&e, "AppInit()");
