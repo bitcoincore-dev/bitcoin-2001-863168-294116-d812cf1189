@@ -93,14 +93,13 @@ pass `--with-incompatible-bdb` to configure.
 
 Otherwise, you can build from self-compiled `depends` (see above).
 
-SQLite is required for the wallet:
+SQLite is required for the descriptor wallet:
 
     sudo apt install libsqlite3-dev
 
 To build Bitcoin Core without wallet, see [*Disable-wallet mode*](/doc/build-unix.md#disable-wallet-mode)
 
-
-Optional port mapping libraries (see: `--with-miniupnpc`, and `--enable-upnp-default`, `--with-natpmp`, `--enable-natpmp-default`):
+Optional port mapping libraries (see: `--with-miniupnpc`, `--enable-upnp-default`, and `--with-natpmp`, `--enable-natpmp-default`):
 
     sudo apt install libminiupnpc-dev libnatpmp-dev
 
@@ -132,15 +131,41 @@ built by default.
 
 Build requirements:
 
-    sudo dnf install gcc-c++ libtool make autoconf automake libevent-devel boost-devel libdb4-devel libdb4-cxx-devel python3
+    sudo dnf install gcc-c++ libtool make autoconf automake python3
 
-Optional port mapping libraries (see: `--with-miniupnpc`, and `--enable-upnp-default`, `--with-natpmp`, `--enable-natpmp-default`):
+Now, you can either build from self-compiled [depends](/depends/README.md) or install the required dependencies:
+
+    sudo dnf install libevent-devel boost-devel
+
+BerkeleyDB is required for the wallet:
+
+    sudo dnf install libdb4-devel libdb4-cxx-devel
+
+In newer Fedora releases, since (Fedora 33),
+[adding and enabling](https://docs.fedoraproject.org/en-US/quick-docs/adding-or-removing-software-repositories-in-fedora/)
+a third-party repository could be required.
+
+Otherwise, you can build from self-compiled `depends` (see above).
+
+SQLite is required for the descriptor wallet:
+
+    sudo dnf install sqlite-devel
+
+To build Bitcoin Core without wallet, see [*Disable-wallet mode*](/doc/build-unix.md#disable-wallet-mode)
+
+Optional port mapping libraries (see: `--with-miniupnpc`, `--enable-upnp-default`, and `--with-natpmp`, `--enable-natpmp-default`):
 
     sudo dnf install miniupnpc-devel libnatpmp-devel
 
 ZMQ dependencies (provides ZMQ API):
 
     sudo dnf install zeromq-devel
+
+GUI dependencies:
+
+If you want to build bitcoin-qt, make sure that the required packages for Qt development
+are installed. Qt 5 is necessary to build the GUI.
+To build without GUI pass `--without-gui`.
 
 To build with Qt 5 you need the following:
 
@@ -150,9 +175,8 @@ libqrencode (optional) can be installed with:
 
     sudo dnf install qrencode-devel
 
-SQLite can be installed with:
-
-    sudo dnf install sqlite-devel
+Once these are installed, they will be found by configure and a bitcoin-qt executable will be
+built by default.
 
 Notes
 -----
