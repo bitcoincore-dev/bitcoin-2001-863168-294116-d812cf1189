@@ -1775,8 +1775,6 @@ RPCHelpMan listdescriptors()
         throw JSONRPCError(RPC_WALLET_ERROR, "listdescriptors is not available for non-descriptor wallets");
     }
 
-    EnsureWalletIsUnlocked(wallet.get());
-
     LOCK(wallet->cs_wallet);
 
     UniValue response(UniValue::VARR);
@@ -1790,8 +1788,12 @@ RPCHelpMan listdescriptors()
         LOCK(desc_spk_man->cs_desc_man);
         const auto& wallet_descriptor = desc_spk_man->GetWalletDescriptor();
         std::string descriptor;
-        if (!desc_spk_man->GetDescriptorString(descriptor, false)) {
-            throw JSONRPCError(RPC_WALLET_ERROR, "Can't get normalized descriptor string.");
+        if (wallet->IsLocked()) {
+            descriptor = wallet_descriptor.descriptor->ToString();
+        } else {
+            if (!desc_spk_man->GetDescriptorString(descriptor, false)) {
+                throw JSONRPCError(RPC_WALLET_ERROR, "Can't get normalized descriptor string.");
+            }
         }
         spk.pushKV("desc", descriptor);
         spk.pushKV("timestamp", wallet_descriptor.creation_time);
