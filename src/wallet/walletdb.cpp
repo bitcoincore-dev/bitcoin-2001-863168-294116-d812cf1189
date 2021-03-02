@@ -1000,6 +1000,27 @@ bool WalletBatch::TxnAbort()
     return m_batch->TxnAbort();
 }
 
+#ifndef USE_BDB
+// Minified copy of function in wallet/bdb.cpp w/o error logging
+bool ExistsBerkeleyDatabase(const fs::path& path_in)
+{
+    fs::path env_directory;
+    std::string data_filename;
+    SplitWalletPath(path_in, env_directory, data_filename);
+    const fs::path path = env_directory / data_filename;
+    if (!fs::exists(path)) return false;
+    boost::system::error_code ec;
+    auto size = fs::file_size(path, ec);
+    if (size < 4096) return false;
+    fsbridge::ifstream file(path, std::ios::binary);
+    if (!file.is_open()) return false;
+    file.seekg(12, std::ios::beg);
+    uint32_t data = 0;
+    file.read((char*) &data, sizeof(data));
+    return data == 0x00053162 || data == 0x62310500;
+}
+#endif
+
 #ifndef USE_SQLITE
 // Minified copy of function in wallet/sqlite.cpp w/o error logging
 bool ExistsSQLiteDatabase(const fs::path& dirpath)
@@ -1035,11 +1056,9 @@ std::unique_ptr<WalletDatabase> MakeDatabase(const fs::path& path, const Databas
 
     Optional<DatabaseFormat> format;
     if (exists) {
-#ifdef USE_BDB
         if (ExistsBerkeleyDatabase(path)) {
             format = DatabaseFormat::BERKELEY;
         }
-#endif
         if (ExistsSQLiteDatabase(path)) {
             if (format) {
                 error = Untranslated(strprintf("Failed to load database path '%s'. Data is in ambiguous format.", path.string()));
