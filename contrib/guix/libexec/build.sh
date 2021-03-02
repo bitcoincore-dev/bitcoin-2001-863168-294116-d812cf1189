@@ -61,9 +61,10 @@ case "$HOST" in
         # When targeting darwin, some native tools built by depends require
         # native packages not incorporated in depends
         #
-        # libcap       required by native_cdrkit/wodim
-        # zlib, bzip2  required by native_cdrkit/genisoimage
-        for native_pkg in libcap zlib bzip2; do
+        # zlib         required by native_libdmg-hfsplus
+        #
+        # shellcheck disable=SC2043
+        for native_pkg in zlib; do
             native_pkg_store_path=$(store_path "$native_pkg")
             export LIBRARY_PATH="${native_pkg_store_path}/lib:${LIBRARY_PATH}"
             export CPATH="${native_pkg_store_path}/include:${CPATH}"
