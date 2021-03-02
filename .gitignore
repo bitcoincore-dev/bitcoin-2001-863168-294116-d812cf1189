@@ -12,6 +12,7 @@ src/bitcoin-util
 src/bitcoin-wallet
 src/test/fuzz/*
 !src/test/fuzz/*.*
+src/test/fuzz/fuzz.exe
 src/test/test_bitcoin
 src/qt/test/test_bitcoin-qt
 
