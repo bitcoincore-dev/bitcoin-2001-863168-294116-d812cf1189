@@ -4041,6 +4041,8 @@ bool PeerManager::SendMessages(CNode* pto)
     // If we get here, the outgoing message serialization version is set and can't change.
     const CNetMsgMaker msgMaker(pto->GetCommonVersion());
 
+    const auto current_time = GetTime<std::chrono::microseconds>();
+
     //
     // Message: ping
     //
@@ -4049,7 +4051,7 @@ bool PeerManager::SendMessages(CNode* pto)
         // RPC ping request by user
         pingSend = true;
     }
-    if (pto->nPingNonceSent == 0 && pto->m_ping_start.load() + PING_INTERVAL < GetTime<std::chrono::microseconds>()) {
+    if (pto->nPingNonceSent == 0 && pto->m_ping_start.load() + PING_INTERVAL < current_time) {
         // Ping automatically sent as a latency probe & keepalive.
         pingSend = true;
     }
@@ -4059,7 +4061,7 @@ bool PeerManager::SendMessages(CNode* pto)
             GetRandBytes((unsigned char*)&nonce, sizeof(nonce));
         }
         pto->fPingQueued = false;
-        pto->m_ping_start = GetTime<std::chrono::microseconds>();
+        pto->m_ping_start = current_time;
         if (pto->GetCommonVersion() > BIP0031_VERSION) {
             pto->nPingNonceSent = nonce;
             m_connman.PushMessage(pto, msgMaker.Make(NetMsgType::PING, nonce));
@@ -4076,7 +4078,6 @@ bool PeerManager::SendMessages(CNode* pto)
         CNodeState &state = *State(pto->GetId());
 
         // Address refresh broadcast
-        auto current_time = GetTime<std::chrono::microseconds>();
 
         if (pto->RelayAddrsWithConn() && !::ChainstateActive().IsInitialBlockDownload() && pto->m_next_local_addr_send < current_time) {
             AdvertiseLocal(pto);
@@ -4357,7 +4358,7 @@ bool PeerManager::SendMessages(CNode* pto)
                             vInv.clear();
                         }
                     }
-                    pto->m_tx_relay->m_last_mempool_req = GetTime<std::chrono::seconds>();
+                    pto->m_tx_relay->m_last_mempool_req = std::chrono::duration_cast<std::chrono::seconds>(current_time);
                 }
 
                 // Determine transactions to relay
@@ -4449,7 +4450,6 @@ bool PeerManager::SendMessages(CNode* pto)
             m_connman.PushMessage(pto, msgMaker.Make(NetMsgType::INV, vInv));
 
         // Detect whether we're stalling
-        current_time = GetTime<std::chrono::microseconds>();
         if (state.nStallingSince && state.nStallingSince < count_microseconds(current_time) - 1000000 * BLOCK_STALLING_TIMEOUT) {
             // Stalling only triggers when the block download window cannot move. During normal steady state,
             // the download window should be much larger than the to-be-downloaded set of blocks, so disconnection
