@@ -17,6 +17,7 @@
 #include <node/coinstats.h>
 #include <node/context.h>
 #include <node/utxo_snapshot.h>
+#include <optional.h>
 #include <policy/feerate.h>
 #include <policy/policy.h>
 #include <policy/rbf.h>
@@ -1475,7 +1476,7 @@ static RPCHelpMan getchaintips()
     };
 }
 
-UniValue MempoolInfoToJSON(const CTxMemPool& pool, bool with_fee_histogram)
+UniValue MempoolInfoToJSON(const CTxMemPool& pool, const Optional<MempoolHistogramFeeRates> feeLimits)
 {
     // Make sure this call is atomic in the pool.
     LOCK(pool.cs);
@@ -1490,14 +1491,8 @@ UniValue MempoolInfoToJSON(const CTxMemPool& pool, bool with_fee_histogram)
     ret.pushKV("minrelaytxfee", ValueFromAmount(::minRelayTxFee.GetFeePerK()));
     ret.pushKV("unbroadcastcount", uint64_t{pool.GetUnbroadcastTxs().size()});
 
-    if (with_fee_histogram) {
-        /* TODO: define log scale formular for dynamically creating the
-         * feelimits but with the property of not constantly changing
-         * (and thus screw up client implementations) */
-        static const std::vector<CAmount> feelimits{1, 2, 3, 4, 5, 6, 7, 8, 10,
-            12, 14, 17, 20, 25, 30, 40, 50, 60, 70, 80, 100,
-            120, 140, 170, 200, 250, 300, 400, 500, 600, 700, 800, 1000,
-            1200, 1400, 1700, 2000, 2500, 3000, 4000, 5000, 6000, 7000, 8000, 10000};
+    if (feeLimits) {
+        const MempoolHistogramFeeRates& feelimits{feeLimits.value()};
 
         /* keep histogram per...
          * ... cumulated tx sizes
@@ -1588,11 +1583,11 @@ static RPCHelpMan getmempoolinfo()
                 },
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {
-    bool with_fee_histogram = false;
-    if (!request.params[0].isNull()) {
-        with_fee_histogram = request.params[0].get_bool();
+    Optional<MempoolHistogramFeeRates> feelimits_opt = nullopt;
+    if (!request.params[0].isNull() && request.params[0].get_bool()) {
+        feelimits_opt = MempoolInfoToJSON_const_limits;
     }
-    return MempoolInfoToJSON(EnsureMemPool(request.context), with_fee_histogram);
+    return MempoolInfoToJSON(EnsureMemPool(request.context), feelimits_opt);
 },
     };
 }

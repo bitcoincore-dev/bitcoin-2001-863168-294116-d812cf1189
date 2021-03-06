@@ -9,6 +9,7 @@
 #include <httpserver.h>
 #include <index/txindex.h>
 #include <node/context.h>
+#include <optional.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <rpc/blockchain.h>
@@ -328,7 +329,7 @@ static bool rest_chaininfo(const util::Ref& context, HTTPRequest* req, const std
     }
 }
 
-static bool rest_mempool_info(const util::Ref& context, HTTPRequest* req, const std::string& strURIPart, bool fee_histogram)
+static bool rest_mempool_info(const util::Ref& context, HTTPRequest* req, const std::string& strURIPart, Optional<MempoolHistogramFeeRates> fee_histogram)
 {
     if (!CheckWarmup(req))
         return false;
@@ -354,12 +355,12 @@ static bool rest_mempool_info(const util::Ref& context, HTTPRequest* req, const 
 
 static bool rest_mempool_info_basic(const util::Ref& context, HTTPRequest* req, const std::string& strURIPart)
 {
-    return rest_mempool_info(context, req, strURIPart, false);
+    return rest_mempool_info(context, req, strURIPart, nullopt);
 }
 
 static bool rest_mempool_info_with_fee_histogram(const util::Ref& context, HTTPRequest* req, const std::string& strURIPart)
 {
-    return rest_mempool_info(context, req, strURIPart, true);
+    return rest_mempool_info(context, req, strURIPart, MempoolInfoToJSON_const_limits);
 }
 
 static bool rest_mempool_contents(const util::Ref& context, HTTPRequest* req, const std::string& strURIPart)
