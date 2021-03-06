@@ -1550,7 +1550,11 @@ static RPCHelpMan getmempoolinfo()
     return RPCHelpMan{"getmempoolinfo",
                 "\nReturns details on the active state of the TX memory pool.\n",
                 {
-                    {"with_fee_histogram", RPCArg::Type::BOOL, /* default */ "false", "True for including the fee histogram in the response"},
+                    {"fee_histogram", RPCArg::Type::ARR, RPCArg::Optional::OMITTED_NAMED_ARG, "Fee statistics grouped by fee rate ranges",
+                        {
+                            {"fee_rate", RPCArg::Type::NUM, RPCArg::Optional::NO, "Fee rate (in " + CURRENCY_ATOM + "/vB) to group the fees by"},
+                        },
+                    },
                 },
                 RPCResult{
                     RPCResult::Type::OBJ, "", "",
@@ -1579,13 +1583,36 @@ static RPCHelpMan getmempoolinfo()
                     }},
                 RPCExamples{
                     HelpExampleCli("getmempoolinfo", "")
+                  + HelpExampleCli("getmempoolinfo", R"("[0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 17, 20, 25, 30, 40, 50, 60, 70, 80, 100, 120, 140, 170, 200]")")
             + HelpExampleRpc("getmempoolinfo", "")
+                  + HelpExampleRpc("getmempoolinfo", R"([0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 17, 20, 25, 30, 40, 50, 60, 70, 80, 100, 120, 140, 170, 200])")
                 },
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {
+    MempoolHistogramFeeRates feelimits;
     Optional<MempoolHistogramFeeRates> feelimits_opt = nullopt;
-    if (!request.params[0].isNull() && request.params[0].get_bool()) {
+
+    if (request.params[0].isTrue()) {
         feelimits_opt = MempoolInfoToJSON_const_limits;
+    } else if (!(request.params[0].isNull() || request.params[0].isFalse())) {
+        const UniValue feelimits_univalue = request.params[0].get_array();
+
+        if (feelimits_univalue.size() == 0 || feelimits_univalue.size() > 30) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid number of parameters");
+        }
+
+        for (size_t i = 0; i < feelimits_univalue.size(); ++i) {
+            int64_t value = feelimits_univalue[i].get_int64();
+
+            if (value < 0) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "Non-negative values are expected");
+            } else if (i > 0 && feelimits.back() >= value) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "Strictly increasing values are expected");
+            }
+
+            feelimits.push_back(value);
+        }
+        feelimits_opt = feelimits;
     }
     return MempoolInfoToJSON(EnsureMemPool(request.context), feelimits_opt);
 },
@@ -2551,7 +2578,7 @@ static const CRPCCommand commands[] =
     { "blockchain",         "getmempoolancestors",    &getmempoolancestors,    {"txid","verbose"} },
     { "blockchain",         "getmempooldescendants",  &getmempooldescendants,  {"txid","verbose"} },
     { "blockchain",         "getmempoolentry",        &getmempoolentry,        {"txid"} },
-    { "blockchain",         "getmempoolinfo",         &getmempoolinfo,         {"with_fee_histogram"} },
+    { "blockchain",         "getmempoolinfo",         &getmempoolinfo,         {"fee_histogram||with_fee_histogram"} },
     { "blockchain",         "getrawmempool",          &getrawmempool,          {"verbose", "mempool_sequence"} },
     { "blockchain",         "gettxout",               &gettxout,               {"txid","n","include_mempool"} },
     { "blockchain",         "gettxoutsetinfo",        &gettxoutsetinfo,        {"hash_type"} },
