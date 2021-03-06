@@ -116,6 +116,23 @@ class MempoolFeeHistogramTest(BitcoinTestFramework):
             assert_equal(expected_count, info['fee_histogram']['fee_rate_groups'][k]['count'])
         assert_equal(total_fees, info['fee_histogram']['total_fees'])
 
+        self.log.info("Test fee rate histogram with default groups")
+        info = node.getmempoolinfo(with_fee_histogram=True)
+
+        # Verify that the 6 sat/vB fee rate group has one transaction, and the 8-9 sat/vB fee rate group has two
+        if '9' in expected_counts:
+            expected_counts['8'] += expected_counts['9']
+            del expected_counts['9']
+        (non_empty_groups, empty_groups, total_fees) = self.histogram_stats(info['fee_histogram'])
+        assert_equal(len(expected_counts), non_empty_groups)
+        assert_equal(45 - len(expected_counts), empty_groups)
+        for k, expected_count in expected_counts.items():
+            assert_equal(expected_count, info['fee_histogram']['fee_rate_groups'][k]['count'])
+        assert_equal(total_fees, info['fee_histogram']['total_fees'])
+
+        self.log.info("Test getmempoolinfo(with_fee_histogram=False) does not return fee histogram")
+        assert('fee_histogram' not in node.getmempoolinfo(with_fee_histogram=False))
+
 
     def histogram_stats(self, histogram):
         total_fees = 0
