@@ -888,9 +888,9 @@ void RPCConsole::setMempoolSize(long numberOfTxs, size_t dynUsage)
 
 void RPCConsole::on_lineEdit_returnPressed()
 {
-    QString cmd = ui->lineEdit->text();
+    QString cmd = ui->lineEdit->text().trimmed();
 
-    if (cmd.isEmpty() || m_is_executing) {
+    if (cmd.isEmpty()) {
         return;
     }
 
@@ -903,6 +903,16 @@ void RPCConsole::on_lineEdit_returnPressed()
         }
     } catch (const std::exception& e) {
         QMessageBox::critical(this, "Error", QString("Error: ") + QString::fromStdString(e.what()));
+        return;
+    }
+
+    if (cmd == QLatin1String("stop")) {
+        std::string dummy;
+        RPCExecuteCommandLine(m_node, dummy, cmd.toStdString());
+        return;
+    }
+
+    if (m_is_executing) {
         return;
     }
 
