@@ -913,6 +913,10 @@ void RPCConsole::on_lineEdit_returnPressed()
         return;
     }
 
+    if (m_is_executing) {
+        return;
+    }
+
     ui->lineEdit->clear();
 
 #ifdef ENABLE_WALLET
@@ -931,6 +935,7 @@ void RPCConsole::on_lineEdit_returnPressed()
     message(CMD_REQUEST, QString::fromStdString(strFilteredCmd));
     //: A message in the GUI console while an entered command being executed.
     message(CMD_REPLY, tr("Executing…"));
+    m_is_executing = true;
     Q_EMIT cmdRequest(cmd, m_last_wallet_model);
 
     cmd = QString::fromStdString(strFilteredCmd);
@@ -982,6 +987,7 @@ void RPCConsole::startExecutor()
         ui->messagesWidget->undo();
         message(category, command);
         scrollToEnd();
+        m_is_executing = false;
     });
 
     // Requests from this object must go to executor
