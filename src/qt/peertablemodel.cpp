@@ -195,12 +195,26 @@ QVariant PeerTableModel::data(const QModelIndex &index, int role) const
         assert(false);
     } else if (role == StatsRole) {
         switch (index.column()) {
-        case NetNodeId: return QVariant::fromValue(rec);
-        default: return QVariant();
-        }
+        case NetNodeId:
+            return QVariant::fromValue(rec);
+        case Address:
+            return QString::fromStdString(rec->nodeStats.addrName);
+        case ConnectionType:
+            [[fallthrough]];
+        case Network:
+            [[fallthrough]];
+        case Ping:
+            [[fallthrough]];
+        case Sent:
+            [[fallthrough]];
+        case Received:
+            [[fallthrough]];
+        case Subversion:
+            return {};
+        } // no default case, so the compiler can warn about missing cases
     }
 
-    return QVariant();
+    return {};
 }
 
 QVariant PeerTableModel::headerData(int section, Qt::Orientation orientation, int role) const
