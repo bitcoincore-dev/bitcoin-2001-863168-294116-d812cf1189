@@ -87,10 +87,7 @@ BOOST_AUTO_TEST_CASE(outbound_slow_chain_eviction)
     }
 
     // Test starts here
-    {
-        LOCK(dummyNode1.cs_sendProcessing);
-        BOOST_CHECK(peerLogic->SendMessages(&dummyNode1)); // should result in getheaders
-    }
+    BOOST_CHECK(peerLogic->SendMessages(&dummyNode1)); // should result in getheaders
     {
         LOCK(dummyNode1.cs_vSend);
         BOOST_CHECK(dummyNode1.vSendMsg.size() > 0);
@@ -100,20 +97,14 @@ BOOST_AUTO_TEST_CASE(outbound_slow_chain_eviction)
     int64_t nStartTime = GetTime();
     // Wait 21 minutes
     SetMockTime(nStartTime+21*60);
-    {
-        LOCK(dummyNode1.cs_sendProcessing);
-        BOOST_CHECK(peerLogic->SendMessages(&dummyNode1)); // should result in getheaders
-    }
+    BOOST_CHECK(peerLogic->SendMessages(&dummyNode1)); // should result in getheaders
     {
         LOCK(dummyNode1.cs_vSend);
         BOOST_CHECK(dummyNode1.vSendMsg.size() > 0);
     }
     // Wait 3 more minutes
     SetMockTime(nStartTime+24*60);
-    {
-        LOCK(dummyNode1.cs_sendProcessing);
-        BOOST_CHECK(peerLogic->SendMessages(&dummyNode1)); // should result in disconnect
-    }
+    BOOST_CHECK(peerLogic->SendMessages(&dummyNode1)); // should result in disconnect
     BOOST_CHECK(dummyNode1.fDisconnect == true);
     SetMockTime(0);
 
@@ -220,10 +211,7 @@ BOOST_AUTO_TEST_CASE(peer_discouragement)
     peerLogic->InitializeNode(&dummyNode1);
     dummyNode1.fSuccessfullyConnected = true;
     peerLogic->Misbehaving(dummyNode1.GetId(), DISCOURAGEMENT_THRESHOLD, /* message */ ""); // Should be discouraged
-    {
-        LOCK(dummyNode1.cs_sendProcessing);
-        BOOST_CHECK(peerLogic->SendMessages(&dummyNode1));
-    }
+    BOOST_CHECK(peerLogic->SendMessages(&dummyNode1));
     BOOST_CHECK(banman->IsDiscouraged(addr1));
     BOOST_CHECK(!banman->IsDiscouraged(ip(0xa0b0c001|0x0000ff00))); // Different IP, not discouraged
 
@@ -233,17 +221,11 @@ BOOST_AUTO_TEST_CASE(peer_discouragement)
     peerLogic->InitializeNode(&dummyNode2);
     dummyNode2.fSuccessfullyConnected = true;
     peerLogic->Misbehaving(dummyNode2.GetId(), DISCOURAGEMENT_THRESHOLD - 1, /* message */ "");
-    {
-        LOCK(dummyNode2.cs_sendProcessing);
-        BOOST_CHECK(peerLogic->SendMessages(&dummyNode2));
-    }
+    BOOST_CHECK(peerLogic->SendMessages(&dummyNode2));
     BOOST_CHECK(!banman->IsDiscouraged(addr2)); // 2 not discouraged yet...
     BOOST_CHECK(banman->IsDiscouraged(addr1));  // ... but 1 still should be
     peerLogic->Misbehaving(dummyNode2.GetId(), 1, /* message */ "");         // 2 reaches discouragement threshold
-    {
-        LOCK(dummyNode2.cs_sendProcessing);
-        BOOST_CHECK(peerLogic->SendMessages(&dummyNode2));
-    }
+    BOOST_CHECK(peerLogic->SendMessages(&dummyNode2));
     BOOST_CHECK(banman->IsDiscouraged(addr1));  // Expect both 1 and 2
     BOOST_CHECK(banman->IsDiscouraged(addr2));  // to be discouraged now
 
@@ -270,10 +252,7 @@ BOOST_AUTO_TEST_CASE(DoS_bantime)
     dummyNode.fSuccessfullyConnected = true;
 
     peerLogic->Misbehaving(dummyNode.GetId(), DISCOURAGEMENT_THRESHOLD, /* message */ "");
-    {
-        LOCK(dummyNode.cs_sendProcessing);
-        BOOST_CHECK(peerLogic->SendMessages(&dummyNode));
-    }
+    BOOST_CHECK(peerLogic->SendMessages(&dummyNode));
     BOOST_CHECK(banman->IsDiscouraged(addr));
 
     peerLogic->FinalizeNode(dummyNode);
