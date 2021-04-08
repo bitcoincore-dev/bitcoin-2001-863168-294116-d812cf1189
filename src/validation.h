@@ -1028,6 +1028,12 @@ public:
     //! ResizeCoinsCaches() as needed.
     void MaybeRebalanceCaches() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
+    //! @returns block metadata for the base block of the active UTXO snapshot, if applicable.
+    std::optional<CBlockIndex*> GetSnapshotBaseBlock() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! @returns height at which the active UTXO snapshot was taken, if a snapshot is being used.
+    std::optional<int> GetSnapshotHeight() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
     ~ChainstateManager() {
         LOCK(::cs_main);
         UnloadBlockIndex(/* mempool */ nullptr, *this);
