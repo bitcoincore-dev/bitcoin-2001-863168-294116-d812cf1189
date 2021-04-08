@@ -4339,6 +4339,8 @@ void CChainState::CheckBlockIndex(const Consensus::Params& consensusParams)
 
     LOCK(cs_main);
 
+    bool is_active_chain = this == &m_chainman.ActiveChainstate();
+
     // During a reindex, we read the genesis block and call CheckBlockIndex before ActivateBestChain,
     // so we have the genesis block in m_blockman.m_block_index but no active chain. (A few of the
     // tests when iterating the block tree require that m_chain has been initialized.)
@@ -4349,6 +4351,7 @@ void CChainState::CheckBlockIndex(const Consensus::Params& consensusParams)
 
     // Build forward-pointing map of the entire block tree.
     std::multimap<CBlockIndex*,CBlockIndex*> forward;
+
     for (const std::pair<const uint256, CBlockIndex*>& entry : m_blockman.m_block_index) {
         forward.insert(std::make_pair(entry.second->pprev, entry.second));
     }
@@ -4421,7 +4424,10 @@ void CChainState::CheckBlockIndex(const Consensus::Params& consensusParams)
                 // is valid and we have all data for its parents, it must be in
                 // setBlockIndexCandidates.  m_chain.Tip() must also be there
                 // even if some data has been pruned.
-                if (pindexFirstMissing == nullptr || pindex == m_chain.Tip()) {
+                //
+                // Don't perform this check for the background validation chainstate since
+                // setBlockIndexCandidates corresponds to the active chainstate.
+                if (is_active_chain && (pindexFirstMissing == nullptr || pindex == m_chain.Tip())) {
                     assert(setBlockIndexCandidates.count(pindex));
                 }
                 // If some parent is missing, then it could be that this block was in
@@ -4429,7 +4435,11 @@ void CChainState::CheckBlockIndex(const Consensus::Params& consensusParams)
                 // In this case it must be in m_blocks_unlinked -- see test below.
             }
         } else { // If this block sorts worse than the current tip or some ancestor's block has never been seen, it cannot be in setBlockIndexCandidates.
-            assert(setBlockIndexCandidates.count(pindex) == 0);
+            // Don't perform this check for the background validation chainstate since
+            // setBlockIndexCandidates corresponds to the active chainstate.
+            if (is_active_chain) {
+                assert(setBlockIndexCandidates.count(pindex) == 0);
+            }
         }
         // Check whether this block is in m_blocks_unlinked.
         std::pair<std::multimap<CBlockIndex*,CBlockIndex*>::iterator,std::multimap<CBlockIndex*,CBlockIndex*>::iterator> rangeUnlinked = m_blockman.m_blocks_unlinked.equal_range(pindex->pprev);
