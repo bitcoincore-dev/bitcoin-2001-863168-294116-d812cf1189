@@ -4810,6 +4810,8 @@ void CChainState::CheckBlockIndex(const Consensus::Params& consensusParams)
 
     LOCK(cs_main);
 
+    bool is_active_chain = this == &::g_chainman.ActiveChainstate();
+
     // During a reindex, we read the genesis block and call CheckBlockIndex before ActivateBestChain,
     // so we have the genesis block in m_blockman.m_block_index but no active chain. (A few of the
     // tests when iterating the block tree require that m_chain has been initialized.)
@@ -4820,11 +4822,27 @@ void CChainState::CheckBlockIndex(const Consensus::Params& consensusParams)
 
     // Build forward-pointing map of the entire block tree.
     std::multimap<CBlockIndex*,CBlockIndex*> forward;
-    for (const std::pair<const uint256, CBlockIndex*>& entry : m_blockman.m_block_index) {
-        forward.insert(std::make_pair(entry.second->pprev, entry.second));
-    }
 
-    assert(forward.size() == m_blockman.m_block_index.size());
+    if (is_active_chain) {
+        for (const std::pair<const uint256, CBlockIndex*>& entry : m_blockman.m_block_index) {
+            forward.insert(std::make_pair(entry.second->pprev, entry.second));
+        }
+
+        assert(forward.size() == m_blockman.m_block_index.size());
+    } else {
+        // For the background validation chainstate, don't consider the full block tree -
+        // only consider headers on the IBD chain. Otherwise, we will fail assertions
+        // related to `setBlockIndexCandidates` below, which corresponds to this subset of
+        // the block tree for this chainstate.
+        //
+        // Since reorgs aren't supported during IBD, this is a linear chain and not a tree
+        // as above.
+        CBlockIndex* pindex = m_chain.Tip();
+        while (pindex) {
+            forward.insert(std::make_pair(pindex->pprev, pindex));
+            pindex = pindex->pprev;
+        }
+    }
 
     std::pair<std::multimap<CBlockIndex*,CBlockIndex*>::iterator,std::multimap<CBlockIndex*,CBlockIndex*>::iterator> rangeGenesis = forward.equal_range(nullptr);
     CBlockIndex *pindex = rangeGenesis.first->second;
