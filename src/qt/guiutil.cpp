@@ -629,7 +629,10 @@ bool SetStartOnSystemStartup(bool fAutoStart) { return false; }
 void setClipboard(const QString& str)
 {
     QApplication::clipboard()->setText(str, QClipboard::Clipboard);
+#if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
+    // Windows and macOS do not support the global mouse selection.
     QApplication::clipboard()->setText(str, QClipboard::Selection);
+#endif
 }
 
 fs::path qstringToBoostPath(const QString &path)
