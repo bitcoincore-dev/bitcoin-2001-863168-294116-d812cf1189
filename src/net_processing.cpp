@@ -241,7 +241,7 @@ public:
     void InitializeNode(CNode* pnode) override EXCLUSIVE_LOCKS_REQUIRED(!m_net_events_mutex);
     void FinalizeNode(const CNode& node) override EXCLUSIVE_LOCKS_REQUIRED(!m_net_events_mutex);
     bool ProcessMessages(CNode* pfrom, std::atomic<bool>& interrupt) override EXCLUSIVE_LOCKS_REQUIRED(!m_net_events_mutex);
-    bool SendMessages(CNode* pto) override EXCLUSIVE_LOCKS_REQUIRED(!m_net_events_mutex, pto->cs_sendProcessing);
+    bool SendMessages(CNode* pto) override EXCLUSIVE_LOCKS_REQUIRED(!m_net_events_mutex);
 
     /** Implement PeerManager */
     void CheckForStaleTipAndEvictPeers() override;
