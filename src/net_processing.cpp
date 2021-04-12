@@ -238,10 +238,10 @@ public:
     void NewPoWValidBlock(const CBlockIndex *pindex, const std::shared_ptr<const CBlock>& pblock) override;
 
     /** Implement NetEventsInterface */
-    void InitializeNode(CNode* pnode) override;
-    void FinalizeNode(const CNode& node) override;
-    bool ProcessMessages(CNode* pfrom, std::atomic<bool>& interrupt) override;
-    bool SendMessages(CNode* pto) override EXCLUSIVE_LOCKS_REQUIRED(pto->cs_sendProcessing);
+    void InitializeNode(CNode* pnode) override EXCLUSIVE_LOCKS_REQUIRED(!m_net_events_mutex);
+    void FinalizeNode(const CNode& node) override EXCLUSIVE_LOCKS_REQUIRED(!m_net_events_mutex);
+    bool ProcessMessages(CNode* pfrom, std::atomic<bool>& interrupt) override EXCLUSIVE_LOCKS_REQUIRED(!m_net_events_mutex);
+    bool SendMessages(CNode* pto) override EXCLUSIVE_LOCKS_REQUIRED(!m_net_events_mutex, pto->cs_sendProcessing);
 
     /** Implement PeerManager */
     void CheckForStaleTipAndEvictPeers() override;
@@ -325,6 +325,12 @@ private:
 
     /** Send `addr` messages on a regular schedule. */
     void MaybeSendAddr(CNode& node, std::chrono::microseconds current_time);
+
+    /**
+     * 'Global' PeerManager mutex. Prevents concurrent calls on the NetEvents interface.
+     *  TODO: move net_processing data guarded by cs_main to this mutex.
+     */
+    Mutex m_net_events_mutex;
 
     const CChainParams& m_chainparams;
     CConnman& m_connman;
@@ -987,6 +993,8 @@ void UpdateLastBlockAnnounceTime(NodeId node, int64_t time_in_seconds)
 
 void PeerManagerImpl::InitializeNode(CNode *pnode)
 {
+    LOCK(m_net_events_mutex);
+
     NodeId nodeid = pnode->GetId();
     {
         LOCK(cs_main);
@@ -1026,6 +1034,8 @@ void PeerManagerImpl::ReattemptInitialBroadcast(CScheduler& scheduler)
 
 void PeerManagerImpl::FinalizeNode(const CNode& node)
 {
+    LOCK(m_net_events_mutex);
+
     NodeId nodeid = node.GetId();
     int misbehavior{0};
     {
@@ -3852,6 +3862,8 @@ bool PeerManagerImpl::MaybeDiscourageAndDisconnect(CNode& pnode, Peer& peer)
 
 bool PeerManagerImpl::ProcessMessages(CNode* pfrom, std::atomic<bool>& interruptMsgProc)
 {
+    LOCK(m_net_events_mutex);
+
     bool fMoreWork = false;
 
     PeerRef peer = GetPeerRef(pfrom->GetId());
@@ -4239,6 +4251,8 @@ public:
 
 bool PeerManagerImpl::SendMessages(CNode* pto)
 {
+    LOCK(m_net_events_mutex);
+
     PeerRef peer = GetPeerRef(pto->GetId());
     if (!peer) return false;
     const Consensus::Params& consensusParams = m_chainparams.GetConsensus();
