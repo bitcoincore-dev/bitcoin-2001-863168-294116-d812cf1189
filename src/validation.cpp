@@ -4256,7 +4256,6 @@ bool CVerifyDB::VerifyDB(
 {
     AssertLockHeld(cs_main);
 
-    assert(std::addressof(::ChainstateActive()) == std::addressof(active_chainstate));
     if (chainstate.m_chain.Tip() == nullptr || chainstate.m_chain.Tip()->pprev == nullptr)
         return true;
 
@@ -4282,8 +4281,11 @@ bool CVerifyDB::VerifyDB(
         uiInterface.ShowProgress(_("Verifying blocks...").translated, percentageDone, false);
         if (pindex->nHeight <= chainstate.m_chain.Height()-nCheckDepth)
             break;
-        if (fPruneMode && !(pindex->nStatus & BLOCK_HAVE_DATA)) {
-            // If pruning, only go back as far as we have data.
+        if ((fPruneMode || g_chainman.IsSnapshotActive()) && !(pindex->nStatus & BLOCK_HAVE_DATA)) {
+            // If pruning or running under an assumeutxo snapshot, only go
+            // back as far as we have data. Note that this will not prevent the
+            // background validation chain from being checked, since the second
+            // part of the predicate will fail for blocks that have data.
             LogPrintf("VerifyDB(): block verification stopping at height %d (pruning, no data)\n", pindex->nHeight);
             break;
         }
