@@ -1749,7 +1749,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
                         }
 
                         if (!CVerifyDB().VerifyDB(
-                                *chainstate, chainparams, &chainstate->CoinsDB(),
+                                *chainstate, chainparams, chainstate->CoinsDB(),
                                 args.GetArg("-checklevel", DEFAULT_CHECKLEVEL),
                                 args.GetArg("-checkblocks", DEFAULT_CHECKBLOCKS))) {
                             strLoadError = _("Corrupted block database detected");

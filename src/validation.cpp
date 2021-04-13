@@ -4264,7 +4264,7 @@ bool CVerifyDB::VerifyDB(
         nCheckDepth = chainstate.m_chain.Height();
     nCheckLevel = std::max(0, std::min(4, nCheckLevel));
     LogPrintf("Verifying last %i blocks at level %i\n", nCheckDepth, nCheckLevel);
-    CCoinsViewCache coins(coinsview);
+    CCoinsViewCache coins(&coinsview);
     CBlockIndex* pindex;
     CBlockIndex* pindexFailure = nullptr;
     int nGoodTransactions = 0;
