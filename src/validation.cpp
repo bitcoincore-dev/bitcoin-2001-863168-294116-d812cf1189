@@ -46,6 +46,7 @@
 #include <util/rbf.h>
 #include <util/strencodings.h>
 #include <util/system.h>
+#include <util/threadnames.h>
 #include <util/translation.h>
 #include <validationinterface.h>
 #include <warnings.h>
