@@ -808,7 +808,7 @@
        <item>
         <widget class="QCheckBox" name="peersTabAlternatingRowColors">
          <property name="toolTip">
-          <string>Turn on/off row color alternating for both &quot;Peers&quot; and &quot;Banned peers&quot; tables in the Peer Tab.</string>
+          <string>Alternate the row colors for the &quot;Peers&quot; and &quot;Banned peers&quot; tables in the Peers tab.</string>
          </property>
          <property name="text">
           <string>Alternate row colors in the Peers Tab</string>
