@@ -16,6 +16,7 @@
 #include <QLabel>
 #include <QMainWindow>
 #include <QMap>
+#include <QMenu>
 #include <QPoint>
 #include <QSystemTrayIcon>
 
@@ -50,7 +51,6 @@ QT_BEGIN_NAMESPACE
 class QAction;
 class QComboBox;
 class QDateTime;
-class QMenu;
 class QProgressBar;
 class QProgressDialog;
 QT_END_NAMESPACE
@@ -173,6 +173,8 @@ private:
     RPCConsole* rpcConsole = nullptr;
     HelpMessageDialog* helpMessageDialog = nullptr;
     ModalOverlay* modalOverlay = nullptr;
+
+    QMenu* m_network_context_menu = new QMenu(this);
 
 #ifdef Q_OS_MAC
     CAppNapInhibitor* m_app_nap_inhibitor = nullptr;
