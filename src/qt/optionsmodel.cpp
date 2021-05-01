@@ -154,6 +154,12 @@ void OptionsModel::Init(bool resetSettings)
         addOverriddenOption("-lang");
 
     language = settings.value("language").toString();
+
+    if (!settings.contains("PeersTabAlternatingRowColors")) {
+        settings.setValue("PeersTabAlternatingRowColors", "false");
+    }
+    m_peers_tab_alternating_row_colors = settings.value("PeersTabAlternatingRowColors").toBool();
+    Q_EMIT peersTabAlternatingRowColorsChanged(m_peers_tab_alternating_row_colors);
 }
 
 /** Helper function to copy contents from one QSettings to another.
@@ -311,6 +317,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return strThirdPartyTxUrls;
         case Language:
             return settings.value("language");
+        case PeersTabAlternatingRowColors:
+            return m_peers_tab_alternating_row_colors;
         case CoinControlFeatures:
             return fCoinControlFeatures;
         case Prune:
@@ -435,6 +443,11 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 settings.setValue("language", value);
                 setRestartRequired(true);
             }
+            break;
+        case PeersTabAlternatingRowColors:
+            m_peers_tab_alternating_row_colors = value.toBool();
+            settings.setValue("PeersTabAlternatingRowColors", m_peers_tab_alternating_row_colors);
+            Q_EMIT peersTabAlternatingRowColorsChanged(m_peers_tab_alternating_row_colors);
             break;
         case CoinControlFeatures:
             fCoinControlFeatures = value.toBool();
