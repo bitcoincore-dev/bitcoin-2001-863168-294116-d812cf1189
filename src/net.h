@@ -327,7 +327,7 @@ public:
      * @param[in] max_pct        Maximum percentage of addresses to return (0 = all).
      * @param[in] network        Select only addresses of this network (nullopt = all).
      */
-    std::vector<CAddress> GetAddresses(size_t max_addresses, size_t max_pct, Optional<Network> network = nullopt) const;
+    std::vector<CAddress> GetAddresses(size_t max_addresses, size_t max_pct, Optional<Network> network = nullopt);
     /**
      * Cache is used to minimize topology leaks, so it should
      * be used for all non-trusted calls, for example, p2p.
