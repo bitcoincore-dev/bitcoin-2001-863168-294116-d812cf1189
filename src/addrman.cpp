@@ -7,6 +7,8 @@
 
 #include <hash.h>
 #include <logging.h>
+#include <netaddress.h>
+#include <optional.h>
 #include <serialize.h>
 
 int CAddrInfo::GetTriedBucket(const uint256& nKey, const std::vector<bool> &asmap) const
@@ -479,7 +481,7 @@ int CAddrMan::Check_()
 }
 #endif
 
-void CAddrMan::GetAddr_(std::vector<CAddress>& vAddr, size_t max_addresses, size_t max_pct)
+void CAddrMan::GetAddr_(std::vector<CAddress>& vAddr, size_t max_addresses, size_t max_pct, Optional<Network> network)
 {
     size_t nNodes = vRandom.size();
     if (max_pct != 0) {
@@ -499,6 +501,11 @@ void CAddrMan::GetAddr_(std::vector<CAddress>& vAddr, size_t max_addresses, size
         assert(mapInfo.count(vRandom[n]) == 1);
 
         const CAddrInfo& ai = mapInfo[vRandom[n]];
+
+        // Filter by network (optional)
+        if (network != nullopt && ai.GetNetClass() != network) continue;
+
+        // Filter for quality
         if (!ai.IsTerrible())
             vAddr.push_back(ai);
     }
