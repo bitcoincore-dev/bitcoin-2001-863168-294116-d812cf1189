@@ -21,6 +21,7 @@
 #include <validation.h> // For DEFAULT_SCRIPTCHECK_THREADS
 
 #include <QDebug>
+#include <QLatin1Char>
 #include <QSettings>
 #include <QStringList>
 
@@ -244,7 +245,8 @@ static ProxySetting GetProxySetting(QSettings &settings, const QString &name)
 
 static void SetProxySetting(QSettings &settings, const QString &name, const ProxySetting &ip_port)
 {
-    settings.setValue(name, ip_port.ip + ":" + ip_port.port);
+    QString proxy = ip_port.ip + QLatin1Char(':') + ip_port.port;
+    settings.setValue(name, proxy);
 }
 
 static const QString GetDefaultProxyAddress()
