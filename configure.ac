@@ -1779,6 +1779,47 @@ if test x$build_bitcoin_wallet$build_bitcoin_cli$build_bitcoin_tx$build_bitcoin_
   AC_MSG_ERROR([No targets! Please specify at least one of: --with-utils --with-libs --with-daemon --with-gui --enable-bench or --enable-tests])
 fi
 
+if test x$enable_fuzz_binary = xyes; then
+  m4_define([bitcoin_mul_overflow_test], [[
+    #include <cstdint>
+    #include <climits>
+
+    #if defined(__has_builtin)
+    #if __has_builtin(__builtin_mul_overflow)
+    #define HAVE_BUILTIN_MUL_OVERFLOW
+    #endif
+    #elif defined(__GNUC__)
+    #define HAVE_BUILTIN_MUL_OVERFLOW
+    #endif
+
+    bool bmo(long long x)
+    {
+    #if defined(HAVE_BUILTIN_MUL_OVERFLOW)
+      long long prod; return __builtin_mul_overflow(x, x, &prod);
+    #else
+      return true;
+    #endif
+    }
+    int main() { return bmo(LLONG_MAX) ? 1 : 0; }
+  ]])
+
+  AC_LANG_PUSH([C++])
+  AC_MSG_CHECKING([whether fuzz binary can be built without --rtlib flag])
+  AC_LINK_IFELSE(
+    [AC_LANG_SOURCE([bitcoin_mul_overflow_test])],
+    [AC_MSG_RESULT([yes])],
+    [
+      AC_MSG_RESULT([no])
+      AX_CHECK_LINK_FLAG([--rtlib=compiler-rt -lgcc_s],
+                         [FUZZ_BINARY_LDFLAGS="--rtlib=compiler-rt -lgcc_s"],
+                         [AC_MSG_WARN([cannot figure out how to build fuzz binary -- skipped]); enable_fuzz_binary=no],
+                         [$LDFLAG_WERROR],
+                         [AC_LANG_SOURCE([bitcoin_mul_overflow_test])])
+    ])
+  AC_LANG_POP
+  AC_SUBST(FUZZ_BINARY_LDFLAGS)
+fi
+
 AM_CONDITIONAL([TARGET_DARWIN], [test x$TARGET_OS = xdarwin])
 AM_CONDITIONAL([BUILD_DARWIN], [test x$BUILD_OS = xdarwin])
 AM_CONDITIONAL([TARGET_LINUX], [test x$TARGET_OS = xlinux])
