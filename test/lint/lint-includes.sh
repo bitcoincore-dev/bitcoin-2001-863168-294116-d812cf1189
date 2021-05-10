@@ -64,6 +64,7 @@ EXPECTED_BOOST_INCLUDES=(
     boost/signals2/connection.hpp
     boost/signals2/optional_last_value.hpp
     boost/signals2/signal.hpp
+    boost/system/windows_error.hpp
     boost/test/unit_test.hpp
 )
 

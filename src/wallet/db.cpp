@@ -10,6 +10,10 @@
 
 #include <string>
 
+#ifdef WIN32
+#include <boost/system/windows_error.hpp>
+#endif // WIN32
+
 std::vector<fs::path> ListDatabases(const fs::path& wallet_dir)
 {
     const size_t offset = wallet_dir.string().size() + 1;
@@ -19,6 +23,12 @@ std::vector<fs::path> ListDatabases(const fs::path& wallet_dir)
     for (auto it = fs::recursive_directory_iterator(wallet_dir, ec); it != fs::recursive_directory_iterator(); it.increment(ec)) {
         if (ec) {
             LogPrintf("%s: %s %s\n", __func__, ec.message(), it->path().string());
+#ifdef WIN32
+            if (ec.value() == boost::system::windows_error::access_denied) {
+                // Do not iterate system folders such as "Z:\System Volume Information".
+                it.no_push();
+            }
+#endif // WIN32
             continue;
         }
 
