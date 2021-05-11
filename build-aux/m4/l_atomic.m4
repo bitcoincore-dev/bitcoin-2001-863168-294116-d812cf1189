@@ -12,10 +12,14 @@ dnl warranty.
 m4_define([_CHECK_ATOMIC_testbody], [[
   #include <atomic>
   #include <cstdint>
+  #include <chrono>
 
   int main() {
     std::atomic<bool> lock{true};
     std::atomic_exchange(&lock, false);
+
+    std::atomic<std::chrono::seconds> t{std::chrono::seconds::zero()};
+    t.store(std::chrono::seconds{2});
 
     std::atomic<int64_t> a{};
 
