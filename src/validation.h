@@ -97,6 +97,8 @@ static const unsigned int DEFAULT_CHECKLEVEL = 3;
 // one 128MB block file + added 15% undo data = 147MB greater for a total of 545MB
 // Setting the target to >= 550 MiB will make it likely we can respect the target.
 static const uint64_t MIN_DISK_SPACE_FOR_BLOCK_FILES = 550 * 1024 * 1024;
+/** Blocks to keep below deepest prune blocker */
+static constexpr int PRUNE_BLOCKER_BUFFER{10};
 
 /** Current sync state passed to tip changed callbacks. */
 enum class SynchronizationState {
@@ -487,6 +489,16 @@ public:
      * This is also true for mempool checks.
      */
     int GetSpendHeight(const CCoinsViewCache& inputs) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
+    /**
+     * Map from external index name to most recent block the index can tolerate being pruned.
+     *
+     * @note Internally, only blocks at height (block->nHeight - PRUNE_BLOCKER_BUFFER) and
+     * below will be pruned, but callers should avoid assuming any particular buffer size.
+     */
+    std::unordered_map<std::string, const CBlockIndex*> m_prune_blockers;
+
+    void UpdatePruneBlocker(const std::string& name, const CBlockIndex* block) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     ~BlockManager() {
         Unload();
