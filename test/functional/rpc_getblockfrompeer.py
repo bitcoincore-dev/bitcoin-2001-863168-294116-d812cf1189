@@ -4,14 +4,12 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the getblockfrompeer RPC."""
 
+from test_framework.authproxy import JSONRPCException
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
 )
-
-import time
-
 
 class GetBlockFromPeerTest(BitcoinTestFramework):
     def set_test_params(self):
@@ -20,19 +18,26 @@ class GetBlockFromPeerTest(BitcoinTestFramework):
     def setup_network(self):
         self.setup_nodes()
 
+    def check_for_block(self, hash):
+        try:
+            self.nodes[0].getblock(hash)
+            return True
+        except JSONRPCException:
+            return False
+
     def run_test(self):
         self.log.info("Mine 4 blocks on Node 0")
-        self.nodes[0].generatetoaddress(4, self.nodes[0].get_deterministic_priv_key().address)
+        self.nodes[0].generate(4)
         assert_equal(self.nodes[0].getblockcount(), 204)
 
         self.log.info("Mine competing 3 blocks on Node 1")
-        self.nodes[1].generatetoaddress(3, self.nodes[1].get_deterministic_priv_key().address)
+        self.nodes[1].generate(3)
         assert_equal(self.nodes[1].getblockcount(), 203)
         short_tip = self.nodes[1].getbestblockhash()
 
         self.log.info("Connect nodes to sync headers")
         self.connect_nodes(0, 1)
-        self.sync_blocks(self.nodes[0:2])
+        self.sync_blocks()
 
         self.log.info("Node 0 should only have the header for node 1's block 3")
         short_tip_synced = False
@@ -48,8 +53,7 @@ class GetBlockFromPeerTest(BitcoinTestFramework):
         assert_equal(len(peers), 1)
         peer_0_peer_1_id = peers[0]["id"]
         self.nodes[0].getblockfrompeer(short_tip, peer_0_peer_1_id)
-        time.sleep(1)
-        self.nodes[0].getblock(short_tip)
+        self.wait_until(lambda: self.check_for_block(short_tip), timeout=1)
 
         self.log.info("Arguments must be sensible")
         assert_raises_rpc_error(-8, "hash must be of length 64 (not 4, for '1234')", self.nodes[0].getblockfrompeer, "1234", 0)

@@ -758,7 +758,7 @@ static RPCHelpMan getmempoolentry()
 static RPCHelpMan getblockfrompeer()
 {
     return RPCHelpMan{"getblockfrompeer",
-                "\nAttempts to fetch block from a given peer.\n",
+                "\nAttempt to fetch block from a given peer.\n",
                 {
                     {"blockhash", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "The block hash"},
                     {"nodeid", RPCArg::Type::NUM, RPCArg::Optional::NO, "The node ID (see getpeerinfo for node IDs)"},
@@ -770,33 +770,22 @@ static RPCHelpMan getblockfrompeer()
                 },
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {
-    uint256 hash(ParseHashV(request.params[0], "hash"));
-
-    const CBlockIndex* pblockindex;
-    {
-        LOCK(cs_main);
-        pblockindex = LookupBlockIndex(hash);
-    }
-
-    if (!pblockindex) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found");
-    }
-
-    const UniValue &id_arg = request.params[1];
-    const NodeId nodeid = (NodeId) id_arg.get_int64();
     const NodeContext& node = EnsureNodeContext(request.context);
-
-    if(!node.connman || !node.peerman) {
+    if (!node.peerman) {
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
     }
+    PeerManager& peerman = *node.peerman;
 
-    CTxMemPool& mempool = EnsureMemPool(request.context);
-    LOCK(mempool.cs);
+    uint256 hash(ParseHashV(request.params[0], "hash"));
 
-    if (!node.peerman->FetchBlock(nodeid, pblockindex, mempool)) {
+    const NodeId nodeid = static_cast<NodeId>(request.params[1].get_int64());
+
+    const CBlockIndex* const pblockindex = WITH_LOCK(cs_main, return LookupBlockIndex(hash););
+
+    if (!peerman.FetchBlock(nodeid, hash, pblockindex)) {
         throw JSONRPCError(RPC_MISC_ERROR, "Failed to fetch block from peer");
     }
-    return NullUniValue;
+    return UniValue::VOBJ;
 },
     };
 }

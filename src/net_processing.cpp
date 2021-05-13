@@ -1141,30 +1141,39 @@ bool PeerManager::MaybePunishNodeForTx(NodeId nodeid, const TxValidationState& s
     return false;
 }
 
-bool PeerManager::FetchBlock(const NodeId nodeid, const CBlockIndex* pindex, CTxMemPool& mempool) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
+bool PeerManager::FetchBlock(NodeId id, const uint256& hash, const CBlockIndex* index)
 {
-    PeerRef peer = GetPeerRef(nodeid);
-    if (peer == nullptr) return false;
-    uint32_t nFetchFlags = 0;
-    CNodeState* state = State(nodeid);
-    if (state == nullptr) {
-        return false;
-    }
-    const int node_sync_height = state->pindexBestKnownBlock ? state->pindexBestKnownBlock->nHeight : -1;
-    if (pindex->nHeight > node_sync_height) {
-        return false;
-    }
-    if (state->fHaveWitness) {
-        nFetchFlags |= MSG_WITNESS_FLAG;
-    }
-    std::vector<CInv> vInv(1);
-    vInv[0] = CInv(MSG_BLOCK | nFetchFlags, pindex->GetBlockHash());
-    bool success = m_connman.ForNode(nodeid, [this, vInv](CNode* pnode) {
-        const CNetMsgMaker msgMaker(pnode->GetCommonVersion());
-        this->m_connman.PushMessage(pnode, msgMaker.Make(NetMsgType::GETDATA, vInv));
+    if (fImporting || fReindex) return false;
+
+    LOCK(cs_main);
+    // Ensure this peer exists and hasn't been disconnected
+    CNodeState* state = State(id);
+    if (state == nullptr) return false;
+    // Ignore pre-segwit peers
+    if (!state->fHaveWitness) return false;
+
+    // Construct message to request the block
+    std::vector<CInv> invs{CInv(MSG_BLOCK | MSG_WITNESS_FLAG, hash)};
+
+    // Mark block as in-flight unless it already is
+    // NOTE: 22.0 silently changes this so that `index` must be non-null! In that case, it is safe to skip this.
+    if (!MarkBlockAsInFlight(m_mempool, id, hash, index)) return false;
+
+    // Send block request message to the peer
+    bool success = m_connman.ForNode(id, [this, &invs](CNode* node) {
+        const CNetMsgMaker msgMaker(node->GetCommonVersion());
+        this->m_connman.PushMessage(node, msgMaker.Make(NetMsgType::GETDATA, invs));
         return true;
     });
-    MarkBlockAsInFlight(mempool, nodeid, pindex->GetBlockHash(), pindex);
+
+    if (success) {
+        LogPrint(BCLog::NET, "Requesting block %s from peer=%d\n",
+                 hash.ToString(), id);
+    } else {
+        MarkBlockAsReceived(hash);
+        LogPrint(BCLog::NET, "Failed to request block %s from peer=%d\n",
+                 hash.ToString(), id);
+    }
     return success;
 }
 
