@@ -208,11 +208,6 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
 
     connect(labelBlocksIcon, &GUIUtil::ClickableLabel::clicked, this, &BitcoinGUI::showModalOverlay);
     connect(progressBar, &GUIUtil::ClickableProgressBar::clicked, this, &BitcoinGUI::showModalOverlay);
-#ifdef ENABLE_WALLET
-    if(enableWallet) {
-        connect(walletFrame, &WalletFrame::requestedSyncWarningInfo, this, &BitcoinGUI::showModalOverlay);
-    }
-#endif
 
 #ifdef Q_OS_MAC
     m_app_nap_inhibitor = new CAppNapInhibitor;

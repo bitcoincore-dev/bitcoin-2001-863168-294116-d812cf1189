@@ -88,7 +88,7 @@ bool WalletFrame::addWallet(WalletModel *walletModel)
     walletStack->addWidget(walletView);
     mapWalletViews[walletModel] = walletView;
 
-    connect(walletView, &WalletView::outOfSyncWarningClicked, this, &WalletFrame::outOfSyncWarningClicked);
+    connect(walletView, &WalletView::outOfSyncWarningClicked, gui, &BitcoinGUI::showModalOverlay);
     connect(walletView, &WalletView::transactionClicked, gui, &BitcoinGUI::gotoHistoryPage);
     connect(walletView, &WalletView::coinsSent, gui, &BitcoinGUI::gotoHistoryPage);
     connect(walletView, &WalletView::message, [this](const QString& title, const QString& message, unsigned int style) {
@@ -262,9 +262,4 @@ WalletModel* WalletFrame::currentWalletModel() const
 {
     WalletView* wallet_view = currentWalletView();
     return wallet_view ? wallet_view->getWalletModel() : nullptr;
-}
-
-void WalletFrame::outOfSyncWarningClicked()
-{
-    Q_EMIT requestedSyncWarningInfo();
 }
