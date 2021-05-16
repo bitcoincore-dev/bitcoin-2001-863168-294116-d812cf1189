@@ -128,6 +128,9 @@ CoinControlDialog::CoinControlDialog(CCoinControl& coin_control, WalletModel* _m
         updateLabelLocked();
         CoinControlDialog::updateLabels(m_coin_control, _model, this);
     }
+
+    setAttribute(Qt::WA_DeleteOnClose);
+    setWindowModality(Qt::ApplicationModal);
 }
 
 CoinControlDialog::~CoinControlDialog()
