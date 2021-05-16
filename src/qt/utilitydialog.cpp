@@ -106,6 +106,9 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent, bool about) :
     }
 
     GUIUtil::handleCloseWindowShortcut(this);
+
+    setAttribute(Qt::WA_DeleteOnClose);
+    setWindowModality(Qt::ApplicationModal);
 }
 
 HelpMessageDialog::~HelpMessageDialog()
