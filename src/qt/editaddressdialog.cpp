@@ -45,6 +45,9 @@ EditAddressDialog::EditAddressDialog(Mode _mode, QWidget *parent) :
     mapper->setItemDelegate(delegate);
 
     GUIUtil::handleCloseWindowShortcut(this);
+
+    setAttribute(Qt::WA_DeleteOnClose);
+    setWindowModality(Qt::ApplicationModal);
 }
 
 EditAddressDialog::~EditAddressDialog()
