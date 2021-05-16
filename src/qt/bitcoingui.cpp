@@ -829,8 +829,9 @@ void BitcoinGUI::aboutClicked()
     if(!clientModel)
         return;
 
-    HelpMessageDialog dlg(this, true);
-    dlg.exec();
+    auto dlg = new HelpMessageDialog(this, true);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+    dlg->open();
 }
 
 void BitcoinGUI::showDebugWindow()
