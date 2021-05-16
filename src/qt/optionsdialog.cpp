@@ -159,6 +159,9 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->systemFont_radioButton->setChecked(true);
 
     GUIUtil::handleCloseWindowShortcut(this);
+
+    setAttribute(Qt::WA_DeleteOnClose);
+    setWindowModality(Qt::ApplicationModal);
 }
 
 OptionsDialog::~OptionsDialog()
