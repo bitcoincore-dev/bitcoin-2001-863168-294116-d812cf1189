@@ -849,8 +849,9 @@ void SendCoinsDialog::coinControlFeatureChanged(bool checked)
 // Coin Control: button inputs -> show actual coin control dialog
 void SendCoinsDialog::coinControlButtonClicked()
 {
-    CoinControlDialog dlg(*m_coin_control, model, platformStyle);
-    dlg.exec();
+    auto dlg = new CoinControlDialog(*m_coin_control, model, platformStyle);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+    dlg->open();
     coinControlUpdateLabels();
 }
 
