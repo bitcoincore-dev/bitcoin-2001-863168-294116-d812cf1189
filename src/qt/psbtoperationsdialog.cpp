@@ -36,6 +36,9 @@ PSBTOperationsDialog::PSBTOperationsDialog(
 
     m_ui->signTransactionButton->setEnabled(false);
     m_ui->broadcastTransactionButton->setEnabled(false);
+
+    setAttribute(Qt::WA_DeleteOnClose);
+    setWindowModality(Qt::ApplicationModal);
 }
 
 PSBTOperationsDialog::~PSBTOperationsDialog()
