@@ -165,6 +165,9 @@ void WalletControllerActivity::showProgressDialog(const QString& label_text)
     m_progress_dialog->setCancelButton(nullptr);
     m_progress_dialog->setWindowModality(Qt::ApplicationModal);
     GUIUtil::PolishProgressDialog(m_progress_dialog);
+    // The setValue call forces QProgressDialog to start the internal duration estimation.
+    // See details in https://bugreports.qt.io/browse/QTBUG-47042.
+    m_progress_dialog->setValue(0);
 }
 
 CreateWalletActivity::CreateWalletActivity(WalletController* wallet_controller, QWidget* parent_widget)

@@ -950,6 +950,11 @@ void PolishProgressDialog(QProgressDialog* dialog)
 #else
     Q_UNUSED(dialog);
 #endif
+    // QProgressDialog estimates the time the operation will take (based on time
+    // for steps), and only shows itself if that estimate is beyond minimumDuration.
+    // The default minimumDuration value is 4 seconds, and it could make users
+    // think that the GUI is frozen.
+    dialog->setMinimumDuration(0);
 }
 
 int TextWidth(const QFontMetrics& fm, const QString& text)
