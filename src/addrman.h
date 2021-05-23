@@ -172,7 +172,6 @@ static const int64_t ADDRMAN_TEST_WINDOW = 40*60; // 40 minutes
  */
 class CAddrMan
 {
-friend class CAddrManTest;
 private:
     //! critical section to protect the inner data structures
     mutable RecursiveMutex cs;
@@ -229,14 +228,12 @@ private:
     //! Holds addrs inserted into tried table that collide with existing entries. Test-before-evict discipline used to resolve these collisions.
     std::set<int> m_tried_collisions;
 
-protected:
     //! secret key to randomize bucket select with
     uint256 nKey;
 
     //! Source of random numbers for randomization in inner loops
     FastRandomContext insecure_rand;
 
-private:
     //! Find an entry.
     CAddrInfo* Find(const CNetAddr& addr, int *pnId = nullptr) EXCLUSIVE_LOCKS_REQUIRED(cs);
 
@@ -304,6 +301,11 @@ private:
 
     //! Update an entry's service bits.
     void SetServices_(const CService &addr, ServiceFlags nServices) EXCLUSIVE_LOCKS_REQUIRED(cs);
+
+    friend class CAddrManCorrupted;
+    friend class CAddrManDeterministic;
+    friend class CAddrManSerializationMock;
+    friend class CAddrManTest;
 
 public:
     // Compressed IP->ASN mapping, loaded from a file when a node starts.
