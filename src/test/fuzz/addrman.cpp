@@ -109,9 +109,6 @@ FUZZ_TARGET_INIT(addrman, initialize_addrman)
                 if (opt_service) {
                     addr_man.SetServices(*opt_service, ConsumeWeakEnum(fuzzed_data_provider, ALL_SERVICE_FLAGS));
                 }
-            },
-            [&] {
-                (void)addr_man.Check();
             });
     }
     (void)addr_man.size();
