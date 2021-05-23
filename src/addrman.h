@@ -620,8 +620,8 @@ public:
     }
 
 private:
-    //! critical section to protect the inner data structures
-    mutable RecursiveMutex cs;
+    //! A mutex to protect the inner data structures.
+    mutable Mutex cs;
 
     //! Serialization versions.
     enum Format : uint8_t {
