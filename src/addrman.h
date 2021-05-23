@@ -716,11 +716,9 @@ private:
     void Check()
     {
 #ifdef DEBUG_ADDRMAN
-        {
-            LOCK(cs);
-            int err;
-            if ((err=Check_()))
-                LogPrintf("ADDRMAN CONSISTENCY CHECK FAILED!!! err=%i\n", err);
+        LOCK(cs);
+        if (const int err = Check_(); err != 0) {
+            LogPrintf("ADDRMAN CONSISTENCY CHECK FAILED!!! err=%i\n", err);
         }
 #endif
     }
