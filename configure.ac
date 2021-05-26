@@ -1622,6 +1622,8 @@ AC_MSG_RESULT($build_bitcoin_libs)
 
 AC_LANG_POP
 
+CC_UNPREFIXED=$CC
+AC_SUBST(CC_UNPREFIXED)
 if test "x$use_ccache" != "xno"; then
   AC_MSG_CHECKING(if ccache should be used)
   if test x$CCACHE = x; then
