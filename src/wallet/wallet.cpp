@@ -4110,7 +4110,7 @@ bool CWallet::AttachChain(const std::shared_ptr<CWallet>& walletInstance, interf
             chain.initError(_("Snapshot: last wallet synchronisation goes beyond the base "
                 "of the snapshot. You need to wait for background validation of "
                 "the snapshot to complete"));
-            return nullptr;
+            return false;
         }
 
         chain.initMessage(_("Rescanning…").translated);
