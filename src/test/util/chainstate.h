@@ -9,6 +9,7 @@
 #include <fs.h>
 #include <node/context.h>
 #include <node/utxo_snapshot.h>
+#include <rpc/blockchain.h>
 #include <validation.h>
 
 #include <univalue.h>
