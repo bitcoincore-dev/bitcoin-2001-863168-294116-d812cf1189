@@ -2634,6 +2634,7 @@ UniValue CreateUTXOSnapshot(
     result.pushKV("base_height", tip->nHeight);
     result.pushKV("path", path.string());
     result.pushKV("assumeutxo", stats.hashSerialized.ToString());
+    result.pushKV("nchaintx", static_cast<int>(tip->nChainTx));
     return result;
 }
 
@@ -2743,7 +2744,7 @@ return RPCHelpMan{
     NodeContext& node = EnsureAnyNodeContext(request.context);
     ChainstateManager& chainman = *node.chainman;
 
-    auto make_chain_data = [&chainman](CChainState* cs) {
+    auto make_chain_data = [](CChainState* cs) {
         UniValue data(UniValue::VOBJ);
         if (!cs || !cs->m_chain.Tip()) {
             return data;
