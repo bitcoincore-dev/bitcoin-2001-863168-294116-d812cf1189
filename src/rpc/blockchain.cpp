@@ -2634,6 +2634,7 @@ UniValue CreateUTXOSnapshot(
     result.pushKV("base_height", tip->nHeight);
     result.pushKV("path", path.string());
     result.pushKV("assumeutxo", stats.hashSerialized.ToString());
+    result.pushKV("nchaintx", static_cast<int>(tip->nChainTx));
     return result;
 }
 
