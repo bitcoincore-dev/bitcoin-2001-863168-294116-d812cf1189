@@ -2762,13 +2762,10 @@ return RPCHelpMan{
         return data;
     };
 
-    obj.pushKV("active_chain_type",
-        chainman.ActiveChainstate().m_from_snapshot_blockhash.value_or(uint256{}).IsNull() ?
-        "ibd" : "snapshot");
+    obj.pushKV("active_chain_type", chainman.ActiveChainstate().IsFromSnapshot() ? "ibd" : "snapshot");
 
     for (CChainState* chainstate : chainman.GetAll()) {
-        std::string cstype =
-            chainstate->m_from_snapshot_blockhash.value_or(uint256{}).IsNull() ? "ibd" : "snapshot";
+        std::string cstype = chainstate->IsFromSnapshot() ? "ibd" : "snapshot";
         obj.pushKV(cstype, make_chain_data(chainstate));
     }
     obj.pushKV("headers", pindexBestHeader ? pindexBestHeader->nHeight : -1);
