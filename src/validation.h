@@ -659,6 +659,9 @@ public:
      */
     const std::optional<uint256> m_from_snapshot_blockhash;
 
+    //! Return true if this chainstate was created from a UTXO snapshot.
+    bool IsFromSnapshot() { return m_from_snapshot_blockhash.has_value(); }
+
     /**
      * The set of all CBlockIndex entries with BLOCK_VALID_TRANSACTIONS (for itself and all ancestors) and
      * as good as our current tip or better. Entries may be failed, though, and pruning nodes may be
