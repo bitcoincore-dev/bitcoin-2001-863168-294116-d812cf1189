@@ -451,14 +451,11 @@ public:
      * Load the blocktree off disk and into memory. Populate certain metadata
      * per index entry (nStatus, nChainWork, nTimeMax, etc.) as well as peripheral
      * collections like setDirtyBlockIndex.
-     *
-     * @param[out] block_index_candidates  Fill this set with any valid blocks for
-     *                                     which we've downloaded all transactions.
      */
     bool LoadBlockIndex(
         const Consensus::Params& consensus_params,
         CBlockTreeDB& blocktree,
-        std::set<CBlockIndex*, CBlockIndexWorkComparator>& block_index_candidates)
+        ChainstateManager& chainman)
         EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
     /** Clear all data members. */
@@ -645,6 +642,10 @@ public:
      * std::nullopt if this chainstate was not created from a snapshot.
      */
     const std::optional<uint256> m_from_snapshot_blockhash;
+
+    //! Return true if this chainstate relies on blocks that are assumed-valid. In
+    //! practice this means it was created based on a UTXO snapshot.
+    bool ReliesOnAssumeValid() { return m_from_snapshot_blockhash.has_value(); }
 
     /**
      * The set of all CBlockIndex entries with either BLOCK_VALID_TRANSACTIONS (for
@@ -917,6 +918,10 @@ private:
         CAutoFile& coins_file,
         const SnapshotMetadata& metadata);
 
+    CBlockIndex* getSnapshotBaseBlock() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+    std::optional<int> getSnapshotHeight() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+    std::optional<unsigned int> getSnapshotNChainTx() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
 public:
     std::thread m_load_block;
     //! A single BlockManager instance is shared across each constructed
@@ -1028,6 +1033,12 @@ public:
     //! Check to see if caches are out of balance and if so, call
     //! ResizeCoinsCaches() as needed.
     void MaybeRebalanceCaches() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! If some region of the block index is assumed to be valid (as in the case of
+    //! UTXO snapshot usage), return the last blockhash to be assumed valid (i.e. the
+    //! base of the snapshot) and the correspondent nChainTx value associated with it.
+    std::pair<std::optional<uint256>, unsigned int> getAssumedValidEnd()
+        EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     ~ChainstateManager() {
         LOCK(::cs_main);
