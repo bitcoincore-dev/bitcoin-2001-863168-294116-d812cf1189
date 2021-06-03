@@ -3701,7 +3701,7 @@ CBlockIndex * BlockManager::InsertBlockIndex(const uint256& hash)
 
 bool BlockManager::LoadBlockIndex(
     const Consensus::Params& consensus_params,
-    std::set<CBlockIndex*, CBlockIndexWorkComparator>& block_index_candidates)
+    ChainstateManager& chainman)
 {
     if (!m_block_tree_db->LoadBlockIndexGuts(consensus_params, [this](const uint256& hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main) { return this->InsertBlockIndex(hash); })) {
         return false;
@@ -3716,17 +3716,50 @@ bool BlockManager::LoadBlockIndex(
         vSortedByHeight.push_back(std::make_pair(pindex->nHeight, pindex));
     }
     sort(vSortedByHeight.begin(), vSortedByHeight.end());
+
+    // If we have a historical region of the chain that is assumed-valid, we should
+    // mark the last assumed-valid block that we see, since we then have to populate
+    // the final nChainTx as well as prevent inclusion of blocks after that in the
+    // setBlockIndexCandidates of the background chainstate.
+    bool saw_end_of_assumedvalid{false};
+
+    std::optional<uint256> assumedvalid_end_blockhash;
+    unsigned int assumedvalid_end_nchaintx;
+    std::tie(assumedvalid_end_blockhash, assumedvalid_end_nchaintx) =
+        chainman.getAssumedValidEnd();
+
     for (const std::pair<int, CBlockIndex*>& item : vSortedByHeight)
     {
         if (ShutdownRequested()) return false;
         CBlockIndex* pindex = item.second;
         pindex->nChainWork = (pindex->pprev ? pindex->pprev->nChainWork : 0) + GetBlockProof(*pindex);
         pindex->nTimeMax = (pindex->pprev ? std::max(pindex->pprev->nTimeMax, pindex->nTime) : pindex->nTime);
+
         // We can link the chain of blocks for which we've received transactions at some point.
         // Pruned nodes may have deleted the block.
+        //
+        // Do not expect assumed-valid blocks to have nTx.
         if (pindex->nTx > 0) {
             if (pindex->pprev) {
-                if (pindex->pprev->HaveTxsDownloaded()) {
+                bool is_assumedvalid_end =
+                    assumedvalid_end_blockhash &&
+                    pindex->GetBlockHash() == *assumedvalid_end_blockhash;
+
+                if (is_assumedvalid_end) {
+                    // While starting up with an assumeutxo snapshot chain,
+                    // we need to manually populate the nChainTx field of the
+                    // base of the snapshot so that we can add assumed-valid
+                    // candidate tips to setBlockIndexCandidates below.
+                    //
+                    // After the snapshot has completed validation, nChainTx
+                    // values should compute normally.
+                    assert(assumedvalid_end_nchaintx > 0);
+                    pindex->nChainTx = assumedvalid_end_nchaintx;
+                    saw_end_of_assumedvalid = true;
+
+                    LogPrintf("\n\n[snapshot] setting %s nChainTx to %d\n\n",
+                        pindex->ToString(), pindex->nChainTx);
+                } else if (pindex->pprev->HaveTxsDownloaded()) {
                     pindex->nChainTx = pindex->pprev->nChainTx + pindex->nTx;
                 } else {
                     pindex->nChainTx = 0;
@@ -3743,7 +3776,18 @@ bool BlockManager::LoadBlockIndex(
         if (pindex->IsAssumedValid() ||
                 (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) &&
                  (pindex->HaveTxsDownloaded() || pindex->pprev == nullptr))) {
-            block_index_candidates.insert(pindex);
+            for (CChainState* chainstate : chainman.GetAll()) {
+                // If we're on an block index entry that is passed the end of the
+                // assumed-valid region of the chain, avoid
+                // adding this as a candidate tip to the background validation
+                // chain, since that would prevent background IBD from happening.
+                //
+                // If there is no assumed-valid region of the chain,
+                // !saw_end_of_assumedvalid will always be true.
+                if (!saw_end_of_assumedvalid || chainstate->ReliesOnAssumeValid()) {
+                    chainstate->setBlockIndexCandidates.insert(pindex);
+                }
+            }
         }
         if (pindex->nStatus & BLOCK_FAILED_MASK && (!pindexBestInvalid || pindex->nChainWork > pindexBestInvalid->nChainWork))
             pindexBestInvalid = pindex;
@@ -3767,11 +3811,9 @@ void BlockManager::Unload() {
     m_block_index.clear();
 }
 
-bool BlockManager::LoadBlockIndexDB(std::set<CBlockIndex*, CBlockIndexWorkComparator>& setBlockIndexCandidates)
+bool BlockManager::LoadBlockIndexDB(ChainstateManager& chainman)
 {
-    if (!LoadBlockIndex(
-            ::Params().GetConsensus(),
-            setBlockIndexCandidates)) {
+    if (!LoadBlockIndex(::Params().GetConsensus(), chainman)) {
         return false;
     }
 
@@ -4117,7 +4159,7 @@ bool ChainstateManager::LoadBlockIndex()
     // Load block index from databases
     bool needs_init = fReindex;
     if (!fReindex) {
-        bool ret = m_blockman.LoadBlockIndexDB(ActiveChainstate().setBlockIndexCandidates);
+        bool ret = m_blockman.LoadBlockIndexDB(*this);
         if (!ret) return false;
         needs_init = m_blockman.m_block_index.empty();
     }
@@ -5098,4 +5140,42 @@ void ChainstateManager::MaybeRebalanceCaches()
                 m_total_coinstip_cache * 0.95, m_total_coinsdb_cache * 0.95);
         }
     }
+}
+
+CBlockIndex* ChainstateManager::getSnapshotBaseBlock()
+{
+    auto blockhash_op = SnapshotBlockhash();
+    if (!blockhash_op) return nullptr;
+    return m_blockman.LookupBlockIndex(*blockhash_op);
+}
+
+std::optional<int> ChainstateManager::getSnapshotHeight()
+{
+    CBlockIndex* base = getSnapshotBaseBlock();
+    return base ? std::make_optional(base->nHeight) : std::nullopt;
+}
+
+std::optional<unsigned int> ChainstateManager::getSnapshotNChainTx()
+{
+    auto height = getSnapshotHeight();
+    if (!height) return std::nullopt;
+
+    auto au_data = ExpectedAssumeutxo(*height, ::Params());
+    if (!au_data) {
+        LogPrintf("%s: WARNING: no assumeutxo chainparams found for " /* Continued */
+            "active snapshot (%s); something is wrong - please report this\n",
+            __func__, (*this->SnapshotBlockhash()).ToString());
+        return std::nullopt;
+    }
+
+    return au_data->nChainTx;
+}
+
+std::pair<std::optional<uint256>, unsigned int> ChainstateManager::getAssumedValidEnd()
+{
+    std::optional<uint256> snapshotblockhash = SnapshotBlockhash();
+    std::optional<unsigned int> nchaintx = getSnapshotNChainTx();
+
+    if (!snapshotblockhash || !nchaintx) return {std::nullopt, 0};
+    return {snapshotblockhash, *nchaintx};
 }
