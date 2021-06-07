@@ -3898,6 +3898,8 @@ bool BlockManager::LoadBlockIndex(
     // start processing blockindex entries that are assumed to be valid.
     bool pindex_assumed_valid = false;
 
+    std::optional<int> snapshot_height = chainman.GetSnapshotHeight();
+
     for (const std::pair<int, CBlockIndex*>& item : vSortedByHeight)
     {
         if (ShutdownRequested()) return false;
@@ -3907,7 +3909,10 @@ bool BlockManager::LoadBlockIndex(
 
         // We can link the chain of blocks for which we've received transactions at some point.
         // Pruned nodes may have deleted the block.
-        if (pindex->nTx > 0) {
+        //
+        // When operating using a UTXO snapshot, do not expect assumed-valid blocks to
+        // have nTx.
+        if (pindex->nTx > 0 || (snapshot_height && *snapshot_height >= pindex->nHeight)) {
             if (pindex->pprev) {
                 bool is_snapshot_base =
                     snapshot_blockhash_opt && pindex->GetBlockHash() == *snapshot_blockhash_opt;
