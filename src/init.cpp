@@ -1487,8 +1487,9 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
             if (!fReset) {
                 LOCK(cs_main);
                 auto chainstates{chainman.GetAll()};
+                std::optional<int> snapshot_height = chainman.GetSnapshotHeight();
                 if (std::any_of(chainstates.begin(), chainstates.end(),
-                                [&chainparams](const CChainState* cs) EXCLUSIVE_LOCKS_REQUIRED(cs_main) { return cs->NeedsRedownload(chainparams); })) {
+                                [&chainparams, snapshot_height](const CChainState* cs) EXCLUSIVE_LOCKS_REQUIRED(cs_main) { return cs->NeedsRedownload(chainparams, snapshot_height); })) {
                     strLoadError = strprintf(_("Witness data for blocks after height %d requires validation. Please restart with -reindex."),
                                              chainparams.GetConsensus().SegwitHeight);
                     break;
