@@ -237,10 +237,9 @@ void WalletView::gotoLoadPSBT(bool from_clipboard)
         return;
     }
 
-    PSBTOperationsDialog* dlg = new PSBTOperationsDialog(this, walletModel, clientModel);
+    auto dlg = new PSBTOperationsDialog(this, walletModel, clientModel);
     dlg->openWithPSBT(psbtx);
-    dlg->setAttribute(Qt::WA_DeleteOnClose);
-    dlg->exec();
+    GUIUtil::ShowModalDialogAndDeleteOnClose(dlg);
 }
 
 bool WalletView::handlePaymentRequest(const SendCoinsRecipient& recipient)
