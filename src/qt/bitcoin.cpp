@@ -301,7 +301,7 @@ void BitcoinApplication::startThread()
 
     /*  communication to and from thread */
     connect(executor, &BitcoinCore::initializeResult, this, &BitcoinApplication::initializeResult);
-    connect(executor, &BitcoinCore::shutdownResult, this, &BitcoinApplication::shutdownResult);
+    connect(executor, &BitcoinCore::shutdownResult, this, &QCoreApplication::quit);
     connect(executor, &BitcoinCore::runawayException, this, &BitcoinApplication::handleRunawayException);
     connect(this, &BitcoinApplication::requestedInitialize, executor, &BitcoinCore::initialize);
     connect(this, &BitcoinApplication::requestedShutdown, executor, &BitcoinCore::shutdown);
@@ -414,11 +414,6 @@ void BitcoinApplication::initializeResult(bool success, interfaces::BlockAndHead
         Q_EMIT splashFinished(); // Make sure splash screen doesn't stick around during shutdown
         requestShutdown();
     }
-}
-
-void BitcoinApplication::shutdownResult()
-{
-    quit();
 }
 
 void BitcoinApplication::handleRunawayException(const QString &message)
