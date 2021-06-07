@@ -4347,7 +4347,9 @@ bool CChainState::ReplayBlocks(const CChainParams& params)
     return true;
 }
 
-bool CChainState::NeedsRedownload(const CChainParams& params) const
+bool CChainState::NeedsRedownload(
+    const CChainParams& params,
+    std::optional<int> snapshot_height) const
 {
     AssertLockHeld(cs_main);
 
@@ -4357,8 +4359,12 @@ bool CChainState::NeedsRedownload(const CChainParams& params) const
 
     while (block != nullptr && block->nHeight >= segwit_height) {
         if (!(block->nStatus & BLOCK_OPT_WITNESS)) {
-            // block is insufficiently validated for a segwit client
-            return true;
+            // When using a snapshot, do not expect BLOCK_OPT_WITNESS to be set
+            // for assumed-valid blocks.
+            if (!snapshot_height || (block->nHeight > *snapshot_height )) {
+                // block is insufficiently validated for a segwit client
+                return true;
+            }
         }
         block = block->pprev;
     }
