@@ -778,7 +778,7 @@ public:
     bool ReplayBlocks(const CChainParams& params);
 
     /** Whether the chain state needs to be redownloaded due to lack of witness data */
-    [[nodiscard]] bool NeedsRedownload(const CChainParams& params) const EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+    [[nodiscard]] bool NeedsRedownload(const CChainParams& params, std::optional<int> snapshot_height) const EXCLUSIVE_LOCKS_REQUIRED(cs_main);
     /** Ensures we have a genesis block in the block tree, possibly writing one to disk. */
     bool LoadGenesisBlock(const CChainParams& chainparams) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
