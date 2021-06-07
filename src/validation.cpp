@@ -4146,7 +4146,6 @@ bool CVerifyDB::VerifyDB(
 {
     AssertLockHeld(cs_main);
 
-    assert(std::addressof(::ChainstateActive()) == std::addressof(chainstate));
     if (chainstate.m_chain.Tip() == nullptr || chainstate.m_chain.Tip()->pprev == nullptr)
         return true;
 
