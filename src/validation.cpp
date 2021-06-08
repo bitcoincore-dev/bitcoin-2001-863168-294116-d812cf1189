@@ -4430,7 +4430,6 @@ bool CChainState::LoadGenesisBlock(const CChainParams& chainparams)
     if (g_chainman.BlockIndex().count(chainparams.GenesisBlock().GetHash()))
         return true;
 
-    assert(std::addressof(::ChainActive()) == std::addressof(m_chain));
     try {
         const CBlock& block = chainparams.GenesisBlock();
         FlatFilePos blockPos = SaveBlockToDisk(block, 0, m_chain, chainparams, nullptr);
