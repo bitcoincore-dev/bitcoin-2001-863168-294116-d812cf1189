@@ -2731,7 +2731,13 @@ return RPCHelpMan{
         "monitorsnapshot",
         "\nReturn information about UTXO snapshot status.\n",
         {},
-        RPCResult{RPCResult::Type::NONE, "", ""},
+        RPCResult{
+            RPCResult::Type::OBJ, "x", "x",
+                {
+                    {RPCResult::Type::NUM, "headers", "the number of headers we've seen"},
+                    {RPCResult::Type::STR, "active_chain_type", "whether active chain is ibd or snapshot"},
+                }
+        },
         RPCExamples{
             HelpExampleCli("monitorsnapshot", "")
     + HelpExampleRpc("monitorsnapshot", "")
@@ -2744,7 +2750,7 @@ return RPCHelpMan{
     NodeContext& node = EnsureAnyNodeContext(request.context);
     ChainstateManager& chainman = *node.chainman;
 
-    auto make_chain_data = [](CChainState* cs) {
+    auto make_chain_data = [](CChainState* cs) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
         UniValue data(UniValue::VOBJ);
         if (!cs || !cs->m_chain.Tip()) {
             return data;
@@ -2762,11 +2768,10 @@ return RPCHelpMan{
         return data;
     };
 
-    obj.pushKV("active_chain_type", chainman.ActiveChainstate().IsFromSnapshot() ? "ibd" : "snapshot");
+    obj.pushKV("active_chain_type", chainman.ActiveChainstate().IsFromSnapshot() ? "snapshot" : "ibd");
 
     for (CChainState* chainstate : chainman.GetAll()) {
-        std::string cstype = chainstate->IsFromSnapshot() ? "ibd" : "snapshot";
-        obj.pushKV(cstype, make_chain_data(chainstate));
+        obj.pushKV(chainstate->IsFromSnapshot() ? "snapshot" : "ibd", make_chain_data(chainstate));
     }
     obj.pushKV("headers", pindexBestHeader ? pindexBestHeader->nHeight : -1);
 
