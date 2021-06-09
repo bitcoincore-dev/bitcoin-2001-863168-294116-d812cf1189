@@ -6,7 +6,8 @@ $(package)_file_name=qtbase-$($(package)_suffix)
 $(package)_sha256_hash=1c1b4e33137ca77881074c140d54c3c9747e845a31338cfe8680f171f0bc3a39
 $(package)_linux_dependencies=freetype fontconfig libxcb libxkbcommon
 $(package)_qt_libs=corelib network widgets gui plugins testlib
-$(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_no_printer.patch no-xlib.patch
+$(package)_patches = qt.pro
+$(package)_patches += fix_qt_pkgconfig.patch mac-qmake.conf fix_no_printer.patch no-xlib.patch
 $(package)_patches+= fix_android_qmake_conf.patch fix_android_jni_static.patch dont_hardcode_pwd.patch
 $(package)_patches+= drop_lrelease_dependency.patch no_sdk_version_check.patch
 $(package)_patches+= fix_lib_paths.patch fix_android_pch.patch
@@ -75,10 +76,8 @@ $(package)_config_opts += -static
 $(package)_config_opts += -v
 $(package)_config_opts += -no-feature-bearermanagement
 $(package)_config_opts += -no-feature-colordialog
-$(package)_config_opts += -no-feature-commandlineparser
 $(package)_config_opts += -no-feature-concurrent
 $(package)_config_opts += -no-feature-dial
-$(package)_config_opts += -no-feature-fontcombobox
 $(package)_config_opts += -no-feature-ftp
 $(package)_config_opts += -no-feature-http
 $(package)_config_opts += -no-feature-image_heuristic_mask
@@ -97,7 +96,6 @@ $(package)_config_opts += -no-feature-sql
 $(package)_config_opts += -no-feature-sqlmodel
 $(package)_config_opts += -no-feature-statemachine
 $(package)_config_opts += -no-feature-syntaxhighlighter
-$(package)_config_opts += -no-feature-textbrowser
 $(package)_config_opts += -no-feature-textodfwriter
 $(package)_config_opts += -no-feature-topleveldomain
 $(package)_config_opts += -no-feature-udpsocket
@@ -106,8 +104,6 @@ $(package)_config_opts += -no-feature-undogroup
 $(package)_config_opts += -no-feature-undostack
 $(package)_config_opts += -no-feature-undoview
 $(package)_config_opts += -no-feature-vnc
-$(package)_config_opts += -no-feature-wizard
-$(package)_config_opts += -no-feature-xml
 
 $(package)_config_opts_darwin = -no-dbus
 $(package)_config_opts_darwin += -no-opengl
@@ -220,6 +216,7 @@ endef
 # 8. Adjust a regex in toolchain.prf, to accommodate Guix's usage of
 # CROSS_LIBRARY_PATH. See #15277.
 define $(package)_preprocess_cmds
+  cp $($(package)_patch_dir)/qt.pro qt.pro && \
   patch -p1 -i $($(package)_patch_dir)/drop_lrelease_dependency.patch && \
   patch -p1 -i $($(package)_patch_dir)/dont_hardcode_pwd.patch && \
   patch -p1 -i $($(package)_patch_dir)/fix_qt_pkgconfig.patch && \
@@ -248,31 +245,18 @@ endef
 define $(package)_config_cmds
   export PKG_CONFIG_SYSROOT_DIR=/ && \
   export PKG_CONFIG_LIBDIR=$(host_prefix)/lib/pkgconfig && \
-  export PKG_CONFIG_PATH=$(host_prefix)/share/pkgconfig  && \
+  export PKG_CONFIG_PATH=$(host_prefix)/share/pkgconfig && \
   cd qtbase && \
-  ./configure $($(package)_config_opts) && \
-  cd .. && \
-  $(MAKE) -C qtbase sub-src-clean && \
-  qtbase/bin/qmake -o qttranslations/Makefile qttranslations/qttranslations.pro && \
-  qtbase/bin/qmake -o qttranslations/translations/Makefile qttranslations/translations/translations.pro && \
-  qtbase/bin/qmake -o qttools/src/linguist/lrelease/Makefile qttools/src/linguist/lrelease/lrelease.pro && \
-  qtbase/bin/qmake -o qttools/src/linguist/lupdate/Makefile qttools/src/linguist/lupdate/lupdate.pro && \
-  qtbase/bin/qmake -o qttools/src/linguist/lconvert/Makefile qttools/src/linguist/lconvert/lconvert.pro
+  ./configure -top-level $($(package)_config_opts)
 endef
 
 define $(package)_build_cmds
-  $(MAKE) -C qtbase/src $(addprefix sub-,$($(package)_qt_libs)) && \
-  $(MAKE) -C qttools/src/linguist/lrelease && \
-  $(MAKE) -C qttools/src/linguist/lupdate && \
-  $(MAKE) -C qttools/src/linguist/lconvert && \
-  $(MAKE) -C qttranslations
+  $(MAKE)
 endef
 
 define $(package)_stage_cmds
   $(MAKE) -C qtbase/src INSTALL_ROOT=$($(package)_staging_dir) $(addsuffix -install_subtargets,$(addprefix sub-,$($(package)_qt_libs))) && \
-  $(MAKE) -C qttools/src/linguist/lrelease INSTALL_ROOT=$($(package)_staging_dir) install_target && \
-  $(MAKE) -C qttools/src/linguist/lupdate INSTALL_ROOT=$($(package)_staging_dir) install_target && \
-  $(MAKE) -C qttools/src/linguist/lconvert INSTALL_ROOT=$($(package)_staging_dir) install_target && \
+  $(MAKE) -C qttools/src/linguist INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install_subtargets
 endef
 
