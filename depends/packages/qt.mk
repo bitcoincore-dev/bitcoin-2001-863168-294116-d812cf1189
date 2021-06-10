@@ -251,7 +251,7 @@ define $(package)_config_cmds
   cd qtbase && \
   ./configure -top-level $($(package)_config_opts) && \
   cd .. && \
-  qtbase/bin/qmake -o qtbase/Makefile "CONFIG+=no_install_prl" qtbase/qtbase.pro && \
+  qtbase/bin/qmake -o qtbase/Makefile "CONFIG+=no_install_prl" -after "CONFIG-=create_libtool" qtbase/qtbase.pro && \
   $(MAKE) -C qtbase sub-src-clean && \
   qtbase/bin/qmake -o qttools/src/linguist/Makefile "CONFIG+=force_bootstrap" qttools/src/linguist/linguist.pro && \
   qtbase/bin/qmake -o qttranslations/Makefile qttranslations/qttranslations.pro
@@ -270,6 +270,5 @@ define $(package)_stage_cmds
 endef
 
 define $(package)_postprocess_cmds
-  rm -rf native/mkspecs/ native/lib/ lib/cmake/ && \
-  rm -f lib/lib*.la
+  rm -rf native/mkspecs/ native/lib/ lib/cmake/
 endef
