@@ -6,6 +6,7 @@ $(package)_file_name=qtbase-$($(package)_suffix)
 $(package)_sha256_hash=1c1b4e33137ca77881074c140d54c3c9747e845a31338cfe8680f171f0bc3a39
 $(package)_linux_dependencies=freetype fontconfig libxcb libxkbcommon
 $(package)_qt_libs=corelib network widgets gui plugins testlib
+$(package)_linguist_tools = lrelease lupdate lconvert
 $(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_no_printer.patch no-xlib.patch
 $(package)_patches+= fix_android_qmake_conf.patch fix_android_jni_static.patch dont_hardcode_pwd.patch
 $(package)_patches+= drop_lrelease_dependency.patch no_sdk_version_check.patch
@@ -254,25 +255,19 @@ define $(package)_config_cmds
   ./configure $($(package)_config_opts) && \
   cd .. && \
   $(MAKE) -C qtbase sub-src-clean && \
-  qtbase/bin/qmake -o qttranslations/Makefile qttranslations/qttranslations.pro && \
-  qtbase/bin/qmake -o qttools/src/linguist/lrelease/Makefile qttools/src/linguist/lrelease/lrelease.pro && \
-  qtbase/bin/qmake -o qttools/src/linguist/lupdate/Makefile qttools/src/linguist/lupdate/lupdate.pro && \
-  qtbase/bin/qmake -o qttools/src/linguist/lconvert/Makefile qttools/src/linguist/lconvert/lconvert.pro
+  qtbase/bin/qmake -o qttools/src/linguist/Makefile qttools/src/linguist/linguist.pro && \
+  qtbase/bin/qmake -o qttranslations/Makefile qttranslations/qttranslations.pro
 endef
 
 define $(package)_build_cmds
   $(MAKE) -C qtbase/src $(addprefix sub-,$($(package)_qt_libs)) && \
-  $(MAKE) -C qttools/src/linguist/lrelease && \
-  $(MAKE) -C qttools/src/linguist/lupdate && \
-  $(MAKE) -C qttools/src/linguist/lconvert && \
+  $(MAKE) -C qttools/src/linguist $(addprefix sub-,$($(package)_linguist_tools)) && \
   $(MAKE) -C qttranslations
 endef
 
 define $(package)_stage_cmds
   $(MAKE) -C qtbase/src INSTALL_ROOT=$($(package)_staging_dir) $(addsuffix -install_subtargets,$(addprefix sub-,$($(package)_qt_libs))) && \
-  $(MAKE) -C qttools/src/linguist/lrelease INSTALL_ROOT=$($(package)_staging_dir) install_target && \
-  $(MAKE) -C qttools/src/linguist/lupdate INSTALL_ROOT=$($(package)_staging_dir) install_target && \
-  $(MAKE) -C qttools/src/linguist/lconvert INSTALL_ROOT=$($(package)_staging_dir) install_target && \
+  $(MAKE) -C qttools/src/linguist INSTALL_ROOT=$($(package)_staging_dir) $(addsuffix -install_subtargets,$(addprefix sub-,$($(package)_linguist_tools))) && \
   $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install_subtargets
 endef
 
