@@ -175,6 +175,7 @@ ChainTestingSetup::ChainTestingSetup(const ChainType chainType, const std::vecto
         .datadir = m_args.GetDataDirNet(),
         .adjusted_time_callback = GetAdjustedTime,
         .check_block_index = true,
+        .checkpoints_enabled = false,
         .notifications = *m_node.notifications,
     };
     const BlockManager::Options blockman_opts{
