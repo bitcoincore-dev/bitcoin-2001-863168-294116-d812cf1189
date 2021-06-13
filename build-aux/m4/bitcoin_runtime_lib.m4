@@ -5,14 +5,10 @@
 # - https://bugs.llvm.org/show_bug.cgi?id=28629
 
 m4_define([_CHECK_RUNTIME_testbody], [[
-  #if defined(__clang__) && defined(__has_builtin)
-  #if __has_builtin(__builtin_mul_overflow)
   bool f(long long x, long long y, long long* p)
   {
     return __builtin_mul_overflow(x, y, p);
   }
-  #endif
-  #endif
 
   int main() { return 0; }
 ]])
@@ -21,18 +17,23 @@ AC_DEFUN([CHECK_RUNTIME_LIB], [
 
   AC_LANG_PUSH(C++)
 
-  AC_MSG_CHECKING([whether __builtin_mul_overflow can be used without compiler-rt])
+  AC_MSG_CHECKING([for __builtin_mul_overflow])
 
   AC_LINK_IFELSE([AC_LANG_SOURCE([_CHECK_RUNTIME_testbody])], [
-      AC_MSG_RESULT([yes])
-    ], [
+    AC_MSG_RESULT([yes])
+    AC_DEFINE([HAVE_BUILTIN_MUL_OVERFLOW], [1], [Define if you have a working __builtin_mul_overflow])
+  ], [
+    ax_check_save_flags="$LDFLAGS"
+    LDFLAGS="$LDFLAGS --rtlib=compiler-rt -lgcc_s"
+    AC_LINK_IFELSE([AC_LANG_SOURCE([_CHECK_RUNTIME_testbody])], [
+      AC_MSG_RESULT([with additional linker flags])
+      RUNTIME_LDFLAGS="--rtlib=compiler-rt -lgcc_s"
+      AC_DEFINE([HAVE_BUILTIN_MUL_OVERFLOW], [1], [Define if you have a working __builtin_mul_overflow])
+    ],[
       AC_MSG_RESULT([no])
-      AX_CHECK_LINK_FLAG([--rtlib=compiler-rt -lgcc_s],
-                         [RUNTIME_LDFLAGS="--rtlib=compiler-rt -lgcc_s"],
-                         [AC_MSG_FAILURE([cannot figure out how to use __builtin_mul_overflow])],
-                         [$LDFLAG_WERROR],
-                         [AC_LANG_SOURCE([_CHECK_RUNTIME_testbody])])
     ])
+    LDFLAGS=$ax_check_save_flags
+  ])
 
   AC_LANG_POP
   AC_SUBST(RUNTIME_LDFLAGS)
