@@ -19,6 +19,7 @@
 #include <QAbstractItemDelegate>
 #include <QApplication>
 #include <QDateTime>
+#include <QLatin1String>
 #include <QPainter>
 #include <QStatusTipEvent>
 
@@ -72,7 +73,6 @@ public:
         painter->setPen(foreground);
         QRect boundingRect;
         painter->drawText(addressRect, Qt::AlignLeft | Qt::AlignVCenter, address, &boundingRect);
-        int address_rect_min_width = boundingRect.width();
 
         if (index.data(TransactionTableModel::WatchonlyRole).toBool())
         {
@@ -80,7 +80,6 @@ public:
             QRect watchonlyRect(boundingRect.right() + 5, mainRect.top()+ypad+halfheight, 16, halfheight);
             iconWatchonly = platformStyle->TextColorIcon(iconWatchonly);
             iconWatchonly.paint(painter, watchonlyRect);
-            address_rect_min_width += 5 + watchonlyRect.width();
         }
 
         if(amount < 0)
@@ -107,9 +106,9 @@ public:
 
         painter->setPen(option.palette.color(QPalette::Text));
         QRect date_bounding_rect;
-        painter->drawText(amountRect, Qt::AlignLeft | Qt::AlignVCenter, GUIUtil::dateTimeStr(date), &date_bounding_rect);
+        painter->drawText(amountRect, Qt::AlignLeft | Qt::AlignVCenter, GUIUtil::dateTimeStr(date) + QLatin1String("  "), &date_bounding_rect);
 
-        const int minimum_width = std::max(address_rect_min_width, amount_bounding_rect.width() + date_bounding_rect.width());
+        const int minimum_width = amount_bounding_rect.width() + date_bounding_rect.width();
         const auto search = m_minimum_width.find(index.row());
         if (search == m_minimum_width.end() || search->second != minimum_width) {
             m_minimum_width[index.row()] = minimum_width;
