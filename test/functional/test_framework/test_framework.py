@@ -991,3 +991,7 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
     def is_syscall_sandbox_compiled(self):
         """Checks whether the syscall sandbox was compiled."""
         return self.config["components"].getboolean("ENABLE_SYSCALL_SANDBOX")
+
+    def has_blockfile(self, node, filenum: str):
+        blocksdir = os.path.join(node.datadir, self.chain, 'blocks', '')
+        return os.path.isfile(os.path.join(blocksdir, f"blk{filenum}.dat"))
