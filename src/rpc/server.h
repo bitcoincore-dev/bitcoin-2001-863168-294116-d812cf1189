@@ -109,7 +109,7 @@ public:
               category,
               fn().m_name,
               [fn](const JSONRPCRequest& request, UniValue& result, bool) { result = fn().HandleRequest(request); return true; },
-              fn().GetArgNames(),
+              args_in,
               intptr_t(fn))
     {
         CHECK_NONFATAL(fn().m_name == name_in);
