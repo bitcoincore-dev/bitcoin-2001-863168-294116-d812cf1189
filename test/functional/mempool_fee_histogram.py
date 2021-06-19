@@ -105,6 +105,10 @@ class MempoolFeeHistogramTest(BitcoinTestFramework):
             assert_greater_than_or_equal(bin['sizes'], 0)
             if bin['to_feerate'] is not None:
                 assert_greater_than_or_equal(bin['to_feerate'], bin['from_feerate'])
+                for next_key in sorted((*(int(a) for a in histogram.keys() if a != 'total_fees'), 0x7fffffffffffffff)):
+                    if int(next_key) <= int(key): continue
+                    assert_equal(bin['to_feerate'], int(next_key))
+                    break
             total_fees += bin['fees']
 
             if bin['count'] == 0:
