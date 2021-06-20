@@ -1482,6 +1482,7 @@ bool AppInitMain(const util::Ref& context, NodeContext& node, interfaces::BlockA
     }
 
     const std::string& i2p_proxy_arg = args.GetArg("-i2pproxy", "");
+    SetReachable(NET_I2P, false);
     if (!i2p_proxy_arg.empty()) {
         CService i2p_proxy;
         constexpr uint16_t dummy_port{0};
