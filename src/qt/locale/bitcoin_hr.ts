@@ -478,12 +478,40 @@
         <translation>Ažurno</translation>
     </message>
     <message>
+        <source>&amp;Load PSBT from file...</source>
+        <translation>&amp;Učitaj PSBT iz datoteke</translation>
+    </message>
+    <message>
+        <source>Load Partially Signed Bitcoin Transaction</source>
+        <translation>Učitaj djelomično potpisanu bitcoin transakciju</translation>
+    </message>
+    <message>
+        <source>Load PSBT from clipboard...</source>
+        <translation>Učitaj PSBT iz međuspremnika</translation>
+    </message>
+    <message>
+        <source>Load Partially Signed Bitcoin Transaction from clipboard</source>
+        <translation>Učitaj djelomično potpisanu bitcoin transakciju iz međuspremnika</translation>
+    </message>
+    <message>
+        <source>Node window</source>
+        <translation>Konzola za čvor</translation>
+    </message>
+    <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Otvori konzolu za dijagnostiku i otklanjanje pogrešaka čvora.</translation>
+    </message>
+    <message>
         <source>&amp;Sending addresses</source>
         <translation>Adrese za &amp;slanje</translation>
     </message>
     <message>
         <source>&amp;Receiving addresses</source>
         <translation>Adrese za &amp;primanje</translation>
+    </message>
+    <message>
+        <source>Open a bitcoin: URI</source>
+        <translation>Otvori bitcoin: URI</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -500,6 +528,14 @@
     <message>
         <source>Close wallet</source>
         <translation>Zatvorite novčanik</translation>
+    </message>
+    <message>
+        <source>Close All Wallets...</source>
+        <translation>Zatvori sve novčanike...</translation>
+    </message>
+    <message>
+        <source>Close all wallets</source>
+        <translation>Zatvori sve novčanike</translation>
     </message>
     <message>
         <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
@@ -817,7 +853,7 @@
         <source>Create</source>
         <translation>Stvorite</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -1757,6 +1793,10 @@
     <message>
         <source>User Agent</source>
         <translation>Korisnički agent</translation>
+    </message>
+    <message>
+        <source>Node window</source>
+        <translation>Konzola za čvor</translation>
     </message>
     <message>
         <source>Open the %1 debug log file from the current data directory. This can take a few seconds for large log files.</source>
@@ -3097,6 +3137,10 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
         <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
         <translation>Držanje novčanik zatvorenim predugo može rezultirati ponovnom sinkronizacijom cijelog lanca ako je obrezivanje uključeno.</translation>
     </message>
+    <message>
+        <source>Close all wallets</source>
+        <translation>Zatvori sve novčanike</translation>
+    </message>
     </context>
 <context>
     <name>WalletFrame</name>
@@ -3582,10 +3626,6 @@ Napomena: Budući da se naknada računa po bajtu, naknada od "100 satošija po k
     <message>
         <source>%s is set very high!</source>
         <translation>%s je postavljen preveliko!</translation>
-    </message>
-    <message>
-        <source>Error loading wallet %s. Duplicate -wallet filename specified.</source>
-        <translation>Greška kod učitavanja novčanika %s. Duplikat imena novčanika zadan.</translation>
     </message>
     <message>
         <source>Starting network threads...</source>
