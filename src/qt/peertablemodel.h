@@ -84,6 +84,7 @@ public:
 
 public Q_SLOTS:
     void refresh();
+    void updatePalette();
 
 private:
     interfaces::Node& m_node;
