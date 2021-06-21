@@ -7,7 +7,11 @@
 #include <logging.h>
 #include <util/system.h>
 
+#ifdef USE_BDB
 bool ExistsBerkeleyDatabase(const fs::path& path);
+#else
+#   define ExistsBerkeleyDatabase(path)  (false)
+#endif
 bool ExistsSQLiteDatabase(const fs::path& path);
 
 fs::path GetWalletDir()
