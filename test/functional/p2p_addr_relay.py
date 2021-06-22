@@ -74,7 +74,7 @@ class AddrTest(BitcoinTestFramework):
             addr_source.send_and_ping(msg)
             self.nodes[0].setmocktime(int(time.time()) + 30 * 60)
             for receiver in receivers:
-                receiver.sync_with_ping()
+                receiver.sync_send_with_ping()
 
         total_ipv4_received = sum(r.num_ipv4_received for r in receivers)
 
