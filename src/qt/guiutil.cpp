@@ -875,6 +875,7 @@ void ThemedLabel::changeEvent(QEvent* e)
     if (e->type() == QEvent::PaletteChange) {
         updateThemedPixmap();
     }
+
     QLabel::changeEvent(e);
 }
 
