@@ -88,6 +88,17 @@ static std::shared_ptr<CWallet> MakeWallet(const std::string& name, const fs::pa
     return wallet_instance;
 }
 
+static std::shared_ptr<CWallet> MakeWallet(const std::string& name, const fs::path& path, bool create)
+{
+    DatabaseOptions options;
+    if (create) {
+        options.require_create = true;
+    } else {
+        options.require_existing = true;
+    }
+    return MakeWallet(name, path, options);
+}
+
 static void WalletShowInfo(CWallet* wallet_instance)
 {
     LOCK(wallet_instance->cs_wallet);
@@ -133,9 +144,7 @@ bool ExecuteWalletToolFunc(const std::string& command, const std::string& name)
         }
     } else if (command == "info" || command == "salvage") {
         if (command == "info") {
-            DatabaseOptions options;
-            options.require_existing = true;
-            std::shared_ptr<CWallet> wallet_instance = MakeWallet(name, path, options);
+            std::shared_ptr<CWallet> wallet_instance = MakeWallet(name, path, /* create= */ false);
             if (!wallet_instance) return false;
             WalletShowInfo(wallet_instance.get());
             wallet_instance->Close();
