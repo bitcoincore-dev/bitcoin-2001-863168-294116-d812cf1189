@@ -272,9 +272,13 @@ void WalletView::encryptWallet(bool status)
 void WalletView::backupWallet()
 {
     QString filetype_str;
+    QString supported_formats = tr("Wallet Data (*.dat)");
+    if (walletModel->wallet().canBackupToDbDump()) {
+        supported_formats += QStringLiteral(";;") + tr("Wallet Database Dump File (*.walletdbdump)");
+    }
     QString filename = GUIUtil::getSaveFileName(this,
         tr("Backup Wallet"), QString(),
-        tr("Wallet Data (*.dat);;Wallet Database Dump File (*.walletdbdump)"),
+        supported_formats,
         &filetype_str);
 
     if (filename.isEmpty())
