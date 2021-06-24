@@ -354,6 +354,9 @@ class BackwardsCompatibilityTest(BitcoinTestFramework):
         hdkeypath = v17_info["hdkeypath"]
         pubkey = v17_info["pubkey"]
 
+        if not self.is_bdb_compiled(): return
+        # Old wallets are BDB and will only work if BDB is compiled
+
         # Copy the 0.16 wallet to the last Bitcoin Core version and open it:
         shutil.copyfile(
             os.path.join(node_v16_wallets_dir, "wallets/u1_v16"),
