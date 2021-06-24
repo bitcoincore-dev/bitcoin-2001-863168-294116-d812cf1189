@@ -563,7 +563,7 @@ void CNode::copyStats(CNodeStats &stats, const std::vector<bool> &m_asmap)
     X(nServices);
     X(addr);
     X(addrBind);
-    stats.m_network = GetNetworkName(ConnectedThroughNetwork());
+    stats.m_network = ConnectedThroughNetwork();
     stats.m_mapped_as = addr.GetMappedAS(m_asmap);
     if (m_tx_relay != nullptr) {
         LOCK(m_tx_relay->cs_filter);
@@ -625,6 +625,7 @@ void CNode::copyStats(CNodeStats &stats, const std::vector<bool> &m_asmap)
     CService addrLocalUnlocked = GetAddrLocal();
     stats.addrLocal = addrLocalUnlocked.IsValid() ? addrLocalUnlocked.ToString() : "";
 
+    X(m_conn_type);
     stats.m_conn_type_string = ConnectionTypeAsString();
 }
 #undef X
