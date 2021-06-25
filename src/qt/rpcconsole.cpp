@@ -554,7 +554,7 @@ void RPCConsole::setClientModel(ClientModel *model)
         // create peer table context menu
         peersTableContextMenu = new QMenu(this);
         //: Context menu action to copy the address of a peer
-        peersTableContextMenu->addAction(tr("Copy address"), [this] {
+        peersTableContextMenu->addAction(tr("&Copy address"), [this] {
             GUIUtil::copyEntryData(ui->peerWidget, PeerTableModel::Address, Qt::DisplayRole);
         });
         peersTableContextMenu->addSeparator();
