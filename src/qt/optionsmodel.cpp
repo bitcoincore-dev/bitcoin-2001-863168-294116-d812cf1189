@@ -155,11 +155,7 @@ void OptionsModel::Init(bool resetSettings)
 
     language = settings.value("language").toString();
 
-    if (!settings.contains("PeersTabAlternatingRowColors")) {
-        settings.setValue("PeersTabAlternatingRowColors", "false");
-    }
-    m_peers_tab_alternating_row_colors = settings.value("PeersTabAlternatingRowColors").toBool();
-    Q_EMIT peersTabAlternatingRowColorsChanged(m_peers_tab_alternating_row_colors);
+    Q_EMIT peersTabAlternatingRowColorsChanged(data(index(PeersTabAlternatingRowColors, 0), Qt::EditRole).toBool());
 }
 
 /** Helper function to copy contents from one QSettings to another.
@@ -318,7 +314,7 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
         case Language:
             return settings.value("language");
         case PeersTabAlternatingRowColors:
-            return m_peers_tab_alternating_row_colors;
+            return settings.value("PeersTabAlternatingRowColors", true);
         case CoinControlFeatures:
             return fCoinControlFeatures;
         case Prune:
@@ -445,9 +441,10 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             }
             break;
         case PeersTabAlternatingRowColors:
-            m_peers_tab_alternating_row_colors = value.toBool();
-            settings.setValue("PeersTabAlternatingRowColors", m_peers_tab_alternating_row_colors);
-            Q_EMIT peersTabAlternatingRowColorsChanged(m_peers_tab_alternating_row_colors);
+            if (data(index, role) != value) {
+                settings.setValue("PeersTabAlternatingRowColors", value);
+                Q_EMIT peersTabAlternatingRowColorsChanged(value.toBool());
+            }
             break;
         case CoinControlFeatures:
             fCoinControlFeatures = value.toBool();

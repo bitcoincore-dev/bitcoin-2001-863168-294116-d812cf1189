@@ -473,8 +473,6 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
         move(QGuiApplication::primaryScreen()->availableGeometry().center() - frameGeometry().center());
     }
 
-    m_alternating_row_colors = settings.value("PeersTabAlternatingRowColors").toBool();
-
     constexpr QChar nonbreaking_hyphen(8209);
     const std::vector<QString> CONNECTION_TYPE_DOC{
         tr("Inbound: initiated by peer"),
@@ -640,7 +638,8 @@ void RPCConsole::setClientModel(ClientModel *model, int bestblock_height, int64_
         ui->peerWidget->setColumnWidth(PeerTableModel::Ping, PING_COLUMN_WIDTH);
         ui->peerWidget->horizontalHeader()->setStretchLastSection(true);
         ui->peerWidget->setItemDelegateForColumn(PeerTableModel::NetNodeId, new PeerIdViewDelegate(this));
-        ui->peerWidget->setAlternatingRowColors(m_alternating_row_colors);
+        const bool alternating_row_colors{clientModel->getOptionsModel()->data(clientModel->getOptionsModel()->index(OptionsModel::PeersTabAlternatingRowColors, 0), Qt::EditRole).toBool()};
+        ui->peerWidget->setAlternatingRowColors(alternating_row_colors);
 
         // create peer table context menu actions
         QAction* disconnectAction = new QAction(tr("&Disconnect"), this);
@@ -683,7 +682,7 @@ void RPCConsole::setClientModel(ClientModel *model, int bestblock_height, int64_
         ui->banlistWidget->setColumnWidth(BanTableModel::Address, BANSUBNET_COLUMN_WIDTH);
         ui->banlistWidget->setColumnWidth(BanTableModel::Bantime, BANTIME_COLUMN_WIDTH);
         ui->banlistWidget->horizontalHeader()->setStretchLastSection(true);
-        ui->banlistWidget->setAlternatingRowColors(m_alternating_row_colors);
+        ui->banlistWidget->setAlternatingRowColors(alternating_row_colors);
 
         // create ban table context menu action
         QAction* unbanAction = new QAction(tr("&Unban"), this);

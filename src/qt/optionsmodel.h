@@ -84,7 +84,6 @@ public:
     bool getMinimizeOnClose() const { return fMinimizeOnClose; }
     int getDisplayUnit() const { return nDisplayUnit; }
     QString getThirdPartyTxUrls() const { return strThirdPartyTxUrls; }
-    bool getPeersTabAlternatingRowColors() const { return m_peers_tab_alternating_row_colors; }
     bool getCoinControlFeatures() const { return fCoinControlFeatures; }
     const QString& getOverriddenByCommandLine() { return strOverriddenByCommandLine; }
 
@@ -108,7 +107,6 @@ private:
     QString language;
     int nDisplayUnit;
     QString strThirdPartyTxUrls;
-    bool m_peers_tab_alternating_row_colors;
     bool fCoinControlFeatures;
     /* settings that were overridden by command-line */
     QString strOverriddenByCommandLine;
