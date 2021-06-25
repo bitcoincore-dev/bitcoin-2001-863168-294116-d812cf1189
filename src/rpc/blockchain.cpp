@@ -562,6 +562,10 @@ static RPCHelpMan maxmempool()
         throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("MaxMempool size %d is too small", nSize));
     gArgs.ForceSetArg("-maxmempool", strprintf("%d", nSize));
 
+    if (request.context.Has<NodeContext>() && request.context.Get<NodeContext>().mempool) {
+        LimitMempoolSize(*request.context.Get<NodeContext>().mempool);
+    }
+
     return NullUniValue;
 }
     };
