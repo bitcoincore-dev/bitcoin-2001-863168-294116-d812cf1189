@@ -625,6 +625,7 @@ void CNode::copyStats(CNodeStats &stats, const std::vector<bool> &m_asmap)
     CService addrLocalUnlocked = GetAddrLocal();
     stats.addrLocal = addrLocalUnlocked.IsValid() ? addrLocalUnlocked.ToString() : "";
 
+    X(m_conn_type);
     stats.m_conn_type_string = ConnectionTypeAsString();
 }
 #undef X
@@ -2050,7 +2051,11 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
                 continue;
             }
 
-            // do not allow non-default ports, unless after 50 invalid addresses selected already
+            // Do not allow non-default ports, unless after 50 invalid
+            // addresses selected already. This is to prevent malicious peers
+            // from advertising themselves as a service on another host and
+            // port, causing a DoS attack as nodes around the network attempt
+            // to connect to it fruitlessly.
             if (addr.GetPort() != Params().GetDefaultPort() && nTries < 50)
                 continue;
 
