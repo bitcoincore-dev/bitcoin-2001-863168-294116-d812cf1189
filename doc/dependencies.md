@@ -7,11 +7,11 @@ These are the dependencies currently used by Bitcoin Core. You can find instruct
 | --- | --- | --- | --- | --- | --- |
 | Berkeley DB | [4.8.30](https://www.oracle.com/technetwork/database/database-technologies/berkeleydb/downloads/index.html) | 4.8.x | No |  |  |
 | Boost | [1.71.0](https://www.boost.org/users/download/) | [1.64.0](https://github.com/bitcoin/bitcoin/pull/22320) | No |  |  |
-| Clang |  | [5.0+](https://releases.llvm.org/download.html) (C++17 support) |  |  |  |
+| Clang<sup>[ \* ](#note1)</sup> |  | [5.0+](https://releases.llvm.org/download.html) (C++17 support) |  |  |  |
 | Expat | [2.2.7](https://libexpat.github.io/) |  | No | Yes |  |
 | fontconfig | [2.12.1](https://www.freedesktop.org/software/fontconfig/release/) |  | No | Yes |  |
 | FreeType | [2.7.1](https://download.savannah.gnu.org/releases/freetype) |  | No |  | [Yes](https://github.com/bitcoin/bitcoin/blob/master/depends/packages/qt.mk) (Android only) |
-| GCC |  | [7+](https://gcc.gnu.org/) (C++17 support) |  |  |  |
+| GCC |  | [7.1+](https://gcc.gnu.org/) (C++17 support with P0083R3 proposal) |  |  |  |
 | HarfBuzz-NG |  |  |  |  | [Yes](https://github.com/bitcoin/bitcoin/blob/master/depends/packages/qt.mk) |
 | libevent | [2.1.12-stable](https://github.com/libevent/libevent/releases) | [2.0.21](https://github.com/bitcoin/bitcoin/pull/18676) | No |  |  |
 | libnatpmp | git commit [4536032...](https://github.com/miniupnp/libnatpmp/tree/4536032ae32268a45c073a4d5e91bbab4534773a) |  | No |  |  |
@@ -27,6 +27,8 @@ These are the dependencies currently used by Bitcoin Core. You can find instruct
 | xkbcommon |  |  |  |  | [Yes](https://github.com/bitcoin/bitcoin/blob/master/depends/packages/qt.mk) (Linux only) |
 | ZeroMQ | [4.3.1](https://github.com/zeromq/libzmq/releases) | 4.0.0 | No |  |  |
 | zlib |  |  |  |  | [Yes](https://github.com/bitcoin/bitcoin/blob/master/depends/packages/qt.mk) |
+
+<a name="note1">Note \*</a> : When compiling with `-stdlib=libc++`, the minimum supported libc++ version is 8.0 which supports the P0083R3 proposal.
 
 Controlling dependencies
 ------------------------
