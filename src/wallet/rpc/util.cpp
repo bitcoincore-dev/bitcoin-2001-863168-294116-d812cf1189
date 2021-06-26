@@ -44,27 +44,6 @@ bool ParseIncludeWatchonly(const UniValue& include_watchonly, const CWallet& wal
     return include_watchonly.get_bool();
 }
 
-bool GetWalletRestrictionFromJSONRPCRequest(const JSONRPCRequest& request, std::string& out_wallet_allowed)
-{
-    for (const std::string& rpcauth_arg : gArgs.GetArgs("-rpcauth")) {
-        // Search for multi-user login/pass "rpcauth" from config
-        std::vector<std::string> fields;
-        boost::split(fields, rpcauth_arg, boost::is_any_of(":$"));
-        if (fields.size() < 3 || fields.size() > 4) {
-            // Incorrect formatting in config file
-            continue;
-        }
-
-        if (fields[0] != request.authUser) continue;
-
-        if (fields.size() > 3) {
-            out_wallet_allowed = fields[3];
-            return true;
-        }
-    }
-    return false;
-}
-
 bool GetWalletNameFromJSONRPCRequest(const JSONRPCRequest& request, std::string& wallet_name)
 {
     if (URL_DECODE && request.URI.substr(0, WALLET_ENDPOINT_BASE.size()) == WALLET_ENDPOINT_BASE) {
