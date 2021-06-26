@@ -44,6 +44,7 @@ static RPCHelpMan validateaddress()
         "\nReturn information about the given bitcoin address.\n",
         {
             {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The bitcoin address to validate"},
+            {"address_type", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "DEPRECATED AND IGNORED", "", {}, /* hidden */ true},
         },
         RPCResult{
             RPCResult::Type::OBJ, "", "",
@@ -56,6 +57,7 @@ static RPCHelpMan validateaddress()
                 {RPCResult::Type::NUM, "witness_version", /*optional=*/true, "The version number of the witness program"},
                 {RPCResult::Type::STR_HEX, "witness_program", /*optional=*/true, "The hex value of the witness program"},
                 {RPCResult::Type::STR, "error", /*optional=*/true, "Error message, if any"},
+                {RPCResult::Type::NUM, "error_index", /*optional=*/true, "DEPRECATED. The index of the first likely error location, if known"},
                 {RPCResult::Type::ARR, "error_locations", /*optional=*/true, "Indices of likely error locations in address, if known (e.g. Bech32 errors)",
                     {
                         {RPCResult::Type::NUM, "index", "index of a potential error"},
@@ -86,6 +88,9 @@ static RPCHelpMan validateaddress()
         UniValue detail = DescribeAddress(dest);
         ret.pushKVs(detail);
     } else {
+        if (!error_locations.empty()) {
+            ret.pushKV("error_index", error_locations.at(0));
+        }
         UniValue error_indices(UniValue::VARR);
         for (int i : error_locations) error_indices.push_back(i);
         ret.pushKV("error_locations", error_indices);
