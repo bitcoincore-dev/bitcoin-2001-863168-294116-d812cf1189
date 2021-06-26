@@ -921,6 +921,14 @@ CWalletTx* CWallet::AddToWallet(CTransactionRef tx, const CWalletTx::Confirmatio
     if (!strCmd.empty())
     {
         boost::replace_all(strCmd, "%s", hash.GetHex());
+        if (confirm.status == CWalletTx::Status::CONFIRMED)
+        {
+            boost::replace_all(strCmd, "%b", confirm.hashBlock.GetHex());
+            boost::replace_all(strCmd, "%h", ToString(confirm.block_height));
+        } else {
+            boost::replace_all(strCmd, "%b", "unconfirmed");
+            boost::replace_all(strCmd, "%h", "-1");
+        }
         boost::replace_all(strCmd, "%w", ShellEscape(GetName()));
         std::thread t(runCommand, strCmd);
         t.detach(); // thread runs free
