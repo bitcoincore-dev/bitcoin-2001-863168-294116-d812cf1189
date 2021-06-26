@@ -23,7 +23,9 @@ std::string EncodeExtPubKey(const CExtPubKey& extpubkey);
 
 std::string EncodeDestination(const CTxDestination& dest);
 CTxDestination DecodeDestination(const std::string& str);
+CTxDestination DecodeDestination(const std::string& str, std::string& error_msg);
 bool IsValidDestinationString(const std::string& str);
 bool IsValidDestinationString(const std::string& str, const CChainParams& params);
+std::string LocateErrorsInDestinationString(const std::string& str, std::vector<int>& error_locations);
 
 #endif // BITCOIN_KEY_IO_H
