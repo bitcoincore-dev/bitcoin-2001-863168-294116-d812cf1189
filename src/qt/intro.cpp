@@ -170,7 +170,7 @@ Intro::Intro(QWidget *parent, int64_t blockchain_size_gb, int64_t chain_state_si
         UpdatePruneLabels(prune_checked);
         UpdateFreeSpaceLabel();
     });
-    connect(ui->pruneMiB, QOverload<int>::of(&QSpinBox::valueChanged), [this](int prune_MiB) {
+    connect(ui->pruneMiB, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [this](int prune_MiB) {
         m_prune_target_gb = PruneMiBtoGB(prune_MiB);
         UpdatePruneLabels(ui->prune->isChecked());
         UpdateFreeSpaceLabel();
