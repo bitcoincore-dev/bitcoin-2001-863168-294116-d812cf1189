@@ -5125,7 +5125,22 @@ bool LoadMempoolKnots014(CTxMemPool& pool, CAutoFile& file)
 
     try {
         std::map<std::string, std::vector<unsigned char>> mapData;
-        file >> mapData;
+        {
+            // Manually deserialise mapData to avoid limiting value data (which includes the entire mempool) to <= 32 MiB
+            unsigned int mapData_size = ReadCompactSize(file);
+            std::string key;
+            for (unsigned int i = 0; i < mapData_size; ++i) {
+                file >> key;
+                auto& value = mapData[key];
+                const unsigned int value_size = ReadCompactSize(file, /* range_check */ false);
+                if (value_size > gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000 * 2) {
+                    // 2x the configured maxmempool size should be more than enough
+                    throw std::ios_base::failure("ReadCompactSize(): size too large");
+                }
+                value.resize(value_size);
+                file.read((char*)value.data(), value_size);
+            }
+        }
 
         auto it = mapData.find("deltas");
         if (it != mapData.end()) {
