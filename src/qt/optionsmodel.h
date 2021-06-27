@@ -60,6 +60,7 @@ public:
         DisplayAddresses,       // bool
         ThirdPartyTxUrls,       // QString
         Language,               // QString
+        PeersTabAlternatingRowColors, // bool
         walletrbf,              // bool
         CoinControlFeatures,    // bool
         ThreadsScriptVerif,     // int
@@ -153,6 +154,7 @@ Q_SIGNALS:
     void displayUnitChanged(int unit);
     void coinControlFeaturesChanged(bool);
     void hideTrayIconChanged(bool);
+    void peersTabAlternatingRowColorsChanged(bool);
 };
 
 #endif // BITCOIN_QT_OPTIONSMODEL_H

@@ -197,6 +197,8 @@ void OptionsModel::Init(bool resetSettings)
         addOverriddenOption("-lang");
 
     language = settings.value("language").toString();
+
+    Q_EMIT peersTabAlternatingRowColorsChanged(data(index(PeersTabAlternatingRowColors, 0), Qt::EditRole).toBool());
 }
 
 /** Helper function to copy contents from one QSettings to another.
@@ -369,6 +371,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return strThirdPartyTxUrls;
         case Language:
             return settings.value("language");
+        case PeersTabAlternatingRowColors:
+            return settings.value("PeersTabAlternatingRowColors", true);
 #ifdef ENABLE_WALLET
         case walletrbf:
             return gArgs.GetBoolArg("-walletrbf", DEFAULT_WALLET_RBF);
@@ -582,6 +586,12 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             if (settings.value("language") != value) {
                 settings.setValue("language", value);
                 setRestartRequired(true);
+            }
+            break;
+        case PeersTabAlternatingRowColors:
+            if (data(index, role) != value) {
+                settings.setValue("PeersTabAlternatingRowColors", value);
+                Q_EMIT peersTabAlternatingRowColorsChanged(value.toBool());
             }
             break;
 #ifdef ENABLE_WALLET

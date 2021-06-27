@@ -11,6 +11,7 @@
 
 #include <qt/bantablemodel.h>
 #include <qt/clientmodel.h>
+#include <qt/optionsmodel.h>
 #include <qt/pairingpage.h>
 #include <qt/platformstyle.h>
 #include <qt/walletmodel.h>
@@ -34,6 +35,8 @@
 #include <QFont>
 #include <QFontMetrics>
 #include <QKeyEvent>
+#include <QLatin1String>
+#include <QLocale>
 #include <QMenu>
 #include <QMessageBox>
 #include <QScreen>
@@ -42,8 +45,10 @@
 #include <QShortcut>
 #include <QString>
 #include <QStringList>
+#include <QStyledItemDelegate>
 #include <QTime>
 #include <QTimer>
+#include <QVariant>
 
 
 const int CONSOLE_HISTORY = 50;
@@ -127,6 +132,20 @@ public:
     }
 };
 
+class PeerIdViewDelegate : public QStyledItemDelegate
+{
+    Q_OBJECT
+public:
+    explicit PeerIdViewDelegate(QObject* parent = nullptr)
+        : QStyledItemDelegate(parent) {}
+
+    QString displayText(const QVariant& value, const QLocale& locale) const override
+    {
+        // Additional spaces should visually separate right-aligned content
+        // from the next column to the right.
+        return value.toString() + QLatin1String("   ");
+    }
+};
 
 #include <qt/rpcconsole.moc>
 
@@ -476,7 +495,7 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
 
     constexpr QChar nonbreaking_hyphen(8209);
     const std::vector<QString> CONNECTION_TYPE_DOC{
-        tr("Inbound Full/Block Relay: initiated by peer"),
+        tr("Inbound: initiated by peer"),
         tr("Outbound Full Relay: default"),
         tr("Outbound Block Relay: does not relay transactions or addresses"),
         tr("Outbound Manual: added using RPC %1 or %2/%3 configuration options")
@@ -684,6 +703,11 @@ void RPCConsole::setClientModel(ClientModel *model, int bestblock_height, int64_
 
         connect(model, &ClientModel::mempoolSizeChanged, this, &RPCConsole::setMempoolSize);
 
+        connect(model->getOptionsModel(), &OptionsModel::peersTabAlternatingRowColorsChanged, [this](bool alternating_row_colors) {
+            ui->peerWidget->setAlternatingRowColors(alternating_row_colors);
+            ui->banlistWidget->setAlternatingRowColors(alternating_row_colors);
+        });
+
         // set up peer table
         ui->peerWidget->setModel(model->getPeerTableModel());
         ui->peerWidget->verticalHeader()->hide();
@@ -702,6 +726,9 @@ void RPCConsole::setClientModel(ClientModel *model, int bestblock_height, int64_
         ui->peerWidget->setColumnWidth(PeerTableModel::Subversion, SUBVERSION_COLUMN_WIDTH);
         ui->peerWidget->setColumnWidth(PeerTableModel::Ping, PING_COLUMN_WIDTH);
         ui->peerWidget->horizontalHeader()->setStretchLastSection(true);
+        ui->peerWidget->setItemDelegateForColumn(PeerTableModel::NetNodeId, new PeerIdViewDelegate(this));
+        const bool alternating_row_colors{clientModel->getOptionsModel()->data(clientModel->getOptionsModel()->index(OptionsModel::PeersTabAlternatingRowColors, 0), Qt::EditRole).toBool()};
+        ui->peerWidget->setAlternatingRowColors(alternating_row_colors);
 
         // create peer table context menu actions
         QAction* disconnectAction = new QAction(tr("&Disconnect"), this);
@@ -744,6 +771,7 @@ void RPCConsole::setClientModel(ClientModel *model, int bestblock_height, int64_
         ui->banlistWidget->setColumnWidth(BanTableModel::Address, BANSUBNET_COLUMN_WIDTH);
         ui->banlistWidget->setColumnWidth(BanTableModel::Bantime, BANTIME_COLUMN_WIDTH);
         ui->banlistWidget->horizontalHeader()->setStretchLastSection(true);
+        ui->banlistWidget->setAlternatingRowColors(alternating_row_colors);
 
         // create ban table context menu action
         QAction* unbanAction = new QAction(tr("&Unban"), this);
@@ -1232,7 +1260,7 @@ void RPCConsole::updateNodeDetail(const CNodeCombinedStats *stats)
     ui->timeoffset->setText(GUIUtil::formatTimeOffset(stats->nodeStats.nTimeOffset));
     ui->peerVersion->setText(QString::number(stats->nodeStats.nVersion));
     ui->peerSubversion->setText(QString::fromStdString(stats->nodeStats.cleanSubVer));
-    ui->peerConnectionType->setText(GUIUtil::ConnectionTypeToQString(stats->nodeStats.m_conn_type, stats->nodeStats.fRelayTxes));
+    ui->peerConnectionType->setText(GUIUtil::ConnectionTypeToQString(stats->nodeStats.m_conn_type));
     ui->peerHeight->setText(QString::number(stats->nodeStats.nStartingHeight));
     ui->peerNetwork->setText(GUIUtil::NetworkToQString(stats->nodeStats.m_network));
     if (stats->nodeStats.m_permissionFlags == PF_NONE) {
