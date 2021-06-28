@@ -1,6 +1,6 @@
 PACKAGE=qtwinextras
 $(package)_version=$(qt_version)
-$(package)_download_path=$(qt_download_path)
+$(package)_download_path=https://download.qt.io/archive/qt/5.9/5.9.8/submodules
 $(package)_suffix=$(qt_suffix)
 $(package)_file_name=$(qt_file_name)
 $(package)_sha256_hash=$(qt_sha256_hash)
