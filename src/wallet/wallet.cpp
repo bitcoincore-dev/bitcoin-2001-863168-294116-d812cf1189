@@ -1170,7 +1170,13 @@ void CWallet::transactionAddedToMempool(const CTransactionRef& tx, uint64_t memp
 
     auto it = mapWallet.find(tx->GetHash());
     if (it != mapWallet.end()) {
-        it->second.fInMempool = true;
+        // Refresh mempool status, but take into account that the transaction
+        // might have been removed from the mempool after this notification was
+        // sent.
+        // This helps the wallet to be in an internally consistent state and
+        // knows the removed transaction should not be considered trusted and
+        // is eligible to be abandoned.
+        it->second.fInMempool = chain().isInMempool(tx->GetHash());
     }
 }
 
