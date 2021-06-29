@@ -32,6 +32,7 @@
 #include <wallet/wallet.h>
 #endif
 
+#include <QAbstractButton>
 #include <QFont>
 #include <QKeyEvent>
 #include <QLatin1String>
@@ -491,9 +492,9 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
     ui->lineEdit->setMaxLength(16 * 1024 * 1024);
     ui->messagesWidget->installEventFilter(this);
 
-    connect(ui->clearButton, &QPushButton::clicked, [this] { clear(/* clearHistory */ false, /* keep_prompt */ true); });
-    connect(ui->fontBiggerButton, &QPushButton::clicked, this, &RPCConsole::fontBigger);
-    connect(ui->fontSmallerButton, &QPushButton::clicked, this, &RPCConsole::fontSmaller);
+    connect(ui->clearButton, &QAbstractButton::clicked, [this] { clear(/* clearHistory */ false, /* keep_prompt */ true); });
+    connect(ui->fontBiggerButton, &QAbstractButton::clicked, this, &RPCConsole::fontBigger);
+    connect(ui->fontSmallerButton, &QAbstractButton::clicked, this, &RPCConsole::fontSmaller);
     connect(ui->btnClearTrafficGraph, &QPushButton::clicked, ui->trafficGraph, &TrafficGraphWidget::clear);
 
     // disable the wallet selector by default
