@@ -62,7 +62,7 @@ class AddrTest(BitcoinTestFramework):
         ]):
             addr_source.send_and_ping(msg)
             self.nodes[0].setmocktime(int(time.time()) + 30 * 60)
-            addr_receiver.sync_with_ping()
+            addr_receiver.sync_send_with_ping()
 
 
 if __name__ == '__main__':
