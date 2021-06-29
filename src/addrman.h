@@ -11,6 +11,7 @@
 #include <fs.h>
 #include <hash.h>
 #include <netaddress.h>
+#include <optional.h>
 #include <protocol.h>
 #include <random.h>
 #include <streams.h>
@@ -281,8 +282,15 @@ protected:
     int Check_() EXCLUSIVE_LOCKS_REQUIRED(cs);
 #endif
 
-    //! Select several addresses at once.
-    void GetAddr_(std::vector<CAddress> &vAddr, size_t max_addresses, size_t max_pct) EXCLUSIVE_LOCKS_REQUIRED(cs);
+    /**
+     * Return all or many randomly selected addresses, optionally by network.
+     *
+     * @param[out] vAddr         Vector of randomly selected addresses from vRandom.
+     * @param[in] max_addresses  Maximum number of addresses to return (0 = all).
+     * @param[in] max_pct        Maximum percentage of addresses to return (0 = all).
+     * @param[in] network        Select only addresses of this network (nullopt = all).
+     */
+    void GetAddr_(std::vector<CAddress>& vAddr, size_t max_addresses, size_t max_pct, Optional<Network> network = nullopt) EXCLUSIVE_LOCKS_REQUIRED(cs);
 
     //! Mark an entry as currently-connected-to.
     void Connected_(const CService &addr, int64_t nTime) EXCLUSIVE_LOCKS_REQUIRED(cs);
@@ -707,14 +715,20 @@ public:
         return addrRet;
     }
 
-    //! Return a bunch of addresses, selected at random.
-    std::vector<CAddress> GetAddr(size_t max_addresses, size_t max_pct)
+    /**
+     * Return all or many randomly selected addresses, optionally by network.
+     *
+     * @param[in] max_addresses  Maximum number of addresses to return (0 = all).
+     * @param[in] max_pct        Maximum percentage of addresses to return (0 = all).
+     * @param[in] network        Select only addresses of this network (nullopt = all).
+     */
+    std::vector<CAddress> GetAddr(size_t max_addresses, size_t max_pct, Optional<Network> network = nullopt)
     {
         Check();
         std::vector<CAddress> vAddr;
         {
             LOCK(cs);
-            GetAddr_(vAddr, max_addresses, max_pct);
+            GetAddr_(vAddr, max_addresses, max_pct, network);
         }
         Check();
         return vAddr;
