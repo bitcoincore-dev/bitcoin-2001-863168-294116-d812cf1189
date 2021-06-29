@@ -4321,6 +4321,10 @@ static RPCHelpMan walletprocesspsbt()
     if (!wallet) return NullUniValue;
     const CWallet* const pwallet = wallet.get();
 
+    // Make sure the results are valid at least up to the most recent block
+    // the user could have gotten from another RPC command prior to now
+    pwallet->BlockUntilSyncedToCurrentChain();
+
     RPCTypeCheck(request.params, {UniValue::VSTR, UniValue::VBOOL, UniValue::VSTR});
 
     // Unserialize the transaction
@@ -4432,6 +4436,10 @@ static RPCHelpMan walletcreatefundedpsbt()
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
     CWallet* const pwallet = wallet.get();
+
+    // Make sure the results are valid at least up to the most recent block
+    // the user could have gotten from another RPC command prior to now
+    pwallet->BlockUntilSyncedToCurrentChain();
 
     RPCTypeCheck(request.params, {
         UniValue::VARR,
