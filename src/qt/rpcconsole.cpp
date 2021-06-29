@@ -497,7 +497,7 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
 
     setTrafficGraphRange(INITIAL_TRAFFIC_GRAPH_MINS);
 
-    ui->detailWidget->hide();
+    ui->peersTabRightPanel->hide();
     ui->peerHeading->setText(tr("Select a peer to view detailed information."));
 
     consoleFontSize = settings.value(fontSizeSettingsKey, QFont().pointSize()).toInt();
@@ -1153,7 +1153,7 @@ void RPCConsole::updateNodeDetail(const CNodeCombinedStats *stats)
             ui->peerCommonHeight->setText(tr("Unknown"));
     }
 
-    ui->detailWidget->show();
+    ui->peersTabRightPanel->show();
 }
 
 void RPCConsole::resizeEvent(QResizeEvent *event)
@@ -1263,7 +1263,7 @@ void RPCConsole::clearSelectedNode()
 {
     ui->peerWidget->selectionModel()->clearSelection();
     cachedNodeids.clear();
-    ui->detailWidget->hide();
+    ui->peersTabRightPanel->hide();
     ui->peerHeading->setText(tr("Select a peer to view detailed information."));
 }
 
