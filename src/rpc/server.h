@@ -109,11 +109,11 @@ public:
               category,
               fn().m_name,
               [fn](const JSONRPCRequest& request, UniValue& result, bool) { result = fn().HandleRequest(request); return true; },
-              fn().GetArgNames(),
+              args_in,
               intptr_t(fn))
     {
         CHECK_NONFATAL(fn().m_name == name_in);
-        CHECK_NONFATAL(fn().GetArgNames() == args_in);
+        CHECK_NONFATAL(fn().CheckArgNames(args_in));
     }
 
     //! Simplified constructor taking plain rpcfn_type function pointer.
