@@ -67,9 +67,10 @@ class MempoolCompatibilityTest(BitcoinTestFramework):
         self.log.info("Move mempool.dat from new to old node")
         os.rename(new_node_mempool, old_node_mempool)
 
-        self.log.info("Start old node again and verify mempool is empty")
+        self.log.info("Start old node again and verify mempool contains both txs")
         self.start_node(0, ['-nowallet'])
-        assert old_node.getrawmempool() == []
+        assert old_tx_hash in old_node.getrawmempool()
+        assert unbroadcasted_tx_hash in old_node.getrawmempool()
 
 
 if __name__ == "__main__":

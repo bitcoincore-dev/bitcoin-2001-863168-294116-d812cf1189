@@ -5210,8 +5210,7 @@ int VersionBitsTipStateSinceHeight(const Consensus::Params& params, Consensus::D
     return VersionBitsStateSinceHeight(::ChainActive().Tip(), params, pos, versionbitscache);
 }
 
-static const uint64_t MEMPOOL_DUMP_VERSION_CORE = 1;
-static const uint64_t MEMPOOL_DUMP_VERSION_KNOTS_014 = 2;  // Knots 0.14-0.21
+static const uint64_t MEMPOOL_DUMP_VERSION = 1;
 static constexpr uint64_t MEMPOOL_KNOTS_DUMP_VERSION = 0;
 
 bool LoadMempoolKnots(CTxMemPool& pool)
@@ -5243,124 +5242,6 @@ bool LoadMempoolKnots(CTxMemPool& pool)
     return true;
 }
 
-bool LoadMempoolKnots014(CTxMemPool& pool, CAutoFile& file)
-{
-    const CChainParams& chainparams = Params();
-    int64_t nExpiryTimeout = gArgs.GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY) * 60 * 60;
-
-    int64_t count = 0;
-    int64_t expired = 0;
-    int64_t failed = 0;
-    int64_t already_there = 0;
-    int64_t unbroadcast = 0;
-    int64_t nNow = GetTime();
-
-    try {
-        std::map<std::string, std::vector<unsigned char>> mapData;
-        file >> mapData;
-
-        auto it = mapData.find("minfee");
-        if (it != mapData.end()) {
-            try {
-                CDataStream ss(it->second, SER_DISK, CLIENT_VERSION);
-                pool.LoadMinFeeInternal(ss);
-            } catch (const std::exception& e) {
-                LogPrintf("Failed to deserialize mempool %s from disk: %s. Continuing anyway.\n", "minfee", e.what());
-            }
-        }
-
-        it = mapData.find("deltas");
-        if (it != mapData.end()) {
-            try {
-                CDataStream ss(it->second, SER_DISK, CLIENT_VERSION);
-                LOCK(pool.cs);
-                ss >> pool.mapDeltas;
-            } catch (const std::exception& e) {
-                LogPrintf("Failed to deserialize mempool %s from disk: %s. Continuing anyway.\n", "deltas", e.what());
-            }
-        }
-
-        it = mapData.find("txs");
-        if (it != mapData.end()) {
-            std::vector<std::map<std::string, std::vector<unsigned char>>> txMapDatas;
-            try {
-                CDataStream(it->second, SER_DISK, CLIENT_VERSION) >> txMapDatas;
-            } catch (const std::exception& e) {
-                LogPrintf("Failed to deserialize mempool %s from disk: %s. Continuing anyway.\n", "transactions", e.what());
-            }
-            for (auto mapTxData : txMapDatas) {
-                try {
-                    it = mapTxData.find("t");
-                    if (it == mapTxData.end()) {
-                        throw std::runtime_error("mapTxData \"t\" key missing");
-                    }
-                    int64_t nTime;
-                    CDataStream(it->second, SER_DISK, CLIENT_VERSION) >> nTime;
-                    if (nTime <= nNow - nExpiryTimeout) {
-                        ++expired;
-                        continue;
-                    }
-
-                    it = mapTxData.find("");
-                    if (it == mapTxData.end()) {
-                        throw std::runtime_error("mapTxData null key missing");
-                    }
-                    CDataStream ssTx(it->second, SER_DISK, CLIENT_VERSION);
-                    CTransactionRef tx;
-                    ssTx >> tx;
-
-                    // mempool may contain the transaction already, e.g. from
-                    // wallet(s) having loaded it while we were processing
-                    // mempool transactions; consider these as valid, instead of
-                    // failing, but mark them as 'already there'
-                    if (pool.exists(tx->GetHash())) {
-                        ++count;
-                        ++already_there;
-                        continue;
-                    }
-
-                    TxValidationState state;
-                    LOCK(cs_main);
-                    AcceptToMemoryPoolWithTime(chainparams, pool, state, tx, nTime,
-                                               nullptr /* plTxnReplaced */, empty_ignore_rejects,
-                                               false /* test_accept */);
-                    if (!state.IsValid()) {
-                        throw std::runtime_error(state.GetRejectReason());
-                    }
-                    ++count;
-                } catch (const std::exception& e) {
-                    ++failed;
-                }
-            }
-            if (ShutdownRequested())
-                return false;
-        }
-
-        it = mapData.find("unbroadcast_txids");
-        if (it != mapData.end()) {
-            std::set<uint256> unbroadcast_txids;
-            try {
-                CDataStream ss(it->second, SER_DISK, CLIENT_VERSION);
-                ss >> unbroadcast_txids;
-                unbroadcast = unbroadcast_txids.size();
-            } catch (const std::exception& e) {
-                LogPrintf("Failed to deserialize mempool %s from disk: %s. Continuing anyway.\n", "unbroadcast txids", e.what());
-            }
-            for (const auto& txid : unbroadcast_txids) {
-                // Ensure transactions were accepted to mempool then add to
-                // unbroadcast set.
-                if (pool.get(txid) != nullptr) pool.AddUnbroadcastTx(txid);
-            }
-        }
-    } catch (const std::exception& e) {
-        LogPrintf("Failed to deserialize mempool data on disk: %s. Continuing anyway.\n", e.what());
-        return false;
-    }
-
-    LogPrintf("Imported mempool transactions from disk: %i succeeded, %i failed, %i expired, %i already there, %i waiting for initial broadcast\n", count, failed, expired, already_there, unbroadcast);
-    return true;
-}
-
 bool LoadMempool(CTxMemPool& pool)
 {
     const CChainParams& chainparams = Params();
@@ -5382,10 +5263,7 @@ bool LoadMempool(CTxMemPool& pool)
     try {
         uint64_t version;
         file >> version;
-        if (version != MEMPOOL_DUMP_VERSION_CORE) {
-            if (version == MEMPOOL_DUMP_VERSION_KNOTS_014) {
-                return LoadMempoolKnots014(pool, file);
-            }
+        if (version != MEMPOOL_DUMP_VERSION) {
             return false;
         }
         uint64_t num;
@@ -5459,19 +5337,13 @@ bool LoadMempool(CTxMemPool& pool)
     return true;
 }
 
-template <class T>
-std::vector<unsigned char> SerializeToVector(T o) {
-    CDataStream ss(SER_DISK, CLIENT_VERSION);
-    ss << o;
-    return std::vector<unsigned char>(ss.begin(), ss.end());
-}
-
 bool DumpMempool(const CTxMemPool& pool)
 {
     int64_t start = GetTimeMicros();
 
+    std::map<uint256, CAmount> mapDeltas;
+    std::map<uint256, double> priority_deltas;
     std::vector<TxMempoolInfo> vinfo;
-    std::map<uint256, std::pair<double, CAmount>> mapDeltas;
     std::set<uint256> unbroadcast_txids;
 
     static Mutex dump_mutex;
@@ -5479,7 +5351,14 @@ bool DumpMempool(const CTxMemPool& pool)
 
     {
         LOCK(pool.cs);
-        mapDeltas = pool.mapDeltas;
+        for (const auto &i : pool.mapDeltas) {
+            if (i.second.first) {   // priority delta
+                priority_deltas[i.first] = i.second.first;
+            }
+            if (i.second.second) {  // fee delta
+                mapDeltas[i.first] = i.second.second;
+            }
+        }
         vinfo = pool.infoAll();
         unbroadcast_txids = pool.GetUnbroadcastTxs();
     }
@@ -5487,26 +5366,6 @@ bool DumpMempool(const CTxMemPool& pool)
     int64_t mid = GetTimeMicros();
 
     try {
-        std::map<std::string, std::vector<unsigned char>> mapData;
-        mapData["deltas"] = SerializeToVector(mapDeltas);
-        {
-            std::vector<std::map<std::string, std::vector<unsigned char>>> txMapDatas;
-            for (TxMempoolInfo info : vinfo) {
-                std::map<std::string, std::vector<unsigned char>> mapTxData;
-                mapTxData[""] = SerializeToVector(*(info.tx));
-                mapTxData["t"] = SerializeToVector(count_seconds(info.m_time));
-                txMapDatas.push_back(std::move(mapTxData));
-            }
-
-            mapData["txs"] = SerializeToVector(txMapDatas);
-        }
-        mapData["unbroadcast_txids"] = SerializeToVector(unbroadcast_txids);
-        {
-            CDataStream ss(SER_DISK, CLIENT_VERSION);
-            pool.DumpMinFeeInternal(ss);
-            mapData["minfee"] = std::vector<unsigned char>(ss.begin(), ss.end());
-        }
-
         FILE* filestr = fsbridge::fopen(GetDataDir() / "mempool.dat.new", "wb");
         if (!filestr) {
             return false;
@@ -5514,14 +5373,44 @@ bool DumpMempool(const CTxMemPool& pool)
 
         CAutoFile file(filestr, SER_DISK, CLIENT_VERSION);
 
-        uint64_t version = MEMPOOL_DUMP_VERSION_KNOTS_014;
+        uint64_t version = MEMPOOL_DUMP_VERSION;
         file << version;
 
-        file << mapData;
+        file << (uint64_t)vinfo.size();
+        for (const auto& i : vinfo) {
+            file << *(i.tx);
+            file << int64_t{count_seconds(i.m_time)};
+            file << int64_t{i.nFeeDelta};
+            mapDeltas.erase(i.tx->GetHash());
+        }
+
+        file << mapDeltas;
+
+        LogPrintf("Writing %d unbroadcast transactions to disk.\n", unbroadcast_txids.size());
+        file << unbroadcast_txids;
 
         if (!FileCommit(file.Get()))
             throw std::runtime_error("FileCommit failed");
         file.fclose();
+
+        const auto knots_filepath = GetDataDir() / "mempool-knots.dat";
+        if (priority_deltas.size()) {
+            auto knots_tmppath = knots_filepath;
+            knots_tmppath += ".new";
+            CAutoFile file(fsbridge::fopen(knots_tmppath, "wb"), SER_DISK, CLIENT_VERSION);
+
+            uint64_t version = MEMPOOL_KNOTS_DUMP_VERSION;
+            file << version;
+
+            file << priority_deltas;
+
+            if (!FileCommit(file.Get())) throw std::runtime_error("FileCommit failed");
+            file.fclose();
+            RenameOver(knots_tmppath, knots_filepath);
+        } else {
+            fs::remove(knots_filepath);
+        }
+
         RenameOver(GetDataDir() / "mempool.dat.new", GetDataDir() / "mempool.dat");
         int64_t last = GetTimeMicros();
         LogPrintf("Dumped mempool: %gs to copy, %gs to dump\n", (mid-start)*MICRO, (last-mid)*MICRO);
