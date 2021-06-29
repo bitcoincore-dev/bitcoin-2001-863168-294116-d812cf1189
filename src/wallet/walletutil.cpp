@@ -9,16 +9,8 @@
 
 #include <set>
 
-#ifdef USE_BDB
 bool ExistsBerkeleyDatabase(const fs::path& path);
-#else
-#   define ExistsBerkeleyDatabase(path)  (false)
-#endif
-#ifdef USE_SQLITE
 bool ExistsSQLiteDatabase(const fs::path& path);
-#else
-#   define ExistsSQLiteDatabase(path)  (false)
-#endif
 
 fs::path GetWalletDir()
 {
