@@ -90,6 +90,19 @@ class GetblockstatsTest(BitcoinTestFramework):
 
 
     def run_test(self):
+        def replacement_getblockstats(self, *a, want_actual=False, **ka):
+            stats = self.__getattr__('getblockstats')(*a, **ka)
+            if not want_actual:
+                try:
+                    assert(stats['utxo_size_inc_actual'] <= stats['utxo_size_inc'])
+                    del stats['utxo_size_inc_actual']
+                    assert(stats['utxo_increase_actual'] <= stats['utxo_increase'])
+                    del stats['utxo_increase_actual']
+                except KeyError:
+                    pass
+            return stats
+        self.nodes[0].getblockstats = replacement_getblockstats.__get__(self.nodes[0], self.nodes[0].__class__)
+
         test_data = os.path.join(TESTSDIR, self.options.test_data)
         if self.options.gen_test_data:
             self.generate_test_data(test_data)
@@ -159,6 +172,14 @@ class GetblockstatsTest(BitcoinTestFramework):
         # Invalid number of args
         assert_raises_rpc_error(-1, 'getblockstats hash_or_height ( stats )', self.nodes[0].getblockstats, '00', 1, 2)
         assert_raises_rpc_error(-1, 'getblockstats hash_or_height ( stats )', self.nodes[0].getblockstats)
+
+        self.log.info('Test block height 0')
+        genesis_stats = self.nodes[0].getblockstats(0, want_actual=True)
+        assert_equal(genesis_stats["blockhash"], "0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206")
+        assert_equal(genesis_stats["utxo_increase"], 1)
+        assert_equal(genesis_stats["utxo_size_inc"], 117)
+        assert_equal(genesis_stats["utxo_increase_actual"], 0)
+        assert_equal(genesis_stats["utxo_size_inc_actual"], 0)
 
 
 if __name__ == '__main__':

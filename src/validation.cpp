@@ -5333,3 +5333,17 @@ void ChainstateManager::MaybeRebalanceCaches()
         }
     }
 }
+
+bool IsBIP30Repeat(const CBlockIndex* pindex) {
+    return (pindex->nHeight==91842 && pindex->GetBlockHash() == uint256S("0x00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec")) ||
+           (pindex->nHeight==91880 && pindex->GetBlockHash() == uint256S("0x00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721"));
+}
+
+bool IsBIP30Unspendable(const CBlockIndex* pindex) {
+    return (pindex->nHeight==91722 && pindex->GetBlockHash() == uint256S("0x00000000000271a2dc26e7667f8419f2e15416dc6955e5a6c6cdf3f2574dd08e")) ||
+           (pindex->nHeight==91812 && pindex->GetBlockHash() == uint256S("0x00000000000af0aed4792b1acee3d966af36cf5def14935db8de83d6f9306f2f"));
+}
+
+bool IsUnspendableCoinbase(const CBlockIndex* pindex) {
+    return (IsBIP30Unspendable(pindex) || (pindex->nHeight == 0 && pindex == ::ChainActive().Genesis()));
+}
