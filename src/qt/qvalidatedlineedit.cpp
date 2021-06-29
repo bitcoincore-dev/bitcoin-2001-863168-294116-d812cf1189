@@ -7,13 +7,6 @@
 #include <qt/bitcoinaddressvalidator.h>
 #include <qt/guiconstants.h>
 
-#include <QColor>
-#include <QCoreApplication>
-#include <QFont>
-#include <QInputMethodEvent>
-#include <QList>
-#include <QTextCharFormat>
-
 QValidatedLineEdit::QValidatedLineEdit(QWidget *parent) :
     QLineEdit(parent),
     valid(true),
@@ -33,16 +26,14 @@ void QValidatedLineEdit::setText(const QString& text)
     checkValidity();
 }
 
-void QValidatedLineEdit::setValid(bool _valid, bool with_warning, int error_pos)
+void QValidatedLineEdit::setValid(bool _valid, bool with_warning)
 {
-    if(_valid && this->valid)
+    if(_valid == this->valid)
     {
-        if (with_warning == m_has_warning) {
+        if (with_warning == m_has_warning || !valid) {
             return;
         }
     }
-
-    QList<QInputMethodEvent::Attribute> attributes;
 
     if(_valid)
     {
@@ -56,20 +47,7 @@ void QValidatedLineEdit::setValid(bool _valid, bool with_warning, int error_pos)
     else
     {
         setStyleSheet("QValidatedLineEdit { " STYLE_INVALID "}");
-        if (error_pos) {
-            QTextCharFormat format;
-            format.setFontUnderline(true);
-            format.setUnderlineStyle(QTextCharFormat::SpellCheckUnderline);
-            format.setUnderlineColor(Qt::yellow);
-            format.setForeground(Qt::yellow);
-            format.setFontWeight(QFont::Bold);
-            attributes.append(QInputMethodEvent::Attribute(QInputMethodEvent::TextFormat, error_pos - cursorPosition(), /*length=*/ 1, format));
-        }
     }
-
-    QInputMethodEvent event(QString(), attributes);
-    QCoreApplication::sendEvent(this, &event);
-
     this->valid = _valid;
 }
 
@@ -135,7 +113,7 @@ void QValidatedLineEdit::checkValidity()
             if (checkValidator->validate(address, pos) == QValidator::Acceptable)
                 setValid(true, has_warning);
             else
-                setValid(false, false, pos);
+                setValid(false);
         }
     }
     else

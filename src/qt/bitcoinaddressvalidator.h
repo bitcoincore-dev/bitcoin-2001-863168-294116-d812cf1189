@@ -22,7 +22,7 @@ public:
 
 /** Bitcoin address widget validator, checks for a valid bitcoin address.
  */
-class BitcoinAddressCheckValidator : public BitcoinAddressEntryValidator
+class BitcoinAddressCheckValidator : public QValidator
 {
     Q_OBJECT
 
