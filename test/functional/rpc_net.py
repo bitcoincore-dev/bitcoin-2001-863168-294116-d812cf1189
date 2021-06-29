@@ -206,6 +206,7 @@ class NetTest(BitcoinTestFramework):
             assert_equal(a["services"], NODE_NETWORK | NODE_WITNESS)
             assert a["address"] in imported_addrs
             assert_equal(a["port"], 8333)
+            assert_equal(a["network"], "ipv4")
 
         node_addresses = self.nodes[0].getnodeaddresses(1)
         assert_equal(len(node_addresses), 1)
