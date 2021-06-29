@@ -3,7 +3,6 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <bech32.h>
 #include <coins.h>
 #include <httpserver.h>
 #include <index/blockfilterindex.h>
@@ -46,7 +45,6 @@ static RPCHelpMan validateaddress()
                 "\nReturn information about the given bitcoin address.\n",
                 {
                     {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The bitcoin address to validate"},
-                    {"address_type", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "The address type provided, used to detect errors. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\"."},
                 },
                 RPCResult{
                     RPCResult::Type::OBJ, "", "",
@@ -58,8 +56,6 @@ static RPCHelpMan validateaddress()
                         {RPCResult::Type::BOOL, "iswitness", "If the address is a witness address"},
                         {RPCResult::Type::NUM, "witness_version", /* optional */ true, "The version number of the witness program"},
                         {RPCResult::Type::STR_HEX, "witness_program", /* optional */ true, "The hex value of the witness program"},
-                        {RPCResult::Type::STR, "error", /* optional */ true, "The error message if the provided address is invalid and address type is provided"},
-                        {RPCResult::Type::NUM, "error_index", /* optional */ true, "The index of the first invalid character (if the address type provided is bech32)"},
                     }
                 },
                 RPCExamples{
@@ -68,8 +64,7 @@ static RPCHelpMan validateaddress()
                 },
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {
-    std::string address = request.params[0].get_str();
-    CTxDestination dest = DecodeDestination(address);
+    CTxDestination dest = DecodeDestination(request.params[0].get_str());
     bool isValid = IsValidDestination(dest);
 
     UniValue ret(UniValue::VOBJ);
@@ -84,13 +79,6 @@ static RPCHelpMan validateaddress()
 
         UniValue detail = DescribeAddress(dest);
         ret.pushKVs(detail);
-    } else {
-        std::string address_type;
-        if (!request.params[1].isNull()) address_type = request.params[1].get_str();
-        std::string error;
-        auto res = LocateErrorInDestinationString(address, address_type);
-        ret.pushKV("error", res.second);
-        if (address_type == "bech32") ret.pushKV("error_index", res.first);
     }
     return ret;
 },
@@ -916,7 +904,7 @@ static const CRPCCommand commands[] =
   //  --------------------- ------------------------  -----------------------  ----------
     { "control",            "getmemoryinfo",          &getmemoryinfo,          {"mode"} },
     { "control",            "logging",                &logging,                {"include", "exclude"}},
-    { "util",               "validateaddress",        &validateaddress,        {"address", "address_type"} },
+    { "util",               "validateaddress",        &validateaddress,        {"address"} },
     { "util",               "createmultisig",         &createmultisig,         {"nrequired","keys","options||address_type"} },
     { "util",               "deriveaddresses",        &deriveaddresses,        {"descriptor", "range"} },
     { "util",               "getdescriptorinfo",      &getdescriptorinfo,      {"descriptor"} },
