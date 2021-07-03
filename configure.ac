@@ -705,6 +705,20 @@ case $host in
          if $BREW list --versions qt5 >/dev/null; then
            export PKG_CONFIG_PATH="$($BREW --prefix qt5 2>/dev/null)/lib/pkgconfig:$PKG_CONFIG_PATH"
          fi
+
+         dnl The preferred Homebrew prefix for Apple Silicon is /opt/homebrew.
+         dnl Therefore, if we do not use pkg-config to detect packages, we
+         dnl should set the CPPFLAGS and LDFLAGS variables for them explicitly.
+         if test "x$use_upnp" != xno && $BREW list --versions miniupnpc >/dev/null; then
+           miniupnpc_prefix=$($BREW --prefix miniupnpc 2>/dev/null)
+           CPPFLAGS="$CPPFLAGS -I$miniupnpc_prefix/include"
+           LDFLAGS="$LDFLAGS -L$miniupnpc_prefix/lib"
+         fi
+         if test "x$use_natpmp" != xno && $BREW list --versions libnatpmp >/dev/null; then
+           libnatpmp_prefix=$($BREW --prefix libnatpmp 2>/dev/null)
+           CPPFLAGS="$CPPFLAGS -I$libnatpmp_prefix/include"
+           LDFLAGS="$LDFLAGS -L$libnatpmp_prefix/lib"
+         fi
        fi
      else
        case $build_os in
