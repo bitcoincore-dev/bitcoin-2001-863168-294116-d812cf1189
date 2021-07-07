@@ -60,6 +60,7 @@ struct CBlockIndexWorkComparator {
 };
 
 struct PruneLockInfo {
+    std::string desc; //! Arbitrary human-readable description of the lock purpose
     int height_first{std::numeric_limits<int>::max()}; //! Height of earliest block that should be kept and not pruned
     int height_last{std::numeric_limits<int>::max()}; //! Height of latest block that should be kept and not pruned
 };
@@ -177,8 +178,10 @@ public:
     //! Returns last CBlockIndex* that is a checkpoint
     CBlockIndex* GetLastCheckpoint(const CCheckpointData& data) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
+    bool PruneLockExists(const std::string& name) const SHARED_LOCKS_REQUIRED(::cs_main);
     //! Create or update a prune lock identified by its name
     void UpdatePruneLock(const std::string& name, const PruneLockInfo& lock_info) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+    void DeletePruneLock(const std::string& name) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     ~BlockManager()
     {
