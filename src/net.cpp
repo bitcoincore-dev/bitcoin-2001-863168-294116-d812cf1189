@@ -1043,12 +1043,6 @@ void CConnman::CreateNodeFromAcceptedSocket(std::unique_ptr<Sock>&& sock,
     uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
 
     ServiceFlags nodeServices = nLocalServices;
-    if (NetPermissions::HasFlag(permission_flags, NetPermissionFlags::BloomFilter)) {
-        nodeServices = static_cast<ServiceFlags>(nodeServices | NODE_BLOOM);
-    }
-    if (NetPermissions::HasFlag(permission_flags, NetPermissionFlags::BlockFilters)) {
-        nodeServices = static_cast<ServiceFlags>(nodeServices | NODE_COMPACT_FILTERS);
-    }
 
     const bool inbound_onion = std::find(m_onion_binds.begin(), m_onion_binds.end(), addr_bind) != m_onion_binds.end();
     CNode* pnode = new CNode(id,
@@ -2041,7 +2035,8 @@ void CConnman::OpenNetworkConnection(const CAddress& addrConnect, bool fCountFai
     if (grantOutbound)
         grantOutbound->MoveTo(pnode->grantOutbound);
 
-    m_msgproc->InitializeNode(*pnode, nLocalServices);
+    ServiceFlags nodeServices = nLocalServices;
+    m_msgproc->InitializeNode(*pnode, nodeServices);
     {
         LOCK(m_nodes_mutex);
         m_nodes.push_back(pnode);
