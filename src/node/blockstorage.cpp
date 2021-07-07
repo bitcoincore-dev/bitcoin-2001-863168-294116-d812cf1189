@@ -32,6 +32,13 @@ static FILE* OpenUndoFile(const FlatFilePos& pos, bool fReadOnly = false);
 static FlatFileSeq BlockFileSeq();
 static FlatFileSeq UndoFileSeq();
 
+/** The number of blocks to keep below the deepest prune lock.
+ *  There is nothing special about this number. It is higher than what we
+ *  expect to see in regular mainnet reorgs, but not so high that it would
+ *  noticeably interfere with the pruning mechanism.
+ * */
+static constexpr int PRUNE_LOCK_BUFFER{10};
+
 CBlockIndex* BlockManager::LookupBlockIndex(const uint256& hash) const
 {
     AssertLockHeld(cs_main);
@@ -109,6 +116,21 @@ void BlockManager::PruneOneBlockFile(const int fileNumber)
     m_dirty_fileinfo.insert(fileNumber);
 }
 
+bool BlockManager::DoPruneLocksForbidPruning(const CBlockFileInfo& block_file_info)
+{
+    AssertLockHeld(cs_main);
+    for (const auto& prune_lock : m_prune_locks) {
+        if (prune_lock.second.height_first == std::numeric_limits<int>::max()) continue;
+        // Remove the buffer and one additional block here to get actual height that is outside of the buffer
+        const unsigned int lock_height{(unsigned)std::max(1, prune_lock.second.height_first - PRUNE_LOCK_BUFFER - 1)};
+        if (block_file_info.nHeightLast > lock_height) {
+            LogPrint(BCLog::PRUNE, "%s limited pruning to height %d\n", prune_lock.first, lock_height);
+            return true;
+        }
+    }
+    return false;
+}
+
 void BlockManager::FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPruneHeight, int chain_tip_height)
 {
     assert(fPruneMode && nManualPruneHeight > 0);
@@ -125,6 +147,9 @@ void BlockManager::FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nM
         if (m_blockfile_info[fileNumber].nSize == 0 || m_blockfile_info[fileNumber].nHeightLast > nLastBlockWeCanPrune) {
             continue;
         }
+
+        if (DoPruneLocksForbidPruning(m_blockfile_info[fileNumber])) continue;
+
         PruneOneBlockFile(fileNumber);
         setFilesToPrune.insert(fileNumber);
         count++;
@@ -176,6 +201,8 @@ void BlockManager::FindFilesToPrune(std::set<int>& setFilesToPrune, uint64_t nPr
             if (m_blockfile_info[fileNumber].nHeightLast > nLastBlockWeCanPrune) {
                 continue;
             }
+
+            if (DoPruneLocksForbidPruning(m_blockfile_info[fileNumber])) continue;
 
             PruneOneBlockFile(fileNumber);
             // Queue up the files for removal
