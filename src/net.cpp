@@ -515,8 +515,7 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char *pszDest, bool fCo
     }
 
     NetPermissionFlags permission_flags = NetPermissionFlags::None;
-    std::vector<NetWhitelistPermissions> whitelist_permissions = conn_type == ConnectionType::MANUAL ? vWhitelistedRangeOutgoing : std::vector<NetWhitelistPermissions>{};
-    AddWhitelistPermissionFlags(permission_flags, addrConnect, whitelist_permissions);
+    AddWhitelistPermissionFlags(permission_flags, addrConnect, vWhitelistedRangeOutgoing);
 
     // Add node
     NodeId id = GetNewNodeId();
