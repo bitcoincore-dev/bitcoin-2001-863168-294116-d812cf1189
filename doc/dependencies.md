@@ -22,6 +22,7 @@ These are the dependencies currently used by Bitcoin Core. You can find instruct
 | qrencode | [3.4.4](https://fukuchi.org/works/qrencode) |  | No |  |  |
 | Qt | [5.15.2](https://download.qt.io/official_releases/qt/) | [5.9.5](https://github.com/bitcoin/bitcoin/issues/20104) | No |  |  |
 | SQLite | [3.32.1](https://sqlite.org/download.html) | [3.7.17](https://github.com/bitcoin/bitcoin/pull/19077) |  |  |  |
+| UniValue | non-standard | [1.0.4](https://github.com/jgarzik/univalue/tags) | No |  |  |
 | XCB |  |  |  |  | [Yes](https://github.com/bitcoin/bitcoin/blob/master/depends/packages/qt.mk) (Linux only) |
 | systemtap ([tracing](tracing.md))| [4.5](https://sourceware.org/systemtap/ftp/releases/) |  |  |  | |
 | xkbcommon |  |  |  |  | [Yes](https://github.com/bitcoin/bitcoin/blob/master/depends/packages/qt.mk) (Linux only) |
@@ -42,6 +43,7 @@ Some dependencies are not needed in all configurations. The following are some f
 * Qt is not needed with `--without-gui`.
 * If the qrencode dependency is absent, QR support won't be added. To force an error when that happens, pass `--with-qrencode`.
 * If the systemtap dependency is absent, USDT support won't compiled in.
+* UniValue is needed only with the `--with-system-univalue` option. Otherwise, a non-standard bundled copy is staticly linked.
 * ZeroMQ is needed only with the `--with-zmq` option.
 
 #### Other
