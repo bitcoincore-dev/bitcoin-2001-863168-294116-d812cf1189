@@ -142,6 +142,7 @@ private:
     /** Dirty block file entries. */
     std::set<int> m_dirty_fileinfo;
 
+public:
     /**
      * Map from external index name to oldest block that must not be pruned.
      *
@@ -151,6 +152,7 @@ private:
      */
     std::unordered_map<std::string, PruneLockInfo> m_prune_locks GUARDED_BY(::cs_main);
 
+private:
     const kernel::BlockManagerOpts m_opts;
 
 public:
