@@ -18,6 +18,7 @@ OpenURIDialog::OpenURIDialog(const PlatformStyle *platformStyle, QWidget *parent
     ui(new Ui::OpenURIDialog)
 {
     ui->setupUi(this);
+    m_platform_style = platformStyle;
     ui->pasteButton->setIcon(platformStyle->SingleColorIcon(":/icons/editpaste"));
     QObject::connect(ui->pasteButton, &QAbstractButton::clicked, ui->uriEdit, &QLineEdit::paste);
 
@@ -44,4 +45,13 @@ void OpenURIDialog::accept()
     } else {
         ui->uriEdit->setValid(false);
     }
+}
+
+void OpenURIDialog::changeEvent(QEvent* e)
+{
+    if (e->type() == QEvent::PaletteChange) {
+        ui->pasteButton->setIcon(m_platform_style->SingleColorIcon(":/icons/editpaste"));
+    }
+
+    QDialog::changeEvent(e);
 }

@@ -25,9 +25,12 @@ public:
 
 protected Q_SLOTS:
     void accept() override;
+    void changeEvent(QEvent* e) override;
 
 private:
     Ui::OpenURIDialog *ui;
+
+    const PlatformStyle* m_platform_style;
 };
 
 #endif // BITCOIN_QT_OPENURIDIALOG_H
