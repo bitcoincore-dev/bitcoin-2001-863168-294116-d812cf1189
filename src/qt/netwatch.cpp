@@ -71,13 +71,14 @@ const CTxOut* GetNonDatacarrierOutput(const CTransactionRef& tx, const size_t tx
 
 } // namespace
 
-const QString LogEntry::LogEntryTypeAbbreviation(const LogEntryType log_entry_type)
+const QString LogEntry::LogEntryTypeAbbreviation(const Type log_entry_type)
 {
     switch (log_entry_type) {
-        case LET_BLOCK: return QObject::tr("Blk", "Tx Watch: Block type abbreviation");
-        case LET_TX:    return QObject::tr("Txn", "Tx Watch: Transaction type abbreviation");
-    }
-    return QString();
+        case Type::Block:       return QObject::tr("Blk", "Tx Watch: Block type abbreviation");
+        case Type::Transaction: return QObject::tr("Txn", "Tx Watch: Transaction type abbreviation");
+    } // no default case, so the compiler can warn about missing cases
+
+    assert(false);
 }
 
 void LogEntry::init(const LogEntry& other)
@@ -101,6 +102,7 @@ void LogEntry::init(const LogEntry& other)
         case 3:  // CTransactionWeakref
             init(relTimestamp, *other.get<CTransactionWeakref>(), true);
             break;
+        default: assert(false);
     }
 }
 
@@ -171,6 +173,7 @@ void LogEntry::clear()
         case 3:  // CTransactionWeakref
             get<CTransactionWeakref>()->~CTransactionWeakref();
             break;
+        default: assert(false);
     }
     delete m_data;
 }
@@ -209,10 +212,10 @@ uint64_t LogEntry::getTimestamp(uint64_t now) const
     return ts;
 }
 
-LogEntry::LogEntryType LogEntry::getType() const
+LogEntry::Type LogEntry::getType() const
 {
     const meta_t n = *(meta_t*)m_data;
-    return (n >> 31) ? LET_TX : LET_BLOCK;
+    return (n >> 31) ? Type::Transaction : Type::Block;
 }
 
 const CBlockIndex& LogEntry::getBlockIndex() const
@@ -320,18 +323,18 @@ int NetWatchLogModel::rowCount(const QModelIndex& parent) const
 
 int NetWatchLogModel::columnCount(const QModelIndex& parent) const
 {
-    return NWLMHeaderCount;
+    return HeaderCount;
 }
 
 QVariant NetWatchLogModel::data(const CBlockIndex& blockindex, int txout_index, const Header header) const
 {
     switch (header) {
-        case NWLMH_TYPE:
-            return LogEntry::LogEntryTypeAbbreviation(LogEntry::LET_BLOCK);
-        case NWLMH_ID:
+        case Header::Type:
+            return LogEntry::LogEntryTypeAbbreviation(LogEntry::Type::Block);
+        case Header::Id:
             return QString::fromStdString(blockindex.GetBlockHash().GetHex());
-        case NWLMH_ADDR:
-        case NWLMH_VALUE: {
+        case Header::Address:
+        case Header::Value: {
             if (blockindex.nTx == 0 || !(blockindex.nStatus & BLOCK_HAVE_DATA)) {
                 return QVariant();
             }
@@ -343,7 +346,8 @@ QVariant NetWatchLogModel::data(const CBlockIndex& blockindex, int txout_index, 
             assert(block.vtx.size());
             return data(block.vtx[0], txout_index, header);
         }
-        case NWLMH_TIME: ;  // Not valid here
+        case Header::Time:  // Not valid here
+            assert(false);
     }
     return QVariant();
 }
@@ -351,11 +355,11 @@ QVariant NetWatchLogModel::data(const CBlockIndex& blockindex, int txout_index, 
 QVariant NetWatchLogModel::data(const CTransactionRef& tx, int txout_index, const Header header) const
 {
     switch (header) {
-        case NWLMH_TYPE:
-            return LogEntry::LogEntryTypeAbbreviation(LogEntry::LET_TX);
-        case NWLMH_ID:
+        case Header::Type:
+            return LogEntry::LogEntryTypeAbbreviation(LogEntry::Type::Transaction);
+        case Header::Id:
             return QString::fromStdString(tx->GetHash().GetHex());
-        case NWLMH_ADDR: {
+        case Header::Address: {
             const CTxOut *ptxout = GetNonDatacarrierOutput(tx, txout_index);
             if (!ptxout) {
                 // Only datacarriers
@@ -369,7 +373,7 @@ QVariant NetWatchLogModel::data(const CTransactionRef& tx, int txout_index, cons
             }
             return QString::fromStdString(EncodeDestination(txdest));
         }
-        case NWLMH_VALUE: {
+        case Header::Value: {
             const CTxOut *ptxout = GetNonDatacarrierOutput(tx, txout_index);
             if (!ptxout) {
                 ptxout = &tx->vout[0];
@@ -380,7 +384,8 @@ QVariant NetWatchLogModel::data(const CTransactionRef& tx, int txout_index, cons
                 return qlonglong(ptxout->nValue);
             }
         }
-        case NWLMH_TIME: ;  // Not valid here
+        case Header::Time:  // Not valid here
+            assert(false);
     }
     return QVariant();
 }
@@ -426,14 +431,14 @@ QVariant NetWatchLogModel::data(const QModelIndex& index, int role) const
             if (!data(index, Qt::DisplayRole).isValid()) {
                 return m_widget->palette().brush(QPalette::WindowText);
             }
-            LogEntry::LogEntryType type;
+            LogEntry::Type type;
             {
                 int entry_row;
                 LOCK(cs);
                 const LogEntry& le = findLogEntry(index.row(), entry_row);
                 type = le.getType();
             }
-            if (type == LogEntry::LET_BLOCK) {
+            if (type == LogEntry::Type::Block) {
                 return m_widget->palette().brush(QPalette::AlternateBase);
             }
             return QVariant();
@@ -456,12 +461,12 @@ QVariant NetWatchLogModel::data(const QModelIndex& index, int role) const
             return QVariant();
         }
         case Qt::TextAlignmentRole:
-            if (header == NWLMH_VALUE) {
+            if (header == Header::Value) {
                 return QVariant(Qt::AlignRight | Qt::AlignVCenter);
             }
             return QVariant();
         case Qt::FontRole:
-            if (header == NWLMH_ID) {
+            if (header == Header::Id) {
                 return GUIUtil::fixedPitchFont();
             }
             return QVariant();
@@ -471,15 +476,15 @@ QVariant NetWatchLogModel::data(const QModelIndex& index, int role) const
     int entry_row;
     LOCK(cs);
     const LogEntry& le = findLogEntry(index.row(), entry_row);
-    if (header == NWLMH_TIME) {
+    if (header == Header::Time) {
         return GUIUtil::dateTimeStr(le.getTimestamp(GetTime()));
     }
-    const LogEntry::LogEntryType type = le.getType();
-    if (type == LogEntry::LET_BLOCK) {
+    const LogEntry::Type type = le.getType();
+    if (type == LogEntry::Type::Block) {
         return data(le.getBlockIndex(), entry_row, header);
     }
-    if (header == NWLMH_TYPE) {
-        return LogEntry::LogEntryTypeAbbreviation(LogEntry::LET_TX);
+    if (header == Header::Type) {
+        return LogEntry::LogEntryTypeAbbreviation(LogEntry::Type::Transaction);
     }
 
     if (le.expired()) {
@@ -493,12 +498,12 @@ QVariant NetWatchLogModel::headerData(int section, Qt::Orientation orientation, 
     if (orientation != Qt::Horizontal || role != Qt::DisplayRole) {
         return QVariant();
     }
-    switch (section) {
-        case NWLMH_TIME:  return tr("Time"   , "NetWatch: Time header");
-        case NWLMH_TYPE:  return tr("Type"   , "NetWatch: Type header");
-        case NWLMH_ID:    return tr("Id"     , "NetWatch: Block hash / Txid header");
-        case NWLMH_ADDR:  return tr("Address", "NetWatch: Address header");
-        case NWLMH_VALUE:
+    switch (Header(section)) {
+        case Header::Time:     return tr("Time"   , "NetWatch: Time header");
+        case Header::Type:     return tr("Type"   , "NetWatch: Type header");
+        case Header::Id:       return tr("Id"     , "NetWatch: Block hash / Txid header");
+        case Header::Address:  return tr("Address", "NetWatch: Address header");
+        case Header::Value:
             if (m_client_model) {
                 return BitcoinUnits::getAmountColumnTitle(m_client_model->getOptionsModel()->getDisplayUnit());
             } else {
@@ -524,15 +529,15 @@ NetWatchLogSearch::NetWatchLogSearch(const QString& query, int display_unit) :
 
 bool NetWatchLogSearch::match(const NetWatchLogModel& model, int row) const
 {
-    if (model.data(model.index(row, NetWatchLogModel::NWLMH_TIME)).toString().contains(m_query)) {
+    if (model.data(model.index(row, int(NetWatchLogModel::Header::Time))).toString().contains(m_query)) {
         return true;
-    } else if (m_check_type && model.data(model.index(row, NetWatchLogModel::NWLMH_TYPE)).toString().contains(m_query, Qt::CaseInsensitive)) {
+    } else if (m_check_type && model.data(model.index(row, int(NetWatchLogModel::Header::Type))).toString().contains(m_query, Qt::CaseInsensitive)) {
         return true;
-    } else if (m_check_id && model.data(model.index(row, NetWatchLogModel::NWLMH_ID)).toString().contains(m_query, Qt::CaseInsensitive)) {
+    } else if (m_check_id && model.data(model.index(row, int(NetWatchLogModel::Header::Id))).toString().contains(m_query, Qt::CaseInsensitive)) {
         return true;
-    } else if (m_check_addr && model.data(model.index(row, NetWatchLogModel::NWLMH_ADDR)).toString().contains(m_query, Qt::CaseInsensitive)) {
+    } else if (m_check_addr && model.data(model.index(row, int(NetWatchLogModel::Header::Address))).toString().contains(m_query, Qt::CaseInsensitive)) {
         return true;
-    } else if (m_check_value && model.data(model.index(row, NetWatchLogModel::NWLMH_VALUE)).toString().contains(m_query)) {
+    } else if (m_check_value && model.data(model.index(row, int(NetWatchLogModel::Header::Value))).toString().contains(m_query)) {
         return true;
     }
     return false;
@@ -678,8 +683,8 @@ void NetWatchLogModel::setClientModel(ClientModel *model)
 
 void NetWatchLogModel::updateDisplayUnit()
 {
-    Q_EMIT headerDataChanged(Qt::Horizontal, NWLMH_VALUE, NWLMH_VALUE);
-    Q_EMIT dataChanged(index(0, NWLMH_VALUE), index(rowCount() - 1, NWLMH_VALUE));
+    Q_EMIT headerDataChanged(Qt::Horizontal, int(Header::Value), int(Header::Value));
+    Q_EMIT dataChanged(index(0, int(Header::Value)), index(rowCount() - 1, int(Header::Value)));
 }
 
 int NetWatchLogTestModel::rowCount(const QModelIndex& parent) const
@@ -690,25 +695,25 @@ int NetWatchLogTestModel::rowCount(const QModelIndex& parent) const
 QVariant NetWatchLogTestModel::data(const QModelIndex& index, int role) const
 {
     const NetWatchLogModel::Header header = NetWatchLogModel::Header(index.column());
-    if (role == Qt::FontRole && header == NWLMH_ID) {
+    if (role == Qt::FontRole && header == Header::Id) {
         return GUIUtil::fixedPitchFont();
     } else if (role != Qt::DisplayRole) {
         return QVariant();
     }
     switch (header) {
-        case NWLMH_TIME:
+        case Header::Time:
             return GUIUtil::dateTimeStr(GetTime()) + "4";
-        case NWLMH_TYPE:
-            return LogEntry::LogEntryTypeAbbreviation(LogEntry::LogEntryType(index.row()));
-        case NWLMH_ID:
+        case Header::Type:
+            return LogEntry::LogEntryTypeAbbreviation(LogEntry::Type(index.row()));
+        case Header::Id:
             return QString(64, '0');
-        case NWLMH_ADDR:
+        case Header::Address:
             if (index.row()) {
                 return "bc1" + QString(LONGEST_BECH32_ADDRESS-3, 'x');
             } else {
                 return QString(LONGEST_BASE58_ADDRESS, 'W');
             }
-        case NWLMH_VALUE:
+        case Header::Value:
             return "20000000.00000000";
     }
     return QVariant();
@@ -720,9 +725,7 @@ GuiNetWatch::GuiNetWatch(const PlatformStyle *platformStyle, const NetworkStyle 
     QVBoxLayout * const layout = new QVBoxLayout(this);
 
     m_search_editor = new QLineEdit(this);
-#if QT_VERSION >= 0x040700
     m_search_editor->setPlaceholderText("Search");
-#endif
     layout->addWidget(m_search_editor);
 
     m_log_view = new QTableView(this);
@@ -744,7 +747,7 @@ GuiNetWatch::GuiNetWatch(const PlatformStyle *platformStyle, const NetworkStyle 
 
     setWindowTitle(tr(PACKAGE_NAME) + " - " + tr("Network Watch") + " " + networkStyle->getTitleAddText());
     setMinimumSize(640, 480);
-    resize(layout->contentsMargins().left() + (m_log_view->frameWidth() * 2) + m_log_view->columnViewportPosition(NetWatchLogModel::NWLMHeaderCount-1) + m_log_view->columnWidth(NetWatchLogModel::NWLMHeaderCount-1) + m_log_view->verticalScrollBar()->size().width() + layout->contentsMargins().right(), 480);
+    resize(layout->contentsMargins().left() + (m_log_view->frameWidth() * 2) + m_log_view->columnViewportPosition(NetWatchLogModel::HeaderCount-1) + m_log_view->columnWidth(NetWatchLogModel::HeaderCount-1) + m_log_view->verticalScrollBar()->size().width() + layout->contentsMargins().right(), 480);
     setWindowIcon(networkStyle->getTrayAndWindowIcon());
 
     connect(m_search_editor, &QLineEdit::textChanged, this, &GuiNetWatch::doSearch);
@@ -810,7 +813,7 @@ void GuiNetWatch::doSearch(const QString& query)
         sel.select(log_model->index(row, 0), QItemSelectionModel::Rows | QItemSelectionModel::Select);
     }
     m_dont_cancel_search = false;
-    m_log_view->scrollTo(log_model->index(results.back(), NetWatchLogModel::NWLMH_ID));
+    m_log_view->scrollTo(log_model->index(results.back(), int(NetWatchLogModel::Header::Id)));
 }
 
 void GuiNetWatch::moreSearchResults(const QList<int>& rows)
