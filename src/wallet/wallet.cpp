@@ -92,6 +92,16 @@ static void UpdateWalletSetting(interfaces::Chain& chain,
     }
 }
 
+/**
+ * Refresh mempool status so the wallet is in an internally consistent state and
+ * immediately knows the transaction's status: Whether it can be considered
+ * trusted and is eligible to be abandoned ...
+ */
+static void RefreshMempoolStatus(CWalletTx& tx, interfaces::Chain& chain)
+{
+    tx.fInMempool = chain.isInMempool(tx.GetHash());
+}
+
 bool AddWallet(const std::shared_ptr<CWallet>& wallet)
 {
     LOCK(cs_wallets);
@@ -1170,13 +1180,7 @@ void CWallet::transactionAddedToMempool(const CTransactionRef& tx, uint64_t memp
 
     auto it = mapWallet.find(tx->GetHash());
     if (it != mapWallet.end()) {
-        // Refresh mempool status, but take into account that the transaction
-        // might have been removed from the mempool after this notification was
-        // sent.
-        // This helps the wallet to be in an internally consistent state and
-        // knows the removed transaction should not be considered trusted and
-        // is eligible to be abandoned.
-        it->second.fInMempool = chain().isInMempool(tx->GetHash());
+        RefreshMempoolStatus(it->second, chain());
     }
 }
 
@@ -1184,7 +1188,7 @@ void CWallet::transactionRemovedFromMempool(const CTransactionRef& tx, MemPoolRe
     LOCK(cs_wallet);
     auto it = mapWallet.find(tx->GetHash());
     if (it != mapWallet.end()) {
-        it->second.fInMempool = false;
+        RefreshMempoolStatus(it->second, chain());
     }
     // Handle transactions that were removed from the mempool because they
     // conflict with transactions in a newly connected block.
