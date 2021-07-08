@@ -64,6 +64,7 @@ EXPECTED_BOOST_INCLUDES=(
     boost/preprocessor/cat.hpp
     boost/preprocessor/stringize.hpp
     boost/process.hpp
+    boost/process/extend.hpp
     boost/signals2/connection.hpp
     boost/signals2/optional_last_value.hpp
     boost/signals2/signal.hpp
