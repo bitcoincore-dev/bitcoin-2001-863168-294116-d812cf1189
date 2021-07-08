@@ -892,20 +892,23 @@ void BitcoinGUI::setNetworkActive(bool networkActive)
 {
     updateNetworkState();
     m_network_context_menu->clear();
-    m_network_context_menu->addAction(
+    QAction* const show_peers_action = m_network_context_menu->addAction(
         //: A context menu item. The "Peers tab" is an element of the "Node window".
-        tr("Show Peers tab"),
+        tr("Show Peers tab"));
+    connect(show_peers_action, &QAction::triggered,
         [this] {
             rpcConsole->setTabFocus(RPCConsole::TabTypes::PEERS);
             showDebugWindow();
         });
-    m_network_context_menu->addAction(
+    QAction* const enabledisable_action = m_network_context_menu->addAction(
         networkActive ?
             //: A context menu item.
             tr("Disable network activity") :
             //: A context menu item. The network activity was disabled previously.
-            tr("Enable network activity"),
-        [this, new_state = !networkActive] { m_node.setNetworkActive(new_state); });
+            tr("Enable network activity"));
+    const bool new_state = !networkActive;
+    connect(enabledisable_action, &QAction::triggered,
+        [this, new_state] { m_node.setNetworkActive(new_state); });
 }
 
 void BitcoinGUI::updateHeadersSyncProgressLabel()
