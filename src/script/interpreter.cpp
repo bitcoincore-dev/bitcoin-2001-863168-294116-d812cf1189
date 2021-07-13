@@ -1490,13 +1490,8 @@ uint256 GetDefaultCheckTemplateVerifyHashEmptyScript(const TxType& tx, const uin
 } // namespace
 
 template<typename TxType>
-uint256 GetDefaultCheckTemplateVerifyHash(const TxType& tx, uint32_t input_index) {
-    return GetDefaultCheckTemplateVerifyHash(tx, GetOutputsSHA256(tx), GetSequencesSHA256(tx), input_index);
-}
-
-template<typename TxType>
-uint256 GetDefaultCheckTemplateVerifyHash(const TxType& tx, const uint256& outputs_hash, const uint256& sequences_hash,
-                                const uint32_t input_index) {
+uint256 GetDefaultCheckTemplateVerifyHash(const TxType& tx, const uint256& outputs_hash,
+                                          const uint256& sequences_hash, const uint32_t input_index) {
     bool skip_scriptSigs = std::find_if(tx.vin.begin(), tx.vin.end(),
             [](const CTxIn& c) { return c.scriptSig != CScript(); }) == tx.vin.end();
     return skip_scriptSigs ? GetDefaultCheckTemplateVerifyHashEmptyScript(tx, outputs_hash, sequences_hash, input_index) :
@@ -1924,10 +1919,9 @@ bool GenericTransactionSignatureChecker<T>::CheckDefaultCheckTemplateVerifyHash(
                         txdata->m_scriptSigs_single_hash, nIn);
             return std::equal(hash_tmpl.begin(), hash_tmpl.end(), hash.data());
         }
+    } else {
+        return HandleMissingData(m_mdb);
     }
-    assert(txTo != nullptr);
-    uint256 hash_tmpl = GetDefaultCheckTemplateVerifyHash(*txTo, nIn);
-    return std::equal(hash_tmpl.begin(), hash_tmpl.end(), hash.data());
 }
 // explicit instantiation
 template class GenericTransactionSignatureChecker<CTransaction>;
