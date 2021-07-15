@@ -25,7 +25,7 @@ so depends build outputs will be installed in that location.
 
 Common `host-platform-triplet`s for cross compilation are:
 
-- `i686-pc-linux-gnu` for Linux 32 bit
+- `i686-linux-gnu` for Linux 32 bit
 - `x86_64-pc-linux-gnu` for x86 Linux
 - `x86_64-w64-mingw32` for Win64
 - `x86_64-apple-darwin18` for macOS
@@ -58,11 +58,15 @@ For more information, see [SDK Extraction](../contrib/macdeploy/README.md#sdk-ex
 
 - see [build-windows.md](../doc/build-windows.md#cross-compilation-for-ubuntu-and-windows-subsystem-for-linux)
 
-#### For linux (including i386, ARM) cross compilation
+#### For linux cross compilation
 
 Common linux dependencies:
 
     sudo apt-get install make automake cmake curl g++-multilib libtool binutils-gold bsdmainutils pkg-config python3 patch bison
+
+For linux 32 bit (i386 architecture) cross compilation:
+
+    sudo apt-get install g++-i686-linux-gnu binutils-i686-linux-gnu
 
 For linux ARM cross compilation:
 
