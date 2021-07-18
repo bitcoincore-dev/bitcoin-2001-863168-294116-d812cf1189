@@ -37,7 +37,7 @@ Release Process
   - This update should be reviewed with a reindex-chainstate with assumevalid=0 to catch any defect
      that causes rejection of blocks in the past history.
 * Update `src/chainparams.cpp` with a new `m_assumeutxo_data` entry including the
-  assumeutxo hash and nChainTx count. 
+  assumeutxo hash and nChainTx count.
   - You can obtain this information, and the corresponding snapshot, by running
     `./contrib/devtools/utxo_snapshot.sh <blockheight> <snapshot-out-path>`.
   - The height used should probably the be same as the assumevalid height chosen.
