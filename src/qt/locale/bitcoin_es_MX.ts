@@ -86,6 +86,11 @@
         <translation type="unfinished">Exportar lista de direcciones </translation>
     </message>
     <message>
+        <source>Comma separated file</source>
+        <extracomment>Expanded name of the CSV file format. See https://en.wikipedia.org/wiki/Comma-separated_values</extracomment>
+        <translation type="unfinished">Archivo separado por comas</translation>
+    </message>
+    <message>
         <source>There was an error trying to save the address list to %1. Please try again.</source>
         <extracomment>An error message. %1 is a stand-in argument for the name of the file we attempted to save to.</extracomment>
         <translation type="unfinished">Hubo un error al tratar de salvar a la lista de direcciones a %1. Por favor intente de nuevo.</translation>
@@ -233,7 +238,22 @@
     </message>
 </context>
 <context>
+    <name>BitcoinApplication</name>
+    <message>
+        <source>Internal error</source>
+        <translation type="unfinished">Error interno</translation>
+    </message>
+    <message>
+        <source>An internal error occurred. %1 will attempt to continue safely. This is an unexpected bug which can be reported as described below.</source>
+        <translation type="unfinished">Un error interno ocurrió. %1 intentará continuar. Este es un error inesperado que puede ser reportado de las formas que se muestran debajo.</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
+    <message>
+        <source>%1 didn't yet exit safely…</source>
+        <translation type="unfinished">%1 todavía no ha terminado de forma segura...</translation>
+    </message>
     <message>
         <source>unknown</source>
         <translation type="unfinished">desconocido</translation>
@@ -417,6 +437,18 @@
         <translation>Pestañas</translation>
     </message>
     <message>
+        <source>Synchronizing with network…</source>
+        <translation type="unfinished">Sincronizando con la red...</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk…</source>
+        <translation type="unfinished">Indexando bloques en disco...</translation>
+    </message>
+    <message>
+        <source>Processing blocks on disk…</source>
+        <translation type="unfinished">Procesando bloques en disco...</translation>
+    </message>
+    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation type="unfinished"> 
 Solicitar pagos (genera códigos QR y bitcoin: URI)
@@ -496,6 +528,11 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
             <numerusform />
             <numerusform />
         </translation>
+    </message>
+    <message>
+        <source>Enable network activity</source>
+        <extracomment>A context menu item. The network activity was disabled previously.</extracomment>
+        <translation type="unfinished">Activar actividad de la red</translation>
     </message>
     <message>
         <source>Warning: %1</source>
@@ -623,6 +660,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation type="unfinished">Esta capa se vuelve roja si algún destinatario recibe un monto menor al actual limite del remanente monetario </translation>
     </message>
     <message>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation type="unfinished">Puede variar +/- %1 satoshi(s) por entrada.</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation type="unfinished">(sin etiqueta)</translation>
     </message>
@@ -633,6 +674,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
 </context>
 <context>
     <name>CreateWalletActivity</name>
+    <message>
+        <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <translation type="unfinished">Creando Monedero &lt;b&gt;%1&lt;/b&gt;…</translation>
+    </message>
     <message>
         <source>Create wallet failed</source>
         <translation type="unfinished">La creación de la cartera falló</translation>
@@ -1599,6 +1644,11 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     <message>
         <source>Export Transaction History</source>
         <translation type="unfinished">Exportar el historial de transacción</translation>
+    </message>
+    <message>
+        <source>Comma separated file</source>
+        <extracomment>Expanded name of the CSV file format. See https://en.wikipedia.org/wiki/Comma-separated_values</extracomment>
+        <translation type="unfinished">Archivo separado por comas</translation>
     </message>
     <message>
         <source>Confirmed</source>
