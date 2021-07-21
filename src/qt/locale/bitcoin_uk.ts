@@ -77,11 +77,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>&amp;Copy Address</source>
-        <translation type="unfinished">&amp;Скопіювати адресу</translation>
+        <translation type="unfinished">Копіювати &amp;адресу</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
-        <translation type="unfinished">Скопіювати &amp;мітку</translation>
+        <translation type="unfinished">Копіювати &amp;мітку</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
@@ -335,41 +335,41 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message numerus="yes">
         <source>%n second(s)</source>
         <translation>
-            <numerusform />
-            <numerusform />
-            <numerusform />
+            <numerusform>%n секунда</numerusform>
+            <numerusform>%n секунди</numerusform>
+            <numerusform>%n секунд</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
         <translation>
-            <numerusform />
-            <numerusform />
-            <numerusform />
+            <numerusform>%n хвилина</numerusform>
+            <numerusform>%n хвилини</numerusform>
+            <numerusform>%n хвилин</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
         <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-            <numerusform />
+            <numerusform>%n година</numerusform>
+            <numerusform>%n години</numerusform>
+            <numerusform>%n годин</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
         <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-            <numerusform />
+            <numerusform>%n день</numerusform>
+            <numerusform>%n дні</numerusform>
+            <numerusform>%n днів</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
         <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-            <numerusform />
+            <numerusform>%n тиждень</numerusform>
+            <numerusform>%n тижні</numerusform>
+            <numerusform>%n тижнів</numerusform>
         </translation>
     </message>
     <message>
@@ -379,9 +379,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message numerus="yes">
         <source>%n year(s)</source>
         <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-            <numerusform />
+            <numerusform>%n рік</numerusform>
+            <numerusform>%n роки</numerusform>
+            <numerusform>%n років</numerusform>
         </translation>
     </message>
     <message>
@@ -527,6 +527,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
         <translation>Перевірте повідомлення для впевненості, що воно підписано вказаною Bitcoin-адресою</translation>
+    </message>
+    <message>
+        <source>&amp;Load PSBT from file…</source>
+        <translation type="unfinished">&amp;Завантажити PSBT з файлу…</translation>
     </message>
     <message>
         <source>Load PSBT from clipboard…</source>
@@ -735,6 +739,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Натисніть для додаткових дій.</translation>
     </message>
     <message>
+        <source>Show Peers tab</source>
+        <extracomment>A context menu item. The "Peers tab" is an element of the "Node window".</extracomment>
+        <translation type="unfinished">Показати вкладку з'єднань</translation>
+    </message>
+    <message>
         <source>Disable network activity</source>
         <extracomment>A context menu item.</extracomment>
         <translation type="unfinished">Вимкнути мережеву активність</translation>
@@ -900,11 +909,23 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Copy amount</source>
-        <translation type="unfinished">Скопіювати суму</translation>
+        <translation type="unfinished">Копіювати суму</translation>
     </message>
     <message>
         <source>&amp;Copy address</source>
         <translation type="unfinished">&amp;Копіювати адресу</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">Копіювати &amp;мітку</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">Копіювати &amp;суму</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">Копіювати &amp;ID транзакції</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -920,15 +941,15 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Copy bytes</source>
-        <translation type="unfinished">Скопіювати байти</translation>
+        <translation type="unfinished">Копіювати байти</translation>
     </message>
     <message>
         <source>Copy dust</source>
-        <translation type="unfinished">Скопіювати інше</translation>
+        <translation type="unfinished">Копіювати "пил"</translation>
     </message>
     <message>
         <source>Copy change</source>
-        <translation type="unfinished">Скопіювати решту</translation>
+        <translation type="unfinished">Копіювати решту</translation>
     </message>
     <message>
         <source>(%1 locked)</source>
@@ -977,7 +998,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Create wallet warning</source>
         <translation type="unfinished">Попередження створення гаманця</translation>
     </message>
-    </context>
+    <message>
+        <source>Can't list signers</source>
+        <translation type="unfinished">Неможливо показати зовнішні підписувачі</translation>
+    </message>
+</context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1069,6 +1094,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Descriptor Wallet</source>
         <translation type="unfinished">Гаманець на базі дескрипторів</translation>
+    </message>
+    <message>
+        <source>External signer</source>
+        <translation type="unfinished">Зовнішній підписувач</translation>
     </message>
     <message>
         <source>Create</source>
@@ -1438,6 +1467,18 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>&amp;Spend unconfirmed change</source>
         <translation type="unfinished">&amp;Витрачати непідтверджену решту</translation>
+    </message>
+    <message>
+        <source>External Signer (e.g. hardware wallet)</source>
+        <translation type="unfinished">Зовнішній підписувач (наприклад, апаратний гаманець)</translation>
+    </message>
+    <message>
+        <source>&amp;External signer script path</source>
+        <translation type="unfinished">Шлях до скрипту &amp;зовнішнього підписувача</translation>
+    </message>
+    <message>
+        <source>Full path to a Bitcoin Core compatible script (e.g. C:\Downloads\hwi.exe or /Users/you/Downloads/hwi.py). Beware: malware can steal your coins!</source>
+        <translation type="unfinished">Повний шлях до скрипту, сумісного з Bitcoin Core (наприклад, C:\Downloads\hwi.exe або /Users/you/Downloads/hwi.py). Обережно: зловмисні програми можуть вкрасти Ваші монети!</translation>
     </message>
     <message>
         <source>Automatically open the Bitcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
@@ -2052,8 +2093,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Дозволи</translation>
     </message>
     <message>
+        <source>Direction/Type</source>
+        <translation type="unfinished">Напрямок/Тип</translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation type="unfinished">Сервіси</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation type="unfinished">Висока пропускна здатність</translation>
     </message>
     <message>
         <source>Connection Time</source>
@@ -2062,6 +2111,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Last Block</source>
         <translation type="unfinished">Останній Блок</translation>
+    </message>
+    <message>
+        <source>Last Tx</source>
+        <translation type="unfinished">Остання транзакція</translation>
     </message>
     <message>
         <source>Last Send</source>
@@ -2126,6 +2179,18 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Out:</source>
         <translation type="unfinished">Вихідних:</translation>
+    </message>
+    <message>
+        <source>we selected the peer for high bandwidth relay</source>
+        <translation type="unfinished">ми обрали з'єднання з високою пропускною здатністю</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation type="unfinished">нас обрали для з'єднання з високою пропускною здатністю</translation>
+    </message>
+    <message>
+        <source>no high bandwidth relay selected</source>
+        <translation type="unfinished">немає з'єднань з високою пропускною здатністю</translation>
     </message>
     <message>
         <source>&amp;Disconnect</source>
@@ -2298,11 +2363,23 @@ For more information on using this console, type %6.
     </message>
     <message>
         <source>Copy &amp;URI</source>
-        <translation type="unfinished">&amp;Скопіювати URI</translation>
+        <translation type="unfinished">&amp;Копіювати URI</translation>
     </message>
     <message>
         <source>&amp;Copy address</source>
         <translation type="unfinished">&amp;Копіювати адресу</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">Копіювати &amp;мітку</translation>
+    </message>
+    <message>
+        <source>Copy &amp;message</source>
+        <translation type="unfinished">Копіювати &amp;повідомлення</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">Копіювати &amp;суму</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -2341,11 +2418,11 @@ For more information on using this console, type %6.
     </message>
     <message>
         <source>Copy &amp;URI</source>
-        <translation type="unfinished">&amp;Скопіювати URI</translation>
+        <translation type="unfinished">&amp;Копіювати URI</translation>
     </message>
     <message>
         <source>Copy &amp;Address</source>
-        <translation type="unfinished">Скопіювати &amp;адресу</translation>
+        <translation type="unfinished">Копіювати &amp;адресу</translation>
     </message>
     <message>
         <source>&amp;Save Image…</source>
@@ -2539,7 +2616,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     </message>
     <message>
         <source>Copy amount</source>
-        <translation type="unfinished">Скопіювати суму</translation>
+        <translation type="unfinished">Копіювати суму</translation>
     </message>
     <message>
         <source>Copy fee</source>
@@ -2551,19 +2628,28 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     </message>
     <message>
         <source>Copy bytes</source>
-        <translation type="unfinished">Скопіювати байти</translation>
+        <translation type="unfinished">Копіювати байти</translation>
     </message>
     <message>
         <source>Copy dust</source>
-        <translation type="unfinished">Скопіювати інше</translation>
+        <translation type="unfinished">Копіювати "пил"</translation>
     </message>
     <message>
         <source>Copy change</source>
-        <translation type="unfinished">Скопіювати решту</translation>
+        <translation type="unfinished">Копіювати решту</translation>
     </message>
     <message>
         <source>%1 (%2 blocks)</source>
         <translation type="unfinished">%1 (%2 блоків)</translation>
+    </message>
+    <message>
+        <source>Sign on device</source>
+        <extracomment>"device" usually means a hardware wallet</extracomment>
+        <translation type="unfinished">Підписати на пристрої</translation>
+    </message>
+    <message>
+        <source>Connect your hardware wallet first.</source>
+        <translation type="unfinished">Спочатку підключіть Ваш апаратний гаманець.</translation>
     </message>
     <message>
         <source>Cr&amp;eate Unsigned</source>
@@ -2602,8 +2688,22 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">Створити без підпису</translation>
     </message>
     <message>
+        <source>Sign and send</source>
+        <translation type="unfinished">Підписати та надіслати</translation>
+    </message>
+    <message>
         <source>Sign failed</source>
         <translation type="unfinished">Не вдалось підписати</translation>
+    </message>
+    <message>
+        <source>External signer not found</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation type="unfinished">Зовнішній підписувач не знайдено</translation>
+    </message>
+    <message>
+        <source>External signer failure</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation type="unfinished">Помилка зовнішнього підписувача</translation>
     </message>
     <message>
         <source>Save Transaction Data</source>
@@ -3308,6 +3408,18 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">&amp;Копіювати адресу</translation>
     </message>
     <message>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">Копіювати &amp;мітку</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">Копіювати &amp;суму</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">Копіювати &amp;ID транзакції</translation>
+    </message>
+    <message>
         <source>Export Transaction History</source>
         <translation type="unfinished">Експортувати історію транзакцій</translation>
     </message>
@@ -3437,6 +3549,10 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation type="unfinished">Не вдалось виконати транзакцію</translation>
     </message>
     <message>
+        <source>Can't display address</source>
+        <translation type="unfinished">Неможливо показати адресу</translation>
+    </message>
+    <message>
         <source>default wallet</source>
         <translation type="unfinished">гаманець за змовчуванням</translation>
     </message>
@@ -3478,6 +3594,11 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Backup Wallet</source>
         <translation type="unfinished">Зробити резервне копіювання гаманця</translation>
+    </message>
+    <message>
+        <source>Wallet Data</source>
+        <extracomment>Name of the wallet data file format.</extracomment>
+        <translation type="unfinished">Файл гаманця</translation>
     </message>
     <message>
         <source>Backup Failed</source>
@@ -3675,6 +3796,10 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation type="unfinished">Завантаження завершено</translation>
     </message>
     <message>
+        <source>Error creating %s</source>
+        <translation type="unfinished">Помилка створення %s</translation>
+    </message>
+    <message>
         <source>Error initializing block database</source>
         <translation type="unfinished">Помилка ініціалізації бази даних блоків</translation>
     </message>
@@ -3721,6 +3846,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Error: Keypool ran out, please call keypoolrefill first</source>
         <translation type="unfinished">Помилка: Пул ключів закінчився, будь-ласка, виконайте спочатку keypoolrefill</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation type="unfinished">Помилка: Відсутня контрольна сума</translation>
     </message>
     <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
@@ -3793,6 +3922,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Loading P2P addresses…</source>
         <translation type="unfinished">Завантаження P2P адрес…</translation>
+    </message>
+    <message>
+        <source>Loading banlist…</source>
+        <translation type="unfinished">Завантаження переліку заборонених з'єднань…</translation>
     </message>
     <message>
         <source>Loading block index…</source>
