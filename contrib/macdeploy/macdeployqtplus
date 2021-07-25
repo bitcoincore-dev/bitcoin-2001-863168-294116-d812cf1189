@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import sys, re, os, shutil, stat, subprocess, os.path
+import sys, re, os, platform, shutil, stat, subprocess, os.path
 from argparse import ArgumentParser
 from ds_store import DSStore
 from mac_alias import Alias
@@ -259,6 +259,7 @@ def copyFramework(framework: FrameworkInfo, path: str, verbose: int) -> Optional
         if verbose:
             print("Copied:", fromPath)
             print(" to:", toPath)
+        need_to_sign_target = True;
     else:    
         to_dir = os.path.join(path, "Contents", "Frameworks", framework.frameworkName)
         if os.path.exists(to_dir):
@@ -427,6 +428,7 @@ if os.path.exists(appname + ".temp.dmg"):
 # ------------------------------------------------
 
 target = os.path.join("dist", "Bitcoin-Qt.app")
+need_to_sign_target = False
 
 print("+ Copying source bundle +")
 if verbose:
@@ -540,6 +542,11 @@ ds.flush()
 ds.close()
 
 # ------------------------------------------------
+
+if need_to_sign_target and platform.system() == "Darwin" and platform.machine() == "arm64":
+    subprocess.check_call(f"codesign --deep --force --sign - {target}", shell=True)
+    if verbose:
+        print("Signed with an ad-hoc signature.")
 
 if config.dmg is not None:
 
