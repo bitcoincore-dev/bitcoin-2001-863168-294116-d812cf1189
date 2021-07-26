@@ -75,6 +75,10 @@ if test "@host_os@" = darwin; then
   PORT=no
 fi
 
+if test "@host_os@" = android; then
+  QT_BASE_PATH="@qt_base_path@"
+fi
+
 PATH="${depends_prefix}/native/bin:${PATH}"
 PKG_CONFIG="$(which pkg-config) --static"
 
