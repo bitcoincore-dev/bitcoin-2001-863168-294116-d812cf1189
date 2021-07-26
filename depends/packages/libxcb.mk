@@ -1,12 +1,12 @@
-package=libxcb
-$(package)_version=1.10
-$(package)_download_path=https://xcb.freedesktop.org/dist
-$(package)_file_name=$(package)-$($(package)_version).tar.bz2
-$(package)_sha256_hash=98d9ab05b636dd088603b64229dd1ab2d2cc02ab807892e107d674f9c3f2d5b5
-$(package)_dependencies=xcb_proto libXau
+package := libxcb
+$(package)_version := 1.10
+$(package)_download_path := https://xcb.freedesktop.org/dist
+$(package)_file_name := $(package)-$($(package)_version).tar.bz2
+$(package)_sha256_hash := 98d9ab05b636dd088603b64229dd1ab2d2cc02ab807892e107d674f9c3f2d5b5
+$(package)_dependencies := xcb_proto libXau
 
 define $(package)_set_vars
-$(package)_config_opts=--disable-static --disable-build-docs --without-doxygen --without-launchd
+$(package)_config_opts := --disable-static --disable-build-docs --without-doxygen --without-launchd
 $(package)_config_opts += --disable-dependency-tracking --enable-option-checking
 # Because we pass -qt-xcb to Qt, it will compile in a set of xcb helper libraries and extensions,
 # so we skip building all of the extensions here.
