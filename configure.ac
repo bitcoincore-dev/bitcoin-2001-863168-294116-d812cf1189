@@ -728,29 +728,29 @@ case $host in
      CPPFLAGS="$CPPFLAGS -DMAC_OSX -DOBJC_OLD_DISPATCH_PROTOTYPES=0"
      OBJCXXFLAGS="$CXXFLAGS"
      ;;
-   *android*)
-     dnl make sure android stays above linux for hosts like *linux-android*
-     TARGET_OS=android
-     case $host in
-       *x86_64*)
-          ANDROID_ARCH=x86_64
-          ;;
-        *aarch64*)
-          ANDROID_ARCH=arm64-v8a
-          ;;
-        *armv7a*)
-          ANDROID_ARCH=armeabi-v7a
-          ;;
-        *i686*)
-          ANDROID_ARCH=i686
-          ;;
-        *) AC_MSG_ERROR("Could not determine Android arch") ;;
-      esac
-      AC_SUBST(QT_BASE_PATH, "$QT_BASE_PATH")
-     ;;
-   *linux*)
-     TARGET_OS=linux
-     ;;
+  *android*)
+    dnl make sure android stays above linux for hosts like *linux-android*
+    TARGET_OS=android
+    case $host in
+      *x86_64*)
+        ANDROID_ARCH=x86_64
+        ;;
+      *aarch64*)
+        ANDROID_ARCH=arm64-v8a
+        ;;
+      *armv7a*)
+        ANDROID_ARCH=armeabi-v7a
+        ;;
+      *i686*)
+        ANDROID_ARCH=i686
+        ;;
+      *) AC_MSG_ERROR("Could not determine Android arch") ;;
+    esac
+    AC_SUBST(QT_BASE_PATH, "$QT_BASE_PATH")
+    ;;
+  *linux*)
+    TARGET_OS=linux
+    ;;
 esac
 
 if test x$use_extended_functional_tests != xno; then
