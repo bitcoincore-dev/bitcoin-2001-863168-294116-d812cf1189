@@ -6,9 +6,9 @@ $(package)_sha256_hash := d73a8da01e8bf8c7eda40b4c84915071a8c8a0df4a6734537ddde4
 
 $(package)_build_subdir := tools/build/src/engine
 ifneq (,$(findstring clang,$($(package)_cxx)))
-$(package)_toolset_$(host_os)=clang
+$(package)_toolset_$(host_os) := clang
 else
-$(package)_toolset_$(host_os)=gcc
+$(package)_toolset_$(host_os) := gcc
 endif
 
 define $(package)_build_cmds
