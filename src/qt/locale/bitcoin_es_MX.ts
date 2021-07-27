@@ -86,6 +86,11 @@
         <translation type="unfinished">Exportar lista de direcciones </translation>
     </message>
     <message>
+        <source>Comma separated file</source>
+        <extracomment>Expanded name of the CSV file format. See https://en.wikipedia.org/wiki/Comma-separated_values</extracomment>
+        <translation type="unfinished">Archivo separado por comas</translation>
+    </message>
+    <message>
         <source>There was an error trying to save the address list to %1. Please try again.</source>
         <extracomment>An error message. %1 is a stand-in argument for the name of the file we attempted to save to.</extracomment>
         <translation type="unfinished">Hubo un error al tratar de salvar a la lista de direcciones a %1. Por favor intente de nuevo.</translation>
@@ -214,7 +219,7 @@
     </message>
     <message>
         <source>Wallet passphrase was successfully changed.</source>
-        <translation type="unfinished">La contraseña de la cartera ha sido exitosamente cambiada.</translation>
+        <translation type="unfinished">La contraseña del monedero se cambió correctamente.</translation>
     </message>
     <message>
         <source>Warning: The Caps Lock key is on!</source>
@@ -233,7 +238,22 @@
     </message>
 </context>
 <context>
+    <name>BitcoinApplication</name>
+    <message>
+        <source>Internal error</source>
+        <translation type="unfinished">Error interno</translation>
+    </message>
+    <message>
+        <source>An internal error occurred. %1 will attempt to continue safely. This is an unexpected bug which can be reported as described below.</source>
+        <translation type="unfinished">Un error interno ocurrió. %1 intentará continuar. Este es un error inesperado que puede ser reportado de las formas que se muestran debajo.</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
+    <message>
+        <source>%1 didn't yet exit safely…</source>
+        <translation type="unfinished">%1 todavía no ha terminado de forma segura...</translation>
+    </message>
     <message>
         <source>unknown</source>
         <translation type="unfinished">desconocido</translation>
@@ -381,6 +401,10 @@
         <translation>&amp;Recibir</translation>
     </message>
     <message>
+        <source>&amp;Options…</source>
+        <translation type="unfinished">&amp;Opciones…</translation>
+    </message>
+    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Mostrar / Ocultar</translation>
     </message>
@@ -389,16 +413,52 @@
         <translation>Mostrar u ocultar la ventana principal</translation>
     </message>
     <message>
+        <source>&amp;Encrypt Wallet…</source>
+        <translation type="unfinished">&amp;Encriptar billetera…</translation>
+    </message>
+    <message>
         <source>Encrypt the private keys that belong to your wallet</source>
         <translation>Cifre las claves privadas que pertenecen a su billetera</translation>
+    </message>
+    <message>
+        <source>&amp;Backup Wallet…</source>
+        <translation type="unfinished">&amp;Realizar copia de seguridad de la billetera</translation>
+    </message>
+    <message>
+        <source>&amp;Change Passphrase…</source>
+        <translation type="unfinished">&amp;Cambiar contraseña...</translation>
     </message>
     <message>
         <source>Sign messages with your Bitcoin addresses to prove you own them</source>
         <translation>Firme mensajes con sus direcciones de Bitcoin para demostrar que los posee</translation>
     </message>
     <message>
+        <source>&amp;Verify message…</source>
+        <translation type="unfinished">&amp;Verificar mensaje...</translation>
+    </message>
+    <message>
         <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
         <translation>Verifique los mensajes para asegurarse de que se firmaron con direcciones de Bitcoin especificadas.</translation>
+    </message>
+    <message>
+        <source>&amp;Load PSBT from file…</source>
+        <translation type="unfinished">&amp;Cargar PSBT desde el archivo...</translation>
+    </message>
+    <message>
+        <source>Open &amp;URI…</source>
+        <translation type="unfinished">Abrir &amp;URI…</translation>
+    </message>
+    <message>
+        <source>Close Wallet…</source>
+        <translation type="unfinished">Cerrar Billetera</translation>
+    </message>
+    <message>
+        <source>Create Wallet…</source>
+        <translation type="unfinished">Crear Billetera</translation>
+    </message>
+    <message>
+        <source>Close All Wallets…</source>
+        <translation type="unfinished">Cerrar todas las Billeteras</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -415,6 +475,26 @@
     <message>
         <source>Tabs toolbar</source>
         <translation>Pestañas</translation>
+    </message>
+    <message>
+        <source>Syncing Headers (%1%)…</source>
+        <translation type="unfinished">Sincronizando cabeceras (%1%) ...</translation>
+    </message>
+    <message>
+        <source>Synchronizing with network…</source>
+        <translation type="unfinished">Sincronizando con la red...</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk…</source>
+        <translation type="unfinished">Indexando bloques en disco...</translation>
+    </message>
+    <message>
+        <source>Processing blocks on disk…</source>
+        <translation type="unfinished">Procesando bloques en disco...</translation>
+    </message>
+    <message>
+        <source>Connecting to peers…</source>
+        <translation type="unfinished">Conectando a pares...</translation>
     </message>
     <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
@@ -437,8 +517,8 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
         <translation>
-            <numerusform />
-            <numerusform />
+            <numerusform>Se han procesado %n bloques del historial de transacciones.</numerusform>
+            <numerusform>Se han procesado %n bloques del historial de transacciones.</numerusform>
         </translation>
     </message>
     <message>
@@ -493,9 +573,24 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <source>%n active connection(s) to Bitcoin network.</source>
         <extracomment>A substring of the tooltip.</extracomment>
         <translation type="unfinished">
-            <numerusform />
-            <numerusform />
+            <numerusform>%n conexiones activas con la red Bitcoin</numerusform>
+            <numerusform>%n conexiones activas con la red Bitcoin </numerusform>
         </translation>
+    </message>
+    <message>
+        <source>Show Peers tab</source>
+        <extracomment>A context menu item. The "Peers tab" is an element of the "Node window".</extracomment>
+        <translation type="unfinished">Mostrar pestaña Pares</translation>
+    </message>
+    <message>
+        <source>Disable network activity</source>
+        <extracomment>A context menu item.</extracomment>
+        <translation type="unfinished">Desactivar actividad de la red</translation>
+    </message>
+    <message>
+        <source>Enable network activity</source>
+        <extracomment>A context menu item. The network activity was disabled previously.</extracomment>
+        <translation type="unfinished">Activar actividad de la red</translation>
     </message>
     <message>
         <source>Warning: %1</source>
@@ -595,6 +690,14 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation type="unfinished">copiar monto</translation>
     </message>
     <message>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copiar dirección</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">Copiar &amp;ID de la transacción</translation>
+    </message>
+    <message>
         <source>Copy quantity</source>
         <translation type="unfinished">Copiar cantidad</translation>
     </message>
@@ -623,6 +726,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation type="unfinished">Esta capa se vuelve roja si algún destinatario recibe un monto menor al actual limite del remanente monetario </translation>
     </message>
     <message>
+        <source>Can vary +/- %1 satoshi(s) per input.</source>
+        <translation type="unfinished">Puede variar +/- %1 satoshi(s) por entrada.</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation type="unfinished">(sin etiqueta)</translation>
     </message>
@@ -633,6 +740,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
 </context>
 <context>
     <name>CreateWalletActivity</name>
+    <message>
+        <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <translation type="unfinished">Creando Monedero &lt;b&gt;%1&lt;/b&gt;…</translation>
+    </message>
     <message>
         <source>Create wallet failed</source>
         <translation type="unfinished">La creación de la cartera falló</translation>
@@ -652,7 +763,11 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <source>default wallet</source>
         <translation type="unfinished">cartera predeterminada</translation>
     </message>
-    </context>
+    <message>
+        <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <translation type="unfinished">Abriendo billetera &lt;b&gt;%1&lt;/b&gt;...</translation>
+    </message>
+</context>
 <context>
     <name>WalletController</name>
     <message>
@@ -763,6 +878,14 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
 </context>
 <context>
     <name>Intro</name>
+    <message>
+        <source>%1 GB of free space available</source>
+        <translation type="unfinished">%1 GB de espacio disponible</translation>
+    </message>
+    <message>
+        <source>(of %1 GB needed)</source>
+        <translation type="unfinished">(de los %1 GB necesarios)</translation>
+    </message>
     <message numerus="yes">
         <source>(sufficient to restore backups %n day(s) old)</source>
         <extracomment>Explanatory text on the capability of the current prune target.</extracomment>
@@ -778,6 +901,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     <message>
         <source>Welcome</source>
         <translation>Bienvenido</translation>
+    </message>
+    <message>
+        <source>Limit block chain storage to</source>
+        <translation type="unfinished">Limitar el almacenamiento de cadena de bloque a</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
@@ -1124,6 +1251,10 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
     <message>
         <source>Remove</source>
         <translation type="unfinished">Eliminar </translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copiar dirección</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -1597,8 +1728,21 @@ Solicitar pagos (genera códigos QR y bitcoin: URI)
         <translation type="unfinished">Monto minimo </translation>
     </message>
     <message>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copiar dirección</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">Copiar &amp;ID de la transacción</translation>
+    </message>
+    <message>
         <source>Export Transaction History</source>
         <translation type="unfinished">Exportar el historial de transacción</translation>
+    </message>
+    <message>
+        <source>Comma separated file</source>
+        <extracomment>Expanded name of the CSV file format. See https://en.wikipedia.org/wiki/Comma-separated_values</extracomment>
+        <translation type="unfinished">Archivo separado por comas</translation>
     </message>
     <message>
         <source>Confirmed</source>
