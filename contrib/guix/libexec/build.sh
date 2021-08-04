@@ -280,15 +280,12 @@ mkdir -p "$DISTSRC"
 (
     cd "$DISTSRC"
 
-    # Extract the source tarball
-    tar --strip-components=1 -xf "${GIT_ARCHIVE}"
+    /bitcoin/autogen.sh
 
-    ./autogen.sh
-
-    # Configure this DISTSRC for $HOST
+    # Configure this DISTSRC for out-of-tree build for $HOST
     # shellcheck disable=SC2086
     env CONFIG_SITE="${BASEPREFIX}/${HOST}/share/config.site" \
-        ./configure --prefix=/ \
+        /bitcoin/configure --prefix=/ \
                     --disable-ccache \
                     --disable-maintainer-mode \
                     --disable-dependency-tracking \
@@ -383,10 +380,10 @@ mkdir -p "$DISTSRC"
 
         case "$HOST" in
             *mingw*)
-                cp "${DISTSRC}/doc/README_windows.txt" "${DISTNAME}/readme.txt"
+                cp /bitcoin/doc/README_windows.txt "${DISTNAME}/readme.txt"
                 ;;
             *linux*)
-                cp "${DISTSRC}/README.md" "${DISTNAME}/"
+                cp /bitcoin/README.md "${DISTNAME}/"
                 ;;
         esac
 
