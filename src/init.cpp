@@ -1333,171 +1333,47 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
     LogPrintf("* Using %.1f MiB for chain state database\n", nCoinDBCache * (1.0 / 1024 / 1024));
     LogPrintf("* Using %.1f MiB for in-memory UTXO set (plus up to %.1f MiB of unused mempool space)\n", nCoinCacheUsage * (1.0 / 1024 / 1024), nMempoolSizeMax * (1.0 / 1024 / 1024));
 
-    bool fLoaded = false;
-    while (!fLoaded && !ShutdownRequested()) {
+
+    bool loaded_successfully = false;
+    while (!loaded_successfully && !ShutdownRequested()) {
         const bool fReset = fReindex;
+        bilingual_str strLoadError;
+
         auto is_coinsview_empty = [&](CChainState* chainstate) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
             return fReset || fReindexChainState || chainstate->CoinsTip().GetBestBlock().IsNull();
         };
-        bilingual_str strLoadError;
 
         uiInterface.InitMessage(_("Loading block index…").translated);
+        const int64_t load_block_index_start_time = GetTimeMillis();
 
-        do {
-            const int64_t load_block_index_start_time = GetTimeMillis();
-            try {
-                LOCK(cs_main);
-                chainman.m_total_coinstip_cache = nCoinCacheUsage;
-                chainman.m_total_coinsdb_cache = nCoinDBCache;
+        std::optional<bilingual_str> load_err_reason;
+        ChainstateManager::InitResult init_result;
+        std::function<void(const char*)> uiErrMsg = [](const char* msg) {
+            uiInterface.ThreadSafeMessageBox(_(msg), "", CClientUIInterface::MSG_ERROR);
+        };
 
-                // Load a chain created from a UTXO snapshot, if any exist.
-                chainman.DetectSnapshotChainstate(*Assert(node.mempool));
+        std::tie(init_result, load_err_reason) = chainman.InitializeChainstates(
+            chainparams,
+            nCoinCacheUsage,
+            nCoinDBCache,
+            nBlockTreeDBCache,
+            *Assert(node.mempool),
+            fReset,
+            fReindexChainState,
+            fPruneMode,
+            uiErrMsg);
 
-                // Conservative value that will ultimately be changed by
-                // a call to `chainman.MaybeRebalanceCaches()`.
-                double init_cache_fraction = 0.2;
+        if (init_result == ChainstateManager::InitResult::EXIT_NOW) {
+            return false;
+        }
+        else if (load_err_reason) {
+            strLoadError = *load_err_reason;
+        }
 
-                // If we're not using a snapshot or we haven't fully validated it yet,
-                // create a validation chainstate.
-                if (!chainman.IsSnapshotValidated()) {
-                    LogPrintf("Loading validation chainstate\n");
-                    chainman.InitializeChainstate(Assert(node.mempool.get()));
-                }
+        loaded_successfully = ChainstateManager::InitResult::SUCCESS == init_result;
 
-                UnloadBlockIndex(node.mempool.get(), chainman);
-
-                auto& pblocktree{chainman.m_blockman.m_block_tree_db};
-                // new CBlockTreeDB tries to delete the existing file, which
-                // fails if it's still open from the previous loop. Close it first:
-                pblocktree.reset();
-                pblocktree.reset(new CBlockTreeDB(nBlockTreeDBCache, false, fReset));
-
-                if (fReset) {
-                    pblocktree->WriteReindexing(true);
-                    //If we're reindexing in prune mode, wipe away unusable block files and all undo data files
-                    if (fPruneMode)
-                        CleanupBlockRevFiles();
-                }
-
-                if (ShutdownRequested()) break;
-
-                for (CChainState* chainstate : chainman.GetAll()) {
-                    // Initialize CoinsDB before loading the block index in case we
-                    // have to consult a cached nChainTx value in the snapshot
-                    // chainstate storage.
-                    // (See nChainTx usage in BlockManager::LoadBlockIndex()).
-                    chainstate->InitCoinsDB(
-                        /* cache_size_bytes */ nCoinDBCache * init_cache_fraction,
-                        /* in_memory */ false,
-                        /* should_wipe */ fReset || fReindexChainState);
-                }
-
-                // LoadBlockIndex will load fHavePruned if we've ever removed a
-                // block file from disk.
-                // Note that it also sets fReindex based on the disk flag!
-                // From here on out fReindex and fReset mean something different!
-                if (!chainman.LoadBlockIndex()) {
-                    if (ShutdownRequested()) break;
-                    strLoadError = _("Error loading block database");
-                    break;
-                }
-
-                // If the loaded chain has a wrong genesis, bail out immediately
-                // (we're likely using a testnet datadir, or the other way around).
-                if (!chainman.BlockIndex().empty() &&
-                        !chainman.m_blockman.LookupBlockIndex(chainparams.GetConsensus().hashGenesisBlock)) {
-                    return InitError(_("Incorrect or no genesis block found. Wrong datadir for network?"));
-                }
-
-                // Check for changed -prune state.  What we are concerned about is a user who has pruned blocks
-                // in the past, but is now trying to run unpruned.
-                if (fHavePruned && !fPruneMode) {
-                    strLoadError = _("You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain");
-                    break;
-                }
-
-                // At this point blocktree args are consistent with what's on disk.
-                // If we're not mid-reindex (based on disk + args), add a genesis block on disk
-                // (otherwise we use the one already on disk).
-                // This is called again in ThreadImport after the reindex completes.
-                if (!fReindex && !chainman.ActiveChainstate().LoadGenesisBlock()) {
-                    strLoadError = _("Error initializing block database");
-                    break;
-                }
-
-                // At this point we're either in reindex or we've loaded a useful
-                // block tree into BlockIndex()!
-
-                bool failed_chainstate_init = false;
-
-                for (CChainState* chainstate : chainman.GetAll()) {
-                    LogPrintf("Initializing chainstate %s\n", chainstate->ToString());
-
-                    chainstate->CoinsErrorCatcher().AddReadErrCallback([]() {
-                        uiInterface.ThreadSafeMessageBox(
-                            _("Error reading from database, shutting down."),
-                            "", CClientUIInterface::MSG_ERROR);
-                    });
-
-                    // If necessary, upgrade from older database format.
-                    // This is a no-op if we cleared the coinsviewdb with -reindex or -reindex-chainstate
-                    if (!chainstate->CoinsDB().Upgrade()) {
-                        strLoadError = _("Error upgrading chainstate database");
-                        failed_chainstate_init = true;
-                        break;
-                    }
-
-                    // ReplayBlocks is a no-op if we cleared the coinsviewdb with -reindex or -reindex-chainstate
-                    if (!chainstate->ReplayBlocks()) {
-                        strLoadError = _("Unable to replay blocks. You will need to rebuild the database using -reindex-chainstate.");
-                        failed_chainstate_init = true;
-                        break;
-                    }
-
-                    // The on-disk coinsdb is now in a good state, create the cache
-                    chainstate->InitCoinsCache(nCoinCacheUsage);
-                    assert(chainstate->CanFlushToDisk());
-
-                    if (!is_coinsview_empty(chainstate)) {
-                        // LoadChainTip initializes the chain based on CoinsTip()'s best block
-                        if (!chainstate->LoadChainTip()) {
-                            strLoadError = _("Error initializing block database");
-                            failed_chainstate_init = true;
-                            break; // out of the per-chainstate loop
-                        }
-                        assert(chainstate->m_chain.Tip() != nullptr);
-                    }
-                }
-
-                if (failed_chainstate_init) {
-                    break; // out of the chainstate activation do-while
-                }
-
-                chainman.CheckForUncleanShutdown();
-                // Now that chainstates are loaded and we're able to flush to
-                // disk, rebalance the coins caches to desired levels based
-                // on the condition of each chainstate.
-                chainman.MaybeRebalanceCaches();
-
-            } catch (const std::exception& e) {
-                LogPrintf("%s\n", e.what());
-                strLoadError = _("Error opening block database");
-                break;
-            }
-
-            if (!fReset) {
-                LOCK(cs_main);
-                auto chainstates{chainman.GetAll()};
-                if (std::any_of(chainstates.begin(), chainstates.end(),
-                                [](const CChainState* cs) EXCLUSIVE_LOCKS_REQUIRED(cs_main) { return cs->NeedsRedownload(); })) {
-                    strLoadError = strprintf(_("Witness data for blocks after height %d requires validation. Please restart with -reindex."),
-                                             chainparams.GetConsensus().SegwitHeight);
-                    break;
-                }
-            }
-
+        if (loaded_successfully) {
             bool failed_verification = false;
-
             try {
                 LOCK(cs_main);
 
@@ -1536,13 +1412,14 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
                 break;
             }
 
-            if (!failed_verification) {
-                fLoaded = true;
+            if (failed_verification) {
+                loaded_successfully = false;
+            } else {
                 LogPrintf(" block index %15dms\n", GetTimeMillis() - load_block_index_start_time);
             }
-        } while(false);
+        }
 
-        if (!fLoaded && !ShutdownRequested()) {
+        if (!loaded_successfully && !ShutdownRequested()) {
             // first suggest a reindex
             if (!fReset) {
                 bool fRet = uiInterface.ThreadSafeQuestion(

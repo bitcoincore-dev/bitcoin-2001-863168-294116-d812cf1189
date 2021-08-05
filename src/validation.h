@@ -971,6 +971,27 @@ public:
         const std::optional<uint256>& snapshot_blockhash = std::nullopt)
         EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
+    enum class InitResult {
+        SUCCESS,
+        ERR,
+        EXIT_NOW
+    };
+
+    //! Initialize one or more chainstates based upon on-disk chainstate data,
+    //! which may include a snapshot-based (assumed-valid) chainstate.
+    //!
+    //! @returns true if initialization was successful, false otherwise.
+    [[nodiscard]] std::tuple<InitResult, std::optional<bilingual_str>> InitializeChainstates(
+        const CChainParams& chainparams,
+        int64_t coin_cache_usage,
+        int64_t coin_db_cache,
+        int64_t blocktree_db_cache,
+        CTxMemPool& mempool,
+        bool should_reset,
+        bool should_reindex,
+        bool is_pruning,
+        std::function<void(const char*)> UIErrorMsg);
+
     //! Get all chainstates currently being used.
     std::vector<CChainState*> GetAll();
 

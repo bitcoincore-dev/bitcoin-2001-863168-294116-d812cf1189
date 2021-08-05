@@ -5550,3 +5550,163 @@ std::pair<unsigned int, unsigned int> ChainstateManager::getPruneRange(
 
     return {prune_start, prune_end};
 }
+
+std::tuple<ChainstateManager::InitResult, std::optional<bilingual_str>> ChainstateManager::InitializeChainstates(
+    const CChainParams& chainparams,
+    const int64_t coin_cache_usage,
+    const int64_t coin_db_cache,
+    const int64_t blocktree_db_cache,
+    CTxMemPool& mempool,
+    const bool should_reset,
+    const bool should_reindex,
+    const bool is_pruning,
+    std::function<void(const char*)> UIErrorMsg)
+{
+    auto is_coinsview_empty = [&](CChainState* chainstate) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
+        return should_reset || should_reindex || chainstate->CoinsTip().GetBestBlock().IsNull();
+    };
+
+    auto ErrVal = [](const char* reason) {
+        return std::make_tuple(ChainstateManager::InitResult::ERR, std::make_optional(_(reason)));
+    };
+
+    auto ExitNowVal = [](const char* reason) {
+        return std::make_tuple(ChainstateManager::InitResult::EXIT_NOW, std::make_optional(_(reason)));
+    };
+
+    try {
+        LOCK(cs_main);
+
+        auto shutdown_val = std::make_tuple(ChainstateManager::InitResult::ERR, std::nullopt);
+        m_total_coinstip_cache = coin_cache_usage;
+        m_total_coinsdb_cache = coin_db_cache;
+
+        // Load a chain created from a UTXO snapshot, if any exist.
+        this->DetectSnapshotChainstate(mempool);
+
+        // Conservative value that will ultimately be changed by
+        // a call to `chainman.MaybeRebalanceCaches()`.
+        double init_cache_fraction = 0.2;
+
+        // If we're not using a snapshot or we haven't fully validated it yet,
+        // create a validation chainstate.
+        if (!this->IsSnapshotValidated()) {
+            LogPrintf("Loading validation chainstate\n");
+            this->InitializeChainstate(&mempool);
+        }
+
+        for (CChainState* chainstate : this->GetAll()) {
+            // Initialize CoinsDB before loading the block index in case we
+            // have to consult a cached nChainTx value in the snapshot
+            // chainstate storage.
+            // (See nChainTx usage in BlockManager::LoadBlockIndex()).
+            chainstate->InitCoinsDB(
+                /* cache_size_bytes */ coin_db_cache * init_cache_fraction,
+                /* in_memory */ false,
+                /* should_wipe */ should_reset || should_reindex);
+        }
+
+        UnloadBlockIndex(&mempool, *this);
+
+        auto& pblocktree{m_blockman.m_block_tree_db};
+        // new CBlockTreeDB tries to delete the existing file, which
+        // fails if it's still open from the previous loop. Close it first:
+        pblocktree.reset();
+        pblocktree.reset(new CBlockTreeDB(blocktree_db_cache, false, should_reset));
+
+        if (should_reset) {
+            pblocktree->WriteReindexing(true);
+            //If we're reindexing in prune mode, wipe away unusable block files and all undo data files
+            if (is_pruning) CleanupBlockRevFiles();
+        }
+
+        if (ShutdownRequested()) return shutdown_val;
+
+        // LoadBlockIndex will load fHavePruned if we've ever removed a
+        // block file from disk.
+        // Note that it also sets fReindex based on the disk flag!
+        // From here on out fReindex and fReset mean something different!
+        if (!this->LoadBlockIndex()) {
+            if (ShutdownRequested()) return shutdown_val;
+            return ErrVal("Error loading block database");
+        }
+
+        // If the loaded chain has a wrong genesis, bail out immediately
+        // (we're likely using a testnet datadir, or the other way around).
+        if (!this->BlockIndex().empty() &&
+                !m_blockman.LookupBlockIndex(chainparams.GetConsensus().hashGenesisBlock)) {
+            auto errMsg = "Incorrect or no genesis block found. Wrong datadir for network?";
+            UIErrorMsg(errMsg);
+            return ExitNowVal(errMsg);
+        }
+
+        // Check for changed -prune state.  What we are concerned about is a user who has pruned blocks
+        // in the past, but is now trying to run unpruned.
+        if (fHavePruned && is_pruning) {
+            return ErrVal("You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain");
+        }
+
+        // At this point blocktree args are consistent with what's on disk.
+        // If we're not mid-reindex (based on disk + args), add a genesis block on disk
+        // (otherwise we use the one already on disk).
+        // This is called again in ThreadImport after the reindex completes.
+        if (!fReindex && !this->ActiveChainstate().LoadGenesisBlock()) {
+            return ErrVal("Error initializing block database");
+        }
+
+        // At this point we're either in reindex or we've loaded a useful
+        // block tree into BlockIndex()!
+
+        for (CChainState* chainstate : this->GetAll()) {
+            LogPrintf("Initializing %s\n", chainstate->ToString());
+
+            chainstate->CoinsErrorCatcher().AddReadErrCallback([&UIErrorMsg]() {
+                UIErrorMsg("Error reading from database, shutting down.");
+            });
+
+            // If necessary, upgrade from older database format.
+            // This is a no-op if we cleared the coinsviewdb with -reindex or -reindex-chainstate
+            if (!chainstate->CoinsDB().Upgrade()) {
+                return ErrVal("Error upgrading chainstate database");
+            }
+
+            // ReplayBlocks is a no-op if we cleared the coinsviewdb with -reindex or -reindex-chainstate
+            if (!chainstate->ReplayBlocks()) {
+                return ErrVal("Unable to replay blocks. You will need to rebuild the database using -reindex-chainstate.");
+            }
+
+            // The on-disk coinsdb is now in a good state, create the cache
+            chainstate->InitCoinsCache(coin_cache_usage);
+            assert(chainstate->CanFlushToDisk());
+
+            if (is_coinsview_empty(chainstate)) {
+                // LoadChainTip initializes the chain based on CoinsTip()'s best block
+                if (!chainstate->LoadChainTip()) {
+                    return ErrVal("Error initializing block database");
+                }
+                assert(chainstate->m_chain.Tip() != nullptr);
+            }
+        }
+
+        this->CheckForUncleanShutdown();
+        // Now that chainstates are loaded and we're able to flush to
+        // disk, rebalance the coins caches to desired levels based
+        // on the condition of each chainstate.
+        this->MaybeRebalanceCaches();
+
+    } catch (const std::exception& e) {
+        LogPrintf("%s\n", e.what());
+        return ErrVal("Error opening block database");
+    }
+
+    if (!should_reset) {
+        LOCK(cs_main);
+        auto chainstates{this->GetAll()};
+        if (std::any_of(chainstates.begin(), chainstates.end(),
+                        [](const CChainState* cs) EXCLUSIVE_LOCKS_REQUIRED(cs_main) { return cs->NeedsRedownload(); })) {
+            return ErrVal(strprintf("Witness data for blocks after height %d requires validation. Please restart with -reindex.", chainparams.GetConsensus().SegwitHeight).c_str());
+        }
+    }
+
+    return {ChainstateManager::InitResult::SUCCESS, std::nullopt};
+}
