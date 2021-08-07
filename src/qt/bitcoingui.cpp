@@ -672,7 +672,7 @@ void BitcoinGUI::addWallet(WalletModel* walletModel)
 {
     if (!walletFrame) return;
 
-    WalletView* wallet_view = new WalletView(platformStyle, walletFrame);
+    WalletView* wallet_view = new WalletView(walletModel, platformStyle, walletFrame);
     if (!walletFrame->addWallet(walletModel, wallet_view)) return;
 
     rpcConsole->addWallet(walletModel);
@@ -696,6 +696,7 @@ void BitcoinGUI::addWallet(WalletModel* walletModel)
     wallet_view->setPrivacy(isPrivacyModeActivated());
     const QString display_name = walletModel->getDisplayName();
     m_wallet_selector->addItem(display_name, QVariant::fromValue(walletModel));
+    updateWalletStatus();
 }
 
 void BitcoinGUI::removeWallet(WalletModel* walletModel)
