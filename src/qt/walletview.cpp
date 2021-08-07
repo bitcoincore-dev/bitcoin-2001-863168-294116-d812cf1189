@@ -127,14 +127,15 @@ void WalletView::setClientModel(ClientModel *_clientModel)
 
     overviewPage->setClientModel(_clientModel);
     sendCoinsPage->setClientModel(_clientModel);
-    if (walletModel) walletModel->setClientModel(_clientModel);
+    walletModel->setClientModel(_clientModel);
 }
 
 void WalletView::processNewTransaction(const QModelIndex& parent, int start, int /*end*/)
 {
     // Prevent balloon-spam when initial block download is in progress
-    if (!walletModel || !clientModel || clientModel->node().isInitialBlockDownload())
+    if (!clientModel || clientModel->node().isInitialBlockDownload()) {
         return;
+    }
 
     TransactionTableModel *ttm = walletModel->getTransactionTableModel();
     if (!ttm || ttm->processingQueuedTransactions())
@@ -252,8 +253,6 @@ void WalletView::updateEncryptionStatus()
 
 void WalletView::encryptWallet()
 {
-    if(!walletModel)
-        return;
     AskPassphraseDialog dlg(AskPassphraseDialog::Encrypt, this);
     dlg.setModel(walletModel);
     dlg.exec();
@@ -290,8 +289,6 @@ void WalletView::changePassphrase()
 
 void WalletView::unlockWallet()
 {
-    if(!walletModel)
-        return;
     // Unlock wallet when requested by wallet model
     if (walletModel->getEncryptionStatus() == WalletModel::Locked)
     {
@@ -303,17 +300,11 @@ void WalletView::unlockWallet()
 
 void WalletView::usedSendingAddresses()
 {
-    if(!walletModel)
-        return;
-
     GUIUtil::bringToFront(usedSendingAddressesPage);
 }
 
 void WalletView::usedReceivingAddresses()
 {
-    if(!walletModel)
-        return;
-
     GUIUtil::bringToFront(usedReceivingAddressesPage);
 }
 
