@@ -579,6 +579,14 @@ Firmar solo es posible con direcciones del tipo Legacy.</translation>
         <translation type="unfinished">Confirmado</translation>
     </message>
     <message>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">copiar dirección </translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">copiar y etiquetar </translation>
+    </message>
+    <message>
         <source>yes</source>
         <translation type="unfinished">sí</translation>
     </message>
@@ -949,6 +957,14 @@ Firmar solo es posible con direcciones del tipo Legacy.</translation>
         <translation type="unfinished">&amp;Cantidad</translation>
     </message>
     <message>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">copiar dirección </translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">copiar y etiquetar </translation>
+    </message>
+    <message>
         <source>Could not generate new %1 address</source>
         <translation type="unfinished">No se ha podido generar una nueva dirección %1</translation>
     </message>
@@ -1145,6 +1161,14 @@ Firmar solo es posible con direcciones del tipo Legacy.</translation>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">copiar dirección </translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">copiar y etiquetar </translation>
+    </message>
     <message>
         <source>Confirmed</source>
         <translation type="unfinished">Confirmado</translation>

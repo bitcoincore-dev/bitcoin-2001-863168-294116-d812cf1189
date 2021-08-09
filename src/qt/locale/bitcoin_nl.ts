@@ -1045,6 +1045,10 @@ Dit is ideaal voor alleen-lezen portommonees.</translation>
         <translation type="unfinished">Descriptor Portemonnee</translation>
     </message>
     <message>
+        <source>Use an external signing device such as a hardware wallet. Configure the external signer script in wallet preferences first.</source>
+        <translation type="unfinished">Gebruik een extern onderteken device zoals een hardware wallet. Configureer eerst het externe ondertekenaar script in wallet preferences.</translation>
+    </message>
+    <message>
         <source>Create</source>
         <translation type="unfinished">Creëer</translation>
     </message>
@@ -2575,8 +2579,17 @@ Notitie: Omdat de vergoeding per byte wordt gerekend, zal een vergoeding van "10
         <translation type="unfinished">Creër ongetekende</translation>
     </message>
     <message>
+        <source>Sign and send</source>
+        <translation type="unfinished">Ondertekenen en verzenden</translation>
+    </message>
+    <message>
         <source>Sign failed</source>
         <translation type="unfinished">Ondertekenen mislukt</translation>
+    </message>
+    <message>
+        <source>External signer not found</source>
+        <extracomment>"External signer" means using devices such as hardware wallets.</extracomment>
+        <translation type="unfinished">Externe ondertekenaar niet gevonden</translation>
     </message>
     <message>
         <source>Save Transaction Data</source>
