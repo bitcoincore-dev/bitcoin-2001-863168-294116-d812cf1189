@@ -48,6 +48,7 @@ public:
 
 Q_SIGNALS:
     void createWalletButtonClicked();
+    void currentWalletSet();
 
 private:
     QStackedWidget *walletStack;
