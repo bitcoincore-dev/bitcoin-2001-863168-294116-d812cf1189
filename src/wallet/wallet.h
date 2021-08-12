@@ -41,6 +41,7 @@
 #include <string>
 #include <utility>
 #include <unordered_map>
+#include <variant>
 #include <vector>
 
 #include <boost/signals2/signal.hpp>
@@ -501,6 +502,8 @@ public:
     bool UnlockCoin(const COutPoint& output, WalletBatch* batch = nullptr) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
     bool UnlockAllCoins() EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
     void ListLockedCoins(std::vector<COutPoint>& vOutpts) const EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
+
+    bool FindScriptPubKeyUsed(const std::set<CScript>& keys, const std::variant<std::monostate, std::function<void(const CWalletTx&)>, std::function<void(const CWalletTx&, uint32_t)>>& callback = std::monostate()) const EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
 
     /*
      * Rescan abort properties
