@@ -52,11 +52,25 @@ class GetBlockFromPeerTest(BitcoinTestFramework):
         peers = self.nodes[0].getpeerinfo()
         assert_equal(len(peers), 1)
         peer_0_peer_1_id = peers[0]["id"]
-        self.nodes[0].getblockfrompeer(short_tip, peer_0_peer_1_id)
-        self.wait_until(lambda: self.check_for_block(short_tip), timeout=1)
 
         self.log.info("Arguments must be sensible")
         assert_raises_rpc_error(-8, "hash must be of length 64 (not 4, for '1234')", self.nodes[0].getblockfrompeer, "1234", 0)
+
+        self.log.info("We can request blocks for which we do not have the header")
+        self.nodes[0].getblockfrompeer("11" * 32, 0)
+
+        self.log.info("Non-existent peer generates error")
+        assert_raises_rpc_error(-1, "Failed to fetch block from peer", self.nodes[0].getblockfrompeer, short_tip, peer_0_peer_1_id + 1)
+
+        self.log.info("Successful fetch")
+        result = self.nodes[0].getblockfrompeer(short_tip, peer_0_peer_1_id)
+        self.wait_until(lambda: self.check_for_block(short_tip), timeout=1)
+        assert(not "warnings" in result)
+
+        self.log.info("Don't fetch blocks we already have")
+        result = self.nodes[0].getblockfrompeer(short_tip, peer_0_peer_1_id)
+        assert("warnings" in result)
+        assert_equal(result["warnings"], "Block already downloaded")
 
 if __name__ == '__main__':
     GetBlockFromPeerTest().main()
