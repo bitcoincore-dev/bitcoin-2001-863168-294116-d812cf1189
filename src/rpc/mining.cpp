@@ -15,6 +15,7 @@
 #include <net.h>
 #include <node/context.h>
 #include <policy/fees.h>
+#include <policy/policy.h>
 #include <pow.h>
 #include <rpc/blockchain.h>
 #include <rpc/mining.h>
@@ -1064,6 +1065,8 @@ static RPCHelpMan estimatesmartfee()
 {
     RPCTypeCheck(request.params, {UniValue::VNUM, UniValue::VSTR});
     RPCTypeCheckArgument(request.params[0], UniValue::VNUM);
+    const CTxMemPool& mempool = EnsureMemPool(request.context);
+
     unsigned int max_target = ::feeEstimator.HighestTargetTracked(FeeEstimateHorizon::LONG_HALFLIFE);
     unsigned int conf_target = ParseConfirmTarget(request.params[0], max_target);
     bool conservative = true;
@@ -1079,6 +1082,9 @@ static RPCHelpMan estimatesmartfee()
     UniValue errors(UniValue::VARR);
     FeeCalculation feeCalc;
     CFeeRate feeRate = ::feeEstimator.estimateSmartFee(conf_target, &feeCalc, conservative);
+    CFeeRate min_mempool_feerate{mempool.GetMinFee(gArgs.GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000)};
+    CFeeRate min_relay_feerate{::minRelayTxFee};
+    feeRate = std::max({feeRate, min_mempool_feerate, min_relay_feerate});
     if (feeRate != CFeeRate(0)) {
         result.pushKV("feerate", ValueFromAmount(feeRate.GetFeePerK()));
     } else {
