@@ -19,6 +19,7 @@ packages:
 - "g++-8"
 - "gcc-8"
 - "git"
+- "libgles2-mesa-dev"
 - "libtool"
 - "patch"
 - "pkg-config"
