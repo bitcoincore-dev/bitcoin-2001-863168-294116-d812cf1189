@@ -7,6 +7,7 @@ env:
   CCACHE_SIZE: "200M"
   CCACHE_DIR: "/tmp/ccache_dir"
   CCACHE_NOHASHDIR: "1"  # Debug info might contain a stale path if the build dir changes, but this is fine
+  SOURCES_CACHE_FINGERPRINT_KEY: "2021-08-15"  # Must be updated when sources in depends have been changed.
 
 cirrus_ephemeral_worker_template_env: &CIRRUS_EPHEMERAL_WORKER_TEMPLATE_ENV
   DANGER_RUN_CI_ON_HOST: "1"  # Containers will be discarded after the run, so there is no risk that the ci scripts modify the system
@@ -41,6 +42,7 @@ global_task_template: &GLOBAL_TASK_TEMPLATE
     folder: "/tmp/ccache_dir"
   depends_built_cache:
     folder: "depends/built"
+    fingerprint_script: echo $SOURCES_CACHE_FINGERPRINT_KEY
   ci_script:
     - ./ci/test_run_all.sh
 
@@ -213,6 +215,7 @@ task:
   << : *DEPENDS_SDK_CACHE_TEMPLATE
   depends_sources_cache:
     folder: "depends/sources"
+    fingerprint_script: echo $SOURCES_CACHE_FINGERPRINT_KEY
   << : *GLOBAL_TASK_TEMPLATE
   container:
     image: ubuntu:focal
