@@ -7,7 +7,6 @@
 
 #include <cstdint> // for int64_t
 
-class ArgsManager;
 struct bilingual_str;
 class CChainParams;
 class CClientUIInterface;
@@ -22,9 +21,10 @@ bool LoadChainstateSequence(bool& fLoaded,
                             NodeContext& node,
                             bool fPruneMode,
                             const CChainParams& chainparams,
-                            const ArgsManager& args,
                             bool fReindexChainState,
                             int64_t nBlockTreeDBCache,
                             int64_t nCoinDBCache,
-                            int64_t nCoinCacheUsage);
+                            int64_t nCoinCacheUsage,
+                            unsigned int check_blocks,
+                            unsigned int check_level);
 #endif // BITCOIN_INIT_CHAINSTATE_H
