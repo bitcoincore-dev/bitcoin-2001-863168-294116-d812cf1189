@@ -8,7 +8,6 @@
 #include <cstdint> // for int64_t
 #include <optional> // for std::optional
 
-class ArgsManager;
 class CChainParams;
 class ChainstateManager;
 struct NodeContext;
@@ -33,9 +32,10 @@ std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
                                                      NodeContext& node,
                                                      bool fPruneMode,
                                                      const CChainParams& chainparams,
-                                                     const ArgsManager& args,
                                                      bool fReindexChainState,
                                                      int64_t nBlockTreeDBCache,
                                                      int64_t nCoinDBCache,
-                                                     int64_t nCoinCacheUsage);
+                                                     int64_t nCoinCacheUsage,
+                                                     unsigned int check_blocks,
+                                                     unsigned int check_level);
 #endif // BITCOIN_INIT_CHAINSTATE_H
