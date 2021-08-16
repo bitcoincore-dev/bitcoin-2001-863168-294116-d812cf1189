@@ -41,6 +41,7 @@ global_task_template: &GLOBAL_TASK_TEMPLATE
     folder: "/tmp/ccache_dir"
   depends_built_cache:
     folder: "depends/built"
+    fingerprint_script: git log -1 --oneline ./depends
   ci_script:
     - ./ci/test_run_all.sh
 
@@ -214,6 +215,7 @@ task:
   << : *GLOBAL_TASK_TEMPLATE
   depends_sources_cache:
     folder: "depends/sources"
+    fingerprint_script: git log -1 --oneline ./depends
   container:
     image: ubuntu:focal
   env:
