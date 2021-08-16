@@ -1408,11 +1408,12 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
                                          node,
                                          fPruneMode,
                                          chainparams,
-                                         args,
                                          fReindexChainState,
                                          nBlockTreeDBCache,
                                          nCoinDBCache,
-                                         nCoinCacheUsage);
+                                         nCoinCacheUsage,
+                                         args.GetIntArg("-checkblocks", DEFAULT_CHECKBLOCKS),
+                                         args.GetIntArg("-checklevel", DEFAULT_CHECKLEVEL));
         if (!rv) return false;
 
         if (!fLoaded && !ShutdownRequested()) {
