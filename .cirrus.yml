@@ -211,9 +211,9 @@ task:
 task:
   name: 'ARM64 Android APK [focal]'
   << : *DEPENDS_SDK_CACHE_TEMPLATE
+  << : *GLOBAL_TASK_TEMPLATE
   depends_sources_cache:
     folder: "depends/sources"
-  << : *GLOBAL_TASK_TEMPLATE
   container:
     image: ubuntu:focal
   env:
