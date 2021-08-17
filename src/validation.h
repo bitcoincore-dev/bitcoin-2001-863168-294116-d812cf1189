@@ -819,6 +819,13 @@ private:
     void UpdateTip(const CBlockIndex* pindexNew)
         EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
+    /**
+     * Remove the datadir for this chainstate if it was created from a snapshot.
+     * Only used during snapshot activation (within ChainstateManager) if the loaded
+     * snapshot does not validate.
+     */
+    bool TeardownSnapshotDatadir() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
     friend ChainstateManager;
 };
 

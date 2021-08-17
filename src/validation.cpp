@@ -4822,7 +4822,9 @@ bool ChainstateManager::ActivateSnapshot(
         *snapshot_chainstate, coins_file, metadata);
 
     if (!snapshot_ok) {
-        WITH_LOCK(::cs_main, this->MaybeRebalanceCaches());
+        LOCK(::cs_main);
+        this->MaybeRebalanceCaches();
+        snapshot_chainstate->TeardownSnapshotDatadir();
         return false;
     }
 
@@ -5255,24 +5257,74 @@ bool ChainstateManager::IsAnyChainInIBD()
         (m_ibd_chainstate && m_ibd_chainstate->IsInitialBlockDownload());
 }
 
-bool ChainstateManager::DetectSnapshotChainstate(CTxMemPool& mempool)
+constexpr int SNAPSHOT_NAME_LEN = 75; // "chainstate_" + 64 hex characters for blockhash.
+
+static bool IsPathSnapshotDatadir(const fs::path& datadir_path)
 {
-    constexpr int SNAPSHOT_NAME_LEN = 75; // "chainstate_" + 64 hex characters for blockhash.
+    return datadir_path.filename().string().length() == SNAPSHOT_NAME_LEN &&
+        datadir_path.filename().string().substr(0,11) == "chainstate_";
+}
+
+static uint256 PathToSnapshotHash(const fs::path& datadir_path)
+{
+    assert(IsPathSnapshotDatadir(datadir_path));
+    return uint256S(datadir_path.filename().string().substr(11));
+}
+
+static std::optional<fs::path> FindSnapshotChainstateDatadir()
+{
+    fs::path found;
 
     for (fs::directory_iterator it(gArgs.GetDataDirNet()); it != fs::directory_iterator(); it++) {
-        if (fs::is_directory(*it) &&
-            !fs::is_empty(*it) &&
-            it->path().filename().string().length() == SNAPSHOT_NAME_LEN &&
-            it->path().filename().string().substr(0,11) == "chainstate_")
+        if (fs::is_directory(*it) && !fs::is_empty(*it) && IsPathSnapshotDatadir(it->path()))
         {
-            auto path = it->path();
-            LogPrintf("[snapshot] detected active snapshot chainstate (%s) - loading\n", path);
-            this->InitializeChainstate(
-                &mempool, /*snapshot_blockhash*/ uint256S(path.filename().string().substr(11)));
-            return true;
+            if (found.empty()) {
+                found = it->path();
+                LogPrintf("[snapshot] found snapshot datadir %s\n", fs::PathToString(found));
+            } else {
+                LogPrintf("[snapshot] WARNING - detected multiple snapshot " /* Continued */
+                    "datadirs (%s). This is not expected.\n", fs::PathToString(it->path()));
+            }
         }
     }
-    return false;
+    return found.empty() ? std::nullopt : std::make_optional(found);
+}
+
+bool ChainstateManager::DetectSnapshotChainstate(CTxMemPool& mempool)
+{
+    std::optional<fs::path> path = FindSnapshotChainstateDatadir();
+    if (!path) {
+        return false;
+    }
+    LogPrintf("[snapshot] detected active snapshot chainstate (%s) - loading\n",
+        fs::PathToString(*path));
+    this->InitializeChainstate(&mempool, /*snapshot_blockhash*/ PathToSnapshotHash(*path));
+    return true;
+}
+
+bool CChainState::TeardownSnapshotDatadir()
+{
+    if (!m_from_snapshot_blockhash) {
+        // Chainstate isn't based on a snapshot.
+        return false;
+    }
+    std::optional<fs::path> snapshot_datadir = FindSnapshotChainstateDatadir();
+
+    if (!snapshot_datadir) {
+        return false;
+    }
+
+    uint256 datadir_hash = PathToSnapshotHash(*snapshot_datadir);
+
+    if (datadir_hash != *m_from_snapshot_blockhash) {
+        LogPrintf("[snapshot] WARNING - unexpected blockhash for snapshot datadir (%s); expected %s\n",
+            datadir_hash.ToString(), m_from_snapshot_blockhash->ToString());
+        return false;
+    }
+
+    LogPrintf("[snapshot] tearing down snapshot datadir %s\n", fs::PathToString(*snapshot_datadir));
+    assert(fs::remove_all(*snapshot_datadir) > 0);
+    return true;
 }
 
 void ChainstateManager::ValidatedSnapshotShutdownCleanup(
