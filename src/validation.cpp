@@ -4798,7 +4798,9 @@ bool ChainstateManager::ActivateSnapshot(
         *snapshot_chainstate, coins_file, metadata);
 
     if (!snapshot_ok) {
-        WITH_LOCK(::cs_main, this->MaybeRebalanceCaches());
+        LOCK(::cs_main);
+        this->MaybeRebalanceCaches();
+        snapshot_chainstate->TeardownSnapshotDatadir();
         return false;
     }
 
@@ -5126,5 +5128,30 @@ bool ChainstateManager::DetectSnapshotChainstate(CTxMemPool* mempool)
     LogPrintf("[snapshot] detected active snapshot chainstate (%s) - loading\n",
         fs::PathToString(*path));
     this->InitializeChainstate(mempool, /*snapshot_blockhash*/ PathToSnapshotHash(*path));
+    return true;
+}
+
+bool CChainState::TeardownSnapshotDatadir()
+{
+    if (!m_from_snapshot_blockhash) {
+        // Chainstate isn't based on a snapshot.
+        return false;
+    }
+    std::optional<fs::path> snapshot_datadir = FindSnapshotChainstateDatadir();
+
+    if (!snapshot_datadir) {
+        return false;
+    }
+
+    uint256 datadir_hash = PathToSnapshotHash(*snapshot_datadir);
+
+    if (datadir_hash != *m_from_snapshot_blockhash) {
+        LogPrintf("[snapshot] WARNING - unexpected blockhash for snapshot datadir (%s); expected %s\n",
+            datadir_hash.ToString(), m_from_snapshot_blockhash->ToString());
+        return false;
+    }
+
+    LogPrintf("[snapshot] tearing down snapshot datadir %s\n", fs::PathToString(*snapshot_datadir));
+    assert(fs::remove_all(*snapshot_datadir) > 0);
     return true;
 }
