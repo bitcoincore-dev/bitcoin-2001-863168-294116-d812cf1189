@@ -4917,6 +4917,17 @@ static std::optional<uint256> ReadSnapshotBaseBlockhash(fs::path datadir)
     return base_blockhash;
 }
 
+static std::optional<fs::path> FindSnapshotChainstateDatadir()
+{
+    fs::path possible_dir =
+        gArgs.GetDataDirNet() / (strprintf("chainstate%s", SNAPSHOT_CHAINSTATE_SUFFIX));
+
+    if (fs::exists(possible_dir)) {
+        return possible_dir;
+    }
+    return std::nullopt;
+}
+
 bool ChainstateManager::ActivateSnapshot(
         CAutoFile& coins_file,
         const SnapshotMetadata& metadata,
@@ -4986,7 +4997,15 @@ bool ChainstateManager::ActivateSnapshot(
         }
     }
     if (!snapshot_ok) {
-        WITH_LOCK(::cs_main, this->MaybeRebalanceCaches());
+        LOCK(::cs_main);
+        this->MaybeRebalanceCaches();
+
+        // PopulateAndValidateSnapshot can return (in error) before the leveldb datadir
+        // has been created, so only attempt removal if we got that far.
+        if (auto snapshot_datadir = FindSnapshotChainstateDatadir()) {
+            bool removed = snapshot_chainstate->removeSnapshotDatadir();
+            assert(removed);
+        }
         return false;
     }
 
@@ -5286,17 +5305,6 @@ bool CChainState::destroyCoinsDB(const std::string& db_path)
     return dbwrapper::DestroyDB(db_path, options).ok();
 }
 
-static std::optional<fs::path> FindSnapshotChainstateDatadir()
-{
-    fs::path possible_dir =
-        gArgs.GetDataDirNet() / (strprintf("chainstate%s", SNAPSHOT_CHAINSTATE_SUFFIX));
-
-    if (fs::exists(possible_dir)) {
-        return possible_dir;
-    }
-    return std::nullopt;
-}
-
 bool ChainstateManager::DetectSnapshotChainstate(CTxMemPool* mempool)
 {
     std::optional<fs::path> path = FindSnapshotChainstateDatadir();
@@ -5311,4 +5319,34 @@ bool ChainstateManager::DetectSnapshotChainstate(CTxMemPool* mempool)
     }
     this->InitializeChainstate(mempool, /*snapshot_blockhash=*/ *base_blockhash);
     return true;
+}
+
+bool CChainState::removeSnapshotDatadir()
+{
+    // Should never be called on a non-snapshot chainstate.
+    assert(m_from_snapshot_blockhash);
+    std::optional<fs::path> maybe_datadir = FindSnapshotChainstateDatadir();
+    if (!maybe_datadir) {
+        return false;
+    }
+    fs::path snapshot_datadir = *maybe_datadir;
+    fs::path base_blockhash_path = snapshot_datadir / SNAPSHOT_BLOCKHASH_FILENAME;
+
+    if (fs::exists(base_blockhash_path)) {
+        bool removed = fs::remove(base_blockhash_path);
+        assert(removed);
+    } else {
+        LogPrintf("[snapshot] snapshot chainstate dir being removed lacks %s file\n",
+                SNAPSHOT_BLOCKHASH_FILENAME);
+    }
+
+    std::string dbpath = fs::PathToString(snapshot_datadir);
+    LogPrintf("[snapshot] removing snapshot datadir %s\n", dbpath);
+    bool destroyed = destroyCoinsDB(dbpath);
+    if (!destroyed) {
+        LogPrintf("[snapshot] error: leveldb DestroyDB call failed on %s\n", dbpath);
+    }
+    // Snapshot datadir should be removed from filesystem; otherwise initialization
+    // will detect it on subsequent statups and get confused.
+    return destroyed && !fs::exists(snapshot_datadir);
 }
