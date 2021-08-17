@@ -767,6 +767,16 @@ private:
     void UpdateTip(const CBlockIndex* pindexNew)
         EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
+    /** @returns the path to the datadir if this chain is based on a snapshot. */
+    std::optional<fs::path> snapshotDatadirPath();
+
+    /**
+     * Remove the datadir for this chainstate if it was created from a snapshot.
+     * Only used during snapshot activation (within ChainstateManager) if the loaded
+     * snapshot does not validate.
+     */
+    [[nodiscard]] bool removeSnapshotDatadir() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
     friend ChainstateManager;
 };
 
