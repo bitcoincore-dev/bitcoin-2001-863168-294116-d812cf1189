@@ -6,23 +6,36 @@
 #define BITCOIN_INIT_CHAINSTATE_H
 
 #include <cstdint> // for int64_t
+#include <optional> // for std::optional
 
 class ArgsManager;
-struct bilingual_str;
 class CChainParams;
 class ChainstateManager;
 struct NodeContext;
 
-bool LoadChainstate(bool& fLoaded,
-                    bilingual_str& strLoadError,
-                    bool fReset,
-                    ChainstateManager& chainman,
-                    NodeContext& node,
-                    bool fPruneMode,
-                    const CChainParams& chainparams,
-                    const ArgsManager& args,
-                    bool fReindexChainState,
-                    int64_t nBlockTreeDBCache,
-                    int64_t nCoinDBCache,
-                    int64_t nCoinCacheUsage);
+enum class ChainstateLoadingError {
+    ERROR_LOADING_BLOCK_DB,
+    ERROR_BAD_GENESIS_BLOCK,
+    ERROR_PRUNED_NEEDS_REINDEX,
+    ERROR_LOAD_GENESIS_BLOCK_FAILED,
+    ERROR_CHAINSTATE_UPGRADE_FAILED,
+    ERROR_REPLAYBLOCKS_FAILED,
+    ERROR_LOADCHAINTIP_FAILED,
+    ERROR_GENERIC_BLOCKDB_OPEN_FAILED,
+    ERROR_BLOCKS_WITNESS_INSUFFICIENTLY_VALIDATED,
+    ERROR_BLOCK_FROM_FUTURE,
+    ERROR_CORRUPTED_BLOCK_DB,
+    SHUTDOWN_REQUESTED,
+};
+
+std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
+                                                     ChainstateManager& chainman,
+                                                     NodeContext& node,
+                                                     bool fPruneMode,
+                                                     const CChainParams& chainparams,
+                                                     const ArgsManager& args,
+                                                     bool fReindexChainState,
+                                                     int64_t nBlockTreeDBCache,
+                                                     int64_t nCoinDBCache,
+                                                     int64_t nCoinCacheUsage);
 #endif // BITCOIN_INIT_CHAINSTATE_H
