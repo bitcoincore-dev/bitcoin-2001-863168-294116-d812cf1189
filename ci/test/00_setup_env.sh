@@ -18,13 +18,6 @@ export DEPENDS_DIR=${DEPENDS_DIR:-$BASE_ROOT_DIR/depends}
 # This folder only exists on the ci host.
 export BASE_SCRATCH_DIR=${BASE_SCRATCH_DIR:-$BASE_ROOT_DIR/ci/scratch}
 
-echo "Setting specific values in env"
-if [ -n "${FILE_ENV}" ]; then
-  set -o errexit;
-  # shellcheck disable=SC1090
-  source "${FILE_ENV}"
-fi
-
 echo "Fallback to default values in env (if not yet set)"
 # The number of parallel jobs to pass down to make and test_runner.py
 export MAKEJOBS=${MAKEJOBS:--j4}
