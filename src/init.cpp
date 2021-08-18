@@ -1777,6 +1777,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
 
     // ********************************************************* Step 13: finished
 
+    RPCNotifyBlockChange(chainman.ActiveTip());
     SetRPCWarmupFinished();
     uiInterface.InitMessage(_("Done loading").translated);
 
