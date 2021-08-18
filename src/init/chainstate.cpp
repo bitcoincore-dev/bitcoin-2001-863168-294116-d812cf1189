@@ -7,13 +7,11 @@
 #include <chainparams.h> // for CChainParams
 #include <rpc/blockchain.h> // for RPCNotifyBlockChange
 #include <node/blockstorage.h> // for CleanupBlockRevFiles, fHavePruned, fReindex
-#include <node/ui_interface.h> // for InitError, CClientUIInterface member access
 #include <shutdown.h> // for ShutdownRequested
 #include <timedata.h> // for GetAdjustedTime
 #include <validation.h> // for a lot of things
 
 std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
-                                                             CClientUIInterface& uiInterface,
                                                              ChainstateManager& chainman,
                                                              CTxMemPool* mempool,
                                                              bool fPruneMode,
@@ -23,7 +21,9 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
                                                              int64_t nCoinDBCache,
                                                              int64_t nCoinCacheUsage,
                                                              unsigned int check_blocks,
-                                                             unsigned int check_level) {
+                                                             unsigned int check_level,
+                                                             std::optional<std::function<void()>> coins_error_cb,
+                                                             std::optional<std::function<void()>> verifying_blocks_cb) {
     auto is_coinsview_empty = [&](CChainState* chainstate) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
         return fReset || fReindexChainState || chainstate->CoinsTip().GetBestBlock().IsNull();
     };
@@ -90,11 +90,9 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
                 /* in_memory */ false,
                 /* should_wipe */ fReset || fReindexChainState);
 
-            chainstate->CoinsErrorCatcher().AddReadErrCallback([&]() {
-                uiInterface.ThreadSafeMessageBox(
-                    _("Error reading from database, shutting down."),
-                    "", CClientUIInterface::MSG_ERROR);
-            });
+            if (coins_error_cb.has_value()) {
+                chainstate->CoinsErrorCatcher().AddReadErrCallback(coins_error_cb.value());
+            }
 
             // If necessary, upgrade from older database format.
             // This is a no-op if we cleared the coinsviewdb with -reindex or -reindex-chainstate
@@ -138,7 +136,9 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
 
         for (CChainState* chainstate : chainman.GetAll()) {
             if (!is_coinsview_empty(chainstate)) {
-                uiInterface.InitMessage(_("Verifying blocks…").translated);
+                if (verifying_blocks_cb.has_value()) {
+                    verifying_blocks_cb.value()();
+                }
                 if (fHavePruned && check_blocks > MIN_BLOCKS_TO_KEEP) {
                     LogPrintf("Prune: pruned datadir may not have more than %d blocks; only checking available blocks\n",
                         MIN_BLOCKS_TO_KEEP);

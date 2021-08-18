@@ -6,10 +6,10 @@
 #define BITCOIN_INIT_CHAINSTATE_H
 
 #include <cstdint> // for int64_t
+#include <functional> // for std::function
 #include <optional> // for std::optional
 
 class CChainParams;
-class CClientUIInterface;
 class ChainstateManager;
 class CTxMemPool;
 
@@ -28,7 +28,6 @@ enum class ChainstateLoadingError {
 };
 
 std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
-                                                             CClientUIInterface& uiInterface,
                                                              ChainstateManager& chainman,
                                                              CTxMemPool* mempool,
                                                              bool fPruneMode,
@@ -38,5 +37,7 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
                                                              int64_t nCoinDBCache,
                                                              int64_t nCoinCacheUsage,
                                                              unsigned int check_blocks,
-                                                             unsigned int check_level);
+                                                             unsigned int check_level,
+                                                             std::optional<std::function<void()>> coins_error_cb = std::nullopt,
+                                                             std::optional<std::function<void()>> verifying_blocks_cb = std::nullopt);
 #endif // BITCOIN_INIT_CHAINSTATE_H
