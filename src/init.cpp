@@ -1408,7 +1408,14 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
                                  fReindexChainState,
                                  nBlockTreeDBCache,
                                  nCoinDBCache,
-                                 nCoinCacheUsage);
+                                 nCoinCacheUsage,
+                                 []() {
+                                     uiInterface.ThreadSafeMessageBox(
+                                         _("Error reading from database, shutting down."),
+                                         "", CClientUIInterface::MSG_ERROR);
+                                 });
+
+        uiInterface.InitMessage(_("Verifying blocks…").translated);
         auto rv2 = VerifyLoadedChainstate(chainman,
                                           fReset,
                                           fReindexChainState,
