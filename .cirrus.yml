@@ -42,7 +42,7 @@ global_task_template: &GLOBAL_TASK_TEMPLATE
   depends_built_cache:
     folder: "depends/built"
   ci_script:
-    - source ./ci/setup_task_specific_env.sh && source ./ci/test_run_all.sh
+    - source ./ci/setup_task_specific_env.sh && if [ "${CIRRUS_BRANCH}" != "${CIRRUS_DEFAULT_BRANCH}" ] && [ "${CIRRUS_BASE_BRANCH}" != "${CIRRUS_DEFAULT_BRANCH}" ]; then export RUN_FUZZ_TESTS="false"; fi && source ./ci/test_run_all.sh
 
 depends_sdk_cache_template: &DEPENDS_SDK_CACHE_TEMPLATE
   depends_sdk_cache:
