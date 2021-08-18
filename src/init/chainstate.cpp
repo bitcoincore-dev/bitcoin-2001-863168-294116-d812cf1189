@@ -28,7 +28,7 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
         return fReset || fReindexChainState || chainstate->CoinsTip().GetBestBlock().IsNull();
     };
 
-    try {
+    {
         LOCK(cs_main);
         chainman.InitializeChainstate(mempool);
         chainman.m_total_coinstip_cache = nCoinCacheUsage;
@@ -117,9 +117,6 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
                 assert(chainstate->m_chain.Tip() != nullptr);
             }
         }
-    } catch (const std::exception& e) {
-        LogPrintf("%s\n", e.what()); // XXX
-        return ChainstateLoadingError::ERROR_GENERIC_BLOCKDB_OPEN_FAILED;
     }
 
     if (!fReset) {
@@ -131,7 +128,7 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
         }
     }
 
-    try {
+    {
         LOCK(cs_main);
 
         for (CChainState* chainstate : chainman.GetAll()) {
@@ -158,9 +155,6 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
                 }
             }
         }
-    } catch (const std::exception& e) {
-        LogPrintf("%s\n", e.what()); // XXX
-        return ChainstateLoadingError::ERROR_GENERIC_BLOCKDB_OPEN_FAILED;
     }
 
     return std::nullopt;
