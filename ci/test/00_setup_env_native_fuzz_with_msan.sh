@@ -20,5 +20,5 @@ export BITCOIN_CONFIG="--enable-fuzz --with-sanitizers=fuzzer,memory --with-asm=
 export USE_MEMORY_SANITIZER="true"
 export RUN_UNIT_TESTS="false"
 export RUN_FUNCTIONAL_TESTS="false"
-export RUN_FUZZ_TESTS=true
+export RUN_FUZZ_TESTS=${RUN_FUZZ_TESTS:-true}
 export CCACHE_SIZE=250M
