@@ -42,7 +42,7 @@ global_task_template: &GLOBAL_TASK_TEMPLATE
   depends_built_cache:
     folder: "depends/built"
   ci_script:
-    - ./ci/test_run_all.sh
+    - source ./ci/setup_task_specific_env.sh && source ./ci/test_run_all.sh
 
 depends_sdk_cache_template: &DEPENDS_SDK_CACHE_TEMPLATE
   depends_sdk_cache:
