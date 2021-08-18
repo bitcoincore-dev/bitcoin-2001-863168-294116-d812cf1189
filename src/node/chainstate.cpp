@@ -5,7 +5,6 @@
 #include <node/chainstate.h>
 
 #include <chainparams.h> // for CChainParams
-#include <rpc/blockchain.h> // for RPCNotifyBlockChange
 #include <node/blockstorage.h> // for CleanupBlockRevFiles, fHavePruned, fReindex
 #include <shutdown.h> // for ShutdownRequested
 #include <timedata.h> // for GetAdjustedTime
@@ -144,7 +143,6 @@ std::optional<ChainstateLoadVerifyError> VerifyLoadedChainstate(ChainstateManage
         for (CChainState* chainstate : chainman.GetAll()) {
             if (!is_coinsview_empty(chainstate)) {
                 const CBlockIndex* tip = chainstate->m_chain.Tip();
-                RPCNotifyBlockChange(tip);
                 if (tip && tip->nTime > GetAdjustedTime() + 2 * 60 * 60) {
                     return ChainstateLoadVerifyError::ERROR_BLOCK_FROM_FUTURE;
                 }
