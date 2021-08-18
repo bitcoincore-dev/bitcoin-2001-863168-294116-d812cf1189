@@ -136,10 +136,6 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
                 if (verifying_blocks_cb.has_value()) {
                     verifying_blocks_cb.value()();
                 }
-                if (fHavePruned && check_blocks > MIN_BLOCKS_TO_KEEP) {
-                    LogPrintf("Prune: pruned datadir may not have more than %d blocks; only checking available blocks\n",
-                        MIN_BLOCKS_TO_KEEP);
-                }
 
                 const CBlockIndex* tip = chainstate->m_chain.Tip();
                 RPCNotifyBlockChange(tip);
