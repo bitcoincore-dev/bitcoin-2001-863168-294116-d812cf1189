@@ -585,6 +585,120 @@ static RPCHelpMan upgradewallet()
     };
 }
 
+RPCHelpMan simulaterawtransaction()
+{
+    return RPCHelpMan{"simulaterawtransaction",
+        "\nCalculate the balance change resulting in the signing and broadcasting of the given transaction(s).\n",
+        {
+            {"rawtxs", RPCArg::Type::ARR, RPCArg::Optional::OMITTED_NAMED_ARG, "An array of hex strings of raw transactions.\n",
+                {
+                    {"rawtx", RPCArg::Type::STR_HEX, RPCArg::Optional::OMITTED, ""},
+                },
+            },
+            {"options", RPCArg::Type::OBJ_USER_KEYS, RPCArg::Optional::OMITTED_NAMED_ARG, "Options",
+                {
+                    {"include_watchonly", RPCArg::Type::BOOL, RPCArg::DefaultHint{"true for watch-only wallets, otherwise false"}, "Whether to include watch-only addresses (see 'importaddress')"},
+                },
+            },
+        },
+        RPCResult{
+            RPCResult::Type::OBJ, "", "",
+            {
+                {RPCResult::Type::STR_AMOUNT, "balance_change", "The wallet balance change (negative means decrease)."},
+            }
+        },
+        RPCExamples{
+            HelpExampleCli("simulaterawtransaction", "[\"myhex\"]")
+            + HelpExampleRpc("simulaterawtransaction", "[\"myhex\"]")
+        },
+    [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
+{
+    std::shared_ptr<const CWallet> const wallet = GetWalletForJSONRPCRequest(request);
+    if (!wallet) return NullUniValue;
+    const CWallet* pwallet = wallet.get();
+
+    RPCTypeCheck(request.params, {UniValue::VARR, UniValue::VOBJ}, true);
+
+    LOCK(pwallet->cs_wallet);
+
+    UniValue include_watchonly(UniValue::VNULL);
+    if (request.params[1].isObject()) {
+        UniValue options = request.params[1];
+        RPCTypeCheckObj(options,
+            {
+                {"include_watchonly", UniValueType(UniValue::VBOOL)},
+            },
+            true, true);
+
+        include_watchonly = options["include_watchonly"];
+    }
+
+    isminefilter filter = ISMINE_SPENDABLE;
+    if (ParseIncludeWatchonly(include_watchonly, *pwallet)) {
+        filter |= ISMINE_WATCH_ONLY;
+    }
+
+    const auto& txs = request.params[0].get_array();
+    CAmount changes{0};
+    std::map<COutPoint, CAmount> new_utxos; // UTXO:s that were made available in transaction array
+    std::set<COutPoint> spent;
+
+    for (size_t i = 0; i < txs.size(); ++i) {
+        CMutableTransaction mtx;
+        if (!DecodeHexTx(mtx, txs[i].get_str(), /* try_no_witness */ true, /* try_witness */ true)) {
+            throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Transaction hex string decoding failure.");
+        }
+
+        // Fetch previous transactions (inputs)
+        std::map<COutPoint, Coin> coins;
+        for (const CTxIn& txin : mtx.vin) {
+            coins[txin.prevout]; // Create empty map entry keyed by prevout.
+        }
+        pwallet->chain().findCoins(coins);
+
+        // Fetch debit; we are *spending* these; if the transaction is signed and
+        // broadcast, we will lose everything in these
+        for (const auto& txin : mtx.vin) {
+            auto& op = txin.prevout;
+            if (spent.count(op)) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "Transaction(s) are spending the same output more than once");
+            }
+            if (new_utxos.count(op)) {
+                changes -= new_utxos.at(op);
+                new_utxos.erase(op);
+            } else {
+                if (!coins.count(op)) {
+                    throw JSONRPCError(RPC_INVALID_PARAMETER, "One or more transaction inputs are missing");
+                }
+                if (coins.at(op).IsSpent()) {
+                    throw JSONRPCError(RPC_INVALID_PARAMETER, "One or more transaction inputs have been spent already");
+                }
+                changes -= pwallet->GetDebit(txin, filter);
+            }
+            spent.insert(op);
+        }
+
+        // Iterate over outputs; we are *receiving* these, if the wallet considers
+        // them "mine"; if the transaction is signed and broadcast, we will receive
+        // everything in these
+        // Also populate new_utxos in case these are spent in later transactions
+
+        const auto hash = mtx.GetHash();
+        for (size_t i = 0; i < mtx.vout.size(); ++i) {
+            const auto& txout = mtx.vout[i];
+            bool is_mine = 0 < (pwallet->IsMine(txout) & filter);
+            changes += new_utxos[COutPoint(hash, i)] = is_mine ? txout.nValue : 0;
+        }
+    }
+
+    UniValue result(UniValue::VOBJ);
+    result.pushKV("balance_change", ValueFromAmount(changes));
+
+    return result;
+}
+    };
+}
+
 // addresses
 RPCHelpMan getaddressinfo();
 RPCHelpMan getnewaddress();
@@ -718,6 +832,7 @@ static const CRPCCommand commands[] =
     { "wallet",             &setwalletflag,                  },
     { "wallet",             &signmessage,                    },
     { "wallet",             &signrawtransactionwithwallet,   },
+    { "wallet",             &simulaterawtransaction,         },
     { "wallet",             &unloadwallet,                   },
     { "wallet",             &upgradewallet,                  },
     { "wallet",             &walletcreatefundedpsbt,         },
