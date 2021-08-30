@@ -13,6 +13,7 @@ Verify node behaviour and debug log when launching bitcoind in these cases:
 3. `bitcoind -asmap=<relative path>`, using the unit test skeleton asmap
 
 4. `bitcoind -asmap/-asmap=` with no file specified, using the default asmap
+    combined with `-checkaddrman=1`
 
 5. `bitcoind -asmap` with no file specified and a missing default asmap file
 
@@ -37,6 +38,11 @@ def expected_messages(filename):
 class AsmapTest(BitcoinTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
+
+    def set_peers_dat(self):
+        """Copy a peers.dat containing tried table entries into the data directory."""
+        peers_data = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/peers.dat')
+        shutil.copyfile(peers_data, os.path.join(self.datadir, 'peers.dat'))
 
     def test_without_asmap_arg(self):
         self.log.info('Test bitcoind with no -asmap arg passed')
@@ -63,13 +69,16 @@ class AsmapTest(BitcoinTestFramework):
             self.start_node(0, [f'-asmap={name}'])
         os.remove(filename)
 
-    def test_default_asmap(self):
+    def test_default_asmap_with_addrman_checks(self):
         shutil.copyfile(self.asmap_raw, self.default_asmap)
         for arg in ['-asmap', '-asmap=']:
-            self.log.info(f'Test bitcoind {arg} (using default map file)')
+            self.log.info(f'Test bitcoind {arg} (using default map file) with addrman checks')
             self.stop_node(0)
+            self.set_peers_dat()
             with self.node.assert_debug_log(expected_messages(self.default_asmap)):
-                self.start_node(0, [arg])
+                self.start_node(0, [arg, '-checkaddrman=1'])
+                # RPC getnodeaddresses runs the addrman consistency checks.
+                self.node.getnodeaddresses()
         os.remove(self.default_asmap)
 
     def test_default_asmap_with_missing_file(self):
@@ -96,7 +105,7 @@ class AsmapTest(BitcoinTestFramework):
         self.test_without_asmap_arg()
         self.test_asmap_with_absolute_path()
         self.test_asmap_with_relative_path()
-        self.test_default_asmap()
+        self.test_default_asmap_with_addrman_checks()
         self.test_default_asmap_with_missing_file()
         self.test_empty_asmap()
 
