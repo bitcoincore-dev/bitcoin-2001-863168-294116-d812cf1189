@@ -253,6 +253,8 @@ static bool InitRPCAuthentication()
     }
     if (gArgs.GetArg("-rpcauth", "") != "" || gArgs.GetArg("-rpcauthfile", "") != "") {
         LogPrintf("Using rpcauth authentication.\n");
+    }
+    if (gArgs.GetArg("-rpcauth", "") != "") {
         for (const std::string& rpcauth : gArgs.GetArgs("-rpcauth")) {
             std::vector<std::string> fields{SplitString(rpcauth, ':')};
             const std::vector<std::string> salt_hmac{SplitString(fields.back(), '$')};
@@ -265,6 +267,8 @@ static bool InitRPCAuthentication()
                 return false;
             }
         }
+    }
+    if (gArgs.GetArg("-rpcauthfile", "") != "") {
         for (std::string path : gArgs.GetArgs("-rpcauthfile")) {
             std::ifstream file;
             file.open(path);
