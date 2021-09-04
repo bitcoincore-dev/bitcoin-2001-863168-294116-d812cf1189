@@ -92,7 +92,7 @@ task:
     VCPKG_FEATURE_FLAGS: 'manifests'
     QT_DOWNLOAD_URL: 'https://github.com/sipsorcery/qt_win_binary/releases/download/qt51211x64_static_vs2019_160900/Qt5.12.11_x64_static_vs2019_160900.zip'
     QT_DOWNLOAD_HASH: 'b24436bbc49ac69d992efc148e640f02e8dec426bed5f8497abf735e7d7d59d0'
-    QT_LOCAL_PATH: 'C:\Qt5.12.11_x64_static_vs2019_160900'
+    QTBASEDIR: 'C:\Qt5.12.11_x64_static_vs2019_160900'
     IgnoreWarnIntDirInTempDetected: 'true'
   merge_script:
     - git config --global user.email "ci@ci.ci"
@@ -123,7 +123,7 @@ task:
       Write-Host "Qt binaries successfully downloaded, checking hash against $env:QT_DOWNLOAD_HASH...";
       if ((Get-FileHash qtdownload.zip).Hash -eq $env:QT_DOWNLOAD_HASH) {
         Write-Host "Downloaded Qt binaries archive matched the expected hash.";
-        Expand-Archive qtdownload.zip -DestinationPath $env:QT_LOCAL_PATH;
+        Expand-Archive qtdownload.zip -DestinationPath $env:QTBASEDIR;
       }
       else {
         Write-Host "ERROR: Downloaded Qt binaries archive did not match the expected hash.";
