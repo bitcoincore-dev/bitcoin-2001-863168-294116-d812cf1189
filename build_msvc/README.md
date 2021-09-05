@@ -37,31 +37,12 @@ To build Bitcoin Core with the GUI, a static build of Qt is required.
 
 1. Download a single ZIP archive of Qt source from https://download.qt.io/official_releases/qt/ (e.g., [`qt-everywhere-src-5.12.11.zip`](https://download.qt.io/official_releases/qt/5.12/5.12.11/single/qt-everywhere-src-5.12.11.zip)), and expand it into a dedicated folder. In this document it is assumed that this folder is `C:\dev\qt-source`.
 
-2. Apply the following patch:
-```diff
---- old\qt-source\qtbase\mkspecs\common\msvc-desktop.conf
-+++ new\qt-source\qtbase\mkspecs\common\msvc-desktop.conf
-@@ -37,9 +37,9 @@
- QMAKE_CFLAGS            = -nologo -Zc:wchar_t
- QMAKE_CFLAGS_WARN_ON    = -W3
- QMAKE_CFLAGS_WARN_OFF   = -W0
--QMAKE_CFLAGS_RELEASE    = $$QMAKE_CFLAGS_OPTIMIZE -MD
--QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO += $$QMAKE_CFLAGS_OPTIMIZE -Zi -MD
--QMAKE_CFLAGS_DEBUG      = -Zi -MDd
-+QMAKE_CFLAGS_RELEASE    = -MT
-+QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO += -Zi -MT
-+QMAKE_CFLAGS_DEBUG      = -Zi -MTd
- QMAKE_CFLAGS_YACC       =
- QMAKE_CFLAGS_LTCG       = -GL
-
-```
-
-3. Open "x64 Native Tools Command Prompt for VS 2019", and input the following commands:
+2. Open "x64 Native Tools Command Prompt for VS 2019", and input the following commands:
 ```cmd
 cd C:\dev\qt-source
 mkdir build
 cd build
-..\configure -release -silent -opensource -confirm-license -opengl desktop -no-shared -static -no-static-runtime -mp -qt-zlib -qt-pcre -qt-libpng -ltcg -no-libjpeg -nomake examples -nomake tests -nomake tools -no-dbus -no-libudev -no-icu -no-gtk -no-opengles3 -no-angle -no-sql-sqlite -no-sql-odbc -no-sqlite -no-libudev -no-vulkan -skip qt3d -skip qtactiveqt -skip qtandroidextras -skip qtcanvas3d -skip qtcharts -skip qtconnectivity -skip qtdatavis3d -skip qtdeclarative -skip qtdoc -skip qtgamepad -skip qtgraphicaleffects -skip qtimageformats -skip qtlocation -skip qtmacextras -skip qtmultimedia -skip qtnetworkauth -skip qtpurchasing -skip qtquickcontrols -skip qtquickcontrols2 -skip qtscript -skip qtscxml -skip qtsensors -skip qtserialbus -skip qtserialport -skip qtspeech -skip qtvirtualkeyboard -skip qtwayland -skip qtwebchannel -skip qtwebengine -skip qtwebsockets -skip qtwebview -skip qtx11extras -skip qtxmlpatterns -no-openssl -no-feature-sql -no-feature-sqlmodel -prefix C:\Qt_static
+..\configure -release -silent -opensource -confirm-license -opengl desktop -no-shared -static -static-runtime -mp -qt-zlib -qt-pcre -qt-libpng -ltcg -no-libjpeg -nomake examples -nomake tests -nomake tools -no-dbus -no-libudev -no-icu -no-gtk -no-opengles3 -no-angle -no-sql-sqlite -no-sql-odbc -no-sqlite -no-libudev -no-vulkan -skip qt3d -skip qtactiveqt -skip qtandroidextras -skip qtcanvas3d -skip qtcharts -skip qtconnectivity -skip qtdatavis3d -skip qtdeclarative -skip qtdoc -skip qtgamepad -skip qtgraphicaleffects -skip qtimageformats -skip qtlocation -skip qtmacextras -skip qtmultimedia -skip qtnetworkauth -skip qtpurchasing -skip qtquickcontrols -skip qtquickcontrols2 -skip qtscript -skip qtscxml -skip qtsensors -skip qtserialbus -skip qtserialport -skip qtspeech -skip qtvirtualkeyboard -skip qtwayland -skip qtwebchannel -skip qtwebengine -skip qtwebsockets -skip qtwebview -skip qtx11extras -skip qtxmlpatterns -no-openssl -no-feature-sql -no-feature-sqlmodel -prefix C:\Qt_static
 nmake
 nmake install
 ```
