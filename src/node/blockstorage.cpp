@@ -27,7 +27,7 @@ uint64_t nPruneTarget = 0;
 
 // TODO make namespace {
 RecursiveMutex cs_LastBlockFile;
-std::vector<CBlockFileInfo> vinfoBlockFile;
+std::vector<CBlockFileInfo> vinfoBlockFile GUARDED_BY(cs_LastBlockFile);
 int nLastBlockFile GUARDED_BY(cs_LastBlockFile) = 0;
 /** Global flag to indicate we should check to see if there are
 *  block/undo files that should be deleted.  Set on startup
@@ -162,6 +162,7 @@ bool UndoReadFromDisk(CBlockUndo& blockundo, const CBlockIndex* pindex)
 
 static void FlushUndoFile(int block_file, bool finalize = false)
 {
+    LOCK(cs_LastBlockFile);
     FlatFilePos undo_pos_old(block_file, vinfoBlockFile[block_file].nUndoSize);
     if (!UndoFileSeq().Flush(undo_pos_old, finalize)) {
         AbortNode("Flushing undo file to disk failed. This is likely the result of an I/O error.");
@@ -343,8 +344,11 @@ bool BlockManager::WriteUndoDataForBlock(const CBlockUndo& blockundo, BlockValid
         // in the block file info as below; note that this does not catch the case where the undo writes are keeping up
         // with the block writes (usually when a synced up node is getting newly mined blocks) -- this case is caught in
         // the FindBlockPos function
-        if (_pos.nFile < WITH_LOCK(cs_LastBlockFile, return nLastBlockFile) && static_cast<uint32_t>(pindex->nHeight) == vinfoBlockFile[_pos.nFile].nHeightLast) {
-            FlushUndoFile(_pos.nFile, true);
+        {
+            LOCK(cs_LastBlockFile);
+            if (_pos.nFile < nLastBlockFile && static_cast<uint32_t>(pindex->nHeight) == vinfoBlockFile[_pos.nFile].nHeightLast) {
+                FlushUndoFile(_pos.nFile, true);
+            }
         }
 
         // update nUndoPos in block index
