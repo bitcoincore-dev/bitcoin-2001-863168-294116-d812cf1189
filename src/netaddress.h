@@ -565,6 +565,8 @@ public:
         READWRITEAS(CNetAddr, obj);
         READWRITE(Using<BigEndianFormatter<2>>(obj.port));
     }
+
+    friend CService MaybeFlipIPv6toCJDNS(const CService& service);
 };
 
 #endif // BITCOIN_NETADDRESS_H
