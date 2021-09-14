@@ -443,14 +443,14 @@ public:
     /** Dirty block file entries. */
     std::set<int> setDirtyFileInfo;
 
-    RecursiveMutex cs_LastBlockFile;
-    std::vector<CBlockFileInfo> vinfoBlockFile GUARDED_BY(cs_LastBlockFile);
-    int nLastBlockFile GUARDED_BY(cs_LastBlockFile) = 0;
+    RecursiveMutex cs_blockfiles;
+    std::vector<CBlockFileInfo> vinfoBlockFile GUARDED_BY(cs_blockfiles);
+    int nLastBlockFile GUARDED_BY(cs_blockfiles) = 0;
     /** Global flag to indicate we should check to see if there are
      *  block/undo files that should be deleted.  Set on startup
      *  or if we allocate more file space when we're in prune mode
      */
-    bool fCheckForPruning GUARDED_BY(cs_LastBlockFile) = false;
+    bool fCheckForPruning GUARDED_BY(cs_blockfiles) = false;
 
     /**
      * All pairs A->B, where A (or one of its ancestors) misses transactions, but B has transactions.

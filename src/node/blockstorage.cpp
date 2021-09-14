@@ -82,7 +82,7 @@ std::string CBlockFileInfo::ToString() const
 
 CBlockFileInfo* BlockManager::GetBlockFileInfo(size_t n)
 {
-    LOCK(cs_LastBlockFile);
+    LOCK(cs_blockfiles);
 
     return &vinfoBlockFile.at(n);
 }
@@ -150,7 +150,7 @@ bool UndoReadFromDisk(CBlockUndo& blockundo, const CBlockIndex* pindex)
 
 void BlockManager::FlushUndoFile(int block_file, bool finalize)
 {
-    LOCK(cs_LastBlockFile);
+    LOCK(cs_blockfiles);
     FlatFilePos undo_pos_old(block_file, vinfoBlockFile[block_file].nUndoSize);
     if (!UndoFileSeq().Flush(undo_pos_old, finalize)) {
         AbortNode("Flushing undo file to disk failed. This is likely the result of an I/O error.");
@@ -159,7 +159,7 @@ void BlockManager::FlushUndoFile(int block_file, bool finalize)
 
 void BlockManager::FlushBlockFile(bool fFinalize, bool finalize_undo)
 {
-    LOCK(cs_LastBlockFile);
+    LOCK(cs_blockfiles);
     FlatFilePos block_pos_old(nLastBlockFile, vinfoBlockFile[nLastBlockFile].nSize);
     if (!BlockFileSeq().Flush(block_pos_old, fFinalize)) {
         AbortNode("Flushing block file to disk failed. This is likely the result of an I/O error.");
@@ -171,7 +171,7 @@ void BlockManager::FlushBlockFile(bool fFinalize, bool finalize_undo)
 
 uint64_t BlockManager::CalculateCurrentUsage()
 {
-    LOCK(cs_LastBlockFile);
+    LOCK(cs_blockfiles);
 
     uint64_t retval = 0;
     for (const CBlockFileInfo& file : vinfoBlockFile) {
@@ -218,7 +218,7 @@ fs::path GetBlockPosFilename(const FlatFilePos& pos)
 
 bool BlockManager::FindBlockPos(FlatFilePos& pos, unsigned int nAddSize, unsigned int nHeight, CChain& active_chain, uint64_t nTime, bool fKnown = false)
 {
-    LOCK(cs_LastBlockFile);
+    LOCK(cs_blockfiles);
 
     unsigned int nFile = fKnown ? pos.nFile : nLastBlockFile;
     if (vinfoBlockFile.size() <= nFile) {
@@ -275,7 +275,7 @@ bool BlockManager::FindUndoPos(BlockValidationState& state, int nFile, FlatFileP
 {
     pos.nFile = nFile;
 
-    LOCK(cs_LastBlockFile);
+    LOCK(cs_blockfiles);
 
     pos.nPos = vinfoBlockFile[nFile].nUndoSize;
     vinfoBlockFile[nFile].nUndoSize += nAddSize;
@@ -333,7 +333,7 @@ bool BlockManager::WriteUndoDataForBlock(const CBlockUndo& blockundo, BlockValid
         // with the block writes (usually when a synced up node is getting newly mined blocks) -- this case is caught in
         // the FindBlockPos function
         {
-            LOCK(cs_LastBlockFile);
+            LOCK(cs_blockfiles);
             if (_pos.nFile < nLastBlockFile && static_cast<uint32_t>(pindex->nHeight) == vinfoBlockFile[_pos.nFile].nHeightLast) {
                 FlushUndoFile(_pos.nFile, true);
             }

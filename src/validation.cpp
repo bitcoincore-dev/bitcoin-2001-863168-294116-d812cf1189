@@ -1922,7 +1922,7 @@ bool CChainState::FlushStateToDisk(
         bool fDoFullFlush = false;
 
         CoinsCacheSizeState cache_state = GetCoinsCacheSizeState();
-        LOCK(m_blockman.cs_LastBlockFile);
+        LOCK(m_blockman.cs_blockfiles);
         if (fPruneMode && (m_blockman.fCheckForPruning || nManualPruneHeight > 0) && !fReindex) {
             // make sure we don't prune above the blockfilterindexes bestblocks
             // pruning is height-based
@@ -2050,7 +2050,7 @@ void CChainState::PruneAndFlush()
 {
     BlockValidationState state;
     {
-        LOCK(m_blockman.cs_LastBlockFile);
+        LOCK(m_blockman.cs_blockfiles);
         m_blockman.fCheckForPruning = true;
     }
     if (!this->FlushStateToDisk(state, FlushStateMode::NONE)) {
@@ -3423,7 +3423,7 @@ bool TestBlockValidity(BlockValidationState& state,
 void BlockManager::PruneOneBlockFile(const int fileNumber)
 {
     AssertLockHeld(cs_main);
-    LOCK(cs_LastBlockFile);
+    LOCK(cs_blockfiles);
 
     for (auto& entry : m_block_index) {
         CBlockIndex* pindex = &entry.second;
@@ -3458,7 +3458,7 @@ void BlockManager::FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nM
 {
     assert(fPruneMode && nManualPruneHeight > 0);
 
-    LOCK2(cs_main, cs_LastBlockFile);
+    LOCK2(cs_main, cs_blockfiles);
     if (chain_tip_height < 0) {
         return;
     }
@@ -3489,7 +3489,7 @@ void PruneBlockFilesManual(CChainState& active_chainstate, int nManualPruneHeigh
 
 void BlockManager::FindFilesToPrune(std::set<int>& setFilesToPrune, uint64_t nPruneAfterHeight, int chain_tip_height, int prune_height, bool is_ibd)
 {
-    LOCK2(cs_main, cs_LastBlockFile);
+    LOCK2(cs_main, cs_blockfiles);
     if (chain_tip_height < 0 || nPruneTarget == 0) {
         return;
     }
@@ -3630,7 +3630,7 @@ bool BlockManager::LoadBlockIndexDB(std::set<CBlockIndex*, CBlockIndexWorkCompar
         return false;
     }
 
-    LOCK(cs_LastBlockFile);
+    LOCK(cs_blockfiles);
     // Load block file info
     m_block_tree_db->ReadLastBlockFile(nLastBlockFile);
     vinfoBlockFile.resize(nLastBlockFile + 1);
