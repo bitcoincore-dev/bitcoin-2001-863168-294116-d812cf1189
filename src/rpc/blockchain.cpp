@@ -782,10 +782,14 @@ static RPCHelpMan getblockfrompeer()
 
     const CBlockIndex* const pblockindex = WITH_LOCK(cs_main, return LookupBlockIndex(hash););
 
-    if (!peerman.FetchBlock(nodeid, hash, pblockindex)) {
+    UniValue result = UniValue::VOBJ;
+
+    if (pblockindex && pblockindex->nStatus & BLOCK_HAVE_DATA) {
+        result.pushKV("warnings", "Block already downloaded");
+    } else if (!peerman.FetchBlock(nodeid, hash, pblockindex)) {
         throw JSONRPCError(RPC_MISC_ERROR, "Failed to fetch block from peer");
     }
-    return UniValue::VOBJ;
+    return result;
 },
     };
 }
