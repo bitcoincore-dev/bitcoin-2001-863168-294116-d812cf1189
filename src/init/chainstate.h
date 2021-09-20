@@ -11,14 +11,14 @@ struct bilingual_str;
 class CChainParams;
 class CClientUIInterface;
 class ChainstateManager;
-struct NodeContext;
+class CTxMemPool;
 
 bool LoadChainstateSequence(bool& fLoaded,
                             bilingual_str& strLoadError,
                             bool fReset,
                             CClientUIInterface& uiInterface,
                             ChainstateManager& chainman,
-                            NodeContext& node,
+                            CTxMemPool* mempool,
                             bool fPruneMode,
                             const CChainParams& chainparams,
                             bool fReindexChainState,

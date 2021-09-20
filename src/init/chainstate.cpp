@@ -9,7 +9,6 @@
 #include <util/time.h> // for GetTimeMillis
 #include <util/translation.h> // for bilingual_str
 #include <node/blockstorage.h> // for CleanupBlockRevFiles, fHavePruned, fReindex
-#include <node/context.h> // for NodeContext
 #include <node/ui_interface.h> // for InitError, CClientUIInterface member access
 #include <shutdown.h> // for ShutdownRequested
 #include <timedata.h> // for GetAdjustedTime
@@ -20,7 +19,7 @@ bool LoadChainstateSequence(bool& fLoaded,
                             bool fReset,
                             CClientUIInterface& uiInterface,
                             ChainstateManager& chainman,
-                            NodeContext& node,
+                            CTxMemPool* mempool,
                             bool fPruneMode,
                             const CChainParams& chainparams,
                             bool fReindexChainState,
@@ -37,11 +36,11 @@ bool LoadChainstateSequence(bool& fLoaded,
         const int64_t load_block_index_start_time = GetTimeMillis();
         try {
             LOCK(cs_main);
-            chainman.InitializeChainstate(Assert(node.mempool.get()));
+            chainman.InitializeChainstate(mempool);
             chainman.m_total_coinstip_cache = nCoinCacheUsage;
             chainman.m_total_coinsdb_cache = nCoinDBCache;
 
-            UnloadBlockIndex(node.mempool.get(), chainman);
+            UnloadBlockIndex(mempool, chainman);
 
             auto& pblocktree{chainman.m_blockman.m_block_tree_db};
             // new CBlockTreeDB tries to delete the existing file, which
