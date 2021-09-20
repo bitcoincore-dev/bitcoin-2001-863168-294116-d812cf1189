@@ -44,7 +44,6 @@ static_assert(MINIUPNPC_API_VERSION >= 10, "miniUPnPc API version >= 10 assumed"
 #include <algorithm>
 #include <cstdint>
 #include <unordered_map>
-#include <unordered_set>
 
 #include <math.h>
 
@@ -125,21 +124,18 @@ std::string strSubVersion;
  */
 static bool OutboundConnectionAllowedTo(const CNetAddr& addr)
 {
-    static const std::unordered_set<Network> onlynets = [](){
-        std::unordered_set<Network> ret;
-        if (gArgs.IsArgSet("-onlynet")) {
-            for (const std::string& net : gArgs.GetArgs("-onlynet")) {
-                ret.insert(ParseNetwork(net));
-            }
-        }
-        return ret;
-    }();
-
-    if (onlynets.empty()) {
+    if (!gArgs.IsArgSet("-onlynet")) {
         return true;
     }
 
-    return onlynets.count(addr.GetNetwork()) > 0;
+    const auto check_network = addr.GetNetwork();
+    for (const std::string& net : gArgs.GetArgs("-onlynet")) {
+        if (ParseNetwork(net) == check_network) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void CConnman::AddAddrFetch(const std::string& strDest)
@@ -2009,9 +2005,9 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
                 const CAddress addr = m_anchors.back();
                 m_anchors.pop_back();
                 if (!addr.IsValid() || IsLocal(addr) || !IsReachable(addr) ||
-                    !OutboundConnectionAllowedTo(addr) ||
                     !HasAllDesirableServiceFlags(addr.nServices) ||
-                    setConnected.count(addr.GetGroup(addrman.m_asmap))) continue;
+                    setConnected.count(addr.GetGroup(addrman.m_asmap)) ||
+                    !OutboundConnectionAllowedTo(addr)) continue;
                 addrConnect = addr;
                 LogPrint(BCLog::NET, "Trying to make an anchor connection to %s\n", addrConnect.ToString());
                 break;
@@ -2063,10 +2059,6 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
             if (!IsReachable(addr))
                 continue;
 
-            if (!OutboundConnectionAllowedTo(addr)) {
-                continue;
-            }
-
             // only consider very recently tried nodes after 30 failed attempts
             if (nANow - addr.nLastTry < 600 && nTries < 30)
                 continue;
@@ -2083,6 +2075,10 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
             // do not allow non-default ports, unless after 50 invalid addresses selected already
             if (addr.GetPort() != Params().GetDefaultPort() && nTries < 50)
                 continue;
+
+            if (!OutboundConnectionAllowedTo(addr)) {
+                continue;
+            }
 
             addrConnect = addr;
             break;
