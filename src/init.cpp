@@ -1405,7 +1405,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
                                          fReset,
                                          uiInterface,
                                          chainman,
-                                         node,
+                                         Assert(node.mempool.get()),
                                          fPruneMode,
                                          chainparams,
                                          fReindexChainState,
