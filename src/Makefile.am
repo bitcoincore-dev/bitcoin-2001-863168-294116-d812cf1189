@@ -161,6 +161,7 @@ BITCOIN_CORE_H = \
   index/txindex.h \
   indirectmap.h \
   init.h \
+  init/chainstate.h \
   init/common.h \
   interfaces/chain.h \
   interfaces/echo.h \
@@ -342,6 +343,7 @@ libbitcoin_server_a_SOURCES = \
   index/coinstatsindex.cpp \
   index/txindex.cpp \
   init.cpp \
+  init/chainstate.cpp \
   mapport.cpp \
   miner.cpp \
   net.cpp \
