@@ -9,8 +9,10 @@
 #include <functional> // for std::function
 #include <optional> // for std::optional
 
-class CChainParams;
 class ChainstateManager;
+namespace Consensus {
+    struct Params;
+}
 class CTxMemPool;
 
 enum class ChainstateLoadingError {
@@ -31,7 +33,7 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
                                                              ChainstateManager& chainman,
                                                              CTxMemPool* mempool,
                                                              bool fPruneMode,
-                                                             const CChainParams& chainparams,
+                                                             const Consensus::Params& consensus_params,
                                                              bool fReindexChainState,
                                                              int64_t nBlockTreeDBCache,
                                                              int64_t nCoinDBCache,

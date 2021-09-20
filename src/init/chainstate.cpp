@@ -4,7 +4,7 @@
 
 #include <init/chainstate.h>
 
-#include <chainparams.h> // for CChainParams
+#include <consensus/params.h> // for Consensus::Params
 #include <node/blockstorage.h> // for CleanupBlockRevFiles, fHavePruned, fReindex
 #include <validation.h> // for a lot of things
 
@@ -12,7 +12,7 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
                                                              ChainstateManager& chainman,
                                                              CTxMemPool* mempool,
                                                              bool fPruneMode,
-                                                             const CChainParams& chainparams,
+                                                             const Consensus::Params& consensus_params,
                                                              bool fReindexChainState,
                                                              int64_t nBlockTreeDBCache,
                                                              int64_t nCoinDBCache,
@@ -62,7 +62,7 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
         // If the loaded chain has a wrong genesis, bail out immediately
         // (we're likely using a testnet datadir, or the other way around).
         if (!chainman.BlockIndex().empty() &&
-                !chainman.m_blockman.LookupBlockIndex(chainparams.GetConsensus().hashGenesisBlock)) {
+                !chainman.m_blockman.LookupBlockIndex(consensus_params.hashGenesisBlock)) {
             return ChainstateLoadingError::ERROR_BAD_GENESIS_BLOCK;
         }
 
@@ -142,7 +142,7 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
                 }
 
                 if (!CVerifyDB().VerifyDB(
-                        *chainstate, chainparams, chainstate->CoinsDB(),
+                        *chainstate, consensus_params, chainstate->CoinsDB(),
                         check_level,
                         check_blocks)) {
                     return ChainstateLoadingError::ERROR_CORRUPTED_BLOCK_DB;
