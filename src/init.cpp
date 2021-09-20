@@ -1406,7 +1406,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
                                         chainman,
                                         Assert(node.mempool.get()),
                                         fPruneMode,
-                                        chainparams,
+                                        chainparams.GetConsensus(),
                                         fReindexChainState,
                                         nBlockTreeDBCache,
                                         nCoinDBCache,
