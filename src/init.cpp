@@ -1400,6 +1400,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
 
         uiInterface.InitMessage(_("Loading block index…").translated);
 
+        const int64_t load_block_index_start_time = GetTimeMillis();
         bool rv = LoadChainstate(fLoaded,
                                  strLoadError,
                                  fReset,
@@ -1413,6 +1414,9 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
                                  nCoinDBCache,
                                  nCoinCacheUsage);
         if (!rv) return false;
+        if (fLoaded) {
+            LogPrintf(" block index %15dms\n", GetTimeMillis() - load_block_index_start_time);
+        }
 
         if (!fLoaded && !ShutdownRequested()) {
             // first suggest a reindex
