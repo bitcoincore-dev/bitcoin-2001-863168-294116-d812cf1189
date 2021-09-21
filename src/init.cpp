@@ -1399,6 +1399,8 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
                                         cache_sizes.coin_cache_usage_size,
                                         args.GetIntArg("-checkblocks", DEFAULT_CHECKBLOCKS),
                                         args.GetIntArg("-checklevel", DEFAULT_CHECKLEVEL),
+                                        false,
+                                        false,
                                         GetAdjustedTime,
                                         ShutdownRequested,
                                         []() {
