@@ -19,6 +19,8 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
                                                              int64_t nCoinCacheUsage,
                                                              unsigned int check_blocks,
                                                              unsigned int check_level,
+                                                             bool block_tree_db_in_memory,
+                                                             bool coins_db_in_memory,
                                                              std::function<int64_t()> get_unix_time_seconds,
                                                              std::optional<std::function<bool()>> shutdown_requested,
                                                              std::optional<std::function<void()>> coins_error_cb,
@@ -39,7 +41,7 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
         // new CBlockTreeDB tries to delete the existing file, which
         // fails if it's still open from the previous loop. Close it first:
         pblocktree.reset();
-        pblocktree.reset(new CBlockTreeDB(nBlockTreeDBCache, false, fReset));
+        pblocktree.reset(new CBlockTreeDB(nBlockTreeDBCache, block_tree_db_in_memory, fReset));
 
         if (fReset) {
             pblocktree->WriteReindexing(true);
@@ -86,7 +88,7 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
         for (CChainState* chainstate : chainman.GetAll()) {
             chainstate->InitCoinsDB(
                 /* cache_size_bytes */ nCoinDBCache,
-                /* in_memory */ false,
+                /* in_memory */ coins_db_in_memory,
                 /* should_wipe */ fReset || fReindexChainState);
 
             if (coins_error_cb.has_value()) {
