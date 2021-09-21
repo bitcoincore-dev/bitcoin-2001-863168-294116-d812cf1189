@@ -7,6 +7,7 @@
 
 #include <chainparamsbase.h>
 #include <fs.h>
+#include <init/caches.h>
 #include <key.h>
 #include <util/system.h>
 #include <node/context.h>
@@ -89,6 +90,7 @@ struct BasicTestingSetup {
  * initialization behaviour.
  */
 struct ChainTestingSetup : public BasicTestingSetup {
+    CacheSizes m_cache_sizes{};
 
     explicit ChainTestingSetup(const std::string& chainName = CBaseChainParams::MAIN, const std::vector<const char*>& extra_args = {});
     ~ChainTestingSetup();
