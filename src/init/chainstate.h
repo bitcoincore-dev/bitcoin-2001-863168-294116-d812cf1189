@@ -35,6 +35,7 @@ std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
                                                      int64_t nBlockTreeDBCache,
                                                      int64_t nCoinDBCache,
                                                      int64_t nCoinCacheUsage,
+                                                     std::optional<std::function<bool()>> shutdown_requested = std::nullopt,
                                                      std::optional<std::function<void()>> coins_error_cb = std::nullopt);
 
 enum class ChainstateLoadVerifyError {
