@@ -7,7 +7,6 @@
 #include <chainparams.h> // for CChainParams
 #include <node/blockstorage.h> // for CleanupBlockRevFiles, fHavePruned, fReindex
 #include <shutdown.h> // for ShutdownRequested
-#include <timedata.h> // for GetAdjustedTime
 #include <validation.h> // for a lot of things
 
 std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
@@ -21,6 +20,7 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
                                                              int64_t nCoinCacheUsage,
                                                              unsigned int check_blocks,
                                                              unsigned int check_level,
+                                                             std::function<int64_t()> get_unix_time_seconds,
                                                              std::optional<std::function<void()>> coins_error_cb,
                                                              std::optional<std::function<void()>> verifying_blocks_cb) {
     auto is_coinsview_empty = [&](CChainState* chainstate) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
@@ -137,7 +137,7 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
                 }
 
                 const CBlockIndex* tip = chainstate->m_chain.Tip();
-                if (tip && tip->nTime > GetAdjustedTime() + 2 * 60 * 60) {
+                if (tip && tip->nTime > get_unix_time_seconds() + 2 * 60 * 60) {
                     return ChainstateLoadingError::ERROR_BLOCK_FROM_FUTURE;
                 }
 

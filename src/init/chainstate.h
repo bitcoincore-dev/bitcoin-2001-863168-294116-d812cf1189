@@ -38,6 +38,7 @@ std::optional<ChainstateLoadingError> LoadChainstateSequence(bool fReset,
                                                              int64_t nCoinCacheUsage,
                                                              unsigned int check_blocks,
                                                              unsigned int check_level,
+                                                             std::function<int64_t()> get_unix_time_seconds,
                                                              std::optional<std::function<void()>> coins_error_cb = std::nullopt,
                                                              std::optional<std::function<void()>> verifying_blocks_cb = std::nullopt);
 #endif // BITCOIN_INIT_CHAINSTATE_H
