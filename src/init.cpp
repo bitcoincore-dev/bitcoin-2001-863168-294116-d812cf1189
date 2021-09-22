@@ -1413,6 +1413,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
                                         nCoinCacheUsage,
                                         args.GetIntArg("-checkblocks", DEFAULT_CHECKBLOCKS),
                                         args.GetIntArg("-checklevel", DEFAULT_CHECKLEVEL),
+                                        GetAdjustedTime,
                                         []() {
                                             uiInterface.ThreadSafeMessageBox(
                                                 _("Error reading from database, shutting down."),
