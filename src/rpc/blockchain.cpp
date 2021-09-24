@@ -19,10 +19,10 @@
 #include <hash.h>
 #include <index/blockfilterindex.h>
 #include <index/coinstatsindex.h>
+#include <logging/timer.h>
 #include <net.h>
 #include <net_processing.h>
 #include <node/blockstorage.h>
-#include <logging/timer.h>
 #include <node/coinstats.h>
 #include <node/context.h>
 #include <node/utxo_snapshot.h>
@@ -39,6 +39,7 @@
 #include <sync.h>
 #include <txdb.h>
 #include <txmempool.h>
+#include <txmempool_entry.h>
 #include <undo.h>
 #include <util/strencodings.h>
 #include <util/string.h>
