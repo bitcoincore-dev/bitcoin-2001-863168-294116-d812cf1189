@@ -39,6 +39,7 @@
 #include <sync.h>
 #include <txdb.h>
 #include <txmempool.h>
+#include <txmempool_entry.h>
 #include <undo.h>
 #include <util/strencodings.h>
 #include <util/string.h>
