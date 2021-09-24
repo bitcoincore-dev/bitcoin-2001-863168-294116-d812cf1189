@@ -75,14 +75,14 @@ private:
     const bool spendsCoinbase;      //!< keep track of transactions that spend a coinbase
     const int64_t sigOpCost;        //!< Total sigop cost
     int64_t feeDelta{0};            //!< Used for determining the priority of the transaction for mining in a block
-    LockPoints lockPoints;     //!< Track the height and time at which tx was final
+    LockPoints lockPoints;          //!< Track the height and time at which tx was final
 
     // Information about descendants of this transaction that are in the
     // mempool; if we remove this transaction we must remove all of these
     // descendants as well.
     uint64_t nCountWithDescendants{1}; //!< number of descendant transactions
-    uint64_t nSizeWithDescendants;   //!< ... and size
-    CAmount nModFeesWithDescendants; //!< ... and total fees (all including us)
+    uint64_t nSizeWithDescendants;     //!< ... and size
+    CAmount nModFeesWithDescendants;   //!< ... and total fees (all including us)
 
     // Analogous statistics for ancestor transactions
     uint64_t nCountWithAncestors{1};
@@ -177,7 +177,7 @@ public:
     Parents& GetMemPoolParents() const { return m_parents; }
     Children& GetMemPoolChildren() const { return m_children; }
 
-    mutable size_t vTxHashesIdx; //!< Index in mempool's vTxHashes
+    mutable size_t vTxHashesIdx;          //!< Index in mempool's vTxHashes
     mutable Epoch::Marker m_epoch_marker; //!< epoch when last touched, useful for graph algorithms
 };
 #endif // BITCOIN_TXMEMPOOL_ENTRY_H
