@@ -48,6 +48,7 @@
 
 #include <univalue.h>
 
+#include <algorithm>
 #include <condition_variable>
 #include <memory>
 #include <mutex>
@@ -1856,7 +1857,7 @@ static RPCHelpMan getchaintxstats()
     CHECK_NONFATAL(pindex != nullptr);
 
     if (request.params[0].isNull()) {
-        blockcount = std::max(0, std::min(blockcount, pindex->nHeight - 1));
+        blockcount = std::clamp(blockcount, 0, pindex->nHeight - 1);
     } else {
         blockcount = request.params[0].get_int();
 
