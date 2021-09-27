@@ -206,14 +206,6 @@ struct PackageMempoolAcceptResult
 };
 
 /**
- * (Try to) add a transaction to the memory pool.
- * @param[in]  bypass_limits   When true, don't enforce mempool fee limits.
- * @param[in]  test_accept     When true, run validation checks but don't submit to mempool.
- */
-MempoolAcceptResult AcceptToMemoryPool(CChainState& active_chainstate, CTxMemPool& pool, const CTransactionRef& tx,
-                                       bool bypass_limits, bool test_accept=false) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
-
-/**
 * Atomically test acceptance of a package. If the package only contains one tx, package rules still
 * apply. Package validation does not allow BIP125 replacements, so the transaction(s) cannot spend
 * the same inputs as any transaction in the mempool.
