@@ -3432,6 +3432,19 @@ bool ChainstateManager::ProcessNewBlock(const CChainParams& chainparams, const s
     return true;
 }
 
+MempoolAcceptResult ChainstateManager::ProcessTransaction(const CTransactionRef& tx,
+                                                          bool bypass_limits,
+                                                          bool test_accept)
+{
+    CChainState& active_chainstate = ActiveChainstate();
+    if (!active_chainstate.m_mempool) {
+        TxValidationState state;
+        state.Invalid(TxValidationResult::TX_NO_MEMPOOL);
+        return MempoolAcceptResult::Failure(state);
+    }
+    return AcceptToMemoryPool(active_chainstate, *active_chainstate.m_mempool, tx, bypass_limits, test_accept);
+}
+
 bool TestBlockValidity(BlockValidationState& state,
                        const CChainParams& chainparams,
                        CChainState& chainstate,

@@ -997,6 +997,15 @@ public:
      */
     bool ProcessNewBlockHeaders(const std::vector<CBlockHeader>& block, BlockValidationState& state, const CChainParams& chainparams, const CBlockIndex** ppindex = nullptr) LOCKS_EXCLUDED(cs_main);
 
+    /**
+     * (Try to) add a transaction to the memory pool.
+     *
+     * @param[in]  bypass_limits   When true, don't enforce mempool fee limits.
+     * @param[in]  test_accept     When true, run validation checks but don't submit to mempool.
+     */
+    MempoolAcceptResult ProcessTransaction(const CTransactionRef& tx, bool bypass_limits, bool test_accept=false)
+        EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
     //! Load the block tree and coins database from disk, initializing state if we're running with -reindex
     bool LoadBlockIndex() EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
