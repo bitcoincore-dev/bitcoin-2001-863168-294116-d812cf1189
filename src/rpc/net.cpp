@@ -295,7 +295,7 @@ static RPCHelpMan addnode()
                 {
                     {"node", RPCArg::Type::STR, RPCArg::Optional::NO, "The node (see getpeerinfo for nodes)"},
                     {"command", RPCArg::Type::STR, RPCArg::Optional::NO, "'add' to add a node to the list, 'remove' to remove a node from the list, 'onetry' to try a connection to the node once"},
-                    {"connection_type", RPCArg::Type::BOOL, /* default */ "manual", "Type of connection: \n" + Join(CONNECTION_TYPE_DOC, ",\n") + "\nOnly supported for command \"onetry\" for now."},
+                    {"connection_type", RPCArg::Type::STR, /* default */ "manual", "Type of connection: \n" + Join(CONNECTION_TYPE_DOC, ",\n") + "\nOnly supported for command \"onetry\" for now."},
                 },
                 RPCResult{RPCResult::Type::NONE, "", ""},
                 RPCExamples{
