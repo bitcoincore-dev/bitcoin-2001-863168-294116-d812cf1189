@@ -638,7 +638,7 @@ struct PartiallySignedTransaction
                     uint32_t v;
                     UnserializeFromVector(s, v);
                     m_version = v;
-                    if (m_version > PSBT_HIGHEST_VERSION) {
+                    if (*m_version > PSBT_HIGHEST_VERSION) {
                         throw std::ios_base::failure("Unsupported version number");
                     }
                     break;
