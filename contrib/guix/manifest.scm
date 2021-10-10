@@ -11,6 +11,8 @@
              (gnu packages file)
              (gnu packages gawk)
              (gnu packages gcc)
+             (gnu packages image)
+             (gnu packages imagemagick)
              ((gnu packages installers) #:select (nsis-x86_64))
              ((gnu packages linux) #:select (linux-libre-headers-5.15 util-linux))
              (gnu packages llvm)
@@ -584,6 +586,9 @@ inspecting signatures in Mach-O binaries.")
         automake
         pkg-config
         bison
+        imagemagick
+        libicns
+        librsvg
         ;; Native GCC 10 toolchain
         gcc-toolchain-10
         (list gcc-toolchain-10 "static")
