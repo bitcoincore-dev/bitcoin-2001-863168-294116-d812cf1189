@@ -16,6 +16,8 @@
              (gnu packages gawk)
              (gnu packages gcc)
              (gnu packages gnome)
+             (gnu packages image)
+             (gnu packages imagemagick)
              (gnu packages installers)
              (gnu packages linux)
              (gnu packages llvm)
@@ -594,6 +596,9 @@ inspecting signatures in Mach-O binaries.")
         automake
         pkg-config
         bison
+        imagemagick
+        libicns
+        librsvg
         ;; Native GCC 10 toolchain
         gcc-toolchain-10
         (list gcc-toolchain-10 "static")
