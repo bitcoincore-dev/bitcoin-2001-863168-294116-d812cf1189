@@ -315,7 +315,7 @@ static bool rest_filter_header(const util::Ref& context, HTTPRequest* req, const
     std::vector<std::string> uriParts;
     boost::split(uriParts, param, boost::is_any_of("/"));
     if (uriParts.size() != 3) {
-        return RESTERR(req, HTTP_BAD_REQUEST, "Invalid URI format. Expected /rest/blockfilterheaders/filtertype/count/blockhash");
+        return RESTERR(req, HTTP_BAD_REQUEST, "Invalid URI format. Expected /rest/blockfilterheaders/<filtertype>/<count>/<blockhash>");
     }
 
     uint256 block_hash;
@@ -423,7 +423,7 @@ static bool rest_block_filter(const util::Ref& context, HTTPRequest* req, const 
     std::vector<std::string> uriParts;
     boost::split(uriParts, param, boost::is_any_of("/"));
     if (uriParts.size() != 2) {
-        return RESTERR(req, HTTP_BAD_REQUEST, "Invalid URI format. Expected /rest/blockfilter/filtertype/blockhash");
+        return RESTERR(req, HTTP_BAD_REQUEST, "Invalid URI format. Expected /rest/blockfilter/<filtertype>/<blockhash>");
     }
 
     uint256 block_hash;
