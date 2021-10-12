@@ -82,7 +82,7 @@ struct BasicTestingSetup {
     ~BasicTestingSetup();
 
     const fs::path m_path_root;
-    ArgsManager m_args;
+    ArgsManager& m_args;
 };
 
 /** Testing setup that performs all steps up until right before
