@@ -30,6 +30,7 @@
 #include <univalue.h>
 
 static const size_t MAX_GETUTXOS_OUTPOINTS = 15; //allow a max of 15 outpoints to be queried at once
+static constexpr unsigned int MAX_REST_HEADERS_RESULTS = 2000;
 
 enum class RetFormat {
     UNDEF,
@@ -333,8 +334,8 @@ static bool rest_filter_header(const util::Ref& context, HTTPRequest* req, const
     }
 
     long count = strtol(uriParts[1].c_str(), nullptr, 10);
-    if (count < 1 || count > 2000) {
-        return RESTERR(req, HTTP_BAD_REQUEST, "Header count out of acceptable range (1-2000): " + uriParts[1]);
+    if (count < 1 || count > MAX_REST_HEADERS_RESULTS) {
+        return RESTERR(req, HTTP_BAD_REQUEST, strprintf("Header count out of acceptable range (1-%u): %s", MAX_REST_HEADERS_RESULTS, uriParts[1]));
     }
 
     std::vector<const CBlockIndex *> headers;
