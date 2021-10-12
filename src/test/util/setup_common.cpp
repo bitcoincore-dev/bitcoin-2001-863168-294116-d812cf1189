@@ -77,9 +77,9 @@ std::ostream& operator<<(std::ostream& os, const uint256& num)
 
 BasicTestingSetup::BasicTestingSetup(const std::string& chainName, const std::vector<const char*>& extra_args)
     : m_path_root{fs::temp_directory_path() / "test_common_" PACKAGE_NAME / g_insecure_rand_ctx_temp_path.rand256().ToString()},
-      m_args{}
+      m_args{gArgs}
 {
-    m_node.args = &gArgs;
+    m_node.args = &m_args;
     const std::vector<const char*> arguments = Cat(
         {
             "dummy",
@@ -95,7 +95,6 @@ BasicTestingSetup::BasicTestingSetup(const std::string& chainName, const std::ve
     util::ThreadRename("test");
     fs::create_directories(m_path_root);
     m_args.ForceSetArg("-datadir", m_path_root.string());
-    gArgs.ForceSetArg("-datadir", m_path_root.string());
     gArgs.ClearPathCache();
     {
         SetupServerArgs(*m_node.args);
