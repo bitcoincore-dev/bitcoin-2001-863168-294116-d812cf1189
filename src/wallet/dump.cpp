@@ -8,6 +8,7 @@
 #include <util/fs.h>
 #include <util/translation.h>
 #include <wallet/wallet.h>
+#include <wallet/walletdb.h>
 
 #include <algorithm>
 #include <fstream>
@@ -20,7 +21,7 @@ namespace wallet {
 static const std::string DUMP_MAGIC = "BITCOIN_CORE_WALLET_DUMP";
 uint32_t DUMP_VERSION = 1;
 
-bool DumpWallet(CWallet& wallet, bilingual_str& error, const std::string& dump_filename)
+bool DumpWallet(WalletDatabase& db, bilingual_str& error, const std::string& dump_filename)
 {
     fs::path path = fs::PathFromString(dump_filename);
     path = fs::absolute(path);
@@ -37,7 +38,6 @@ bool DumpWallet(CWallet& wallet, bilingual_str& error, const std::string& dump_f
 
     HashWriter hasher{};
 
-    WalletDatabase& db = wallet.GetDatabase();
     std::unique_ptr<DatabaseBatch> batch = db.MakeBatch();
 
     bool ret = true;

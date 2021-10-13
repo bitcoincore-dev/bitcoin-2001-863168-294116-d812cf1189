@@ -155,7 +155,10 @@ public:
     bool backupWallet(const std::string& filename, const WalletBackupFormat format, bilingual_str& error) override {
         switch (format) {
             case WalletBackupFormat::DbDump:
-                return DumpWallet(*m_wallet, error, filename);
+            {
+                WalletDatabase& db = m_wallet->GetDatabase();
+                return DumpWallet(db, error, filename);
+            }
             case WalletBackupFormat::Raw:
                 return m_wallet->BackupWallet(filename);
         }
