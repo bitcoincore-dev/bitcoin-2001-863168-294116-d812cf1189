@@ -168,12 +168,12 @@ public:
     bool isLogRowContinuation(int row) const EXCLUSIVE_LOCKS_REQUIRED(cs);
     const LogEntry& findLogEntry(int row, int& out_entry_row) const EXCLUSIVE_LOCKS_REQUIRED(cs);
 
-    int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    int columnCount(const QModelIndex& parent) const;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex& parent) const override;
     QVariant data(const CBlockIndex&, int txout_index, const Header) const;
     QVariant data(const CTransactionRef&, int txout_index, const Header) const;
-    QVariant data(const QModelIndex&, int role = Qt::DisplayRole) const;
-    QVariant headerData(int section, Qt::Orientation, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex&, int role = Qt::DisplayRole) const override;
+    QVariant headerData(int section, Qt::Orientation, int role = Qt::DisplayRole) const override;
 
     void searchRows(const QString& query, QList<int>& results);
     void searchDisable();
@@ -196,8 +196,8 @@ class NetWatchLogTestModel : public NetWatchLogModel
 public:
     NetWatchLogTestModel() : NetWatchLogModel(nullptr) { }
 
-    int rowCount(const QModelIndex& parent) const;
-    QVariant data(const QModelIndex&, int role = Qt::DisplayRole) const;
+    int rowCount(const QModelIndex& parent) const override;
+    QVariant data(const QModelIndex&, int role = Qt::DisplayRole) const override;
 };
 
 class GuiNetWatch: public QWidget
