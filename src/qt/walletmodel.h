@@ -253,7 +253,7 @@ class BitcoinAddressUnusedInWalletValidator : public QValidator
 public:
     explicit BitcoinAddressUnusedInWalletValidator(const WalletModel&, QObject *parent=nullptr);
 
-    State validate(QString &input, int &pos) const;
+    State validate(QString &input, int &pos) const override;
 };
 
 #endif // BITCOIN_QT_WALLETMODEL_H
