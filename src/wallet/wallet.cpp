@@ -2395,7 +2395,7 @@ void CWallet::CommitTransaction(CTransactionRef tx, mapValue_t mapValue, std::ve
     }
 }
 
-DBErrors CWallet::LoadWallet()
+DBErrors CWallet::LoadWallet(const do_init_used_flag do_init_used_flag_val)
 {
     LOCK(cs_wallet);
 
@@ -2419,7 +2419,7 @@ DBErrors CWallet::LoadWallet()
         return nLoadWalletRet;
     }
 
-    InitialiseAddressBookUsed();
+    if (do_init_used_flag_val == do_init_used_flag::Init) InitialiseAddressBookUsed();
 
     return DBErrors::LOAD_OK;
 }
