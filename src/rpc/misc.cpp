@@ -463,7 +463,7 @@ static UniValue sweepprivkeys(const JSONRPCRequest& request)
                         },
                         "options"},
                 },
-                RPCResults{},
+                RPCResult{RPCResult::Type::STR_HEX, "", "The transaction id."},
                 RPCExamples{""},
             }.ToString());
     }
