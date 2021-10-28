@@ -332,6 +332,8 @@ public:
         return false;
     }
 
+    bool isGenesis() const { return nHeight == 0; }
+
     //! Build the skiplist pointer for this entry.
     void BuildSkip();
 

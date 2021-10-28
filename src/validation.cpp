@@ -4912,6 +4912,14 @@ bool ChainstateManager::PopulateAndValidateSnapshot(
     for (int i = 0; i <= snapshot_chainstate.m_chain.Height(); ++i) {
         index = snapshot_chainstate.m_chain[i];
 
+        if (index->isGenesis()) {
+            // Don't make any modifications to the genesis block.
+            // This is especially important because we don't want to erroneously
+            // apply BLOCK_ASSUMED_VALID to genesis, which would happen if we didn't skip
+            // it here (since it apparently isn't BLOCK_VALID_SCRIPTS).
+            continue;
+        }
+
         // Fake nTx so that LoadBlockIndex() loads assumed-valid CBlockIndex
         // entries (among other things)
         if (!index->nTx) {
