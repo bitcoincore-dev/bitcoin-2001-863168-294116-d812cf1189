@@ -860,6 +860,10 @@ private:
         CBlockIndex** ppindex) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
     friend CChainState;
 
+    // Returns nullptr if no snapshot has been loaded.
+    CBlockIndex* GetSnapshotBaseBlock() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+    std::optional<int> GetSnapshotBaseHeight() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
 public:
     explicit ChainstateManager(const CChainParams& chainparams) : m_chainparams{chainparams} { }
 
