@@ -5302,3 +5302,18 @@ Chainstate& ChainstateManager::ActivateExistingSnapshot(CTxMemPool* mempool, uin
     m_active_chainstate = m_snapshot_chainstate.get();
     return *m_snapshot_chainstate;
 }
+
+const CBlockIndex* ChainstateManager::GetSnapshotBaseBlock() const
+{
+    AssertLockHeld(::cs_main);
+    const auto blockhash_op{this->SnapshotBlockhash()};
+    if (!blockhash_op) return nullptr;
+    return m_blockman.LookupBlockIndex(*blockhash_op);
+}
+
+std::optional<int> ChainstateManager::GetSnapshotBaseHeight() const
+{
+    AssertLockHeld(::cs_main);
+    auto base{this->GetSnapshotBaseBlock()};
+    return base ? std::make_optional(base->nHeight) : std::nullopt;
+}
