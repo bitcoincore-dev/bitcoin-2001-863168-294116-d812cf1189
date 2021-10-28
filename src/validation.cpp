@@ -5389,3 +5389,16 @@ bool ChainstateManager::DetectSnapshotChainstate(CTxMemPool* mempool)
     this->InitializeChainstate(mempool, /*snapshot_blockhash=*/ *base_blockhash);
     return true;
 }
+
+CBlockIndex* ChainstateManager::GetSnapshotBaseBlock()
+{
+    auto blockhash_op = this->SnapshotBlockhash();
+    if (!blockhash_op) return nullptr;
+    return m_blockman.LookupBlockIndex(*blockhash_op);
+}
+
+std::optional<int> ChainstateManager::GetSnapshotBaseHeight()
+{
+    CBlockIndex* base = this->GetSnapshotBaseBlock();
+    return base ? std::make_optional(base->nHeight) : std::nullopt;
+}
