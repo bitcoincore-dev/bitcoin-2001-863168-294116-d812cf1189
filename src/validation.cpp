@@ -3607,7 +3607,7 @@ CBlockIndex * BlockManager::InsertBlockIndex(const uint256& hash)
 
 bool BlockManager::LoadBlockIndex(
     const Consensus::Params& consensus_params,
-    std::set<CBlockIndex*, CBlockIndexWorkComparator>& block_index_candidates)
+    ChainstateManager& chainman)
 {
     if (!m_block_tree_db->LoadBlockIndexGuts(consensus_params, [this](const uint256& hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main) { return this->InsertBlockIndex(hash); })) {
         return false;
@@ -3622,17 +3622,29 @@ bool BlockManager::LoadBlockIndex(
         vSortedByHeight.push_back(std::make_pair(pindex->nHeight, pindex));
     }
     sort(vSortedByHeight.begin(), vSortedByHeight.end());
+
+    // Have we yet seen a pindex->IsAssumedValid()? If so, account for the fact that all subsequent
+    // index entries rely on assumed-valid ancestors.
+    bool seen_assumed_valid{false};
+
     for (const std::pair<int, CBlockIndex*>& item : vSortedByHeight)
     {
         if (ShutdownRequested()) return false;
         CBlockIndex* pindex = item.second;
         pindex->nChainWork = (pindex->pprev ? pindex->pprev->nChainWork : 0) + GetBlockProof(*pindex);
         pindex->nTimeMax = (pindex->pprev ? std::max(pindex->pprev->nTimeMax, pindex->nTime) : pindex->nTime);
-        // We can link the chain of blocks for which we've received transactions at some point.
+
+        if (!seen_assumed_valid && pindex->IsAssumedValid()) {
+            seen_assumed_valid = true;
+        }
+
+        // We can link the chain of blocks for which we've received transactions at some point, or
+        // blocks that are assumed-valid on the basis of snapshot load (see
+        // PopulateAndValidateSnapshot()).
         // Pruned nodes may have deleted the block.
         if (pindex->nTx > 0) {
             if (pindex->pprev) {
-                if (pindex->pprev->HaveTxsDownloaded()) {
+                if (pindex->pprev->nChainTx > 0) {
                     pindex->nChainTx = pindex->pprev->nChainTx + pindex->nTx;
                 } else {
                     pindex->nChainTx = 0;
@@ -3649,7 +3661,25 @@ bool BlockManager::LoadBlockIndex(
         if (pindex->IsAssumedValid() ||
                 (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) &&
                  (pindex->HaveTxsDownloaded() || pindex->pprev == nullptr))) {
-            block_index_candidates.insert(pindex);
+            for (CChainState* chainstate : chainman.GetAll()) {
+                // Only add blocks which are assumed-valid to chainstates which
+                // explicitly allow a reliance on assumed-valid blocks.
+                //
+                // Note: the loop over `vSortedByHeight` could ceteris paribus mean that
+                // we are possibly considering a block which has a height
+                // higher than the assumed-valid region but is not itself
+                // reliant on assumed-valid ancestors. In practice this will
+                // not happen because assumed-valid blocks are buried fairly
+                // deeply in the valid chain.
+                if (seen_assumed_valid) {
+                    if (chainstate->reliesOnAssumedValid()) {
+                        chainstate->setBlockIndexCandidates.insert(pindex);
+                    }
+                } else {
+                    // When blockindex doesn't rely on assumedvalid blocks, add it to all chainstates.
+                    chainstate->setBlockIndexCandidates.insert(pindex);
+                }
+            }
         }
         if (pindex->nStatus & BLOCK_FAILED_MASK && (!pindexBestInvalid || pindex->nChainWork > pindexBestInvalid->nChainWork))
             pindexBestInvalid = pindex;
@@ -3673,11 +3703,9 @@ void BlockManager::Unload() {
     m_block_index.clear();
 }
 
-bool BlockManager::LoadBlockIndexDB(std::set<CBlockIndex*, CBlockIndexWorkComparator>& setBlockIndexCandidates)
+bool BlockManager::LoadBlockIndexDB(ChainstateManager& chainman)
 {
-    if (!LoadBlockIndex(
-            ::Params().GetConsensus(),
-            setBlockIndexCandidates)) {
+    if (!LoadBlockIndex(::Params().GetConsensus(), chainman)) {
         return false;
     }
 
@@ -4023,7 +4051,7 @@ bool ChainstateManager::LoadBlockIndex()
     // Load block index from databases
     bool needs_init = fReindex;
     if (!fReindex) {
-        bool ret = m_blockman.LoadBlockIndexDB(ActiveChainstate().setBlockIndexCandidates);
+        bool ret = m_blockman.LoadBlockIndexDB(*this);
         if (!ret) return false;
         needs_init = m_blockman.m_block_index.empty();
     }
