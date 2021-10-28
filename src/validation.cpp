@@ -5350,3 +5350,16 @@ bool CChainState::removeSnapshotDatadir()
     // will detect it on subsequent statups and get confused.
     return destroyed && !fs::exists(snapshot_datadir);
 }
+
+CBlockIndex* ChainstateManager::getSnapshotBaseBlock()
+{
+    auto blockhash_op = SnapshotBlockhash();
+    if (!blockhash_op) return nullptr;
+    return m_blockman.LookupBlockIndex(*blockhash_op);
+}
+
+std::optional<int> ChainstateManager::getSnapshotBaseHeight()
+{
+    CBlockIndex* base = getSnapshotBaseBlock();
+    return base ? std::make_optional(base->nHeight) : std::nullopt;
+}
