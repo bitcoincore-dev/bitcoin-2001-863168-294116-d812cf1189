@@ -5218,3 +5218,23 @@ ChainstateManager::~ChainstateManager()
         i.clear();
     }
 }
+
+std::optional<const CBlockIndex> ChainstateManager::GetSnapshotBaseBlock() const
+{
+    AssertLockHeld(::cs_main);
+    const auto blockhash_op{this->SnapshotBlockhash()};
+    if (!blockhash_op) return {};
+    const CBlockIndex* found = m_blockman.LookupBlockIndex(*blockhash_op);
+
+    if (found) {
+        return *found;
+    }
+    return {};
+}
+
+std::optional<int> ChainstateManager::GetSnapshotBaseHeight() const
+{
+    AssertLockHeld(::cs_main);
+    auto base{this->GetSnapshotBaseBlock()};
+    return base ? std::make_optional(base->nHeight) : std::nullopt;
+}
