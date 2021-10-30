@@ -167,6 +167,10 @@ public:
     //! Add a batch of checks to the queue
     void Add(std::vector<T>& vChecks)
     {
+        if (vChecks.empty()) {
+            return;
+        }
+
         unsigned int num_of_new_checks;
         {
             LOCK(m_mutex);
@@ -178,10 +182,11 @@ public:
             nTodo += num_of_new_checks;
         }
 
-        if (num_of_new_checks == 1)
+        if (num_of_new_checks == 1) {
             m_worker_cv.notify_one();
-        else if (num_of_new_checks > 1)
+        } else {
             m_worker_cv.notify_all();
+        }
     }
 
     //! Stop all of the worker threads.
