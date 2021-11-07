@@ -92,7 +92,8 @@ fi
 
 EXIT_CODE=0
 
-if ! PYTHONWARNINGS="ignore" flake8 --ignore=B,C,E,F,I,N,W --select=$(IFS=","; echo "${enabled[*]}") $(
+# shellcheck disable=SC2046
+if ! PYTHONWARNINGS="ignore" flake8 --ignore=B,C,E,F,I,N,W --select="$(IFS=","; echo "${enabled[*]}")" $(
     if [[ $# == 0 ]]; then
         git ls-files "*.py"
     else
@@ -102,6 +103,7 @@ if ! PYTHONWARNINGS="ignore" flake8 --ignore=B,C,E,F,I,N,W --select=$(IFS=","; e
     EXIT_CODE=1
 fi
 
+# shellcheck disable=SC2046
 if ! mypy --show-error-codes $(git ls-files "test/functional/*.py" "contrib/devtools/*.py"); then
     EXIT_CODE=1
 fi
