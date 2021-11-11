@@ -752,8 +752,8 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
 
     def is_cli_available(self):
         """Checks whether bitcoin-cli is available."""
-        if os.getenv("BITCOINCLI", "__NOT_SET__") != "__NOT_SET__":
-            return True
+        if "BITCOINCLI" in os.environ:
+            return os.environ["BITCOINCLI"]
 
         return self.config["components"].getboolean("ENABLE_CLI")
 
