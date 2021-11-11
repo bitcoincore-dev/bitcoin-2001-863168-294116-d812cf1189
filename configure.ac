@@ -1311,8 +1311,6 @@ if test x$system_leveldb != xno; then
   done
   LIBS="$TEMP_LIBS"
   CPPFLAGS="$TEMP_CPPFLAGS"
-else
-  AC_DEFINE(EMBEDDED_LEVELDB, 1, [Define this symbol when the embedded copy of LevelDB is being used])
 fi
 AM_CONDITIONAL([EMBEDDED_LEVELDB],[test x$build_leveldb = xyes])
 AC_SUBST(LEVELDB_CPPFLAGS)
