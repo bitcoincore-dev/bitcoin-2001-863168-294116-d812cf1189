@@ -7,6 +7,7 @@ FUZZ_TARGETS = \
   test/fuzz/addr_info_deserialize \
   test/fuzz/addrdb \
   test/fuzz/address_deserialize \
+  test/fuzz/addrman \
   test/fuzz/addrman_deserialize \
   test/fuzz/asmap \
   test/fuzz/asmap_direct \
@@ -35,6 +36,7 @@ FUZZ_TARGETS = \
   test/fuzz/checkqueue \
   test/fuzz/coins_deserialize \
   test/fuzz/coins_view \
+  test/fuzz/connman \
   test/fuzz/crypto \
   test/fuzz/crypto_aes256 \
   test/fuzz/crypto_aes256cbc \
@@ -129,6 +131,7 @@ FUZZ_TARGETS = \
   test/fuzz/script_deserialize \
   test/fuzz/script_flags \
   test/fuzz/script_interpreter \
+  test/fuzz/script_assets_test_minimizer \
   test/fuzz/script_ops \
   test/fuzz/script_sigcache \
   test/fuzz/script_sign \
@@ -151,6 +154,7 @@ FUZZ_TARGETS = \
   test/fuzz/tx_in_deserialize \
   test/fuzz/tx_out \
   test/fuzz/txoutcompressor_deserialize \
+  test/fuzz/txrequest \
   test/fuzz/txundo_deserialize \
   test/fuzz/uint160_deserialize \
   test/fuzz/uint256_deserialize
@@ -235,7 +239,6 @@ BITCOIN_TESTS =\
   test/interfaces_tests.cpp \
   test/key_io_tests.cpp \
   test/key_tests.cpp \
-  test/limitedmap_tests.cpp \
   test/logging_tests.cpp \
   test/dbwrapper_tests.cpp \
   test/validation_tests.cpp \
@@ -275,6 +278,7 @@ BITCOIN_TESTS =\
   test/torcontrol_tests.cpp \
   test/transaction_tests.cpp \
   test/txindex_tests.cpp \
+  test/txrequest_tests.cpp \
   test/txvalidation_tests.cpp \
   test/txvalidationcache_tests.cpp \
   test/uint256_tests.cpp \
@@ -315,7 +319,7 @@ test_test_bitcoin_LDADD += $(LIBBITCOIN_SERVER) $(LIBBITCOIN_CLI) $(LIBBITCOIN_C
   $(LIBLEVELDB) $(LIBLEVELDB_SSE42) $(LIBMEMENV) $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(LIBSECP256K1) $(EVENT_LIBS) $(EVENT_PTHREADS_LIBS)
 test_test_bitcoin_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
-test_test_bitcoin_LDADD += $(BDB_LIBS) $(MINIUPNPC_LIBS)
+test_test_bitcoin_LDADD += $(BDB_LIBS) $(MINIUPNPC_LIBS) $(SQLITE_LIBS)
 test_test_bitcoin_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS) -static
 
 if ENABLE_ZMQ
@@ -349,6 +353,12 @@ test_fuzz_address_deserialize_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 test_fuzz_address_deserialize_LDADD = $(FUZZ_SUITE_LD_COMMON)
 test_fuzz_address_deserialize_LDFLAGS = $(FUZZ_SUITE_LDFLAGS_COMMON)
 test_fuzz_address_deserialize_SOURCES = test/fuzz/deserialize.cpp
+
+test_fuzz_addrman_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+test_fuzz_addrman_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+test_fuzz_addrman_LDADD = $(FUZZ_SUITE_LD_COMMON)
+test_fuzz_addrman_LDFLAGS = $(FUZZ_SUITE_LDFLAGS_COMMON)
+test_fuzz_addrman_SOURCES = test/fuzz/addrman.cpp
 
 test_fuzz_addrman_deserialize_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) -DADDRMAN_DESERIALIZE=1
 test_fuzz_addrman_deserialize_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -517,6 +527,12 @@ test_fuzz_coins_view_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 test_fuzz_coins_view_LDADD = $(FUZZ_SUITE_LD_COMMON)
 test_fuzz_coins_view_LDFLAGS = $(FUZZ_SUITE_LDFLAGS_COMMON)
 test_fuzz_coins_view_SOURCES = test/fuzz/coins_view.cpp
+
+test_fuzz_connman_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+test_fuzz_connman_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+test_fuzz_connman_LDADD = $(FUZZ_SUITE_LD_COMMON)
+test_fuzz_connman_LDFLAGS = $(FUZZ_SUITE_LDFLAGS_COMMON)
+test_fuzz_connman_SOURCES = test/fuzz/connman.cpp
 
 test_fuzz_crypto_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 test_fuzz_crypto_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -1082,6 +1098,12 @@ test_fuzz_script_interpreter_LDADD = $(FUZZ_SUITE_LD_COMMON)
 test_fuzz_script_interpreter_LDFLAGS = $(FUZZ_SUITE_LDFLAGS_COMMON)
 test_fuzz_script_interpreter_SOURCES = test/fuzz/script_interpreter.cpp
 
+test_fuzz_script_assets_test_minimizer_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+test_fuzz_script_assets_test_minimizer_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+test_fuzz_script_assets_test_minimizer_LDADD = $(FUZZ_SUITE_LD_COMMON)
+test_fuzz_script_assets_test_minimizer_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+test_fuzz_script_assets_test_minimizer_SOURCES = test/fuzz/script_assets_test_minimizer.cpp
+
 test_fuzz_script_ops_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 test_fuzz_script_ops_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 test_fuzz_script_ops_LDADD = $(FUZZ_SUITE_LD_COMMON)
@@ -1213,6 +1235,12 @@ test_fuzz_txoutcompressor_deserialize_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 test_fuzz_txoutcompressor_deserialize_LDADD = $(FUZZ_SUITE_LD_COMMON)
 test_fuzz_txoutcompressor_deserialize_LDFLAGS = $(FUZZ_SUITE_LDFLAGS_COMMON)
 test_fuzz_txoutcompressor_deserialize_SOURCES = test/fuzz/deserialize.cpp
+
+test_fuzz_txrequest_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+test_fuzz_txrequest_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+test_fuzz_txrequest_LDADD = $(FUZZ_SUITE_LD_COMMON)
+test_fuzz_txrequest_LDFLAGS = $(FUZZ_SUITE_LDFLAGS_COMMON)
+test_fuzz_txrequest_SOURCES = test/fuzz/txrequest.cpp
 
 test_fuzz_txundo_deserialize_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) -DTXUNDO_DESERIALIZE=1
 test_fuzz_txundo_deserialize_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)

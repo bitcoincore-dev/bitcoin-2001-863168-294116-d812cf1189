@@ -340,8 +340,9 @@ RPCHelpMan importprunedfunds()
     CWallet* const pwallet = wallet.get();
 
     CMutableTransaction tx;
-    if (!DecodeHexTx(tx, request.params[0].get_str()))
-        throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
+    if (!DecodeHexTx(tx, request.params[0].get_str())) {
+        throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed. Make sure the tx has at least one input.");
+    }
     uint256 hashTx = tx.GetHash();
 
     CDataStream ssMB(ParseHexV(request.params[1], "proof"), SER_NETWORK, PROTOCOL_VERSION);
@@ -932,6 +933,7 @@ static std::string RecurseImportData(const CScript& script, ImportData& import_d
         return "unspendable script";
     case TxoutType::NONSTANDARD:
     case TxoutType::WITNESS_UNKNOWN:
+    case TxoutType::WITNESS_V1_TAPROOT:
     default:
         return "unrecognized script";
     }
@@ -1521,7 +1523,9 @@ static UniValue ProcessDescriptorImport(CWallet * const pwallet, const UniValue&
         // Need to ExpandPrivate to check if private keys are available for all pubkeys
         FlatSigningProvider expand_keys;
         std::vector<CScript> scripts;
-        parsed_desc->Expand(0, keys, scripts, expand_keys);
+        if (!parsed_desc->Expand(0, keys, scripts, expand_keys)) {
+            throw JSONRPCError(RPC_WALLET_ERROR, "Cannot expand descriptor. Probably because of hardened derivations without private keys provided");
+        }
         parsed_desc->ExpandPrivate(0, keys, expand_keys);
 
         // Check if all private keys are provided
@@ -1557,7 +1561,7 @@ static UniValue ProcessDescriptorImport(CWallet * const pwallet, const UniValue&
         }
 
         // Add descriptor to the wallet
-        auto spk_manager = pwallet->AddWalletDescriptor(w_desc, keys, label);
+        auto spk_manager = pwallet->AddWalletDescriptor(w_desc, keys, label, internal);
         if (spk_manager == nullptr) {
             throw JSONRPCError(RPC_WALLET_ERROR, strprintf("Could not add descriptor '%s'", descriptor));
         }

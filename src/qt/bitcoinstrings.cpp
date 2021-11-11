@@ -39,6 +39,9 @@ QT_TRANSLATE_NOOP("bitcoin-core", ""
 "Invalid amount for -maxtxfee=<amount>: '%s' (must be at least the minrelay "
 "fee of %s to prevent stuck transactions)"),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
+"More than one onion bind address is provided. Using %s for the automatically "
+"created Tor onion service."),
+QT_TRANSLATE_NOOP("bitcoin-core", ""
 "Please check that your computer's date and time are correct! If your clock "
 "is wrong, %s will not work properly."),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
@@ -49,6 +52,15 @@ QT_TRANSLATE_NOOP("bitcoin-core", ""
 QT_TRANSLATE_NOOP("bitcoin-core", ""
 "Prune: last wallet synchronisation goes beyond pruned data. You need to -"
 "reindex (download the whole blockchain again in case of pruned node)"),
+QT_TRANSLATE_NOOP("bitcoin-core", ""
+"SQLiteDatabase: Failed to prepare the statement to fetch sqlite wallet "
+"schema version: %s"),
+QT_TRANSLATE_NOOP("bitcoin-core", ""
+"SQLiteDatabase: Failed to prepare the statement to fetch the application id: "
+"%s"),
+QT_TRANSLATE_NOOP("bitcoin-core", ""
+"SQLiteDatabase: Unknown sqlite wallet schema version %d. Only version %d is "
+"supported"),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
 "The block database contains a block which appears to be from the future. "
 "This may be due to your computer's date and time being set incorrectly. Only "
@@ -117,7 +129,6 @@ QT_TRANSLATE_NOOP("bitcoin-core", "Error loading %s: Private keys can only be di
 QT_TRANSLATE_NOOP("bitcoin-core", "Error loading %s: Wallet corrupted"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error loading %s: Wallet requires newer version of %s"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error loading block database"),
-QT_TRANSLATE_NOOP("bitcoin-core", "Error loading wallet %s. Duplicate -wallet filename specified."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error opening block database"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error reading from database, shutting down."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error upgrading chainstate database"),
@@ -125,7 +136,9 @@ QT_TRANSLATE_NOOP("bitcoin-core", "Error: Disk space is low for %s"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error: Keypool ran out, please call keypoolrefill first"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Failed to listen on any port. Use -listen=0 if you want this."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Failed to rescan the wallet during initialization"),
+QT_TRANSLATE_NOOP("bitcoin-core", "Failed to verify database"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Fee rate (%s) is lower than the minimum fee rate setting (%s)"),
+QT_TRANSLATE_NOOP("bitcoin-core", "Ignoring duplicate -wallet %s."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Importing..."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Incorrect or no genesis block found. Wrong datadir for network?"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Initialization sanity check failed. %s is shutting down."),
@@ -153,6 +166,12 @@ QT_TRANSLATE_NOOP("bitcoin-core", "Reducing -maxconnections from %d to %d, becau
 QT_TRANSLATE_NOOP("bitcoin-core", "Replaying blocks..."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Rescanning..."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Rewinding blocks..."),
+QT_TRANSLATE_NOOP("bitcoin-core", "SQLiteDatabase: Failed to execute statement to verify database: %s"),
+QT_TRANSLATE_NOOP("bitcoin-core", "SQLiteDatabase: Failed to fetch sqlite wallet schema version: %s"),
+QT_TRANSLATE_NOOP("bitcoin-core", "SQLiteDatabase: Failed to fetch the application id: %s"),
+QT_TRANSLATE_NOOP("bitcoin-core", "SQLiteDatabase: Failed to prepare statement to verify database: %s"),
+QT_TRANSLATE_NOOP("bitcoin-core", "SQLiteDatabase: Failed to read database verification error: %s"),
+QT_TRANSLATE_NOOP("bitcoin-core", "SQLiteDatabase: Unexpected application id. Expected %u, got %u"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Section [%s] is not recognized."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Signing transaction failed"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Specified -walletdir \"%s\" does not exist"),

@@ -86,11 +86,13 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
 
-        // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000e1ab5ec9348e9f4b8eb8154");
+        // Deployment of Taproot (BIPs 340-342)
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].bit = 2;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = 1199145601; // January 1, 2008
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = 1230767999; // December 31, 2008
 
-        // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0000000000000000000f2adce67e49b0b6bdeb9de8b7c3d7e93b21e7fc1e819d"); // 623950
+        consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000001533efd8d716a517fe2c5008");
+        consensus.defaultAssumeValid = uint256S("0x0000000000000000000b9d2ec5a352ecba0592946514a92f14319dc2b367fc72"); // 654683
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -103,8 +105,8 @@ public:
         pchMessageStart[3] = 0xd9;
         nDefaultPort = 8333;
         nPruneAfterHeight = 100000;
-        m_assumed_blockchain_size = 320;
-        m_assumed_chain_state_size = 4;
+        m_assumed_blockchain_size = 350;
+        m_assumed_chain_state_size = 6;
 
         genesis = CreateGenesisBlock(1231006505, 2083236893, 0x1d00ffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
@@ -160,10 +162,10 @@ public:
         };
 
         chainTxData = ChainTxData{
-            // Data from RPC: getchaintxstats 4096 0000000000000000000f2adce67e49b0b6bdeb9de8b7c3d7e93b21e7fc1e819d
-            /* nTime    */ 1585764811,
-            /* nTxCount */ 517186863,
-            /* dTxRate  */ 3.305709665792344,
+            // Data from RPC: getchaintxstats 4096 0000000000000000000b9d2ec5a352ecba0592946514a92f14319dc2b367fc72
+            /* nTime    */ 1603995752,
+            /* nTxCount */ 582083445,
+            /* dTxRate  */ 3.508976121410527,
         };
     }
 };
@@ -197,11 +199,13 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
 
-        // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000001495c1d5a01e2af8a23");
+        // Deployment of Taproot (BIPs 340-342)
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].bit = 2;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = 1199145601; // January 1, 2008
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = 1230767999; // December 31, 2008
 
-        // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x000000000000056c49030c174179b52a928c870e6e8a822c75973b7970cfbd01"); // 1692000
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000001db6ec4ac88cf2272c6");
+        consensus.defaultAssumeValid = uint256S("0x000000000000006433d1efec504c53ca332b64963c425395515b01977bd7b3b0"); // 1864000
 
         pchMessageStart[0] = 0x0b;
         pchMessageStart[1] = 0x11;
@@ -247,10 +251,10 @@ public:
         };
 
         chainTxData = ChainTxData{
-            // Data from RPC: getchaintxstats 4096 000000000000056c49030c174179b52a928c870e6e8a822c75973b7970cfbd01
-            /* nTime    */ 1585561140,
-            /* nTxCount */ 13483,
-            /* dTxRate  */ 0.08523187013249722,
+            // Data from RPC: getchaintxstats 4096 000000000000006433d1efec504c53ca332b64963c425395515b01977bd7b3b0
+            /* nTime    */ 1603359686,
+            /* nTxCount */ 58090238,
+            /* dTxRate  */ 0.1232886622799463,
         };
     }
 };
@@ -270,15 +274,15 @@ public:
             vSeeds.emplace_back("2a01:7c8:d005:390::5");
             vSeeds.emplace_back("ntv3mtqw5wt63red.onion:38333");
 
-            consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000d145533ce");
-            consensus.defaultAssumeValid = uint256S("0x00000128807d9175c494e24d805fc7854f7d79aa965cbb128342ad8b70cecfa5"); // 5348
+            consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000000000000019fd16269a");
+            consensus.defaultAssumeValid = uint256S("0x0000002a1de0f46379358c1fd09906f7ac59adf3712323ed90eb59e4c183c020"); // 9434
             m_assumed_blockchain_size = 1;
             m_assumed_chain_state_size = 0;
             chainTxData = ChainTxData{
-                // Data from RPC: getchaintxstats 4096 00000128807d9175c494e24d805fc7854f7d79aa965cbb128342ad8b70cecfa5
-                /* nTime    */ 1601382000,
-                /* nTxCount */ 5435,
-                /* dTxRate  */ 0.001898346323372538,
+                // Data from RPC: getchaintxstats 4096 0000002a1de0f46379358c1fd09906f7ac59adf3712323ed90eb59e4c183c020
+                /* nTime    */ 1603986000,
+                /* nTxCount */ 9582,
+                /* dTxRate  */ 0.00159272030651341,
             };
         } else {
             const auto signet_challenge = args.GetArgs("-signetchallenge");
@@ -287,6 +291,8 @@ public:
             }
             bin = ParseHex(signet_challenge[0]);
 
+            consensus.nMinimumChainWork = uint256{};
+            consensus.defaultAssumeValid = uint256{};
             m_assumed_blockchain_size = 0;
             m_assumed_chain_state_size = 0;
             chainTxData = ChainTxData{
@@ -305,7 +311,9 @@ public:
         consensus.signet_blocks = true;
         consensus.signet_challenge.assign(bin.begin(), bin.end());
         consensus.nSubsidyHalvingInterval = 210000;
+        consensus.BIP16Exception = uint256{};
         consensus.BIP34Height = 1;
+        consensus.BIP34Hash = uint256{};
         consensus.BIP65Height = 1;
         consensus.BIP66Height = 1;
         consensus.CSVHeight = 1;
@@ -314,12 +322,18 @@ public:
         consensus.nPowTargetSpacing = 10 * 60;
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 1916;
-        consensus.nMinerConfirmationWindow = 2016;
+        consensus.nRuleChangeActivationThreshold = 1916; // 95% of 2016
+        consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.MinBIP9WarningHeight = 0;
         consensus.powLimit = uint256S("00000377ae000000000000000000000000000000000000000000000000000000");
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
+
+        // Activation of Taproot (BIPs 340-342)
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].bit = 2;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = Consensus::BIP9Deployment::ALWAYS_ACTIVE;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
 
         // message start is defined as the first 4 bytes of the sha256d of the block script
         CHashWriter h(SER_DISK, 0);
@@ -380,12 +394,12 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].bit = 2;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = Consensus::BIP9Deployment::ALWAYS_ACTIVE;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
 
-        // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x00");
-
-        // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x00");
+        consensus.nMinimumChainWork = uint256{};
+        consensus.defaultAssumeValid = uint256{};
 
         pchMessageStart[0] = 0xfa;
         pchMessageStart[1] = 0xbf;

@@ -65,17 +65,22 @@ bool VerifyWallets(interfaces::Chain& chain)
         const fs::path path = fs::absolute(wallet_file, GetWalletDir());
 
         if (!wallet_paths.insert(path).second) {
-            chain.initError(strprintf(_("Error loading wallet %s. Duplicate -wallet filename specified."), wallet_file));
-            return false;
+            chain.initWarning(strprintf(_("Ignoring duplicate -wallet %s."), wallet_file));
+            continue;
         }
 
         DatabaseOptions options;
         DatabaseStatus status;
+        options.require_existing = true;
         options.verify = true;
         bilingual_str error_string;
         if (!MakeWalletDatabase(wallet_file, options, status, error_string)) {
-            chain.initError(error_string);
-            return false;
+            if (status == DatabaseStatus::FAILED_NOT_FOUND) {
+                chain.initWarning(Untranslated(strprintf("Skipping -wallet path that doesn't exist. %s\n", error_string.original)));
+            } else {
+                chain.initError(error_string);
+                return false;
+            }
         }
     }
 
@@ -85,13 +90,21 @@ bool VerifyWallets(interfaces::Chain& chain)
 bool LoadWallets(interfaces::Chain& chain)
 {
     try {
+        std::set<fs::path> wallet_paths;
         for (const std::string& name : gArgs.GetArgs("-wallet")) {
+            if (!wallet_paths.insert(name).second) {
+                continue;
+            }
             DatabaseOptions options;
             DatabaseStatus status;
+            options.require_existing = true;
             options.verify = false; // No need to verify, assuming verified earlier in VerifyWallets()
             bilingual_str error;
             std::vector<bilingual_str> warnings;
             std::unique_ptr<WalletDatabase> database = MakeWalletDatabase(name, options, status, error);
+            if (!database && status == DatabaseStatus::FAILED_NOT_FOUND) {
+                continue;
+            }
             std::shared_ptr<CWallet> pwallet = database ? CWallet::Create(chain, name, std::move(database), options.create_flags, error, warnings) : nullptr;
             if (!warnings.empty()) chain.initWarning(Join(warnings, Untranslated("\n")));
             if (!pwallet) {

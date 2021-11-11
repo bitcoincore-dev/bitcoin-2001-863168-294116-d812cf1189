@@ -185,21 +185,60 @@ BOOST_AUTO_TEST_CASE(cnode_simple_test)
     CAddress addr = CAddress(CService(ipv4Addr, 7777), NODE_NETWORK);
     std::string pszDest;
 
-    std::unique_ptr<CNode> pnode1 = MakeUnique<CNode>(id++, NODE_NETWORK, height, hSocket, addr, 0, 0, CAddress(), pszDest, ConnectionType::OUTBOUND_FULL_RELAY);
+    std::unique_ptr<CNode> pnode1 = MakeUnique<CNode>(
+        id++, NODE_NETWORK, height, hSocket, addr,
+        /* nKeyedNetGroupIn = */ 0,
+        /* nLocalHostNonceIn = */ 0,
+        CAddress(), pszDest, ConnectionType::OUTBOUND_FULL_RELAY);
     BOOST_CHECK(pnode1->IsFullOutboundConn() == true);
     BOOST_CHECK(pnode1->IsManualConn() == false);
     BOOST_CHECK(pnode1->IsBlockOnlyConn() == false);
     BOOST_CHECK(pnode1->IsFeelerConn() == false);
     BOOST_CHECK(pnode1->IsAddrFetchConn() == false);
     BOOST_CHECK(pnode1->IsInboundConn() == false);
+    BOOST_CHECK_EQUAL(pnode1->ConnectedThroughNetwork(), Network::NET_IPV4);
 
-    std::unique_ptr<CNode> pnode2 = MakeUnique<CNode>(id++, NODE_NETWORK, height, hSocket, addr, 1, 1, CAddress(), pszDest, ConnectionType::INBOUND);
+    std::unique_ptr<CNode> pnode2 = MakeUnique<CNode>(
+        id++, NODE_NETWORK, height, hSocket, addr,
+        /* nKeyedNetGroupIn = */ 1,
+        /* nLocalHostNonceIn = */ 1,
+        CAddress(), pszDest, ConnectionType::INBOUND,
+        /* inbound_onion = */ false);
     BOOST_CHECK(pnode2->IsFullOutboundConn() == false);
     BOOST_CHECK(pnode2->IsManualConn() == false);
     BOOST_CHECK(pnode2->IsBlockOnlyConn() == false);
     BOOST_CHECK(pnode2->IsFeelerConn() == false);
     BOOST_CHECK(pnode2->IsAddrFetchConn() == false);
     BOOST_CHECK(pnode2->IsInboundConn() == true);
+    BOOST_CHECK_EQUAL(pnode2->ConnectedThroughNetwork(), Network::NET_IPV4);
+
+    std::unique_ptr<CNode> pnode3 = MakeUnique<CNode>(
+        id++, NODE_NETWORK, height, hSocket, addr,
+        /* nKeyedNetGroupIn = */ 0,
+        /* nLocalHostNonceIn = */ 0,
+        CAddress(), pszDest, ConnectionType::OUTBOUND_FULL_RELAY,
+        /* inbound_onion = */ true);
+    BOOST_CHECK(pnode3->IsFullOutboundConn() == true);
+    BOOST_CHECK(pnode3->IsManualConn() == false);
+    BOOST_CHECK(pnode3->IsBlockOnlyConn() == false);
+    BOOST_CHECK(pnode3->IsFeelerConn() == false);
+    BOOST_CHECK(pnode3->IsAddrFetchConn() == false);
+    BOOST_CHECK(pnode3->IsInboundConn() == false);
+    BOOST_CHECK_EQUAL(pnode3->ConnectedThroughNetwork(), Network::NET_IPV4);
+
+    std::unique_ptr<CNode> pnode4 = MakeUnique<CNode>(
+        id++, NODE_NETWORK, height, hSocket, addr,
+        /* nKeyedNetGroupIn = */ 1,
+        /* nLocalHostNonceIn = */ 1,
+        CAddress(), pszDest, ConnectionType::INBOUND,
+        /* inbound_onion = */ true);
+    BOOST_CHECK(pnode4->IsFullOutboundConn() == false);
+    BOOST_CHECK(pnode4->IsManualConn() == false);
+    BOOST_CHECK(pnode4->IsBlockOnlyConn() == false);
+    BOOST_CHECK(pnode4->IsFeelerConn() == false);
+    BOOST_CHECK(pnode4->IsAddrFetchConn() == false);
+    BOOST_CHECK(pnode4->IsInboundConn() == true);
+    BOOST_CHECK_EQUAL(pnode4->ConnectedThroughNetwork(), Network::NET_ONION);
 }
 
 BOOST_AUTO_TEST_CASE(cnetaddr_basic)
@@ -212,6 +251,7 @@ BOOST_AUTO_TEST_CASE(cnetaddr_basic)
     BOOST_REQUIRE(addr.IsIPv4());
 
     BOOST_CHECK(addr.IsBindAny());
+    BOOST_CHECK(addr.IsAddrV1Compatible());
     BOOST_CHECK_EQUAL(addr.ToString(), "0.0.0.0");
 
     // IPv4, INADDR_NONE
@@ -220,6 +260,7 @@ BOOST_AUTO_TEST_CASE(cnetaddr_basic)
     BOOST_REQUIRE(addr.IsIPv4());
 
     BOOST_CHECK(!addr.IsBindAny());
+    BOOST_CHECK(addr.IsAddrV1Compatible());
     BOOST_CHECK_EQUAL(addr.ToString(), "255.255.255.255");
 
     // IPv4, casual
@@ -228,6 +269,7 @@ BOOST_AUTO_TEST_CASE(cnetaddr_basic)
     BOOST_REQUIRE(addr.IsIPv4());
 
     BOOST_CHECK(!addr.IsBindAny());
+    BOOST_CHECK(addr.IsAddrV1Compatible());
     BOOST_CHECK_EQUAL(addr.ToString(), "12.34.56.78");
 
     // IPv6, in6addr_any
@@ -236,6 +278,7 @@ BOOST_AUTO_TEST_CASE(cnetaddr_basic)
     BOOST_REQUIRE(addr.IsIPv6());
 
     BOOST_CHECK(addr.IsBindAny());
+    BOOST_CHECK(addr.IsAddrV1Compatible());
     BOOST_CHECK_EQUAL(addr.ToString(), "::");
 
     // IPv6, casual
@@ -244,6 +287,7 @@ BOOST_AUTO_TEST_CASE(cnetaddr_basic)
     BOOST_REQUIRE(addr.IsIPv6());
 
     BOOST_CHECK(!addr.IsBindAny());
+    BOOST_CHECK(addr.IsAddrV1Compatible());
     BOOST_CHECK_EQUAL(addr.ToString(), "1122:3344:5566:7788:9900:aabb:ccdd:eeff");
 
     // IPv6, scoped/link-local. See https://tools.ietf.org/html/rfc4007
@@ -271,6 +315,7 @@ BOOST_AUTO_TEST_CASE(cnetaddr_basic)
     BOOST_REQUIRE(addr.IsTor());
 
     BOOST_CHECK(!addr.IsBindAny());
+    BOOST_CHECK(addr.IsAddrV1Compatible());
     BOOST_CHECK_EQUAL(addr.ToString(), "6hzph5hv6337r6p2.onion");
 
     // TORv3
@@ -280,6 +325,7 @@ BOOST_AUTO_TEST_CASE(cnetaddr_basic)
     BOOST_REQUIRE(addr.IsTor());
 
     BOOST_CHECK(!addr.IsBindAny());
+    BOOST_CHECK(!addr.IsAddrV1Compatible());
     BOOST_CHECK_EQUAL(addr.ToString(), torv3_addr);
 
     // TORv3, broken, with wrong checksum
@@ -304,6 +350,7 @@ BOOST_AUTO_TEST_CASE(cnetaddr_basic)
     BOOST_REQUIRE(addr.IsInternal());
 
     BOOST_CHECK(!addr.IsBindAny());
+    BOOST_CHECK(addr.IsAddrV1Compatible());
     BOOST_CHECK_EQUAL(addr.ToString(), "esffpvrt3wpeaygy.internal");
 
     // Totally bogus
@@ -398,6 +445,7 @@ BOOST_AUTO_TEST_CASE(cnetaddr_unserialize_v2)
     s >> addr;
     BOOST_CHECK(addr.IsValid());
     BOOST_CHECK(addr.IsIPv4());
+    BOOST_CHECK(addr.IsAddrV1Compatible());
     BOOST_CHECK_EQUAL(addr.ToString(), "1.2.3.4");
     BOOST_REQUIRE(s.empty());
 
@@ -434,6 +482,7 @@ BOOST_AUTO_TEST_CASE(cnetaddr_unserialize_v2)
     s >> addr;
     BOOST_CHECK(addr.IsValid());
     BOOST_CHECK(addr.IsIPv6());
+    BOOST_CHECK(addr.IsAddrV1Compatible());
     BOOST_CHECK_EQUAL(addr.ToString(), "102:304:506:708:90a:b0c:d0e:f10");
     BOOST_REQUIRE(s.empty());
 
@@ -445,6 +494,7 @@ BOOST_AUTO_TEST_CASE(cnetaddr_unserialize_v2)
                                               // sha256(name)[0:10]
     s >> addr;
     BOOST_CHECK(addr.IsInternal());
+    BOOST_CHECK(addr.IsAddrV1Compatible());
     BOOST_CHECK_EQUAL(addr.ToString(), "zklycewkdo64v6wc.internal");
     BOOST_REQUIRE(s.empty());
 
@@ -480,6 +530,7 @@ BOOST_AUTO_TEST_CASE(cnetaddr_unserialize_v2)
     s >> addr;
     BOOST_CHECK(addr.IsValid());
     BOOST_CHECK(addr.IsTor());
+    BOOST_CHECK(addr.IsAddrV1Compatible());
     BOOST_CHECK_EQUAL(addr.ToString(), "6hzph5hv6337r6p2.onion");
     BOOST_REQUIRE(s.empty());
 
@@ -501,6 +552,7 @@ BOOST_AUTO_TEST_CASE(cnetaddr_unserialize_v2)
     s >> addr;
     BOOST_CHECK(addr.IsValid());
     BOOST_CHECK(addr.IsTor());
+    BOOST_CHECK(!addr.IsAddrV1Compatible());
     BOOST_CHECK_EQUAL(addr.ToString(),
                       "pg6mmjiyjmcrsslvykfwnntlaru7p5svn6y2ymmju6nubxndf4pscryd.onion");
     BOOST_REQUIRE(s.empty());
@@ -522,6 +574,8 @@ BOOST_AUTO_TEST_CASE(cnetaddr_unserialize_v2)
                            "f98232ae42d4b6fd2fa81952dfe36a87"));
     s >> addr;
     BOOST_CHECK(addr.IsValid());
+    BOOST_CHECK(addr.IsI2P());
+    BOOST_CHECK(!addr.IsAddrV1Compatible());
     BOOST_CHECK_EQUAL(addr.ToString(),
                       "ukeu3k5oycgaauneqgtnvselmt4yemvoilkln7jpvamvfx7dnkdq.b32.i2p");
     BOOST_REQUIRE(s.empty());
@@ -543,6 +597,8 @@ BOOST_AUTO_TEST_CASE(cnetaddr_unserialize_v2)
                            ));
     s >> addr;
     BOOST_CHECK(addr.IsValid());
+    BOOST_CHECK(addr.IsCJDNS());
+    BOOST_CHECK(!addr.IsAddrV1Compatible());
     BOOST_CHECK_EQUAL(addr.ToString(), "fc00:1:2:3:4:5:6:7");
     BOOST_REQUIRE(s.empty());
 
