@@ -12,13 +12,13 @@
 #include <consensus/validation.h>
 #include <crypto/sha256.h>
 #include <init.h>
-#include <init/chainstate.h> // for LoadChainstate
+#include <init/chainstate.h>
 #include <interfaces/chain.h>
 #include <miner.h>
 #include <net.h>
 #include <net_processing.h>
 #include <noui.h>
-#include <node/blockstorage.h> // for fReindex, fPruneMode
+#include <node/blockstorage.h>
 #include <policy/fees.h>
 #include <pow.h>
 #include <rpc/blockchain.h>
@@ -26,7 +26,7 @@
 #include <rpc/server.h>
 #include <scheduler.h>
 #include <script/sigcache.h>
-#include <shutdown.h> // for ShutdownRequested
+#include <shutdown.h>
 #include <streams.h>
 #include <txdb.h>
 #include <util/strencodings.h>

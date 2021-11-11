@@ -24,8 +24,8 @@
 #include <index/blockfilterindex.h>
 #include <index/coinstatsindex.h>
 #include <index/txindex.h>
-#include <init/caches.h> // for CalculateCacheSizes
-#include <init/chainstate.h> // for LoadChainstate
+#include <init/caches.h>
+#include <init/chainstate.h>
 #include <init/common.h>
 #include <interfaces/chain.h>
 #include <interfaces/init.h>
