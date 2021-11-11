@@ -14,7 +14,6 @@
 #include <compat.h>
 #include <crypto/siphash.h>
 #include <hash.h>
-#include <limitedmap.h>
 #include <net_permissions.h>
 #include <netaddress.h>
 #include <optional.h>
@@ -116,17 +115,12 @@ struct CSerializedNetMsg
     std::string m_type;
 };
 
-const std::vector<std::string> CONNECTION_TYPE_DOC{
-    "outbound-full-relay (default automatic connections)",
-    "block-relay-only (does not relay transactions or addresses)",
-    "inbound (initiated by the peer)",
-    "manual (added via addnode RPC or -addnode/-connect configuration options)",
-    "addr-fetch (short-lived automatic connection for soliciting addresses)",
-    "feeler (short-lived automatic connection for testing addresses)"};
-
 /** Different types of connections to a peer. This enum encapsulates the
  * information we have available at the time of opening or accepting the
- * connection. Aside from INBOUND, all types are initiated by us. */
+ * connection. Aside from INBOUND, all types are initiated by us.
+ *
+ * If adding or removing types, please update CONNECTION_TYPE_DOC in
+ * src/rpc/net.cpp. */
 enum class ConnectionType {
     /**
      * Inbound connections are those initiated by a peer. This is the only
@@ -174,7 +168,9 @@ enum class ConnectionType {
      * attacks. By not relaying transactions or addresses, these connections
      * are harder to detect by a third party, thus helping obfuscate the
      * network topology. We automatically attempt to open
-     * MAX_BLOCK_RELAY_ONLY_CONNECTIONS using addresses from our AddrMan.
+     * MAX_BLOCK_RELAY_ONLY_ANCHORS using addresses from our anchors.dat. Then
+     * addresses from our AddrMan if MAX_BLOCK_RELAY_ONLY_CONNECTIONS
+     * isn't reached yet.
      */
     BLOCK_RELAY,
 
@@ -253,6 +249,7 @@ public:
             LOCK(cs_vAddedNodes);
             vAddedNodes = connOptions.m_added_nodes;
         }
+        m_onion_binds = connOptions.onion_binds;
     }
 
     CConnman(uint64_t seed0, uint64_t seed1, bool network_active = true);
@@ -445,6 +442,12 @@ private:
     CNode* FindNode(const std::string& addrName);
     CNode* FindNode(const CService& addr);
 
+    /**
+     * Determine whether we're already connected to a given address, in order to
+     * avoid initiating duplicate connections.
+     */
+    bool AlreadyConnectedToAddress(const CAddress& addr);
+
     bool AttemptToEvictConnection();
     CNode* ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure, ConnectionType conn_type);
     void AddWhitelistPermissionFlags(NetPermissionFlags& flags, const CNetAddr &addr) const;
@@ -459,6 +462,11 @@ private:
     // Network stats
     void RecordBytesRecv(uint64_t bytes);
     void RecordBytesSent(uint64_t bytes);
+
+    /**
+     * Return vector of current BLOCK_RELAY peers.
+     */
+    std::vector<CAddress> GetCurrentBlockRelayOnlyConns() const;
 
     // Whether the node should be passed out in ForEach* callbacks
     static bool NodeFullyConnected(const CNode* pnode);
@@ -561,6 +569,12 @@ private:
     /** Pointer to this node's banman. May be nullptr - check existence before dereferencing. */
     BanMan* m_banman;
 
+    /**
+     * Addresses that were saved during the previous clean shutdown. We'll
+     * attempt to make block-relay-only connections to them.
+     */
+    std::vector<CAddress> m_anchors;
+
     /** SipHasher seeds for deterministic randomness */
     const uint64_t nSeed0, nSeed1;
 
@@ -586,6 +600,12 @@ private:
 
     std::atomic<int64_t> m_next_send_inv_to_incoming{0};
 
+    /**
+     * A vector of -bind=<address>:<port>=onion arguments each of which is
+     * an address and port that are designated for incoming Tor connections.
+     */
+    std::vector<CService> m_onion_binds;
+
     friend struct CConnmanTest;
     friend struct ConnmanTestMsg;
 };
@@ -604,7 +624,7 @@ public:
     virtual bool ProcessMessages(CNode* pnode, std::atomic<bool>& interrupt) = 0;
     virtual bool SendMessages(CNode* pnode) = 0;
     virtual void InitializeNode(CNode* pnode) = 0;
-    virtual void FinalizeNode(NodeId id, bool& update_connection_time) = 0;
+    virtual void FinalizeNode(const CNode& node, bool& update_connection_time) = 0;
 
 protected:
     /**
@@ -699,6 +719,8 @@ public:
     CAddress addr;
     // Bind address of our side of the connection
     CAddress addrBind;
+    // Name of the network the peer connected through
+    std::string m_network;
     uint32_t m_mapped_as;
     std::string m_conn_type_string;
 };
@@ -841,7 +863,6 @@ public:
 
     RecursiveMutex cs_sendProcessing;
 
-    std::deque<CInv> vRecvGetData;
     uint64_t nRecvBytes GUARDED_BY(cs_vRecv){0};
 
     std::atomic<int64_t> nLastSend{0};
@@ -867,6 +888,11 @@ public:
     bool m_legacyWhitelisted{false};
     bool fClient{false}; // set by version message
     bool m_limited_node{false}; //after BIP159, set by version message
+    /**
+     * Whether the peer has signaled support for receiving ADDRv2 (BIP155)
+     * messages, implying a preference to receive ADDRv2 instead of ADDR ones.
+     */
+    std::atomic_bool m_wants_addrv2{false};
     std::atomic_bool fSuccessfullyConnected{false};
     // Setting fDisconnect to true will cause the node to be disconnected the
     // next time DisconnectNodes() runs
@@ -938,6 +964,18 @@ public:
 
         assert(false);
     }
+
+    /**
+     * Get network the peer connected through.
+     *
+     * Returns Network::NET_ONION for *inbound* onion connections,
+     * and CNetAddr::GetNetClass() otherwise. The latter cannot be used directly
+     * because it doesn't detect the former, and it's not the responsibility of
+     * the CNetAddr class to know the actual network a peer is connected through.
+     *
+     * @return network the peer connected through.
+     */
+    Network ConnectedThroughNetwork() const;
 
 protected:
     mapMsgCmdSize mapSendBytesPerMsgCmd;
@@ -1018,9 +1056,7 @@ public:
     // Whether a ping is requested.
     std::atomic<bool> fPingQueued{false};
 
-    std::set<uint256> orphan_work_set;
-
-    CNode(NodeId id, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn, SOCKET hSocketIn, const CAddress &addrIn, uint64_t nKeyedNetGroupIn, uint64_t nLocalHostNonceIn, const CAddress &addrBindIn, const std::string &addrNameIn, ConnectionType conn_type_in);
+    CNode(NodeId id, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn, SOCKET hSocketIn, const CAddress &addrIn, uint64_t nKeyedNetGroupIn, uint64_t nLocalHostNonceIn, const CAddress &addrBindIn, const std::string &addrNameIn, ConnectionType conn_type_in, bool inbound_onion = false);
     ~CNode();
     CNode(const CNode&) = delete;
     CNode& operator=(const CNode&) = delete;
@@ -1058,6 +1094,10 @@ private:
     // Our address, as reported by the peer
     CService addrLocal GUARDED_BY(cs_addrLocal);
     mutable RecursiveMutex cs_addrLocal;
+
+    //! Whether this peer connected via our Tor onion service.
+    const bool m_inbound_onion{false};
+
 public:
 
     NodeId GetId() const {
@@ -1114,11 +1154,16 @@ public:
 
     void PushAddress(const CAddress& _addr, FastRandomContext &insecure_rand)
     {
+        // Whether the peer supports the address in `_addr`. For example,
+        // nodes that do not implement BIP155 cannot receive Tor v3 addresses
+        // because they require ADDRv2 (BIP155) encoding.
+        const bool addr_format_supported = m_wants_addrv2 || _addr.IsAddrV1Compatible();
+
         // Known checking here is only to save space from duplicates.
         // SendMessages will filter it again for knowns that were added
         // after addresses were pushed.
         assert(m_addr_known);
-        if (_addr.IsValid() && !m_addr_known->contains(_addr.GetKey())) {
+        if (_addr.IsValid() && !m_addr_known->contains(_addr.GetKey()) && addr_format_supported) {
             if (vAddrToSend.size() >= MAX_ADDR_TO_SEND) {
                 vAddrToSend[insecure_rand.randrange(vAddrToSend.size())] = _addr;
             } else {
