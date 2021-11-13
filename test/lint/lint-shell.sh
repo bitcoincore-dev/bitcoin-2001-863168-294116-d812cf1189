@@ -25,7 +25,8 @@ fi
 SHELLCHECK_CMD=(shellcheck --external-sources --check-sourced)
 EXCLUDE="--exclude=$(IFS=','; echo "${disabled[*]}")"
 SOURCED_FILES=$(git ls-files | xargs gawk '/^# shellcheck shell=/ {print FILENAME} {nextfile}')  # Check shellcheck directive used for sourced files
-if ! "${SHELLCHECK_CMD[@]}" "$EXCLUDE" $SOURCED_FILES $(git ls-files -- '*.sh' | grep -vE 'src/(leveldb|secp256k1|minisketch|univalue)/'); then
+mapfile -t GUIX_FILES < <(git ls-files contrib/guix contrib/shell | xargs gawk '/^#!\/usr\/bin\/env bash/ {print FILENAME} {nextfile}')
+if ! "${SHELLCHECK_CMD[@]}" "$EXCLUDE" $SOURCED_FILES "${GUIX_FILES[@]}" $(git ls-files -- '*.sh' | grep -vE 'src/(leveldb|secp256k1|minisketch|univalue)/'); then
     EXIT_CODE=1
 fi
 
