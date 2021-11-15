@@ -7,6 +7,8 @@
 
 #include <qt/guiutil.h>
 #include <qt/peertablemodel.h>
+#include <qt/mempool_tab/mempoolstats.h>
+#include <qt/mempool_tab/mempooldetail.h>
 
 #include <net.h>
 
@@ -64,10 +66,11 @@ public:
         INFO,
         CONSOLE,
         GRAPH,
+        MEMPOOL,
         PEERS
     };
 
-    std::vector<TabTypes> tabs() const { return {TabTypes::INFO, TabTypes::CONSOLE, TabTypes::GRAPH, TabTypes::PEERS}; }
+    std::vector<TabTypes> tabs() const { return {  TabTypes::INFO, TabTypes::CONSOLE, TabTypes::GRAPH, TabTypes::MEMPOOL, TabTypes::PEERS}; }
 
     QString tabTitle(TabTypes tab_type) const;
     QKeySequence tabShortcut(TabTypes tab_type) const;
