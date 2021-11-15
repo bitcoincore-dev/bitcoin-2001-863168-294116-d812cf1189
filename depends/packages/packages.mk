@@ -2,7 +2,7 @@ packages:=boost libevent
 
 qrencode_packages = qrencode
 
-qt_linux_packages:=qt expat libxcb xcb_proto libXau xproto freetype fontconfig libxkbcommon libffi
+qt_linux_packages:=qt expat libxcb xcb_proto libXau xproto freetype fontconfig libxkbcommon libffi wayland
 qt_android_packages=qt
 
 qt_darwin_packages=qt
