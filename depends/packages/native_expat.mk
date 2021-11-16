@@ -1,14 +1,13 @@
-package := expat
-$(package)_version := $(native_$(package)_version)
-$(package)_download_path := $(native_$(package)_download_path)
-$(package)_file_name := $(native_$(package)_file_name)
-$(package)_sha256_hash := $(native_$(package)_sha256_hash)
+package := native_expat
+$(package)_version := 2.4.1
+$(package)_download_path := https://github.com/libexpat/libexpat/releases/download/R_2_4_1
+$(package)_file_name := expat-$($(package)_version).tar.xz
+$(package)_sha256_hash := cf032d0dba9b928636548e32b327a2d66b1aab63c4f4a13dd132c2d1d2f2fb6a
 
 define $(package)_set_vars
   $(package)_config_opts := --disable-shared --without-docbook --without-tests --without-examples
   $(package)_config_opts += --disable-dependency-tracking --enable-option-checking
-  $(package)_config_opts += --without-xmlwf
-  $(package)_config_opts_linux := --with-pic
+  $(package)_config_opts += --with-pic
 endef
 
 define $(package)_config_cmds
@@ -24,5 +23,5 @@ define $(package)_stage_cmds
 endef
 
 define $(package)_postprocess_cmds
-  rm -rf share lib/cmake lib/*.la
+  rm -rf share lib/*.la
 endef
