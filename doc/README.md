@@ -47,34 +47,20 @@ The following are developer notes on how to build Bitcoin Core on your native pl
 - [NetBSD Build Notes](build-netbsd.md)
 - [Android Build Notes](build-android.md)
 
-Development
----------------------
-The Bitcoin repo's [root README](/README.md) contains relevant information on the development process and automated testing.
-
-- [Developer Notes](devel/dev-notes.md)
-- [Productivity Notes](devel/productivity.md)
-- [Release Notes](release-notes.md)
-- [Release Process](devel/release-process.md)
-- [Source Code Documentation (External Link)](https://doxygen.bitcoincore.org/)
-- [Translation Process](devel/translation_process.md)
-- [Translation Strings Policy](devel/translation_strings_policy.md)
-- [JSON-RPC Interface](JSON-RPC-interface.md)
-- [Unauthenticated REST Interface](REST-interface.md)
-- [Shared Libraries](shared-libraries.md)
-- [BIPS](bips.md)
-- [Dnsseed Policy](devel/dnsseed-policy.md)
-- [Benchmarking](devel/benchmarking.md)
-
 ### Resources
 * Discuss on the [BitcoinTalk](https://bitcointalk.org/) forums, in the [Development & Technical Discussion board](https://bitcointalk.org/index.php?board=6.0).
 * Discuss project-specific development on #bitcoin-core-dev on Libera Chat. If you don't have an IRC client, you can use [web.libera.chat](https://web.libera.chat/#bitcoin-core-dev).
 
 ### Miscellaneous
+
+- [Release Notes](release-notes.md)
+- [JSON-RPC Interface](JSON-RPC-interface.md)
+- [Unauthenticated REST Interface](REST-interface.md)
+- [Shared Libraries](shared-libraries.md)
+- [BIPS](bips.md)
 - [Assets Attribution](assets-attribution.md)
-- [Assumeutxo design](devel/assumeutxo.md)
 - [bitcoin.conf Configuration File](bitcoin-conf.md)
 - [Files](files.md)
-- [Fuzz-testing](devel/fuzzing.md)
 - [I2P Support](i2p.md)
 - [Init Scripts (systemd/upstart/openrc)](init.md)
 - [Managing Wallets](managing-wallets.md)
@@ -83,6 +69,21 @@ The Bitcoin repo's [root README](/README.md) contains relevant information on th
 - [Reduce Traffic](reduce-traffic.md)
 - [Tor Support](tor.md)
 - [ZMQ](zmq.md)
+
+### Internal development documentation
+
+The repo's [root README](/README.md) contains relevant information on the development process and automated testing.
+
+- [Developer Notes](devel/dev-notes.md)
+- [Productivity Notes](devel/productivity.md)
+- [Release Process](devel/release-process.md)
+- [Source Code Documentation (External Link)](https://doxygen.bitcoincore.org/)
+- [Translation Process](devel/translation_process.md)
+- [Translation Strings Policy](devel/translation_strings_policy.md)
+- [Dnsseed Policy](devel/dnsseed-policy.md)
+- [Benchmarking](devel/benchmarking.md)
+- [Assumeutxo design](devel/assumeutxo.md)
+- [Fuzz-testing](devel/fuzzing.md)
 
 License
 ---------------------
