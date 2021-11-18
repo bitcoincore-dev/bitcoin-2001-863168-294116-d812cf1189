@@ -25,6 +25,7 @@ class scanblocksTest(BitcoinTestFramework):
 
         # mine a block and assure that the mined blockhash is in the filterresult
         blockhash = self.nodes[0].generate(1)[0]
+        self.wait_until(lambda: all(i["synced"] for i in self.nodes[0].getindexinfo().values()))
         out = self.nodes[0].scanblocks("start", ["addr("+addr_1+")"])
         assert(blockhash in out['relevant_blocks'])
         assert_equal(self.nodes[0].getblockheader(blockhash)['height'], out['to_height'])
