@@ -2306,7 +2306,7 @@ static RPCHelpMan scanblocks()
 {
     return RPCHelpMan{"scanblocks",
                 "\nReturn relevant blockhashes for given descriptors.\n"
-                "This call may take serval minutes. Make sure to use no RPC timeout (bitcoin-cli -rpcclienttimeout=0)",
+                "This call may take several minutes. Make sure to use no RPC timeout (bitcoin-cli -rpcclienttimeout=0)",
                 {
                     {"action", RPCArg::Type::STR, RPCArg::Optional::NO, "The action to execute\n"
             "                                      \"start\" for starting a scan\n"
@@ -2324,12 +2324,11 @@ static RPCHelpMan scanblocks()
                             },
                         },
                         "[scanobjects,...]"},
-                    {"start_height", RPCArg::Type::NUM, /*default*/ "0", "height to start to filter from"},
-                    {"stop_height", RPCArg::Type::NUM, /*default*/ "<tip>", "height to stop to scan"},
+                    {"start_height", RPCArg::Type::NUM, /*default*/ "0", "Height to start to scan from"},
+                    {"stop_height", RPCArg::Type::NUM, /*default*/ "chain tip", "Height to stop to scan"},
                     {"filtertype", RPCArg::Type::STR, /*default*/ "basic", "The type name of the filter"}
                 },
                 {
-
                     RPCResult{"if action is start (only returns after scan completes)",
                         RPCResult::Type::OBJ, "", "",
                         {
@@ -2351,8 +2350,12 @@ static RPCHelpMan scanblocks()
                     RPCResult{"if action is status, and there is no scan running (possibly already completed)", RPCResult::Type::NONE, "", ""},
                 },
                 RPCExamples{
-                    HelpExampleCli("scanblocks", "\"[\"addr(bcrt1q4u4nsgk6ug0sqz7r3rj9tykjxrsl0yy4d0wwte)\"]\" 300000") +
-                    HelpExampleRpc("scanblocks", "\"[\"addr(bcrt1q4u4nsgk6ug0sqz7r3rj9tykjxrsl0yy4d0wwte)\"]\" 300000")
+                    HelpExampleCli("scanblocks", "start \"[\\\"addr(bcrt1q4u4nsgk6ug0sqz7r3rj9tykjxrsl0yy4d0wwte)\\\"]\" 300000") +
+                    HelpExampleRpc("scanblocks", "\"start\", [\"addr(bcrt1q4u4nsgk6ug0sqz7r3rj9tykjxrsl0yy4d0wwte)\"], 300000") +
+                    HelpExampleCli("scanblocks", "start \"[\\\"addr(bcrt1q4u4nsgk6ug0sqz7r3rj9tykjxrsl0yy4d0wwte)\\\"]\" 100 150 basic") +
+                    HelpExampleRpc("scanblocks", "\"start\", [\"addr(bcrt1q4u4nsgk6ug0sqz7r3rj9tykjxrsl0yy4d0wwte)\"], 100, 150, \"basic\"") +
+                    HelpExampleCli("scanblocks", "status") +
+                    HelpExampleRpc("scanblocks", "\"status\"")
                 },
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {
