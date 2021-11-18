@@ -2440,6 +2440,7 @@ static RPCHelpMan scanblocks()
         while (block) {
             node.rpc_interruption_point(); // allow a clean shutdown
             if (g_scanfilter_should_abort_scan) {
+                LogPrintf("scanblocks RPC aborted at height %d.\n", block->nHeight);
                 break;
             }
             const CBlockIndex* next = nullptr;
