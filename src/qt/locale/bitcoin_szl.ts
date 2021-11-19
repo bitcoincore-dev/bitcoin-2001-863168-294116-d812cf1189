@@ -686,6 +686,10 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Wallet</source>
+        <translation>Portmanyj</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -1932,10 +1936,6 @@
     <message>
         <source>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</source>
         <translation>Imyntnŏ dugość kety wersyje (%i) przekrŏczŏ maksymalnõ dopuszczalnõ dugość (%i). Zmyńsz wielość abo miara parametra uacomment.</translation>
-    </message>
-    <message>
-        <source>Error loading wallet %s. Duplicate -wallet filename specified.</source>
-        <translation>Feler w czasie wgrŏwaniŏ portmanyja %s. Podanŏ tuplowane miano zbioru w -wallet.</translation>
     </message>
     <message>
         <source>Starting network threads...</source>

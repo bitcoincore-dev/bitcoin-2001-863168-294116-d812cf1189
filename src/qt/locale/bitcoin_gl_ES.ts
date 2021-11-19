@@ -419,7 +419,7 @@
     </message>
     <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation>Solicita pagamentos (xera un código QR e bitocin : URIs)</translation>
+        <translation>Solicita pagamentos (xera un código QR e bitcoin : URIs)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -799,6 +799,10 @@
         <translation>Crea unha Carteira</translation>
     </message>
     <message>
+        <source>Wallet</source>
+        <translation>Wallet</translation>
+    </message>
+    <message>
         <source>Wallet Name</source>
         <translation>Nome da Carteira</translation>
     </message>
@@ -830,7 +834,7 @@
         <source>Create</source>
         <translation>Crea</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -1440,6 +1444,14 @@
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Save...</source>
+        <translation>Gardar...</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Pechar</translation>
+    </message>
     <message>
         <source>Total Amount</source>
         <translation>Total Amount</translation>
@@ -3666,10 +3678,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>%s is set very high!</source>
         <translation>%s is set very high!</translation>
-    </message>
-    <message>
-        <source>Error loading wallet %s. Duplicate -wallet filename specified.</source>
-        <translation>Error loading wallet %s. Duplicate -wallet filename specified.</translation>
     </message>
     <message>
         <source>Starting network threads...</source>
