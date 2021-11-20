@@ -1569,16 +1569,16 @@ static RPCHelpMan getmempoolinfo()
                         {RPCResult::Type::NUM, "unbroadcastcount", "Current number of transactions that haven't passed initial broadcast yet"},
                         {RPCResult::Type::OBJ, "fee_histogram", "",
                             {
-                                RPCResult{RPCResult::Type::OBJ, "<feerate-group>", "Object per feerate group",
+                                RPCResult{RPCResult::Type::OBJ, "<fee_rate_group>", "Fee rate group named by its lower bound (in " + CURRENCY_ATOM + "/vB), identical to the \"from_feerate\" field below",
                                     {
-                                        RPCResult{RPCResult::Type::NUM, "sizes", "Cumulated size of all transactions in feerate group"},
-                                        RPCResult{RPCResult::Type::NUM, "count", "Amount of transactions in feerate group"},
-                                        RPCResult{RPCResult::Type::NUM, "fees", "Cumulated fee of all transactions in feerate group"},
-                                        RPCResult{RPCResult::Type::NUM, "from_feerate", "Group contains transaction with feerates equal or greater than this value"},
-                                        RPCResult{RPCResult::Type::NUM, "to_feerate", "Group contains transaction with feerates equal or greater than this value"},
+                                        RPCResult{RPCResult::Type::NUM, "sizes", "Cumulative size of all transactions in the fee rate group (in vBytes)"},
+                                        RPCResult{RPCResult::Type::NUM, "count", "Number of transactions in the fee rate group"},
+                                        RPCResult{RPCResult::Type::NUM, "fees", "Cumulative fees of all transactions in the fee rate group (in " + CURRENCY_ATOM + ")"},
+                                        RPCResult{RPCResult::Type::NUM, "from_feerate", "Group contains transactions with fee rates equal or greater than this value (in " + CURRENCY_ATOM + "/vB)"},
+                                        RPCResult{RPCResult::Type::NUM, "to_feerate", "Group contains transactions with fee rates equal or less than this value (in " + CURRENCY_ATOM + "/vB)"},
                                     }},
                                 RPCResult{RPCResult::Type::ELISION, "", ""},
-                                RPCResult{RPCResult::Type::NUM, "total_fees", "Total available fees in mempool"},
+                                RPCResult{RPCResult::Type::NUM, "total_fees", "Total available fees in mempool (in " + CURRENCY_ATOM + ")"},
                             }},
                     }},
                 RPCExamples{
