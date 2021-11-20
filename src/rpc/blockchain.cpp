@@ -1573,12 +1573,12 @@ static RPCHelpMan getmempoolinfo()
                                     {
                                         RPCResult{RPCResult::Type::NUM, "sizes", "Cumulated size of all transactions in feerate group"},
                                         RPCResult{RPCResult::Type::NUM, "count", "Amount of transactions in feerate group"},
-                                        RPCResult{RPCResult::Type::STR_AMOUNT, "fees", "Cumulated fee of all transactions in feerate group"},
-                                        RPCResult{RPCResult::Type::STR_AMOUNT, "from_feerate", "Group contains transaction with feerates equal or greater than this value"},
-                                        RPCResult{RPCResult::Type::STR_AMOUNT, "to_feerate", "Group contains transaction with feerates equal or greater than this value"},
+                                        RPCResult{RPCResult::Type::NUM, "fees", "Cumulated fee of all transactions in feerate group"},
+                                        RPCResult{RPCResult::Type::NUM, "from_feerate", "Group contains transaction with feerates equal or greater than this value"},
+                                        RPCResult{RPCResult::Type::NUM, "to_feerate", "Group contains transaction with feerates equal or greater than this value"},
                                     }},
                                 RPCResult{RPCResult::Type::ELISION, "", ""},
-                                RPCResult{RPCResult::Type::STR_AMOUNT, "total_fees", "Total available fees in mempool"},
+                                RPCResult{RPCResult::Type::NUM, "total_fees", "Total available fees in mempool"},
                             }},
                     }},
                 RPCExamples{
