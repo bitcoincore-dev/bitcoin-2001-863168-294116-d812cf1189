@@ -333,8 +333,9 @@ static bool rest_filter_header(const util::Ref& context, HTTPRequest* req, const
         return RESTERR(req, HTTP_BAD_REQUEST, "Index is not enabled for filtertype " + uriParts[0]);
     }
 
-    long count = strtol(uriParts[1].c_str(), nullptr, 10);
-    if (count < 1 || count > MAX_REST_HEADERS_RESULTS) {
+    uint32_t count;
+    const auto parsed_count = ParseUInt32(uriParts[1], &count) ? Optional<size_t>(size_t(count)) : Optional<size_t>{};
+    if (!parsed_count.has_value() || count < 1 || count > MAX_REST_HEADERS_RESULTS) {
         return RESTERR(req, HTTP_BAD_REQUEST, strprintf("Header count out of acceptable range (1-%u): %s", MAX_REST_HEADERS_RESULTS, uriParts[1]));
     }
 
