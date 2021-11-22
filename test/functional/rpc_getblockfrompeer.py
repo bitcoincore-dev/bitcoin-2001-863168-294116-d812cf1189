@@ -66,5 +66,8 @@ class GetBlockFromPeerTest(BitcoinTestFramework):
         self.log.info("Don't fetch blocks we already have")
         assert_raises_rpc_error(-1, "Block already downloaded", self.nodes[0].getblockfrompeer, short_tip, peer_0_peer_1_id)
 
+        self.log.info("Non-existent peer generates error, even if we already have the block")
+        assert_raises_rpc_error(-1, "Block already downloaded", self.nodes[0].getblockfrompeer, short_tip, peer_0_peer_1_id + 1)
+
 if __name__ == '__main__':
     GetBlockFromPeerTest().main()
