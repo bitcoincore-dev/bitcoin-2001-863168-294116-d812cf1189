@@ -790,7 +790,8 @@ static RPCHelpMan getblockfrompeer()
 
     if (pblockindex && pblockindex->nStatus & BLOCK_HAVE_DATA) {
         result.pushKV("warnings", "Block already downloaded");
-    } else if (!peerman.FetchBlock(nodeid, hash, pblockindex)) {
+    }
+    if (!peerman.FetchBlock(nodeid, hash, pblockindex)) {
         throw JSONRPCError(RPC_MISC_ERROR, "Failed to fetch block from peer");
     }
     return result;
