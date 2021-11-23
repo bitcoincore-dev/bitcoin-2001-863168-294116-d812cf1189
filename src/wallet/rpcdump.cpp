@@ -336,6 +336,8 @@ static void RemoveScript(CWallet* const pwallet, const CScript& script, bool is_
 
     LegacyScriptPubKeyMan& spk_man = EnsureLegacyScriptPubKeyMan(*pwallet);
 
+    throw JSONRPCError(RPC_INTERNAL_ERROR, "removeaddress is broken, sorry");
+
     if (spk_man.HaveWatchOnly(script) && !spk_man.PurgeWatchOnly(script)) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Error removing address/script from wallet");
     }
