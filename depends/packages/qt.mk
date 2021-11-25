@@ -126,6 +126,15 @@ $(package)_config_opts_darwin += -device-option MAC_SDK_VERSION=$(OSX_SDK_VERSIO
 $(package)_config_opts_darwin += -device-option CROSS_COMPILE="$(host)-"
 $(package)_config_opts_darwin += -device-option MAC_TARGET=$(host)
 $(package)_config_opts_darwin += -device-option XCODE_VERSION=$(XCODE_VERSION)
+else
+# Qt must be able to build its own tools for the build platform.
+# While this approach looks reasonable for any cross compiling case,
+# at least, it breaks cross compiling for "linux build - darwin host"
+# pair due to our custom macx-clang-linux mkspec.
+ifneq ($(build),$(host))
+$(package)_cc := $(build_darwin_CC)
+$(package)_cxx := $(build_darwin_CXX)
+endif
 endif
 
 ifneq ($(build_arch),$(host_arch))
