@@ -1166,7 +1166,7 @@ static bool BlockRequestAllowed(const CBlockIndex* pindex, const Consensus::Para
 }
 
 PeerManager::PeerManager(const CChainParams& chainparams, CConnman& connman, BanMan* banman,
-                         CScheduler& scheduler, ChainstateManager& chainman, CTxMemPool& pool)
+                         ChainstateManager& chainman, CTxMemPool& pool)
     : m_chainparams(chainparams),
       m_connman(connman),
       m_banman(banman),
@@ -1187,7 +1187,10 @@ PeerManager::PeerManager(const CChainParams& chainparams, CConnman& connman, Ban
     // transaction per day that would be inadvertently ignored (which is the
     // same probability that we have in the reject filter).
     g_recent_confirmed_transactions.reset(new CRollingBloomFilter(48000, 0.000001));
+}
 
+void PeerManager::StartScheduledTasks(CScheduler& scheduler)
+{
     // Stale tip checking and peer eviction are on two different timers, but we
     // don't want them to get out of sync due to drift in the scheduler, so we
     // combine them in one function and schedule at the quicker (peer-eviction)
@@ -2310,6 +2313,9 @@ void PeerManager::ProcessMessage(CNode& pfrom, const std::string& msg_type, CDat
         bool fRelay = true;
 
         vRecv >> nVersion >> nServiceInt >> nTime >> addrMe;
+        if (nTime < 0) {
+            nTime = 0;
+        }
         nServices = ServiceFlags(nServiceInt);
         if (!pfrom.IsInboundConn())
         {
@@ -2369,10 +2375,16 @@ void PeerManager::ProcessMessage(CNode& pfrom, const std::string& msg_type, CDat
             m_connman.PushMessage(&pfrom, msg_maker.Make(NetMsgType::WTXIDRELAY));
         }
 
-        m_connman.PushMessage(&pfrom, msg_maker.Make(NetMsgType::VERACK));
-
         // Signal ADDRv2 support (BIP155).
-        m_connman.PushMessage(&pfrom, msg_maker.Make(NetMsgType::SENDADDRV2));
+        if (greatest_common_version >= 70016) {
+            // BIP155 defines addrv2 and sendaddrv2 for all protocol versions, but some
+            // implementations reject messages they don't know. As a courtesy, don't send
+            // it to nodes with a version before 70016, as no software is known to support
+            // BIP155 that doesn't announce at least that protocol version number.
+            m_connman.PushMessage(&pfrom, msg_maker.Make(NetMsgType::SENDADDRV2));
+        }
+
+        m_connman.PushMessage(&pfrom, msg_maker.Make(NetMsgType::VERACK));
 
         pfrom.nServices = nServices;
         pfrom.SetAddrLocal(addrMe);
@@ -2545,6 +2557,17 @@ void PeerManager::ProcessMessage(CNode& pfrom, const std::string& msg_type, CDat
         return;
     }
 
+    if (msg_type == NetMsgType::SENDADDRV2) {
+        if (pfrom.fSuccessfullyConnected) {
+            // Disconnect peers that send SENDADDRV2 message after VERACK; this
+            // must be negotiated between VERSION and VERACK.
+            pfrom.fDisconnect = true;
+            return;
+        }
+        pfrom.m_wants_addrv2 = true;
+        return;
+    }
+
     if (!pfrom.fSuccessfullyConnected) {
         LogPrint(BCLog::NET, "Unsupported message \"%s\" prior to verack from peer=%d\n", SanitizeString(msg_type), pfrom.GetId());
         return;
@@ -2609,11 +2632,6 @@ void PeerManager::ProcessMessage(CNode& pfrom, const std::string& msg_type, CDat
             pfrom.fGetAddr = false;
         if (pfrom.IsAddrFetchConn())
             pfrom.fDisconnect = true;
-        return;
-    }
-
-    if (msg_type == NetMsgType::SENDADDRV2) {
-        pfrom.m_wants_addrv2 = true;
         return;
     }
 
