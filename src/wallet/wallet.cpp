@@ -916,22 +916,27 @@ CWalletTx* CWallet::AddToWallet(CTransactionRef tx, const CWalletTx::Confirmatio
 
 #if HAVE_SYSTEM
     // notify an external script when a wallet transaction comes in or is updated
-    std::string strCmd = gArgs.GetArg("-walletnotify", "");
-
-    if (!strCmd.empty())
-    {
-        boost::replace_all(strCmd, "%s", hash.GetHex());
-        if (confirm.status == CWalletTx::Status::CONFIRMED)
-        {
-            boost::replace_all(strCmd, "%b", confirm.hashBlock.GetHex());
-            boost::replace_all(strCmd, "%h", ToString(confirm.block_height));
+    if (gArgs.IsArgSet("-walletnotify")) {
+        const std::string walletname_escaped = ShellEscape(GetName());
+        const std::string txid_hex = hash.GetHex();
+        std::string blockhash_hex, blockheight_str;
+        if (confirm.status == CWalletTx::Status::CONFIRMED) {
+            blockhash_hex = confirm.hashBlock.GetHex();
+            blockheight_str = ToString(confirm.block_height);
         } else {
-            boost::replace_all(strCmd, "%b", "unconfirmed");
-            boost::replace_all(strCmd, "%h", "-1");
+            blockhash_hex = "unconfirmed";
+            blockheight_str = "-1";
         }
-        boost::replace_all(strCmd, "%w", ShellEscape(GetName()));
-        std::thread t(runCommand, strCmd);
-        t.detach(); // thread runs free
+
+        for (std::string command : gArgs.GetArgs("-walletnotify")) {
+            boost::replace_all(command, "%s", txid_hex);
+            boost::replace_all(command, "%b", blockhash_hex);
+            boost::replace_all(command, "%h", blockheight_str);
+            boost::replace_all(command, "%w", walletname_escaped);
+
+            std::thread t(runCommand, command);
+            t.detach(); // thread runs free
+        }
     }
 #endif
 
