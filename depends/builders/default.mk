@@ -8,9 +8,9 @@ default_build_OTOOL = otool
 default_build_INSTALL_NAME_TOOL = install_name_tool
 
 define add_build_tool_func
-ifeq ($(filter $(origin $1),undefined default),)
-build_$(build_os)_$1 = $(or $($1),$(build_$(build_os)_$1),$(default_build_$1))
-build_$(build_arch)_$(build_os)_$1 = $(or $($1),$(build_$(build_arch)_$(build_os)_$1),$$(build_$(build_os)_$1))
+ifneq ($(origin $1_FOR_BUILD),undefined)
+build_$(build_os)_$1 = $(or $($1_FOR_BUILD),$(build_$(build_os)_$1),$(default_build_$1))
+build_$(build_arch)_$(build_os)_$1 = $(or $($1_FOR_BUILD),$(build_$(build_arch)_$(build_os)_$1),$$(build_$(build_os)_$1))
 else
 build_$(build_os)_$1 ?= $$(default_build_$1)
 build_$(build_arch)_$(build_os)_$1 ?= $$(build_$(build_os)_$1)

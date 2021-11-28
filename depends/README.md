@@ -112,7 +112,9 @@ The following can be set when running make: `make FOO=bar`
 - `BUILD_ID_SALT`: Optional salt to use when generating build package ids
 - `FORCE_USE_SYSTEM_CLANG`: (EXPERTS ONLY) When cross-compiling for macOS, use Clang found in the
   system's `$PATH` rather than the default prebuilt release of Clang
-  from llvm.org. Clang 8 or later is required.
+  from llvm.org. Clang 8 or later is required
+- `{CC,CXX,...}_FOR_BUILD`: Build native packages with specified tools when
+  a package build script allows it
 
 If some packages are not built, for example `make NO_WALLET=1`, the appropriate
 options will be passed to bitcoin's configure. In this case, `--disable-wallet`.
