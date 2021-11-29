@@ -360,7 +360,7 @@ $(QT_QRC_LOCALE_CPP): $(QT_QRC_LOCALE) $(QT_QM)
 	@rm $(@D)/temp_$(<F)
 
 $(QT_QRC_BUILD): $(QT_QRC)
-	$(SED) -e 's:\(res\/\(icons\|movies\)/\):$(abs_srcdir)/qt/\1:' <"$<" >"$@"
+	$(SED) -e 's:\(res\/\(icons\|animation\)/\):$(abs_srcdir)/qt/\1:' <"$<" >"$@"
 
 $(QT_QRC_CPP): $(QT_QRC_BUILD) $(QT_FORMS_H) $(RES_ICONS) $(RES_ANIMATION)
 	@test -f $(RCC)
