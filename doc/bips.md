@@ -54,10 +54,11 @@ BIPs that are implemented by Bitcoin Core (up-to-date up to **v0.21.1**):
 * [`BIP 339`](https://github.com/bitcoin/bips/blob/master/bip-0339.mediawiki): Relay of transactions by wtxid is supported as of **v0.21.0** ([PR 18044](https://github.com/bitcoin/bitcoin/pull/18044)).
 * [`BIP 340`](https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki)
   [`341`](https://github.com/bitcoin/bips/blob/master/bip-0341.mediawiki)
-  [`342`](https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki):
+  [`342`](https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki)
+  [`343`](https://github.com/bitcoin/bips/blob/master/bip-0343.mediawiki):
   Validation rules for Taproot (including Schnorr signatures and Tapscript
   leaves) are implemented as of **v0.21.0** ([PR 19953](https://github.com/bitcoin/bitcoin/pull/19953)),
-  with mainnet activation as of **v0.21.1** ([PR 21377](https://github.com/bitcoin/bitcoin/pull/21377),
+  with *checkpointed* mainnet activation as of **v0.21.1** ([PR 21377](https://github.com/bitcoin/bitcoin/pull/21377),
   [PR 21686](https://github.com/bitcoin/bitcoin/pull/21686)).
 * [`BIP 350`](https://github.com/bitcoin/bips/blob/master/bip-0350.mediawiki): Addresses for native v1+ segregated Witness outputs use Bech32m instead of Bech32 as of **v0.21.1** ([PR 20861](https://github.com/bitcoin/bitcoin/pull/20861)).
 * [`BIP 380`](https://github.com/bitcoin/bips/blob/master/bip-0380.mediawiki)
