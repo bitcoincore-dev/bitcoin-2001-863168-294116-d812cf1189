@@ -1749,13 +1749,6 @@ else
   BUILD_TEST=""
 fi
 
-AC_MSG_CHECKING([whether to reduce exports])
-if test x$use_reduce_exports = xyes; then
-  AC_MSG_RESULT([yes])
-else
-  AC_MSG_RESULT([no])
-fi
-
 if test x$build_bitcoin_wallet$build_bitcoin_cli$build_bitcoin_tx$build_bitcoin_libs$build_bitcoind$bitcoin_enable_qt$use_bench$use_tests = xnononononononono; then
   AC_MSG_ERROR([No targets! Please specify at least one of: --with-utils --with-libs --with-daemon --with-gui --enable-bench or --enable-tests])
 fi
@@ -1951,6 +1944,7 @@ echo "  debug enabled   = $enable_debug"
 echo "  gprof enabled   = $enable_gprof"
 echo "  werror          = $enable_werror"
 echo "  LTO             = $enable_lto"
+echo "  reduce exports  = $use_reduce_exports"
 echo
 echo "  target os       = $TARGET_OS"
 echo "  build os        = $build_os"
