@@ -213,9 +213,9 @@ AC_ARG_ENABLE([hardening],
 
 AC_ARG_ENABLE([reduce-exports],
   [AS_HELP_STRING([--enable-reduce-exports],
-  [attempt to reduce exported symbols in the resulting executables (default is no)])],
+  [attempt to reduce exported symbols in the resulting executables (default is yes for macOS host, otherwise no)])],
   [use_reduce_exports=$enableval],
-  [use_reduce_exports=no])
+  [AS_CASE([$host], [*darwin*], [use_reduce_exports=yes], [use_reduce_exports=no])])
 
 AC_ARG_ENABLE([ccache],
   [AS_HELP_STRING([--disable-ccache],
