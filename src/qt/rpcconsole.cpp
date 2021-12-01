@@ -910,8 +910,14 @@ void RPCConsole::clear(bool keep_prompt)
 
 void RPCConsole::keyPressEvent(QKeyEvent *event)
 {
-    if(windowType() != Qt::Widget && event->key() == Qt::Key_Escape)
-    {
+    const auto close_key =
+#ifdef Q_OS_ANDROID
+        Qt::Key_Back;
+#else
+        Qt::Key_Escape;
+#endif // Q_OS_ANDROID
+
+    if (windowType() != Qt::Widget && event->key() == close_key) {
         close();
     }
 }
