@@ -89,7 +89,7 @@ public:
     bool getMinimizeOnClose() const { return fMinimizeOnClose; }
     int getDisplayUnit() const { return nDisplayUnit; }
     QString getThirdPartyTxUrls() const { return strThirdPartyTxUrls; }
-    bool getUseEmbeddedMonospacedFont() const { return m_use_embedded_monospaced_font; }
+    QFont getFontForMoney() const;
     bool getPeersTabAlternatingRowColors() const { return m_peers_tab_alternating_row_colors; }
     bool getCoinControlFeatures() const { return fCoinControlFeatures; }
     bool getSubFeeFromAmount() const { return m_sub_fee_from_amount; }
@@ -133,8 +133,14 @@ Q_SIGNALS:
     void displayUnitChanged(int unit);
     void coinControlFeaturesChanged(bool);
     void showTrayIconChanged(bool);
+<<<<<<< HEAD
     void useEmbeddedMonospacedFontChanged(bool);
     void peersTabAlternatingRowColorsChanged(bool);
+||||||| parent of c98c1b16dbb (GUI: Move "embedded font or not" decision into new OptionsModel::getFontForMoney method)
+    void useEmbeddedMonospacedFontChanged(bool);
+=======
+    void fontForMoneyChanged(const QFont&);
+>>>>>>> c98c1b16dbb (GUI: Move "embedded font or not" decision into new OptionsModel::getFontForMoney method)
 };
 
 #endif // BITCOIN_QT_OPTIONSMODEL_H
