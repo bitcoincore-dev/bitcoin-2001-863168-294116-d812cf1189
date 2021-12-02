@@ -60,7 +60,7 @@ public:
         DisplayUnit,            // BitcoinUnits::Unit
         ThirdPartyTxUrls,       // QString
         Language,               // QString
-        UseEmbeddedMonospacedFont, // bool
+        FontForMoney,           // FontChoice
         PeersTabAlternatingRowColors, // bool
         CoinControlFeatures,    // bool
         SubFeeFromAmount,       // bool
@@ -133,6 +133,7 @@ private:
     /* settings that were overridden by command-line */
     QString strOverriddenByCommandLine;
 
+    static QString FontChoiceToString(const OptionsModel::FontChoice&);
     static FontChoice FontChoiceFromString(const QString&);
 
     // Add option to list of GUI options overridden through command line/config file
@@ -147,5 +148,7 @@ Q_SIGNALS:
     void fontForMoneyChanged(const QFont&);
     void peersTabAlternatingRowColorsChanged(bool);
 };
+
+Q_DECLARE_METATYPE(OptionsModel::FontChoice)
 
 #endif // BITCOIN_QT_OPTIONSMODEL_H
