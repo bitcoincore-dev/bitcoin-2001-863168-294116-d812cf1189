@@ -629,16 +629,21 @@ void OptionsModel::setDisplayUnit(const QVariant &value)
     }
 }
 
-QFont OptionsModel::getFontForMoney() const
+QFont OptionsModel::getFontForChoice(const FontChoice& fc)
 {
     QFont f;
-    if (std::holds_alternative<FontChoiceAbstract>(m_font_money)) {
-        f = GUIUtil::fixedPitchFont(m_font_money != UseBestSystemFont);
+    if (std::holds_alternative<FontChoiceAbstract>(fc)) {
+        f = GUIUtil::fixedPitchFont(fc != UseBestSystemFont);
         f.setWeight(QFont::Bold);
     } else {
-        f = std::get<QFont>(m_font_money);
+        f = std::get<QFont>(fc);
     }
     return f;
+}
+
+QFont OptionsModel::getFontForMoney() const
+{
+    return getFontForChoice(m_font_money);
 }
 
 void OptionsModel::setRestartRequired(bool fRequired)

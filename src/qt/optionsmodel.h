@@ -82,6 +82,7 @@ public:
     };
     typedef std::variant<FontChoiceAbstract, QFont> FontChoice;
     static inline const FontChoice UseBestSystemFont{FontChoiceAbstract::BestSystemFont};
+    static QFont getFontForChoice(const FontChoice& fc);
 
     void Init(bool resetSettings = false);
     void Reset();
