@@ -29,6 +29,25 @@ const char *DEFAULT_GUI_PROXY_HOST = "127.0.0.1";
 
 static const QString GetDefaultProxyAddress();
 
+static const QLatin1String fontchoice_str_embedded{"embedded"};
+static const QLatin1String fontchoice_str_best_system{"best_system"};
+static const QString fontchoice_str_custom_prefix{QStringLiteral("custom, ")};
+
+OptionsModel::FontChoice OptionsModel::FontChoiceFromString(const QString& s)
+{
+    if (s == fontchoice_str_best_system) {
+        return FontChoiceAbstract::BestSystemFont;
+    } else if (s == fontchoice_str_embedded) {
+        return FontChoiceAbstract::EmbeddedFont;
+    } else if (s.startsWith(fontchoice_str_custom_prefix)) {
+        QFont f;
+        f.fromString(s.mid(fontchoice_str_custom_prefix.size()));
+        return f;
+    } else {
+        return FontChoiceAbstract::EmbeddedFont;  // default
+    }
+}
+
 OptionsModel::OptionsModel(QObject *parent, bool resetSettings) :
     QAbstractListModel(parent)
 {
@@ -189,13 +208,14 @@ void OptionsModel::Init(bool resetSettings)
 
     language = settings.value("language").toString();
 
-    if (!settings.contains("UseEmbeddedMonospacedFont")) {
-        settings.setValue("UseEmbeddedMonospacedFont", "true");
-    }
-    if (settings.value("UseEmbeddedMonospacedFont").toBool()) {
-        m_font_money = FontChoiceAbstract::EmbeddedFont;
-    } else {
-        m_font_money = FontChoiceAbstract::BestSystemFont;
+    if (settings.contains("FontForMoney")) {
+        m_font_money = FontChoiceFromString(settings.value("FontForMoney").toString());
+    } else if (settings.contains("UseEmbeddedMonospacedFont")) {
+        if (settings.value("UseEmbeddedMonospacedFont").toBool()) {
+            m_font_money = FontChoiceAbstract::EmbeddedFont;
+        } else {
+            m_font_money = FontChoiceAbstract::BestSystemFont;
+        }
     }
     Q_EMIT fontForMoneyChanged(getFontForMoney());
 
@@ -529,6 +549,7 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 m_font_money = FontChoiceAbstract::BestSystemFont;
             }
             settings.setValue("UseEmbeddedMonospacedFont", use_embedded_monospaced_font);
+            settings.remove("FontForMoney");
             Q_EMIT fontForMoneyChanged(getFontForMoney());
             break;
         }

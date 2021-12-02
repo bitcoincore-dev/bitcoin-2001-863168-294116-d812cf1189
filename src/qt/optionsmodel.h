@@ -125,13 +125,15 @@ private:
     QString language;
     int nDisplayUnit;
     QString strThirdPartyTxUrls;
-    FontChoice m_font_money;
+    FontChoice m_font_money{FontChoiceAbstract::EmbeddedFont};
     bool m_peers_tab_alternating_row_colors;
     bool fCoinControlFeatures;
     bool m_sub_fee_from_amount;
     bool m_enable_psbt_controls;
     /* settings that were overridden by command-line */
     QString strOverriddenByCommandLine;
+
+    static FontChoice FontChoiceFromString(const QString&);
 
     // Add option to list of GUI options overridden through command line/config file
     void addOverriddenOption(const std::string &option);
