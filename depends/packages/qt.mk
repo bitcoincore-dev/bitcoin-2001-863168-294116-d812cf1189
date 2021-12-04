@@ -179,10 +179,10 @@ $(package)_config_opts_android += -I $(host_prefix)/include
 $(package)_config_opts_android += -pch
 $(package)_config_opts_android += -no-feature-vulkan
 
-$(package)_config_opts_aarch64_android += -android-arch arm64-v8a
-$(package)_config_opts_armv7a_android += -android-arch armeabi-v7a
-$(package)_config_opts_x86_64_android += -android-arch x86_64
-$(package)_config_opts_i686_android += -android-arch x86
+$(package)_config_opts_aarch64_android += -android-abis arm64-v8a
+$(package)_config_opts_armv7a_android += -android-abis armeabi-v7a
+$(package)_config_opts_x86_64_android += -android-abis x86_64
+$(package)_config_opts_i686_android += -android-abis x86
 endef
 
 define $(package)_fetch_cmds
