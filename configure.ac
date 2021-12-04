@@ -768,16 +768,16 @@ case $host in
      TARGET_OS=android
      case $host in
        *x86_64*)
-          ANDROID_ARCH=x86_64
+          ANDROID_ABI=x86_64
           ;;
         *aarch64*)
-          ANDROID_ARCH=arm64-v8a
+          ANDROID_ABI=arm64-v8a
           ;;
         *armv7a*)
-          ANDROID_ARCH=armeabi-v7a
+          ANDROID_ABI=armeabi-v7a
           ;;
         *i686*)
-          ANDROID_ARCH=x86
+          ANDROID_ABI=x86
           ;;
         *) AC_MSG_ERROR([Could not determine Android arch]) ;;
       esac
@@ -1869,7 +1869,7 @@ AC_SUBST(HAVE_O_CLOEXEC)
 AC_SUBST(HAVE_BUILTIN_PREFETCH)
 AC_SUBST(HAVE_MM_PREFETCH)
 AC_SUBST(HAVE_STRONG_GETAUXVAL)
-AC_SUBST(ANDROID_ARCH)
+AC_SUBST(ANDROID_ABI)
 AC_CONFIG_FILES([Makefile src/Makefile doc/man/Makefile share/setup.nsi share/qt/Info.plist test/config.ini])
 AC_CONFIG_FILES([contrib/devtools/split-debug.sh],[chmod +x contrib/devtools/split-debug.sh])
 AM_COND_IF([HAVE_DOXYGEN], [AC_CONFIG_FILES([doc/Doxyfile])])
