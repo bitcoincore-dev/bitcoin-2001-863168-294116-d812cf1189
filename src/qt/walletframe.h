@@ -51,6 +51,8 @@ Q_SIGNALS:
     /** Notify that the user has requested more information about the out-of-sync warning */
     void requestedSyncWarningInfo();
 
+    void message(const QString& title, const QString& message, unsigned int style);
+
 private:
     QStackedWidget *walletStack;
     BitcoinGUI *gui;
