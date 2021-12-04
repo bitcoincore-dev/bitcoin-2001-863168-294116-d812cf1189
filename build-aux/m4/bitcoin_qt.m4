@@ -70,7 +70,7 @@ AC_DEFUN([BITCOIN_QT_INIT],[
                  [qt_lib_suffix= ]); bitcoin_qt_want_version=qt5],
         [qt_lib_suffix= ])
 
-  AS_CASE([$host], [*android*], [qt_lib_suffix=_$ANDROID_ARCH])
+  AS_CASE([$host], [*android*], [qt_lib_suffix=_$ANDROID_ABI])
 
   AC_ARG_WITH([qt-incdir],[AS_HELP_STRING([--with-qt-incdir=INC_DIR],[specify qt include path (overridden by pkgconfig)])], [qt_include_path=$withval], [])
   AC_ARG_WITH([qt-libdir],[AS_HELP_STRING([--with-qt-libdir=LIB_DIR],[specify qt lib path (overridden by pkgconfig)])], [qt_lib_path=$withval], [])
