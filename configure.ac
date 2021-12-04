@@ -773,13 +773,7 @@ case $host in
         *aarch64*)
           ANDROID_ARCH=arm64-v8a
           ;;
-        *armv7a*)
-          ANDROID_ARCH=armeabi-v7a
-          ;;
-        *i686*)
-          ANDROID_ARCH=i686
-          ;;
-        *) AC_MSG_ERROR([Could not determine Android arch]) ;;
+        *) AC_MSG_ERROR([Could not determine Android arch, or it is unsupported]) ;;
       esac
      ;;
    *linux*)
