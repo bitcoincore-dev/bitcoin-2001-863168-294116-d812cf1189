@@ -252,7 +252,8 @@ void TransactionView::setModel(WalletModel *_model)
                     /*: Transactions table context menu action to show the
                         selected transaction in a third-party block explorer.
                         %1 is a stand-in argument for the URL of the explorer. */
-                    contextMenu->addAction(tr("Show in %1").arg(host), [this, url] { openThirdPartyTxUrl(url); });
+                    QAction* const thirdPartyTxUrlAction = contextMenu->addAction(tr("Show in %1").arg(host));
+                    connect(thirdPartyTxUrlAction, &QAction::triggered, [this, url] { openThirdPartyTxUrl(url); });
                 }
             }
         }
