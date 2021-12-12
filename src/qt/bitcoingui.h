@@ -39,6 +39,7 @@ class WalletFrame;
 class WalletModel;
 class HelpMessageDialog;
 class ModalOverlay;
+class MempoolStats;
 enum class SynchronizationState;
 
 namespace interfaces {
@@ -156,6 +157,7 @@ private:
     QAction* openRPCConsoleAction = nullptr;
     QAction* openAction = nullptr;
     QAction* showHelpMessageAction = nullptr;
+    QAction* showMempoolStatsAction = nullptr;
     QAction* m_create_wallet_action{nullptr};
     QAction* m_open_wallet_action{nullptr};
     QMenu* m_open_wallet_menu{nullptr};
@@ -175,6 +177,7 @@ private:
     RPCConsole* rpcConsole = nullptr;
     HelpMessageDialog* helpMessageDialog = nullptr;
     ModalOverlay* modalOverlay = nullptr;
+    MempoolStats* mempoolStats = nullptr;
 
 #ifdef Q_OS_MAC
     CAppNapInhibitor* m_app_nap_inhibitor = nullptr;
@@ -301,6 +304,8 @@ public Q_SLOTS:
     void showDebugWindowActivateConsole();
     /** Show help message dialog */
     void showHelpMessageClicked();
+    /** Show mempool stats window */
+    void showMempoolStatsWindow();
 #ifndef Q_OS_MAC
     /** Handle tray icon clicked */
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
