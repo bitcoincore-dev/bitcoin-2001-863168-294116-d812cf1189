@@ -764,7 +764,7 @@ static RPCHelpMan getblockfrompeer()
         "\nReturns {} if a block-request was successfully scheduled.\n",
         {
             {"blockhash", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "The block hash"},
-            {"nodeid", RPCArg::Type::NUM, RPCArg::Optional::NO, "The node ID (see getpeerinfo for node IDs)"},
+            {"nodeid|peer_id", RPCArg::Type::NUM, RPCArg::Optional::NO, "The node ID (see getpeerinfo for node IDs)"},
         },
         RPCResult{RPCResult::Type::OBJ, "", "",
         {
@@ -2520,7 +2520,7 @@ static const CRPCCommand commands[] =
     { "blockchain",         "getbestblockhash",       &getbestblockhash,       {} },
     { "blockchain",         "getblockcount",          &getblockcount,          {} },
     { "blockchain",         "getblock",               &getblock,               {"blockhash","verbosity|verbose"} },
-    { "blockchain",         "getblockfrompeer",       &getblockfrompeer,       {"blockhash","nodeid"} },
+    { "blockchain",         "getblockfrompeer",       &getblockfrompeer,       {"blockhash","nodeid|peer_id"} },
     { "blockchain",         "getblockhash",           &getblockhash,           {"height"} },
     { "blockchain",         "getblockheader",         &getblockheader,         {"blockhash","verbose"} },
     { "blockchain",         "getchaintips",           &getchaintips,           {} },
