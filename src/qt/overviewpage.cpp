@@ -71,6 +71,7 @@ public:
         if (index.data(TransactionTableModel::WatchonlyRole).toBool()) {
             QIcon iconWatchonly = qvariant_cast<QIcon>(index.data(TransactionTableModel::WatchonlyDecorationRole));
             QRect watchonlyRect(addressRect.left(), addressRect.top(), 16, addressRect.height());
+            iconWatchonly = platformStyle->TextColorIcon(iconWatchonly);
             iconWatchonly.paint(painter, watchonlyRect);
             addressRect.setLeft(addressRect.left() + watchonlyRect.width() + 5);
         }
@@ -141,6 +142,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     ui(new Ui::OverviewPage),
     clientModel(nullptr),
     walletModel(nullptr),
+    m_platform_style{platformStyle},
     txdelegate(new TxViewDelegate(platformStyle, this))
 {
     ui->setupUi(this);
@@ -303,6 +305,17 @@ void OverviewPage::setWalletModel(WalletModel *model)
 
     // update the display unit, to not use the default ("BTC")
     updateDisplayUnit();
+}
+
+void OverviewPage::changeEvent(QEvent* e)
+{
+#ifdef Q_OS_MACOS
+    if (e->type() == QEvent::PaletteChange) {
+        QIcon icon = m_platform_style->SingleColorIcon(QStringLiteral(":/icons/warning"));
+        ui->labelTransactionsStatus->setIcon(icon);
+        ui->labelWalletStatus->setIcon(icon);
+    }
+#endif
 }
 
 void OverviewPage::updateDisplayUnit()
