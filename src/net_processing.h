@@ -36,7 +36,10 @@ static const int DISCOURAGEMENT_THRESHOLD{100};
 class PeerManager final : public CValidationInterface, public NetEventsInterface {
 public:
     PeerManager(const CChainParams& chainparams, CConnman& connman, BanMan* banman,
-                CScheduler& scheduler, ChainstateManager& chainman, CTxMemPool& pool);
+                ChainstateManager& chainman, CTxMemPool& pool);
+
+    /** Begin running background tasks, should only be called once */
+    void StartScheduledTasks(CScheduler& scheduler);
 
     /**
      * Overridden from CValidationInterface.
