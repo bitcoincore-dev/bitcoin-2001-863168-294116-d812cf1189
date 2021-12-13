@@ -7,6 +7,7 @@ container:
   cpu: 2
   memory: 8G  # Set to 8GB to avoid OOM. https://cirrus-ci.org/guide/linux/#linux-containers
   kvm: true  # Use kvm to avoid spurious CI failures in the default virtualization cluster, see https://github.com/bitcoin/bitcoin/issues/20093
+  greedy: true
 env:
   PACKAGE_MANAGER_INSTALL: "apt-get update && apt-get install -y"
   MAKEJOBS: "-j4"
@@ -102,8 +103,11 @@ task:
   << : *GLOBAL_TASK_TEMPLATE
   container:
     image: ubuntu:focal
+    cpu: 8
+    memory: 32G
   env:
     FILE_ENV: "./ci/test/00_setup_env_native_asan.sh"
+    MAKEJOBS: "-j10"
 
 task:
   name: 'x86_64 Linux  [GOAL: install]  [focal]  [no depends, only system libs, sanitizers: fuzzer,address,undefined]'
