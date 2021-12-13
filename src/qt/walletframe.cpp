@@ -234,6 +234,15 @@ void WalletFrame::gotoLoadPSBT(bool from_clipboard)
         }
         std::ifstream in(filename.toLocal8Bit().data(), std::ios::binary);
         data = std::string(std::istreambuf_iterator<char>{in}, {});
+
+        // Some psbt files may be base64 strings in the file rather than binary data
+        bool invalid = false;
+        std::string b64_dec = data;
+        b64_dec.erase(b64_dec.find_last_not_of(" \t\n\r\f\v") + 1); // Trim trailing whitespace
+        b64_dec = DecodeBase64(b64_dec, &invalid);
+        if (!invalid) {
+            data = b64_dec;
+        }
     }
 
     std::string error;
