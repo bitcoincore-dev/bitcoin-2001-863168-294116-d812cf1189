@@ -226,6 +226,10 @@ public:
 
 std::string BerkeleyDatabaseVersion();
 
+/** Perform sanity check of runtime BDB version versus linked BDB version.
+ */
+bool BerkeleyDatabaseSanityCheck();
+
 //! Check if Berkeley database exists at specified path.
 bool ExistsBerkeleyDatabase(const fs::path& path);
 
