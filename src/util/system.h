@@ -283,6 +283,7 @@ protected:
 
 private:
     fs::path rwconf_path GUARDED_BY(cs_args);
+    bool rwconf_had_prune_option{false};
 
 public:
     ArgsManager();
@@ -296,8 +297,9 @@ public:
     NODISCARD bool ParseParameters(int argc, const char* const argv[], std::string& error);
     NODISCARD bool ReadConfigFiles(std::string& error, bool ignore_invalid_keys = false);
 
-    void ModifyRWConfigFile(const std::map<std::string, std::string>& settings_to_change);
-    void ModifyRWConfigFile(const std::string& setting_to_change, const std::string& new_value);
+    bool RWConfigHasPruneOption() const { return rwconf_had_prune_option; }
+    void ModifyRWConfigFile(const std::map<std::string, std::string>& settings_to_change, bool also_settings_json = true);
+    void ModifyRWConfigFile(const std::string& setting_to_change, const std::string& new_value, bool also_settings_json = true);
     void EraseRWConfigFile();
 
     /**
