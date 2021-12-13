@@ -681,6 +681,12 @@ void RPCConsole::setClientModel(ClientModel *model, int bestblock_height, int64_
 
         // create peer table context menu
         peersTableContextMenu = new QMenu(this);
+        //: Context menu action to copy the address of a peer
+        QAction* const copy_address_action = peersTableContextMenu->addAction(tr("&Copy address"));
+        connect(copy_address_action, &QAction::triggered, [this] {
+            GUIUtil::copyEntryData(ui->peerWidget, PeerTableModel::Address, Qt::DisplayRole);
+        });
+        peersTableContextMenu->addSeparator();
         peersTableContextMenu->addAction(disconnectAction);
         peersTableContextMenu->addAction(banAction1h);
         peersTableContextMenu->addAction(banAction24h);
