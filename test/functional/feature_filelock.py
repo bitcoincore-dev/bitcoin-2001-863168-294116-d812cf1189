@@ -26,12 +26,22 @@ class FilelockTest(BitcoinTestFramework):
         expected_msg = "Error: Cannot obtain a lock on data directory {0}. {1} is probably already running.".format(datadir, self.config['environment']['PACKAGE_NAME'])
         self.nodes[1].assert_start_raises_init_error(extra_args=['-datadir={}'.format(self.nodes[0].datadir), '-noserver'], expected_msg=expected_msg)
 
-        if self.is_wallet_compiled():
-            self.nodes[0].createwallet(self.default_wallet_name)
+        def check_wallet_filelock(descriptors):
+            self.nodes[0].createwallet(wallet_name=self.default_wallet_name, descriptors=descriptors)
             wallet_dir = os.path.join(datadir, 'wallets')
             self.log.info("Check that we can't start a second bitcoind instance using the same wallet")
-            expected_msg = "Error: Error initializing wallet database environment"
+            if descriptors:
+                expected_msg = "Error: SQLiteDatabase: Unable to obtain an exclusive lock on the database, is it being used by another bitcoind?"
+            else:
+                expected_msg = "Error: Error initializing wallet database environment"
             self.nodes[1].assert_start_raises_init_error(extra_args=['-walletdir={}'.format(wallet_dir), '-wallet=' + self.default_wallet_name, '-noserver'], expected_msg=expected_msg, match=ErrorMatch.PARTIAL_REGEX)
+
+        if self.is_wallet_compiled():
+            if self.is_bdb_compiled():
+                check_wallet_filelock(False)
+            if self.is_sqlite_compiled():
+                self.default_wallet_name += 'sqlite'
+                check_wallet_filelock(True)
 
 if __name__ == '__main__':
     FilelockTest().main()

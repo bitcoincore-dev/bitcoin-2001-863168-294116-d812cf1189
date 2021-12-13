@@ -25,6 +25,9 @@
 #include <univalue.h>
 
 #ifdef ENABLE_WALLET
+#ifdef USE_BDB
+#include <wallet/bdb.h>
+#endif
 #include <wallet/db.h>
 #include <wallet/wallet.h>
 #endif
@@ -480,7 +483,7 @@ RPCConsole::RPCConsole(interfaces::Node& node, const PlatformStyle *_platformSty
     ui->WalletSelectorLabel->setVisible(false);
 
     // set library version labels
-#ifdef ENABLE_WALLET
+#ifdef USE_BDB
     ui->berkeleyDBVersion->setText(QString::fromStdString(BerkeleyDatabaseVersion()));
 #else
     ui->label_berkeleyDBVersion->hide();
