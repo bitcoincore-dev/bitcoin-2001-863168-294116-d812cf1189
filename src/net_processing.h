@@ -84,6 +84,15 @@ public:
     void CheckForStaleTipAndEvictPeers();
     /** If we have extra outbound peers, try to disconnect the one with the oldest block announcement */
     void EvictExtraOutboundPeers(int64_t time_in_seconds) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+    /**
+     * Attempt to manually fetch block from a given peer.
+     *
+     * @param[in]  id       The peer id
+     * @param[in]  hash     The block hash
+     * @param[in]  pindex   The blockindex if we have the header, otherwise nullptr
+     * @returns             Whether a request was successfully made
+     */
+    bool FetchBlock(NodeId id, const uint256& hash, const CBlockIndex* pindex);
     /** Retrieve unbroadcast transactions from the mempool and reattempt sending to peers */
     void ReattemptInitialBroadcast(CScheduler& scheduler) const;
 
