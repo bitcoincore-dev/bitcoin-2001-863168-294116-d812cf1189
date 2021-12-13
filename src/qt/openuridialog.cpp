@@ -8,13 +8,19 @@
 #include <qt/guiutil.h>
 #include <qt/sendcoinsrecipient.h>
 
+#include <QAbstractButton>
+#include <QLineEdit>
 #include <QUrl>
+#include <QClipboard>
 
-OpenURIDialog::OpenURIDialog(QWidget *parent) :
+OpenURIDialog::OpenURIDialog(const PlatformStyle *platformStyle, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::OpenURIDialog)
 {
     ui->setupUi(this);
+    m_platform_style = platformStyle;
+    ui->pasteButton->setIcon(platformStyle->SingleColorIcon(":/icons/editpaste"));
+    QObject::connect(ui->pasteButton, &QAbstractButton::clicked, ui->uriEdit, &QLineEdit::paste);
 
     GUIUtil::handleCloseWindowShortcut(this);
 }
@@ -39,4 +45,13 @@ void OpenURIDialog::accept()
     } else {
         ui->uriEdit->setValid(false);
     }
+}
+
+void OpenURIDialog::changeEvent(QEvent* e)
+{
+    if (e->type() == QEvent::PaletteChange) {
+        ui->pasteButton->setIcon(m_platform_style->SingleColorIcon(":/icons/editpaste"));
+    }
+
+    QDialog::changeEvent(e);
 }
