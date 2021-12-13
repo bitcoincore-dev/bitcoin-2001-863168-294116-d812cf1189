@@ -79,7 +79,7 @@ class AddrTest(BitcoinTestFramework):
         ]):
             addr_source.send_and_ping(msg)
             self.nodes[0].setmocktime(int(time.time()) + 30 * 60)
-            addr_receiver.sync_with_ping()
+            addr_receiver.sync_send_with_ping()
 
         # The following test is backported. The original test also verified behavior for
         # outbound peers, but lacking add_outbound_p2p_connection, those tests have been
