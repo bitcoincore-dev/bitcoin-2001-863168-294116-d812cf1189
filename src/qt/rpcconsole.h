@@ -96,7 +96,7 @@ private Q_SLOTS:
     void clearSelectedNode();
 
 public Q_SLOTS:
-    void clear(bool clearHistory = true);
+    void clear(bool clearHistory, bool keep_prompt);
     void fontBigger();
     void fontSmaller();
     void setFontSize(int newSize);
