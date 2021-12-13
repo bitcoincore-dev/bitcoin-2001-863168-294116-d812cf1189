@@ -266,6 +266,7 @@ BASE_SCRIPTS = [
     'p2p_unrequested_blocks.py',
     'p2p_blockfilters.py',
     'feature_includeconf.py',
+    'feature_addrman.py',
     'feature_asmap.py',
     'mempool_unbroadcast.py',
     'mempool_compatibility.py',
