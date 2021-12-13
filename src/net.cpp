@@ -14,6 +14,7 @@
 #include <consensus/consensus.h>
 #include <crypto/sha256.h>
 #include <net_permissions.h>
+#include <netaddress.h>
 #include <netbase.h>
 #include <node/ui_interface.h>
 #include <protocol.h>
@@ -2771,9 +2772,9 @@ bool CConnman::AddNewAddresses(const std::vector<CAddress>& vAddr, const CAddres
     return addrman.Add(vAddr, addrFrom, nTimePenalty);
 }
 
-std::vector<CAddress> CConnman::GetAddresses(size_t max_addresses, size_t max_pct)
+std::vector<CAddress> CConnman::GetAddresses(size_t max_addresses, size_t max_pct, Optional<Network> network)
 {
-    std::vector<CAddress> addresses = addrman.GetAddr(max_addresses, max_pct);
+    std::vector<CAddress> addresses = addrman.GetAddr(max_addresses, max_pct, network);
     if (m_banman) {
         addresses.erase(std::remove_if(addresses.begin(), addresses.end(),
                         [this](const CAddress& addr){return m_banman->IsDiscouraged(addr) || m_banman->IsBanned(addr);}),
