@@ -237,16 +237,21 @@ void TransactionView::setModel(WalletModel *_model)
         {
             // Add third party transaction URLs to context menu
             QStringList listUrls = _model->getOptionsModel()->getThirdPartyTxUrls().split("|", QString::SkipEmptyParts);
+            bool actions_created = false;
             for (int i = 0; i < listUrls.size(); ++i)
             {
                 QString url = listUrls[i].trimmed();
                 QString host = QUrl(url, QUrl::StrictMode).host();
                 if (!host.isEmpty())
                 {
-                    QAction *thirdPartyTxUrlAction = new QAction(host, this); // use host as menu item label
-                    if (i == 0)
+                    if (!actions_created) {
                         contextMenu->addSeparator();
-                    contextMenu->addAction(thirdPartyTxUrlAction);
+                        actions_created = true;
+                    }
+                    /*: Transactions table context menu action to show the
+                        selected transaction in a third-party block explorer.
+                        %1 is a stand-in argument for the URL of the explorer. */
+                    QAction* const thirdPartyTxUrlAction = contextMenu->addAction(tr("Show in %1").arg(host));
                     connect(thirdPartyTxUrlAction, &QAction::triggered, [this, url] { openThirdPartyTxUrl(url); });
                 }
             }
