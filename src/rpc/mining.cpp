@@ -536,8 +536,10 @@ static RPCHelpMan getblocktemplate()
                         },
                         "\"template_request\""},
                 },
-                RPCResult{
-                    RPCResult::Type::OBJ, "", "",
+        {
+            RPCResult{"If the proposal was accepted with mode=='proposal'", RPCResult::Type::NONE, "", ""},
+            RPCResult{"If the proposal was not accepted with mode=='proposal'", RPCResult::Type::STR, "", "According to BIP22"},
+            RPCResult{"Otherwise", RPCResult::Type::OBJ, "", "",
                     {
                         {RPCResult::Type::NUM, "version", "The preferred block version"},
                         {RPCResult::Type::ARR, "rules", "specific block rules that are to be enforced",
@@ -591,6 +593,7 @@ static RPCHelpMan getblocktemplate()
                         {RPCResult::Type::NUM, "height", "The height of the next block"},
                         {RPCResult::Type::STR_HEX, "default_witness_commitment", /* optional */ true, "a valid witness commitment for the unmodified block template"},
                     }},
+        },
                 RPCExamples{
                     HelpExampleCli("getblocktemplate", "'{\"rules\": [\"segwit\"]}'")
             + HelpExampleRpc("getblocktemplate", "{\"rules\": [\"segwit\"]}")
@@ -936,7 +939,10 @@ static RPCHelpMan submitblock()
                     {"hexdata", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "the hex-encoded block data to submit"},
                     {"dummy", RPCArg::Type::STR, /* default */ "ignored", "dummy value, for compatibility with BIP22. This value is ignored."},
                 },
-                RPCResult{RPCResult::Type::NONE, "", "Returns JSON Null when valid, a string according to BIP22 otherwise"},
+        {
+            RPCResult{"If the block was accepted", RPCResult::Type::NONE, "", ""},
+            RPCResult{"Otherwise", RPCResult::Type::STR, "", "According to BIP22"},
+        },
                 RPCExamples{
                     HelpExampleCli("submitblock", "\"mydata\"")
             + HelpExampleRpc("submitblock", "\"mydata\"")

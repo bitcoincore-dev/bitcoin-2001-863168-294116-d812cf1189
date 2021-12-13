@@ -1102,9 +1102,9 @@ static RPCHelpMan gettxout()
                     {"n", RPCArg::Type::NUM, RPCArg::Optional::NO, "vout number"},
                     {"include_mempool", RPCArg::Type::BOOL, /* default */ "true", "Whether to include the mempool. Note that an unspent output that is spent in the mempool won't appear."},
                 },
-                RPCResult{
-                    RPCResult::Type::OBJ, "", "",
-                    {
+                {
+            RPCResult{"If the UTXO was not found", RPCResult::Type::NONE, "", ""},
+            RPCResult{"Otherwise", RPCResult::Type::OBJ, "", "", {
                         {RPCResult::Type::STR_HEX, "bestblock", "The hash of the block at the tip of the chain"},
                         {RPCResult::Type::NUM, "confirmations", "The number of confirmations"},
                         {RPCResult::Type::STR_AMOUNT, "value", "The transaction value in " + CURRENCY_UNIT},
@@ -1119,6 +1119,7 @@ static RPCHelpMan gettxout()
                             }},
                         {RPCResult::Type::BOOL, "coinbase", "Coinbase or not"},
                     }},
+                },
                 RPCExamples{
             "\nGet unspent transactions\n"
             + HelpExampleCli("listunspent", "") +
@@ -2186,9 +2187,14 @@ static RPCHelpMan scantxoutset()
                         },
                         "[scanobjects,...]"},
                 },
-                RPCResult{
-                    RPCResult::Type::OBJ, "", "",
-                    {
+        {
+            RPCResult{"When action=='abort'", RPCResult::Type::BOOL, "", ""},
+            RPCResult{"When action=='status' and no scan is in progress", RPCResult::Type::NONE, "", ""},
+            RPCResult{"When action=='status' and scan is in progress", RPCResult::Type::OBJ, "", "",
+            {
+                {RPCResult::Type::NUM, "progress", "The scan progress"},
+            }},
+            RPCResult{"When action=='start'", RPCResult::Type::OBJ, "", "", {
                         {RPCResult::Type::BOOL, "success", "Whether the scan was completed"},
                         {RPCResult::Type::NUM, "txouts", "The number of unspent transaction outputs scanned"},
                         {RPCResult::Type::NUM, "height", "The current block height (index)"},
@@ -2207,6 +2213,7 @@ static RPCHelpMan scantxoutset()
                             }},
                         {RPCResult::Type::STR_AMOUNT, "total_amount", "The total amount of all found unspent outputs in " + CURRENCY_UNIT},
                     }},
+        },
         RPCExamples{
             HelpExampleCli("scantxoutset", "start \'[\"" + EXAMPLE_DESCRIPTOR_RAW + "\"]\'") +
             HelpExampleCli("scantxoutset", "status") +
