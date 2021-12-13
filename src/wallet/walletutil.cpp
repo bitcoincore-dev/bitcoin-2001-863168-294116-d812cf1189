@@ -7,6 +7,8 @@
 #include <logging.h>
 #include <util/system.h>
 
+#include <set>
+
 #ifdef USE_BDB
 bool ExistsBerkeleyDatabase(const fs::path& path);
 #else
@@ -43,9 +45,27 @@ fs::path GetWalletDir()
 std::vector<fs::path> ListWalletDir()
 {
     const fs::path wallet_dir = GetWalletDir();
+    const fs::path data_dir = GetDataDir();
+    const fs::path blocks_dir = GetBlocksDir();
+
     const size_t offset = wallet_dir.string().size() + 1;
     std::vector<fs::path> paths;
     boost::system::error_code ec;
+
+    // Here we place the top level dirs we want to skip in case walletdir is datadir or blocksdir
+    // Those directories are referenced in doc/files.md
+    const std::set<fs::path> ignore_paths = {
+                                        blocks_dir,
+                                        data_dir / "blktree",
+                                        data_dir / "blocks",
+                                        data_dir / "chainstate",
+                                        data_dir / "coins",
+                                        data_dir / "database",
+                                        data_dir / "indexes",
+                                        data_dir / "regtest",
+                                        data_dir / "signet",
+                                        data_dir / "testnet3"
+                                        };
 
     for (auto it = fs::recursive_directory_iterator(wallet_dir, ec); it != fs::recursive_directory_iterator(); it.increment(ec)) {
         if (ec) {
@@ -55,6 +75,12 @@ std::vector<fs::path> ListWalletDir()
             } else {
                 LogPrintf("%s: %s %s\n", __func__, ec.message(), it->path().string());
             }
+            continue;
+        }
+
+        // We don't want to iterate through those special node dirs
+        if (ignore_paths.count(it->path())) {
+            it.no_push();
             continue;
         }
 
