@@ -71,6 +71,7 @@ class TestNode():
         """
 
         self.index = i
+        self.p2p_conn_index = 1
         self.datadir = datadir
         self.bitcoinconf = os.path.join(self.datadir, "bitcoin.conf")
         self.stdout_dir = os.path.join(self.datadir, "stdout")
@@ -539,6 +540,29 @@ class TestNode():
             # So syncing here is redundant when we only want to send a message, but the cost is low (a few milliseconds)
             # in comparison to the upside of making tests less fragile and unexpected intermittent errors less likely.
             p2p_conn.sync_with_ping()
+
+        return p2p_conn
+
+    def add_outbound_p2p_connection(self, p2p_conn, *, p2p_idx, connection_type="outbound-full-relay", **kwargs):
+        """Add an outbound p2p connection from node. Either
+        full-relay("outbound-full-relay") or
+        block-relay-only("block-relay-only") connection.
+
+        This method adds the p2p connection to the self.p2ps list and returns
+        the connection to the caller.
+        """
+
+        def addconnection_callback(address, port):
+            self.log.debug("Connecting to %s:%d %s" % (address, port, connection_type))
+            self.addconnection('%s:%d' % (address, port), connection_type)
+
+        p2p_conn.peer_accept_connection(connect_cb=addconnection_callback, connect_id=p2p_idx + 1, net=self.chain, timeout_factor=self.timeout_factor, **kwargs)()
+
+        p2p_conn.wait_for_connect()
+        self.p2ps.append(p2p_conn)
+
+        p2p_conn.wait_for_verack()
+        p2p_conn.sync_with_ping()
 
         return p2p_conn
 
