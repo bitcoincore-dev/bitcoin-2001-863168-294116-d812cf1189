@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Манзил ёки ёрлиқни таҳрирлаш учун икки марта босинг</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Янги манзил яратинг</translation>
     </message>
@@ -172,6 +168,10 @@
         <translation>Ҳамёни кодланган</translation>
     </message>
     <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Ҳамёнга янги махфий сўз киритинг.&lt;br/&gt;Илтимос, &lt;b&gt;ўнта ёки тасодифий белгили&lt;/b&gt; махфий сўздан фойдаланинг ёки &lt;b&gt;саккизта ёки кўпроқ сўзлар&lt;/b&gt;дан фойдаланинг.</translation>
+    </message>
+    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>МУҲИМ: Сиз қилган олдинги ҳамён файли заҳиралари янги яратилган, кодланган ҳамён файли билан алмаштирилиши керак. Хавфсизлик сабабларига кўра олдинги кодланган ҳамён файли заҳираси янги кодланган ҳамёндан фойдаланишингиз билан яроқсиз ҳолга келади.</translation>
     </message>
@@ -246,6 +246,10 @@
         <translation>Иловадан чиқиш</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>%1 ҳақидаги маълумотларни кўрсатиш</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>&amp;Qt ҳақида</translation>
     </message>
@@ -272,6 +276,10 @@
     <message>
         <source>Open &amp;URI...</source>
         <translation>Интернет манзилни очиш</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Ҳамён:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -353,9 +361,9 @@
         <source>&amp;Command-line options</source>
         <translation>&amp;Буйруқлар сатри мосламалари</translation>
     </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n та Bitcoin тармоғига фаол уланиш мавжуд</numerusform></translation>
+    <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Дискдаги блоклар қайта индексланмоқда...</translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -386,12 +394,33 @@
         <translation>Янгиланган</translation>
     </message>
     <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Носозликни ҳал қилиш ва ташхис терминали</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Жўнатилувчи манзиллар</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Қабул қилувчи манзиллар</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Мавжуд Bitcoin буйруқлар матни мосламалари билан  %1 ёрдам хабарларини олиш рўйхатини кўрсатиш</translation>
+    </message>
+    <message>
         <source>&amp;Window</source>
         <translation>&amp;Ойна</translation>
     </message>
     <message>
         <source>Minimize</source>
         <translation>Камайтириш</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation type="unfinished"><numerusform>%n та Bitcoin тармоғига фаол уланиш мавжуд</numerusform><numerusform>%n та Bitcoin тармоғига фаол уланиш мавжуд</numerusform></translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -413,7 +442,11 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Ҳамён &lt;b&gt;кодланган&lt;/b&gt; ва вақтинча &lt;b&gt;қулфланган&lt;/b&gt;</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>Жиддий хато юз берди. %1 хавфсиз ишлай олмайди, шунинг учун чиқиб кетилади.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -473,28 +506,32 @@
         <translation>Тасдиқланди</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Манзилни нусхалаш</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Ёрликни нусхала</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Кийматни нусхала</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Ўтказам рақамидан нусха олиш</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Манзилни нусхалаш</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>Сарфланмаганларни қулфлаш</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Ёрликни нусхала</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>Сарфланмаганларни қулфдан чиқариш</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Кийматни нусхала</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Ўтказам рақамидан нусха олиш</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;Сарфланмаганларни қулфлаш</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">&amp;Сарфланмаганларни қулфдан чиқариш</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -557,6 +594,10 @@
     <message>
         <source>Wallet</source>
         <translation>Ҳамён</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation type="unfinished">Ҳамённи кодлаш</translation>
     </message>
     </context>
 <context>
@@ -647,6 +688,10 @@
         <translation>Хуш келибсиз</translation>
     </message>
     <message>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>Биринчи марта дастур ишга тушгани каби сиз %1 маълумотларини жойлаштирадиган жойни танлашингиз мумкин.</translation>
+    </message>
+    <message>
         <source>Use the default data directory</source>
         <translation>Стандарт маълумотлар директориясидан фойдаланиш</translation>
     </message>
@@ -655,8 +700,16 @@
         <translation>Бошқа маълумотлар директориясида фойдаланинг:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>Камида %1GB  маълумот ушбу директорияга жойлаштирилади ва вақт давомида ўсиб боради.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 юклаб олинади ва Bitcoin блок занжири нусхаси жойлаштирилади.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>Ҳамён ҳам ушбу директорияда жойлашади.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -668,10 +721,21 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Тўғри келмайди</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
     <message>
         <source>Form</source>
         <translation>Шакл</translation>
+    </message>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">Номаълум...</translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -679,12 +743,25 @@
     </message>
     </context>
 <context>
-    <name>OpenURIDialog</name>
+    <name>NetWatchLogModel</name>
     <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тури</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Манзил</translation>
     </message>
 </context>
+<context>
+    <name>OpenURIDialog</name>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Клипбоарддан манзилни қўйиш</translation>
+    </message>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     </context>
@@ -717,6 +794,14 @@
     <message>
         <source>W&amp;allet</source>
         <translation>Ҳамён</translation>
+    </message>
+    <message>
+        <source>Accept connections from outside.</source>
+        <translation type="unfinished">Ташқаридан уланишларга рози бўлиш.</translation>
+    </message>
+    <message>
+        <source>Allow incomin&amp;g connections</source>
+        <translation type="unfinished">&amp;Кирувчи уланишларга рухсат бериш</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
@@ -759,8 +844,8 @@
         <translation>Миқдорларни кўрсатиш учун &amp;қисм:</translation>
     </message>
     <message>
-        <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
+        <source>&amp;Third party transaction URLs</source>
+        <translation type="unfinished">&amp;Бегона тараф ўтказмалари URL манзиллари</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
@@ -869,6 +954,10 @@
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">Ёпиш</translation>
+    </message>
+    <message>
         <source>or</source>
         <translation>ёки</translation>
     </message>
@@ -884,8 +973,8 @@
         <translation>URI осилиб қолмоқда</translation>
     </message>
     <message>
-        <source>Invalid payment address %1</source>
-        <translation>Нотўғри тўлов манзили %1</translation>
+        <source>Invalid payment address</source>
+        <translation>Нотўғри тўлов манзили</translation>
     </message>
     </context>
 <context>
@@ -893,6 +982,10 @@
     <message>
         <source>User Agent</source>
         <translation>Фойдаланувчи вакил</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Тури</translation>
     </message>
     </context>
 <context>
@@ -904,6 +997,10 @@
     <message>
         <source>Enter a Bitcoin address (e.g. %1)</source>
         <translation>Bitcoin манзилини киритинг (масалан.  %1)</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Ички йўналиш</translation>
     </message>
     <message>
         <source>%1 m</source>
@@ -925,9 +1022,25 @@
         <source>%1 ms</source>
         <translation>%1 мс</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n соат</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n кун</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n ҳафта</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 ва %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n йил</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -948,6 +1061,16 @@
     <message>
         <source>unknown</source>
         <translation>Номаълум</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Ўтказма</translation>
     </message>
 </context>
 <context>
@@ -1004,16 +1127,16 @@
         <translation>Ном</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Ҳамён: </translation>
+    </message>
+    <message>
         <source>&amp;Peers</source>
         <translation>&amp;Уламлар</translation>
     </message>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Батафсил маълумотларни кўриш учун уламни танланг.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Йўналиш</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1060,10 +1183,6 @@
         <translation>&amp;Тармоқ трафиги</translation>
     </message>
     <message>
-        <source>Totals</source>
-        <translation>Жами</translation>
-    </message>
-    <message>
         <source>In:</source>
         <translation>Ичига:</translation>
     </message>
@@ -1080,26 +1199,31 @@
         <translation>Терминални тозалаш</translation>
     </message>
     <message>
+        <source>To</source>
+        <translation>Га</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Дан</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Йўқ</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Манзилни нусхалаш</translation>
+    </message>
+    <message>
         <source>via %1</source>
         <translation>%1 орқали</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>ҳеч қачон</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Ички йўналиш</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Ташқи йўналиш</translation>
     </message>
     <message>
         <source>Unknown</source>
         <translation>Номаълум</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -1125,6 +1249,10 @@
     <message>
         <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
         <translation>Хоҳланган миқдор сўрови. Кўрсатилган миқдорни сўраш учун буни бўш ёки ноль қолдиринг.</translation>
+    </message>
+    <message>
+        <source>&amp;Request payment</source>
+        <translation>Тўловни &amp;сўраш</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -1155,16 +1283,20 @@
         <translation>Ўчириш</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Ёрликни нусхала</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Манзилни нусхалаш</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>Хабарни нусхала</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Ёрликни нусхала</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Кийматни нусхала</translation>
+        <source>Copy &amp;message</source>
+        <translation type="unfinished">&amp;Хабарни нусхала</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Кийматни нусхала</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -1174,12 +1306,28 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Request payment to ...</source>
+        <translation type="unfinished">... дан Тўловни сўраш</translation>
+    </message>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">Манзил:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>Миқдори:</translation>
     </message>
     <message>
+        <source>Label:</source>
+        <translation type="unfinished">Ёрлиқ:</translation>
+    </message>
+    <message>
         <source>Message:</source>
         <translation>Хабар</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Ҳамён:</translation>
     </message>
     <message>
         <source>Copy &amp;Address</source>
@@ -1364,6 +1512,10 @@
         <translation>Тангалар жўнаишни тасдиқлаш</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">Жўнатиш</translation>
+    </message>
+    <message>
         <source>The amount to pay must be larger than 0.</source>
         <translation>Тўлов миқдори 0. дан катта бўлиши керак. </translation>
     </message>
@@ -1399,16 +1551,8 @@
         <translation>Олдин фойдаланилган манзилни танла</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Клипбоарддан манзилни қўйиш</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -1429,16 +1573,8 @@
         <translation>Олдин фойдаланилган манзилни танла</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Клипбоарддан манзилни қўйиш</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Signature</source>
@@ -1447,6 +1583,14 @@
     <message>
         <source>Clear &amp;All</source>
         <translation>Барчасини &amp; Тозалаш</translation>
+    </message>
+    <message>
+        <source>&amp;Verify Message</source>
+        <translation>Хабарни &amp;тасдиқлаш</translation>
+    </message>
+    <message>
+        <source>Verify &amp;Message</source>
+        <translation type="unfinished">Хабарни &amp;тасдиқлаш</translation>
     </message>
     <message>
         <source>Message verified.</source>
@@ -1497,6 +1641,10 @@
     <message>
         <source>own address</source>
         <translation>ўз манзили</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation>Фақат кўришга</translation>
     </message>
     <message>
         <source>label</source>
@@ -1609,6 +1757,10 @@
         <translation>Фойда</translation>
     </message>
     <message>
+        <source>watch-only</source>
+        <translation>Фақат кўришга</translation>
+    </message>
+    <message>
         <source>(n/a)</source>
         <translation>(қ/қ)</translation>
     </message>
@@ -1672,10 +1824,6 @@
         <translation>Жўнатиш</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Ўзингизга</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Фойда</translation>
     </message>
@@ -1688,28 +1836,28 @@
         <translation>Мин қиймат</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Манзилни нусхалаш</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Манзилни нусхалаш</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Ёрликни нусхала</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Ёрликни нусхала</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Кийматни нусхала</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Кийматни нусхала</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Ўтказам рақамидан нусха олиш</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Ўтказам рақамидан нусха олиш</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>Ёрликни тахрирлаш</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;Ёрликни тахрирлаш</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>Ўтказма тафсилотларини кўрсатиш </translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;Ўтказма тафсилотларини кўрсатиш </translation>
     </message>
     <message>
         <source>Export Transaction History</source>
@@ -1744,10 +1892,6 @@
         <translation>Манзил</translation>
     </message>
     <message>
-        <source>ID</source>
-        <translation>ID</translation>
-    </message>
-    <message>
         <source>Exporting Failed</source>
         <translation>Экспорт қилиб бўлмади</translation>
     </message>
@@ -1772,6 +1916,10 @@
     </context>
 <context>
     <name>WalletFrame</name>
+    <message>
+        <source>Error</source>
+        <translation>Хатолик</translation>
+    </message>
     </context>
 <context>
     <name>WalletModel</name>
@@ -1791,12 +1939,24 @@
         <translation>Жорий ички ойна ичидаги маълумотларни файлга экспорт қилиш</translation>
     </message>
     <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Ҳамённи заҳиралаш</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Бекор қилиш</translation>
+    </message>
+</context>
+<context>
+    <name>bitcoin-core</name>
+    <message>
         <source>Error</source>
         <translation>Хатолик</translation>
     </message>
-    </context>
-<context>
-    <name>bitcoin-core</name>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Манзиллар юкланмоқда...</translation>
+    </message>
     <message>
         <source>Insufficient funds</source>
         <translation>Кам миқдор</translation>

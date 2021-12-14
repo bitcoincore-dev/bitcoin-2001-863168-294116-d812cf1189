@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Klikatu eskuinarekin helbidea edo etiketa aldatzeko</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Sortu helbide berria</translation>
     </message>
@@ -334,16 +330,9 @@
         <translation>Diruzorroa:</translation>
     </message>
     <message>
-        <source>Click to disable network activity.</source>
-        <translation>Sarea desaktibatzeko sakatu</translation>
-    </message>
-    <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>Sarea desaktibatua</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Sarea berriro aktibatzeko sakatu</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -504,10 +493,6 @@
     <message>
         <source>Close all wallets</source>
         <translation>Diruzorro guztiak itxi</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>Diruzorro lehenetsia</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -684,28 +669,32 @@
         <translation>Konfirmatuta</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Helbidea kopiatu</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Etiketa kopiatu</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>zenbatekoaren kopia</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopiatu transakzioaren IDa</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Helbidea kopiatu</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>Blokeatu erabili gabe</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Etiketa kopiatu</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>Desblokeatu gastatu gabe</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;zenbatekoaren kopia</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Kopiatu transakzioaren IDa</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;Blokeatu erabili gabe</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">&amp;Desblokeatu gastatu gabe</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -747,7 +736,13 @@
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation>Diruzorroa sortu</translation>
+    </message>
+    <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
         <translation>Diruzorroa sortzen&lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
     <message>
@@ -862,10 +857,6 @@
         <translation>Ongietorri %1-ra</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
-    <message>
         <source>Error</source>
         <translation>Akatsa</translation>
     </message>
@@ -900,11 +891,20 @@
         <source>Hide</source>
         <translation>Izkutatu</translation>
     </message>
-    <message>
-        <source>Esc</source>
-        <translation>Esc</translation>
-    </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Mota</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Helbidea</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -915,7 +915,11 @@
         <source>URI:</source>
         <translation>URI: </translation>
     </message>
-</context>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Arbeletik helbidea itsatsi</translation>
+    </message>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -931,7 +935,13 @@
         <translation>Diruzorro lehenetsia</translation>
     </message>
     <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>Diruzorroa zabaldu</translation>
+    </message>
+    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
         <translation>Diru-zorroa irekitzen &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
 </context>
@@ -974,12 +984,8 @@
         <translation>&amp;Sarea</translation>
     </message>
     <message>
-        <source>GB</source>
-        <translation>GB</translation>
-    </message>
-    <message>
-        <source>MiB</source>
-        <translation>MiB</translation>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Diruzorroa</translation>
     </message>
     <message>
         <source>Expert</source>
@@ -1012,18 +1018,6 @@
     <message>
         <source>Port of the proxy (e.g. 9050)</source>
         <translation>Proxy portua (9050 adibidez)</translation>
-    </message>
-    <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -1127,8 +1121,8 @@
         <translation>Ordainketa eskaera akatsa</translation>
     </message>
     <message>
-        <source>Invalid payment address %1</source>
-        <translation>Ordainketa helbide baliogabea %1</translation>
+        <source>Invalid payment address</source>
+        <translation>Ordainketa helbide baliogabea</translation>
     </message>
     </context>
 <context>
@@ -1140,6 +1134,10 @@
     <message>
         <source>Node/Service</source>
         <translation>Adabegi / Zerbitzua</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Mota</translation>
     </message>
     </context>
 <context>
@@ -1156,12 +1154,24 @@
         <source>unknown</source>
         <translation>ezezaguna</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Informazioa</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation type="unfinished">Sarea</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Diruzorroa: </translation>
+    </message>
     <message>
         <source>User Agent</source>
         <translation>Erabiltzaile agentea</translation>
@@ -1173,6 +1183,27 @@
     <message>
         <source>Last block time</source>
         <translation>Azken blokearen unea</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Ra</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Tik</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Helbidea kopiatu</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Sarea desaktibatua</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">Ezezaguna</translation>
     </message>
     </context>
 <context>
@@ -1190,12 +1221,16 @@
         <translation>&amp;Mezua:</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Etiketa kopiatu</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Helbidea kopiatu</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>zenbatekoaren kopia</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Etiketa kopiatu</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;zenbatekoaren kopia</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -1205,8 +1240,16 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">Helbidea:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>Kopurua:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">Izendapen:</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -1271,6 +1314,10 @@
         <translation>Bueltak:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Aukeratu...</translation>
+    </message>
+    <message>
         <source>Hide</source>
         <translation>Izkutatu</translation>
     </message>
@@ -1289,6 +1336,10 @@
     <message>
         <source>Confirm the send action</source>
         <translation>Bidalketa berretsi</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Bidali</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -1315,6 +1366,10 @@
         <translation>Txanponen bidalketa berretsi</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">Bidali</translation>
+    </message>
+    <message>
         <source>The amount to pay must be larger than 0.</source>
         <translation>Ordaintzeko kopurua, 0 baino handiagoa izan behar du.</translation>
     </message>
@@ -1338,16 +1393,8 @@
         <translation>&amp;Etiketa:</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Arbeletik helbidea itsatsi</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -1364,16 +1411,16 @@
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Arbeletik helbidea itsatsi</translation>
     </message>
     <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
+        <source>&amp;Verify Message</source>
+        <translation>Mezua &amp;balioztatu</translation>
+    </message>
+    <message>
+        <source>Verify &amp;Message</source>
+        <translation type="unfinished">Mezua &amp;balioztatu</translation>
     </message>
     <message>
         <source>No error</source>
@@ -1540,10 +1587,6 @@
         <translation>ikusi bakarrik</translation>
     </message>
     <message>
-        <source>(n/a)</source>
-        <translation>(n/a)</translation>
-    </message>
-    <message>
         <source>(no label)</source>
         <translation>(izendapenik ez)</translation>
     </message>
@@ -1603,10 +1646,6 @@
         <translation>Hona bidalia</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Zeure buruari</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Meatua</translation>
     </message>
@@ -1619,20 +1658,20 @@
         <translation>Kopuru minimoa</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Helbidea kopiatu</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Helbidea kopiatu</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Etiketa kopiatu</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Etiketa kopiatu</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>zenbatekoaren kopia</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;zenbatekoaren kopia</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopiatu transakzioaren IDa</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Kopiatu transakzioaren IDa</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
@@ -1641,6 +1680,10 @@
     <message>
         <source>Confirmed</source>
         <translation>Berretsia</translation>
+    </message>
+    <message>
+        <source>Watch-only</source>
+        <translation type="unfinished">Ikusi-bakarrik</translation>
     </message>
     <message>
         <source>Date</source>
@@ -1661,6 +1704,10 @@
     <message>
         <source>Exporting Failed</source>
         <translation>Esportazioak huts egin du</translation>
+    </message>
+    <message>
+        <source>Range:</source>
+        <translation type="unfinished">Muga:</translation>
     </message>
     </context>
 <context>
@@ -1683,7 +1730,11 @@
         <source>Create a new wallet</source>
         <translation>Diruzorro berri bat sortu</translation>
     </message>
-</context>
+    <message>
+        <source>Error</source>
+        <translation>Akatsa</translation>
+    </message>
+    </context>
 <context>
     <name>WalletModel</name>
     <message>
@@ -1706,12 +1757,16 @@
         <translation>Uneko fitxategian datuak esportatu</translation>
     </message>
     <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Ezeztatu</translation>
+    </message>
+</context>
+<context>
+    <name>bitcoin-core</name>
+    <message>
         <source>Error</source>
         <translation>Akatsa</translation>
     </message>
-    </context>
-<context>
-    <name>bitcoin-core</name>
     <message>
         <source>Loading wallet...</source>
         <translation>Diru-zorroa kargatzen</translation>

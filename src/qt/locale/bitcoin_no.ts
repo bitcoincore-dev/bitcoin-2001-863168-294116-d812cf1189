@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Høyreklikk for å redigere addressen eller etikketen </translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Lag en ny adresse</translation>
     </message>
@@ -94,9 +90,21 @@
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Sender adresser </translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Mottar adresser </translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>&amp;Koper adresse</translation>
+    </message>
     </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -106,6 +114,10 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;Adresse </translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -120,6 +132,14 @@
     <name>ModalOverlay</name>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse </translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     </context>
 <context>
@@ -133,6 +153,13 @@
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">CTap</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -148,12 +175,29 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation>&amp;Koper adresse</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>&amp;Koper adresse</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">Adresse :</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Koper adresse</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -184,6 +228,10 @@
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>&amp;Koper adresse</translation>
+    </message>
     <message>
         <source>Address</source>
         <translation>Adresse </translation>

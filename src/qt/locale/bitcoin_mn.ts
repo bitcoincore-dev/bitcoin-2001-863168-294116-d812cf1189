@@ -230,8 +230,25 @@
         <translation>&amp;Нууц Үгийг Солих...</translation>
     </message>
     <message>
+        <source>Create Wallet...</source>
+        <translation type="unfinished">Хэтэвч үүсгэх...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation>Хэтэвч:</translation>
+    </message>
+    <message>
         <source>Change the passphrase used for wallet encryption</source>
         <translation>Түрүйвчийг цоожлох нууц үгийг солих</translation>
+    </message>
+    <message>
+        <source>&amp;Send</source>
+        <translation>&amp;Илгээх
+ </translation>
+    </message>
+    <message>
+        <source>&amp;Receive</source>
+        <translation>&amp;Хүлээж авах</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -254,12 +271,36 @@
         <translation>Алдаа</translation>
     </message>
     <message>
+        <source>Warning</source>
+        <translation>Анхааруулга</translation>
+    </message>
+    <message>
         <source>Information</source>
         <translation>Мэдээллэл</translation>
     </message>
     <message>
         <source>Up to date</source>
         <translation>Шинэчлэгдсэн</translation>
+    </message>
+    <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Оношилгоо ба засварын консолыг онгойлго</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Илгээх хаягууд</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Хүлээн авах хаяг</translation>
+    </message>
+    <message>
+        <source>Close Wallet...</source>
+        <translation type="unfinished">Хэтэвч хаах...</translation>
+    </message>
+    <message>
+        <source>Error: %1</source>
+        <translation>Алдаа: %1</translation>
     </message>
     <message>
         <source>Sent transaction</source>
@@ -301,16 +342,20 @@
         <translation>Баталгаажлаа</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Хаягийг санах</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Шошгыг санах</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Хэмжээг санах</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Хаягийг санах</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Шошгыг санах</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Хэмжээг санах</translation>
     </message>
     <message>
         <source>Copy change</source>
@@ -327,12 +372,25 @@
 </context>
 <context>
     <name>CreateWalletActivity</name>
+    <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation type="unfinished">Хэтэвч үүсгэх</translation>
+    </message>
     </context>
 <context>
     <name>CreateWalletDialog</name>
     <message>
+        <source>Create Wallet</source>
+        <translation type="unfinished">Хэтэвч үүсгэх</translation>
+    </message>
+    <message>
         <source>Wallet</source>
         <translation>Түрүйвч</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation type="unfinished">Түрүйвчийг цоожлох</translation>
     </message>
     </context>
 <context>
@@ -392,14 +450,42 @@
     </message>
     </context>
 <context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Алга Байна</translation>
+    </message>
+    </context>
+<context>
     <name>ModalOverlay</name>
+    <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">үл мэдэгдэх...</translation>
+    </message>
     <message>
         <source>Last block time</source>
         <translation>Сүүлийн блокийн хугацаа</translation>
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тѳрѳл</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Хаяг</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Копидсон хаягийг буулгах</translation>
+    </message>
     </context>
 <context>
     <name>OpenWalletActivity</name>
@@ -445,6 +531,10 @@
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">Хаах</translation>
+    </message>
+    <message>
         <source>or</source>
         <translation>эсвэл</translation>
     </message>
@@ -454,6 +544,10 @@
     </context>
 <context>
     <name>PeerTableModel</name>
+    <message>
+        <source>Type</source>
+        <translation>Тѳрѳл</translation>
+    </message>
     </context>
 <context>
     <name>QObject</name>
@@ -466,8 +560,22 @@
         <translation>Алга Байна</translation>
     </message>
     <message>
+        <source>Error: %1</source>
+        <translation>Алдаа: %1</translation>
+    </message>
+    <message>
         <source>unknown</source>
         <translation>үл мэдэгдэх</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Блокийн</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Гүйлгээний</translation>
     </message>
 </context>
 <context>
@@ -512,6 +620,10 @@
         <translation>Блокийн цуваа</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Түрүйвч: </translation>
+    </message>
+    <message>
         <source>Last block time</source>
         <translation>Сүүлийн блокийн хугацаа</translation>
     </message>
@@ -526,6 +638,15 @@
     <message>
         <source>Clear console</source>
         <translation>Консолыг цэвэрлэх</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Хаягийг санах</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">үл мэдэгдэх</translation>
     </message>
     </context>
 <context>
@@ -555,16 +676,20 @@
         <translation>Устгах</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Шошгыг санах</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Хаягийг санах</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>Зурвасыг санах</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Шошгыг санах</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Хэмжээг санах</translation>
+        <source>Copy &amp;message</source>
+        <translation type="unfinished">&amp;Зурвасыг санах</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Хэмжээг санах</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -574,12 +699,24 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">Хаяг:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>Хэмжээ:</translation>
     </message>
     <message>
+        <source>Label:</source>
+        <translation type="unfinished">Шошго:</translation>
+    </message>
+    <message>
         <source>Message:</source>
         <translation>Зурвас:</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation>Хэтэвч:</translation>
     </message>
     <message>
         <source>Copy &amp;Address</source>
@@ -632,6 +769,10 @@
         <translation>Тѳлбѳр:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Сонго...</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Нэгэн зэрэг олон хүлээн авагчруу явуулах</translation>
     </message>
@@ -672,6 +813,10 @@
         <translation>Зоос явуулахыг баталгаажуулна уу</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">Явуул</translation>
+    </message>
+    <message>
         <source>The amount to pay must be larger than 0.</source>
         <translation>Тѳлѳх хэмжээ 0.-оос их байх ёстой</translation>
     </message>
@@ -707,16 +852,8 @@
         <translation>&amp;Шошго:</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Копидсон хаягийг буулгах</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -737,20 +874,16 @@
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Копидсон хаягийг буулгах</translation>
     </message>
     <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
         <source>Clear &amp;All</source>
         <translation>&amp;Бүгдийг Цэвэрлэ</translation>
+    </message>
+    <message>
+        <source>&amp;Verify Message</source>
+        <translation type="unfinished">&amp;Баталгаажуулах мэссэж</translation>
     </message>
     </context>
 <context>
@@ -785,6 +918,10 @@
     <message>
         <source>Transaction ID</source>
         <translation>Тодорхойлолт</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>Гүйлгээний</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -912,10 +1049,6 @@
         <translation>Явуулсан хаяг</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Ѳѳрлүүгээ</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Олборлогдсон</translation>
     </message>
@@ -928,24 +1061,24 @@
         <translation>Хамгийн бага хэмжээ</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Хаягийг санах</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Хаягийг санах</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Шошгыг санах</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Шошгыг санах</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Хэмжээг санах</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Хэмжээг санах</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>Шошгыг ѳѳрчлѳх</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;Шошгыг ѳѳрчлѳх</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>Гүйлгээний дэлгэрэнгүйг харуул</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;Гүйлгээний дэлгэрэнгүйг харуул</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
@@ -992,6 +1125,10 @@
     </context>
 <context>
     <name>WalletFrame</name>
+    <message>
+        <source>Error</source>
+        <translation>Алдаа</translation>
+    </message>
     </context>
 <context>
     <name>WalletModel</name>
@@ -1011,12 +1148,20 @@
         <translation>Сонгогдсон таб дээрхи дата-г экспортлох</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Алдаа</translation>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Түрүйвчийг Жоорлох</translation>
     </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Error</source>
+        <translation>Алдаа</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Хаягуудыг ачааллаж байна...</translation>
+    </message>
     <message>
         <source>Insufficient funds</source>
         <translation>Таны дансны үлдэгдэл хүрэлцэхгүй байна</translation>

@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Høyreklikk for å redigere adressen eller beskrivelsen</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Opprett en ny adresse</translation>
     </message>
@@ -68,11 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Dette er dine Bitcoin adresser for å sende  å sende betalinger. Husk å sjekke beløp og mottager adresser før du sender mynter.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Dette er dine Bitcoin adresser for å motta betalinger. Bruk 'Lag ny mottaksadresse' knappen i motta tabben for å lage nye adresser. Signering er bare mulig for adresser av typen 'legacy'.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -339,16 +330,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Lommebok:</translation>
     </message>
     <message>
-        <source>Click to disable network activity.</source>
-        <translation>Klikk for å slå av nettverksaktivitet.</translation>
-    </message>
-    <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>Nettverksaktivitet er slått av</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Klikk for å slå på nettverksaktivitet igjen.</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -438,10 +422,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>&amp;Command-line options</source>
         <translation>&amp;Kommandolinjealternativer</translation>
     </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n aktiv tilkobling til Bitcoin nettverket</numerusform><numerusform>%n aktive tilkoblinger til Bitcoin nettverket</numerusform></translation>
-    </message>
     <message>
         <source>Indexing blocks on disk...</source>
         <translation>Indekserer blokker på disken...</translation>
@@ -452,7 +432,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
-        <translation><numerusform>Har prosessert %n blokk av transaksjonshistorien</numerusform><numerusform>Har prosessert %n blokker av transaksjonshistorien</numerusform></translation>
+        <translation>
+            <numerusform>%n blokk med transaksjonshistorikk er prosessert.</numerusform>
+            <numerusform>%n blokker med transaksjonshistorikk er prosessert.</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -555,10 +538,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Masker verdiene i oversiktstabben</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>standard lommebok</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Ingen lommebøker tilgjengelig</translation>
     </message>
@@ -571,16 +550,37 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Minimer</translation>
     </message>
     <message>
-        <source>Zoom</source>
-        <translation>Zoom</translation>
-    </message>
-    <message>
         <source>Main Window</source>
         <translation>Hovedvindu</translation>
     </message>
     <message>
         <source>%1 client</source>
         <translation>%1-klient</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation type="unfinished"><numerusform>%n aktiv tilkobling til Bitcoin nettverket</numerusform><numerusform>%n aktive tilkoblinger til Bitcoin nettverket</numerusform><numerusform>%n aktiv tilkobling til Bitcoin nettverket</numerusform><numerusform>%n aktive tilkoblinger til Bitcoin nettverket</numerusform></translation>
+    </message>
+    <message>
+        <source>Click for more actions.</source>
+        <extracomment>A substring of the tooltip. "More actions" are available via the context menu.</extracomment>
+        <translation type="unfinished">Trykk for flere valg.</translation>
+    </message>
+    <message>
+        <source>Show Peers tab</source>
+        <extracomment>A context menu item. The "Peers tab" is an element of the "Node window".</extracomment>
+        <translation type="unfinished">Vis Likemann fane</translation>
+    </message>
+    <message>
+        <source>Disable network activity</source>
+        <extracomment>A context menu item.</extracomment>
+        <translation type="unfinished">Klikk for å deaktivere nettverksaktivitet</translation>
+    </message>
+    <message>
+        <source>Enable network activity</source>
+        <extracomment>A context menu item. The network activity was disabled previously.</extracomment>
+        <translation type="unfinished">Klikk for å aktivere nettverksaktivitet.</translation>
     </message>
     <message>
         <source>Connecting to peers...</source>
@@ -614,12 +614,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Wallet: %1
 </source>
         <translation>Lommeboik: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Type: %1
 </translation>
     </message>
     <message>
@@ -682,10 +676,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Mengde:</translation>
     </message>
     <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
-    </message>
-    <message>
         <source>Amount:</source>
         <translation>Beløp:</translation>
     </message>
@@ -742,28 +732,32 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Bekreftet</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Kopiér adresse</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopiér merkelapp</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Kopiér beløp</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopier transaksjons-ID</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Kopiér adresse</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>Lås ubrukte</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Kopiér merkelapp</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>Lås opp ubrukte</translation>
+        <source>Copy &amp;amount</source>
+        <translation>Kopiér &amp;beløp</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Kopier transaksjons-ID</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;Lås ubrukte</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">&amp;Lås opp ubrukte</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -825,7 +819,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation>Lag lommebok</translation>
+    </message>
+    <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
         <translation>Lager lommebok &lt;b&gt;%1&lt;b&gt;...</translation>
     </message>
     <message>
@@ -895,7 +895,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Compiled without sqlite support (required for descriptor wallets)</source>
         <translation>Kompilert uten sqlite støtte (kreves for deskriptor lommebok)</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -1008,6 +1008,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Når du klikker OK, vil %1 starte nedlasting og behandle hele den %4 blokkjeden (%2GB) fra de eldste transaksjonene i %3 når %4 først startet.</translation>
     </message>
     <message>
+        <source>Limit block chain storage to</source>
+        <translation type="unfinished">Begrens blokkjedelagring til</translation>
+    </message>
+    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
         <translation>Gjenoppretting av denne innstillingen krever at du laster ned hele blockchain på nytt. Det er raskere å laste ned hele kjeden først og beskjære den senere Deaktiver noen avanserte funksjoner.</translation>
     </message>
@@ -1028,20 +1032,20 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Bruk en egendefinert datamappe:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
-    <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Kast blokker etter bekreftelse, bortsett fra de siste %1 GB (sviske)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Minst %1 GB data vil bli lagret i denne mappen og den vil vokse over tid.</translation>
     </message>
     <message>
         <source>Approximately %1 GB of data will be stored in this directory.</source>
         <translation>Omtrent %1GB data vil bli lagret i denne mappen.</translation>
+    </message>
+    <message numerus="yes">
+        <source>(sufficient to restore backups %n day(s) old)</source>
+        <comment>block chain pruning</comment>
+        <translation type="unfinished">
+            <numerusform>(Tilstrekkelig å gjenopprette backuper som er %n dag gammel) </numerusform>
+            <numerusform>(Tilstrekkelig å gjenopprette backuper som er %n dager gamle) </numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 will download and store a copy of the Bitcoin block chain.</source>
@@ -1072,6 +1076,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation><numerusform>(%n GB kreves for hele kjeden)</numerusform><numerusform>(%n GB kreves for hele kjeden)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>-</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1119,10 +1130,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Skjul</translation>
     </message>
     <message>
-        <source>Esc</source>
-        <translation>Esc</translation>
-    </message>
-    <message>
         <source>%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.</source>
         <translation>%1 synkroniseres for øyeblikket. Den vil laste ned overskrifter og blokker fra jevnaldrende og validere dem til de når spissen av blokkjeden.</translation>
     </message>
@@ -1132,16 +1139,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresse</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
         <translation>Åpne bitcoin URI</translation>
     </message>
     <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
+        <source>Paste address from clipboard</source>
+        <translation>Lim inn adresse fra utklippstavlen</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1157,7 +1172,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>standard lommebok</translation>
     </message>
     <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>Åpne Lommebok</translation>
+    </message>
+    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
         <translation>Åpner Lommebok &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
 </context>
@@ -1240,16 +1261,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Beskjær og blokker lagring til</translation>
     </message>
     <message>
-        <source>GB</source>
-        <translation>GB</translation>
-    </message>
-    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
         <translation>Gjenoppretting av denne innstillingen krever at du laster ned hele blockchain på nytt</translation>
-    </message>
-    <message>
-        <source>MiB</source>
-        <translation>MiB</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1300,32 +1313,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>&amp;Koble til gjennom SOCKS5 proxy (standardvalg proxy):</translation>
     </message>
     <message>
-        <source>Proxy &amp;IP:</source>
-        <translation>Proxy &amp;IP:</translation>
-    </message>
-    <message>
-        <source>&amp;Port:</source>
-        <translation>&amp;Port:</translation>
-    </message>
-    <message>
         <source>Port of the proxy (e.g. 9050)</source>
         <translation>Proxyens port (f.eks. 9050)</translation>
     </message>
     <message>
         <source>Used for reaching peers via:</source>
         <translation>Brukt for å nå noder via:</translation>
-    </message>
-    <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -1382,10 +1375,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Options set in this dialog are overridden by the command line or in the configuration file:</source>
         <translation>Alternativer som er satt i denne dialogboksen overstyres av kommandolinjen eller i konfigurasjonsfilen:</translation>
-    </message>
-    <message>
-        <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
@@ -1517,10 +1506,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 </context>
 <context>
     <name>PSBTOperationsDialog</name>
-    <message>
-        <source>Dialog</source>
-        <translation>Dialog</translation>
-    </message>
     <message>
         <source>Sign Tx</source>
         <translation>Signer Tx</translation>
@@ -1657,20 +1642,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>'bitcoin: //' er ikke en gyldig URI. Bruk 'bitcoin:' i stedet.</translation>
     </message>
     <message>
-        <source>Cannot process payment request because BIP70 is not supported.</source>
-        <translation>Kan ikke behandle betalingsforespørsel fordi BIP70 ikke støttes.</translation>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation type="unfinished">Kan ikke prosessere betalingsforespørsel fordi BIP70 ikke er støttet.
+Grunnet utbredte sikkerhetshull i BIP70 er det sterkt anbefalt å ignorere instruksjoner fra forretningsdrivende om å bytte lommebøker.
+Hvis du får denne feilen burde du be forretningsdrivende om å tilby en BIP21 kompatibel URI.</translation>
     </message>
     <message>
-        <source>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</source>
-        <translation>På grunn av utbredte sikkerhetsfeil i BIP70 anbefales det på det sterkeste at alle selgerinstruksjoner for å bytte lommebok ignoreres.</translation>
-    </message>
-    <message>
-        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
-        <translation>Hvis du mottar denne feilen, bør du be selgeren gi en BIP21-kompatibel URI.</translation>
-    </message>
-    <message>
-        <source>Invalid payment address %1</source>
-        <translation>Ugyldig betalingsadresse %1</translation>
+        <source>Invalid payment address</source>
+        <translation>Ugyldig betalingsadresse</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
@@ -1692,10 +1673,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Node/Tjeneste</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeId</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Nettverkssvarkall</translation>
     </message>
@@ -1707,7 +1684,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Received</source>
         <translation>Mottatt</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1719,20 +1696,36 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Oppgi en Bitcoin-adresse (f.eks. %1)</translation>
     </message>
     <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
+        <source>Unroutable</source>
+        <translation type="unfinished">Ikke-rutbar</translation>
+    </message>
+    <message>
+        <source>Internal</source>
+        <translation type="unfinished">Intern</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Innkommende</translation>
+    </message>
+    <message>
+        <source>Full Relay</source>
+        <translation type="unfinished">Fullrelé</translation>
+    </message>
+    <message>
+        <source>Block Relay</source>
+        <translation type="unfinished">Blokkrelé</translation>
+    </message>
+    <message>
+        <source>Feeler</source>
+        <translation type="unfinished">Føler</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <translation type="unfinished">Adressehenting</translation>
     </message>
     <message>
         <source>%1 h</source>
         <translation>%1 t</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
     </message>
     <message>
         <source>None</source>
@@ -1741,10 +1734,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>N/A</source>
         <translation>-</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
@@ -1775,22 +1764,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation><numerusform>%n år</numerusform><numerusform>%n år</numerusform></translation>
     </message>
     <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
         <translation>Feil: Den spesifiserte datamappen "%1" finnes ikke.</translation>
     </message>
@@ -1799,16 +1772,17 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Feil: %1</translation>
     </message>
     <message>
-        <source>Error initializing settings: %1</source>
-        <translation>Initialisering av innstillinger feilet: %1</translation>
-    </message>
-    <message>
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 har ikke avsluttet trygt enda…</translation>
     </message>
     <message>
         <source>unknown</source>
         <translation>ukjent</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -1867,10 +1841,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Datadir</source>
         <translation>Datamappe</translation>
-    </message>
-    <message>
-        <source>Blocksdir</source>
-        <translation>Blocksdir</translation>
     </message>
     <message>
         <source>Startup time</source>
@@ -1937,10 +1907,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Velg en node for å vise detaljert informasjon.</translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation>Retning</translation>
-    </message>
-    <message>
         <source>Version</source>
         <translation>Versjon</translation>
     </message>
@@ -1993,12 +1959,44 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Rettigheter</translation>
     </message>
     <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation type="unfinished">Nettverksprotokollen som denne likemannen er tilkoblet gjennom: IPv4, IPv6, Onion, I2P eller CJDNS.</translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation>Tjenester</translation>
     </message>
     <message>
+        <source>Whether the peer requested us to relay transactions.</source>
+        <translation type="unfinished">Hvorvidt likemannen ba oss om å videresende transaksjoner.</translation>
+    </message>
+    <message>
+        <source>Wants Tx Relay</source>
+        <translation type="unfinished">Ønsker Tx Relé</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation type="unfinished">Høy Båndbredde</translation>
+    </message>
+    <message>
         <source>Connection Time</source>
         <translation>Tilkoblingstid</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation type="unfinished">Forløpt tid siden en ny blokk som passerte de initielle validitetskontrollene ble mottatt fra denne likemannen.</translation>
+    </message>
+    <message>
+        <source>Last Block</source>
+        <translation type="unfinished">Siste blokk</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <translation type="unfinished">Tid som har passert siden en ny transaksjon akseptert inn i vår minnepool ble mottatt fra denne likemann.</translation>
+    </message>
+    <message>
+        <source>Last Tx</source>
+        <translation type="unfinished">Siste Tx</translation>
     </message>
     <message>
         <source>Last Send</source>
@@ -2045,10 +2043,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>&amp;Nettverkstrafikk</translation>
     </message>
     <message>
-        <source>Totals</source>
-        <translation>Totalt</translation>
-    </message>
-    <message>
         <source>In:</source>
         <translation>Inn:</translation>
     </message>
@@ -2069,10 +2063,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>1 &amp;time</translation>
     </message>
     <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;dag</translation>
-    </message>
-    <message>
         <source>1 &amp;week</source>
         <translation>1 &amp;uke</translation>
     </message>
@@ -2085,8 +2075,66 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>&amp;Koble fra</translation>
     </message>
     <message>
+        <source>Inbound: initiated by peer</source>
+        <translation type="unfinished">Innkommende: initiert av likemann</translation>
+    </message>
+    <message>
+        <source>Outbound Full Relay: default</source>
+        <translation type="unfinished">Utgående Fullrelé: standard</translation>
+    </message>
+    <message>
+        <source>Outbound Block Relay: does not relay transactions or addresses</source>
+        <translation type="unfinished">Utgående Blokkrelé: videresender ikke transaksjoner eller adresser</translation>
+    </message>
+    <message>
+        <source>Outbound Feeler: short-lived, for testing addresses</source>
+        <translation type="unfinished">Utgående Føler: kortlevd, til testing av adresser</translation>
+    </message>
+    <message>
+        <source>Outbound Address Fetch: short-lived, for soliciting addresses</source>
+        <translation type="unfinished">Utgående Adressehenting: kortlevd, for å hente adresser</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Til</translation>
+    </message>
+    <message>
+        <source>we selected the peer for high bandwidth relay</source>
+        <translation type="unfinished">vi valgte likemannen for høy båndbredderelé</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Fra</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation type="unfinished">likemannen valgte oss for høy båndbredderelé</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Nei</translation>
+    </message>
+    <message>
+        <source>no high bandwidth relay selected</source>
+        <translation type="unfinished">intet høy båndbredderelé valgt</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation type="unfinished">Cltr+=</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>Bannlys i</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation type="unfinished">1 &amp;dag</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Kopiér adresse</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
@@ -2125,28 +2173,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Utfør kommando med lommebok "%1"</translation>
     </message>
     <message>
-        <source>(node id: %1)</source>
-        <translation>(node id: %1)</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>via %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>aldri</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Innkommende</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Utgående</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Ukjent</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation type="unfinished">Aldri</translation>
     </message>
 </context>
 <context>
@@ -2188,8 +2220,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>En valgfri melding som er knyttet til betalingsforespørselen og kan vises til avsenderen.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Lag ny mottakeradresse</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Etterspør betaling</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2228,20 +2260,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Fjern</translation>
     </message>
     <message>
-        <source>Copy URI</source>
-        <translation>Kopier URI</translation>
+        <source>Copy &amp;URI</source>
+        <translation>Kopier &amp;URI</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Kopiér merkelapp</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Kopiér adresse</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>Kopier melding</translation>
+        <source>Copy &amp;label</source>
+        <translation>Kopiér &amp;merkelapp</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Kopier beløp</translation>
+        <source>Copy &amp;message</source>
+        <translation>Kopiér &amp;melding</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation>Kopiér &amp;beløp</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -2357,10 +2393,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Mengde:</translation>
     </message>
     <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
-    </message>
-    <message>
         <source>Amount:</source>
         <translation>Beløp:</translation>
     </message>
@@ -2407,10 +2439,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Spesifiser en tilpasset avgift per kB (1000 byte) av transaksjonens virtuelle størrelse.
 
 Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis per kB" for en transaksjonsstørrelse på 500 byte (halvparten av 1 kB) til slutt gi et gebyr på bare 50 satoshis.</translation>
-    </message>
-    <message>
-        <source>per kilobyte</source>
-        <translation>per kilobyte</translation>
     </message>
     <message>
         <source>Hide</source>
@@ -2482,7 +2510,7 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
     </message>
     <message>
         <source>S&amp;end</source>
-        <translation>S&amp;end</translation>
+        <translation type="unfinished">&amp;Sende</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -2519,6 +2547,10 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
     <message>
         <source>Cr&amp;eate Unsigned</source>
         <translation>Cr &amp; eate Usignert</translation>
+    </message>
+    <message>
+        <source> from wallet '%1'</source>
+        <translation> fra lommebok '%1'</translation>
     </message>
     <message>
         <source>%1 to %2</source>
@@ -2590,7 +2622,7 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
     </message>
     <message>
         <source>Send</source>
-        <translation>Send</translation>
+        <translation type="unfinished">Sende</translation>
     </message>
     <message>
         <source>Watch-only balance:</source>
@@ -2630,7 +2662,10 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Antatt bekreftelsesbegynnelse innen %n blokk.</numerusform><numerusform>Antatt bekreftelsesbegynnelse innen %n blokker.</numerusform></translation>
+        <translation>
+            <numerusform>Estimert å begynne bekreftelse innen %n blokk.</numerusform>
+            <numerusform>Estimert å begynne bekreftelse innen %n blokker.</numerusform>
+        </translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2676,16 +2711,8 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
         <translation>Bitcoin-adressen betalingen skal sendes til</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Lim inn adresse fra utklippstavlen</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Remove this entry</source>
@@ -2731,11 +2758,7 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
         <source>Pay To:</source>
         <translation>Betal Til:</translation>
     </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Memo:</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>ShutdownWindow</name>
     <message>
@@ -2770,16 +2793,8 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
         <translation>Velg tidligere brukt adresse</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Lim inn adresse fra utklippstavlen</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -2900,11 +2915,7 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
 </context>
 <context>
     <name>TrafficGraphWidget</name>
-    <message>
-        <source>KB/s</source>
-        <translation>KB/s</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>TransactionDesc</name>
     <message numerus="yes">
@@ -2942,10 +2953,6 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
     <message>
         <source>%1 confirmations</source>
         <translation>%1 bekreftelser</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Status</translation>
     </message>
     <message>
         <source>Date</source>
@@ -3094,10 +3101,6 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
         <translation>Dato</translation>
     </message>
     <message>
-        <source>Type</source>
-        <translation>Type</translation>
-    </message>
-    <message>
         <source>Label</source>
         <translation>Beskrivelse</translation>
     </message>
@@ -3233,10 +3236,6 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
         <translation>Sendt til</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Til deg selv</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Utvunnet</translation>
     </message>
@@ -3253,44 +3252,44 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
         <translation>Minimumsbeløp</translation>
     </message>
     <message>
-        <source>Abandon transaction</source>
-        <translation>Avbryt transaksjon</translation>
+        <source>A&amp;bandon transaction</source>
+        <translation type="unfinished">&amp;Avbryt transaksjon</translation>
     </message>
     <message>
-        <source>Increase transaction fee</source>
-        <translation>Øk overføringsgebyret</translation>
+        <source>Increase transaction &amp;fee</source>
+        <translation type="unfinished">&amp;Øk overføringsgebyret</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Kopier adresse</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Kopiér adresse</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Kopiér merkelapp</translation>
+        <source>Copy &amp;label</source>
+        <translation>Kopiér &amp;merkelapp</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Kopier beløp</translation>
+        <source>Copy &amp;amount</source>
+        <translation>Kopiér &amp;beløp</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopier transaksjons-ID</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation>Kopiér transaksjons&amp;ID</translation>
     </message>
     <message>
-        <source>Copy raw transaction</source>
-        <translation>Kopier råtransaksjon</translation>
+        <source>Copy &amp;raw transaction</source>
+        <translation type="unfinished">&amp;Kopier råtransaksjon</translation>
     </message>
     <message>
-        <source>Copy full transaction details</source>
-        <translation>Kopier helhetlig transaksjonsdetaljering</translation>
+        <source>Copy full transaction &amp;details</source>
+        <translation>Kopiér helhetlig transaksjons&amp;detaljering</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>Rediger merkelapp</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;Rediger merkelapp</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>Vis transaksjonsdetaljer</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;Vis transaksjonsdetaljer</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
@@ -3313,20 +3312,12 @@ Merk: Siden avgiften er beregnet per byte-basis, vil et gebyr på "100 satoshis 
         <translation>Dato</translation>
     </message>
     <message>
-        <source>Type</source>
-        <translation>Type</translation>
-    </message>
-    <message>
         <source>Label</source>
         <translation>Beskrivelse</translation>
     </message>
     <message>
         <source>Address</source>
         <translation>Adresse</translation>
-    </message>
-    <message>
-        <source>ID</source>
-        <translation>ID</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -3393,6 +3384,30 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
         <source>Create a new wallet</source>
         <translation>Lag en ny lommebok</translation>
     </message>
+    <message>
+        <source>Error</source>
+        <translation>Feilmelding</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>Klarte ikke å dekode PSBT fra utklippstavle (ugyldig base64)</translation>
+    </message>
+    <message>
+        <source>Load Transaction Data</source>
+        <translation>Last transaksjonsdata</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (*.psbt)</source>
+        <translation>Delvis signert transaksjon (*.psbt)</translation>
+    </message>
+    <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>PSBT-fil må være mindre enn 100 MiB</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>Klarte ikke å dekode PSBT</translation>
+    </message>
 </context>
 <context>
     <name>WalletModel</name>
@@ -3427,6 +3442,10 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
     <message>
         <source>New fee:</source>
         <translation>Nytt gebyr:</translation>
+    </message>
+    <message>
+        <source>Warning: This may pay the additional fee by reducing change outputs or adding inputs, when necessary. It may add a new change output if one does not already exist. These changes may potentially leak privacy.</source>
+        <translation type="unfinished">Advarsel: Dette kan betale tilleggsgebyret ved å redusere endringsoutput eller legge til input, ved behov. Det kan legge til en ny endringsoutput hvis en ikke allerede eksisterer. Disse endringene kan potensielt lekke privatinformasjon.</translation>
     </message>
     <message>
         <source>Confirm fee bump</source>
@@ -3464,30 +3483,6 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
         <translation>Eksporter data i den valgte fliken til en fil</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Feilmelding</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
-        <translation>Klarte ikke å dekode PSBT fra utklippstavle (ugyldig base64)</translation>
-    </message>
-    <message>
-        <source>Load Transaction Data</source>
-        <translation>Last transaksjonsdata</translation>
-    </message>
-    <message>
-        <source>Partially Signed Transaction (*.psbt)</source>
-        <translation>Delvis signert transaksjon (*.psbt)</translation>
-    </message>
-    <message>
-        <source>PSBT file must be smaller than 100 MiB</source>
-        <translation>PSBT-fil må være mindre enn 100 MiB</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT</source>
-        <translation>Klarte ikke å dekode PSBT</translation>
-    </message>
-    <message>
         <source>Backup Wallet</source>
         <translation>Sikkerhetskopier lommebok</translation>
     </message>
@@ -3502,6 +3497,10 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
     <message>
         <source>There was an error trying to save the wallet data to %1.</source>
         <translation>Feil under forsøk på lagring av lommebokdata til %1</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the wallet data to %1: %2</source>
+        <translation>Feil under forsøk på lagring av lommebokdata til %1: %2</translation>
     </message>
     <message>
         <source>Backup Successful</source>
@@ -3543,6 +3542,10 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
         <translation>%s-utviklerne</translation>
     </message>
     <message>
+        <source>Cannot downgrade wallet from version %i to version %i. Wallet version unchanged.</source>
+        <translation type="unfinished">Kan ikke nedgradere lommebok fra versjon %i til versjon %i. Lommebokversjon er uforandret.</translation>
+    </message>
+    <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
         <translation>Kan ikke låse datamappen %s. %s kjører antagelig allerede.</translation>
     </message>
@@ -3551,8 +3554,28 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
         <translation>Kan ikke angi spesifikke tilkoblinger og ha addrman til å finne utgående tilkoblinger samtidig.</translation>
     </message>
     <message>
+        <source>Cannot upgrade a non HD split wallet from version %i to version %i without upgrading to support pre-split keypool. Please use version %i or no version specified.</source>
+        <translation type="unfinished">Kan ikke oppgradere en ikke-HD delt lommebok fra versjon %i til versjon %i uten å først oppgradere for å få støtte for forhåndsdelt keypool. Vennligst bruk versjon %i eller ingen versjon spesifisert.</translation>
+    </message>
+    <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>Feil under lesing av %s! Alle nøkler har blitt lest rett, men transaksjonsdata eller adressebokoppføringer kan mangle eller være uriktige.</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation type="unfinished">Feil: Dumpfil formatoppføring stemmer ikke. Fikk "%s", forventet "format".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation type="unfinished">Feil: Dumpfil identifiseringsoppføring stemmer ikke. Fikk "%s", forventet "%s".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">Feil: Dumpfil versjon er ikke støttet. Denne versjonen av bitcoin-lommebok støtter kun versjon 1 dumpfiler. Fikk dumpfil med versjon %s</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation type="unfinished">Filen %s eksisterer allerede. Hvis du er sikker på at det er dette du vil, flytt den vekk først.</translation>
     </message>
     <message>
         <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
@@ -3565,6 +3588,18 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
     <message>
         <source>Please contribute if you find %s useful. Visit %s for further information about the software.</source>
         <translation>Bidra hvis du finner %s nyttig. Besøk %s for mer informasjon om programvaren.</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to prepare the statement to fetch sqlite wallet schema version: %s</source>
+        <translation>SQLiteDataBase: Kunne ikke forberede uttrykket for å hente sqlite lommebokskjemaversjon: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to prepare the statement to fetch the application id: %s</source>
+        <translation>SQLiteDatabase: Kunne ikke forberede uttrykket for å hente applikasjonsid: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unknown sqlite wallet schema version %d. Only version %d is supported</source>
+        <translation>SQLiteDatabase: Ukjent sqlite lommebokskjemaversjon %d. Kun versjon %d er støttet</translation>
     </message>
     <message>
         <source>The block database contains a block which appears to be from the future. This may be due to your computer's date and time being set incorrectly. Only rebuild the block database if you are sure that your computer's date and time are correct</source>
@@ -3585,6 +3620,10 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
     <message>
         <source>Unable to rewind the database to a pre-fork state. You will need to redownload the blockchain</source>
         <translation>Kan ikke spole tilbake databasen til en tilstand før forgreiningen. Du må laste ned blokkjeden igjen</translation>
+    </message>
+    <message>
+        <source>Warning: Dumpfile wallet format "%s" does not match command line specified format "%s".</source>
+        <translation type="unfinished">Advarsel: Dumpfil lommebokformat "%s" stemmer ikke med format "%s" spesifisert i kommandolinje.</translation>
     </message>
     <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
@@ -3627,6 +3666,14 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
         <translation>Ønsker du å gjenopprette blokkdatabasen nå?</translation>
     </message>
     <message>
+        <source>Dump file %s does not exist.</source>
+        <translation type="unfinished">Dump fil %s eksisterer ikke.</translation>
+    </message>
+    <message>
+        <source>Error creating %s</source>
+        <translation type="unfinished">Feil under opprettelse av %s</translation>
+    </message>
+    <message>
         <source>Error initializing block database</source>
         <translation>Feil under initialisering av blokkdatabase</translation>
     </message>
@@ -3653,6 +3700,30 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
     <message>
         <source>Error opening block database</source>
         <translation>Feil under åpning av blokkdatabase</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation type="unfinished">Feil ved lesing av neste oppføring fra lommebokdatabase</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Feilmelding</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation type="unfinished">Feil: Dumpfil sjekksum samsvarer ikke. Beregnet %s, forventet %s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation type="unfinished">Feil: Fikk nøkkel som ikke var hex: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation type="unfinished">Feil: Fikk verdi som ikke var hex: %s</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation type="unfinished">Feil: Manglende sjekksum</translation>
     </message>
     <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
@@ -3693,6 +3764,40 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
     <message>
         <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
         <translation>Ugyldig beløp for -fallbackfee=&lt;amount&gt;: "%s"</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to execute statement to verify database: %s</source>
+        <translation>SQLiteDatabase: Kunne ikke utføre uttrykk for å verifisere database: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to fetch sqlite wallet schema version: %s</source>
+        <translation>SQLiteDatabase: Kunne ikke hente sqlite lommebokskjemaversjon: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to fetch the application id: %s</source>
+        <translation>SQLiteDatabase: Kunne ikke hente applikasjonsid: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to prepare statement to verify database: %s</source>
+        <translation>SQLiteDataBase: Kunne ikke forberede uttrykk for å verifisere database: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Failed to read database verification error: %s</source>
+        <translation>SQLiteDatabase: Kunne ikke lese databaseverifikasjonsfeil: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unexpected application id. Expected %u, got %u</source>
+        <translation>SQLiteDatabase: Uventet applikasjonsid. Forventet %u, fikk %u</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>R/W Konfigurasjonsfilen %s eksisterer ikke
+</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation type="unfinished">Kan ikke åpne %s for skriving</translation>
     </message>
     <message>
         <source>Upgrading txindex database</source>
@@ -3769,10 +3874,6 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
     <message>
         <source>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</source>
         <translation>%s korrupt. Prøv å bruk lommebokverktøyet bitcoin-wallet til å fikse det eller laste en backup.</translation>
-    </message>
-    <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>Kan ikke oppgradere en delt lommebok uten HD uten å oppgradere til støtte for forhåndsdelt tastatur. Bruk -upgradewallet = 169900 eller -upgradewallet uten versjon spesifisert.</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
@@ -3979,10 +4080,6 @@ Gå til Fil &gt; Åpne lommebok for å laste en lommebok.
     <message>
         <source>Loading wallet...</source>
         <translation>Laster lommebok...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Kan ikke nedgradere lommebok</translation>
     </message>
     <message>
         <source>Rescanning...</source>

@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Clic-dde i olygu cyfeiriad neu label</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Creu cyfeiriad newydd</translation>
     </message>
@@ -97,10 +93,6 @@
 <context>
     <name>AddressTableModel</name>
     <message>
-        <source>Label</source>
-        <translation>Label</translation>
-    </message>
-    <message>
         <source>Address</source>
         <translation>Cyfeiriad</translation>
     </message>
@@ -166,6 +158,14 @@
     <message>
         <source>Wallet encrypted</source>
         <translation>Waled wedi amgryptio</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Ysgrifennwch y cyfrinair newydd i'r waled. &lt;br/&gt; Os gwelwch yn dda, defnyddiwch gyfrinair &lt;b&gt; deg neu fwy o gymeriadau ar hap &lt;/b&gt; , neu &lt;b&gt; wyth neu fwy o eiriau &lt;/b&gt; .</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>Ysgrifennwch yr hen gyfrinair a chyfrinair newydd y waled.</translation>
     </message>
     <message>
         <source>Wallet to be encrypted</source>
@@ -298,16 +298,9 @@
         <translation>Waled:</translation>
     </message>
     <message>
-        <source>Click to disable network activity.</source>
-        <translation>Cliciwch i anablu gweithgaredd y rhwydwaith.</translation>
-    </message>
-    <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>Gweithgaredd rhwydwaith wedi anablu.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Cliciwch i alluogi gweithgaredd y rhwydwaith eto.</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -430,6 +423,14 @@
         <translation>Cyfamserol</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Cyfeiriadau anfon</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Cyfeiriadau derbyn</translation>
+    </message>
+    <message>
         <source>Open Wallet</source>
         <translation>Agor Waled</translation>
     </message>
@@ -490,12 +491,6 @@
 </translation>
     </message>
     <message>
-        <source>Label: %1
-</source>
-        <translation>Label: %1
-</translation>
-    </message>
-    <message>
         <source>Address: %1
 </source>
         <translation>Cyfeiriad: %1
@@ -525,7 +520,11 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Mae'r waled &lt;b&gt;wedi'i amgryptio&lt;/b&gt; ac &lt;b&gt;ar glo&lt;/b&gt; ar hyn o bryd</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>Mae gwall angheuol wedi digwydd. Ni all %1 barhau'n ddiogel ac mae'n cau lawr.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -585,16 +584,20 @@
         <translation>Cadarnhawyd</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Copïo cyfeiriad</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Copïo label</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Copïo cyfanswm</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copïo cyfeiriad</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Copïo label</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation>Copïo cyfansw&amp;m</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -614,16 +617,16 @@
         <source>Wallet</source>
         <translation>Waled</translation>
     </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation type="unfinished">Amgryptio'r waled</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
         <translation>Golygu'r cyfeiriad</translation>
-    </message>
-    <message>
-        <source>&amp;Label</source>
-        <translation>&amp;Label</translation>
     </message>
     <message>
         <source>&amp;Address</source>
@@ -659,16 +662,20 @@
     </context>
 <context>
     <name>HelpMessageDialog</name>
-    </context>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">Ynghylch %1</translation>
+    </message>
+    <message>
+        <source>Command-line options</source>
+        <translation type="unfinished">Dewisiadau Gorchymyn-llinell</translation>
+    </message>
+</context>
 <context>
     <name>Intro</name>
     <message>
         <source>Welcome</source>
         <translation>Croeso</translation>
-    </message>
-    <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Error</source>
@@ -683,14 +690,32 @@
     </message>
     </context>
 <context>
-    <name>OpenURIDialog</name>
+    <name>NetWatchLogModel</name>
     <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Math</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Cyfeiriad</translation>
     </message>
 </context>
 <context>
+    <name>OpenURIDialog</name>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Gludo cyfeiriad o'r glipfwrdd</translation>
+    </message>
+    </context>
+<context>
     <name>OpenWalletActivity</name>
+    <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>Agor Waled</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
@@ -707,24 +732,16 @@
         <translation>W&amp;aled</translation>
     </message>
     <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
-    </message>
-    <message>
         <source>&amp;Window</source>
         <translation>&amp;Ffenestr</translation>
     </message>
     <message>
         <source>&amp;Display</source>
         <translation>&amp;Dangos</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Craidd Bitcoin</translation>
     </message>
     <message>
         <source>Error</source>
@@ -740,12 +757,23 @@
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Cau</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
     </context>
 <context>
     <name>PeerTableModel</name>
+    <message>
+        <source>Type</source>
+        <translation>Math</translation>
+    </message>
     </context>
 <context>
     <name>QObject</name>
@@ -753,15 +781,36 @@
         <source>Amount</source>
         <translation>Cyfanswm</translation>
     </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n awr</numerusform><numerusform>%n awr</numerusform><numerusform>%n awr</numerusform><numerusform>%n awr</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n dydd</numerusform><numerusform>%n dydd</numerusform><numerusform>%n dydd</numerusform><numerusform>%n dydd</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n wythnos</numerusform><numerusform>%n wythnos</numerusform><numerusform>%n wythnos</numerusform><numerusform>%n wythnos</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 a %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n blwydd</numerusform><numerusform>%n blwydd</numerusform><numerusform>%n blwydd</numerusform><numerusform>%n blwydd</numerusform></translation>
     </message>
     <message>
         <source>Error: %1</source>
         <translation> Gwall: %1</translation>
     </message>
-    </context>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tfd</translation>
+    </message>
+</context>
 <context>
     <name>QRImageWidget</name>
     </context>
@@ -776,23 +825,44 @@
         <translation>Rhwydwaith</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Waled: </translation>
+    </message>
+    <message>
         <source>&amp;Open</source>
         <translation>&amp;Agor</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Copïo cyfeiriad</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>Gweithgaredd rhwydwaith wedi anablu</translation>
     </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Label:</translation>
+        <source>&amp;Amount:</source>
+        <translation>&amp;Maint</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Copïo label</translation>
+        <source>&amp;Message:</source>
+        <translation>&amp;Neges:</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Copïo Cyfanswm</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copïo cyfeiriad</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Copïo label</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation>Copïo cyfansw&amp;m</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -801,6 +871,10 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">Cyfeiriad:</translation>
+    </message>
     <message>
         <source>Amount:</source>
         <translation>Maint</translation>
@@ -823,10 +897,6 @@
     <message>
         <source>Date</source>
         <translation>Dyddiad</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>Label</translation>
     </message>
     <message>
         <source>Message</source>
@@ -868,6 +938,10 @@
         <translation>Newid:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Dewis...</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Anfon at pobl lluosog ar yr un pryd</translation>
     </message>
@@ -884,12 +958,20 @@
         <translation>Cadarnhau'r gweithrediad anfon</translation>
     </message>
     <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Anfon</translation>
+    </message>
+    <message>
         <source>Copy amount</source>
         <translation>Copïo Cyfanswm</translation>
     </message>
     <message>
         <source>%1 to %2</source>
         <translation>%1 i %2</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">Anfon</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -903,20 +985,8 @@
         <translation>&amp;Maint</translation>
     </message>
     <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Label:</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Gludo cyfeiriad o'r glipfwrdd</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -929,16 +999,16 @@
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Gludo cyfeiriad o'r glipfwrdd</translation>
     </message>
     <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
+        <source>&amp;Verify Message</source>
+        <translation>&amp;Gwirio neges</translation>
+    </message>
+    <message>
+        <source>Verify &amp;Message</source>
+        <translation type="unfinished">&amp;Gwirio neges</translation>
     </message>
     </context>
 <context>
@@ -959,6 +1029,10 @@
         <translation>Neges</translation>
     </message>
     <message>
+        <source>Transaction</source>
+        <translation>Trafodiad</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>Cyfanswm</translation>
     </message>
@@ -975,10 +1049,6 @@
     <message>
         <source>Type</source>
         <translation>Math</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>Label</translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -1012,20 +1082,20 @@
         <translation>Eleni</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Copïo cyfeiriad</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copïo cyfeiriad</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Copïo label</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Copïo label</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Copïo Cyfanswm</translation>
+        <source>Copy &amp;amount</source>
+        <translation>Copïo cyfansw&amp;m</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>Golygu label</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;Golygu label</translation>
     </message>
     <message>
         <source>Confirmed</source>
@@ -1038,10 +1108,6 @@
     <message>
         <source>Type</source>
         <translation>Math</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>Label</translation>
     </message>
     <message>
         <source>Address</source>
@@ -1064,6 +1130,10 @@
     </context>
 <context>
     <name>WalletFrame</name>
+    <message>
+        <source>Error</source>
+        <translation>Gwall</translation>
+    </message>
     </context>
 <context>
     <name>WalletModel</name>
@@ -1095,11 +1165,15 @@
         <translation>Allforio'r data yn y tab presennol i ffeil</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Gwall</translation>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Backup Waled</translation>
     </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Error</source>
+        <translation>Gwall</translation>
+    </message>
     </context>
 </TS>

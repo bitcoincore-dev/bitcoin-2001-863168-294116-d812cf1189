@@ -2,17 +2,12 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Botão direito para editar endereço ou rótulo
-</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Criar um novo endereço</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>&amp;Novo</translation>
+        <translation>&amp; Novo</translation>
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
@@ -20,7 +15,7 @@
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation>&amp;Copiar</translation>
+        <translation>&amp; Copiar</translation>
     </message>
     <message>
         <source>C&amp;lose</source>
@@ -69,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Estes são os seus endereços para enviar pagamentos. Sempre cheque a quantia e o endereço do destinatário antes de enviar BitCoins.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Estes são seus endereços Bitcoin para receber pagamentos. Use o botão 'Criar novos endereços de recebimento' na barra receber para criar novos endereços.
-Somente é possível assinar com endereços do tipo 'legado'.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -341,16 +330,9 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Carteira:</translation>
     </message>
     <message>
-        <source>Click to disable network activity.</source>
-        <translation>Clique para desativar a atividade de rede.</translation>
-    </message>
-    <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>Atividade de rede desativada.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Clique para ativar a atividade de rede.</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -439,10 +421,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
     <message>
         <source>&amp;Command-line options</source>
         <translation>Opções de linha de &amp;comando</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n conexão ativa na rede Bitcoin</numerusform><numerusform>%n conexões ativas na rede Bitcoin</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -557,10 +535,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Mascarar os valores na barra Resumo</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>carteira padrão</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Nenhuma carteira disponível</translation>
     </message>
@@ -583,6 +557,31 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
     <message>
         <source>%1 client</source>
         <translation>Cliente %1</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation type="unfinished"><numerusform>%n conexão ativa na rede Bitcoin</numerusform><numerusform>%n conexões ativas na rede Bitcoin</numerusform><numerusform>%n conexão ativa na rede Bitcoin</numerusform><numerusform>%n conexões ativas na rede Bitcoin</numerusform></translation>
+    </message>
+    <message>
+        <source>Click for more actions.</source>
+        <extracomment>A substring of the tooltip. "More actions" are available via the context menu.</extracomment>
+        <translation type="unfinished">Clique para mais opções.</translation>
+    </message>
+    <message>
+        <source>Show Peers tab</source>
+        <extracomment>A context menu item. The "Peers tab" is an element of the "Node window".</extracomment>
+        <translation type="unfinished">Mostrar abas De pares.</translation>
+    </message>
+    <message>
+        <source>Disable network activity</source>
+        <extracomment>A context menu item.</extracomment>
+        <translation type="unfinished">Desativar atividade da rede</translation>
+    </message>
+    <message>
+        <source>Enable network activity</source>
+        <extracomment>A context menu item. The network activity was disabled previously.</extracomment>
+        <translation type="unfinished">Ativar atividade de conexões</translation>
     </message>
     <message>
         <source>Connecting to peers...</source>
@@ -684,10 +683,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Quantidade:</translation>
     </message>
     <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
-    </message>
-    <message>
         <source>Amount:</source>
         <translation>Quantia:</translation>
     </message>
@@ -744,28 +739,32 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Confirmado</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Copiar endereço</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Copiar rótulo</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Copiar quantia</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Copiar ID da transação</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copiar endereço</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>Bloquear não-gasto</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Copiar rótulo</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>Desbloquear não-gasto</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Copiar quantia</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Copiar ID da transação</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;Bloquear não-gasto</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">&amp;Desbloquear não-gasto</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -827,7 +826,13 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation>Criar Carteira</translation>
+    </message>
+    <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
         <translation>Criando Carteira &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
     <message>
@@ -897,7 +902,7 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <source>Compiled without sqlite support (required for descriptor wallets)</source>
         <translation>Compilado sem suporte a sqlite (requerido para carteiras descritoras)</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -1010,6 +1015,10 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Quando você clica OK, %1 vai começar a baixar e processar todos os %4 da block chain (%2GB) começando com a mais recente transação em %3 quando %4 inicialmente foi lançado.</translation>
     </message>
     <message>
+        <source>Limit block chain storage to</source>
+        <translation type="unfinished">Limitar o tamanho da blockchain para</translation>
+    </message>
+    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
         <translation>Reverter essa configuração requer o re-download de todo o blockchain. É mais rápido fazer o download de todo o blockchain primeiro e depois fazer prune. Essa opção desabilita algumas funcionalidades avançadas.</translation>
     </message>
@@ -1030,20 +1039,20 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Use um diretório de dados personalizado:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
-    <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Descartar os blocos após verificação, exceto os mais recentes %1 GB (prune)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>No mínimo %1 GB de dados serão armazenados neste diretório, e isso irá crescer com o tempo.</translation>
     </message>
     <message>
         <source>Approximately %1 GB of data will be stored in this directory.</source>
         <translation>Aproximadamente %1 GB de dados serão armazenados neste diretório.</translation>
+    </message>
+    <message numerus="yes">
+        <source>(sufficient to restore backups %n day(s) old)</source>
+        <comment>block chain pruning</comment>
+        <translation type="unfinished">
+            <numerusform>(sufficient to restore backups %n day(s) old)</numerusform>
+            <numerusform>(sufficient to restore backups %n day(s) old)</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 will download and store a copy of the Bitcoin block chain.</source>
@@ -1121,10 +1130,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Ocultar</translation>
     </message>
     <message>
-        <source>Esc</source>
-        <translation>Esc</translation>
-    </message>
-    <message>
         <source>%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.</source>
         <translation>%1 esta sincronizando. Os cabeçalhos e blocos serão baixados dos nós e validados até que alcance o final do block chain.</translation>
     </message>
@@ -1134,16 +1139,29 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Endereço</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
         <translation>Abrir um bitcoin URI</translation>
     </message>
     <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
+        <source>Paste address from clipboard</source>
+        <translation>Colar o endereço da área de transferência</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1159,7 +1177,13 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>carteira padrão</translation>
     </message>
     <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>Abrir carteira</translation>
+    </message>
+    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
         <translation>Abrindo carteira &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
 </context>
@@ -1242,16 +1266,8 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Fazer Prune &amp;da memória de blocos para</translation>
     </message>
     <message>
-        <source>GB</source>
-        <translation>GB</translation>
-    </message>
-    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
         <translation>Reverter esta configuração requer baixar de novo a blockchain inteira.</translation>
-    </message>
-    <message>
-        <source>MiB</source>
-        <translation>MiB</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1318,18 +1334,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Usado para alcançar nós via:</translation>
     </message>
     <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
-    </message>
-    <message>
         <source>&amp;Window</source>
         <translation>&amp;Janela</translation>
     </message>
@@ -1386,10 +1390,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Opções nesta tela foram sobreescritas por comandos ou no arquivo de configuração:</translation>
     </message>
     <message>
-        <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
-    </message>
-    <message>
         <source>&amp;Cancel</source>
         <translation>&amp;Cancelar</translation>
     </message>
@@ -1400,6 +1400,10 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
     <message>
         <source>none</source>
         <translation>nenhum</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1479,10 +1483,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
     <message>
         <source>Balances</source>
         <translation>Saldos</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Total:</translation>
     </message>
     <message>
         <source>Your current total balance</source>
@@ -1659,20 +1659,8 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>'bitcoin://' não é um URI válido. Use 'bitcoin:'.</translation>
     </message>
     <message>
-        <source>Cannot process payment request because BIP70 is not supported.</source>
-        <translation>O pagamento não pode ser processado porque a BIP70 não é suportada.</translation>
-    </message>
-    <message>
-        <source>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</source>
-        <translation>Devido a falha de segurança divulgada no BIP70 é fortemente recomendado que qualquer instrução para comerciantes para mudar de carteira seja ignorado</translation>
-    </message>
-    <message>
-        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
-        <translation>Se você está recebendo este erro você deve requisitar ao comerciante oferecer uma URI compatível com o BIP21.</translation>
-    </message>
-    <message>
-        <source>Invalid payment address %1</source>
-        <translation>Endereço de pagamento %1 inválido</translation>
+        <source>Invalid payment address</source>
+        <translation>Endereço de pagamento inválido</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
@@ -1686,20 +1674,8 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
 <context>
     <name>PeerTableModel</name>
     <message>
-        <source>User Agent</source>
-        <translation>User Agent</translation>
-    </message>
-    <message>
         <source>Node/Service</source>
         <translation>Nó/Serviço</translation>
-    </message>
-    <message>
-        <source>NodeId</source>
-        <translation>ID do nó</translation>
-    </message>
-    <message>
-        <source>Ping</source>
-        <translation>Ping</translation>
     </message>
     <message>
         <source>Sent</source>
@@ -1709,7 +1685,11 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <source>Received</source>
         <translation>Recebido</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tipo</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1721,32 +1701,12 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Informe um endereço Bitcoin (ex: %1)</translation>
     </message>
     <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
+        <source>Inbound</source>
+        <translation>Entrada</translation>
     </message>
     <message>
         <source>None</source>
         <translation>Nenhum</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
@@ -1777,22 +1737,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation><numerusform>%n ano</numerusform><numerusform>%n anos</numerusform></translation>
     </message>
     <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
         <translation>Erro: Diretório de dados especificado "%1" não existe.</translation>
     </message>
@@ -1805,16 +1749,22 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Erro: %1</translation>
     </message>
     <message>
-        <source>Error initializing settings: %1</source>
-        <translation>Erro ao iniciar configurações: %1</translation>
-    </message>
-    <message>
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 ainda não terminou com segurança...</translation>
     </message>
     <message>
         <source>unknown</source>
         <translation>desconhecido</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Bco</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tso</translation>
     </message>
 </context>
 <context>
@@ -1850,10 +1800,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
 </context>
 <context>
     <name>RPCConsole</name>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
     <message>
         <source>Client version</source>
         <translation>Versão do cliente</translation>
@@ -1951,10 +1897,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Selecione um nó para ver informações detalhadas.</translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation>Direção</translation>
-    </message>
-    <message>
         <source>Version</source>
         <translation>Versão</translation>
     </message>
@@ -1977,10 +1919,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
     <message>
         <source>Mapped AS</source>
         <translation>Mapeado como</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>User Agent</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -2051,16 +1989,8 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>&amp;Abrir</translation>
     </message>
     <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Console</translation>
-    </message>
-    <message>
         <source>&amp;Network Traffic</source>
         <translation>&amp;Tráfego da Rede</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Totais</translation>
     </message>
     <message>
         <source>In:</source>
@@ -2083,10 +2013,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>1 &amp;hora</translation>
     </message>
     <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;dia</translation>
-    </message>
-    <message>
         <source>1 &amp;week</source>
         <translation>1 &amp;semana</translation>
     </message>
@@ -2099,8 +2025,29 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>&amp;Desconectar</translation>
     </message>
     <message>
+        <source>To</source>
+        <translation>Para</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>De</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Não</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>Banir por</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation type="unfinished">1 &amp;dia</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Copiar endereço</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
@@ -2147,22 +2094,10 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>por %1</translation>
     </message>
     <message>
-        <source>never</source>
-        <translation>nunca</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Entrada</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Saída</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Desconhecido</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -2202,8 +2137,8 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Uma mensagem opcional que será anexada na cobrança e será mostrada ao remetente. </translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Criar novo endereço de recebimento</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Requisitar Pagamento</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2242,20 +2177,24 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
         <translation>Remover</translation>
     </message>
     <message>
-        <source>Copy URI</source>
-        <translation>Copiar URI</translation>
+        <source>Copy &amp;URI</source>
+        <translation>Copiar &amp;URI</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Copiar rótulo</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copiar endereço</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>Copiar mensagem</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Copiar rótulo</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Copiar quantia</translation>
+        <source>Copy &amp;message</source>
+        <translation type="unfinished">&amp;Copiar mensagem</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Copiar quantia</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -2369,10 +2308,6 @@ Somente é possível assinar com endereços do tipo 'legado'.</translation>
     <message>
         <source>Quantity:</source>
         <translation>Quantidade:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
     </message>
     <message>
         <source>Amount:</source>
@@ -2656,7 +2591,7 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Confirmação em %n bloco.</numerusform><numerusform>Início estimado para confirmação em %n blocos.</numerusform></translation>
+        <translation><numerusform>Confirmação estimada em %n bloco.</numerusform><numerusform>Confirmação estimada em %n blocos.</numerusform></translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2702,16 +2637,8 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
         <translation>O endereço Bitcoin para enviar o pagamento</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Colar o endereço da área de transferência</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Remove this entry</source>
@@ -2796,16 +2723,8 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
         <translation>Escolha um endereço usado anteriormente</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Colar o endereço da área de transferência</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -2926,11 +2845,7 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
 </context>
 <context>
     <name>TrafficGraphWidget</name>
-    <message>
-        <source>KB/s</source>
-        <translation>KB/s</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>TransactionDesc</name>
     <message numerus="yes">
@@ -2968,10 +2883,6 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
     <message>
         <source>%1 confirmations</source>
         <translation>%1 confirmações</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Status</translation>
     </message>
     <message>
         <source>Date</source>
@@ -3188,10 +3099,6 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
         <translation>monitorado</translation>
     </message>
     <message>
-        <source>(n/a)</source>
-        <translation>(n/a)</translation>
-    </message>
-    <message>
         <source>(no label)</source>
         <translation>(sem rótulo)</translation>
     </message>
@@ -3259,10 +3166,6 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
         <translation>Enviado para</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Para você mesmo</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Minerado</translation>
     </message>
@@ -3279,44 +3182,44 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
         <translation>Quantia mínima</translation>
     </message>
     <message>
-        <source>Abandon transaction</source>
-        <translation>Transação abandonada</translation>
+        <source>A&amp;bandon transaction</source>
+        <translation type="unfinished">&amp;Transação abandonada</translation>
     </message>
     <message>
-        <source>Increase transaction fee</source>
-        <translation>Aumentar taxa da transação</translation>
+        <source>Increase transaction &amp;fee</source>
+        <translation type="unfinished">&amp;Aumentar taxa da transação</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Copiar endereço</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copiar endereço</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Copiar rótulo</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Copiar rótulo</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Copiar quantia</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Copiar quantia</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Copiar ID da transação</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Copiar ID da transação</translation>
     </message>
     <message>
-        <source>Copy raw transaction</source>
-        <translation>Copiar o raw da transação</translation>
+        <source>Copy &amp;raw transaction</source>
+        <translation>Copiar o &amp;raw da transação</translation>
     </message>
     <message>
-        <source>Copy full transaction details</source>
-        <translation>Copiar dados completos da transação</translation>
+        <source>Copy full transaction &amp;details</source>
+        <translation type="unfinished">&amp;Copiar dados completos da transação</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>Editar rótulo</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;Editar rótulo</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>Mostrar detalhes da transação</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;Mostrar detalhes da transação</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
@@ -3324,7 +3227,7 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
-        <translation>Comma separated file (*.csv)</translation>
+        <translation>Arquivo separado por virgula (*.csv)</translation>
     </message>
     <message>
         <source>Confirmed</source>
@@ -3349,10 +3252,6 @@ Nota:  Como a taxa é calculada por byte, uma taxa de "100 satoshis por kB" por 
     <message>
         <source>Address</source>
         <translation>Endereço</translation>
-    </message>
-    <message>
-        <source>ID</source>
-        <translation>ID</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -3420,6 +3319,30 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Create a new wallet</source>
         <translation>Criar uma nova carteira</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Erro</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>Não foi possível decodificar PSBT da área de transferência (base64 inválido)</translation>
+    </message>
+    <message>
+        <source>Load Transaction Data</source>
+        <translation>Carregar Dados de Transação</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (*.psbt)</source>
+        <translation>Transação Parcialmente Assinada (*.psbt)</translation>
+    </message>
+    <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>Arquivo PSBT deve ser menor que 100 MiB</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>Não foi possível decodificar PSDBT</translation>
     </message>
 </context>
 <context>
@@ -3492,30 +3415,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>Exportar os dados da guia atual para um arquivo</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Erro</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
-        <translation>Não foi possível decodificar PSBT da área de transferência (base64 inválido)</translation>
-    </message>
-    <message>
-        <source>Load Transaction Data</source>
-        <translation>Carregar Dados de Transação</translation>
-    </message>
-    <message>
-        <source>Partially Signed Transaction (*.psbt)</source>
-        <translation>Transação Parcialmente Assinada (*.psbt)</translation>
-    </message>
-    <message>
-        <source>PSBT file must be smaller than 100 MiB</source>
-        <translation>Arquivo PSBT deve ser menor que 100 MiB</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT</source>
-        <translation>Não foi possível decodificar PSDBT</translation>
-    </message>
-    <message>
         <source>Backup Wallet</source>
         <translation>Backup da carteira</translation>
     </message>
@@ -3530,6 +3429,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>There was an error trying to save the wallet data to %1.</source>
         <translation>Ocorreu um erro ao tentar salvar os dados da carteira em %1.</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the wallet data to %1: %2</source>
+        <translation>Ocorreu um erro ao tentar salvar os dados da carteira em %1: %2</translation>
     </message>
     <message>
         <source>Backup Successful</source>
@@ -3651,10 +3554,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>A configuração %s somente é aplicada na rede %s quando na sessão [%s].</translation>
     </message>
     <message>
-        <source>Copyright (C) %i-%i</source>
-        <translation>Copyright (C) %i-%i</translation>
-    </message>
-    <message>
         <source>Corrupted block database detected</source>
         <translation>Detectado Banco de dados de blocos corrompido</translation>
     </message>
@@ -3701,6 +3600,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Error opening block database</source>
         <translation>Erro ao abrir banco de dados de blocos</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Erro</translation>
     </message>
     <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
@@ -3773,6 +3676,12 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>Diretório de blocos especificado "%s" não existe.</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>O Arquivo de R/W configuração especificado %s não existe
+</translation>
     </message>
     <message>
         <source>Unknown address type '%s'</source>
@@ -3857,10 +3766,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</source>
         <translation>%s está corrompido. Tente usar a ferramenta de carteira bitcoin-wallet para salvamento ou restauração de backup.</translation>
-    </message>
-    <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>Não é possível fazer upgrade de uma carteira dividida não HD sem fazer upgrade para ser compatível com a keypool antes da divisão. Use -upgradewallet=169900 ou -upgradewallet sem especificar nenhuma versão.</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
@@ -4087,10 +3992,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Loading wallet...</source>
         <translation>Carregando carteira...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Não é possível fazer downgrade da carteira</translation>
     </message>
     <message>
         <source>Rescanning...</source>

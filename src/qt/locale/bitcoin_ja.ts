@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>右クリックでアドレスまたはラベルを編集</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>アドレスの新規作成</translation>
     </message>
@@ -68,11 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>これらは、あなたが知っている送信先の Bitcoin アドレスです。コインを送る前に必ず、金額と受取用アドレスを確認してください。</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>これらは支払いを受け取るための、あなたの Bitcoin アドレスです。新しいアドレスを作成するには受取タブ内の「新しい受取用アドレスを作成」ボタンを使用します。</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -340,16 +331,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>ウォレット:</translation>
     </message>
     <message>
-        <source>Click to disable network activity.</source>
-        <translation>クリックするとネットワーク活動を無効化します。</translation>
-    </message>
-    <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>ネットワーク活動は無効化されました。</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>クリックするとネットワーク活動を再び有効化します。</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -438,10 +422,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>&amp;Command-line options</source>
         <translation>コマンドラインオプション(&amp;C)</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>Bitcoin ネットワークへのアクティブな接続は %n 個</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -556,10 +536,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>概要タブにある値を隠す</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>デフォルトウォレット</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>ウォレットは利用できません</translation>
     </message>
@@ -582,6 +558,31 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>%1 client</source>
         <translation>%1 クライアント</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation type="unfinished"><numerusform>Bitcoin ネットワークへのアクティブな接続は %n 個</numerusform><numerusform>Bitcoin ネットワークへのアクティブな接続は %n 個</numerusform></translation>
+    </message>
+    <message>
+        <source>Click for more actions.</source>
+        <extracomment>A substring of the tooltip. "More actions" are available via the context menu.</extracomment>
+        <translation type="unfinished">クリックして、より多くのアクションを表示。</translation>
+    </message>
+    <message>
+        <source>Show Peers tab</source>
+        <extracomment>A context menu item. The "Peers tab" is an element of the "Node window".</extracomment>
+        <translation type="unfinished">ピアタブを表示する</translation>
+    </message>
+    <message>
+        <source>Disable network activity</source>
+        <extracomment>A context menu item.</extracomment>
+        <translation type="unfinished">ネットワーク活動を無効化する</translation>
+    </message>
+    <message>
+        <source>Enable network activity</source>
+        <extracomment>A context menu item. The network activity was disabled previously.</extracomment>
+        <translation type="unfinished">ネットワーク活動を有効化する</translation>
     </message>
     <message>
         <source>Connecting to peers...</source>
@@ -743,28 +744,32 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>検証済み</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>アドレスをコピー</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>ラベルをコピー</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>金額をコピー</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>取引 ID をコピー</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">アドレスをコピー(&amp;C)</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>未使用トランザクションをロック</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">ラベルをコピー(&amp;l)</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>未使用トランザクションのロックを解除</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">金額をコピー(&amp;a)</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation>取引 &amp;ID をコピー</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">コインをロック(&amp;o)</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">コインをアンロック(&amp;U)</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -826,7 +831,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation>ウォレットを作成する</translation>
+    </message>
+    <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
         <translation>ウォレット &lt;b&gt;%1&lt;/b&gt;を作成しています...</translation>
     </message>
     <message>
@@ -896,7 +907,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Compiled without sqlite support (required for descriptor wallets)</source>
         <translation>（Descriptorウォレットに必要な）sqliteサポート無しでコンパイル</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -1009,6 +1020,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>OKをクリックすると、%1 は %4 がリリースされた%3年における最初の取引からの完全な %4 ブロックチェーン（%2GB）のダウンロードおよび処理を開始します。</translation>
     </message>
     <message>
+        <source>Limit block chain storage to</source>
+        <translation type="unfinished">ブロックチェーンのストレージを次に限定する: </translation>
+    </message>
+    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
         <translation>この設定を元に戻すには、ブロックチェーン全体を再ダウンロードする必要があります。先にチェーン全体をダウンロードしてから、剪定する方が高速です。一部の高度な機能を無効にします。</translation>
     </message>
@@ -1029,20 +1044,19 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>カスタムデータディレクトリを使用:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
-    <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>最新の%1 GBを除き、検証後にブロックを破棄する（剪定する）</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>最低でも%1 GBのデータをこのディレクトリに保存する必要があります。またこのデータは時間とともに増加していきます。</translation>
     </message>
     <message>
         <source>Approximately %1 GB of data will be stored in this directory.</source>
         <translation>約%1 GBのデータがこのディレクトリに保存されます。</translation>
+    </message>
+    <message numerus="yes">
+        <source>(sufficient to restore backups %n day(s) old)</source>
+        <comment>block chain pruning</comment>
+        <translation type="unfinished">
+            <numerusform>(%n 日前のバックアップを復元するのに充分です)</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 will download and store a copy of the Bitcoin block chain.</source>
@@ -1120,10 +1134,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>隠す</translation>
     </message>
     <message>
-        <source>Esc</source>
-        <translation>Esc</translation>
-    </message>
-    <message>
         <source>%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.</source>
         <translation>%1は現在同期中です。ブロックチェーンの先端に到達するまで、ピアからヘッダーとブロックをダウンロードし検証します。</translation>
     </message>
@@ -1133,16 +1143,29 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>タイプ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>アドレス</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
         <translation>bitcoin URIを開く</translation>
     </message>
     <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
+        <source>Paste address from clipboard</source>
+        <translation>クリップボードからアドレスを貼り付け</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1158,7 +1181,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>デフォルトウォレット</translation>
     </message>
     <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>ウォレットを開く</translation>
+    </message>
+    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
         <translation>ウォレット &lt;b&gt;%1&lt;/b&gt;を開いています...</translation>
     </message>
 </context>
@@ -1238,19 +1267,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Prune &amp;block storage to</source>
-        <translation>ブロックの保存容量を次の値までに剪定する(&amp;amp;B):</translation>
-    </message>
-    <message>
-        <source>GB</source>
-        <translation>GB</translation>
+        <translation>ブロックの保存容量を次の値までに剪定する(&amp;B):</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
         <translation>この設定を元に戻すには、ブロック チェーン全体を再ダウンロードする必要があります。</translation>
-    </message>
-    <message>
-        <source>MiB</source>
-        <translation>MiB</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1317,18 +1338,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>ピアへの接続手段:</translation>
     </message>
     <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
-    </message>
-    <message>
         <source>&amp;Window</source>
         <translation>ウインドウ(&amp;W)</translation>
     </message>
@@ -1385,10 +1394,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>このダイアログで指定したオプションは、コマンドラインや設定ファイルの内容でオーバーライドされます:</translation>
     </message>
     <message>
-        <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
-    </message>
-    <message>
         <source>&amp;Cancel</source>
         <translation>キャンセル(&amp;C)</translation>
     </message>
@@ -1399,6 +1404,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>none</source>
         <translation>なし</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin のコア</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1658,20 +1667,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>'bitcoin://' は正しいURIではありません｡ 'bitcoin:'を使用してください｡</translation>
     </message>
     <message>
-        <source>Cannot process payment request because BIP70 is not supported.</source>
-        <translation>BIP70がサポートされていないため、支払いリクエストを処理することができません。</translation>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation type="unfinished">BIP70がサポートされていないので支払い請求を処理できません。
+BIP70には広範なセキュリティー上の問題があるので、ウォレットを換えるようにとの事業者からの指示は無視することを強く推奨します。
+このエラーが発生した場合、事業者に対してBIP21に対応したURIを要求してください。</translation>
     </message>
     <message>
-        <source>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</source>
-        <translation>BIP70 に内在する広く知られたセキュリティ上の欠陥がるため、ウォレットを切り替えるというマーチャントからの指示については無視することが強く推奨されます。</translation>
-    </message>
-    <message>
-        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
-        <translation>このエラーが発生する場合は、販売者にBIP21互換URIの提供を依頼するべきです。</translation>
-    </message>
-    <message>
-        <source>Invalid payment address %1</source>
-        <translation>支払い先アドレス「 %1 」は無効です</translation>
+        <source>Invalid payment address</source>
+        <translation>支払い先アドレスは無効です</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
@@ -1693,14 +1698,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>ノード/サービス</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>ノードID</translation>
-    </message>
-    <message>
-        <source>Ping</source>
-        <translation>Ping</translation>
-    </message>
-    <message>
         <source>Sent</source>
         <translation>送信</translation>
     </message>
@@ -1708,7 +1705,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Received</source>
         <translation>受信</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>種別</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1718,6 +1719,38 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Enter a Bitcoin address (e.g. %1)</source>
         <translation>Bitcoin アドレスを入力してください (例: %1)</translation>
+    </message>
+    <message>
+        <source>Unroutable</source>
+        <translation type="unfinished">ルーティング不可能</translation>
+    </message>
+    <message>
+        <source>Internal</source>
+        <translation type="unfinished">内部の</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>内向き</translation>
+    </message>
+    <message>
+        <source>Full Relay</source>
+        <translation type="unfinished">フルリレー</translation>
+    </message>
+    <message>
+        <source>Block Relay</source>
+        <translation type="unfinished">ブロックリレー</translation>
+    </message>
+    <message>
+        <source>Manual</source>
+        <translation type="unfinished">マニュアル</translation>
+    </message>
+    <message>
+        <source>Feeler</source>
+        <translation type="unfinished">探索</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <translation type="unfinished">アドレスのフェッチ</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -1738,10 +1771,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>None</source>
         <translation>なし</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
     </message>
     <message>
         <source>%1 ms</source>
@@ -1776,22 +1805,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation><numerusform>%n年</numerusform></translation>
     </message>
     <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
         <translation>エラー: 指定されたデータ ディレクトリ "%1" は存在しません。</translation>
     </message>
@@ -1804,16 +1817,22 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>エラー: %1</translation>
     </message>
     <message>
-        <source>Error initializing settings: %1</source>
-        <translation>設定の初期化エラー: %1</translation>
-    </message>
-    <message>
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 はまだ安全に終了していません...</translation>
     </message>
     <message>
         <source>unknown</source>
         <translation>不明</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>ブロック</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>取引</translation>
     </message>
 </context>
 <context>
@@ -1849,10 +1868,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 </context>
 <context>
     <name>RPCConsole</name>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
     <message>
         <source>Client version</source>
         <translation>クライアントのバージョン</translation>
@@ -1950,10 +1965,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>詳しい情報を見たいピアを選択してください。</translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation>方向</translation>
-    </message>
-    <message>
         <source>Version</source>
         <translation>バージョン</translation>
     </message>
@@ -2006,12 +2017,48 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>パーミッション</translation>
     </message>
     <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation type="unfinished">このピアと接続しているネットワーク: IPv4, IPv6, Onion, I2P, or CJDNS.</translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation>サービス</translation>
     </message>
     <message>
+        <source>Whether the peer requested us to relay transactions.</source>
+        <translation type="unfinished">ピアがトランザクションの中継を要求したかどうか。</translation>
+    </message>
+    <message>
+        <source>Wants Tx Relay</source>
+        <translation type="unfinished">Txのリレーが必要</translation>
+    </message>
+    <message>
+        <source>High bandwidth BIP152 compact block relay: %1</source>
+        <translation type="unfinished">高帯域幅のBIP152 Compact Blockリレー: %1</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation type="unfinished">高帯域幅</translation>
+    </message>
+    <message>
         <source>Connection Time</source>
         <translation>接続時間</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation type="unfinished">このピアから初期有効性チェックに合格した新規ブロックを受信してからの経過時間。</translation>
+    </message>
+    <message>
+        <source>Last Block</source>
+        <translation type="unfinished">最終ブロック</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <translation type="unfinished">mempoolに受け入れられた新しいトランザクションがこのピアから受信されてからの経過時間。</translation>
+    </message>
+    <message>
+        <source>Last Tx</source>
+        <translation type="unfinished">最後のTx</translation>
     </message>
     <message>
         <source>Last Send</source>
@@ -2058,10 +2105,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>ネットワークトラフィック(&amp;N)</translation>
     </message>
     <message>
-        <source>Totals</source>
-        <translation>合計</translation>
-    </message>
-    <message>
         <source>In:</source>
         <translation>入力:</translation>
     </message>
@@ -2082,10 +2125,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>1時間(&amp;H)</translation>
     </message>
     <message>
-        <source>1 &amp;day</source>
-        <translation>1日(&amp;D)</translation>
-    </message>
-    <message>
         <source>1 &amp;week</source>
         <translation>1週間(&amp;W)</translation>
     </message>
@@ -2098,8 +2137,65 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>切断(&amp;D)</translation>
     </message>
     <message>
+        <source>Inbound: initiated by peer</source>
+        <translation type="unfinished">Inbound: ピアから接続</translation>
+    </message>
+    <message>
+        <source>Outbound Full Relay: default</source>
+        <translation type="unfinished">アウトバウンドフルリレー: デフォルト</translation>
+    </message>
+    <message>
+        <source>Outbound Block Relay: does not relay transactions or addresses</source>
+        <translation type="unfinished">アウトバウンドブロックリレー: トランザクションやアドレスは中継しません</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <translation type="unfinished">Outbound Manual: RPC %1 or %2/%3 設定オプションによって追加</translation>
+    </message>
+    <message>
+        <source>Outbound Feeler: short-lived, for testing addresses</source>
+        <translation type="unfinished">Outbound Feeler: 短時間接続、テスティングアドレス用</translation>
+    </message>
+    <message>
+        <source>Outbound Address Fetch: short-lived, for soliciting addresses</source>
+        <translation type="unfinished">Outbound Address Fetch: 短時間接続、solicitingアドレス用</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>送金先</translation>
+    </message>
+    <message>
+        <source>we selected the peer for high bandwidth relay</source>
+        <translation type="unfinished">高帯域幅リレー用のピアを選択しました</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>送金元</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation type="unfinished">ピアは高帯域幅リレーのために当方を選択しました</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>いいえ</translation>
+    </message>
+    <message>
+        <source>no high bandwidth relay selected</source>
+        <translation type="unfinished">高帯域幅リレーが選択されていません</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>Banする:</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation>1日(&amp;a)</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;アドレスをコピー</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
@@ -2146,20 +2242,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>%1 経由</translation>
     </message>
     <message>
-        <source>never</source>
-        <translation>まだ無し</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>内向き</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>外向き</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>不明</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation type="unfinished">無期限</translation>
     </message>
 </context>
 <context>
@@ -2201,8 +2289,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>支払いリクエストに任意で添付できるメッセージで、送り主に表示されます。</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>新しい受取用アドレスを作成</translation>
+        <source>&amp;Request payment</source>
+        <translation>支払いをリクエスト(&amp;R)</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2241,20 +2329,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>削除</translation>
     </message>
     <message>
-        <source>Copy URI</source>
-        <translation>URIをコピー</translation>
+        <source>Copy &amp;URI</source>
+        <translation>URIをコピーする(&amp;U)</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>ラベルをコピー</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">アドレスをコピー(&amp;C)</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>メッセージをコピー</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">ラベルをコピー(&amp;l)</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>金額をコピー</translation>
+        <source>Copy &amp;message</source>
+        <translation type="unfinished">メッセージをコピー(&amp;m)</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">金額をコピー(&amp;a)</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -2655,7 +2747,9 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>予想される承認開始ブロック: %n ブロック以内</numerusform></translation>
+        <translation>
+            <numerusform>検証が %n ブロック以内に開始される見込みです</numerusform>
+        </translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2701,16 +2795,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>支払い先 Bitcoin アドレス</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>クリップボードからアドレスを貼り付け</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Remove this entry</source>
@@ -2795,16 +2881,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>これまでに使用したことがあるアドレスから選択</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>クリップボードからアドレスを貼り付け</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -3187,10 +3265,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>ウォッチ限定</translation>
     </message>
     <message>
-        <source>(n/a)</source>
-        <translation>(n/a)</translation>
-    </message>
-    <message>
         <source>(no label)</source>
         <translation>(ラベル無し)</translation>
     </message>
@@ -3258,10 +3332,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>送金</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>自己送金</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>発掘</translation>
     </message>
@@ -3278,44 +3348,44 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>表示最小金額</translation>
     </message>
     <message>
-        <source>Abandon transaction</source>
-        <translation>取引の送信を中止</translation>
+        <source>A&amp;bandon transaction</source>
+        <translation>取引の送信を中止(&amp;b)</translation>
     </message>
     <message>
-        <source>Increase transaction fee</source>
-        <translation>取引手数料を上乗せ</translation>
+        <source>Increase transaction &amp;fee</source>
+        <translation>取引手数料を上乗せ(&amp;f)</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>アドレスをコピー</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">アドレスをコピー(&amp;C)</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>ラベルをコピー</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">ラベルをコピー(&amp;l)</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>金額をコピー</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">金額をコピー(&amp;a)</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>取引IDをコピー</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation>取引IDをコピー(&amp;I)</translation>
     </message>
     <message>
-        <source>Copy raw transaction</source>
-        <translation>生トランザクションをコピー</translation>
+        <source>Copy &amp;raw transaction</source>
+        <translation>生トランザクションをコピー(&amp;r)</translation>
     </message>
     <message>
-        <source>Copy full transaction details</source>
-        <translation>取引の詳細すべてをコピー</translation>
+        <source>Copy full transaction &amp;details</source>
+        <translation>取引の詳細すべてをコピー(&amp;d)</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>ラベルを編集</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;ラベルを編集</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>取引の詳細を表示</translation>
+        <source>&amp;Show transaction details</source>
+        <translation>取引の詳細を表示(&amp;S)</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
@@ -3348,10 +3418,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Address</source>
         <translation>アドレス</translation>
-    </message>
-    <message>
-        <source>ID</source>
-        <translation>ID</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -3422,6 +3488,30 @@ Go to File &gt; Open Wallet to load a wallet.
         <source>Create a new wallet</source>
         <translation>新しいウォレットを作成</translation>
     </message>
+    <message>
+        <source>Error</source>
+        <translation>エラー</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>クリップボードのPSBTをデコードできません（無効なbase64）</translation>
+    </message>
+    <message>
+        <source>Load Transaction Data</source>
+        <translation>トランザクションデータのロード</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (*.psbt)</source>
+        <translation>部分的に署名されたトランザクション (*.psbt)</translation>
+    </message>
+    <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation type="unfinished">PSBTファイルは、100MBより小さい必要があります。</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation type="unfinished">PSBTファイルを復号できません</translation>
+    </message>
 </context>
 <context>
     <name>WalletModel</name>
@@ -3456,6 +3546,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>New fee:</source>
         <translation>新しい手数料:</translation>
+    </message>
+    <message>
+        <source>Warning: This may pay the additional fee by reducing change outputs or adding inputs, when necessary. It may add a new change output if one does not already exist. These changes may potentially leak privacy.</source>
+        <translation type="unfinished">警告: 必要に応じて、お釣り用のアウトプットの額を減らしたり、インプットを追加することで追加手数料を支払うことができます。またお釣り用のアウトプットが存在しない場合、新たな乙利用のアウトプットを追加することもできます。これらの変更はプライバシーをリークする可能性があります。</translation>
     </message>
     <message>
         <source>Confirm fee bump</source>
@@ -3493,30 +3587,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>現在のタブのデータをファイルにエクスポート</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>エラー</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
-        <translation>クリップボードのPSBTをデコードできません（無効なbase64）</translation>
-    </message>
-    <message>
-        <source>Load Transaction Data</source>
-        <translation>トランザクションデータのロード</translation>
-    </message>
-    <message>
-        <source>Partially Signed Transaction (*.psbt)</source>
-        <translation>部分的に署名されたトランザクション (*.psbt)</translation>
-    </message>
-    <message>
-        <source>PSBT file must be smaller than 100 MiB</source>
-        <translation>PSBTファイルは、100MBより小さい必要があります.</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT</source>
-        <translation>PSBTファイルを復号できません.</translation>
-    </message>
-    <message>
         <source>Backup Wallet</source>
         <translation>ウォレットのバックアップ</translation>
     </message>
@@ -3531,6 +3601,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>There was an error trying to save the wallet data to %1.</source>
         <translation>ウォレットデータを %1 へ保存する際にエラーが発生しました。</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the wallet data to %1: %2</source>
+        <translation>ウォレットデータを %1 へ保存する際にエラーが発生しまし: %2</translation>
     </message>
     <message>
         <source>Backup Successful</source>
@@ -3572,6 +3646,10 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>%s の開発者</translation>
     </message>
     <message>
+        <source>Cannot downgrade wallet from version %i to version %i. Wallet version unchanged.</source>
+        <translation type="unfinished">ウォレットをバージョン%iからバージョン%iにダウングレードできません。ウォレットバージョンは変更されていません。</translation>
+    </message>
+    <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
         <translation>データ ディレクトリ %s のロックを取得することができません。%s がおそらく既に実行中です。</translation>
     </message>
@@ -3580,12 +3658,40 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>指定された接続が利用できず、また addrman は外向き接続を見つけられませんでした。</translation>
     </message>
     <message>
+        <source>Cannot upgrade a non HD split wallet from version %i to version %i without upgrading to support pre-split keypool. Please use version %i or no version specified.</source>
+        <translation type="unfinished">事前分割キープールをサポートするようアップグレードせずに、非HD分割ウォレットをバージョン%iからバージョン%iにアップグレードすることはできません。バージョン%iを使用するか、バージョンを指定しないでください。</translation>
+    </message>
+    <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>%s の読み込み中にエラーが発生しました！ 全ての鍵は正しく読み込めましたが、取引データやアドレス帳の項目が失われたか、正しくない可能性があります。</translation>
     </message>
     <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation type="unfinished">エラー: Dumpfileのフォーマットレコードが不正です。"%s"が得られましたが、期待値は"format"です。</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation type="unfinished">エラー: Dumpfileの識別子レコードが不正です。得られた値は"%s"で、期待値は"%s"です。</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">エラー: Dumpfileのバージョンが未指定です。このバージョンのbitcoin-walletは、バージョン1のDumpfileのみをサポートします。バージョン%sのDumpfileを取得しました。</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation type="unfinished">ファイル%sは既に存在します。これが必要なものである場合、まず邪魔にならない場所に移動してください。</translation>
+    </message>
+    <message>
         <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
         <translation>2つ以上のonionアドレスが与えられました。%sを自動的に作成されたTorのonionサービスとして使用します。</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation type="unfinished">ダンプファイルが指定されていません。createfromdumpを使用するには、-dumpfile=&lt;filename&gt;を指定する必要があります。</translation>
+    </message>
+    <message>
+        <source>No wallet file format provided. To use createfromdump, -format=&lt;format&gt; must be provided.</source>
+        <translation type="unfinished">ウォレットファイルフォーマットが指定されていません。createfromdumpを使用するには、-format=&lt;format&gt;を指定する必要があります。</translation>
     </message>
     <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
@@ -3628,6 +3734,14 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>データベースをフォーク前の状態に巻き戻せませんでした。ブロックチェーンを再ダウンロードする必要があります</translation>
     </message>
     <message>
+        <source>Unknown wallet file format "%s" provided. Please provide one of "bdb" or "sqlite".</source>
+        <translation type="unfinished">未知のウォレットフォーマット"%s"が指定されました。"bdb"もしくは"sqlite"のどちらかを指定してください。</translation>
+    </message>
+    <message>
+        <source>Warning: Dumpfile wallet format "%s" does not match command line specified format "%s".</source>
+        <translation type="unfinished">警告: ダンプファイルウォレットフォーマット"%s"は、コマンドラインで指定されたフォーマット"%s"と合致していません。</translation>
+    </message>
+    <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
         <translation>警告: ネットワークは完全に合意が取れていないようです。問題が発生しているマイナーがいる可能性があります。</translation>
     </message>
@@ -3652,10 +3766,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>%s の設定は、 [%s] セクションに書かれた場合のみ %s ネットワークへ適用されます。</translation>
     </message>
     <message>
-        <source>Copyright (C) %i-%i</source>
-        <translation>Copyright (C) %i-%i</translation>
-    </message>
-    <message>
         <source>Corrupted block database detected</source>
         <translation>破損したブロック データベースが見つかりました</translation>
     </message>
@@ -3670,6 +3780,14 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Do you want to rebuild the block database now?</source>
         <translation>ブロック データベースを今すぐ再構築しますか？</translation>
+    </message>
+    <message>
+        <source>Dump file %s does not exist.</source>
+        <translation type="unfinished">ダンプファイル%sは存在しません。</translation>
+    </message>
+    <message>
+        <source>Error creating %s</source>
+        <translation type="unfinished">%sの作成エラー</translation>
     </message>
     <message>
         <source>Error initializing block database</source>
@@ -3702,6 +3820,42 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Error opening block database</source>
         <translation>ブロックデータベースのオープン時にエラーが発生しました</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation type="unfinished">ウォレットデータベースから次のレコードの読み取りでエラー</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>エラー</translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation type="unfinished">エラー: データベースにカーソルを作成できませんでした</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation type="unfinished">エラー: ダンプファイルのチェックサムが合致しません。計算された値%s、期待される値%s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation type="unfinished">エラー: hexではない鍵を取得しました: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation type="unfinished">エラー: hexではない値を取得しました: %s</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation type="unfinished">エラー: チェックサムがありません</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation type="unfinished">エラー: バージョン%uをuint32_tとしてパースできませんでした</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation type="unfinished">エラー: 新しいウォレットにレコードを書き込めません</translation>
     </message>
     <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
@@ -3774,6 +3928,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>指定されたブロックディレクトリ "%s" は存在しません｡</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation type="unfinished">書き込み用に%sを開くことができません</translation>
     </message>
     <message>
         <source>Unknown address type '%s'</source>
@@ -3858,10 +4016,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</source>
         <translation>%sが破損しています。ウォレットのツールbitcoin-walletを使って復旧するか、バックアップから復元してみてください。</translation>
-    </message>
-    <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>事前分割キープールをサポートするようにアップグレードしないと、非HD分割ウォレットをアップグレードすることはできません。バージョン169900 を使うか、バージョンを指定しないでください。</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
@@ -4088,10 +4242,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Loading wallet...</source>
         <translation>ウォレットの読み込み中...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>ウォレットのダウングレードはできません</translation>
     </message>
     <message>
         <source>Rescanning...</source>

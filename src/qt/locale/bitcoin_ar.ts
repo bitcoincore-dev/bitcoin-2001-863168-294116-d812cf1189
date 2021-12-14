@@ -2,12 +2,8 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>أنقر بزر الماوس الأيمن لتحرير العنوان أو التصنيف</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
-        <translation>إنشاء عنوان جديد</translation>
+        <translation>إنشاء عنوان جديد </translation>
     </message>
     <message>
         <source>&amp;New</source>
@@ -70,12 +66,6 @@
         <translation>هذه هي عناوين البيتكوين لإرسال المدفوعات. دائما تحقق من المبلغ وعنوان المستلم قبل الإرسال.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>هذه هي عناوين بتكوين الخاصة بك لتلقي المدفوعات. استخدم الزر "إنشاء عنوان استلام جديد" في علامة تبويب الاستلام لإنشاء عناوين جديدة.
-التوقيع ممكن فقط مع عناوين من النوع "قديم".</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>نسخ العنوان</translation>
     </message>
@@ -99,7 +89,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Exporting Failed</source>
         <translation>لقد فشل التصدير</translation>
     </message>
-    </context>
+    <message>
+        <source>There was an error trying to save the address list to %1. Please try again.</source>
+        <translation>لقد حدث خطأ أثناء  حفظ قائمة العناوين إلى %1. يرجى المحاولة مرة أخرى.</translation>
+    </message>
+</context>
 <context>
     <name>AddressTableModel</name>
     <message>
@@ -336,16 +330,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>المحفظة:</translation>
     </message>
     <message>
-        <source>Click to disable network activity.</source>
-        <translation>اضغط لإلغاء تفعيل الشبكه</translation>
-    </message>
-    <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>تم إلغاء تفعيل الشبكه</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>اضغط لتفعيل الشبكه مره أخرى</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -442,6 +429,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Processing blocks on disk...</source>
         <translation>معالجة الكتل على القرص...</translation>
+    </message>
+    <message numerus="yes">
+        <source>Processed %n block(s) of transaction history.</source>
+        <translation><numerusform>تمت معالجة %n كتلة من محفوظات المعاملة.</numerusform><numerusform>تمت معالجة %n كتلة من محفوظات المعاملة.</numerusform><numerusform>تمت معالجة %n كتلة من محفوظات المعاملة.</numerusform><numerusform>تمت معالجة %n كتلات من محفوظات المعاملة.</numerusform><numerusform>تمت معالجة %n كتلات من محفوظات المعاملة.</numerusform><numerusform>تمت معالجة %n كتلات من محفوظات المعاملة.</numerusform></translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -544,10 +535,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>إخفاء القيم في علامة التبويب نظرة عامة</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>المحفظة الإفتراضية</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>المحفظة الرقمية غير متوفرة</translation>
     </message>
@@ -570,6 +557,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>%1 client</source>
         <translation>الزبون %1</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation type="unfinished"><numerusform>%n اتصال نشطة بشبكة بتكوين</numerusform><numerusform>%n اتصال نشطة بشبكة بتكوين</numerusform><numerusform>%n اتصال نشطة بشبكة بتكوين</numerusform><numerusform>%n اتصالات نشطة بشبكة بتكوين</numerusform><numerusform>%n اتصالات نشطة بشبكة بتكوين</numerusform><numerusform>%n اتصالات نشطة بشبكة بتكوين</numerusform></translation>
     </message>
     <message>
         <source>Connecting to peers...</source>
@@ -732,28 +724,32 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>تأكيد</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>نسخ العنوان</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation> انسخ التسمية</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>نسخ الكمية</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>نسخ رقم العملية</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;نسخ العنوان</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>قفل غير المنفق</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp; انسخ التسمية</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>فتح غير المنفق</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;نسخ الكمية</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;نسخ رقم العملية</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;قفل غير المنفق</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">&amp;فتح غير المنفق</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -815,7 +811,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation>إنشاء محفظة</translation>
+    </message>
+    <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
         <translation>جاري إنشاء المحفظة&lt;b&gt;%1&lt;/b&gt;.......</translation>
     </message>
     <message>
@@ -885,7 +887,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Compiled without sqlite support (required for descriptor wallets)</source>
         <translation>تم تجميعه بدون دعم sqlite (مطلوب لمحافظ الواصف)</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -1022,10 +1024,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>بتكوين</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>تجاهل الكتل بعد التحقق ، باستثناء أحدث %1  جيجابايت (تقليم)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>سيتم تخزين %1 جيجابايت على الأقل من البيانات في هذا الدليل، وستنمو مع الوقت.</translation>
     </message>
@@ -1048,6 +1046,21 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Error</source>
         <translation>خطأ</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation><numerusform>%n جيجابايت من المساحة المتوفرة</numerusform><numerusform>%n جيجابايت من المساحة المتوفرة</numerusform><numerusform>%n جيجابايت من المساحة المتوفرة</numerusform><numerusform>%n جيجابايت من المساحة المتوفرة</numerusform><numerusform>%n جيجابايت من المساحة المتوفرة</numerusform><numerusform>%n جيجابايت من المساحة المتوفرة</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation><numerusform>(من %n جيجابايت اللازمة)</numerusform><numerusform>(من %n جيجابايت اللازمة)</numerusform><numerusform>(من %n جيجابايت اللازمة)</numerusform><numerusform>(من %n جيجابايت اللازمة)</numerusform><numerusform>(من %n جيجابايت اللازمة)</numerusform><numerusform>(من %n جيجابايت اللازمة)</numerusform></translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>غير معروف</translation>
     </message>
     </context>
 <context>
@@ -1106,6 +1119,19 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>النوع</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>عنوان</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1115,7 +1141,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>URI:</source>
         <translation>العنوان:</translation>
     </message>
-</context>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>انسخ العنوان من لوحة المفاتيح</translation>
+    </message>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1131,7 +1161,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>المحفظة الإفتراضية</translation>
     </message>
     <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>افتح المحفظة</translation>
+    </message>
+    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
         <translation>يتم فتح المحفظة&lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
 </context>
@@ -1210,10 +1246,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>تقليم وحظر التخزين لـ</translation>
     </message>
     <message>
-        <source>GB</source>
-        <translation>جب</translation>
-    </message>
-    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
         <translation>تتطلب العودة إلى هذا الإعداد إعادة تنزيل سلسلة الكتل بالكامل.</translation>
     </message>
@@ -1284,14 +1316,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Used for reaching peers via:</source>
         <translation>مستخدم للاتصال بالاصدقاء من خلال:</translation>
-    </message>
-    <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
     </message>
     <message>
         <source>Tor</source>
@@ -1368,6 +1392,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>none</source>
         <translation>لا شيء</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>جوهر البيت كوين</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1623,20 +1651,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>'bitcoin://' هو ليس عنوان URL صالح. استعمل 'bitcoin:' بدلا من ذلك.</translation>
     </message>
     <message>
-        <source>Cannot process payment request because BIP70 is not supported.</source>
-        <translation>معالجة طلب الدفع لأن BIP70 غير مدعوم.</translation>
-    </message>
-    <message>
-        <source>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</source>
-        <translation>بسبب الانتشار الواسع للعيوب الأمنية في BIP70 فإنه من الموصى به وبشدة تجاهل أي ارشادات من التجار لتغيير المحافظ.</translation>
-    </message>
-    <message>
-        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
-        <translation>إذا كنت تتلقى هذا الخطأ فيجب عليك الطلب من التاجر توفير عنوان URI يتوافق مع BIP21.</translation>
-    </message>
-    <message>
-        <source>Invalid payment address %1</source>
-        <translation>عنوان الدفع غير صالح %1</translation>
+        <source>Invalid payment address</source>
+        <translation>عنوان الدفع غير صالح</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
@@ -1658,10 +1674,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>عقدة/خدمة</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>رقم العقدة</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>رنين</translation>
     </message>
@@ -1673,7 +1685,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Received</source>
         <translation>إستقبل</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>النوع</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1683,6 +1699,18 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Enter a Bitcoin address (e.g. %1)</source>
         <translation>ادخل عنوان محفطة البتكوين (مثال %1)</translation>
+    </message>
+    <message>
+        <source>Internal</source>
+        <translation type="unfinished">داخلي</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>داخل</translation>
+    </message>
+    <message>
+        <source>Manual</source>
+        <translation type="unfinished">يدوي</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -1712,9 +1740,33 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>%1 ms</source>
         <translation>%1 جزء من الثانية</translation>
     </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation><numerusform>%n ثانية</numerusform><numerusform>%n ثانية</numerusform><numerusform>%n ثانية</numerusform><numerusform>%n ثواني</numerusform><numerusform>%n ثانية</numerusform><numerusform>%n ثانية</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation><numerusform>%n دقيقة</numerusform><numerusform>%n دقيقة</numerusform><numerusform>%n دقيقة</numerusform><numerusform>%n دقيقة</numerusform><numerusform>%n دقيقة</numerusform><numerusform>%n دقيقة</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n ساعة</numerusform><numerusform>%n ساعة</numerusform><numerusform>%n ساعة</numerusform><numerusform>%n ساعة</numerusform><numerusform>%n ساعة</numerusform><numerusform>%n ساعة</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation><numerusform>%n أيام</numerusform><numerusform>%n يوم</numerusform><numerusform>%n أيام</numerusform><numerusform>%n يوم</numerusform><numerusform>%n أيام</numerusform><numerusform>%n أيام</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation><numerusform>%n أسابيع</numerusform><numerusform>%n أسابيع</numerusform><numerusform>%n أسابيع</numerusform><numerusform>%n أسابيع</numerusform><numerusform>%n أسابيع</numerusform><numerusform>%n أسابيع</numerusform></translation>
+    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 و %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation><numerusform>%n سنوات</numerusform><numerusform>%n سنوات</numerusform><numerusform>%n سنوات</numerusform><numerusform>%n سنوات</numerusform><numerusform>%n سنوات</numerusform><numerusform>%n سنوات</numerusform></translation>
     </message>
     <message>
         <source>%1 B</source>
@@ -1747,6 +1799,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>unknown</source>
         <translation>غير معروف</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>معاملة</translation>
     </message>
 </context>
 <context>
@@ -1875,10 +1932,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>حدد نظير لعرض معلومات مفصلة.</translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation>جهة</translation>
-    </message>
-    <message>
         <source>Version</source>
         <translation>الإصدار</translation>
     </message>
@@ -1979,10 +2032,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>&amp;حركة مرور الشبكة</translation>
     </message>
     <message>
-        <source>Totals</source>
-        <translation>المجاميع</translation>
-    </message>
-    <message>
         <source>In:</source>
         <translation>داخل:</translation>
     </message>
@@ -2003,10 +2052,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>1 &amp;ساعة</translation>
     </message>
     <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp; يوم</translation>
-    </message>
-    <message>
         <source>1 &amp;week</source>
         <translation>1 &amp; اسبوع</translation>
     </message>
@@ -2019,8 +2064,29 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>قطع الاتصال</translation>
     </message>
     <message>
+        <source>To</source>
+        <translation>الى</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>من</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>لا</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>حظر ل</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation type="unfinished">1 &amp; يوم</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;نسخ العنوان</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
@@ -2063,22 +2129,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>خلال %1</translation>
     </message>
     <message>
-        <source>never</source>
-        <translation>ابدا</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>داخل</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>خارجي</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>غير معرف</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -2118,8 +2172,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>رسالة اختيارية مرفقة بطلب الدفع ومن الممكن أن تعرض للمرسل.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>و إنشاء عناوين استقبال جديدة</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;طلب دفعة</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2158,20 +2212,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>ازل</translation>
     </message>
     <message>
-        <source>Copy URI</source>
-        <translation>نسخ العنوان</translation>
+        <source>Copy &amp;URI</source>
+        <translation>نسخ  &amp;URI</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation> انسخ التسمية</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;نسخ العنوان</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>انسخ الرسالة</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp; انسخ التسمية</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>نسخ الكمية</translation>
+        <source>Copy &amp;message</source>
+        <translation type="unfinished">&amp;انسخ الرسالة</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;نسخ الكمية</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -2551,6 +2609,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Payment request expired.</source>
         <translation>انتهاء صلاحية طلب الدفع.</translation>
     </message>
+    <message numerus="yes">
+        <source>Estimated to begin confirmation within %n block(s).</source>
+        <translation><numerusform>يقدر أن يبدأ التأكيد ضمن %n من الكتل.</numerusform><numerusform>يقدر أن يبدأ التأكيد ضمن %n من الكتل.</numerusform><numerusform>يقدر أن يبدأ التأكيد ضمن %n من الكتل.</numerusform><numerusform>يقدر أن يبدأ التأكيد ضمن %n من الكتل.</numerusform><numerusform>يقدر أن يبدأ التأكيد ضمن %n من الكتل.</numerusform><numerusform>يقدر أن يبدأ التأكيد ضمن %n من الكتل.</numerusform></translation>
+    </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
         <translation>تحذير: عنوان بتكوين غير صالح</translation>
@@ -2595,16 +2657,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>عنوان البت كوين المرسل اليه الدفع</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>انسخ العنوان من لوحة المفاتيح</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Remove this entry</source>
@@ -2689,16 +2743,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>اختر عنوانا مستخدم سابقا</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>انسخ العنوان من لوحة المفاتيح</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -2826,6 +2872,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
 </context>
 <context>
     <name>TransactionDesc</name>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>مفتوح ل %n كتلة إضافية</numerusform><numerusform>مفتوح ل %n كتلة إضافية</numerusform><numerusform>مفتوح ل %n كتلة إضافية</numerusform><numerusform>مفتوح ل %n كتلات إضافية</numerusform><numerusform>مفتوح ل %n كتلة إضافية</numerusform><numerusform>مفتوح ل %n كتلة إضافية</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>مفتوح حتى %1</translation>
@@ -2897,6 +2947,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Credit</source>
         <translation>رصيد</translation>
+    </message>
+    <message numerus="yes">
+        <source>matures in %n more block(s)</source>
+        <translation><numerusform>تنضج خلال %n كتل إضافية</numerusform><numerusform>تنضج خلال %n كتل إضافية</numerusform><numerusform>تنضج خلال %n كتل إضافية</numerusform><numerusform>تنضج خلال %n كتل إضافية</numerusform><numerusform>تنضج خلال %n كتل إضافية</numerusform><numerusform>تنضج خلال %n كتل إضافية</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -3004,6 +3058,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Label</source>
         <translation>وسم</translation>
     </message>
+    <message numerus="yes">
+        <source>Open for %n more block(s)</source>
+        <translation><numerusform>مفتوح لـ %n كتلة إضافية</numerusform><numerusform>مفتوح لـ %n كتلة إضافية</numerusform><numerusform>مفتوح لـ %n كتلة إضافية</numerusform><numerusform>مفتوح لـ %n كتلة إضافية</numerusform><numerusform>مفتوح لـ %n كتلة إضافية</numerusform><numerusform>مفتوح لـ %n كتلة إضافية</numerusform></translation>
+    </message>
     <message>
         <source>Open until %1</source>
         <translation>مفتوح حتى %1</translation>
@@ -3051,10 +3109,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Payment to yourself</source>
         <translation>دفع لنفسك</translation>
-    </message>
-    <message>
-        <source>Mined</source>
-        <translation>Mined</translation>
     </message>
     <message>
         <source>watch-only</source>
@@ -3132,14 +3186,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>أرسل إلى</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>إليك</translation>
-    </message>
-    <message>
-        <source>Mined</source>
-        <translation>Mined</translation>
-    </message>
-    <message>
         <source>Other</source>
         <translation>أخرى</translation>
     </message>
@@ -3152,44 +3198,44 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>الحد الأدنى</translation>
     </message>
     <message>
-        <source>Abandon transaction</source>
-        <translation>التخلي عن المعاملة</translation>
+        <source>A&amp;bandon transaction</source>
+        <translation type="unfinished">&amp;التخلي عن المعاملة</translation>
     </message>
     <message>
-        <source>Increase transaction fee</source>
-        <translation>زيادة رسوم المعاملة</translation>
+        <source>Increase transaction &amp;fee</source>
+        <translation type="unfinished">&amp;زيادة رسوم المعاملة</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>نسخ العنوان</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;نسخ العنوان</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation> انسخ التسمية</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp; انسخ التسمية</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>نسخ الكمية</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;نسخ الكمية</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>نسخ رقم العملية</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;نسخ رقم العملية</translation>
     </message>
     <message>
-        <source>Copy raw transaction</source>
-        <translation>نسخ المعاملة الخام</translation>
+        <source>Copy &amp;raw transaction</source>
+        <translation type="unfinished">&amp;نسخ المعاملة الخام</translation>
     </message>
     <message>
-        <source>Copy full transaction details</source>
-        <translation>نسخ كامل تفاصيل المعاملة</translation>
+        <source>Copy full transaction &amp;details</source>
+        <translation type="unfinished">&amp;نسخ كامل تفاصيل المعاملة</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>عدل الوصف</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;عدل الوصف</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>عرض تفاصيل المعاملة</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;عرض تفاصيل المعاملة</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
@@ -3292,6 +3338,30 @@ Go to File &gt; Open Wallet to load a wallet.
         <source>Create a new wallet</source>
         <translation>إنشاء محفظة جديدة</translation>
     </message>
+    <message>
+        <source>Error</source>
+        <translation>خطأ</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>تعذر فك تشفير PSBT من الحافظة (base64 غير صالح)</translation>
+    </message>
+    <message>
+        <source>Load Transaction Data</source>
+        <translation>تحميل بيانات المعاملة</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (*.psbt)</source>
+        <translation>معاملة موقعة جزئيا (psbt.*)</translation>
+    </message>
+    <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>ملف PSBT يجب أن يكون أصغر من 100 ميجابايت</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>غير قادر على فك تشفير PSBT</translation>
+    </message>
 </context>
 <context>
     <name>WalletModel</name>
@@ -3361,30 +3431,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>استخراج البيانات في علامة التبويب الحالية إلى ملف</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>خطأ</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
-        <translation>تعذر فك تشفير PSBT من الحافظة (base64 غير صالح)</translation>
-    </message>
-    <message>
-        <source>Load Transaction Data</source>
-        <translation>تحميل بيانات المعاملة</translation>
-    </message>
-    <message>
-        <source>Partially Signed Transaction (*.psbt)</source>
-        <translation>معاملة موقعة جزئيا (psbt.*)</translation>
-    </message>
-    <message>
-        <source>PSBT file must be smaller than 100 MiB</source>
-        <translation>ملف PSBT يجب أن يكون أصغر من 100 ميجابايت</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT</source>
-        <translation>غير قادر على فك تشفير PSBT</translation>
     </message>
     <message>
         <source>Backup Wallet</source>
@@ -3518,14 +3564,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>هل تريد إعادة بناء قاعدة بيانات الكتل الآن؟</translation>
     </message>
     <message>
-        <source>Error initializing block database</source>
-        <translation>Error initializing block database</translation>
-    </message>
-    <message>
-        <source>Error initializing wallet database environment %s!</source>
-        <translation>Error initializing wallet database environment %s!</translation>
-    </message>
-    <message>
         <source>Error loading %s</source>
         <translation>خطأ في تحميل %s</translation>
     </message>
@@ -3548,6 +3586,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Error opening block database</source>
         <translation>خطأ في فتح قاعدة بيانات الكتل</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>خطأ</translation>
     </message>
     <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
@@ -3598,36 +3640,8 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>SQLiteDatabase: فشل في تحضير التصريح لجلب التطبيق id: %s</translation>
     </message>
     <message>
-        <source>SQLiteDatabase: Failed to fetch sqlite wallet schema version: %s</source>
-        <translation>SQLiteDatabase: Failed to fetch sqlite wallet schema version: %s</translation>
-    </message>
-    <message>
-        <source>SQLiteDatabase: Failed to fetch the application id: %s</source>
-        <translation>SQLiteDatabase: Failed to fetch the application id: %s</translation>
-    </message>
-    <message>
-        <source>SQLiteDatabase: Failed to prepare statement to verify database: %s</source>
-        <translation>SQLiteDatabase: Failed to prepare statement to verify database: %s</translation>
-    </message>
-    <message>
-        <source>SQLiteDatabase: Failed to read database verification error: %s</source>
-        <translation>SQLiteDatabase: Failed to read database verification error: %s</translation>
-    </message>
-    <message>
-        <source>SQLiteDatabase: Unexpected application id. Expected %u, got %u</source>
-        <translation>SQLiteDatabase: Unexpected application id. Expected %u, got %u</translation>
-    </message>
-    <message>
-        <source>Specified blocks directory "%s" does not exist.</source>
-        <translation>Specified blocks directory "%s" does not exist.</translation>
-    </message>
-    <message>
         <source>Unknown address type '%s'</source>
         <translation>عنوان  غير صحيح : '%s'</translation>
-    </message>
-    <message>
-        <source>Unknown change type '%s'</source>
-        <translation>Unknown change type '%s'</translation>
     </message>
     <message>
         <source>Upgrading txindex database</source>
@@ -3678,16 +3692,8 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation> غير قادر على توليد مفاتيح.</translation>
     </message>
     <message>
-        <source>Unsupported logging category %s=%s.</source>
-        <translation>Unsupported logging category %s=%s.</translation>
-    </message>
-    <message>
         <source>Upgrading UTXO database</source>
         <translation>ترقية قاعدة بيانات UTXO</translation>
-    </message>
-    <message>
-        <source>User Agent comment (%s) contains unsafe characters.</source>
-        <translation>User Agent comment (%s) contains unsafe characters.</translation>
     </message>
     <message>
         <source>Verifying blocks...</source>
@@ -3698,14 +3704,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>يلزم إعادة كتابة المحفظة: إعادة تشغيل %s لإكمال العملية</translation>
     </message>
     <message>
-        <source>Error: Listening for incoming connections failed (listen returned error %s)</source>
-        <translation>Error: Listening for incoming connections failed (listen returned error %s)</translation>
-    </message>
-    <message>
-        <source>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</source>
-        <translation>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</translation>
-    </message>
-    <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
         <translation>قيمة غير صالحة لـ -maxtxfee=&lt;amount&gt;: '%s' (يجب أن تحتوي على الحد الأدنى للعمولة من %s على الأقل لتجنب المعاملات العالقة.</translation>
     </message>
@@ -3714,28 +3712,12 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>قيمة المعاملة صغيرة جدًا ولا يمكن إرسالها بعد خصم الرسوم</translation>
     </message>
     <message>
-        <source>This error could occur if this wallet was not shutdown cleanly and was last loaded using a build with a newer version of Berkeley DB. If so, please use the software that last loaded this wallet</source>
-        <translation>This error could occur if this wallet was not shutdown cleanly and was last loaded using a build with a newer version of Berkeley DB. If so, please use the software that last loaded this wallet</translation>
-    </message>
-    <message>
-        <source>This is the maximum transaction fee you pay (in addition to the normal fee) to prioritize partial spend avoidance over regular coin selection.</source>
-        <translation>This is the maximum transaction fee you pay (in addition to the normal fee) to prioritize partial spend avoidance over regular coin selection.</translation>
-    </message>
-    <message>
-        <source>Transaction needs a change address, but we can't generate it. Please call keypoolrefill first.</source>
-        <translation>Transaction needs a change address, but we can't generate it. Please call keypoolrefill first.</translation>
-    </message>
-    <message>
         <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
         <translation>تحتاج إلى إعادة إنشاء قاعدة البيانات باستخدام -reindex للعودة إلى الوضعية الغير مجردة. هذا سوف يعيد تحميل سلسلة الكتل بأكملها</translation>
     </message>
     <message>
         <source>A fatal internal error occurred, see debug.log for details</source>
-        <translation>A fatal internal error occurred, see debug.log for details</translation>
-    </message>
-    <message>
-        <source>Cannot set -peerblockfilters without -blockfilterindex.</source>
-        <translation>Cannot set -peerblockfilters without -blockfilterindex.</translation>
+        <translation>خطأ: حدث خطأ داخلي فادح، راجع debug.log للحصول على التفاصيل</translation>
     </message>
     <message>
         <source>Disk space is too low!</source>
@@ -3754,44 +3736,12 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>خطأ : مساحة القرص منخفضة ل %s</translation>
     </message>
     <message>
-        <source>Error: Keypool ran out, please call keypoolrefill first</source>
-        <translation>Error: Keypool ran out, please call keypoolrefill first</translation>
-    </message>
-    <message>
-        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s)</source>
-        <translation>Fee rate (%s) is lower than the minimum fee rate setting (%s)</translation>
-    </message>
-    <message>
         <source>Invalid -onion address or hostname: '%s'</source>
         <translation>عنوان اونيون غير صحيح : '%s'</translation>
     </message>
     <message>
         <source>Invalid -proxy address or hostname: '%s'</source>
-        <translation>Invalid -proxy address or hostname: '%s'</translation>
-    </message>
-    <message>
-        <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s' (must be at least %s)</source>
-        <translation>Invalid amount for -paytxfee=&lt;amount&gt;: '%s' (must be at least %s)</translation>
-    </message>
-    <message>
-        <source>Invalid netmask specified in -whitelist: '%s'</source>
-        <translation>Invalid netmask specified in -whitelist: '%s'</translation>
-    </message>
-    <message>
-        <source>Need to specify a port with -whitebind: '%s'</source>
-        <translation>Need to specify a port with -whitebind: '%s'</translation>
-    </message>
-    <message>
-        <source>No proxy server specified. Use -proxy=&lt;ip&gt; or -proxy=&lt;ip:port&gt;.</source>
-        <translation>No proxy server specified. Use -proxy=&lt;ip&gt; or -proxy=&lt;ip:port&gt;.</translation>
-    </message>
-    <message>
-        <source>Prune mode is incompatible with -blockfilterindex.</source>
-        <translation>Prune mode is incompatible with -blockfilterindex.</translation>
-    </message>
-    <message>
-        <source>Reducing -maxconnections from %d to %d, because of system limitations.</source>
-        <translation>Reducing -maxconnections from %d to %d, because of system limitations.</translation>
+        <translation>عنوان البروكسي غير صحيح : '%s'</translation>
     </message>
     <message>
         <source>Section [%s] is not recognized.</source>
@@ -3810,10 +3760,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <source>Specified -walletdir "%s" is a relative path</source>
         <translation>ملف المحفظة المحدد "%s" غير موجود
 </translation>
-    </message>
-    <message>
-        <source>Specified -walletdir "%s" is not a directory</source>
-        <translation>Specified -walletdir "%s" is not a directory</translation>
     </message>
     <message>
         <source>The specified config file %s does not exist
@@ -3842,10 +3788,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>يتعذر الربط مع %s على هذا الكمبيوتر (الربط انتج خطأ %s)</translation>
     </message>
     <message>
-        <source>Unable to create the PID file '%s': %s</source>
-        <translation>Unable to create the PID file '%s': %s</translation>
-    </message>
-    <message>
         <source>Unable to generate initial keys</source>
         <translation>غير قادر على توليد مفاتيح أولية</translation>
     </message>
@@ -3864,10 +3806,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>This is the transaction fee you may pay when fee estimates are not available.</source>
         <translation>هذه هي رسوم المعاملة التي قد تدفعها عندما تكون عملية حساب الرسوم غير متوفرة.</translation>
-    </message>
-    <message>
-        <source>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</source>
-        <translation>Total length of network version string (%i) exceeds maximum length (%i). Reduce the number or size of uacomments.</translation>
     </message>
     <message>
         <source>%s is set very high!</source>
@@ -3911,27 +3849,23 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Fee estimation failed. Fallbackfee is disabled. Wait a few blocks or enable -fallbackfee.</source>
-        <translation>عملية حساب الرسوم فشلت. الرسوم الاحتياطية غير مفعلة. انتظر عدة كتل أو مكن خيار الرسوم الاحتياطية.</translation>
+        <translation>عملية حساب الرسوم فشلت. الرسوم الاحتياطية غير مفعلة. انتظر عدة كتل أو مكن خيار الرسوم الاحتياطية. </translation>
     </message>
     <message>
         <source>Warning: Private keys detected in wallet {%s} with disabled private keys</source>
-        <translation>تحذير: تم اكتشاف مفاتيح خاصة في المحفظة {%s} مع مفاتيح خاصة موقفة.</translation>
+        <translation>تحذير: تم اكتشاف مفاتيح خاصة في المحفظة {%s} مع مفاتيح خاصة موقفة. </translation>
     </message>
     <message>
         <source>Cannot write to data directory '%s'; check permissions.</source>
-        <translation>لايمكن الكتابة على دليل البيانات '%s'؛ تحقق من السماحيات.</translation>
+        <translation>لايمكن الكتابة على دليل البيانات '%s'؛ تحقق من السماحيات. </translation>
     </message>
     <message>
         <source>Loading block index...</source>
-        <translation>تحميل مؤشر الكتلة</translation>
+        <translation>تحميل مؤشر الكتلة </translation>
     </message>
     <message>
         <source>Loading wallet...</source>
         <translation>تحميل المحفظة...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>لايمكن تنزيل نسخة محفظة أقل</translation>
     </message>
     <message>
         <source>Rescanning...</source>

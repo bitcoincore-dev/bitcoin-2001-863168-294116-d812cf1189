@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Click derecho para editar la dirección o etiqueta</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Crear una nueva dirección</translation>
     </message>
@@ -69,12 +65,6 @@ Exportar los datos en la pestaña actual a un archivo</translation>
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Estas son sus direcciones de Bitcoin para enviar pagos. Siempre verifique el monto y la dirección de recepción antes de enviar monedas.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Estas son sus direcciones de Bitcoin para recibir los pagos.
-Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir para crear una nueva direccion.  Firmar es posible solo con la direccion del tipo "legado"</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -341,16 +331,9 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Billetera:</translation>
     </message>
     <message>
-        <source>Click to disable network activity.</source>
-        <translation>Haga clic para deshabilitar la actividad de la red.</translation>
-    </message>
-    <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>Actividad de red deshabilitada.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Haga clic para habilitar nuevamente la actividad de la red.</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -440,10 +423,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <source>&amp;Command-line options</source>
         <translation>Y opciones de línea de comando</translation>
     </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n conexión activa hacia la red Bitcoin</numerusform><numerusform>%n conexiones activas hacia la red Bitcoin</numerusform></translation>
-    </message>
     <message>
         <source>Indexing blocks on disk...</source>
         <translation>Bloques de indexación en el disco ...</translation>
@@ -469,10 +448,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Las transacciones posteriores a esto aún no estarán visibles.</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Error</translation>
-    </message>
-    <message>
         <source>Warning</source>
         <translation>Advertencia</translation>
     </message>
@@ -491,6 +466,18 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
     <message>
         <source>Load Partially Signed Bitcoin Transaction</source>
         <translation>Cargar transacción de Bitcoin parcialmente firmada</translation>
+    </message>
+    <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Abrir consola de diagnóstico y desarrollo</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Enviando direcciones</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Recibiendo direcciones</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -513,10 +500,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Muestre el mensaje de ayuda %1 para obtener una lista con posibles opciones de línea de comandos de Bitcoin</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>billetera predeterminada</translation>
-    </message>
-    <message>
         <source>&amp;Window</source>
         <translation>Ventana</translation>
     </message>
@@ -532,6 +515,11 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <source>%1 client</source>
         <translation>%1 cliente</translation>
     </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation type="unfinished"><numerusform>%n conexión activa hacia la red Bitcoin</numerusform><numerusform>%n conexiones activas hacia la red Bitcoin</numerusform><numerusform>%n conexión activa hacia la red Bitcoin</numerusform><numerusform>%n conexiones activas hacia la red Bitcoin</numerusform></translation>
+    </message>
     <message>
         <source>Connecting to peers...</source>
         <translation>Conectando con sus pares ...</translation>
@@ -539,10 +527,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
     <message>
         <source>Catching up...</source>
         <translation>Alcanzando...</translation>
-    </message>
-    <message>
-        <source>Error: %1</source>
-        <translation>Error: %1</translation>
     </message>
     <message>
         <source>Date: %1
@@ -608,7 +592,11 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>La billetera está &lt;b&gt; encriptada &lt;/ b&gt; y actualmente está &lt;b&gt; bloqueada &lt;/ b&gt;</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>Se produjo un error fatal. %1 ya no puede continuar de manera segura y no continuará</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -618,10 +606,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
     <message>
         <source>Quantity:</source>
         <translation>Cantidad:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
     </message>
     <message>
         <source>Amount:</source>
@@ -680,28 +664,32 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Confirmado</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Copiar dirección</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Copiar etiqueta</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Copiar cantidad</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Copiar ID de la transacción</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copiar dirección</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>Bloquear no utilizado</translation>
+        <source>Copy &amp;label</source>
+        <translation>Copiar &amp;etiqueta</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>Desbloquear no utilizado</translation>
+        <source>Copy &amp;amount</source>
+        <translation>Copiar c&amp;antidad</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation>Copiar &amp;ID de la transacción</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;Bloquear no utilizado</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">&amp;Desbloquear no utilizado</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -736,10 +724,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>si</translation>
     </message>
     <message>
-        <source>no</source>
-        <translation>no</translation>
-    </message>
-    <message>
         <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
         <translation>Está etiqueta se vuelve roja si algún receptor recibe una cantidad inferior al límite actual establecido para el polvo.</translation>
     </message>
@@ -763,6 +747,11 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation>Crear Billetera</translation>
+    </message>
+    <message>
         <source>Create wallet failed</source>
         <translation>Crear billetera falló</translation>
     </message>
@@ -780,6 +769,10 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
     <message>
         <source>Wallet</source>
         <translation>Billetera</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation type="unfinished">Codificar la billetera</translation>
     </message>
     <message>
         <source>Create</source>
@@ -906,10 +899,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Use un directorio de datos personalizado:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Al menos %1 GB de información será almacenado en este directorio, y seguirá creciendo a través del tiempo.</translation>
     </message>
@@ -929,10 +918,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <source>Error: Specified data directory "%1" cannot be created.</source>
         <translation>Error: no se puede crear el directorio de datos especificado "%1".</translation>
     </message>
-    <message>
-        <source>Error</source>
-        <translation>Error</translation>
-    </message>
     <message numerus="yes">
         <source>%n GB of free space available</source>
         <translation><numerusform>%n GB de espacio libre disponible</numerusform><numerusform>%n GB de espacio libre disponible</numerusform></translation>
@@ -940,6 +925,13 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
     <message numerus="yes">
         <source>(of %n GB needed)</source>
         <translation><numerusform>(de %n GB requerido)</numerusform><numerusform>(de %n GB requeridos)</numerusform></translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
     </message>
     </context>
 <context>
@@ -994,17 +986,39 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Dirección</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>URI:</source>
-        <translation>URI:</translation>
+        <translation>url:</translation>
     </message>
-</context>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Pega dirección desde portapapeles</translation>
+    </message>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
         <source>default wallet</source>
         <translation>billetera predeterminada</translation>
+    </message>
+    <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>Abrir billetera</translation>
     </message>
     </context>
 <context>
@@ -1127,7 +1141,7 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
-        <translation>Proxy &amp;IP:</translation>
+        <translation>&amp;IP Proxy:</translation>
     </message>
     <message>
         <source>&amp;Port:</source>
@@ -1140,18 +1154,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
     <message>
         <source>Used for reaching peers via:</source>
         <translation>Utilizado para llegar a los compañeros a través de:</translation>
-    </message>
-    <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -1194,12 +1196,16 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Ya sea para mostrar las funciones de control de monedas o no.</translation>
     </message>
     <message>
-        <source>&amp;Third party transaction URLs</source>
-        <translation>URLs de transacciones de terceros</translation>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Conéctese a la red de Bitcoin a través de un proxy SOCKS5 separado para los servicios Tor ocultos.</translation>
     </message>
     <message>
-        <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Use SOCKS&amp;5 y proxy por separado para llegar a sus compañeros a través de los servicios ocultos de Tor:</translation>
+    </message>
+    <message>
+        <source>&amp;Third party transaction URLs</source>
+        <translation>URLs de transacciones de terceros</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
@@ -1212,6 +1218,10 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
     <message>
         <source>none</source>
         <translation>ninguno</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>bitcoin core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1232,10 +1242,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
     <message>
         <source>The configuration file is used to specify advanced user options which override GUI settings. Additionally, any command-line options will override this configuration file.</source>
         <translation>El archivo de configuración se utiliza para especificar opciones de usuario avanzadas que anulan la configuración de la GUI. Además, cualquier opción de línea de comandos anulará este archivo de configuración.</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Error</translation>
     </message>
     <message>
         <source>The configuration file could not be opened.</source>
@@ -1290,11 +1296,7 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
     </message>
     <message>
         <source>Balances</source>
-        <translation>Balances</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Total:</translation>
+        <translation>Saldos</translation>
     </message>
     <message>
         <source>Your current total balance</source>
@@ -1359,8 +1361,8 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Manejo de URI</translation>
     </message>
     <message>
-        <source>Invalid payment address %1</source>
-        <translation>Dirección de pago inválida %1</translation>
+        <source>Invalid payment address</source>
+        <translation>Dirección de pago inválida</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
@@ -1382,14 +1384,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Nodo / Servicio</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeId</translation>
-    </message>
-    <message>
-        <source>Ping</source>
-        <translation>Ping</translation>
-    </message>
-    <message>
         <source>Sent</source>
         <translation>Expedido</translation>
     </message>
@@ -1397,7 +1391,11 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <source>Received</source>
         <translation>Recibido</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tipo</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1409,20 +1407,12 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Ingrese una dirección de Bitcoin (por ejemplo, %1)</translation>
     </message>
     <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
+        <source>Inbound</source>
+        <translation>Entrante</translation>
     </message>
     <message>
         <source>%1 h</source>
         <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
     </message>
     <message>
         <source>None</source>
@@ -1432,13 +1422,9 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <source>N/A</source>
         <translation>N/D</translation>
     </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
     <message numerus="yes">
         <source>%n second(s)</source>
-        <translation><numerusform>%n segundos</numerusform><numerusform>%n segundos</numerusform></translation>
+        <translation><numerusform>%n segundo</numerusform><numerusform>%n segundos</numerusform></translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
@@ -1465,28 +1451,8 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation><numerusform>%n años</numerusform><numerusform>%n años</numerusform></translation>
     </message>
     <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
         <translation>Error: el directorio de datos especificado "%1" no existe.</translation>
-    </message>
-    <message>
-        <source>Error: %1</source>
-        <translation>Error: %1</translation>
     </message>
     <message>
         <source>%1 didn't yet exit safely...</source>
@@ -1495,6 +1461,16 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
     <message>
         <source>unknown</source>
         <translation>desconocido</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blq</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -1535,16 +1511,8 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Información</translation>
     </message>
     <message>
-        <source>General</source>
-        <translation>General</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Usando la versión BerkeleyDB</translation>
-    </message>
-    <message>
-        <source>Datadir</source>
-        <translation>Datadir</translation>
     </message>
     <message>
         <source>Startup time</source>
@@ -1579,6 +1547,10 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Uso de memoria</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Cartera: </translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>Reiniciar</translation>
     </message>
@@ -1601,10 +1573,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Seleccione un par para ver información detallada.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Dirección</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1664,7 +1632,7 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
     </message>
     <message>
         <source>Min Ping</source>
-        <translation>Min Ping</translation>
+        <translation>Ping minimo</translation>
     </message>
     <message>
         <source>Time Offset</source>
@@ -1687,10 +1655,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Tráfico de red</translation>
     </message>
     <message>
-        <source>Totals</source>
-        <translation>Totales</translation>
-    </message>
-    <message>
         <source>In:</source>
         <translation>En:</translation>
     </message>
@@ -1711,10 +1675,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>1 hora</translation>
     </message>
     <message>
-        <source>1 &amp;day</source>
-        <translation>1 día</translation>
-    </message>
-    <message>
         <source>1 &amp;week</source>
         <translation>1 semana</translation>
     </message>
@@ -1727,8 +1687,25 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Desconectar</translation>
     </message>
     <message>
+        <source>To</source>
+        <translation>Para</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Desde</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>Prohibición de</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation>1 d&amp;ía</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Copiar dirección</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
@@ -1767,20 +1744,12 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>a través de %1</translation>
     </message>
     <message>
-        <source>never</source>
-        <translation>nunca</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Entrante</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Salida</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Desconocido</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation type="unfinished">nunca</translation>
     </message>
 </context>
 <context>
@@ -1814,8 +1783,8 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Un monto opcional para solicitar. Deje esto vacío o en cero para no solicitar una cantidad específica.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Crear una nueva dirección de recibo</translation>
+        <source>&amp;Request payment</source>
+        <translation>Solicitud de pago</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -1846,20 +1815,24 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Eliminar</translation>
     </message>
     <message>
-        <source>Copy URI</source>
-        <translation>Copiar URI</translation>
+        <source>Copy &amp;URI</source>
+        <translation>Copiar &amp;URI</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Copiar etiqueta</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copiar dirección</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>Copiar mensaje</translation>
+        <source>Copy &amp;label</source>
+        <translation>Copiar &amp;etiqueta</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Copiar cantidad</translation>
+        <source>Copy &amp;message</source>
+        <translation type="unfinished">&amp;Copiar mensaje</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation>Copiar c&amp;antidad</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -1868,6 +1841,14 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Request payment to ...</source>
+        <translation type="unfinished">Solicitar pago a ...</translation>
+    </message>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">Dirección:</translation>
+    </message>
     <message>
         <source>Amount:</source>
         <translation>Cantidad:</translation>
@@ -1963,10 +1944,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>Cantidad:</translation>
     </message>
     <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
-    </message>
-    <message>
         <source>Amount:</source>
         <translation>Cantidad:</translation>
     </message>
@@ -2039,10 +2016,6 @@ Usa el boton "Crear nueva direccion de recibimiento" en la pestaña de recibir p
         <translation>&amp;Borra todos</translation>
     </message>
     <message>
-        <source>Balance:</source>
-        <translation>Balance:</translation>
-    </message>
-    <message>
         <source>Confirm the send action</source>
         <translation>Confirma el envio</translation>
     </message>
@@ -2106,6 +2079,10 @@ Tarifa de copia</translation>
     <message>
         <source>Confirm send coins</source>
         <translation>Confirmar el envió de monedas</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">Envía</translation>
     </message>
     <message>
         <source>The recipient address is not valid. Please recheck.</source>
@@ -2179,16 +2156,8 @@ Tarifa de copia</translation>
         <translation>Dirección Bitcoin a enviar el pago</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Pega dirección desde portapapeles</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Remove this entry</source>
@@ -2218,11 +2187,7 @@ Tarifa de copia</translation>
         <source>Pay To:</source>
         <translation>Pagar a:</translation>
     </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Memo:</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>ShutdownWindow</name>
     <message>
@@ -2253,16 +2218,8 @@ Tarifa de copia</translation>
         <translation>Seleccionar dirección usada anteriormente</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Pega dirección desde portapapeles</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -2367,11 +2324,7 @@ Tarifa de copia</translation>
 </context>
 <context>
     <name>TrafficGraphWidget</name>
-    <message>
-        <source>KB/s</source>
-        <translation>KB/s</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>TransactionDesc</name>
     <message>
@@ -2605,10 +2558,6 @@ Tarifa de copia</translation>
         <translation>Solo observación</translation>
     </message>
     <message>
-        <source>(n/a)</source>
-        <translation>(n/a)</translation>
-    </message>
-    <message>
         <source>(no label)</source>
         <translation>(no etiqueta)</translation>
     </message>
@@ -2668,10 +2617,6 @@ Tarifa de copia</translation>
         <translation>Enviado a</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>A ti mismo</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Minado</translation>
     </message>
@@ -2684,44 +2629,44 @@ Tarifa de copia</translation>
         <translation>Cantidad mínima</translation>
     </message>
     <message>
-        <source>Abandon transaction</source>
-        <translation>Transacción abandonada</translation>
+        <source>A&amp;bandon transaction</source>
+        <translation type="unfinished">&amp;Transacción abandonada</translation>
     </message>
     <message>
-        <source>Increase transaction fee</source>
-        <translation>Incrementar cuota de transacción</translation>
+        <source>Increase transaction &amp;fee</source>
+        <translation type="unfinished">&amp;Incrementar cuota de transacción</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Copiar dirección</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copiar dirección</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Copiar etiqueta</translation>
+        <source>Copy &amp;label</source>
+        <translation>Copiar &amp;etiqueta</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Copiar cantidad</translation>
+        <source>Copy &amp;amount</source>
+        <translation>Copiar c&amp;antidad</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Copiar ID de la transacción</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation>Copiar &amp;ID de la transacción</translation>
     </message>
     <message>
-        <source>Copy raw transaction</source>
-        <translation>Copiar transacción bruta</translation>
+        <source>Copy &amp;raw transaction</source>
+        <translation type="unfinished">&amp;Copiar transacción bruta</translation>
     </message>
     <message>
-        <source>Copy full transaction details</source>
-        <translation>Copiar todos los detalles de la transacción</translation>
+        <source>Copy full transaction &amp;details</source>
+        <translation type="unfinished">&amp;Copiar todos los detalles de la transacción</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>Editar etiqueta</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;Editar etiqueta</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>Mostrar detalles de la transacción</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;Mostrar detalles de la transacción</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
@@ -2754,10 +2699,6 @@ Tarifa de copia</translation>
     <message>
         <source>Address</source>
         <translation>Dirección</translation>
-    </message>
-    <message>
-        <source>ID</source>
-        <translation>ID</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -2800,7 +2741,7 @@ Tarifa de copia</translation>
         <source>Create a new wallet</source>
         <translation>Crear una nueva billetera</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletModel</name>
     <message>
@@ -2860,10 +2801,6 @@ Tarifa de copia</translation>
 Exportar los datos en la pestaña actual a un archivo</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Error</translation>
-    </message>
-    <message>
         <source>Backup Wallet</source>
         <translation>Respaldar monedero</translation>
     </message>
@@ -2880,6 +2817,10 @@ Exportar los datos en la pestaña actual a un archivo</translation>
         <translation>Ha habido un error al intentar guardar los datos del monedero a %1.</translation>
     </message>
     <message>
+        <source>There was an error trying to save the wallet data to %1: %2</source>
+        <translation>Ha habido un error al intentar guardar los datos del monedero a %1: %2</translation>
+    </message>
+    <message>
         <source>Backup Successful</source>
         <translation>Respaldo exitoso</translation>
     </message>
@@ -2887,7 +2828,11 @@ Exportar los datos en la pestaña actual a un archivo</translation>
         <source>The wallet data was successfully saved to %1.</source>
         <translation>Los datos del monedero se han guardado con éxito en %1.</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancela</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -2925,10 +2870,6 @@ Exportar los datos en la pestaña actual a un archivo</translation>
     <message>
         <source>Change index out of range</source>
         <translation>Cambio de indice fuera de rango</translation>
-    </message>
-    <message>
-        <source>Copyright (C) %i-%i</source>
-        <translation>Copyright (C) %i-%i</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
@@ -3031,12 +2972,20 @@ Exportar los datos en la pestaña actual a un archivo</translation>
         <translation>Verificando bloques...</translation>
     </message>
     <message>
+        <source>A fatal internal error occurred, see debug.log for details</source>
+        <translation>Un error interno fatal ha ocurrido, ver debug.log para detalles</translation>
+    </message>
+    <message>
         <source>Error reading from database, shutting down.</source>
         <translation>Error al leer la base de datos, cerrando aplicación.</translation>
     </message>
     <message>
         <source>Error upgrading chainstate database</source>
         <translation>Error actualizando la base de datos chainstate</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>Keypool se ha agotado, llame a keypoolrefill primero</translation>
     </message>
     <message>
         <source>Invalid -onion address or hostname: '%s'</source>
@@ -3153,10 +3102,6 @@ Exportar los datos en la pestaña actual a un archivo</translation>
     <message>
         <source>Loading wallet...</source>
         <translation>Cargando billetera...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>No es posible desactualizar la billetera</translation>
     </message>
     <message>
         <source>Rescanning...</source>

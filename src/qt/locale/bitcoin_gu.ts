@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>સરનામું અથવા લેબલ બદલવા માટે જમણું-ક્લિક કરો</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>નવું સરનામું બનાવો</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>આ તમારા ચુકવણી કરવા માટે ના સરનામાં છે, હંમેશા કિંમત અને મોકલવાના ના સરનામાં ચકાસી લેવા સિક્કા આપતા પહેલા.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>આ તમારુ ચૂકવણું લેવા માટે નું સરનામા છે. નવું સરનામું બનાવા માટે "મેળવવા" માટે ની ટેબ માં "ચૂકવણું લેવા માટે નવું સરનામુ બનાવો" બટન વાપરો.
-ડિજિટલી સહી કરવા માટે 'legacy એટલેકે જુના પ્રકાર નુ' પ્રકાર નું સરનામું હોવું જરૂરી છે.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -183,9 +173,29 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">&amp;સાંકેતિક પાકીટ...</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;મોકલવા માટે ના સરનામાં</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;મેળવવા માટે ના સરનામાં</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>&amp; સરનામુ નકલ કરો</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>નકલ &amp; લેબલ</translation>
+    </message>
     <message>
         <source>(no label)</source>
         <translation>લેબલ નથી</translation>
@@ -196,9 +206,21 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>સાંકેતિક પાકીટ</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;ચિઠ્ઠી</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;સરનામુ</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -213,6 +235,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <name>ModalOverlay</name>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>સરનામુ</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     </context>
 <context>
@@ -226,6 +256,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished"> બંધ કરો</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -241,12 +278,41 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation>&amp; સરનામુ નકલ કરો</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ચિઠ્ઠી:</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>&amp; સરનામુ નકલ કરો</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>નકલ &amp; લેબલ</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">સરનામુ:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">ચિઠ્ઠી:</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp; સરનામુ નકલ કરો</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -262,12 +328,20 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished"> પસંદ કરો...</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>લેબલ નથી</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;ચિઠ્ઠી:</translation>
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -297,6 +371,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>&amp; સરનામુ નકલ કરો</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>નકલ &amp; લેબલ</translation>
+    </message>
     <message>
         <source>Comma separated file (*.csv)</source>
         <translation>અલ્પવિરામ થી જુદા પડલી માહિતી ની યાદી (*.csv)</translation>

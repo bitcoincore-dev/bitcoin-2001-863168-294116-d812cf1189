@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Klik-kanan untuk mengubah alamat atau label</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Buat alamat baru</translation>
     </message>
@@ -70,11 +66,6 @@
         <translation>Berikut ialah alamat-alamat Bitcoin Anda yang digunakan untuk mengirimkan pembayaran. Selalu periksa jumlah dan alamat penerima sebelum mengirimkan koin.</translation>
     </message>
     <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Ini adalah alamat-alamat bitcoinmu untuk menerima pembayaran. Gunakan tombol 'Buat alamat penerima baru' di atas tab menerima untuk membuat alamat baru. Tanda tangan hanya bisa digunakan dengan tipe alamat 'Lama'</translation>
-    </message>
-    <message>
         <source>&amp;Copy Address</source>
         <translation>&amp;Salin Alamat</translation>
     </message>
@@ -105,10 +96,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 </context>
 <context>
     <name>AddressTableModel</name>
-    <message>
-        <source>Label</source>
-        <translation>Label</translation>
-    </message>
     <message>
         <source>Address</source>
         <translation>Alamat</translation>
@@ -244,10 +231,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>BanTableModel</name>
     <message>
-        <source>IP/Netmask</source>
-        <translation>IP/Netmask</translation>
-    </message>
-    <message>
         <source>Banned Until</source>
         <translation>Di banned sampai</translation>
     </message>
@@ -336,19 +319,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Wallet:</source>
-        <translation>Wallet:</translation>
-    </message>
-    <message>
-        <source>Click to disable network activity.</source>
-        <translation>Klik untuk menonaktifkan aktivitas jaringan.</translation>
+        <translation>Dompet:</translation>
     </message>
     <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>Aktivitas jaringan dinonaktifkan.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Klik untuk mengaktifkan aktivitas jaringan lagi.</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -437,10 +413,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;pilihan Command-line</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n koneksi aktif ke jaringan Bitcoin</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -555,10 +527,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Mask nilai yang ada di tab Overview</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>wallet default</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Tidak ada wallet tersedia</translation>
     </message>
@@ -571,16 +539,37 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Minimalkan</translation>
     </message>
     <message>
-        <source>Zoom</source>
-        <translation>Zoom</translation>
-    </message>
-    <message>
         <source>Main Window</source>
         <translation>Jendela Utama</translation>
     </message>
     <message>
         <source>%1 client</source>
         <translation>%1 klien</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation type="unfinished"><numerusform>%n koneksi aktif ke jaringan Bitcoin</numerusform><numerusform>%n koneksi aktif ke jaringan Bitcoin</numerusform></translation>
+    </message>
+    <message>
+        <source>Click for more actions.</source>
+        <extracomment>A substring of the tooltip. "More actions" are available via the context menu.</extracomment>
+        <translation type="unfinished">Klik untuk tindakan lainnya</translation>
+    </message>
+    <message>
+        <source>Show Peers tab</source>
+        <extracomment>A context menu item. The "Peers tab" is an element of the "Node window".</extracomment>
+        <translation type="unfinished">Tampilkan tab Rekan</translation>
+    </message>
+    <message>
+        <source>Disable network activity</source>
+        <extracomment>A context menu item.</extracomment>
+        <translation type="unfinished">nonaktifkan aktivitas jaringan</translation>
+    </message>
+    <message>
+        <source>Enable network activity</source>
+        <extracomment>A context menu item. The network activity was disabled previously.</extracomment>
+        <translation type="unfinished">aktifkan aktivitas jaringan</translation>
     </message>
     <message>
         <source>Connecting to peers...</source>
@@ -592,7 +581,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Error: %1</source>
-        <translation>Error: %1</translation>
+        <translation type="unfinished">Kesalahan: %1</translation>
     </message>
     <message>
         <source>Warning: %1</source>
@@ -611,21 +600,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 </translation>
     </message>
     <message>
-        <source>Wallet: %1
-</source>
-        <translation>Wallet: %1
-</translation>
-    </message>
-    <message>
         <source>Type: %1
 </source>
         <translation>Tipe: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Label: %1
 </translation>
     </message>
     <message>
@@ -682,20 +659,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Kuantitas:</translation>
     </message>
     <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
-    </message>
-    <message>
         <source>Amount:</source>
         <translation>Jumlah:</translation>
     </message>
     <message>
         <source>Fee:</source>
         <translation>Biaya:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Dust:</translation>
     </message>
     <message>
         <source>After Fee:</source>
@@ -711,7 +680,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Tree mode</source>
-        <translation>Tree mode</translation>
+        <translation>Mode pohon</translation>
     </message>
     <message>
         <source>List mode</source>
@@ -742,28 +711,32 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Terkonfirmasi</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Salin alamat</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Salin label</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Salin Jumlah</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Salain ID Transaksi</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Salin alamat</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>Kunci Yang Tidak Digunakan</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">Salin &amp;label</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>Buka Kunci Yang Tidak Digunakan</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">Salin &amp;jumlah</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation>Salain &amp;ID Transaksi</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation>K&amp;unci yang tidak digunakan</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation>&amp;Buka kunci yang tidak digunakan</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -825,7 +798,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation>Bikin dompet</translation>
+    </message>
+    <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
         <translation>Membuat Dompet &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
     <message>
@@ -895,16 +874,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Compiled without sqlite support (required for descriptor wallets)</source>
         <translation>Dikompilasi tanpa support sqlite (dibutuhkan untuk dompet deskriptor)</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
         <translation>Ubah Alamat</translation>
-    </message>
-    <message>
-        <source>&amp;Label</source>
-        <translation>&amp;Label</translation>
     </message>
     <message>
         <source>The label associated with this address list entry</source>
@@ -1008,6 +983,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Ketika Anda mengklik OK, %1 akan mulai mengunduh dan memproses %4 block chain penuh (%2GB), dimulai dari transaksi-transaksi awal di %3 saat %4 diluncurkan pertama kali.</translation>
     </message>
     <message>
+        <source>Limit block chain storage to</source>
+        <translation type="unfinished">Batasi penyimpanan rantai blok menjadi </translation>
+    </message>
+    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
         <translation>Mengembalikan pengaturan perlu mengunduh ulang seluruh blockchain. Lebih cepat mengunduh rantai penuh terlebih dahulu dan memangkasnya kemudian. Menonaktifkan beberapa fitur lanjutan.</translation>
     </message>
@@ -1028,14 +1007,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Gunakan direktori pilihan Anda:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
-    <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Buang blok setelah verifikasi, kecuali %1 GB terbaru (prune)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Setidaknya %1 GB data akan disimpan di direktori ini dan akan berkembang seiring berjalannya waktu.</translation>
     </message>
@@ -1043,9 +1014,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Approximately %1 GB of data will be stored in this directory.</source>
         <translation>%1 GB data akan disimpan di direktori ini.</translation>
     </message>
+    <message numerus="yes">
+        <source>(sufficient to restore backups %n day(s) old)</source>
+        <comment>block chain pruning</comment>
+        <translation type="unfinished">
+            <numerusform>(cukup untuk memulihkan cadangan %n hari)</numerusform>
+        </translation>
+    </message>
     <message>
         <source>%1 will download and store a copy of the Bitcoin block chain.</source>
-        <translation>%1 akan mengunduh dan menyimpan salinan Bitcoin blockchain.</translation>
+        <translation>%1 akan mengunduh dan menyimpan salinan blockchain Bitcoin.</translation>
     </message>
     <message>
         <source>The wallet will also be stored in this directory.</source>
@@ -1072,6 +1050,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation><numerusform>(%n GB dibutuhkan untuk rantai penuh)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>T/S</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1132,6 +1117,19 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipe</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Alamat</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
@@ -1139,7 +1137,15 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>URI:</source>
-        <translation>URI:</translation>
+        <translation type="unfinished">Tautan:</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Tempel alamat dari salinan</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+B</translation>
     </message>
 </context>
 <context>
@@ -1157,7 +1163,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>wallet default</translation>
     </message>
     <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>Buka Wallet</translation>
+    </message>
+    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
         <translation>Membuka Wallet &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
 </context>
@@ -1240,20 +1252,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Prune &amp;ruang penyimpan block ke</translation>
     </message>
     <message>
-        <source>GB</source>
-        <translation>GB</translation>
-    </message>
-    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
         <translation>Mengembalikan pengaturan ini membutuhkan pengunduhan seluruh blockchain lagi.</translation>
-    </message>
-    <message>
-        <source>MiB</source>
-        <translation>MiB</translation>
-    </message>
-    <message>
-        <source>(0 = auto, &lt;0 = leave that many cores free)</source>
-        <translation>(0 = auto, &lt;0 = leave that many cores free)</translation>
     </message>
     <message>
         <source>W&amp;allet</source>
@@ -1304,28 +1304,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>IP Proxy:</translation>
     </message>
     <message>
-        <source>&amp;Port:</source>
-        <translation>&amp;Port:</translation>
-    </message>
-    <message>
         <source>Port of the proxy (e.g. 9050)</source>
         <translation>Port proxy (cth. 9050)</translation>
     </message>
     <message>
         <source>Used for reaching peers via:</source>
         <translation>Digunakan untuk berhubungan dengan peers melalui:</translation>
-    </message>
-    <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -1341,7 +1325,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>M&amp;inimize on close</source>
-        <translation>M&amp;eminilisasi saat tutup</translation>
+        <translation>M&amp;eminilisasi saat ditutup</translation>
     </message>
     <message>
         <source>&amp;Display</source>
@@ -1518,16 +1502,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
-        <source>Dialog</source>
-        <translation>Dialog</translation>
-    </message>
-    <message>
         <source>Sign Tx</source>
         <translation>Tanda tangan Tx</translation>
-    </message>
-    <message>
-        <source>Broadcast Tx</source>
-        <translation>Broadcast Tx</translation>
     </message>
     <message>
         <source>Copy to Clipboard</source>
@@ -1653,20 +1629,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>'bitcoin://' bukanlah alamat URI yang valid. Silakan gunakan 'bitcoin:'.</translation>
     </message>
     <message>
-        <source>Cannot process payment request because BIP70 is not supported.</source>
-        <translation>Tidak dapat memproses pembayaran karena dukungan BIP70 tidak disertakan.</translation>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation type="unfinished">Tidak dapat memproses permintaan pembayaran disebabkan BIP70 tidak didukung. 
+Akibat celah keamanan yang meluas di BIP70, sangat disarankan agar mengabaikan petunjuk pedagang apa pun untuk beralih dompet. 
+Jika Anda menerima kesalahan ini, Anda harus meminta pedagang untuk memberikan URI yang kompatibel dengan BIP21. </translation>
     </message>
     <message>
-        <source>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</source>
-        <translation>Berhubung kelemahan keamanan yang meluas di BIP70, sangat disarankan agar instruksi pedagang untuk mengganti dompet diabaikan.</translation>
-    </message>
-    <message>
-        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
-        <translation>Jika Anda menerima kesalahan ini, Anda harus meminta pedagang memberikan URI yang kompatibel dengan BIP21.</translation>
-    </message>
-    <message>
-        <source>Invalid payment address %1</source>
-        <translation>Alamat pembayaran tidak valid %1</translation>
+        <source>Invalid payment address</source>
+        <translation>Alamat pembayaran tidak valid</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
@@ -1684,18 +1656,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Agen Pengguna</translation>
     </message>
     <message>
-        <source>Node/Service</source>
-        <translation>Node/Service</translation>
-    </message>
-    <message>
-        <source>NodeId</source>
-        <translation>NodeID</translation>
-    </message>
-    <message>
-        <source>Ping</source>
-        <translation>Ping</translation>
-    </message>
-    <message>
         <source>Sent</source>
         <translation>Terkirim</translation>
     </message>
@@ -1703,7 +1663,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Received</source>
         <translation>Diterima</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tipe</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1715,8 +1679,28 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Masukkan alamat Bitcoin (contoh %1)</translation>
     </message>
     <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
+        <source>Unroutable</source>
+        <translation type="unfinished">Tidak dapat dirutekan</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>masuk</translation>
+    </message>
+    <message>
+        <source>Full Relay</source>
+        <translation type="unfinished">Relay Penuh</translation>
+    </message>
+    <message>
+        <source>Block Relay</source>
+        <translation type="unfinished">Blok Relay</translation>
+    </message>
+    <message>
+        <source>Feeler</source>
+        <translation type="unfinished">Pengintai</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <translation type="unfinished">Ambil Alamat</translation>
     </message>
     <message>
         <source>%1 h</source>
@@ -1727,20 +1711,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>%1 menit</translation>
     </message>
     <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
         <source>None</source>
         <translation>Tidak ada</translation>
     </message>
     <message>
         <source>N/A</source>
         <translation>T/S</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
@@ -1771,22 +1747,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation><numerusform>%n tahun</numerusform></translation>
     </message>
     <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
         <translation>Error: Direktori data yang ditentukan "%1" tidak ada.</translation>
     </message>
@@ -1796,11 +1756,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Error: %1</source>
-        <translation>Error: %1</translation>
-    </message>
-    <message>
-        <source>Error initializing settings: %1</source>
-        <translation>Kesalahan menginisialisasi pengaturan: %1</translation>
+        <translation type="unfinished">Kesalahan: %1</translation>
     </message>
     <message>
         <source>%1 didn't yet exit safely...</source>
@@ -1809,6 +1765,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>unknown</source>
         <translation>tidak diketahui</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsi</translation>
     </message>
 </context>
 <context>
@@ -1827,7 +1788,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Error encoding URI into QR Code.</source>
-        <translation>Error saat menyandikan tautan ke dalam kode QR.</translation>
+        <translation>Terjadi kesalahan saat menyandikan tautan ke dalam kode QR.</translation>
     </message>
     <message>
         <source>QR code support not available.</source>
@@ -1865,16 +1826,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Menggunakan versi BerkeleyDB</translation>
     </message>
     <message>
-        <source>Datadir</source>
-        <translation>Datadir</translation>
-    </message>
-    <message>
         <source>To specify a non-default location of the data directory use the '%1' option.</source>
         <translation>Untuk menentukan lokasi direktori data yang tidak standar gunakan opsi '%1'.</translation>
-    </message>
-    <message>
-        <source>Blocksdir</source>
-        <translation>Blocksdir</translation>
     </message>
     <message>
         <source>To specify a non-default location of the blocks directory use the '%1' option.</source>
@@ -1901,10 +1854,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Rantai blok</translation>
     </message>
     <message>
-        <source>Memory Pool</source>
-        <translation>Memory Pool</translation>
-    </message>
-    <message>
         <source>Current number of transactions</source>
         <translation>Jumlah transaksi saat ini</translation>
     </message>
@@ -1919,10 +1868,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>(none)</source>
         <translation>(tidak ada)</translation>
-    </message>
-    <message>
-        <source>&amp;Reset</source>
-        <translation>&amp;Reset</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1943,10 +1888,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Pilih satu peer untuk melihat informasi detail.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Panduan</translation>
     </message>
     <message>
         <source>Version</source>
@@ -2003,12 +1944,44 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Izin</translation>
     </message>
     <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation type="unfinished">Peer ini terhubung melalui protokol jaringan: IPv4, IPv6, Onion, I2P, atau CJDNS. </translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation>Layanan</translation>
     </message>
     <message>
+        <source>Whether the peer requested us to relay transactions.</source>
+        <translation type="unfinished">Apakah peer meminta kami untuk menyampaikan transaksi. </translation>
+    </message>
+    <message>
+        <source>Wants Tx Relay</source>
+        <translation type="unfinished">Ingin Relay Tx </translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation type="unfinished">Bandwidth Tinggi</translation>
+    </message>
+    <message>
         <source>Connection Time</source>
         <translation>Waktu Koneksi</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation type="unfinished">Waktu yang berlalu sejak blok baru yang lolos pemeriksaan validitas awal diterima dari peer ini. </translation>
+    </message>
+    <message>
+        <source>Last Block</source>
+        <translation type="unfinished">Blok Terakhir</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <translation type="unfinished">Waktu yang telah berlalu sejak transaksi baru yang diterima di mempool kami sudah diterima dari peer ini. </translation>
+    </message>
+    <message>
+        <source>Last Tx</source>
+        <translation type="unfinished">Tx Terakhir</translation>
     </message>
     <message>
         <source>Last Send</source>
@@ -2055,10 +2028,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Kemacetan &amp;Jaringan</translation>
     </message>
     <message>
-        <source>Totals</source>
-        <translation>Total</translation>
-    </message>
-    <message>
         <source>In:</source>
         <translation>Masuk:</translation>
     </message>
@@ -2079,10 +2048,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>1 &amp;jam</translation>
     </message>
     <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;hari</translation>
-    </message>
-    <message>
         <source>1 &amp;week</source>
         <translation>1 &amp;minggu</translation>
     </message>
@@ -2095,8 +2060,65 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>&amp;Memutuskan</translation>
     </message>
     <message>
+        <source>Inbound: initiated by peer</source>
+        <translation type="unfinished">Masuk: dimulai oleh peer</translation>
+    </message>
+    <message>
+        <source>Outbound Full Relay: default</source>
+        <translation type="unfinished">Relai Penuh Keluar: default </translation>
+    </message>
+    <message>
+        <source>Outbound Block Relay: does not relay transactions or addresses</source>
+        <translation type="unfinished">Outbound Block Relay: tidak menyampaikan transaksi atau alamat</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <translation type="unfinished">Manual Keluar: ditambahkan menggunakan opsi konfigurasi RPC %1 atau %2/%3 </translation>
+    </message>
+    <message>
+        <source>Outbound Feeler: short-lived, for testing addresses</source>
+        <translation type="unfinished">Outbound Feeler: berumur pendek, untuk menguji alamat</translation>
+    </message>
+    <message>
+        <source>Outbound Address Fetch: short-lived, for soliciting addresses</source>
+        <translation type="unfinished">Outbound Address Fetch: berumur pendek, untuk meminta alamat </translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Untuk</translation>
+    </message>
+    <message>
+        <source>we selected the peer for high bandwidth relay</source>
+        <translation type="unfinished">kami memilih peer untuk relai bandwidth tinggi </translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Dari</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation type="unfinished">peer memilih kami untuk relai bandwidth tinggi </translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Tidak</translation>
+    </message>
+    <message>
+        <source>no high bandwidth relay selected</source>
+        <translation type="unfinished">tidak ada relai bandwidth tinggi yang dipilih</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>Ban untuk</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation type="unfinished">1 h&amp;ari</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Salin alamat</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
@@ -2135,24 +2157,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>(id simpul: %1)</translation>
     </message>
     <message>
-        <source>via %1</source>
-        <translation>via %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>tidak pernah</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>masuk</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>keluar</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Tidak diketahui</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation type="unfinished">Tidak pernah</translation>
     </message>
 </context>
 <context>
@@ -2160,10 +2170,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>&amp;Amount:</source>
         <translation>&amp;Nilai:</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Label:</translation>
     </message>
     <message>
         <source>&amp;Message:</source>
@@ -2179,7 +2185,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>Gunakan form ini untuk meminta pembayaran. Semua bidang adalah &lt;b&gt;opsional&lt;/b&gt;.</translation>
+        <translation>Gunakan form ini untuk meminta pembayaran. Semua kolom adalah &lt;b&gt;opsional&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
@@ -2194,8 +2200,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Pesan opsional yang dilampirkan di permintaan pembayaran dan dapat ditampilkan ke pengirim.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Create alamat penerima baru</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Minta pembayaran</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2215,7 +2221,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Requested payments history</source>
-        <translation>Riwayat pembayaran yang diminta Anda</translation>
+        <translation>Riwayat pembayaran yang Anda pinta</translation>
     </message>
     <message>
         <source>Show the selected request (does the same as double clicking an entry)</source>
@@ -2234,20 +2240,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Menghapus</translation>
     </message>
     <message>
-        <source>Copy URI</source>
-        <translation>Salin tautan</translation>
+        <source>Copy &amp;URI</source>
+        <translation>Salin &amp;URI</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Salin label</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Salin alamat</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>Salin pesan</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">Salin &amp;label</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Salin Jumlah</translation>
+        <source>Copy &amp;message</source>
+        <translation>Salin &amp;pesan</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">Salin &amp;jumlah</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -2273,16 +2283,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Nilai:</translation>
     </message>
     <message>
-        <source>Label:</source>
-        <translation>Label:</translation>
-    </message>
-    <message>
         <source>Message:</source>
         <translation>Pesan:</translation>
     </message>
     <message>
         <source>Wallet:</source>
-        <translation>Wallet:</translation>
+        <translation>Dompet:</translation>
     </message>
     <message>
         <source>Copy &amp;URI</source>
@@ -2310,10 +2316,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Date</source>
         <translation>Tanggal</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>Label</translation>
     </message>
     <message>
         <source>Message</source>
@@ -2361,10 +2363,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Quantity:</source>
         <translation>Kuantitas:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
     </message>
     <message>
         <source>Amount:</source>
@@ -2415,10 +2413,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
 Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" untuk ukuran transaksi 500 byte (setengah dari 1 kB) pada akhirnya akan menghasilkan biaya hanya 50 satoshi.</translation>
     </message>
     <message>
-        <source>per kilobyte</source>
-        <translation>per kilobyte</translation>
-    </message>
-    <message>
         <source>Hide</source>
         <translation>Sembunyikan</translation>
     </message>
@@ -2445,10 +2439,6 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
     <message>
         <source>Clear all fields of the form.</source>
         <translation>Hapus informasi dari form.</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Dust:</translation>
     </message>
     <message>
         <source>Hide transaction fee settings</source>
@@ -2674,10 +2664,6 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
         <translation>Kirim &amp;Ke:</translation>
     </message>
     <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Label:</translation>
-    </message>
-    <message>
         <source>Choose previously used address</source>
         <translation>Pilih alamat yang telah digunakan sebelumnya</translation>
     </message>
@@ -2777,7 +2763,7 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
     </message>
     <message>
         <source>Alt+A</source>
-        <translation>Alt+A</translation>
+        <translation>Alt+J</translation>
     </message>
     <message>
         <source>Paste address from clipboard</source>
@@ -2906,16 +2892,14 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
 </context>
 <context>
     <name>TrafficGraphWidget</name>
-    <message>
-        <source>KB/s</source>
-        <translation>KB/s</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>TransactionDesc</name>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Buka untuk %n lebih blok</numerusform></translation>
+        <translation>
+            <numerusform>Buka untuk %nblok lagi</numerusform>
+        </translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -2950,10 +2934,6 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
         <translation>%1 konfirmasi</translation>
     </message>
     <message>
-        <source>Status</source>
-        <translation>Status</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation>Tanggal</translation>
     </message>
@@ -2986,28 +2966,18 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
         <translation>hanya-melihat</translation>
     </message>
     <message>
-        <source>label</source>
-        <translation>label</translation>
-    </message>
-    <message>
         <source>Credit</source>
         <translation>Kredit</translation>
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>jatuh tempo dalam %n blok lagi</numerusform></translation>
+        <translation>
+            <numerusform>matang dalam %n blok lagi</numerusform>
+        </translation>
     </message>
     <message>
         <source>not accepted</source>
         <translation>tidak diterima</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Debit</translation>
-    </message>
-    <message>
-        <source>Total debit</source>
-        <translation>Total debit</translation>
     </message>
     <message>
         <source>Total credit</source>
@@ -3099,13 +3069,11 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
         <source>Type</source>
         <translation>Tipe</translation>
     </message>
-    <message>
-        <source>Label</source>
-        <translation>Label</translation>
-    </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
-        <translation><numerusform>Buka %n untuk blok lebih</numerusform></translation>
+        <translation>
+            <numerusform>Buka untuk %n blok lagi</numerusform>
+        </translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -3158,10 +3126,6 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
     <message>
         <source>watch-only</source>
         <translation>hanya-melihat</translation>
-    </message>
-    <message>
-        <source>(n/a)</source>
-        <translation>(n/a)</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -3231,10 +3195,6 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
         <translation>Dikirim ke</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Untuk diri sendiri</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Ditambang</translation>
     </message>
@@ -3251,44 +3211,44 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
         <translation>Jumlah min</translation>
     </message>
     <message>
-        <source>Abandon transaction</source>
-        <translation>Batalkan transaksi</translation>
+        <source>A&amp;bandon transaction</source>
+        <translation type="unfinished">A&amp;batalkan transaksi</translation>
     </message>
     <message>
-        <source>Increase transaction fee</source>
-        <translation>Tingkatkan biaya transaksi</translation>
+        <source>Increase transaction &amp;fee</source>
+        <translation type="unfinished">&amp;Tingkatkan biaya transaksi</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Salin alamat</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Salin alamat</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Salin label</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">Salin &amp;label</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Salin Jumlah</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">Salin &amp;jumlah</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Salain ID Transaksi</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation>Salain &amp;ID Transaksi</translation>
     </message>
     <message>
-        <source>Copy raw transaction</source>
-        <translation>Salin transaksi yang belum diproses</translation>
+        <source>Copy &amp;raw transaction</source>
+        <translation>Salin &amp;transaksi mentah</translation>
     </message>
     <message>
-        <source>Copy full transaction details</source>
-        <translation>Salin detail transaksi</translation>
+        <source>Copy full transaction &amp;details</source>
+        <translation type="unfinished">salin seluruh transaksi &amp;detail</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>Ubah label</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;Ubah label</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>Lihat detail transaksi</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;Lihat detail transaksi</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
@@ -3304,7 +3264,7 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
     </message>
     <message>
         <source>Watch-only</source>
-        <translation>Hanya-melihat</translation>
+        <translation>Hanya-lihat</translation>
     </message>
     <message>
         <source>Date</source>
@@ -3315,16 +3275,8 @@ Catatan: Karena biaya dihitung berdasarkan per byte, biaya "100 satoshi per kB" 
         <translation>Tipe</translation>
     </message>
     <message>
-        <source>Label</source>
-        <translation>Label</translation>
-    </message>
-    <message>
         <source>Address</source>
         <translation>Alamat</translation>
-    </message>
-    <message>
-        <source>ID</source>
-        <translation>ID</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -3395,6 +3347,30 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
         <source>Create a new wallet</source>
         <translation>Bikin dompet baru</translation>
     </message>
+    <message>
+        <source>Error</source>
+        <translation>Terjadi sebuah kesalahan</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>Tidak dapat membaca kode PSBT dari papan klip (base64 tidak valid)</translation>
+    </message>
+    <message>
+        <source>Load Transaction Data</source>
+        <translation>Memuat Data Transaksi</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (*.psbt)</source>
+        <translation>Transaksi yang Ditandatangani Sebagian (* .psbt)</translation>
+    </message>
+    <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>File PSBT harus lebih kecil dari 100 MB</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>Tidak dapat membaca kode PSBT</translation>
+    </message>
 </context>
 <context>
     <name>WalletModel</name>
@@ -3408,7 +3384,7 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
     </message>
     <message>
         <source>Increasing transaction fee failed</source>
-        <translation>Gagal meningkatkan biaya transaksi</translation>
+        <translation>Peningkatan biaya transaksi gagal</translation>
     </message>
     <message>
         <source>Do you want to increase the fee?</source>
@@ -3429,6 +3405,10 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
     <message>
         <source>New fee:</source>
         <translation>Biaya baru:</translation>
+    </message>
+    <message>
+        <source>Warning: This may pay the additional fee by reducing change outputs or adding inputs, when necessary. It may add a new change output if one does not already exist. These changes may potentially leak privacy.</source>
+        <translation type="unfinished">Peringatan: Bila diperlukan, dimungkinkan membayar biaya tambahan dengan mengurangi perubahan output atau menambahkan input. Ini dapat menambahkan perubahan keluaran baru jika belum ada. Perubahan ini berpotensi membocorkan privasi.</translation>
     </message>
     <message>
         <source>Confirm fee bump</source>
@@ -3466,30 +3446,6 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
         <translation>Ekspor data dalam tab sekarang ke sebuah berkas</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Kesalahan</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
-        <translation>Tidak dapat membaca kode PSBT dari papan klip (base64 tidak valid)</translation>
-    </message>
-    <message>
-        <source>Load Transaction Data</source>
-        <translation>Memuat Data Transaksi</translation>
-    </message>
-    <message>
-        <source>Partially Signed Transaction (*.psbt)</source>
-        <translation>Transaksi yang Ditandatangani Sebagian (* .psbt)</translation>
-    </message>
-    <message>
-        <source>PSBT file must be smaller than 100 MiB</source>
-        <translation>File PSBT harus lebih kecil dari 100 MB</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT</source>
-        <translation>Tidak dapat membaca kode PSBT</translation>
-    </message>
-    <message>
         <source>Backup Wallet</source>
         <translation>Cadangkan Dompet</translation>
     </message>
@@ -3504,6 +3460,10 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
     <message>
         <source>There was an error trying to save the wallet data to %1.</source>
         <translation>Terjadi kesalahan saat mencoba menyimpan data dompet ke %1.</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the wallet data to %1: %2</source>
+        <translation>Terjadi kesalahan saat mencoba menyimpan data dompet ke %1: %2</translation>
     </message>
     <message>
         <source>Backup Successful</source>
@@ -3545,6 +3505,10 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
         <translation>Pengembang %s</translation>
     </message>
     <message>
+        <source>Cannot downgrade wallet from version %i to version %i. Wallet version unchanged.</source>
+        <translation type="unfinished">Tidak dapat menurunkan versi dompet dari versi %ike versi %i. Versi dompet tidak berubah. </translation>
+    </message>
+    <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
         <translation>Tidak dapat memperoleh kunci pada direktori data %s. %s mungkin sudah berjalan.</translation>
     </message>
@@ -3553,12 +3517,40 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
         <translation>Tidak bisa menyediakan koneksi-koneksi spesifik dan memiliki addrman untuk mencari koneksi-koneksi yang terbuka di sama.</translation>
     </message>
     <message>
+        <source>Cannot upgrade a non HD split wallet from version %i to version %i without upgrading to support pre-split keypool. Please use version %i or no version specified.</source>
+        <translation type="unfinished">Tidak dapat mempebaharui dompet split non HD dari versi %i ke versi %i tanpa mempebaharui untuk mendukung keypool pra-split. Harap gunakan versi %i atau tidak ada versi yang ditentukan.</translation>
+    </message>
+    <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>Kesalahan membaca %s! Semua kunci dibaca dengan benar, tetapi data transaksi atau entri buku alamat mungkin hilang atau salah.</translation>
     </message>
     <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation type="unfinished">Kesalahan: Rekaman pengenal dumpfile salah. Mendapat "%s", diharapkan "format". </translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation type="unfinished">Kesalahan: Rekaman pengenal dumpfile salah. Mendapat "%s", diharapkan "%s". </translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">Kesalahan: Versi Dumpfile tidak didukung. Versi dompet bitcoin ini hanya mendukung dumpfile versi 1. Dumpfile yang didapat adalah versi %s</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation type="unfinished">File %s sudah ada. Jika Anda yakin ini yang Anda inginkan, singkirkan dulu. </translation>
+    </message>
+    <message>
         <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
         <translation>Lebih dari satu alamat Onion Bind tersedia. Menggunakan %s untuk membuat Tor onion secara otomatis.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation type="unfinished">Tidak ada dumpfile yang teredia. Untuk menggunakan createfromdump, -dumpfile=&lt;filename&gt; harus tersedia. </translation>
+    </message>
+    <message>
+        <source>No wallet file format provided. To use createfromdump, -format=&lt;format&gt; must be provided.</source>
+        <translation type="unfinished">Tidak ada format file dompet yang tersedia. Untuk menggunakan createfromdump, -format=&lt;format&gt;harus tersedia. </translation>
     </message>
     <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
@@ -3601,6 +3593,14 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
         <translation>tidak bisa memundur database ke status pre-fork. Kamu harus mengunduh ulang blockchain</translation>
     </message>
     <message>
+        <source>Unknown wallet file format "%s" provided. Please provide one of "bdb" or "sqlite".</source>
+        <translation type="unfinished">Format berkas dompet tidak dikenal "%s" tersedia. Berikan salah satu dari "bdb" atau "sqlite". </translation>
+    </message>
+    <message>
+        <source>Warning: Dumpfile wallet format "%s" does not match command line specified format "%s".</source>
+        <translation type="unfinished">Peringatan: Dumpfile dompet format "%s" tidak cocok dengan format baris perintah yang ditentukan "%s". </translation>
+    </message>
+    <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
         <translation>Peringatan: Jaringan tampaknya tidak sepenuhnya setuju! Beberapa penambang tampaknya mengalami masalah.</translation>
     </message>
@@ -3622,11 +3622,7 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
     </message>
     <message>
         <source>Config setting for %s only applied on %s network when in [%s] section.</source>
-        <translation>Setting konfigurasi untuk %s hanya di terapkan di %s jaringan ketika ada di [%s] bagian.</translation>
-    </message>
-    <message>
-        <source>Copyright (C) %i-%i</source>
-        <translation>Copyright (C) %i-%i</translation>
+        <translation>Pengaturan konfigurasi untuk %s hanya diterapkan di jaringan %s saat berada di bagian [%s].</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
@@ -3645,6 +3641,14 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
         <translation>Apakah Anda ingin coba membangun kembali database blok sekarang?</translation>
     </message>
     <message>
+        <source>Dump file %s does not exist.</source>
+        <translation type="unfinished">Dumpfile %stidak ada. </translation>
+    </message>
+    <message>
+        <source>Error creating %s</source>
+        <translation type="unfinished">Terjadi kesalahan saat membuat %s</translation>
+    </message>
+    <message>
         <source>Error initializing block database</source>
         <translation>Kesalahan menginisialisasi database blok</translation>
     </message>
@@ -3654,7 +3658,7 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
     </message>
     <message>
         <source>Error loading %s</source>
-        <translation>Error loading %s</translation>
+        <translation type="unfinished">Kesalahan memuat %s</translation>
     </message>
     <message>
         <source>Error loading %s: Private keys can only be disabled during creation</source>
@@ -3677,8 +3681,44 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
         <translation>Menemukan masalah membukakan database blok</translation>
     </message>
     <message>
+        <source>Error reading next record from wallet database</source>
+        <translation type="unfinished">Kesalahan membaca catatan berikutnya dari basis data dompet</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Kesalahan</translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation type="unfinished">Kesalahan: Tidak dapat membuat kursor ke basis data</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation type="unfinished">Kesalahan: Checksum dumpfile tidak cocok. Dihitung %s, diharapkan %s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation type="unfinished">Kesalahan: Mendapat kunci yang bukan hex: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation type="unfinished">Kesalahan: Mendapat nilai yang bukan hex: %s</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation type="unfinished">Kesalahan: Checksum tidak ada</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation type="unfinished">Kesalahan: Tidak dapat mengurai versi %u sebagai uint32_t </translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation type="unfinished">Kesalahan: Tidak dapat menulis catatan ke dompet baru</translation>
+    </message>
+    <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
-        <translation>Gagal untuk mendengarkan di port apapun. Gunakan -listen=0 kalau kamu mau ini.</translation>
+        <translation>Gagal mendengarkan di port apa pun. Gunakan -listen=0 jika kamu ingin.</translation>
     </message>
     <message>
         <source>Failed to rescan the wallet during initialization</source>
@@ -3714,7 +3754,7 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
     </message>
     <message>
         <source>Invalid amount for -fallbackfee=&lt;amount&gt;: '%s'</source>
-        <translation>Jumlah yang tidak saf untuk -fallbackfee=&lt;amount&gt;: '%s'</translation>
+        <translation>Jumlah tidak sah untuk -fallbackfee=&lt;amount&gt;: '%s'</translation>
     </message>
     <message>
         <source>SQLiteDatabase: Failed to execute statement to verify database: %s</source>
@@ -3743,6 +3783,16 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
     <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>Blocks yang ditentukan directori "%s" tidak ada.</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Berkas konfigurasi %s R/W yang ditentukan tidak ada
+</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation type="unfinished">Tidak dapat membuka %suntuk menulis </translation>
     </message>
     <message>
         <source>Unknown address type '%s'</source>
@@ -3823,10 +3873,6 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
     <message>
         <source>Error: Listening for incoming connections failed (listen returned error %s)</source>
         <translation>Error: Mendengarkan koneksi yang masuk gagal (dengarkan kesalahan yang dikembalikan %s)</translation>
-    </message>
-    <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>Tidak dapat mengupgrade dompet split non HD tanpa mengupgrade untuk mendukung keypool pra-split. Harap gunakan versi 169900 atau bukan versi yang ditentukan.</translation>
     </message>
     <message>
         <source>The transaction amount is too small to send after the fee has been deducted</source>
@@ -4049,10 +4095,6 @@ Pergi ke File &gt; Open Wallet untuk memuat dompet.
     <message>
         <source>Loading wallet...</source>
         <translation>Memuat dompet...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Tidak dapat menurunkan versi dompet</translation>
     </message>
     <message>
         <source>Rescanning...</source>

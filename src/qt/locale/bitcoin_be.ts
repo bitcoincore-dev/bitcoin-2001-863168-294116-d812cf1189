@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Правы клік, каб рэдагаваць адрас ці метку</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Стварыць новы адрас</translation>
     </message>
@@ -176,6 +172,14 @@
         <translation>Гаманец зашыфраваны</translation>
     </message>
     <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Увядзіце новы пароль для гаманца.&lt;br/&gt;Парольная фраза павинна складацца&lt;b&gt; не меньш чым з дзесяці сімвалаў&lt;/b&gt;, ці &lt;b&gt;больш чым з васьмі слоў&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>Увядзіце стары пароль і новы пароль для гаманца.</translation>
+    </message>
+    <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation>ВАЖНА: Усе папярэднія копіі гаманца варта замяніць новым зашыфраваным файлам. У мэтах бяспекі папярэднія копіі незашыфраванага файла-гаманца стануць неўжывальнымі, калі вы станеце карыстацца новым зашыфраваным гаманцом.</translation>
     </message>
@@ -250,6 +254,10 @@
         <translation>Выйсці з праграмы</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Паказаць інфармацыю аб %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Аб Qt</translation>
     </message>
@@ -270,12 +278,12 @@
         <translation>Стварыць копію гаманца...</translation>
     </message>
     <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Change Passphrase...</translation>
-    </message>
-    <message>
         <source>Open &amp;URI...</source>
         <translation>Адчыниць &amp;URI...</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Гаманец:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -354,6 +362,10 @@
         <translation>Опцыі каманднага радка</translation>
     </message>
     <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Пераіндэксацыя блокаў на дыску...</translation>
+    </message>
+    <message>
         <source>%1 behind</source>
         <translation>%1 таму</translation>
     </message>
@@ -380,6 +392,18 @@
     <message>
         <source>Up to date</source>
         <translation>Сінхранізавана</translation>
+    </message>
+    <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Адкрыць кансоль дыягностыкі і адладкі</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;адрасы Адпраўкі</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;адрасы Прымання</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -495,28 +519,32 @@
         <translation>Пацверджана</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Капіяваць адрас</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Капіяваць пазнаку</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Капіяваць колькасць</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Капіяваць ID транзакцыі</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Капіяваць адрас</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>Замкнуць непатрачанае</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Капіяваць пазнаку</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>Адамкнуць непатрачанае</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Капіяваць колькасць</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Капіяваць ID транзакцыі</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;Замкнуць непатрачанае</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">&amp;Адамкнуць непатрачанае</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -559,6 +587,10 @@
     <message>
         <source>Wallet</source>
         <translation>Гаманец</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation type="unfinished">Зашыфраваць Гаманец</translation>
     </message>
     </context>
 <context>
@@ -641,7 +673,24 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тып</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адрас</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Уставіць адрас з буферу абмена</translation>
+    </message>
     </context>
 <context>
     <name>OpenWalletActivity</name>
@@ -670,12 +719,23 @@
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Зачыніць</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
     </context>
 <context>
     <name>PeerTableModel</name>
+    <message>
+        <source>Type</source>
+        <translation>Тып</translation>
+    </message>
     </context>
 <context>
     <name>QObject</name>
@@ -691,7 +751,7 @@
         <source>unknown</source>
         <translation>невядома</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     </context>
@@ -700,6 +760,15 @@
     <message>
         <source>&amp;Information</source>
         <translation>Інфармацыя</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Гаманец: </translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Капіяваць адрас</translation>
     </message>
     </context>
 <context>
@@ -713,12 +782,20 @@
         <translation>Метка:</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Капіяваць пазнаку</translation>
+        <source>&amp;Message:</source>
+        <translation type="unfinished">&amp;Паведамленне:</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Капіяваць колькасць</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Капіяваць адрас</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Капіяваць пазнаку</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Капіяваць колькасць</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -728,12 +805,24 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">Адрас:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>Колькасць:</translation>
     </message>
     <message>
+        <source>Label:</source>
+        <translation type="unfinished">Метка:</translation>
+    </message>
+    <message>
         <source>Message:</source>
         <translation>Паведамленне:</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Гаманец:</translation>
     </message>
     <message>
         <source>Copy &amp;Address</source>
@@ -790,6 +879,10 @@
         <translation>Пасля камісіі:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Выбраць...</translation>
+    </message>
+    <message>
         <source>Send to multiple recipients at once</source>
         <translation>Даслаць адразу некалькім атрымальнікам</translation>
     </message>
@@ -804,6 +897,10 @@
     <message>
         <source>Confirm the send action</source>
         <translation>Пацвердзіць дасыланне</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">Даслаць</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -834,6 +931,10 @@
         <translation>Пацвердзіць дасыланне манет</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">Даслаць</translation>
+    </message>
+    <message>
         <source>The amount to pay must be larger than 0.</source>
         <translation>Велічыня плацяжу мае быць больш за 0.</translation>
     </message>
@@ -857,16 +958,8 @@
         <translation>Метка:</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Уставіць адрас з буферу абмена</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -887,16 +980,16 @@
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Уставіць адрас з буферу абмена</translation>
     </message>
     <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
+        <source>&amp;Verify Message</source>
+        <translation>Праверыць паведамленне</translation>
+    </message>
+    <message>
+        <source>Verify &amp;Message</source>
+        <translation type="unfinished">Праверыць паведамленне</translation>
     </message>
     </context>
 <context>
@@ -995,10 +1088,6 @@
         <translation>Здабыта</translation>
     </message>
     <message>
-        <source>(n/a)</source>
-        <translation>(n/a)</translation>
-    </message>
-    <message>
         <source>(no label)</source>
         <translation>непазначаны</translation>
     </message>
@@ -1058,10 +1147,6 @@
         <translation>Даслана да</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Да сябе</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Здабыта</translation>
     </message>
@@ -1074,24 +1159,24 @@
         <translation>Мін. колькасць</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Капіяваць адрас</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Капіяваць адрас</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Капіяваць пазнаку</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Капіяваць пазнаку</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Капіяваць колькасць</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Капіяваць колькасць</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Капіяваць ID транзакцыі</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Капіяваць ID транзакцыі</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>Рэдагаваць пазнаку</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;Рэдагаваць пазнаку</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
@@ -1118,10 +1203,6 @@
         <translation>Адрас</translation>
     </message>
     <message>
-        <source>ID</source>
-        <translation>ID</translation>
-    </message>
-    <message>
         <source>Exporting Failed</source>
         <translation>Экспартаванне няўдалае</translation>
     </message>
@@ -1142,6 +1223,10 @@
     </context>
 <context>
     <name>WalletFrame</name>
+    <message>
+        <source>Error</source>
+        <translation>Памылка</translation>
+    </message>
     </context>
 <context>
     <name>WalletModel</name>
@@ -1161,8 +1246,8 @@
         <translation>Экспартаваць гэтыя звесткі у файл</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Памылка</translation>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Стварыць копію гаманца</translation>
     </message>
     </context>
 <context>
@@ -1186,6 +1271,10 @@
     <message>
         <source>Error opening block database</source>
         <translation>Памылка адчынення базы звестак блокаў</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Памылка</translation>
     </message>
     <message>
         <source>Importing...</source>
@@ -1226,10 +1315,6 @@
     <message>
         <source>Loading wallet...</source>
         <translation>Загружаем гаманец...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Немагчыма рэгрэсаваць гаманец</translation>
     </message>
     <message>
         <source>Rescanning...</source>

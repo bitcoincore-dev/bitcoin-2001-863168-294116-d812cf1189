@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Δεξί-κλικ για επεξεργασία της διεύθυνσης ή της ετικέτας</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Δημιουργία νέας διεύθυνσης</translation>
     </message>
@@ -47,7 +43,7 @@
     </message>
     <message>
         <source>Choose the address to send coins to</source>
-        <translation>Επιλέξτε διεύθυνση αποστολής των νομισμάτων σας</translation>
+        <translation>Επιλέξτε τη διεύθυνση αποστολής των νομισμάτων σας</translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
@@ -67,21 +63,15 @@
     </message>
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Αυτές είναι οι Bitcoin διευθύνσεις σας για να στέλνετε πληρωμές. Να ελέγχετε πάντα το ποσό, καθώς και τη διεύθυνση παραλήπτη πριν στείλετε νομίσματα.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Αυτές είναι οι Bitcoin διευθύνσεις για την λήψη πληρωμών. Χρησιμοποιήστε το κουμπί  'Δημιουργία νέας διεύθυνσης λήψεων' στο παράθυρο λήψεων για την δημιουργία νέας διεύθυνσης.
-Η υπογραφή είναι διαθέσιμη μόνο σε διευθύνσεις 'παλαιού τύπου'.</translation>
+        <translation>Αυτές είναι οι διευθύνσεις Bitcoin σας για την αποστολή πληρωμών. Να ελέγχετε πάντα το ποσό, καθώς και τη διεύθυνση παραλήπτη, πριν στείλετε νομίσματα.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
-        <translation>&amp;Αντιγραφή Διεύθυνσης</translation>
+        <translation>&amp;Αντιγραφή διεύθυνσης</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
-        <translation>Αντιγραφή&amp;Ετικέτα</translation>
+        <translation>Αντιγραφή &amp;ετικέτας</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
@@ -135,7 +125,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Repeat new passphrase</source>
-        <translation>Επανέλαβε τον νέο κωδικό πρόσβασης</translation>
+        <translation>Επανάλαβε τον νέο κωδικό πρόσβασης</translation>
     </message>
     <message>
         <source>Show passphrase</source>
@@ -147,7 +137,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation>Αυτή η ενέργεια χρειάζεται τον κωδικό του πορτοφολιού για να ξεκλειδώσει το πορτοφόλι.</translation>
+        <translation>Αυτή η ενέργεια απαιτεί τον κωδικό πρόσβασης του πορτοφολιού για να ξεκλειδώσει το πορτοφόλι.</translation>
     </message>
     <message>
         <source>Unlock wallet</source>
@@ -163,7 +153,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Change passphrase</source>
-        <translation>Αλλάξτε Φράση Πρόσβασης</translation>
+        <translation>Αλλαγή κωδικού πρόσβασης</translation>
     </message>
     <message>
         <source>Confirm wallet encryption</source>
@@ -171,7 +161,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation>Προσόχη! Εάν κρυπτογραφήσεις το πορτοφόλι σου και χάσεις τη φράση αποκατάστασης, θα &lt;b&gt; ΧΑΣΕΙΣ ΟΛΑ ΣΟΥ ΤΑ BITCOIN &lt;/b&gt;!</translation>
+        <translation>Προσοχή! Εάν κρυπτογραφήσεις το πορτοφόλι σου και χάσεις τον κωδικό πρόσβασης, θα &lt;b&gt; ΧΑΣΕΙΣ ΟΛΑ ΣΟΥ ΤΑ BITCOINS &lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -187,7 +177,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase for the wallet.</source>
-        <translation>Πληκτρολόγησε τον παλιό κωδικό πρόσβασής σου και τον νέο κωδικό πρόσβασής σου για το πορτοφόλι</translation>
+        <translation>Πληκτρολογήστε τον παλιό και τον νέο κωδικό σας πρόσβασης για το πορτοφόλι.</translation>
     </message>
     <message>
         <source>Remember that encrypting your wallet cannot fully protect your bitcoins from being stolen by malware infecting your computer.</source>
@@ -199,15 +189,15 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Your wallet is about to be encrypted. </source>
-        <translation>Το πορτοφόλι σου πρόκειται να κρυπτογραφηθεί</translation>
+        <translation>Το πορτοφόλι σου πρόκειται να κρυπτογραφηθεί.</translation>
     </message>
     <message>
         <source>Your wallet is now encrypted. </source>
-        <translation>Το πορτοφόλι σου έχει κρυπτογραφηθεί τώρα</translation>
+        <translation>Το πορτοφόλι σου έχει τώρα κρυπτογραφηθεί.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
-        <translation>ΣΗΜΑΝΤΙΚΟ: Τα προηγούμενα αντίγραφα ασφαλείας που έχετε κάνει από το αρχείο του πορτοφόλιου σας θα πρέπει να αντικατασταθουν με το νέο που δημιουργείται, κρυπτογραφημένο αρχείο πορτοφόλιου. Για λόγους ασφαλείας, τα προηγούμενα αντίγραφα ασφαλείας του μη κρυπτογραφημένου αρχείου πορτοφόλιου θα καταστουν άχρηστα μόλις αρχίσετε να χρησιμοποιείτε το νέο κρυπτογραφημένο πορτοφόλι.</translation>
+        <translation>ΣΗΜΑΝΤΙΚΟ: Τα προηγούμενα αντίγραφα ασφαλείας που έχετε κάνει από το αρχείο του πορτοφόλιου σας θα πρέπει να αντικατασταθούν με το νέο κρυπτογραφημένο αρχείο πορτοφολιού που δημιουργείται. Για λόγους ασφαλείας, τα προηγούμενα αντίγραφα ασφαλείας του μη κρυπτογραφημένου αρχείου πορτοφολιού θα καταστούν άχρηστα μόλις αρχίσετε να χρησιμοποιείτε το νέο κρυπτογραφημένο πορτοφόλι.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -235,22 +225,18 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Wallet passphrase was successfully changed.</source>
-        <translation>Η φράση πρόσβασης άλλαξε επιτυχώς</translation>
+        <translation>Η φράση πρόσβασης άλλαξε επιτυχώς.</translation>
     </message>
     <message>
         <source>Warning: The Caps Lock key is on!</source>
-        <translation>Προσοχη: το πλήκτρο Caps Lock είναι ενεργο.</translation>
+        <translation>Προειδοποίηση: Το πλήκτρο Caps Lock είναι ενεργό!</translation>
     </message>
 </context>
 <context>
     <name>BanTableModel</name>
     <message>
-        <source>IP/Netmask</source>
-        <translation>IP/Netmask</translation>
-    </message>
-    <message>
         <source>Banned Until</source>
-        <translation>Απαγορευμένο έως</translation>
+        <translation>Απαγόρευση έως</translation>
     </message>
 </context>
 <context>
@@ -337,23 +323,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Wallet:</source>
-        <translation>Πορτοφόλι</translation>
-    </message>
-    <message>
-        <source>Click to disable network activity.</source>
-        <translation>Κάντε κλικ για να απενεργοποιήσετε το δίκτυο.</translation>
+        <translation>Πορτοφόλι:</translation>
     </message>
     <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>Η δραστηριότητα δικτύου είναι απενεργοποιημένη.</translation>
     </message>
     <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Κάντε κλικ για να ενεργοποιήσετε τo δίκτυο ξανά.</translation>
-    </message>
-    <message>
         <source>Syncing Headers (%1%)...</source>
-        <translation>Συγχρονισμός Επικεφαλίδων (%1%)...</translation>
+        <translation>Συγχρονισμός επικεφαλίδων (%1%)...</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -405,7 +384,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
-        <translation>Υπογράψτε ένα μήνυμα για ν' αποδείξετε πως ανήκει μια συγκεκριμένη διεύθυνση Bitcoin</translation>
+        <translation>Ελέγξτε τα μηνύματα για να βεβαιωθείτε ότι υπογράφηκαν με τις καθορισμένες διευθύνσεις Bitcoin</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -439,17 +418,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>&amp;Command-line options</source>
         <translation>&amp;Επιλογές γραμμής εντολών</translation>
     </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n ενεργές συνδέσεις στο δίκτυο Bitcoin</numerusform><numerusform>%n ενεργές συνδέσεις στο δίκτυο Bitcoin</numerusform></translation>
-    </message>
     <message>
         <source>Indexing blocks on disk...</source>
         <translation>Φόρτωση ευρετηρίου μπλοκ στον σκληρο δισκο...</translation>
     </message>
     <message>
         <source>Processing blocks on disk...</source>
-        <translation>Φόρτωση ευρετηρίου μπλοκ στον σκληρο δισκο...</translation>
+        <translation>Φόρτωση ευρετηρίου μπλοκ στον δίσκο...</translation>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
@@ -529,7 +504,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Close Wallet...</source>
-        <translation>Κλείσιμο Πορτοφολιού</translation>
+        <translation>Κλείσιμο πορτοφολιού...</translation>
     </message>
     <message>
         <source>Close wallet</source>
@@ -556,10 +531,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Απόκρυψη τιμών στην καρτέλα Επισκόπησης</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>Προεπιλεγμένο πορτοφόλι</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Κανένα πορτοφόλι διαθέσιμο</translation>
     </message>
@@ -583,9 +554,37 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>%1 client</source>
         <translation>%1 πελάτης</translation>
     </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation type="unfinished">
+            <numerusform>%n ενεργές συνδέσεις στο δίκτυο Bitcoin.</numerusform>
+            <numerusform>%n ενεργές συνδέσεις στο δίκτυο Bitcoin.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Click for more actions.</source>
+        <extracomment>A substring of the tooltip. "More actions" are available via the context menu.</extracomment>
+        <translation type="unfinished">Κάντε κλικ για περισσότερες επιλογές.</translation>
+    </message>
+    <message>
+        <source>Show Peers tab</source>
+        <extracomment>A context menu item. The "Peers tab" is an element of the "Node window".</extracomment>
+        <translation type="unfinished">Προβολή καρτέλας Χρηστών</translation>
+    </message>
+    <message>
+        <source>Disable network activity</source>
+        <extracomment>A context menu item.</extracomment>
+        <translation type="unfinished">Απενεργοποίηση δραστηριότητας δικτύου</translation>
+    </message>
+    <message>
+        <source>Enable network activity</source>
+        <extracomment>A context menu item. The network activity was disabled previously.</extracomment>
+        <translation type="unfinished">Ενεργοποίηση δραστηριότητας δικτύου</translation>
+    </message>
     <message>
         <source>Connecting to peers...</source>
-        <translation>Σύνδεση στους σύντροφους...</translation>
+        <translation>Σύνδεση στους χρήστες...</translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -683,10 +682,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Ποσότητα:</translation>
     </message>
     <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
-    </message>
-    <message>
         <source>Amount:</source>
         <translation>Ποσό:</translation>
     </message>
@@ -743,28 +738,32 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Επικυρωμένες</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Αντιγραφή διεύθυνσης</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Αντιγραφή ετικέτας</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Αντιγραφή ποσού</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Αντιγραφή ταυτότητας συναλλαγής</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Αντιγραφή διεύθυνσης</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>Κλείδωμα μη δαπανημένου</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">Αντιγραφή &amp;ετικέτα</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>Ξεκλείδωμα μη δαπανημένου</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">Αντιγραφή &amp;ποσού</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Αντιγραφή ταυτότητας συναλλαγής</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;Κλείδωμα μη δαπανημένου</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">&amp;Ξεκλείδωμα μη δαπανημένου</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -808,7 +807,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation>Μπορεί να ποικίλει +/- %1 satoshi(s) ανά είσοδο.</translation>
+        <translation>Μπορεί να ποικίλει +/-%1 satoshi(s) ανά είσοδο.</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -816,7 +815,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>change from %1 (%2)</source>
-        <translation>αλλαγή από %1(%2)</translation>
+        <translation>αλλαγή από %1 (%2)</translation>
     </message>
     <message>
         <source>(change)</source>
@@ -826,12 +825,18 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation>Δημιουργία Πορτοφολιού</translation>
+    </message>
+    <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
         <translation>Δημιουργία Πορτοφολιού &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
     <message>
         <source>Create wallet failed</source>
-        <translation>Δημιουργία πορτοφολιού απέτυχε</translation>
+        <translation>Αποτυχία δημιουργίας πορτοφολιού</translation>
     </message>
     <message>
         <source>Create wallet warning</source>
@@ -870,7 +875,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Disable Private Keys</source>
-        <translation>Απενεργοποίηση Ιδιωτικών Κλειδιών</translation>
+        <translation>Απενεργοποίηση ιδιωτικών κλειδιών</translation>
     </message>
     <message>
         <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported, or an HD seed can be set, at a later time.</source>
@@ -896,7 +901,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Compiled without sqlite support (required for descriptor wallets)</source>
         <translation>Μεταγλωτίστηκε χωρίς την υποστήριξη sqlite (απαραίτητη για περιγραφικά πορτοφόλια )</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -921,7 +926,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>New sending address</source>
-        <translation>Νέα Διεύθυνση Αποστολής</translation>
+        <translation>Νέα διεύθυνση αποστολής</translation>
     </message>
     <message>
         <source>Edit receiving address</source>
@@ -1002,7 +1007,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
-        <translation>Όταν κάνετε κλικ στο OK, το %1 θα ξεκινήσει τη λήψη και την επεξεργασία της πλήρους αλυσίδας μπλοκ% 4 (%2GB) αρχίζοντας από τις πρώτες συναλλαγές στο %3 όταν αρχικά ξεκίνησε το %4.</translation>
+        <translation>Όταν κάνετε κλικ στο OK, το %1 θα ξεκινήσει τη λήψη και την επεξεργασία της πλήρους αλυσίδας μπλοκ %4 (%2GB) αρχίζοντας από τις πρώτες συναλλαγές στο %3 όταν αρχικά ξεκίνησε το %4.</translation>
     </message>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
@@ -1025,10 +1030,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Προσαρμογή του φακέλου δεδομένων:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Τουλάχιστον %1 GB δεδομένων θα αποθηκευτούν σε αυτόν τον κατάλογο και θα αυξηθεί με την πάροδο του χρόνου.</translation>
     </message>
@@ -1042,7 +1043,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>The wallet will also be stored in this directory.</source>
-        <translation>Το πορτοφόλι θα αποθηκευτεί επίσης σε αυτό το ευρετήριο</translation>
+        <translation>Το πορτοφόλι θα αποθηκευτεί κι αυτό σε αυτόν τον κατάλογο.</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1065,6 +1066,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation><numerusform>(%n GB απαιτούνται για την πλήρη αλυσίδα)</numerusform><numerusform>(%n GB απαιτούνται για την πλήρη αλυσίδα)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Μη διαθέσιμο</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1117,11 +1125,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.</source>
-        <translation>Το %1 συγχρονίζεται αυτήν τη στιγμή. Θα κατεβάσει κεφαλίδες και μπλοκ από τους συντρόφους και θα τους επικυρώσει μέχρι να φτάσουν στην άκρη της αλυσίδας μπλοκ.</translation>
+        <translation>Το %1 συγχρονίζεται αυτήν τη στιγμή. Θα κατεβάσει κεφαλίδες και μπλοκ από τους χρήστες και θα τους επικυρώσει μέχρι να φτάσουν στην άκρη της αλυσίδας μπλοκ.</translation>
     </message>
     <message>
         <source>Unknown. Syncing Headers (%1, %2%)...</source>
         <translation>Αγνωστος. Συγχρονισμός κεφαλίδων (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Τύπος</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Διεύθυνση</translation>
     </message>
 </context>
 <context>
@@ -1131,10 +1152,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Ανοίξτε το bitcoin URI</translation>
     </message>
     <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
+        <source>Paste address from clipboard</source>
+        <translation>Επικόλληση διεύθυνσης από το βιβλίο διευθύνσεων</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1143,14 +1164,20 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Open wallet warning</source>
-        <translation>Άνοιγμα πορτοφολιού προειδοποίηση</translation>
+        <translation>Προειδοποίηση ανοίγματος πορτοφολιού</translation>
     </message>
     <message>
         <source>default wallet</source>
         <translation>Προεπιλεγμένο πορτοφόλι</translation>
     </message>
     <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>Άνοιγμα Πορτοφολιού</translation>
+    </message>
+    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
         <translation>Άνοιγμα Πορτοφολιού &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
 </context>
@@ -1233,10 +1260,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Αποκοπή &amp;αποκλεισμός αποθήκευσης στο</translation>
     </message>
     <message>
-        <source>GB</source>
-        <translation>GB</translation>
-    </message>
-    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
         <translation>Η επαναφορά αυτής της ρύθμισης απαιτεί εκ νέου λήψη ολόκληρου του μπλοκ αλυσίδας.</translation>
     </message>
@@ -1286,7 +1309,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation>Σύνδεση στο δίκτυο Bitcoin μέσω διαμεσολαβητή SOCKS5 (π.χ. για σύνδεση μέσω Tor)</translation>
+        <translation>Σύνδεση στο δίκτυο Bitcoin μέσω διαμεσολαβητή SOCKS5.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1302,23 +1325,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Port of the proxy (e.g. 9050)</source>
-        <translation>Θύρα διαμεσολαβητή</translation>
+        <translation>Θύρα διαμεσολαβητή (π.χ. 9050)</translation>
     </message>
     <message>
         <source>Used for reaching peers via:</source>
-        <translation>Χρησιμοποιείται για να φτάσεις στους σύντροφους μέσω:</translation>
-    </message>
-    <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
+        <translation>Χρησιμοποιείται για να φτάσεις στους χρήστες μέσω:</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -1390,7 +1401,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Confirm options reset</source>
-        <translation>Επιβεβαίωση των επιλογών επαναφοράς</translation>
+        <translation>Επιβεβαίωση επαναφοράς επιλογών</translation>
     </message>
     <message>
         <source>Client restart required to activate changes.</source>
@@ -1458,7 +1469,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Immature:</source>
-        <translation>Ανώριμος</translation>
+        <translation>Ανώριμα:</translation>
     </message>
     <message>
         <source>Mined balance that has not yet matured</source>
@@ -1482,7 +1493,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Spendable:</source>
-        <translation>Ξοδεμένα:</translation>
+        <translation>Για ξόδεμα:</translation>
     </message>
     <message>
         <source>Recent transactions</source>
@@ -1540,6 +1551,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Αποτυχία εκπλήρωσης συναλλαγής: %1</translation>
     </message>
     <message>
+        <source>Could not sign any more inputs.</source>
+        <translation>Δεν είναι δυνατή η υπογραφή περισσότερων καταχωρήσεων.</translation>
+    </message>
+    <message>
+        <source>Signed %1 inputs, but more signatures are still required.</source>
+        <translation>Υπεγράφη %1 καταχώρηση, αλλά περισσότερες υπογραφές χρειάζονται.</translation>
+    </message>
+    <message>
         <source>Signed transaction successfully. Transaction is ready to broadcast.</source>
         <translation>Η συναλλαγή υπογράφηκε με επιτυχία. Η συναλλαγή είναι έτοιμη για μετάδοση.</translation>
     </message>
@@ -1565,6 +1584,10 @@ ID Συναλλαγής: %1</translation>
         <translation>Αποθήκευση Δεδομένων Συναλλαγής</translation>
     </message>
     <message>
+        <source>Partially Signed Transaction (Binary) (*.psbt)</source>
+        <translation>Μερικώς υπογεγραμμένη συναλλαγή (Δυαδική) (*.psbt)</translation>
+    </message>
+    <message>
         <source>PSBT saved to disk.</source>
         <translation>PSBT αποθηκεύτηκε στο δίσκο.</translation>
     </message>
@@ -1587,6 +1610,18 @@ ID Συναλλαγής: %1</translation>
     <message>
         <source>or</source>
         <translation>ή</translation>
+    </message>
+    <message>
+        <source>Transaction has %1 unsigned inputs.</source>
+        <translation>Η συναλλαγή έχει %1 μη υπογεγραμμένη καταχώρηση.</translation>
+    </message>
+    <message>
+        <source>Transaction is missing some information about inputs.</source>
+        <translation>Λείπουν μερικές πληροφορίες από την συναλλαγή.</translation>
+    </message>
+    <message>
+        <source>Transaction still needs signature(s).</source>
+        <translation>Η συναλλαγή απαιτεί υπογραφή/ές</translation>
     </message>
     <message>
         <source>(But this wallet cannot sign transactions.)</source>
@@ -1617,27 +1652,15 @@ ID Συναλλαγής: %1</translation>
     </message>
     <message>
         <source>URI handling</source>
-        <translation>URI χειριστής</translation>
+        <translation>χειρισμός URI</translation>
     </message>
     <message>
         <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
-        <translation>'bitcoin: //' δεν είναι έγκυρο URI. Χρησιμοποιήστε το "bitcoin:" αντ 'αυτού.</translation>
+        <translation>Το 'bitcoin://' δεν είναι έγκυρο URI. Αντ' αυτού χρησιμοποιήστε το 'bitcoin:'.</translation>
     </message>
     <message>
-        <source>Cannot process payment request because BIP70 is not supported.</source>
-        <translation>Δεν είναι δυνατή η επεξεργασία της αίτησης πληρωμής, επειδή δεν υποστηρίζεται το BIP70.</translation>
-    </message>
-    <message>
-        <source>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</source>
-        <translation>Λόγω εκτεταμένων αδυναμιών ασφαλείας στο BIP70 συνιστάται ανεπιφύλακτα να αγνοούνται οι οδηγίες του εμπόρου για την αλλαγή πορτοφολιών.</translation>
-    </message>
-    <message>
-        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
-        <translation>Αν λαμβάνετε αυτό το σφάλμα, θα πρέπει να ζητήσετε από τον έμπορο να παράσχει URI συμβατό με BIP21.</translation>
-    </message>
-    <message>
-        <source>Invalid payment address %1</source>
-        <translation>Μη έγκυρη διεύθυνση πληρωμής %1</translation>
+        <source>Invalid payment address</source>
+        <translation>Μη έγκυρη διεύθυνση πληρωμής</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
@@ -1659,14 +1682,6 @@ ID Συναλλαγής: %1</translation>
         <translation>Κόμβος / Υπηρεσία</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>Ταυτότητα Κόμβου</translation>
-    </message>
-    <message>
-        <source>Ping</source>
-        <translation>Ping</translation>
-    </message>
-    <message>
         <source>Sent</source>
         <translation>Αποστολή</translation>
     </message>
@@ -1674,7 +1689,11 @@ ID Συναλλαγής: %1</translation>
         <source>Received</source>
         <translation>Παραλήφθησαν</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Τύπος</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1686,20 +1705,28 @@ ID Συναλλαγής: %1</translation>
         <translation>Εισάγετε μια διεύθυνση Bitcoin (π.χ. %1)</translation>
     </message>
     <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
+        <source>Unroutable</source>
+        <translation type="unfinished">Αδρομολόγητο</translation>
     </message>
     <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
+        <source>Internal</source>
+        <translation type="unfinished">Εσωτερικό</translation>
     </message>
     <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
+        <source>Inbound</source>
+        <translation>Εισερχόμενα</translation>
     </message>
     <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
+        <source>Full Relay</source>
+        <translation type="unfinished">Πλήρης αναμεταδότης</translation>
+    </message>
+    <message>
+        <source>Block Relay</source>
+        <translation type="unfinished">Αναμεταδότης μπλοκ</translation>
+    </message>
+    <message>
+        <source>Manual</source>
+        <translation type="unfinished">Χειροκίνητα</translation>
     </message>
     <message>
         <source>None</source>
@@ -1709,29 +1736,40 @@ ID Συναλλαγής: %1</translation>
         <source>N/A</source>
         <translation>Μη διαθέσιμο</translation>
     </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
     <message numerus="yes">
         <source>%n second(s)</source>
-        <translation><numerusform>%n δευτερόλεπτα</numerusform><numerusform>%n δευτερόλεπτα</numerusform></translation>
+        <translation>
+            <numerusform>%n δευτερόλεπτο</numerusform>
+            <numerusform>%n δευτερόλεπτα</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
-        <translation><numerusform>%n λεπτά</numerusform><numerusform>%n λεπτά</numerusform></translation>
+        <translation>
+            <numerusform>%n λεπτό</numerusform>
+            <numerusform>%n λεπτά</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation><numerusform>%n ώρες</numerusform><numerusform>%n ώρες</numerusform></translation>
+        <translation type="unfinished">
+            <numerusform>%n ώρα</numerusform>
+            <numerusform>%n ώρες</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation><numerusform>%n ημέρες</numerusform><numerusform>%n ημέρες</numerusform></translation>
+        <translation type="unfinished">
+            <numerusform>%n ημέρα</numerusform>
+            <numerusform>%n ημέρες</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation><numerusform>%n εβδομάδες</numerusform><numerusform>%n εβδομάδες</numerusform></translation>
+        <translation type="unfinished">
+            <numerusform>%n εβδομάδα</numerusform>
+            <numerusform>%n εβδομάδες</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -1739,27 +1777,14 @@ ID Συναλλαγής: %1</translation>
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation><numerusform>%n χρόνια</numerusform><numerusform>%n χρόνια</numerusform></translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
+        <translation type="unfinished">
+            <numerusform>%n χρόνο</numerusform>
+            <numerusform>%n χρόνια</numerusform>
+        </translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
-        <translation>Σφάλμα: Ο καθορισμένος κατάλογος δεδομένων "%1" δεν υπάρχει.</translation>
+        <translation>Σφάλμα: Ο ορισμένος κατάλογος δεδομένων "%1" δεν υπάρχει.</translation>
     </message>
     <message>
         <source>Error: Cannot parse configuration file: %1.</source>
@@ -1770,16 +1795,22 @@ ID Συναλλαγής: %1</translation>
         <translation>Σφάλμα: %1</translation>
     </message>
     <message>
-        <source>Error initializing settings: %1</source>
-        <translation>Σφάλμα έναρξης ρυθμίσεω: %1</translation>
-    </message>
-    <message>
         <source>%1 didn't yet exit safely...</source>
         <translation> Το %1 δεν έφυγε ακόμα με ασφάλεια...</translation>
     </message>
     <message>
         <source>unknown</source>
         <translation>Άγνωστο</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>μπλοκ</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Συναλλαγή</translation>
     </message>
 </context>
 <context>
@@ -1790,7 +1821,7 @@ ID Συναλλαγής: %1</translation>
     </message>
     <message>
         <source>&amp;Copy Image</source>
-        <translation>&amp;Αντιγραφή Εικόνας</translation>
+        <translation>&amp;Αντιγραφή εικόνας</translation>
     </message>
     <message>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
@@ -1833,7 +1864,7 @@ ID Συναλλαγής: %1</translation>
     </message>
     <message>
         <source>Using BerkeleyDB version</source>
-        <translation>Χρήση BerkeleyDB έκδοσης</translation>
+        <translation>Χρήση έκδοσης BerkeleyDB</translation>
     </message>
     <message>
         <source>Datadir</source>
@@ -1905,15 +1936,11 @@ ID Συναλλαγής: %1</translation>
     </message>
     <message>
         <source>Banned peers</source>
-        <translation>Αποκλεισμένοι σύντροφοι</translation>
+        <translation>Αποκλεισμένοι χρήστες</translation>
     </message>
     <message>
         <source>Select a peer to view detailed information.</source>
-        <translation>Επιλέξτε ένα χρήστη για να δείτε αναλυτικές πληροφορίες.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Κατεύθυνση</translation>
+        <translation>Επιλέξτε έναν χρήστη για να δείτε αναλυτικές πληροφορίες.</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1972,8 +1999,20 @@ ID Συναλλαγής: %1</translation>
         <translation>Υπηρεσίες</translation>
     </message>
     <message>
+        <source>Wants Tx Relay</source>
+        <translation type="unfinished">Απαιτεί Αναμετάδοση Tx</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation type="unfinished">Υψηλό εύρος ζώνης</translation>
+    </message>
+    <message>
         <source>Connection Time</source>
         <translation>Χρόνος σύνδεσης</translation>
+    </message>
+    <message>
+        <source>Last Tx</source>
+        <translation type="unfinished">Τελευταίο Tx</translation>
     </message>
     <message>
         <source>Last Send</source>
@@ -1993,7 +2032,7 @@ ID Συναλλαγής: %1</translation>
     </message>
     <message>
         <source>Ping Wait</source>
-        <translation>Ping Αναμονή</translation>
+        <translation>Αναμονή Ping</translation>
     </message>
     <message>
         <source>Min Ping</source>
@@ -2020,10 +2059,6 @@ ID Συναλλαγής: %1</translation>
         <translation>&amp;Κίνηση δικτύου</translation>
     </message>
     <message>
-        <source>Totals</source>
-        <translation>Σύνολα</translation>
-    </message>
-    <message>
         <source>In:</source>
         <translation>Εισερχόμενα:</translation>
     </message>
@@ -2044,10 +2079,6 @@ ID Συναλλαγής: %1</translation>
         <translation>1 &amp;ώρα</translation>
     </message>
     <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;μέρα</translation>
-    </message>
-    <message>
         <source>1 &amp;week</source>
         <translation>1 &amp;εβδομάδα</translation>
     </message>
@@ -2060,8 +2091,33 @@ ID Συναλλαγής: %1</translation>
         <translation>&amp;Αποσύνδεση</translation>
     </message>
     <message>
+        <source>To</source>
+        <translation>Προς</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Από</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation type="unfinished">ο ομότιμος μας επέλεξε για υψηλής ταχύτητας αναμετάδοση </translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Όχι</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>Απαγόρευση για</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation type="unfinished">1 &amp;μέρα</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Αντιγραφή διεύθυνσης</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
@@ -2073,7 +2129,7 @@ ID Συναλλαγής: %1</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and %1 to clear screen.</source>
-        <translation>Χρησιμοποιήστε τα βέλη πάνω και κάτω για να περιηγηθείτε στο ιστορικό και το %1 για να καθαρίσετε την οθόνη.</translation>
+        <translation>Χρησιμοποιήστε τα βέλη πάνω και κάτω για περιήγηση στο ιστορικό, και το %1 για καθαρισμό οθόνης.</translation>
     </message>
     <message>
         <source>Type %1 for an overview of available commands.</source>
@@ -2085,7 +2141,7 @@ ID Συναλλαγής: %1</translation>
     </message>
     <message>
         <source>WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.</source>
-        <translation>ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Οι απατεώνες είναι ενεργοί, λέγοντας στους χρήστες να πληκτρολογούν εντολές εδώ, κλέβοντας τα περιεχόμενα του πορτοφολιού τους. Μην χρησιμοποιείτε αυτήν την κονσόλα χωρίς να κατανοείτε πλήρως τις συνέπειες μιας εντολής.</translation>
+        <translation>ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Οι απατεώνες δραστηριοποιούνται στο να βάζουν τους χρήστες να πληκτρολογούν εντολές εδώ, καταλήγοντας να κλέβουν τα περιεχόμενα των πορτοφολιών τους. Μη χρησιμοποιείτε αυτήν την κονσόλα χωρίς να κατανοείτε πλήρως τις συνέπειες μιας εντολής.</translation>
     </message>
     <message>
         <source>Network activity disabled</source>
@@ -2109,20 +2165,12 @@ ID Συναλλαγής: %1</translation>
         <translation>μέσω %1</translation>
     </message>
     <message>
-        <source>never</source>
-        <translation>ποτέ</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Εισερχόμενα</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Εξερχόμενα</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Άγνωστο(α)</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation type="unfinished">Ποτέ</translation>
     </message>
 </context>
 <context>
@@ -2164,8 +2212,8 @@ ID Συναλλαγής: %1</translation>
         <translation>Ένα προαιρετικό μήνυμα που επισυνάπτεται στην αίτηση πληρωμής και μπορεί να εμφανιστεί στον αποστολέα.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Δημιουργία νέας διεύθυνσης λήψης</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Αίτηση πληρωμής</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2204,20 +2252,24 @@ ID Συναλλαγής: %1</translation>
         <translation>Αφαίρεση</translation>
     </message>
     <message>
-        <source>Copy URI</source>
+        <source>Copy &amp;URI</source>
         <translation>Αντιγραφή της επιλεγμένης διεύθυνσης στο πρόχειρο του συστήματος</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Αντιγραφή ετικέτας</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Αντιγραφή διεύθυνσης</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>Αντιγραφή μηνύματος</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">Αντιγραφή &amp;ετικέτα</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Αντιγραφή ποσού</translation>
+        <source>Copy &amp;message</source>
+        <translation type="unfinished">Αντιγραφή &amp;μηνύματος</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">Αντιγραφή &amp;ποσού</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -2256,7 +2308,7 @@ ID Συναλλαγής: %1</translation>
     </message>
     <message>
         <source>Copy &amp;URI</source>
-        <translation>Αντιγραφή της επιλεγμένης διεύθυνσης στο πρόχειρο του συστήματος</translation>
+        <translation>Αντιγραφή &amp;URI</translation>
     </message>
     <message>
         <source>Copy &amp;Address</source>
@@ -2331,10 +2383,6 @@ ID Συναλλαγής: %1</translation>
     <message>
         <source>Quantity:</source>
         <translation>Ποσότητα:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
     </message>
     <message>
         <source>Amount:</source>
@@ -2435,7 +2483,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Confirmation time target:</source>
-        <translation>Επιβεβαίωση χρονικού στόχου :</translation>
+        <translation>Επιβεβαίωση χρονικού στόχου:</translation>
     </message>
     <message>
         <source>Enable Replace-By-Fee</source>
@@ -2526,6 +2574,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Αποθήκευση Δεδομένων Συναλλαγής</translation>
     </message>
     <message>
+        <source>Partially Signed Transaction (Binary) (*.psbt)</source>
+        <translation>Μερικώς υπογεγραμμένη συναλλαγή (Δυαδική) (*.psbt)</translation>
+    </message>
+    <message>
         <source>PSBT saved</source>
         <translation>Το PSBT αποθηκεύτηκε</translation>
     </message>
@@ -2556,7 +2608,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Total Amount</source>
-        <translation>Συνολικό Ποσό</translation>
+        <translation>Συνολικό ποσό</translation>
     </message>
     <message>
         <source>To review recipient list click "Show Details..."</source>
@@ -2612,7 +2664,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Εκτιμάται η έναρξη επιβεβαίωσης εντός %n μπλοκ.</numerusform><numerusform>Εκτιμάται η έναρξη επιβεβαίωσης εντός %n μπλοκ.</numerusform></translation>
+        <translation>
+            <numerusform>Αναμένεται η έναρξη επιβεβαίωσης εντός %n μπλοκ.</numerusform>
+            <numerusform>Αναμένεται η έναρξη επιβεβαίωσης εντός %n μπλοκ.</numerusform>
+        </translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2658,16 +2713,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Η διεύθυνση Bitcoin που θα σταλεί η πληρωμή</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Επικόλληση διεύθυνσης από το βιβλίο διευθύνσεων</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Remove this entry</source>
@@ -2748,16 +2795,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Επιλογή διεύθυνσης που έχει ήδη χρησιμοποιηθεί</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Επικόλληση διεύθυνσης από το βιβλίο διευθύνσεων</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -2801,7 +2840,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>The signed message to verify</source>
-        <translation>The signed message to verify</translation>
+        <translation>Το υπογεγραμμένο μήνυμα προς επιβεβαίωση</translation>
     </message>
     <message>
         <source>The signature given when the message was signed</source>
@@ -2878,11 +2917,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
 </context>
 <context>
     <name>TrafficGraphWidget</name>
-    <message>
-        <source>KB/s</source>
-        <translation>KB/s</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>TransactionDesc</name>
     <message numerus="yes">
@@ -2943,7 +2978,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>unknown</source>
-        <translation>Άγνωστο</translation>
+        <translation>άγνωστο</translation>
     </message>
     <message>
         <source>To</source>
@@ -3204,15 +3239,11 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message>
         <source>Received with</source>
-        <translation>Λήψη με</translation>
+        <translation>Ελήφθη με</translation>
     </message>
     <message>
         <source>Sent to</source>
         <translation>Αποστέλλονται προς</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation>Στον εαυτό σου</translation>
     </message>
     <message>
         <source>Mined</source>
@@ -3231,44 +3262,44 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Ελάχιστο ποσό</translation>
     </message>
     <message>
-        <source>Abandon transaction</source>
-        <translation>Απαλλαγή συναλλαγής</translation>
+        <source>A&amp;bandon transaction</source>
+        <translation type="unfinished">Α&amp;πόρριψη συναλλαγής</translation>
     </message>
     <message>
-        <source>Increase transaction fee</source>
-        <translation>Αύξηση του τέλους συναλλαγής</translation>
+        <source>Increase transaction &amp;fee</source>
+        <translation type="unfinished">Αύξηση &amp;κρατήσεων συναλλαγής</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Αντιγραφή διεύθυνσης</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Αντιγραφή διεύθυνσης</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Αντιγραφή ετικέτας</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">Αντιγραφή &amp;ετικέτα</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Αντιγραφή ποσού</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">Αντιγραφή &amp;ποσού</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Αντιγραφή ταυτότητας συναλλαγής</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Αντιγραφή ταυτότητας συναλλαγής</translation>
     </message>
     <message>
-        <source>Copy raw transaction</source>
-        <translation>Αντιγραφή ανεπεξέργαστης συναλλαγής</translation>
+        <source>Copy &amp;raw transaction</source>
+        <translation type="unfinished">Αντιγραφή &amp;ανεπεξέργαστης συναλλαγής</translation>
     </message>
     <message>
-        <source>Copy full transaction details</source>
-        <translation>Αντιγράψτε τις πλήρεις λεπτομέρειες της συναλλαγής</translation>
+        <source>Copy full transaction &amp;details</source>
+        <translation>Αντιγράψτε τις πλήρεις &amp;λεπτομέρειες της συναλλαγής</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>Επεξεργασία ετικέτας</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;Επεξεργασία ετικέτας</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>Εμφάνιση λεπτομερειών συναλλαγής</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;Εμφάνιση λεπτομερειών συναλλαγής</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
@@ -3375,6 +3406,30 @@ Go to File &gt; Open Wallet to load a wallet.
         <source>Create a new wallet</source>
         <translation>Δημιουργία νέου Πορτοφολιού</translation>
     </message>
+    <message>
+        <source>Error</source>
+        <translation>Σφάλμα</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>Αδυναμία αποκωδικοποίησης PSBT από το πρόχειρο (μη έγκυρο Base64)</translation>
+    </message>
+    <message>
+        <source>Load Transaction Data</source>
+        <translation>Φόρτωση δεδομένων συναλλαγής</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (*.psbt)</source>
+        <translation>Μερικώς υπογεγραμμένη συναλλαγή (*.psbt)</translation>
+    </message>
+    <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>Το αρχείο PSBT πρέπει να είναι μικρότερο από 100 MiB</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>Αδυναμία στην αποκωδικοποίηση του PSBT</translation>
+    </message>
 </context>
 <context>
     <name>WalletModel</name>
@@ -3446,14 +3501,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>Εξαγωγή δεδομένων καρτέλας σε αρχείο</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Σφάλμα</translation>
-    </message>
-    <message>
-        <source>Load Transaction Data</source>
-        <translation>Φόρτωση δεδομένων συναλλαγής</translation>
-    </message>
-    <message>
         <source>Backup Wallet</source>
         <translation>Αντίγραφο ασφαλείας Πορτοφολιού</translation>
     </message>
@@ -3468,6 +3515,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>There was an error trying to save the wallet data to %1.</source>
         <translation>Παρουσιάστηκε σφάλμα κατά την προσπάθεια αποθήκευσης των δεδομένων πορτοφολιού στο %1.</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the wallet data to %1: %2</source>
+        <translation>Παρουσιάστηκε σφάλμα κατά την προσπάθεια αποθήκευσης των δεδομένων πορτοφολιού στο %1: %2</translation>
     </message>
     <message>
         <source>Backup Successful</source>
@@ -3509,8 +3560,12 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>Οι προγραμματιστές %s</translation>
     </message>
     <message>
+        <source>Cannot downgrade wallet from version %i to version %i. Wallet version unchanged.</source>
+        <translation type="unfinished">Αδύνατη η υποβάθμιση του πορτοφολιού από την έκδοση %i στην έκδοση %i. Η έκδοση του πορτοφολιού δεν έχει αλλάξει.</translation>
+    </message>
+    <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
-        <translation>Δεν είναι δυνατή η λήψη κλειδώματος στον κατάλογο δεδομένων %s. Το %s πιθανώς ήδη εκτελείται.</translation>
+        <translation>Δεν είναι δυνατή η εφαρμογή κλειδώματος στον κατάλογο δεδομένων %s. Το %s μάλλον εκτελείται ήδη.</translation>
     </message>
     <message>
         <source>Cannot provide specific connections and have addrman find outgoing connections at the same.</source>
@@ -3519,6 +3574,26 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>Σφάλμα κατά την ανάγνωση %s! Όλα τα κλειδιά διαβάζονται σωστά, αλλά τα δεδομένα των συναλλαγών ή οι καταχωρίσεις του βιβλίου διευθύνσεων ενδέχεται να λείπουν ή να είναι εσφαλμένα.</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation type="unfinished">Σφάλμα: Η καταγραφή του φορμά του αρχείου dump είναι εσφαλμένη. Ελήφθη: «%s», αναμενόταν: «φορμά».</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">Σφάλμα: Η έκδοση του αρχείου dump δεν υποστηρίζεται. Αυτή η έκδοση του bitcoin-wallet υποστηρίζει αρχεία dump μόνο της έκδοσης 1. Δόθηκε αρχείο dump έκδοσης %s.</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation type="unfinished">Το αρχείο %s υπάρχει ήδη. Αν είστε σίγουροι ότι αυτό θέλετε, βγάλτε το πρώτα από τη μέση.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation type="unfinished">Δεν δόθηκε αρχείο dump. Για να χρησιμοποιηθεί το createfromdump θα πρέπει να δοθεί το -dumpfile=&lt;filename&gt;.</translation>
+    </message>
+    <message>
+        <source>No wallet file format provided. To use createfromdump, -format=&lt;format&gt; must be provided.</source>
+        <translation type="unfinished">Δεν δόθηκε φορμά αρχείου πορτοφολιού. Για τη χρήση του createfromdump, πρέπει να δοθεί -format=&lt;format&gt;.</translation>
     </message>
     <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
@@ -3554,7 +3629,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
-        <translation>Προειδοποίηση: Δεν φαίνεται να συμφωνούμε πλήρως με τους συμμαθητές μας! Ίσως χρειαστεί να κάνετε αναβάθμιση ή ίσως χρειαστεί να αναβαθμίσετε άλλους κόμβους.</translation>
+        <translation>Προειδοποίηση: Δεν φαίνεται να συμφωνείτε πλήρως με τους χρήστες! Ίσως χρειάζεται να κάνετε αναβάθμιση, ή ίσως οι άλλοι κόμβοι να χρειάζονται αναβάθμιση.</translation>
     </message>
     <message>
         <source>-maxmempool must be at least %d MB</source>
@@ -3593,12 +3668,20 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>Θέλετε να δημιουργηθεί τώρα η βάση δεδομένων των μπλοκ;</translation>
     </message>
     <message>
+        <source>Dump file %s does not exist.</source>
+        <translation type="unfinished">Το αρχείο dump %s δεν υπάρχει.</translation>
+    </message>
+    <message>
+        <source>Error creating %s</source>
+        <translation type="unfinished">Σφάλμα στη δημιουργία %s</translation>
+    </message>
+    <message>
         <source>Error initializing block database</source>
         <translation>Σφάλμα κατά την ενεργοποίηση της βάσης δεδομένων των μπλοκ</translation>
     </message>
     <message>
         <source>Error initializing wallet database environment %s!</source>
-        <translation>Σφάλμα κατά την ενεργοποίηση της βάσης δεδομένων πορτοφολιού %s!</translation>
+        <translation>Σφάλμα ενεργοποίησης του περιβάλλοντος βάσης δεδομένων πορτοφολιού %s!</translation>
     </message>
     <message>
         <source>Error loading %s</source>
@@ -3614,7 +3697,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Error loading %s: Wallet requires newer version of %s</source>
-        <translation>Σφάλμα κατά τη φόρτωση %s: Το Πορτοφόλι απαιτεί νεότερη έκδοση του %s</translation>
+        <translation>Σφάλμα κατά τη φόρτωση του %s: Το πορτοφόλι απαιτεί νεότερη έκδοση του %s</translation>
     </message>
     <message>
         <source>Error loading block database</source>
@@ -3623,6 +3706,26 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Error opening block database</source>
         <translation>Σφάλμα φόρτωσης της βάσης δεδομένων των μπλοκ</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Σφάλμα</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation type="unfinished">Σφάλμα: Το checksum του αρχείου dump δεν αντιστοιχεί. Υπολογίστηκε: %s, αναμενόταν: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation type="unfinished">Σφάλμα: Ελήφθη μη δεκαεξαδικό κλειδί: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation type="unfinished">Σφάλμα: Ελήφθη μη δεκαεξαδική τιμή: %s</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation type="unfinished">Σφάλμα: Δεν υπάρχει το checksum</translation>
     </message>
     <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
@@ -3635,6 +3738,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Failed to verify database</source>
         <translation>Η επιβεβαίωση της βάσης δεδομένων απέτυχε</translation>
+    </message>
+    <message>
+        <source>Ignoring duplicate -wallet %s.</source>
+        <translation>Αγνόηση διπλότυπου -wallet %s.</translation>
     </message>
     <message>
         <source>Importing...</source>
@@ -3661,8 +3768,20 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>Μη έγκυρο ποσό για το -fallbackfee =&lt;amount&gt;: '%s'</translation>
     </message>
     <message>
+        <source>SQLiteDatabase: Failed to fetch the application id: %s</source>
+        <translation>SQLiteDatabase: Αποτυχία στο κατέβασμα του αναγνωριστικού εφαρμογής: %s</translation>
+    </message>
+    <message>
+        <source>SQLiteDatabase: Unexpected application id. Expected %u, got %u</source>
+        <translation>SQLiteDatabase: Μη αναμενόμενο αναγνωριστικό εφαρμογής. Αναμενόταν: %u, ελήφθη: %u</translation>
+    </message>
+    <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>Δεν υπάρχει κατάλογος καθορισμένων μπλοκ "%s".</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation type="unfinished">Αδυναμία στο άνοιγμα του %s για εγγραφή</translation>
     </message>
     <message>
         <source>Unknown address type '%s'</source>
@@ -3741,6 +3860,10 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>Σφάλμα: Η ακρόαση για εισερχόμενες συνδέσεις απέτυχε (ακούστε επιστραμμένο σφάλμα %s)</translation>
     </message>
     <message>
+        <source>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</source>
+        <translation>%s κατεστραμμένο. Δοκιμάστε να το επισκευάσετε με το εργαλείο πορτοφολιού bitcoin-wallet, ή επαναφέρετε κάποιο αντίγραφο ασφαλείας.</translation>
+    </message>
+    <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
         <translation>Μη έγκυρο ποσό για το -maxtxfee =: '%s' (πρέπει να είναι τουλάχιστον το minrelay έξοδο του %s για την αποφυγή κολλημένων συναλλαγών)</translation>
     </message>
@@ -3753,12 +3876,16 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>Πρέπει να ξαναφτιάξετε τη βάση δεδομένων χρησιμοποιώντας το -reindex για να επιστρέψετε στη λειτουργία χωρίς εκτύπωση. Αυτό θα ξαναφορτώσει ολόκληρο το blockchain</translation>
     </message>
     <message>
+        <source>A fatal internal error occurred, see debug.log for details</source>
+        <translation>Προέκυψε ένα κρίσιμο εσωτερικό σφάλμα. Ανατρέξτε στο debug.log για λεπτομέρειες</translation>
+    </message>
+    <message>
         <source>Disk space is too low!</source>
         <translation>Αποθηκευτικός χώρος πολύ μικρός!</translation>
     </message>
     <message>
         <source>Error reading from database, shutting down.</source>
-        <translation>Σφάλμα ανάγνωσης από τη βάση δεδομένων, γίνεται τερματισμός.</translation>
+        <translation>Σφάλμα ανάγνωσης από τη βάση δεδομένων, εκτελείται τερματισμός.</translation>
     </message>
     <message>
         <source>Error upgrading chainstate database</source>
@@ -3789,6 +3916,10 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>Πρέπει να καθορίσετε μια θύρα με -whitebind: '%s'</translation>
     </message>
     <message>
+        <source>No proxy server specified. Use -proxy=&lt;ip&gt; or -proxy=&lt;ip:port&gt;.</source>
+        <translation>Δεν ορίστηκε διακομιστής μεσολάβησης. Χρησιμοποιήστε -proxy=&lt;ip&gt; ή -proxy=&lt;ip:port&gt;.</translation>
+    </message>
+    <message>
         <source>Prune mode is incompatible with -blockfilterindex.</source>
         <translation>Η λειτουργία Prune είναι ασύμβατη με το -blokfilterindex.</translation>
     </message>
@@ -3806,7 +3937,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Specified -walletdir "%s" does not exist</source>
-        <translation>Δεν υπάρχει καθορισμένο "%s"</translation>
+        <translation>Η ορισμένη -walletdir "%s" δεν υπάρχει</translation>
     </message>
     <message>
         <source>Specified -walletdir "%s" is a relative path</source>
@@ -3840,7 +3971,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Unable to bind to %s on this computer (bind returned error %s)</source>
-        <translation> Δεν είναι δυνατή η δέσμευση του %s σε αυτόν τον υπολογιστή (δεσμεύει το επιστρεφόμενο σφάλμα %s)</translation>
+        <translation>Δεν είναι δυνατή η δέσμευση του %s σε αυτόν τον υπολογιστή (η δέσμευση επέστρεψε σφάλμα %s)</translation>
     </message>
     <message>
         <source>Unable to create the PID file '%s': %s</source>
@@ -3892,7 +4023,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Transaction has too long of a mempool chain</source>
-        <translation>Η συναλλαγή έχει μια μακρά αλυσίδα mempool</translation>
+        <translation>Η συναλλαγή έχει πολύ μακρά αλυσίδα mempool</translation>
     </message>
     <message>
         <source>Transaction must have at least one recipient</source>
@@ -3911,8 +4042,12 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>Η αποτίμηση του τέλους απέτυχε. Το Fallbackfee είναι απενεργοποιημένο. Περιμένετε λίγα τετράγωνα ή ενεργοποιήστε το -fallbackfee.</translation>
     </message>
     <message>
+        <source>Warning: Private keys detected in wallet {%s} with disabled private keys</source>
+        <translation>Προειδοποίηση: Ιδιωτικά κλειδιά εντοπίστηκαν στο πορτοφόλι {%s} με απενεργοποιημένα ιδιωτικά κλειδιά</translation>
+    </message>
+    <message>
         <source>Cannot write to data directory '%s'; check permissions.</source>
-        <translation>Δεν είναι δυνατή η εγγραφή στον κατάλογο δεδομένων '%s'. ελέγξτε τα δικαιώματα.</translation>
+        <translation>Αδύνατη η εγγραφή στον κατάλογο δεδομένων '%s'. Ελέγξτε τα δικαιώματα.</translation>
     </message>
     <message>
         <source>Loading block index...</source>
@@ -3921,10 +4056,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Loading wallet...</source>
         <translation>Φόρτωση πορτοφολιού...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Δεν μπορώ να υποβαθμίσω το πορτοφόλι</translation>
     </message>
     <message>
         <source>Rescanning...</source>

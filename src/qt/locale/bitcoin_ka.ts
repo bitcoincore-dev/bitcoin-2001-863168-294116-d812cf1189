@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>დააჭირეთ მარჯვენა ღილაკს მისამართის ან იარლიყის ჩასასწორებლად</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>ახალი მისამართის შექმნა</translation>
     </message>
@@ -334,16 +330,9 @@
         <translation>საფულე:</translation>
     </message>
     <message>
-        <source>Click to disable network activity.</source>
-        <translation>დააწკაპეთ ქსელური აქტივობის გასათიშად.</translation>
-    </message>
-    <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>ქსელური აქტივობა გათიშულია.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>დააჭირეთ ქსელის აქტივობის კვლავ ჩართვას</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -494,8 +483,8 @@
         <translation>საფულის ფახურვა</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>ნაგულისხმევი საფულე</translation>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>%1-ს დახმარების ჩვენება Bitcoin-ის საკომანდო სტრიქონის დასაშვები ოპციების სანახავად</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -573,7 +562,11 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>საფულე &lt;b&gt;დაშიფრულია&lt;/b&gt; და ამჟამად &lt;b&gt;დაბლოკილია&lt;/b&gt;</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>ფატალური შეცდომა. %1 ვერ უზრუნველყოფს უსაფრთხო გაგრძელებას, ამიტომ იხურება.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -637,28 +630,32 @@
         <translation>დადასტურებულია</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>მისამართის კოპირება</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>ლეიბლის კოპირება</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>რაოდენობის კოპირება</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>ტრანსაქციის ID-ს კოპირება</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;მისამართის კოპირება</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>დაუხარჯავის ჩაკეტვა</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;ლეიბლის კოპირება</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>დაუხარჯავის განბლოკვა</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;რაოდენობის კოპირება</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;ტრანსაქციის ID-ს კოპირება</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;დაუხარჯავის ჩაკეტვა</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">&amp;დაუხარჯავის განბლოკვა</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -713,6 +710,10 @@
     <message>
         <source>Wallet</source>
         <translation>საფულე</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>საფულის დაშიფრვა</translation>
     </message>
     </context>
 <context>
@@ -811,6 +812,10 @@
         <translation>კეთილი იყოს თქვენი მობრძანება %1-ში.</translation>
     </message>
     <message>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>ეს პროგრამის პირველი გაშვებაა; შეგიძლიათ მიუთითოთ, სად შეინახოს მონაცემები %1-მ.</translation>
+    </message>
+    <message>
         <source>Use the default data directory</source>
         <translation>ნაგულისხმევი კატალოგის გამოყენება</translation>
     </message>
@@ -819,12 +824,35 @@
         <translation>მითითებული კატალოგის გამოყენება:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation>მითითებულ კატალოგში დაგროვდება სულ ცოტა %1 გბ მონაცემები, და მომავალში უფრო გაიზრდება.</translation>
+    </message>
+    <message>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation>%1 გადმოტვირთავს და შეინახავს Bitcoin-ის ბლოკთა ჯაჭვს.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation>საფულეც ამავე კატალოგში შეინახება.</translation>
     </message>
     <message>
         <source>Error</source>
         <translation>შეცდომა</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n GB of free space available</source>
+        <translation><numerusform>ხელმისაწვდომია თავისუფალი სივრცის %n გბ</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation><numerusform>(საჭირო %n გბ-დან)</numerusform></translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>მიუწვდ.</translation>
     </message>
     </context>
 <context>
@@ -855,17 +883,39 @@
     </message>
     </context>
 <context>
-    <name>OpenURIDialog</name>
+    <name>NetWatchLogModel</name>
     <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>ტიპი</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>მისამართი</translation>
     </message>
 </context>
+<context>
+    <name>OpenURIDialog</name>
+    <message>
+        <source>Open bitcoin URI</source>
+        <translation>გახსენით ბიტკოინი: URI</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>მისამართის ჩასმა კლიპბორდიდან</translation>
+    </message>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
         <source>default wallet</source>
         <translation>ნაგულისხმევი საფულე</translation>
+    </message>
+    <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>ღია საფულე</translation>
     </message>
     </context>
 <context>
@@ -935,18 +985,6 @@
         <translation>პროქსის პორტი (მაგ.: 9050)</translation>
     </message>
     <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
-    </message>
-    <message>
         <source>&amp;Window</source>
         <translation>&amp;ფანჯარა</translation>
     </message>
@@ -981,10 +1019,6 @@
     <message>
         <source>Whether to show coin control features or not.</source>
         <translation>ვაჩვენოთ თუ არა მონეტების მართვის პარამეტრები.</translation>
-    </message>
-    <message>
-        <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
@@ -1065,6 +1099,10 @@
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">დახურვა</translation>
+    </message>
+    <message>
         <source>or</source>
         <translation>ან</translation>
     </message>
@@ -1084,8 +1122,8 @@
         <translation>URI-ების დამუშავება</translation>
     </message>
     <message>
-        <source>Invalid payment address %1</source>
-        <translation>გადახდის მისამართი არასწორია: %1</translation>
+        <source>Invalid payment address</source>
+        <translation>გადახდის მისამართი არასწორია</translation>
     </message>
     <message>
         <source>Payment request file handling</source>
@@ -1094,6 +1132,10 @@
 </context>
 <context>
     <name>PeerTableModel</name>
+    <message>
+        <source>Type</source>
+        <translation>ტიპი</translation>
+    </message>
     </context>
 <context>
     <name>QObject</name>
@@ -1118,28 +1160,22 @@
         <translation>%1 და %2</translation>
     </message>
     <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
         <translation>შეცდომა: მითითებული მონაცემთა კატალოგი "%1" არ არსებობს.</translation>
     </message>
     <message>
         <source>unknown</source>
         <translation>უცნობია</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>ბლოკის</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>ტრანსაქცია</translation>
     </message>
 </context>
 <context>
@@ -1208,6 +1244,10 @@
         <translation>ბლოკთა ჯაჭვი</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">საფულე: </translation>
+    </message>
+    <message>
         <source>Node window</source>
         <translation>კვანძის ფანჯარა</translation>
     </message>
@@ -1228,10 +1268,6 @@
         <translation>&amp;ქსელის ტრაფიკი</translation>
     </message>
     <message>
-        <source>Totals</source>
-        <translation>სულ:</translation>
-    </message>
-    <message>
         <source>In:</source>
         <translation>შემომავალი:</translation>
     </message>
@@ -1246,6 +1282,27 @@
     <message>
         <source>Clear console</source>
         <translation>კონსოლის გასუფთავება</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>მიმღები</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>გამგზავნი</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;მისამართის კოპირება</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation type="unfinished">ქსელური აქტივობა გათიშულია</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">უცნობია</translation>
     </message>
     </context>
 <context>
@@ -1279,6 +1336,10 @@
         <translation>მოთხოვნის მოცულობა. არააუცილებელია. ჩაწერეთ 0 ან დატოვეთ ცარიელი, თუ არ მოითხოვება კონკრეტული მოცულობა.</translation>
     </message>
     <message>
+        <source>&amp;Request payment</source>
+        <translation>&amp;გადახდის მოთხოვნა</translation>
+    </message>
+    <message>
         <source>Clear all fields of the form.</source>
         <translation>ფორმის ყველა ველის წაშლა</translation>
     </message>
@@ -1307,16 +1368,24 @@
         <translation>წაშლა</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>ლეიბლის კოპირება</translation>
+        <source>Copy &amp;URI</source>
+        <translation>&amp;URI-ის კოპირება</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>მესიჯის კოპირება</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;მისამართის კოპირება</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>რაოდენობის კოპირება</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;ლეიბლის კოპირება</translation>
+    </message>
+    <message>
+        <source>Copy &amp;message</source>
+        <translation type="unfinished">&amp;მესიჯის კოპირება</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;რაოდენობის კოპირება</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -1326,8 +1395,20 @@
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Request payment to ...</source>
+        <translation type="unfinished">...-ის გადაზდის მოთხოვნა</translation>
+    </message>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">მისამართი:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>თანხა:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">ნიშნული:</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -1440,6 +1521,10 @@
         <translation>ტრანსაქციის საფასური - საკომისიო:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">არჩევა...</translation>
+    </message>
+    <message>
         <source>Hide</source>
         <translation>დამალვა</translation>
     </message>
@@ -1520,6 +1605,10 @@
         <translation>მონეტების გაგზავნის დადასტურება</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">გაგზავნა</translation>
+    </message>
+    <message>
         <source>The amount to pay must be larger than 0.</source>
         <translation>გადახდის მოცულობა 0-ზე მეტი უნდა იყოს</translation>
     </message>
@@ -1567,16 +1656,8 @@
         <translation>აირჩიეთ ადრე გამოყენებული მისამართი</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>მისამართის ჩასმა კლიპბორდიდან</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Remove this entry</source>
@@ -1625,16 +1706,8 @@
         <translation>აირჩიეთ ადრე გამოყენებული მისამართი</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>მისამართის ჩასმა კლიპბორდიდან</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -1735,11 +1808,7 @@
 </context>
 <context>
     <name>TrafficGraphWidget</name>
-    <message>
-        <source>KB/s</source>
-        <translation>KB/s</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>TransactionDesc</name>
     <message>
@@ -1988,10 +2057,6 @@
         <translation>გაგზავნილია</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>საკუთარი თავისათვის</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>მოპოვებულია</translation>
     </message>
@@ -2004,28 +2069,28 @@
         <translation>მინ. თანხა</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>მისამართის კოპირება</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;მისამართის კოპირება</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>ლეიბლის კოპირება</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;ლეიბლის კოპირება</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>რაოდენობის კოპირება</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;რაოდენობის კოპირება</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>ტრანსაქციის ID-ს კოპირება</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;ტრანსაქციის ID-ს კოპირება</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>ნიშნულის რედაქტირება</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;ნიშნულის რედაქტირება</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>ტრანსაქციის დეტალების ჩვენება</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;ტრანსაქციის დეტალების ჩვენება</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
@@ -2054,10 +2119,6 @@
     <message>
         <source>Address</source>
         <translation>მისამართი</translation>
-    </message>
-    <message>
-        <source>ID</source>
-        <translation>ID</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -2096,7 +2157,11 @@
         <source>Create a new wallet</source>
         <translation>შექმენით ახალი საფულე</translation>
     </message>
-</context>
+    <message>
+        <source>Error</source>
+        <translation>შეცდომა</translation>
+    </message>
+    </context>
 <context>
     <name>WalletModel</name>
     <message>
@@ -2119,10 +2184,6 @@
         <translation>ამ ბარათიდან მონაცემების ექსპორტი ფაილში</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>შეცდომა</translation>
-    </message>
-    <message>
         <source>Backup Wallet</source>
         <translation>საფულის არქივირება</translation>
     </message>
@@ -2139,6 +2200,10 @@
         <translation>შეცდომა %1-ში საფულის მონაცემების შენახვის მცდელობისას.</translation>
     </message>
     <message>
+        <source>There was an error trying to save the wallet data to %1: %2</source>
+        <translation>შეცდომა %1-ში საფულის მონაცემების შენახვის მცდელობისას: %2</translation>
+    </message>
+    <message>
         <source>Backup Successful</source>
         <translation>არქივირება შესრულებულია</translation>
     </message>
@@ -2146,7 +2211,11 @@
         <source>The wallet data was successfully saved to %1.</source>
         <translation>საფულის მონაცემები შენახულია %1-ში.</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">გაუქმება</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -2160,6 +2229,10 @@
     <message>
         <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
         <translation>ყურადღება: ჩვენ არ ვეთანხმებით ყველა პირს. შესაძლოა თქვენ ან სხვა კვანძებს განახლება გჭირდებათ.</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>ვერ ხერხდება -%s მისამართის გარკვევა: '%s'</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
@@ -2186,12 +2259,20 @@
         <translation>ბლოკთა ბაზის შექმნა ვერ მოხერხდა</translation>
     </message>
     <message>
+        <source>Error</source>
+        <translation>შეცდომა</translation>
+    </message>
+    <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
         <translation>ვერ ხერხდება პორტების მიყურადება. თუ გსურთ, გამოიყენეთ -listen=0.</translation>
     </message>
     <message>
         <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
         <translation>საწყისი ბლოკი არ არსებობს ან არასწორია. ქსელის მონაცემთა კატალოგი datadir ხომ არის არასწორი?</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>მისამართების ჩატვირთვა...</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -2214,6 +2295,10 @@
         <translation>ტრანსაქცია ძალიან დიდია</translation>
     </message>
     <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>საფულის ვერიფიკაცია...</translation>
+    </message>
+    <message>
         <source>Unknown network specified in -onlynet: '%s'</source>
         <translation>-onlynet-ში მითითებულია უცნობი ქსელი: '%s'</translation>
     </message>
@@ -2228,10 +2313,6 @@
     <message>
         <source>Loading wallet...</source>
         <translation>საფულის ჩატვირთვა...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>საფულის ძველ ვერსიაზე გადაყვანა შეუძლებელია</translation>
     </message>
     <message>
         <source>Rescanning...</source>

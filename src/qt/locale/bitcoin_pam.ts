@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>I-right click ban alilan ing address o libel</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Maglalang kang bayung address</translation>
     </message>
@@ -73,21 +69,9 @@
         <source>&amp;Edit</source>
         <translation>&amp;Alilan</translation>
     </message>
-    <message>
-        <source>Comma separated file (*.csv)</source>
-        <translation>Comma separated file (*.csv)</translation>
-    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
-    <message>
-        <source>Label</source>
-        <translation>Label</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Address</translation>
-    </message>
     <message>
         <source>(no label)</source>
         <translation>(alang label)</translation>
@@ -202,10 +186,6 @@
         <translation>Mag-sychronize ne king network...</translation>
     </message>
     <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Overview</translation>
-    </message>
-    <message>
         <source>Show general overview of wallet</source>
         <translation>Ipakit ing kabuuang lawe ning wallet</translation>
     </message>
@@ -224,6 +204,10 @@
     <message>
         <source>Quit application</source>
         <translation>Tuknangan ing aplikasyon</translation>
+    </message>
+    <message>
+        <source>Show information about %1</source>
+        <translation>Magpakit impormasion tungkul king %1</translation>
     </message>
     <message>
         <source>About &amp;Qt</source>
@@ -266,16 +250,16 @@
         <translation>&amp;Beripikan ing message...</translation>
     </message>
     <message>
+        <source>&amp;Send</source>
+        <translation type="unfinished">Ipadala</translation>
+    </message>
+    <message>
         <source>&amp;Show / Hide</source>
         <translation>&amp;Ipalto / Isalikut</translation>
     </message>
     <message>
         <source>Show or hide the main Window</source>
         <translation>Ipalto o isalikut ing pun a awang</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation>&amp;File</translation>
     </message>
     <message>
         <source>&amp;Settings</source>
@@ -318,12 +302,20 @@
         <translation>Makatuki ya king aldo</translation>
     </message>
     <message>
-        <source>&amp;Window</source>
-        <translation>&amp;Awang</translation>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Ibuklat ing debugging at diagnostic console</translation>
     </message>
     <message>
-        <source>Catching up...</source>
-        <translation>Catching up...</translation>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Address king pamag-Send</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Address king pamag-Tanggap</translation>
+    </message>
+    <message>
+        <source>&amp;Window</source>
+        <translation>&amp;Awang</translation>
     </message>
     <message>
         <source>Sent transaction</source>
@@ -341,7 +333,11 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Maka-&lt;b&gt;encrypt&lt;/b&gt; ya ing wallet at kasalukuyan yang maka-&lt;b&gt;locked&lt;/b&gt;</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>Atin kamalian a milyari. Ali ne magsilbing sumulung pa ing %1 at kailangan na ng tuknang.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -361,16 +357,20 @@
         <translation>Me-kumpirma</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Kopyan ing address</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopyan ing label</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Kopyan ing alaga</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Kopyan ing address</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Kopyan ing label</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Kopyan ing alaga</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -384,7 +384,11 @@
     <name>CreateWalletDialog</name>
     <message>
         <source>Wallet</source>
-        <translation>Wallet</translation>
+        <translation type="unfinished">Wallet</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation type="unfinished">I-Encrypt in Wallet</translation>
     </message>
     </context>
 <context>
@@ -392,14 +396,6 @@
     <message>
         <source>Edit Address</source>
         <translation>Alilan ing Address</translation>
-    </message>
-    <message>
-        <source>&amp;Label</source>
-        <translation>&amp;Label</translation>
-    </message>
-    <message>
-        <source>&amp;Address</source>
-        <translation>&amp;Address</translation>
     </message>
     <message>
         <source>New sending address</source>
@@ -447,10 +443,6 @@
         <translation>Malaus ka</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
-    <message>
         <source>Error</source>
         <translation>Mali</translation>
     </message>
@@ -458,8 +450,8 @@
 <context>
     <name>ModalOverlay</name>
     <message>
-        <source>Form</source>
-        <translation>Form</translation>
+        <source>Unknown...</source>
+        <translation type="unfinished">e miya balu...</translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -467,7 +459,19 @@
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Klase</translation>
+    </message>
+    </context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Idikit ing address menibat king clipboard</translation>
+    </message>
     </context>
 <context>
     <name>OpenWalletActivity</name>
@@ -483,8 +487,8 @@
         <translation>&amp;Pun</translation>
     </message>
     <message>
-        <source>&amp;Network</source>
-        <translation>&amp;Network</translation>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Wallet</translation>
     </message>
     <message>
         <source>Automatically open the Bitcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
@@ -493,14 +497,6 @@
     <message>
         <source>Map port using &amp;UPnP</source>
         <translation>Mapa ng ning port gamit ing &amp;UPnP</translation>
-    </message>
-    <message>
-        <source>Proxy &amp;IP:</source>
-        <translation>Proxy &amp;IP:</translation>
-    </message>
-    <message>
-        <source>&amp;Port:</source>
-        <translation>&amp;Port:</translation>
     </message>
     <message>
         <source>Port of the proxy (e.g. 9050)</source>
@@ -539,16 +535,12 @@
         <translation>Pilinan ing default subdivision unit a ipalto o ipakit king interface at istung magpadala kang barya.</translation>
     </message>
     <message>
-        <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
-    </message>
-    <message>
         <source>&amp;Cancel</source>
         <translation>I-&amp;Cancel</translation>
     </message>
     <message>
-        <source>default</source>
-        <translation>default</translation>
+        <source>Bitcoin Core</source>
+        <translation>Kapilubluban ning Bitcoin</translation>
     </message>
     <message>
         <source>Error</source>
@@ -562,10 +554,6 @@
 <context>
     <name>OverviewPage</name>
     <message>
-        <source>Form</source>
-        <translation>Form</translation>
-    </message>
-    <message>
         <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Bitcoin network after a connection is established, but this process has not completed yet.</source>
         <translation>Ing makaltong impormasion mapalyaring luma ne. Ing kekang wallet otomatiku yang mag-synchronize keng Bitcoin network istung mekakonekta ne king network, oneng ing prosesung ini ali ya pa kumpletu.</translation>
     </message>
@@ -576,10 +564,6 @@
     <message>
         <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
         <translation>Ing kabuuan dareng transaksion a kasalungsungan ali pa me-kumpirma, at kasalungsungan ali pa mebilang kareng kekang balanseng malyari mung gastusan</translation>
-    </message>
-    <message>
-        <source>Immature:</source>
-        <translation>Immature:</translation>
     </message>
     <message>
         <source>Mined balance that has not yet matured</source>
@@ -596,12 +580,23 @@
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Isara</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
     </context>
 <context>
     <name>PeerTableModel</name>
+    <message>
+        <source>Type</source>
+        <translation>Klase</translation>
+    </message>
     </context>
 <context>
     <name>QObject</name>
@@ -610,12 +605,13 @@
         <translation>Alaga</translation>
     </message>
     <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
         <source>unknown</source>
         <translation>e miya balu</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -623,10 +619,6 @@
     </context>
 <context>
     <name>RPCConsole</name>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
     <message>
         <source>Client version</source>
         <translation>Bersion ning Cliente</translation>
@@ -640,16 +632,12 @@
         <translation>Oras ning umpisa</translation>
     </message>
     <message>
-        <source>Network</source>
-        <translation>Network</translation>
-    </message>
-    <message>
         <source>Number of connections</source>
         <translation>Bilang dareng koneksion</translation>
     </message>
     <message>
-        <source>Block chain</source>
-        <translation>Block chain</translation>
+        <source>Wallet: </source>
+        <translation type="unfinished">Wallet: </translation>
     </message>
     <message>
         <source>Last block time</source>
@@ -660,35 +648,48 @@
         <translation>&amp;Ibuklat</translation>
     </message>
     <message>
-        <source>&amp;Console</source>
-        <translation>&amp;Console</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Kabuuan:</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Debug log file</translation>
-    </message>
-    <message>
         <source>Clear console</source>
         <translation>I-Clear ing console</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Para kang</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Menibat</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Kopyan ing address</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">e miya balu</translation>
     </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Label:</translation>
+        <source>&amp;Amount:</source>
+        <translation>A&amp;laga:</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Kopyan ing label</translation>
+        <source>&amp;Message:</source>
+        <translation>&amp;Mensayi:</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Kopyan ing alaga</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Kopyan ing address</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Kopyan ing label</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Kopyan ing alaga</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -717,10 +718,6 @@
         <translation>Kaaldauan</translation>
     </message>
     <message>
-        <source>Label</source>
-        <translation>Label</translation>
-    </message>
-    <message>
         <source>Message</source>
         <translation>Mensayi</translation>
     </message>
@@ -746,6 +743,10 @@
     <message>
         <source>Transaction Fee:</source>
         <translation>Bayad king Transaksion:</translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Pilinan...</translation>
     </message>
     <message>
         <source>Send to multiple recipients at once</source>
@@ -784,6 +785,10 @@
         <translation>Kumpirman ing pamagpadalang barya</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">Ipadala</translation>
+    </message>
+    <message>
         <source>The amount to pay must be larger than 0.</source>
         <translation>Ing alaga na ning bayaran dapat mung mas matas ya king 0.</translation>
     </message>
@@ -811,20 +816,8 @@
         <translation>Ibayad &amp;kang:</translation>
     </message>
     <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Label:</translation>
-    </message>
-    <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Idikit ing address menibat king clipboard</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -849,16 +842,8 @@
         <translation>&amp;Pirman ing Mensayi</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Idikit ing address menibat king clipboard</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -1007,20 +992,8 @@
         <translation>sariling address</translation>
     </message>
     <message>
-        <source>label</source>
-        <translation>label</translation>
-    </message>
-    <message>
-        <source>Credit</source>
-        <translation>Credit</translation>
-    </message>
-    <message>
         <source>not accepted</source>
         <translation>ali metanggap</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Debit</translation>
     </message>
     <message>
         <source>Transaction fee</source>
@@ -1081,10 +1054,6 @@
         <translation>Klase</translation>
     </message>
     <message>
-        <source>Label</source>
-        <translation>Label</translation>
-    </message>
-    <message>
         <source>Open until %1</source>
         <translation>Makabuklat anggang %1</translation>
     </message>
@@ -1115,10 +1084,6 @@
     <message>
         <source>Mined</source>
         <translation>Me-mina</translation>
-    </message>
-    <message>
-        <source>(n/a)</source>
-        <translation>(n/a)</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -1180,10 +1145,6 @@
         <translation>Mipadala kang</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Keng sarili mu</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Me-mina</translation>
     </message>
@@ -1196,28 +1157,24 @@
         <translation>Pekaditak a alaga</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Kopyan ing address</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Kopyan ing address</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Kopyan ing label</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Kopyan ing label</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Kopyan ing alaga</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Kopyan ing alaga</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>Alilan ing label</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;Alilan ing label</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>Ipakit ing detalye ning transaksion</translation>
-    </message>
-    <message>
-        <source>Comma separated file (*.csv)</source>
-        <translation>Comma separated file (*.csv)</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;Ipakit ing detalye ning transaksion</translation>
     </message>
     <message>
         <source>Confirmed</source>
@@ -1230,18 +1187,6 @@
     <message>
         <source>Type</source>
         <translation>Klase</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>Label</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Address</translation>
-    </message>
-    <message>
-        <source>ID</source>
-        <translation>ID</translation>
     </message>
     <message>
         <source>Range:</source>
@@ -1260,6 +1205,10 @@
     </context>
 <context>
     <name>WalletFrame</name>
+    <message>
+        <source>Error</source>
+        <translation>Mali</translation>
+    </message>
     </context>
 <context>
     <name>WalletModel</name>
@@ -1271,12 +1220,20 @@
 <context>
     <name>WalletView</name>
     <message>
-        <source>Error</source>
-        <translation>Mali</translation>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">I-Backup ing Wallet</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">I-Cancel</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>Eya me-resolve ing -%s address: '%s'</translation>
+    </message>
     <message>
         <source>Corrupted block database detected</source>
         <translation>Mekapansin lang me-corrupt a block database</translation>
@@ -1294,8 +1251,16 @@
         <translation>Kamalian king pamag buklat king block database</translation>
     </message>
     <message>
+        <source>Error</source>
+        <translation>Mali</translation>
+    </message>
+    <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
         <translation>Memali ya ing pamakiramdam kareng gang nanung port. Gamita me ini -listen=0 nung buri me ini.</translation>
+    </message>
+    <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Lo-load da ne ing address...</translation>
     </message>
     <message>
         <source>Transaction too large</source>
@@ -1316,10 +1281,6 @@
     <message>
         <source>Loading wallet...</source>
         <translation>Lo-load dane ing wallet...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Ali ya magsilbing i-downgrade ing wallet</translation>
     </message>
     <message>
         <source>Rescanning...</source>

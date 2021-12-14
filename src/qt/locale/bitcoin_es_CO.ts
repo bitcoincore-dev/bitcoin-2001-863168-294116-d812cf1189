@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Clic derecho para editar la dirección o etiqueta</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Crea una nueva dirección</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Estas son tus direcciones de Bitcoin para recibir pagos. Siempre revise el monto y la dirección de envío antes de enviar criptomonedas.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Estas son tus direcciones Bitcoin para recibir pagos. Usa el botón 'Crear una nueva dirección para recibir' en la pestaña 'Recibir' para crear nuevas direcciones.
-Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -340,16 +330,9 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Billetera:</translation>
     </message>
     <message>
-        <source>Click to disable network activity.</source>
-        <translation>Click para deshabilitar la actividad de red.</translation>
-    </message>
-    <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>Actividad de red deshabilitada</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Click para volver a habilitar la actividad de red.</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -439,10 +422,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <source>&amp;Command-line options</source>
         <translation>&amp;Opciones de linea de comando</translation>
     </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n conexión activa hacia la red Bitcoin</numerusform><numerusform>%n conexiones activas hacia la red Bitcoin</numerusform></translation>
-    </message>
     <message>
         <source>Indexing blocks on disk...</source>
         <translation>Indexando bloques en disco...</translation>
@@ -466,10 +445,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     <message>
         <source>Transactions after this will not yet be visible.</source>
         <translation>Las transacciones posteriores aún no están visibles.</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Error</translation>
     </message>
     <message>
         <source>Warning</source>
@@ -536,10 +511,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Mostrar el mensaje de ayuda %1 para obtener una lista de los posibles comandos de Bitcoin</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>billetera predeterminada</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>No hay billeteras disponibles</translation>
     </message>
@@ -563,6 +534,11 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <source>%1 client</source>
         <translation>%1 cliente</translation>
     </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation type="unfinished"><numerusform>%n conexión activa hacia la red Bitcoin</numerusform><numerusform>%n conexiones activas hacia la red Bitcoin</numerusform><numerusform>%n conexión activa hacia la red Bitcoin</numerusform><numerusform>%n conexiones activas hacia la red Bitcoin</numerusform></translation>
+    </message>
     <message>
         <source>Connecting to peers...</source>
         <translation>Conectando a pares...</translation>
@@ -570,10 +546,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     <message>
         <source>Catching up...</source>
         <translation>Recuperando...</translation>
-    </message>
-    <message>
-        <source>Error: %1</source>
-        <translation>Error: %1</translation>
     </message>
     <message>
         <source>Warning: %1</source>
@@ -647,7 +619,11 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <source>Original message:</source>
         <translation>Mensaje original:</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>Ha ocurrido un error fatal. %1 no puede seguir seguro y se cerrará.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -657,10 +633,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     <message>
         <source>Quantity:</source>
         <translation>Cantidad:</translation>
-    </message>
-    <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
     </message>
     <message>
         <source>Amount:</source>
@@ -720,28 +692,32 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Confirmado</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Copiar dirección</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Copiar etiqueta</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Copiar Cantidad</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Copiar ID de transacción</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copiar dirección</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>Bloquear lo no gastado</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Copiar etiqueta</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>Desbloquear lo no gastado</translation>
+        <source>Copy &amp;amount</source>
+        <translation>Copiar c&amp;antidad</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation>Copiar &amp;ID de transacción</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;Bloquear lo no gastado</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">&amp;Desbloquear lo no gastado</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -776,10 +752,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>si</translation>
     </message>
     <message>
-        <source>no</source>
-        <translation>no</translation>
-    </message>
-    <message>
         <source>This label turns red if any recipient receives an amount smaller than the current dust threshold.</source>
         <translation>Está etiqueta se vuelve roja si algún receptor recibe una cantidad inferior al límite actual establecido para el polvo.</translation>
     </message>
@@ -803,7 +775,13 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation>Crear Billetera</translation>
+    </message>
+    <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
         <translation>Creando billetera &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
     <message>
@@ -990,10 +968,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>usar un directorio de datos personalizado:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Al menos %1 GB de información será almacenado en este directorio, y seguirá creciendo a través del tiempo.</translation>
     </message>
@@ -1013,10 +987,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <source>Error: Specified data directory "%1" cannot be created.</source>
         <translation>Error: El directorio de datos especificado "%1" no pudo ser creado.</translation>
     </message>
-    <message>
-        <source>Error</source>
-        <translation>Error</translation>
-    </message>
     <message numerus="yes">
         <source>%n GB of free space available</source>
         <translation><numerusform>%n GB de espacio libre disponible</numerusform><numerusform>%n GB de espacio libre disponible</numerusform></translation>
@@ -1024,6 +994,13 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     <message numerus="yes">
         <source>(of %n GB needed)</source>
         <translation><numerusform>(de %n GB requerido)</numerusform><numerusform>(de %n GB requeridos)</numerusform></translation>
+    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>N/D</translation>
     </message>
     </context>
 <context>
@@ -1073,26 +1050,44 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Ocultar</translation>
     </message>
     <message>
-        <source>Esc</source>
-        <translation>Esc</translation>
-    </message>
-    <message>
         <source>Unknown. Syncing Headers (%1, %2%)...</source>
         <translation>Desconocido. Sincronizando cabeceras (%1, %2%)...</translation>
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
+    <name>NetWatchLogModel</name>
     <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Tipo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Dirección</translation>
     </message>
 </context>
+<context>
+    <name>OpenURIDialog</name>
+    <message>
+        <source>Open bitcoin URI</source>
+        <translation type="unfinished">Abrir un bitcoin: URI</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Pega dirección desde portapapeles</translation>
+    </message>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
         <source>default wallet</source>
         <translation>billetera predeterminada</translation>
+    </message>
+    <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>Abrir billetera</translation>
     </message>
     </context>
 <context>
@@ -1230,18 +1225,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Usado para alcanzar compañeros vía:</translation>
     </message>
     <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
-    </message>
-    <message>
         <source>&amp;Window</source>
         <translation>y windows
 </translation>
@@ -1283,12 +1266,16 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Mostrar o no funcionalidad de Coin Control</translation>
     </message>
     <message>
-        <source>&amp;Third party transaction URLs</source>
-        <translation>URLs de transacciones de terceros</translation>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Conectar a la red de Bitcoin a través de un proxy SOCKS5 diferente para los servicios anónimos de Tor.</translation>
     </message>
     <message>
-        <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Use SOCKS&amp;5 y proxy por separado para llegar a sus compañeros a través de los servicios ocultos de Tor:</translation>
+    </message>
+    <message>
+        <source>&amp;Third party transaction URLs</source>
+        <translation>URLs de transacciones de terceros</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
@@ -1301,6 +1288,10 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     <message>
         <source>none</source>
         <translation>Nada</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>bitcoin core</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1321,10 +1312,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     <message>
         <source>The configuration file is used to specify advanced user options which override GUI settings. Additionally, any command-line options will override this configuration file.</source>
         <translation>El archivo de configuración es utilizado para especificar opciones avanzadas del usuario, que invalidan los ajustes predeterminados. Adicionalmente, cualquier opción ingresada por la línea de comandos invalidará este archivo de configuración.</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Error</translation>
     </message>
     <message>
         <source>The configuration file could not be opened.</source>
@@ -1380,10 +1367,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     <message>
         <source>Balances</source>
         <translation>Saldos</translation>
-    </message>
-    <message>
-        <source>Total:</source>
-        <translation>Total:</translation>
     </message>
     <message>
         <source>Your current total balance</source>
@@ -1460,8 +1443,8 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Manejo de URI</translation>
     </message>
     <message>
-        <source>Invalid payment address %1</source>
-        <translation>Dirección de pago inválida %1</translation>
+        <source>Invalid payment address</source>
+        <translation>Dirección de pago inválida</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
@@ -1476,19 +1459,11 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     <name>PeerTableModel</name>
     <message>
         <source>User Agent</source>
-        <translation>User Agent</translation>
+        <translation>Agente de usuario</translation>
     </message>
     <message>
         <source>Node/Service</source>
         <translation>Nodo/Servicio</translation>
-    </message>
-    <message>
-        <source>NodeId</source>
-        <translation>ID del nodo</translation>
-    </message>
-    <message>
-        <source>Ping</source>
-        <translation>Ping</translation>
     </message>
     <message>
         <source>Sent</source>
@@ -1498,7 +1473,11 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <source>Received</source>
         <translation>Recibido</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tipo</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1510,20 +1489,12 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Ingresa una dirección de Bitcoin (Ejemplo: %1)</translation>
     </message>
     <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
+        <source>Inbound</source>
+        <translation>Entrante</translation>
     </message>
     <message>
         <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
+        <translation>%1 d</translation>
     </message>
     <message>
         <source>None</source>
@@ -1531,11 +1502,7 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     </message>
     <message>
         <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
+        <translation>N/D</translation>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
@@ -1566,28 +1533,8 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation><numerusform>%n años</numerusform><numerusform>%n años</numerusform></translation>
     </message>
     <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
         <translation>Error: El directorio de datos "%1" especificado no existe.</translation>
-    </message>
-    <message>
-        <source>Error: %1</source>
-        <translation>Error: %1</translation>
     </message>
     <message>
         <source>%1 didn't yet exit safely...</source>
@@ -1596,6 +1543,16 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     <message>
         <source>unknown</source>
         <translation>desconocido</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Blq</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tsn</translation>
     </message>
 </context>
 <context>
@@ -1625,7 +1582,7 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     <name>RPCConsole</name>
     <message>
         <source>N/A</source>
-        <translation>N/A</translation>
+        <translation>N/D</translation>
     </message>
     <message>
         <source>Client version</source>
@@ -1636,16 +1593,12 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>&amp;Información</translation>
     </message>
     <message>
-        <source>General</source>
-        <translation>General</translation>
-    </message>
-    <message>
         <source>Using BerkeleyDB version</source>
         <translation>Utilizando la versión de BerkeleyDB</translation>
     </message>
     <message>
-        <source>Datadir</source>
-        <translation>Datadir</translation>
+        <source>Blocksdir</source>
+        <translation>Bloques dir</translation>
     </message>
     <message>
         <source>Startup time</source>
@@ -1669,7 +1622,7 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     </message>
     <message>
         <source>Memory Pool</source>
-        <translation>Memory Pool</translation>
+        <translation>Grupo de memoria</translation>
     </message>
     <message>
         <source>Current number of transactions</source>
@@ -1701,7 +1654,7 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     </message>
     <message>
         <source>&amp;Peers</source>
-        <translation>&amp;Peers</translation>
+        <translation>Pares</translation>
     </message>
     <message>
         <source>Banned peers</source>
@@ -1710,10 +1663,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Selecciona un peer para ver la información detallada.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Dirección</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1734,7 +1683,7 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     </message>
     <message>
         <source>User Agent</source>
-        <translation>User Agent</translation>
+        <translation>Agente de usuario</translation>
     </message>
     <message>
         <source>Node window</source>
@@ -1809,10 +1758,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>&amp;Tráfico de Red</translation>
     </message>
     <message>
-        <source>Totals</source>
-        <translation>Total:</translation>
-    </message>
-    <message>
         <source>In:</source>
         <translation>Entrada:</translation>
     </message>
@@ -1833,10 +1778,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>1 &amp;hora</translation>
     </message>
     <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;día</translation>
-    </message>
-    <message>
         <source>1 &amp;week</source>
         <translation>1 semana</translation>
     </message>
@@ -1849,8 +1790,25 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>&amp;Desconectar</translation>
     </message>
     <message>
+        <source>To</source>
+        <translation>Para</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Desde</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>Prohibir para</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation>1 d&amp;ía</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Copiar dirección</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
@@ -1881,30 +1839,18 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Actividad de red desactivada</translation>
     </message>
     <message>
+        <source>Executing command without any wallet</source>
+        <translation>Ejecutando comando con cualquier cartera</translation>
+    </message>
+    <message>
         <source>(node id: %1)</source>
         <translation>(identificador del nodo: %1)</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>via %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>nunca</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Entrante</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Saliente</translation>
     </message>
     <message>
         <source>Unknown</source>
         <translation>Desconocido</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -1936,6 +1882,10 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Monto opcional a solicitar. Deja este campo vacío o en cero si no quieres definir un monto específico.</translation>
     </message>
     <message>
+        <source>&amp;Request payment</source>
+        <translation>Solicitar pago</translation>
+    </message>
+    <message>
         <source>Clear all fields of the form.</source>
         <translation>Limpiar todos los campos del formulario.</translation>
     </message>
@@ -1964,20 +1914,24 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Eliminar</translation>
     </message>
     <message>
-        <source>Copy URI</source>
-        <translation>Copiar URI</translation>
+        <source>Copy &amp;URI</source>
+        <translation>Copiar &amp;URI</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Copiar etiqueta</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copiar dirección</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>Copiar mensaje</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Copiar etiqueta</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Copiar Cantidad</translation>
+        <source>Copy &amp;message</source>
+        <translation type="unfinished">&amp;Copiar mensaje</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation>Copiar c&amp;antidad</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -1986,6 +1940,10 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Request payment to ...</source>
+        <translation type="unfinished">Solicitar pago a ...</translation>
+    </message>
     <message>
         <source>Address:</source>
         <translation>Dirección:</translation>
@@ -2085,10 +2043,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Cantidad:</translation>
     </message>
     <message>
-        <source>Bytes:</source>
-        <translation>Bytes:</translation>
-    </message>
-    <message>
         <source>Amount:</source>
         <translation>Cantidad:</translation>
     </message>
@@ -2164,10 +2118,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     <message>
         <source>Clear &amp;All</source>
         <translation>&amp;Borra todos</translation>
-    </message>
-    <message>
-        <source>Balance:</source>
-        <translation>Balance:</translation>
     </message>
     <message>
         <source>Confirm the send action</source>
@@ -2329,16 +2279,8 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Dirección Bitcoin a enviar el pago</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Pega dirección desde portapapeles</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Remove this entry</source>
@@ -2372,11 +2314,7 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <source>Pay To:</source>
         <translation>Pagar a:</translation>
     </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Memo:</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>ShutdownWindow</name>
     <message>
@@ -2407,16 +2345,8 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Seleccionar dirección usada anteriormente</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Pega dirección desde portapapeles</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -2525,11 +2455,7 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
 </context>
 <context>
     <name>TrafficGraphWidget</name>
-    <message>
-        <source>KB/s</source>
-        <translation>KB/s</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>TransactionDesc</name>
     <message>
@@ -2763,10 +2689,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Solo observación</translation>
     </message>
     <message>
-        <source>(n/a)</source>
-        <translation>(n/a)</translation>
-    </message>
-    <message>
         <source>(no label)</source>
         <translation>(sin etiqueta)</translation>
     </message>
@@ -2826,10 +2748,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Enviado a</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>A ti mismo</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Minado</translation>
     </message>
@@ -2842,44 +2760,44 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Cantidad mínima</translation>
     </message>
     <message>
-        <source>Abandon transaction</source>
-        <translation>Transacción abandonada</translation>
+        <source>A&amp;bandon transaction</source>
+        <translation type="unfinished">&amp;Transacción abandonada</translation>
     </message>
     <message>
-        <source>Increase transaction fee</source>
-        <translation>Incrementar cuota de transacción</translation>
+        <source>Increase transaction &amp;fee</source>
+        <translation type="unfinished">&amp;Incrementar cuota de transacción</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Copiar dirección</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copiar dirección</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Copiar etiqueta</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Copiar etiqueta</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Copiar Cantidad</translation>
+        <source>Copy &amp;amount</source>
+        <translation>Copiar c&amp;antidad</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Copiar ID de transacción</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation>Copiar &amp;ID de transacción</translation>
     </message>
     <message>
-        <source>Copy raw transaction</source>
-        <translation>Copiar transacción bruta</translation>
+        <source>Copy &amp;raw transaction</source>
+        <translation type="unfinished">&amp;Copiar transacción bruta</translation>
     </message>
     <message>
-        <source>Copy full transaction details</source>
-        <translation>Copiar todos los detalles de la transacción</translation>
+        <source>Copy full transaction &amp;details</source>
+        <translation type="unfinished">&amp;Copiar todos los detalles de la transacción</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>Editar etiqueta</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;Editar etiqueta</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>Mostrar detalles de la transacción</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;Mostrar detalles de la transacción</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
@@ -2912,10 +2830,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     <message>
         <source>Address</source>
         <translation>Dirección</translation>
-    </message>
-    <message>
-        <source>ID</source>
-        <translation>ID</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -2966,7 +2880,11 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <source>Create a new wallet</source>
         <translation>Crear una nueva billetera</translation>
     </message>
-</context>
+    <message>
+        <source>Load Transaction Data</source>
+        <translation>Cargar datos de la transacción</translation>
+    </message>
+    </context>
 <context>
     <name>WalletModel</name>
     <message>
@@ -3025,14 +2943,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Exportar los datos de la pestaña actual a un archivo</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Error</translation>
-    </message>
-    <message>
-        <source>Load Transaction Data</source>
-        <translation>Cargar datos de la transacción</translation>
-    </message>
-    <message>
         <source>Backup Wallet</source>
         <translation>Respaldar monedero</translation>
     </message>
@@ -3049,6 +2959,10 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Ha habido un error al intentar guardar los datos del monedero a %1.</translation>
     </message>
     <message>
+        <source>There was an error trying to save the wallet data to %1: %2</source>
+        <translation>Ha habido un error al intentar guardar los datos del monedero a %1: %2</translation>
+    </message>
+    <message>
         <source>Backup Successful</source>
         <translation>Respaldo exitoso</translation>
     </message>
@@ -3056,7 +2970,11 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <source>The wallet data was successfully saved to %1.</source>
         <translation>Los datos del monedero se han guardado con éxito en %1.</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancelar</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
@@ -3096,8 +3014,8 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Cambio de indice fuera de rango</translation>
     </message>
     <message>
-        <source>Copyright (C) %i-%i</source>
-        <translation>Copyright (C) %i-%i</translation>
+        <source>Config setting for %s only applied on %s network when in [%s] section.</source>
+        <translation>Configurar ajustes para %s solo aplicados en %s en red cuando [%s] sección.</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
@@ -3200,12 +3118,20 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
         <translation>Verificando bloques...</translation>
     </message>
     <message>
+        <source>A fatal internal error occurred, see debug.log for details</source>
+        <translation>Un error interno fatal ha ocurrido, ver debug.log para detalles</translation>
+    </message>
+    <message>
         <source>Error reading from database, shutting down.</source>
         <translation>Error al leer la base de datos, cerrando aplicación.</translation>
     </message>
     <message>
         <source>Error upgrading chainstate database</source>
         <translation>Error actualizando la base de datos chainstate</translation>
+    </message>
+    <message>
+        <source>Error: Keypool ran out, please call keypoolrefill first</source>
+        <translation>Keypool se ha agotado, llame a keypoolrefill primero</translation>
     </message>
     <message>
         <source>Invalid -onion address or hostname: '%s'</source>
@@ -3322,10 +3248,6 @@ Firmar solo es posible con direcciones del tipo 'Legacy'.</translation>
     <message>
         <source>Loading wallet...</source>
         <translation>Cargando cartera...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>No es posible desactualizar la billetera</translation>
     </message>
     <message>
         <source>Rescanning...</source>

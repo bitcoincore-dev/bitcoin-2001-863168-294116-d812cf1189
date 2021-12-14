@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Кликните правой кнопкой для редактирования адреса или метки</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Создать новый адрес</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Это ваши биткоин-адреса для отправки платежей. Всегда проверяйте сумму и адрес получателя перед отправкой перевода.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Это ваши биткоин-адреса для получения платежей. Используйте кнопку «Создать новый адрес для получения» на вкладке Получить, чтобы создать новые адреса.
-Подписание возможно только с адресами типа "legacy".</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -340,16 +330,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Кошелёк:</translation>
     </message>
     <message>
-        <source>Click to disable network activity.</source>
-        <translation>Нажмите для отключения взаимодействия с сетью.</translation>
-    </message>
-    <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>Взаимодействие с сетью отключено.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Нажмите для включения взаимодействия с сетью.</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -438,10 +421,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>&amp;Command-line options</source>
         <translation>Параметры командной строки</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n активное подключение к сети Bitcoin</numerusform><numerusform>%n активных подключения к сети Bitcoin</numerusform><numerusform>%n активных подключений к сети Bitcoin</numerusform><numerusform>%n активных подключений к сети биткоина</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -556,10 +535,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Скрыть значения на вкладке Обзор</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>Кошелёк по умолчанию</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Нет доступных кошельков</translation>
     </message>
@@ -582,6 +557,31 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>%1 client</source>
         <translation>%1 клиент</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation type="unfinished"><numerusform>%n активное подключение к сети Bitcoin.</numerusform><numerusform>%n активных подключения к сети Bitcoin.</numerusform><numerusform>%n активных подключений к сети Bitcoin.</numerusform><numerusform>%n активных подключений к сети Биткойн.</numerusform><numerusform>%n активное подключение к сети Bitcoin.</numerusform><numerusform>%n активных подключения к сети Bitcoin.</numerusform><numerusform>%n активных подключений к сети Bitcoin.</numerusform><numerusform>%n активных подключений к сети Биткойн.</numerusform></translation>
+    </message>
+    <message>
+        <source>Click for more actions.</source>
+        <extracomment>A substring of the tooltip. "More actions" are available via the context menu.</extracomment>
+        <translation type="unfinished">Нажмите для дополнительных действий.</translation>
+    </message>
+    <message>
+        <source>Show Peers tab</source>
+        <extracomment>A context menu item. The "Peers tab" is an element of the "Node window".</extracomment>
+        <translation type="unfinished">Показать вкладку Узлы</translation>
+    </message>
+    <message>
+        <source>Disable network activity</source>
+        <extracomment>A context menu item.</extracomment>
+        <translation type="unfinished">Отключить взаимодействие с сетью</translation>
+    </message>
+    <message>
+        <source>Enable network activity</source>
+        <extracomment>A context menu item. The network activity was disabled previously.</extracomment>
+        <translation type="unfinished">Включить взаимодействие с сетью</translation>
     </message>
     <message>
         <source>Connecting to peers...</source>
@@ -744,28 +744,32 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Подтверждено</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Копировать адрес</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Копировать метку</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Копировать сумму</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Копировать идентификатор транзакции</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Копировать адрес</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>Заблокировать остаток</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">Копировать &amp;метку</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>Разблокировать остаток</translation>
+        <source>Copy &amp;amount</source>
+        <translation>Копировать &amp;сумму</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation>Копировать &amp;идентификатор транзакции</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;Заблокировать непотраченное</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">&amp;Разблокировать непотраченное</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -827,7 +831,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation>Создать кошелёк</translation>
+    </message>
+    <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
         <translation>Создание кошелька &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
     <message>
@@ -897,7 +907,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Compiled without sqlite support (required for descriptor wallets)</source>
         <translation>Скомпилирован без поддержки sqlite (необходимо для кошельков с дескриптором)</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -1010,6 +1020,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Когда вы нажмёте ОК, %1 начнет скачивать и обрабатывать полную цепочку блоков %4а (%2 ГБ), начиная с самых первых транзакций в %3, когда %4 был изначально запущен.</translation>
     </message>
     <message>
+        <source>Limit block chain storage to</source>
+        <translation type="unfinished">Ограничить размер сохранённой цепочки блоков до</translation>
+    </message>
+    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
         <translation>Возврат этого параметра в прежнее положение потребует повторного скачивания всей цепочки блоков. Быстрее будет сначала скачать полную цепочку, а потом - обрезать. Отключает некоторые расширенные функции. </translation>
     </message>
@@ -1034,16 +1048,21 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>биткоин</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Не сохранять блоки после проверки, кроме самых последних %1 ГБ (обрезать)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>В эту директорию будет сохранено не менее %1 ГБ данных, и со временем их объём будет увеличиваться.</translation>
     </message>
     <message>
         <source>Approximately %1 GB of data will be stored in this directory.</source>
         <translation>В эту директорию будет сохранено приблизительно %1 ГБ данных.</translation>
+    </message>
+    <message numerus="yes">
+        <source>(sufficient to restore backups %n day(s) old)</source>
+        <comment>block chain pruning</comment>
+        <translation type="unfinished">
+            <numerusform>(достаточно для восстановления резервных копий %n-дневной давности)</numerusform>
+            <numerusform>(достаточно для восстановления резервных копий %n-дневной давности)</numerusform>
+            <numerusform>(достаточно для восстановления резервных копий %n-дневной давности)</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 will download and store a copy of the Bitcoin block chain.</source>
@@ -1074,6 +1093,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation><numerusform>(%n ГБ необходимо для полного блокчейна)</numerusform><numerusform>(%n ГБ необходимо для полного блокчейна)</numerusform><numerusform>(%n ГБ необходимо для полного блокчейна)</numerusform><numerusform>(необходимо %n ГБ для полной цепочки блоков)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Н/Д</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1134,16 +1160,29 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Тип</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Адрес</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
         <translation>Открыть URI биткоина</translation>
     </message>
     <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
+        <source>Paste address from clipboard</source>
+        <translation>Вставить адрес из буфера обмена</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1159,7 +1198,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>кошелёк по умолчанию</translation>
     </message>
     <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>Открыть кошелёк</translation>
+    </message>
+    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
         <translation>Открывается кошелёк &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
 </context>
@@ -1242,10 +1287,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Обрезать объём хранимых блоков до</translation>
     </message>
     <message>
-        <source>GB</source>
-        <translation>ГБ</translation>
-    </message>
-    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
         <translation>Возврат этой настройки в прежнее значение требует повторного скачивания всей цепочки блоков.</translation>
     </message>
@@ -1316,18 +1357,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Used for reaching peers via:</source>
         <translation>Используется для подключения к пирам по:</translation>
-    </message>
-    <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -1659,20 +1688,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>«bitcoin://» — это неверный URI. Используйте вместо него «bitcoin:».</translation>
     </message>
     <message>
-        <source>Cannot process payment request because BIP70 is not supported.</source>
-        <translation>Невозможно обработать запрос платежа, потому что BIP70 не поддерживается.</translation>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation type="unfinished">Не удалось обработать транзакцию, потому что BIP70 не поддерживается.
+Из-за широко распространённых уязвимостей в BIP70 настоятельно рекомендуется игнорировать любые инструкции продавцов сменить кошелёк.
+Если вы получили эту ошибку, вам следует попросить у продавца URI, совместимый с BIP21.</translation>
     </message>
     <message>
-        <source>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</source>
-        <translation>Из-за широко распространённых уязвимостей в BIP70 настоятельно рекомендуется игнорировать любые инструкции продавцов сменить кошелёк.</translation>
-    </message>
-    <message>
-        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
-        <translation>Если вы получили эту ошибку, вам следует запросить у продавца URI, совместимый с BIP21.</translation>
-    </message>
-    <message>
-        <source>Invalid payment address %1</source>
-        <translation>Неверный платёжный адрес %1</translation>
+        <source>Invalid payment address</source>
+        <translation>Неверный адрес</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
@@ -1694,10 +1719,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Узел/служба</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>Идентификатор узла</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Время отклика</translation>
     </message>
@@ -1709,7 +1730,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Received</source>
         <translation>Получено</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Тип</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1719,6 +1744,38 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Enter a Bitcoin address (e.g. %1)</source>
         <translation>Введите биткоин-адрес (напр. %1)</translation>
+    </message>
+    <message>
+        <source>Unroutable</source>
+        <translation type="unfinished">Немаршрутизируемый</translation>
+    </message>
+    <message>
+        <source>Internal</source>
+        <translation type="unfinished">Внутренний</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>Входящий</translation>
+    </message>
+    <message>
+        <source>Full Relay</source>
+        <translation type="unfinished">Полный ретранслятор</translation>
+    </message>
+    <message>
+        <source>Block Relay</source>
+        <translation type="unfinished">Ретранслятор блоков</translation>
+    </message>
+    <message>
+        <source>Manual</source>
+        <translation type="unfinished">Вручную</translation>
+    </message>
+    <message>
+        <source>Feeler</source>
+        <translation type="unfinished">Пробный</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <translation type="unfinished">Получение адресов</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -1805,16 +1862,22 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Ошибка: %1</translation>
     </message>
     <message>
-        <source>Error initializing settings: %1</source>
-        <translation>Ошибка инициализации настроек: %1</translation>
-    </message>
-    <message>
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 ещё не закрылся безопасно...</translation>
     </message>
     <message>
         <source>unknown</source>
         <translation>неизвестно</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>блок</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Транзакция</translation>
     </message>
 </context>
 <context>
@@ -1951,10 +2014,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Выберите узел для просмотра детальной информации.</translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation>Направление</translation>
-    </message>
-    <message>
         <source>Version</source>
         <translation>Версия</translation>
     </message>
@@ -2007,12 +2066,48 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Права</translation>
     </message>
     <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation type="unfinished">Сетевой протокол, через который подключён этот узел: IPv4, IPv6, Onion, I2P или CJDNS.</translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation>Сервисы</translation>
     </message>
     <message>
+        <source>Whether the peer requested us to relay transactions.</source>
+        <translation type="unfinished">Попросил ли нас узел передавать транзакции дальше.</translation>
+    </message>
+    <message>
+        <source>Wants Tx Relay</source>
+        <translation type="unfinished">Желает передавать транзакции</translation>
+    </message>
+    <message>
+        <source>High bandwidth BIP152 compact block relay: %1</source>
+        <translation type="unfinished">Широкополосный ретранслятор компактных блоков BIP152: %1</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation type="unfinished">Широкая полоса</translation>
+    </message>
+    <message>
         <source>Connection Time</source>
         <translation>Время соединения</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation type="unfinished">Время с момента получения нового блока, прошедшего базовую проверку, от этого узла</translation>
+    </message>
+    <message>
+        <source>Last Block</source>
+        <translation type="unfinished">Последний блок</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <translation type="unfinished">Время с момента принятия новой транзакции в наш мемпул от этого узла.</translation>
+    </message>
+    <message>
+        <source>Last Tx</source>
+        <translation type="unfinished">Последняя транзакция</translation>
     </message>
     <message>
         <source>Last Send</source>
@@ -2059,10 +2154,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>&amp;Сетевой трафик</translation>
     </message>
     <message>
-        <source>Totals</source>
-        <translation>Всего</translation>
-    </message>
-    <message>
         <source>In:</source>
         <translation>Вход:</translation>
     </message>
@@ -2083,10 +2174,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>1 &amp;час</translation>
     </message>
     <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;день</translation>
-    </message>
-    <message>
         <source>1 &amp;week</source>
         <translation>1 &amp;неделя</translation>
     </message>
@@ -2099,8 +2186,65 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>О&amp;тключиться</translation>
     </message>
     <message>
+        <source>Inbound: initiated by peer</source>
+        <translation type="unfinished">Входящее: инициировано узлом</translation>
+    </message>
+    <message>
+        <source>Outbound Full Relay: default</source>
+        <translation type="unfinished">Исходящий полный ретранслятор: по умолчанию</translation>
+    </message>
+    <message>
+        <source>Outbound Block Relay: does not relay transactions or addresses</source>
+        <translation type="unfinished">Исходящий ретранслятор блоков: не ретранслирует транзакции или адреса</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <translation type="unfinished">Исходящий ручной: добавлен через RPC %1 или опции конфигурации %2/%3</translation>
+    </message>
+    <message>
+        <source>Outbound Feeler: short-lived, for testing addresses</source>
+        <translation type="unfinished">Исходящий пробный: короткое время жизни, для тестирования адресов</translation>
+    </message>
+    <message>
+        <source>Outbound Address Fetch: short-lived, for soliciting addresses</source>
+        <translation type="unfinished">Исходящий для получения адресов: короткое время жизни, для запроса адресов</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Кому</translation>
+    </message>
+    <message>
+        <source>we selected the peer for high bandwidth relay</source>
+        <translation type="unfinished">мы выбрали этот узел для широкополосной передачи</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>От</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation type="unfinished">этот узел выбрал нас для широкополосной передачи</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Нет</translation>
+    </message>
+    <message>
+        <source>no high bandwidth relay selected</source>
+        <translation type="unfinished">широкополосный передатчик не выбран</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>Забанить на</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation type="unfinished">1 д&amp;ень</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Копировать адрес</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
@@ -2147,20 +2291,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>с помощью %1</translation>
     </message>
     <message>
-        <source>never</source>
-        <translation>никогда</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Входящий</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Исходящий</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Неизвестно</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation type="unfinished">Никогда</translation>
     </message>
 </context>
 <context>
@@ -2202,8 +2338,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Необязательное сообщение, которое присоединяется к запросу платежа и может быть показано отправителю.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Создать новый адрес для получения</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Запросить платёж</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2242,20 +2378,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <source>Copy URI</source>
-        <translation>Копировать URI</translation>
+        <source>Copy &amp;URI</source>
+        <translation>Копировать &amp;URI</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Копировать метку</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Копировать адрес</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>Копировать сообщение</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">Копировать &amp;метку</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Копировать сумму</translation>
+        <source>Copy &amp;message</source>
+        <translation>Копировать &amp;сообщение</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation>Копировать &amp;сумму</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -2702,16 +2842,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Биткоин-адрес, на который нужно отправить платёж</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Вставить адрес из буфера обмена</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Remove this entry</source>
@@ -2796,16 +2928,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Выбрать ранее использованный адрес</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Вставить адрес из буфера обмена</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -3015,7 +3139,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message numerus="yes">
         <source>matures in %n more block(s)</source>
-        <translation><numerusform>созревает еще в %n блоках</numerusform><numerusform>созревает еще в %n блоках</numerusform><numerusform>созревает еще в %n блоках</numerusform><numerusform>созреет через %n блоков</numerusform></translation>
+        <translation><numerusform>созревает еще в %n блоках</numerusform><numerusform>созревает еще в %n блоках</numerusform><numerusform>созревает еще в %n блоках</numerusform><numerusform>созревает еще в %n блоках</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -3259,10 +3383,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Отправлено на</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Себе</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Добыто</translation>
     </message>
@@ -3279,44 +3399,44 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>Мин. сумма</translation>
     </message>
     <message>
-        <source>Abandon transaction</source>
-        <translation>Отбросить транзакцию</translation>
+        <source>A&amp;bandon transaction</source>
+        <translation type="unfinished">&amp;Отказ от транзакции</translation>
     </message>
     <message>
-        <source>Increase transaction fee</source>
-        <translation>Увеличить комиссию за транзакцию</translation>
+        <source>Increase transaction &amp;fee</source>
+        <translation>Увеличить &amp;комиссию за транзакцию</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Копировать адрес</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Копировать адрес</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Копировать метку</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">Копировать &amp;метку</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Копировать сумму</translation>
+        <source>Copy &amp;amount</source>
+        <translation>Копировать &amp;сумму</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Копировать идентификатор транзакции</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation>Копировать &amp;идентификатор транзакции</translation>
     </message>
     <message>
-        <source>Copy raw transaction</source>
-        <translation>Копировать исходный код транзакции</translation>
+        <source>Copy &amp;raw transaction</source>
+        <translation>Копировать исходный &amp;код транзакции</translation>
     </message>
     <message>
-        <source>Copy full transaction details</source>
-        <translation>Копировать все подробности транзакции</translation>
+        <source>Copy full transaction &amp;details</source>
+        <translation>Копировать все по&amp;дробности транзакции</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>Редактировать метку</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;Изменить метку</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>Показать подробности транзакции</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;Отобразить детали транзакции</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
@@ -3423,6 +3543,30 @@ Go to File &gt; Open Wallet to load a wallet.
         <source>Create a new wallet</source>
         <translation>Создать новый кошелёк</translation>
     </message>
+    <message>
+        <source>Error</source>
+        <translation>Ошибка</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>Не удалось декодировать PSBT из буфера обмена (неверный base64)</translation>
+    </message>
+    <message>
+        <source>Load Transaction Data</source>
+        <translation>Загрузить данные о транзакции</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (*.psbt)</source>
+        <translation>Частично подписанная транзакция (*.psbt)</translation>
+    </message>
+    <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>Файл PSBT должен быть меньше 100 МиБ</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>Не удалось декодировать PSBT</translation>
+    </message>
 </context>
 <context>
     <name>WalletModel</name>
@@ -3457,6 +3601,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>New fee:</source>
         <translation>Новая комиссия:</translation>
+    </message>
+    <message>
+        <source>Warning: This may pay the additional fee by reducing change outputs or adding inputs, when necessary. It may add a new change output if one does not already exist. These changes may potentially leak privacy.</source>
+        <translation type="unfinished">Внимание: комиссия может быть увеличена путём уменьшения выводов для сдачи или добавления входов (по необходимости). Может быть добавлен новый вывод для сдачи, если он не существует. Эти изменения могут привести к ухудшению вашей конфиденциальности.</translation>
     </message>
     <message>
         <source>Confirm fee bump</source>
@@ -3494,30 +3642,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>Экспортировать данные текущей вкладки в файл</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Ошибка</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
-        <translation>Не удалось декодировать PSBT из буфера обмена (неверный base64)</translation>
-    </message>
-    <message>
-        <source>Load Transaction Data</source>
-        <translation>Загрузить данные о транзакции</translation>
-    </message>
-    <message>
-        <source>Partially Signed Transaction (*.psbt)</source>
-        <translation>Частично подписанная транзакция (*.psbt)</translation>
-    </message>
-    <message>
-        <source>PSBT file must be smaller than 100 MiB</source>
-        <translation>Файл PSBT должен быть меньше 100 МиБ</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT</source>
-        <translation>Не удалось декодировать PSBT</translation>
-    </message>
-    <message>
         <source>Backup Wallet</source>
         <translation>Создать резервную копию кошелька</translation>
     </message>
@@ -3532,6 +3656,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>There was an error trying to save the wallet data to %1.</source>
         <translation>При попытке сохранения данных кошелька в %1 произошла ошибка.</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the wallet data to %1: %2</source>
+        <translation>При попытке сохранения данных кошелька в %1 произошла ошибка: %2</translation>
     </message>
     <message>
         <source>Backup Successful</source>
@@ -3573,6 +3701,10 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>Разработчики %s</translation>
     </message>
     <message>
+        <source>Cannot downgrade wallet from version %i to version %i. Wallet version unchanged.</source>
+        <translation type="unfinished">Невозможно понизить версию кошелька с %i до %i. Версия кошелька не была изменена.</translation>
+    </message>
+    <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
         <translation>Невозможно заблокировать каталог данных %s. Вероятно, %s уже запущен.</translation>
     </message>
@@ -3581,12 +3713,40 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>Не удаётся предоставить определённые соединения, чтобы при этом addrman нашёл в них исходящие соединения.</translation>
     </message>
     <message>
+        <source>Cannot upgrade a non HD split wallet from version %i to version %i without upgrading to support pre-split keypool. Please use version %i or no version specified.</source>
+        <translation type="unfinished">Невозможно обновить разделённый кошелёк без HD с версии %i до версии %i, не обновившись для поддержки предварительно разделённого пула ключей. Пожалуйста, используйте версию %iили повторите без указания версии.</translation>
+    </message>
+    <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>Ошибка чтения %s! Все ключи прочитаны верно, но данные транзакций или записи адресной книги могут отсутствовать или быть неправильными.</translation>
     </message>
     <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation type="unfinished">Ошибка: запись формата дамп-файла неверна. Обнаружено "%s", ожидалось "format".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation type="unfinished">Ошибка: запись идентификатора дамп-файла неверна. Обнаружено "%s", ожидалось "%s".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">Ошибка: версия дамп-файла не поддерживается. Эта версия bitcoin-wallet поддерживает только дамп-файлы версии 1. Обнаружено дамп-файл версии %s</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation type="unfinished">Файл %s уже существует. Если вы уверены, что так и должно быть, сначала уберите оттуда этот файл.</translation>
+    </message>
+    <message>
         <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
         <translation>Предоставлен более чем один onion-адрес для привязки. Для автоматически созданного onion-сервиса Tor будет использован %s.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation type="unfinished">Не указан дамп-файл. Чтобы использовать createfromdump, необходимо указать -dumpfile=&lt;filename&gt;</translation>
+    </message>
+    <message>
+        <source>No wallet file format provided. To use createfromdump, -format=&lt;format&gt; must be provided.</source>
+        <translation type="unfinished">Не указан формат файла кошелька. Чтобы использовать createfromdump, необходимо указать -format=&lt;format&gt;</translation>
     </message>
     <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
@@ -3629,6 +3789,14 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>Невозможно откатить базу данных до предфоркового состояния. Вам необходимо заново скачать цепочку блоков.</translation>
     </message>
     <message>
+        <source>Unknown wallet file format "%s" provided. Please provide one of "bdb" or "sqlite".</source>
+        <translation type="unfinished">Указан неизвестный формат файла кошелька "%s". Укажите "bdb" либо "sqlite".</translation>
+    </message>
+    <message>
+        <source>Warning: Dumpfile wallet format "%s" does not match command line specified format "%s".</source>
+        <translation type="unfinished">Внимание: формат кошелька дамп-файла "%s" не соответствует указанному в командной строке формату "%s".</translation>
+    </message>
+    <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
         <translation>Внимание: по-видимому, в сети нет полного согласия! Некоторые майнеры, возможно, испытывают проблемы.</translation>
     </message>
@@ -3654,7 +3822,7 @@ Go to File &gt; Open Wallet to load a wallet.
     </message>
     <message>
         <source>Copyright (C) %i-%i</source>
-        <translation>Copyright (C) %i-%i</translation>
+        <translation>Авторское право (©) %i-%i</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
@@ -3671,6 +3839,14 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Do you want to rebuild the block database now?</source>
         <translation>Пересобрать базу данных блоков прямо сейчас?</translation>
+    </message>
+    <message>
+        <source>Dump file %s does not exist.</source>
+        <translation type="unfinished">Дамп файл %s не существует.</translation>
+    </message>
+    <message>
+        <source>Error creating %s</source>
+        <translation type="unfinished">Ошибка загрузки %s</translation>
     </message>
     <message>
         <source>Error initializing block database</source>
@@ -3703,6 +3879,42 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Error opening block database</source>
         <translation>Не удалось открыть базу данных блоков</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation type="unfinished">Ошибка чтения следующей записи из базы данных кошелька</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Ошибка</translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation type="unfinished">Ошибка: не удалось создать курсор в базе данных</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation type="unfinished">Ошибка: контрольная сумма дамп-файла не совпадает. Вычислено %s, ожидалось %s.</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation type="unfinished">Ошибка: получен ключ, оказавшийся не шестнадцатеричным: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation type="unfinished">Ошибка: получено значение, оказавшееся не шестнадцатеричным: %s</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation type="unfinished">Ошибка: отсутствует контрольная сумма</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation type="unfinished">Ошибка: невозможно разобрать версию %u как uint32_t</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation type="unfinished">Ошибка: невозможно произвести запись в новый кошелек</translation>
     </message>
     <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
@@ -3775,6 +3987,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>Указанная директория для блоков "%s" не существует.</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation type="unfinished">Не удается открыть %s для записи</translation>
     </message>
     <message>
         <source>Unknown address type '%s'</source>
@@ -3859,10 +4075,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</source>
         <translation>%s испорчен. Попробуйте восстановить с помощью инструмента bitcoin-wallet или восстановите из резервной копии.</translation>
-    </message>
-    <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>Невозможно обновить разделённый кошелёк без HD, не обновившись для поддержки предварительно разделённого пула ключей. Пожалуйста, используйте версию 169900 или повторите без указания версии.</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
@@ -4089,10 +4301,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Loading wallet...</source>
         <translation>Загрузка кошелька...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Невозможно понизить версию кошелька</translation>
     </message>
     <message>
         <source>Rescanning...</source>

@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Pravým tlačítkem myši můžeš upravit označení adresy</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Vytvoř novou adresu</translation>
     </message>
@@ -39,7 +35,7 @@
     </message>
     <message>
         <source>&amp;Export</source>
-        <translation>&amp;Export</translation>
+        <translation>&amp;Exportovat</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
@@ -68,11 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Tohle jsou tvé bitcoinové adresy pro posílání plateb. Před odesláním mincí si vždy zkontroluj částku a cílovou adresu.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Tohle jsou tvé bitcoinové adresy pro přijmaní plateb. Použij "Vytvoř novou přijimací adresu" pro vytvoření nových adres. Přihlašování je povoleno jen s adresami typu "Legacy"</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -339,16 +330,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Peněženka:</translation>
     </message>
     <message>
-        <source>Click to disable network activity.</source>
-        <translation>Kliknutím zařízneš spojení se sítí.</translation>
-    </message>
-    <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>Síť je vypnutá.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Kliknutím opět umožníš spojení do sítě.</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -437,10 +421,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>&amp;Command-line options</source>
         <translation>Ar&amp;gumenty příkazové řádky</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n aktivní spojení do bitcoinové sítě</numerusform><numerusform>%n aktivní spojení do bitcoinové sítě</numerusform><numerusform>%n aktivních spojení do bitcoinové sítě</numerusform><numerusform>%n aktivních spojení do bitcoinové sítě</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -555,10 +535,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Skrýt částky v přehledu</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>výchozí peněženka</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Nejsou dostupné žádné peněženky</translation>
     </message>
@@ -581,6 +557,31 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>%1 client</source>
         <translation>%1 klient</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation type="unfinished"><numerusform>%n aktivní spojení do bitcoinové sítě</numerusform><numerusform>%n aktivní spojení do bitcoinové sítě</numerusform><numerusform>%n aktivních spojení do bitcoinové sítě</numerusform><numerusform>%n aktivních spojení do bitcoinové sítě</numerusform><numerusform>%n aktivní spojení do bitcoinové sítě</numerusform><numerusform>%n aktivní spojení do bitcoinové sítě</numerusform><numerusform>%n aktivních spojení do bitcoinové sítě</numerusform><numerusform>%n aktivních spojení do bitcoinové sítě</numerusform></translation>
+    </message>
+    <message>
+        <source>Click for more actions.</source>
+        <extracomment>A substring of the tooltip. "More actions" are available via the context menu.</extracomment>
+        <translation type="unfinished">Klikněte pro více možností.</translation>
+    </message>
+    <message>
+        <source>Show Peers tab</source>
+        <extracomment>A context menu item. The "Peers tab" is an element of the "Node window".</extracomment>
+        <translation type="unfinished">Zobrazit uzly</translation>
+    </message>
+    <message>
+        <source>Disable network activity</source>
+        <extracomment>A context menu item.</extracomment>
+        <translation type="unfinished">Vypnout síťovou aktivitu</translation>
+    </message>
+    <message>
+        <source>Enable network activity</source>
+        <extracomment>A context menu item. The network activity was disabled previously.</extracomment>
+        <translation type="unfinished">Zapnout síťovou aktivitu</translation>
     </message>
     <message>
         <source>Connecting to peers...</source>
@@ -742,28 +743,32 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Potvrzeno</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Kopíruj adresu</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopíruj její označení</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Kopíruj částku</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopíruj ID transakce</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Kopíruj adresu</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>Zamkni neutracené</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Kopíruj její označení</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>Odemkni k utracení</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Kopíruj částku</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Kopíruj ID transakce</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;Zamkni neutracené</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">&amp;Odemkni k utracení</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -825,7 +830,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation>Vytvořit peněženku</translation>
+    </message>
+    <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
         <translation>Vytvářím peněženku &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
     <message>
@@ -895,7 +906,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Compiled without sqlite support (required for descriptor wallets)</source>
         <translation>Zkompilováno bez podpory sqlite (vyžadováno pro popisovačové peněženky)</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -1008,6 +1019,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Jakmile stiskneš OK, %1 začne stahovat a zpracovávat celý %4ový blockchain (%2 GB), počínaje nejstaršími transakcemi z roku %3, kdy byl %4 spuštěn.</translation>
     </message>
     <message>
+        <source>Limit block chain storage to</source>
+        <translation type="unfinished">Omezit uložiště blokového řetězce na</translation>
+    </message>
+    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
         <translation>Vrácení tohoto nastavení vyžaduje opětovné stažení celého blockchainu. Je rychlejší stáhnout celý řetězec nejprve a prořezat jej později. Některé pokročilé funkce budou zakázány, dokud celý blockchain nebude stažen nanovo.</translation>
     </message>
@@ -1028,20 +1043,21 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Použij tento adresář pro data:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
-    <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Zahodit bloky po ověření, s výjimkou posledních %1 GB (prořezat)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>Bude proto potřebovat do tohoto adresáře uložit nejméně %1 GB dat – tohle číslo navíc bude v průběhu času růst.</translation>
     </message>
     <message>
         <source>Approximately %1 GB of data will be stored in this directory.</source>
         <translation>Bude proto potřebovat do tohoto adresáře uložit přibližně %1 GB dat.</translation>
+    </message>
+    <message numerus="yes">
+        <source>(sufficient to restore backups %n day(s) old)</source>
+        <comment>block chain pruning</comment>
+        <translation type="unfinished">
+            <numerusform>(Dostačující k obnovení zálohy %n den staré)</numerusform>
+            <numerusform>(Dostačující k obnovení záloh %n dnů staré)</numerusform>
+            <numerusform>(Dostačující k obnovení záloh %n dnů staré)</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 will download and store a copy of the Bitcoin block chain.</source>
@@ -1072,6 +1088,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation><numerusform>(%n GB potřeba pre plný řetězec)</numerusform><numerusform>(%n GB potřeba pre plný řetězec) </numerusform><numerusform>(%n GB potřeba pre plný řetězec) </numerusform><numerusform>(%n GB potřeba pre plný řetězec) </numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>nedostupná informace</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1132,16 +1155,29 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Adresa</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
         <translation>Otevřít bitcoin URI</translation>
     </message>
     <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
+        <source>Paste address from clipboard</source>
+        <translation>Vlož adresu ze schránky</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1157,7 +1193,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>výchozí peněženka</translation>
     </message>
     <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>Otevřít peněženku</translation>
+    </message>
+    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
         <translation>Otevírám peněženku &lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
 </context>
@@ -1240,16 +1282,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Redukovat prostor pro &amp;bloky na</translation>
     </message>
     <message>
-        <source>GB</source>
-        <translation>GB</translation>
-    </message>
-    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
         <translation>Obnovení tohoto nastavení vyžaduje opětovné stažení celého blockchainu.</translation>
-    </message>
-    <message>
-        <source>MiB</source>
-        <translation>MiB</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1314,18 +1348,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Used for reaching peers via:</source>
         <translation>Použije se k připojování k protějskům přes:</translation>
-    </message>
-    <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -1518,10 +1540,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
-        <source>Dialog</source>
-        <translation>Dialog</translation>
-    </message>
-    <message>
         <source>Sign Tx</source>
         <translation>Podepsat transakci</translation>
     </message>
@@ -1657,20 +1675,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>'bitcoin://' není platné URI. Místo toho použij 'bitcoin:'.</translation>
     </message>
     <message>
-        <source>Cannot process payment request because BIP70 is not supported.</source>
-        <translation>Nelze zpracovat žádost o platbu, protože podpora pro BIP70 není podporována.</translation>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation type="unfinished">Nelze zpracovat žádost o platbu, protože BIP70 není podporován.
+Vzhledem k rozšířeným bezpečnostním chybám v BIP70 je důrazně doporučeno ignorovat jakékoli požadavky obchodníka na přepnutí peněženek.
+Pokud vidíte tuto chybu, měli byste požádat, aby obchodník poskytl adresu kompatibilní s BIP21.</translation>
     </message>
     <message>
-        <source>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</source>
-        <translation>Vzhledem k rozšířeným bezpečnostním nedostatkům v BIP70 se důrazně doporučuje, aby byly ignorovány veškeré obchodní pokyny pro přepínání peněženek.</translation>
-    </message>
-    <message>
-        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
-        <translation>Pokud obdržíte tuto chybu, měli byste požádat obchodníka, aby poskytl URI kompatibilní s BIP21.</translation>
-    </message>
-    <message>
-        <source>Invalid payment address %1</source>
-        <translation>Neplatná platební adresa %1</translation>
+        <source>Invalid payment address</source>
+        <translation>Neplatná platební adresa</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
@@ -1692,10 +1706,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Uzel/Služba</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>Id uzlu</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Odezva</translation>
     </message>
@@ -1707,7 +1717,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Received</source>
         <translation>Přijato</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Typ</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1719,20 +1733,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Zadej bitcoinovou adresu (např. %1)</translation>
     </message>
     <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
+        <source>Unroutable</source>
+        <translation type="unfinished">Nesměrovatelné</translation>
     </message>
     <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
+        <source>Internal</source>
+        <translation type="unfinished">Vnitřní</translation>
     </message>
     <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
+        <source>Inbound</source>
+        <translation>Sem</translation>
     </message>
     <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
+        <source>Manual</source>
+        <translation type="unfinished">Manuální</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <translation type="unfinished">Načtení adresy</translation>
     </message>
     <message>
         <source>None</source>
@@ -1740,11 +1758,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
+        <translation>nedostupná informace</translation>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
@@ -1775,20 +1789,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation><numerusform>%n rok</numerusform><numerusform>%n roky</numerusform><numerusform>%n roků</numerusform><numerusform>%n roků</numerusform></translation>
     </message>
     <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
         <source>%1 KB</source>
         <translation>%1 kB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
@@ -1803,16 +1805,17 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Chyba: %1</translation>
     </message>
     <message>
-        <source>Error initializing settings: %1</source>
-        <translation>Zjišťování neshod: %1</translation>
-    </message>
-    <message>
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 ještě bezpečně neskončil…</translation>
     </message>
     <message>
         <source>unknown</source>
         <translation>neznámo</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tse</translation>
     </message>
 </context>
 <context>
@@ -1875,10 +1878,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>To specify a non-default location of the data directory use the '%1' option.</source>
         <translation>Pro specifikaci neklasické lokace pro data použij možnost '%1'</translation>
-    </message>
-    <message>
-        <source>Blocksdir</source>
-        <translation>Blocksdir</translation>
     </message>
     <message>
         <source>To specify a non-default location of the blocks directory use the '%1' option.</source>
@@ -1949,10 +1948,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Vyber protějšek a uvidíš jeho detailní informace.</translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation>Směr</translation>
-    </message>
-    <message>
         <source>Version</source>
         <translation>Verze</translation>
     </message>
@@ -2005,12 +2000,44 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Oprávnění</translation>
     </message>
     <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation type="unfinished">Síťový protokol, přes který je protějšek připojen: IPv4, IPv6, Onion, I2P, nebo CJDNS.</translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation>Služby</translation>
     </message>
     <message>
+        <source>Whether the peer requested us to relay transactions.</source>
+        <translation type="unfinished">Zda po nás protějšek chtěl přeposílat transakce.</translation>
+    </message>
+    <message>
+        <source>Wants Tx Relay</source>
+        <translation type="unfinished">Chce přeposílání transakcí</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation type="unfinished">Velká šířka pásma</translation>
+    </message>
+    <message>
         <source>Connection Time</source>
         <translation>Doba spojení</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation type="unfinished">Doba, před kterou byl od tohoto protějšku přijat nový blok, který prošel základní kontrolou platnosti.</translation>
+    </message>
+    <message>
+        <source>Last Block</source>
+        <translation type="unfinished">Poslední blok</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <translation type="unfinished">Doba, před kterou byla od tohoto protějšku přijata nová transakce, která byla přijata do našeho mempoolu.</translation>
+    </message>
+    <message>
+        <source>Last Tx</source>
+        <translation type="unfinished">Poslední transakce</translation>
     </message>
     <message>
         <source>Last Send</source>
@@ -2057,10 +2084,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>&amp;Síťový provoz</translation>
     </message>
     <message>
-        <source>Totals</source>
-        <translation>Součty</translation>
-    </message>
-    <message>
         <source>In:</source>
         <translation>Sem:</translation>
     </message>
@@ -2081,10 +2104,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>1 &amp;hodinu</translation>
     </message>
     <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;den</translation>
-    </message>
-    <message>
         <source>1 &amp;week</source>
         <translation>1 &amp;týden</translation>
     </message>
@@ -2097,8 +2116,33 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>&amp;Odpoj</translation>
     </message>
     <message>
+        <source>Inbound: initiated by peer</source>
+        <translation type="unfinished">Příchozí: iniciováno uzlem</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Pro</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Od</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Ne</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>Uval klatbu na</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation type="unfinished">1 &amp;den</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Kopíruj adresu</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
@@ -2141,24 +2185,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>(id uzlu: %1)</translation>
     </message>
     <message>
-        <source>via %1</source>
-        <translation>via %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>nikdy</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Sem</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Ven</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Neznámá</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation type="unfinished">Nikdy</translation>
     </message>
 </context>
 <context>
@@ -2200,8 +2232,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Volitelná zpráva která se přidá k téjo platební výzvě a může být zobrazena odesílateli.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;Vytvořit novou přijímací adresu</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Vyžádat platbu</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2240,20 +2272,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Smazat</translation>
     </message>
     <message>
-        <source>Copy URI</source>
-        <translation>Kopíruj URI</translation>
+        <source>Copy &amp;URI</source>
+        <translation>&amp;Kopíruj URI</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Kopíruj její označení</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Kopíruj adresu</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>Kopíruj zprávu</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Kopíruj její označení</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Kopíruj částku</translation>
+        <source>Copy &amp;message</source>
+        <translation type="unfinished">&amp;Kopíruj zprávu</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Kopíruj částku</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -2700,16 +2736,8 @@ Poznámka: Jelikož je poplatek počítaný za bajt, poplatek o hodnotě "100 sa
         <translation>Bitcoinová adresa příjemce</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Vlož adresu ze schránky</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Remove this entry</source>
@@ -2794,16 +2822,8 @@ Poznámka: Jelikož je poplatek počítaný za bajt, poplatek o hodnotě "100 sa
         <translation>Vyber již použitou adresu</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Vlož adresu ze schránky</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -3091,15 +3111,7 @@ Poznámka: Jelikož je poplatek počítaný za bajt, poplatek o hodnotě "100 sa
         <source>Amount</source>
         <translation>Částka</translation>
     </message>
-    <message>
-        <source>true</source>
-        <translation>true</translation>
-    </message>
-    <message>
-        <source>false</source>
-        <translation>false</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>TransactionDescDialog</name>
     <message>
@@ -3186,10 +3198,6 @@ Poznámka: Jelikož je poplatek počítaný za bajt, poplatek o hodnotě "100 sa
         <translation>sledovací</translation>
     </message>
     <message>
-        <source>(n/a)</source>
-        <translation>(n/a)</translation>
-    </message>
-    <message>
         <source>(no label)</source>
         <translation>(bez označení)</translation>
     </message>
@@ -3257,10 +3265,6 @@ Poznámka: Jelikož je poplatek počítaný za bajt, poplatek o hodnotě "100 sa
         <translation>Posláno</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Sám sobě</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Vytěženo</translation>
     </message>
@@ -3277,44 +3281,44 @@ Poznámka: Jelikož je poplatek počítaný za bajt, poplatek o hodnotě "100 sa
         <translation>Minimální částka</translation>
     </message>
     <message>
-        <source>Abandon transaction</source>
-        <translation>Zapomenout transakci</translation>
+        <source>A&amp;bandon transaction</source>
+        <translation type="unfinished">&amp;Zapomenout transakci</translation>
     </message>
     <message>
-        <source>Increase transaction fee</source>
-        <translation>Navyš transakční poplatek</translation>
+        <source>Increase transaction &amp;fee</source>
+        <translation type="unfinished">&amp;Navyš transakční poplatek</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Kopíruj adresu</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Kopíruj adresu</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Kopíruj její označení</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Kopíruj její označení</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Kopíruj částku</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Kopíruj částku</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopíruj ID transakce</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Kopíruj ID transakce</translation>
     </message>
     <message>
-        <source>Copy raw transaction</source>
-        <translation>Kopíruj surovou transakci</translation>
+        <source>Copy &amp;raw transaction</source>
+        <translation type="unfinished">&amp;Kopíruj surovou transakci</translation>
     </message>
     <message>
-        <source>Copy full transaction details</source>
-        <translation>Kopíruj kompletní podrobnosti o transakci</translation>
+        <source>Copy full transaction &amp;details</source>
+        <translation type="unfinished">&amp;Kopíruj kompletní podrobnosti o transakci</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>Uprav označení</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;Uprav označení</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>Zobraz detaily transakce</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;Zobraz detaily transakce</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
@@ -3347,10 +3351,6 @@ Poznámka: Jelikož je poplatek počítaný za bajt, poplatek o hodnotě "100 sa
     <message>
         <source>Address</source>
         <translation>Adresa</translation>
-    </message>
-    <message>
-        <source>ID</source>
-        <translation>ID</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -3421,6 +3421,30 @@ Přejděte do Soubor &gt; Otevřít peněženku pro načtení peněženky.
         <source>Create a new wallet</source>
         <translation>Vytvoř novou peněženku</translation>
     </message>
+    <message>
+        <source>Error</source>
+        <translation>Chyba</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>Nelze dekódovat PSBT ze schránky (neplatné kódování base64)</translation>
+    </message>
+    <message>
+        <source>Load Transaction Data</source>
+        <translation>Načíst data o transakci</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (*.psbt)</source>
+        <translation>Částečně podepsaná transakce (*.psbt)</translation>
+    </message>
+    <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>Soubor PSBT musí být menší než 100 MiB</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>Nelze dekódovat PSBT</translation>
+    </message>
 </context>
 <context>
     <name>WalletModel</name>
@@ -3485,35 +3509,11 @@ Přejděte do Soubor &gt; Otevřít peněženku pro načtení peněženky.
     <name>WalletView</name>
     <message>
         <source>&amp;Export</source>
-        <translation>&amp;Export</translation>
+        <translation>&amp;Exportovat</translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
         <translation>Exportuj data z tohoto panelu do souboru</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Chyba</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
-        <translation>Nelze dekódovat PSBT ze schránky (neplatné kódování base64)</translation>
-    </message>
-    <message>
-        <source>Load Transaction Data</source>
-        <translation>Načíst data o transakci</translation>
-    </message>
-    <message>
-        <source>Partially Signed Transaction (*.psbt)</source>
-        <translation>Částečně podepsaná transakce (*.psbt)</translation>
-    </message>
-    <message>
-        <source>PSBT file must be smaller than 100 MiB</source>
-        <translation>Soubor PSBT musí být menší než 100 MiB</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT</source>
-        <translation>Nelze dekódovat PSBT</translation>
     </message>
     <message>
         <source>Backup Wallet</source>
@@ -3530,6 +3530,10 @@ Přejděte do Soubor &gt; Otevřít peněženku pro načtení peněženky.
     <message>
         <source>There was an error trying to save the wallet data to %1.</source>
         <translation>Při ukládání peněženky do %1 se přihodila nějaká chyba.</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the wallet data to %1: %2</source>
+        <translation>Při ukládání peněženky do %1 se přihodila nějaká chyba: %2</translation>
     </message>
     <message>
         <source>Backup Successful</source>
@@ -3571,6 +3575,10 @@ Přejděte do Soubor &gt; Otevřít peněženku pro načtení peněženky.
         <translation>Vývojáři %s</translation>
     </message>
     <message>
+        <source>Cannot downgrade wallet from version %i to version %i. Wallet version unchanged.</source>
+        <translation type="unfinished">Nelze snížit verzi peněženky z verze %i na verzi %i. Verze peněženky nebyla změněna.</translation>
+    </message>
+    <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
         <translation>Nedaří se mi získat zámek na datový adresář %s. %s pravděpodobně už jednou běží.</translation>
     </message>
@@ -3579,12 +3587,40 @@ Přejděte do Soubor &gt; Otevřít peněženku pro načtení peněženky.
         <translation>Nemohu poskytovat konkrétní spojení a současně chtít, aby addrman vyhledával odchozí spojení.</translation>
     </message>
     <message>
+        <source>Cannot upgrade a non HD split wallet from version %i to version %i without upgrading to support pre-split keypool. Please use version %i or no version specified.</source>
+        <translation type="unfinished">Nelze zvýšit verzi ne-HD dělené peněženky z verze %i na verzi %i bez aktualizace podporující pre-split keypool. Použijte prosím verzi %i nebo verzi neuvádějte.</translation>
+    </message>
+    <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>Nastala chyba při čtení souboru %s! Všechny klíče se přečetly správně, ale data o transakcích nebo záznamy v adresáři mohou chybět či být nesprávné.</translation>
     </message>
     <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation type="unfinished">Chyba: záznam formátu souboru výpisu je nesprávný. Získáno "%s", očekáváno "format".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation type="unfinished">Chyba: záznam identifikátoru souboru výpisu je nesprávný. Získáno "%s", očekáváno "%s".</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">Chyba: verze souboru výpisu není podporována. Tato verze peněženky Bitcoin podporuje pouze soubory výpisu verze 1. Získán soubor výpisu verze %s</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation type="unfinished">Soubor %s již existuje. Pokud si jste jistí, že tohle chcete, napřed ho přesuňte mimo.</translation>
+    </message>
+    <message>
         <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
         <translation>Byla zadána více než jedna onion adresa. Použiju %s pro automaticky vytvořenou službu sítě Tor.</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation type="unfinished">Nebyl poskytnut soubor výpisu. Pro použití createfromdump, -dumpfile=&lt;filename&gt; musí být poskytnut.</translation>
+    </message>
+    <message>
+        <source>No wallet file format provided. To use createfromdump, -format=&lt;format&gt; must be provided.</source>
+        <translation type="unfinished">Nebyl poskytnut formát souboru peněženky. Pro použití createfromdump, -format=&lt;format&gt; musí být poskytnut.</translation>
     </message>
     <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
@@ -3625,6 +3661,14 @@ Přejděte do Soubor &gt; Otevřít peněženku pro načtení peněženky.
     <message>
         <source>Unable to rewind the database to a pre-fork state. You will need to redownload the blockchain</source>
         <translation>Nedaří se mi vrátit databázi do stavu před štěpem. Budeš muset znovu stáhnout celý blockchain</translation>
+    </message>
+    <message>
+        <source>Unknown wallet file format "%s" provided. Please provide one of "bdb" or "sqlite".</source>
+        <translation type="unfinished">Byl poskytnut neznámý formát souboru peněženky "%s". Poskytněte prosím "bdb" nebo "sqlite".</translation>
+    </message>
+    <message>
+        <source>Warning: Dumpfile wallet format "%s" does not match command line specified format "%s".</source>
+        <translation type="unfinished">Varování: formát výpisu peněženky "%s" se neshoduje s formátem "%s", který byl určen příkazem.</translation>
     </message>
     <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
@@ -3671,6 +3715,14 @@ Přejděte do Soubor &gt; Otevřít peněženku pro načtení peněženky.
         <translation>Chceš přestavět databázi bloků hned teď?</translation>
     </message>
     <message>
+        <source>Dump file %s does not exist.</source>
+        <translation type="unfinished">Soubor výpisu %s neexistuje.</translation>
+    </message>
+    <message>
+        <source>Error creating %s</source>
+        <translation type="unfinished">Chyba při vytváření %s .</translation>
+    </message>
+    <message>
         <source>Error initializing block database</source>
         <translation>Chyba při zakládání databáze bloků</translation>
     </message>
@@ -3701,6 +3753,42 @@ Přejděte do Soubor &gt; Otevřít peněženku pro načtení peněženky.
     <message>
         <source>Error opening block database</source>
         <translation>Chyba při otevírání databáze bloků</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation type="unfinished">Chyba při čtení následujícího záznamu z databáze peněženky</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Chyba</translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation type="unfinished">Chyba: nebylo možno vytvořit kurzor do databáze</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation type="unfinished">Chyba: kontrolní součet souboru výpisu se neshoduje. Vypočteno %s, očekáváno %s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation type="unfinished">Chyba: obdržený klíč nebyl hexadecimální: %s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation type="unfinished">Chyba: obdržená hodnota nebyla hexadecimální: %s</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation type="unfinished">Chyba: chybí kontrolní součet</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation type="unfinished">Chyba: nelze zpracovat verzi %u jako uint32_t</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation type="unfinished">Chyba: nelze zapsat záznam do nové peněženky</translation>
     </message>
     <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
@@ -3773,6 +3861,16 @@ Přejděte do Soubor &gt; Otevřít peněženku pro načtení peněženky.
     <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>Zadaný adresář bloků "%s" neexistuje.</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Uvedený R/W konfigurační soubor %s neexistuje
+</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation type="unfinished">Nelze otevřít %s pro zápis</translation>
     </message>
     <message>
         <source>Unknown address type '%s'</source>
@@ -3857,10 +3955,6 @@ Přejděte do Soubor &gt; Otevřít peněženku pro načtení peněženky.
     <message>
         <source>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</source>
         <translation>Soubor %s je poškozen. Zkus použít bitcoin-wallet pro opravu nebo obnov zálohu.</translation>
-    </message>
-    <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>Nelze upgradovat na non HD split peněženku bez aktualizace pre split keypoolu. Použij verzi 169900 nebo nezadávej verzi žádnou.</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
@@ -4087,10 +4181,6 @@ Přejděte do Soubor &gt; Otevřít peněženku pro načtení peněženky.
     <message>
         <source>Loading wallet...</source>
         <translation>Načítám peněženku...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Nemohu převést peněženku do staršího formátu</translation>
     </message>
     <message>
         <source>Rescanning...</source>

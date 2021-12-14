@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>முகவரியை மாற்ற ரைட் கிளிக் செய்யவும்</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>புதிய முகவரியை உருவாக்கு</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>இவை பணம் அனுப்புவதற்கு உங்களின் பிட்காயின் முகவரிகள். பிட்காயின்களை அனுப்புவதற்கு முன் எப்பொழுதும் தொகையும் பெறுதலையும் சரிபார்க்கவும்.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>பிட்காயின் பெறுவதற்காக உங்கள் முகவரி இவை. புதிய முகவரிகளை உருவாக்க 'புதிய முகவரியை உருவாக்கு' என்ற பட்டனை கிளிக் செய்யவும்.
-கையொப்பமிடுவது 'மரபு' வகையின் முகவரிகளால் மட்டுமே சாத்தியமாகும்.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -245,10 +235,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>BanTableModel</name>
     <message>
-        <source>IP/Netmask</source>
-        <translation>IP/Netmask</translation>
-    </message>
-    <message>
         <source>Banned Until</source>
         <translation>வரை தடை செய்யப்பட்டது</translation>
     </message>
@@ -340,16 +326,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>கைப்பை:</translation>
     </message>
     <message>
-        <source>Click to disable network activity.</source>
-        <translation>பிணைய செயல்பாட்டை முடக்க கிளிக் செய்க.</translation>
-    </message>
-    <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>நெட்வொர்க் செயல்பாடு முடக்கப்பட்டது.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>நெட்வொர்க் செயல்பாட்டை மீண்டும் இயக்க கிளிக் செய்க.</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -438,10 +417,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp; கட்டளை வரி விருப்பங்கள்</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>பிட்காயின் வலையமைப்புடன் %n செயலில் உள்ள இணைப்புகள்</numerusform><numerusform>பிட்காயின் வலையமைப்புடன் %n செயலில் உள்ள இணைப்புகள்</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -553,10 +528,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>கண்ணோட்டம் தாவலில் மதிப்புகளை மறைக்கவும்</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>அடிப்படை வாலட்</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>வாலட் எதுவும் இல்லை</translation>
     </message>
@@ -579,6 +550,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>%1 client</source>
         <translation>%1 கிளையன்</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation type="unfinished"><numerusform>பிட்காயின் வலையமைப்புடன் %n செயலில் உள்ள இணைப்புகள்</numerusform><numerusform>பிட்காயின் வலையமைப்புடன் %n செயலில் உள்ள இணைப்புகள்</numerusform><numerusform>பிட்காயின் வலையமைப்புடன் %n செயலில் உள்ள இணைப்புகள்</numerusform><numerusform>பிட்காயின் வலையமைப்புடன் %n செயலில் உள்ள இணைப்புகள்</numerusform></translation>
     </message>
     <message>
         <source>Connecting to peers...</source>
@@ -732,28 +708,32 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>உறுதியாக</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>முகவரி முகவரியை நகலெடுக்கவும்</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>லேபிளை நகலெடு</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>நகல் நகல்</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>பரிவர்த்தனை ஐடியை நகலெடு</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;முகவரி முகவரியை நகலெடுக்கவும்</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>விலக்கு இல்லை</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;லேபிளை நகலெடு</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>விலக்கு திறக்க</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;நகல் நகல்</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;பரிவர்த்தனை ஐடியை நகலெடு</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;விலக்கு இல்லை</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">&amp;விலக்கு திறக்க</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -815,7 +795,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation>வாலட்டை உருவாக்கு</translation>
+    </message>
+    <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
         <translation>வாலட் உருவாக்கம்&lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
     <message>
@@ -1002,14 +988,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>தனிப்பயன் தரவு கோப்பகத்தைப் பயன்படுத்தவும்:</translation>
     </message>
     <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
-    <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>சமீபத்திய %1 ஜிபி ப்லாக்கை தவிர (ப்ரூன்), சரிபார்ப்புக்குப் பிறகு மற்ற ப்லாக்கை நிராகரிக்கவும்</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>குறைந்தது %1 ஜிபி தரவு இந்த அடைவில் சேமிக்கப்படும், மேலும் காலப்போக்கில் அது வளரும்.</translation>
     </message>
@@ -1094,12 +1072,29 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
+    <name>NetWatchLogModel</name>
     <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>வகை</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>முகவரி</translation>
     </message>
 </context>
+<context>
+    <name>OpenURIDialog</name>
+    <message>
+        <source>Open bitcoin URI</source>
+        <translation>திற பிட்காயின்: URI</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>கிளிப்போர்டிலிருந்து முகவரியை பேஸ்ட் செய்யவும்</translation>
+    </message>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1115,7 +1110,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>அடிப்படை வாலட்</translation>
     </message>
     <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>வாலட்டை திற</translation>
+    </message>
+    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
         <translation>வாலட் திறத்தல் &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
 </context>
@@ -1198,10 +1199,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>பிரவுன் &amp; தடுப்பு சேமிப்பு</translation>
     </message>
     <message>
-        <source>GB</source>
-        <translation>ஜிபி</translation>
-    </message>
-    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
         <translation>இந்த அமைப்பை மறுபரிசீலனை செய்வது முழுமையான blockchain ஐ மீண்டும் பதிவிறக்க வேண்டும்.</translation>
     </message>
@@ -1274,18 +1271,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>சகாக்கள் வழியாக வருவதற்குப் பயன்படுத்தப்பட்டது:</translation>
     </message>
     <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
-    </message>
-    <message>
         <source>&amp;Window</source>
         <translation>&amp;சாளரம்</translation>
     </message>
@@ -1326,6 +1311,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>நாணயக் கட்டுப்பாட்டு அம்சங்களைக் காட்டலாமா அல்லது இல்லையா.</translation>
     </message>
     <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>டார் மறைக்கப்பட்ட சேவைகளை தனித்த SOCKS5 ப்ராக்ஸி மூலம் பிட்கோடு நெட்வொர்க்குடன் இணைக்கவும்.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Tor மறைக்கப்பட்ட சேவைகளை வழியாக சகலரையும் அணுக தனித்த SOCKS &amp; 5 ப்ராக்ஸி பயன்படுத்தவும்</translation>
+    </message>
+    <message>
         <source>&amp;Third party transaction URLs</source>
         <translation>&amp; மூன்றாம் தரப்பு பரிவர்த்தனை URL கள்</translation>
     </message>
@@ -1346,8 +1339,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>இயல்புநிலை</translation>
     </message>
     <message>
-        <source>none</source>
-        <translation>none</translation>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin மையம்</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1441,10 +1434,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>வாட்ச் மட்டும் முகவரிகள் உள்ள உங்கள் தற்போதைய இருப்பு</translation>
     </message>
     <message>
-        <source>Spendable:</source>
-        <translation>Spendable:</translation>
-    </message>
-    <message>
         <source>Recent transactions</source>
         <translation>சமீபத்திய பரிவர்த்தனைகள்</translation>
     </message>
@@ -1495,20 +1484,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>'bitcoin: //' சரியான URI அல்ல. அதற்கு பதிலாக 'பிட்கின்:' பயன்படுத்தவும்.</translation>
     </message>
     <message>
-        <source>Cannot process payment request because BIP70 is not supported.</source>
-        <translation>பரிவர்த்தனை வேண்டுதலை ஏற்க இயலாது ஏனென்றால் BIP70  ஆதரவு தரவில்லை</translation>
-    </message>
-    <message>
-        <source>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</source>
-        <translation>பிப்70 இல் உள்ள பரவலான பாதுகாப்பு குறைபாடுகள் காரணமாக, வாலட்டை மாற்றுவதற்கான எந்தவொரு வணிக அறிவுறுத்தல்களும் புறக்கணிக்கப்பட வேண்டும் என்று கடுமையாக பரிந்துரைக்கப்படுகிறது.</translation>
-    </message>
-    <message>
-        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
-        <translation>இந்த பிழையை நீங்கள் பெறுகிறீர்கள் என்றால், வணிகரிடம் பிப்21 இணக்கமான யுஆர்எல் லை வழங்குமாறு கேட்க வேண்டும்.</translation>
-    </message>
-    <message>
-        <source>Invalid payment address %1</source>
-        <translation>தவறான கட்டண முகவரி %1</translation>
+        <source>Invalid payment address</source>
+        <translation>தவறான கட்டண முகவரி</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
@@ -1530,10 +1507,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>கணு / சேவை</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeId</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>பிங்</translation>
     </message>
@@ -1545,7 +1518,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Received</source>
         <translation>பெறப்பட்டது</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>வகை</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1557,52 +1534,20 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>ஒரு விக்கிபீடியா முகவரியை உள்ளிடவும் (எ.கா. %1)</translation>
     </message>
     <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
+        <source>Inbound</source>
+        <translation>உள்வரும்</translation>
     </message>
     <message>
         <source>None</source>
         <translation>யாரும்</translation>
     </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation><numerusform>%n மணி</numerusform><numerusform>%n மணி</numerusform></translation>
     </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 மற்றும் %2</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
@@ -1623,6 +1568,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>unknown</source>
         <translation>தெரியாத</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>பரிவர்த்தனை</translation>
     </message>
 </context>
 <context>
@@ -1659,10 +1609,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>RPCConsole</name>
     <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
         <source>Client version</source>
         <translation>வாடிக்கையாளர் பதிப்பு</translation>
     </message>
@@ -1679,16 +1625,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>BerkeleyDB பதிப்பைப் பயன்படுத்துதல்</translation>
     </message>
     <message>
-        <source>Datadir</source>
-        <translation>Datadir</translation>
-    </message>
-    <message>
         <source>To specify a non-default location of the data directory use the '%1' option.</source>
         <translation>தரவு அடைவின் இயல்புநிலை இருப்பிடத்தை குறிப்பிட ' %1' விருப்பத்தை பயன்படுத்தவும்.</translation>
-    </message>
-    <message>
-        <source>Blocksdir</source>
-        <translation>Blocksdir</translation>
     </message>
     <message>
         <source>To specify a non-default location of the blocks directory use the '%1' option.</source>
@@ -1757,10 +1695,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>விரிவான தகவலைப் பார்வையிட ஒரு சகவரைத் தேர்ந்தெடுக்கவும்.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>திசை</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1851,10 +1785,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>&amp; நெட்வொர்க் ட்ராஃபிக்</translation>
     </message>
     <message>
-        <source>Totals</source>
-        <translation>மொத்தம்</translation>
-    </message>
-    <message>
         <source>In:</source>
         <translation>உள்ளே:</translation>
     </message>
@@ -1875,10 +1805,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>1 &amp;மணி</translation>
     </message>
     <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;நாள்</translation>
-    </message>
-    <message>
         <source>1 &amp;week</source>
         <translation>1 &amp;வாரம்</translation>
     </message>
@@ -1891,8 +1817,29 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>&amp; துண்டி</translation>
     </message>
     <message>
+        <source>To</source>
+        <translation>இதற்கு அனுப்பு</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>இருந்து</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>மறு</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>தடை செய்</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation type="unfinished">1 &amp;நாள்</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;முகவரி முகவரியை நகலெடுக்கவும்</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
@@ -1935,26 +1882,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>(கணு ஐடி: %1)</translation>
     </message>
     <message>
-        <source>via %1</source>
-        <translation>via %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>ஒருபோதும்</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>உள்வரும்</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>வெளி செல்லும்</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>அறியப்படாத</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -1986,8 +1917,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>கோரிக்கைக்கு விருப்பமான தொகை. ஒரு குறிப்பிட்ட தொகையை கோர வேண்டாம் இந்த வெற்று அல்லது பூஜ்ஜியத்தை விடு.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp;புதிய பிட்காயின் பெறும் முகவரியை உருவாக்கு</translation>
+        <source>&amp;Request payment</source>
+        <translation>கட்டணம் மற்றும் கோரிக்கை கட்டணம்</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2026,20 +1957,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>நீக்கு</translation>
     </message>
     <message>
-        <source>Copy URI</source>
-        <translation>URI ஐ நகலெடு</translation>
+        <source>Copy &amp;URI</source>
+        <translation>நகலை &amp;URI</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>லேபிளை நகலெடு</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;முகவரி முகவரியை நகலெடுக்கவும்</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>செய்தியை நகலெடுக்கவும்</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;லேபிளை நகலெடு</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>நகல் நகல்</translation>
+        <source>Copy &amp;message</source>
+        <translation type="unfinished">&amp;செய்தியை நகலெடுக்கவும்</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;நகல் நகல்</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -2049,8 +1984,20 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Request payment to ...</source>
+        <translation type="unfinished">... க்கு கட்டணம் கோரவும்</translation>
+    </message>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">முகவரி:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>விலை</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">லேபிள்:</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -2422,16 +2369,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>கட்டணத்தை அனுப்ப பிட்காயின் முகவரி</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>கிளிப்போர்டிலிருந்து முகவரியை பேஸ்ட் செய்யவும்</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Remove this entry</source>
@@ -2512,16 +2451,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>முன்பு பயன்படுத்திய முகவரியைத் தேர்வுசெய்</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>கிளிப்போர்டிலிருந்து முகவரியை பேஸ்ட் செய்யவும்</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -2630,11 +2561,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
 </context>
 <context>
     <name>TrafficGraphWidget</name>
-    <message>
-        <source>KB/s</source>
-        <translation>KB/s</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>TransactionDesc</name>
     <message numerus="yes">
@@ -2939,10 +2866,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>அனுப்பப்பட்டது</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>உங்களுக்கே</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>மைன் செய்யப்பட்டது</translation>
     </message>
@@ -2959,44 +2882,44 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>குறைந்தபட்ச தொகை</translation>
     </message>
     <message>
-        <source>Abandon transaction</source>
-        <translation>பரிவர்த்தனையை கைவிடவும்</translation>
+        <source>A&amp;bandon transaction</source>
+        <translation type="unfinished">&amp;பரிவர்த்தனையை கைவிடவும்</translation>
     </message>
     <message>
-        <source>Increase transaction fee</source>
-        <translation>பரிவர்த்தனையின் கட்டணத்தை உயர்த்துக</translation>
+        <source>Increase transaction &amp;fee</source>
+        <translation type="unfinished">&amp;பரிவர்த்தனையின் கட்டணத்தை உயர்த்துக</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>முகவரி முகவரியை நகலெடுக்கவும்</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;முகவரி முகவரியை நகலெடுக்கவும்</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>லேபிளை நகலெடு</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;லேபிளை நகலெடு</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>நகல் நகல்</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;நகல் நகல்</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>பரிவர்த்தனை ஐடியை நகலெடு</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;பரிவர்த்தனை ஐடியை நகலெடு</translation>
     </message>
     <message>
-        <source>Copy raw transaction</source>
-        <translation>மூல பரிவர்த்தனையை காபி செய்</translation>
+        <source>Copy &amp;raw transaction</source>
+        <translation type="unfinished">&amp;மூல பரிவர்த்தனையை காபி செய்</translation>
     </message>
     <message>
-        <source>Copy full transaction details</source>
-        <translation>முழு பரிவர்த்தனை விவரங்களையும் காபி செய்</translation>
+        <source>Copy full transaction &amp;details</source>
+        <translation type="unfinished">&amp;முழு பரிவர்த்தனை விவரங்களையும் காபி செய்</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>லேபிளை திருத்து</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;லேபிளை திருத்து</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>பரிவர்த்தனையின் விவரங்களைக் காட்டு</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;பரிவர்த்தனையின் விவரங்களைக் காட்டு</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
@@ -3091,7 +3014,11 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <source>Create a new wallet</source>
         <translation>புதிய வாலட்டை உருவாக்கு</translation>
     </message>
-</context>
+    <message>
+        <source>Error</source>
+        <translation>பிழை</translation>
+    </message>
+    </context>
 <context>
     <name>WalletModel</name>
     <message>
@@ -3154,10 +3081,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>தற்போதைய தாவலில் தரவை ஒரு கோப்பிற்கு ஏற்றுமதி செய்க</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>பிழை</translation>
-    </message>
-    <message>
         <source>Backup Wallet</source>
         <translation>பேக்அப் வாலட்</translation>
     </message>
@@ -3172,6 +3095,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>There was an error trying to save the wallet data to %1.</source>
         <translation>வாலட் தகவல்களை %1  சேவ் செய்வதில் பிழை ஏற்பட்டது</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the wallet data to %1: %2</source>
+        <translation>வாலட் தகவல்களை %1  சேவ் செய்வதில் பிழை ஏற்பட்டது: %2</translation>
     </message>
     <message>
         <source>Backup Successful</source>
@@ -3317,6 +3244,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>பிளாக் டேட்டாபேஸை திறப்பதில் பிழை</translation>
     </message>
     <message>
+        <source>Error</source>
+        <translation>பிழை</translation>
+    </message>
+    <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
         <translation>எந்த போர்டிலும் கேட்க முடியவில்லை. இதை நீங்கள் கேட்க விரும்பினால் -லிசென்= 0 வை பயன்படுத்தவும்.</translation>
     </message>
@@ -3415,6 +3346,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>The transaction amount is too small to send after the fee has been deducted</source>
         <translation>கட்டணம் கழிக்கப்பட்ட பின்னர் பரிவர்த்தனை தொகை அனுப்ப மிகவும் சிறியது</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see debug.log for details</source>
+        <translation>ஆபத்தான உள் பிழை ஏற்பட்டது, விவரங்களுக்கு debug.log ஐ பார்க்கவும்</translation>
     </message>
     <message>
         <source>Error reading from database, shutting down.</source>
@@ -3539,10 +3474,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Loading wallet...</source>
         <translation>வாலட் லோடிங் செய்யப்படுகிறது...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>வாலட்டை தரமிறக்க முடியாது</translation>
     </message>
     <message>
         <source>Rescanning...</source>

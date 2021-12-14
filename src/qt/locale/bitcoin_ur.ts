@@ -2,12 +2,8 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>پتہ یا لیبل کی تصیح کیلیئے داہنا کلک</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
-        <translation>نیا پتہ تخلیق کریں</translation>
+        <translation>ایک نیا پتہ تخلیق کریں</translation>
     </message>
     <message>
         <source>&amp;New</source>
@@ -15,19 +11,19 @@
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>موجودہ چنے ہوئے پتے کو نقل کریں سسٹم کلپ بورڈ پر</translation>
+        <translation>موجودہ چنے ہوئے پتے کو سسٹم کلپ بورڈ پر نقل کریں </translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation>نقل</translation>
+        <translation>&amp;نقل</translation>
     </message>
     <message>
         <source>C&amp;lose</source>
-        <translation>بند</translation>
+        <translation>C&amp;بند</translation>
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
-        <translation>سلیکٹڈ پتے کو مٹائیں</translation>
+        <translation>منتخب کردہ پتے کو مٹائیں</translation>
     </message>
     <message>
         <source>Enter address or label to search</source>
@@ -68,11 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>یہ آپ کے ادائیگی بھیجنے کے لئے بٹ کوائن ایڈریس ہیں.سکے بھیجنے سے پہلے ہمیشہ رقم اور وصول کنندہ پتہ چیک کریں۔</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>ادائیگیوں کے لئے آپ کے بٹ کوائن ایڈریس ہیں۔ نئے پتے بنانے کے لئے وصول کنندہ ٹیب میں 'نیا وصول کنندہ پتہ بنائیں' بٹن کا استعمال کریں۔دستخط صرف 'میراثی' قسم کے پتے کے ساتھ ہی ممکن ہے۔</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -303,8 +294,28 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>Qt کے بارے میں معلومات دکھائیں</translation>
     </message>
     <message>
+        <source>&amp;Options...</source>
+        <translation>&amp;اختیارات</translation>
+    </message>
+    <message>
         <source>Modify configuration options for %1</source>
         <translation>%1 اختیارات کے لئےترتیب ترمیم کریں</translation>
+    </message>
+    <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">&amp;بٹوے کو خفیہ کریں...</translation>
+    </message>
+    <message>
+        <source>&amp;Backup Wallet...</source>
+        <translation type="unfinished">&amp; بیک اپ والیٹ...</translation>
+    </message>
+    <message>
+        <source>&amp;Change Passphrase...</source>
+        <translation type="unfinished">&amp; بیک اپ والیٹ...</translation>
+    </message>
+    <message>
+        <source>Open &amp;URI...</source>
+        <translation type="unfinished">کھولیں اور یو آر آئی...</translation>
     </message>
     <message>
         <source>Create a new wallet</source>
@@ -316,6 +327,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>نیٹ ورک کی سرگرمی غیر فعال ہے۔</translation>
     </message>
     <message>
@@ -335,6 +347,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>بٹوے کی خفیہ کاری کے لئے استعمال ہونے والا پاسفریز تبدیل کریں</translation>
     </message>
     <message>
+        <source>&amp;Verify message...</source>
+        <translation type="unfinished">پیغام کی توثیق کریں...</translation>
+    </message>
+    <message>
         <source>&amp;Send</source>
         <translation>&amp;بھیجیں</translation>
     </message>
@@ -351,10 +367,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>مین ونڈو دکھائیں یا چھپائیں</translation>
     </message>
     <message>
-        <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Encrypt the private keys that belong to your wallet</translation>
-    </message>
-    <message>
         <source>Sign messages with your Bitcoin addresses to prove you own them</source>
         <translation>اپنے ویکیپیڈیا پتوں کے ساتھ پیغامات پر دستخط کریں تاکہ آپ ان کے مالک ہوں</translation>
     </message>
@@ -367,10 +379,30 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>نقص</translation>
     </message>
     <message>
+        <source>Load PSBT from clipboard...</source>
+        <translation type="unfinished">کلپ بورڈ سے پی ایس بی ٹی لوڈ کریں...</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;پتے ارسال کیے جارہے ہیں</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;پتے موصول ہورہے ہیں</translation>
+    </message>
+    <message>
+        <source>Close Wallet...</source>
+        <translation type="unfinished">پرس بند کریں...</translation>
+    </message>
+    <message>
         <source>Error: %1</source>
         <translation>خرابی:%1</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation type="unfinished">ایک مہلک خرابی واقع ہوئی ہے۔  %1 اب مزید سلامتی سے جاری نہیں رہ سکتا ہے اور چھوڑ دے گا۔</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -386,6 +418,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>تاریخ</translation>
     </message>
     <message>
+        <source>&amp;Copy address</source>
+        <translation>&amp;پتا نقل کریں</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>&amp;لیبل نقل کریں</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(کوئی لیبل نہیں)</translation>
     </message>
@@ -395,6 +435,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Wallet</source>
+        <translation type="unfinished">پرس</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>بٹوے کو خفیہ کریں</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -412,6 +460,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">معلومات%1</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
@@ -424,6 +476,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <name>ModalOverlay</name>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>پتہ</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     </context>
 <context>
@@ -431,6 +491,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">اختیارات</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;پرس</translation>
+    </message>
     <message>
         <source>Error</source>
         <translation>نقص</translation>
@@ -441,6 +509,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">بند</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -467,8 +542,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>خرابی:%1</translation>
     </message>
     <message>
-        <source>Error initializing settings: %1</source>
-        <translation>ترتیبات کو شروع کرنے میں خرابی:%1</translation>
+        <source>%1 didn't yet exit safely...</source>
+        <translation type="unfinished">%1ابھی تک سلامتی سے باہر نہیں نکلا...</translation>
     </message>
     </context>
 <context>
@@ -476,15 +551,52 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">پرس: </translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation>&amp;پتا نقل کریں</translation>
+    </message>
+    <message>
+        <source>Network activity disabled</source>
+        <translation>نیٹ ورک کی سرگرمی غیر فعال ہے۔</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;رقم:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;لیبل:</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>&amp;پتا نقل کریں</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>&amp;لیبل نقل کریں</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">پتہ:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation>رقم:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">لیبل:</translation>
     </message>
     <message>
         <source>Wallet:</source>
@@ -521,8 +633,20 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>رقم:</translation>
     </message>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">چننا...</translation>
+    </message>
+    <message>
         <source>Balance:</source>
         <translation>بیلنس:</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;بھیجیں</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">بھیجیں</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -531,12 +655,28 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;رقم:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;لیبل:</translation>
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>
     </context>
 <context>
     <name>SignVerifyMessageDialog</name>
+    <message>
+        <source>&amp;Verify Message</source>
+        <translation>پیغام کی توثیق کریں</translation>
+    </message>
+    <message>
+        <source>Verify &amp;Message</source>
+        <translation type="unfinished">پیغام کی توثیق کریں</translation>
+    </message>
     </context>
 <context>
     <name>TrafficGraphWidget</name>
@@ -546,6 +686,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Date</source>
         <translation>تاریخ</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>ٹرانزیکشن</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -573,8 +717,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>TransactionView</name>
     <message>
-        <source>Other</source>
-        <translation>Other</translation>
+        <source>&amp;Copy address</source>
+        <translation>&amp;پتا نقل کریں</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>&amp;لیبل نقل کریں</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
@@ -609,7 +757,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Create a new wallet</source>
         <translation>ایک نیا پرس بنائیں</translation>
     </message>
-</context>
+    <message>
+        <source>Error</source>
+        <translation>نقص</translation>
+    </message>
+    </context>
 <context>
     <name>WalletModel</name>
     </context>
@@ -624,12 +776,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>موجودہ ڈیٹا کو فائیل میں محفوظ کریں</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>نقص</translation>
+        <source>Backup Wallet</source>
+        <translation type="unfinished"> بیک اپ والیٹ</translation>
     </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Error</source>
+        <translation>نقص</translation>
+    </message>
     <message>
         <source>Insufficient funds</source>
         <translation>ناکافی فنڈز</translation>

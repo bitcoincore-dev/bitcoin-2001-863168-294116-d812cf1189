@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>右击编辑地址或标签</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>创建一个新的地址</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>这是你的比特币发币地址。发送前请确认发送数量和接收地址</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>这是你的比特币接收地址。点击接收选项卡中“创建新的接收地址”按钮来创建新的地址。
-签名只能使用“传统”类型的地址。</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -157,15 +147,87 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
         <translation>此操作需要您的钱包密码用来解密钱包。</translation>
     </message>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>解密钱包</translation>
+    </message>
+    <message>
+        <source>Change passphrase</source>
+        <translation>修改密码</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>确认钱包加密</translation>
+    </message>
+    <message>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
+        <translation>注意:如果你加密了钱包又忘记了密码，你将会丢失所有的比特币！</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to encrypt your wallet?</source>
+        <translation>你确定要将钱包加密吗？</translation>
+    </message>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>钱包已加密</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase for the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>输入钱包的新密码。&lt;br/&gt;密码中请使用&lt;b&gt;10个或更多随机字符&lt;/b&gt;，或&lt;b&gt;8个或更多的单词&lt;/b&gt;。</translation>
+    </message>
+    <message>
+        <source>Enter the old passphrase and new passphrase for the wallet.</source>
+        <translation>输入钱包的旧密码和新密码。</translation>
+    </message>
+    <message>
+        <source>Wallet to be encrypted</source>
+        <translation>需要加密的钱包</translation>
+    </message>
+    <message>
+        <source>Your wallet is about to be encrypted. </source>
+        <translation>你的钱包将要被加密</translation>
+    </message>
+    <message>
+        <source>Your wallet is now encrypted. </source>
+        <translation>你的钱包已被加密</translation>
+    </message>
+    <message>
+        <source>Wallet encryption failed</source>
+        <translation>钱包加密失败</translation>
+    </message>
+    <message>
+        <source>Wallet unlock failed</source>
+        <translation>钱包解锁失败</translation>
+    </message>
     </context>
 <context>
     <name>BanTableModel</name>
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">&amp;加密钱包...</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;发送地址</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;接收地址</translation>
+    </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>复制地址</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>复制标签</translation>
+    </message>
     <message>
         <source>(no label)</source>
         <translation>(无标签)</translation>
@@ -176,9 +238,21 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>加密钱包</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;标签</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;地址</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -193,6 +267,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <name>ModalOverlay</name>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>地址</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     </context>
 <context>
@@ -206,6 +288,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">关闭</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -221,12 +310,41 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation>复制地址</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;标签:</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>复制地址</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>复制标签</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">地址:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">标签:</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">复制地址</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -242,12 +360,20 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">选择...</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(无标签)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;标签:</translation>
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -277,6 +403,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>复制地址</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>复制标签</translation>
+    </message>
     <message>
         <source>Comma separated file (*.csv)</source>
         <translation>逗号分隔文件(*.csv)</translation>

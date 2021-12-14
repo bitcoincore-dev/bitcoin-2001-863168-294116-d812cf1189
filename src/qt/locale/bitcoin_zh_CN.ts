@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>鼠标右击编辑地址或标签</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>创建新地址</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>您可以给这些比特币地址付款。在付款之前，务必要检查金额和收款地址是否正确。</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>这是您用来收款的比特币地址。使用“接收”标签页中的“创建新收款地址”按钮来创建新的收款地址。
-只有“传统（legacy）”类型的地址支持签名。</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -340,16 +330,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>钱包:</translation>
     </message>
     <message>
-        <source>Click to disable network activity.</source>
-        <translation>点击禁用网络活动。</translation>
-    </message>
-    <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>网络活动已禁用。</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>点击重新开启网络活动。</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -439,10 +422,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>&amp;Command-line options</source>
         <translation>命令行选项(&amp;C)</translation>
     </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n 条到比特币网络的活动连接</numerusform></translation>
-    </message>
     <message>
         <source>Indexing blocks on disk...</source>
         <translation>正在为区块数据建立索引...</translation>
@@ -453,7 +432,9 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
-        <translation><numerusform>已处理 %n 个区块的交易历史</numerusform></translation>
+        <translation>
+            <numerusform>已处理%n个区块的交易历史。</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 behind</source>
@@ -556,10 +537,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>在“概况”标签页中不明文显示数值、只显示掩码</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>默认钱包</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>没有可用的钱包</translation>
     </message>
@@ -582,6 +559,31 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>%1 client</source>
         <translation>%1 客户端</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation type="unfinished"><numerusform>%n 条到比特币网络的活动连接</numerusform><numerusform>%n 条到比特币网络的活动连接</numerusform></translation>
+    </message>
+    <message>
+        <source>Click for more actions.</source>
+        <extracomment>A substring of the tooltip. "More actions" are available via the context menu.</extracomment>
+        <translation type="unfinished">点击查看更多操作。</translation>
+    </message>
+    <message>
+        <source>Show Peers tab</source>
+        <extracomment>A context menu item. The "Peers tab" is an element of the "Node window".</extracomment>
+        <translation type="unfinished">显示节点标签</translation>
+    </message>
+    <message>
+        <source>Disable network activity</source>
+        <extracomment>A context menu item.</extracomment>
+        <translation type="unfinished">禁用网络活动</translation>
+    </message>
+    <message>
+        <source>Enable network activity</source>
+        <extracomment>A context menu item. The network activity was disabled previously.</extracomment>
+        <translation type="unfinished">启用网络活动</translation>
     </message>
     <message>
         <source>Connecting to peers...</source>
@@ -743,28 +745,32 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>已确认</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>复制地址</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>复制标签</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>复制金额</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>复制交易ID</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">复制地址(&amp;C)</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>锁定未花费</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">复制标签(&amp;L)</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>解锁未花费</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">复制金额(&amp;A)</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">复制交易 &amp;ID</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">锁定未花费(&amp;O)</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">解锁未花费(&amp;U)</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -826,7 +832,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation>创建钱包</translation>
+    </message>
+    <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
         <translation>正在创建钱包&lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
     <message>
@@ -896,7 +908,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Compiled without sqlite support (required for descriptor wallets)</source>
         <translation>编译时未启用SQLite支持（输出描述符钱包需要它）</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -1009,6 +1021,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>当你单击确认后，%1 将会在 %4 启动时从  %3 中最早的交易开始，下载并处理完整的 %4 区块链 (%2GB)。</translation>
     </message>
     <message>
+        <source>Limit block chain storage to</source>
+        <translation type="unfinished">将区块链存储限制到</translation>
+    </message>
+    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
         <translation>取消此设置需要重新下载整个区块链。先完整下载整条链再进行修剪会更快。这会禁用一些高级功能。</translation>
     </message>
@@ -1033,16 +1049,19 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>比特币</translation>
     </message>
     <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>在完成验证后丢弃区块，只保留最近的 %1 GB(修剪)</translation>
-    </message>
-    <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
         <translation>此目录中至少会保存 %1 GB 的数据，并且大小还会随着时间增长。</translation>
     </message>
     <message>
         <source>Approximately %1 GB of data will be stored in this directory.</source>
         <translation>会在此目录中存储约 %1 GB 的数据。</translation>
+    </message>
+    <message numerus="yes">
+        <source>(sufficient to restore backups %n day(s) old)</source>
+        <comment>block chain pruning</comment>
+        <translation type="unfinished">
+            <numerusform>(足以恢复 %n 天之内的备份)</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 will download and store a copy of the Bitcoin block chain.</source>
@@ -1073,6 +1092,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation><numerusform>(保存完整的链需要 %n GB)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>不可用</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1120,16 +1146,25 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>隐藏</translation>
     </message>
     <message>
-        <source>Esc</source>
-        <translation>Esc</translation>
-    </message>
-    <message>
         <source>%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.</source>
         <translation>%1目前正在同步中。它会从其他节点下载区块头和区块数据并进行验证，直到抵达区块链尖端。</translation>
     </message>
     <message>
         <source>Unknown. Syncing Headers (%1, %2%)...</source>
         <translation>未知。正在同步区块头 (%1, %2%)...</translation>
+    </message>
+</context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>种类</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>地址</translation>
     </message>
 </context>
 <context>
@@ -1140,9 +1175,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>URI:</source>
-        <translation>URI:</translation>
+        <translation>URI: </translation>
     </message>
-</context>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>从剪贴板粘贴地址</translation>
+    </message>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1158,7 +1197,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>默认钱包</translation>
     </message>
     <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>打开钱包</translation>
+    </message>
+    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
         <translation>正在打开钱包&lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
 </context>
@@ -1241,16 +1286,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>将区块存储修剪至(&amp;B)</translation>
     </message>
     <message>
-        <source>GB</source>
-        <translation>GB</translation>
-    </message>
-    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
         <translation>警告:还原此设置需要重新下载整个区块链。</translation>
-    </message>
-    <message>
-        <source>MiB</source>
-        <translation>MiB</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1315,18 +1352,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Used for reaching peers via:</source>
         <translation>在走这些途径连接到节点的时候启用:</translation>
-    </message>
-    <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -1399,6 +1424,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>none</source>
         <translation>无</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>比特币核心</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1658,20 +1687,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>‘bitcoin://’不是合法的URI。请改用'bitcoin:'。</translation>
     </message>
     <message>
-        <source>Cannot process payment request because BIP70 is not supported.</source>
-        <translation>因为BIP70不再受到支持，无法处理付款请求</translation>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation type="unfinished">因为不支持BIP70，无法处理付款请求。
+由于BIP70具有广泛的安全缺陷，无论哪个商家指引要求您更换钱包，我们都强烈建议您不要听信。
+如果您看到了这个错误，您应该要求商家提供兼容BIP21的URI。</translation>
     </message>
     <message>
-        <source>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</source>
-        <translation>由于BIP70具有广泛的安全缺陷，无论哪个商家指引要求您更换钱包，我们都建议您不要听信。</translation>
-    </message>
-    <message>
-        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
-        <translation>如果您看到了这个错误，您需要请求商家提供一个兼容BIP21的URI。</translation>
-    </message>
-    <message>
-        <source>Invalid payment address %1</source>
-        <translation>无效的付款地址 %1</translation>
+        <source>Invalid payment address</source>
+        <translation>无效的付款地址</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
@@ -1693,14 +1718,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>节点/服务</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>节点ID</translation>
-    </message>
-    <message>
-        <source>Ping</source>
-        <translation>Ping</translation>
-    </message>
-    <message>
         <source>Sent</source>
         <translation>已发送</translation>
     </message>
@@ -1708,7 +1725,11 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Received</source>
         <translation>已接收</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>类型</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1718,6 +1739,38 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Enter a Bitcoin address (e.g. %1)</source>
         <translation>请输入一个比特币地址 (例如 %1)</translation>
+    </message>
+    <message>
+        <source>Unroutable</source>
+        <translation type="unfinished">不可路由</translation>
+    </message>
+    <message>
+        <source>Internal</source>
+        <translation type="unfinished">内部</translation>
+    </message>
+    <message>
+        <source>Inbound</source>
+        <translation>传入</translation>
+    </message>
+    <message>
+        <source>Full Relay</source>
+        <translation type="unfinished">完整转发</translation>
+    </message>
+    <message>
+        <source>Block Relay</source>
+        <translation type="unfinished">区块转发</translation>
+    </message>
+    <message>
+        <source>Manual</source>
+        <translation type="unfinished">手册</translation>
+    </message>
+    <message>
+        <source>Feeler</source>
+        <translation type="unfinished">触须</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <translation type="unfinished">地址取回</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -1749,23 +1802,33 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
-        <translation><numerusform>%n 秒</numerusform></translation>
+        <translation>
+            <numerusform>%n秒</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n minute(s)</source>
-        <translation><numerusform>%n 分钟</numerusform></translation>
+        <translation>
+            <numerusform>%n分钟</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
-        <translation><numerusform>%n 小时</numerusform></translation>
+        <translation type="unfinished">
+            <numerusform>%n小时</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n day(s)</source>
-        <translation><numerusform>%n 天</numerusform></translation>
+        <translation type="unfinished">
+            <numerusform>%n天</numerusform>
+        </translation>
     </message>
     <message numerus="yes">
         <source>%n week(s)</source>
-        <translation><numerusform>%n 周</numerusform></translation>
+        <translation type="unfinished">
+            <numerusform>%n周</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -1773,23 +1836,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message numerus="yes">
         <source>%n year(s)</source>
-        <translation><numerusform>%n 年</numerusform></translation>
+        <translation type="unfinished">
+            <numerusform>%n年</numerusform>
+        </translation>
     </message>
     <message>
         <source>%1 B</source>
         <translation>%1 字节</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
@@ -1804,16 +1857,22 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>错误: %1</translation>
     </message>
     <message>
-        <source>Error initializing settings: %1</source>
-        <translation>初始化设置出错: %1</translation>
-    </message>
-    <message>
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 尚未安全退出...</translation>
     </message>
     <message>
         <source>unknown</source>
         <translation>未知</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>块</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>交易</translation>
     </message>
 </context>
 <context>
@@ -1950,10 +2009,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>选择节点查看详细信息。</translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation>方向</translation>
-    </message>
-    <message>
         <source>Version</source>
         <translation>版本</translation>
     </message>
@@ -2006,12 +2061,48 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>权限</translation>
     </message>
     <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation type="unfinished">这个节点是通过这种网络协议连接到的: IPv4, IPv6, Onion, I2P, 或 CJDNS.</translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation>服务</translation>
     </message>
     <message>
+        <source>Whether the peer requested us to relay transactions.</source>
+        <translation type="unfinished">这个节点是否要求我们转发交易。</translation>
+    </message>
+    <message>
+        <source>Wants Tx Relay</source>
+        <translation type="unfinished">要求交易转发</translation>
+    </message>
+    <message>
+        <source>High bandwidth BIP152 compact block relay: %1</source>
+        <translation type="unfinished">高带宽BIP152密实区块转发: %1</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation type="unfinished">高带宽</translation>
+    </message>
+    <message>
         <source>Connection Time</source>
         <translation>连接时间</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation type="unfinished">自从这个节点上一次发来可通过初始有效性检查的新区块以来到现在经过的时间</translation>
+    </message>
+    <message>
+        <source>Last Block</source>
+        <translation type="unfinished">上一个区块</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel transaction accepted into our mempool was received from this peer.</source>
+        <translation type="unfinished">自从这个节点上一次发来被我们的内存池接受的新交易到现在经过的时间</translation>
+    </message>
+    <message>
+        <source>Last Tx</source>
+        <translation type="unfinished">上次交易</translation>
     </message>
     <message>
         <source>Last Send</source>
@@ -2058,10 +2149,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>网络流量(&amp;N)</translation>
     </message>
     <message>
-        <source>Totals</source>
-        <translation>总数</translation>
-    </message>
-    <message>
         <source>In:</source>
         <translation>传入:</translation>
     </message>
@@ -2082,10 +2169,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>1 小时(&amp;H)</translation>
     </message>
     <message>
-        <source>1 &amp;day</source>
-        <translation>1 天(&amp;D)</translation>
-    </message>
-    <message>
         <source>1 &amp;week</source>
         <translation>1 周(&amp;W)</translation>
     </message>
@@ -2098,8 +2181,65 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>断开(&amp;D)</translation>
     </message>
     <message>
+        <source>Inbound: initiated by peer</source>
+        <translation type="unfinished">入站: 由对端发起</translation>
+    </message>
+    <message>
+        <source>Outbound Full Relay: default</source>
+        <translation type="unfinished">出站完整转发: 默认</translation>
+    </message>
+    <message>
+        <source>Outbound Block Relay: does not relay transactions or addresses</source>
+        <translation type="unfinished">出站区块转发: 不转发交易和地址</translation>
+    </message>
+    <message>
+        <source>Outbound Manual: added using RPC %1 or %2/%3 configuration options</source>
+        <translation type="unfinished">出站手动: 加入使用RPC %1 或 %2/%3 配置选项</translation>
+    </message>
+    <message>
+        <source>Outbound Feeler: short-lived, for testing addresses</source>
+        <translation type="unfinished">出站触须: 短暂，用于测试地址</translation>
+    </message>
+    <message>
+        <source>Outbound Address Fetch: short-lived, for soliciting addresses</source>
+        <translation type="unfinished">出站地址取回: 短暂，用于请求取回地址</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>到</translation>
+    </message>
+    <message>
+        <source>we selected the peer for high bandwidth relay</source>
+        <translation type="unfinished">我们选择了用于高带宽转发的节点</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>来自</translation>
+    </message>
+    <message>
+        <source>the peer selected us for high bandwidth relay</source>
+        <translation type="unfinished">对端选择了我们用于高带宽转发</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>否</translation>
+    </message>
+    <message>
+        <source>no high bandwidth relay selected</source>
+        <translation type="unfinished">未选择高带宽转发</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>封禁时长</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation type="unfinished">1 天(&amp;A)</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;复制地址</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
@@ -2146,20 +2286,12 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>通过 %1</translation>
     </message>
     <message>
-        <source>never</source>
-        <translation>从未</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>传入</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>传出</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>未知</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation type="unfinished">永不</translation>
     </message>
 </context>
 <context>
@@ -2201,8 +2333,8 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>一条附加到付款请求中的可选消息，可以显示给付款方。</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>新建收款地址(&amp;C)</translation>
+        <source>&amp;Request payment</source>
+        <translation>请求付款(&amp;R)</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2241,20 +2373,24 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation>移除</translation>
     </message>
     <message>
-        <source>Copy URI</source>
-        <translation>复制URI</translation>
+        <source>Copy &amp;URI</source>
+        <translation>复制 &amp;URI</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>复制标签</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">复制地址(&amp;C)</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>复制消息</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">复制标签(&amp;L)</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>复制金额</translation>
+        <source>Copy &amp;message</source>
+        <translation type="unfinished">复制消息(&amp;M)</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">复制金额(&amp;A)</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -2655,7 +2791,9 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>预计在等待 %n 个区块后会有第一个确认。</numerusform></translation>
+        <translation>
+            <numerusform>预估将会在 %n 个区块内开始确认。</numerusform>
+        </translation>
     </message>
     <message>
         <source>Warning: Invalid Bitcoin address</source>
@@ -2701,16 +2839,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>付款目的地址</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>从剪贴板粘贴地址</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Remove this entry</source>
@@ -2795,16 +2925,8 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>选择以前用过的地址</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>从剪贴板粘贴地址</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -2925,11 +3047,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
 </context>
 <context>
     <name>TrafficGraphWidget</name>
-    <message>
-        <source>KB/s</source>
-        <translation>KB/s</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>TransactionDesc</name>
     <message numerus="yes">
@@ -3258,10 +3376,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>发送到</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>给自己</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>挖矿所得</translation>
     </message>
@@ -3278,44 +3392,44 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
         <translation>最小金额</translation>
     </message>
     <message>
-        <source>Abandon transaction</source>
-        <translation>丢弃交易</translation>
+        <source>A&amp;bandon transaction</source>
+        <translation type="unfinished">放弃交易(&amp;B)</translation>
     </message>
     <message>
-        <source>Increase transaction fee</source>
-        <translation>追加手续费</translation>
+        <source>Increase transaction &amp;fee</source>
+        <translation>追加手续费(&amp;F)</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>复制地址</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">复制地址(&amp;C)</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>复制标签</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">复制标签(&amp;L)</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>复制金额</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">复制金额(&amp;A)</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>复制交易ID</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">复制交易 &amp;ID</translation>
     </message>
     <message>
-        <source>Copy raw transaction</source>
-        <translation>复制原始交易</translation>
+        <source>Copy &amp;raw transaction</source>
+        <translation type="unfinished">复制原始交易(&amp;R)</translation>
     </message>
     <message>
-        <source>Copy full transaction details</source>
-        <translation>复制完整交易详情</translation>
+        <source>Copy full transaction &amp;details</source>
+        <translation type="unfinished">复制完整交易详情(&amp;D)</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>编辑标签</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;编辑标签</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>显示交易详情</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">显示交易详情(&amp;S)</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
@@ -3348,10 +3462,6 @@ Note:  Since the fee is calculated on a per-byte basis, a fee of "100 satoshis p
     <message>
         <source>Address</source>
         <translation>地址</translation>
-    </message>
-    <message>
-        <source>ID</source>
-        <translation>ID</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -3422,6 +3532,30 @@ Go to File &gt; Open Wallet to load a wallet.
         <source>Create a new wallet</source>
         <translation>创建一个新的钱包</translation>
     </message>
+    <message>
+        <source>Error</source>
+        <translation>错误</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>无法从剪贴板解码PSBT(Base64值无效)</translation>
+    </message>
+    <message>
+        <source>Load Transaction Data</source>
+        <translation>加载交易数据</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (*.psbt)</source>
+        <translation>部分签名交易 (*.psbt)</translation>
+    </message>
+    <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>PSBT文件必须小于100MiB</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>无法解码PSBT</translation>
+    </message>
 </context>
 <context>
     <name>WalletModel</name>
@@ -3456,6 +3590,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>New fee:</source>
         <translation>新交易费:</translation>
+    </message>
+    <message>
+        <source>Warning: This may pay the additional fee by reducing change outputs or adding inputs, when necessary. It may add a new change output if one does not already exist. These changes may potentially leak privacy.</source>
+        <translation type="unfinished">警告: 因为在必要的时候会减少找零输出个数或增加输入个数，这可能要付出额外的费用。在没有找零输出的情况下可能会新增一个。这些变更可能会导致潜在的隐私泄露。</translation>
     </message>
     <message>
         <source>Confirm fee bump</source>
@@ -3493,30 +3631,6 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>将当前标签页数据导出到文件</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>错误</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
-        <translation>无法从剪贴板解码PSBT(Base64值无效)</translation>
-    </message>
-    <message>
-        <source>Load Transaction Data</source>
-        <translation>加载交易数据</translation>
-    </message>
-    <message>
-        <source>Partially Signed Transaction (*.psbt)</source>
-        <translation>部分签名交易 (*.psbt)</translation>
-    </message>
-    <message>
-        <source>PSBT file must be smaller than 100 MiB</source>
-        <translation>PSBT文件必须小于100MiB</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT</source>
-        <translation>无法解码PSBT</translation>
-    </message>
-    <message>
         <source>Backup Wallet</source>
         <translation>备份钱包</translation>
     </message>
@@ -3531,6 +3645,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>There was an error trying to save the wallet data to %1.</source>
         <translation>尝试保存钱包数据至 %1 时发生了错误。</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the wallet data to %1: %2</source>
+        <translation>尝试保存钱包数据至 %1 时发生了错误: %2</translation>
     </message>
     <message>
         <source>Backup Successful</source>
@@ -3572,6 +3690,10 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>%s 开发者</translation>
     </message>
     <message>
+        <source>Cannot downgrade wallet from version %i to version %i. Wallet version unchanged.</source>
+        <translation type="unfinished">无法把钱包版本从%i降级到%i。钱包版本未改变。</translation>
+    </message>
+    <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
         <translation>无法锁定数据目录 %s。%s 可能已经在运行。</translation>
     </message>
@@ -3580,12 +3702,40 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>在使用地址管理器(addrman)寻找出站连接时，无法同时提供特定的连接。</translation>
     </message>
     <message>
+        <source>Cannot upgrade a non HD split wallet from version %i to version %i without upgrading to support pre-split keypool. Please use version %i or no version specified.</source>
+        <translation type="unfinished">无法在不支持“拆分前的密钥池”（pre split keypool）的情况下把“非拆分HD钱包”（non HD split wallet）从版本%i升级到%i。请使用版本号%i，或者压根不要指定版本号。</translation>
+    </message>
+    <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>读取 %s 时发生错误！所有的密钥都可以正确读取，但是交易记录或地址簿数据可能已经丢失或出错。</translation>
     </message>
     <message>
+        <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
+        <translation type="unfinished">错误: 转储文件格式不正确。得到是"%s"，而预期本应得到的是 "format"。</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile identifier record is incorrect. Got "%s", expected "%s".</source>
+        <translation type="unfinished">错误: 转储文件标识符记录不正确。得到的是 "%s"，而预期本应得到的是 "%s"。</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">错误: 转储文件版本不被支持。这个版本的 bitcoin-wallet 只支持版本为 1 的转储文件。得到的转储文件版本却是%s</translation>
+    </message>
+    <message>
+        <source>File %s already exists. If you are sure this is what you want, move it out of the way first.</source>
+        <translation type="unfinished">文件%s已经存在。如果你确定这就是你想做的，先把这个文件挪开。</translation>
+    </message>
+    <message>
         <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
         <translation>提供多个洋葱路由绑定地址。对自动创建的洋葱服务用%s</translation>
+    </message>
+    <message>
+        <source>No dump file provided. To use createfromdump, -dumpfile=&lt;filename&gt; must be provided.</source>
+        <translation type="unfinished">没有提供转储文件。要使用 createfromdump ，必须提供 -dumpfile=&lt;filename&gt;。</translation>
+    </message>
+    <message>
+        <source>No wallet file format provided. To use createfromdump, -format=&lt;format&gt; must be provided.</source>
+        <translation type="unfinished">没有提供钱包格式。要使用 createfromdump ，必须提供 -format=&lt;format&gt;</translation>
     </message>
     <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong, %s will not work properly.</source>
@@ -3626,6 +3776,14 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Unable to rewind the database to a pre-fork state. You will need to redownload the blockchain</source>
         <translation>无法将数据库回滚到分叉前的状态。必须要重新下载区块链。</translation>
+    </message>
+    <message>
+        <source>Unknown wallet file format "%s" provided. Please provide one of "bdb" or "sqlite".</source>
+        <translation type="unfinished">提供了未知的钱包格式 "%s" 。请使用 "bdb" 或 "sqlite" 中的一种。</translation>
+    </message>
+    <message>
+        <source>Warning: Dumpfile wallet format "%s" does not match command line specified format "%s".</source>
+        <translation type="unfinished">警告: 转储文件的钱包格式 "%s" 与命令行指定的格式 "%s" 不符。</translation>
     </message>
     <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
@@ -3672,6 +3830,14 @@ Go to File &gt; Open Wallet to load a wallet.
         <translation>你想现在就重建区块数据库吗？</translation>
     </message>
     <message>
+        <source>Dump file %s does not exist.</source>
+        <translation type="unfinished">转储文件 %s 不存在</translation>
+    </message>
+    <message>
+        <source>Error creating %s</source>
+        <translation type="unfinished">创建%s时出错</translation>
+    </message>
+    <message>
         <source>Error initializing block database</source>
         <translation>初始化区块数据库时出错</translation>
     </message>
@@ -3702,6 +3868,42 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Error opening block database</source>
         <translation>打开区块数据库时出错</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation type="unfinished">从钱包数据库读取下一条记录时出错</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>错误</translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation type="unfinished">错误: 无法在数据库中创建指针</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation type="unfinished">错误: 转储文件的校验和不符。计算得到%s，预料中本应该得到%s</translation>
+    </message>
+    <message>
+        <source>Error: Got key that was not hex: %s</source>
+        <translation type="unfinished">错误: 得到了不是十六进制的键:%s</translation>
+    </message>
+    <message>
+        <source>Error: Got value that was not hex: %s</source>
+        <translation type="unfinished">错误: 得到了不是十六进制的数值:%s</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation type="unfinished">错误：跳过检查检验和</translation>
+    </message>
+    <message>
+        <source>Error: Unable to parse version %u as a uint32_t</source>
+        <translation type="unfinished">错误：无法把版本号%u作为unit32_t解析</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation type="unfinished">错误: 无法写入记录到新钱包</translation>
     </message>
     <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
@@ -3770,6 +3972,10 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>指定的区块目录"%s"不存在。</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation type="unfinished">无法打开%s用于写入</translation>
     </message>
     <message>
         <source>Unknown address type '%s'</source>
@@ -3854,10 +4060,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</source>
         <translation>%s损坏。请尝试用bitcoin-wallet钱包工具来对其进行急救。或者用一个备份进行还原。</translation>
-    </message>
-    <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>无法在不支持“拆分前的密钥池”（pre split keypool）的情况下对“非拆分HD钱包”（non HD split wallet）进行升级。请使用版本号169900，或者压根不要指定版本号。</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
@@ -4084,10 +4286,6 @@ Go to File &gt; Open Wallet to load a wallet.
     <message>
         <source>Loading wallet...</source>
         <translation>正在加载钱包...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>无法降级钱包</translation>
     </message>
     <message>
         <source>Rescanning...</source>

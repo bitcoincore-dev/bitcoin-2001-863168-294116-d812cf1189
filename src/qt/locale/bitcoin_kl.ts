@@ -78,13 +78,17 @@
     </context>
 <context>
     <name>BanTableModel</name>
-    <message>
-        <source>IP/Netmask</source>
-        <translation>IP/Netmask</translation>
-    </message>
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Options...</source>
+        <translation type="unfinished">&amp;Toqqagassat...</translation>
+    </message>
+    <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">&amp;Aningaasiviit kode-leruk...</translation>
+    </message>
     <message>
         <source>Wallet:</source>
         <translation>Aningaasivik:</translation>
@@ -106,6 +110,10 @@
     </context>
 <context>
     <name>CoinControlDialog</name>
+    <message>
+        <source>Amount:</source>
+        <translation type="unfinished">Bitcoin amerlassusaa:</translation>
+    </message>
     <message>
         <source>Fee:</source>
         <translation>Akileraarut:</translation>
@@ -136,6 +144,14 @@
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Wallet</source>
+        <translation type="unfinished">Aningaasivik</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>Aningaasiviit kode-leruk</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
@@ -164,10 +180,9 @@
         <source>Welcome to %1.</source>
         <translation>Tikilluarit uunga %1</translation>
     </message>
-    <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -175,16 +190,20 @@
         <source>Hide</source>
         <translation>Tarrisiguk</translation>
     </message>
-    <message>
-        <source>Esc</source>
-        <translation>Esc</translation>
-    </message>
+    </context>
+<context>
+    <name>NetWatchLogModel</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
     </context>
 <context>
     <name>OpenWalletActivity</name>
+    <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>Ammaruk aningaasivik</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
@@ -192,12 +211,23 @@
         <source>Options</source>
         <translation>Toqqagassat</translation>
     </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Aningaasivik</translation>
+    </message>
     </context>
 <context>
     <name>OverviewPage</name>
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Matuguk</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -212,20 +242,8 @@
         <translation>Aningaasat amerlassusaa</translation>
     </message>
     <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
         <source>%1 h</source>
         <translation>%1 t</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
     </message>
     </context>
 <context>
@@ -233,9 +251,21 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Aningaasivik: </translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Aningaasat amerlassusaa:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Taajuut:</translation>
+    </message>
     <message>
         <source>Could not unlock wallet.</source>
         <translation>Aningaasivik ammarneqanngilaq</translation>
@@ -243,6 +273,14 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Amount:</source>
+        <translation type="unfinished">Aningaasat amerlassusaa:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">Taajuut:</translation>
+    </message>
     <message>
         <source>Wallet:</source>
         <translation>Aningaasivik:</translation>
@@ -262,6 +300,10 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Amount:</source>
+        <translation type="unfinished">Bitcoin amerlassusaa:</translation>
+    </message>
+    <message>
         <source>Fee:</source>
         <translation>Akileraarut</translation>
     </message>
@@ -276,6 +318,14 @@
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Bitcoin amerlassusaa:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Taajuut:</translation>
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>

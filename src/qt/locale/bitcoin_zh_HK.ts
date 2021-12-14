@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>按右擊修改位址或標記</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>新增一個位址</translation>
     </message>
@@ -406,16 +402,24 @@
         <translation>已更新至最新版本</translation>
     </message>
     <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>開啓除錯和診斷主控台</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;付款地址</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;收款地址</translation>
+    </message>
+    <message>
         <source>Open Wallet</source>
         <translation>開啟錢包</translation>
     </message>
     <message>
         <source>Open a wallet</source>
         <translation>開啟一個錢包</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation>預設錢包</translation>
     </message>
     <message>
         <source>Main Window</source>
@@ -445,35 +449,67 @@
         <translation>已確認</translation>
     </message>
     <message>
+        <source>&amp;Copy address</source>
+        <translation>複製地址 &amp;C</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>複製標記 &amp;L</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(無標記)</translation>
     </message>
     </context>
 <context>
     <name>CreateWalletActivity</name>
+    <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation type="unfinished">建立錢包</translation>
+    </message>
     </context>
 <context>
     <name>CreateWalletDialog</name>
     <message>
+        <source>Create Wallet</source>
+        <translation type="unfinished">建立錢包</translation>
+    </message>
+    <message>
         <source>Wallet</source>
         <translation>錢包</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>加密錢包</translation>
     </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;標記</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;位址</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">關於 %1 A</translation>
+    </message>
     </context>
 <context>
     <name>Intro</name>
-    <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
     <message>
         <source>Error</source>
         <translation>錯誤</translation>
@@ -483,6 +519,14 @@
     <name>ModalOverlay</name>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>地址</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     </context>
 <context>
@@ -491,9 +535,18 @@
         <source>default wallet</source>
         <translation>預設錢包</translation>
     </message>
+    <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>開啟錢包</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
+    <message>
+        <source>W&amp;allet</source>
+        <translation>&amp;錢包</translation>
+    </message>
     <message>
         <source>Error</source>
         <translation>錯誤</translation>
@@ -504,6 +557,13 @@
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">關閉 l</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -518,7 +578,7 @@
         <source>Received</source>
         <translation>已接收</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -544,10 +604,6 @@
     <message>
         <source>None</source>
         <translation>沒有</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
     </message>
     <message>
         <source>%1 ms</source>
@@ -585,7 +641,17 @@
         <source>Error: %1</source>
         <translation>錯誤: %1</translation>
     </message>
-    </context>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>塊</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>交易</translation>
+    </message>
+</context>
 <context>
     <name>QRImageWidget</name>
     <message>
@@ -600,16 +666,16 @@
 <context>
     <name>RPCConsole</name>
     <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
         <source>&amp;Information</source>
         <translation>資訊 &amp;I</translation>
     </message>
     <message>
         <source>General</source>
         <translation>一般</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">錢包: </translation>
     </message>
     <message>
         <source>Received</source>
@@ -623,15 +689,44 @@
         <source>Version</source>
         <translation>版本</translation>
     </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation>複製地址 &amp;C</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;標記:</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>複製地址 &amp;C</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>複製標記 &amp;L</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">地址:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">標記:</translation>
+    </message>
+    <message>
         <source>Wallet:</source>
         <translation>錢包:</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>複製位址 &amp;C</translation>
     </message>
     </context>
 <context>
@@ -648,18 +743,42 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Choose...</source>
+        <translation type="unfinished">選取 h...</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">付款 &amp;S</translation>
+    </message>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">付款 S</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(無標記)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;標記:</translation>
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>
     </context>
 <context>
     <name>SignVerifyMessageDialog</name>
+    <message>
+        <source>&amp;Verify Message</source>
+        <translation>驗證訊息 &amp;V</translation>
+    </message>
+    <message>
+        <source>Verify &amp;Message</source>
+        <translation type="unfinished">驗證訊息 &amp;V</translation>
+    </message>
     </context>
 <context>
     <name>TrafficGraphWidget</name>
@@ -669,6 +788,10 @@
     <message>
         <source>Open until %1</source>
         <translation>開放至 %1</translation>
+    </message>
+    <message>
+        <source>Transaction</source>
+        <translation>交易</translation>
     </message>
     </context>
 <context>
@@ -691,6 +814,14 @@
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>複製地址 &amp;C</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>複製標記 &amp;L</translation>
+    </message>
     <message>
         <source>Comma separated file (*.csv)</source>
         <translation>逗號分隔檔 (*.csv)</translation>
@@ -724,7 +855,11 @@
         <source>Create a new wallet</source>
         <translation>新增一個錢包</translation>
     </message>
-</context>
+    <message>
+        <source>Error</source>
+        <translation>錯誤</translation>
+    </message>
+    </context>
 <context>
     <name>WalletModel</name>
     <message>
@@ -743,11 +878,15 @@
         <translation>把目前分頁的資料匯出至檔案</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
+        <source>Backup Wallet</source>
+        <translation>備份錢包 &amp;B</translation>
     </message>
     </context>
 <context>
     <name>bitcoin-core</name>
+    <message>
+        <source>Error</source>
+        <translation>錯誤</translation>
+    </message>
     </context>
 </TS>

@@ -75,6 +75,11 @@
     </context>
 <context>
     <name>OpenWalletActivity</name>
+    <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>sii apamowo</translation>
+    </message>
     </context>
 <context>
     <name>OptionsDialog</name>
@@ -85,6 +90,10 @@
     </context>
 <context>
     <name>OverviewPage</name>
+    <message>
+        <source>Watch-only:</source>
+        <translation type="unfinished">wo nikan:</translation>
+    </message>
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
@@ -178,6 +187,10 @@
     <message>
         <source>This year</source>
         <translation>Odun yi</translation>
+    </message>
+    <message>
+        <source>Watch-only</source>
+        <translation>wo nikan</translation>
     </message>
     <message>
         <source>Date</source>

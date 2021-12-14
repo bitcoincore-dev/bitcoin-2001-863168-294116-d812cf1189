@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Mag-right-klik upang baguhin ang address o label</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Gumawa ng bagong address</translation>
     </message>
@@ -86,10 +82,6 @@
         <translation>I-export ang Listahan ng Address</translation>
     </message>
     <message>
-        <source>Comma separated file (*.csv)</source>
-        <translation>Comma separated file (*.csv)</translation>
-    </message>
-    <message>
         <source>Exporting Failed</source>
         <translation>Nabigo ang Pag-export</translation>
     </message>
@@ -102,11 +94,11 @@
     <name>AddressTableModel</name>
     <message>
         <source>Label</source>
-        <translation>Label</translation>
+        <translation type="unfinished">Label</translation>
     </message>
     <message>
         <source>Address</source>
-        <translation>Address</translation>
+        <translation type="unfinished">Address</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -115,10 +107,6 @@
 </context>
 <context>
     <name>AskPassphraseDialog</name>
-    <message>
-        <source>Passphrase Dialog</source>
-        <translation>Passphrase Dialog</translation>
-    </message>
     <message>
         <source>Enter passphrase</source>
         <translation>Ipasok ang passphrase</translation>
@@ -239,10 +227,6 @@
 <context>
     <name>BanTableModel</name>
     <message>
-        <source>IP/Netmask</source>
-        <translation>IP/Netmask</translation>
-    </message>
-    <message>
         <source>Banned Until</source>
         <translation>Bawal Hanggang</translation>
     </message>
@@ -334,16 +318,9 @@
         <translation>Walet:</translation>
     </message>
     <message>
-        <source>Click to disable network activity.</source>
-        <translation>Mag-klik upang hindi paganahin ang aktibidad ng network.</translation>
-    </message>
-    <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>Ang aktibidad ng network ay hindi pinagana.</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Mag-klik upang muling paganahin ang aktibidad ng network.</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -414,10 +391,6 @@
         <translation>Tulong</translation>
     </message>
     <message>
-        <source>Tabs toolbar</source>
-        <translation>Tabs toolbar</translation>
-    </message>
-    <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
         <translation>Humiling ng bayad (lumilikha ng QR codes at bitcoin: URIs)</translation>
     </message>
@@ -475,7 +448,7 @@
     </message>
     <message>
         <source>Open node debugging and diagnostic console</source>
-        <translation>Open node debugging and diagnostic console</translation>
+        <translation>Buksan ang debugging at diagnostic console</translation>
     </message>
     <message>
         <source>&amp;Sending addresses</source>
@@ -484,10 +457,6 @@
     <message>
         <source>&amp;Receiving addresses</source>
         <translation>Mga address para sa pagtanggap</translation>
-    </message>
-    <message>
-        <source>Open a bitcoin: URI</source>
-        <translation>Open a bitcoin: URI</translation>
     </message>
     <message>
         <source>Open Wallet</source>
@@ -506,12 +475,16 @@
         <translation>Isara ang walet</translation>
     </message>
     <message>
-        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
-        <translation>Ipakita sa %1 ang tulong na mensahe upang makuha ang talaan ng mga posibleng opsyon ng Bitcoin command-line</translation>
+        <source>Close All Wallets...</source>
+        <translation>Isarado ang lahat ng wallets...</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>walet na default</translation>
+        <source>Close all wallets</source>
+        <translation>Isarado ang lahat ng wallets</translation>
+    </message>
+    <message>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>Ipakita sa %1 ang tulong na mensahe upang makuha ang talaan ng mga posibleng opsyon ng Bitcoin command-line</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -574,18 +547,6 @@
 </translation>
     </message>
     <message>
-        <source>Label: %1
-</source>
-        <translation>Label: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Address: %1
-</translation>
-    </message>
-    <message>
         <source>Sent transaction</source>
         <translation>Pinadalang transaksyon</translation>
     </message>
@@ -617,7 +578,11 @@
         <source>Original message:</source>
         <translation>Orihinal na mensahe:</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>May nangyaring malubhang kamalian. Hindi na kayang magpatuloy ng ligtas ang %1 at ito ay hihinto na.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -630,7 +595,7 @@
     </message>
     <message>
         <source>Bytes:</source>
-        <translation>Bytes:</translation>
+        <translation>Bytes: </translation>
     </message>
     <message>
         <source>Amount:</source>
@@ -639,10 +604,6 @@
     <message>
         <source>Fee:</source>
         <translation>Bayad:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Dust:</translation>
     </message>
     <message>
         <source>After Fee:</source>
@@ -655,14 +616,6 @@
     <message>
         <source>(un)select all</source>
         <translation>(huwag)piliin lahat</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Tree mode</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>List mode</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -689,28 +642,32 @@
         <translation>Nakumpirma</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Kopyahin ang address</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopyahin ang label</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Kopyahin ang halaga</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopyahin ang ID ng transaksyon</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Kopyahin ang address</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>I-lock ang hindi pa nagastos</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Kopyahin ang label</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>I-unlock ang hindi pa nagastos</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Kopyahin ang halaga</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Kopyahin ang ID ng transaksyon</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;I-lock ang hindi pa nagastos</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">&amp;I-unlock ang hindi pa nagastos</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -772,7 +729,13 @@
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation>Gumawa ng Pitaka</translation>
+    </message>
+    <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
         <translation>Lumilikha ng Wallet 1 %1 1...</translation>
     </message>
     <message>
@@ -799,24 +762,12 @@
         <translation>Pangalan ng Pitaka</translation>
     </message>
     <message>
-        <source>Encrypt the wallet. The wallet will be encrypted with a passphrase of your choice.</source>
-        <translation>Encrypt the wallet. The wallet will be encrypted with a passphrase of your choice.</translation>
-    </message>
-    <message>
         <source>Encrypt Wallet</source>
-        <translation>Encrypt Wallet</translation>
-    </message>
-    <message>
-        <source>Disable private keys for this wallet. Wallets with private keys disabled will have no private keys and cannot have an HD seed or imported private keys. This is ideal for watch-only wallets.</source>
-        <translation>Disable private keys for this wallet. Wallets with private keys disabled will have no private keys and cannot have an HD seed or imported private keys. This is ideal for watch-only wallets.</translation>
+        <translation type="unfinished">I-encrypt ang Walet</translation>
     </message>
     <message>
         <source>Disable Private Keys</source>
         <translation>Huwag paganahin ang Privbadong susi</translation>
-    </message>
-    <message>
-        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported, or an HD seed can be set, at a later time.</source>
-        <translation>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported, or an HD seed can be set, at a later time.</translation>
     </message>
     <message>
         <source>Make Blank Wallet</source>
@@ -939,10 +890,6 @@
         <translation>Pagkatapos mong mag-click ng OK, %1 ay magsisimulang mag-download at mag-proseso ng buong blockchain (%2GB) magmula sa pinakaunang transaksyon sa %3 nuong ang %4 ay paunang nilunsad.</translation>
     </message>
     <message>
-        <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
-        <translation>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</translation>
-    </message>
-    <message>
         <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
         <translation>Maraming pangangailangan ang itong paunang sinkronisasyon at maaaring ilantad ang mga problema sa hardware ng iyong computer na hindi dating napansin. Tuwing pagaganahin mo ang %1, ito'y magpapatuloy mag-download kung saan ito tumigil.</translation>
     </message>
@@ -957,14 +904,6 @@
     <message>
         <source>Use a custom data directory:</source>
         <translation>Gamitin ang pasadyang data directory:</translation>
-    </message>
-    <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
-    <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Discard blocks after verification, except most recent %1 GB (prune)</translation>
     </message>
     <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
@@ -1042,29 +981,30 @@
         <translation>Itago</translation>
     </message>
     <message>
-        <source>Esc</source>
-        <translation>Esc</translation>
-    </message>
-    <message>
-        <source>%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.</source>
-        <translation>%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.</translation>
-    </message>
-    <message>
         <source>Unknown. Syncing Headers (%1, %2%)...</source>
         <translation>Hindi alam. S-in-i-sync ang mga Header (%1, %2%)...</translation>
     </message>
 </context>
 <context>
-    <name>OpenURIDialog</name>
+    <name>NetWatchLogModel</name>
     <message>
-        <source>Open bitcoin URI</source>
-        <translation>Open bitcoin URI</translation>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Uri</translation>
     </message>
     <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation type="unfinished">Address</translation>
     </message>
 </context>
+<context>
+    <name>OpenURIDialog</name>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>I-paste ang address mula sa clipboard</translation>
+    </message>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1080,7 +1020,13 @@
         <translation>walet na default</translation>
     </message>
     <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>Buksan ang Walet</translation>
+    </message>
+    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
         <translation>Binubuksan ang walet &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
 </context>
@@ -1163,20 +1109,8 @@
         <translation>I-prune and block storage sa</translation>
     </message>
     <message>
-        <source>GB</source>
-        <translation>GB</translation>
-    </message>
-    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
         <translation>Ang pag-revert ng pagtatampok na ito ay nangangailangan ng muling pag-download ng buong blockchain.</translation>
-    </message>
-    <message>
-        <source>MiB</source>
-        <translation>MiB</translation>
-    </message>
-    <message>
-        <source>(0 = auto, &lt;0 = leave that many cores free)</source>
-        <translation>(0 = auto, &lt;0 = leave that many cores free)</translation>
     </message>
     <message>
         <source>W&amp;allet</source>
@@ -1239,18 +1173,6 @@
         <translation>Gamit para sa pagabot ng peers sa pamamagitan ng:</translation>
     </message>
     <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
-    </message>
-    <message>
         <source>&amp;Window</source>
         <translation>Window</translation>
     </message>
@@ -1291,6 +1213,14 @@
         <translation>Kung magpapakita ng mga tampok ng kontrol ng coin o hindi</translation>
     </message>
     <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>Kumunekta sa Bitcoin network sa pamamagitan ng hiwalay na SOCKS5 proxy para sa mga tagong serbisyo ng Tor.</translation>
+    </message>
+    <message>
+        <source>Use separate SOCKS&amp;5 proxy to reach peers via Tor onion services:</source>
+        <translation>Gumamit ng hiwalay na SOCKS&amp;5 proxy upang maabot ang mga peers sa pamamagitan ng mga tagong serbisyo ng Tor:</translation>
+    </message>
+    <message>
         <source>&amp;Third party transaction URLs</source>
         <translation>Mga URL ng transaksyon ng third party</translation>
     </message>
@@ -1305,10 +1235,6 @@
     <message>
         <source>&amp;Cancel</source>
         <translation>Kanselahin</translation>
-    </message>
-    <message>
-        <source>default</source>
-        <translation>default</translation>
     </message>
     <message>
         <source>none</source>
@@ -1362,20 +1288,12 @@
         <translation>Ang ipinapakitang impormasyon ay maaaring luma na. Kusang mag-sy-synchronize ang iyong walet sa Bitcoin network pagkatapos maitatag ang koneksyon, ngunit hindi pa nakukumpleto ang prosesong ito.</translation>
     </message>
     <message>
-        <source>Watch-only:</source>
-        <translation>Watch-only:</translation>
-    </message>
-    <message>
         <source>Available:</source>
         <translation>Magagamit:</translation>
     </message>
     <message>
         <source>Your current spendable balance</source>
         <translation>Ang iyong balanse ngayon na puedeng gastusin</translation>
-    </message>
-    <message>
-        <source>Pending:</source>
-        <translation>Pending:</translation>
     </message>
     <message>
         <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
@@ -1433,10 +1351,6 @@
 <context>
     <name>PSBTOperationsDialog</name>
     <message>
-        <source>Dialog</source>
-        <translation>Dialog</translation>
-    </message>
-    <message>
         <source>Sign Tx</source>
         <translation>I-sign ang Tx</translation>
     </message>
@@ -1485,6 +1399,10 @@
         <translation>%1</translation>
     </message>
     <message>
+        <source>Pays transaction fee: </source>
+        <translation>babayaran ang transaction fee:</translation>
+    </message>
+    <message>
         <source>Total Amount</source>
         <translation>Kabuuang Halaga</translation>
     </message>
@@ -1504,28 +1422,12 @@
         <translation>Hindi masimulan ang bitcoin: click-to-pay handler</translation>
     </message>
     <message>
-        <source>URI handling</source>
-        <translation>URI handling</translation>
-    </message>
-    <message>
         <source>'bitcoin://' is not a valid URI. Use 'bitcoin:' instead.</source>
         <translation>Ang 'bitcoin://' ay hindi wastong URI. Sa halip, gamitin ang 'bitcoin:'.</translation>
     </message>
     <message>
-        <source>Cannot process payment request because BIP70 is not supported.</source>
-        <translation>Cannot process payment request because BIP70 is not supported.</translation>
-    </message>
-    <message>
-        <source>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</source>
-        <translation>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</translation>
-    </message>
-    <message>
-        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
-        <translation>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</translation>
-    </message>
-    <message>
-        <source>Invalid payment address %1</source>
-        <translation>Hindi wasto and address ng bayad %1</translation>
+        <source>Invalid payment address</source>
+        <translation>Hindi wasto and address ng bayad</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
@@ -1547,14 +1449,6 @@
         <translation>Node/Serbisyo</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>Nodeld</translation>
-    </message>
-    <message>
-        <source>Ping</source>
-        <translation>Ping</translation>
-    </message>
-    <message>
         <source>Sent</source>
         <translation>Ipinadala</translation>
     </message>
@@ -1562,7 +1456,11 @@
         <source>Received</source>
         <translation>Natanggap</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Uri</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1574,32 +1472,12 @@
         <translation>I-enter ang Bitcoin address (e.g. %1)</translation>
     </message>
     <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
+        <source>Inbound</source>
+        <translation>Dumarating</translation>
     </message>
     <message>
         <source>None</source>
         <translation>Wala</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
@@ -1630,22 +1508,6 @@
         <translation><numerusform>%n taon</numerusform><numerusform>%n taon</numerusform></translation>
     </message>
     <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
         <translation>Kamalian: Wala ang tinukoy na direktoryo ng datos "%1".</translation>
     </message>
@@ -1665,7 +1527,7 @@
         <source>unknown</source>
         <translation>hindi alam</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     <message>
@@ -1692,17 +1554,9 @@
         <source>Save QR Code</source>
         <translation>I-save ang QR Code</translation>
     </message>
-    <message>
-        <source>PNG Image (*.png)</source>
-        <translation>PNG Image (*.png)</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>RPCConsole</name>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
     <message>
         <source>Client version</source>
         <translation>Bersyon ng kliyente</translation>
@@ -1720,16 +1574,8 @@
         <translation>Gumagamit ng bersyon ng BerkeleyDB</translation>
     </message>
     <message>
-        <source>Datadir</source>
-        <translation>Datadir</translation>
-    </message>
-    <message>
         <source>To specify a non-default location of the data directory use the '%1' option.</source>
         <translation>Upang tukuyin ang non-default na lokasyon ng direktoryo ng datos, gamitin ang '%1' na opsyon.</translation>
-    </message>
-    <message>
-        <source>Blocksdir</source>
-        <translation>Blocksdir</translation>
     </message>
     <message>
         <source>To specify a non-default location of the blocks directory use the '%1' option.</source>
@@ -1741,7 +1587,7 @@
     </message>
     <message>
         <source>Network</source>
-        <translation>Network</translation>
+        <translation type="unfinished">Network</translation>
     </message>
     <message>
         <source>Name</source>
@@ -1750,14 +1596,6 @@
     <message>
         <source>Number of connections</source>
         <translation>Dami ng mga koneksyon</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Block chain</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>Memory Pool</translation>
     </message>
     <message>
         <source>Current number of transactions</source>
@@ -1798,10 +1636,6 @@
     <message>
         <source>Select a peer to view detailed information.</source>
         <translation>Pumili ng peer upang tingnan ang detalyadong impormasyon.</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Direksyon</translation>
     </message>
     <message>
         <source>Version</source>
@@ -1873,14 +1707,6 @@
         <translation>Ang tagal ng kasalukuyang natitirang ping.</translation>
     </message>
     <message>
-        <source>Ping Wait</source>
-        <translation>Ping Wait</translation>
-    </message>
-    <message>
-        <source>Min Ping</source>
-        <translation>Min Ping</translation>
-    </message>
-    <message>
         <source>Time Offset</source>
         <translation>Offset ng Oras</translation>
     </message>
@@ -1899,10 +1725,6 @@
     <message>
         <source>&amp;Network Traffic</source>
         <translation>Traffic ng Network</translation>
-    </message>
-    <message>
-        <source>Totals</source>
-        <translation>Mga kabuuan</translation>
     </message>
     <message>
         <source>In:</source>
@@ -1925,10 +1747,6 @@
         <translation>1 &amp;oras</translation>
     </message>
     <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;araw</translation>
-    </message>
-    <message>
         <source>1 &amp;week</source>
         <translation>1 &amp;linggo</translation>
     </message>
@@ -1941,8 +1759,29 @@
         <translation>Idiskonekta</translation>
     </message>
     <message>
+        <source>To</source>
+        <translation>Sa</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Mula sa</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Hindi</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>Ban para sa</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation type="unfinished">1 &amp;araw</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Kopyahin ang address</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
@@ -1981,30 +1820,14 @@
         <translation>Isinasagawa ang command gamit ang "%1" walet</translation>
     </message>
     <message>
-        <source>(node id: %1)</source>
-        <translation>(node id: %1)</translation>
-    </message>
-    <message>
         <source>via %1</source>
         <translation>sa pamamagitan ng %1</translation>
-    </message>
-    <message>
-        <source>never</source>
-        <translation>hindi kailanman</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Dumarating</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Papalabas</translation>
     </message>
     <message>
         <source>Unknown</source>
         <translation>Hindi alam</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
@@ -2044,8 +1867,8 @@
         <translation>Isang opsyonal na mensahe na naka-attach sa kahilingan sa pagbabayad at maaaring ipakita sa nagpadala.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation>&amp; Lumikha ng bagong address sa pagtanggap</translation>
+        <source>&amp;Request payment</source>
+        <translation>Humiling ng bayad</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2084,20 +1907,24 @@
         <translation>Alisin</translation>
     </message>
     <message>
-        <source>Copy URI</source>
+        <source>Copy &amp;URI</source>
         <translation>Kopyahin ang URI</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Kopyahin ang label</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Kopyahin ang address</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>Kopyahin ang mensahe</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Kopyahin ang label</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Kopyahin ang halaga</translation>
+        <source>Copy &amp;message</source>
+        <translation type="unfinished">&amp;Kopyahin ang mensahe</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Kopyahin ang halaga</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -2106,6 +1933,10 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Request payment to ...</source>
+        <translation>Humiling ng bayad sa ...</translation>
+    </message>
     <message>
         <source>Amount:</source>
         <translation>Halaga:</translation>
@@ -2147,7 +1978,7 @@
     </message>
     <message>
         <source>Label</source>
-        <translation>Label</translation>
+        <translation type="unfinished">Label</translation>
     </message>
     <message>
         <source>Message</source>
@@ -2198,7 +2029,7 @@
     </message>
     <message>
         <source>Bytes:</source>
-        <translation>Bytes:</translation>
+        <translation>Bytes: </translation>
     </message>
     <message>
         <source>Amount:</source>
@@ -2261,10 +2092,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
         <translation>Inirekumenda:</translation>
     </message>
     <message>
-        <source>Custom:</source>
-        <translation>Custom:</translation>
-    </message>
-    <message>
         <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
         <translation>(Ang smart fee ay hindi pa nasisimulan. Ito ay karaniwang tumatagal ng ilang mga block...)</translation>
     </message>
@@ -2279,10 +2106,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     <message>
         <source>Clear all fields of the form.</source>
         <translation>Limasin ang lahat ng mga patlang ng form.</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Dust:</translation>
     </message>
     <message>
         <source>Hide transaction fee settings</source>
@@ -2361,6 +2184,10 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
         <translation>Lumikha ng Unsigned</translation>
     </message>
     <message>
+        <source> from wallet '%1'</source>
+        <translation> mula sa walet '%1'</translation>
+    </message>
+    <message>
         <source>%1 to %2</source>
         <translation>%1 sa %2</translation>
     </message>
@@ -2371,6 +2198,10 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     <message>
         <source>Are you sure you want to send?</source>
         <translation>Sigurado ka bang nais mong magpadala?</translation>
+    </message>
+    <message>
+        <source>Create Unsigned</source>
+        <translation type="unfinished">Lumikha ng Unsigned</translation>
     </message>
     <message>
         <source>or</source>
@@ -2496,24 +2327,12 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
         <translation>Ang Bitcoin address kung saan ipapadala and bayad</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>I-paste ang address mula sa clipboard</translation>
     </message>
     <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
         <source>Remove this entry</source>
         <translation>Alisin ang entry na ito</translation>
-    </message>
-    <message>
-        <source>The amount to send in the selected unit</source>
-        <translation>The amount to send in the selected unit</translation>
     </message>
     <message>
         <source>The fee will be deducted from the amount being sent. The recipient will receive less bitcoins than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
@@ -2551,11 +2370,7 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
         <source>Pay To:</source>
         <translation>Magbayad Sa:</translation>
     </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Memo:</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>ShutdownWindow</name>
     <message>
@@ -2590,16 +2405,8 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
         <translation>Piliin ang dating ginamit na address</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>I-paste ang address mula sa clipboard</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -2640,14 +2447,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     <message>
         <source>The Bitcoin address the message was signed with</source>
         <translation>Ang Bitcoin address na pumirma sa mensahe</translation>
-    </message>
-    <message>
-        <source>The signed message to verify</source>
-        <translation>The signed message to verify</translation>
-    </message>
-    <message>
-        <source>The signature given when the message was signed</source>
-        <translation>The signature given when the message was signed</translation>
     </message>
     <message>
         <source>Verify the message to ensure it was signed with the specified Bitcoin address</source>
@@ -2720,11 +2519,7 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
 </context>
 <context>
     <name>TrafficGraphWidget</name>
-    <message>
-        <source>KB/s</source>
-        <translation>KB/s</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>TransactionDesc</name>
     <message numerus="yes">
@@ -2796,14 +2591,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
         <translation>sariling address</translation>
     </message>
     <message>
-        <source>watch-only</source>
-        <translation>watch-only</translation>
-    </message>
-    <message>
-        <source>label</source>
-        <translation>label</translation>
-    </message>
-    <message>
         <source>Credit</source>
         <translation>Pautang</translation>
     </message>
@@ -2814,10 +2601,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     <message>
         <source>not accepted</source>
         <translation>hindi tinanggap</translation>
-    </message>
-    <message>
-        <source>Debit</source>
-        <translation>Debit</translation>
     </message>
     <message>
         <source>Total debit</source>
@@ -2854,14 +2637,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     <message>
         <source>Transaction virtual size</source>
         <translation>Ang virtual size ng transaksyon</translation>
-    </message>
-    <message>
-        <source>Output index</source>
-        <translation>Output index</translation>
-    </message>
-    <message>
-        <source> (Certificate was not verified)</source>
-        <translation> (Certificate was not verified)</translation>
     </message>
     <message>
         <source>Merchant</source>
@@ -2919,7 +2694,7 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     </message>
     <message>
         <source>Label</source>
-        <translation>Label</translation>
+        <translation type="unfinished">Label</translation>
     </message>
     <message numerus="yes">
         <source>Open for %n more block(s)</source>
@@ -2976,14 +2751,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     <message>
         <source>Mined</source>
         <translation>Namina</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>watch-only</translation>
-    </message>
-    <message>
-        <source>(n/a)</source>
-        <translation>(n/a)</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -3053,10 +2820,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
         <translation>Ipinadala sa</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Sa iyong sarili</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Namina</translation>
     </message>
@@ -3073,60 +2836,52 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
         <translation>Minimum na halaga</translation>
     </message>
     <message>
-        <source>Abandon transaction</source>
-        <translation>Iwanan ang transaksyon</translation>
+        <source>A&amp;bandon transaction</source>
+        <translation type="unfinished">&amp;Iwanan ang transaksyon</translation>
     </message>
     <message>
-        <source>Increase transaction fee</source>
-        <translation>Dagdagan ang bayad sa transaksyon</translation>
+        <source>Increase transaction &amp;fee</source>
+        <translation type="unfinished">&amp;Dagdagan ang bayad sa transaksyon</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Kopyahin ang address</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Kopyahin ang address</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Kopyahin ang label</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Kopyahin ang label</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Kopyahin ang halaga</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Kopyahin ang halaga</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopyahin ang ID ng transaksyon</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Kopyahin ang ID ng transaksyon</translation>
     </message>
     <message>
-        <source>Copy raw transaction</source>
-        <translation>Kopyahin ang raw na transaksyon</translation>
+        <source>Copy &amp;raw transaction</source>
+        <translation type="unfinished">&amp;Kopyahin ang raw na transaksyon</translation>
     </message>
     <message>
-        <source>Copy full transaction details</source>
-        <translation>Kopyahin ang buong detalye ng transaksyon</translation>
+        <source>Copy full transaction &amp;details</source>
+        <translation type="unfinished">&amp;Kopyahin ang buong detalye ng transaksyon</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>I-edit ang label</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;I-edit ang label</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>Ipakita ang mga detalye ng transaksyon</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;Ipakita ang mga detalye ng transaksyon</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
         <translation>I-export ang Kasaysayan ng Transaksyon</translation>
     </message>
     <message>
-        <source>Comma separated file (*.csv)</source>
-        <translation>Comma separated file (*.csv)</translation>
-    </message>
-    <message>
         <source>Confirmed</source>
         <translation>Nakumpirma</translation>
-    </message>
-    <message>
-        <source>Watch-only</source>
-        <translation>Watch-only</translation>
     </message>
     <message>
         <source>Date</source>
@@ -3138,15 +2893,11 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     </message>
     <message>
         <source>Label</source>
-        <translation>Label</translation>
+        <translation type="unfinished">Label</translation>
     </message>
     <message>
         <source>Address</source>
-        <translation>Address</translation>
-    </message>
-    <message>
-        <source>ID</source>
-        <translation>ID</translation>
+        <translation type="unfinished">Address</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -3188,20 +2939,32 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     </message>
     <message>
         <source>Are you sure you wish to close the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
-        <translation>Are you sure you wish to close the wallet &lt;i&gt;%1&lt;/i&gt;?</translation>
+        <translation>Sigurado ka bang nais mong isara ang walet &lt;i&gt;%1&lt;/i&gt;?</translation>
     </message>
     <message>
         <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
         <translation>Ang pagsasara ng walet nang masyadong matagal ay maaaring magresulta sa pangangailangan ng pag-resync sa buong chain kung pinagana ang pruning.</translation>
     </message>
-    </context>
+    <message>
+        <source>Close all wallets</source>
+        <translation>Isarado ang lahat ng wallets</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to close all wallets?</source>
+        <translation>Sigurado ka bang nais mong isara ang lahat ng mga wallets?</translation>
+    </message>
+</context>
 <context>
     <name>WalletFrame</name>
     <message>
         <source>Create a new wallet</source>
         <translation>Gumawa ng Bagong Pitaka</translation>
     </message>
-</context>
+    <message>
+        <source>Error</source>
+        <translation>Kamalian</translation>
+    </message>
+    </context>
 <context>
     <name>WalletModel</name>
     <message>
@@ -3219,10 +2982,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     <message>
         <source>Do you want to increase the fee?</source>
         <translation>Nais mo bang dagdagan ang bayad?</translation>
-    </message>
-    <message>
-        <source>Do you want to draft a transaction with fee increase?</source>
-        <translation>Do you want to draft a transaction with fee increase?</translation>
     </message>
     <message>
         <source>Current fee:</source>
@@ -3272,10 +3031,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
         <translation>Angkatin ang datos sa kasalukuyang tab sa talaksan</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Kamalian</translation>
-    </message>
-    <message>
         <source>Backup Wallet</source>
         <translation>Backup na walet</translation>
     </message>
@@ -3290,6 +3045,10 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     <message>
         <source>There was an error trying to save the wallet data to %1.</source>
         <translation>May kamalian sa pag-impok ng datos ng walet sa %1.</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the wallet data to %1: %2</source>
+        <translation>May kamalian sa pag-impok ng datos ng walet sa %1: %2</translation>
     </message>
     <message>
         <source>Backup Successful</source>
@@ -3319,10 +3078,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
         <translation>Prune: ang huling pag-synchronize ng walet ay lampas sa pruned data. Kailangan mong mag-reindex (i-download muli ang buong blockchain sa kaso ng pruned node)</translation>
     </message>
     <message>
-        <source>Pruning blockstore...</source>
-        <translation>Pruning blockstore...</translation>
-    </message>
-    <message>
         <source>Unable to start HTTP server. See debug log for details.</source>
         <translation>Hindi masimulan ang HTTP server. Tingnan ang debug log para sa detalye.</translation>
     </message>
@@ -3333,10 +3088,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
         <translation>Hindi makakuha ng lock sa direktoryo ng data %s. Malamang na tumatakbo ang %s.</translation>
-    </message>
-    <message>
-        <source>Cannot provide specific connections and have addrman find outgoing connections at the same.</source>
-        <translation>Cannot provide specific connections and have addrman find outgoing connections at the same.</translation>
     </message>
     <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
@@ -3395,20 +3146,8 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
         <translation>Ang config setting para sa %s ay inilalapat lamang sa %s network kapag sa [%s] na seksyon.</translation>
     </message>
     <message>
-        <source>Copyright (C) %i-%i</source>
-        <translation>Copyright (C) %i-%i</translation>
-    </message>
-    <message>
         <source>Corrupted block database detected</source>
         <translation>Sirang block database ay napansin</translation>
-    </message>
-    <message>
-        <source>Could not find asmap file %s</source>
-        <translation>Could not find asmap file %s</translation>
-    </message>
-    <message>
-        <source>Could not parse asmap file %s</source>
-        <translation>Could not parse asmap file %s</translation>
     </message>
     <message>
         <source>Do you want to rebuild the block database now?</source>
@@ -3447,6 +3186,10 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
         <translation>Kamalian sa pagbukas ng block database</translation>
     </message>
     <message>
+        <source>Error</source>
+        <translation>Kamalian</translation>
+    </message>
+    <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
         <translation>Nabigong makinig sa anumang port. Gamitin ang -listen=0 kung nais mo ito.</translation>
     </message>
@@ -3461,14 +3204,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     <message>
         <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
         <translation>Hindi tamang o walang nahanap na genesis block. Maling datadir para sa network?</translation>
-    </message>
-    <message>
-        <source>Initialization sanity check failed. %s is shutting down.</source>
-        <translation>Initialization sanity check failed. %s is shutting down.</translation>
-    </message>
-    <message>
-        <source>Invalid P2P permission: '%s'</source>
-        <translation>Invalid P2P permission: '%s'</translation>
     </message>
     <message>
         <source>Invalid amount for -%s=&lt;amount&gt;: '%s'</source>
@@ -3487,12 +3222,10 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
         <translation>Ang tinukoy na direktoryo ng mga block "%s" ay hindi umiiral.</translation>
     </message>
     <message>
-        <source>Unknown address type '%s'</source>
-        <translation>Unknown address type '%s'</translation>
-    </message>
-    <message>
-        <source>Unknown change type '%s'</source>
-        <translation>Unknown change type '%s'</translation>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Ang tinukoy na R/W config file %s ay hindi umiiral
+</translation>
     </message>
     <message>
         <source>Upgrading txindex database</source>
@@ -3575,8 +3308,16 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
         <translation>Ang halaga ng transaksyon ay masyadong maliit na maipadala matapos na maibawas ang bayad</translation>
     </message>
     <message>
+        <source>This error could occur if this wallet was not shutdown cleanly and was last loaded using a build with a newer version of Berkeley DB. If so, please use the software that last loaded this wallet</source>
+        <translation>Ang error na ito ay maaaring lumabas kung ang wallet na ito ay hindi na i-shutdown na mabuti at last loaded gamit ang  build na may mas pinabagong bersyon ng Berkeley DB. Kung magkagayon, pakiusap ay gamitin ang software na ginamit na huli ng wallet na ito.</translation>
+    </message>
+    <message>
         <source>You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain</source>
         <translation>Kailangan mong muling itayo ang database gamit ang -reindex upang bumalik sa unpruned mode. I-do-download muli nito ang buong blockchain</translation>
+    </message>
+    <message>
+        <source>A fatal internal error occurred, see debug.log for details</source>
+        <translation>May naganap na isang nakamamatay na panloob na error, tingnan ang debug.log para sa detalye</translation>
     </message>
     <message>
         <source>Error reading from database, shutting down.</source>
@@ -3609,10 +3350,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     <message>
         <source>Need to specify a port with -whitebind: '%s'</source>
         <translation>Kailangang tukuyin ang port na may -whitebind: '%s'</translation>
-    </message>
-    <message>
-        <source>Prune mode is incompatible with -blockfilterindex.</source>
-        <translation>Prune mode is incompatible with -blockfilterindex.</translation>
     </message>
     <message>
         <source>Reducing -maxconnections from %d to %d, because of system limitations.</source>
@@ -3671,10 +3408,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     <message>
         <source>Unable to generate initial keys</source>
         <translation>Hindi makagawa ng paunang mga key</translation>
-    </message>
-    <message>
-        <source>Unknown -blockfilterindex value %s.</source>
-        <translation>Unknown -blockfilterindex value %s.</translation>
     </message>
     <message>
         <source>Verifying wallet(s)...</source>
@@ -3755,14 +3488,6 @@ Tandaan: Dahil ang bayad  ay kinakalkula sa bawat-byte na batayan, ang bayad ng 
     <message>
         <source>Loading wallet...</source>
         <translation>Ni-lo-load ang walet...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Hindi ma-downgrade ang walet</translation>
-    </message>
-    <message>
-        <source>Rescanning...</source>
-        <translation>Rescanning...</translation>
     </message>
     <message>
         <source>Done loading</source>

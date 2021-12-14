@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>လိပ်စာ သို့မဟုတ် ခေါင်းစဉ်တပ်ရန် Right-click နှိပ်ပါ။</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>လိပ်စာအသစ်ယူမယ်။</translation>
     </message>
@@ -20,6 +16,10 @@
     <message>
         <source>&amp;Copy</source>
         <translation>&amp;ကူးမယ်</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>ပိတ်မည်</translation>
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
@@ -44,6 +44,14 @@
     <message>
         <source>Choose the address to send coins to</source>
         <translation>လိပ်စာကိုပေးပို့ဖို့လိပ်စာရွေးချယ်ပါ</translation>
+    </message>
+    <message>
+        <source>Choose the address to receive coins with</source>
+        <translation>ဒင်္ဂါးများလက်ခံရယူမည့်လိပ်စာကို​​ရွေးပါ</translation>
+    </message>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation>​ရွေးပါ</translation>
     </message>
     <message>
         <source>Sending addresses</source>
@@ -94,6 +102,14 @@
         <translation>နောက်ဆုံးပေါ်</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;လိပ်စာပေးပို့နေသည်</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;လိပ်စာလက်ခံရရှိသည်</translation>
+    </message>
+    <message>
         <source>Zoom</source>
         <translation>ချဲ့</translation>
     </message>
@@ -121,6 +137,14 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;တံဆိပ်</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;လိပ်စာ</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -139,6 +163,14 @@
     <name>ModalOverlay</name>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>လိပ်စာ</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     </context>
 <context>
@@ -156,6 +188,13 @@
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">ပိတ်မည်</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -171,12 +210,28 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;အချက်အလက်</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;တံဆိပ်:</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">လိပ်စာ:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">တံဆိပ်:</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -191,9 +246,17 @@
     </context>
 <context>
     <name>SendCoinsDialog</name>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">​ရွေးပါ...</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;တံဆိပ်:</translation>
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -228,6 +291,10 @@
 <context>
     <name>TransactionView</name>
     <message>
+        <source>Other</source>
+        <translation>အခြား</translation>
+    </message>
+    <message>
         <source>Date</source>
         <translation>နေ့စွဲ</translation>
     </message>
@@ -252,6 +319,10 @@
     </context>
 <context>
     <name>WalletFrame</name>
+    <message>
+        <source>Error</source>
+        <translation>အမှား</translation>
+    </message>
     </context>
 <context>
     <name>WalletModel</name>
@@ -266,12 +337,12 @@
         <source>Export the data in the current tab to a file</source>
         <translation>လက်ရှိ tab မှာရှိတဲ့ဒေတာတွေကို ဖိုင်လ်မှာသိမ်းမယ်။</translation>
     </message>
+    </context>
+<context>
+    <name>bitcoin-core</name>
     <message>
         <source>Error</source>
         <translation>အမှား</translation>
     </message>
-    </context>
-<context>
-    <name>bitcoin-core</name>
     </context>
 </TS>

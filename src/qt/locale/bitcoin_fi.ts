@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Valitse hiiren oikealla painikkeella muokataksesi osoitetta tai nimikettä</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Luo uusi osoite</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Nämä ovat Bitcoin-osoitteesi maksujen lähettämistä varten. Tarkista aina määrä ja vastaanotto-osoite ennen kolikoiden lähettämistä.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Nämä ovat Bitcoin-osoitteesi maksujen vastaanottoa varten. Käytä painiketta "Luo uusi vastaanotto-osoite" vastaanottovälilehdessä luodaksesi uusia osoitteita.
-Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -340,16 +330,9 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>Lompakko:</translation>
     </message>
     <message>
-        <source>Click to disable network activity.</source>
-        <translation>Paina poistaaksesi verkkoyhteysilmaisin käytöstä.</translation>
-    </message>
-    <message>
         <source>Network activity disabled.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
         <translation>Verkkoyhteysmittari pois käytöstä</translation>
-    </message>
-    <message>
-        <source>Click to enable network activity again.</source>
-        <translation>Paina ottaaksesi verkkoyhteysilmaisin uudelleen käyttöön.</translation>
     </message>
     <message>
         <source>Syncing Headers (%1%)...</source>
@@ -438,10 +421,6 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
     <message>
         <source>&amp;Command-line options</source>
         <translation>&amp;Komentorivin valinnat</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network</source>
-        <translation><numerusform>%n aktiivinen yhteys Bitcoin-verkkoon</numerusform><numerusform>%n aktiivista yhteyttä Bitcoin-verkkoon</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -556,10 +535,6 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>Naamioi arvot Yhteenveto-välilehdessä</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation>oletuslompakko</translation>
-    </message>
-    <message>
         <source>No wallets available</source>
         <translation>Lompakoita ei ole saatavilla</translation>
     </message>
@@ -582,6 +557,31 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
     <message>
         <source>%1 client</source>
         <translation>%1-asiakas</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n active connection(s) to Bitcoin network.</source>
+        <extracomment>A substring of the tooltip.</extracomment>
+        <translation type="unfinished"><numerusform>%n aktiivinen yhteys Bitcoin-verkkoon</numerusform><numerusform>%n aktiivista yhteyttä Bitcoin-verkkoon</numerusform><numerusform>%n aktiivinen yhteys Bitcoin-verkkoon</numerusform><numerusform>%n aktiivista yhteyttä Bitcoin-verkkoon</numerusform></translation>
+    </message>
+    <message>
+        <source>Click for more actions.</source>
+        <extracomment>A substring of the tooltip. "More actions" are available via the context menu.</extracomment>
+        <translation type="unfinished">Klikkaa saadaksesi lisää toimintoja.</translation>
+    </message>
+    <message>
+        <source>Show Peers tab</source>
+        <extracomment>A context menu item. The "Peers tab" is an element of the "Node window".</extracomment>
+        <translation type="unfinished">Näytä Vertaiset-välilehti</translation>
+    </message>
+    <message>
+        <source>Disable network activity</source>
+        <extracomment>A context menu item.</extracomment>
+        <translation type="unfinished">Poista verkkotoiminta käytöstä</translation>
+    </message>
+    <message>
+        <source>Enable network activity</source>
+        <extracomment>A context menu item. The network activity was disabled previously.</extracomment>
+        <translation type="unfinished">Ota verkkotoiminta käyttöön</translation>
     </message>
     <message>
         <source>Connecting to peers...</source>
@@ -743,28 +743,32 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>Vahvistettu</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Kopioi osoite</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Kopioi nimike</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Kopioi määrä</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopioi siirron ID</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Kopioi osoite</translation>
     </message>
     <message>
-        <source>Lock unspent</source>
-        <translation>Lukitse käyttämättömät</translation>
+        <source>Copy &amp;label</source>
+        <translation>Kopioi &amp;nimike</translation>
     </message>
     <message>
-        <source>Unlock unspent</source>
-        <translation>Avaa käyttämättömien lukitus</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">Kopioi &amp;määrä</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation>Kopioi siirron &amp;ID</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;Lukitse käyttämättömät</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock unspent</source>
+        <translation type="unfinished">&amp;Avaa käyttämättömien lukitus</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -826,7 +830,13 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
 <context>
     <name>CreateWalletActivity</name>
     <message>
+        <source>Create Wallet</source>
+        <extracomment>Title of window indicating the progress of creation of a new wallet.</extracomment>
+        <translation>Luo lompakko</translation>
+    </message>
+    <message>
         <source>Creating Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the create wallet progress window which indicates to the user which wallet is currently being created.</extracomment>
         <translation>Luodaan lompakkoa &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
     <message>
@@ -896,7 +906,7 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <source>Compiled without sqlite support (required for descriptor wallets)</source>
         <translation>Koostettu ilman sqlite-tukea (vaaditaan descriptor-lompakoille)</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
@@ -1009,6 +1019,10 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>Kun valitset OK, %1 aloittaa lataamaan ja käsittelemään koko %4 lohkoketjua (%2GB) aloittaen ensimmäisestä siirrosta %3 jolloin %4 käynnistettiin ensimmäistä kertaa.</translation>
     </message>
     <message>
+        <source>Limit block chain storage to</source>
+        <translation type="unfinished">Rajoita lohkoketjun tallennus</translation>
+    </message>
+    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
         <translation>Tämän asetuksen peruuttaminen vaatii koko lohkoketjun uudelleenlataamisen. On nopeampaa ladata koko ketju ensin ja karsia se myöhemmin. Tämä myös poistaa käytöstä joitain edistyneitä toimintoja.</translation>
     </message>
@@ -1027,14 +1041,6 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
     <message>
         <source>Use a custom data directory:</source>
         <translation>Määritä oma kansio:</translation>
-    </message>
-    <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
-    <message>
-        <source>Discard blocks after verification, except most recent %1 GB (prune)</source>
-        <translation>Hävitä lohkot varmistuksen jälkeen, poislukien viimeiset %1 GB (karsinta)</translation>
     </message>
     <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
@@ -1073,6 +1079,13 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation><numerusform>(tarvitaan %n GB koko ketjua varten)</numerusform><numerusform>(tarvitaan %n GB koko ketjua varten)</numerusform></translation>
     </message>
 </context>
+<context>
+    <name>MempoolStats</name>
+    <message>
+        <source>N/A</source>
+        <translation>Ei saatavilla</translation>
+    </message>
+    </context>
 <context>
     <name>ModalOverlay</name>
     <message>
@@ -1133,16 +1146,29 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
     </message>
 </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Laatu</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Osoite</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     <message>
         <source>Open bitcoin URI</source>
         <translation>Avaa bitcoin URI</translation>
     </message>
     <message>
-        <source>URI:</source>
-        <translation>URI:</translation>
+        <source>Paste address from clipboard</source>
+        <translation>Liitä osoite leikepöydältä</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>OpenWalletActivity</name>
     <message>
@@ -1158,7 +1184,13 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>oletuslompakko</translation>
     </message>
     <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation>Avaa lompakko</translation>
+    </message>
+    <message>
         <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;...</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
         <translation>Avataan lompakkoa &lt;b&gt;%1&lt;/b&gt;...</translation>
     </message>
 </context>
@@ -1241,16 +1273,8 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>Karsi lohkovaraston kooksi</translation>
     </message>
     <message>
-        <source>GB</source>
-        <translation>Gt</translation>
-    </message>
-    <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
         <translation>Tämän asetuksen muuttaminen vaatii koko lohkoketjun uudelleenlataamista.</translation>
-    </message>
-    <message>
-        <source>MiB</source>
-        <translation>MiB</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1317,18 +1341,6 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>Vertaisten saavuttamiseen käytettävät verkkotyypit:</translation>
     </message>
     <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
-    </message>
-    <message>
         <source>&amp;Window</source>
         <translation>&amp;Ikkuna</translation>
     </message>
@@ -1385,10 +1397,6 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>Seuraavat komentorivillä tai asetustiedostossa annetut määritykset menevät tässä ikkunassa asetettujen asetusten edelle:</translation>
     </message>
     <message>
-        <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
-    </message>
-    <message>
         <source>&amp;Cancel</source>
         <translation>&amp;Peruuta</translation>
     </message>
@@ -1399,6 +1407,10 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
     <message>
         <source>none</source>
         <translation>ei mitään</translation>
+    </message>
+    <message>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin-ydin</translation>
     </message>
     <message>
         <source>Confirm options reset</source>
@@ -1658,20 +1670,16 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>'bitcoin://' ei ole kelvollinen URI. Käytä 'bitcoin:' sen sijaan.</translation>
     </message>
     <message>
-        <source>Cannot process payment request because BIP70 is not supported.</source>
-        <translation>Maksupyyntöä ei voida käsitellä, koska BIP70:tä ei tueta.</translation>
+        <source>Cannot process payment request because BIP70 is not supported.
+Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.
+If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
+        <translation type="unfinished">Maksupyyntöä ei voida käsitellä, koska BIP70 ei ole tuettu.
+BIP70:n laajalle levinneiden tietoturva-aukkojen vuoksi on erittäin suositeltavaa jättää huomiotta kaikki kauppiaan ohjeet lompakon vaihtamisesta.
+Jos saat tämän virheen, pyydä kauppiasta antamaan BIP21-yhteensopiva URI.</translation>
     </message>
     <message>
-        <source>Due to widespread security flaws in BIP70 it's strongly recommended that any merchant instructions to switch wallets be ignored.</source>
-        <translation>BIP70:n laajalle levinneiden tietoturvavirheiden vuoksi on erittäin suositeltavaa, että kaikki kauppiaan ohjeet lompakkojen vaihtamiseksi jätetään huomioimatta.</translation>
-    </message>
-    <message>
-        <source>If you are receiving this error you should request the merchant provide a BIP21 compatible URI.</source>
-        <translation>Tämän virheen saadessasi tulee sinun pyytää kauppiaalta BIP21 -yhteensopivaa URI-osoitetta.</translation>
-    </message>
-    <message>
-        <source>Invalid payment address %1</source>
-        <translation>Virheellinen maksuosoite %1</translation>
+        <source>Invalid payment address</source>
+        <translation>Virheellinen maksuosoite</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid Bitcoin address or malformed URI parameters.</source>
@@ -1693,10 +1701,6 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>Noodi/Palvelu</translation>
     </message>
     <message>
-        <source>NodeId</source>
-        <translation>NodeId</translation>
-    </message>
-    <message>
         <source>Ping</source>
         <translation>Vasteaika</translation>
     </message>
@@ -1708,7 +1712,11 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <source>Received</source>
         <translation>Vastaanotetut</translation>
     </message>
-</context>
+    <message>
+        <source>Type</source>
+        <translation>Tyyppi</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -1720,20 +1728,24 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>Syötä Bitcoin-osoite (esim. %1)</translation>
     </message>
     <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
+        <source>Unroutable</source>
+        <translation type="unfinished">Reitittämätön</translation>
     </message>
     <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
+        <source>Internal</source>
+        <translation type="unfinished">Sisäinen</translation>
     </message>
     <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
+        <source>Inbound</source>
+        <translation>Sisääntuleva</translation>
     </message>
     <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
+        <source>Manual</source>
+        <translation type="unfinished">Manuaali</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <translation type="unfinished">Osoitteen haku</translation>
     </message>
     <message>
         <source>None</source>
@@ -1742,10 +1754,6 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
     <message>
         <source>N/A</source>
         <translation>Ei saatavilla</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
     </message>
     <message numerus="yes">
         <source>%n second(s)</source>
@@ -1776,22 +1784,6 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation><numerusform>%n vuosi</numerusform><numerusform>%n vuotta</numerusform></translation>
     </message>
     <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
         <source>Error: Specified data directory "%1" does not exist.</source>
         <translation>Virhe: Annettua data-hakemistoa "%1" ei ole olemassa.</translation>
     </message>
@@ -1804,16 +1796,22 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>Virhe: %1</translation>
     </message>
     <message>
-        <source>Error initializing settings: %1</source>
-        <translation>Virhe alustaessa asetuksia: %1</translation>
-    </message>
-    <message>
         <source>%1 didn't yet exit safely...</source>
         <translation>%1 ei vielä sulkeutunut turvallisesti...</translation>
     </message>
     <message>
         <source>unknown</source>
         <translation>tuntematon</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Lko</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Rso</translation>
     </message>
 </context>
 <context>
@@ -1876,10 +1874,6 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
     <message>
         <source>To specify a non-default location of the data directory use the '%1' option.</source>
         <translation>Käytä '%1' -valitsinta määritelläksesi muun kuin oletuksen data-hakemistolle.</translation>
-    </message>
-    <message>
-        <source>Blocksdir</source>
-        <translation>Blocksdir</translation>
     </message>
     <message>
         <source>To specify a non-default location of the blocks directory use the '%1' option.</source>
@@ -1950,10 +1944,6 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>Valitse vertainen eriteltyjä tietoja varten.</translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation>Suunta</translation>
-    </message>
-    <message>
         <source>Version</source>
         <translation>Versio</translation>
     </message>
@@ -2006,12 +1996,36 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>Luvat</translation>
     </message>
     <message>
+        <source>The network protocol this peer is connected through: IPv4, IPv6, Onion, I2P, or CJDNS.</source>
+        <translation type="unfinished">Verkkoprotokolla, jonka kautta tämä vertaisverkko on yhdistetty: IPv4, IPv6, Onion, I2P tai CJDNS.</translation>
+    </message>
+    <message>
         <source>Services</source>
         <translation>Palvelut</translation>
     </message>
     <message>
+        <source>Whether the peer requested us to relay transactions.</source>
+        <translation type="unfinished">Pyytääkö vertainen meitä välittämään siirtotapahtumia.</translation>
+    </message>
+    <message>
+        <source>High Bandwidth</source>
+        <translation type="unfinished">Suuri kaistanleveys</translation>
+    </message>
+    <message>
         <source>Connection Time</source>
         <translation>Yhteysaika</translation>
+    </message>
+    <message>
+        <source>Elapsed time since a novel block passing initial validity checks was received from this peer.</source>
+        <translation type="unfinished">Kulunut aika siitä, kun tältä vertaiselta vastaanotettiin uusi lohko, joka on läpäissyt alustavat validiteettitarkistukset.</translation>
+    </message>
+    <message>
+        <source>Last Block</source>
+        <translation type="unfinished">Viimeisin lohko</translation>
+    </message>
+    <message>
+        <source>Last Tx</source>
+        <translation type="unfinished">Viimeisin transaktio</translation>
     </message>
     <message>
         <source>Last Send</source>
@@ -2058,10 +2072,6 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>&amp;Verkkoliikenne</translation>
     </message>
     <message>
-        <source>Totals</source>
-        <translation>Yhteensä</translation>
-    </message>
-    <message>
         <source>In:</source>
         <translation>Sisään:</translation>
     </message>
@@ -2082,10 +2092,6 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>1 &amp;tunti</translation>
     </message>
     <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;päivä</translation>
-    </message>
-    <message>
         <source>1 &amp;week</source>
         <translation>1 &amp;viikko</translation>
     </message>
@@ -2098,8 +2104,38 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>&amp;Katkaise yhteys</translation>
     </message>
     <message>
+        <source>Inbound: initiated by peer</source>
+        <translation type="unfinished">Saapuva: vertaisen aloittama</translation>
+    </message>
+    <message>
+        <source>To</source>
+        <translation>Saaja</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Lähettäjä</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation>Ei</translation>
+    </message>
+    <message>
+        <source>Ctrl+=</source>
+        <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
+        <translation type="unfinished">Ctrl+-</translation>
+    </message>
+    <message>
         <source>Ban for</source>
         <translation>Estä</translation>
+    </message>
+    <message>
+        <source>1 d&amp;ay</source>
+        <translation type="unfinished">1 &amp;päivä</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Kopioi osoite</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
@@ -2146,20 +2182,12 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>%1 kautta</translation>
     </message>
     <message>
-        <source>never</source>
-        <translation>ei koskaan</translation>
-    </message>
-    <message>
-        <source>Inbound</source>
-        <translation>Sisääntuleva</translation>
-    </message>
-    <message>
-        <source>Outbound</source>
-        <translation>Ulosmenevä</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation>Tuntematon</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation type="unfinished">Ei ikinä</translation>
     </message>
 </context>
 <context>
@@ -2201,8 +2229,8 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>Valinnainen viesti, joka on liitetty maksupyyntöön ja joka voidaan näyttää lähettäjälle.</translation>
     </message>
     <message>
-        <source>&amp;Create new receiving address</source>
-        <translation> &amp;Luo uusi vastaanotto-osoite</translation>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Vastaanota maksu</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
@@ -2241,20 +2269,24 @@ Allekirjoitus on mahdollista vain 'legacy'-tyyppisillä osoitteilla.</translatio
         <translation>Poista</translation>
     </message>
     <message>
-        <source>Copy URI</source>
-        <translation>Kopioi URI</translation>
+        <source>Copy &amp;URI</source>
+        <translation>Kopioi &amp;URI</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Kopioi nimike</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Kopioi osoite</translation>
     </message>
     <message>
-        <source>Copy message</source>
-        <translation>Kopioi viesti</translation>
+        <source>Copy &amp;label</source>
+        <translation>Kopioi &amp;nimike</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Kopioi määrä</translation>
+        <source>Copy &amp;message</source>
+        <translation type="unfinished">Kopioi &amp;viesti</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">Kopioi &amp;määrä</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -2542,10 +2574,6 @@ Huom: Koska siirtomaksu lasketaan tavujen mukaan, niin määrittelemällä 500 t
         <translation> lompakosta '%1'</translation>
     </message>
     <message>
-        <source>%1 to %2</source>
-        <translation>%1 to %2</translation>
-    </message>
-    <message>
         <source>Do you want to draft this transaction?</source>
         <translation>Haluatko laatia tämän siirron?</translation>
     </message>
@@ -2697,16 +2725,8 @@ Huom: Koska siirtomaksu lasketaan tavujen mukaan, niin määrittelemällä 500 t
         <translation>Bitcoin-osoite johon maksu lähetetään</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Liitä osoite leikepöydältä</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Remove this entry</source>
@@ -2791,16 +2811,8 @@ Huom: Koska siirtomaksu lasketaan tavujen mukaan, niin määrittelemällä 500 t
         <translation>Valitse aikaisemmin käytetty osoite</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Liitä osoite leikepöydältä</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -2921,11 +2933,7 @@ Huom: Koska siirtomaksu lasketaan tavujen mukaan, niin määrittelemällä 500 t
 </context>
 <context>
     <name>TrafficGraphWidget</name>
-    <message>
-        <source>KB/s</source>
-        <translation>KB/s</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>TransactionDesc</name>
     <message numerus="yes">
@@ -3254,10 +3262,6 @@ Huom: Koska siirtomaksu lasketaan tavujen mukaan, niin määrittelemällä 500 t
         <translation>Lähetetty vastaanottajalle</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Itsellesi</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Louhittu</translation>
     </message>
@@ -3274,44 +3278,44 @@ Huom: Koska siirtomaksu lasketaan tavujen mukaan, niin määrittelemällä 500 t
         <translation>Minimimäärä</translation>
     </message>
     <message>
-        <source>Abandon transaction</source>
-        <translation>Hylkää siirto</translation>
+        <source>A&amp;bandon transaction</source>
+        <translation type="unfinished">&amp;Hylkää siirto</translation>
     </message>
     <message>
-        <source>Increase transaction fee</source>
-        <translation>Kasvata siirtokulun määrää</translation>
+        <source>Increase transaction &amp;fee</source>
+        <translation type="unfinished">&amp;Kasvata siirtokulun määrää</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Kopioi osoite</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Kopioi osoite</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Kopioi nimike</translation>
+        <source>Copy &amp;label</source>
+        <translation>Kopioi &amp;nimike</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Kopioi määrä</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">Kopioi &amp;määrä</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Kopioi transaktion ID</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation>Kopioi transaktion &amp;ID</translation>
     </message>
     <message>
-        <source>Copy raw transaction</source>
-        <translation>Kopioi rahansiirron raakavedos</translation>
+        <source>Copy &amp;raw transaction</source>
+        <translation type="unfinished">&amp;Kopioi rahansiirron raakavedos</translation>
     </message>
     <message>
-        <source>Copy full transaction details</source>
-        <translation>Kopioi rahansiirron täydet yksityiskohdat</translation>
+        <source>Copy full transaction &amp;details</source>
+        <translation type="unfinished">&amp;Kopioi rahansiirron täydet yksityiskohdat</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>Muokkaa nimeä</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;Muokkaa nimeä</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>Näytä rahansiirron yksityiskohdat</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;Näytä rahansiirron yksityiskohdat</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
@@ -3344,10 +3348,6 @@ Huom: Koska siirtomaksu lasketaan tavujen mukaan, niin määrittelemällä 500 t
     <message>
         <source>Address</source>
         <translation>Osoite</translation>
-    </message>
-    <message>
-        <source>ID</source>
-        <translation>ID</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -3388,6 +3388,10 @@ Huom: Koska siirtomaksu lasketaan tavujen mukaan, niin määrittelemällä 500 t
         <translation>Sulje lompakko</translation>
     </message>
     <message>
+        <source>Are you sure you wish to close the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation>Haluatko varmasti sulkea lompakon &lt;i&gt;%1&lt;/i&gt;?</translation>
+    </message>
+    <message>
         <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
         <translation>Lompakon sulkeminen liian pitkäksi aikaa saattaa johtaa tarpeeseen synkronoida koko ketju uudelleen, mikäli karsinta on käytössä.</translation>
     </message>
@@ -3413,6 +3417,30 @@ Siirry osioon Tiedosto &gt; Avaa lompakko ladataksesi lompakon.
     <message>
         <source>Create a new wallet</source>
         <translation>Luo uusi lompakko</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Virhe</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
+        <translation>PSBT-ää ei voitu tulkita leikepöydältä (kelpaamaton base64)</translation>
+    </message>
+    <message>
+        <source>Load Transaction Data</source>
+        <translation>Lataa siirtotiedot</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (*.psbt)</source>
+        <translation>Osittain allekirjoitettu siirto (*.psbt)</translation>
+    </message>
+    <message>
+        <source>PSBT file must be smaller than 100 MiB</source>
+        <translation>PSBT-tiedoston tulee olla pienempi kuin 100 mebitavua</translation>
+    </message>
+    <message>
+        <source>Unable to decode PSBT</source>
+        <translation>PSBT-ää ei voitu tulkita</translation>
     </message>
 </context>
 <context>
@@ -3485,30 +3513,6 @@ Siirry osioon Tiedosto &gt; Avaa lompakko ladataksesi lompakon.
         <translation>Vie auki olevan välilehden tiedot tiedostoon</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Virhe</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT from clipboard (invalid base64)</source>
-        <translation>PBST-ää ei voitu tulkita leikepöydältä (kelpaamaton base64)</translation>
-    </message>
-    <message>
-        <source>Load Transaction Data</source>
-        <translation>Lataa siirtotiedot</translation>
-    </message>
-    <message>
-        <source>Partially Signed Transaction (*.psbt)</source>
-        <translation>Osittain allekirjoitettu siirto (*.pbst)</translation>
-    </message>
-    <message>
-        <source>PSBT file must be smaller than 100 MiB</source>
-        <translation>PBST-tiedoston tulee olla pienempi kuin 100 mebitavua</translation>
-    </message>
-    <message>
-        <source>Unable to decode PSBT</source>
-        <translation>PSBT-ää ei voitu tulkita</translation>
-    </message>
-    <message>
         <source>Backup Wallet</source>
         <translation>Varmuuskopioi lompakko</translation>
     </message>
@@ -3523,6 +3527,10 @@ Siirry osioon Tiedosto &gt; Avaa lompakko ladataksesi lompakon.
     <message>
         <source>There was an error trying to save the wallet data to %1.</source>
         <translation>Lompakon tallennuksessa tapahtui virhe %1.</translation>
+    </message>
+    <message>
+        <source>There was an error trying to save the wallet data to %1: %2</source>
+        <translation>Lompakon tallennuksessa tapahtui virhe %1: %2</translation>
     </message>
     <message>
         <source>Backup Successful</source>
@@ -3564,6 +3572,10 @@ Siirry osioon Tiedosto &gt; Avaa lompakko ladataksesi lompakon.
         <translation>%s kehittäjät</translation>
     </message>
     <message>
+        <source>Cannot downgrade wallet from version %i to version %i. Wallet version unchanged.</source>
+        <translation type="unfinished">Ei voida alentaa lompakon versiota versiosta %i versioon %i. Lompakon versio pysyy ennallaan.</translation>
+    </message>
+    <message>
         <source>Cannot obtain a lock on data directory %s. %s is probably already running.</source>
         <translation>Ei voida lukita data-hakemistoa %s. %s on luultavasti jo käynnissä.</translation>
     </message>
@@ -3574,6 +3586,10 @@ Siirry osioon Tiedosto &gt; Avaa lompakko ladataksesi lompakon.
     <message>
         <source>Error reading %s! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
         <translation>Virhe luettaessa %s! Avaimet luetttiin oikein, mutta rahansiirtotiedot tai osoitekirjan sisältö saattavat olla puutteellisia tai vääriä.</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">Virhe: Dump-tiedoston versio ei ole tuettu. Tämä bitcoin-lompakon versio tukee vain version 1 dump-tiedostoja. Annetun dump-tiedoston versio %s</translation>
     </message>
     <message>
         <source>More than one onion bind address is provided. Using %s for the automatically created Tor onion service.</source>
@@ -3660,6 +3676,14 @@ Siirry osioon Tiedosto &gt; Avaa lompakko ladataksesi lompakon.
         <translation>Haluatko uudelleenrakentaa lohkotietokannan nyt?</translation>
     </message>
     <message>
+        <source>Dump file %s does not exist.</source>
+        <translation type="unfinished">Dump-tiedostoa %s ei ole olemassa.</translation>
+    </message>
+    <message>
+        <source>Error creating %s</source>
+        <translation type="unfinished">Virhe luodessa %s</translation>
+    </message>
+    <message>
         <source>Error initializing block database</source>
         <translation>Virhe alustaessa lohkotietokantaa</translation>
     </message>
@@ -3690,6 +3714,26 @@ Siirry osioon Tiedosto &gt; Avaa lompakko ladataksesi lompakon.
     <message>
         <source>Error opening block database</source>
         <translation>Virhe avattaessa lohkoindeksiä</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation type="unfinished">Virhe seuraavan tietueen lukemisessa lompakon tietokannasta</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Virhe</translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation type="unfinished">Virhe: Tietokantaan ei voitu luoda kursoria.</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile checksum does not match. Computed %s, expected %s</source>
+        <translation type="unfinished">Virhe: Dump-tiedoston tarkistussumma ei täsmää. Laskettu %s, odotettu %s</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation type="unfinished">virhe: Puuttuva tarkistussumma</translation>
     </message>
     <message>
         <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
@@ -3758,6 +3802,16 @@ Siirry osioon Tiedosto &gt; Avaa lompakko ladataksesi lompakon.
     <message>
         <source>Specified blocks directory "%s" does not exist.</source>
         <translation>Määrättyä lohkohakemistoa "%s" ei ole olemassa.</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation>Määriteltyä R/W asetustiedostoa %s ei löytynyt
+</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation type="unfinished">Ei pystytä avaamaan %s kirjoittamista varten</translation>
     </message>
     <message>
         <source>Unknown address type '%s'</source>
@@ -3842,10 +3896,6 @@ Siirry osioon Tiedosto &gt; Avaa lompakko ladataksesi lompakon.
     <message>
         <source>%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring a backup.</source>
         <translation>%s on vioittunut. Yritä käyttää lompakkotyökalua bitcoin-wallet pelastaaksesi sen tai palauttaa varmuuskopio.</translation>
-    </message>
-    <message>
-        <source>Cannot upgrade a non HD split wallet without upgrading to support pre split keypool. Please use version 169900 or no version specified.</source>
-        <translation>Muuta kuin HD-jaettua lompakkoa ei voi päivittää ilman päivitystä tukemaan esijaettua avainvarastoa. Käytä versiota 169900 tai älä kaytä määritettyä versiota.</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s' (must be at least the minrelay fee of %s to prevent stuck transactions)</source>
@@ -4068,10 +4118,6 @@ Siirry osioon Tiedosto &gt; Avaa lompakko ladataksesi lompakon.
     <message>
         <source>Loading wallet...</source>
         <translation>Ladataan lompakkoa...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Et voi päivittää lompakkoasi vanhempaan versioon</translation>
     </message>
     <message>
         <source>Rescanning...</source>

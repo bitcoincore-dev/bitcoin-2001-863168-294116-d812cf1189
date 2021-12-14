@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Ünvana və ya etiketə düzəliş etmək üçün sağ düyməsi ilə klikləyin</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Yeni bir ünvan yaradın</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Bunlar ödənişləri göndərmək üçün Bitcoin ünvanlarınızdır. Pul göndərməkdən əvvəl həmişə miqdarı və göndəriləcək ünvanı yoxlayın.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation>Bunlar ödəniş almaq üçün Bitcoin ünvanlarınızdır. Yeni ünvan yaratmaq üçün alacaqlar vərəqində 'Yeni alacaq ünvan yarat' düyməsini istifadə edin.
-Daxil olma, yalnız 'qanuni' tipli ünvanlar ilə mümkündür.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -185,12 +175,24 @@ Daxil olma, yalnız 'qanuni' tipli ünvanlar ilə mümkündür.</translation>
         <source>Your wallet is now encrypted. </source>
         <translation>Cüzdanınız artıq şifrələnib.</translation>
     </message>
-    </context>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Xəbərdarlıq: Caps Lock düyməsi yanılıdır!</translation>
+    </message>
+</context>
 <context>
     <name>BanTableModel</name>
     </context>
 <context>
     <name>BitcoinGUI</name>
+    <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation type="unfinished">&amp;Şifrəli pulqabı...</translation>
+    </message>
+    <message>
+        <source>Open &amp;URI...</source>
+        <translation>&amp;URI aç...</translation>
+    </message>
     <message>
         <source>&amp;Settings</source>
         <translation>&amp;Tənzimləmələr</translation>
@@ -208,12 +210,28 @@ Daxil olma, yalnız 'qanuni' tipli ünvanlar ilə mümkündür.</translation>
         <translation>Məlumat</translation>
     </message>
     <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Göndərilən ünvanlar</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Alınan ünvanlar</translation>
+    </message>
+    <message>
         <source>Open a wallet</source>
         <translation>Bir pulqabı aç</translation>
     </message>
     </context>
 <context>
     <name>CoinControlDialog</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>&amp;Ünvanı kopyala</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>&amp;Etiketi kopyala</translation>
+    </message>
     <message>
         <source>Copy quantity</source>
         <translation>Miqdarı kopyalayın</translation>
@@ -232,9 +250,21 @@ Daxil olma, yalnız 'qanuni' tipli ünvanlar ilə mümkündür.</translation>
     </context>
 <context>
     <name>CreateWalletDialog</name>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation>Şifrəli pulqabı</translation>
+    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation type="unfinished">&amp;Etiket</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;Ünvan</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -256,6 +286,14 @@ Daxil olma, yalnız 'qanuni' tipli ünvanlar ilə mümkündür.</translation>
 <context>
     <name>ModalOverlay</name>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Ünvan</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     </context>
@@ -290,6 +328,13 @@ Daxil olma, yalnız 'qanuni' tipli ünvanlar ilə mümkündür.</translation>
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Bağla</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -306,15 +351,48 @@ Daxil olma, yalnız 'qanuni' tipli ünvanlar ilə mümkündür.</translation>
 <context>
     <name>RPCConsole</name>
     <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Məlumat</translation>
+    </message>
+    <message>
         <source>&amp;Reset</source>
         <translation>&amp;Sıfırla</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation>&amp;Ünvanı kopyala</translation>
     </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etiket:</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>&amp;Ünvanı kopyala</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>&amp;Etiketi kopyala</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">Ünvan:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">Etiket:</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">&amp;Ünvanı kopyala</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -330,6 +408,14 @@ Daxil olma, yalnız 'qanuni' tipli ünvanlar ilə mümkündür.</translation>
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Insufficient funds!</source>
+        <translation>Yetərsiz balans</translation>
+    </message>
+    <message>
+        <source>Choose...</source>
+        <translation type="unfinished">Seç...</translation>
+    </message>
+    <message>
         <source>Copy quantity</source>
         <translation>Miqdarı kopyalayın</translation>
     </message>
@@ -344,6 +430,10 @@ Daxil olma, yalnız 'qanuni' tipli ünvanlar ilə mümkündür.</translation>
 </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Etiket:</translation>
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -378,6 +468,14 @@ Daxil olma, yalnız 'qanuni' tipli ünvanlar ilə mümkündür.</translation>
         <translation>Başqa</translation>
     </message>
     <message>
+        <source>&amp;Copy address</source>
+        <translation>&amp;Ünvanı kopyala</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation>&amp;Etiketi kopyala</translation>
+    </message>
+    <message>
         <source>Comma separated file (*.csv)</source>
         <translation>Vergüllə ayrılmış fayl (*.csv)</translation>
     </message>
@@ -402,6 +500,10 @@ Daxil olma, yalnız 'qanuni' tipli ünvanlar ilə mümkündür.</translation>
     </context>
 <context>
     <name>WalletFrame</name>
+    <message>
+        <source>Error</source>
+        <translation>Xəta</translation>
+    </message>
     </context>
 <context>
     <name>WalletModel</name>
@@ -416,13 +518,13 @@ Daxil olma, yalnız 'qanuni' tipli ünvanlar ilə mümkündür.</translation>
         <source>Export the data in the current tab to a file</source>
         <translation>Hazırki vərəqdəki verilənləri fayla ixrac edin</translation>
     </message>
+    </context>
+<context>
+    <name>bitcoin-core</name>
     <message>
         <source>Error</source>
         <translation>Xəta</translation>
     </message>
-    </context>
-<context>
-    <name>bitcoin-core</name>
     <message>
         <source>Replaying blocks...</source>
         <translation>Bloklar yenidən səsləndirilir...</translation>
@@ -450,10 +552,6 @@ Daxil olma, yalnız 'qanuni' tipli ünvanlar ilə mümkündür.</translation>
     <message>
         <source>Loading wallet...</source>
         <translation>Pulqabı yüklənir...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Pulqabı əvvəlki versiyaya keçirilə bilmir</translation>
     </message>
     <message>
         <source>Rescanning...</source>

@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Manzil yoki yorliqni tahrirlash uchun oʻng tugmani bosing</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Yangi manzil yaratish</translation>
     </message>
@@ -52,6 +48,10 @@
     </context>
 <context>
     <name>CoinControlDialog</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>&amp;Manzillarni nusxalash</translation>
+    </message>
     </context>
 <context>
     <name>CreateWalletActivity</name>
@@ -61,6 +61,14 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Label</source>
+        <translation>&amp;Yorliq</translation>
+    </message>
+    <message>
+        <source>&amp;Address</source>
+        <translation>&amp;Manzil</translation>
+    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -75,6 +83,14 @@
     <name>ModalOverlay</name>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Manzil</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
     </context>
 <context>
@@ -88,6 +104,13 @@
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Yopish</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -103,12 +126,37 @@
     </context>
 <context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation>&amp;Manzillarni nusxalash</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Yorliq:</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>&amp;Manzillarni nusxalash</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">Manzil:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation type="unfinished">Yorliq:</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation>&amp;Manzillarni nusxalash</translation>
+    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
@@ -122,6 +170,10 @@
     </context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Yorliq:</translation>
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>
@@ -147,6 +199,10 @@
     </context>
 <context>
     <name>TransactionView</name>
+    <message>
+        <source>&amp;Copy address</source>
+        <translation>&amp;Manzillarni nusxalash</translation>
+    </message>
     <message>
         <source>Label</source>
         <translation>Yorliq</translation>

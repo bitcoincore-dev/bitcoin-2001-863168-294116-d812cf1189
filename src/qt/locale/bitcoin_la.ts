@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation>Right-click to edit address or label</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation>Crea novam inscriptionem</translation>
     </message>
@@ -230,6 +226,10 @@
         <translation>&amp;De %1</translation>
     </message>
     <message>
+        <source>Show information about %1</source>
+        <translation>Monstra informationem de %1</translation>
+    </message>
+    <message>
         <source>About &amp;Qt</source>
         <translation>Informatio de &amp;Qt</translation>
     </message>
@@ -264,6 +264,10 @@
     <message>
         <source>Create a new wallet</source>
         <translation>Creare novum cassidilium</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Cassidile:</translation>
     </message>
     <message>
         <source>Reindexing blocks on disk...</source>
@@ -334,6 +338,10 @@
         <translation>Optiones mandati initiantis</translation>
     </message>
     <message>
+        <source>Indexing blocks on disk...</source>
+        <translation>Creans indicem frustorum in disco...</translation>
+    </message>
+    <message>
         <source>%1 behind</source>
         <translation>%1 post</translation>
     </message>
@@ -346,10 +354,6 @@
         <translation>Transactiones post hoc nondum visibiles erunt.</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Error</translation>
-    </message>
-    <message>
         <source>Warning</source>
         <translation>Monitio</translation>
     </message>
@@ -360,6 +364,10 @@
     <message>
         <source>Up to date</source>
         <translation>Recentissimo</translation>
+    </message>
+    <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>Aperi terminalem debug et diagnosticalem</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -385,7 +393,11 @@
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Cassidile &lt;b&gt;cifratum&lt;/b&gt; est et iam nunc &lt;b&gt;seratum&lt;/b&gt;</translation>
     </message>
-    </context>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>Error fatalis accidit.  %1 nondum pergere tute potest, et exibit.</translation>
+    </message>
+</context>
 <context>
     <name>CoinControlDialog</name>
     <message>
@@ -409,20 +421,24 @@
         <translation>Confirmatum</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Copia inscriptionem</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation>Copia titulum</translation>
-    </message>
-    <message>
         <source>Copy amount</source>
         <translation>Copia quantitatem</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Copia transactionis ID</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copia inscriptionem</translation>
+    </message>
+    <message>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Copia titulum</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Copia quantitatem</translation>
+    </message>
+    <message>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Copia transactionis ID</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -437,6 +453,10 @@
     <message>
         <source>Wallet</source>
         <translation>Cassidile</translation>
+    </message>
+    <message>
+        <source>Encrypt Wallet</source>
+        <translation type="unfinished">Cifra Cassidile</translation>
     </message>
     </context>
 <context>
@@ -488,20 +508,19 @@
         <translation>versio</translation>
     </message>
     <message>
+        <source>About %1</source>
+        <translation type="unfinished">De %1</translation>
+    </message>
+    <message>
         <source>Command-line options</source>
         <translation>Optiones mandati initiantis</translation>
     </message>
 </context>
 <context>
     <name>Intro</name>
-    <message>
-        <source>Bitcoin</source>
-        <translation>Bitcoin</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Error</translation>
-    </message>
+    </context>
+<context>
+    <name>MempoolStats</name>
     </context>
 <context>
     <name>ModalOverlay</name>
@@ -510,12 +529,33 @@
         <translation>Schema</translation>
     </message>
     <message>
+        <source>Unknown...</source>
+        <translation type="unfinished">ignotum...</translation>
+    </message>
+    <message>
         <source>Last block time</source>
         <translation>Hora postremi frusti</translation>
     </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>Typus</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Inscriptio</translation>
+    </message>
+</context>
+<context>
     <name>OpenURIDialog</name>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Glutina inscriptionem ex latibulo</translation>
+    </message>
     </context>
 <context>
     <name>OpenWalletActivity</name>
@@ -599,10 +639,6 @@
         <translation>Selige praedefinitam unitam subdivisionis monstrare in interfacie et quando nummos mittere</translation>
     </message>
     <message>
-        <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
-    </message>
-    <message>
         <source>&amp;Cancel</source>
         <translation>&amp;Cancella</translation>
     </message>
@@ -611,12 +647,12 @@
         <translation>praedefinitum</translation>
     </message>
     <message>
-        <source>Confirm options reset</source>
-        <translation>Confirma optionum reconstituere</translation>
+        <source>Bitcoin Core</source>
+        <translation>Bitcoin Nucleus</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Error</translation>
+        <source>Confirm options reset</source>
+        <translation>Confirma optionum reconstituere</translation>
     </message>
     <message>
         <source>The supplied proxy address is invalid.</source>
@@ -644,6 +680,13 @@
     </context>
 <context>
     <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Claude</translation>
+    </message>
+    </context>
+<context>
+    <name>PairingPage</name>
     </context>
 <context>
     <name>PaymentServer</name>
@@ -658,6 +701,10 @@
     </context>
 <context>
     <name>PeerTableModel</name>
+    <message>
+        <source>Type</source>
+        <translation>Typus</translation>
+    </message>
     </context>
 <context>
     <name>QObject</name>
@@ -666,12 +713,18 @@
         <translation>Quantitas</translation>
     </message>
     <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
-    <message>
         <source>unknown</source>
         <translation>ignotum</translation>
+    </message>
+    <message>
+        <source>Blk</source>
+        <comment>Tx Watch: Block type abbreviation</comment>
+        <translation>Fsm</translation>
+    </message>
+    <message>
+        <source>Txn</source>
+        <comment>Tx Watch: Transaction type abbreviation</comment>
+        <translation>Tso</translation>
     </message>
 </context>
 <context>
@@ -691,10 +744,6 @@
     </context>
 <context>
     <name>RPCConsole</name>
-    <message>
-        <source>N/A</source>
-        <translation>N/A</translation>
-    </message>
     <message>
         <source>Client version</source>
         <translation>Versio clientis</translation>
@@ -720,6 +769,10 @@
         <translation>Catena frustorum</translation>
     </message>
     <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Cassidile: </translation>
+    </message>
+    <message>
         <source>Last block time</source>
         <translation>Hora postremi frusti</translation>
     </message>
@@ -739,6 +792,23 @@
         <source>Clear console</source>
         <translation>Vacuefac terminale</translation>
     </message>
+    <message>
+        <source>To</source>
+        <translation>Ad</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>Ab</translation>
+    </message>
+    <message>
+        <source>&amp;Copy address</source>
+        <extracomment>Context menu action to copy the address of a peer</extracomment>
+        <translation type="unfinished">&amp;Copia inscriptionem</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">ignotum</translation>
+    </message>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
@@ -755,12 +825,16 @@
         <translation>Nuntius:</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Copia titulum</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copia inscriptionem</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Copia quantitatem</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Copia titulum</translation>
+    </message>
+    <message>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Copia quantitatem</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -769,6 +843,10 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">Inscriptio:</translation>
+    </message>
     <message>
         <source>Amount:</source>
         <translation>Quantitas:</translation>
@@ -780,6 +858,10 @@
     <message>
         <source>Message:</source>
         <translation>Nuntius:</translation>
+    </message>
+    <message>
+        <source>Wallet:</source>
+        <translation type="unfinished">Cassidile:</translation>
     </message>
     <message>
         <source>Copy &amp;Address</source>
@@ -810,6 +892,10 @@
     <message>
         <source>Send Coins</source>
         <translation>Mitte Nummos</translation>
+    </message>
+    <message>
+        <source>Inputs...</source>
+        <translation type="unfinished">Lectenda...</translation>
     </message>
     <message>
         <source>Insufficient funds!</source>
@@ -864,6 +950,10 @@
         <translation>Confirma mittendum nummorum</translation>
     </message>
     <message>
+        <source>Send</source>
+        <translation type="unfinished">Mitte</translation>
+    </message>
+    <message>
         <source>The amount to pay must be larger than 0.</source>
         <translation>Oportet quantitatem ad pensandum maiorem quam 0 esse.</translation>
     </message>
@@ -895,16 +985,8 @@
         <translation>&amp;Titulus:</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Glutina inscriptionem ex latibulo</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Message:</source>
@@ -929,16 +1011,8 @@
         <translation>&amp;Signa Nuntium</translation>
     </message>
     <message>
-        <source>Alt+A</source>
-        <translation>Alt+A</translation>
-    </message>
-    <message>
         <source>Paste address from clipboard</source>
         <translation>Glutina inscriptionem ex latibulo</translation>
-    </message>
-    <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
@@ -1053,10 +1127,6 @@
     <message>
         <source>%1 confirmations</source>
         <translation>%1 confirmationes</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Status</translation>
     </message>
     <message>
         <source>Date</source>
@@ -1201,10 +1271,6 @@
         <translation>Fossa</translation>
     </message>
     <message>
-        <source>(n/a)</source>
-        <translation>(n/a)</translation>
-    </message>
-    <message>
         <source>(no label)</source>
         <translation>(nullus titulus)</translation>
     </message>
@@ -1264,10 +1330,6 @@
         <translation>Missum ad</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation>Ad te ipsum</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation>Fossa</translation>
     </message>
@@ -1280,28 +1342,28 @@
         <translation>Quantitas minima</translation>
     </message>
     <message>
-        <source>Copy address</source>
-        <translation>Copia inscriptionem</translation>
+        <source>&amp;Copy address</source>
+        <translation type="unfinished">&amp;Copia inscriptionem</translation>
     </message>
     <message>
-        <source>Copy label</source>
-        <translation>Copia titulum</translation>
+        <source>Copy &amp;label</source>
+        <translation type="unfinished">&amp;Copia titulum</translation>
     </message>
     <message>
-        <source>Copy amount</source>
-        <translation>Copia quantitatem</translation>
+        <source>Copy &amp;amount</source>
+        <translation type="unfinished">&amp;Copia quantitatem</translation>
     </message>
     <message>
-        <source>Copy transaction ID</source>
-        <translation>Copia transactionis ID</translation>
+        <source>Copy transaction &amp;ID</source>
+        <translation type="unfinished">&amp;Copia transactionis ID</translation>
     </message>
     <message>
-        <source>Edit label</source>
-        <translation>Muta titulum</translation>
+        <source>&amp;Edit label</source>
+        <translation type="unfinished">&amp;Muta titulum</translation>
     </message>
     <message>
-        <source>Show transaction details</source>
-        <translation>Monstra particularia transactionis</translation>
+        <source>&amp;Show transaction details</source>
+        <translation type="unfinished">&amp;Monstra particularia transactionis</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
@@ -1328,10 +1390,6 @@
         <translation>Inscriptio</translation>
     </message>
     <message>
-        <source>ID</source>
-        <translation>ID</translation>
-    </message>
-    <message>
         <source>Range:</source>
         <translation>Intervallum:</translation>
     </message>
@@ -1352,7 +1410,7 @@
         <source>Create a new wallet</source>
         <translation>Creare novum casidillium</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletModel</name>
     <message>
@@ -1371,10 +1429,6 @@
         <translation>Exporta data in hac tabella in plicam</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>Error</translation>
-    </message>
-    <message>
         <source>Backup Wallet</source>
         <translation>Conserva cassidile</translation>
     </message>
@@ -1390,12 +1444,20 @@
         <source>Backup Successful</source>
         <translation>Successum in conservando</translation>
     </message>
-    </context>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancella</translation>
+    </message>
+</context>
 <context>
     <name>bitcoin-core</name>
     <message>
         <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
         <translation>Hoc est prae-dimittum experimentala aedes - utere eo periculo tuo proprio - nolite utere fodendo vel applicationibus mercatoriis</translation>
+    </message>
+    <message>
+        <source>Cannot resolve -%s address: '%s'</source>
+        <translation>Non posse resolvere -%s inscriptionem: '%s'</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
@@ -1426,6 +1488,10 @@
         <translation>Non potuisse auscultare in ulla porta.  Utere -listen=0 si hoc vis.</translation>
     </message>
     <message>
+        <source>Loading P2P addresses...</source>
+        <translation>Legens p2p inscriptiones...</translation>
+    </message>
+    <message>
         <source>Not enough file descriptors available.</source>
         <translation>Inopia descriptorum plicarum.</translation>
     </message>
@@ -1446,6 +1512,10 @@
         <translation>Transactio nimis magna</translation>
     </message>
     <message>
+        <source>Verifying wallet(s)...</source>
+        <translation>Verificante cassidilem...</translation>
+    </message>
+    <message>
         <source>Unknown network specified in -onlynet: '%s'</source>
         <translation>Ignotum rete specificatum in -onlynet: '%s'</translation>
     </message>
@@ -1460,10 +1530,6 @@
     <message>
         <source>Loading wallet...</source>
         <translation>Legens cassidile...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Non posse cassidile regredi</translation>
     </message>
     <message>
         <source>Rescanning...</source>
