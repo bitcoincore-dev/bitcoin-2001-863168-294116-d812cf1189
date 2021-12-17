@@ -785,7 +785,7 @@ void BitcoinGUI::createTrayIconMenu()
     }
 
     // Note: On macOS, the Dock icon's menu already has Show / Hide action.
-    QAction* show_hide_action = trayIconMenu->addAction(tr("Show / &Hide"), this, &BitcoinGUI::toggleHidden);
+    QAction* show_hide_action = trayIconMenu->addAction(QString(), this, &BitcoinGUI::toggleHidden);
     show_hide_action->setStatusTip(tr("Hide the main window"));
     trayIconMenu->addSeparator();
 #endif // Q_OS_MAC
@@ -810,6 +810,17 @@ void BitcoinGUI::createTrayIconMenu()
             toggleHidden();
         }
     });
+
+    // Using QSystemTrayIcon::Context is not reliable.
+    // See https://bugreports.qt.io/browse/QTBUG-91697
+    connect(
+        trayIconMenu.get(), &QMenu::aboutToShow,
+        [this, show_hide_action] {
+            show_hide_action->setText(
+                (!isHidden() && !isMinimized() && !GUIUtil::isObscured(this)) ?
+                    tr("&Hide") :
+                    tr("S&how"));
+        });
 #else
     // Note: On macOS, the Dock icon is used to provide the tray's functionality.
     MacDockIconHandler* dockIconHandler = MacDockIconHandler::instance();
