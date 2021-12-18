@@ -28,6 +28,7 @@ bool dbwrapper_SanityCheck()
             leveldb::kMajorVersion, leveldb::kMinorVersion,
             leveldb_major_version(), leveldb_minor_version()
         )));
+        InitError(Untranslated("Database sanity check failure. Aborting."));
         return false;
     }
 

@@ -1081,7 +1081,7 @@ bool AppInitSanityChecks()
 
     init::SetGlobals();
 
-    if (!init::SanityChecks()) {
+    if (!(dbwrapper_SanityCheck() && init::SanityChecks())) {
         return InitError(strprintf(_("Initialization sanity check failed. %s is shutting down."), PACKAGE_NAME));
     }
 

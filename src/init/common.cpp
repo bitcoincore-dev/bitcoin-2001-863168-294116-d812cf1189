@@ -9,7 +9,6 @@
 #include <clientversion.h>
 #include <compat/sanity.h>
 #include <crypto/sha256.h>
-#include <dbwrapper.h>
 #include <key.h>
 #include <logging.h>
 #include <node/ui_interface.h>
@@ -41,10 +40,6 @@ void UnsetGlobals()
 
 bool SanityChecks()
 {
-    if (!dbwrapper_SanityCheck()) {
-        return InitError(Untranslated("Database sanity check failure. Aborting."));
-    }
-
     if (!ECC_InitSanityCheck()) {
         return InitError(Untranslated("Elliptic curve cryptography sanity check failure. Aborting."));
     }
