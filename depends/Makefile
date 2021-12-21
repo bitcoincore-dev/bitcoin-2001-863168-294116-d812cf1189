@@ -208,13 +208,19 @@ $(host_prefix)/.stamp_$(final_build_id): $(native_packages) $(packages)
 $(host_prefix)/share/config.site : config.site.in $(host_prefix)/.stamp_$(final_build_id)
 	@mkdir -p $(@D)
 	sed -e 's|@HOST@|$(host)|' \
+            -e 's|@CC_FOR_BUILD@|$(build_CC)|' \
+            -e 's|@CXX_FOR_BUILD@|$(build_CXX)|' \
+            -e 's|@AR_FOR_BUILD@|$(build_AR)|' \
+            -e 's|@RANLIB_FOR_BUILD@|$(build_RANLIB)|' \
+            -e 's|@NM_FOR_BUILD@|$(build_NM)|' \
+            -e 's|@STRIP_FOR_BUILD@|$(build_STRIP)|' \
+            -e 's|@build_os@|$(build_os)|' \
             -e 's|@CC@|$(host_CC)|' \
             -e 's|@CXX@|$(host_CXX)|' \
             -e 's|@AR@|$(host_AR)|' \
             -e 's|@RANLIB@|$(host_RANLIB)|' \
             -e 's|@NM@|$(host_NM)|' \
             -e 's|@STRIP@|$(host_STRIP)|' \
-            -e 's|@build_os@|$(build_os)|' \
             -e 's|@host_os@|$(host_os)|' \
             -e 's|@CFLAGS@|$(strip $(host_CFLAGS) $(host_$(release_type)_CFLAGS))|' \
             -e 's|@CXXFLAGS@|$(strip $(host_CXXFLAGS) $(host_$(release_type)_CXXFLAGS))|' \
