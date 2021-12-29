@@ -33,7 +33,9 @@ struct MinerTestingSetup : public TestingSetup {
     bool TestSequenceLocks(const CTransaction& tx, int flags) EXCLUSIVE_LOCKS_REQUIRED(::cs_main, m_node.mempool->cs)
     {
         CCoinsViewMemPool view_mempool(&m_node.chainman->ActiveChainstate().CoinsTip(), *m_node.mempool);
-        return CheckSequenceLocks(m_node.chainman->ActiveChain().Tip(), view_mempool, tx, flags);
+        CBlockIndex* tip = m_node.chainman->ActiveChain().Tip();
+        LockPoints lp{};
+        return CalculateLockPoints(tip, view_mempool, tx, flags, &lp) && CheckSequenceLocks(tip, &lp);
     }
     BlockAssembler AssemblerForTest(const CChainParams& params);
 };
