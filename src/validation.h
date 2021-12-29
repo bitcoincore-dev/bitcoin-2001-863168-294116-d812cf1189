@@ -268,6 +268,28 @@ PackageMempoolAcceptResult ProcessNewPackage(CChainState& active_chainstate, CTx
 bool CheckFinalTx(const CBlockIndex* active_chain_tip, const CTransaction &tx, int flags = -1) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
 /**
+ * Calculate LockPoints required to check if transaction will be BIP68 final in the next block to be created on top of tip.
+ * @param[in]   tip             Chain tip to check tx sequence locks against. For example,
+ *                              the tip of the current active chain.
+ * @param[in]   coins_view      Any CCoinsView that provides access to the relevant coins for
+ *                              checking sequence locks. For example, it can be a CCoinsViewCache
+ *                              that isn't connected to anything but contains all the relevant
+ *                              coins, or a CCoinsViewMemPool that is connected to the
+ *                              mempool and chainstate UTXO set. In the latter case, the caller is
+ *                              responsible for holding the appropriate locks to ensure that
+ *                              calls to GetCoin() return correct coins.
+ * @param[out]  lp              Relative locktime constraints (BIP68).
+ *
+ * See consensus/consensus.h for flag definitions.
+ */
+bool CalculateLockPoints(
+    CBlockIndex* tip,
+    const CCoinsView& coins_view,
+    const CTransaction& tx,
+    int flags,
+    LockPoints* lp);
+
+/**
  * Check if transaction will be BIP68 final in the next block to be created on top of tip.
  * @param[in]   tip             Chain tip to check tx sequence locks against. For example,
  *                              the tip of the current active chain.
