@@ -211,6 +211,70 @@ bool CheckFinalTx(const CBlockIndex* active_chain_tip, const CTransaction &tx, i
     return IsFinalTx(tx, nBlockHeight, nBlockTime);
 }
 
+bool CalculateLockPoints(
+    CBlockIndex* tip,
+    const CCoinsView& coins_view,
+    const CTransaction& tx,
+    int flags,
+    LockPoints* lp)
+{
+    assert(tip);
+    assert(lp);
+
+    CBlockIndex index;
+    index.pprev = tip;
+    // CheckSequenceLocks() uses active_chainstate.m_chain.Height()+1 to evaluate
+    // height based locks because when SequenceLocks() is called within
+    // ConnectBlock(), the height of the block *being*
+    // evaluated is what is used.
+    // Thus if we want to know if a transaction can be part of the
+    // *next* block, we need to use one more than active_chainstate.m_chain.Height()
+    index.nHeight = tip->nHeight + 1;
+
+    std::vector<int> prevheights;
+    prevheights.resize(tx.vin.size());
+    for (size_t txinIndex = 0; txinIndex < tx.vin.size(); ++txinIndex) {
+        const CTxIn& txin = tx.vin[txinIndex];
+        Coin coin;
+        if (!coins_view.GetCoin(txin.prevout, coin)) {
+            return error("%s: Missing input", __func__);
+        }
+        if (coin.nHeight == MEMPOOL_HEIGHT) {
+            // Assume all mempool transaction confirm in the next block
+            prevheights[txinIndex] = tip->nHeight + 1;
+        } else {
+            prevheights[txinIndex] = coin.nHeight;
+        }
+    }
+
+    const std::pair<int, int64_t> lock_pair{CalculateSequenceLocks(tx, flags, prevheights, index)};
+    lp->height = lock_pair.first;
+    lp->time = lock_pair.second;
+    // Also store the hash of the block with the highest height of
+    // all the blocks which have sequence locked prevouts.
+    // This hash needs to still be on the chain
+    // for these LockPoint calculations to be valid
+    // Note: It is impossible to correctly calculate a maxInputBlock
+    // if any of the sequence locked inputs depend on unconfirmed txs,
+    // except in the special case where the relative lock time/height
+    // is 0, which is equivalent to no sequence lock. Since we assume
+    // input height of tip+1 for mempool txs and test the resulting
+    // lock_pair from CalculateSequenceLocks against tip+1.  We know
+    // EvaluateSequenceLocks will fail if there was a non-zero sequence
+    // lock on a mempool input, so we can use the return value of
+    // CheckSequenceLocks to indicate the LockPoints validity
+    int max_input_height{0};
+    for (const int height : prevheights) {
+        // Can ignore mempool inputs since we'll fail if they had non-zero locks
+        if (height != tip->nHeight + 1) {
+            max_input_height = std::max(max_input_height, height);
+        }
+    }
+    lp->maxInputBlock = tip->GetAncestor(max_input_height);
+
+    return true;
+}
+
 bool CheckSequenceLocks(CBlockIndex* tip,
                         const CCoinsView& coins_view,
                         const CTransaction& tx,
