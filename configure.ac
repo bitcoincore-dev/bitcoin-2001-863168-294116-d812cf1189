@@ -1590,6 +1590,37 @@ if test "$use_zmq" = "yes"; then
   esac
 fi
 
+dnl univalue check
+AC_ARG_WITH([system-univalue],
+  [AS_HELP_STRING([--with-system-univalue],
+  [Build with system UniValue (default is no)])],
+  [system_univalue=$withval],
+  [system_univalue=no]
+)
+need_bundled_univalue=yes
+if test x$build_bitcoin_wallet$build_bitcoin_cli$build_bitcoin_tx$build_bitcoin_util$build_bitcoind$bitcoin_enable_qt$use_tests$use_bench = xnononononononono; then
+  need_bundled_univalue=no
+else
+  if test x$system_univalue != xno; then
+    PKG_CHECK_MODULES([UNIVALUE], [libunivalue >= 1.0.4], [found_univalue=yes], [found_univalue=no])
+    if test x$found_univalue = xyes; then
+      system_univalue=yes
+      need_bundled_univalue=no
+    elif test x$system_univalue = xyes; then
+      AC_MSG_ERROR([univalue not found])
+    else
+      system_univalue=no
+    fi
+  fi
+
+  if test x$need_bundled_univalue = xyes; then
+    UNIVALUE_CFLAGS='-I$(srcdir)/univalue/include'
+  fi
+fi
+AM_CONDITIONAL([EMBEDDED_UNIVALUE],[test x$need_bundled_univalue = xyes])
+AC_SUBST(UNIVALUE_CFLAGS)
+AC_SUBST(UNIVALUE_LIBS)
+
 dnl libmultiprocess library check
 
 libmultiprocess_found=no
