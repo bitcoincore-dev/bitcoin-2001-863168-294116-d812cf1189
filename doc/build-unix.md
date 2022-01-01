@@ -45,6 +45,7 @@ Optional dependencies:
  libdb4.8    | Berkeley DB      | Wallet storage (only needed when legacy wallet enabled)
  qt          | GUI              | GUI toolkit (only needed when GUI enabled)
  libqrencode | QR codes in GUI  | QR code generation (only needed when GUI enabled)
+ univalue    | JSON             | JSON parsing and encoding (bundled version will be used unless --with-system-univalue passed to configure)
  libzmq3     | ZMQ notification | ZMQ notifications (requires ZMQ version >= 4.0.0)
  sqlite3     | SQLite DB        | Wallet storage (only needed when descriptor wallet enabled)
  systemtap   | Tracing (USDT)   | Statically defined tracepoints
