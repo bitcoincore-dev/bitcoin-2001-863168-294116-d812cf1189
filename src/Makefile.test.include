@@ -374,7 +374,7 @@ endif
 
 if ENABLE_TESTS
 UNIVALUE_TESTS = univalue/test/object univalue/test/unitester
-noinst_PROGRAMS += $(UNIVALUE_TESTS)
+check_PROGRAMS += $(UNIVALUE_TESTS)
 TESTS += $(UNIVALUE_TESTS)
 
 univalue_test_unitester_SOURCES = $(UNIVALUE_TEST_UNITESTER_INT)
