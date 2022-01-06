@@ -19,8 +19,9 @@
 #include <util/threadnames.h>
 #include <validation.h>
 
-#include <stdint.h>
+#include <chrono>
 #include <functional>
+#include <stdint.h>
 
 #include <QDebug>
 #include <QThread>
@@ -288,7 +289,7 @@ static void BlockTipChanged(ClientModel* clientmodel, SynchronizationState sync_
     const bool throttle = (sync_state != SynchronizationState::POST_INIT && !fHeader) || sync_state == SynchronizationState::INIT_REINDEX;
     const int64_t now = throttle ? GetTimeMillis() : 0;
     int64_t& nLastUpdateNotification = fHeader ? nLastHeaderTipUpdateNotification : nLastBlockTipUpdateNotification;
-    if (throttle && now < nLastUpdateNotification + MODEL_UPDATE_DELAY) {
+    if (throttle && now < nLastUpdateNotification + MODEL_UPDATE_DELAY.count()) {
         return;
     }
 
