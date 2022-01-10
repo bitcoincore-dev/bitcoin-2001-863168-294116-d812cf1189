@@ -1,11 +1,11 @@
-package=qt
-$(package)_version=5.15.2
-$(package)_download_path=https://download.qt.io/official_releases/qt/5.15/$($(package)_version)/submodules
-$(package)_suffix=everywhere-src-$($(package)_version).tar.xz
-$(package)_file_name=qtbase-$($(package)_suffix)
-$(package)_sha256_hash=909fad2591ee367993a75d7e2ea50ad4db332f05e1c38dd7a5a274e156a4e0f8
-$(package)_linux_dependencies=freetype fontconfig libxcb libxkbcommon libxcb_util libxcb_util_render libxcb_util_keysyms libxcb_util_image libxcb_util_wm
-$(package)_qt_libs=corelib network widgets gui plugins testlib
+package := qt
+$(package)_version := 5.15.2
+$(package)_download_path := https://download.qt.io/official_releases/qt/5.15/$($(package)_version)/submodules
+$(package)_suffix := everywhere-src-$($(package)_version).tar.xz
+$(package)_file_name := qtbase-$($(package)_suffix)
+$(package)_sha256_hash := 909fad2591ee367993a75d7e2ea50ad4db332f05e1c38dd7a5a274e156a4e0f8
+$(package)_linux_dependencies := freetype fontconfig libxcb libxkbcommon libxcb_util libxcb_util_render libxcb_util_keysyms libxcb_util_image libxcb_util_wm
+$(package)_qt_libs := corelib network widgets gui plugins testlib
 $(package)_linguist_tools = lrelease lupdate lconvert
 $(package)_patches = qt.pro qttools_src.pro
 $(package)_patches += fix_qt_pkgconfig.patch mac-qmake.conf fix_no_printer.patch no-xlib.patch
@@ -15,11 +15,11 @@ $(package)_patches += qtbase-moc-ignore-gcc-macro.patch fix_limits_header.patch
 $(package)_patches += fix_bigsur_style.patch use_android_ndk23.patch
 $(package)_patches += rcc_hardcode_timestamp.patch
 
-$(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
-$(package)_qttranslations_sha256_hash=d5788e86257b21d5323f1efd94376a213e091d1e5e03b45a95dd052b5f570db8
+$(package)_qttranslations_file_name := qttranslations-$($(package)_suffix)
+$(package)_qttranslations_sha256_hash := d5788e86257b21d5323f1efd94376a213e091d1e5e03b45a95dd052b5f570db8
 
-$(package)_qttools_file_name=qttools-$($(package)_suffix)
-$(package)_qttools_sha256_hash=c189d0ce1ff7c739db9a3ace52ac3e24cb8fd6dbf234e49f075249b38f43c1cc
+$(package)_qttools_file_name := qttools-$($(package)_suffix)
+$(package)_qttools_sha256_hash := c189d0ce1ff7c739db9a3ace52ac3e24cb8fd6dbf234e49f075249b38f43c1cc
 
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
