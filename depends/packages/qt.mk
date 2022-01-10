@@ -6,8 +6,8 @@ $(package)_file_name := qtbase-$($(package)_suffix)
 $(package)_sha256_hash := 909fad2591ee367993a75d7e2ea50ad4db332f05e1c38dd7a5a274e156a4e0f8
 $(package)_linux_dependencies := freetype fontconfig libxcb libxkbcommon libxcb_util libxcb_util_render libxcb_util_keysyms libxcb_util_image libxcb_util_wm
 $(package)_qt_libs := corelib network widgets gui plugins testlib
-$(package)_linguist_tools = lrelease lupdate lconvert
-$(package)_patches = qt.pro qttools_src.pro
+$(package)_linguist_tools := lrelease lupdate lconvert
+$(package)_patches := qt.pro qttools_src.pro
 $(package)_patches += fix_qt_pkgconfig.patch mac-qmake.conf fix_no_printer.patch no-xlib.patch
 $(package)_patches += dont_use_avx_android_x86_64.patch dont_hardcode_x86_64.patch fix_montery_include.patch
 $(package)_patches += fix_android_jni_static.patch dont_hardcode_pwd.patch
@@ -21,7 +21,7 @@ $(package)_qttranslations_sha256_hash := d5788e86257b21d5323f1efd94376a213e091d1
 $(package)_qttools_file_name := qttools-$($(package)_suffix)
 $(package)_qttools_sha256_hash := c189d0ce1ff7c739db9a3ace52ac3e24cb8fd6dbf234e49f075249b38f43c1cc
 
-$(package)_extra_sources  = $($(package)_qttranslations_file_name)
+$(package)_extra_sources := $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
 
 define $(package)_set_vars
