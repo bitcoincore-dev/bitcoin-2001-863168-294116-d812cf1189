@@ -792,26 +792,26 @@ case $host in
      CORE_CPPFLAGS="$CORE_CPPFLAGS -DMAC_OSX -DOBJC_OLD_DISPATCH_PROTOTYPES=0"
      OBJCXXFLAGS="$CXXFLAGS"
      ;;
-   *android*)
-     dnl make sure android stays above linux for hosts like *linux-android*
-     TARGET_OS=android
-     case $host in
-       *x86_64*)
-          ANDROID_ARCH=x86_64
-          ;;
-        *aarch64*)
-          ANDROID_ARCH=arm64-v8a
-          ;;
-        *armv7a*)
-          ANDROID_ARCH=armeabi-v7a
-          ;;
-        *) AC_MSG_ERROR([Could not determine Android arch, or it is unsupported]) ;;
-      esac
-      AC_SUBST(QT_BASE_PATH, "$QT_BASE_PATH")
-     ;;
-   *linux*)
-     TARGET_OS=linux
-     ;;
+  *android*)
+    dnl make sure android stays above linux for hosts like *linux-android*
+    TARGET_OS=android
+    case $host in
+      *x86_64*)
+        ANDROID_ARCH=x86_64
+        ;;
+      *aarch64*)
+        ANDROID_ARCH=arm64-v8a
+        ;;
+      *armv7a*)
+        ANDROID_ARCH=armeabi-v7a
+        ;;
+      *) AC_MSG_ERROR([Could not determine Android arch, or it is unsupported]) ;;
+    esac
+    AC_SUBST(QT_BASE_PATH, "$QT_BASE_PATH")
+    ;;
+  *linux*)
+    TARGET_OS=linux
+    ;;
 esac
 
 if test "$use_extended_functional_tests" != "no"; then
