@@ -4062,11 +4062,10 @@ void CChainState::UnloadBlockIndex()
 // May NOT be used after any connections are up as much
 // of the peer-processing logic assumes a consistent
 // block index state
-void UnloadBlockIndex(CTxMemPool* mempool, ChainstateManager& chainman)
+void UnloadBlockIndex(ChainstateManager& chainman)
 {
     AssertLockHeld(::cs_main);
     chainman.Unload();
-    if (mempool) mempool->clear();
 }
 
 bool ChainstateManager::LoadBlockIndex()
@@ -5077,7 +5076,7 @@ void ChainstateManager::MaybeRebalanceCaches()
 
 ChainstateManager::~ChainstateManager() {
     LOCK(::cs_main);
-    UnloadBlockIndex(/*mempool=*/nullptr, *this);
+    UnloadBlockIndex(*this);
 
     // TODO: The version bits cache and warning cache should probably become
     // non-globals
