@@ -639,6 +639,7 @@ RPCHelpMan fundrawtransaction();
 RPCHelpMan bumpfee();
 RPCHelpMan psbtbumpfee();
 RPCHelpMan send();
+RPCHelpMan sendall();
 RPCHelpMan walletprocesspsbt();
 RPCHelpMan walletcreatefundedpsbt();
 RPCHelpMan signrawtransactionwithwallet();
@@ -718,6 +719,7 @@ static const CRPCCommand commands[] =
     { "wallet",             &setwalletflag,                  },
     { "wallet",             &signmessage,                    },
     { "wallet",             &signrawtransactionwithwallet,   },
+    { "wallet",             &sendall,                        },
     { "wallet",             &unloadwallet,                   },
     { "wallet",             &upgradewallet,                  },
     { "wallet",             &walletcreatefundedpsbt,         },
