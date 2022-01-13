@@ -4181,8 +4181,8 @@ void CChainState::CheckBlockIndex()
 
     // Build forward-pointing map of the entire block tree.
     std::multimap<CBlockIndex*,CBlockIndex*> forward;
-    for (std::pair<const uint256, CBlockIndex>& entry : m_blockman.m_block_index) {
-        forward.insert(std::make_pair(entry.second.pprev, &entry.second));
+    for (auto& [_, block] : m_blockman.m_block_index) {
+        forward.emplace(block.pprev, &block);
     }
 
     assert(forward.size() == m_blockman.m_block_index.size());
