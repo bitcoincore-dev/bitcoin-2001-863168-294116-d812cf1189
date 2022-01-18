@@ -39,16 +39,15 @@ BanMan::~BanMan()
 
 void BanMan::DumpBanlist()
 {
+    banmap_t banmap;
     {
         LOCK(m_cs_banned);
         SweepBanned();
         if (!m_is_dirty) return;
+        banmap = m_banned;
     }
 
     int64_t n_start = GetTimeMillis();
-
-    banmap_t banmap;
-    GetBanned(banmap);
     if (m_ban_db.Write(banmap)) {
         SetBannedSetDirty(false);
     }
