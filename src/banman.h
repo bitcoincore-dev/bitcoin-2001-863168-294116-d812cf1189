@@ -80,7 +80,6 @@ public:
     void DumpBanlist();
 
 private:
-    bool BannedSetIsDirty();
     //!set the "dirty" flag for the banlist
     void SetBannedSetDirty(bool dirty = true);
     //!clean unused entries (if bantime has expired)
