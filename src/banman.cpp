@@ -19,7 +19,7 @@ BanMan::BanMan(fs::path ban_file, CClientUIInterface* client_interface, int64_t 
 
     int64_t n_start = GetTimeMillis();
     if (m_ban_db.Read(m_banned)) {
-        SweepBanned(); // sweep out unused entries
+        WITH_LOCK(m_banned_mutex, SweepBanned());
 
         LogPrint(BCLog::NET, "Loaded %d banned node addresses/subnets  %dms\n", m_banned.size(),
                  GetTimeMillis() - n_start);
@@ -169,10 +169,11 @@ void BanMan::GetBanned(banmap_t& banmap)
 
 void BanMan::SweepBanned()
 {
+    AssertLockHeld(m_cs_banned);
+
     int64_t now = GetTime();
     bool notify_ui = false;
     {
-        LOCK(m_cs_banned);
         banmap_t::iterator it = m_banned.begin();
         while (it != m_banned.end()) {
             CSubNet sub_net = (*it).first;
