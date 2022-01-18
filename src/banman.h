@@ -80,8 +80,6 @@ public:
     void DumpBanlist();
 
 private:
-    //!set the "dirty" flag for the banlist
-    void SetBannedSetDirty(bool dirty = true);
     //!clean unused entries (if bantime has expired)
     void SweepBanned() EXCLUSIVE_LOCKS_REQUIRED(m_cs_banned);
 
