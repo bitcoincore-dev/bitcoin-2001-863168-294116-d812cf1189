@@ -39,9 +39,11 @@ BanMan::~BanMan()
 
 void BanMan::DumpBanlist()
 {
-    SweepBanned(); // clean unused entries (if bantime has expired)
-
-    if (!BannedSetIsDirty()) return;
+    {
+        LOCK(m_cs_banned);
+        SweepBanned();
+        if (!BannedSetIsDirty()) return;
+    }
 
     int64_t n_start = GetTimeMillis();
 
