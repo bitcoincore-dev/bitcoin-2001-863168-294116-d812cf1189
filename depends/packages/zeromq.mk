@@ -22,6 +22,7 @@ define $(package)_preprocess_cmds
 endef
 
 define $(package)_config_cmds
+  export PKG_CONFIG_LIBDIR=$(host_prefix)/lib/pkgconfig && \
   ./autogen.sh && \
   $($(package)_autoconf)
 endef
