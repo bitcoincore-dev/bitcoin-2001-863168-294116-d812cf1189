@@ -1,4 +1,4 @@
-ifneq ($(shell which $(host)-g++-posix),)
+ifneq ($(shell which $(host)-g++-posix 2> /dev/null),)
 mingw32_CXX := $(host)-g++-posix
 endif
 
