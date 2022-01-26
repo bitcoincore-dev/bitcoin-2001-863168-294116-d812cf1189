@@ -39,6 +39,10 @@ BanMan::~BanMan()
 
 void BanMan::DumpBanlist()
 {
+    static Mutex dump_mutex;
+    TRY_LOCK(dump_mutex, dump_lock);
+    if (!dump_lock) return;
+
     SweepBanned(); // clean unused entries (if bantime has expired)
 
     if (!BannedSetIsDirty()) return;
