@@ -8,6 +8,7 @@
 
 #include <coins.h>
 #include <dbwrapper.h>
+#include <fs.h>
 
 #include <memory>
 #include <optional>
@@ -71,6 +72,9 @@ public:
 
     //! Dynamically alter the underlying leveldb cache size.
     void ResizeCache(size_t new_cache_size) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
+    //! @returns filesystem path to on-disk storage.
+    std::optional<fs::path> StoragePath() { return m_db->StoragePath(); }
 };
 
 /** Access to the block database (blocks/index/) */
