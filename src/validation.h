@@ -492,6 +492,12 @@ protected:
     //! Manages the UTXO set, which is a reflection of the contents of `m_chain`.
     std::unique_ptr<CoinsViews> m_coins_views;
 
+    //! This toggle exists for use when doing background validation for UTXO
+    //! snapshots. It is set once the background validation chain reaches the
+    //! same height as the base of the snapshot, and signals that we should no
+    //! longer connect blocks to this chainstate.
+    bool m_stop_use{false};
+
 public:
     //! Reference to a BlockManager instance which itself is shared across all
     //! CChainState instances.
@@ -865,6 +871,15 @@ private:
     // Returns nullptr if no snapshot ahs been loaded.
     CBlockIndex* getSnapshotBaseBlock() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
     std::optional<int> getSnapshotHeight() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! Return true if a chainstate is considered usable.
+    //!
+    //! This might be false for, say, a background validation chainstate which has
+    //! completed its validation of an assumed-valid chainstate, or a snapshot
+    //! chainstate which has been found to be invalid.
+    bool isUsable(const CChainState* const cs) const {
+        return cs && !cs->m_stop_use;
+    }
 
 public:
     std::thread m_load_block;
