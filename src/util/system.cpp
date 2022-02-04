@@ -245,19 +245,6 @@ static std::optional<util::SettingsValue> InterpretValue(const KeyInfo& key, con
     return value;
 }
 
-namespace {
-fs::path StripRedundantLastElementsOfPath(const fs::path& path)
-{
-    auto result = path;
-    while (result.filename().empty() || fs::PathToString(result.filename()) == ".") {
-        result = result.parent_path();
-    }
-
-    assert(fs::equivalent(result, path.lexically_normal()));
-    return result;
-}
-} // namespace
-
 // Define default constructor and destructor that are not inline, so code instantiating this class doesn't need to
 // #include class definitions for all members.
 // For example, m_settings has an internal dependency on univalue.
@@ -450,15 +437,16 @@ const fs::path& ArgsManager::GetDataDir(bool net_specific) const
     } else {
         path = GetDefaultDataDir();
     }
-    if (net_specific)
+
+    if (net_specific && !BaseParams().DataDir().empty()) {
         path /= fs::PathFromString(BaseParams().DataDir());
+    }
 
     if (fs::create_directories(path)) {
         // This is the first run, create wallets subdirectory too
         fs::create_directories(path / "wallets");
     }
 
-    path = StripRedundantLastElementsOfPath(path);
     return path;
 }
 
