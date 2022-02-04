@@ -399,6 +399,15 @@ std::optional<unsigned int> ArgsManager::GetArgFlags(const std::string& name) co
     return std::nullopt;
 }
 
+fs::path ArgsManager::GetNormalPath(std::string pathlike_arg) const
+{
+    const std::string path_str{GetArg(pathlike_arg, "")};
+    if (path_str.empty()) return {};
+    // Adding a slash followed by parent_path() call
+    // guaranties no trailing slashes in the resulted path.
+    return fs::PathFromString(path_str + "/").lexically_normal().parent_path();
+}
+
 const fs::path& ArgsManager::GetBlocksDirPath() const
 {
     LOCK(cs_args);
