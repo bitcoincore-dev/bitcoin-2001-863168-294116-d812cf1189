@@ -442,9 +442,9 @@ const fs::path& ArgsManager::GetDataDir(bool net_specific) const
     // this function
     if (!path.empty()) return path;
 
-    std::string datadir = GetArg("-datadir", "");
+    const fs::path datadir{GetNormalPath("-datadir")};
     if (!datadir.empty()) {
-        path = fs::absolute(StripRedundantLastElementsOfPath(fs::PathFromString(datadir)));
+        path = fs::absolute(datadir);
         if (!fs::is_directory(path)) {
             path = "";
             return path;
@@ -821,8 +821,8 @@ fs::path GetDefaultDataDir()
 
 bool CheckDataDirOption()
 {
-    std::string datadir = gArgs.GetArg("-datadir", "");
-    return datadir.empty() || fs::is_directory(fs::absolute(fs::PathFromString(datadir)));
+    const fs::path datadir{gArgs.GetNormalPath("-datadir")};
+    return datadir.empty() || fs::is_directory(fs::absolute(datadir));
 }
 
 fs::path GetConfigFile(const std::string& confPath)
