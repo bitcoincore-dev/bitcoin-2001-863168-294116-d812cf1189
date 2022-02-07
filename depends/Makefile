@@ -1,8 +1,16 @@
 .NOTPARALLEL :
 
 # Pattern rule to print variables, e.g. make print-top_srcdir
+# To print multi-line variables and/or additional debug info, use print-all-%
 print-%: FORCE
 	@echo '$*'='$($*)'
+
+print-all-% : FORCE
+	$(info - name:   $*)
+	$(info - origin: $(origin $*))
+	$(info - flavor: $(flavor $*))
+	$(info - value, printed from the new line:)
+	$(info $($*))
 
 # When invoking a sub-make, keep only the command line variable definitions
 # matching the pattern in the filter function.
