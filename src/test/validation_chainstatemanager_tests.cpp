@@ -328,6 +328,85 @@ BOOST_FIXTURE_TEST_CASE(chainstatemanager_activate_snapshot, SnapshotTestSetup)
     setupSnapshot();
 }
 
+BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_completion, SnapshotTestSetup)
+{
+    auto chainstates = setupSnapshot();
+    CChainState& validation_chainstate = *std::get<0>(chainstates);
+    CChainState& snapshot_chainstate = *std::get<1>(chainstates);
+
+    ChainstateManager& chainman = *Assert(m_node.chainman);
+    CChainState& active_cs = chainman.ActiveChainstate();
+    auto tip_cache_before_complete = active_cs.m_coinstip_cache_size_bytes;
+    auto db_cache_before_complete = active_cs.m_coinsdb_cache_size_bytes;
+    CChain& chain = validation_chainstate.m_chain;
+
+    SnapshotCompletionResult res;
+    auto mock_shutdown = []() {};
+
+    // Should return false when called with blocks lower than the snapshot base block.
+    res = WITH_LOCK(::cs_main, return chainman.maybeCompleteSnapshotValidation(
+            validation_chainstate, *chain[chain.Height() - 1]));
+    BOOST_CHECK(!res.completed);
+
+    // Should return false when called with a chainstate that isn't doing background
+    // validation.
+    res = WITH_LOCK(::cs_main, return chainman.maybeCompleteSnapshotValidation(
+        snapshot_chainstate, *chain.Tip(), mock_shutdown));
+    BOOST_CHECK(!res.completed);
+
+    res = WITH_LOCK(::cs_main, return chainman.maybeCompleteSnapshotValidation(
+        validation_chainstate, *chain.Tip(), mock_shutdown));
+    BOOST_CHECK(res.completed);
+
+    BOOST_CHECK(chainman.IsSnapshotValidated());
+    BOOST_CHECK(chainman.IsSnapshotActive());
+
+    // Cache should have been rebalanced and reallocated to the "only" remaining
+    // chainstate.
+    BOOST_CHECK(active_cs.m_coinstip_cache_size_bytes > tip_cache_before_complete);
+    BOOST_CHECK(active_cs.m_coinsdb_cache_size_bytes > db_cache_before_complete);
+
+    auto all_chainstates = chainman.GetAll();
+    BOOST_CHECK_EQUAL(all_chainstates.size(), 1);
+    BOOST_CHECK_EQUAL(all_chainstates[0], &active_cs);
+
+    // Trying completion again should return false.
+    res = WITH_LOCK(::cs_main, return chainman.maybeCompleteSnapshotValidation(
+        validation_chainstate, *chain.Tip(), mock_shutdown));
+    BOOST_CHECK(!res.completed);
+}
+
+BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_completion_hash_mismatch, SnapshotTestSetup)
+{
+    auto chainstates = setupSnapshot();
+    CChainState& validation_chainstate = *std::get<0>(chainstates);
+    ChainstateManager& chainman = *Assert(m_node.chainman);
+    CChain& chain = validation_chainstate.m_chain;
+    SnapshotCompletionResult res;
+    auto mock_shutdown = []() {};
+
+    // Test mucking up the IBD UTXO set with an extra coin to ensure it causes snapshot
+    // completion to fail.
+    CCoinsViewCache& ibd_coins = WITH_LOCK(::cs_main,
+        return validation_chainstate.CoinsTip());
+    Coin badcoin;
+    badcoin.out.nValue = InsecureRand32();
+    badcoin.nHeight = 1;
+    badcoin.out.scriptPubKey.assign(InsecureRandBits(6), 0);
+    uint256 txid = InsecureRand256();
+    ibd_coins.AddCoin(COutPoint(txid, 0), std::move(badcoin), false);
+
+    res = WITH_LOCK(::cs_main, return chainman.maybeCompleteSnapshotValidation(
+        validation_chainstate, *chain.Tip(), mock_shutdown));
+    BOOST_CHECK(!res.completed);
+    BOOST_CHECK(*res.error == SnapshotCompletionError::HASH_MISMATCH);
+
+    auto all_chainstates = chainman.GetAll();
+    BOOST_CHECK_EQUAL(all_chainstates.size(), 1);
+    BOOST_CHECK_EQUAL(all_chainstates[0], &validation_chainstate);
+    BOOST_CHECK_EQUAL(&chainman.ActiveChainstate(), &validation_chainstate);
+}
+
 //! Test LoadBlockIndex behavior when multiple chainstates are in use.
 //!
 //! - First, verfiy that setBlockIndexCandidates is as expected when using a single,
