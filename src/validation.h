@@ -20,6 +20,7 @@
 #include <policy/feerate.h>
 #include <policy/packages.h>
 #include <script/script_error.h>
+#include <shutdown.h>
 #include <sync.h>
 #include <txdb.h>
 #include <txmempool.h> // For CTxMemPool::cs
@@ -775,17 +776,51 @@ private:
     void UpdateTip(const CBlockIndex* pindexNew)
         EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
-    /** @returns the path to the datadir if this chain is based on a snapshot. */
-    std::optional<fs::path> snapshotDatadirPath();
-
     /**
      * Remove the datadir for this chainstate if it was created from a snapshot.
      * Only used during snapshot activation (within ChainstateManager) if the loaded
      * snapshot does not validate.
+     *
+     * @param maybe_datadir   If specified, remove the chainstate dir at this path.
      */
-    [[nodiscard]] bool removeSnapshotDatadir() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+    [[nodiscard]] bool removeSnapshotDatadir(
+        std::optional<fs::path> maybe_datadir = std::nullopt)
+        EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    /**
+     * In case of an invalid snapshot, rename the directory so that it can be
+     * examined during issue report.
+     */
+    void invalidateSnapshotDatadir() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     friend ChainstateManager;
+};
+
+
+enum class SnapshotCompletionError {
+    // The background chainstate has progressed beyond the snapshot base block.
+    IBD_TOO_FAR,
+
+    // Expected assumeutxo configuration data is not found for the height of the
+    // base block.
+    MISSING_CHAINPARAMS,
+
+    // Failed to generate UTXO statistics (to check UTXO set hash) for the background
+    // chainstate.
+    STATS_FAILED,
+
+    // The UTXO set hash of the background validation chainstate does not match
+    // the one expected by assumeutxo chainparams.
+    HASH_MISMATCH,
+
+    // The blockhash of the current tip of the background validation chainstate does
+    // not match the one expected by the snapshot chainstate.
+    BASE_BLOCKHASH_MISMATCH,
+};
+
+struct SnapshotCompletionResult {
+    bool completed;
+    std::optional<SnapshotCompletionError> error;
 };
 
 /**
@@ -858,7 +893,10 @@ private:
     CChainState* m_active_chainstate GUARDED_BY(::cs_main) {nullptr};
 
     //! If true, the assumed-valid chainstate has been fully validated
-    //! by the background validation chainstate.
+    //! by the background validation chainstate. This will trigger shutdown
+    //! logic.
+    //!
+    //! @sa validatedSnapshotCleanup()
     bool m_snapshot_validated{false};
 
     CBlockIndex* m_best_invalid;
@@ -960,6 +998,18 @@ public:
     [[nodiscard]] bool ActivateSnapshot(
         CAutoFile& coins_file, const node::SnapshotMetadata& metadata, bool in_memory);
 
+    //! Once the background validation chainstate has reached the height which
+    //! is the base of the UTXO snapshot in use, compare its coins to ensure
+    //! they match those expected by the snapshot.
+    //!
+    //! If the coins match (expected), then mark the validation chainstate for
+    //! deletion and continue using the snapshot chainstate as active.
+    //! Otherwise, revert to using the ibd chainstate and shutdown (TODO).
+    SnapshotCompletionResult maybeCompleteSnapshotValidation(
+        std::function<void(bilingual_str)> shutdown_fnc =
+            [](bilingual_str msg) { AbortNode(msg.translated, msg); })
+        EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
     //! The most-work chain.
     CChainState& ActiveChainstate() const;
     CChain& ActiveChain() const { return ActiveChainstate().m_chain; }
@@ -1038,8 +1088,17 @@ public:
     //! snapshot that is in the process of being validated.
     bool DetectSnapshotChainstate(CTxMemPool* mempool) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
+    //! Perform teardown and optional snapshot cleanup.
+    void reset() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! If we have validated a snapshot chain during this runtime, copy its
+    //! chainstate directory over to the main `chainstate` location, completing
+    //! validation of the snapshot.
+    void validatedSnapshotCleanup() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
     ~ChainstateManager() {
         LOCK(::cs_main);
+        reset();
         UnloadBlockIndex(/*mempool=*/nullptr, *this);
     }
 };

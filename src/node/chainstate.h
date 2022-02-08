@@ -27,6 +27,8 @@ enum class ChainstateLoadingError {
     ERROR_GENERIC_BLOCKDB_OPEN_FAILED,
     ERROR_BLOCKS_WITNESS_INSUFFICIENTLY_VALIDATED,
     SHUTDOWN_PROBED,
+    SNAPSHOT_VALIDATION_COMPLETE,
+    SNAPSHOT_VALIDATION_FAILED,
 };
 
 /** This sequence can have 4 types of outcomes:
