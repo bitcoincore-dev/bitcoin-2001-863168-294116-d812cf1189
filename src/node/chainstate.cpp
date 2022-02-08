@@ -20,9 +20,25 @@ static std::optional<ChainstateLoadingError> CompleteChainstateInitialization(
     std::function<void()> coins_error_cb) EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
 
 {
+    if (!chainman.BlockIndex().empty() &&
+            !chainman.m_blockman.LookupBlockIndex(chainman.GetParams().GetConsensus().hashGenesisBlock)) {
+        return ChainstateLoadingError::ERROR_BAD_GENESIS_BLOCK;
+    }
+
+    // At this point blocktree args are consistent with what's on disk.
+    // If we're not mid-reindex (based on disk + args), add a genesis block on disk
+    // (otherwise we use the one already on disk).
+    // This is called again in ThreadImport after the reindex completes.
+    if (!fReindex && !chainman.ActiveChainstate().LoadGenesisBlock()) {
+        return ChainstateLoadingError::ERROR_LOAD_GENESIS_BLOCK_FAILED;
+    }
+
     auto is_coinsview_empty = [&](CChainState* chainstate) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
         return fReset || fReindexChainState || chainstate->CoinsTip().GetBestBlock().IsNull();
     };
+
+    assert(chainman.m_total_coinstip_cache > 0);
+    assert(chainman.m_total_coinsdb_cache > 0);
 
     // Conservative value that will ultimately be changed by
     // a call to `chainman.MaybeRebalanceCaches()`.
@@ -130,21 +146,12 @@ std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
         return ChainstateLoadingError::ERROR_LOADING_BLOCK_DB;
     }
 
-    if (!chainman.BlockIndex().empty() &&
-            !chainman.m_blockman.LookupBlockIndex(chainman.GetConsensus().hashGenesisBlock)) {
-        return ChainstateLoadingError::ERROR_BAD_GENESIS_BLOCK;
-    }
-
     // Check for changed -prune state.  What we are concerned about is a user who has pruned blocks
     // in the past, but is now trying to run unpruned.
     if (chainman.m_blockman.m_have_pruned && !fPruneMode) {
         return ChainstateLoadingError::ERROR_PRUNED_NEEDS_REINDEX;
     }
 
-    // At this point blocktree args are consistent with what's on disk.
-    // If we're not mid-reindex (based on disk + args), add a genesis block on disk
-    // (otherwise we use the one already on disk).
-    // This is called again in ThreadImport after the reindex completes.
     if (!fReindex && !chainman.ActiveChainstate().LoadGenesisBlock()) {
         return ChainstateLoadingError::ERROR_LOAD_GENESIS_BLOCK_FAILED;
     }
@@ -153,6 +160,44 @@ std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
                 chainman, coins_db_in_memory, fReset, fReindexChainState, coins_error_cb)) {
         return err;
     }
+
+    // If a snapshot chainstate was fully validated by a background chainstate during
+    // the last run, detect it here and clean up the now-unneeded background
+    // chainstate. This is the expected case during snapshot completion, and 
+    // not just a belt-and-suspenders.
+    auto snapshot_completion = chainman.MaybeCompleteSnapshotValidation();
+
+    if (snapshot_completion.completed) {
+        LogPrintf("[snapshot] cleaning up unneeded background chainstate, then reinitializing\n");
+        if (!chainman.ValidatedSnapshotCleanup()) {
+            AbortNode("Background chainstate cleanup failed unexpectedly.");
+        }
+
+        // Because ValidatedSnapshotCleanup() has torn down chainstates with
+        // ChainstateManager::ResetChainstates(), reinitialize them here without
+        // duplicating the blockindex work above.
+        assert(chainman.GetAll().size() == 0);
+        assert(!chainman.IsSnapshotActive());
+        assert(!chainman.IsSnapshotValidated());
+
+        chainman.InitializeChainstate(mempool);
+
+        // A reload of the block index is required to recompute setBlockIndexCandidates
+        // for the fully validated chainstate.
+        chainman.ActiveChainstate().UnloadBlockIndex();
+
+        if (!chainman.LoadBlockIndex()) {
+            if (shutdown_requested && shutdown_requested()) return ChainstateLoadingError::SHUTDOWN_PROBED;
+            return ChainstateLoadingError::ERROR_LOADING_BLOCK_DB;
+        }
+        if (std::optional<ChainstateLoadingError> err = CompleteChainstateInitialization(
+                chainman, coins_db_in_memory, fReset, fReindexChainState, coins_error_cb)) {
+            return err;
+        }
+    } else if (snapshot_completion.error) {
+        return ChainstateLoadingError::SNAPSHOT_VALIDATION_FAILED;
+    }
+
     return std::nullopt;
 }
 
