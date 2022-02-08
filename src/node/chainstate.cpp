@@ -137,6 +137,8 @@ std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
         }
     }
 
+    chainman.checkForUncleanShutdown();
+
     // Now that chainstates are loaded and we're able to flush to
     // disk, rebalance the coins caches to desired levels based
     // on the condition of each chainstate.

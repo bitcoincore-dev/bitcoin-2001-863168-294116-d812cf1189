@@ -19,6 +19,7 @@
 #include <policy/feerate.h>
 #include <policy/packages.h>
 #include <script/script_error.h>
+#include <shutdown.h>
 #include <sync.h>
 #include <txdb.h>
 #include <txmempool.h> // For CTxMemPool::cs
@@ -772,9 +773,22 @@ private:
      * Only used during snapshot activation (within ChainstateManager) if the loaded
      * snapshot does not validate.
      */
-    bool TeardownSnapshotDatadir() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+    bool teardownSnapshotDatadir() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     friend ChainstateManager;
+};
+
+
+enum class SnapshotCompletionError {
+    IBD_TOO_FAR,
+    MISSING_CHAINPARAMS,
+    STATS_FAILED,
+    HASH_MISMATCH,
+};
+
+struct SnapshotCompletionResult {
+    bool completed;
+    std::optional<SnapshotCompletionError> error;
 };
 
 /**
@@ -847,7 +861,10 @@ private:
     CChainState* m_active_chainstate GUARDED_BY(::cs_main) {nullptr};
 
     //! If true, the assumed-valid chainstate has been fully validated
-    //! by the background validation chainstate.
+    //! by the background validation chainstate. This will trigger shutdown
+    //! logic.
+    //!
+    //! @sa validatedSnapshotShutdownCleanup()
     bool m_snapshot_validated{false};
 
     CBlockIndex* m_best_invalid;
@@ -873,6 +890,11 @@ private:
     // Returns nullptr if no snapshot ahs been loaded.
     CBlockIndex* getSnapshotBaseBlock() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
     std::optional<int> getSnapshotHeight() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! If we have validated a snapshot chain during this runtime, copy its
+    //! chainstate directory over to the main `chainstate` location, completing
+    //! validation of the snapshot.
+    void validatedSnapshotShutdownCleanup(fs::path new_chainstate, fs::path old_chainstate);
 
     //! Return true if a chainstate is considered usable.
     //!
@@ -948,6 +970,19 @@ public:
     //!   ChainstateActive().
     [[nodiscard]] bool ActivateSnapshot(
         CAutoFile& coins_file, const node::SnapshotMetadata& metadata, bool in_memory);
+
+    //! Once the background validation chainstate has reached the height which
+    //! is the base of the UTXO snapshot in use, compare its coins to ensure
+    //! they match those expected by the snapshot.
+    //!
+    //! If the coins match (expected), then mark the validation chainstate for
+    //! deletion and continue using the snapshot chainstate as active.
+    //! Otherwise, revert to using the ibd chainstate and shutdown (TODO).
+    SnapshotCompletionResult maybeCompleteSnapshotValidation(
+        CChainState& chainstate,
+        CBlockIndex& pindexNew,
+        std::function<void()> shutdown_fnc = []() { StartShutdown(); })
+        EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     //! The most-work chain.
     CChainState& ActiveChainstate() const;
@@ -1027,8 +1062,17 @@ public:
     //! snapshot that is in the process of being validated.
     bool DetectSnapshotChainstate(CTxMemPool* mempool) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
+    //! If we completed background validation of the loaded snapshot during the
+    //! last run but didn't for whatever reason shutdown properly, ensure that
+    //! the background validation chainstate is marked accordingly.
+    void checkForUncleanShutdown() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! Perform teardown and optional snapshot cleanup.
+    void cleanup() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
     ~ChainstateManager() {
         LOCK(::cs_main);
+        cleanup();
         UnloadBlockIndex(/*mempool=*/nullptr, *this);
     }
 };
