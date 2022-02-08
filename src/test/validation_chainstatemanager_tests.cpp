@@ -155,6 +155,10 @@ BOOST_AUTO_TEST_CASE(chainstatemanager_rebalance_caches)
 }
 
 struct SnapshotTestSetup : TestChain100Setup {
+    // Run with coinsdb on the filesystem to support, e.g., moving invalidated
+    // chainstate dirs to "*_invalid".
+    SnapshotTestSetup() : TestChain100Setup{{}, /*coins_db_in_memory=*/false} { }
+
     std::tuple<CChainState*, CChainState*> setupSnapshot()
     {
         ChainstateManager& chainman = *Assert(m_node.chainman);
@@ -326,6 +330,82 @@ struct SnapshotTestSetup : TestChain100Setup {
 BOOST_FIXTURE_TEST_CASE(chainstatemanager_activate_snapshot, SnapshotTestSetup)
 {
     setupSnapshot();
+}
+
+BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_completion, SnapshotTestSetup)
+{
+    setupSnapshot();
+    ChainstateManager& chainman = *Assert(m_node.chainman);
+    CChainState& active_cs = chainman.ActiveChainstate();
+    auto tip_cache_before_complete = active_cs.m_coinstip_cache_size_bytes;
+    auto db_cache_before_complete = active_cs.m_coinsdb_cache_size_bytes;
+
+    SnapshotCompletionResult res;
+    auto mock_shutdown = [](bilingual_str msg) {};
+
+    fs::path snapshot_chainstate_dir = gArgs.GetDataDirNet() / "chainstate_snapshot";
+    BOOST_CHECK(fs::exists(snapshot_chainstate_dir));
+
+    res = WITH_LOCK(::cs_main,
+        return chainman.maybeCompleteSnapshotValidation(mock_shutdown));
+    BOOST_CHECK(res.completed);
+
+    BOOST_CHECK(chainman.IsSnapshotValidated());
+    BOOST_CHECK(chainman.IsSnapshotActive());
+
+    // Cache should have been rebalanced and reallocated to the "only" remaining
+    // chainstate.
+    BOOST_CHECK(active_cs.m_coinstip_cache_size_bytes > tip_cache_before_complete);
+    BOOST_CHECK(active_cs.m_coinsdb_cache_size_bytes > db_cache_before_complete);
+
+    auto all_chainstates = chainman.GetAll();
+    BOOST_CHECK_EQUAL(all_chainstates.size(), 1);
+    BOOST_CHECK_EQUAL(all_chainstates[0], &active_cs);
+
+    // Trying completion again should return false.
+    res = WITH_LOCK(::cs_main,
+        return chainman.maybeCompleteSnapshotValidation(mock_shutdown));
+    BOOST_CHECK(!res.completed);
+
+    // The invalid snapshot path should not have been used.
+    fs::path snapshot_invalid_dir = gArgs.GetDataDirNet() / "chainstate_snapshot_INVALID";
+    BOOST_CHECK(!fs::exists(snapshot_invalid_dir));
+}
+
+BOOST_FIXTURE_TEST_CASE(chainstatemanager_snapshot_completion_hash_mismatch, SnapshotTestSetup)
+{
+    auto chainstates = setupSnapshot();
+    CChainState& validation_chainstate = *std::get<0>(chainstates);
+    ChainstateManager& chainman = *Assert(m_node.chainman);
+    SnapshotCompletionResult res;
+    auto mock_shutdown = [](bilingual_str msg) {};
+
+    // Test tampering with the IBD UTXO set with an extra coin to ensure it causes
+    // snapshot completion to fail.
+    CCoinsViewCache& ibd_coins = WITH_LOCK(::cs_main,
+        return validation_chainstate.CoinsTip());
+    Coin badcoin;
+    badcoin.out.nValue = InsecureRand32();
+    badcoin.nHeight = 1;
+    badcoin.out.scriptPubKey.assign(InsecureRandBits(6), 0);
+    uint256 txid = InsecureRand256();
+    ibd_coins.AddCoin(COutPoint(txid, 0), std::move(badcoin), false);
+
+    fs::path snapshot_chainstate_dir = gArgs.GetDataDirNet() / "chainstate_snapshot";
+    BOOST_CHECK(fs::exists(snapshot_chainstate_dir));
+
+    res = WITH_LOCK(::cs_main,
+        return chainman.maybeCompleteSnapshotValidation(mock_shutdown));
+    BOOST_CHECK(!res.completed);
+    BOOST_CHECK(*res.error == SnapshotCompletionError::HASH_MISMATCH);
+
+    auto all_chainstates = chainman.GetAll();
+    BOOST_CHECK_EQUAL(all_chainstates.size(), 1);
+    BOOST_CHECK_EQUAL(all_chainstates[0], &validation_chainstate);
+    BOOST_CHECK_EQUAL(&chainman.ActiveChainstate(), &validation_chainstate);
+
+    fs::path snapshot_invalid_dir = gArgs.GetDataDirNet() / "chainstate_snapshot_INVALID";
+    BOOST_CHECK(fs::exists(snapshot_invalid_dir));
 }
 
 //! Test LoadBlockIndex behavior when multiple chainstates are in use.
