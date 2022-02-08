@@ -34,12 +34,8 @@ std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
     // Load a chain created from a UTXO snapshot, if any exist.
     chainman.DetectSnapshotChainstate(mempool);
 
-    // If we're not using a snapshot or we haven't fully validated it yet,
-    // create a validation chainstate.
-    if (!chainman.IsSnapshotValidated()) {
-        LogPrintf("Loading validation chainstate\n");
-        chainman.InitializeChainstate(mempool);
-    }
+    // Load the fully-validated chainstate.
+    chainman.InitializeChainstate(mempool);
 
     UnloadBlockIndex(mempool, chainman);
 
@@ -135,6 +131,20 @@ std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
                         [](const CChainState* cs) EXCLUSIVE_LOCKS_REQUIRED(cs_main) { return cs->NeedsRedownload(); })) {
             return ChainstateLoadingError::ERROR_BLOCKS_WITNESS_INSUFFICIENTLY_VALIDATED;
         }
+    }
+
+    // If a snapshot chainstate was fully validated by a background chainstate during
+    // the last run, detect it here and clean up the now-unneeded background
+    // chainstate.
+    auto snapshot_completion = chainman.maybeCompleteSnapshotValidation();
+
+    if (snapshot_completion.completed) {
+        LogPrintf("[snapshot] cleaning up unneeded background chainstate, then reinitializing\n");
+        chainman.validatedSnapshotCleanup();
+        chainman.reset();
+        return ChainstateLoadingError::SNAPSHOT_VALIDATION_COMPLETE;
+    } else if (snapshot_completion.error) {
+        return ChainstateLoadingError::SNAPSHOT_VALIDATION_FAILED;
     }
 
     // Now that chainstates are loaded and we're able to flush to

@@ -1474,6 +1474,13 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
                 break;
             case ChainstateLoadingError::SHUTDOWN_PROBED:
                 break;
+            case ChainstateLoadingError::SNAPSHOT_VALIDATION_COMPLETE:
+                // Retry LoadChainstate now that the fully-validated snapshot
+                // chainstate datadir has been moved to the `chainstate` directory.
+                continue;
+            case ChainstateLoadingError::SNAPSHOT_VALIDATION_FAILED:
+                strLoadError = _("UTXO snapshot failed to validate");
+                break;
             }
         } else {
             std::optional<ChainstateLoadVerifyError> maybe_verify_error;
