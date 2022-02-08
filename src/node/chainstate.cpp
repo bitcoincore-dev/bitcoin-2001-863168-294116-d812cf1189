@@ -25,6 +25,9 @@ CompleteChainstateInitialization(
         return fReset || fReindexChainState || chainstate->CoinsTip().GetBestBlock().IsNull();
     };
 
+    assert(chainman.m_total_coinstip_cache > 0);
+    assert(chainman.m_total_coinsdb_cache > 0);
+
     // Conservative value that will ultimately be changed by
     // a call to `chainman.MaybeRebalanceCaches()`.
     double init_cache_fraction = 0.2;
@@ -154,6 +157,51 @@ std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
                 chainman, coins_db_in_memory, fReset, fReindexChainState, coins_error_cb)) {
         return err;
     }
+
+    // If a snapshot chainstate was fully validated by a background chainstate during
+    // the last run, detect it here and clean up the now-unneeded background
+    // chainstate.
+    auto snapshot_completion = chainman.MaybeCompleteSnapshotValidation();
+
+    if (snapshot_completion.completed) {
+        LogPrintf("[snapshot] cleaning up unneeded background chainstate, then reinitializing\n");
+        if (!chainman.ValidatedSnapshotCleanup()) {
+            AbortNode("Background chainstate cleanup failed unexpectedly.");
+        }
+
+        // Because ValidatedSnapshotCleanup() has torn down chainstates with
+        // ChainstateManager::ResetChainstates(), reinitialize them here without
+        // duplicating the blockindex work above.
+        assert(chainman.GetAll().size() == 0);
+        assert(!chainman.IsSnapshotActive());
+        assert(!chainman.IsSnapshotValidated());
+
+        chainman.InitializeChainstate(mempool);
+
+        // A reload of the block index is required to recompute setBlockIndexCandidates
+        // for the fully validated chainstate.
+        chainman.ActiveChainstate().UnloadBlockIndex();
+
+        if (!chainman.LoadBlockIndex()) {
+            if (shutdown_requested && shutdown_requested()) return ChainstateLoadingError::SHUTDOWN_PROBED;
+            return ChainstateLoadingError::ERROR_LOADING_BLOCK_DB;
+        }
+        if (!chainman.BlockIndex().empty() &&
+                !chainman.m_blockman.LookupBlockIndex(chainman.GetParams().GetConsensus().hashGenesisBlock)) {
+            return ChainstateLoadingError::ERROR_BAD_GENESIS_BLOCK;
+        }
+        if (!fReindex && !chainman.ActiveChainstate().LoadGenesisBlock()) {
+            return ChainstateLoadingError::ERROR_LOAD_GENESIS_BLOCK_FAILED;
+        }
+
+        if (std::optional<ChainstateLoadingError> err = CompleteChainstateInitialization(
+                chainman, coins_db_in_memory, fReset, fReindexChainState, coins_error_cb)) {
+            return err;
+        }
+    } else if (snapshot_completion.error) {
+        return ChainstateLoadingError::SNAPSHOT_VALIDATION_FAILED;
+    }
+
     return std::nullopt;
 }
 
