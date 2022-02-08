@@ -2423,9 +2423,6 @@ void PeerManagerImpl::ProcessHeadersMessage(CNode& pfrom, const Peer& peer,
             nodestate->m_last_block_announcement = GetTime();
         }
 
-        // Consider immediately downloading blocks.
-        HeadersDirectFetchBlocks(pfrom, pindexLast);
-
         // If we're in IBD, we want outbound peers that will serve us a useful
         // chain. Disconnect peers that are on chains with insufficient work.
         if (m_chainman.ActiveChainstate().IsInitialBlockDownload() && nCount != MAX_HEADERS_RESULTS) {
@@ -2460,6 +2457,9 @@ void PeerManagerImpl::ProcessHeadersMessage(CNode& pfrom, const Peer& peer,
             }
         }
     }
+
+    // Consider immediately downloading blocks.
+    HeadersDirectFetchBlocks(pfrom, pindexLast);
 
     return;
 }
