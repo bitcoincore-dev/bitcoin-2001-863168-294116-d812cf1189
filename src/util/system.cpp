@@ -1062,9 +1062,14 @@ void ArgsManager::LogArgs() const
 
 bool RenameOver(fs::path src, fs::path dest)
 {
+#ifdef __MINGW64__
+    return MoveFileExW(src.wstring().c_str(), dest.wstring().c_str(),
+                       MOVEFILE_REPLACE_EXISTING) != 0;
+#else
     std::error_code error;
     fs::rename(src, dest, error);
     return !error;
+#endif
 }
 
 /**
