@@ -1311,7 +1311,9 @@ else
     QT_TEST_INCLUDES=SUPPRESS_WARNINGS($QT_TEST_INCLUDES)
   fi
 
-  CPPFLAGS="$CPPFLAGS -DPROVIDE_FUZZ_MAIN_FUNCTION"
+  if test "$enable_fuzz_binary" = "yes"; then
+    CPPFLAGS="$CPPFLAGS -DPROVIDE_FUZZ_MAIN_FUNCTION"
+  fi
 fi
 
 if test "$enable_wallet" != "no"; then
