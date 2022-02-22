@@ -1394,8 +1394,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
 
     assert(!node.mempool);
     assert(!node.chainman);
-    bool fLoaded = false;
-    while (!fLoaded && !ShutdownRequested()) {
+    for (bool fLoaded = false; !fLoaded && !ShutdownRequested();) {
         node.mempool = std::make_unique<CTxMemPool>(node.fee_estimator.get(), check_ratio);
         CTxMemPool& mempool = *Assert(node.mempool);
 
