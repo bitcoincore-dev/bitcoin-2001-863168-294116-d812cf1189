@@ -331,6 +331,8 @@ void BlockManager::Unload()
     m_dirty_fileinfo.clear();
 
     pindexBestHeader = nullptr;
+
+    fHavePruned = false;
 }
 
 bool BlockManager::WriteBlockIndexDB()
