@@ -1668,6 +1668,10 @@ if test "$use_ccache" != "no"; then
     AX_CHECK_PREPROC_FLAG([-fmacro-prefix-map=A=B], [DEBUG_CPPFLAGS="$DEBUG_CPPFLAGS -fmacro-prefix-map=\$(abs_top_srcdir)=."], [], [$CXXFLAG_WERROR])
   fi
 fi
+if test "$COMPILER_ENVIRONMENT" != ""; then
+  CC="$COMPILER_ENVIRONMENT $CC"
+  CXX="$COMPILER_ENVIRONMENT $CXX"
+fi
 
 dnl enable wallet
 AC_MSG_CHECKING([if wallet should be enabled])
