@@ -317,7 +317,7 @@ RPCHelpMan sendmany()
     };
 }
 
-static RPCHelpMan setfeerate()
+RPCHelpMan setfeerate()
 {
     return RPCHelpMan{
         "setfeerate",
