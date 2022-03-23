@@ -2502,9 +2502,9 @@ static RPCHelpMan scanblocks()
         {
             scan_action_arg_desc,
             scan_objects_arg_desc,
-            RPCArg{"start_height", RPCArg::Type::NUM, RPCArg::DefaultHint{"0"}, "Height to start to scan from"},
+            RPCArg{"start_height", RPCArg::Type::NUM, RPCArg::Default{0}, "Height to start to scan from"},
             RPCArg{"stop_height", RPCArg::Type::NUM, RPCArg::DefaultHint{"chain tip"}, "Height to stop to scan"},
-            RPCArg{"filtertype", RPCArg::Type::STR, RPCArg::DefaultHint{"basic"}, "The type name of the filter"}
+            RPCArg{"filtertype", RPCArg::Type::STR, RPCArg::Default{"basic"}, "The type name of the filter"}
         },
         {
             scan_result_abort,
