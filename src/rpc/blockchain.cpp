@@ -2343,9 +2343,6 @@ static RPCHelpMan scantxoutset()
             scan_objects_arg_desc,
         },
         {
-            scan_result_abort,
-            scan_result_status_none,
-            scan_result_status_some,
             RPCResult{"When action=='start'", RPCResult::Type::OBJ, "", "", {
                 {RPCResult::Type::BOOL, "success", "Whether the scan was completed"},
                 {RPCResult::Type::NUM, "txouts", "The number of unspent transaction outputs scanned"},
@@ -2365,6 +2362,9 @@ static RPCHelpMan scantxoutset()
                 }},
                 {RPCResult::Type::STR_AMOUNT, "total_amount", "The total amount of all found unspent outputs in " + CURRENCY_UNIT},
             }},
+            scan_result_abort,
+            scan_result_status_some,
+            scan_result_status_none,
         },
         RPCExamples{""},
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
