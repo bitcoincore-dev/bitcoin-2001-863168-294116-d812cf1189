@@ -2317,10 +2317,6 @@ static const auto scan_objects_arg_desc = RPCArg{
 
 static const auto scan_result_abort = RPCResult{"When action=='abort'", RPCResult::Type::BOOL, "", ""};
 static const auto scan_result_status_none = RPCResult{"When action=='status' and no scan is in progress", RPCResult::Type::NONE, "", ""};
-static const auto scan_result_status_some = RPCResult{
-    "When action=='status' and scan is in progress", RPCResult::Type::OBJ, "", "",
-    {{RPCResult::Type::NUM, "progress", "The scan progress"},}
-};
 
 
 static RPCHelpMan scantxoutset()
@@ -2363,7 +2359,10 @@ static RPCHelpMan scantxoutset()
                 {RPCResult::Type::STR_AMOUNT, "total_amount", "The total amount of all found unspent outputs in " + CURRENCY_UNIT},
             }},
             scan_result_abort,
-            scan_result_status_some,
+            RPCResult{"When action=='status' and scan is in progress", RPCResult::Type::OBJ, "", "",
+            {
+                {RPCResult::Type::NUM, "progress", "The scan progress"},
+            }},
             scan_result_status_none,
         },
         RPCExamples{""},
@@ -2514,7 +2513,11 @@ static RPCHelpMan scanblocks()
                 },
             },
             scan_result_abort,
-            scan_result_status_some,
+            RPCResult{"When action=='status' and scan is in progress", RPCResult::Type::OBJ, "", "",
+            {
+                {RPCResult::Type::NUM, "progress", "The scan progress"},
+                {RPCResult::Type::NUM, "current_height", "Height of the block currently being scanned."},
+            }},
             scan_result_status_none,
         },
         RPCExamples{
