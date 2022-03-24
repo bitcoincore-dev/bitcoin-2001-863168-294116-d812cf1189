@@ -2507,15 +2507,15 @@ static RPCHelpMan scanblocks()
             RPCArg{"filtertype", RPCArg::Type::STR, RPCArg::Default{"basic"}, "The type name of the filter"}
         },
         {
-            scan_result_abort,
-            scan_result_status_none,
-            scan_result_status_some,
             RPCResult{"When action=='start'", RPCResult::Type::OBJ, "", "", {
                 {RPCResult::Type::NUM, "from_height", "The height we started the scan from"},
                 {RPCResult::Type::NUM, "to_height", "The height we ended the scan at"},
                 {RPCResult::Type::ARR, "relevant_blocks", "", {{RPCResult::Type::STR_HEX, "blockhash", "A relevant blockhash"},}},
                 },
             },
+            scan_result_abort,
+            scan_result_status_some,
+            scan_result_status_none,
         },
         RPCExamples{
             HelpExampleCli("scanblocks", R"cli(start '["addr(bcrt1q4u4nsgk6ug0sqz7r3rj9tykjxrsl0yy4d0wwte)"]' 300000)cli") +
