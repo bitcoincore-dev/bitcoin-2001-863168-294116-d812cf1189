@@ -2315,8 +2315,8 @@ static const auto scan_objects_arg_desc = RPCArg{
     "[scanobjects,...]"
 };
 
-static const auto scan_result_abort = RPCResult{"When action=='abort'", RPCResult::Type::BOOL, "", ""};
-static const auto scan_result_status_none = RPCResult{"When action=='status' and no scan is in progress", RPCResult::Type::NONE, "", ""};
+static const auto scan_result_abort = RPCResult{"When action=='abort'", RPCResult::Type::BOOL, "success", "True if scan will be aborted (not necessarily before this RPC call returns), or false if there is no scan to abort."};
+static const auto scan_result_status_none = RPCResult{"When action=='status' and no scan is in progress - possibly already completed", RPCResult::Type::NONE, "", ""};
 
 
 static RPCHelpMan scantxoutset()
@@ -2339,7 +2339,7 @@ static RPCHelpMan scantxoutset()
             scan_objects_arg_desc,
         },
         {
-            RPCResult{"When action=='start'", RPCResult::Type::OBJ, "", "", {
+            RPCResult{"When action=='start'; only returns after scan completes", RPCResult::Type::OBJ, "", "", {
                 {RPCResult::Type::BOOL, "success", "Whether the scan was completed"},
                 {RPCResult::Type::NUM, "txouts", "The number of unspent transaction outputs scanned"},
                 {RPCResult::Type::NUM, "height", "The current block height (index)"},
@@ -2361,7 +2361,7 @@ static RPCHelpMan scantxoutset()
             scan_result_abort,
             RPCResult{"When action=='status' and scan is in progress", RPCResult::Type::OBJ, "", "",
             {
-                {RPCResult::Type::NUM, "progress", "The scan progress"},
+                {RPCResult::Type::NUM, "progress", "Approximate percent complete."},
             }},
             scan_result_status_none,
         },
@@ -2506,16 +2506,17 @@ static RPCHelpMan scanblocks()
             RPCArg{"filtertype", RPCArg::Type::STR, RPCArg::Default{"basic"}, "The type name of the filter"}
         },
         {
-            RPCResult{"When action=='start'", RPCResult::Type::OBJ, "", "", {
+            RPCResult{"When action=='start'; only returns after scan completes", RPCResult::Type::OBJ, "", "", {
                 {RPCResult::Type::NUM, "from_height", "The height we started the scan from"},
                 {RPCResult::Type::NUM, "to_height", "The height we ended the scan at"},
-                {RPCResult::Type::ARR, "relevant_blocks", "", {{RPCResult::Type::STR_HEX, "blockhash", "A relevant blockhash"},}},
-                },
-            },
+                {RPCResult::Type::ARR, "relevant_blocks", "Blocks that may have matched a scanobject.", {
+                    {RPCResult::Type::STR_HEX, "blockhash", "A relevant blockhash"},
+                }},
+            }},
             scan_result_abort,
             RPCResult{"When action=='status' and scan is in progress", RPCResult::Type::OBJ, "", "",
             {
-                {RPCResult::Type::NUM, "progress", "The scan progress"},
+                {RPCResult::Type::NUM, "progress", "Approximate percent complete."},
                 {RPCResult::Type::NUM, "current_height", "Height of the block currently being scanned."},
             }},
             scan_result_status_none,
