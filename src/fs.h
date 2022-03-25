@@ -156,6 +156,18 @@ static inline path PathFromString(const std::string& string)
 }
 
 /**
+ * Convert byte string to path object which in turn has been
+ * normalized, with redundant "." and ".." path components
+ * and trailing separators removed.
+ */
+static inline path NormalizedPathFromString(std::string string)
+{
+    fs::path result = fs::PathFromString(string).lexically_normal();
+    // Remove trailing slash, if present.
+    return result.has_filename() ? result : result.parent_path();
+}
+
+/**
  * Create directory (and if necessary its parents), unless the leaf directory
  * already exists or is a symlink to an existing directory.
  * This is a temporary workaround for an issue in libstdc++ that has been fixed
