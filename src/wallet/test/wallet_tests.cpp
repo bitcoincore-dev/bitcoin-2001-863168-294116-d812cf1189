@@ -779,34 +779,6 @@ BOOST_FIXTURE_TEST_CASE(CreateWallet, TestChain100Setup)
 
 
     TestUnloadWallet(std::move(wallet));
-
-
-    // Load wallet again, this time creating new block and mempool transactions
-    // paying to the wallet as the wallet finishes loading and syncing the
-    // queue so the events have to be handled immediately. Releasing the wallet
-    // lock during the sync is a little artificial but is needed to avoid a
-    // deadlock during the sync and simulates a new block notification happening
-    // as soon as possible.
-    addtx_count = 0;
-    auto handler = HandleLoadWallet(context, [&](std::unique_ptr<interfaces::Wallet> wallet) {
-            BOOST_CHECK(rescan_completed);
-            m_coinbase_txns.push_back(CreateAndProcessBlock({}, GetScriptForRawPubKey(coinbaseKey.GetPubKey())).vtx[0]);
-            block_tx = TestSimpleSpend(*m_coinbase_txns[2], 0, coinbaseKey, GetScriptForRawPubKey(key.GetPubKey()));
-            m_coinbase_txns.push_back(CreateAndProcessBlock({block_tx}, GetScriptForRawPubKey(coinbaseKey.GetPubKey())).vtx[0]);
-            mempool_tx = TestSimpleSpend(*m_coinbase_txns[3], 0, coinbaseKey, GetScriptForRawPubKey(key.GetPubKey()));
-            BOOST_CHECK(m_node.chain->broadcastTransaction(MakeTransactionRef(mempool_tx), DEFAULT_TRANSACTION_MAXFEE, false, error));
-            SyncWithValidationInterfaceQueue();
-        });
-    wallet = TestLoadWallet(context);
-    BOOST_CHECK_EQUAL(addtx_count, 4);
-    {
-        LOCK(wallet->cs_wallet);
-        BOOST_CHECK_EQUAL(wallet->mapWallet.count(block_tx.GetHash()), 1U);
-        BOOST_CHECK_EQUAL(wallet->mapWallet.count(mempool_tx.GetHash()), 1U);
-    }
-
-
-    TestUnloadWallet(std::move(wallet));
 }
 
 BOOST_FIXTURE_TEST_CASE(CreateWalletWithoutChain, BasicTestingSetup)
