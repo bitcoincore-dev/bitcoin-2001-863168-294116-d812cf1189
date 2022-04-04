@@ -4,6 +4,8 @@
 print-%: FORCE
 	@echo '$*'='$($*)'
 
+SYSTEM_PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
+
 # When invoking a sub-make, keep only the command line variable definitions
 # matching the pattern in the filter function.
 #

@@ -18,6 +18,7 @@
              (gnu packages gnome)
              (gnu packages installers)
              (gnu packages linux)
+             (gnu packages libffi)
              (gnu packages llvm)
              (gnu packages mingw)
              (gnu packages moreutils)
@@ -607,7 +608,8 @@ inspecting signatures in Mach-O binaries.")
                                                       #:base-libc glibc-2.27/bitcoin-patched
                                                       #:base-kernel-headers linux-libre-headers-4.19))
                        (else
-                        (make-bitcoin-cross-toolchain target)))))
+                        (make-bitcoin-cross-toolchain target)))
+                 libffi))
           ((string-contains target "darwin")
            (list ;; Native GCC 10 toolchain
                  gcc-toolchain-10
