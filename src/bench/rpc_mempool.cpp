@@ -5,6 +5,7 @@
 #include <bench/bench.h>
 #include <rpc/mempool.h>
 #include <txmempool.h>
+#include <txmempool_entry.h>
 
 #include <univalue.h>
 
