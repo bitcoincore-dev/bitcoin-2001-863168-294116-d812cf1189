@@ -6,6 +6,7 @@
 
 #include <policy/settings.h>
 #include <tinyformat.h>
+#include <txmempool_entry.h>
 #include <util/moneystr.h>
 #include <util/rbf.h>
 
