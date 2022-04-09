@@ -95,4 +95,14 @@ T&& inline_assertion_check(LIFETIMEBOUND T&& val, [[maybe_unused]] const char* f
         format_internal_error("Unreachable code reached (non-fatal)", \
                               __FILE__, __LINE__, __func__, PACKAGE_BUGREPORT))
 
+/**
+ * UNREACHABLE is a macro that is used to mark unreachable code. It aborts the program.
+ * This is used to mark code that is not yet implemented or is not yet reachable.
+ */
+#define UNREACHABLE()                                                                                                                                   \
+    do {                                                                                                                                                \
+        std::cerr << format_internal_error("Unreachable code reached (fatal, aborting)", __FILE__, __LINE__, __func__, PACKAGE_BUGREPORT) << std::endl; \
+        std::abort();                                                                                                                                   \
+    } while (false)
+
 #endif // BITCOIN_UTIL_CHECK_H
