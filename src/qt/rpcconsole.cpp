@@ -610,6 +610,7 @@ bool RPCConsole::eventFilter(QObject* obj, QEvent *event)
     if(event->type() == QEvent::KeyPress) // Special key handling
     {
         QKeyEvent *keyevt = static_cast<QKeyEvent*>(event);
+        const auto type = keyevt->type();
         int key = keyevt->key();
         Qt::KeyboardModifiers mod = keyevt->modifiers();
         switch(key)
@@ -618,17 +619,16 @@ bool RPCConsole::eventFilter(QObject* obj, QEvent *event)
         case Qt::Key_Down: if(obj == ui->lineEdit) { browseHistory(1); return true; } break;
         case Qt::Key_PageUp: /* pass paging keys to messages widget */
         case Qt::Key_PageDown:
-            if(obj == ui->lineEdit)
-            {
-                QApplication::postEvent(ui->messagesWidget, new QKeyEvent(*keyevt));
+            if (obj == ui->lineEdit) {
+                QApplication::postEvent(ui->messagesWidget, new QKeyEvent(type, key, mod));
                 return true;
             }
             break;
         case Qt::Key_Return:
         case Qt::Key_Enter:
             // forward these events to lineEdit
-            if(obj == autoCompleter->popup()) {
-                QApplication::postEvent(ui->lineEdit, new QKeyEvent(*keyevt));
+            if (obj == autoCompleter->popup()) {
+                QApplication::postEvent(ui->lineEdit, new QKeyEvent(type, key, mod));
                 autoCompleter->popup()->hide();
                 return true;
             }
@@ -636,13 +636,13 @@ bool RPCConsole::eventFilter(QObject* obj, QEvent *event)
         default:
             // Typing in messages widget brings focus to line edit, and redirects key there
             // Exclude most combinations and keys that emit no text, except paste shortcuts
-            if(obj == ui->messagesWidget && (
+            if (obj == ui->messagesWidget && (
                   (!mod && !keyevt->text().isEmpty() && key != Qt::Key_Tab) ||
                   ((mod & Qt::ControlModifier) && key == Qt::Key_V) ||
                   ((mod & Qt::ShiftModifier) && key == Qt::Key_Insert)))
             {
                 ui->lineEdit->setFocus();
-                QApplication::postEvent(ui->lineEdit, new QKeyEvent(*keyevt));
+                QApplication::postEvent(ui->lineEdit, new QKeyEvent(type, key, mod));
                 return true;
             }
         }
