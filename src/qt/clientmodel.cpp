@@ -215,19 +215,7 @@ QString ClientModel::blocksDir() const
     return GUIUtil::PathToQString(gArgs.GetBlocksDirPath());
 }
 
-void ClientModel::updateBanlist()
-{
-    banTableModel->refresh();
-}
-
 // Handlers for core signals
-static void BannedListChanged(ClientModel *clientmodel)
-{
-    qDebug() << QString("%1: Requesting update for peer banlist").arg(__func__);
-    bool invoked = QMetaObject::invokeMethod(clientmodel, "updateBanlist", Qt::QueuedConnection);
-    assert(invoked);
-}
-
 static void BlockTipChanged(ClientModel* clientmodel, SynchronizationState sync_state, interfaces::BlockTip tip, double verificationProgress, bool fHeader)
 {
     if (fHeader) {
@@ -277,7 +265,11 @@ void ClientModel::subscribeToCoreSignals()
             qDebug() << "NotifyAlertChanged";
             Q_EMIT alertsChanged(getStatusBarWarnings());
         });
-    m_handler_banned_list_changed = m_node.handleBannedListChanged(std::bind(BannedListChanged, this));
+    m_handler_banned_list_changed = m_node.handleBannedListChanged(
+        [this]() {
+            qDebug() << QString("%1: Requesting update for peer banlist").arg(__func__);
+            banTableModel->refresh();
+        });
     m_handler_notify_block_tip = m_node.handleNotifyBlockTip(std::bind(BlockTipChanged, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, false));
     m_handler_notify_header_tip = m_node.handleNotifyHeaderTip(std::bind(BlockTipChanged, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, true));
 }
