@@ -239,7 +239,6 @@ void ClientModel::TipChanged(SynchronizationState sync_state, interfaces::BlockT
 
 void ClientModel::subscribeToCoreSignals()
 {
-    // Connect signals to client
     m_handler_show_progress = m_node.handleShowProgress(
         [this](const std::string& title, int progress, [[maybe_unused]] bool resume_possible) {
             Q_EMIT showProgress(QString::fromStdString(title), progress);
@@ -274,7 +273,6 @@ void ClientModel::subscribeToCoreSignals()
 
 void ClientModel::unsubscribeFromCoreSignals()
 {
-    // Disconnect signals from client
     m_handler_show_progress->disconnect();
     m_handler_notify_num_connections_changed->disconnect();
     m_handler_notify_network_active_changed->disconnect();
