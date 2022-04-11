@@ -535,8 +535,8 @@ public:
     CService(const struct in_addr& ipv4Addr, uint16_t port);
     explicit CService(const struct sockaddr_in& addr);
     uint16_t GetPort() const;
-    bool GetSockAddr(struct sockaddr* paddr, socklen_t* addrlen) const;
-    bool SetSockAddr(const struct sockaddr* paddr);
+    bool GetSockAddr(struct sockaddr_storage* paddr, socklen_t* addrlen) const;
+    bool SetSockAddr(const struct sockaddr_storage& addr);
     friend bool operator==(const CService& a, const CService& b);
     friend bool operator!=(const CService& a, const CService& b) { return !(a == b); }
     friend bool operator<(const CService& a, const CService& b);

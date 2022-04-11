@@ -941,15 +941,21 @@ CService::CService(const struct sockaddr_in6 &addr) : CNetAddr(addr.sin6_addr, a
    assert(addr.sin6_family == AF_INET6);
 }
 
-bool CService::SetSockAddr(const struct sockaddr *paddr)
+bool CService::SetSockAddr(const struct sockaddr_storage &addrIn)
 {
-    switch (paddr->sa_family) {
-    case AF_INET:
-        *this = CService(*(const struct sockaddr_in*)paddr);
+    switch (addrIn.ss_family) {
+    case AF_INET: {
+        struct sockaddr_in addr;
+        std::memcpy(&addr, &addrIn, sizeof(addr));
+        *this = CService(addr);
         return true;
-    case AF_INET6:
-        *this = CService(*(const struct sockaddr_in6*)paddr);
+    }
+    case AF_INET6: {
+        struct sockaddr_in6 addr6;
+        std::memcpy(&addr6, &addrIn, sizeof(addr6));
+        *this = CService(addr6);
         return true;
+    }
     default:
         return false;
     }
@@ -974,39 +980,34 @@ bool operator<(const CService& a, const CService& b)
  * Obtain the IPv4/6 socket address this represents.
  *
  * @param[out] paddr The obtained socket address.
- * @param[in,out] addrlen The size, in bytes, of the address structure pointed
- *                        to by paddr. The value that's pointed to by this
- *                        parameter might change after calling this function if
- *                        the size of the corresponding address structure
- *                        changed.
+ * @param[out] addrlen The size, in bytes, of the address structure pointed
+ *                     to by paddr.
  *
  * @returns Whether or not the operation was successful.
  */
-bool CService::GetSockAddr(struct sockaddr* paddr, socklen_t *addrlen) const
+bool CService::GetSockAddr(struct sockaddr_storage* paddr, socklen_t *addrlen) const
 {
     if (IsIPv4()) {
-        if (*addrlen < (socklen_t)sizeof(struct sockaddr_in))
+        struct sockaddr_in addrin;
+        std::memset(&addrin, 0, sizeof(addrin));
+        *addrlen = sizeof(addrin);
+        if (!GetInAddr(&addrin.sin_addr))
             return false;
-        *addrlen = sizeof(struct sockaddr_in);
-        struct sockaddr_in *paddrin = (struct sockaddr_in*)paddr;
-        memset(paddrin, 0, *addrlen);
-        if (!GetInAddr(&paddrin->sin_addr))
-            return false;
-        paddrin->sin_family = AF_INET;
-        paddrin->sin_port = htons(port);
+        addrin.sin_family = AF_INET;
+        addrin.sin_port = htons(port);
+        std::memcpy(paddr, &addrin, *addrlen);
         return true;
     }
     if (IsIPv6() || IsCJDNS()) {
-        if (*addrlen < (socklen_t)sizeof(struct sockaddr_in6))
+        struct sockaddr_in6 addrin6;
+        std::memset(&addrin6, 0, sizeof(addrin6));
+        *addrlen = sizeof(addrin6);
+        if (!GetIn6Addr(&addrin6.sin6_addr))
             return false;
-        *addrlen = sizeof(struct sockaddr_in6);
-        struct sockaddr_in6 *paddrin6 = (struct sockaddr_in6*)paddr;
-        memset(paddrin6, 0, *addrlen);
-        if (!GetIn6Addr(&paddrin6->sin6_addr))
-            return false;
-        paddrin6->sin6_scope_id = m_scope_id;
-        paddrin6->sin6_family = AF_INET6;
-        paddrin6->sin6_port = htons(port);
+        addrin6.sin6_scope_id = m_scope_id;
+        addrin6.sin6_family = AF_INET6;
+        addrin6.sin6_port = htons(port);
+        std::memcpy(paddr, &addrin6, *addrlen);
         return true;
     }
     return false;
