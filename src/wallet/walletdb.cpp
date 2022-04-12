@@ -310,11 +310,7 @@ public:
     std::vector<uint256> vWalletUpgrade;
     std::map<OutputType, uint256> m_active_external_spks;
     std::map<OutputType, uint256> m_active_internal_spks;
-    std::map<uint256, DescriptorCache> m_descriptor_caches;
-    std::map<std::pair<uint256, CKeyID>, CKey> m_descriptor_keys;
-    std::map<std::pair<uint256, CKeyID>, std::pair<CPubKey, std::vector<unsigned char>>> m_descriptor_crypt_keys;
     bool tx_corrupt{false};
-    bool descriptor_unknown{false};
 
     CWalletScanState() = default;
 };
@@ -597,108 +593,10 @@ ReadKeyValue(CWallet* pwallet, DataStream& ssKey, CDataStream& ssValue,
             }
             spk_mans[static_cast<OutputType>(type)] = id;
         } else if (strType == DBKeys::WALLETDESCRIPTOR) {
-            uint256 id;
-            ssKey >> id;
-            WalletDescriptor desc;
-            try {
-                ssValue >> desc;
-            } catch (const std::ios_base::failure& e) {
-                strErr = e.what();
-                wss.descriptor_unknown = true;
-                return false;
-            }
-            if (wss.m_descriptor_caches.count(id) == 0) {
-                wss.m_descriptor_caches[id] = DescriptorCache();
-            }
-            pwallet->LoadDescriptorScriptPubKeyMan(id, desc);
         } else if (strType == DBKeys::WALLETDESCRIPTORCACHE) {
-            bool parent = true;
-            uint256 desc_id;
-            uint32_t key_exp_index;
-            uint32_t der_index;
-            ssKey >> desc_id;
-            ssKey >> key_exp_index;
-
-            // if the der_index exists, it's a derived xpub
-            try
-            {
-                ssKey >> der_index;
-                parent = false;
-            }
-            catch (...) {}
-
-            std::vector<unsigned char> ser_xpub(BIP32_EXTKEY_SIZE);
-            ssValue >> ser_xpub;
-            CExtPubKey xpub;
-            xpub.Decode(ser_xpub.data());
-            if (parent) {
-                wss.m_descriptor_caches[desc_id].CacheParentExtPubKey(key_exp_index, xpub);
-            } else {
-                wss.m_descriptor_caches[desc_id].CacheDerivedExtPubKey(key_exp_index, der_index, xpub);
-            }
         } else if (strType == DBKeys::WALLETDESCRIPTORLHCACHE) {
-            uint256 desc_id;
-            uint32_t key_exp_index;
-            ssKey >> desc_id;
-            ssKey >> key_exp_index;
-
-            std::vector<unsigned char> ser_xpub(BIP32_EXTKEY_SIZE);
-            ssValue >> ser_xpub;
-            CExtPubKey xpub;
-            xpub.Decode(ser_xpub.data());
-            wss.m_descriptor_caches[desc_id].CacheLastHardenedExtPubKey(key_exp_index, xpub);
         } else if (strType == DBKeys::WALLETDESCRIPTORKEY) {
-            uint256 desc_id;
-            CPubKey pubkey;
-            ssKey >> desc_id;
-            ssKey >> pubkey;
-            if (!pubkey.IsValid())
-            {
-                strErr = "Error reading wallet database: CPubKey corrupt";
-                return false;
-            }
-            CKey key;
-            CPrivKey pkey;
-            uint256 hash;
-
-            wss.nKeys++;
-            ssValue >> pkey;
-            ssValue >> hash;
-
-            // hash pubkey/privkey to accelerate wallet load
-            std::vector<unsigned char> to_hash;
-            to_hash.reserve(pubkey.size() + pkey.size());
-            to_hash.insert(to_hash.end(), pubkey.begin(), pubkey.end());
-            to_hash.insert(to_hash.end(), pkey.begin(), pkey.end());
-
-            if (Hash(to_hash) != hash)
-            {
-                strErr = "Error reading wallet database: CPubKey/CPrivKey corrupt";
-                return false;
-            }
-
-            if (!key.Load(pkey, pubkey, true))
-            {
-                strErr = "Error reading wallet database: CPrivKey corrupt";
-                return false;
-            }
-            wss.m_descriptor_keys.insert(std::make_pair(std::make_pair(desc_id, pubkey.GetID()), key));
         } else if (strType == DBKeys::WALLETDESCRIPTORCKEY) {
-            uint256 desc_id;
-            CPubKey pubkey;
-            ssKey >> desc_id;
-            ssKey >> pubkey;
-            if (!pubkey.IsValid())
-            {
-                strErr = "Error reading wallet database: CPubKey corrupt";
-                return false;
-            }
-            std::vector<unsigned char> privkey;
-            ssValue >> privkey;
-            wss.nCKeys++;
-
-            wss.m_descriptor_crypt_keys.insert(std::make_pair(std::make_pair(desc_id, pubkey.GetID()), std::make_pair(pubkey, privkey)));
-            wss.fIsEncrypted = true;
         } else if (strType == DBKeys::LOCKED_UTXO) {
             uint256 hash;
             uint32_t n;
@@ -758,14 +656,12 @@ struct LoadResult
 };
 
 using LoadFunc = std::function<DBErrors(CWallet* pwallet, DataStream& key, CDataStream& value, std::string& err)>;
-static LoadResult LoadRecords(CWallet* pwallet, DatabaseBatch& batch, const std::string& key, LoadFunc load_func)
+static LoadResult LoadRecords(CWallet* pwallet, DatabaseBatch& batch, const std::string& key, DataStream& prefix, LoadFunc load_func)
 {
     LoadResult result;
     DataStream ssKey;
     CDataStream ssValue(SER_DISK, CLIENT_VERSION);
 
-    DataStream prefix;
-    prefix << key;
     Assume(!prefix.empty());
     std::unique_ptr<DatabaseCursor> cursor = batch.GetNewPrefixCursor(prefix);
     if (!cursor) {
@@ -792,6 +688,13 @@ static LoadResult LoadRecords(CWallet* pwallet, DatabaseBatch& batch, const std:
         ++result.m_records;
     }
     return result;
+}
+
+static LoadResult LoadRecords(CWallet* pwallet, DatabaseBatch& batch, const std::string& key, LoadFunc load_func)
+{
+    DataStream prefix;
+    prefix << key;
+    return LoadRecords(pwallet, batch, key, prefix, load_func);
 }
 
 static DBErrors LoadLegacyWalletRecords(CWallet* pwallet, DatabaseBatch& batch, int last_client) EXCLUSIVE_LOCKS_REQUIRED(pwallet->cs_wallet)
@@ -1009,6 +912,175 @@ static DBErrors LoadLegacyWalletRecords(CWallet* pwallet, DatabaseBatch& batch, 
     return result;
 }
 
+template<typename... Args>
+static CDataStream PrefixStream(const Args&... args)
+{
+    CDataStream prefix(0, 0);
+    SerializeMany(prefix, args...);
+    return prefix;
+}
+
+static DBErrors LoadDescriptorWalletRecords(CWallet* pwallet, DatabaseBatch& batch, int last_client) EXCLUSIVE_LOCKS_REQUIRED(pwallet->cs_wallet)
+{
+    AssertLockHeld(pwallet->cs_wallet);
+
+    // Load descriptor record
+    int num_keys = 0;
+    int num_ckeys= 0;
+    LoadResult desc_res = LoadRecords(pwallet, batch, DBKeys::WALLETDESCRIPTOR,
+        [&batch, &num_keys, &num_ckeys, &last_client] (CWallet* pwallet, DataStream& key, CDataStream& value, std::string& err) {
+        DBErrors result = DBErrors::LOAD_OK;
+
+        uint256 id;
+        key >> id;
+        WalletDescriptor desc;
+        try {
+            value >> desc;
+        } catch (const std::ios_base::failure&) {
+            err = strprintf("Error: Unrecognized descriptor found in wallet %s. ", pwallet->GetName());
+            err += (last_client > CLIENT_VERSION) ? "The wallet might had been created on a newer version. " :
+                    "The database might be corrupted or the software version is not compatible with one of your wallet descriptors. ";
+            err += "Please try running the latest software version";
+            pwallet->WalletLogPrintf("%s\n", err);
+            return DBErrors::UNKNOWN_DESCRIPTOR;
+        }
+        pwallet->LoadDescriptorScriptPubKeyMan(id, desc);
+
+        DescriptorCache cache;
+
+        // Get key cache for this descriptor
+        CDataStream prefix = PrefixStream(DBKeys::WALLETDESCRIPTORCACHE, id);
+        LoadResult key_cache_res = LoadRecords(pwallet, batch, DBKeys::WALLETDESCRIPTORCACHE, prefix,
+            [&id, &cache] (CWallet* pwallet, DataStream& key, CDataStream& value, std::string& err) {
+            bool parent = true;
+            uint256 desc_id;
+            uint32_t key_exp_index;
+            uint32_t der_index;
+            key >> desc_id;
+            assert(desc_id == id);
+            key >> key_exp_index;
+
+            // if the der_index exists, it's a derived xpub
+            try
+            {
+                key >> der_index;
+                parent = false;
+            }
+            catch (...) {}
+
+            std::vector<unsigned char> ser_xpub(BIP32_EXTKEY_SIZE);
+            value >> ser_xpub;
+            CExtPubKey xpub;
+            xpub.Decode(ser_xpub.data());
+            if (parent) {
+                cache.CacheParentExtPubKey(key_exp_index, xpub);
+            } else {
+                cache.CacheDerivedExtPubKey(key_exp_index, der_index, xpub);
+            }
+            return DBErrors::LOAD_OK;
+        });
+        result = std::max(result, key_cache_res.m_result);
+
+        // Get last hardened cache for this descriptor
+        prefix = PrefixStream(DBKeys::WALLETDESCRIPTORLHCACHE, id);
+        LoadResult lh_cache_res = LoadRecords(pwallet, batch, DBKeys::WALLETDESCRIPTORLHCACHE, prefix,
+            [&id, &cache] (CWallet* pwallet, DataStream& key, CDataStream& value, std::string& err) {
+            uint256 desc_id;
+            uint32_t key_exp_index;
+            key >> desc_id;
+            assert(desc_id == id);
+            key >> key_exp_index;
+
+            std::vector<unsigned char> ser_xpub(BIP32_EXTKEY_SIZE);
+            value >> ser_xpub;
+            CExtPubKey xpub;
+            xpub.Decode(ser_xpub.data());
+            cache.CacheLastHardenedExtPubKey(key_exp_index, xpub);
+            return DBErrors::LOAD_OK;
+        });
+        result = std::max(result, lh_cache_res.m_result);
+
+        // Set the cache for this descriptor
+        auto spk_man = (DescriptorScriptPubKeyMan*)pwallet->GetScriptPubKeyMan(id);
+        assert(spk_man);
+        spk_man->SetCache(cache);
+
+        // Get unencrypted keys
+        prefix = PrefixStream(DBKeys::WALLETDESCRIPTORKEY, id);
+        LoadResult key_res = LoadRecords(pwallet, batch, DBKeys::WALLETDESCRIPTORKEY, prefix,
+            [&id, &spk_man] (CWallet* pwallet, DataStream& key, CDataStream& value, std::string& err) {
+            uint256 desc_id;
+            CPubKey pubkey;
+            key >> desc_id;
+            assert(desc_id == id);
+            key >> pubkey;
+            if (!pubkey.IsValid())
+            {
+                err = "Error reading wallet database: descriptor unencrypted key CPubKey corrupt\n";
+                return DBErrors::CORRUPT;
+            }
+            CKey privkey;
+            CPrivKey pkey;
+            uint256 hash;
+
+            value >> pkey;
+            value >> hash;
+
+            // hash pubkey/privkey to accelerate wallet load
+            std::vector<unsigned char> to_hash;
+            to_hash.reserve(pubkey.size() + pkey.size());
+            to_hash.insert(to_hash.end(), pubkey.begin(), pubkey.end());
+            to_hash.insert(to_hash.end(), pkey.begin(), pkey.end());
+
+            if (Hash(to_hash) != hash)
+            {
+                err = "Error reading wallet database: descriptor unencrypted key CPubKey/CPrivKey corrupt\n";
+                return DBErrors::CORRUPT;
+            }
+
+            if (!privkey.Load(pkey, pubkey, true))
+            {
+                err = "Error reading wallet database: descriptor unencrypted key CPrivKey corrupt\n";
+                return DBErrors::CORRUPT;
+            }
+            spk_man->AddKey(pubkey.GetID(), privkey);
+            return DBErrors::LOAD_OK;
+        });
+        result = std::max(result, key_res.m_result);
+        num_keys = key_res.m_records;
+
+        // Get encrypted keys
+        prefix = PrefixStream(DBKeys::WALLETDESCRIPTORCKEY, id);
+        LoadResult ckey_res = LoadRecords(pwallet, batch, DBKeys::WALLETDESCRIPTORCKEY, prefix,
+            [&id, &spk_man] (CWallet* pwallet, DataStream& key, CDataStream& value, std::string& err) {
+            uint256 desc_id;
+            CPubKey pubkey;
+            key >> desc_id;
+            assert(desc_id == id);
+            key >> pubkey;
+            if (!pubkey.IsValid())
+            {
+                err = "Error reading wallet database: descriptor encrypted key CPubKey corrupt\n";
+                return DBErrors::CORRUPT;
+            }
+            std::vector<unsigned char> privkey;
+            value >> privkey;
+
+            spk_man->AddCryptedKey(pubkey.GetID(), pubkey, privkey);
+            return DBErrors::LOAD_OK;
+        });
+        result = std::max(result, ckey_res.m_result);
+        num_ckeys = ckey_res.m_records;
+
+        return result;
+    });
+
+    pwallet->WalletLogPrintf("Descriptors: %u, Descriptor Keys: %u plaintext, %u encrypted, %u total.\n",
+           desc_res.m_records, num_keys, num_ckeys, num_keys + num_ckeys);
+
+    return desc_res.m_result;
+}
+
 DBErrors WalletBatch::LoadWallet(CWallet* pwallet)
 {
     CWalletScanState wss;
@@ -1039,6 +1111,10 @@ DBErrors WalletBatch::LoadWallet(CWallet* pwallet)
 
         // Load legacy wallet keys
         result = LoadLegacyWalletRecords(pwallet, *m_batch, last_client);
+        if (result != DBErrors::LOAD_OK) return result;
+
+        // Load descriptors
+        result = std::max(LoadDescriptorWalletRecords(pwallet, *m_batch, last_client), result);
         if (result != DBErrors::LOAD_OK) return result;
 
         // Get cursor
@@ -1077,13 +1153,6 @@ DBErrors WalletBatch::LoadWallet(CWallet* pwallet)
                     // Set tx_corrupt back to false so that the error is only printed once (per corrupt tx)
                     wss.tx_corrupt = false;
                     result = DBErrors::CORRUPT;
-                } else if (wss.descriptor_unknown) {
-                    strErr = strprintf("Error: Unrecognized descriptor found in wallet %s. ", pwallet->GetName());
-                    strErr += (last_client > CLIENT_VERSION) ? "The wallet might had been created on a newer version. " :
-                            "The database might be corrupted or the software version is not compatible with one of your wallet descriptors. ";
-                    strErr += "Please try running the latest software version";
-                    pwallet->WalletLogPrintf("%s\n", strErr);
-                    return DBErrors::UNKNOWN_DESCRIPTOR;
                 } else {
                     // Leave other errors alone, if we try to fix them we might make things worse.
                     fNoncriticalErrors = true; // ... but do warn the user there is something wrong.
@@ -1105,23 +1174,6 @@ DBErrors WalletBatch::LoadWallet(CWallet* pwallet)
     }
     for (auto spk_man_pair : wss.m_active_internal_spks) {
         pwallet->LoadActiveScriptPubKeyMan(spk_man_pair.second, spk_man_pair.first, /*internal=*/true);
-    }
-
-    // Set the descriptor caches
-    for (const auto& desc_cache_pair : wss.m_descriptor_caches) {
-        auto spk_man = pwallet->GetScriptPubKeyMan(desc_cache_pair.first);
-        assert(spk_man);
-        ((DescriptorScriptPubKeyMan*)spk_man)->SetCache(desc_cache_pair.second);
-    }
-
-    // Set the descriptor keys
-    for (const auto& desc_key_pair : wss.m_descriptor_keys) {
-        auto spk_man = pwallet->GetScriptPubKeyMan(desc_key_pair.first.first);
-        ((DescriptorScriptPubKeyMan*)spk_man)->AddKey(desc_key_pair.first.second, desc_key_pair.second);
-    }
-    for (const auto& desc_key_pair : wss.m_descriptor_crypt_keys) {
-        auto spk_man = pwallet->GetScriptPubKeyMan(desc_key_pair.first.first);
-        ((DescriptorScriptPubKeyMan*)spk_man)->AddCryptedKey(desc_key_pair.first.second, desc_key_pair.second.first, desc_key_pair.second.second);
     }
 
     if (rescan_required && result == DBErrors::LOAD_OK) {
