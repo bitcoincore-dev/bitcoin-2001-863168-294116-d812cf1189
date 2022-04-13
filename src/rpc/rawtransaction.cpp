@@ -141,7 +141,6 @@ static RPCHelpMan getrawtransaction()
                          RPCResult::Type::STR, "data", "The serialized, hex-encoded data for 'txid'"
                      },
                      RPCResult{"if verbose is set to true",
-                         // When updating this documentation, update `decoderawtransaction` in the same way.
                          RPCResult::Type::OBJ, "", "",
                          {
                              {RPCResult::Type::BOOL, "in_active_chain", /*optional=*/true, "Whether specified block is in the active chain or not (only present with explicit \"blockhash\" argument)"},
@@ -165,11 +164,11 @@ static RPCHelpMan getrawtransaction()
                                          {RPCResult::Type::STR, "asm", "asm"},
                                          {RPCResult::Type::STR_HEX, "hex", "hex"},
                                      }},
+                                     {RPCResult::Type::NUM, "sequence", "The script sequence number"},
                                      {RPCResult::Type::ARR, "txinwitness", /*optional=*/true, "",
                                      {
                                          {RPCResult::Type::STR_HEX, "hex", "hex-encoded witness data (if any)"},
                                      }},
-                                     {RPCResult::Type::NUM, "sequence", "The script sequence number"},
                                  }},
                              }},
                              {RPCResult::Type::ARR, "vout", "",
@@ -475,12 +474,11 @@ static RPCHelpMan decoderawtransaction()
                 RPCResult{
                     RPCResult::Type::OBJ, "", "",
                     {
-                        // When updating this documentation, update `getrawtransaction` in the same way.
                         {RPCResult::Type::STR_HEX, "txid", "The transaction id"},
                         {RPCResult::Type::STR_HEX, "hash", "The transaction hash (differs from txid for witness transactions)"},
-                        {RPCResult::Type::NUM, "size", "The serialized transaction size"},
+                        {RPCResult::Type::NUM, "size", "The transaction size"},
                         {RPCResult::Type::NUM, "vsize", "The virtual transaction size (differs from size for witness transactions)"},
-                        {RPCResult::Type::NUM, "weight", "The transaction's weight (between vsize*4-3 and vsize*4)"},
+                        {RPCResult::Type::NUM, "weight", "The transaction's weight (between vsize*4 - 3 and vsize*4)"},
                         {RPCResult::Type::NUM, "version", "The version"},
                         {RPCResult::Type::NUM_TIME, "locktime", "The lock time"},
                         {RPCResult::Type::ARR, "vin", "",
