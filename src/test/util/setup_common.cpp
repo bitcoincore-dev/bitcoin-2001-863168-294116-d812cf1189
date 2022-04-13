@@ -186,7 +186,10 @@ ChainTestingSetup::~ChainTestingSetup()
     m_node.chainman.reset();
 }
 
-TestingSetup::TestingSetup(const std::string& chainName, const std::vector<const char*>& extra_args)
+TestingSetup::TestingSetup(
+        const std::string& chainName,
+        const std::vector<const char*>& extra_args,
+        const bool coins_db_in_memory)
     : ChainTestingSetup(chainName, extra_args)
 {
     const CChainParams& chainparams = Params();
@@ -204,7 +207,7 @@ TestingSetup::TestingSetup(const std::string& chainName, const std::vector<const
                                            m_cache_sizes.coins_db,
                                            m_cache_sizes.coins,
                                            /*block_tree_db_in_memory=*/true,
-                                           /*coins_db_in_memory=*/true);
+                                           /*coins_db_in_memory=*/coins_db_in_memory);
     assert(!maybe_load_error.has_value());
 
     auto maybe_verify_error = VerifyLoadedChainstate(
@@ -237,8 +240,10 @@ TestingSetup::TestingSetup(const std::string& chainName, const std::vector<const
     }
 }
 
-TestChain100Setup::TestChain100Setup(const std::vector<const char*>& extra_args)
-    : TestingSetup{CBaseChainParams::REGTEST, extra_args}
+TestChain100Setup::TestChain100Setup(
+        const std::vector<const char*>& extra_args,
+        const bool coins_db_in_memory)
+    : TestingSetup{CBaseChainParams::REGTEST, extra_args, coins_db_in_memory}
 {
     SetMockTime(1598887952);
     constexpr std::array<unsigned char, 32> vchKey = {
