@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(netbase_properties)
 
 }
 
-bool static TestSplitHost(const std::string& test, const std::string& host, uint16_t port, bool validPort)
+bool static TestSplitHost(const std::string& test, const std::string& host, uint16_t port, bool validPort = true)
 {
     std::string hostOut;
     uint16_t portOut{0};
@@ -93,22 +93,22 @@ bool static TestSplitHost(const std::string& test, const std::string& host, uint
 
 BOOST_AUTO_TEST_CASE(netbase_splithost)
 {
-    BOOST_CHECK(TestSplitHost("www.bitcoincore.org", "www.bitcoincore.org", 0, true));
-    BOOST_CHECK(TestSplitHost("[www.bitcoincore.org]", "www.bitcoincore.org", 0, true));
-    BOOST_CHECK(TestSplitHost("www.bitcoincore.org:80", "www.bitcoincore.org", 80, true));
-    BOOST_CHECK(TestSplitHost("[www.bitcoincore.org]:80", "www.bitcoincore.org", 80, true));
-    BOOST_CHECK(TestSplitHost("127.0.0.1", "127.0.0.1", 0, true));
-    BOOST_CHECK(TestSplitHost("127.0.0.1:8333", "127.0.0.1", 8333, true));
-    BOOST_CHECK(TestSplitHost("[127.0.0.1]", "127.0.0.1", 0, true));
-    BOOST_CHECK(TestSplitHost("[127.0.0.1]:8333", "127.0.0.1", 8333, true));
-    BOOST_CHECK(TestSplitHost("::ffff:127.0.0.1", "::ffff:127.0.0.1", 0, true));
-    BOOST_CHECK(TestSplitHost("[::ffff:127.0.0.1]:8333", "::ffff:127.0.0.1", 8333, true));
-    BOOST_CHECK(TestSplitHost("[::]:8333", "::", 8333, true));
-    BOOST_CHECK(TestSplitHost("::8333", "::8333", 0, true));
-    BOOST_CHECK(TestSplitHost(":8333", "", 8333, true));
-    BOOST_CHECK(TestSplitHost("[]:8333", "", 8333, true));
-    BOOST_CHECK(TestSplitHost("", "", 0, true));
-    BOOST_CHECK(TestSplitHost(":65535", "", 65535, true));
+    BOOST_CHECK(TestSplitHost("www.bitcoincore.org", "www.bitcoincore.org", 0));
+    BOOST_CHECK(TestSplitHost("[www.bitcoincore.org]", "www.bitcoincore.org", 0));
+    BOOST_CHECK(TestSplitHost("www.bitcoincore.org:80", "www.bitcoincore.org", 80));
+    BOOST_CHECK(TestSplitHost("[www.bitcoincore.org]:80", "www.bitcoincore.org", 80));
+    BOOST_CHECK(TestSplitHost("127.0.0.1", "127.0.0.1", 0));
+    BOOST_CHECK(TestSplitHost("127.0.0.1:8333", "127.0.0.1", 8333));
+    BOOST_CHECK(TestSplitHost("[127.0.0.1]", "127.0.0.1", 0));
+    BOOST_CHECK(TestSplitHost("[127.0.0.1]:8333", "127.0.0.1", 8333));
+    BOOST_CHECK(TestSplitHost("::ffff:127.0.0.1", "::ffff:127.0.0.1", 0));
+    BOOST_CHECK(TestSplitHost("[::ffff:127.0.0.1]:8333", "::ffff:127.0.0.1", 8333));
+    BOOST_CHECK(TestSplitHost("[::]:8333", "::", 8333));
+    BOOST_CHECK(TestSplitHost("::8333", "::8333", 0));
+    BOOST_CHECK(TestSplitHost(":8333", "", 8333));
+    BOOST_CHECK(TestSplitHost("[]:8333", "", 8333));
+    BOOST_CHECK(TestSplitHost("", "", 0));
+    BOOST_CHECK(TestSplitHost(":65535", "", 65535));
     BOOST_CHECK(TestSplitHost(":65536", "", 0, false));
     BOOST_CHECK(TestSplitHost(":-1", "", 0, false));
     BOOST_CHECK(TestSplitHost("[]:70001", "", 0, false));

@@ -117,11 +117,11 @@ bool SplitHostPort(std::string in, uint16_t& portOut, std::string& hostOut)
     bool fMultiColon{fHaveColon && colon != 0 && (in.find_last_of(':', colon - 1) != in.npos)};
     if (fHaveColon && (colon == 0 || fBracketed || !fMultiColon)) {
         if (!in.substr(colon + 1).empty()) {
-            uint16_t n;
-            if (ParseUInt16(in.substr(colon+1), &n)) {
-              portOut = n;
+        uint16_t n;
+        if (ParseUInt16(in.substr(colon + 1), &n)) {
+            portOut = n;
               valid = (portOut != 0);
-            }
+        }
         }
         in = in.substr(0, colon);
     } else {
