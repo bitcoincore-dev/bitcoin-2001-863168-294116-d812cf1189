@@ -111,10 +111,10 @@ committed - see #15606), in `CompleteSnapshotValidation()`, which is checked in
 `ActivateBestChain()`). We hash the background chainstate's UTXO set contents and
 ensure it matches the compiled value in `CMainParams::m_assumeutxo_data`.
 
-The background chainstate data lingers on disk until shutdown, when in
-`ChainstateManager::Reset()`, the background chainstate is cleaned up with
-`ValidatedSnapshotShutdownCleanup()`, which renames the `chainstate_[hash]` datadir as
-`chainstate`.
+The background chainstate data lingers on disk until subsequent initialization (after a
+shutdown), when in `LoadChainstate()`, the background chainstate is cleaned
+up with `validatedSnapshotCleanup()`, which renames the `chainstate_[hash]`
+datadir as `chainstate` and removes the now unnecessary background chainstate data.
 
 |    |    |
 | ---------- | ----------- |
