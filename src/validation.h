@@ -14,6 +14,7 @@
 #include <attributes.h>
 #include <chain.h>
 #include <consensus/amount.h>
+#include <dbwrapper.h>
 #include <fs.h>
 #include <node/blockstorage.h>
 #include <policy/feerate.h>
@@ -573,6 +574,12 @@ public:
         AssertLockHeld(::cs_main);
         return m_coins_views->m_dbview;
     }
+
+    //! Remove the on-disk storage associated with the CoinsDB. Calling this
+    //! makes this chainstate instance unusable as it resets all coins-views.
+    //!
+    //! Used when cleaning up unneeded chainstates during UTXO snapshot usage.
+    bool destroyCoinsDB(const std::string& db_path) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     //! @returns A pointer to the mempool.
     CTxMemPool* GetMempool()

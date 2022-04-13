@@ -5202,3 +5202,17 @@ void ChainstateManager::MaybeRebalanceCaches()
         }
     }
 }
+
+bool CChainState::destroyCoinsDB(const std::string& db_path)
+{
+    AssertLockHeld(::cs_main);
+    LogPrintf("Destroying coins leveldb for %s\n", this->ToString());
+    dbwrapper::Options options = Assert(m_coins_views)->m_dbview.Options();
+    // We have to destruct leveldb::DB in order to release the db lock, otherwise
+    // `DestroyDB` will fail. See `leveldb::~DBImpl()`.
+    //
+    // And this chainstate should no longer be considered usable anyway, so
+    // teardown all coinsviews.
+    m_coins_views.reset();
+    return dbwrapper::DestroyDB(db_path, options).ok();
+}
