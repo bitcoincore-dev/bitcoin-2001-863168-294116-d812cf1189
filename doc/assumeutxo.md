@@ -76,8 +76,10 @@ original chainstate remains in use as active.
 
 Once the snapshot chainstate is loaded and validated, it is promoted to active
 chainstate and a sync to tip begins. A new chainstate directory is created in the
-datadir for the snapshot chainstate called
-`chainstate_[SHA256 blockhash of snapshot base block]`.
+datadir for the snapshot chainstate called `chainstate_snapshot`. A special file is
+created within that directory, `base_blockhash`, which contains the serialized
+`uint256` of the base block of the snapshot. This is used to reinitialize the snapshot
+chainstate on subsequent inits. Otherwise, the directory is a normal leveldb database. 
 
 |    |    |
 | ---------- | ----------- |
@@ -87,7 +89,7 @@ datadir for the snapshot chainstate called
 The snapshot begins to sync to tip from its base block, technically in parallel with
 the original chainstate, but it is given priority during block download and is
 allocated most of the cache (see `MaybeRebalanceCaches()` and usages) as our chief
-consideration is getting to network tip.
+goal is getting to network tip.
 
 **Failure consideration:** if shutdown happens at any point during this phase, both
 chainstates will be detected during the next init and the process will resume.
@@ -106,25 +108,20 @@ sequentially.
 ### Background chainstate hits snapshot base block
 
 Once the tip of the background chainstate hits the base block of the snapshot
-chainstate, we stop use of the background chainstate by setting `m_stop_use` (not yet
-committed - see #15606), in `CompleteSnapshotValidation()`, which is checked in
-`ActivateBestChain()`). We hash the background chainstate's UTXO set contents and
-ensure it matches the compiled value in `CMainParams::m_assumeutxo_data`.
+chainstate, we stop use of the background chainstate by setting `m_stop_use`, in
+`CompleteSnapshotValidation()`, which is checked in `ActivateBestChain()`). We hash the
+background chainstate's UTXO set contents and ensure it matches the compiled value in
+`CMainParams::m_assumeutxo_data`.
 
-The background chainstate data lingers on disk until shutdown, when in
-`ChainstateManager::Reset()`, the background chainstate is cleaned up with
-`ValidatedSnapshotShutdownCleanup()`, which renames the `chainstate_[hash]` datadir as
-`chainstate`.
+The background chainstate data lingers on disk until subsequent initialization (after a
+shutdown), when in `LoadChainstate()`, the background chainstate is cleaned
+up with `validatedSnapshotCleanup()`, which renames the `chainstate_snapshot`
+datadir as `chainstate` and removes the now unnecessary background chainstate data.
 
 |    |    |
 | ---------- | ----------- |
 | number of chainstates | 2 (ibd has `m_stop_use=true`) |
 | active chainstate | snapshot |
-
-**Failure consideration:** if bitcoind unexpectedly halts after `m_stop_use` is set on
-the background chainstate but before `CompleteSnapshotValidation()` can finish, the
-need to complete snapshot validation will be detected on subsequent init by
-`ChainstateManager::CheckForUncleanShutdown()`.
 
 ### Bitcoind restarts sometime after snapshot validation has completed
 
