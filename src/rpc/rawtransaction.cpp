@@ -54,8 +54,8 @@ using node::PSBTAnalysis;
 using node::ReadBlockFromDisk;
 using node::UndoReadFromDisk;
 
-static void TxToJSON(const CTransaction& tx, const uint256& hashBlock, UniValue& entry,
-                     const Chainstate& active_chainstate, const CTxUndo* txundo = nullptr,
+static void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& entry,
+                     Chainstate& active_chainstate, const CTxUndo* txundo = nullptr,
                      TxVerbosity verbosity = TxVerbosity::SHOW_DETAILS)
 {
     CHECK_NONFATAL(verbosity >= TxVerbosity::SHOW_DETAILS);
@@ -67,7 +67,7 @@ static void TxToJSON(const CTransaction& tx, const uint256& hashBlock, UniValue&
     TxToUniv(tx, /*block_hash=*/uint256(), entry, /*include_hex=*/true, RPCSerializationFlags(), txundo, verbosity);
 
     if (!hashBlock.IsNull()) {
-        LOCK(::cs_main);
+        LOCK(cs_main);
 
         entry.pushKV("blockhash", hashBlock.GetHex());
         const CBlockIndex* pindex = active_chainstate.m_blockman.LookupBlockIndex(hashBlock);
@@ -76,9 +76,9 @@ static void TxToJSON(const CTransaction& tx, const uint256& hashBlock, UniValue&
                 entry.pushKV("confirmations", 1 + active_chainstate.m_chain.Height() - pindex->nHeight);
                 entry.pushKV("time", pindex->GetBlockTime());
                 entry.pushKV("blocktime", pindex->GetBlockTime());
-            } else {
-                entry.pushKV("confirmations", 0);
             }
+            else
+                entry.pushKV("confirmations", 0);
         }
     }
 }
@@ -202,7 +202,7 @@ static RPCHelpMan getrawtransaction()
                          {
                              {RPCResult::Type::BOOL, "in_active_chain", /*optional=*/true, "Whether specified block is in the active chain or not (only present with explicit \"blockhash\" argument)"},
                              {RPCResult::Type::STR_HEX, "blockhash", /*optional=*/true, "the block hash"},
-                             {RPCResult::Type::NUM, "confirmations", /*optional=*/true, "The number of confirmations"},
+                             {RPCResult::Type::NUM, "confirmations", /*optional=*/true, "The confirmations"},
                              {RPCResult::Type::NUM_TIME, "blocktime", /*optional=*/true, "The block time expressed in " + UNIX_EPOCH_TIME},
                              {RPCResult::Type::NUM, "time", /*optional=*/true, "Same as \"blocktime\""},
                              {RPCResult::Type::STR_HEX, "hex", "The serialized, hex-encoded data for 'txid'"},
@@ -431,10 +431,10 @@ static RPCHelpMan decodescript()
                  "Result of a witness script public key wrapping this redeem script (not returned for types that should not be wrapped)",
                  {
                      {RPCResult::Type::STR, "asm", "String representation of the script public key"},
-                     {RPCResult::Type::STR, "desc", "Inferred descriptor for the script"},
                      {RPCResult::Type::STR_HEX, "hex", "Hex string of the script public key"},
                      {RPCResult::Type::STR, "address", /*optional=*/true, "The Bitcoin address (only if a well-defined address exists)"},
-                     {RPCResult::Type::STR, "type", "The type (one of: " + GetAllOutputTypes() + ")"},
+                     {RPCResult::Type::STR, "desc", "Inferred descriptor for the script"},
+                     {RPCResult::Type::STR, "type", "The type of the script public key (one of: " + GetAllOutputTypes() + ")"},
                      {RPCResult::Type::STR, "p2sh-segwit", "address of the P2SH script wrapping this witness redeem script"},
                  }},
             },
