@@ -140,7 +140,7 @@ public:
                 addr_in.sin_family = AF_INET;
                 memset(&addr_in.sin_addr, 0x05, sizeof(addr_in.sin_addr));
                 addr_in.sin_port = htons(6789);
-                std::memcpy(addr, &addr_in, write_len);
+                StoreSockaddrIPv4(addr_in, addr, addr_len);
             }
         }
         return std::make_unique<StaticContentsSock>("");

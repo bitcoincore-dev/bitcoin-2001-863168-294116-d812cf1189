@@ -583,4 +583,22 @@ private:
     const uint64_t m_salt_k1;
 };
 
+/**
+ * Read the provided "generic" sockaddr struct safely. Use these
+ * instead of casting the src and dereferencing it.
+ */
+sockaddr_in LoadSockaddrIPv4(const sockaddr& src);
+sockaddr_in LoadSockaddrIPv4(const sockaddr_storage& src);
+sockaddr_in6 LoadSockaddrIPv6(const sockaddr& src);
+sockaddr_in6 LoadSockaddrIPv6(const sockaddr_storage& src);
+
+/**
+ * Overwrite the provided generic sockaddr struct safely. Use these
+ * instead of casting the src and dereferencing it.
+ */
+void StoreSockaddrIPv4(const sockaddr_in& src, sockaddr* ptr, socklen_t *addrlen);
+void StoreSockaddrIPv4(const sockaddr_in& src, sockaddr_storage* ptr, socklen_t *addrlen);
+void StoreSockaddrIPv6(const sockaddr_in6& src, sockaddr* ptr, socklen_t *addrlen);
+void StoreSockaddrIPv6(const sockaddr_in6& src, sockaddr_storage* ptr, socklen_t *addrlen);
+
 #endif // BITCOIN_NETADDRESS_H

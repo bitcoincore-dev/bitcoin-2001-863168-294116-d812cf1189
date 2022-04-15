@@ -2466,16 +2466,14 @@ void Discover()
             if (strcmp(ifa->ifa_name, "lo0") == 0) continue;
             if (ifa->ifa_addr->sa_family == AF_INET)
             {
-                struct sockaddr_in s4;
-                std::memcpy(&s4, ifa->ifa_addr, sizeof(s4));
+                auto s4 = LoadSockaddrIPv4(*ifa->ifa_addr);
                 CNetAddr addr(s4.sin_addr);
                 if (AddLocal(addr, LOCAL_IF))
                     LogPrintf("%s: IPv4 %s: %s\n", __func__, ifa->ifa_name, addr.ToString());
             }
             else if (ifa->ifa_addr->sa_family == AF_INET6)
             {
-                struct sockaddr_in6 s6;
-                std::memcpy(&s6, ifa->ifa_addr, sizeof(s6));
+                auto s6 = LoadSockaddrIPv6(*ifa->ifa_addr);
                 CNetAddr addr(s6.sin6_addr);
                 if (AddLocal(addr, LOCAL_IF))
                     LogPrintf("%s: IPv6 %s: %s\n", __func__, ifa->ifa_name, addr.ToString());

@@ -68,14 +68,12 @@ std::vector<CNetAddr> WrappedGetAddrInfo(const std::string& name, bool allow_loo
     while (ai_trav != nullptr) {
         if (ai_trav->ai_family == AF_INET) {
             assert(ai_trav->ai_addrlen >= sizeof(sockaddr_in));
-            sockaddr_in s4;
-            std::memcpy(&s4, ai_trav->ai_addr, sizeof(s4));
+            auto s4 = LoadSockaddrIPv4(*ai_trav->ai_addr);
             resolved_addresses.emplace_back(s4.sin_addr);
         }
         if (ai_trav->ai_family == AF_INET6) {
             assert(ai_trav->ai_addrlen >= sizeof(sockaddr_in6));
-            sockaddr_in6 s6;
-            std::memcpy(&s6, ai_trav->ai_addr, sizeof(s6));
+            auto s6 = LoadSockaddrIPv6(*ai_trav->ai_addr);
             resolved_addresses.emplace_back(s6.sin6_addr, s6.sin6_scope_id);
         }
         ai_trav = ai_trav->ai_next;
