@@ -135,6 +135,11 @@ if test "@host_os@" = darwin; then
     DSYMUTIL="@DSYMUTIL@"
     ac_cv_path_ac_pt_DSYMUTIL="${DSYMUTIL}"
   fi
+
+  if test -n "@DMG@"; then
+    DMG="@DMG@"
+    ac_cv_path_DMG="${DMG}"
+  fi
 fi
 
 if test -n "@debug@"; then

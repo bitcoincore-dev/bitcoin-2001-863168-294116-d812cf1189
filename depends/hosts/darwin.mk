@@ -48,6 +48,8 @@ lc = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,f,$(s
 # would.
 $(foreach TOOL,$(cctools_TOOLS),$(eval darwin_$(TOOL) = $$(build_prefix)/bin/$$(host)-$(call lc,$(TOOL))))
 
+DMG=$(build_prefix)/bin/dmg
+
 # Flag explanations:
 #
 #     -mlinker-version
