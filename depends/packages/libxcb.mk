@@ -5,7 +5,7 @@ $(package)_file_name=$(package)-$($(package)_version).tar.xz
 $(package)_sha256_hash=a55ed6db98d43469801262d81dc2572ed124edc3db31059d4e9916eb9f844c34
 $(package)_dependencies=xcb_proto libXau
 
-define $(package)_set_vars
+define $(package)_set_vars :=
 $(package)_config_opts=--disable-static --disable-devel-docs --without-doxygen --without-launchd
 $(package)_config_opts += --disable-dependency-tracking --enable-option-checking
 # Disable unneeded extensions.
