@@ -463,7 +463,6 @@ ReadKeyValue(CWallet* pwallet, DataStream& ssKey, CDataStream& ssValue,
         } else if (strType == DBKeys::WATCHS) {
         } else if (strType == DBKeys::KEY) {
         } else if (strType == DBKeys::MASTER_KEY) {
-            if (!LoadEncryptionKey(pwallet, ssKey, ssValue, strErr)) return false;
         } else if (strType == DBKeys::CRYPTED_KEY) {
         } else if (strType == DBKeys::KEYMETA) {
         } else if (strType == DBKeys::WATCHMETA) {
@@ -1150,6 +1149,21 @@ static DBErrors LoadActiveSPKMs(CWallet* pwallet, DatabaseBatch& batch) EXCLUSIV
     return DBErrors::LOAD_OK;
 }
 
+static DBErrors LoadDecryptionKeys(CWallet* pwallet, DatabaseBatch& batch) EXCLUSIVE_LOCKS_REQUIRED(pwallet->cs_wallet)
+{
+    AssertLockHeld(pwallet->cs_wallet);
+
+    // Load decryption key (mkey) records
+    LoadResult mkey_res = LoadRecords(pwallet, batch, DBKeys::MASTER_KEY,
+        [] (CWallet* pwallet, DataStream& key, CDataStream& value, std::string& err) {
+        if (!LoadEncryptionKey(pwallet, key, value, err)) {
+            return DBErrors::CORRUPT;
+        }
+        return DBErrors::LOAD_OK;
+    });
+    return mkey_res.m_result;
+}
+
 DBErrors WalletBatch::LoadWallet(CWallet* pwallet)
 {
     CWalletScanState wss;
@@ -1196,6 +1210,9 @@ DBErrors WalletBatch::LoadWallet(CWallet* pwallet)
         // Load SPKMs
         result = std::max(LoadActiveSPKMs(pwallet, *m_batch), result);
 
+        // Load decryption keys
+        result = std::max(LoadDecryptionKeys(pwallet, *m_batch), result);
+
         // Get cursor
         std::unique_ptr<DatabaseCursor> cursor = m_batch->GetNewCursor();
         if (!cursor)
@@ -1222,14 +1239,8 @@ DBErrors WalletBatch::LoadWallet(CWallet* pwallet)
             std::string strType, strErr;
             if (!ReadKeyValue(pwallet, ssKey, ssValue, wss, strType, strErr))
             {
-                // losing keys is considered a catastrophic error, anything else
-                // we assume the user can live with:
-                if (strType == DBKeys::MASTER_KEY) {
-                    result = DBErrors::CORRUPT;
-                } else {
                     // Leave other errors alone, if we try to fix them we might make things worse.
                     fNoncriticalErrors = true; // ... but do warn the user there is something wrong.
-                }
             }
             if (!strErr.empty())
                 pwallet->WalletLogPrintf("%s\n", strErr);
