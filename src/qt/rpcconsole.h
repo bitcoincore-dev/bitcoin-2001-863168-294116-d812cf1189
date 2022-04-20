@@ -38,6 +38,24 @@ class QMenu;
 class QItemSelection;
 QT_END_NAMESPACE
 
+/* Object for executing console RPC commands in a separate thread.
+ */
+class RPCExecutor : public QObject
+{
+    Q_OBJECT
+public:
+    explicit RPCExecutor(interfaces::Node& node) : m_node(node) {}
+
+public Q_SLOTS:
+    void request(const QString& command, const WalletModel* wallet_model);
+
+Q_SIGNALS:
+    void reply(int category, const QString& command);
+
+private:
+    interfaces::Node& m_node;
+};
+
 /** Local Bitcoin RPC console. */
 class RPCConsole: public QWidget
 {
