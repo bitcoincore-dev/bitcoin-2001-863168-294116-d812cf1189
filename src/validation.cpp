@@ -18,6 +18,7 @@
 #include <cuckoocache.h>
 #include <deploymentstatus.h>
 #include <flatfile.h>
+#include <fs.h>
 #include <hash.h>
 #include <logging.h>
 #include <logging/timer.h>
@@ -1515,6 +1516,10 @@ CChainState::CChainState(
       m_chainman(chainman),
       m_from_snapshot_blockhash(from_snapshot_blockhash) {}
 
+
+constexpr std::string_view SNAPSHOT_CHAINSTATE_SUFFIX = "_snapshot";
+
+
 void CChainState::InitCoinsDB(
     size_t cache_size_bytes,
     bool in_memory,
@@ -1522,7 +1527,7 @@ void CChainState::InitCoinsDB(
     std::string leveldb_name)
 {
     if (m_from_snapshot_blockhash) {
-        leveldb_name += "_" + m_from_snapshot_blockhash->ToString();
+        leveldb_name += SNAPSHOT_CHAINSTATE_SUFFIX;
     }
 
     m_coins_views = std::make_unique<CoinsViews>(
@@ -4873,6 +4878,62 @@ const AssumeutxoData* ExpectedAssumeutxo(
     return nullptr;
 }
 
+//! The file in the snapshot chainstate dir which stores the base blockhash. This
+//! is needed to reconstruct snapshot chainstates on init.
+constexpr std::string_view SNAPSHOT_BLOCKHASH_FILENAME = "base_blockhash";
+
+
+//! Write out the blockhash of the snapshot base block that was used to construct
+//! this chainstate. This value is read in during subsequent initializations and
+//! used to reconstruct snapshot-based chainstates.
+static bool WriteSnapshotBaseBlockhash(CChainState& snapshot_chainstate)
+    EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+{
+    AssertLockHeld(::cs_main);
+    assert(snapshot_chainstate.m_from_snapshot_blockhash);
+
+    const std::optional<fs::path> datadir_path = snapshot_chainstate.CoinsDB().StoragePath();
+    assert(datadir_path); // Sanity check that chainstate isn't in-memory.
+    const fs::path write_to = *datadir_path / SNAPSHOT_BLOCKHASH_FILENAME;
+
+    FILE* file{fsbridge::fopen(write_to, "wb")};
+    CAutoFile afile{file, SER_DISK, CLIENT_VERSION};
+    if (afile.IsNull()) {
+        LogPrintf("[snapshot] failed to open base blockhash file for writing: %s\n",
+                  fs::PathToString(write_to));
+        return false;
+    }
+    afile << *snapshot_chainstate.m_from_snapshot_blockhash;
+    return true;
+}
+
+static std::optional<uint256> ReadSnapshotBaseBlockhash(fs::path datadir)
+{
+    if (!fs::exists(datadir)) {
+        LogPrintf("[snapshot] cannot read base blockhash: no chainstate dir " /* Continued */
+            "exists at path %s\n", fs::PathToString(datadir));
+        return std::nullopt;
+    }
+    const fs::path p = datadir / SNAPSHOT_BLOCKHASH_FILENAME;
+
+    if (!fs::exists(p)) {
+        LogPrintf("[snapshot] snapshot chainstate dir is malformed! no base blockhash file " /* Continued */
+            "exists at path %s. Try reinitializing snapshot?\n", fs::PathToString(p));
+        return std::nullopt;
+    }
+
+    uint256 base_blockhash;
+    FILE* file{fsbridge::fopen(p, "rb")};
+    CAutoFile afile{file, SER_DISK, CLIENT_VERSION};
+    if (afile.IsNull()) {
+        LogPrintf("[snapshot] failed to open base blockhash file for reading: %s\n",
+            fs::PathToString(p));
+        return std::nullopt;
+    }
+    afile >> base_blockhash;
+    return base_blockhash;
+}
+
 bool ChainstateManager::ActivateSnapshot(
         CAutoFile& coins_file,
         const SnapshotMetadata& metadata,
@@ -4930,9 +4991,17 @@ bool ChainstateManager::ActivateSnapshot(
             static_cast<size_t>(current_coinstip_cache_size * SNAPSHOT_CACHE_PERC));
     }
 
-    const bool snapshot_ok = this->PopulateAndValidateSnapshot(
+    bool snapshot_ok = this->PopulateAndValidateSnapshot(
         *snapshot_chainstate, coins_file, metadata);
 
+    // If not in-memory, persist the base blockhash for use during subsequent
+    // initialization.
+    if (!in_memory) {
+        LOCK(::cs_main);
+        if (!WriteSnapshotBaseBlockhash(*snapshot_chainstate)) {
+            snapshot_ok = false;
+        }
+    }
     if (!snapshot_ok) {
         WITH_LOCK(::cs_main, this->MaybeRebalanceCaches());
         return false;
