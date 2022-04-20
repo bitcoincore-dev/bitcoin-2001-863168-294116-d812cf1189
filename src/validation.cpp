@@ -5285,3 +5285,30 @@ bool CChainState::destroyCoinsDB(const std::string& db_path)
     m_coins_views.reset();
     return dbwrapper::DestroyDB(db_path, options).ok();
 }
+
+static std::optional<fs::path> FindSnapshotChainstateDatadir()
+{
+    fs::path possible_dir =
+        gArgs.GetDataDirNet() / (strprintf("chainstate%s", SNAPSHOT_CHAINSTATE_SUFFIX));
+
+    if (fs::exists(possible_dir)) {
+        return possible_dir;
+    }
+    return std::nullopt;
+}
+
+bool ChainstateManager::DetectSnapshotChainstate(CTxMemPool* mempool)
+{
+    std::optional<fs::path> path = FindSnapshotChainstateDatadir();
+    if (!path) {
+        return false;
+    }
+    LogPrintf("[snapshot] detected active snapshot chainstate (%s) - loading\n",
+        fs::PathToString(*path));
+    std::optional<uint256> base_blockhash = ReadSnapshotBaseBlockhash(*path);
+    if (!base_blockhash) {
+        return false;
+    }
+    this->InitializeChainstate(mempool, /*snapshot_blockhash=*/ *base_blockhash);
+    return true;
+}
