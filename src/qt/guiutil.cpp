@@ -53,6 +53,7 @@
 #include <QMouseEvent>
 #include <QPluginLoader>
 #include <QProgressDialog>
+#include <QRegularExpression>
 #include <QScreen>
 #include <QSettings>
 #include <QShortcut>
@@ -307,12 +308,12 @@ QString getSaveFileName(QWidget *parent, const QString &caption, const QString &
     QString result = QDir::toNativeSeparators(QFileDialog::getSaveFileName(parent, caption, myDir, filter, &selectedFilter));
 
     /* Extract first suffix from filter pattern "Description (*.foo)" or "Description (*.foo *.bar ...) */
-    QRegExp filter_re(".* \\(\\*\\.(.*)[ \\)]");
+    // QRegExp filter_re(".* \\(\\*\\.(.*)[ \\)]");
     QString selectedSuffix;
-    if(filter_re.exactMatch(selectedFilter))
-    {
-        selectedSuffix = filter_re.cap(1);
-    }
+    // if(filter_re.exactMatch(selectedFilter))
+    // {
+    //     selectedSuffix = filter_re.cap(1);
+    // }
 
     /* Add suffix if needed */
     QFileInfo info(result);
@@ -355,12 +356,12 @@ QString getOpenFileName(QWidget *parent, const QString &caption, const QString &
     if(selectedSuffixOut)
     {
         /* Extract first suffix from filter pattern "Description (*.foo)" or "Description (*.foo *.bar ...) */
-        QRegExp filter_re(".* \\(\\*\\.(.*)[ \\)]");
+        // QRegExp filter_re(".* \\(\\*\\.(.*)[ \\)]");
         QString selectedSuffix;
-        if(filter_re.exactMatch(selectedFilter))
-        {
-            selectedSuffix = filter_re.cap(1);
-        }
+        // if(filter_re.exactMatch(selectedFilter))
+        // {
+        //     selectedSuffix = filter_re.cap(1);
+        // }
         *selectedSuffixOut = selectedSuffix;
     }
     return result;
