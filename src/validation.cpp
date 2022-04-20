@@ -17,6 +17,7 @@
 #include <consensus/validation.h>
 #include <cuckoocache.h>
 #include <flatfile.h>
+#include <fs.h>
 #include <hash.h>
 #include <kernel/coinstats.h>
 #include <logging.h>
@@ -1508,6 +1509,10 @@ CChainState::CChainState(
       m_chainman(chainman),
       m_from_snapshot_blockhash(from_snapshot_blockhash) {}
 
+
+constexpr std::string_view SNAPSHOT_CHAINSTATE_SUFFIX = "_snapshot";
+
+
 void CChainState::InitCoinsDB(
     size_t cache_size_bytes,
     bool in_memory,
@@ -1515,7 +1520,7 @@ void CChainState::InitCoinsDB(
     fs::path leveldb_name)
 {
     if (m_from_snapshot_blockhash) {
-        leveldb_name += "_" + m_from_snapshot_blockhash->ToString();
+        leveldb_name += SNAPSHOT_CHAINSTATE_SUFFIX;
     }
 
     m_coins_views = std::make_unique<CoinsViews>(
@@ -4928,9 +4933,17 @@ bool ChainstateManager::ActivateSnapshot(
             static_cast<size_t>(current_coinstip_cache_size * SNAPSHOT_CACHE_PERC));
     }
 
-    const bool snapshot_ok = this->PopulateAndValidateSnapshot(
+    bool snapshot_ok = this->PopulateAndValidateSnapshot(
         *snapshot_chainstate, coins_file, metadata);
 
+    // If not in-memory, persist the base blockhash for use during subsequent
+    // initialization.
+    if (!in_memory) {
+        LOCK(::cs_main);
+        if (!node::WriteSnapshotBaseBlockhash(*snapshot_chainstate)) {
+            snapshot_ok = false;
+        }
+    }
     if (!snapshot_ok) {
         WITH_LOCK(::cs_main, this->MaybeRebalanceCaches());
         return false;

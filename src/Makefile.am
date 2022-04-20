@@ -375,6 +375,7 @@ libbitcoin_node_a_SOURCES = \
   node/psbt.cpp \
   node/transaction.cpp \
   node/interface_ui.cpp \
+  node/utxo_snapshot.cpp \
   noui.cpp \
   policy/fees.cpp \
   policy/packages.cpp \
@@ -877,6 +878,7 @@ libbitcoinkernel_la_SOURCES = \
   node/blockstorage.cpp \
   node/chainstate.cpp \
   node/interface_ui.cpp \
+  node/utxo_snapshot.cpp \
   policy/feerate.cpp \
   policy/fees.cpp \
   policy/packages.cpp \
