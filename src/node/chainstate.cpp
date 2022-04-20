@@ -27,9 +27,14 @@ std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
     };
 
     LOCK(cs_main);
-    chainman.InitializeChainstate(mempool);
     chainman.m_total_coinstip_cache = nCoinCacheUsage;
     chainman.m_total_coinsdb_cache = nCoinDBCache;
+
+    // Load the fully validated chainstate.
+    chainman.InitializeChainstate(mempool);
+
+    // Load a chain created from a UTXO snapshot, if any exist.
+    chainman.DetectSnapshotChainstate(mempool);
 
     auto& pblocktree{chainman.m_blockman.m_block_tree_db};
     // new CBlockTreeDB tries to delete the existing file, which
@@ -74,12 +79,20 @@ std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
         return ChainstateLoadingError::ERROR_LOAD_GENESIS_BLOCK_FAILED;
     }
 
+    // Conservative value which is arbitrarily chosen, as it will ultimately be changed
+    // by a call to `chainman.MaybeRebalanceCaches()`. We just need to make sure
+    // that the sum of the two caches (40%) does not exceed the allowable amount
+    // during this temporary initialization state.
+    double init_cache_fraction = 0.2;
+
     // At this point we're either in reindex or we've loaded a useful
     // block tree into BlockIndex()!
 
     for (CChainState* chainstate : chainman.GetAll()) {
+        LogPrintf("Initializing chainstate %s\n", chainstate->ToString());
+
         chainstate->InitCoinsDB(
-            /*cache_size_bytes=*/nCoinDBCache,
+            /*cache_size_bytes=*/chainman.m_total_coinsdb_cache * init_cache_fraction,
             /*in_memory=*/coins_db_in_memory,
             /*should_wipe=*/fReset || fReindexChainState);
 
@@ -99,7 +112,7 @@ std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
         }
 
         // The on-disk coinsdb is now in a good state, create the cache
-        chainstate->InitCoinsCache(nCoinCacheUsage);
+        chainstate->InitCoinsCache(chainman.m_total_coinstip_cache * init_cache_fraction);
         assert(chainstate->CanFlushToDisk());
 
         if (!is_coinsview_empty(chainstate)) {
@@ -118,6 +131,11 @@ std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
             return ChainstateLoadingError::ERROR_BLOCKS_WITNESS_INSUFFICIENTLY_VALIDATED;
         }
     }
+
+    // Now that chainstates are loaded and we're able to flush to
+    // disk, rebalance the coins caches to desired levels based
+    // on the condition of each chainstate.
+    chainman.MaybeRebalanceCaches();
 
     return std::nullopt;
 }
