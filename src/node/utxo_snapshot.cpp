@@ -74,4 +74,15 @@ std::optional<uint256> ReadSnapshotBaseBlockhash(fs::path chaindir)
     return base_blockhash;
 }
 
+std::optional<fs::path> FindSnapshotChainstateDir()
+{
+    fs::path possible_dir =
+        gArgs.GetDataDirNet() / fs::u8path(strprintf("chainstate%s", SNAPSHOT_CHAINSTATE_SUFFIX));
+
+    if (fs::exists(possible_dir)) {
+        return possible_dir;
+    }
+    return std::nullopt;
+}
+
 } // namespace node
