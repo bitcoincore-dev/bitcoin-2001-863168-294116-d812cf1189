@@ -10,6 +10,7 @@
 #include <qt/bitcoingui.h>
 #include <qt/networkstyle.h>
 #include <qt/rpcconsole.h>
+#include <qt/walletmodel.h>
 #include <shutdown.h>
 #include <test/util/setup_common.h>
 #include <validation.h>
@@ -76,6 +77,7 @@ void AppTests::appTests()
     }());
 
     qRegisterMetaType<interfaces::BlockAndHeaderTipInfo>("interfaces::BlockAndHeaderTipInfo");
+    qRegisterMetaType<const WalletModel*>();
     m_app.parameterSetup();
     m_app.createOptionsModel(true /* reset settings */);
     QScopedPointer<const NetworkStyle> style(NetworkStyle::instantiate(Params().NetworkIDString()));
@@ -119,6 +121,6 @@ AppTests::HandleCallback::~HandleCallback()
     assert(it != callbacks.end());
     callbacks.erase(it);
     if (callbacks.empty()) {
-        m_app_tests.m_app.quit();
+        m_app_tests.m_app.exit(0);
     }
 }
