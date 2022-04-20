@@ -40,6 +40,10 @@ public:
     SERIALIZE_METHODS(SnapshotMetadata, obj) { READWRITE(obj.m_base_blockhash, obj.m_coins_count); }
 };
 
+//! Suffix appended to the chainstate (leveldb) dir when created based upon
+//! a snapshot.
+constexpr std::string_view SNAPSHOT_CHAINSTATE_SUFFIX = "_snapshot";
+
 //! The file in the snapshot chainstate dir which stores the base blockhash. This
 //! is needed to reconstruct snapshot chainstates on init.
 const fs::path SNAPSHOT_BLOCKHASH_FILENAME{"base_blockhash"};
@@ -52,6 +56,9 @@ bool WriteSnapshotBaseBlockhash(CChainState& snapshot_chainstate)
 
 std::optional<uint256> ReadSnapshotBaseBlockhash(fs::path chaindir)
     EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+//! Return a path to the snapshot-based chainstate dir, if one exists.
+std::optional<fs::path> FindSnapshotChainstateDir();
 
 } // namespace node
 
