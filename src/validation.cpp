@@ -4917,6 +4917,17 @@ static std::optional<uint256> ReadSnapshotBaseBlockhash(fs::path datadir)
     return base_blockhash;
 }
 
+static std::optional<fs::path> FindSnapshotChainstateDatadir()
+{
+    fs::path possible_dir =
+        gArgs.GetDataDirNet() / (strprintf("chainstate%s", SNAPSHOT_CHAINSTATE_SUFFIX));
+
+    if (fs::exists(possible_dir)) {
+        return possible_dir;
+    }
+    return std::nullopt;
+}
+
 bool ChainstateManager::ActivateSnapshot(
         CAutoFile& coins_file,
         const SnapshotMetadata& metadata,
@@ -5270,4 +5281,20 @@ void ChainstateManager::MaybeRebalanceCaches()
                 m_total_coinstip_cache * 0.95, m_total_coinsdb_cache * 0.95);
         }
     }
+}
+
+bool ChainstateManager::DetectSnapshotChainstate(CTxMemPool* mempool)
+{
+    std::optional<fs::path> path = FindSnapshotChainstateDatadir();
+    if (!path) {
+        return false;
+    }
+    LogPrintf("[snapshot] detected active snapshot chainstate (%s) - loading\n",
+        fs::PathToString(*path));
+    std::optional<uint256> base_blockhash = ReadSnapshotBaseBlockhash(*path);
+    if (!base_blockhash) {
+        return false;
+    }
+    this->InitializeChainstate(mempool, /*snapshot_blockhash=*/ *base_blockhash);
+    return true;
 }
