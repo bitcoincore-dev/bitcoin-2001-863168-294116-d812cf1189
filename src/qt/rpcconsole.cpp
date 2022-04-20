@@ -1031,7 +1031,10 @@ void RPCConsole::on_lineEdit_returnPressed()
     //: A console message indicating an entered command is currently being executed.
     message(CMD_REPLY, tr("Executing…"));
     m_is_executing = true;
-    Q_EMIT cmdRequest(cmd, m_last_wallet_model);
+
+    QMetaObject::invokeMethod(m_executor, [this, cmd]() {
+        m_executor->request(cmd, m_last_wallet_model);
+    });
 
     cmd = QString::fromStdString(strFilteredCmd);
 
@@ -1084,9 +1087,6 @@ void RPCConsole::startExecutor()
         scrollToEnd();
         m_is_executing = false;
     });
-
-    // Requests from this object must go to executor
-    connect(this, &RPCConsole::cmdRequest, m_executor, &RPCExecutor::request);
 
     // Make sure executor object is deleted in its own thread
     connect(&thread, &QThread::finished, m_executor, &RPCExecutor::deleteLater);
