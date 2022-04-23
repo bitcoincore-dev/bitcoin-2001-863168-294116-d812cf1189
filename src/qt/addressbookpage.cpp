@@ -46,7 +46,11 @@ protected:
 
         auto address = model->index(row, AddressTableModel::Address, parent);
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 12, 0))
+        const auto pattern = filterRegularExpression().pattern();
+#else
         const auto pattern = filterRegExp();
+#endif
         return (model->data(address).toString().contains(pattern) ||
                 model->data(label).toString().contains(pattern));
     }
@@ -141,7 +145,11 @@ void AddressBookPage::setModel(AddressTableModel *_model)
     proxyModel->setSourceModel(_model);
 
     connect(ui->searchLineEdit, &QLineEdit::textChanged, [this](const QString& pattern) {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 12, 0))
+        proxyModel->setFilterRegularExpression(pattern);
+#else
         proxyModel->setFilterFixedString(pattern);
+#endif
     });
 
     ui->tableView->setModel(proxyModel);
