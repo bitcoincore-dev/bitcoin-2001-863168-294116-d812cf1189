@@ -23,6 +23,7 @@ EXPECTED_CIRCULAR_DEPENDENCIES = (
     "qt/recentrequeststablemodel -> qt/walletmodel -> qt/recentrequeststablemodel",
     "qt/sendcoinsdialog -> qt/walletmodel -> qt/sendcoinsdialog",
     "qt/transactiontablemodel -> qt/walletmodel -> qt/transactiontablemodel",
+    "script/bitcoinconsensus -> script/validation -> script/bitcoinconsensus",
     "wallet/fees -> wallet/wallet -> wallet/fees",
     "wallet/wallet -> wallet/walletdb -> wallet/wallet",
     "node/coinstats -> validation -> node/coinstats",
