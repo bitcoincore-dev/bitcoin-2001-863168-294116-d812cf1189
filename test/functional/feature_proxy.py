@@ -342,19 +342,28 @@ class ProxyTest(BitcoinTestFramework):
         msg = "Error: Invalid port specified in -i2psam: '192.0.0.1:def'"
         self.nodes[1].assert_start_raises_init_error(expected_msg=msg)
 
+        self.log.info("Test passing -onlynet=onion with -onion=0/-noonion raises expected init error")
         msg = (
             "Error: Outbound connections restricted to Tor (-onlynet=onion) but "
-            "the proxy for reaching the Tor network is not provided (no -proxy= "
-            "and no -onion= given) or it is explicitly forbidden (-onion=0)"
+            "the proxy for reaching the Tor network is explicitly forbidden: -onion=0"
         )
-        self.log.info("Test passing -onlynet=onion without -proxy or -onion raises expected init error")
-        self.nodes[1].extra_args = ["-onlynet=onion"]
-        self.nodes[1].assert_start_raises_init_error(expected_msg=msg)
-
-        self.log.info("Test passing -onlynet=onion with -onion=0/-noonion raises expected init error")
         for arg in ["-onion=0", "-noonion"]:
             self.nodes[1].extra_args = ["-onlynet=onion", arg]
             self.nodes[1].assert_start_raises_init_error(expected_msg=msg)
+
+        self.log.info("Test passing -onlynet=onion without -proxy, -onion or -listenonion raises expected init error")
+        self.nodes[1].extra_args = ["-onlynet=onion", "-listenonion=0"]
+        msg = (
+            "Error: The -onlynet=onion configuration option was passed to restrict outbound"
+            " connections to Tor, but the proxy for reaching the Tor network was not"
+            " provided: none of -proxy, -onion or -listenonion was given"
+        )
+        self.nodes[1].assert_start_raises_init_error(expected_msg=msg)
+
+        self.log.info("Test passing -onlynet=onion without -proxy or -onion but with -listenonion=1 is ok")
+        self.nodes[1].extra_args = ["-onlynet=onion", "-listenonion=1"]
+        self.start_node(1)
+        self.stop_node(1)
 
 
 if __name__ == '__main__':
