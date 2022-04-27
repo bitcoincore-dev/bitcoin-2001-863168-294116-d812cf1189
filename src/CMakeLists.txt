@@ -44,6 +44,7 @@ target_sources(bitcoin_consensus_sources INTERFACE
   script/interpreter.cpp
   script/script.cpp
   script/script_error.cpp
+  script/transaction_unserialize.cpp
   uint256.cpp
   util/strencodings.cpp
 )

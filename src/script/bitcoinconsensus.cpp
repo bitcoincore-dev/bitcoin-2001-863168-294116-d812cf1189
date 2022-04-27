@@ -8,48 +8,9 @@
 #include <primitives/transaction.h>
 #include <pubkey.h>
 #include <script/interpreter.h>
+#include <script/transaction_unserialize.h>
 
 namespace {
-
-/** A class that deserializes a single CTransaction one time. */
-class TxInputStream
-{
-public:
-    TxInputStream(const unsigned char *txTo, size_t txToLen) :
-    m_data(txTo),
-    m_remaining(txToLen)
-    {}
-
-    void read(Span<std::byte> dst)
-    {
-        if (dst.size() > m_remaining) {
-            throw std::ios_base::failure(std::string(__func__) + ": end of data");
-        }
-
-        if (dst.data() == nullptr) {
-            throw std::ios_base::failure(std::string(__func__) + ": bad destination buffer");
-        }
-
-        if (m_data == nullptr) {
-            throw std::ios_base::failure(std::string(__func__) + ": bad source buffer");
-        }
-
-        memcpy(dst.data(), m_data, dst.size());
-        m_remaining -= dst.size();
-        m_data += dst.size();
-    }
-
-    template<typename T>
-    TxInputStream& operator>>(T&& obj)
-    {
-        ::Unserialize(*this, obj);
-        return *this;
-    }
-
-private:
-    const unsigned char* m_data;
-    size_t m_remaining;
-};
 
 inline int set_error(bitcoinconsensus_error* ret, bitcoinconsensus_error serror)
 {
@@ -80,8 +41,7 @@ static int verify_script(const unsigned char *scriptPubKey, unsigned int scriptP
     }
 
     try {
-        TxInputStream stream(txTo, txToLen);
-        CTransaction tx(deserialize, TX_WITH_WITNESS, stream);
+        CTransaction tx = bitcoinconsensus::UnserializeTx(txTo, txToLen);
 
         std::vector<CTxOut> spent_outputs;
         if (spentOutputs != nullptr) {
@@ -98,7 +58,7 @@ static int verify_script(const unsigned char *scriptPubKey, unsigned int scriptP
 
         if (nIn >= tx.vin.size())
             return set_error(err, bitcoinconsensus_ERR_TX_INDEX);
-        if (GetSerializeSize(TX_WITH_WITNESS(tx)) != txToLen)
+        if (bitcoinconsensus::TxSize(tx) != txToLen)
             return set_error(err, bitcoinconsensus_ERR_TX_SIZE_MISMATCH);
 
         // Regardless of the verification result, the tx did not error.
