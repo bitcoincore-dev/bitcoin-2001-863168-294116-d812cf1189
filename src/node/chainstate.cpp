@@ -25,13 +25,83 @@
 #include <vector>
 
 namespace node {
-ChainstateLoadResult LoadChainstate(ChainstateManager& chainman, const CacheSizes& cache_sizes,
-                                    const ChainstateLoadOptions& options)
+// Complete initialization of chainstates after the initial call has been made
+// to ChainstateManager::InitializeChainstate().
+static ChainstateLoadResult CompleteChainstateInitialization(
+    ChainstateManager& chainman,
+    const ChainstateLoadOptions& options) EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
 {
     auto is_coinsview_empty = [&](CChainState* chainstate) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
         return options.reindex || options.reindex_chainstate || chainstate->CoinsTip().GetBestBlock().IsNull();
     };
 
+    // Conservative value which is arbitrarily chosen, as it will ultimately be changed
+    // by a call to `chainman.MaybeRebalanceCaches()`. We just need to make sure
+    // that the sum of the two caches (40%) does not exceed the allowable amount
+    // during this temporary initialization state.
+    double init_cache_fraction = 0.2;
+
+    // At this point we're either in reindex or we've loaded a useful
+    // block tree into BlockIndex()!
+
+    for (CChainState* chainstate : chainman.GetAll()) {
+        LogPrintf("Initializing chainstate %s\n", chainstate->ToString());
+
+        chainstate->InitCoinsDB(
+            /*cache_size_bytes=*/chainman.m_total_coinsdb_cache * init_cache_fraction,
+            /*in_memory=*/options.coins_db_in_memory,
+            /*should_wipe=*/options.reindex || options.reindex_chainstate);
+
+        if (options.coins_error_cb) {
+            chainstate->CoinsErrorCatcher().AddReadErrCallback(options.coins_error_cb);
+        }
+
+        // Refuse to load unsupported database format.
+        // This is a no-op if we cleared the coinsviewdb with -reindex or -reindex-chainstate
+        if (chainstate->CoinsDB().NeedsUpgrade()) {
+            return {ChainstateLoadStatus::FAILURE_INCOMPATIBLE_DB, _("Unsupported chainstate database format found. "
+                                                                     "Please restart with -reindex-chainstate. This will "
+                                                                     "rebuild the chainstate database.")};
+        }
+
+        // ReplayBlocks is a no-op if we cleared the coinsviewdb with -reindex or -reindex-chainstate
+        if (!chainstate->ReplayBlocks()) {
+            return {ChainstateLoadStatus::FAILURE, _("Unable to replay blocks. You will need to rebuild the database using -reindex-chainstate.")};
+        }
+
+        // The on-disk coinsdb is now in a good state, create the cache
+        chainstate->InitCoinsCache(chainman.m_total_coinstip_cache * init_cache_fraction);
+        assert(chainstate->CanFlushToDisk());
+
+        if (!is_coinsview_empty(chainstate)) {
+            // LoadChainTip initializes the chain based on CoinsTip()'s best block
+            if (!chainstate->LoadChainTip()) {
+                return {ChainstateLoadStatus::FAILURE, _("Error initializing block database")};
+            }
+            assert(chainstate->m_chain.Tip() != nullptr);
+        }
+    }
+
+    if (!options.reindex) {
+        auto chainstates{chainman.GetAll()};
+        if (std::any_of(chainstates.begin(), chainstates.end(),
+                        [](const CChainState* cs) EXCLUSIVE_LOCKS_REQUIRED(cs_main) { return cs->NeedsRedownload(); })) {
+            return {ChainstateLoadStatus::FAILURE, strprintf(_("Witness data for blocks after height %d requires validation. Please restart with -reindex."),
+                                                             chainman.GetConsensus().SegwitHeight)};
+        };
+    }
+
+    // Now that chainstates are loaded and we're able to flush to
+    // disk, rebalance the coins caches to desired levels based
+    // on the condition of each chainstate.
+    chainman.MaybeRebalanceCaches();
+
+    return {ChainstateLoadStatus::SUCCESS, {}};
+}
+
+ChainstateLoadResult LoadChainstate(ChainstateManager& chainman, const CacheSizes& cache_sizes,
+                                    const ChainstateLoadOptions& options)
+{
     if (!hashAssumeValid.IsNull()) {
         LogPrintf("Assuming ancestors of block %s have valid signatures.\n", hashAssumeValid.GetHex());
     } else {
@@ -103,66 +173,10 @@ ChainstateLoadResult LoadChainstate(ChainstateManager& chainman, const CacheSize
         return {ChainstateLoadStatus::FAILURE, _("Error initializing block database")};
     }
 
-    // Conservative value which is arbitrarily chosen, as it will ultimately be changed
-    // by a call to `chainman.MaybeRebalanceCaches()`. We just need to make sure
-    // that the sum of the two caches (40%) does not exceed the allowable amount
-    // during this temporary initialization state.
-    double init_cache_fraction = 0.2;
-
-    // At this point we're either in reindex or we've loaded a useful
-    // block tree into BlockIndex()!
-
-    for (CChainState* chainstate : chainman.GetAll()) {
-        LogPrintf("Initializing chainstate %s\n", chainstate->ToString());
-
-        chainstate->InitCoinsDB(
-            /*cache_size_bytes=*/chainman.m_total_coinsdb_cache * init_cache_fraction,
-            /*in_memory=*/options.coins_db_in_memory,
-            /*should_wipe=*/options.reindex || options.reindex_chainstate);
-
-        if (options.coins_error_cb) {
-            chainstate->CoinsErrorCatcher().AddReadErrCallback(options.coins_error_cb);
-        }
-
-        // Refuse to load unsupported database format.
-        // This is a no-op if we cleared the coinsviewdb with -reindex or -reindex-chainstate
-        if (chainstate->CoinsDB().NeedsUpgrade()) {
-            return {ChainstateLoadStatus::FAILURE_INCOMPATIBLE_DB, _("Unsupported chainstate database format found. "
-                                                                     "Please restart with -reindex-chainstate. This will "
-                                                                     "rebuild the chainstate database.")};
-        }
-
-        // ReplayBlocks is a no-op if we cleared the coinsviewdb with -reindex or -reindex-chainstate
-        if (!chainstate->ReplayBlocks()) {
-            return {ChainstateLoadStatus::FAILURE, _("Unable to replay blocks. You will need to rebuild the database using -reindex-chainstate.")};
-        }
-
-        // The on-disk coinsdb is now in a good state, create the cache
-        chainstate->InitCoinsCache(chainman.m_total_coinstip_cache * init_cache_fraction);
-        assert(chainstate->CanFlushToDisk());
-
-        if (!is_coinsview_empty(chainstate)) {
-            // LoadChainTip initializes the chain based on CoinsTip()'s best block
-            if (!chainstate->LoadChainTip()) {
-                return {ChainstateLoadStatus::FAILURE, _("Error initializing block database")};
-            }
-            assert(chainstate->m_chain.Tip() != nullptr);
-        }
+    auto [init_status, init_error] = CompleteChainstateInitialization(chainman, options);
+    if (init_status != ChainstateLoadStatus::SUCCESS) {
+        return {init_status, init_error};
     }
-
-    if (!options.reindex) {
-        auto chainstates{chainman.GetAll()};
-        if (std::any_of(chainstates.begin(), chainstates.end(),
-                        [](const CChainState* cs) EXCLUSIVE_LOCKS_REQUIRED(cs_main) { return cs->NeedsRedownload(); })) {
-            return {ChainstateLoadStatus::FAILURE, strprintf(_("Witness data for blocks after height %d requires validation. Please restart with -reindex."),
-                                                             chainman.GetConsensus().SegwitHeight)};
-        };
-    }
-
-    // Now that chainstates are loaded and we're able to flush to
-    // disk, rebalance the coins caches to desired levels based
-    // on the condition of each chainstate.
-    chainman.MaybeRebalanceCaches();
 
     return {ChainstateLoadStatus::SUCCESS, {}};
 }
