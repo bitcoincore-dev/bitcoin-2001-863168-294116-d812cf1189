@@ -25,52 +25,12 @@
 #include <vector>
 
 namespace node {
-ChainstateLoadResult LoadChainstate(ChainstateManager& chainman, const CacheSizes& cache_sizes,
-                                    const ChainstateLoadOptions& options)
+// Complete initialization of chainstates after the initial call has been made
+// to ChainstateManager::InitializeChainstate().
+static ChainstateLoadResult CompleteChainstateInitialization(
+    ChainstateManager& chainman,
+    const ChainstateLoadOptions& options) EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
 {
-    auto is_coinsview_empty = [&](Chainstate* chainstate) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
-        return options.reindex || options.reindex_chainstate || chainstate->CoinsTip().GetBestBlock().IsNull();
-    };
-
-    if (!hashAssumeValid.IsNull()) {
-        LogPrintf("Assuming ancestors of block %s have valid signatures.\n", hashAssumeValid.GetHex());
-    } else {
-        LogPrintf("Validating signatures for all blocks.\n");
-    }
-    LogPrintf("Setting nMinimumChainWork=%s\n", nMinimumChainWork.GetHex());
-    if (nMinimumChainWork < UintToArith256(chainman.GetConsensus().nMinimumChainWork)) {
-        LogPrintf("Warning: nMinimumChainWork set below default value of %s\n", chainman.GetConsensus().nMinimumChainWork.GetHex());
-    }
-    if (nPruneTarget == std::numeric_limits<uint64_t>::max()) {
-        LogPrintf("Block pruning enabled.  Use RPC call pruneblockchain(height) to manually prune block and undo files.\n");
-    } else if (nPruneTarget) {
-        LogPrintf("Prune configured to target %u MiB on disk for block and undo files.\n", nPruneTarget / 1024 / 1024);
-    }
-
-    LOCK(cs_main);
-    chainman.m_total_coinstip_cache = cache_sizes.coins;
-    chainman.m_total_coinsdb_cache = cache_sizes.coins_db;
-
-    // Load the fully validated chainstate.
-    chainman.InitializeChainstate(options.mempool);
-
-    // Load a chain created from a UTXO snapshot, if any exist.
-    chainman.DetectSnapshotChainstate(options.mempool);
-
-    auto& pblocktree{chainman.m_blockman.m_block_tree_db};
-    // new CBlockTreeDB tries to delete the existing file, which
-    // fails if it's still open from the previous loop. Close it first:
-    pblocktree.reset();
-    pblocktree.reset(new CBlockTreeDB(cache_sizes.block_tree_db, options.block_tree_db_in_memory, options.reindex));
-
-    if (options.reindex) {
-        pblocktree->WriteReindexing(true);
-        //If we're reindexing in prune mode, wipe away unusable block files and all undo data files
-        if (options.prune) {
-            CleanupBlockRevFiles();
-        }
-    }
-
     if (options.check_interrupt && options.check_interrupt()) return {ChainstateLoadStatus::INTERRUPTED, {}};
 
     // LoadBlockIndex will load m_have_pruned if we've ever removed a
@@ -82,17 +42,17 @@ ChainstateLoadResult LoadChainstate(ChainstateManager& chainman, const CacheSize
         return {ChainstateLoadStatus::FAILURE, _("Error loading block database")};
     }
 
+    // Check for changed -prune state.  What we are concerned about is a user who has pruned blocks
+    // in the past, but is now trying to run unpruned.
+    if (chainman.m_blockman.m_have_pruned && !options.prune) {
+        return {ChainstateLoadStatus::FAILURE, _("You need to rebuild the database using -reindex to go back to unpruned mode. This will redownload the entire blockchain")};
+    }
+
     if (!chainman.BlockIndex().empty() &&
             !chainman.m_blockman.LookupBlockIndex(chainman.GetConsensus().hashGenesisBlock)) {
         // If the loaded chain has a wrong genesis, bail out immediately
         // (we're likely using a testnet datadir, or the other way around).
         return {ChainstateLoadStatus::FAILURE_INCOMPATIBLE_DB, _("Incorrect or no genesis block found. Wrong datadir for network?")};
-    }
-
-    // Check for changed -prune state.  What we are concerned about is a user who has pruned blocks
-    // in the past, but is now trying to run unpruned.
-    if (chainman.m_blockman.m_have_pruned && !options.prune) {
-        return {ChainstateLoadStatus::FAILURE, _("You need to rebuild the database using -reindex to go back to unpruned mode.  This will redownload the entire blockchain")};
     }
 
     // At this point blocktree args are consistent with what's on disk.
@@ -102,6 +62,13 @@ ChainstateLoadResult LoadChainstate(ChainstateManager& chainman, const CacheSize
     if (!fReindex && !chainman.ActiveChainstate().LoadGenesisBlock()) {
         return {ChainstateLoadStatus::FAILURE, _("Error initializing block database")};
     }
+
+    auto is_coinsview_empty = [&](Chainstate* chainstate) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
+        return options.reindex || options.reindex_chainstate || chainstate->CoinsTip().GetBestBlock().IsNull();
+    };
+
+    assert(chainman.m_total_coinstip_cache > 0);
+    assert(chainman.m_total_coinsdb_cache > 0);
 
     // Conservative value which is arbitrarily chosen, as it will ultimately be changed
     // by a call to `chainman.MaybeRebalanceCaches()`. We just need to make sure
@@ -163,6 +130,93 @@ ChainstateLoadResult LoadChainstate(ChainstateManager& chainman, const CacheSize
     // disk, rebalance the coins caches to desired levels based
     // on the condition of each chainstate.
     chainman.MaybeRebalanceCaches();
+
+    return {ChainstateLoadStatus::SUCCESS, {}};
+}
+
+ChainstateLoadResult LoadChainstate(ChainstateManager& chainman, const CacheSizes& cache_sizes,
+                                    const ChainstateLoadOptions& options)
+{
+    if (!hashAssumeValid.IsNull()) {
+        LogPrintf("Assuming ancestors of block %s have valid signatures.\n", hashAssumeValid.GetHex());
+    } else {
+        LogPrintf("Validating signatures for all blocks.\n");
+    }
+    LogPrintf("Setting nMinimumChainWork=%s\n", nMinimumChainWork.GetHex());
+    if (nMinimumChainWork < UintToArith256(chainman.GetConsensus().nMinimumChainWork)) {
+        LogPrintf("Warning: nMinimumChainWork set below default value of %s\n", chainman.GetConsensus().nMinimumChainWork.GetHex());
+    }
+    if (nPruneTarget == std::numeric_limits<uint64_t>::max()) {
+        LogPrintf("Block pruning enabled.  Use RPC call pruneblockchain(height) to manually prune block and undo files.\n");
+    } else if (nPruneTarget) {
+        LogPrintf("Prune configured to target %u MiB on disk for block and undo files.\n", nPruneTarget / 1024 / 1024);
+    }
+
+    LOCK(cs_main);
+    chainman.m_total_coinstip_cache = cache_sizes.coins;
+    chainman.m_total_coinsdb_cache = cache_sizes.coins_db;
+
+    // Load the fully validated chainstate.
+    chainman.InitializeChainstate(options.mempool);
+
+    // Load a chain created from a UTXO snapshot, if any exist.
+    chainman.DetectSnapshotChainstate(options.mempool);
+
+    auto& pblocktree{chainman.m_blockman.m_block_tree_db};
+    // new CBlockTreeDB tries to delete the existing file, which
+    // fails if it's still open from the previous loop. Close it first:
+    pblocktree.reset();
+    pblocktree.reset(new CBlockTreeDB(cache_sizes.block_tree_db, options.block_tree_db_in_memory, options.reindex));
+
+    if (options.reindex) {
+        pblocktree->WriteReindexing(true);
+        //If we're reindexing in prune mode, wipe away unusable block files and all undo data files
+        if (options.prune) {
+            CleanupBlockRevFiles();
+        }
+    }
+
+    auto [init_status, init_error] = CompleteChainstateInitialization(chainman, options);
+    if (init_status != ChainstateLoadStatus::SUCCESS) {
+        return {init_status, init_error};
+    }
+
+    // If a snapshot chainstate was fully validated by a background chainstate during
+    // the last run, detect it here and clean up the now-unneeded background
+    // chainstate. This is the expected case during snapshot completion, and
+    // not just a belt-and-suspenders.
+    auto snapshot_completion = chainman.MaybeCompleteSnapshotValidation();
+
+    if (snapshot_completion == SnapshotCompletionResult::SKIPPED) {
+        // do nothing; expected case
+    } else if (snapshot_completion == SnapshotCompletionResult::SUCCESS) {
+        LogPrintf("[snapshot] cleaning up unneeded background chainstate, then reinitializing\n");
+        if (!chainman.ValidatedSnapshotCleanup()) {
+            AbortNode("Background chainstate cleanup failed unexpectedly.");
+        }
+
+        // Because ValidatedSnapshotCleanup() has torn down chainstates with
+        // ChainstateManager::ResetChainstates(), reinitialize them here without
+        // duplicating the blockindex work above.
+        assert(chainman.GetAll().empty());
+        assert(!chainman.IsSnapshotActive());
+        assert(!chainman.IsSnapshotValidated());
+
+        chainman.InitializeChainstate(options.mempool);
+
+        // A reload of the block index is required to recompute setBlockIndexCandidates
+        // for the fully validated chainstate.
+        chainman.ActiveChainstate().UnloadBlockIndex();
+
+        auto [init_status, init_error] = CompleteChainstateInitialization(chainman, options);
+        if (init_status != ChainstateLoadStatus::SUCCESS) {
+            return {init_status, init_error};
+        }
+    } else {
+        return {ChainstateLoadStatus::FAILURE, _(
+           "UTXO snapshot failed to validate. "
+           "Restart to resume normal initial block download, or try loading a different snapshot.")};
+    }
 
     return {ChainstateLoadStatus::SUCCESS, {}};
 }
