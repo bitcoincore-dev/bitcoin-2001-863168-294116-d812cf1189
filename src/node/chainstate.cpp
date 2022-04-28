@@ -9,6 +9,81 @@
 #include <validation.h>
 
 namespace node {
+
+// Complete initialization of chainstates after the inital call has been made
+// to ChainstateManager::InitializeChainstate().
+static std::optional<ChainstateLoadingError>
+CompleteChainstateInitialization(
+    ChainstateManager& chainman,
+    bool coins_db_in_memory,
+    bool fReset,
+    bool fReindexChainState,
+    std::function<void()> coins_error_cb) EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+
+{
+    auto is_coinsview_empty = [&](CChainState* chainstate) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
+        return fReset || fReindexChainState || chainstate->CoinsTip().GetBestBlock().IsNull();
+    };
+
+    // Conservative value that will ultimately be changed by
+    // a call to `chainman.MaybeRebalanceCaches()`.
+    double init_cache_fraction = 0.2;
+
+    // At this point we're either in reindex or we've loaded a useful
+    // block tree into BlockIndex()!
+
+    for (CChainState* chainstate : chainman.GetAll()) {
+        LogPrintf("Initializing chainstate %s\n", chainstate->ToString());
+
+        chainstate->InitCoinsDB(
+            /*cache_size_bytes=*/chainman.m_total_coinsdb_cache * init_cache_fraction,
+            /*in_memory=*/coins_db_in_memory,
+            /*should_wipe=*/fReset || fReindexChainState);
+
+        if (coins_error_cb) {
+            chainstate->CoinsErrorCatcher().AddReadErrCallback(coins_error_cb);
+        }
+
+        // Refuse to load unsupported database format.
+        // This is a no-op if we cleared the coinsviewdb with -reindex or -reindex-chainstate
+        if (chainstate->CoinsDB().NeedsUpgrade()) {
+            return ChainstateLoadingError::ERROR_CHAINSTATE_UPGRADE_FAILED;
+        }
+
+        // ReplayBlocks is a no-op if we cleared the coinsviewdb with -reindex or -reindex-chainstate
+        if (!chainstate->ReplayBlocks()) {
+            return ChainstateLoadingError::ERROR_REPLAYBLOCKS_FAILED;
+        }
+
+        // The on-disk coinsdb is now in a good state, create the cache
+        chainstate->InitCoinsCache(chainman.m_total_coinstip_cache * init_cache_fraction);
+        assert(chainstate->CanFlushToDisk());
+
+        if (!is_coinsview_empty(chainstate)) {
+            // LoadChainTip initializes the chain based on CoinsTip()'s best block
+            if (!chainstate->LoadChainTip()) {
+                return ChainstateLoadingError::ERROR_LOADCHAINTIP_FAILED;
+            }
+            assert(chainstate->m_chain.Tip() != nullptr);
+        }
+    }
+
+    if (!fReset) {
+        auto chainstates{chainman.GetAll()};
+        if (std::any_of(chainstates.begin(), chainstates.end(),
+                        [](const CChainState* cs) EXCLUSIVE_LOCKS_REQUIRED(cs_main) { return cs->NeedsRedownload(); })) {
+            return ChainstateLoadingError::ERROR_BLOCKS_WITNESS_INSUFFICIENTLY_VALIDATED;
+        }
+    }
+
+    // Now that chainstates are loaded and we're able to flush to
+    // disk, rebalance the coins caches to desired levels based
+    // on the condition of each chainstate.
+    chainman.MaybeRebalanceCaches();
+
+    return std::nullopt;
+}
+
 std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
                                                      ChainstateManager& chainman,
                                                      CTxMemPool* mempool,
@@ -23,10 +98,6 @@ std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
                                                      std::function<bool()> shutdown_requested,
                                                      std::function<void()> coins_error_cb)
 {
-    auto is_coinsview_empty = [&](CChainState* chainstate) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
-        return fReset || fReindexChainState || chainstate->CoinsTip().GetBestBlock().IsNull();
-    };
-
     LOCK(cs_main);
     chainman.m_total_coinstip_cache = nCoinCacheUsage;
     chainman.m_total_coinsdb_cache = nCoinDBCache;
@@ -82,62 +153,10 @@ std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
         return ChainstateLoadingError::ERROR_LOAD_GENESIS_BLOCK_FAILED;
     }
 
-    // Conservative value that will ultimately be changed by
-    // a call to `chainman.MaybeRebalanceCaches()`.
-    double init_cache_fraction = 0.2;
-
-    // At this point we're either in reindex or we've loaded a useful
-    // block tree into BlockIndex()!
-
-    for (CChainState* chainstate : chainman.GetAll()) {
-        LogPrintf("Initializing chainstate %s\n", chainstate->ToString());
-
-        chainstate->InitCoinsDB(
-            /*cache_size_bytes=*/nCoinDBCache * init_cache_fraction,
-            /*in_memory=*/coins_db_in_memory,
-            /*should_wipe=*/fReset || fReindexChainState);
-
-        if (coins_error_cb) {
-            chainstate->CoinsErrorCatcher().AddReadErrCallback(coins_error_cb);
-        }
-
-        // Refuse to load unsupported database format.
-        // This is a no-op if we cleared the coinsviewdb with -reindex or -reindex-chainstate
-        if (chainstate->CoinsDB().NeedsUpgrade()) {
-            return ChainstateLoadingError::ERROR_CHAINSTATE_UPGRADE_FAILED;
-        }
-
-        // ReplayBlocks is a no-op if we cleared the coinsviewdb with -reindex or -reindex-chainstate
-        if (!chainstate->ReplayBlocks()) {
-            return ChainstateLoadingError::ERROR_REPLAYBLOCKS_FAILED;
-        }
-
-        // The on-disk coinsdb is now in a good state, create the cache
-        chainstate->InitCoinsCache(nCoinCacheUsage);
-        assert(chainstate->CanFlushToDisk());
-
-        if (!is_coinsview_empty(chainstate)) {
-            // LoadChainTip initializes the chain based on CoinsTip()'s best block
-            if (!chainstate->LoadChainTip()) {
-                return ChainstateLoadingError::ERROR_LOADCHAINTIP_FAILED;
-            }
-            assert(chainstate->m_chain.Tip() != nullptr);
-        }
+    if (std::optional<ChainstateLoadingError> err = CompleteChainstateInitialization(
+                chainman, coins_db_in_memory, fReset, fReindexChainState, coins_error_cb)) {
+        return err;
     }
-
-    if (!fReset) {
-        auto chainstates{chainman.GetAll()};
-        if (std::any_of(chainstates.begin(), chainstates.end(),
-                        [](const CChainState* cs) EXCLUSIVE_LOCKS_REQUIRED(cs_main) { return cs->NeedsRedownload(); })) {
-            return ChainstateLoadingError::ERROR_BLOCKS_WITNESS_INSUFFICIENTLY_VALIDATED;
-        }
-    }
-
-    // Now that chainstates are loaded and we're able to flush to
-    // disk, rebalance the coins caches to desired levels based
-    // on the condition of each chainstate.
-    chainman.MaybeRebalanceCaches();
-
     return std::nullopt;
 }
 
