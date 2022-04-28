@@ -9,75 +9,20 @@
 #include <validation.h>
 
 namespace node {
-std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
-                                                     ChainstateManager& chainman,
-                                                     CTxMemPool* mempool,
-                                                     bool fPruneMode,
-                                                     bool fReindexChainState,
-                                                     int64_t nBlockTreeDBCache,
-                                                     int64_t nCoinDBCache,
-                                                     int64_t nCoinCacheUsage,
-                                                     bool block_tree_db_in_memory,
-                                                     bool coins_db_in_memory,
-                                                     std::function<bool()> shutdown_requested,
-                                                     std::function<void()> coins_error_cb)
+
+// Complete initialization of chainstates after the inital call has been made
+// to ChainstateManager::InitializeChainstate().
+static std::optional<ChainstateLoadingError> CompleteChainstateInitialization(
+    ChainstateManager& chainman,
+    bool coins_db_in_memory,
+    bool fReset,
+    bool fReindexChainState,
+    std::function<void()> coins_error_cb) EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+
 {
     auto is_coinsview_empty = [&](CChainState* chainstate) EXCLUSIVE_LOCKS_REQUIRED(::cs_main) {
         return fReset || fReindexChainState || chainstate->CoinsTip().GetBestBlock().IsNull();
     };
-
-    LOCK(cs_main);
-    chainman.m_total_coinstip_cache = nCoinCacheUsage;
-    chainman.m_total_coinsdb_cache = nCoinDBCache;
-
-    // Load the fully validated chainstate.
-    chainman.InitializeChainstate(mempool);
-
-    // Load a chain created from a UTXO snapshot, if any exist.
-    chainman.DetectSnapshotChainstate(mempool);
-
-    auto& pblocktree{chainman.m_blockman.m_block_tree_db};
-    // new CBlockTreeDB tries to delete the existing file, which
-    // fails if it's still open from the previous loop. Close it first:
-    pblocktree.reset();
-    pblocktree.reset(new CBlockTreeDB(nBlockTreeDBCache, block_tree_db_in_memory, fReset));
-
-    if (fReset) {
-        pblocktree->WriteReindexing(true);
-        //If we're reindexing in prune mode, wipe away unusable block files and all undo data files
-        if (fPruneMode)
-            CleanupBlockRevFiles();
-    }
-
-    if (shutdown_requested && shutdown_requested()) return ChainstateLoadingError::SHUTDOWN_PROBED;
-
-    // LoadBlockIndex will load m_have_pruned if we've ever removed a
-    // block file from disk.
-    // Note that it also sets fReindex based on the disk flag!
-    // From here on out fReindex and fReset mean something different!
-    if (!chainman.LoadBlockIndex()) {
-        if (shutdown_requested && shutdown_requested()) return ChainstateLoadingError::SHUTDOWN_PROBED;
-        return ChainstateLoadingError::ERROR_LOADING_BLOCK_DB;
-    }
-
-    if (!chainman.BlockIndex().empty() &&
-            !chainman.m_blockman.LookupBlockIndex(chainman.GetConsensus().hashGenesisBlock)) {
-        return ChainstateLoadingError::ERROR_BAD_GENESIS_BLOCK;
-    }
-
-    // Check for changed -prune state.  What we are concerned about is a user who has pruned blocks
-    // in the past, but is now trying to run unpruned.
-    if (chainman.m_blockman.m_have_pruned && !fPruneMode) {
-        return ChainstateLoadingError::ERROR_PRUNED_NEEDS_REINDEX;
-    }
-
-    // At this point blocktree args are consistent with what's on disk.
-    // If we're not mid-reindex (based on disk + args), add a genesis block on disk
-    // (otherwise we use the one already on disk).
-    // This is called again in ThreadImport after the reindex completes.
-    if (!fReindex && !chainman.ActiveChainstate().LoadGenesisBlock()) {
-        return ChainstateLoadingError::ERROR_LOAD_GENESIS_BLOCK_FAILED;
-    }
 
     // Conservative value that will ultimately be changed by
     // a call to `chainman.MaybeRebalanceCaches()`.
@@ -135,6 +80,79 @@ std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
     // on the condition of each chainstate.
     chainman.MaybeRebalanceCaches();
 
+    return std::nullopt;
+}
+
+std::optional<ChainstateLoadingError> LoadChainstate(bool fReset,
+                                                     ChainstateManager& chainman,
+                                                     CTxMemPool* mempool,
+                                                     bool fPruneMode,
+                                                     bool fReindexChainState,
+                                                     int64_t nBlockTreeDBCache,
+                                                     int64_t nCoinDBCache,
+                                                     int64_t nCoinCacheUsage,
+                                                     bool block_tree_db_in_memory,
+                                                     bool coins_db_in_memory,
+                                                     std::function<bool()> shutdown_requested,
+                                                     std::function<void()> coins_error_cb)
+{
+    LOCK(cs_main);
+    chainman.m_total_coinstip_cache = nCoinCacheUsage;
+    chainman.m_total_coinsdb_cache = nCoinDBCache;
+
+    // Load the fully validated chainstate.
+    chainman.InitializeChainstate(mempool);
+
+    // Load a chain created from a UTXO snapshot, if any exist.
+    chainman.DetectSnapshotChainstate(mempool);
+
+    auto& pblocktree{chainman.m_blockman.m_block_tree_db};
+    // new CBlockTreeDB tries to delete the existing file, which
+    // fails if it's still open from the previous loop. Close it first:
+    pblocktree.reset();
+    pblocktree.reset(new CBlockTreeDB(nBlockTreeDBCache, block_tree_db_in_memory, fReset));
+
+    if (fReset) {
+        pblocktree->WriteReindexing(true);
+        //If we're reindexing in prune mode, wipe away unusable block files and all undo data files
+        if (fPruneMode)
+            CleanupBlockRevFiles();
+    }
+
+    if (shutdown_requested && shutdown_requested()) return ChainstateLoadingError::SHUTDOWN_PROBED;
+
+    // LoadBlockIndex will load m_have_pruned if we've ever removed a
+    // block file from disk.
+    // Note that it also sets fReindex based on the disk flag!
+    // From here on out fReindex and fReset mean something different!
+    if (!chainman.LoadBlockIndex()) {
+        if (shutdown_requested && shutdown_requested()) return ChainstateLoadingError::SHUTDOWN_PROBED;
+        return ChainstateLoadingError::ERROR_LOADING_BLOCK_DB;
+    }
+
+    if (!chainman.BlockIndex().empty() &&
+            !chainman.m_blockman.LookupBlockIndex(chainman.GetConsensus().hashGenesisBlock)) {
+        return ChainstateLoadingError::ERROR_BAD_GENESIS_BLOCK;
+    }
+
+    // Check for changed -prune state.  What we are concerned about is a user who has pruned blocks
+    // in the past, but is now trying to run unpruned.
+    if (chainman.m_blockman.m_have_pruned && !fPruneMode) {
+        return ChainstateLoadingError::ERROR_PRUNED_NEEDS_REINDEX;
+    }
+
+    // At this point blocktree args are consistent with what's on disk.
+    // If we're not mid-reindex (based on disk + args), add a genesis block on disk
+    // (otherwise we use the one already on disk).
+    // This is called again in ThreadImport after the reindex completes.
+    if (!fReindex && !chainman.ActiveChainstate().LoadGenesisBlock()) {
+        return ChainstateLoadingError::ERROR_LOAD_GENESIS_BLOCK_FAILED;
+    }
+
+    if (std::optional<ChainstateLoadingError> err = CompleteChainstateInitialization(
+                chainman, coins_db_in_memory, fReset, fReindexChainState, coins_error_cb)) {
+        return err;
+    }
     return std::nullopt;
 }
 
