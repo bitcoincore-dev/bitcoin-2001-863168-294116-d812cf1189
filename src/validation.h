@@ -760,6 +760,20 @@ private:
     void UpdateTip(const CBlockIndex* pindexNew)
         EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
+    /**
+     * In case of an invalid snapshot, rename the directory so that it can be
+     * examined during issue report.
+     */
+    void InvalidateSnapshotDatadir() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    //! Prepare this chainstate to have its on-disk coins leveldb deleted.
+    //! Returning a copy of the database options is required to provide to
+    //! leveldb's DestroyDB().
+    //!
+    //! Calling this makes this chainstate instance unusable as it resets all
+    //! coins-views.
+    dbwrapper::Options PrepareForCoinsDBDeletion() EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
     friend ChainstateManager;
 };
 
