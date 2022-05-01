@@ -18,7 +18,10 @@ zmq_packages=zeromq
 upnp_packages=miniupnpc
 natpmp_packages=libnatpmp
 
-multiprocess_packages = libmultiprocess capnp
+multiprocess_packages := libmultiprocess
+ifneq ($(host),$(build))
+multiprocess_packages += capnp
+endif
 multiprocess_native_packages := native_capnp
 
 usdt_linux_packages=systemtap
