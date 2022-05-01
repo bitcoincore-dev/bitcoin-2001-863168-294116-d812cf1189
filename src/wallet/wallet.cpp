@@ -43,6 +43,7 @@
 #include <algorithm>
 #include <assert.h>
 #include <optional>
+#include <variant>
 
 #include <boost/algorithm/string/replace.hpp>
 
@@ -167,6 +168,14 @@ std::unique_ptr<interfaces::Handler> HandleLoadWallet(WalletContext& context, Lo
     return interfaces::MakeHandler([&context, it] { LOCK(context.wallets_mutex); context.wallet_load_fns.erase(it); });
 }
 
+void NotifyWalletLoaded(WalletContext& context, const std::shared_ptr<CWallet>& wallet)
+{
+    LOCK(context.wallets_mutex);
+    for (auto& load_wallet : context.wallet_load_fns) {
+        load_wallet(interfaces::MakeWallet(context, wallet));
+    }
+}
+
 static Mutex g_loading_wallet_mutex;
 static Mutex g_wallet_release_mutex;
 static std::condition_variable g_wallet_release_cv;
@@ -232,6 +241,8 @@ std::shared_ptr<CWallet> LoadWalletInternal(WalletContext& context, const std::s
             status = DatabaseStatus::FAILED_LOAD;
             return nullptr;
         }
+
+        NotifyWalletLoaded(context, wallet);
         AddWallet(context, wallet);
         wallet->postInitProcess();
 
@@ -348,6 +359,8 @@ std::shared_ptr<CWallet> CreateWallet(WalletContext& context, const std::string&
             wallet->Lock();
         }
     }
+
+    NotifyWalletLoaded(context, wallet);
     AddWallet(context, wallet);
     wallet->postInitProcess();
 
@@ -656,6 +669,59 @@ void CWallet::AddToSpends(const uint256& wtxid, WalletBatch* batch)
         AddToSpends(txin.prevout, wtxid, batch);
 }
 
+void CWallet::UpdateAddressBookUsed(const CWalletTx& wtx)
+{
+    for (const auto& output : wtx.tx->vout) {
+        CTxDestination dest;
+        if (!ExtractDestination(output.scriptPubKey, dest)) continue;
+        m_address_book[dest].m_used = true;
+    }
+}
+
+void CWallet::InitialiseAddressBookUsed()
+{
+    for (const auto& entry : mapWallet) {
+        const CWalletTx& wtx = entry.second;
+        UpdateAddressBookUsed(wtx);
+    }
+}
+
+bool CWallet::FindScriptPubKeyUsed(const std::set<CScript>& keys, const std::variant<std::monostate, std::function<void(const CWalletTx&)>, std::function<void(const CWalletTx&, uint32_t)>>& callback) const
+{
+    bool found_any = false;
+    for (const auto& key : keys) {
+        CTxDestination dest;
+        if (!ExtractDestination(key, dest)) continue;
+        const auto& address_book_it = m_address_book.find(dest);
+        if (address_book_it == m_address_book.end()) continue;
+        if (address_book_it->second.m_used) {
+            found_any = true;
+            break;
+        }
+    }
+    if (!found_any) return false;
+    if (std::holds_alternative<std::monostate>(callback)) return true;
+
+    found_any = false;
+    for (const auto& entry : mapWallet) {
+        const CWalletTx& wtx = entry.second;
+        for (uint32_t i = 0; i < wtx.tx->vout.size(); ++i) {
+            const auto& output = wtx.tx->vout[i];
+            if (keys.count(output.scriptPubKey)) {
+                found_any = true;
+                const auto callback_type = callback.index();
+                if (callback_type == 1) {
+                    std::get<std::function<void(const CWalletTx&)>>(callback)(wtx);
+                    break;
+                }
+                std::get<std::function<void(const CWalletTx&, uint32_t)>>(callback)(wtx, i);
+            }
+        }
+    }
+
+    return found_any;
+}
+
 bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
 {
     if (IsCrypted())
@@ -953,6 +1019,7 @@ CWalletTx* CWallet::AddToWallet(CTransactionRef tx, const TxState& state, const 
         wtx.m_it_wtxOrdered = wtxOrdered.insert(std::make_pair(wtx.nOrderPos, &wtx));
         wtx.nTimeSmart = ComputeTimeSmart(wtx, rescanning_old_block);
         AddToSpends(hash, &batch);
+        UpdateAddressBookUsed(wtx);
     }
 
     if (!fInsertedNew)
@@ -2114,7 +2181,7 @@ void CWallet::CommitTransaction(CTransactionRef tx, mapValue_t mapValue, std::ve
     }
 }
 
-DBErrors CWallet::LoadWallet()
+DBErrors CWallet::LoadWallet(const do_init_used_flag do_init_used_flag_val)
 {
     LOCK(cs_wallet);
 
@@ -2134,7 +2201,12 @@ DBErrors CWallet::LoadWallet()
         assert(m_internal_spk_managers.empty());
     }
 
-    return nLoadWalletRet;
+    if (nLoadWalletRet != DBErrors::LOAD_OK)
+        return nLoadWalletRet;
+
+    if (do_init_used_flag_val == do_init_used_flag::Init) InitialiseAddressBookUsed();
+
+    return DBErrors::LOAD_OK;
 }
 
 DBErrors CWallet::ZapSelectTx(std::vector<uint256>& vHashIn, std::vector<uint256>& vHashOut)
@@ -2896,13 +2968,6 @@ std::shared_ptr<CWallet> CWallet::Create(WalletContext& context, const std::stri
 
     if (chain && !AttachChain(walletInstance, *chain, rescan_required, error, warnings)) {
         return nullptr;
-    }
-
-    {
-        LOCK(context.wallets_mutex);
-        for (auto& load_wallet : context.wallet_load_fns) {
-            load_wallet(interfaces::MakeWallet(context, walletInstance));
-        }
     }
 
     {
