@@ -1,17 +1,17 @@
 package=libmultiprocess
-$(package)_version=$(native_$(package)_version)
-$(package)_download_path=$(native_$(package)_download_path)
-$(package)_file_name=$(native_$(package)_file_name)
-$(package)_sha256_hash=$(native_$(package)_sha256_hash)
-$(package)_dependencies=native_$(package) capnp
+$(package)_version := d576d975debdc9090bd2582f83f49c76c0061698
+$(package)_download_path := https://github.com/chaincodelabs/libmultiprocess/archive
+$(package)_file_name := $($(package)_version).tar.gz
+$(package)_sha256_hash := 9f8b055c8bba755dc32fe799b67c20b91e7b13e67cadafbc54c0f1def057a370
+$(package)_dependencies := capnp
 ifneq ($(host),$(build))
 $(package)_dependencies += native_capnp
 endif
 
 define $(package)_set_vars :=
 ifneq ($(host),$(build))
-$(package)_cmake_opts := -DCAPNP_EXECUTABLE="$$(native_capnp_prefixbin)/capnp"
-$(package)_cmake_opts += -DCAPNPC_CXX_EXECUTABLE="$$(native_capnp_prefixbin)/capnpc-c++"
+$(package)_cmake_opts := -DCAPNP_EXECUTABLE="$(build_prefix)/bin/capnp"
+$(package)_cmake_opts += -DCAPNPC_CXX_EXECUTABLE="$(build_prefix)/bin/capnpc-c++"
 endif
 endef
 

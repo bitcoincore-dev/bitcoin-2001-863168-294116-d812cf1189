@@ -4,7 +4,7 @@ $(package)_download_path=$(native_$(package)_download_path)
 $(package)_download_file=$(native_$(package)_download_file)
 $(package)_file_name=$(native_$(package)_file_name)
 $(package)_sha256_hash=$(native_$(package)_sha256_hash)
-$(package)_dependencies=native_$(package)
+$(package)_dependencies := native_$(package)
 
 define $(package)_config_cmds
   $($(package)_autoconf) --with-external-capnp
