@@ -59,6 +59,7 @@ include(cmake/introspection.cmake)
 include(cmake/optional.cmake)
 
 include(cmake/subtree-crc32c.cmake)
+include(cmake/subtree-leveldb.cmake)
 
 add_subdirectory(src)
 
