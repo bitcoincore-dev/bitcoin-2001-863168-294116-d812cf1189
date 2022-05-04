@@ -31,6 +31,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(CheckCXXSourceCompiles)
 include(CheckCXXSymbolExists)
+include(ExternalProject)
+include(FindPkgConfig)
 include(TestBigEndian)
 
 # Global checks.
@@ -52,3 +54,5 @@ include(cmake/subtree-crc32c.cmake)
 include(cmake/subtree-leveldb.cmake)
 include(cmake/subtree-minisketch.cmake)
 include(cmake/subtree-univalue.cmake)
+
+add_subdirectory(src)
