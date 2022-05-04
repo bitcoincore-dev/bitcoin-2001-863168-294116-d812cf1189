@@ -62,6 +62,8 @@ configure_file(cmake/bitcoin-config.h.in src/config/bitcoin-config.h @ONLY)
 include_directories(${CMAKE_BINARY_DIR}/src)
 add_definitions(-DHAVE_CONFIG_H)
 
+include(cmake/subtree-crc32c.cmake)
+
 message("\n")
 message("Configure summary")
 message("=================")
