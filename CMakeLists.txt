@@ -67,6 +67,8 @@ include(cmake/subtree-leveldb.cmake)
 include(cmake/subtree-minisketch.cmake)
 include(cmake/subtree-secp256k1.cmake)
 
+add_subdirectory(src)
+
 message("\n")
 message("Configure summary")
 message("=================")
