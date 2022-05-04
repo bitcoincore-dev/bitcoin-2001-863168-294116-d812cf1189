@@ -63,6 +63,7 @@ include_directories(${CMAKE_BINARY_DIR}/src)
 add_definitions(-DHAVE_CONFIG_H)
 
 include(cmake/subtree-crc32c.cmake)
+include(cmake/subtree-leveldb.cmake)
 
 message("\n")
 message("Configure summary")
