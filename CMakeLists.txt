@@ -58,6 +58,8 @@ endif()
 include(cmake/introspection.cmake)
 include(cmake/optional.cmake)
 
+include(cmake/subtree-crc32c.cmake)
+
 add_subdirectory(src)
 
 message("\n")
