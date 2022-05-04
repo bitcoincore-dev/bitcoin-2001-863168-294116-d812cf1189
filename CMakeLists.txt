@@ -56,7 +56,18 @@ if(CMAKE_SYSTEM_NAME STREQUAL Darwin)
 endif()
 
 include(cmake/introspection.cmake)
+include(cmake/optional.cmake)
 
 configure_file(cmake/bitcoin-config.h.in src/config/bitcoin-config.h @ONLY)
 include_directories(${CMAKE_BINARY_DIR}/src)
 add_definitions(-DHAVE_CONFIG_H)
+
+message("\n")
+message("Configure summary")
+message("=================")
+get_directory_property(definitions COMPILE_DEFINITIONS)
+message("Preprocessor defined macros: ${definitions}")
+message("CXX: ${CMAKE_CXX_COMPILER_LAUNCHER} ${CMAKE_CXX_COMPILER}")
+get_directory_property(compile_options COMPILE_OPTIONS)
+message("CXXFLAGS: ${compile_options}")
+message("\n")
