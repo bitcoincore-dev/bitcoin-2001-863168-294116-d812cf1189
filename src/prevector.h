@@ -397,7 +397,15 @@ public:
         // representation (with capacity N and size <= N).
         iterator p = first;
         char* endp = (char*)&(*end());
-        _size -= last - p;
+        if (!std::is_trivially_destructible<T>::value) {
+            while (p != last) {
+                (*p).~T();
+                _size--;
+                ++p;
+            }
+        } else {
+            _size -= last - p;
+        }
         memmove(&(*first), &(*last), endp - ((char*)(&(*last))));
         return first;
     }
@@ -437,6 +445,9 @@ public:
     }
 
     ~prevector() {
+        if (!std::is_trivially_destructible<T>::value) {
+            clear();
+        }
         if (!is_direct()) {
             free(_union.indirect);
             _union.indirect = nullptr;
