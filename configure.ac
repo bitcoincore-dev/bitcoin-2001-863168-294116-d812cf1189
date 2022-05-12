@@ -1439,6 +1439,11 @@ if test "$use_external_signer" != "no"; then
   AC_LINK_IFELSE([AC_LANG_PROGRAM([[
     // A workaround for boost::process not including what it needs
     #include <algorithm>
+    #if defined(WIN32) && !defined(__kernel_entry)
+    // A workaround for boost 1.71 incompatibility with mingw-w64 compiler.
+    // For details see https://github.com/bitcoin/bitcoin/pull/22348.
+    #define __kernel_entry
+    #endif
     #define BOOST_PROCESS_USE_STD_FS
     #include <boost/process.hpp>
   ]],[[
