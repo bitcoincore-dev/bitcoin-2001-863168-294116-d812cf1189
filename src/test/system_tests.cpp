@@ -7,6 +7,10 @@
 #include <univalue.h>
 
 #ifdef ENABLE_EXTERNAL_SIGNER
+// Boost 1.77 requires the following workaround.
+// See: https://github.com/boostorg/process/issues/213
+#include <algorithm>
+
 #include <boost/process.hpp>
 #endif // ENABLE_EXTERNAL_SIGNER
 

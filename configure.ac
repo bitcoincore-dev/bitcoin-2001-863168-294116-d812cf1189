@@ -1507,6 +1507,9 @@ if test "$use_external_signer" != "no"; then
   dnl Boost 1.73 and older require the following workaround.
   LDFLAGS="$LDFLAGS $PTHREAD_CFLAGS"
   AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+    // Boost 1.77 requires the following workaround.
+    // See: https://github.com/boostorg/process/issues/213
+    #include <algorithm>
     #define BOOST_PROCESS_USE_STD_FS
     #include <boost/process.hpp>
 
