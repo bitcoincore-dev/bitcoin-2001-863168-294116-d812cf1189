@@ -7,6 +7,9 @@
 #include <univalue.h>
 
 #ifdef ENABLE_EXTERNAL_SIGNER
+// Boost 1.77 requires the following workaround.
+// See: https://github.com/boostorg/process/issues/213
+#include <algorithm>
 #if defined(__GNUC__)
 // Boost 1.78 requires the following workaround.
 // See: https://github.com/boostorg/process/issues/235
