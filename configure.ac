@@ -1510,6 +1510,11 @@ if test "$use_external_signer" != "no"; then
     // Boost 1.77 requires the following workaround.
     // See: https://github.com/boostorg/process/issues/213
     #include <algorithm>
+    #if defined(WIN32) && !defined(__kernel_entry)
+    // Boost 1.71-1.77 requires the following workaround for compatibility with mingw-w64 compiler.
+    // See: https://github.com/bitcoin/bitcoin/pull/22348
+    #define __kernel_entry
+    #endif
     #define BOOST_PROCESS_USE_STD_FS
     #include <boost/process.hpp>
 
