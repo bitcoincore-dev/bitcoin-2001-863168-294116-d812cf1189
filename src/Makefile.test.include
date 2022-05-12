@@ -360,7 +360,9 @@ if ENABLE_BENCH
 	$(BENCH_BINARY) > /dev/null
 endif
 endif
+if EMBEDDED_LIBSECP256K1
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C secp256k1 check
+endif
 
 if !ENABLE_FUZZ
 UNIVALUE_TESTS = univalue/test/object univalue/test/unitester univalue/test/no_nul
