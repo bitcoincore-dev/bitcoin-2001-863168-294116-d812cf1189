@@ -1314,6 +1314,32 @@ else
   CPPFLAGS="$CPPFLAGS -DPROVIDE_FUZZ_MAIN_FUNCTION"
 fi
 
+dnl Check for libsecp256k1, only if explicitly requested
+AC_ARG_WITH([system-libsecp256k1],
+  [AS_HELP_STRING([--with-system-libsecp256k1],
+  [Build with system libsecp256k1 (default is no; DANGEROUS; NOT SUPPORTED)])],
+  [system_libsecp256k1=$withval],
+  [system_libsecp256k1=no]
+)
+if test x$system_libsecp256k1 != xno; then
+  PKG_CHECK_MODULES([libsecp256k1],[libsecp256k1],,[true])
+  TEMP_CFLAGS="$CFLAGS"
+  TEMP_LIBS="$LIBS"
+  CFLAGS="$libsecp256k1_CFLAGS $CFLAGS"
+  LIBS="$libsecp256k1_LIBS $LIBS"
+  AC_CHECK_FUNCS([secp256k1_schnorrsig_sign_custom],[],[
+    AC_MSG_ERROR([libsecp256k1 is too old or broken (must be at least 2021-07-03 or newer)])
+  ])
+  CFLAGS="$TEMP_CFLAGS"
+  LIBS="$TEMP_LIBS"
+else
+  libsecp256k1_CFLAGS='-I$(srcdir)/secp256k1/include'
+  libsecp256k1_LIBS='secp256k1/libsecp256k1.la'
+fi
+AM_CONDITIONAL([EMBEDDED_LIBSECP256K1],[test x$system_libsecp256k1 = xno])
+AC_SUBST(libsecp256k1_CFLAGS)
+AC_SUBST(libsecp256k1_LIBS)
+
 if test "$enable_wallet" != "no"; then
     dnl Check for libdb_cxx only if wallet enabled
     if test "$use_bdb" != "no"; then
@@ -1563,6 +1589,37 @@ if test "$use_zmq" = "yes"; then
     ;;
   esac
 fi
+
+dnl univalue check
+AC_ARG_WITH([system-univalue],
+  [AS_HELP_STRING([--with-system-univalue],
+  [Build with system UniValue (default is no)])],
+  [system_univalue=$withval],
+  [system_univalue=no]
+)
+need_bundled_univalue=yes
+if test x$build_bitcoin_wallet$build_bitcoin_cli$build_bitcoin_tx$build_bitcoin_util$build_bitcoind$bitcoin_enable_qt$use_tests$use_bench = xnononononononono; then
+  need_bundled_univalue=no
+else
+  if test x$system_univalue != xno; then
+    PKG_CHECK_MODULES([UNIVALUE], [libunivalue >= 1.0.4], [found_univalue=yes], [found_univalue=no])
+    if test x$found_univalue = xyes; then
+      system_univalue=yes
+      need_bundled_univalue=no
+    elif test x$system_univalue = xyes; then
+      AC_MSG_ERROR([univalue not found])
+    else
+      system_univalue=no
+    fi
+  fi
+
+  if test x$need_bundled_univalue = xyes; then
+    UNIVALUE_CFLAGS='-I$(srcdir)/univalue/include'
+  fi
+fi
+AM_CONDITIONAL([EMBEDDED_UNIVALUE],[test x$need_bundled_univalue = xyes])
+AC_SUBST(UNIVALUE_CFLAGS)
+AC_SUBST(UNIVALUE_LIBS)
 
 dnl libmultiprocess library check
 
@@ -1928,8 +1985,10 @@ PKGCONFIG_LIBDIR_TEMP="$PKG_CONFIG_LIBDIR"
 unset PKG_CONFIG_LIBDIR
 PKG_CONFIG_LIBDIR="$PKGCONFIG_LIBDIR_TEMP"
 
+if test x$system_libsecp256k1 = xno; then
 ac_configure_args="${ac_configure_args} --disable-shared --with-pic --enable-benchmark=no --enable-module-recovery --enable-module-schnorrsig --enable-experimental"
 AC_CONFIG_SUBDIRS([src/secp256k1])
+fi
 
 AC_OUTPUT
 

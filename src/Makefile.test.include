@@ -360,8 +360,11 @@ if ENABLE_BENCH
 	$(BENCH_BINARY) > /dev/null
 endif
 endif
+if EMBEDDED_LIBSECP256K1
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C secp256k1 check
+endif
 
+if EMBEDDED_UNIVALUE
 if !ENABLE_FUZZ
 UNIVALUE_TESTS = univalue/test/object univalue/test/unitester univalue/test/no_nul
 noinst_PROGRAMS += $(UNIVALUE_TESTS)
@@ -381,6 +384,7 @@ univalue_test_object_SOURCES = $(UNIVALUE_TEST_OBJECT_INT)
 univalue_test_object_LDADD = $(LIBUNIVALUE)
 univalue_test_object_CPPFLAGS = -I$(srcdir)/$(UNIVALUE_INCLUDE_DIR_INT)
 univalue_test_object_LDFLAGS = -static $(LIBTOOL_APP_LDFLAGS)
+endif
 endif
 
 %.cpp.test: %.cpp
