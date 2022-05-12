@@ -14,7 +14,7 @@ struct bilingual_str;
 
 namespace wallet {
 class CWallet;
-bool DumpWallet(CWallet& wallet, bilingual_str& error);
+bool DumpWallet(CWallet& wallet, bilingual_str& error, const std::string& dump_filename);
 bool CreateFromDump(const std::string& name, const fs::path& wallet_path, bilingual_str& error, std::vector<bilingual_str>& warnings);
 } // namespace wallet
 
