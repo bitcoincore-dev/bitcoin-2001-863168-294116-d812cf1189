@@ -29,6 +29,37 @@ const char *DEFAULT_GUI_PROXY_HOST = "127.0.0.1";
 
 static const QString GetDefaultProxyAddress();
 
+static const QLatin1String fontchoice_str_embedded{"embedded"};
+static const QLatin1String fontchoice_str_best_system{"best_system"};
+static const QString fontchoice_str_custom_prefix{QStringLiteral("custom, ")};
+
+QString OptionsModel::FontChoiceToString(const OptionsModel::FontChoice& f)
+{
+    if (std::holds_alternative<FontChoiceAbstract>(f)) {
+        if (f == UseBestSystemFont) {
+            return fontchoice_str_best_system;
+        } else {
+            return fontchoice_str_embedded;
+        }
+    }
+    return fontchoice_str_custom_prefix + std::get<QFont>(f).toString();
+}
+
+OptionsModel::FontChoice OptionsModel::FontChoiceFromString(const QString& s)
+{
+    if (s == fontchoice_str_best_system) {
+        return FontChoiceAbstract::BestSystemFont;
+    } else if (s == fontchoice_str_embedded) {
+        return FontChoiceAbstract::EmbeddedFont;
+    } else if (s.startsWith(fontchoice_str_custom_prefix)) {
+        QFont f;
+        f.fromString(s.mid(fontchoice_str_custom_prefix.size()));
+        return f;
+    } else {
+        return FontChoiceAbstract::EmbeddedFont;  // default
+    }
+}
+
 OptionsModel::OptionsModel(QObject *parent, bool resetSettings) :
     QAbstractListModel(parent)
 {
@@ -192,11 +223,27 @@ void OptionsModel::Init(bool resetSettings)
 
     language = settings.value("language").toString();
 
-    if (!settings.contains("UseEmbeddedMonospacedFont")) {
-        settings.setValue("UseEmbeddedMonospacedFont", "true");
+    if (settings.contains("FontForMoney")) {
+        m_font_money = FontChoiceFromString(settings.value("FontForMoney").toString());
+    } else if (settings.contains("UseEmbeddedMonospacedFont")) {
+        if (settings.value("UseEmbeddedMonospacedFont").toBool()) {
+            m_font_money = FontChoiceAbstract::EmbeddedFont;
+        } else {
+            m_font_money = FontChoiceAbstract::BestSystemFont;
+        }
     }
-    m_use_embedded_monospaced_font = settings.value("UseEmbeddedMonospacedFont").toBool();
-    Q_EMIT useEmbeddedMonospacedFontChanged(m_use_embedded_monospaced_font);
+    Q_EMIT fontForMoneyChanged(getFontForMoney());
+
+    if (settings.contains("FontForQRCodes")) {
+        m_font_qrcodes = FontChoiceFromString(settings.value("FontForQRCodes").toString());
+    }
+    Q_EMIT fontForQRCodesChanged(getFontChoiceForQRCodes());
+
+    if (!settings.contains("PeersTabAlternatingRowColors")) {
+        settings.setValue("PeersTabAlternatingRowColors", "false");
+    }
+    m_peers_tab_alternating_row_colors = settings.value("PeersTabAlternatingRowColors").toBool();
+    Q_EMIT peersTabAlternatingRowColorsChanged(m_peers_tab_alternating_row_colors);
 }
 
 /** Helper function to copy contents from one QSettings to another.
@@ -364,8 +411,12 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return strThirdPartyTxUrls;
         case Language:
             return settings.value("language");
-        case UseEmbeddedMonospacedFont:
-            return m_use_embedded_monospaced_font;
+        case FontForMoney:
+            return QVariant::fromValue(m_font_money);
+        case FontForQRCodes:
+            return QVariant::fromValue(m_font_qrcodes);
+        case PeersTabAlternatingRowColors:
+            return m_peers_tab_alternating_row_colors;
         case CoinControlFeatures:
             return fCoinControlFeatures;
         case EnablePSBTControls:
@@ -507,10 +558,28 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 setRestartRequired(true);
             }
             break;
-        case UseEmbeddedMonospacedFont:
-            m_use_embedded_monospaced_font = value.toBool();
-            settings.setValue("UseEmbeddedMonospacedFont", m_use_embedded_monospaced_font);
-            Q_EMIT useEmbeddedMonospacedFontChanged(m_use_embedded_monospaced_font);
+        case FontForMoney:
+        {
+            const auto& new_font = value.value<FontChoice>();
+            if (m_font_money == new_font) break;
+            settings.setValue("FontForMoney", FontChoiceToString(new_font));
+            m_font_money = new_font;
+            Q_EMIT fontForMoneyChanged(getFontForMoney());
+            break;
+        }
+        case FontForQRCodes:
+        {
+            const auto& new_font = value.value<FontChoice>();
+            if (m_font_qrcodes == new_font) break;
+            settings.setValue("FontForQRCodes", FontChoiceToString(new_font));
+            m_font_qrcodes = new_font;
+            Q_EMIT fontForQRCodesChanged(new_font);
+            break;
+        }
+        case PeersTabAlternatingRowColors:
+            m_peers_tab_alternating_row_colors = value.toBool();
+            settings.setValue("PeersTabAlternatingRowColors", m_peers_tab_alternating_row_colors);
+            Q_EMIT peersTabAlternatingRowColorsChanged(m_peers_tab_alternating_row_colors);
             break;
         case CoinControlFeatures:
             fCoinControlFeatures = value.toBool();
@@ -577,6 +646,23 @@ void OptionsModel::setDisplayUnit(const QVariant &value)
         settings.setValue("nDisplayUnit", nDisplayUnit);
         Q_EMIT displayUnitChanged(nDisplayUnit);
     }
+}
+
+QFont OptionsModel::getFontForChoice(const FontChoice& fc)
+{
+    QFont f;
+    if (std::holds_alternative<FontChoiceAbstract>(fc)) {
+        f = GUIUtil::fixedPitchFont(fc != UseBestSystemFont);
+        f.setWeight(QFont::Bold);
+    } else {
+        f = std::get<QFont>(fc);
+    }
+    return f;
+}
+
+QFont OptionsModel::getFontForMoney() const
+{
+    return getFontForChoice(m_font_money);
 }
 
 void OptionsModel::setRestartRequired(bool fRequired)
