@@ -813,7 +813,7 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
     }
 
     // Check for non-standard pay-to-script-hash in inputs
-    if (fRequireStandard && !AreInputsStandard(tx, m_view, "bad-txns-input-", reason)) {
+    if (fRequireStandard && !AreInputsStandard(tx, m_view, "bad-txns-input-", reason, ignore_rejects)) {
         return state.Invalid(TxValidationResult::TX_INPUTS_NOT_STANDARD, reason);
     }
 
