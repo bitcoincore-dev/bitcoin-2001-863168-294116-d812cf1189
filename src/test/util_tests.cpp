@@ -17,6 +17,7 @@
 #include <util/message.h> // For MessageSign(), MessageVerify(), MESSAGE_MAGIC
 #include <util/moneystr.h>
 #include <util/overflow.h>
+#include <util/readwritefile.h>
 #include <util/spanparsing.h>
 #include <util/strencodings.h>
 #include <util/string.h>
@@ -24,9 +25,10 @@
 #include <util/vector.h>
 
 #include <array>
-#include <optional>
+#include <fstream>
 #include <limits>
 #include <map>
+#include <optional>
 #include <stdint.h>
 #include <string.h>
 #include <thread>
@@ -2590,6 +2592,205 @@ BOOST_AUTO_TEST_CASE(util_ParseByteUnits)
 
     // invalid unit
     BOOST_CHECK(!ParseByteUnits("1x", noop));
+}
+
+BOOST_AUTO_TEST_CASE(util_ReadBinaryFile)
+{
+    fs::path tmpfolder = m_args.GetDataDirBase();
+    fs::path tmpfile = tmpfolder / "read_binary.dat";
+    std::string expected_text;
+    for (int i = 0; i < 30; i++) {
+        expected_text += "0123456789";
+    }
+    {
+        std::ofstream file{tmpfile};
+        file << expected_text;
+    }
+    {
+        // read all contents in file
+        auto [valid, text] = ReadBinaryFile(tmpfile);
+        BOOST_CHECK(valid);
+        BOOST_CHECK_EQUAL(text, expected_text);
+    }
+    {
+        // read half contents in file
+        auto [valid, text] = ReadBinaryFile(tmpfile, expected_text.size() / 2);
+        BOOST_CHECK(valid);
+        BOOST_CHECK_EQUAL(text, expected_text.substr(0, expected_text.size() / 2));
+    }
+    {
+        // read from non-existent file
+        fs::path invalid_file = tmpfolder / "invalid_binary.dat";
+        auto [valid, text] = ReadBinaryFile(invalid_file);
+        BOOST_CHECK(!valid);
+        BOOST_CHECK(text.empty());
+    }
+}
+
+BOOST_AUTO_TEST_CASE(util_WriteBinaryFile)
+{
+    fs::path tmpfolder = m_args.GetDataDirBase();
+    fs::path tmpfile = tmpfolder / "write_binary.dat";
+    std::string expected_text = "bitcoin";
+    auto valid = WriteBinaryFile(tmpfile, expected_text);
+    std::string actual_text;
+    std::ifstream file{tmpfile};
+    file >> actual_text;
+    BOOST_CHECK(valid);
+    BOOST_CHECK_EQUAL(actual_text, expected_text);
+}
+
+static std::string CheckModifyRWConfigFile(std::map<std::string, std::string>& settings_to_change, const std::string& current_config_file)
+{
+    std::istringstream stream_in(current_config_file);
+    std::ostringstream stream_out;
+    try {
+        ModifyRWConfigStream(stream_in, stream_out, settings_to_change);
+    } catch (...) {
+        settings_to_change.clear();
+        throw;
+    }
+    settings_to_change.clear();
+    return stream_out.str();
+}
+
+BOOST_AUTO_TEST_CASE(test_ModifyRWConfigFile)
+{
+    std::map<std::string, std::string> cs;
+
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b"), "a=b");
+
+    cs["a"] = "c";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b"), "a=c");
+    BOOST_CHECK(cs.empty());
+
+    // Multi-char name/value
+    cs["ab"] = "cd";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "ab=bc"), "ab=cd");
+
+    // Preserved final newline
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\n"), "a=b\n");
+    cs["a"] = "c";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\n"), "a=c\n");
+
+    // Preserved final tab
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\t"), "a=b\t");
+    cs["a"] = "c";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\t"), "a=c\t");
+
+    // Preserved final space
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b "), "a=b ");
+    cs["a"] = "c";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b "), "a=c ");
+
+    // Preserved final crnl
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\r\n"), "a=b\r\n");
+    cs["a"] = "c";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\r\n"), "a=c\r\n");
+
+    // Empty file
+    cs["a"] = "c";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, ""), "a=c\n");
+
+    // Ignore k=v in comment
+    cs["a"] = "c";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "#a=b"), "#a=b\na=c\n");
+
+    // Preserved comment
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\t# c"), "a=b\t# c");
+
+    // Commented out commented value
+    cs["a"] = "c";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\t# c"), "a=c\n#a=b\t# c");
+
+    // Preserved whitespace before name
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, " \t \ta=b"), " \t \ta=b");
+    cs["a"] = "c";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, " \t \ta=b"), " \t \ta=c");
+
+    // Preserved whitespace after name
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a \t \t=b"), "a \t \t=b");
+    cs["a"] = "c";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a \t \t=b"), "a \t \t=c");
+
+    // Preserved whitespace before value
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a= \t \tb"), "a= \t \tb");
+    cs["a"] = "c";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a= \t \tb"), "a= \t \tc");
+
+    // Modifying value between others
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\nab=bc\nd=e"), "a=b\nab=bc\nd=e");
+    cs["ab"] = "x";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\nab=bc\nd=e"), "a=b\nab=x\nd=e");
+
+    // Blank key/value
+    cs["ab"] = "";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\nab=bc\nd=e"), "a=b\nab=\nd=e");
+    cs[""] = "x";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\nab=bc\nd=e"), "a=b\nab=bc\nd=e\n=x\n");
+
+    // Blank line in source
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\n\nab=bc\n\nd=e"), "a=b\n\nab=bc\n\nd=e");
+    cs["ab"] = "x";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\n\nab=bc\n\nd=e"), "a=b\n\nab=x\n\nd=e");
+
+    // Duplicate keys in the source
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\nab=bc\nf=x\nab=zx\nd=e"), "a=b\nab=bc\nf=x\nab=zx\nd=e");
+    cs["ab"] = "x";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\nab=bc\nf=x\nab=zx\nd=e"), "a=b\nab=x\nf=x\nab=zx\nd=e");
+
+    // Comment out entire file if invalid input line
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\nab=bc\nGARBAGE\nd=e"), "[INVALID]\n# Error parsing line 3: GARBAGE\n#a=b\n#ab=bc\n#GARBAGE\n#d=e");
+    cs["ab"] = "x";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\nab=bc\nGARBAGE\nd=e"), "ab=x\n[INVALID]\n# Error parsing line 3: GARBAGE\n#a=b\n#ab=bc\n#GARBAGE\n#d=e");
+    cs["ab"] = "x";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\nab=bc\nGARBAGE\nd=e\n"), "ab=x\n[INVALID]\n# Error parsing line 3: GARBAGE\n#a=b\n#ab=bc\n#GARBAGE\n#d=e\n");
+
+    // Whitespace inside values
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\nab=b\t \t c\nd=e"), "a=b\nab=b\t \t c\nd=e");
+    cs["ab"] = "x \t \tx";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\nab=b\t \t c\nd=e"), "a=b\nab=x \t \tx\nd=e");
+
+    // Newline inside name/value
+    cs["a"] = "x\nx";
+    BOOST_REQUIRE_THROW(CheckModifyRWConfigFile(cs, ""), std::invalid_argument);
+    cs["a"] = "x\rx";
+    BOOST_REQUIRE_THROW(CheckModifyRWConfigFile(cs, ""), std::invalid_argument);
+    cs["a\nb"] = "x";
+    BOOST_REQUIRE_THROW(CheckModifyRWConfigFile(cs, ""), std::invalid_argument);
+    cs["a\rb"] = "x";
+    BOOST_REQUIRE_THROW(CheckModifyRWConfigFile(cs, ""), std::invalid_argument);
+
+    // Whitespace leading/trailing name/value
+    cs["a"] = " x";
+    BOOST_REQUIRE_THROW(CheckModifyRWConfigFile(cs, ""), std::invalid_argument);
+    cs["a"] = "\tx";
+    BOOST_REQUIRE_THROW(CheckModifyRWConfigFile(cs, ""), std::invalid_argument);
+    cs[" a"] = "x";
+    BOOST_REQUIRE_THROW(CheckModifyRWConfigFile(cs, ""), std::invalid_argument);
+    cs["\ta"] = "x";
+    BOOST_REQUIRE_THROW(CheckModifyRWConfigFile(cs, ""), std::invalid_argument);
+    cs["a"] = "x ";
+    BOOST_REQUIRE_THROW(CheckModifyRWConfigFile(cs, ""), std::invalid_argument);
+    cs["a"] = "x\t";
+    BOOST_REQUIRE_THROW(CheckModifyRWConfigFile(cs, ""), std::invalid_argument);
+    cs["a "] = "x";
+    BOOST_REQUIRE_THROW(CheckModifyRWConfigFile(cs, ""), std::invalid_argument);
+    cs["a\t"] = "x";
+    BOOST_REQUIRE_THROW(CheckModifyRWConfigFile(cs, ""), std::invalid_argument);
+
+    // Ignore groups
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\n[group]\nab=bc\nd=e"), "a=b\n[group]\nab=bc\nd=e");
+    cs["ab"] = "x";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\n[group]\nab=bc\nd=e"), "a=b\nab=x\n[group]\nab=bc\nd=e");
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\n\t [group] \t#c\nab=bc\nd=e"), "a=b\n\t [group] \t#c\nab=bc\nd=e");
+    cs["ab"] = "x";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\n\t [group] \t#c\nab=bc\nd=e"), "a=b\nab=x\n\t [group] \t#c\nab=bc\nd=e");
+
+    // Comment out entire file if invalid input line, even after a group
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\n[group]\nab=bc\nGARBAGE\nd=e"), "[INVALID]\n# Error parsing line 4: GARBAGE\n#a=b\n#[group]\n#ab=bc\n#GARBAGE\n#d=e");
+    cs["ab"] = "x";
+    BOOST_CHECK_EQUAL(CheckModifyRWConfigFile(cs, "a=b\n[group]\nab=bc\nGARBAGE\nd=e"), "ab=x\n[INVALID]\n# Error parsing line 4: GARBAGE\n#a=b\n#[group]\n#ab=bc\n#GARBAGE\n#d=e");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
