@@ -608,6 +608,7 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                         continue;
                     }
                 }
+                Q_EMIT addresstypeChanged(newvalue);
             }
             break;
         }
