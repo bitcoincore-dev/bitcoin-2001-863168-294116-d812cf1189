@@ -10,8 +10,11 @@
 
 #include <QAbstractListModel>
 #include <QFont>
+#include <QString>
 
 #include <assert.h>
+#include <map>
+#include <utility>
 #include <variant>
 
 enum class OutputType;
@@ -22,6 +25,8 @@ class Node;
 
 extern const char *DEFAULT_GUI_PROXY_HOST;
 static constexpr uint16_t DEFAULT_GUI_PROXY_PORT = 9050;
+
+extern const std::map<OutputType, std::pair<QString, QString>> OutputTypeDescriptions;
 
 /**
  * Convert configured prune target MiB to displayed GB. Round up to avoid underestimating max disk usage.

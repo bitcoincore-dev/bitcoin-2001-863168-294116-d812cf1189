@@ -42,6 +42,13 @@ static const QLatin1String fontchoice_str_embedded{"embedded"};
 static const QLatin1String fontchoice_str_best_system{"best_system"};
 static const QString fontchoice_str_custom_prefix{QStringLiteral("custom, ")};
 
+const std::map<OutputType, std::pair<QString, QString>> OutputTypeDescriptions{
+    {OutputType::LEGACY, {"Base58 (Legacy)", "Not recommended due to higher fees and less protection against typos."}},
+    {OutputType::P2SH_SEGWIT, {"Base58 (P2SH-SegWit)", "Generates an address compatible with older wallets."}},
+    {OutputType::BECH32, {"Bech32 (SegWit)", "Generates a native segwit address (BIP-173). Some old wallets don't support it."}},
+    {OutputType::BECH32M, {"Bech32m (Taproot)", "Bech32m (BIP-350) is an upgrade to Bech32, wallet support is still limited."}},
+};
+
 QString OptionsModel::FontChoiceToString(const OptionsModel::FontChoice& f)
 {
     if (std::holds_alternative<FontChoiceAbstract>(f)) {
