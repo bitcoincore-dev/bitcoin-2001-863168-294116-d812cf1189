@@ -39,7 +39,7 @@ bool TonalUtils::Supported()
 }
 
 #define RE_TONAL_DIGIT "[\\d\\xe8e0-\\xe8ef\\xe9d0-\\xe9df]"
-static QRegExpValidator tv(QRegExp("-?(?:" RE_TONAL_DIGIT "+\\.?|" RE_TONAL_DIGIT "*\\." RE_TONAL_DIGIT "*)"), NULL);
+static QRegExpValidator tv(QRegExp("-?(?:" RE_TONAL_DIGIT "+\\.?|" RE_TONAL_DIGIT "*\\." RE_TONAL_DIGIT "+)"), NULL);
 
 QValidator::State TonalUtils::validate(QString&input, int&pos)
 {
