@@ -84,7 +84,8 @@ private:
     //!set the "dirty" flag for the banlist
     void SetBannedSetDirty(bool dirty = true);
     //!clean unused entries (if bantime has expired)
-    void SweepBanned();
+    void SweepBanned_() EXCLUSIVE_LOCKS_REQUIRED(m_cs_banned);
+    void SweepBanned() EXCLUSIVE_LOCKS_REQUIRED(!m_cs_banned);
 
     RecursiveMutex m_cs_banned;
     banmap_t m_banned GUARDED_BY(m_cs_banned);

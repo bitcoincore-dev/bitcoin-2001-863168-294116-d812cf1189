@@ -46,7 +46,7 @@ void BanMan::DumpBanlist()
     banmap_t banmap;
     {
         LOCK(m_cs_banned);
-        SweepBanned();
+        SweepBanned_();
         if (!BannedSetIsDirty()) return;
         banmap = m_banned;
         SetBannedSetDirty(false);
@@ -167,16 +167,17 @@ void BanMan::GetBanned(banmap_t& banmap)
 {
     LOCK(m_cs_banned);
     // Sweep the banlist so expired bans are not returned
-    SweepBanned();
+    SweepBanned_();
     banmap = m_banned; //create a thread safe copy
 }
 
-void BanMan::SweepBanned()
+void BanMan::SweepBanned_()
 {
+    AssertLockHeld(m_cs_banned);
+
     int64_t now = GetTime();
     bool notify_ui = false;
     {
-        LOCK(m_cs_banned);
         banmap_t::iterator it = m_banned.begin();
         while (it != m_banned.end()) {
             CSubNet sub_net = (*it).first;
@@ -194,6 +195,13 @@ void BanMan::SweepBanned()
     if (notify_ui && m_client_interface) {
         m_client_interface->BannedListChanged();
     }
+}
+
+void BanMan::SweepBanned()
+{
+    AssertLockNotHeld(m_cs_banned);
+    LOCK(m_cs_banned);
+    SweepBanned_();
 }
 
 bool BanMan::BannedSetIsDirty()
