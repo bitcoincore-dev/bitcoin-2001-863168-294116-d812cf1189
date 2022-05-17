@@ -5,6 +5,7 @@
 #ifndef BITCOIN_POLICY_RBF_H
 #define BITCOIN_POLICY_RBF_H
 
+#include <policy/policy.h>
 #include <primitives/transaction.h>
 #include <txmempool.h>
 #include <uint256.h>
@@ -52,7 +53,8 @@ RBFTransactionState IsRBFOptInEmptyMempool(const CTransaction& tx);
  */
 std::optional<std::string> GetEntriesForConflicts(const CTransaction& tx, CTxMemPool& pool,
                                                   const CTxMemPool::setEntries& iters_conflicting,
-                                                  CTxMemPool::setEntries& all_conflicts)
+                                                  CTxMemPool::setEntries& all_conflicts,
+                                                  const ignore_rejects_type& ignore_rejects)
     EXCLUSIVE_LOCKS_REQUIRED(pool.cs);
 
 /** BIP125 Rule #2: "The replacement transaction may only include an unconfirmed input if that input
