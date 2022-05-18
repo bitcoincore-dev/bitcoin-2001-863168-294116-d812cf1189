@@ -2721,9 +2721,9 @@ UniValue CreateUTXOSnapshot(
         fs::PathToString(path), fs::PathToString(temppath)));
 
     if (!is_human_readable) {
-        SnapshotMetadata metadata{tip->GetBlockHash(), maybe_stats->coins_count};
+    SnapshotMetadata metadata{tip->GetBlockHash(), maybe_stats->coins_count};
 
-        afile << metadata;
+    afile << metadata;
     } else if (show_header) {
         afile.write(MakeByteSpan("#(blockhash " + tip->GetBlockHash().ToString() + " ) "));
         for (auto it = std::begin(requested); it != std::end(requested); ++it) {
@@ -2744,8 +2744,8 @@ UniValue CreateUTXOSnapshot(
         ++iter;
         if (pcursor->GetKey(key) && pcursor->GetValue(coin)) {
             if (!is_human_readable) {
-                afile << key;
-                afile << coin;
+            afile << key;
+            afile << coin;
             } else {
                 for (auto it = std::begin(requested); it != std::end(requested); ++it) {
                     if (it != std::begin(requested))
