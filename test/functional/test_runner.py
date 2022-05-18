@@ -172,6 +172,7 @@ BASE_SCRIPTS = [
     'rpc_psbt.py --descriptors',
     'rpc_users.py',
     'rpc_whitelist.py',
+    'rpc_getrpcwhitelist.py',
     'feature_proxy.py',
     'feature_syscall_sandbox.py',
     'rpc_signrawtransaction.py --legacy-wallet',
