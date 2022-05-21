@@ -598,7 +598,7 @@ inspecting signatures in Mach-O binaries.")
         bison
         imagemagick
         libicns
-        librsvg
+        librsvg-2.40
         ;; Native GCC 10 toolchain
         gcc-toolchain-10
         (list gcc-toolchain-10 "static")
