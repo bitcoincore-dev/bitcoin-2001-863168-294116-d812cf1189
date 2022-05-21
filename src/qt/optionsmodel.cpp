@@ -331,8 +331,9 @@ bool OptionsModel::Init(bilingual_str& error)
         addOverriddenOption("-port");
 
     // rwconf settings that require a restart
+    // Caution: This is before general initialisation occurs!
     f_peerbloomfilters = gArgs.GetBoolArg("-peerbloomfilters", DEFAULT_PEERBLOOMFILTERS);
-    f_rejectspkreuse = (SpkReuseMode != SRM_ALLOW);
+    f_rejectspkreuse = !(gArgs.GetArg("-spkreuse", DEFAULT_SPKREUSE) == "allow" || gArgs.GetBoolArg("-spkreuse", false));
 
     // Display
     if (settings.contains("FontForMoney")) {
