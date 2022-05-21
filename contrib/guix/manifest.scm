@@ -591,7 +591,7 @@ inspecting signatures in Mach-O binaries.")
         bison
         imagemagick
         libicns
-        librsvg
+        librsvg-2.40
         ;; Scripting
         perl
         python-3
