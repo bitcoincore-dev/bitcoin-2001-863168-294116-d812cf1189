@@ -463,7 +463,7 @@ public:
     const std::optional<unsigned> m_max_datacarrier_bytes;
     bool m_datacarrier_fullcount;
     bool m_accept_non_std_datacarrier;
-    const bool m_require_standard;
+    bool m_require_standard;
     RBFPolicy m_rbf_policy;
 
     const Limits m_limits;
