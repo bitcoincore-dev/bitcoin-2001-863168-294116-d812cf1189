@@ -307,6 +307,10 @@ CoinsResult AvailableCoins(const CWallet& wallet,
 
             std::unique_ptr<SigningProvider> provider = wallet.GetSolvingProvider(output.scriptPubKey);
 
+            if (coinControl && coinControl->m_segwit_inputs_only && !IsSegWitOutput(*provider, wtx.tx->vout[i].scriptPubKey)) {
+                continue;
+            }
+
             int input_bytes = CalculateMaximumSignedInputSize(output, COutPoint(), provider.get(), can_grind_r, coinControl);
             bool solvable = provider ? InferDescriptor(output.scriptPubKey, *provider)->IsSolvable() : false;
             bool spendable = ((mine & ISMINE_SPENDABLE) != ISMINE_NO) || (((mine & ISMINE_WATCH_ONLY) != ISMINE_NO) && (coinControl && coinControl->fAllowWatchOnly && solvable));
