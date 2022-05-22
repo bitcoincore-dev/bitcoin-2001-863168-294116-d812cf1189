@@ -16,6 +16,7 @@
 #include <chainparams.h>
 #include <compat/sanity.h>
 #include <consensus/amount.h>
+#include <dbwrapper.h>
 #include <deploymentstatus.h>
 #include <fs.h>
 #include <hash.h>
@@ -1082,7 +1083,7 @@ bool AppInitSanityChecks()
 
     init::SetGlobals();
 
-    if (!init::SanityChecks()) {
+    if (!(dbwrapper_SanityCheck() && init::SanityChecks())) {
         return InitError(strprintf(_("Initialization sanity check failed. %s is shutting down."), PACKAGE_NAME));
     }
 
