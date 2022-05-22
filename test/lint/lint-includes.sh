@@ -36,7 +36,6 @@ for CPP_FILE in $(filter_suffix cpp); do
         echo "Duplicate include(s) in ${CPP_FILE}:"
         echo "${DUPLICATE_INCLUDES_IN_CPP_FILE}"
         echo
-        EXIT_CODE=1
     fi
 done
 
