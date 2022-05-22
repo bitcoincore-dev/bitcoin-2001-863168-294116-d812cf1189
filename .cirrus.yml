@@ -72,6 +72,7 @@ task:
     << : *CIRRUS_EPHEMERAL_WORKER_TEMPLATE_ENV
 
 task:
+  only_if: false
   name: "Win64 native [msvc]"
   << : *FILTER_TEMPLATE
   windows_container:
