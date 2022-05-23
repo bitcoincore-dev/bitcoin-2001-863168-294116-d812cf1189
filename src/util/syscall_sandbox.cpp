@@ -593,6 +593,8 @@ public:
         allowed_syscalls.insert(__NR_getdents);        // get directory entries
         allowed_syscalls.insert(__NR_getdents64);      // get directory entries
         allowed_syscalls.insert(__NR_inotify_rm_watch);// remove an existing watch from an inotify instance
+        allowed_syscalls.insert(__NR_ioprio_get);      // get i/o priority
+        allowed_syscalls.insert(__NR_ioprio_set);      // set i/o priority
         allowed_syscalls.insert(__NR_linkat);          // create relative to a directory file descriptor
         allowed_syscalls.insert(__NR_lstat);           // get file status
         allowed_syscalls.insert(__NR_mkdir);           // create a directory
