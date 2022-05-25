@@ -369,6 +369,11 @@ bool ArgsManager::ParseParameters(int argc, const char* const argv[], std::strin
         std::optional<util::SettingsValue> value = InterpretValue(keyinfo, val, *flags, error);
         if (!value) return false;
 
+        if (is_index == std::string::npos && keyinfo.name == "proxy" && !keyinfo.negated) {
+            assert(value->get_str() == "");
+            value = std::string(1, 0);
+        }
+
         m_settings.command_line_options[keyinfo.name].push_back(*value);
     }
 

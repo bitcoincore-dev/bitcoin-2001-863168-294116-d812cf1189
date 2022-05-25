@@ -1028,7 +1028,7 @@ bool AppInitParameterInteraction(const ArgsManager& args)
 
     nMaxTipAge = args.GetIntArg("-maxtipage", DEFAULT_MAX_TIP_AGE);
 
-    if (args.IsArgSet("-proxy") && args.GetArg("-proxy", "").empty()) {
+    if (args.IsArgSet("-proxy") && args.GetArg("-proxy", "") == std::string(1, 0)) {
         return InitError(_("No proxy server specified. Use -proxy=<ip> or -proxy=<ip:port>."));
     }
 
