@@ -792,7 +792,6 @@ static RPCHelpMan getblockfrompeer()
     return RPCHelpMan{
         "getblockfrompeer",
         "Attempt to fetch block from a given peer.\n\n"
-        "We must have the header for this block, e.g. using submitheader.\n"
         "Subsequent calls for the same block and a new peer will cause the response from the previous peer to be ignored.\n\n"
         "Returns an empty JSON object if the request was successfully scheduled.",
         {
@@ -820,16 +819,12 @@ static RPCHelpMan getblockfrompeer()
 
     const CBlockIndex* const index = WITH_LOCK(cs_main, return chainman.m_blockman.LookupBlockIndex(block_hash););
 
-    if (!index) {
-        throw JSONRPCError(RPC_MISC_ERROR, "Block header missing");
-    }
-
-    const bool block_has_data = WITH_LOCK(::cs_main, return index->nStatus & BLOCK_HAVE_DATA);
+    const bool block_has_data = index && WITH_LOCK(::cs_main, return index->nStatus & BLOCK_HAVE_DATA);
     if (block_has_data) {
         throw JSONRPCError(RPC_MISC_ERROR, "Block already downloaded");
     }
 
-    if (const auto err{peerman.FetchBlock(peer_id, *index)}) {
+    if (const auto err{peerman.FetchBlock(peer_id, block_hash, index)}) {
         throw JSONRPCError(RPC_MISC_ERROR, err.value());
     }
     return UniValue::VOBJ;

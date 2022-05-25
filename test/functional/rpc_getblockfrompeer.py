@@ -54,8 +54,8 @@ class GetBlockFromPeerTest(BitcoinTestFramework):
         assert_raises_rpc_error(-3, "Expected type string, got number", self.nodes[0].getblockfrompeer, 1234, peer_0_peer_1_id)
         assert_raises_rpc_error(-3, "Expected type number, got string", self.nodes[0].getblockfrompeer, short_tip, "0")
 
-        self.log.info("We must already have the header")
-        assert_raises_rpc_error(-1, "Block header missing", self.nodes[0].getblockfrompeer, "00" * 32, 0)
+        self.log.info("We can request blocks for which we do not have the header")
+        self.nodes[0].getblockfrompeer("11" * 32, 0)
 
         self.log.info("Non-existent peer generates error")
         for peer_id in [-1, peer_0_peer_1_id + 1]:
@@ -68,6 +68,9 @@ class GetBlockFromPeerTest(BitcoinTestFramework):
 
         self.log.info("Don't fetch blocks we already have")
         assert_raises_rpc_error(-1, "Block already downloaded", self.nodes[0].getblockfrompeer, short_tip, peer_0_peer_1_id)
+
+        self.log.info("Non-existent peer generates error, even if we already have the block")
+        assert_raises_rpc_error(-1, "Block already downloaded", self.nodes[0].getblockfrompeer, short_tip, peer_0_peer_1_id + 1)
 
 if __name__ == '__main__':
     GetBlockFromPeerTest().main()
