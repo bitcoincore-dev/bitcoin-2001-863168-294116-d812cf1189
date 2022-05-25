@@ -1555,7 +1555,7 @@ RPCHelpMan getblockchaininfo()
                         {RPCResult::Type::NUM, "pruneheight", /*optional=*/true, "lowest-height complete block stored (only present if pruning is enabled)"},
                         {RPCResult::Type::BOOL, "automatic_pruning", /*optional=*/true, "whether automatic pruning is enabled (only present if pruning is enabled)"},
                         {RPCResult::Type::NUM, "prune_target_size", /*optional=*/true, "the target size used by pruning (only present if automatic pruning is enabled)"},
-                        {RPCResult::Type::OBJ_DYN, "softforks", "(DEPRECATED, returned only if config option -deprecatedrpc=softforks is passed) status of softforks",
+                {RPCResult::Type::OBJ_DYN, "softforks", /*optional=*/true, "(DEPRECATED, returned only if config option -deprecatedrpc=softforks is passed) status of softforks",
                         {
                             {RPCResult::Type::OBJ, "xxxx", "name of the softfork",
                                 RPCHelpForDeployment
@@ -1640,7 +1640,7 @@ const std::vector<RPCResult> RPCHelpForDeployment{
             {RPCResult::Type::NUM, "count", "the number of blocks with the version bit set in the current period"},
             {RPCResult::Type::BOOL, "possible", /*optional=*/true, "returns false if there are not enough blocks left in this period to pass activation threshold (only for \"started\" status)"},
         }},
-        {RPCResult::Type::STR, "signalling", "indicates blocks that signalled with a # and blocks that did not with a -"},
+        {RPCResult::Type::STR, "signalling", /*optional=*/true, "indicates blocks that signalled with a # and blocks that did not with a -"},
     }},
 };
 
@@ -1669,7 +1669,7 @@ static RPCHelpMan getdeploymentinfo()
             RPCResult::Type::OBJ, "", "", {
                 {RPCResult::Type::STR, "hash", "requested block hash (or tip)"},
                 {RPCResult::Type::NUM, "height", "requested block height (or tip)"},
-                {RPCResult::Type::OBJ, "deployments", "", {
+                {RPCResult::Type::OBJ_DYN, "deployments", "", {
                     {RPCResult::Type::OBJ, "xxxx", "name of the deployment", RPCHelpForDeployment}
                 }},
             }
