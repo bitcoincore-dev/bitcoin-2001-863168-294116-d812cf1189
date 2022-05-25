@@ -959,6 +959,7 @@ bool ArgsManager::ReadConfigFiles(std::string& error, bool ignore_invalid_keys)
         LOCK(cs_args);
         m_settings.ro_config.clear();
         m_settings.rw_config.clear();
+        m_rwconf_had_prune_option = false;
         m_config_sections.clear();
     }
 
@@ -1061,6 +1062,7 @@ bool ArgsManager::ReadConfigFiles(std::string& error, bool ignore_invalid_keys)
         if (!ReadConfigStream(rwconf_stream, rwconf_path_str, error, ignore_invalid_keys, &m_settings.rw_config)) {
             return false;
         }
+        m_rwconf_had_prune_option = m_settings.rw_config.count("prune");
     }
 
     return true;
@@ -1305,7 +1307,7 @@ void ModifyRWConfigStream(std::istream& stream_in, std::ostream& stream_out, con
     }
 }
 
-void ArgsManager::ModifyRWConfigFile(const std::map<std::string, std::string>& settings_to_change)
+void ArgsManager::ModifyRWConfigFile(const std::map<std::string, std::string>& settings_to_change, const bool also_settings_json)
 {
     LOCK(cs_args);
     assert(!m_rwconf_path.empty());
@@ -1329,20 +1331,23 @@ void ArgsManager::ModifyRWConfigFile(const std::map<std::string, std::string>& s
         fs::remove(rwconf_new_path);
         throw std::ios_base::failure(strprintf("Failed to replace %s", fs::PathToString(rwconf_new_path)));
     }
-    if (!IsArgNegated("-settings")) {
+    if (also_settings_json && !IsArgNegated("-settings")) {
         // Also save to settings.json for Core (0.21+) compatibility
         for (const auto& setting_change : settings_to_change) {
             m_settings.rw_settings[setting_change.first] = setting_change.second;
         }
         WriteSettingsFile();
     }
+    if (settings_to_change.count("prune")) {
+        m_rwconf_had_prune_option = true;
+    }
 }
 
-void ArgsManager::ModifyRWConfigFile(const std::string& setting_to_change, const std::string& new_value)
+void ArgsManager::ModifyRWConfigFile(const std::string& setting_to_change, const std::string& new_value, const bool also_settings_json)
 {
     std::map<std::string, std::string> settings_to_change;
     settings_to_change[setting_to_change] = new_value;
-    ModifyRWConfigFile(settings_to_change);
+    ModifyRWConfigFile(settings_to_change, also_settings_json);
 }
 
 void ArgsManager::EraseRWConfigFile()

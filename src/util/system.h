@@ -260,6 +260,7 @@ protected:
 
     mutable RecursiveMutex cs_args;
     fs::path m_rwconf_path GUARDED_BY(cs_args);
+    bool m_rwconf_had_prune_option{false};
     util::Settings m_settings GUARDED_BY(cs_args);
     std::vector<std::string> m_command GUARDED_BY(cs_args);
     std::string m_network GUARDED_BY(cs_args);
@@ -306,8 +307,9 @@ protected:
     [[nodiscard]] bool ParseParameters(int argc, const char* const argv[], std::string& error);
     [[nodiscard]] bool ReadConfigFiles(std::string& error, bool ignore_invalid_keys = false);
 
-    void ModifyRWConfigFile(const std::map<std::string, std::string>& settings_to_change);
-    void ModifyRWConfigFile(const std::string& setting_to_change, const std::string& new_value);
+    bool RWConfigHasPruneOption() const { return m_rwconf_had_prune_option; }
+    void ModifyRWConfigFile(const std::map<std::string, std::string>& settings_to_change, bool also_settings_json = true);
+    void ModifyRWConfigFile(const std::string& setting_to_change, const std::string& new_value, bool also_settings_json = true);
     void EraseRWConfigFile();
 
     /**

@@ -13,13 +13,21 @@
 #include <qt/guiutil.h>
 
 #include <chainparams.h>
+#include <index/blockfilterindex.h>
 #include <interfaces/node.h>
 #include <mapport.h>
 #include <net.h>
+#include <net_processing.h>
 #include <netbase.h>
+#include <node/context.h>
+#include <outputtype.h>
 #include <txdb.h>       // for -dbcache defaults
 #include <util/string.h>
 #include <validation.h> // For DEFAULT_SCRIPTCHECK_THREADS
+#ifdef ENABLE_WALLET
+#include <interfaces/wallet.h>
+#include <wallet/wallet.h>
+#endif
 
 #include <QDebug>
 #include <QLatin1Char>
@@ -33,6 +41,13 @@ static const QString GetDefaultProxyAddress();
 static const QLatin1String fontchoice_str_embedded{"embedded"};
 static const QLatin1String fontchoice_str_best_system{"best_system"};
 static const QString fontchoice_str_custom_prefix{QStringLiteral("custom, ")};
+
+const std::map<OutputType, std::pair<QString, QString>> OutputTypeDescriptions{
+    {OutputType::LEGACY, {"Base58 (Legacy)", "Widest compatibility and best for health of the Bitcoin network, but may result in higher fees later. Recommended."}},
+    {OutputType::P2SH_SEGWIT, {"Base58 (P2SH-SegWit)", "Compatible with most older wallets, and may result in lower fees than Legacy."}},
+    {OutputType::BECH32, {"Native Segwit (Bech32)", "Lower fees than Base58, but some old wallets don't support it."}},
+    {OutputType::BECH32M, {"Taproot (Bech32m)", "Lowest fees, but wallet support is still limited."}},
+};
 
 QString OptionsModel::FontChoiceToString(const OptionsModel::FontChoice& f)
 {
@@ -129,11 +144,18 @@ void OptionsModel::Init(bool resetSettings)
     // by command-line and show this in the UI.
 
     // Main
-    if (!settings.contains("bPrune"))
-        settings.setValue("bPrune", false);
-    if (!settings.contains("nPruneSize"))
-        settings.setValue("nPruneSize", DEFAULT_PRUNE_TARGET_GB);
-    SetPruneEnabled(settings.value("bPrune").toBool());
+    if (!gArgs.IsArgSet("-prune")) {
+        if (settings.contains("bPrune")) {
+            if (settings.value("bPrune").toBool()) {
+                if (!settings.contains("nPruneSize"))
+                    settings.setValue("nPruneSize", DEFAULT_PRUNE_TARGET_GB);
+                const uint64_t nPruneSizeMiB = PruneGBtoMiB(settings.value("nPruneSize").toInt());
+                gArgs.ForceSetArg("-prune", nPruneSizeMiB);
+            } else {
+                gArgs.ForceSetArg("-prune", "0");
+            }
+        }
+    }
 
     if (!settings.contains("nDatabaseCache"))
         settings.setValue("nDatabaseCache", (qint64)nDefaultDbCache);
@@ -221,6 +243,9 @@ void OptionsModel::Init(bool resetSettings)
     else if(!settings.value("fUseSeparateProxyTor").toBool() && !gArgs.GetArg("-onion", "").empty())
         addOverriddenOption("-onion");
 
+    // rwconf settings that require a restart
+    f_peerbloomfilters = gArgs.GetBoolArg("-peerbloomfilters", DEFAULT_PEERBLOOMFILTERS);
+
     // Display
     if (!settings.contains("language"))
         settings.setValue("language", "");
@@ -291,6 +316,11 @@ void OptionsModel::Reset()
     // Set strDataDir
     settings.setValue("strDataDir", dataDir);
 
+    // Set prune option iff it was configured in rwconf
+    if (gArgs.RWConfigHasPruneOption()) {
+        SetPruneMiB(gArgs.GetIntArg("-prune", 0), false);
+    }
+
     // Set that this was reset
     settings.setValue("fReset", true);
 
@@ -336,12 +366,17 @@ static const QString GetDefaultProxyAddress()
     return QString("%1:%2").arg(DEFAULT_GUI_PROXY_HOST).arg(DEFAULT_GUI_PROXY_PORT);
 }
 
-void OptionsModel::SetPruneEnabled(bool prune, bool force)
+void OptionsModel::SetPruneMiB(int64_t prune_target_mib, bool force)
 {
+    const bool prune = prune_target_mib > 1;
     QSettings settings;
     settings.setValue("bPrune", prune);
-    const int64_t prune_target_mib = PruneGBtoMiB(settings.value("nPruneSize").toInt());
-    std::string prune_val = prune ? ToString(prune_target_mib) : "0";
+    if (prune) {
+        const int prune_target_gb = PruneMiBtoGB(prune_target_mib);
+        settings.setValue("nPruneSize", prune_target_gb);
+    }
+    std::string prune_val = ToString(prune_target_mib);
+    gArgs.ModifyRWConfigFile("prune", prune_val);
     if (force) {
         gArgs.ForceSetArg("-prune", prune_val);
         return;
@@ -349,16 +384,6 @@ void OptionsModel::SetPruneEnabled(bool prune, bool force)
     if (!gArgs.SoftSetArg("-prune", prune_val)) {
         addOverriddenOption("-prune");
     }
-}
-
-void OptionsModel::SetPruneTargetGB(int prune_target_gb, bool force)
-{
-    const bool prune = prune_target_gb > 0;
-    if (prune) {
-        QSettings settings;
-        settings.setValue("nPruneSize", prune_target_gb);
-    }
-    SetPruneEnabled(prune, force);
 }
 
 // read QSettings values and return them
@@ -415,6 +440,11 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("external_signer_path");
         case SubFeeFromAmount:
             return m_sub_fee_from_amount;
+        case addresstype:
+        {
+            const OutputType default_address_type = ParseOutputType(gArgs.GetArg("-addresstype", "")).value_or(wallet::DEFAULT_ADDRESS_TYPE);
+            return QString::fromStdString(FormatOutputType(default_address_type));
+        }
 #endif
         case DisplayUnit:
             return nDisplayUnit;
@@ -432,10 +462,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return fCoinControlFeatures;
         case EnablePSBTControls:
             return settings.value("enable_psbt_controls");
-        case Prune:
-            return settings.value("bPrune");
-        case PruneSize:
-            return settings.value("nPruneSize");
+        case PruneMiB:
+            return qlonglong(gArgs.GetIntArg("-prune", 0));
         case DatabaseCache:
             return settings.value("nDatabaseCache");
         case ThreadsScriptVerif:
@@ -444,6 +472,12 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("fListen");
         case Server:
             return settings.value("server");
+        case maxuploadtarget:
+            return qlonglong(node().context()->connman->GetMaxOutboundTarget() / 1024 / 1024);
+        case peerbloomfilters:
+            return f_peerbloomfilters;
+        case peerblockfilters:
+            return gArgs.GetBoolArg("-peerblockfilters", DEFAULT_PEERBLOCKFILTERS);
         default:
             return QVariant();
         }
@@ -564,6 +598,27 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             m_sub_fee_from_amount = value.toBool();
             settings.setValue("SubFeeFromAmount", m_sub_fee_from_amount);
             break;
+        case addresstype:
+        {
+            const std::string newvalue_str = value.toString().toStdString();
+            const OutputType oldvalue = ParseOutputType(gArgs.GetArg("-addresstype", "")).value_or(wallet::DEFAULT_ADDRESS_TYPE);
+            const OutputType newvalue = ParseOutputType(newvalue_str).value_or(oldvalue);
+            if (newvalue != oldvalue) {
+                gArgs.ModifyRWConfigFile("addresstype", newvalue_str);
+                gArgs.ForceSetArg("-addresstype", newvalue_str);
+                for (auto& wallet_interface : m_node->walletLoader().getWallets()) {
+                    wallet::CWallet *wallet;
+                    if (wallet_interface && (wallet = wallet_interface->wallet())) {
+                        wallet->m_default_address_type = newvalue;
+                    } else {
+                        setRestartRequired(true);
+                        continue;
+                    }
+                }
+                Q_EMIT addresstypeChanged(newvalue);
+            }
+            break;
+        }
 #endif
         case DisplayUnit:
             setDisplayUnit(value);
@@ -613,18 +668,19 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             m_enable_psbt_controls = value.toBool();
             settings.setValue("enable_psbt_controls", m_enable_psbt_controls);
             break;
-        case Prune:
-            if (settings.value("bPrune") != value) {
-                settings.setValue("bPrune", value);
+        case PruneMiB:
+        {
+            const qlonglong llvalue = value.toLongLong();
+            if (gArgs.GetIntArg("-prune", 0) != llvalue) {
+                gArgs.ModifyRWConfigFile("prune", value.toString().toStdString());
+                settings.setValue("bPrune", (llvalue > 1));
+                if (llvalue > 1) {
+                    settings.setValue("nPruneSize", PruneMiBtoGB(llvalue));
+                }
                 setRestartRequired(true);
             }
             break;
-        case PruneSize:
-            if (settings.value("nPruneSize") != value) {
-                settings.setValue("nPruneSize", value);
-                setRestartRequired(true);
-            }
-            break;
+        }
         case DatabaseCache:
             if (settings.value("nDatabaseCache") != value) {
                 settings.setValue("nDatabaseCache", value);
@@ -649,6 +705,39 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
                 setRestartRequired(true);
             }
             break;
+        case maxuploadtarget:
+        {
+            qlonglong nv = value.toLongLong();
+            if (node().context()->connman->GetMaxOutboundTarget() / 1024 / 1024 != uint64_t(nv)) {
+                gArgs.ModifyRWConfigFile("maxuploadtarget", value.toString().toStdString());
+                node().context()->connman->SetMaxOutboundTarget(nv * 1024 * 1024);
+            }
+            break;
+        }
+        case peerbloomfilters:
+            if (f_peerbloomfilters != value) {
+                gArgs.ModifyRWConfigFile("peerbloomfilters", strprintf("%d", value.toBool()));
+                f_peerbloomfilters = value.toBool();
+                setRestartRequired(true);
+            }
+            break;
+        case peerblockfilters:
+        {
+            bool nv = value.toBool();
+            if (gArgs.GetBoolArg("-peerblockfilters", DEFAULT_PEERBLOCKFILTERS) != nv) {
+                gArgs.ModifyRWConfigFile("peerblockfilters", strprintf("%d", nv));
+                gArgs.ModifyRWConfigFile("peercfilters", strprintf("%d", nv), /* also_settings_json= */ false);  // for downgrade compatibility with Knots 0.19
+                gArgs.ForceSetArg("peerblockfilters", nv);
+                if (nv && !GetBlockFilterIndex(BlockFilterType::BASIC)) {
+                    // TODO: When other options are possible, we need to append a list!
+                    // TODO: Some way to unset/delete this...
+                    gArgs.ModifyRWConfigFile("blockfilterindex", "basic");
+                    gArgs.ForceSetArg("blockfilterindex", "basic");
+                }
+                setRestartRequired(true);
+            }
+            break;
+        }
         default:
             break;
         }

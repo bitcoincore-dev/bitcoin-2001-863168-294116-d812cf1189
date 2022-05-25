@@ -10,9 +10,14 @@
 
 #include <QAbstractListModel>
 #include <QFont>
+#include <QString>
 
 #include <assert.h>
+#include <map>
+#include <utility>
 #include <variant>
+
+enum class OutputType;
 
 namespace interfaces {
 class Node;
@@ -20,6 +25,8 @@ class Node;
 
 extern const char *DEFAULT_GUI_PROXY_HOST;
 static constexpr uint16_t DEFAULT_GUI_PROXY_PORT = 9050;
+
+extern const std::map<OutputType, std::pair<QString, QString>> OutputTypeDescriptions;
 
 /**
  * Convert configured prune target MiB to displayed GB. Round up to avoid underestimating max disk usage.
@@ -67,14 +74,17 @@ public:
         CoinControlFeatures,    // bool
         SubFeeFromAmount,       // bool
         ThreadsScriptVerif,     // int
-        Prune,                  // bool
-        PruneSize,              // int
+        PruneMiB,               // int
         DatabaseCache,          // int
         ExternalSignerPath,     // QString
         SpendZeroConfChange,    // bool
+        addresstype,            // QString
         Listen,                 // bool
         Server,                 // bool
         EnablePSBTControls,     // bool
+        maxuploadtarget,
+        peerbloomfilters,       // bool
+        peerblockfilters,       // bool
         OptionIDRowCount,
     };
 
@@ -110,8 +120,7 @@ public:
     const QString& getOverriddenByCommandLine() { return strOverriddenByCommandLine; }
 
     /* Explicit setters */
-    void SetPruneEnabled(bool prune, bool force = false);
-    void SetPruneTargetGB(int prune_target_gb, bool force = false);
+    void SetPruneMiB(int64_t prune_target_MiB, bool force = false);
 
     /* Restart flag helper */
     void setRestartRequired(bool fRequired);
@@ -141,6 +150,9 @@ private:
     static QString FontChoiceToString(const OptionsModel::FontChoice&);
     static FontChoice FontChoiceFromString(const QString&);
 
+    /* rwconf settings that require a restart */
+    bool f_peerbloomfilters;
+
     // Add option to list of GUI options overridden through command line/config file
     void addOverriddenOption(const std::string &option);
 
@@ -149,6 +161,7 @@ private:
 Q_SIGNALS:
     void displayUnitChanged(int unit);
     void coinControlFeaturesChanged(bool);
+    void addresstypeChanged(OutputType);
     void showTrayIconChanged(bool);
     void fontForMoneyChanged(const QFont&);
     void fontForQRCodesChanged(const FontChoice&);
