@@ -35,7 +35,7 @@
 #include <utility>
 #include <vector>
 
-#if defined(ENABLE_EXTERNAL_SIGNER) && defined(BOOST_POSIX_API)
+#if defined(HAVE_BOOST_PROCESS) && defined(BOOST_POSIX_API)
 #include <fcntl.h>
 #ifdef FD_CLOEXEC
 #include <unistd.h>
@@ -56,7 +56,7 @@
 #pragma GCC diagnostic pop
 #endif
 #endif // FD_CLOEXEC
-#endif // ENABLE_EXTERNAL_SIGNER && BOOST_POSIX_API
+#endif // HAVE_BOOST_PROCESS && BOOST_POSIX_API
 
 class UniValue;
 
@@ -142,7 +142,7 @@ std::string ShellEscape(const std::string& arg);
 void runCommand(const std::string& strCommand);
 #endif
 
-#if defined(ENABLE_EXTERNAL_SIGNER) && defined(BOOST_POSIX_API) && defined(FD_CLOEXEC)
+#if defined(HAVE_BOOST_PROCESS) && defined(BOOST_POSIX_API) && defined(FD_CLOEXEC)
 /**
  * Ensure a boost::process::child has its non-std fds all closed when exec
  * is called.
