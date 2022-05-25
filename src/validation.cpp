@@ -766,7 +766,17 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
                 // Applications relying on first-seen mempool behavior should
                 // check all unconfirmed ancestors; otherwise an opt-in ancestor
                 // might be replaced, causing removal of this descendant.
-                if (!(ignore_rejects.count("txn-mempool-conflict") || SignalsOptInRBF(*ptxConflicting))) {
+                bool allow_replacement;
+                if (ignore_rejects.count("txn-mempool-conflict")) {
+                    allow_replacement = true;
+                } else if (!fEnableReplacement) {
+                    allow_replacement = false;
+                } else if (fReplacementHonourOptOut) {
+                    allow_replacement = SignalsOptInRBF(*ptxConflicting);
+                } else {
+                    allow_replacement = true;
+                }
+                if (!allow_replacement) {
                     return state.Invalid(TxValidationResult::TX_MEMPOOL_POLICY, "txn-mempool-conflict");
                 }
 
