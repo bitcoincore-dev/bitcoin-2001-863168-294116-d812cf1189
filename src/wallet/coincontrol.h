@@ -37,6 +37,8 @@ public:
     bool m_add_inputs = true;
     //! If false, only safe inputs will be used
     bool m_include_unsafe_inputs = false;
+    //! If true, only segwit inputs are selected
+    bool m_segwit_inputs_only = false;
     //! If false, allows unselected inputs, but requires all selected inputs be used
     bool fAllowOtherInputs = false;
     //! Includes watch only addresses which are solvable
