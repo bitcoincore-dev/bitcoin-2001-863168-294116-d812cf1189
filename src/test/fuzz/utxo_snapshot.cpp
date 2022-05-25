@@ -80,7 +80,8 @@ FUZZ_TARGET_INIT(utxo_snapshot, initialize_chain)
             chain_tx += num_tx;
         }
         Assert(g_chain->size() == coinscache.GetCacheSize());
-        Assert(chain_tx == chainman.ActiveTip()->nChainTx);
+        const auto nChainTx = chainman.ActiveTip()->nChainTx;
+        Assert(chain_tx == nChainTx);
     } else {
         Assert(!chainman.SnapshotBlockhash());
         Assert(!chainman.ActiveChainstate().m_from_snapshot_blockhash);
