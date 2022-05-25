@@ -23,6 +23,7 @@ EXPECTED_CIRCULAR_DEPENDENCIES=(
     "wallet/wallet -> wallet/walletdb -> wallet/wallet"
     "node/coinstats -> validation -> node/coinstats"
 )
+EXPECTED_CIRCULAR_DEPENDENCIES=()
 
 EXIT_CODE=0
 
