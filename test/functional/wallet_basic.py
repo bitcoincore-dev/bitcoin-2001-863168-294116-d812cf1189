@@ -681,6 +681,7 @@ class WalletTest(BitcoinTestFramework):
             'fee',
             'hex',
             'in_mempool',
+            'lastprocessedblock',
             'time',
             'timereceived',
             'trusted',

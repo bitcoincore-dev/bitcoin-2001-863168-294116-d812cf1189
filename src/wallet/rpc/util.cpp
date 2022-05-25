@@ -18,6 +18,21 @@ namespace wallet {
 static const std::string WALLET_ENDPOINT_BASE = "/wallet/";
 const std::string HELP_REQUIRING_PASSPHRASE{"\nRequires wallet passphrase to be set with walletpassphrase call if wallet is encrypted.\n"};
 
+const RPCResult RESULT_LAST_PROCESSED_BLOCK
+    {RPCResult::Type::OBJ, "lastprocessedblock", "hash and height of the block this information was generated on", {
+        {RPCResult::Type::STR_HEX, "hash", "hash of the block this information was generated on"},
+        {RPCResult::Type::NUM, "height", "height of the block this information was generated on"}
+    }};
+
+void AppendLastProcessedBlock(UniValue& entry, const CWallet& wallet) EXCLUSIVE_LOCKS_REQUIRED(wallet.cs_wallet)
+{
+    AssertLockHeld(wallet.cs_wallet);
+    UniValue lastprocessedblock{UniValue::VOBJ};
+    lastprocessedblock.pushKV("hash", wallet.GetLastBlockHash().GetHex());
+    lastprocessedblock.pushKV("height", wallet.GetLastBlockHeight());
+    entry.pushKV("lastprocessedblock", lastprocessedblock);
+}
+
 bool GetAvoidReuseFlag(const CWallet& wallet, const UniValue& param) {
     bool can_avoid_reuse = wallet.IsWalletFlagSet(WALLET_FLAG_AVOID_REUSE);
     bool avoid_reuse = param.isNull() ? can_avoid_reuse : param.get_bool();

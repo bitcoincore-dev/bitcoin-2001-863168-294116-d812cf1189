@@ -5,6 +5,9 @@
 #ifndef BITCOIN_WALLET_RPC_UTIL_H
 #define BITCOIN_WALLET_RPC_UTIL_H
 
+#include <rpc/util.h>
+#include <wallet/wallet.h>
+
 #include <any>
 #include <memory>
 #include <string>
@@ -21,6 +24,7 @@ enum class DatabaseStatus;
 struct WalletContext;
 
 extern const std::string HELP_REQUIRING_PASSPHRASE;
+extern const RPCResult RESULT_LAST_PROCESSED_BLOCK;
 
 /**
  * Figures out what wallet, if any, to use for a JSONRPCRequest.
@@ -35,6 +39,8 @@ void EnsureWalletIsUnlocked(const CWallet&);
 WalletContext& EnsureWalletContext(const std::any& context);
 LegacyScriptPubKeyMan& EnsureLegacyScriptPubKeyMan(CWallet& wallet, bool also_create = false);
 const LegacyScriptPubKeyMan& EnsureConstLegacyScriptPubKeyMan(const CWallet& wallet);
+
+void AppendLastProcessedBlock(UniValue& entry, const CWallet& wallet) EXCLUSIVE_LOCKS_REQUIRED(wallet.cs_wallet);
 
 bool GetAvoidReuseFlag(const CWallet& wallet, const UniValue& param);
 bool ParseIncludeWatchonly(const UniValue& include_watchonly, const CWallet& wallet);
