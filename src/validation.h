@@ -18,6 +18,7 @@
 #include <node/blockstorage.h>
 #include <policy/feerate.h>
 #include <policy/packages.h>
+#include <policy/policy.h>
 #include <script/script_error.h>
 #include <sync.h>
 #include <txdb.h>
@@ -248,6 +249,10 @@ struct PackageMempoolAcceptResult
         : m_tx_results{ {wtxid, result} } {}
 };
 
+static const std::string rejectmsg_lowfee_mempool = "mempool min fee not met";
+static const std::string rejectmsg_lowfee_relay = "min relay fee not met";
+static const std::string rejectmsg_mempoolfull = "mempool full";
+
 /**
  * Try to add a transaction to the mempool. This is an internal function and is exposed only for testing.
  * Client code should use ChainstateManager::ProcessTransaction()
@@ -256,14 +261,18 @@ struct PackageMempoolAcceptResult
  * @param[in]  tx                 The transaction to submit for mempool acceptance.
  * @param[in]  accept_time        The timestamp for adding the transaction to the mempool.
  *                                It is also used to determine when the entry expires.
- * @param[in]  bypass_limits      When true, don't enforce mempool fee and capacity limits.
+ * @param[in]  ignore_rejects     Set of reject reasons to ignore and bypass, if possible.
  * @param[in]  test_accept        When true, run validation checks but don't submit to mempool.
  *
  * @returns a MempoolAcceptResult indicating whether the transaction was accepted/rejected with reason.
  */
 MempoolAcceptResult AcceptToMemoryPool(CChainState& active_chainstate, const CTransactionRef& tx,
-                                       int64_t accept_time, bool bypass_limits, bool test_accept)
-    EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+                                       int64_t accept_time, const ignore_rejects_type& ignore_rejects, bool test_accept) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
+static inline MempoolAcceptResult AcceptToMemoryPool(CChainState& active_chainstate, const CTransactionRef& tx, int64_t accept_time, bool bypass_limits, bool test_accept) EXCLUSIVE_LOCKS_REQUIRED(cs_main) {
+    static const ignore_rejects_type ignore_rejects_legacy{rejectmsg_lowfee_mempool, rejectmsg_lowfee_relay, rejectmsg_mempoolfull};
+    return AcceptToMemoryPool(active_chainstate, tx, accept_time, (bypass_limits ? ignore_rejects_legacy : empty_ignore_rejects), test_accept);
+}
 
 /**
 * Validate (and maybe submit) a package to the mempool. See doc/policy/packages.md for full details
@@ -988,7 +997,7 @@ public:
      * @param[in]  tx              The transaction to submit for mempool acceptance.
      * @param[in]  test_accept     When true, run validation checks but don't submit to mempool.
      */
-    [[nodiscard]] MempoolAcceptResult ProcessTransaction(const CTransactionRef& tx, bool test_accept=false)
+    [[nodiscard]] MempoolAcceptResult ProcessTransaction(const CTransactionRef& tx, bool test_accept=false, const ignore_rejects_type& ignore_rejects=empty_ignore_rejects)
         EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
     //! Load the block tree and coins database from disk, initializing state if we're running with -reindex
