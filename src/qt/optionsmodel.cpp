@@ -234,6 +234,11 @@ void OptionsModel::Init(bool resetSettings)
     }
     Q_EMIT fontForMoneyChanged(getFontForMoney());
 
+    if (settings.contains("FontForQRCodes")) {
+        m_font_qrcodes = FontChoiceFromString(settings.value("FontForQRCodes").toString());
+    }
+    Q_EMIT fontForQRCodesChanged(getFontChoiceForQRCodes());
+
     if (!settings.contains("PeersTabAlternatingRowColors")) {
         settings.setValue("PeersTabAlternatingRowColors", "false");
     }
@@ -408,6 +413,8 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("language");
         case FontForMoney:
             return QVariant::fromValue(m_font_money);
+        case FontForQRCodes:
+            return QVariant::fromValue(m_font_qrcodes);
         case PeersTabAlternatingRowColors:
             return m_peers_tab_alternating_row_colors;
         case CoinControlFeatures:
@@ -558,6 +565,15 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             settings.setValue("FontForMoney", FontChoiceToString(new_font));
             m_font_money = new_font;
             Q_EMIT fontForMoneyChanged(getFontForMoney());
+            break;
+        }
+        case FontForQRCodes:
+        {
+            const auto& new_font = value.value<FontChoice>();
+            if (m_font_qrcodes == new_font) break;
+            settings.setValue("FontForQRCodes", FontChoiceToString(new_font));
+            m_font_qrcodes = new_font;
+            Q_EMIT fontForQRCodesChanged(new_font);
             break;
         }
         case PeersTabAlternatingRowColors:
