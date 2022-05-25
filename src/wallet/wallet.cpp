@@ -50,6 +50,12 @@
 using interfaces::FoundBlock;
 
 namespace wallet {
+
+/*
+ * Signal when transactions are added to wallet
+ */
+boost::signals2::signal<void (const CTransactionRef &ptxn, const uint256 &blockHash)> CWallet::TransactionAddedToWallet;
+
 const std::map<uint64_t,std::string> WALLET_FLAG_CAVEATS{
     {WALLET_FLAG_AVOID_REUSE,
         "You need to rescan the blockchain in order to correctly mark used "
@@ -1063,6 +1069,9 @@ CWalletTx* CWallet::AddToWallet(CTransactionRef tx, const TxState& state, const 
 
     // Notify UI of new or updated transaction
     NotifyTransactionChanged(hash, fInsertedNew ? CT_NEW : CT_UPDATED);
+
+    // Notify listeners on new wallet transaction
+    CWallet::TransactionAddedToWallet(wtx.tx, TxStateSerializedBlockHash(wtx.m_state));
 
 #if HAVE_SYSTEM
     // notify an external script when a wallet transaction comes in or is updated
