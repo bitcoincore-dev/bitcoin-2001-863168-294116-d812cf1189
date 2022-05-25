@@ -609,7 +609,21 @@ int64_t ArgsManager::GetIntArg(const std::string& strArg, int64_t nDefault) cons
 bool ArgsManager::GetBoolArg(const std::string& strArg, bool fDefault) const
 {
     const util::SettingsValue value = GetSetting(strArg);
-    return value.isNull() ? fDefault : value.isBool() ? value.get_bool() : InterpretBool(value.get_str());
+    switch (value.getType()) {
+        case UniValue::VNULL:
+            return fDefault;
+        case UniValue::VBOOL:
+            return value.get_bool();
+        case UniValue::VOBJ:
+        case UniValue::VARR:
+            // Throws an exception
+            value.get_str();
+            assert(false);
+        case UniValue::VSTR:
+        case UniValue::VNUM:
+            return InterpretBool(value.getValStr());
+    }
+    assert(false);
 }
 
 bool ArgsManager::SoftSetArg(const std::string& strArg, const std::string& strValue)
