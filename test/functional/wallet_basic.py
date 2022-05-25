@@ -686,6 +686,7 @@ class WalletTest(BitcoinTestFramework):
             'trusted',
             'txid',
             'walletconflicts',
+            'wtxid',
         })
         verbose_field = "decoded"
         expected_verbose_fields = expected_fields | {verbose_field}
