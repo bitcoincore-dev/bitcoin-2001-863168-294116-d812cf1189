@@ -359,7 +359,8 @@ bool SendCoinsDialog::PrepareSendText(QString& question_string, QString& informa
         question_string.append("</b>");
 
         // append transaction size
-        question_string.append(" (" + QString::number((double)m_current_transaction->getTransactionSize() / 1000) + " kB): ");
+        //: When reviewing a newly created PSBT (via Send flow), the transaction fee is shown, with "virtual size" of the transaction displayed for context
+        question_string.append(" (" + tr("%1 kvB", "PSBT transaction creation").arg((double)m_current_transaction->getTransactionSize() / 1000, 0, 'g', 3) + "): ");
 
         // append transaction fee value
         question_string.append("<span style='color:#aa0000; font-weight:bold;'>");
@@ -457,17 +458,20 @@ bool SendCoinsDialog::signWithExternalSigner(PartiallySignedTransaction& psbtx, 
     }
     if (err == TransactionError::EXTERNAL_SIGNER_NOT_FOUND) {
         //: "External signer" means using devices such as hardware wallets.
-        QMessageBox::critical(nullptr, tr("External signer not found"), "External signer not found");
+        const QString msg = tr("External signer not found");
+        QMessageBox::critical(nullptr, msg, msg);
         return false;
     }
     if (err == TransactionError::EXTERNAL_SIGNER_FAILED) {
         //: "External signer" means using devices such as hardware wallets.
-        QMessageBox::critical(nullptr, tr("External signer failure"), "External signer failure");
+        const QString msg = tr("External signer failure");
+        QMessageBox::critical(nullptr, msg, msg);
         return false;
     }
     if (err != TransactionError::OK) {
-        tfm::format(std::cerr, "Failed to sign PSBT");
         processSendCoinsReturn(WalletModel::TransactionCreationFailed);
+        const QString msg = tr("Failed to sign PSBT");
+        QMessageBox::critical(nullptr, msg, msg);
         return false;
     }
     // fillPSBT does not always properly finalize
