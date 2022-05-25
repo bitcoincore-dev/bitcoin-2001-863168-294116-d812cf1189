@@ -91,6 +91,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "scantxoutset", 1, "scanobjects" },
     { "dumptxoutset", 1, "format" },
     { "dumptxoutset", 2, "show_header" },
+    { "sweepprivkeys", 0, "options" },
     { "addmultisigaddress", 0, "nrequired" },
     { "addmultisigaddress", 1, "keys" },
     { "addmultisigaddress", 2, "options" },
