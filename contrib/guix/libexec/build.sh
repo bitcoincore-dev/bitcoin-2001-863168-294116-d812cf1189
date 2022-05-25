@@ -242,6 +242,9 @@ mkdir -p "$OUTDIR"
 
 # CONFIGFLAGS
 CONFIGFLAGS="--enable-reduce-exports --disable-bench --disable-gui-tests --disable-fuzz-binary"
+case "$HOST" in
+    i?86-*linux*) CONFIGFLAGS+=" --enable-glibc-back-compat" ;;
+esac
 
 # CFLAGS
 HOST_CFLAGS="-O2 -g"
