@@ -2125,7 +2125,7 @@ OutputType CWallet::TransactionChangeType(const std::optional<OutputType>& chang
     }
 
     const bool has_bech32m_spkman(GetScriptPubKeyMan(OutputType::BECH32M, /*internal=*/true));
-    if (has_bech32m_spkman && any_tr) {
+    if (has_bech32m_spkman && any_tr && m_default_address_type == OutputType::BECH32M) {
         // Currently tr is the only type supported by the BECH32M spkman
         return OutputType::BECH32M;
     }
@@ -2145,6 +2145,18 @@ OutputType CWallet::TransactionChangeType(const std::optional<OutputType>& chang
         // Currently pkh is the only type supported by the LEGACY spkman
         return OutputType::LEGACY;
     }
+    if (!GetScriptPubKeyMan(m_default_address_type, /*internal=*/true)) {
+        // Default type not available, so look for anything older to fallback to
+        for (const auto& ot : OUTPUT_TYPES) {
+            // NOTE: Assumes OUTPUT_TYPES is sorted oldest to newest
+            if (ot == m_default_address_type) break;
+
+            if (GetScriptPubKeyMan(ot, /*internal=*/true)) {
+                return ot;
+            }
+        }
+    }
+    return m_default_address_type;
 
     if (has_bech32m_spkman) {
         return OutputType::BECH32M;

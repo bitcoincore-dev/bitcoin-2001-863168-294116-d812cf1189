@@ -181,6 +181,8 @@ class WalletTaprootTest(BitcoinTestFramework):
         self.num_nodes = 3
         self.setup_clean_chain = True
         self.extra_args = [['-keypool=100'], ['-keypool=100'], ["-vbparams=taproot:1:1"]]
+        for ea in self.extra_args:
+            ea.append('-addresstype=bech32m')
         self.supports_cli = False
 
     def skip_test_if_missing_module(self):
@@ -336,6 +338,8 @@ class WalletTaprootTest(BitcoinTestFramework):
         self.nodes[0].createwallet(wallet_name="psbt_online", descriptors=True, disable_private_keys=True, blank=True)
         self.nodes[1].createwallet(wallet_name="psbt_offline", descriptors=True, blank=True)
         self.boring = self.nodes[0].get_wallet_rpc("boring")
+        orig_boring_gna = self.boring.getnewaddress
+        self.boring.getnewaddress = lambda *a, **ka: orig_boring_gna(*a, address_type='bech32', **ka)
         self.addr_gen = self.nodes[0].get_wallet_rpc("addr_gen")
         self.rpc_online = self.nodes[0].get_wallet_rpc("rpc_online")
         self.psbt_online = self.nodes[0].get_wallet_rpc("psbt_online")
