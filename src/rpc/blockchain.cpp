@@ -55,6 +55,7 @@
 #include <condition_variable>
 #include <memory>
 #include <mutex>
+#include <optional>
 
 using node::BlockManager;
 using node::CCoinsStats;
@@ -1823,7 +1824,7 @@ static RPCHelpMan getchaintips()
     };
 }
 
-UniValue MempoolInfoToJSON(const CTxMemPool& pool)
+UniValue MempoolInfoToJSON(const CTxMemPool& pool, const std::optional<MempoolHistogramFeeRates>& histogram_floors)
 {
     // Make sure this call is atomic in the pool.
     LOCK(pool.cs);
@@ -1838,6 +1839,62 @@ UniValue MempoolInfoToJSON(const CTxMemPool& pool)
     ret.pushKV("mempoolminfee", ValueFromAmount(std::max(pool.GetMinFee(maxmempool), ::minRelayTxFee).GetFeePerK()));
     ret.pushKV("minrelaytxfee", ValueFromAmount(::minRelayTxFee.GetFeePerK()));
     ret.pushKV("unbroadcastcount", uint64_t{pool.GetUnbroadcastTxs().size()});
+
+    if (histogram_floors) {
+        const MempoolHistogramFeeRates& floors{histogram_floors.value()};
+
+        /* Keep histogram per...
+         * ... cumulated tx sizes
+         * ... txns (count)
+         * ... cumulated fees */
+        std::vector<uint64_t> sizes(floors.size(), 0);
+        std::vector<uint64_t> count(floors.size(), 0);
+        std::vector<CAmount> fees(floors.size(), 0);
+
+        for (const CTxMemPoolEntry& e : pool.mapTx) {
+            const CAmount fee{e.GetFee()};
+            const uint32_t size{uint32_t(e.GetTxSize())};
+
+            const CAmount afees{e.GetModFeesWithAncestors()}, dfees{e.GetModFeesWithDescendants()};
+            const uint32_t asize{uint32_t(e.GetSizeWithAncestors())}, dsize{uint32_t(e.GetSizeWithDescendants())};
+
+            const CAmount fpb{CFeeRate{fee, size}.GetFee(1)};     // Fee rate per byte
+            const CAmount afpb{CFeeRate{afees, asize}.GetFee(1)}; // Fee rate per byte including ancestors
+            const CAmount dfpb{CFeeRate{dfees, dsize}.GetFee(1)}; // Fee rate per byte including descendants
+
+            // Fee rate per byte including ancestors & descendants
+            const CAmount tfpb{CFeeRate{afees + dfees - fee, asize + dsize - size}.GetFee(1)};
+
+            const CAmount fee_rate{std::max(std::min(dfpb, tfpb), std::min(fpb, afpb))};
+
+            // Distribute fee rates
+            for (size_t i = floors.size(); i-- > 0;) {
+                if (fee_rate >= floors[i]) {
+                    sizes[i] += size;
+                    ++count[i];
+                    fees[i] += fee;
+                    break;
+                }
+            }
+        }
+
+        // Track total amount of available fees in fee rate groups
+        CAmount total_fees = 0;
+        UniValue info(UniValue::VOBJ);
+        for (size_t i = 0; i < floors.size(); ++i) {
+            UniValue info_sub(UniValue::VOBJ);
+            info_sub.pushKV("sizes", sizes[i]);
+            info_sub.pushKV("count", count.at(i));
+            info_sub.pushKV("fees", fees.at(i));
+            info_sub.pushKV("from_feerate", floors[i]);
+            info_sub.pushKV("to_feerate", i == floors.size() - 1 ? std::numeric_limits<int64_t>::max() : floors[i + 1]);
+            total_fees += fees.at(i);
+            info.pushKV(ToString(floors[i]), info_sub);
+        }
+        info.pushKV("total_fees", total_fees);
+        ret.pushKV("fee_histogram", info);
+    }
+
     return ret;
 }
 
@@ -1845,7 +1902,13 @@ static RPCHelpMan getmempoolinfo()
 {
     return RPCHelpMan{"getmempoolinfo",
                 "\nReturns details on the active state of the TX memory pool.\n",
-                {},
+        {
+            {"fee_histogram|with_fee_histogram", RPCArg::Type::ARR, RPCArg::Optional::OMITTED_NAMED_ARG, "Fee statistics grouped by fee rate ranges",
+                {
+                    {"fee_rate", RPCArg::Type::NUM, RPCArg::Optional::NO, "Fee rate (in " + CURRENCY_ATOM + "/vB) to group the fees by"},
+                },
+            },
+        },
                 RPCResult{
                     RPCResult::Type::OBJ, "", "",
                     {
@@ -1857,15 +1920,58 @@ static RPCHelpMan getmempoolinfo()
                         {RPCResult::Type::NUM, "maxmempool", "Maximum memory usage for the mempool"},
                         {RPCResult::Type::STR_AMOUNT, "mempoolminfee", "Minimum fee rate in " + CURRENCY_UNIT + "/kvB for tx to be accepted. Is the maximum of minrelaytxfee and minimum mempool fee"},
                         {RPCResult::Type::STR_AMOUNT, "minrelaytxfee", "Current minimum relay fee for transactions"},
-                        {RPCResult::Type::NUM, "unbroadcastcount", "Current number of transactions that haven't passed initial broadcast yet"}
+                {RPCResult::Type::NUM, "unbroadcastcount", "Current number of transactions that haven't passed initial broadcast yet"},
+                {RPCResult::Type::OBJ, "fee_histogram", /*optional=*/true, "",
+                    {
+                        {RPCResult::Type::OBJ, "<fee_rate_group>", "Fee rate group named by its lower bound (in " + CURRENCY_ATOM + "/vB), identical to the \"from_feerate\" field below",
+                            {
+                                {RPCResult::Type::NUM, "sizes", "Cumulative size of all transactions in the fee rate group (in vBytes)"},
+                                {RPCResult::Type::NUM, "count", "Number of transactions in the fee rate group"},
+                                {RPCResult::Type::NUM, "fees", "Cumulative fees of all transactions in the fee rate group (in " + CURRENCY_ATOM + ")"},
+                                {RPCResult::Type::NUM, "from_feerate", "Group contains transactions with fee rates equal or greater than this value (in " + CURRENCY_ATOM + "/vB)"},
+                                {RPCResult::Type::NUM, "to_feerate", /*optional=*/true, "Group contains transactions with fee rates equal or less than this value (in " + CURRENCY_ATOM + "/vB)"},
+                            }},
+                        {RPCResult::Type::ELISION, "", ""},
+                        {RPCResult::Type::NUM, "total_fees", "Total available fees in mempool (in " + CURRENCY_ATOM + ")"},
+                    }},
                     }},
                 RPCExamples{
                     HelpExampleCli("getmempoolinfo", "")
+            +
+            HelpExampleCli("getmempoolinfo", R"("[0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 17, 20, 25, 30, 40, 50, 60, 70, 80, 100, 120, 140, 170, 200]")")
             + HelpExampleRpc("getmempoolinfo", "")
+            +
+            HelpExampleRpc("getmempoolinfo", R"([0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 17, 20, 25, 30, 40, 50, 60, 70, 80, 100, 120, 140, 170, 200])")
                 },
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {
-    return MempoolInfoToJSON(EnsureAnyMemPool(request.context));
+    MempoolHistogramFeeRates histogram_floors;
+    std::optional<MempoolHistogramFeeRates> histogram_floors_opt = std::nullopt;
+
+    if (request.params[0].isTrue()) {
+        histogram_floors_opt = MempoolInfoToJSON_const_histogram_floors;
+    } else if (!(request.params[0].isNull() || request.params[0].isFalse())) {
+        const UniValue histogram_floors_univalue = request.params[0].get_array();
+
+        if (histogram_floors_univalue.size() == 0 || histogram_floors_univalue.size() > 30) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid number of parameters");
+        }
+
+        for (size_t i = 0; i < histogram_floors_univalue.size(); ++i) {
+            int64_t value = histogram_floors_univalue[i].get_int64();
+
+            if (value < 0) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "Non-negative values are expected");
+            } else if (i > 0 && histogram_floors.back() >= value) {
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "Strictly increasing values are expected");
+            }
+
+            histogram_floors.push_back(value);
+        }
+        histogram_floors_opt = std::optional<MempoolHistogramFeeRates>(std::move(histogram_floors));
+    }
+
+    return MempoolInfoToJSON(EnsureAnyMemPool(request.context), histogram_floors_opt);
 },
     };
 }
