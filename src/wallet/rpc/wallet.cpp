@@ -726,6 +726,7 @@ RPCHelpMan walletdisplayaddress();
 
 // backup
 RPCHelpMan dumpprivkey();
+RPCHelpMan dumpmasterprivkey();
 RPCHelpMan importprivkey();
 RPCHelpMan importaddress();
 RPCHelpMan importpubkey();
@@ -798,6 +799,7 @@ static const CRPCCommand commands[] =
     { "wallet",             &createwallet,                   },
     { "wallet",             &restorewallet,                  },
     { "wallet",             &dumpprivkey,                    },
+    { "wallet",             &dumpmasterprivkey,              },
     { "wallet",             &dumpwallet,                     },
     { "wallet",             &encryptwallet,                  },
     { "wallet",             &getaddressesbylabel,            },
