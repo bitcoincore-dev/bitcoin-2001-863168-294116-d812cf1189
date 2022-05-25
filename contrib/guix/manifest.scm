@@ -16,6 +16,8 @@
              (gnu packages gawk)
              (gnu packages gcc)
              (gnu packages gnome)
+             (gnu packages image)
+             (gnu packages imagemagick)
              (gnu packages installers)
              (gnu packages linux)
              (gnu packages llvm)
@@ -592,6 +594,9 @@ inspecting signatures in Mach-O binaries.")
         automake
         pkg-config
         bison
+        imagemagick
+        libicns
+        librsvg-2.40
         ;; Scripting
         perl
         python-3
