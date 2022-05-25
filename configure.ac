@@ -1526,45 +1526,66 @@ if test "$use_boost" = "yes"; then
 fi
 
 if test "$use_external_signer" != "no"; then
-  case $host in
-    *mingw*)
-      dnl Boost Process uses Boost Filesystem when targeting Windows. Also,
-      dnl since Boost 1.71.0, Process does not work with mingw-w64 without
-      dnl workarounds. See 67669ab425b52a2b6be3d2f3b3b7e3939b676a2c.
-      if test "$use_external_signer" = "yes"; then
-        AC_MSG_ERROR([External signing is not supported on Windows])
-      fi
-      use_external_signer="no";
-    ;;
-    *)
-      AC_MSG_CHECKING([whether Boost.Process can be used])
-      TEMP_CXXFLAGS="$CXXFLAGS"
-      dnl Boost 1.78 requires the following workaround.
-      dnl See: https://github.com/boostorg/process/issues/235
-      CXXFLAGS="$CXXFLAGS -Wno-error=narrowing"
-      TEMP_CPPFLAGS="$CPPFLAGS"
-      CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
-      TEMP_LDFLAGS="$LDFLAGS"
-      dnl Boost 1.73 and older require the following workaround.
-      LDFLAGS="$LDFLAGS $PTHREAD_CFLAGS"
-      AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <boost/process.hpp>]])],
-        [have_boost_process="yes"],
-        [have_boost_process="no"])
-      LDFLAGS="$TEMP_LDFLAGS"
-      CPPFLAGS="$TEMP_CPPFLAGS"
-      CXXFLAGS="$TEMP_CXXFLAGS"
-      AC_MSG_RESULT([$have_boost_process])
-      if test "$have_boost_process" = "yes"; then
-        use_external_signer="yes"
-        AC_DEFINE([ENABLE_EXTERNAL_SIGNER], [1], [Define if external signer support is enabled])
-      else
-        if test "$use_external_signer" = "yes"; then
-          AC_MSG_ERROR([External signing is not supported for this Boost version])
-        fi
-        use_external_signer="no";
-      fi
-    ;;
-  esac
+  AC_MSG_CHECKING([whether Boost.Process can be used])
+  TEMP_CXXFLAGS="$CXXFLAGS"
+  dnl Boost 1.78 requires the following workaround.
+  dnl See: https://github.com/boostorg/process/issues/235
+  CXXFLAGS="$CXXFLAGS -Wno-error=narrowing"
+  TEMP_CPPFLAGS="$CPPFLAGS"
+  CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
+  TEMP_LDFLAGS="$LDFLAGS"
+  dnl Boost 1.73 and older require the following workaround.
+  LDFLAGS="$LDFLAGS $PTHREAD_CFLAGS"
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+    // A workaround for boost::process not including what it needs
+    #include <algorithm>
+    #if defined(WIN32) && !defined(__kernel_entry)
+    // A workaround for boost 1.71 incompatibility with mingw-w64 compiler.
+    // For details see https://github.com/bitcoin/bitcoin/pull/22348.
+    #define __kernel_entry
+    #endif
+    #define BOOST_PROCESS_USE_STD_FS
+    #include <boost/process.hpp>
+
+    #ifdef BOOST_POSIX_API
+    # include <fcntl.h>
+    # ifdef FD_CLOEXEC
+    #  include <boost/process/extend.hpp>
+    # endif
+    #endif
+  ]],[[
+    namespace bp = boost::process;
+    bp::opstream stdin_stream;
+    bp::ipstream stdout_stream;
+    #if defined(BOOST_POSIX_API) && defined(FD_CLOEXEC)
+    struct dummy_extension : boost::process::extend::handler {};
+    #endif
+    bp::child c("dummy", bp::std_out > stdout_stream, bp::std_err > stdout_stream, bp::std_in < stdin_stream
+    #if defined(BOOST_POSIX_API) && defined(FD_CLOEXEC)
+        , dummy_extension()
+    #endif
+    );
+    stdin_stream << std::string{"test"} << std::endl;
+    if (c.running()) c.terminate();
+    c.wait();
+    c.exit_code();
+  ]])],
+    [have_boost_process="yes"],
+    [have_boost_process="no"])
+  LDFLAGS="$TEMP_LDFLAGS"
+  CPPFLAGS="$TEMP_CPPFLAGS"
+  CXXFLAGS="$TEMP_CXXFLAGS"
+  AC_MSG_RESULT([$have_boost_process])
+  if test "$have_boost_process" = "yes"; then
+    use_external_signer="yes"
+    AC_DEFINE([ENABLE_EXTERNAL_SIGNER], [1], [Define if external signer support is enabled])
+    AC_DEFINE([BOOST_PROCESS_USE_STD_FS], [1], [Defined to avoid Boost::Process trying to use Boost Filesystem])
+  else
+    if test "$use_external_signer" = "yes"; then
+      AC_MSG_ERROR([External signing is not supported for this Boost version])
+    fi
+    use_external_signer="no";
+  fi
 fi
 AM_CONDITIONAL([ENABLE_EXTERNAL_SIGNER], [test "$use_external_signer" = "yes"])
 
