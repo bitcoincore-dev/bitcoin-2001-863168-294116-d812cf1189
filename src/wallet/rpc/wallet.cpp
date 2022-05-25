@@ -634,6 +634,7 @@ RPCHelpMan encryptwallet();
 // spend
 RPCHelpMan sendtoaddress();
 RPCHelpMan sendmany();
+RPCHelpMan setfeerate();
 RPCHelpMan settxfee();
 RPCHelpMan fundrawtransaction();
 RPCHelpMan bumpfee();
@@ -712,6 +713,7 @@ static const CRPCCommand commands[] =
     { "wallet",             &send,                           },
     { "wallet",             &sendmany,                       },
     { "wallet",             &sendtoaddress,                  },
+    { "wallet",             &setfeerate,                     },
     { "wallet",             &sethdseed,                      },
     { "wallet",             &setlabel,                       },
     { "wallet",             &settxfee,                       },
