@@ -44,6 +44,8 @@ KNOWN_VIOLATIONS=(
     "src/test/fuzz/locale.cpp"
     "src/test/fuzz/string.cpp"
     "src/test/util_tests.cpp"
+    "src/wallet/bdb.cpp:.*DbEnv::strerror"  # False positive
+    "src/util/syserror.cpp:.*strerror"      # Outside this function use `SysErrorString`
 )
 
 REGEXP_IGNORE_EXTERNAL_DEPENDENCIES="^src/(crypto/ctaes/|leveldb/|secp256k1/|minisketch/|tinyformat.h|univalue/)"
@@ -131,7 +133,7 @@ LOCALE_DEPENDENT_FUNCTIONS=(
     strcasecmp
     strcasestr
     strcoll      # LC_COLLATE
-#   strerror
+    strerror
     strfmon
     strftime     # LC_TIME
     strncasecmp
@@ -211,7 +213,7 @@ REGEXP_IGNORE_KNOWN_VIOLATIONS=$(join_array "|" "${KNOWN_VIOLATIONS[@]}")
 
 # Invoke "git grep" only once in order to minimize run-time
 REGEXP_LOCALE_DEPENDENT_FUNCTIONS=$(join_array "|" "${LOCALE_DEPENDENT_FUNCTIONS[@]}")
-GIT_GREP_OUTPUT=$(git grep -E "[^a-zA-Z0-9_\`'\"<>](${REGEXP_LOCALE_DEPENDENT_FUNCTIONS}(_r|_s)?)[^a-zA-Z0-9_\`'\"<>]" -- "*.cpp" "*.h")
+GIT_GREP_OUTPUT=$(git grep -E "[^a-zA-Z0-9_\`'\"<>](${REGEXP_LOCALE_DEPENDENT_FUNCTIONS})(_r|_s)?[^a-zA-Z0-9_\`'\"<>]" -- "*.cpp" "*.h")
 
 EXIT_CODE=0
 for LOCALE_DEPENDENT_FUNCTION in "${LOCALE_DEPENDENT_FUNCTIONS[@]}"; do
