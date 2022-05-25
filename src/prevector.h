@@ -35,6 +35,8 @@
  */
 template<unsigned int N, typename T, typename Size = uint32_t, typename Diff = int32_t>
 class prevector {
+    static_assert(std::is_trivially_copyable_v<T>);
+
 public:
     typedef Size size_type;
     typedef Diff difference_type;
