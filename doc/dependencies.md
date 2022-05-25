@@ -43,7 +43,7 @@ Some dependencies are not needed in all configurations. The following are some f
 * Qt is not needed with `--without-gui`.
 * If the qrencode dependency is absent, QR support won't be added. To force an error when that happens, pass `--with-qrencode`.
 * If the systemtap dependency is absent, USDT support won't compiled in.
-* UniValue is needed only with the `--with-system-univalue` option. Otherwise, a non-standard bundled copy is staticly linked.
+* UniValue is needed only with the `--with-system-univalue` option. Otherwise, if it's missing, a non-standard bundled copy is staticly linked.
 * ZeroMQ is needed only with the `--with-zmq` option.
 
 #### Other
