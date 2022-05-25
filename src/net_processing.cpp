@@ -4636,7 +4636,28 @@ bool PeerManagerImpl::SendMessages(CNode* pto)
         // Start block sync
         if (pindexBestHeader == nullptr)
             pindexBestHeader = m_chainman.ActiveChain().Tip();
-        bool fFetch = state.fPreferredDownload || (nPreferredDownload == 0 && !pto->fClient && !pto->IsAddrFetchConn()); // Download if this is a nice peer, or we have no nice peers and this one might do.
+
+        // Determine whether we might try initial headers sync or parallel
+        // block download from this peer -- this mostly affects behavior while
+        // in IBD (once out of IBD, we sync from all peers).
+        bool fFetch = false;
+        if (state.fPreferredDownload) {
+            fFetch = true;
+        } else if (!pto->fClient && !pto->IsAddrFetchConn()) {
+            // Typically this is an inbound peer. If we don't have any outbound
+            // peers, or if we aren't downloading any blocks from such peers,
+            // then allow block downloads from this peer, too.
+            // We prefer downloading blocks from outbound peers to avoid
+            // putting undue load on (say) some home user who is just making
+            // outbound connections to the network, but if our only source of
+            // the latest blocks is from an inbound peer, we have to be sure to
+            // eventually download it (and not just wait indefinitely for an
+            // outbound peer to have it).
+            if (nPreferredDownload == 0 || mapBlocksInFlight.empty()) {
+                fFetch = true;
+            }
+        }
+
         if (!state.fSyncStarted && !pto->fClient && !fImporting && !fReindex) {
             // Only actively request headers from a single peer, unless we're close to today.
             if ((nSyncStarted == 0 && fFetch) || pindexBestHeader->GetBlockTime() > GetAdjustedTime() - 24 * 60 * 60) {
