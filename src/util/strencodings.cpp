@@ -111,25 +111,33 @@ std::vector<unsigned char> ParseHex(const std::string& str)
     return ParseHex(str.c_str());
 }
 
-void SplitHostPort(std::string in, uint16_t& portOut, std::string& hostOut)
+bool SplitHostPort(std::string in, uint16_t& portOut, std::string& hostOut)
 {
+    bool valid = false;
     size_t colon = in.find_last_of(':');
     // if a : is found, and it either follows a [...], or no other : is in the string, treat it as port separator
     bool fHaveColon = colon != in.npos;
     bool fBracketed = fHaveColon && (in[0] == '[' && in[colon - 1] == ']'); // if there is a colon, and in[0]=='[', colon is not 0, so in[colon-1] is safe
     bool fMultiColon{fHaveColon && colon != 0 && (in.find_last_of(':', colon - 1) != in.npos)};
     if (fHaveColon && (colon == 0 || fBracketed || !fMultiColon)) {
+        if (!in.substr(colon + 1).empty()) {
         uint16_t n;
         if (ParseUInt16(in.substr(colon + 1), &n)) {
-            in = in.substr(0, colon);
             portOut = n;
+              valid = (portOut != 0);
         }
+        }
+        in = in.substr(0, colon);
+    } else {
+      valid = true;
     }
     if (in.size() > 0 && in[0] == '[' && in[in.size() - 1] == ']') {
         hostOut = in.substr(1, in.size() - 2);
     } else {
         hostOut = in;
     }
+
+    return valid;
 }
 
 std::string EncodeBase64(Span<const unsigned char> input)
