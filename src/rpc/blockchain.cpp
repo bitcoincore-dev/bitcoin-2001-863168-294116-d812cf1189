@@ -1035,11 +1035,12 @@ static RPCHelpMan getblock()
                                     {
                                         {RPCResult::Type::BOOL, "generated", "Coinbase or not"},
                                         {RPCResult::Type::NUM, "height", "The height of the prevout"},
-                                        {RPCResult::Type::NUM, "value", "The value in " + CURRENCY_UNIT},
+                                        {RPCResult::Type::STR_AMOUNT, "value", "The value in " + CURRENCY_UNIT},
                                         {RPCResult::Type::OBJ, "scriptPubKey", "",
                                         {
                                             {RPCResult::Type::STR, "asm", "The asm"},
-                                            {RPCResult::Type::STR, "hex", "The hex"},
+                                            {RPCResult::Type::STR, "desc", "Inferred descriptor for the output"},
+                                            {RPCResult::Type::STR_HEX, "hex", "The hex"},
                                             {RPCResult::Type::STR, "address", /* optional */ true, "The Bitcoin address (only if a well-defined address exists)"},
                                             {RPCResult::Type::STR, "type", "The type (one of: " + GetAllOutputTypes() + ")"},
                                         }},
@@ -1344,7 +1345,7 @@ static RPCHelpMan gettxout()
                     {RPCResult::Type::STR, "asm", ""},
                     {RPCResult::Type::STR, "desc", "Inferred descriptor for the output"},
                     {RPCResult::Type::STR_HEX, "hex", ""},
-                    {RPCResult::Type::STR, "type", "The type, eg pubkeyhash"},
+                    {RPCResult::Type::STR, "type", "The type (one of: " + GetAllOutputTypes() + ")"},
                     {RPCResult::Type::STR, "address", /*optional=*/true, "The Bitcoin address (only if a well-defined address exists)"},
                 }},
                 {RPCResult::Type::BOOL, "coinbase", "Coinbase or not"},
