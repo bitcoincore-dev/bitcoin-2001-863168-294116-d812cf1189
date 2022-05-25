@@ -447,6 +447,7 @@ static std::vector<RPCResult> MempoolEntryDescription() { return {
     RPCResult{RPCResult::Type::STR_AMOUNT, "ancestorfees", /*optional=*/true,
               "transaction fees of in-mempool ancestors (including this one) with fee deltas used for mining priority, denominated in " +
                   CURRENCY_ATOM + "s (DEPRECATED, returned only if config option -deprecatedrpc=fees is passed)"},
+    RPCResult{RPCResult::Type::STR_HEX, "hash", "hash of entire serialized transaction"},
     RPCResult{RPCResult::Type::STR_HEX, "wtxid", "hash of serialized transaction, including witness data"},
     RPCResult{RPCResult::Type::OBJ, "fees", "",
         {
@@ -488,6 +489,7 @@ static void entryToJSON(const CTxMemPool& pool, UniValue& info, const CTxMemPool
         info.pushKV("ancestorfees", e.GetModFeesWithAncestors());
     }
     info.pushKV("wtxid", pool.vTxHashes[e.vTxHashesIdx].first.ToString());
+    info.pushKV("hash", info["wtxid"]);
 
     UniValue fees(UniValue::VOBJ);
     fees.pushKV("base", ValueFromAmount(e.GetFee()));
