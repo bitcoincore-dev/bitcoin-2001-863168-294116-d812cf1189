@@ -1,23 +1,9 @@
-*After branching off for a major version release of Bitcoin Core, use this
-template to create the initial release notes draft.*
+23.0 Release Notes
+==================
 
-*The release notes draft is a temporary file that can be added to by anyone. See
-[/doc/developer-notes.md#release-notes](/doc/developer-notes.md#release-notes)
-for the process.*
+Bitcoin Core version 23.0 is now available from:
 
-*Create the draft, named* "*version* Release Notes Draft"
-*(e.g. "22.0 Release Notes Draft"), as a collaborative wiki in:*
-
-https://github.com/bitcoin-core/bitcoin-devwiki/wiki/
-
-*Before the final release, move the notes back to this git repository.*
-
-*version* Release Notes Draft
-===============================
-
-Bitcoin Core version *version* is now available from:
-
-  <https://bitcoincore.org/bin/bitcoin-core-*version*/>
+  <https://bitcoincore.org/bin/bitcoin-core-23.0/>
 
 This release includes new features, various bug fixes and performance
 improvements, as well as updated translations.
@@ -61,6 +47,10 @@ P2P and network changes
   They will become eligible for address gossip after sending an ADDR, ADDRV2,
   or GETADDR message. (#21528)
 
+- Before this release, Bitcoin Core had a strong preference to try to connect only to peers that listen on port 8333. As a result of that, Bitcoin nodes listening on non-standard ports would likely not get any Bitcoin Core peers connecting to them. This preference has been removed. (#23542)
+
+- Full support has been added for the CJDNS network. See the new option `-cjdnsreachable` and [doc/cjdns.md](https://github.com/bitcoin/bitcoin/tree/23.x/doc/cjdns.md) (#23077)
+
 Fee estimation changes
 ----------------------
 
@@ -73,6 +63,17 @@ Rescan startup parameter removed
 The `-rescan` startup parameter has been removed. Wallets which require
 rescanning due to corruption will still be rescanned on startup.
 Otherwise, please use the `rescanblockchain` RPC to trigger a rescan. (#23123)
+
+Tracepoints and Userspace, Statically Defined Tracing support
+-------------------------------------------------------------
+
+Bitcoin Core release binaries for Linux now include experimental tracepoints which
+act as an interface for process-internal events. These can be used for review,
+debugging, monitoring, and more. The tracepoint API is semi-stable. While the API
+is tested, process internals might change between releases requiring changes to the
+tracepoints. Information about the existing tracepoints can be found under
+[doc/tracing.md](https://github.com/bitcoin/bitcoin/blob/23.x/doc/tracing.md) and
+usage examples are provided in [contrib/tracing/](https://github.com/bitcoin/bitcoin/tree/23.x/contrib/tracing).
 
 Updated RPCs
 ------------
@@ -112,6 +113,8 @@ Updated RPCs
   field, which will show a warning if a non-legacy address type is requested
   when using uncompressed public keys. (#23113)
 
+Changes to wallet related RPCs can be found in the Wallet section below.
+
 New RPCs
 --------
 
@@ -124,9 +127,6 @@ New RPCs
   now reflects the status of the current block rather than the next
   block. (#23508)
 
-Build System
-------------
-
 Files
 -----
 
@@ -136,9 +136,6 @@ Files
   it to `banlist.json`. If `banlist.json` already exists, version 22.x will not
   try to translate the `banlist.dat` into json. After an upgrade, `listbanned`
   can be used to double check the parsed entries. (#22570)
-
-New settings
-------------
 
 Updated settings
 ----------------
@@ -170,6 +167,18 @@ Tools and Utilities
 
 Wallet
 ------
+
+- Descriptor wallets are now the default wallet type. Newly created wallets
+  will use descriptors unless `descriptors=false` is set during `createwallet`, or
+  the `Descriptor wallet` checkbox is unchecked in the GUI.
+
+  Note that wallet RPC commands like `importmulti` and `dumpprivkey` cannot be
+  used with descriptor wallets, so if your client code relies on these commands
+  without specifying `descriptors=false` during wallet creation, you will need
+  to update your code.
+
+- Newly created descriptor wallets will contain an automatically generated `tr()`
+  descriptor which allows for creating single key Taproot receiving addresses.
 
 - `upgradewallet` will now automatically flush the keypool if upgrading
   from a non-HD wallet to an HD wallet, to immediately start using the
@@ -227,6 +236,138 @@ Credits
 
 Thanks to everyone who directly contributed to this release:
 
+- 0xb10c
+- 0xree
+- Aaron Clauson
+- Adrian-Stefan Mares
+- agroce
+- aitorjs
+- Alex Groce
+- amadeuszpawlik
+- Amiti Uttarwar
+- Andrew Chow
+- Andrew Poelstra
+- Andrew Toth
+- anouar kappitou
+- Anthony Towns
+- Antoine Poinsot
+- Arnab Sen
+- Ben Woosley
+- benthecarman
+- Bitcoin Hodler
+- BitcoinTsunami
+- brianddk
+- Bruno Garcia
+- CallMeMisterOwl
+- Calvin Kim
+- Carl Dong
+- Cory Fields
+- Cuong V. Nguyen
+- Darius Parvin
+- Dhruv Mehta
+- Dimitri Deijs
+- Dimitris Apostolou
+- Dmitry Goncharov
+- Douglas Chimento
+- eugene
+- Fabian Jahr
+- fanquake
+- Florian Baumgartl
+- fyquah
+- Gleb Naumenko
+- glozow
+- Gregory Sanders
+- Heebs
+- Hennadii Stepanov
+- hg333
+- HiLivin
+- Igor Cota
+- Jadi
+- James O'Beirne
+- Jameson Lopp
+- Jarol Rodriguez
+- Jeremy Rand
+- Jeremy Rubin
+- Joan Karadimov
+- John Newbery
+- Jon Atack
+- João Barbosa
+- josibake
+- junderw
+- Karl-Johan Alm
+- katesalazar
+- Kennan Mell
+- Kiminuo
+- Kittywhiskers Van Gogh
+- Klement Tan
+- Kristaps Kaupe
+- Kuro
+- Larry Ruane
+- lsilva01
+- lucash-dev
+- Luke Dashjr
+- MarcoFalke
+- Martin Leitner-Ankerl
+- Martin Zumsande
+- Matt Corallo
+- Matt Whitlock
+- MeshCollider
+- Michael Dietz
+- Murch
+- naiza
+- Nathan Garabedian
+- Nelson Galdeman
+- NikhilBartwal
+- Niklas Gögge
+- node01
+- nthumann
+- Pasta
+- Patrick Kamin
+- Pavel Safronov
+- Pavol Rusnak
+- Perlover
+- Pieter Wuille
+- practicalswift
+- pradumnasaraf
+- pranabp-bit
+- Prateek Sancheti
+- Prayank
+- Rafael Sadowski
+- rajarshimaitra
+- randymcmillan
+- ritickgoenka
+- Rob Fielding
+- Rojar Smith
+- Russell Yanofsky
+- S3RK
+- Saibato
+- Samuel Dobson
+- sanket1729
+- seaona
+- Sebastian Falbesoner
+- sh15h4nk
+- Shashwat
+- Shorya
+- ShubhamPalriwala
+- Shubhankar Gambhir
+- Sjors Provoost
+- sogoagain
+- sstone
+- stratospher
+- Suriyaa Rocky Sundararuban
+- Taeik Lim
+- TheCharlatan
+- Tim Ruffing
+- Tobin Harding
+- Troy Giorshev
+- Tyler Chambers
+- Vasil Dimov
+- W. J. van der Laan
+- w0xlt
+- willcl-ark
+- William Casarin
+- zealsham
+- Zero-1729
 
 As well as to everyone that helped with translations on
 [Transifex](https://www.transifex.com/bitcoin/bitcoin/).
