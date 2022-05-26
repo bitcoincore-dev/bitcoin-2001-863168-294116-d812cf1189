@@ -184,7 +184,6 @@ BITCOIN_CORE_H = \
   node/coinstats.h \
   node/context.h \
   node/miner.h \
-  node/minisketchwrapper.h \
   node/psbt.h \
   node/transaction.h \
   node/ui_interface.h \
@@ -354,7 +353,6 @@ libbitcoin_node_a_SOURCES = \
   node/context.cpp \
   node/interfaces.cpp \
   node/miner.cpp \
-  node/minisketchwrapper.cpp \
   node/psbt.cpp \
   node/transaction.cpp \
   node/ui_interface.cpp \
@@ -876,7 +874,6 @@ nodist_libbitcoin_ipc_a_SOURCES = $(libbitcoin_ipc_mpgen_output)
 CLEANFILES += $(libbitcoin_ipc_mpgen_output)
 endif
 
-include Makefile.minisketch.include
 
 include Makefile.crc32c.include
 include Makefile.leveldb.include
