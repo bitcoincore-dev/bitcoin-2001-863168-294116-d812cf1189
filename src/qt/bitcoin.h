@@ -109,6 +109,7 @@ private:
     std::unique_ptr<QWidget> shutdownWindow;
     SplashScreen* m_splash = nullptr;
     std::unique_ptr<interfaces::Node> m_node;
+    bool m_initialized{false};
 
     void startThread();
 };

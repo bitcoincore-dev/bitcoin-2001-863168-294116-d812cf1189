@@ -426,6 +426,7 @@ void BitcoinApplication::initializeResult(bool success, interfaces::BlockAndHead
         }
 #endif
         pollShutdownTimer->start(SHUTDOWN_POLLING_DELAY);
+        m_initialized = true;
     } else {
         requestShutdown();
     }
@@ -460,7 +461,7 @@ WId BitcoinApplication::getMainWinId() const
 
 bool BitcoinApplication::event(QEvent* e)
 {
-    if (e->type() == QEvent::Quit) {
+    if (m_initialized && e->type() == QEvent::Quit) {
         requestShutdown();
         return true;
     }
