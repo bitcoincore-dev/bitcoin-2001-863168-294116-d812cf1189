@@ -11,9 +11,6 @@
 static const char UNUSED *bitcoin_strings[] = {
 QT_TRANSLATE_NOOP("bitcoin-core", "The %s developers"),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
-"%s corrupt. Try using the wallet tool bitcoin-wallet to salvage or restoring "
-"a backup."),
-QT_TRANSLATE_NOOP("bitcoin-core", ""
 "%s request to listen on port %u. This port is considered \"bad\" and thus it "
 "is unlikely that any Bitcoin Core peers connect to it. See doc/p2p-bad-ports."
 "md for details and a full list."),
@@ -79,14 +76,11 @@ QT_TRANSLATE_NOOP("bitcoin-core", ""
 "No dump file provided. To use createfromdump, -dumpfile=<filename> must be "
 "provided."),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
-"No dump file provided. To use dump, -dumpfile=<filename> must be provided."),
-QT_TRANSLATE_NOOP("bitcoin-core", ""
 "No wallet file format provided. To use createfromdump, -format=<format> must "
 "be provided."),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
 "Outbound connections restricted to Tor (-onlynet=onion) but the proxy for "
-"reaching the Tor network is not provided (no -proxy= and no -onion= given) "
-"or it is explicitly forbidden (-onion=0)"),
+"reaching the Tor network is explicitly forbidden: -onion=0"),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
 "Please check that your computer's date and time are correct! If your clock "
 "is wrong, %s will not work properly."),
@@ -102,6 +96,10 @@ QT_TRANSLATE_NOOP("bitcoin-core", ""
 "SQLiteDatabase: Unknown sqlite wallet schema version %d. Only version %d is "
 "supported"),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
+"The -onlynet=onion configuration option was passed to restrict outbound "
+"connections to Tor, but the proxy for reaching the Tor network was not "
+"provided: none of -proxy, -onion or -listenonion was given"),
+QT_TRANSLATE_NOOP("bitcoin-core", ""
 "The -txindex upgrade started by a previous version cannot be completed. "
 "Restart with the previous version or run a full -reindex."),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
@@ -115,10 +113,6 @@ QT_TRANSLATE_NOOP("bitcoin-core", ""
 "will not be displayed again."),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
 "The transaction amount is too small to send after the fee has been deducted"),
-QT_TRANSLATE_NOOP("bitcoin-core", ""
-"This error could occur if this wallet was not shutdown cleanly and was last "
-"loaded using a build with a newer version of Berkeley DB. If so, please use "
-"the software that last loaded this wallet"),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
 "This is a pre-release test build - use at your own risk - do not use for "
 "mining or merchant applications"),
@@ -140,10 +134,15 @@ QT_TRANSLATE_NOOP("bitcoin-core", ""
 "Unknown wallet file format \"%s\" provided. Please provide one of \"bdb\" or "
 "\"sqlite\"."),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
+"Warning: BDB-backed wallets have a wallet id that is not currently restored."),
+QT_TRANSLATE_NOOP("bitcoin-core", ""
 "Warning: Dumpfile wallet format \"%s\" does not match command line specified "
 "format \"%s\"."),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
 "Warning: Private keys detected in wallet {%s} with disabled private keys"),
+QT_TRANSLATE_NOOP("bitcoin-core", ""
+"Warning: Unrecognised block version being mined! Unknown rules may or may "
+"not be in effect"),
 QT_TRANSLATE_NOOP("bitcoin-core", ""
 "Warning: We do not appear to fully agree with our peers! You may need to "
 "upgrade, or other nodes may need to upgrade."),
@@ -156,22 +155,24 @@ QT_TRANSLATE_NOOP("bitcoin-core", ""
 QT_TRANSLATE_NOOP("bitcoin-core", "%s is set very high!"),
 QT_TRANSLATE_NOOP("bitcoin-core", "-maxmempool must be at least %d MB"),
 QT_TRANSLATE_NOOP("bitcoin-core", "A fatal internal error occurred, see debug.log for details"),
+QT_TRANSLATE_NOOP("bitcoin-core", "Cannot grant blockfilters permission without -blockfilterindex."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Cannot resolve -%s address: '%s'"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Cannot set -forcednsseed to true when setting -dnsseed to false."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Cannot set -peerblockfilters without -blockfilterindex."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Cannot write to data directory '%s'; check permissions."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Config setting for %s only applied on %s network when in [%s] section."),
+QT_TRANSLATE_NOOP("bitcoin-core", "Continue without this wallet?"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Copyright (C) %i-%i"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Corrupted block database detected"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Could not find asmap file %s"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Could not parse asmap file %s"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Disk space is too low!"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Do you want to rebuild the block database now?"),
+QT_TRANSLATE_NOOP("bitcoin-core", "Do you want to use the standard network port for %s (port %s) instead?"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Done loading"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Dump file %s does not exist."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error creating %s"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error initializing block database"),
-QT_TRANSLATE_NOOP("bitcoin-core", "Error initializing wallet database environment %s!"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error loading %s"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error loading %s: Private keys can only be disabled during creation"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error loading %s: Wallet corrupted"),
@@ -181,6 +182,7 @@ QT_TRANSLATE_NOOP("bitcoin-core", "Error opening block database"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error reading from database, shutting down."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error reading next record from wallet database"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error upgrading chainstate database"),
+QT_TRANSLATE_NOOP("bitcoin-core", "Error"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error: Couldn't create cursor into database"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error: Disk space is low for %s"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Error: Dumpfile checksum does not match. Computed %s, expected %s"),
@@ -210,6 +212,8 @@ QT_TRANSLATE_NOOP("bitcoin-core", "Invalid amount for -discardfee=<amount>: '%s'
 QT_TRANSLATE_NOOP("bitcoin-core", "Invalid amount for -fallbackfee=<amount>: '%s'"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Invalid amount for -paytxfee=<amount>: '%s' (must be at least %s)"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Invalid netmask specified in -whitelist: '%s'"),
+QT_TRANSLATE_NOOP("bitcoin-core", "Invalid port specified in %s: '%s'"),
+QT_TRANSLATE_NOOP("bitcoin-core", "Listen on port %s failed."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Loading P2P addresses…"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Loading banlist…"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Loading block index…"),
@@ -239,6 +243,7 @@ QT_TRANSLATE_NOOP("bitcoin-core", "Specified -walletdir \"%s\" is not a director
 QT_TRANSLATE_NOOP("bitcoin-core", "Specified blocks directory \"%s\" does not exist."),
 QT_TRANSLATE_NOOP("bitcoin-core", "Starting network threads…"),
 QT_TRANSLATE_NOOP("bitcoin-core", "The source code is available from %s."),
+QT_TRANSLATE_NOOP("bitcoin-core", "The specified R/W config file %s does not exist\n"),
 QT_TRANSLATE_NOOP("bitcoin-core", "The specified config file %s does not exist"),
 QT_TRANSLATE_NOOP("bitcoin-core", "The transaction amount is too small to pay the fee"),
 QT_TRANSLATE_NOOP("bitcoin-core", "The wallet will avoid paying less than the minimum relay fee."),
@@ -271,4 +276,5 @@ QT_TRANSLATE_NOOP("bitcoin-core", "User Agent comment (%s) contains unsafe chara
 QT_TRANSLATE_NOOP("bitcoin-core", "Verifying blocks…"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Verifying wallet(s)…"),
 QT_TRANSLATE_NOOP("bitcoin-core", "Wallet needed to be rewritten: restart %s to complete"),
+QT_TRANSLATE_NOOP("bitcoin-core", "whitebind is only used for incoming connections"),
 };

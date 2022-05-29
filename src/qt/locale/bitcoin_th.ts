@@ -2,16 +2,12 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation type="unfinished">คลิกขวา เพื่อ แก้ไข แอดเดรส หรือ เลเบล</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation type="unfinished">สร้าง แอดเดรส ใหม่</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation type="unfinished">&amp;ใหม่</translation>
+        <translation>&amp;ใหม่</translation>
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
@@ -19,15 +15,15 @@
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation type="unfinished">&amp;คัดลอก</translation>
+        <translation>&amp;คัดลอก</translation>
     </message>
     <message>
         <source>C&amp;lose</source>
-        <translation type="unfinished">&amp;ปิด</translation>
+        <translation>&amp;ปิด</translation>
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
-        <translation type="unfinished">ลบที่อยู่ที่เลือกในปัจจุบันออกจากรายการ</translation>
+        <translation>ลบที่อยู่ที่เลือกในปัจจุบันออกจากรายการ</translation>
     </message>
     <message>
         <source>Enter address or label to search</source>
@@ -35,15 +31,15 @@
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
-        <translation type="unfinished">ส่งออกข้อมูลในแท็บปัจจุบันไปยังไฟล์</translation>
+        <translation>ส่งออกข้อมูลในแท็บปัจจุบันไปยังไฟล์</translation>
     </message>
     <message>
         <source>&amp;Export</source>
-        <translation type="unfinished">&amp;ส่งออก</translation>
+        <translation>&amp;ส่งออก</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
-        <translation type="unfinished">&amp;ลบ</translation>
+        <translation>&amp;ลบ</translation>
     </message>
     <message>
         <source>Choose the address to send coins to</source>
@@ -55,7 +51,7 @@
     </message>
     <message>
         <source>C&amp;hoose</source>
-        <translation type="unfinished">&amp;เลือก</translation>
+        <translation>&amp;เลือก</translation>
     </message>
     <message>
         <source>Sending addresses</source>
@@ -64,6 +60,10 @@
     <message>
         <source>Receiving addresses</source>
         <translation type="unfinished">แอดเดรส การรับ</translation>
+    </message>
+    <message>
+        <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>ที่อยู่ Bitcoin ของคุณสำหรับการส่งการชำระเงิน โปรดตรวจสอบจำนวนเงินและที่อยู่รับก่อนที่จะส่งเหรียญ</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -75,7 +75,7 @@
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation type="unfinished">&amp;แก้ไข</translation>
+        <translation>&amp;แก้ไข</translation>
     </message>
     <message>
         <source>Export Address List</source>
@@ -93,7 +93,7 @@
     </message>
     <message>
         <source>Exporting Failed</source>
-        <translation type="unfinished">การส่งออก ล้มเหลว</translation>
+        <translation>การส่งออกล้มเหลว</translation>
     </message>
 </context>
 <context>
@@ -123,7 +123,7 @@
     </message>
     <message>
         <source>New passphrase</source>
-        <translation type="unfinished">วลีรหัสผ่านใหม่</translation>
+        <translation>วลีรหัสผ่านใหม่</translation>
     </message>
     <message>
         <source>Repeat new passphrase</source>
@@ -225,386 +225,34 @@
 <context>
     <name>BanTableModel</name>
     <message>
+        <source>IP/Netmask</source>
+        <translation>IP/Netmask (ตัวกรอง IP)</translation>
+    </message>
+    <message>
         <source>Banned Until</source>
-        <translation type="unfinished">ห้าม จนถึง</translation>
+        <translation>ห้าม จนถึง</translation>
     </message>
 </context>
 <context>
     <name>BitcoinApplication</name>
+    <message>
+        <source>Runaway exception</source>
+        <translation type="unfinished">ข้อยกเว้นการหลบหนี</translation>
+    </message>
+    <message>
+        <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
+        <translation>เกิดข้อผิดพลาดร้ายแรง %1 ไม่สามารถดำเนินการต่อได้อย่างปลอดภัยอีกต่อไปและจะยกเลิก</translation>
+    </message>
     <message>
         <source>Internal error</source>
         <translation type="unfinished">ข้อผิดพลาดภายใน</translation>
     </message>
     </context>
 <context>
-    <name>QObject</name>
-    <message>
-        <source>Do you want to reset settings to default values, or to abort without making changes?</source>
-        <extracomment>Explanatory text shown on startup when the settings file cannot be read. Prompts user to make a choice between resetting or aborting.</extracomment>
-        <translation type="unfinished">คุณต้องการคืนค่าการตั้งค่าไปเป็นแบบดั้งเดิมหรือไม่, หรือคุณต้องการยกเลิกโดยไม่เปลี่ยนแปลงการตั้งค่าใดๆ</translation>
-    </message>
-    <message>
-        <source>A fatal error occurred. Check that settings file is writable, or try running with -nosettings.</source>
-        <extracomment>Explanatory text shown on startup when the settings file could not be written. Prompts user to check that we have the ability to write to the file. Explains that the user has the option of running without a settings file.</extracomment>
-        <translation type="unfinished">เกิดข้อผิดพลาดร้ายแรงขึ้น, โปรดตรวจสอบว่าไฟล์ตั้งค่านั้นสามารถเขียนทับได้หรือลองใช้งานด้วยคำสั่ง -nosettings</translation>
-    </message>
-    <message>
-        <source>Error: Specified data directory "%1" does not exist.</source>
-        <translation type="unfinished">ข้อผิดพลาด: ข้อมูล ไดเร็กทอรี ที่เจาะจง "%1" นั้น ไม่ มี</translation>
-    </message>
-    <message>
-        <source>Error: Cannot parse configuration file: %1.</source>
-        <translation type="unfinished">ข้อผิดพลาด: ไม่สามารถ parse configuration ไฟล์: %1.</translation>
-    </message>
-    <message>
-        <source>Error: %1</source>
-        <translation type="unfinished">ข้อผิดพลาด: %1</translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation type="unfinished">ไม่รู้จัก</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation type="unfinished">จำนวน</translation>
-    </message>
-    <message>
-        <source>Internal</source>
-        <translation type="unfinished">ภายใน</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="unfinished">ไม่มี</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation type="unfinished">%1 มิลลิวินาที</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n วินาที</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n นาที</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n ชั่วโมง</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n วัน</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n สัปดาห์</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%1 and %2</source>
-        <translation type="unfinished">%1 และ %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation type="unfinished">
-            <numerusform>%n ปี</numerusform>
-        </translation>
-    </message>
-    </context>
-<context>
-    <name>bitcoin-core</name>
-    <message>
-        <source>Settings file could not be read</source>
-        <translation type="unfinished">ไม่สามารถอ่านไฟล์ตั้งค่าได้</translation>
-    </message>
-    <message>
-        <source>Settings file could not be written</source>
-        <translation type="unfinished">ไม่สามารถเขียนข้อมูลลงบนไฟล์ตั้งค่าได้</translation>
-    </message>
-    <message>
-        <source>The %s developers</source>
-        <translation type="unfinished">%s นักพัฒนา</translation>
-    </message>
-    <message>
-        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
-        <translation type="unfinished">ข้อผิดพลาด: ดัมพ์ไฟล์เวอร์ชัน ไม่รองรับเวอร์ชัน บิตคอยน์-วอลเล็ต รุ่นนี้รองรับไฟล์ดัมพ์เวอร์ชัน 1 เท่านั้น รับดัมพ์ไฟล์พร้อมเวอร์ชัน %s</translation>
-    </message>
-    <message>
-        <source>Error: Legacy wallets only support the "legacy", "p2sh-segwit", and "bech32" address types</source>
-        <translation type="unfinished">ข้อผิดพลาด: เลกาซี วอลเล็ต เพียง สนับสนุน "legacy", "p2sh-segwit", และ "bech32" ชนิด แอดเดรส</translation>
-    </message>
-    <message>
-        <source>Cannot set -forcednsseed to true when setting -dnsseed to false.</source>
-        <translation type="unfinished">ไม่สามารถตั้ง -forcednsseed เป็น true ได้เมื่อการตั้งค่า -dnsseed เป็น false</translation>
-    </message>
-    <message>
-        <source>Error loading %s: External signer wallet being loaded without external signer support compiled</source>
-        <translation type="unfinished">เกิดข้อผิดพลาดในการโหลด %s: กำลังโหลดวอลเล็ตผู้ลงนามภายนอกโดยไม่มีการรวบรวมการสนับสนุนผู้ลงนามภายนอก</translation>
-    </message>
-    <message>
-        <source>Failed to rename invalid peers.dat file. Please move or delete it and try again.</source>
-        <translation type="unfinished">ไม่สามารถเปลี่ยนชื่อไฟล์ peers.dat ที่ไม่ถูกต้อง โปรดย้ายหรือลบแล้วลองอีกครั้ง</translation>
-    </message>
-    <message>
-        <source>Could not find asmap file %s</source>
-        <translation type="unfinished">ไม่ ตรวจพบ ไฟล์ asmap %s</translation>
-    </message>
-    <message>
-        <source>Could not parse asmap file %s</source>
-        <translation type="unfinished">ไม่ สามารถ แยก วิเคราะห์ ไฟล์ asmap %s</translation>
-    </message>
-    <message>
-        <source>Disk space is too low!</source>
-        <translation type="unfinished">พื้นที่ว่าง ดิสก์ เหลือ น้อย เกินไป!</translation>
-    </message>
-    <message>
-        <source>Do you want to rebuild the block database now?</source>
-        <translation type="unfinished">คุณต้องการาร้างฐานข้อมูลบล็อกใหม่ตอนนี้หรือไม่?</translation>
-    </message>
-    <message>
-        <source>Done loading</source>
-        <translation type="unfinished">การโหลด เสร็จสิ้น</translation>
-    </message>
-    <message>
-        <source>Dump file %s does not exist.</source>
-        <translation type="unfinished"> ไม่มีไฟล์ดัมพ์ %s </translation>
-    </message>
-    <message>
-        <source>Error creating %s</source>
-        <translation type="unfinished">เกิดข้อผิดพลาด ในการสร้าง%s</translation>
-    </message>
-    <message>
-        <source>Error initializing block database</source>
-        <translation type="unfinished">เกิดข้อผิดพลาดในการเริ่มต้นฐานข้อมูลบล็อก</translation>
-    </message>
-    <message>
-        <source>Error loading %s</source>
-        <translation type="unfinished">การโหลด เกิดข้อผิดพลาด %s</translation>
-    </message>
-    <message>
-        <source>Error loading %s: Private keys can only be disabled during creation</source>
-        <translation type="unfinished">การโหลดเกิดข้อผิดพลาด %s: Private keys สามารถปิดการใช้งานระหว่างการสร้างขึ้นเท่านั้น</translation>
-    </message>
-    <message>
-        <source>Error loading %s: Wallet corrupted</source>
-        <translation type="unfinished">เกิดข้อผิดพลาดในการโหลด %s: วอลเล็ตเกิดความเสียหาย</translation>
-    </message>
-    <message>
-        <source>Error loading %s: Wallet requires newer version of %s</source>
-        <translation type="unfinished">เกิดข้อผิดพลาดในการโหลด %s: วอลเล็ตต้องการเวอร์ชันใหม่กว่า %s</translation>
-    </message>
-    <message>
-        <source>Error loading block database</source>
-        <translation type="unfinished">เกิดข้อผิดพลาด ในการโหลด ฐานข้อมูล บล็อก</translation>
-    </message>
-    <message>
-        <source>Error opening block database</source>
-        <translation type="unfinished">เกิดข้อผิดพลาด ในการเปิด ฐานข้อมูล บล็อก</translation>
-    </message>
-    <message>
-        <source>Error reading from database, shutting down.</source>
-        <translation type="unfinished">เกิดข้อผิดพลาด ในการอ่าน จาก ฐานข้อมูล, กำลังปิด</translation>
-    </message>
-    <message>
-        <source>Error reading next record from wallet database</source>
-        <translation type="unfinished">เกิดข้อผิดพลาด ในการอ่าน บันทึก ถัดไป จาก ฐานข้อมูล วอลเล็ต</translation>
-    </message>
-    <message>
-        <source>Error upgrading chainstate database</source>
-        <translation type="unfinished">เกิดข้อผิดพลาด ในการอัพเกรด ฐานข้อมูล chainstate</translation>
-    </message>
-    <message>
-        <source>Error: Couldn't create cursor into database</source>
-        <translation type="unfinished">ข้อผิดพลาด: ไม่สามารถ สร้าง เคอร์เซอร์ ใน ฐานข้อมูล</translation>
-    </message>
-    <message>
-        <source>Error: Disk space is low for %s</source>
-        <translation type="unfinished">ข้อผิดพลาด: พื้นที่ ดิสก์ เหลือน้อย สำหรับ %s</translation>
-    </message>
-    <message>
-        <source>Error: Missing checksum</source>
-        <translation type="unfinished">ข้อผิดพลาด: ไม่มี เช็คซัม</translation>
-    </message>
-    <message>
-        <source>Error: No %s addresses available.</source>
-        <translation type="unfinished">ข้อผิดพลาด: ไม่มี %s แอดเดรสพร้อมใช้งาน</translation>
-    </message>
-    <message>
-        <source>Error: Unable to write record to new wallet</source>
-        <translation type="unfinished">ข้อผิดพลาด: ไม่สามารถเขียนบันทึกไปยังวอลเล็ตใหม่</translation>
-    </message>
-    <message>
-        <source>Failed to rescan the wallet during initialization</source>
-        <translation type="unfinished">ไม่สามารถสแกนวอลเล็ตอีกครั้งในระหว่างการเริ่มต้น</translation>
-    </message>
-    <message>
-        <source>Failed to verify database</source>
-        <translation type="unfinished">ไม่สามารถตรวจสอบฐานข้อมูล</translation>
-    </message>
-    <message>
-        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s)</source>
-        <translation type="unfinished">อัตราค่าธรรมเนียม (%s) ต่ำกว่าอัตราค่าธรรมเนียมขั้นต่ำที่ตั้งไว้  (%s)</translation>
-    </message>
-    <message>
-        <source>Ignoring duplicate -wallet %s.</source>
-        <translation type="unfinished">ละเว้นการทำซ้ำ -วอลเล็ต %s.</translation>
-    </message>
-    <message>
-        <source>Importing…</source>
-        <translation type="unfinished">กำลังนำเข้า…</translation>
-    </message>
-    <message>
-        <source>Input not found or already spent</source>
-        <translation type="unfinished">ไม่พบข้อมูลที่ป้อนหรือใช้ไปแล้ว</translation>
-    </message>
-    <message>
-        <source>Insufficient funds</source>
-        <translation type="unfinished">เงินทุน ไม่เพียงพอ</translation>
-    </message>
-    <message>
-        <source>Loading wallet…</source>
-        <translation type="unfinished">กำลังโหลด วอลเล็ต...</translation>
-    </message>
-    <message>
-        <source>Missing amount</source>
-        <translation type="unfinished">จำนวน ที่หายไป</translation>
-    </message>
-    <message>
-        <source>No addresses available</source>
-        <translation type="unfinished">ไม่มี แอดเดรส ที่ใช้งานได้</translation>
-    </message>
-    <message>
-        <source>Rescanning…</source>
-        <translation type="unfinished">ทำการสแกนซ้ำ…</translation>
-    </message>
-    <message>
-        <source>Specified -walletdir "%s" does not exist</source>
-        <translation type="unfinished">Specified -walletdir "%s" ไม่มีอยู่</translation>
-    </message>
-    <message>
-        <source>Specified -walletdir "%s" is a relative path</source>
-        <translation type="unfinished">Specified -walletdir "%s" เป็นพาธสัมพัทธ์</translation>
-    </message>
-    <message>
-        <source>Specified -walletdir "%s" is not a directory</source>
-        <translation type="unfinished">Specified -walletdir "%s" ไม่ใช่ไดเร็กทอรี</translation>
-    </message>
-    <message>
-        <source>Specified blocks directory "%s" does not exist.</source>
-        <translation type="unfinished">ไม่มีไดเร็กทอรีบล็อกที่ระบุ "%s" </translation>
-    </message>
-    <message>
-        <source>Starting network threads…</source>
-        <translation type="unfinished">การเริ่มเธรดเครือข่าย…</translation>
-    </message>
-    <message>
-        <source>The source code is available from %s.</source>
-        <translation type="unfinished">ซอร์สโค๊ดสามารถใช้ได้จาก %s.</translation>
-    </message>
-    <message>
-        <source>The specified config file %s does not exist</source>
-        <translation type="unfinished">ไฟล์กำหนดค่าที่ระบุ %s ไม่มีอยู่</translation>
-    </message>
-    <message>
-        <source>The transaction amount is too small to pay the fee</source>
-        <translation type="unfinished">จำนวนธุรกรรมน้อยเกินไปที่จะชำระค่าธรรมเนียม</translation>
-    </message>
-    <message>
-        <source>The wallet will avoid paying less than the minimum relay fee.</source>
-        <translation type="unfinished">วอลเล็ตจะหลีกเลี่ยงการจ่ายน้อยกว่าค่าธรรมเนียมรีเลย์ขั้นต่ำ</translation>
-    </message>
-    <message>
-        <source>This is experimental software.</source>
-        <translation type="unfinished">นี่คือซอฟต์แวร์ทดลอง</translation>
-    </message>
-    <message>
-        <source>This is the minimum transaction fee you pay on every transaction.</source>
-        <translation type="unfinished">นี่คือค่าธรรมเนียมการทำธุรกรรมขั้นต่ำที่คุณจ่ายในทุกธุรกรรม</translation>
-    </message>
-    <message>
-        <source>This is the transaction fee you will pay if you send a transaction.</source>
-        <translation type="unfinished">นี่คือค่าธรรมเนียมการทำธุรกรรมที่คุณจะจ่ายหากคุณส่งธุรกรรม</translation>
-    </message>
-    <message>
-        <source>Transaction amount too small</source>
-        <translation type="unfinished">จำนวนธุรกรรมน้อยเกินไป</translation>
-    </message>
-    <message>
-        <source>Transaction amounts must not be negative</source>
-        <translation type="unfinished">จำนวนเงินที่ทำธุรกรรมต้องไม่เป็นค่าติดลบ</translation>
-    </message>
-    <message>
-        <source>Transaction has too long of a mempool chain</source>
-        <translation type="unfinished">ธุรกรรมมี เชนเมมพูล ยาวเกินไป</translation>
-    </message>
-    <message>
-        <source>Transaction must have at least one recipient</source>
-        <translation type="unfinished">ธุรกรรมต้องมีผู้รับอย่างน้อยหนึ่งราย</translation>
-    </message>
-    <message>
-        <source>Transaction needs a change address, but we can't generate it.</source>
-        <translation type="unfinished">การทำธุรกรรมต้องการการเปลี่ยนแปลงที่อยู่ แต่เราไม่สามารถสร้างมันขึ้นมาได้</translation>
-    </message>
-    <message>
-        <source>Transaction too large</source>
-        <translation type="unfinished">ธุรกรรมใหญ่เกินไป</translation>
-    </message>
-    <message>
-        <source>Unable to create the PID file '%s': %s</source>
-        <translation type="unfinished">ไม่สามารถสร้างไฟล์ PID '%s': %s</translation>
-    </message>
-    <message>
-        <source>Unable to generate initial keys</source>
-        <translation type="unfinished">ไม่สามารถ สร้าง คีย์ เริ่มต้น</translation>
-    </message>
-    <message>
-        <source>Unable to generate keys</source>
-        <translation type="unfinished">ไม่สามารถ สร้าง คีย์</translation>
-    </message>
-    <message>
-        <source>Unable to open %s for writing</source>
-        <translation type="unfinished">ไม่สามารถเปิด %s สำหรับการเขียนข้อมูล</translation>
-    </message>
-    <message>
-        <source>Unknown address type '%s'</source>
-        <translation type="unfinished">ไม่รู้จัก ประเภท แอดเดรส '%s'</translation>
-    </message>
-    <message>
-        <source>Unknown change type '%s'</source>
-        <translation type="unfinished">ไม่รู้จัก ประเภท การเปลี่ยนแปลง '%s'</translation>
-    </message>
-    <message>
-        <source>Unknown network specified in -onlynet: '%s'</source>
-        <translation type="unfinished">ไม่รู้จัก เครือข่าย ที่ระบุ ใน -onlynet: '%s'</translation>
-    </message>
-    <message>
-        <source>Upgrading UTXO database</source>
-        <translation type="unfinished">กำลังอัพเกรด ฐานข้อมูล UTXO</translation>
-    </message>
-    <message>
-        <source>Verifying blocks…</source>
-        <translation type="unfinished">กำลังตรวจสอบ บล็อก…</translation>
-    </message>
-    <message>
-        <source>Verifying wallet(s)…</source>
-        <translation type="unfinished">กำลังตรวจสอบ วอลเล็ต…</translation>
-    </message>
-    </context>
-<context>
     <name>BitcoinGUI</name>
     <message>
         <source>&amp;Overview</source>
-        <translation type="unfinished">&amp;ภาพรวม</translation>
+        <translation>&amp;ภาพรวม</translation>
     </message>
     <message>
         <source>Show general overview of wallet</source>
@@ -620,7 +268,7 @@
     </message>
     <message>
         <source>E&amp;xit</source>
-        <translation type="unfinished">&amp;ออก</translation>
+        <translation>&amp;ออก</translation>
     </message>
     <message>
         <source>Quit application</source>
@@ -628,7 +276,7 @@
     </message>
     <message>
         <source>&amp;About %1</source>
-        <translation type="unfinished">&amp;เกี่ยวกับ %1</translation>
+        <translation>&amp;เกี่ยวกับ %1</translation>
     </message>
     <message>
         <source>Show information about %1</source>
@@ -636,7 +284,7 @@
     </message>
     <message>
         <source>About &amp;Qt</source>
-        <translation type="unfinished">เกี่ยวกับ &amp;Qt</translation>
+        <translation>เกี่ยวกับ &amp;Qt</translation>
     </message>
     <message>
         <source>Show information about Qt</source>
@@ -681,11 +329,11 @@
     </message>
     <message>
         <source>&amp;Send</source>
-        <translation type="unfinished">&amp;ส่ง</translation>
+        <translation>&amp;ส่ง</translation>
     </message>
     <message>
         <source>&amp;Receive</source>
-        <translation type="unfinished">&amp;รับ</translation>
+        <translation>&amp;รับ</translation>
     </message>
     <message>
         <source>&amp;Options…</source>
@@ -720,6 +368,10 @@
         <translation type="unfinished">&amp;ยืนยัน ข้อความ…</translation>
     </message>
     <message>
+        <source>Verify messages to ensure they were signed with specified Bitcoin addresses</source>
+        <translation>ตรวจสอบ ข้อความ เพื่อให้แน่ใจว่า การเซ็นต์ชื่อ ด้วยที่เก็บ Bitcoin แล้ว</translation>
+    </message>
+    <message>
         <source>&amp;Load PSBT from file…</source>
         <translation type="unfinished">&amp;โหลด PSBT จาก ไฟล์...</translation>
     </message>
@@ -741,23 +393,39 @@
     </message>
     <message>
         <source>&amp;File</source>
-        <translation type="unfinished">&amp;ไฟล์</translation>
+        <translation>&amp;ไฟล์</translation>
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation type="unfinished">&amp;การตั้งค่า</translation>
+        <translation>&amp;การตั้งค่า</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation type="unfinished">&amp;ช่วยเหลือ</translation>
+        <translation>&amp;ช่วยเหลือ</translation>
     </message>
     <message>
         <source>Tabs toolbar</source>
         <translation type="unfinished">แถบ เครื่องมือ</translation>
     </message>
     <message>
+        <source>Syncing Headers (%1%)…</source>
+        <translation type="unfinished">กำลังซิงค์ส่วนหัว (%1%)…</translation>
+    </message>
+    <message>
         <source>Synchronizing with network…</source>
         <translation type="unfinished">กำลังซิงค์ข้อมูล กับทาง เครือข่าย ...</translation>
+    </message>
+    <message>
+        <source>Indexing blocks on disk…</source>
+        <translation type="unfinished">การกำลังสร้างดัชนีของบล็อก ในดิสก์…</translation>
+    </message>
+    <message>
+        <source>Processing blocks on disk…</source>
+        <translation type="unfinished">กำลังดำเนินการกับบล็อกในดิสก์…</translation>
+    </message>
+    <message>
+        <source>Reindexing blocks on disk…</source>
+        <translation type="unfinished">กำลังทำดัชนี ที่เก็บบล็อก ใหม่ ในดิสก์…</translation>
     </message>
     <message>
         <source>Connecting to peers…</source>
@@ -765,19 +433,19 @@
     </message>
     <message>
         <source>Request payments (generates QR codes and bitcoin: URIs)</source>
-        <translation type="unfinished">เรียกเก็บ การชำระเงิน (สร้าง QR codes และ bitcoin: URIs)</translation>
+        <translation>เรียกเก็บ การชำระเงิน (สร้าง QR codes และ bitcoin: URIs)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
-        <translation type="unfinished">แสดงรายการ ที่เก็บเงินที่จะส่ง bitcoin ออก และป้ายชื่อ ที่ใช้ไปแล้ว</translation>
+        <translation>แสดงรายการ ที่เก็บเงินที่จะส่ง bitcoin ออก และป้ายชื่อ ที่ใช้ไปแล้ว</translation>
     </message>
     <message>
         <source>Show the list of used receiving addresses and labels</source>
-        <translation type="unfinished">แสดงรายการ ที่เก็บเงินที่จะรับ bitcoin เข้า และป้ายชื่อ ที่ใช้ไปแล้ว</translation>
+        <translation>แสดงรายการ ที่เก็บเงินที่จะรับ bitcoin เข้า และป้ายชื่อ ที่ใช้ไปแล้ว</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
-        <translation type="unfinished">&amp;ตัวเลือก Command-line</translation>
+        <translation>&amp;ตัวเลือก Command-line</translation>
     </message>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
@@ -787,35 +455,47 @@
     </message>
     <message>
         <source>%1 behind</source>
-        <translation type="unfinished">%1 ตามหลัง</translation>
+        <translation>%1 ตามหลัง</translation>
+    </message>
+    <message>
+        <source>Catching up…</source>
+        <translation type="unfinished">กำลังตามให้ทัน…</translation>
     </message>
     <message>
         <source>Last received block was generated %1 ago.</source>
-        <translation type="unfinished">บล็อกสุดท้ายที่ได้รับ สร้างขึ้นเมื่อ %1 มาแล้ว</translation>
+        <translation>บล็อกสุดท้ายที่ได้รับ สร้างขึ้นเมื่อ %1 มาแล้ว</translation>
     </message>
     <message>
         <source>Transactions after this will not yet be visible.</source>
-        <translation type="unfinished">ธุรกรรมหลังจากนี้จะยังไม่สามารถมองเห็น</translation>
+        <translation>ธุรกรรมหลังจากนี้จะยังไม่สามารถมองเห็น</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished">ข้อผิดพลาด</translation>
+        <translation>ข้อผิดพลาด</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished">คำเตือน</translation>
+        <translation>คำเตือน</translation>
     </message>
     <message>
         <source>Information</source>
-        <translation type="unfinished">ข้อมูล</translation>
+        <translation>ข้อมูล</translation>
     </message>
     <message>
         <source>Up to date</source>
-        <translation type="unfinished">ทันสมัย</translation>
+        <translation>ทันสมัย</translation>
     </message>
     <message>
         <source>Load PSBT from &amp;clipboard…</source>
         <translation type="unfinished">โหลด PSBT จากคลิปบอร์ด...</translation>
+    </message>
+    <message>
+        <source>Node window</source>
+        <translation>หน้าต่างโหนด</translation>
+    </message>
+    <message>
+        <source>Open node debugging and diagnostic console</source>
+        <translation>เปิด แผลงควบคุม debugging และ diagnostic</translation>
     </message>
     <message>
         <source>&amp;Sending addresses</source>
@@ -846,8 +526,8 @@
         <translation type="unfinished">ปิด วอลเล็ต ทั้งหมด</translation>
     </message>
     <message>
-        <source>default wallet</source>
-        <translation type="unfinished">วอลเล็ต เริ่มต้น</translation>
+        <source>Show the %1 help message to get a list with possible Bitcoin command-line options</source>
+        <translation>แสดง %1 ข้อความช่วยเหลือ เพื่อแสดงรายการ ตัวเลือกที่เป็นไปได้สำหรับ Bitcoin command-line</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -859,7 +539,7 @@
     </message>
     <message>
         <source>Zoom</source>
-        <translation type="unfinished">ซูม</translation>
+        <translation>ซูม</translation>
     </message>
     <message>
         <source>Main Window</source>
@@ -867,7 +547,7 @@
     </message>
     <message>
         <source>%1 client</source>
-        <translation type="unfinished">%1 ลูกค้า</translation>
+        <translation>%1 ลูกค้า</translation>
     </message>
     <message>
         <source>&amp;Hide</source>
@@ -901,22 +581,22 @@
     </message>
     <message>
         <source>Error: %1</source>
-        <translation type="unfinished">ข้อผิดพลาด: %1</translation>
+        <translation>ข้อผิดพลาด: %1</translation>
     </message>
     <message>
         <source>Warning: %1</source>
-        <translation type="unfinished">คำเตือน: %1</translation>
+        <translation>คำเตือน: %1</translation>
     </message>
     <message>
         <source>Date: %1
 </source>
-        <translation type="unfinished">วันที่: %1
+        <translation>วันที่: %1
 </translation>
     </message>
     <message>
         <source>Amount: %1
 </source>
-        <translation type="unfinished">จำนวน: %1
+        <translation>จำนวน: %1
 </translation>
     </message>
     <message>
@@ -928,7 +608,7 @@
     <message>
         <source>Type: %1
 </source>
-        <translation type="unfinished">ชนิด: %1
+        <translation>ชนิด: %1
 </translation>
     </message>
     <message>
@@ -980,39 +660,39 @@
     <name>CoinControlDialog</name>
     <message>
         <source>Coin Selection</source>
-        <translation type="unfinished">การเลือกเหรียญ</translation>
+        <translation>การเลือกเหรียญ</translation>
     </message>
     <message>
         <source>Quantity:</source>
-        <translation type="unfinished">จำนวน:</translation>
+        <translation>จำนวน:</translation>
     </message>
     <message>
         <source>Bytes:</source>
-        <translation type="unfinished">ไบต์:</translation>
+        <translation>ไบต์:</translation>
     </message>
     <message>
         <source>Amount:</source>
-        <translation type="unfinished">จำนวน:</translation>
+        <translation>จำนวน:</translation>
     </message>
     <message>
         <source>Fee:</source>
-        <translation type="unfinished">ค่าธรรมเนียม:</translation>
+        <translation>ค่าธรรมเนียม:</translation>
     </message>
     <message>
         <source>Dust:</source>
-        <translation type="unfinished">เศษ:</translation>
+        <translation>เศษ:</translation>
     </message>
     <message>
         <source>After Fee:</source>
-        <translation type="unfinished">ส่วนที่เหลือจากค่าธรรมเนียม:</translation>
+        <translation>ส่วนที่เหลือจากค่าธรรมเนียม:</translation>
     </message>
     <message>
         <source>Change:</source>
-        <translation type="unfinished">เงินทอน:</translation>
+        <translation>เงินทอน:</translation>
     </message>
     <message>
         <source>(un)select all</source>
-        <translation type="unfinished">(ไม่)เลือกทั้งหมด</translation>
+        <translation>(ไม่)เลือกทั้งหมด</translation>
     </message>
     <message>
         <source>Tree mode</source>
@@ -1024,7 +704,7 @@
     </message>
     <message>
         <source>Amount</source>
-        <translation type="unfinished">จำนวน</translation>
+        <translation>จำนวน</translation>
     </message>
     <message>
         <source>Received with label</source>
@@ -1036,15 +716,15 @@
     </message>
     <message>
         <source>Date</source>
-        <translation type="unfinished">วันที่</translation>
+        <translation>วันที่</translation>
     </message>
     <message>
         <source>Confirmations</source>
-        <translation type="unfinished">การยืนยัน</translation>
+        <translation>การยืนยัน</translation>
     </message>
     <message>
         <source>Confirmed</source>
-        <translation type="unfinished">ยืนยันแล้ว</translation>
+        <translation>ยืนยันแล้ว</translation>
     </message>
     <message>
         <source>Copy amount</source>
@@ -1065,6 +745,10 @@
     <message>
         <source>Copy transaction &amp;ID and output index</source>
         <translation type="unfinished">คัดล็อก &amp;ID ธุรกรรม และ ส่งออก เป็นดัชนี</translation>
+    </message>
+    <message>
+        <source>L&amp;ock unspent</source>
+        <translation type="unfinished">&amp;Lock unspent</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -1112,7 +796,7 @@
     </message>
     <message>
         <source>(change)</source>
-        <translation type="unfinished">(เปลี่ยน)</translation>
+        <translation>(เปลี่ยน)</translation>
     </message>
 </context>
 <context>
@@ -1138,63 +822,6 @@
     <message>
         <source>Can't list signers</source>
         <translation type="unfinished">ไม่สามารถ จัดรายการ ผู้เซ็น</translation>
-    </message>
-</context>
-<context>
-    <name>LoadWalletsActivity</name>
-    <message>
-        <source>Load Wallets</source>
-        <extracomment>Title of progress window which is displayed when wallets are being loaded.</extracomment>
-        <translation type="unfinished">โหลด วอลเล็ต</translation>
-    </message>
-    <message>
-        <source>Loading wallets…</source>
-        <extracomment>Descriptive text of the load wallets progress window which indicates to the user that wallets are currently being loaded.</extracomment>
-        <translation type="unfinished">กำลังโหลด วอลเล็ต...</translation>
-    </message>
-</context>
-<context>
-    <name>OpenWalletActivity</name>
-    <message>
-        <source>Open wallet failed</source>
-        <translation type="unfinished">เปิด วอลเล็ต ล้มเหลว</translation>
-    </message>
-    <message>
-        <source>Open wallet warning</source>
-        <translation type="unfinished">คำเตือน การเปิด วอลเล็ต</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation type="unfinished">วอลเล็ต เริ่มต้น</translation>
-    </message>
-    <message>
-        <source>Open Wallet</source>
-        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
-        <translation type="unfinished">เปิด วอลเล็ต</translation>
-    </message>
-    <message>
-        <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
-        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
-        <translation type="unfinished">กำลังเปิด วอลเล็ต &lt;b&gt;%1&lt;/b&gt;…</translation>
-    </message>
-</context>
-<context>
-    <name>WalletController</name>
-    <message>
-        <source>Close wallet</source>
-        <translation type="unfinished">ปิด วอลเล็ต</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to close the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
-        <translation type="unfinished">คุณ แน่ใจ หรือไม่ว่า ต้องการ ปิด วอลเล็ต &lt;i&gt;%1&lt;/i&gt;?</translation>
-    </message>
-    <message>
-        <source>Close all wallets</source>
-        <translation type="unfinished">ปิด วอลเล็ต ทั้งหมด</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to close all wallets?</source>
-        <translation type="unfinished">คุณ แน่ใจ หรือไม่ว่า ต้องการ ปิด วอลเล็ต ทั้งหมด?</translation>
     </message>
 </context>
 <context>
@@ -1224,8 +851,16 @@
         <translation type="unfinished">ตัวเลือก ขั้นสูง</translation>
     </message>
     <message>
+        <source>Disable private keys for this wallet. Wallets with private keys disabled will have no private keys and cannot have an HD seed or imported private keys. This is ideal for watch-only wallets.</source>
+        <translation type="unfinished">Disable private keys for this wallet. Wallets with private keys disabled will have no private keys and cannot have an HD seed or imported private keys. This is ideal for watch-only wallets</translation>
+    </message>
+    <message>
         <source>Disable Private Keys</source>
         <translation type="unfinished">ปิดใช้งาน คีย์ ส่วนตัว</translation>
+    </message>
+    <message>
+        <source>Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported, or an HD seed can be set, at a later time.</source>
+        <translation type="unfinished">Make a blank wallet. Blank wallets do not initially have private keys or scripts. Private keys and addresses can be imported, or an HD seed can be set, at a later time</translation>
     </message>
     <message>
         <source>Make Blank Wallet</source>
@@ -1236,8 +871,12 @@
         <translation type="unfinished">ตัวอธิบาย วอลเล็ต</translation>
     </message>
     <message>
+        <source>Use an external signing device such as a hardware wallet. Configure the external signer script in wallet preferences first.</source>
+        <translation type="unfinished">Use an external signing device such as a hardware wallet. Configure the external signer script in wallet preferences first</translation>
+    </message>
+    <message>
         <source>Create</source>
-        <translation type="unfinished">สร้าง</translation>
+        <translation>สร้าง</translation>
     </message>
     </context>
 <context>
@@ -1256,7 +895,7 @@
     </message>
     <message>
         <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
-        <translation type="unfinished">ที่เก็บที่เกี่ยวข้องกับ ที่เก็บที่แสดงรายการนี้ การปรับปรุงนี้ทำได้สำหรับ ที่เก็บเงินที่จะใช่ส่งเงิน เท่านั้น</translation>
+        <translation>ที่เก็บที่เกี่ยวข้องกับ ที่เก็บที่แสดงรายการนี้ การปรับปรุงนี้ทำได้สำหรับ ที่เก็บเงินที่จะใช่ส่งเงิน เท่านั้น</translation>
     </message>
     <message>
         <source>&amp;Address</source>
@@ -1279,6 +918,14 @@
         <translation type="unfinished">แอดเดรส ที่ป้อน "%1" เป็น Bitcoin แอดเดรส ที่ ไม่ ถูกต้อง</translation>
     </message>
     <message>
+        <source>Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address.</source>
+        <translation type="unfinished">Address "%1" already exists as a receiving address with label "%2" and so cannot be added as a sending address</translation>
+    </message>
+    <message>
+        <source>The entered address "%1" is already in the address book with label "%2".</source>
+        <translation type="unfinished">The entered address "%1" is already in the address book with label "%2"</translation>
+    </message>
+    <message>
         <source>Could not unlock wallet.</source>
         <translation type="unfinished">ไม่สามารถปลดล็อควอลเล็ต</translation>
     </message>
@@ -1291,34 +938,97 @@
     <name>FreespaceChecker</name>
     <message>
         <source>A new data directory will be created.</source>
-        <translation type="unfinished">ไดเร็กทอรี่ใหม่ที่ใช้เก็บข้อมูลจะถูกสร้างขึ้นมา</translation>
+        <translation>ไดเร็กทอรี่ใหม่ที่ใช้เก็บข้อมูลจะถูกสร้างขึ้นมา</translation>
     </message>
     <message>
         <source>name</source>
-        <translation type="unfinished">ชื่อ</translation>
+        <translation>ชื่อ</translation>
     </message>
     <message>
         <source>Directory already exists. Add %1 if you intend to create a new directory here.</source>
-        <translation type="unfinished">มีไดเรกทอรีอยู่แล้ว เพิ่ม %1 หากคุณต้องการสร้างไดเรกทอรีใหม่ที่นี่</translation>
+        <translation>มีไดเรกทอรีอยู่แล้ว เพิ่ม %1 หากคุณต้องการสร้างไดเรกทอรีใหม่ที่นี่</translation>
     </message>
     <message>
         <source>Path already exists, and is not a directory.</source>
-        <translation type="unfinished">มีเส้นทางอยู่แล้วและไม่ใช่ไดเรกทอรี</translation>
+        <translation>มีเส้นทางอยู่แล้วและไม่ใช่ไดเรกทอรี</translation>
     </message>
     <message>
         <source>Cannot create data directory here.</source>
-        <translation type="unfinished">ไม่สามารถสร้างไดเรกทอรีข้อมูลที่นี่</translation>
+        <translation>ไม่สามารถสร้างไดเรกทอรีข้อมูลที่นี่</translation>
+    </message>
+</context>
+<context>
+    <name>HelpMessageDialog</name>
+    <message>
+        <source>version</source>
+        <translation>รุ่น</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation>เกี่ยวกับ %1</translation>
+    </message>
+    <message>
+        <source>Command-line options</source>
+        <translation>ตัวเลือกบรรทัดคำสั่ง</translation>
     </message>
 </context>
 <context>
     <name>Intro</name>
     <message>
-        <source>%1 GB of space available</source>
-        <translation type="unfinished">มีพื้นที่ว่าง %1 GB ที่ใช้งานได้</translation>
+        <source>Welcome</source>
+        <translation>ยินดีต้อนรับ</translation>
+    </message>
+    <message>
+        <source>Welcome to %1.</source>
+        <translation>ยินดีต้อนรับสู่ %1</translation>
+    </message>
+    <message>
+        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
+        <translation>นี่เป็นการรันโปรแกรมครั้งแรก ท่านสามารถเลือก ว่าจะเก็บข้อมูลไว้ที่ %1</translation>
+    </message>
+    <message>
+        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
+        <translation type="unfinished">When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched</translation>
+    </message>
+    <message>
+        <source>Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features.</source>
+        <translation type="unfinished">Reverting this setting requires re-downloading the entire blockchain. It is faster to download the full chain first and prune it later. Disables some advanced features</translation>
+    </message>
+    <message>
+        <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
+        <translation type="unfinished">This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off</translation>
+    </message>
+    <message>
+        <source>If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low.</source>
+        <translation type="unfinished">If you have chosen to limit block chain storage (pruning), the historical data must still be downloaded and processed, but will be deleted afterward to keep your disk usage low</translation>
+    </message>
+    <message>
+        <source>Use the default data directory</source>
+        <translation type="unfinished">ใช้ ไดเรกทอรี ข้อมูล เริ่มต้น</translation>
+    </message>
+    <message>
+        <source>Use a custom data directory:</source>
+        <translation type="unfinished">ใช้ ไดเรกทอรี ข้อมูล ที่กำหนดเอง:</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n GB of space available</source>
+        <translation><numerusform>มีพื้นที่ว่าง %n GB ที่ใช้งานได้</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation><numerusform>(ต้องการพื้นที่ %n GB)</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>(%n GB needed for full chain)</source>
+        <translation><numerusform>(%n GB needed for full chain)</numerusform></translation>
+    </message>
+    <message>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation type="unfinished">At least %1 GB of data will be stored in this directory, and it will grow over time</translation>
     </message>
     <message>
         <source>Approximately %1 GB of data will be stored in this directory.</source>
-        <translation type="unfinished">ประมาณ %1 GB ของข้อมูลจะเก็บในไดเร็กทอรี่</translation>
+        <translation>ประมาณ %1 GB ของข้อมูลจะเก็บในไดเร็กทอรี่</translation>
     </message>
     <message numerus="yes">
         <source>(sufficient to restore backups %n day(s) old)</source>
@@ -1333,53 +1043,24 @@
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
-        <translation type="unfinished">ข้อผิดพลาด: ไดเร็กทอรี่ข้อมูลที่ต้องการ "%1" ไม่สามารถสร้างได้</translation>
+        <translation>ข้อผิดพลาด: ไดเร็กทอรี่ข้อมูลที่ต้องการ "%1" ไม่สามารถสร้างได้</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished">ข้อผิดพลาด</translation>
-    </message>
-    <message>
-        <source>Welcome</source>
-        <translation type="unfinished">ยินดีต้อนรับ</translation>
-    </message>
-    <message>
-        <source>Welcome to %1.</source>
-        <translation type="unfinished">ยินดีต้อนรับสู่ %1</translation>
-    </message>
-    <message>
-        <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
-        <translation type="unfinished">นี่เป็นการรันโปรแกรมครั้งแรก ท่านสามารถเลือก ว่าจะเก็บข้อมูลไว้ที่ %1</translation>
-    </message>
-    <message>
-        <source>Use the default data directory</source>
-        <translation type="unfinished">ใช้ ไดเรกทอรี ข้อมูล เริ่มต้น</translation>
-    </message>
-    <message>
-        <source>Use a custom data directory:</source>
-        <translation type="unfinished">ใช้ ไดเรกทอรี ข้อมูล ที่กำหนดเอง:</translation>
+        <translation>ข้อผิดพลาด</translation>
     </message>
 </context>
 <context>
-    <name>HelpMessageDialog</name>
+    <name>LoadWalletsActivity</name>
     <message>
-        <source>version</source>
-        <translation type="unfinished">รุ่น</translation>
+        <source>Load Wallets</source>
+        <extracomment>Title of progress window which is displayed when wallets are being loaded.</extracomment>
+        <translation type="unfinished">โหลด วอลเล็ต</translation>
     </message>
     <message>
-        <source>About %1</source>
-        <translation type="unfinished">เกี่ยวกับ %1</translation>
-    </message>
-    <message>
-        <source>Command-line options</source>
-        <translation type="unfinished">ตัวเลือกบรรทัดคำสั่ง</translation>
-    </message>
-</context>
-<context>
-    <name>ShutdownWindow</name>
-    <message>
-        <source>Do not shut down the computer until this window disappears.</source>
-        <translation type="unfinished">อย่าปิดเครื่องคอมพิวเตอร์จนกว่าหน้าต่างนี้จะหายไป</translation>
+        <source>Loading wallets…</source>
+        <extracomment>Descriptive text of the load wallets progress window which indicates to the user that wallets are currently being loaded.</extracomment>
+        <translation type="unfinished">กำลังโหลด วอลเล็ต...</translation>
     </message>
 </context>
 <context>
@@ -1406,7 +1087,7 @@
     </message>
     <message>
         <source>Progress</source>
-        <translation type="unfinished">ความคืบหน้า</translation>
+        <translation>ความคืบหน้า</translation>
     </message>
     <message>
         <source>Progress increase per hour</source>
@@ -1418,9 +1099,22 @@
     </message>
     <message>
         <source>Hide</source>
-        <translation type="unfinished">ซ่อน</translation>
+        <translation>ซ่อน</translation>
     </message>
     </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Type</source>
+        <comment>NetWatch: Type header</comment>
+        <translation>ชนิด</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>ที่อยู่</translation>
+    </message>
+</context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -1430,58 +1124,83 @@
     <message>
         <source>Paste address from clipboard</source>
         <extracomment>Tooltip text for button that allows you to paste an address that is in your clipboard.</extracomment>
-        <translation type="unfinished">วางที่อยู่จากคลิปบอร์ด</translation>
+        <translation>วางที่อยู่จากคลิปบอร์ด</translation>
+    </message>
+    </context>
+<context>
+    <name>OpenWalletActivity</name>
+    <message>
+        <source>Open wallet failed</source>
+        <translation type="unfinished">เปิด วอลเล็ต ล้มเหลว</translation>
+    </message>
+    <message>
+        <source>Open wallet warning</source>
+        <translation type="unfinished">คำเตือน การเปิด วอลเล็ต</translation>
+    </message>
+    <message>
+        <source>default wallet</source>
+        <translation type="unfinished">วอลเล็ต เริ่มต้น</translation>
+    </message>
+    <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation type="unfinished">เปิด วอลเล็ต</translation>
+    </message>
+    <message>
+        <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
+        <translation type="unfinished">กำลังเปิด วอลเล็ต &lt;b&gt;%1&lt;/b&gt;…</translation>
     </message>
 </context>
 <context>
     <name>OptionsDialog</name>
     <message>
         <source>Options</source>
-        <translation type="unfinished">ตัวเลือก</translation>
+        <translation>ตัวเลือก</translation>
     </message>
     <message>
         <source>&amp;Main</source>
-        <translation type="unfinished">&amp;หลัก</translation>
+        <translation>&amp;หลัก</translation>
     </message>
     <message>
         <source>Automatically start %1 after logging in to the system.</source>
-        <translation type="unfinished">เริ่มต้นอัตโนมัติ %1 หลังจาก ล็อกอิน เข้าสู่ระบบแล้ว</translation>
+        <translation>เริ่มต้นอัตโนมัติ %1 หลังจาก ล็อกอิน เข้าสู่ระบบแล้ว</translation>
     </message>
     <message>
         <source>&amp;Start %1 on system login</source>
-        <translation type="unfinished">&amp;เริ่ม %1 ในการล็อกอินระบบ</translation>
+        <translation>&amp;เริ่ม %1 ในการล็อกอินระบบ</translation>
     </message>
     <message>
         <source>Size of &amp;database cache</source>
-        <translation type="unfinished">ขนาดของ &amp;database cache</translation>
+        <translation>ขนาดของ &amp;database cache</translation>
     </message>
     <message>
         <source>Number of script &amp;verification threads</source>
-        <translation type="unfinished">จำนวนของสคริปท์ &amp;verification threads</translation>
+        <translation>จำนวนของสคริปท์ &amp;verification threads</translation>
     </message>
     <message>
         <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
-        <translation type="unfinished">IP แอดเดส ของ proxy (เช่น IPv4: 127.0.0.1 / IPv6: ::1)</translation>
+        <translation>IP แอดเดส ของ proxy (เช่น IPv4: 127.0.0.1 / IPv6: ::1)</translation>
     </message>
     <message>
         <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
-        <translation type="unfinished">มินิไมซ์แอพ แทนการออกจากแอพพลิเคชั่น เมื่อวินโดว์ได้รับการปิด เมื่อเลือกตัวเลือกนี้ แอพพลิเคชั่น จะถูกปิด ก็ต่อเมื่อ มีการเลือกเมนู Exit/ออกจากระบบ เท่านั้น</translation>
+        <translation>มินิไมซ์แอพ แทนการออกจากแอพพลิเคชั่น เมื่อวินโดว์ได้รับการปิด เมื่อเลือกตัวเลือกนี้ แอพพลิเคชั่น จะถูกปิด ก็ต่อเมื่อ มีการเลือกเมนู Exit/ออกจากระบบ เท่านั้น</translation>
     </message>
     <message>
         <source>Open Configuration File</source>
-        <translation type="unfinished">เปิดไฟล์การกำหนดค่า</translation>
+        <translation>เปิดไฟล์การกำหนดค่า</translation>
     </message>
     <message>
         <source>Reset all client options to default.</source>
-        <translation type="unfinished">รีเซต ไคลเอ็นออพชั่น กลับไปเป็นค่าเริ่มต้น</translation>
+        <translation>รีเซต ไคลเอ็นออพชั่น กลับไปเป็นค่าเริ่มต้น</translation>
     </message>
     <message>
         <source>&amp;Reset Options</source>
-        <translation type="unfinished">&amp;รีเซต ออพชั่น</translation>
+        <translation>&amp;รีเซต ออพชั่น</translation>
     </message>
     <message>
         <source>&amp;Network</source>
-        <translation type="unfinished">&amp;เครือข่าย</translation>
+        <translation>&amp;เครือข่าย</translation>
     </message>
     <message>
         <source>Maximum database cache size. A larger cache can contribute to faster sync, after which the benefit is less pronounced for most use cases. Lowering the cache size will reduce memory usage. Unused mempool memory is shared for this cache.</source>
@@ -1495,7 +1214,7 @@
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
-        <translation type="unfinished">(0 = อัตโนมัติ, &lt;0 = ปล่อย คอร์ อิสระ)</translation>
+        <translation>(0 = อัตโนมัติ, &lt;0 = ปล่อย คอร์ อิสระ)</translation>
     </message>
     <message>
         <source>This allows you or a third party tool to communicate with the node through command-line and JSON-RPC commands.</source>
@@ -1513,19 +1232,19 @@
     </message>
     <message>
         <source>Expert</source>
-        <translation type="unfinished">ผู้เชี่ยวชาญ</translation>
+        <translation>ผู้เชี่ยวชาญ</translation>
     </message>
     <message>
         <source>Enable coin &amp;control features</source>
-        <translation type="unfinished">เปิดใช้ coin &amp; รูปแบบการควบคุม</translation>
+        <translation>เปิดใช้ coin &amp; รูปแบบการควบคุม</translation>
     </message>
     <message>
         <source>If you disable the spending of unconfirmed change, the change from a transaction cannot be used until that transaction has at least one confirmation. This also affects how your balance is computed.</source>
-        <translation type="unfinished">หากท่านไม่เปิดใช้ การใช้เงินทอนที่ยังไม่ยืนยัน เงินทอนจากการทำรายการจะไม่สามารถใช้ได้ จนกว่ารายการที่ทำการ จะได้รับการยืนยันหนึ่งครั้ง และจะกระทบการคำนวณยอดคงเหลือของท่านด้วย</translation>
+        <translation>หากท่านไม่เปิดใช้ การใช้เงินทอนที่ยังไม่ยืนยัน เงินทอนจากการทำรายการจะไม่สามารถใช้ได้ จนกว่ารายการที่ทำการ จะได้รับการยืนยันหนึ่งครั้ง และจะกระทบการคำนวณยอดคงเหลือของท่านด้วย</translation>
     </message>
     <message>
         <source>&amp;Spend unconfirmed change</source>
-        <translation type="unfinished">&amp;ใช้เงินทอนที่ยังไม่ยืนยัน</translation>
+        <translation>&amp;ใช้เงินทอนที่ยังไม่ยืนยัน</translation>
     </message>
     <message>
         <source>Enable &amp;PSBT controls</source>
@@ -1538,23 +1257,23 @@
     </message>
     <message>
         <source>Automatically open the Bitcoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation type="unfinished">เปิด Bitcoin ไคล์เอ็นท์พอร์ต/client port บน router โดยอัตโนมัติ วิธีนี้ใช้ได้เมื่อ router สนับสนุน UPnP และสถานะเปิดใช้งาน</translation>
+        <translation>เปิด Bitcoin ไคล์เอ็นท์พอร์ต/client port บน router โดยอัตโนมัติ วิธีนี้ใช้ได้เมื่อ router สนับสนุน UPnP และสถานะเปิดใช้งาน</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
-        <translation type="unfinished">จองพอร์ต โดยใช้ &amp;UPnP</translation>
+        <translation>จองพอร์ต โดยใช้ &amp;UPnP</translation>
     </message>
     <message>
         <source>Connect to the Bitcoin network through a SOCKS5 proxy.</source>
-        <translation type="unfinished">เชื่อมต่อกับ Bitcoin เน็ตเวิร์ก ผ่านพร็อกซี่แบบ SOCKS5</translation>
+        <translation>เชื่อมต่อกับ Bitcoin เน็ตเวิร์ก ผ่านพร็อกซี่แบบ SOCKS5</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
-        <translation type="unfinished">&amp;เชื่อมต่อผ่าน พร็อกซี่ SOCKS5 (พร็อกซี่เริ่มต้น):</translation>
+        <translation>&amp;เชื่อมต่อผ่าน พร็อกซี่ SOCKS5 (พร็อกซี่เริ่มต้น):</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
-        <translation type="unfinished">พร็อกซี่ &amp;IP:</translation>
+        <translation>พร็อกซี่ &amp;IP:</translation>
     </message>
     <message>
         <source>&amp;Port:</source>
@@ -1562,11 +1281,11 @@
     </message>
     <message>
         <source>Port of the proxy (e.g. 9050)</source>
-        <translation type="unfinished">พอร์ตของพร็อกซี่ (ตัวอย่าง 9050)</translation>
+        <translation>พอร์ตของพร็อกซี่ (ตัวอย่าง 9050)</translation>
     </message>
     <message>
         <source>Used for reaching peers via:</source>
-        <translation type="unfinished">ใช้ในการเข้าถึงอีกฝ่ายหนึ่ง peer โดย:</translation>
+        <translation>ใช้ในการเข้าถึงอีกฝ่ายหนึ่ง peer โดย:</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -1574,11 +1293,11 @@
     </message>
     <message>
         <source>Show only a tray icon after minimizing the window.</source>
-        <translation type="unfinished">แสดงเฉพาะไอคอนถาดหลังจากย่อหน้าต่าง</translation>
+        <translation>แสดงเฉพาะไอคอนถาดหลังจากย่อหน้าต่าง</translation>
     </message>
     <message>
         <source>User Interface &amp;language:</source>
-        <translation type="unfinished">&amp;ภาษาส่วนติดต่อผู้ใช้:</translation>
+        <translation>&amp;ภาษาส่วนติดต่อผู้ใช้:</translation>
     </message>
     <message>
         <source>Third-party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
@@ -1589,12 +1308,16 @@
         <translation type="unfinished">&amp;URL ธุรกรรมบุคคลที่สาม</translation>
     </message>
     <message>
+        <source>Connect to the Bitcoin network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <translation>เชื่อมต่อกับ เครือข่าย Bitcoin ผ่านทาง พร้อกซี่ SOCKS5 แยกต่างหาก สำหรับ Tor เซอร์วิส</translation>
+    </message>
+    <message>
         <source>&amp;OK</source>
-        <translation type="unfinished">&amp;ตกลง</translation>
+        <translation>&amp;ตกลง</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
-        <translation type="unfinished">&amp;ยกเลิก</translation>
+        <translation>&amp;ยกเลิก</translation>
     </message>
     <message>
         <source>none</source>
@@ -1603,7 +1326,7 @@
     <message>
         <source>Configuration options</source>
         <extracomment>Window title text of pop-up box that allows opening up of configuration file.</extracomment>
-        <translation type="unfinished">ตัวเลือกการกำหนดค่า</translation>
+        <translation>ตัวเลือกการกำหนดค่า</translation>
     </message>
     <message>
         <source>Continue</source>
@@ -1611,11 +1334,11 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">ยกเลิก</translation>
+        <translation>ยกเลิก</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished">ข้อผิดพลาด</translation>
+        <translation>ข้อผิดพลาด</translation>
     </message>
     </context>
 <context>
@@ -1625,8 +1348,12 @@
         <translation type="unfinished">ฟอร์ม</translation>
     </message>
     <message>
+        <source>Watch-only:</source>
+        <translation type="unfinished">ดูอย่างเดียว:</translation>
+    </message>
+    <message>
         <source>Balances</source>
-        <translation type="unfinished">ยอดดุล</translation>
+        <translation>ยอดดุล</translation>
     </message>
     <message>
         <source>Total:</source>
@@ -1649,7 +1376,7 @@
     <name>PSBTOperationsDialog</name>
     <message>
         <source>Copy to Clipboard</source>
-        <translation type="unfinished">คัดลอกไปยังคลิปบอร์ด</translation>
+        <translation>คัดลอกไปยังคลิปบอร์ด</translation>
     </message>
     <message>
         <source>Save…</source>
@@ -1657,11 +1384,15 @@
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished">ปิด</translation>
+        <translation>ปิด</translation>
     </message>
     <message>
         <source>Cannot sign inputs while wallet is locked.</source>
         <translation type="unfinished">ไม่สามารถลงนามอินพุตในขณะที่วอลเล็ตถูกล็อค</translation>
+    </message>
+    <message>
+        <source>Unknown error processing transaction.</source>
+        <translation type="unfinished">ข้อผิดพลาดที่ไม่รู้จักของการประมวลผลธุรกรรม</translation>
     </message>
     <message>
         <source>Total Amount</source>
@@ -1683,31 +1414,110 @@
 <context>
     <name>PeerTableModel</name>
     <message>
-        <source>Direction</source>
-        <extracomment>Title of Peers Table column which indicates the direction the peer connection was initiated from.</extracomment>
-        <translation type="unfinished">ทิศทาง</translation>
-    </message>
-    <message>
         <source>Sent</source>
         <extracomment>Title of Peers Table column which indicates the total amount of network information we have sent to the peer.</extracomment>
         <translation type="unfinished">ส่งแล้ว</translation>
     </message>
     <message>
-        <source>Received</source>
-        <extracomment>Title of Peers Table column which indicates the total amount of network information we have received from the peer.</extracomment>
-        <translation type="unfinished">รับแล้ว</translation>
-    </message>
-    <message>
         <source>Address</source>
         <extracomment>Title of Peers Table column which contains the IP/Onion/I2P address of the connected peer.</extracomment>
-        <translation type="unfinished">ที่อยู่</translation>
+        <translation>ที่อยู่</translation>
     </message>
     <message>
         <source>Type</source>
         <extracomment>Title of Peers Table column which describes the type of peer connection. The "type" describes why the connection exists.</extracomment>
-        <translation type="unfinished">ชนิด</translation>
+        <translation>ชนิด</translation>
     </message>
     </context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation>จำนวน</translation>
+    </message>
+    <message>
+        <source>Internal</source>
+        <translation type="unfinished">ภายใน</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">ไม่มี</translation>
+    </message>
+    <message>
+        <source>%1 ms</source>
+        <translation type="unfinished">%1 มิลลิวินาที</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n second(s)</source>
+        <translation type="unfinished">
+            <numerusform>%n วินาที</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n minute(s)</source>
+        <translation type="unfinished">
+            <numerusform>%n นาที</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n hour(s)</source>
+        <translation type="unfinished">
+            <numerusform>%n ชั่วโมง</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n day(s)</source>
+        <translation type="unfinished">
+            <numerusform>%n วัน</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n week(s)</source>
+        <translation type="unfinished">
+            <numerusform>%n สัปดาห์</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>%1 and %2</source>
+        <translation>%1 และ %2</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n year(s)</source>
+        <translation type="unfinished">
+            <numerusform>%n ปี</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Do you want to reset settings to default values, or to abort without making changes?</source>
+        <extracomment>Explanatory text shown on startup when the settings file cannot be read. Prompts user to make a choice between resetting or aborting.</extracomment>
+        <translation type="unfinished">คุณต้องการคืนค่าการตั้งค่าไปเป็นแบบดั้งเดิมหรือไม่, หรือคุณต้องการยกเลิกโดยไม่เปลี่ยนแปลงการตั้งค่าใดๆ</translation>
+    </message>
+    <message>
+        <source>A fatal error occurred. Check that settings file is writable, or try running with -nosettings.</source>
+        <extracomment>Explanatory text shown on startup when the settings file could not be written. Prompts user to check that we have the ability to write to the file. Explains that the user has the option of running without a settings file.</extracomment>
+        <translation type="unfinished">เกิดข้อผิดพลาดร้ายแรงขึ้น, โปรดตรวจสอบว่าไฟล์ตั้งค่านั้นสามารถเขียนทับได้หรือลองใช้งานด้วยคำสั่ง -nosettings</translation>
+    </message>
+    <message>
+        <source>Error: Specified data directory "%1" does not exist.</source>
+        <translation type="unfinished">ข้อผิดพลาด: ข้อมูล ไดเร็กทอรี ที่เจาะจง "%1" นั้น ไม่ มี</translation>
+    </message>
+    <message>
+        <source>Error: Cannot parse configuration file: %1.</source>
+        <translation type="unfinished">ข้อผิดพลาด: ไม่สามารถ parse configuration ไฟล์: %1.</translation>
+    </message>
+    <message>
+        <source>Error: %1</source>
+        <translation>ข้อผิดพลาด: %1</translation>
+    </message>
+    <message>
+        <source>unknown</source>
+        <translation type="unfinished">ไม่รู้จัก</translation>
+    </message>
+    <message>
+        <source>Custom…</source>
+        <translation type="unfinished">กำหนดเอง…</translation>
+    </message>
+</context>
 <context>
     <name>QRImageWidget</name>
     <message>
@@ -1720,7 +1530,7 @@
     </message>
     <message>
         <source>Save QR Code</source>
-        <translation type="unfinished">บันทึกรหัส QR</translation>
+        <translation>บันทึกรหัส QR</translation>
     </message>
     <message>
         <source>PNG Image</source>
@@ -1834,24 +1644,36 @@
         <translation type="unfinished">Block สุดท้าย</translation>
     </message>
     <message>
+        <source>Last block time</source>
+        <translation type="unfinished">บล็อกเวลาล่าสุด</translation>
+    </message>
+    <message>
         <source>&amp;Open</source>
-        <translation type="unfinished">&amp;เปิด</translation>
+        <translation>&amp;เปิด</translation>
     </message>
     <message>
         <source>&amp;Console</source>
-        <translation type="unfinished">&amp;คอนโซล</translation>
+        <translation>&amp;คอนโซล</translation>
     </message>
     <message>
-        <source>Totals</source>
-        <translation type="unfinished">ทั้งหมด</translation>
+        <source>Yes</source>
+        <translation type="unfinished">ใช่</translation>
     </message>
     <message>
-        <source>In:</source>
-        <translation type="unfinished">เข้า:</translation>
+        <source>No</source>
+        <translation type="unfinished">ไม่</translation>
     </message>
     <message>
-        <source>Out:</source>
-        <translation type="unfinished">ออก:</translation>
+        <source>To</source>
+        <translation>ถึง</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>จาก</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation type="unfinished">ไม่เคย</translation>
     </message>
     <message>
         <source>&amp;Copy address</source>
@@ -1884,38 +1706,6 @@
         <translation type="unfinished">&amp;คัดลอก IP/Netmask</translation>
     </message>
     <message>
-        <source>Executing command without any wallet</source>
-        <translation type="unfinished">ดำเนินการคำสั่งโดยไม่มีวอลเล็ตใด ๆ</translation>
-    </message>
-    <message>
-        <source>Executing command using "%1" wallet</source>
-        <translation type="unfinished">ดำเนินการคำสั่งโดยใช้ "%1" วอลเล็ต</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation type="unfinished">โดยผ่าน %1</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation type="unfinished">ใช่</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation type="unfinished">ไม่</translation>
-    </message>
-    <message>
-        <source>To</source>
-        <translation type="unfinished">ถึง</translation>
-    </message>
-    <message>
-        <source>From</source>
-        <translation type="unfinished">จาก</translation>
-    </message>
-    <message>
-        <source>Never</source>
-        <translation type="unfinished">ไม่เคย</translation>
-    </message>
-    <message>
         <source>Unknown</source>
         <translation type="unfinished">ไม่รู้จัก</translation>
     </message>
@@ -1932,19 +1722,19 @@
     </message>
     <message>
         <source>&amp;Message:</source>
-        <translation type="unfinished">&amp;ข้อความ:</translation>
+        <translation>&amp;ข้อความ:</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished">ล้าง</translation>
+        <translation>ล้าง</translation>
     </message>
     <message>
         <source>Show</source>
-        <translation type="unfinished">แสดง</translation>
+        <translation>แสดง</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished">เอาออก</translation>
+        <translation>เอาออก</translation>
     </message>
     <message>
         <source>Copy &amp;URI</source>
@@ -1979,7 +1769,7 @@
     </message>
     <message>
         <source>Amount:</source>
-        <translation type="unfinished">จำนวน:</translation>
+        <translation>จำนวน:</translation>
     </message>
     <message>
         <source>Label:</source>
@@ -1987,7 +1777,7 @@
     </message>
     <message>
         <source>Message:</source>
-        <translation type="unfinished">ข้อความ:</translation>
+        <translation>ข้อความ:</translation>
     </message>
     <message>
         <source>Wallet:</source>
@@ -2018,7 +1808,7 @@
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Date</source>
-        <translation type="unfinished">วันที่</translation>
+        <translation>วันที่</translation>
     </message>
     <message>
         <source>Label</source>
@@ -2026,7 +1816,7 @@
     </message>
     <message>
         <source>Message</source>
-        <translation type="unfinished">ข้อความ</translation>
+        <translation>ข้อความ</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -2052,28 +1842,32 @@
         <translation type="unfinished">ทำการเลือก โดยอัตโนมัติแล้ว</translation>
     </message>
     <message>
+        <source>Insufficient funds!</source>
+        <translation type="unfinished">เงินทุน ไม่เพียงพอ</translation>
+    </message>
+    <message>
         <source>Quantity:</source>
-        <translation type="unfinished">จำนวน:</translation>
+        <translation>จำนวน:</translation>
     </message>
     <message>
         <source>Bytes:</source>
-        <translation type="unfinished">ไบต์:</translation>
+        <translation>ไบต์:</translation>
     </message>
     <message>
         <source>Amount:</source>
-        <translation type="unfinished">จำนวน:</translation>
+        <translation>จำนวน:</translation>
     </message>
     <message>
         <source>Fee:</source>
-        <translation type="unfinished">ค่าธรรมเนียม:</translation>
+        <translation>ค่าธรรมเนียม:</translation>
     </message>
     <message>
         <source>After Fee:</source>
-        <translation type="unfinished">ส่วนที่เหลือจากค่าธรรมเนียม:</translation>
+        <translation>ส่วนที่เหลือจากค่าธรรมเนียม:</translation>
     </message>
     <message>
         <source>Change:</source>
-        <translation type="unfinished">เงินทอน:</translation>
+        <translation>เงินทอน:</translation>
     </message>
     <message>
         <source>Custom change address</source>
@@ -2085,15 +1879,15 @@
     </message>
     <message>
         <source>Hide</source>
-        <translation type="unfinished">ซ่อน</translation>
+        <translation>ซ่อน</translation>
     </message>
     <message>
         <source>Recommended:</source>
-        <translation type="unfinished">แนะนำ:</translation>
+        <translation>แนะนำ:</translation>
     </message>
     <message>
         <source>Custom:</source>
-        <translation type="unfinished">กำหนดเอง:</translation>
+        <translation>กำหนดเอง:</translation>
     </message>
     <message>
         <source>Add &amp;Recipient</source>
@@ -2101,11 +1895,15 @@
     </message>
     <message>
         <source>Dust:</source>
-        <translation type="unfinished">เศษ:</translation>
+        <translation>เศษ:</translation>
     </message>
     <message>
         <source>Choose…</source>
         <translation type="unfinished">เลือก…</translation>
+    </message>
+    <message>
+        <source>Clear &amp;All</source>
+        <translation type="unfinished">ล้าง &amp;ทั้งหมด</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -2116,8 +1914,12 @@
         <translation type="unfinished">&amp;ส่ง</translation>
     </message>
     <message>
+        <source>Copy quantity</source>
+        <translation type="unfinished">คัดลอก ปริมาณ</translation>
+    </message>
+    <message>
         <source>Copy amount</source>
-        <translation type="unfinished">คัดลอกจำนวนเงิน</translation>
+        <translation>คัดลอกจำนวนเงิน</translation>
     </message>
     <message>
         <source>Copy fee</source>
@@ -2216,11 +2018,11 @@
     </message>
     <message>
         <source>Paste address from clipboard</source>
-        <translation type="unfinished">วางที่อยู่จากคลิปบอร์ด</translation>
+        <translation>วางที่อยู่จากคลิปบอร์ด</translation>
     </message>
     <message>
         <source>Message:</source>
-        <translation type="unfinished">ข้อความ:</translation>
+        <translation>ข้อความ:</translation>
     </message>
     <message>
         <source>Pay To:</source>
@@ -2235,9 +2037,16 @@
     <name>SendConfirmationDialog</name>
     <message>
         <source>Send</source>
-        <translation type="unfinished">ส่ง</translation>
+        <translation>ส่ง</translation>
     </message>
     </context>
+<context>
+    <name>ShutdownWindow</name>
+    <message>
+        <source>Do not shut down the computer until this window disappears.</source>
+        <translation type="unfinished">อย่าปิดเครื่องคอมพิวเตอร์จนกว่าหน้าต่างนี้จะหายไป</translation>
+    </message>
+</context>
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
@@ -2246,11 +2055,11 @@
     </message>
     <message>
         <source>Paste address from clipboard</source>
-        <translation type="unfinished">วางที่อยู่จากคลิปบอร์ด</translation>
+        <translation>วางที่อยู่จากคลิปบอร์ด</translation>
     </message>
     <message>
         <source>Signature</source>
-        <translation type="unfinished">ลายเซ็น</translation>
+        <translation>ลายเซ็น</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -2297,6 +2106,17 @@
     </message>
 </context>
 <context>
+    <name>TrafficGraphWidget</name>
+    <message>
+        <source>In</source>
+        <translation type="unfinished">เข้า</translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation type="unfinished">ออก</translation>
+    </message>
+</context>
+<context>
     <name>TransactionDesc</name>
     <message>
         <source>in memory pool</source>
@@ -2312,11 +2132,11 @@
     </message>
     <message>
         <source>Status</source>
-        <translation type="unfinished">สถานะ</translation>
+        <translation>สถานะ</translation>
     </message>
     <message>
         <source>Date</source>
-        <translation type="unfinished">วันที่</translation>
+        <translation>วันที่</translation>
     </message>
     <message>
         <source>Source</source>
@@ -2324,7 +2144,7 @@
     </message>
     <message>
         <source>From</source>
-        <translation type="unfinished">จาก</translation>
+        <translation>จาก</translation>
     </message>
     <message>
         <source>unknown</source>
@@ -2332,11 +2152,15 @@
     </message>
     <message>
         <source>To</source>
-        <translation type="unfinished">ถึง</translation>
+        <translation>ถึง</translation>
     </message>
     <message>
         <source>own address</source>
         <translation type="unfinished">แอดเดรส คุณเอง</translation>
+    </message>
+    <message>
+        <source>watch-only</source>
+        <translation type="unfinished">ดูอย่างเดียว</translation>
     </message>
     <message>
         <source>label</source>
@@ -2378,11 +2202,11 @@
     </message>
     <message>
         <source>Message</source>
-        <translation type="unfinished">ข้อความ</translation>
+        <translation>ข้อความ</translation>
     </message>
     <message>
         <source>Comment</source>
-        <translation type="unfinished">ความคิดเห็น</translation>
+        <translation>ความคิดเห็น</translation>
     </message>
     <message>
         <source>Merchant</source>
@@ -2394,7 +2218,7 @@
     </message>
     <message>
         <source>Amount</source>
-        <translation type="unfinished">จำนวน</translation>
+        <translation>จำนวน</translation>
     </message>
     <message>
         <source>true</source>
@@ -2409,11 +2233,11 @@
     <name>TransactionTableModel</name>
     <message>
         <source>Date</source>
-        <translation type="unfinished">วันที่</translation>
+        <translation>วันที่</translation>
     </message>
     <message>
         <source>Type</source>
-        <translation type="unfinished">ชนิด</translation>
+        <translation>ชนิด</translation>
     </message>
     <message>
         <source>Label</source>
@@ -2440,6 +2264,10 @@
         <translation type="unfinished">ส่ง ถึง</translation>
     </message>
     <message>
+        <source>watch-only</source>
+        <translation type="unfinished">ดูอย่างเดียว</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation type="unfinished">(ไม่มีเลเบล)</translation>
     </message>
@@ -2452,27 +2280,27 @@
     <name>TransactionView</name>
     <message>
         <source>All</source>
-        <translation type="unfinished">ทั้งหมด</translation>
+        <translation>ทั้งหมด</translation>
     </message>
     <message>
         <source>Today</source>
-        <translation type="unfinished">วันนี้</translation>
+        <translation>วันนี้</translation>
     </message>
     <message>
         <source>This week</source>
-        <translation type="unfinished">สัปดาห์นี้</translation>
+        <translation>สัปดาห์นี้</translation>
     </message>
     <message>
         <source>This month</source>
-        <translation type="unfinished">เดือนนี้</translation>
+        <translation>เดือนนี้</translation>
     </message>
     <message>
         <source>Last month</source>
-        <translation type="unfinished">เดือนที่แล้ว</translation>
+        <translation>เดือนที่แล้ว</translation>
     </message>
     <message>
         <source>This year</source>
-        <translation type="unfinished">ปีนี้</translation>
+        <translation>ปีนี้</translation>
     </message>
     <message>
         <source>Received with</source>
@@ -2481,10 +2309,6 @@
     <message>
         <source>Sent to</source>
         <translation type="unfinished">ส่ง ถึง</translation>
-    </message>
-    <message>
-        <source>To yourself</source>
-        <translation type="unfinished">ถึง ตัวคุณเอง</translation>
     </message>
     <message>
         <source>Other</source>
@@ -2512,7 +2336,7 @@
     </message>
     <message>
         <source>Copy transaction &amp;ID</source>
-        <translation type="unfinished">คัดลอก transaction &amp;ID</translation>
+        <translation type="unfinished">&amp;คัดลอก ID ธุรกรรม</translation>
     </message>
     <message>
         <source>Copy &amp;raw transaction</source>
@@ -2521,6 +2345,14 @@
     <message>
         <source>Copy full transaction &amp;details</source>
         <translation type="unfinished">คัดลอก full transaction &amp;details</translation>
+    </message>
+    <message>
+        <source>Increase transaction &amp;fee</source>
+        <translation type="unfinished">&amp;Increase transaction fee</translation>
+    </message>
+    <message>
+        <source>A&amp;bandon transaction</source>
+        <translation type="unfinished">&amp;Abandon transaction</translation>
     </message>
     <message>
         <source>&amp;Edit address label</source>
@@ -2542,7 +2374,7 @@
     </message>
     <message>
         <source>Confirmed</source>
-        <translation type="unfinished">ยืนยันแล้ว</translation>
+        <translation>ยืนยันแล้ว</translation>
     </message>
     <message>
         <source>Watch-only</source>
@@ -2550,11 +2382,11 @@
     </message>
     <message>
         <source>Date</source>
-        <translation type="unfinished">วันที่</translation>
+        <translation>วันที่</translation>
     </message>
     <message>
         <source>Type</source>
-        <translation type="unfinished">ชนิด</translation>
+        <translation>ชนิด</translation>
     </message>
     <message>
         <source>Label</source>
@@ -2582,6 +2414,29 @@
     </message>
 </context>
 <context>
+    <name>WalletController</name>
+    <message>
+        <source>Close wallet</source>
+        <translation type="unfinished">ปิด วอลเล็ต</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to close the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation type="unfinished">คุณ แน่ใจ หรือไม่ว่า ต้องการ ปิด วอลเล็ต &lt;i&gt;%1&lt;/i&gt;?</translation>
+    </message>
+    <message>
+        <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
+        <translation type="unfinished">Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled</translation>
+    </message>
+    <message>
+        <source>Close all wallets</source>
+        <translation type="unfinished">ปิด วอลเล็ต ทั้งหมด</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to close all wallets?</source>
+        <translation type="unfinished">คุณ แน่ใจ หรือไม่ว่า ต้องการ ปิด วอลเล็ต ทั้งหมด?</translation>
+    </message>
+</context>
+<context>
     <name>WalletFrame</name>
     <message>
         <source>Create a new wallet</source>
@@ -2589,7 +2444,7 @@
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished">ข้อผิดพลาด</translation>
+        <translation>ข้อผิดพลาด</translation>
     </message>
     <message>
         <source>Load Transaction Data</source>
@@ -2612,7 +2467,7 @@
     </message>
     <message>
         <source>PSBT copied</source>
-        <translation type="unfinished">คัดลอก PSBT แล้ว</translation>
+        <translation>คัดลอก PSBT แล้ว</translation>
     </message>
     <message>
         <source>Can't display address</source>
@@ -2627,7 +2482,7 @@
     <name>WalletView</name>
     <message>
         <source>&amp;Export</source>
-        <translation type="unfinished">&amp;ส่งออก</translation>
+        <translation>&amp;ส่งออก</translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
@@ -2652,7 +2507,327 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">ยกเลิก</translation>
+        <translation>ยกเลิก</translation>
+    </message>
+</context>
+<context>
+    <name>bitcoin-core</name>
+    <message>
+        <source>The %s developers</source>
+        <translation type="unfinished">%s นักพัฒนา</translation>
+    </message>
+    <message>
+        <source>Error: Dumpfile version is not supported. This version of bitcoin-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <translation type="unfinished">ข้อผิดพลาด: ดัมพ์ไฟล์เวอร์ชัน ไม่รองรับเวอร์ชัน บิตคอยน์-วอลเล็ต รุ่นนี้รองรับไฟล์ดัมพ์เวอร์ชัน 1 เท่านั้น รับดัมพ์ไฟล์พร้อมเวอร์ชัน %s</translation>
+    </message>
+    <message>
+        <source>Error: Legacy wallets only support the "legacy", "p2sh-segwit", and "bech32" address types</source>
+        <translation type="unfinished">ข้อผิดพลาด: เลกาซี วอลเล็ต เพียง สนับสนุน "legacy", "p2sh-segwit", และ "bech32" ชนิด แอดเดรส</translation>
+    </message>
+    <message>
+        <source>Cannot set -forcednsseed to true when setting -dnsseed to false.</source>
+        <translation type="unfinished">ไม่สามารถตั้ง -forcednsseed เป็น true ได้เมื่อการตั้งค่า -dnsseed เป็น false</translation>
+    </message>
+    <message>
+        <source>Cannot set -peerblockfilters without -blockfilterindex.</source>
+        <translation type="unfinished">ไม่สามารถตั้งค่า -peerblockfilters โดยที่ไม่มี -blockfilterindex</translation>
+    </message>
+    <message>
+        <source>%s request to listen on port %u. This port is considered "bad" and thus it is unlikely that any Bitcoin Core peers connect to it. See doc/p2p-bad-ports.md for details and a full list.</source>
+        <translation type="unfinished">%sขอฟังความเห็นเรื่องพอร์ต%u พอร์ตนี้ถือว่า "ไม่ดี" ดังนั้นจึงไม่น่าเป็นไปได้ที่ Bitcoin Core จะเชื่อมต่อกับพอร์ตนี้ ดู doc/p2p-bad-ports.md สำหรับรายละเอียดและรายการทั้งหมด</translation>
+    </message>
+    <message>
+        <source>Error loading %s: External signer wallet being loaded without external signer support compiled</source>
+        <translation type="unfinished">เกิดข้อผิดพลาดในการโหลด %s: กำลังโหลดวอลเล็ตผู้ลงนามภายนอกโดยไม่มีการรวบรวมการสนับสนุนผู้ลงนามภายนอก</translation>
+    </message>
+    <message>
+        <source>Failed to rename invalid peers.dat file. Please move or delete it and try again.</source>
+        <translation type="unfinished">ไม่สามารถเปลี่ยนชื่อไฟล์ peers.dat ที่ไม่ถูกต้อง โปรดย้ายหรือลบแล้วลองอีกครั้ง</translation>
+    </message>
+    <message>
+        <source>Could not find asmap file %s</source>
+        <translation type="unfinished">ไม่ ตรวจพบ ไฟล์ asmap %s</translation>
+    </message>
+    <message>
+        <source>Could not parse asmap file %s</source>
+        <translation type="unfinished">ไม่ สามารถ แยก วิเคราะห์ ไฟล์ asmap %s</translation>
+    </message>
+    <message>
+        <source>Disk space is too low!</source>
+        <translation type="unfinished">พื้นที่ว่าง ดิสก์ เหลือ น้อย เกินไป!</translation>
+    </message>
+    <message>
+        <source>Do you want to rebuild the block database now?</source>
+        <translation type="unfinished">คุณต้องการาร้างฐานข้อมูลบล็อกใหม่ตอนนี้หรือไม่?</translation>
+    </message>
+    <message>
+        <source>Done loading</source>
+        <translation type="unfinished">การโหลด เสร็จสิ้น</translation>
+    </message>
+    <message>
+        <source>Dump file %s does not exist.</source>
+        <translation type="unfinished"> ไม่มีไฟล์ดัมพ์ %s </translation>
+    </message>
+    <message>
+        <source>Error creating %s</source>
+        <translation type="unfinished">เกิดข้อผิดพลาด ในการสร้าง%s</translation>
+    </message>
+    <message>
+        <source>Error initializing block database</source>
+        <translation type="unfinished">เกิดข้อผิดพลาดในการเริ่มต้นฐานข้อมูลบล็อก</translation>
+    </message>
+    <message>
+        <source>Error loading %s</source>
+        <translation type="unfinished">การโหลด เกิดข้อผิดพลาด %s</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Private keys can only be disabled during creation</source>
+        <translation type="unfinished">การโหลดเกิดข้อผิดพลาด %s: Private keys สามารถปิดการใช้งานระหว่างการสร้างขึ้นเท่านั้น</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet corrupted</source>
+        <translation type="unfinished">เกิดข้อผิดพลาดในการโหลด %s: วอลเล็ตเกิดความเสียหาย</translation>
+    </message>
+    <message>
+        <source>Error loading %s: Wallet requires newer version of %s</source>
+        <translation type="unfinished">เกิดข้อผิดพลาดในการโหลด %s: วอลเล็ตต้องการเวอร์ชันใหม่กว่า %s</translation>
+    </message>
+    <message>
+        <source>Error loading block database</source>
+        <translation type="unfinished">เกิดข้อผิดพลาด ในการโหลด ฐานข้อมูล บล็อก</translation>
+    </message>
+    <message>
+        <source>Error opening block database</source>
+        <translation type="unfinished">เกิดข้อผิดพลาด ในการเปิด ฐานข้อมูล บล็อก</translation>
+    </message>
+    <message>
+        <source>Error reading from database, shutting down.</source>
+        <translation type="unfinished">เกิดข้อผิดพลาด ในการอ่าน จาก ฐานข้อมูล, กำลังปิด</translation>
+    </message>
+    <message>
+        <source>Error reading next record from wallet database</source>
+        <translation type="unfinished">เกิดข้อผิดพลาด ในการอ่าน บันทึก ถัดไป จาก ฐานข้อมูล วอลเล็ต</translation>
+    </message>
+    <message>
+        <source>Error upgrading chainstate database</source>
+        <translation type="unfinished">เกิดข้อผิดพลาด ในการอัพเกรด ฐานข้อมูล chainstate</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>ข้อผิดพลาด</translation>
+    </message>
+    <message>
+        <source>Error: Couldn't create cursor into database</source>
+        <translation type="unfinished">ข้อผิดพลาด: ไม่สามารถ สร้าง เคอร์เซอร์ ใน ฐานข้อมูล</translation>
+    </message>
+    <message>
+        <source>Error: Disk space is low for %s</source>
+        <translation type="unfinished">ข้อผิดพลาด: พื้นที่ ดิสก์ เหลือน้อย สำหรับ %s</translation>
+    </message>
+    <message>
+        <source>Error: Missing checksum</source>
+        <translation type="unfinished">ข้อผิดพลาด: ไม่มี เช็คซัม</translation>
+    </message>
+    <message>
+        <source>Error: No %s addresses available.</source>
+        <translation type="unfinished">ข้อผิดพลาด: ไม่มี %s แอดเดรสพร้อมใช้งาน</translation>
+    </message>
+    <message>
+        <source>Error: Unable to write record to new wallet</source>
+        <translation type="unfinished">ข้อผิดพลาด: ไม่สามารถเขียนบันทึกไปยังวอลเล็ตใหม่</translation>
+    </message>
+    <message>
+        <source>Failed to rescan the wallet during initialization</source>
+        <translation type="unfinished">ไม่สามารถสแกนวอลเล็ตอีกครั้งในระหว่างการเริ่มต้น</translation>
+    </message>
+    <message>
+        <source>Failed to verify database</source>
+        <translation type="unfinished">ไม่สามารถตรวจสอบฐานข้อมูล</translation>
+    </message>
+    <message>
+        <source>Fee rate (%s) is lower than the minimum fee rate setting (%s)</source>
+        <translation type="unfinished">อัตราค่าธรรมเนียม (%s) ต่ำกว่าอัตราค่าธรรมเนียมขั้นต่ำที่ตั้งไว้  (%s)</translation>
+    </message>
+    <message>
+        <source>Ignoring duplicate -wallet %s.</source>
+        <translation type="unfinished">ละเว้นการทำซ้ำ -วอลเล็ต %s.</translation>
+    </message>
+    <message>
+        <source>Importing…</source>
+        <translation type="unfinished">กำลังนำเข้า…</translation>
+    </message>
+    <message>
+        <source>Input not found or already spent</source>
+        <translation type="unfinished">ไม่พบข้อมูลที่ป้อนหรือใช้ไปแล้ว</translation>
+    </message>
+    <message>
+        <source>Insufficient funds</source>
+        <translation type="unfinished">เงินทุน ไม่เพียงพอ</translation>
+    </message>
+    <message>
+        <source>Loading wallet…</source>
+        <translation type="unfinished">กำลังโหลด วอลเล็ต...</translation>
+    </message>
+    <message>
+        <source>Missing amount</source>
+        <translation type="unfinished">จำนวน ที่หายไป</translation>
+    </message>
+    <message>
+        <source>No addresses available</source>
+        <translation type="unfinished">ไม่มี แอดเดรส ที่ใช้งานได้</translation>
+    </message>
+    <message>
+        <source>Prune cannot be configured with a negative value.</source>
+        <translation type="unfinished">ไม่สามารถกำหนดค่าพรุนด้วยค่าลบ</translation>
+    </message>
+    <message>
+        <source>Prune mode is incompatible with -txindex.</source>
+        <translation type="unfinished">โหมดพรุนเข้ากันไม่ได้กับ -txindex</translation>
+    </message>
+    <message>
+        <source>Rescanning…</source>
+        <translation type="unfinished">ทำการสแกนซ้ำ…</translation>
+    </message>
+    <message>
+        <source>Section [%s] is not recognized.</source>
+        <translation type="unfinished">ส่วน [%s] ไม่เป็นที่รู้จัก</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" does not exist</source>
+        <translation type="unfinished">Specified -walletdir "%s" ไม่มีอยู่</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is a relative path</source>
+        <translation type="unfinished">Specified -walletdir "%s" เป็นพาธสัมพัทธ์</translation>
+    </message>
+    <message>
+        <source>Specified -walletdir "%s" is not a directory</source>
+        <translation type="unfinished">Specified -walletdir "%s" ไม่ใช่ไดเร็กทอรี</translation>
+    </message>
+    <message>
+        <source>Specified blocks directory "%s" does not exist.</source>
+        <translation type="unfinished">ไม่มีไดเร็กทอรีบล็อกที่ระบุ "%s" </translation>
+    </message>
+    <message>
+        <source>Starting network threads…</source>
+        <translation type="unfinished">การเริ่มเธรดเครือข่าย…</translation>
+    </message>
+    <message>
+        <source>The source code is available from %s.</source>
+        <translation type="unfinished">ซอร์สโค๊ดสามารถใช้ได้จาก %s.</translation>
+    </message>
+    <message>
+        <source>The specified R/W config file %s does not exist
+</source>
+        <translation type="unfinished">ไฟล์กำหนดค่าที่ระบุ %s ไม่มีอยู่</translation>
+    </message>
+    <message>
+        <source>The specified config file %s does not exist</source>
+        <translation type="unfinished">ไฟล์กำหนดค่าที่ระบุ %s ไม่มีอยู่</translation>
+    </message>
+    <message>
+        <source>The transaction amount is too small to pay the fee</source>
+        <translation type="unfinished">จำนวนธุรกรรมน้อยเกินไปที่จะชำระค่าธรรมเนียม</translation>
+    </message>
+    <message>
+        <source>The wallet will avoid paying less than the minimum relay fee.</source>
+        <translation type="unfinished">วอลเล็ตจะหลีกเลี่ยงการจ่ายน้อยกว่าค่าธรรมเนียมรีเลย์ขั้นต่ำ</translation>
+    </message>
+    <message>
+        <source>This is experimental software.</source>
+        <translation type="unfinished">นี่คือซอฟต์แวร์ทดลอง</translation>
+    </message>
+    <message>
+        <source>This is the minimum transaction fee you pay on every transaction.</source>
+        <translation type="unfinished">นี่คือค่าธรรมเนียมการทำธุรกรรมขั้นต่ำที่คุณจ่ายในทุกธุรกรรม</translation>
+    </message>
+    <message>
+        <source>This is the transaction fee you will pay if you send a transaction.</source>
+        <translation type="unfinished">นี่คือค่าธรรมเนียมการทำธุรกรรมที่คุณจะจ่ายหากคุณส่งธุรกรรม</translation>
+    </message>
+    <message>
+        <source>Transaction amount too small</source>
+        <translation type="unfinished">จำนวนธุรกรรมน้อยเกินไป</translation>
+    </message>
+    <message>
+        <source>Transaction amounts must not be negative</source>
+        <translation type="unfinished">จำนวนเงินที่ทำธุรกรรมต้องไม่เป็นค่าติดลบ</translation>
+    </message>
+    <message>
+        <source>Transaction has too long of a mempool chain</source>
+        <translation type="unfinished">ธุรกรรมมี เชนเมมพูล ยาวเกินไป</translation>
+    </message>
+    <message>
+        <source>Transaction must have at least one recipient</source>
+        <translation type="unfinished">ธุรกรรมต้องมีผู้รับอย่างน้อยหนึ่งราย</translation>
+    </message>
+    <message>
+        <source>Transaction needs a change address, but we can't generate it.</source>
+        <translation type="unfinished">การทำธุรกรรมต้องการการเปลี่ยนแปลงที่อยู่ แต่เราไม่สามารถสร้างมันขึ้นมาได้</translation>
+    </message>
+    <message>
+        <source>Transaction too large</source>
+        <translation type="unfinished">ธุรกรรมใหญ่เกินไป</translation>
+    </message>
+    <message>
+        <source>Unable to bind to %s on this computer. %s is probably already running.</source>
+        <translation type="unfinished">ไม่สามารถผูก %s บนคอมพิวเตอร์นี้ %s อาจเนื่องมาจากเคยใช้แล้ว</translation>
+    </message>
+    <message>
+        <source>Unable to create the PID file '%s': %s</source>
+        <translation type="unfinished">ไม่สามารถสร้างไฟล์ PID '%s': %s</translation>
+    </message>
+    <message>
+        <source>Unable to generate initial keys</source>
+        <translation type="unfinished">ไม่สามารถ สร้าง คีย์ เริ่มต้น</translation>
+    </message>
+    <message>
+        <source>Unable to generate keys</source>
+        <translation type="unfinished">ไม่สามารถ สร้าง คีย์</translation>
+    </message>
+    <message>
+        <source>Unable to open %s for writing</source>
+        <translation type="unfinished">ไม่สามารถเปิด %s สำหรับการเขียนข้อมูล</translation>
+    </message>
+    <message>
+        <source>Unknown -blockfilterindex value %s.</source>
+        <translation type="unfinished">ไม่รู้จัก -ค่า blockfilterindex value %s</translation>
+    </message>
+    <message>
+        <source>Unknown address type '%s'</source>
+        <translation type="unfinished">ไม่รู้จัก ประเภท แอดเดรส '%s'</translation>
+    </message>
+    <message>
+        <source>Unknown change type '%s'</source>
+        <translation type="unfinished">ไม่รู้จัก ประเภท การเปลี่ยนแปลง '%s'</translation>
+    </message>
+    <message>
+        <source>Unknown network specified in -onlynet: '%s'</source>
+        <translation type="unfinished">ไม่รู้จัก เครือข่าย ที่ระบุ ใน -onlynet: '%s'</translation>
+    </message>
+    <message>
+        <source>Unsupported logging category %s=%s.</source>
+        <translation type="unfinished">หมวดหมู่การบันทึกที่ไม่รองรับ %s=%s</translation>
+    </message>
+    <message>
+        <source>Upgrading UTXO database</source>
+        <translation type="unfinished">กำลังอัพเกรด ฐานข้อมูล UTXO</translation>
+    </message>
+    <message>
+        <source>Verifying blocks…</source>
+        <translation type="unfinished">กำลังตรวจสอบ บล็อก…</translation>
+    </message>
+    <message>
+        <source>Verifying wallet(s)…</source>
+        <translation type="unfinished">กำลังตรวจสอบ วอลเล็ต…</translation>
+    </message>
+    <message>
+        <source>Settings file could not be read</source>
+        <translation type="unfinished">ไม่สามารถอ่านไฟล์ตั้งค่าได้</translation>
+    </message>
+    <message>
+        <source>Settings file could not be written</source>
+        <translation type="unfinished">ไม่สามารถเขียนข้อมูลลงบนไฟล์ตั้งค่าได้</translation>
     </message>
 </context>
 </TS>

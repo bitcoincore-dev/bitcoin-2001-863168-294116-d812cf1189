@@ -2,125 +2,89 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation type="unfinished">Bonyeza kitufe cha kulia kufanya mabadiliko kwenye anuani au lebo</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
-        <translation type="unfinished">Fungua anuani mpya</translation>
+        <translation>Fungua anuani mpya</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation type="unfinished">&amp;Mpya</translation>
+        <translation>&amp;Mpya</translation>
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation type="unfinished">Nakili anwani iliyochaguliwa sasa kwenye ubao wa kunakili wa mfumo</translation>
+        <translation>Nakili anwani iliyochaguliwa sasa kwenye ubao wa kunakili wa mfumo</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation type="unfinished">&amp;nakili</translation>
+        <translation>&amp;nakili</translation>
     </message>
     <message>
         <source>C&amp;lose</source>
-        <translation type="unfinished">C&amp;Funga</translation>
+        <translation>C&amp;Funga</translation>
     </message>
     <message>
         <source>Delete the currently selected address from the list</source>
-        <translation type="unfinished">Futa anwani iliyochaguliwa sasa kutoka kwenye orodha</translation>
+        <translation>Futa anwani iliyochaguliwa sasa kutoka kwenye orodha</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
-        <translation type="unfinished">&amp;Futa</translation>
+        <translation>&amp;Futa</translation>
     </message>
     <message>
         <source>Sending addresses</source>
-        <translation type="unfinished">Kutuma anuani</translation>
+        <translation>Kutuma anuani</translation>
     </message>
     <message>
         <source>Receiving addresses</source>
-        <translation type="unfinished">Kupokea anuani</translation>
+        <translation>Kupokea anuani</translation>
     </message>
     </context>
 <context>
     <name>AddressTableModel</name>
     <message>
         <source>Address</source>
-        <translation type="unfinished">Anuani</translation>
+        <translation>Anuani</translation>
     </message>
     </context>
 <context>
-    <name>QObject</name>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
-    </message>
+    <name>AskPassphraseDialog</name>
+    </context>
+<context>
+    <name>BitcoinApplication</name>
     </context>
 <context>
     <name>BitcoinGUI</name>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
+    <message>
+        <source>&amp;Sending addresses</source>
+        <translation type="unfinished">&amp;Kutuma anuani</translation>
     </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to Bitcoin network.</source>
-        <extracomment>A substring of the tooltip.</extracomment>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
+    <message>
+        <source>&amp;Receiving addresses</source>
+        <translation type="unfinished">&amp;Kupokea anuani</translation>
+    </message>
+    </context>
+<context>
+    <name>EditAddressDialog</name>
+    <message>
+        <source>&amp;Address</source>
+        <translation type="unfinished">&amp;Anuani</translation>
     </message>
     </context>
 <context>
     <name>Intro</name>
-    <message numerus="yes">
-        <source>(sufficient to restore backups %n day(s) old)</source>
-        <extracomment>Explanatory text on the capability of the current prune target.</extracomment>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
+    </context>
+<context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation>Anuani</translation>
+    </message>
+</context>
+<context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">CFunga</translation>
     </message>
     </context>
 <context>
@@ -128,34 +92,30 @@
     <message>
         <source>Address</source>
         <extracomment>Title of Peers Table column which contains the IP/Onion/I2P address of the connected peer.</extracomment>
-        <translation type="unfinished">Anuani</translation>
+        <translation>Anuani</translation>
     </message>
     </context>
 <context>
-    <name>SendCoinsDialog</name>
-    <message numerus="yes">
-        <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
+    <name>QObject</name>
+    </context>
+<context>
+    <name>ReceiveRequestDialog</name>
+    <message>
+        <source>Address:</source>
+        <translation type="unfinished">Anuani:</translation>
     </message>
     </context>
 <context>
     <name>TransactionDesc</name>
-    <message numerus="yes">
-        <source>matures in %n more block(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
-    </message>
+    </context>
+<context>
+    <name>TransactionTableModel</name>
     </context>
 <context>
     <name>TransactionView</name>
     <message>
         <source>Address</source>
-        <translation type="unfinished">Anuani</translation>
+        <translation>Anuani</translation>
     </message>
     </context>
 </TS>

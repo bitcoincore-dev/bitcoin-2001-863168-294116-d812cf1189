@@ -2,10 +2,6 @@
 <context>
     <name>AddressBookPage</name>
     <message>
-        <source>Right-click to edit address or label</source>
-        <translation type="unfinished">Salgyny ýa-da belligi rejelemek üçin syçanjygyň sag düwmesine basyň</translation>
-    </message>
-    <message>
         <source>Create a new address</source>
         <translation type="unfinished">Täze salgy döret</translation>
     </message>
@@ -68,12 +64,6 @@
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation type="unfinished">Tölegleri ibermek üçin siziň Bitkoin salgylaryňyz şulardyr. Teňňeleri ibermezden ozal hemişe möçberi we kabul edýän salgyny barlaň.</translation>
-    </message>
-    <message>
-        <source>These are your Bitcoin addresses for receiving payments. Use the 'Create new receiving address' button in the receive tab to create new addresses.
-Signing is only possible with addresses of the type 'legacy'.</source>
-        <translation type="unfinished">Tölegleri kabul etmek üçin siziň Bitkoin salgylaryňyz şulardyr. Täze salgylary döretmek üçin kabul etmek bölüminde "Täze kabul ediji salgyny döret" düwmesini ulan.
-Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -258,92 +248,6 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
         <translation type="unfinished">Içki ýalňyşlyk ýüze çykdy. %1 ygtybarly dowam etmäge çalyşar. Bu garaşylmadyk näsazlyk we ol barada aşakda beýan edilişi ýaly hasabat berip bolar.</translation>
     </message>
 </context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Do you want to reset settings to default values, or to abort without making changes?</source>
-        <extracomment>Explanatory text shown on startup when the settings file cannot be read. Prompts user to make a choice between resetting or aborting.</extracomment>
-        <translation type="unfinished">Sazlamalary deslapky ýagdaýyna getirmek isleýäňmi ýa-da hiçhili üýtgeşme girizmezden ýatyrmak?</translation>
-    </message>
-    <message>
-        <source>A fatal error occurred. Check that settings file is writable, or try running with -nosettings.</source>
-        <extracomment>Explanatory text shown on startup when the settings file could not be written. Prompts user to check that we have the ability to write to the file. Explains that the user has the option of running without a settings file.</extracomment>
-        <translation type="unfinished">Ýowuz ýalňyşlyk ýüze çykdy. Sazlamalar faýlyna ýazmak mümkinçiliginiň bardygyny ýa-da ýokdugyny barla, bolmasa -nosettings bilen işletmäge çalyş.</translation>
-    </message>
-    <message>
-        <source>Error: Specified data directory "%1" does not exist.</source>
-        <translation type="unfinished">Ýalňyşlyk: Görkezilen maglumatlar katalogy "%1" ýok.</translation>
-    </message>
-    <message>
-        <source>Error: Cannot parse configuration file: %1.</source>
-        <translation type="unfinished">Ýalňyşlyk: %1 konfigurasiýa faýlyny derňäp bolanok.</translation>
-    </message>
-    <message>
-        <source>Error: %1</source>
-        <translation type="unfinished">Ýalňyşlyk: %1</translation>
-    </message>
-    <message>
-        <source>%1 didn't yet exit safely…</source>
-        <translation type="unfinished">%1 entek ygtybarly çykmady...</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation type="unfinished">Möçber</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
-    </message>
-    </context>
-<context>
-    <name>bitcoin-core</name>
-    <message>
-        <source>Settings file could not be read</source>
-        <translation type="unfinished">Sazlamalar faýlyny okap bolanok</translation>
-    </message>
-    <message>
-        <source>Settings file could not be written</source>
-        <translation type="unfinished">Sazlamalar faýlyny ýazdyryp bolanok</translation>
-    </message>
-    </context>
 <context>
     <name>BitcoinGUI</name>
     <message>
@@ -546,8 +450,8 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
     <message numerus="yes">
         <source>Processed %n block(s) of transaction history.</source>
         <translation type="unfinished">
-            <numerusform>Amallar geçmişinden %n blok(lar) işlendi.</numerusform>
-            <numerusform>Amallar geçmişinden %n blok(lar) işlendi.</numerusform>
+            <numerusform>Amallar geçmişinden %n blok işlendi.</numerusform>
+            <numerusform>Amallar geçmişinden %n bloklar işlendi.</numerusform>
         </translation>
     </message>
     <message>
@@ -641,10 +545,6 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
     <message>
         <source>Mask the values in the Overview tab</source>
         <translation type="unfinished">Gözden geçir bölüminde sanlaryň üstüni ört</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation type="unfinished">deslapky bellenen gapjyk</translation>
     </message>
     <message>
         <source>No wallets available</source>
@@ -777,13 +677,6 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
     <message>
         <source>Original message:</source>
         <translation type="unfinished">Başdaky habar:</translation>
-    </message>
-</context>
-<context>
-    <name>UnitDisplayStatusBarControl</name>
-    <message>
-        <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation type="unfinished">Möçberleri görkezmek üçin ölçeg birligi. Başga ölçeg birligini saýlamak üçin bas.</translation>
     </message>
 </context>
 <context>
@@ -967,54 +860,6 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
     </message>
 </context>
 <context>
-    <name>OpenWalletActivity</name>
-    <message>
-        <source>Open wallet failed</source>
-        <translation type="unfinished">Gapjyk açyp bolmady</translation>
-    </message>
-    <message>
-        <source>Open wallet warning</source>
-        <translation type="unfinished">Gapjyk açmak duýduryşy</translation>
-    </message>
-    <message>
-        <source>default wallet</source>
-        <translation type="unfinished">deslapky bellenen gapjyk</translation>
-    </message>
-    <message>
-        <source>Open Wallet</source>
-        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
-        <translation type="unfinished">Gapjyk aç</translation>
-    </message>
-    <message>
-        <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
-        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
-        <translation type="unfinished">&lt;b&gt;%1&lt;/b&gt; gapjyk açylýar...</translation>
-    </message>
-</context>
-<context>
-    <name>WalletController</name>
-    <message>
-        <source>Close wallet</source>
-        <translation type="unfinished">Gapjygy ýap</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to close the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
-        <translation type="unfinished">&lt;i&gt;%1&lt;/i&gt; gapjygy ýapmak isleýäniňiz çynmy?</translation>
-    </message>
-    <message>
-        <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
-        <translation type="unfinished">Kesip gysgaltmaklyk işjeň bolsa, aşa uzak wagtlap gapjygyň ýapylmagy tutuş zynjyryň gaýtadan utgaşmak zerurlygyna getirip biler.</translation>
-    </message>
-    <message>
-        <source>Close all wallets</source>
-        <translation type="unfinished">Ähli gapjyklary ýap</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to close all wallets?</source>
-        <translation type="unfinished">Ähli gapjyklary ýapmak isleýäniňiz çynmy?</translation>
-    </message>
-</context>
-<context>
     <name>CreateWalletDialog</name>
     <message>
         <source>Create Wallet</source>
@@ -1165,51 +1010,25 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
     </message>
 </context>
 <context>
+    <name>GuiNetWatch</name>
+    </context>
+<context>
+    <name>HelpMessageDialog</name>
+    <message>
+        <source>version</source>
+        <translation type="unfinished">wersiýa</translation>
+    </message>
+    <message>
+        <source>About %1</source>
+        <translation type="unfinished">%1 barada</translation>
+    </message>
+    <message>
+        <source>Command-line options</source>
+        <translation type="unfinished">Buýruk setiri opsiýalary</translation>
+    </message>
+</context>
+<context>
     <name>Intro</name>
-    <message>
-        <source>Bitcoin</source>
-        <translation type="unfinished">Bitkoin</translation>
-    </message>
-    <message>
-        <source>(of %1 GB needed)</source>
-        <translation type="unfinished">(Zerur bolan %1 GB-dan)</translation>
-    </message>
-    <message>
-        <source>(%1 GB needed for full chain)</source>
-        <translation type="unfinished">(Doly zynjyr üçin %1 GB zerur)</translation>
-    </message>
-    <message>
-        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
-        <translation type="unfinished">Bu sanawda azyndan %1 GB maglumat saklanar we ol wagtyň geçmegi bilen köpeler.</translation>
-    </message>
-    <message>
-        <source>Approximately %1 GB of data will be stored in this directory.</source>
-        <translation type="unfinished">Bu sanawda takmynan %1 GB maglumat saklanar.</translation>
-    </message>
-    <message numerus="yes">
-        <source>(sufficient to restore backups %n day(s) old)</source>
-        <extracomment>Explanatory text on the capability of the current prune target.</extracomment>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
-    </message>
-    <message>
-        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
-        <translation type="unfinished">%1 Bitkoin blok zynjyrynyň nusgasyny ýükläp alar we göçürer.</translation>
-    </message>
-    <message>
-        <source>The wallet will also be stored in this directory.</source>
-        <translation type="unfinished">Gapjyk hem bu sanawa saklanar.</translation>
-    </message>
-    <message>
-        <source>Error: Specified data directory "%1" cannot be created.</source>
-        <translation type="unfinished">Ýalňyşlyk: Görkezilen %1 maglumat sanawyny döredip bolanok.</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="unfinished">Ýalňyşlyk</translation>
-    </message>
     <message>
         <source>Welcome</source>
         <translation type="unfinished">Hoş geldiňiz</translation>
@@ -1231,10 +1050,6 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
         <translation type="unfinished">Bu sazlamany yzyna gaýtarmaklyk tutuş blok zynjyryny gaýtadan ýükläp almak zerur. Ilki bilen tutuş zynjyry ýükläp almak we soň ony kesmek has çalt bolar. Käbir giňişleýin aýratynlyklary öçürer.</translation>
     </message>
     <message>
-        <source> GB</source>
-        <translation type="unfinished">GB</translation>
-    </message>
-    <message>
         <source>This initial synchronisation is very demanding, and may expose hardware problems with your computer that had previously gone unnoticed. Each time you run %1, it will continue downloading where it left off.</source>
         <translation type="unfinished">Bu başdaky utgaşdyrma örän çylşyrymlydyr we kompýuteriňiziň ozal üns berilmedik enjam näsazlyklaryny ýüze çykaryp biler. Her sapar %1 işledeniňizde ol säginen ýerinden ýükläp almaga dowam eder.</translation>
     </message>
@@ -1250,31 +1065,47 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
         <source>Use a custom data directory:</source>
         <translation type="unfinished">Aýratyn maglumat sanawyny ulan:</translation>
     </message>
-</context>
-<context>
-    <name>HelpMessageDialog</name>
     <message>
-        <source>version</source>
-        <translation type="unfinished">wersiýa</translation>
+        <source>Bitcoin</source>
+        <translation type="unfinished">Bitkoin</translation>
+    </message>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation>
+            <numerusform>(Zerur bolan %n GB-dan)</numerusform>
+            <numerusform>(Zerur bolan %n GB-dan)</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>(%n GB needed for full chain)</source>
+        <translation>
+            <numerusform>(Doly zynjyr üçin %n GB zerur)</numerusform>
+            <numerusform>(Doly zynjyr üçin %n GB zerur)</numerusform>
+        </translation>
     </message>
     <message>
-        <source>About %1</source>
-        <translation type="unfinished">%1 barada</translation>
+        <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
+        <translation type="unfinished">Bu sanawda azyndan %1 GB maglumat saklanar we ol wagtyň geçmegi bilen köpeler.</translation>
     </message>
     <message>
-        <source>Command-line options</source>
-        <translation type="unfinished">Buýruk setiri opsiýalary</translation>
-    </message>
-</context>
-<context>
-    <name>ShutdownWindow</name>
-    <message>
-        <source>%1 is shutting down…</source>
-        <translation type="unfinished">%1 ýapylýar...</translation>
+        <source>Approximately %1 GB of data will be stored in this directory.</source>
+        <translation type="unfinished">Bu sanawda takmynan %1 GB maglumat saklanar.</translation>
     </message>
     <message>
-        <source>Do not shut down the computer until this window disappears.</source>
-        <translation type="unfinished">Bu penjire ýitýänçä kompýuteri ýapmaň.</translation>
+        <source>%1 will download and store a copy of the Bitcoin block chain.</source>
+        <translation type="unfinished">%1 Bitkoin blok zynjyrynyň nusgasyny ýükläp alar we göçürer.</translation>
+    </message>
+    <message>
+        <source>The wallet will also be stored in this directory.</source>
+        <translation type="unfinished">Gapjyk hem bu sanawa saklanar.</translation>
+    </message>
+    <message>
+        <source>Error: Specified data directory "%1" cannot be created.</source>
+        <translation type="unfinished">Ýalňyşlyk: Görkezilen %1 maglumat sanawyny döredip bolanok.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Ýalňyşlyk</translation>
     </message>
 </context>
 <context>
@@ -1291,9 +1122,61 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
         <source>Attempting to spend bitcoins that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
         <translation type="unfinished">Entek görkezilmedik geleşikleriň täsirine düşen bitkoinleri sarp etmek synanyşygy ulgam tarapyndan kabul edilmez.</translation>
     </message>
+    <message>
+        <source>Hide</source>
+        <translation type="unfinished">Gizle</translation>
+    </message>
     </context>
 <context>
+    <name>NetWatchLogModel</name>
+    <message>
+        <source>Address</source>
+        <comment>NetWatch: Address header</comment>
+        <translation type="unfinished">Salgy</translation>
+    </message>
+</context>
+<context>
+    <name>OpenURIDialog</name>
+    <message>
+        <source>Open bitcoin URI</source>
+        <translation type="unfinished">Bitkoin aç: URI</translation>
+    </message>
+    </context>
+<context>
+    <name>OpenWalletActivity</name>
+    <message>
+        <source>Open wallet failed</source>
+        <translation type="unfinished">Gapjyk açyp bolmady</translation>
+    </message>
+    <message>
+        <source>Open wallet warning</source>
+        <translation type="unfinished">Gapjyk açmak duýduryşy</translation>
+    </message>
+    <message>
+        <source>default wallet</source>
+        <translation type="unfinished">deslapky bellenen gapjyk</translation>
+    </message>
+    <message>
+        <source>Open Wallet</source>
+        <extracomment>Title of window indicating the progress of opening of a wallet.</extracomment>
+        <translation type="unfinished">Gapjyk aç</translation>
+    </message>
+    <message>
+        <source>Opening Wallet &lt;b&gt;%1&lt;/b&gt;…</source>
+        <extracomment>Descriptive text of the open wallet progress window which indicates to the user which wallet is currently being opened.</extracomment>
+        <translation type="unfinished">&lt;b&gt;%1&lt;/b&gt; gapjyk açylýar...</translation>
+    </message>
+</context>
+<context>
     <name>OptionsDialog</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Opsiýalar</translation>
+    </message>
+    <message>
+        <source>W&amp;allet</source>
+        <translation type="unfinished">&amp;Gapjyk</translation>
+    </message>
     <message>
         <source>&amp;Window</source>
         <translation type="unfinished">&amp;Penjire</translation>
@@ -1316,6 +1199,13 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
     </message>
     </context>
 <context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Ýap</translation>
+    </message>
+    </context>
+<context>
     <name>PeerTableModel</name>
     <message>
         <source>Address</source>
@@ -1324,7 +1214,48 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
     </message>
     </context>
 <context>
+    <name>QObject</name>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished">Möçber</translation>
+    </message>
+    <message>
+        <source>Do you want to reset settings to default values, or to abort without making changes?</source>
+        <extracomment>Explanatory text shown on startup when the settings file cannot be read. Prompts user to make a choice between resetting or aborting.</extracomment>
+        <translation type="unfinished">Sazlamalary deslapky ýagdaýyna getirmek isleýäňmi ýa-da hiçhili üýtgeşme girizmezden ýatyrmak?</translation>
+    </message>
+    <message>
+        <source>A fatal error occurred. Check that settings file is writable, or try running with -nosettings.</source>
+        <extracomment>Explanatory text shown on startup when the settings file could not be written. Prompts user to check that we have the ability to write to the file. Explains that the user has the option of running without a settings file.</extracomment>
+        <translation type="unfinished">Ýowuz ýalňyşlyk ýüze çykdy. Sazlamalar faýlyna ýazmak mümkinçiliginiň bardygyny ýa-da ýokdugyny barla, bolmasa -nosettings bilen işletmäge çalyş.</translation>
+    </message>
+    <message>
+        <source>Error: Specified data directory "%1" does not exist.</source>
+        <translation type="unfinished">Ýalňyşlyk: Görkezilen maglumatlar katalogy "%1" ýok.</translation>
+    </message>
+    <message>
+        <source>Error: Cannot parse configuration file: %1.</source>
+        <translation type="unfinished">Ýalňyşlyk: %1 konfigurasiýa faýlyny derňäp bolanok.</translation>
+    </message>
+    <message>
+        <source>Error: %1</source>
+        <translation type="unfinished">Ýalňyşlyk: %1</translation>
+    </message>
+    <message>
+        <source>%1 didn't yet exit safely…</source>
+        <translation type="unfinished">%1 entek ygtybarly çykmady...</translation>
+    </message>
+    </context>
+<context>
     <name>RPCConsole</name>
+    <message>
+        <source>&amp;Information</source>
+        <translation type="unfinished">&amp;Maglumat</translation>
+    </message>
+    <message>
+        <source>Wallet: </source>
+        <translation type="unfinished">Gapjyk: </translation>
+    </message>
     <message>
         <source>Node window</source>
         <translation type="unfinished">Düwün penjiresi</translation>
@@ -1337,6 +1268,18 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
     </context>
 <context>
     <name>ReceiveCoinsDialog</name>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation type="unfinished">&amp;Möçber:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Bellik:</translation>
+    </message>
+    <message>
+        <source>Show</source>
+        <translation type="unfinished">Görkez</translation>
+    </message>
     <message>
         <source>&amp;Copy address</source>
         <translation type="unfinished">&amp;Salgyny göçür</translation>
@@ -1357,12 +1300,24 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
+        <source>Address:</source>
+        <translation type="unfinished">Salgy:</translation>
+    </message>
+    <message>
         <source>Amount:</source>
         <translation type="unfinished">Möçber:</translation>
     </message>
     <message>
+        <source>Label:</source>
+        <translation type="unfinished">Bellik:</translation>
+    </message>
+    <message>
         <source>Wallet:</source>
         <translation type="unfinished">Gapjyk:</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Address</source>
+        <translation type="unfinished">Salgyny göçür</translation>
     </message>
     </context>
 <context>
@@ -1407,8 +1362,20 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
         <translation type="unfinished">Çalyş:</translation>
     </message>
     <message>
+        <source>Hide</source>
+        <translation type="unfinished">Gizle</translation>
+    </message>
+    <message>
         <source>Dust:</source>
         <translation type="unfinished">Toz:</translation>
+    </message>
+    <message>
+        <source>Choose…</source>
+        <translation type="unfinished">Saýla…</translation>
+    </message>
+    <message>
+        <source>S&amp;end</source>
+        <translation type="unfinished">&amp;Iber</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -1438,30 +1405,52 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
         <source>Copy change</source>
         <translation type="unfinished">Gaýtargyny göçür</translation>
     </message>
-    <message numerus="yes">
-        <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
-    </message>
     <message>
         <source>(no label)</source>
         <translation type="unfinished">(bellik ýok)</translation>
     </message>
 </context>
 <context>
+    <name>SendCoinsEntry</name>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation type="unfinished">&amp;Möçber:</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation type="unfinished">&amp;Bellik:</translation>
+    </message>
+    </context>
+<context>
+    <name>SendConfirmationDialog</name>
+    <message>
+        <source>Send</source>
+        <translation type="unfinished">Iber</translation>
+    </message>
+    </context>
+<context>
+    <name>ShutdownWindow</name>
+    <message>
+        <source>%1 is shutting down…</source>
+        <translation type="unfinished">%1 ýapylýar...</translation>
+    </message>
+    <message>
+        <source>Do not shut down the computer until this window disappears.</source>
+        <translation type="unfinished">Bu penjire ýitýänçä kompýuteri ýapmaň.</translation>
+    </message>
+</context>
+<context>
+    <name>SignVerifyMessageDialog</name>
+    <message>
+        <source>&amp;Verify Message</source>
+        <translation>&amp;Habary tassykla</translation>
+    </message>
+    </context>
+<context>
     <name>TransactionDesc</name>
     <message>
         <source>Date</source>
         <translation type="unfinished">Sene</translation>
-    </message>
-    <message numerus="yes">
-        <source>matures in %n more block(s)</source>
-        <translation type="unfinished">
-            <numerusform />
-            <numerusform />
-        </translation>
     </message>
     <message>
         <source>Amount</source>
@@ -1528,6 +1517,36 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
     </message>
     </context>
 <context>
+    <name>UnitDisplayStatusBarControl</name>
+    <message>
+        <source>Unit to show amounts in. Click to select another unit.</source>
+        <translation type="unfinished">Möçberleri görkezmek üçin ölçeg birligi. Başga ölçeg birligini saýlamak üçin bas.</translation>
+    </message>
+</context>
+<context>
+    <name>WalletController</name>
+    <message>
+        <source>Close wallet</source>
+        <translation type="unfinished">Gapjygy ýap</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to close the wallet &lt;i&gt;%1&lt;/i&gt;?</source>
+        <translation type="unfinished">&lt;i&gt;%1&lt;/i&gt; gapjygy ýapmak isleýäniňiz çynmy?</translation>
+    </message>
+    <message>
+        <source>Closing the wallet for too long can result in having to resync the entire chain if pruning is enabled.</source>
+        <translation type="unfinished">Kesip gysgaltmaklyk işjeň bolsa, aşa uzak wagtlap gapjygyň ýapylmagy tutuş zynjyryň gaýtadan utgaşmak zerurlygyna getirip biler.</translation>
+    </message>
+    <message>
+        <source>Close all wallets</source>
+        <translation type="unfinished">Ähli gapjyklary ýap</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to close all wallets?</source>
+        <translation type="unfinished">Ähli gapjyklary ýapmak isleýäniňiz çynmy?</translation>
+    </message>
+</context>
+<context>
     <name>WalletFrame</name>
     <message>
         <source>Create a new wallet</source>
@@ -1555,5 +1574,24 @@ Diňe "miras" görnüşli salgylar bilen gol çekmek mümkin.</translation>
         <source>Export the data in the current tab to a file</source>
         <translation type="unfinished">Häzirki bellikdäki maglumaty faýla geçir</translation>
     </message>
+    <message>
+        <source>Backup Wallet</source>
+        <translation type="unfinished">Gapjygyň ätiýaçlyk nusgasyny sakla</translation>
+    </message>
     </context>
+<context>
+    <name>bitcoin-core</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Ýalňyşlyk</translation>
+    </message>
+    <message>
+        <source>Settings file could not be read</source>
+        <translation type="unfinished">Sazlamalar faýlyny okap bolanok</translation>
+    </message>
+    <message>
+        <source>Settings file could not be written</source>
+        <translation type="unfinished">Sazlamalar faýlyny ýazdyryp bolanok</translation>
+    </message>
+</context>
 </TS>
