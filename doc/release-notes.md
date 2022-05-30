@@ -1,20 +1,20 @@
 23.0 Release Notes
 ==================
 
-Bitcoin Core version 23.0 is now available from:
+Bitcoin Knots version *23.0.knots20220529* is now available from:
 
-  <https://bitcoincore.org/bin/bitcoin-core-23.0/>
+  <https://bitcoinknots.org/files/23.x/23.0.knots20220529/>
 
 This release includes new features, various bug fixes and performance
 improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at GitHub:
 
-  <https://github.com/bitcoin/bitcoin/issues>
+  <https://github.com/bitcoinknots/bitcoin/issues>
 
 To receive security and update notifications, please subscribe to:
 
-  <https://bitcoincore.org/en/list/announcements/join/>
+  <https://bitcoinknots.org/list/announcements/join/>
 
 How to Upgrade
 ==============
@@ -24,18 +24,20 @@ shut down (which might take a few minutes in some cases), then run the
 installer (on Windows) or just copy over `/Applications/Bitcoin-Qt` (on Mac)
 or `bitcoind`/`bitcoin-qt` (on Linux).
 
-Upgrading directly from a version of Bitcoin Core that has reached its EOL is
+Upgrading directly from very old versions of Bitcoin Core or Knots is
 possible, but it might take some time if the data directory needs to be migrated. Old
-wallet versions of Bitcoin Core are generally supported.
+wallet versions of Bitcoin Knots are generally supported.
+
+If you need to ensure your prior transaction mempool is preserved across the
+upgrade (usually you don't), be sure you upgrade to and open Knots 0.21.1
+prior to upgrading to 22.0 or later.
 
 Compatibility
 ==============
 
-Bitcoin Core is supported and extensively tested on operating systems
-using the Linux kernel, macOS 10.15+, and Windows 7 and newer.  Bitcoin
-Core should also work on most other Unix-like systems but is not as
-frequently tested on them.  It is not recommended to use Bitcoin Core on
-unsupported systems.
+Bitcoin Knots is supported on operating systems using the Linux kernel,
+macOS 10.15+, and Windows 7 and newer. It is not recommended to use
+Bitcoin Knots on unsupported systems.
 
 Notable changes
 ===============
@@ -47,7 +49,10 @@ P2P and network changes
   They will become eligible for address gossip after sending an ADDR, ADDRV2,
   or GETADDR message. (#21528)
 
-- Before this release, Bitcoin Core had a strong preference to try to connect only to peers that listen on port 8333. As a result of that, Bitcoin nodes listening on non-standard ports would likely not get any Bitcoin Core peers connecting to them. This preference has been removed. (#23542)
+- Before this release, Bitcoin Knots had a strong preference to try to connect
+  only to peers that listen on port 8333. As a result of that, Bitcoin nodes
+  listening on non-standard ports would likely not get any Bitcoin Knots peers
+  connecting to them. This preference has been removed. (#23542)
 
 - Full support has been added for the CJDNS network. See the new option `-cjdnsreachable` and [doc/cjdns.md](https://github.com/bitcoin/bitcoin/tree/23.x/doc/cjdns.md) (#23077)
 
@@ -67,7 +72,7 @@ Otherwise, please use the `rescanblockchain` RPC to trigger a rescan. (#23123)
 Tracepoints and Userspace, Statically Defined Tracing support
 -------------------------------------------------------------
 
-Bitcoin Core release binaries for Linux now include experimental tracepoints which
+Bitcoin Knots release binaries for Linux now include experimental tracepoints which
 act as an interface for process-internal events. These can be used for review,
 debugging, monitoring, and more. The tracepoint API is semi-stable. While the API
 is tested, process internals might change between releases requiring changes to the
@@ -78,27 +83,11 @@ usage examples are provided in [contrib/tracing/](https://github.com/bitcoin/bit
 Updated RPCs
 ------------
 
-- The `validateaddress` RPC now returns an `error_locations` array for invalid
-  addresses, with the indices of invalid character locations in the address (if
-  known). For example, this will attempt to locate up to two Bech32 errors, and
-  return their locations if successful. Success and correctness are only guaranteed
-  if fewer than two substitution errors have been made.
-  The error message returned in the `error` field now also returns more specific
-  errors when decoding fails. (#16807)
-
 - The `-deprecatedrpc=addresses` configuration option has been removed.  RPCs
   `gettxout`, `getrawtransaction`, `decoderawtransaction`, `decodescript`,
   `gettransaction verbose=true` and REST endpoints `/rest/tx`, `/rest/getutxos`,
   `/rest/block` no longer return the `addresses` and `reqSigs` fields, which
   were previously deprecated in 22.0. (#22650)
-- The `getblock` RPC command now supports verbosity level 3 containing transaction inputs'
-  `prevout` information.  The existing `/rest/block/` REST endpoint is modified to contain
-  this information too. Every `vin` field will contain an additional `prevout` subfield
-  describing the spent output. `prevout` contains the following keys:
-  - `generated` - true if the spent coins was a coinbase.
-  - `height`
-  - `value`
-  - `scriptPubKey`
 
 - The top-level fee fields `fee`, `modifiedfee`, `ancestorfees` and `descendantfees`
   returned by RPCs `getmempoolentry`,`getrawmempool(verbose=true)`,
@@ -109,9 +98,14 @@ Updated RPCs
   fields `ancestorfees` and `descendantfees` are denominated in sats, whereas all
   fields in the `fees` object are denominated in BTC. (#22689)
 
-- Both `createmultisig` and `addmultisigaddress` now include a `warnings`
-  field, which will show a warning if a non-legacy address type is requested
-  when using uncompressed public keys. (#23113)
+- The return value of the `pruneblockchain` method had an off-by-one bug,
+  returning the height of the block *after* the most recent pruned. This has
+  been corrected, and it now returns the height of the last pruned block as
+  documented.
+
+- A new `require_checksum` option has been added to the `deriveaddress` method
+  to allow for specifying descriptors without first calculating a checksum for
+  them. (#24162)
 
 Changes to wallet related RPCs can be found in the Wallet section below.
 
@@ -127,11 +121,22 @@ New RPCs
   now reflects the status of the current block rather than the next
   block. (#23508)
 
+- The `sendall` RPC spends specific UTXOs to one or more recipients
+  without creating change. By default, the `sendall` RPC will spend
+  every UTXO in the wallet. `sendall` is useful to empty wallets or to
+  create a changeless payment from select UTXOs. When creating a payment
+  from a specific amount for which the recipient incurs the transaction
+  fee, continue to use the `subtractfeefromamount` option via the
+  `send`, `sendtoaddress`, or `sendmany` RPCs. (#24118)
+
+- A new `gettxspendingprevout` RPC has been added, which scans the mempool to
+  find transactions spending any of the given outpoints. (#24408)
+
 Files
 -----
 
-* On startup, the list of banned hosts and networks (via `setban` RPC) in
-  `banlist.dat` is ignored and only `banlist.json` is considered. Bitcoin Core
+- On startup, the list of banned hosts and networks (via `setban` RPC) in
+  `banlist.dat` is ignored and only `banlist.json` is considered. Bitcoin Knots
   version 22.x is the only version that can read `banlist.dat` and also write
   it to `banlist.json`. If `banlist.json` already exists, version 22.x will not
   try to translate the `banlist.dat` into json. After an upgrade, `listbanned`
@@ -140,21 +145,9 @@ Files
 Updated settings
 ----------------
 
-- In previous releases, the meaning of the command line option
-  `-persistmempool` (without a value provided) incorrectly disabled mempool
-  persistence.  `-persistmempool` is now treated like other boolean options to
-  mean `-persistmempool=1`. Passing `-persistmempool=0`, `-persistmempool=1`
-  and `-nopersistmempool` is unaffected. (#23061)
-
 - `-maxuploadtarget` now allows human readable byte units [k|K|m|M|g|G|t|T].
   E.g. `-maxuploadtarget=500g`. No whitespace, +- or fractions allowed.
   Default is `M` if no suffix provided. (#23249)
-
-- If `-proxy=` is given together with `-noonion` then the provided proxy will
-  not be set as a proxy for reaching the Tor network. So it will not be
-  possible to open manual connections to the Tor network for example with the
-  `addnode` RPC. To mimic the old behavior use `-proxy=` together with
-  `-onlynet=` listing all relevant networks except `onion`. (#22834)
 
 Tools and Utilities
 -------------------
@@ -163,7 +156,7 @@ Tools and Utilities
 
 - CLI `-addrinfo` now returns a single field for the number of `onion` addresses
   known to the node instead of separate `torv2` and `torv3` fields, as support
-  for Tor V2 addresses was removed from Bitcoin Core in 22.0. (#22544)
+  for Tor V2 addresses was removed from Bitcoin Knots in 22.0. (#22544)
 
 Wallet
 ------
@@ -187,10 +180,6 @@ Wallet
 - a new RPC `newkeypool` has been added, which will flush (entirely
   clear and refill) the keypool. (#23093)
 
-- `listunspent` now includes `ancestorcount`, `ancestorsize`, and
-  `ancestorfees` for each transaction output that is still in the mempool.
-  (#12677)
-
 - `lockunspent` now optionally takes a third parameter, `persistent`, which
   causes the lock to be written persistently to the wallet database. This
   allows UTXOs to remain locked even after node restarts or crashes. (#23065)
@@ -208,21 +197,40 @@ Wallet
   transactions. Immature coinbase transactions are coinbase transactions that
   have 100 or fewer confirmations, and are not spendable. (#14707)
 
+- The following RPCs: `listtransactions`, `gettransaction` and `listsinceblock`
+  now include the `wtxid` of the transaction. (#24198)
+
+- The `listtransactions`, `gettransaction`, and `listsinceblock`
+  RPC methods now include a wtxid field (hash of serialized transaction,
+  including witness data) for each transaction.
+
+- A new `gettxspendingprevout` RPC has been added, which scans the mempool to find
+  transactions spending any of the given outpoints. (#24408)
+
+- The `fundrawtransaction`, `send`, and `walletcreatefundedpsbt` RPC methods
+  now accept `minconf` and `maxconf` options to limit selection of inputs to
+  UTXOs with a range of blocks confirmed. The previous `min_conf` option which
+  served the same purpose is deprecated and may be removed in a future
+  version. (#22049)
+
+- The `fundrawtransaction` RPC method accepts a new `segwit_inputs_only`
+  option to limit inputs to only segwit UTXOs. (#25183)
+
 GUI changes
 -----------
 
 - UTXOs which are locked via the GUI are now stored persistently in the
   wallet database, so are not lost on node shutdown or crash. (#23065)
 
-- The Bech32 checkbox has been replaced with a dropdown for all address types, including the new Bech32m (BIP-350) standard for Taproot enabled wallets.
+- The Bech32 checkbox has been replaced with a dropdown for all address types,
+  including the new Bech32m (BIP-350) standard for Taproot enabled wallets.
+
+- The network traffic graph can be switched between linear and non-linear
+  views by clicking on the graph. Moving the mouse over the graph will show
+  precise time and traffic info for a specific point. (gui#473, gui#492)
 
 Low-level changes
 =================
-
-RPC
----
-
-- `getblockchaininfo` now returns a new `time` field, that provides the chain tip time. (#22407)
 
 Tests
 -----
@@ -252,6 +260,8 @@ Thanks to everyone who directly contributed to this release:
 - Anthony Towns
 - Antoine Poinsot
 - Arnab Sen
+- Aurèle Oulès
+- avirgovi
 - Ben Woosley
 - benthecarman
 - Bitcoin Hodler
@@ -282,6 +292,7 @@ Thanks to everyone who directly contributed to this release:
 - hg333
 - HiLivin
 - Igor Cota
+- ishaanam
 - Jadi
 - James O'Beirne
 - Jameson Lopp
@@ -291,8 +302,10 @@ Thanks to everyone who directly contributed to this release:
 - Joan Karadimov
 - John Newbery
 - Jon Atack
+- Jonas Schnelli
 - João Barbosa
 - josibake
+- Juan Pablo Civile
 - junderw
 - Karl-Johan Alm
 - katesalazar
@@ -326,12 +339,14 @@ Thanks to everyone who directly contributed to this release:
 - Pavel Safronov
 - Pavol Rusnak
 - Perlover
+- Peter Bushnell
 - Pieter Wuille
 - practicalswift
 - pradumnasaraf
 - pranabp-bit
 - Prateek Sancheti
 - Prayank
+- R E Broadley
 - Rafael Sadowski
 - rajarshimaitra
 - randymcmillan
@@ -339,6 +354,7 @@ Thanks to everyone who directly contributed to this release:
 - Rob Fielding
 - Rojar Smith
 - Russell Yanofsky
+- Ryan Ofsky
 - S3RK
 - Saibato
 - Samuel Dobson
@@ -354,6 +370,8 @@ Thanks to everyone who directly contributed to this release:
 - sogoagain
 - sstone
 - stratospher
+- Suhail Saqan
+- Suhas Daftuar
 - Suriyaa Rocky Sundararuban
 - Taeik Lim
 - TheCharlatan
