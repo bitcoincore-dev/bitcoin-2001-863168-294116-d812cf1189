@@ -65,6 +65,7 @@ add_definitions(-DHAVE_CONFIG_H)
 include(cmake/subtree-crc32c.cmake)
 include(cmake/subtree-leveldb.cmake)
 include(cmake/subtree-minisketch.cmake)
+include(cmake/subtree-secp256k1.cmake)
 
 message("\n")
 message("Configure summary")
