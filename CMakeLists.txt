@@ -61,6 +61,7 @@ include(cmake/optional.cmake)
 include(cmake/subtree-crc32c.cmake)
 include(cmake/subtree-leveldb.cmake)
 include(cmake/subtree-minisketch.cmake)
+include(cmake/subtree-secp256k1.cmake)
 
 add_subdirectory(src)
 
