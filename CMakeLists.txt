@@ -51,6 +51,7 @@ option(BUILD_DAEMON "Build bitcoind" ON)
 option(BUILD_CLI "Build bitcoin-cli" ON)
 option(BUILD_TX "Build bitcoin-tx" ON)
 option(BUILD_UTIL "Build bitcoin-util" ON)
+option(BUILD_BITCOINCONSENSUS_LIB "Build bitcoinconsensus shared library" ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
