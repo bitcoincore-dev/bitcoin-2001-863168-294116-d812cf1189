@@ -159,4 +159,10 @@
 /* Define if the visibility attribute is supported. */
 #define HAVE_DEFAULT_VISIBILITY_ATTRIBUTE
 
+
+// Features.
+
+/* Define to 1 to enable wallet functions. */
+#cmakedefine ENABLE_WALLET 1
+
 #endif // BITCOIN_CONFIG_H
