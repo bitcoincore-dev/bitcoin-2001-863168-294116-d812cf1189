@@ -49,6 +49,7 @@ include(cmake/check_filesystem.cmake)
 # Configurable options.
 option(BUILD_DAEMON "Build bitcoind" ON)
 option(BUILD_CLI "Build bitcoin-cli" ON)
+option(BUILD_BITCOINCONSENSUS_LIB "Build bitcoinconsensus shared library" ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
