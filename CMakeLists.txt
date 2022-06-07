@@ -53,6 +53,7 @@ option(BUILD_TX "Build bitcoin-tx" ON)
 option(BUILD_UTIL "Build bitcoin-util" ON)
 option(BUILD_BITCOINCONSENSUS_LIB "Build bitcoinconsensus shared library" ON)
 option(BUILD_BITCOINKERNEL_LIB "Build experimental bitcoinkernel shared library" ON)
+option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables" OFF)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -84,6 +85,12 @@ if(CMAKE_CROSSCOMPILING)
 endif()
 
 include(cmake/introspection.cmake)
+
+if(REDUCE_EXPORTS)
+  set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+  set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+  link_libraries(-Wl,--exclude-libs,ALL)
+endif()
 
 include(cmake/subtree-minisketch.cmake)
 include(cmake/subtree-secp256k1.cmake)
