@@ -17,7 +17,7 @@
 #include <qt/transactiontablemodel.h>
 #include <qt/walletmodel.h>
 
-#include <node/ui_interface.h>
+#include <node/uiinterface.h>
 
 #include <chrono>
 #include <optional>

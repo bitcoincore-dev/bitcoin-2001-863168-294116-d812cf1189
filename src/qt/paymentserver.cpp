@@ -15,7 +15,7 @@
 #include <chainparams.h>
 #include <interfaces/node.h>
 #include <key_io.h>
-#include <node/ui_interface.h>
+#include <node/uiinterface.h>
 #include <policy/policy.h>
 #include <util/system.h>
 #include <wallet/wallet.h>

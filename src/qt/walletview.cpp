@@ -19,7 +19,7 @@
 #include <qt/walletmodel.h>
 
 #include <interfaces/node.h>
-#include <node/ui_interface.h>
+#include <node/uiinterface.h>
 #include <util/strencodings.h>
 
 #include <QAction>
