@@ -15,7 +15,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL Darwin)
   execute_process(COMMAND brew --prefix qt@5 OUTPUT_VARIABLE qt5_brew_prefix ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 endif()
 
-find_package(Qt5 5.11.3 REQUIRED COMPONENTS Widgets LinguistTools PATHS ${qt5_brew_prefix})
+find_package(Qt5 5.11.3 REQUIRED COMPONENTS Widgets Network LinguistTools PATHS ${qt5_brew_prefix})
 message(STATUS "Found Qt, version ${Qt5_VERSION}")
 
 file(GLOB ts_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} locale/*.ts)
@@ -75,6 +75,47 @@ target_link_libraries(bitcoinqt
     leveldb
     Boost::boost
 )
+
+if(ENABLE_WALLET)
+  target_sources(bitcoinqt
+    PRIVATE
+      addressbookpage.cpp
+      addresstablemodel.cpp
+      askpassphrasedialog.cpp
+      coincontroldialog.cpp
+      coincontroltreewidget.cpp
+      createwalletdialog.cpp
+      editaddressdialog.cpp
+      openuridialog.cpp
+      overviewpage.cpp
+      paymentserver.cpp
+      psbtoperationsdialog.cpp
+      qrimagewidget.cpp
+      receivecoinsdialog.cpp
+      receiverequestdialog.cpp
+      recentrequeststablemodel.cpp
+      sendcoinsdialog.cpp
+      sendcoinsentry.cpp
+      signverifymessagedialog.cpp
+      transactiondesc.cpp
+      transactiondescdialog.cpp
+      transactionfilterproxy.cpp
+      transactionoverviewwidget.cpp
+      transactionrecord.cpp
+      transactiontablemodel.cpp
+      transactionview.cpp
+      walletcontroller.cpp
+      walletframe.cpp
+      walletmodel.cpp
+      walletmodeltransaction.cpp
+      walletview.cpp
+  )
+  target_link_libraries(bitcoinqt
+    PRIVATE
+      bitcoin_wallet
+      Qt5::Network
+  )
+endif()
 
 add_executable(bitcoin-qt)
 target_sources(bitcoin-qt
