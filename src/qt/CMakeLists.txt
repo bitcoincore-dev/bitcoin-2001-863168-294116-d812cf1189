@@ -101,6 +101,9 @@ target_link_libraries(bitcoinqt
 if(TARGET natpmp)
   target_link_libraries(bitcoinqt PRIVATE natpmp)
 endif()
+if(TARGET miniupnpc)
+  target_link_libraries(bitcoinqt PRIVATE miniupnpc)
+endif()
 
 if(ENABLE_WALLET)
   target_sources(bitcoinqt
