@@ -97,6 +97,9 @@ target_link_libraries(bitcoinqt
     leveldb
     Boost::boost
 )
+if(TARGET natpmp)
+  target_link_libraries(bitcoinqt PRIVATE natpmp)
+endif()
 
 if(ENABLE_WALLET)
   target_sources(bitcoinqt
