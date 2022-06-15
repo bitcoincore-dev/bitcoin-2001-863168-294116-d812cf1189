@@ -5,8 +5,11 @@
 set(WITH_NATPMP "auto" CACHE STRING "Enable NAT-PMP ([auto], yes, no). \"auto\" means \"yes\" if libnatpmp is found")
 option(ENABLE_NATPMP_DEFAULT "If NAT-PMP is enabled, turn it on at startup" OFF)
 
+set(WITH_MINIUPNPC "auto" CACHE STRING "Enable UPNP ([auto], yes, no). \"auto\" means \"yes\" if libminiupnpc is found")
+option(ENABLE_UPNP_DEFAULT "If UPNP is enabled, turn it on at startup" OFF)
+
 set(OPTIONAL_PACKAGE_OPTION_VALUES auto yes no)
-foreach(optional_package_option WITH_NATPMP)
+foreach(optional_package_option WITH_NATPMP WITH_MINIUPNPC)
   if(NOT ${optional_package_option} IN_LIST OPTIONAL_PACKAGE_OPTION_VALUES)
     message(FATAL_ERROR "${optional_package_option} value is \"${${optional_package_option}}\", but must be one of \"auto\", \"yes\" or \"no\".")
   endif()
@@ -37,6 +40,36 @@ if(NOT WITH_NATPMP STREQUAL no)
         TARGET natpmp
         APPEND
         PROPERTY INTERFACE_COMPILE_DEFINITIONS NATPMP_STATICLIB
+      )
+    endif()
+  endif()
+endif()
+
+if(NOT WITH_MINIUPNPC STREQUAL no)
+  find_library(LIBMINIUPNPC_LIBRARY miniupnpc)
+  if(LIBMINIUPNPC_LIBRARY STREQUAL LIBMINIUPNPC_LIBRARY-NOTFOUND)
+    if(WITH_MINIUPNPC STREQUAL yes)
+      message(FATAL_ERROR "libminiupnpc requested, but not found.")
+    else()
+      message(WARNING "libminiupnpc not found, disabling.\nTo skip libminiupnpc check, use \"-DWITH_MINIUPNPC=no\".")
+    endif()
+  else()
+    message(STATUS "Found libminiupnpc: ${LIBMINIUPNPC_LIBRARY}")
+    if(ENABLE_UPNP_DEFAULT)
+      set(USE_UPNP 1)
+    else()
+      set(USE_UPNP 0)
+    endif()
+    add_library(miniupnpc UNKNOWN IMPORTED)
+    set_target_properties(miniupnpc PROPERTIES
+      IMPORTED_LOCATION ${LIBMINIUPNPC_LIBRARY}
+      INTERFACE_COMPILE_DEFINITIONS USE_UPNP=${USE_UPNP}
+    )
+    if(CMAKE_SYSTEM_NAME STREQUAL Windows)
+      set_property(
+        TARGET miniupnpc
+        APPEND
+        PROPERTY INTERFACE_COMPILE_DEFINITIONS MINIUPNP_STATICLIB
       )
     endif()
   endif()
