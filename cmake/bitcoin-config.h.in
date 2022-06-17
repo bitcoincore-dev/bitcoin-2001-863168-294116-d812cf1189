@@ -168,4 +168,7 @@
 /* Define to 1 to enable wallet functions. */
 #cmakedefine ENABLE_WALLET 1
 
+/* Define to 1 to enable tracepoints for Userspace, Statically Defined Tracing. */
+#cmakedefine ENABLE_TRACING 1
+
 #endif // BITCOIN_CONFIG_H
