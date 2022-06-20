@@ -156,6 +156,8 @@ if(NOT ENABLE_TRACING)
   set(ENABLE_USDT_TRACEPOINTS_TRUE \#)
 endif()
 configure_file(test/config.ini.in test/config.ini @ONLY)
+execute_process(COMMAND mkdir -p ${CMAKE_BINARY_DIR}/test/functional)
+execute_process(COMMAND ln -s ${CMAKE_SOURCE_DIR}/test/functional/test_runner.py ${CMAKE_BINARY_DIR}/test/functional/test_runner.py)
 
 message("\n")
 message("Configure summary")
