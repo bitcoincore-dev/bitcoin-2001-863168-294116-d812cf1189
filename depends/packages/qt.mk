@@ -58,7 +58,6 @@ $(package)_config_opts += -no-libudev
 $(package)_config_opts += -no-mtdev
 $(package)_config_opts += -no-openssl
 $(package)_config_opts += -no-openvg
-$(package)_config_opts += -no-reduce-relocations
 $(package)_config_opts += -no-schannel
 $(package)_config_opts += -no-sctp
 $(package)_config_opts += -no-securetransport
@@ -152,6 +151,11 @@ $(package)_config_opts_linux += -fontconfig
 $(package)_config_opts_linux += -no-opengl
 $(package)_config_opts_linux += -no-feature-vulkan
 $(package)_config_opts_linux += -dbus-runtime
+ifneq ($(LTO),)
+# See https://wiki.qt.io/Performance_Tip_Startup_Time
+$(package)_config_opts_linux += -reduce-relocations
+$(package)_config_opts_linux += -ltcg
+endif
 $(package)_config_opts_arm_linux += -platform linux-g++ -xplatform bitcoin-linux-g++
 $(package)_config_opts_i686_linux  = -xplatform linux-g++-32
 ifneq (,$(findstring -stdlib=libc++,$($(1)_cxx)))
