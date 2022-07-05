@@ -40,6 +40,9 @@ $(package)_config_opts += -bindir $(build_prefix)/bin
 $(package)_config_opts += -c++std c++17
 $(package)_config_opts += -confirm-license
 $(package)_config_opts += -hostprefix $(build_prefix)
+ifneq ($(LTO),)
+$(package)_config_opts += -ltcg
+endif
 $(package)_config_opts += -no-compile-examples
 $(package)_config_opts += -no-cups
 $(package)_config_opts += -no-egl
