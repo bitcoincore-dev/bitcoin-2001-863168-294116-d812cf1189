@@ -415,8 +415,6 @@ enum class CoinsCacheSizeState
     OK = 0
 };
 
-using FopenFn = std::function<FILE*(const fs::path&, const char*)>;
-
 /**
  * CChainState stores and provides an API to update our local knowledge of the
  * current best chain.
@@ -679,7 +677,7 @@ public:
     void CheckBlockIndex();
 
     /** Load the persisted mempool from disk */
-    void LoadMempool(const fs::path& load_path, FopenFn mockable_fopen_function = fsbridge::fopen);
+    void LoadMempool(const fs::path& load_path, fsbridge::FopenFn mockable_fopen_function = fsbridge::fopen);
 
     /** Update the chain tip based on database information, i.e. CoinsTip()'s best block. */
     bool LoadChainTip() EXCLUSIVE_LOCKS_REQUIRED(cs_main);
@@ -1015,10 +1013,10 @@ bool DeploymentEnabled(const ChainstateManager& chainman, DEP dep)
 }
 
 /** Dump the mempool to disk. */
-bool DumpMempool(const CTxMemPool& pool, const fs::path& dump_path, FopenFn mockable_fopen_function = fsbridge::fopen, bool skip_file_commit = false);
+bool DumpMempool(const CTxMemPool& pool, const fs::path& dump_path, fsbridge::FopenFn mockable_fopen_function = fsbridge::fopen, bool skip_file_commit = false);
 
 /** Load the mempool from disk. */
-bool LoadMempool(CTxMemPool& pool, const fs::path& load_path, CChainState& active_chainstate, FopenFn mockable_fopen_function = fsbridge::fopen);
+bool LoadMempool(CTxMemPool& pool, const fs::path& load_path, CChainState& active_chainstate, fsbridge::FopenFn mockable_fopen_function = fsbridge::fopen);
 
 /**
  * Return the expected assumeutxo value for a given height, if one exists.
