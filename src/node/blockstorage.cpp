@@ -11,6 +11,7 @@
 #include <flatfile.h>
 #include <fs.h>
 #include <hash.h>
+#include <node/mempool_persist_args.h>
 #include <pow.h>
 #include <reverse_iterator.h>
 #include <shutdown.h>
@@ -823,7 +824,7 @@ struct CImportingNow {
     }
 };
 
-void ThreadImport(ChainstateManager& chainman, std::vector<fs::path> vImportFiles, const ArgsManager& args)
+void ThreadImport(ChainstateManager& chainman, std::vector<fs::path> vImportFiles, const ArgsManager& args, const fs::path& mempool_path)
 {
     SetSyscallSandboxPolicy(SyscallSandboxPolicy::INITIALIZATION_LOAD_BLOCKS);
     ScheduleBatchPriority();
@@ -893,6 +894,6 @@ void ThreadImport(ChainstateManager& chainman, std::vector<fs::path> vImportFile
             return;
         }
     } // End scope of CImportingNow
-    chainman.ActiveChainstate().LoadMempool(args);
+    chainman.ActiveChainstate().LoadMempool(mempool_path);
 }
 } // namespace node
