@@ -11,6 +11,9 @@ class ArgsManager;
 
 namespace node {
 
+/** Default for -persistmempool */
+static constexpr bool DEFAULT_PERSIST_MEMPOOL{true};
+
 bool MempoolPersist(const ArgsManager& argsman);
 fs::path MempoolPath(const ArgsManager& argsman);
 
