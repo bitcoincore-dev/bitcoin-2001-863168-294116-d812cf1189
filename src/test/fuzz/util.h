@@ -24,6 +24,7 @@
 #include <test/fuzz/fuzz.h>
 #include <test/util/net.h>
 #include <txmempool.h>
+#include <txmempool_entry.h>
 #include <uint256.h>
 #include <version.h>
 
