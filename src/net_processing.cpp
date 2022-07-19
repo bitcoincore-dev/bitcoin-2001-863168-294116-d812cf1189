@@ -31,6 +31,7 @@
 #include <sync.h>
 #include <tinyformat.h>
 #include <txmempool.h>
+#include <txmempool_entry.h>
 #include <txorphanage.h>
 #include <txrequest.h>
 #include <util/check.h> // For NDEBUG compile time check
