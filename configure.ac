@@ -19,6 +19,16 @@ if test "$PKG_CONFIG" = ""; then
   AC_MSG_ERROR([pkg-config not found])
 fi
 
+if test -n "$PKG_CONFIG_PATH"; then
+  PKG_CONFIG="PKG_CONFIG_PATH=$PKG_CONFIG_PATH $PKG_CONFIG"
+fi
+if test -n "$PKG_CONFIG_LIBDIR"; then
+  PKG_CONFIG="PKG_CONFIG_LIBDIR=$PKG_CONFIG_LIBDIR $PKG_CONFIG"
+fi
+if test -n "$PKG_CONFIG_PATH" || test -n "$PKG_CONFIG_LIBDIR"; then
+  PKG_CONFIG="env $PKG_CONFIG"
+fi
+
 BITCOIN_DAEMON_NAME=bitcoind
 BITCOIN_GUI_NAME=bitcoin-qt
 BITCOIN_CLI_NAME=bitcoin-cli
