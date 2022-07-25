@@ -1476,33 +1476,33 @@ if test "$use_boost" = "yes"; then
 fi
 
 if test "$use_external_signer" != "no"; then
-      AC_MSG_CHECKING([whether Boost.Process can be used])
-      TEMP_CXXFLAGS="$CXXFLAGS"
-      dnl Boost 1.78 requires the following workaround.
-      dnl See: https://github.com/boostorg/process/issues/235
-      CXXFLAGS="$CXXFLAGS -Wno-error=narrowing"
-      TEMP_CPPFLAGS="$CPPFLAGS"
-      CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
-      TEMP_LDFLAGS="$LDFLAGS"
-      dnl Boost 1.73 and older require the following workaround.
-      LDFLAGS="$LDFLAGS $PTHREAD_CFLAGS"
-      AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <boost/process.hpp>]])],
-        [have_boost_process="yes"],
-        [have_boost_process="no"])
-      LDFLAGS="$TEMP_LDFLAGS"
-      CPPFLAGS="$TEMP_CPPFLAGS"
-      CXXFLAGS="$TEMP_CXXFLAGS"
-      AC_MSG_RESULT([$have_boost_process])
-      if test "$have_boost_process" = "yes"; then
-        use_external_signer="yes"
-        BOOST_CPPFLAGS="$BOOST_CPPFLAGS -DBOOST_PROCESS_USE_STD_FS"
-        AC_DEFINE([ENABLE_EXTERNAL_SIGNER], [1], [Define if external signer support is enabled])
-      else
-        if test "$use_external_signer" = "yes"; then
-          AC_MSG_ERROR([External signing is not supported for this Boost version])
-        fi
-        use_external_signer="no";
-      fi
+  AC_MSG_CHECKING([whether Boost.Process can be used])
+  TEMP_CXXFLAGS="$CXXFLAGS"
+  dnl Boost 1.78 requires the following workaround.
+  dnl See: https://github.com/boostorg/process/issues/235
+  CXXFLAGS="$CXXFLAGS -Wno-error=narrowing"
+  TEMP_CPPFLAGS="$CPPFLAGS"
+  CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
+  TEMP_LDFLAGS="$LDFLAGS"
+  dnl Boost 1.73 and older require the following workaround.
+  LDFLAGS="$LDFLAGS $PTHREAD_CFLAGS"
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <boost/process.hpp>]])],
+    [have_boost_process="yes"],
+    [have_boost_process="no"])
+  LDFLAGS="$TEMP_LDFLAGS"
+  CPPFLAGS="$TEMP_CPPFLAGS"
+  CXXFLAGS="$TEMP_CXXFLAGS"
+  AC_MSG_RESULT([$have_boost_process])
+  if test "$have_boost_process" = "yes"; then
+    use_external_signer="yes"
+    BOOST_CPPFLAGS="$BOOST_CPPFLAGS -DBOOST_PROCESS_USE_STD_FS"
+    AC_DEFINE([ENABLE_EXTERNAL_SIGNER], [1], [Define if external signer support is enabled])
+  else
+    if test "$use_external_signer" = "yes"; then
+      AC_MSG_ERROR([External signing is not supported for this Boost version])
+    fi
+    use_external_signer="no";
+  fi
 fi
 AM_CONDITIONAL([ENABLE_EXTERNAL_SIGNER], [test "$use_external_signer" = "yes"])
 
