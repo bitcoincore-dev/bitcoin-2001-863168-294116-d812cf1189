@@ -1476,17 +1476,6 @@ if test "$use_boost" = "yes"; then
 fi
 
 if test "$use_external_signer" != "no"; then
-  case $host in
-    *mingw*)
-      dnl Boost Process uses Boost Filesystem when targeting Windows. Also,
-      dnl since Boost 1.71.0, Process does not work with mingw-w64 without
-      dnl workarounds. See 67669ab425b52a2b6be3d2f3b3b7e3939b676a2c.
-      if test "$use_external_signer" = "yes"; then
-        AC_MSG_ERROR([External signing is not supported on Windows])
-      fi
-      use_external_signer="no";
-    ;;
-    *)
       AC_MSG_CHECKING([whether Boost.Process can be used])
       TEMP_CXXFLAGS="$CXXFLAGS"
       dnl Boost 1.78 requires the following workaround.
@@ -1506,6 +1495,7 @@ if test "$use_external_signer" != "no"; then
       AC_MSG_RESULT([$have_boost_process])
       if test "$have_boost_process" = "yes"; then
         use_external_signer="yes"
+        BOOST_CPPFLAGS="$BOOST_CPPFLAGS -DBOOST_PROCESS_USE_STD_FS"
         AC_DEFINE([ENABLE_EXTERNAL_SIGNER], [1], [Define if external signer support is enabled])
       else
         if test "$use_external_signer" = "yes"; then
@@ -1513,8 +1503,6 @@ if test "$use_external_signer" != "no"; then
         fi
         use_external_signer="no";
       fi
-    ;;
-  esac
 fi
 AM_CONDITIONAL([ENABLE_EXTERNAL_SIGNER], [test "$use_external_signer" = "yes"])
 
