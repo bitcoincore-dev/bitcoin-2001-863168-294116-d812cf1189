@@ -52,7 +52,11 @@ BOOST_AUTO_TEST_CASE(run_command)
     {
         // An invalid command is handled by Boost
 #ifdef WIN32
+#ifdef _MSC_VER
         const std::string expected{"The system cannot find the file specified."};
+#else
+        const std::string expected{"No such device or address"};
+#endif
 #else
         const std::string expected{"No such file or directory"};
 #endif
@@ -66,12 +70,13 @@ BOOST_AUTO_TEST_CASE(run_command)
     {
         // Return non-zero exit code, no output to stderr
 #ifdef WIN32
-        const std::string command{"cmd.exe /c call"};
+        const std::string command{"cmd.exe /c exit 1"};
 #else
         const std::string command{"false"};
 #endif
         BOOST_CHECK_EXCEPTION(RunCommandParseJSON(command), std::runtime_error, [&](const std::runtime_error& e) {
-            BOOST_CHECK(std::string(e.what()).find(strprintf("RunCommandParseJSON error: process(%s) returned 1: \n", command)) != std::string::npos);
+            const std::string what(e.what());
+            BOOST_CHECK(what.find(strprintf("RunCommandParseJSON error: process(%s) returned 1: \n", command)) != std::string::npos);
             return true;
         });
     }
@@ -79,7 +84,11 @@ BOOST_AUTO_TEST_CASE(run_command)
         // Return non-zero exit code, with error message for stderr
 #ifdef WIN32
         const std::string command{"cmd.exe /c dir nosuchfile"};
+#ifdef _MSC_VER
         const std::string expected{"File Not Found"};
+#else
+        const std::string expected{"File not found."};
+#endif
 #else
         const std::string command{"ls nosuchfile"};
         const std::string expected{"No such file or directory"};
