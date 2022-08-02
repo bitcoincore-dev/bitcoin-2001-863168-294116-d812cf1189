@@ -101,7 +101,7 @@ include(cmake/subtree-secp256k1.cmake)
 
 include(FindPkgConfig)
 
-if(BUILD_DAEMON OR BUILD_CLI OR BUILD_TX OR BUILD_BITCOINKERNEL_LIB OR BUILD_WALLET_TOOL)
+if(BUILD_DAEMON OR BUILD_CLI OR BUILD_TX OR BUILD_BITCOINKERNEL_LIB OR BUILD_WALLET_TOOL OR NOT WITH_GUI STREQUAL no)
   # Find Boost headers only.
   find_package(Boost 1.64.0 REQUIRED)
 
@@ -109,17 +109,18 @@ if(BUILD_DAEMON OR BUILD_CLI OR BUILD_TX OR BUILD_BITCOINKERNEL_LIB OR BUILD_WAL
   find_package(Threads REQUIRED)
 endif()
 
-if(BUILD_DAEMON OR BUILD_CLI)
+if(BUILD_DAEMON OR BUILD_CLI OR NOT WITH_GUI STREQUAL no)
   pkg_check_modules(libevent REQUIRED libevent>=2.1.8 IMPORTED_TARGET)
   if(WIN32)
     target_link_libraries(PkgConfig::libevent INTERFACE iphlpapi ws2_32)
   endif()
 endif()
 
-if(NOT CMAKE_SYSTEM_NAME STREQUAL Windows AND BUILD_DAEMON)
+if(NOT CMAKE_SYSTEM_NAME STREQUAL Windows AND (BUILD_DAEMON OR NOT WITH_GUI STREQUAL no))
   pkg_check_modules(libevent_pthreads REQUIRED libevent_pthreads>=2.1.8 IMPORTED_TARGET)
 endif()
 
+include(cmake/optional_qt.cmake)
 include(cmake/optional.cmake)
 
 add_subdirectory(src)
@@ -145,4 +146,6 @@ if(ENABLE_WALLET)
   message("  Berkeley DB, legacy wallets ...... ${WITH_BDB}")
   message("  wallet tool ...................... ${BUILD_WALLET_TOOL}")
 endif()
+message("Optional packages:")
+message("  GUI .............................. ${WITH_GUI}")
 message("\n")
