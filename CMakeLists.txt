@@ -28,6 +28,8 @@ project("Bitcoin Core"
   LANGUAGES CXX C ASM
 )
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
+
 set(PACKAGE_NAME ${PROJECT_NAME})
 set(PACKAGE_VERSION ${PROJECT_VERSION})
 set(CLIENT_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
@@ -53,6 +55,7 @@ option(BUILD_TX "Build bitcoin-tx" ON)
 option(BUILD_UTIL "Build bitcoin-util" ON)
 option(BUILD_BITCOINCONSENSUS_LIB "Build bitcoinconsensus shared library" ON)
 option(BUILD_BITCOINKERNEL_LIB "Build experimental bitcoinkernel shared library" ON)
+option(ENABLE_WALLET "Enable wallet" ON)
 option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables" OFF)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -135,4 +138,9 @@ message("Utility binaries:")
 message("  bitcoin-cli ...................... ${BUILD_CLI}")
 message("  bitcoin-tx ....................... ${BUILD_TX}")
 message("  bitcoin-util ..................... ${BUILD_UTIL}")
+message("Wallet functionality ............... ${WITH_WALLET}")
+if(ENABLE_WALLET)
+  message("  SQLite, descriptor wallets ....... ${WITH_SQLITE}")
+  message("  Berkeley DB, legacy wallets ...... ${WITH_BDB}")
+endif()
 message("\n")
