@@ -52,6 +52,7 @@ include(cmake/check_filesystem.cmake)
 option(BUILD_DAEMON "Build bitcoind" ON)
 option(BUILD_CLI "Build bitcoin-cli" ON)
 option(BUILD_TX "Build bitcoin-tx" ON)
+option(BUILD_UTIL "Build bitcoin-util" ON)
 option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables" OFF)
 
 # Define custom "RelWithAsserts" build type
@@ -182,4 +183,5 @@ message("Compile options: ${compile_options}")
 message("Utility binaries:")
 message("  bitcoin-cli ...................... ${BUILD_CLI}")
 message("  bitcoin-tx ....................... ${BUILD_TX}")
+message("  bitcoin-util ..................... ${BUILD_UTIL}")
 message("\n")
