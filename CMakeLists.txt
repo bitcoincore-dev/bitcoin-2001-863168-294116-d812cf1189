@@ -49,6 +49,7 @@ include(cmake/check_filesystem.cmake)
 # Configurable options.
 option(BUILD_DAEMON "Build bitcoind" ON)
 option(BUILD_CLI "Build bitcoin-cli" ON)
+option(BUILD_TX "Build bitcoin-tx" ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -86,7 +87,7 @@ include(cmake/subtree-secp256k1.cmake)
 
 include(FindPkgConfig)
 
-if(BUILD_DAEMON OR BUILD_CLI)
+if(BUILD_DAEMON OR BUILD_CLI OR BUILD_TX)
   # Find Boost headers only.
   find_package(Boost 1.64.0 REQUIRED)
 
@@ -120,4 +121,5 @@ get_directory_property(compile_options COMPILE_OPTIONS)
 message("Compile options: ${compile_options}")
 message("Utility binaries:")
 message("  bitcoin-cli ...................... ${BUILD_CLI}")
+message("  bitcoin-tx ....................... ${BUILD_TX}")
 message("\n")
