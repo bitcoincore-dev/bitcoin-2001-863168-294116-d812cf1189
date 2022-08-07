@@ -50,6 +50,7 @@ include(cmake/check_filesystem.cmake)
 
 # Configurable options.
 option(BUILD_DAEMON "Build bitcoind" ON)
+option(BUILD_CLI "Build bitcoin-cli" ON)
 option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables" OFF)
 
 # Define custom "RelWithAsserts" build type
@@ -146,7 +147,7 @@ include(cmake/optional.cmake)
 
 include(FindPkgConfig)
 
-if(BUILD_DAEMON)
+if(BUILD_DAEMON OR BUILD_CLI)
   # Find Boost headers only.
   find_package(Boost 1.64.0 REQUIRED)
 
@@ -177,4 +178,6 @@ message("Preprocessor defined macros: ${definitions}")
 message("CXX: ${CMAKE_CXX_COMPILER_LAUNCHER} ${CMAKE_CXX_COMPILER}")
 get_directory_property(compile_options COMPILE_OPTIONS)
 message("Compile options: ${compile_options}")
+message("Utility binaries:")
+message("  bitcoin-cli ...................... ${BUILD_CLI}")
 message("\n")
