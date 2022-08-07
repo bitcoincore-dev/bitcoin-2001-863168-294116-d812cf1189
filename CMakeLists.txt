@@ -154,6 +154,8 @@ endif()
 
 include(cmake/introspection.cmake)
 
+include(cmake/optional.cmake)
+
 add_subdirectory(src)
 
 message("\n")
