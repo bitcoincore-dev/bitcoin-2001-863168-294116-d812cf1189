@@ -50,6 +50,7 @@ else()
 endif()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+include(cmake/check_filesystem.cmake)
 
 # Configurable options.
 option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables" OFF)
