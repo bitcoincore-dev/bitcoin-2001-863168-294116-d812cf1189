@@ -38,6 +38,9 @@ endif()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Configurable options.
+option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables" OFF)
+
 include(cmake/try_append_cxxflag.cmake)
 # Define custom "RelWithAsserts" build type
 set(release_cxx_flags "")
@@ -98,6 +101,14 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+if(REDUCE_EXPORTS)
+  set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+  set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+  if(NOT CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+    link_libraries(-Wl,--exclude-libs,ALL)
+  endif()
+endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL Linux)
   link_libraries(-Wl,-O2)
