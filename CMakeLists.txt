@@ -163,6 +163,8 @@ endif()
 
 get_directory_property(common_compile_options COMPILE_OPTIONS)
 
+include(cmake/introspection.cmake)
+
 add_subdirectory(src)
 
 message("\n")
