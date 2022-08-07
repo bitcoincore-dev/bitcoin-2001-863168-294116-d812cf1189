@@ -38,6 +38,9 @@ endif()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Configurable options.
+option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables" OFF)
+
 include(cmake/try_append_compiler_flag.cmake)
 # Define custom "RelWithAsserts" build type
 set(release_c_flags "")
@@ -112,6 +115,14 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+if(REDUCE_EXPORTS)
+  set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+  set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+  if(NOT CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+    link_libraries(-Wl,--exclude-libs,ALL)
+  endif()
+endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL Windows)
   add_definitions(-D_MT -DWIN32 -D_WINDOWS -D_WIN32_WINNT=0x0601 -D_WIN32_IE=0x0501 -DWIN32_LEAN_AND_MEAN)
