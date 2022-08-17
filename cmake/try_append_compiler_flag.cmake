@@ -1,3 +1,9 @@
+if(CMAKE_CROSSCOMPILING)
+  set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+else()
+  set(CMAKE_TRY_COMPILE_TARGET_TYPE EXECUTABLE)
+endif()
+
 include(CheckCCompilerFlag)
 function(try_append_cflag flags_var flag)
   string(MAKE_C_IDENTIFIER ${flag} result)
