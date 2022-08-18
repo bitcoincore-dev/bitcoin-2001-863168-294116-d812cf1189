@@ -86,19 +86,60 @@ set(CMAKE_SHARED_LINKER_FLAGS_RELWITHASSERTS "${release_linker_flags}" CACHE STR
   "Flags used by the shared libraries linker during \"RelWithAsserts\" builds."
   FORCE
 )
+# Define custom "RelHardened" build type
+set(hardened_cxx_flags "${release_cxx_flags}")
+try_append_cxxflag(hardened_cxx_flags "-Wstack-protector")
+try_append_cxxflag(hardened_cxx_flags "-fstack-protector-all")
+try_append_cxxflag(hardened_cxx_flags "-fcf-protection=full")
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  # stack-clash-protection doesn't currently work, and likely should just be skipped for Windows.
+  # See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90458 for more details.
+  try_append_cxxflag(hardened_cxx_flags "-fstack-clash-protection")
+endif()
+set(CMAKE_C_FLAGS_RELHARDENED "${release_c_flags}" CACHE STRING
+  "Flags used by the C compiler during \"RelHardened\" builds."
+  FORCE
+)
+set(CMAKE_CXX_FLAGS_RELHARDENED "${hardened_cxx_flags}" CACHE STRING
+  "Flags used by the C++ compiler during \"RelHardened\" builds."
+  FORCE
+)
+set(hardened_linker_flags "${release_linker_flags}")
+try_append_linker_flag(hardened_linker_flags "-Wl,--enable-reloc-section")
+try_append_linker_flag(hardened_linker_flags "-Wl,--dynamicbase")
+try_append_linker_flag(hardened_linker_flags "-Wl,--nxcompat")
+try_append_linker_flag(hardened_linker_flags "-Wl,--high-entropy-va")
+try_append_linker_flag(hardened_linker_flags "-Wl,-z,relro")
+try_append_linker_flag(hardened_linker_flags "-Wl,-z,now")
+try_append_linker_flag(hardened_linker_flags "-Wl,-z,separate-code")
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  try_append_linker_flag(hardened_linker_flags "-Wl,-bind_at_load")
+endif()
+set(CMAKE_EXE_LINKER_FLAGS_RELHARDENED "${hardened_linker_flags}" CACHE STRING
+  "Flags used for linking binaries during \"RelHardened\" builds."
+  FORCE
+)
+set(CMAKE_SHARED_LINKER_FLAGS_RELHARDENED "${hardened_linker_flags}" CACHE STRING
+  "Flags used by the shared libraries linker during \"RelHardened\" builds."
+  FORCE
+)
 mark_as_advanced(
   CMAKE_C_FLAGS_RELWITHASSERTS
   CMAKE_CXX_FLAGS_RELWITHASSERTS
   CMAKE_EXE_LINKER_FLAGS_RELWITHASSERTS
   CMAKE_SHARED_LINKER_FLAGS_RELWITHASSERTS
+  CMAKE_C_FLAGS_RELHARDENED
+  CMAKE_CXX_FLAGS_RELHARDENED
+  CMAKE_EXE_LINKER_FLAGS_RELHARDENED
+  CMAKE_SHARED_LINKER_FLAGS_RELHARDENED
 )
 get_property(cached_cmake_build_type CACHE CMAKE_BUILD_TYPE PROPERTY TYPE)
 if(cached_cmake_build_type)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY
-    STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo" "RelWithAsserts"
+    STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo" "RelWithAsserts" "RelHardened"
   )
 endif()
-set(default_build_type "RelWithAsserts")
+set(default_build_type "RelHardened")
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "Setting build type to \"${default_build_type}\" as none was specified")
   set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE STRING "Choose the type of build." FORCE)
