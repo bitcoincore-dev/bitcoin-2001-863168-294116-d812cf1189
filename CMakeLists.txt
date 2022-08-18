@@ -212,6 +212,8 @@ include(cmake/introspection.cmake)
 include(CheckStdFilesystem)
 check_std_filesystem()
 
+include(cmake/optional.cmake)
+
 add_subdirectory(src)
 
 message("\n")
