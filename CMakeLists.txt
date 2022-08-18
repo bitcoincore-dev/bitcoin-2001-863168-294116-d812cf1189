@@ -57,6 +57,7 @@ include(cmake/check_filesystem.cmake)
 # Configurable options.
 option(BUILD_DAEMON "Build bitcoind" ON)
 option(BUILD_CLI "Build bitcoin-cli" ON)
+option(BUILD_TX "Build bitcoin-tx" ON)
 option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables" OFF)
 
 include(TryAppendCompilerFlag)
@@ -201,7 +202,7 @@ include(cmake/subtree-secp256k1.cmake)
 
 include(cmake/optional.cmake)
 
-if(BUILD_DAEMON OR BUILD_CLI)
+if(BUILD_DAEMON OR BUILD_CLI OR BUILD_TX)
   # Find Boost headers only.
   find_package(Boost 1.64.0 REQUIRED)
 
@@ -226,6 +227,7 @@ message("Configure summary")
 message("=================")
 message("Utility binaries:")
 message("  bitcoin-cli ...................... ${BUILD_CLI}")
+message("  bitcoin-tx ....................... ${BUILD_TX}")
 message("")
 get_directory_property(definitions COMPILE_DEFINITIONS)
 message("Preprocessor defined macros ........ ${definitions}")
