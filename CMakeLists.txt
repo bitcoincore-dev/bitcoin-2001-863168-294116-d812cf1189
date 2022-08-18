@@ -209,6 +209,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   try_append_linker_flag(release_linker_flags "-Wl,-headerpad_max_install_names")
 endif()
 
+include(cmake/introspection.cmake)
+
 include(CheckStdFilesystem)
 check_std_filesystem()
 
