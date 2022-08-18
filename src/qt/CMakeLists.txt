@@ -73,6 +73,9 @@ target_link_libraries(bitcoinqt
     Boost::boost
     $<$<CXX_COMPILER_ID:MSVC>:shlwapi>
 )
+if(TARGET NATPMP::NATPMP)
+  target_link_libraries(bitcoinqt PRIVATE NATPMP::NATPMP)
+endif()
 
 if(ENABLE_WALLET)
   target_sources(bitcoinqt
