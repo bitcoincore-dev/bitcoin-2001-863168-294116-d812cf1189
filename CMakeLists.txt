@@ -213,6 +213,8 @@ endif()
 
 include(cmake/introspection.cmake)
 
+include(cmake/subtree-minisketch.cmake)
+
 include(CheckStdFilesystem)
 check_std_filesystem()
 
