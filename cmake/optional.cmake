@@ -6,21 +6,36 @@
 
 set(USE_CCACHE "auto" CACHE STRING "Use ccache for building ([auto], yes, no). \"auto\" means \"yes\" if ccache is found")
 
-set(WITH_SQLITE "auto" CACHE STRING "Enable SQLite wallet support ([auto], yes, no). \"auto\" means \"yes\" if libsqlite3 is found")
-set(WITH_BDB "auto" CACHE STRING "Enable Berkeley DB (BDB) wallet support ([auto], yes, no). \"auto\" means \"yes\" if libdb_cxx is found")
+if(NOT DEFINED WITH_SQLITE)
+  set(WITH_SQLITE "auto" CACHE STRING "Enable SQLite wallet support ([auto], yes, no). \"auto\" means \"yes\" if libsqlite3 is found")
+endif()
+
+if(NOT DEFINED WITH_BDB)
+  set(WITH_BDB "auto" CACHE STRING "Enable Berkeley DB (BDB) wallet support ([auto], yes, no). \"auto\" means \"yes\" if libdb_cxx is found")
+endif()
 option(ALLOW_INCOMPATIBLE_BDB "Allow using a Berkeley DB (BDB) version other than 4.8" OFF)
 
-set(WITH_NATPMP "auto" CACHE STRING "Enable NAT-PMP ([auto], yes, no). \"auto\" means \"yes\" if libnatpmp is found")
+if(NOT DEFINED WITH_NATPMP)
+  set(WITH_NATPMP "auto" CACHE STRING "Enable NAT-PMP ([auto], yes, no). \"auto\" means \"yes\" if libnatpmp is found")
+endif()
 option(ENABLE_NATPMP_DEFAULT "If NAT-PMP is enabled, turn it on at startup" OFF)
 
-set(WITH_MINIUPNPC "auto" CACHE STRING "Enable UPNP ([auto], yes, no). \"auto\" means \"yes\" if libminiupnpc is found")
+if(NOT DEFINED WITH_MINIUPNPC)
+  set(WITH_MINIUPNPC "auto" CACHE STRING "Enable UPNP ([auto], yes, no). \"auto\" means \"yes\" if libminiupnpc is found")
+endif()
 option(ENABLE_UPNP_DEFAULT "If UPNP is enabled, turn it on at startup" OFF)
 
-set(WITH_ZMQ "auto" CACHE STRING "Enable ZMQ notifications ([auto], yes, no). \"auto\" means \"yes\" if libzmq is found")
+if(NOT DEFINED WITH_ZMQ)
+  set(WITH_ZMQ "auto" CACHE STRING "Enable ZMQ notifications ([auto], yes, no). \"auto\" means \"yes\" if libzmq is found")
+endif()
 
-set(WITH_USDT "auto" CACHE STRING "Enable tracepoints for Userspace, Statically Defined Tracing ([auto], yes, no). \"auto\" means \"yes\" if sys/sdt.h is found")
+if(NOT DEFINED WITH_USDT)
+  set(WITH_USDT "auto" CACHE STRING "Enable tracepoints for Userspace, Statically Defined Tracing ([auto], yes, no). \"auto\" means \"yes\" if sys/sdt.h is found")
+endif()
 
-set(WITH_QRENCODE "auto" CACHE STRING "Enable QR code support ([auto], yes, no). \"auto\" means \"yes\" if libqrencode is found")
+if(NOT DEFINED WITH_QRENCODE)
+  set(WITH_QRENCODE "auto" CACHE STRING "Enable QR code support ([auto], yes, no). \"auto\" means \"yes\" if libqrencode is found")
+endif()
 
 set(WITH_SECCOMP "auto" CACHE STRING "Enable experimental syscall sandbox feature (-sandbox) ([auto], yes, no). \"auto\" means \"yes\" if seccomp-bpf is found under Linux x86_64")
 

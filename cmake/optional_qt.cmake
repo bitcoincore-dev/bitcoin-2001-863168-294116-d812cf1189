@@ -2,7 +2,9 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-set(WITH_GUI "auto" CACHE STRING "Build GUI ([auto], Qt5, no)")
+if(NOT DEFINED WITH_GUI)
+  set(WITH_GUI "auto" CACHE STRING "Build GUI ([auto], Qt5, no)")
+endif()
 set(with_gui_values "auto" "Qt5" "no")
 if(NOT WITH_GUI IN_LIST with_gui_values)
   message(FATAL_ERROR "WITH_GUI value is \"${WITH_GUI}\", but must be one of \"auto\", \"Qt5\" or \"no\".")
