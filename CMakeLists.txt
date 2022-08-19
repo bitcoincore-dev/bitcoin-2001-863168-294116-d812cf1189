@@ -192,6 +192,9 @@ endif()
 
 get_directory_property(common_compile_options COMPILE_OPTIONS)
 
+include(CheckStdFilesystem)
+check_std_filesystem()
+
 add_subdirectory(src)
 
 message("\n")
