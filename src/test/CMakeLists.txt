@@ -203,3 +203,46 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT MSVC)
     PROPERTY LINK_FLAGS -static
   )
 endif()
+
+function(add_boost_test source_file_name)
+  set(source_file_path "${CMAKE_CURRENT_SOURCE_DIR}/${source_file_name}")
+  if(NOT EXISTS ${source_file_path})
+    return()
+  endif()
+
+  file(READ "${source_file_path}" source_file_content)
+  string(REGEX
+    MATCH "(BOOST_FIXTURE_TEST_SUITE|BOOST_AUTO_TEST_SUITE)\\(([A-Za-z0-9_]+)"
+    test_suite_macro "${source_file_content}"
+  )
+  string(REGEX
+    REPLACE "(BOOST_FIXTURE_TEST_SUITE|BOOST_AUTO_TEST_SUITE)\\(" ""
+    test_suite_name "${test_suite_macro}"
+  )
+  if(test_suite_name)
+    add_test(NAME "${test_suite_name}:${source_file_name}"
+      COMMAND test_bitcoin --run_test=${test_suite_name} --catch_system_error=no
+    )
+  endif()
+endfunction()
+
+function(add_all_test_targets)
+  get_target_property(test_sources test_bitcoin SOURCES)
+  foreach(test_source ${test_sources})
+    add_boost_test(${test_source})
+  endforeach()
+endfunction()
+
+include(CTest)
+enable_testing()
+add_all_test_targets()
+
+# https://gitlab.kitware.com/cmake/community/-/wikis/doc/tutorials/EmulateMakeCheck
+include(ProcessorCount)
+ProcessorCount(nproc)
+set(ctest_command_args "")
+if(NOT nproc EQUAL 0)
+  set(ctest_command_args "-j ${nproc}")
+endif()
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} ${ctest_command_args})
+add_dependencies(check test_bitcoin)
