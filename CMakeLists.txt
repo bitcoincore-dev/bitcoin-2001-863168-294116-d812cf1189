@@ -57,6 +57,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Configurable options.
 option(BUILD_DAEMON "Build bitcoind" ON)
+option(BUILD_CLI "Build bitcoin-cli" ON)
 option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables" OFF)
 option(WERROR "Treat compiler warnings as errors" OFF)
 
@@ -220,7 +221,7 @@ include(CheckStdFilesystem)
 check_std_filesystem()
 
 find_package(PkgConfig)
-if(BUILD_DAEMON)
+if(BUILD_DAEMON OR BUILD_CLI)
   set(THREADS_PREFER_PTHREAD_FLAG ON)
   find_package(Threads REQUIRED)
 
@@ -242,6 +243,9 @@ add_subdirectory(src)
 message("\n")
 message("Configure summary")
 message("=================")
+message("Utility binaries:")
+message("  bitcoin-cli ...................... ${BUILD_CLI}")
+message("")
 get_directory_property(definitions COMPILE_DEFINITIONS)
 message("Preprocessor defined macros ........ ${definitions}")
 message("C compiler ......................... ${CMAKE_C_COMPILER_LAUNCHER} ${CMAKE_C_COMPILER}")
