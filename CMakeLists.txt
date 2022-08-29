@@ -347,6 +347,29 @@ execute_process(COMMAND mkdir -p ${CMAKE_BINARY_DIR}/test/functional)
 execute_process(COMMAND rm -f ${CMAKE_BINARY_DIR}/test/functional/test_runner.py)
 execute_process(COMMAND ln -s ${CMAKE_SOURCE_DIR}/test/functional/test_runner.py ${CMAKE_BINARY_DIR}/test/functional/test_runner.py)
 
+# https://gitlab.kitware.com/cmake/community/-/wikis/doc/tutorials/EmulateMakeCheck
+include(ProcessorCount)
+ProcessorCount(nproc)
+set(ctest_command_jobs_arg "")
+if(NOT nproc EQUAL 0)
+  set(ctest_command_jobs_arg "-j ${nproc}")
+endif()
+set(run_bench_bitcoin "")
+if(TARGET bench_bitcoin)
+  set(run_bench_bitcoin COMMAND $<TARGET_FILE:bench_bitcoin> --sanity-check)
+endif()
+add_custom_target(check
+  COMMAND ${CMAKE_CTEST_COMMAND} --test-dir ${CMAKE_BINARY_DIR}/src/test ${ctest_command_jobs_arg}
+  ${run_bench_bitcoin}
+  VERBATIM
+)
+if(TARGET test_bitcoin)
+  add_dependencies(check test_bitcoin)
+endif()
+if(TARGET bench_bitcoin)
+  add_dependencies(check bench_bitcoin)
+endif()
+
 message("\n")
 message("Configure summary")
 message("=================")
