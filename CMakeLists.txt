@@ -32,6 +32,8 @@ project("Bitcoin Core"
   LANGUAGES CXX C ASM
 )
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/module")
+
 if(MSVC)
   set(CMAKE_CXX_STANDARD 20)
 else()
@@ -39,6 +41,68 @@ else()
 endif()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+include(TryAppendCompilerFlag)
+include(TryAppendLinkerFlag)
+# Define custom "RelWithAsserts" build type
+set(release_c_flags "")
+try_append_cflag(release_c_flags "-O2")
+try_append_cflag(release_c_flags "-g")
+set(release_cxx_flags "")
+try_append_cxxflag(release_cxx_flags "-O2")
+try_append_cxxflag(release_cxx_flags "-g")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  # All versions of gcc that we commonly use for building are subject to bug
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90348. To work around that, set
+  # -fstack-reuse=none for all gcc builds.
+  try_append_cxxflag(release_cxx_flags "-fstack-reuse=none")
+endif()
+set(CMAKE_C_FLAGS_RELWITHASSERTS "${release_c_flags}" CACHE STRING
+  "Flags used by the C compiler during \"RelWithAsserts\" builds."
+  FORCE
+)
+set(CMAKE_CXX_FLAGS_RELWITHASSERTS "${release_cxx_flags}" CACHE STRING
+  "Flags used by the C++ compiler during \"RelWithAsserts\" builds."
+  FORCE
+)
+set(release_linker_flags "")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  try_append_linker_flag(release_linker_flags "-Wl,--major-subsystem-version,6")
+  try_append_linker_flag(release_linker_flags "-Wl,--minor-subsystem-version,1")
+endif()
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  # These flags are specific to ld64, and may cause issues with other linkers.
+  # For example: GNU ld will interpret -dead_strip as -de and then try and use
+  # "ad_strip" as the symbol for the entry point.
+  try_append_linker_flag(release_linker_flags "-Wl,-dead_strip")
+  try_append_linker_flag(release_linker_flags "-Wl,-dead_strip_dylibs")
+  try_append_linker_flag(release_linker_flags "-Wl,-headerpad_max_install_names")
+endif()
+set(CMAKE_EXE_LINKER_FLAGS_RELWITHASSERTS "${release_linker_flags}" CACHE STRING
+  "Flags used for linking binaries during \"RelWithAsserts\" builds."
+  FORCE
+)
+set(CMAKE_SHARED_LINKER_FLAGS_RELWITHASSERTS "${release_linker_flags}" CACHE STRING
+  "Flags used by the shared libraries linker during \"RelWithAsserts\" builds."
+  FORCE
+)
+mark_as_advanced(
+  CMAKE_C_FLAGS_RELWITHASSERTS
+  CMAKE_CXX_FLAGS_RELWITHASSERTS
+  CMAKE_EXE_LINKER_FLAGS_RELWITHASSERTS
+  CMAKE_SHARED_LINKER_FLAGS_RELWITHASSERTS
+)
+get_property(cached_cmake_build_type CACHE CMAKE_BUILD_TYPE PROPERTY TYPE)
+if(cached_cmake_build_type)
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY
+    STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo" "RelWithAsserts"
+  )
+endif()
+set(default_build_type "RelWithAsserts")
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to \"${default_build_type}\" as none was specified")
+  set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE STRING "Choose the type of build." FORCE)
+endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
