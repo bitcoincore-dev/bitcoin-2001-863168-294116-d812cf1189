@@ -65,6 +65,7 @@ option(BUILD_BITCOINKERNEL_LIB "Build experimental bitcoinkernel shared library"
 option(ENABLE_WALLET "Enable wallet" ON)
 option(BUILD_WALLET_TOOL "Build bitcoin-wallet tool" ${ENABLE_WALLET})
 option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables" OFF)
+option(BUILD_TESTS "Build test" ON)
 
 include(TryAppendCompilerFlag)
 include(TryAppendLinkerFlag)
@@ -247,6 +248,10 @@ include(cmake/optional_qt.cmake)
 include(cmake/optional.cmake)
 
 add_subdirectory(src)
+
+if(BUILD_TESTS)
+  add_subdirectory(src/test)
+endif()
 
 set(abs_top_srcdir ${CMAKE_SOURCE_DIR})
 set(abs_top_builddir ${CMAKE_BINARY_DIR})
