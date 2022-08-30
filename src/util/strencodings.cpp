@@ -4,6 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <span.h>
+#include <tinyformat.h>
 #include <util/strencodings.h>
 
 #include <array>
@@ -25,12 +26,14 @@ static const std::string SAFE_CHARS[] =
     CHARS_ALPHA_NUM + "!*'();:@&=+$,/?#[]-_.~%", // SAFE_CHARS_URI
 };
 
-std::string SanitizeString(std::string_view str, int rule)
+std::string SanitizeString(std::string_view str, int rule, bool escape)
 {
     std::string result;
     for (char c : str) {
-        if (SAFE_CHARS[rule].find(c) != std::string::npos) {
+        if (SAFE_CHARS[rule].find(c) != std::string::npos || (c == '%' && escape)) {
             result.push_back(c);
+        } else if (escape) {
+            result += strprintf("%%%02X", c);
         }
     }
     return result;
