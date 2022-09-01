@@ -44,6 +44,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Configurable options.
 option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables" OFF)
+option(WERROR "Treat compiler warnings as errors" OFF)
 
 include(TryAppendCompilerFlag)
 include(TryAppendLinkerFlag)
@@ -156,6 +157,23 @@ if(REDUCE_EXPORTS)
   if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     link_libraries(-Wl,--exclude-libs,ALL)
   endif()
+endif()
+
+if(WERROR)
+  set(error_cxx_flags "")
+  try_append_cxxflag(error_cxx_flags "-Werror")
+  if(NOT CXX_SUPPORTS_WERROR)
+    message(FATAL_ERROR "WERROR set but -Werror is not usable.")
+  endif()
+
+  if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    # -Wreturn-type is broken in GCC for MinGW-w64.
+    # https://sourceforge.net/p/mingw-w64/bugs/306/
+    try_append_cxxflag(error_cxx_flags "-Werror=return-type" "-Wno-error=return-type")
+  endif()
+
+  separate_arguments(error_cxx_flags)
+  add_compile_options(${error_cxx_flags})
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
