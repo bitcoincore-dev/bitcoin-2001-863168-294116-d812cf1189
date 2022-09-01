@@ -1497,6 +1497,24 @@ static void SoftForkDescPushBack(const CBlockIndex* blockindex, UniValue& softfo
         case ThresholdState::LOCKED_IN:
         case ThresholdState::ACTIVE:
             bip9.pushKV("signal_abandon", strprintf("%08x", consensusParams.vDeployments[id].signal_abandon));
+
+            // Report observed signalling
+            {
+                UniValue signals(UniValue::VARR);
+                for (const auto& signal_info : g_versionbitscache.GetSignalInfo(blockindex, consensusParams, id)) {
+                    UniValue s(UniValue::VOBJ);
+                    if (signal_info.bip_version == -1) {
+                        // don't report self-activation signals if already active
+                        if (signal_info.activate && current_state == ThresholdState::ACTIVE) continue;
+                    } else {
+                        s.pushKV("bip_version", signal_info.bip_version);
+                    }
+                    s.pushKV("height", signal_info.height);
+                    s.pushKV("action", (signal_info.activate ? "activate" : "abandon"));
+                    signals.push_back(s);
+                }
+                bip9.pushKV("signals", signals);
+            }
             break;
         case ThresholdState::DEACTIVATING:
         case ThresholdState::ABANDONED:
