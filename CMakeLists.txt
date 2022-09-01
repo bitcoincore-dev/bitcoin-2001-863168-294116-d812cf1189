@@ -218,6 +218,16 @@ include(cmake/subtree-secp256k1.cmake)
 include(CheckStdFilesystem)
 check_std_filesystem()
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
+# Find Boost headers only.
+find_package(Boost 1.64.0 REQUIRED)
+
+find_package(PkgConfig)
+pkg_check_modules(libevent REQUIRED libevent>=2.1.8 IMPORTED_TARGET)
+target_link_libraries(PkgConfig::libevent INTERFACE $<$<PLATFORM_ID:Windows>:iphlpapi ws2_32>)
+
 include(cmake/optional.cmake)
 
 add_subdirectory(src)
