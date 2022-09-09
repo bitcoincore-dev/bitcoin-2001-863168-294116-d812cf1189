@@ -1501,26 +1501,6 @@ bool CChainState::IsInitialBlockDownload() const
     return false;
 }
 
-static void AlertNotify(const std::string& strMessage)
-{
-    uiInterface.NotifyAlertChanged();
-#if HAVE_SYSTEM
-    std::string strCmd = gArgs.GetArg("-alertnotify", "");
-    if (strCmd.empty()) return;
-
-    // Alert text should be plain ascii coming from a trusted source, but to
-    // be safe we first strip anything not in safeChars, then add single quotes around
-    // the whole string before passing it to the shell:
-    std::string singleQuote("'");
-    std::string safeStatus = SanitizeString(strMessage);
-    safeStatus = singleQuote+safeStatus+singleQuote;
-    boost::replace_all(strCmd, "%s", safeStatus);
-
-    std::thread t(runCommand, strCmd);
-    t.detach(); // thread runs free
-#endif
-}
-
 void CChainState::CheckForkWarningConditions()
 {
     AssertLockHeld(cs_main);
@@ -1835,33 +1815,6 @@ void StopScriptCheckWorkerThreads()
 {
     scriptcheckqueue.StopWorkerThreads();
 }
-
-/**
- * Threshold condition checker that triggers when unknown versionbits are seen on the network.
- */
-class WarningBitsConditionChecker : public AbstractThresholdConditionChecker
-{
-private:
-    int bit;
-
-public:
-    explicit WarningBitsConditionChecker(int bitIn) : bit(bitIn) {}
-
-    int64_t BeginTime(const Consensus::Params& params) const override { return 0; }
-    int64_t EndTime(const Consensus::Params& params) const override { return std::numeric_limits<int64_t>::max(); }
-    int Period(const Consensus::Params& params) const override { return params.nMinerConfirmationWindow; }
-    int Threshold(const Consensus::Params& params) const override { return params.nRuleChangeActivationThreshold; }
-
-    bool Condition(const CBlockIndex* pindex, const Consensus::Params& params) const override
-    {
-        return pindex->nHeight >= params.MinBIP9WarningHeight &&
-               ((pindex->nVersion & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) &&
-               ((pindex->nVersion >> bit) & 1) != 0 &&
-               ((g_versionbitscache.ComputeBlockVersion(pindex->pprev, params) >> bit) & 1) == 0;
-    }
-};
-
-static ThresholdConditionCache warningcache[VERSIONBITS_NUM_BITS] GUARDED_BY(cs_main);
 
 static unsigned int GetBlockScriptFlags(const CBlockIndex* pindex, const Consensus::Params& consensusparams)
 {
@@ -2411,23 +2364,6 @@ void CChainState::PruneAndFlush()
     }
 }
 
-static void DoWarning(const bilingual_str& warning)
-{
-    static bool fWarned = false;
-    SetMiscWarning(warning);
-    if (!fWarned) {
-        AlertNotify(warning.original);
-        fWarned = true;
-    }
-}
-
-/** Private helper function that concatenates warning messages. */
-static void AppendWarning(bilingual_str& res, const bilingual_str& warn)
-{
-    if (!res.empty()) res += Untranslated(", ");
-    res += warn;
-}
-
 static void UpdateTipLog(
     const CCoinsViewCache& coins_tip,
     const CBlockIndex* tip,
@@ -2477,21 +2413,6 @@ void CChainState::UpdateTip(const CBlockIndex* pindexNew)
     }
 
     bilingual_str warning_messages;
-    if (!this->IsInitialBlockDownload()) {
-        const CBlockIndex* pindex = pindexNew;
-        for (int bit = 0; bit < VERSIONBITS_NUM_BITS; bit++) {
-            WarningBitsConditionChecker checker(bit);
-            ThresholdState state = checker.GetStateFor(pindex, m_params.GetConsensus(), warningcache[bit]);
-            if (state == ThresholdState::ACTIVE || state == ThresholdState::LOCKED_IN) {
-                const bilingual_str warning = strprintf(_("Unknown new rules activated (versionbit %i)"), bit);
-                if (state == ThresholdState::ACTIVE) {
-                    DoWarning(warning);
-                } else {
-                    AppendWarning(warning_messages, warning);
-                }
-            }
-        }
-    }
     UpdateTipLog(coins_tip, pindexNew, m_params, __func__, "", warning_messages.original);
 }
 
@@ -4075,9 +3996,6 @@ void UnloadBlockIndex(CTxMemPool* mempool, ChainstateManager& chainman)
     pindexBestHeader = nullptr;
     if (mempool) mempool->clear();
     g_versionbitscache.Clear();
-    for (int b = 0; b < VERSIONBITS_NUM_BITS; b++) {
-        warningcache[b].clear();
-    }
     fHavePruned = false;
 }
 
