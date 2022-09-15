@@ -7,6 +7,7 @@
 
 #include <consensus/params.h>
 
+#include <map>
 #include <string>
 
 /** What bits to set to signal activation */
@@ -41,5 +42,9 @@ inline int32_t CalculateAbandonVersion(int bip, int bip_version)
 {
     return (VERSIONBITS_TOP_ABANDON | (int32_t{bip} << 8) | bip_version);
 }
+
+extern const std::map<std::string, uint32_t> g_verify_flag_names;
+
+std::string FormatScriptFlags(uint32_t flags);
 
 #endif // BITCOIN_DEPLOYMENTINFO_H

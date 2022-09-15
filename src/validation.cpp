@@ -282,9 +282,6 @@ bool CheckSequenceLocks(CBlockIndex* tip,
     return EvaluateSequenceLocks(index, lockPair);
 }
 
-// Returns the script flags which should be checked for a given block
-static unsigned int GetBlockScriptFlags(const CBlockIndex* pindex, const Consensus::Params& chainparams);
-
 static void LimitMempoolSize(CTxMemPool& pool, CCoinsViewCache& coins_cache, size_t limit, std::chrono::seconds age)
     EXCLUSIVE_LOCKS_REQUIRED(::cs_main, pool.cs)
 {
@@ -1816,7 +1813,7 @@ void StopScriptCheckWorkerThreads()
     scriptcheckqueue.StopWorkerThreads();
 }
 
-static unsigned int GetBlockScriptFlags(const CBlockIndex* pindex, const Consensus::Params& consensusparams)
+unsigned int GetBlockScriptFlags(const CBlockIndex* pindex, const Consensus::Params& consensusparams)
 {
     unsigned int flags = SCRIPT_VERIFY_NONE;
 
