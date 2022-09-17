@@ -46,6 +46,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/module)
 option(CXX20 "Enable compilation in c++20 mode." OFF)
 option(HARDENING "Attempt to harden the resulting executables." ON)
 option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables." OFF)
+option(WERROR "Treat compiler warnings as errors." OFF)
 
 if(CXX20 OR MSVC)
   set(CMAKE_CXX_STANDARD 20)
@@ -143,6 +144,25 @@ if(REDUCE_EXPORTS)
   if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     link_libraries(-Wl,--exclude-libs,ALL)
   endif()
+endif()
+
+if(WERROR)
+  set(error_cxx_flags "")
+  try_append_cxxflag(error_cxx_flags "-Werror")
+  if(NOT CXX_SUPPORTS_WERROR)
+    message(FATAL_ERROR "WERROR set but -Werror is not usable.")
+  endif()
+
+  # -Wreturn-type is broken in GCC for MinGW-w64.
+  # https://sourceforge.net/p/mingw-w64/bugs/306/
+  try_append_cxxflag(error_cxx_flags "-Werror=return-type"
+    CHECK_PASSED_FLAG ""
+    CHECK_FAILED_FLAG "-Wno-error=return-type"
+    SOURCE "#include <cassert>\nint f(){ assert(false); }"
+  )
+
+  separate_arguments(error_cxx_flags)
+  add_compile_options(${error_cxx_flags})
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
