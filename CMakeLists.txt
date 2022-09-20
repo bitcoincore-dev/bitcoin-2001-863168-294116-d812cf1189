@@ -32,7 +32,10 @@ project("Bitcoin Core"
   LANGUAGES CXX C ASM
 )
 
-if(MSVC)
+# Configurable options.
+option(CXX20 "Enable compilation in c++20 mode" OFF)
+
+if(CXX20 OR MSVC)
   set(CMAKE_CXX_STANDARD 20)
 else()
   set(CMAKE_CXX_STANDARD 17)
