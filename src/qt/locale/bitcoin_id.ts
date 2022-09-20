@@ -3,7 +3,7 @@
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation type="unfinished">Klik-kanan untuk mengubah alamat atau label</translation>
+        <translation type="unfinished">Klik kanan untuk mengubah alamat atau label</translation>
     </message>
     <message>
         <source>Create a new address</source>
@@ -48,10 +48,6 @@
     <message>
         <source>Choose the address to send coins to</source>
         <translation type="unfinished">Pilih alamat untuk mengirim koin</translation>
-    </message>
-    <message>
-        <source>Choose the address to receive coins with</source>
-        <translation type="unfinished">Piih alamat untuk menerima koin</translation>
     </message>
     <message>
         <source>C&amp;hoose</source>
@@ -242,17 +238,13 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>A fatal error occurred. %1 can no longer continue safely and will quit.</source>
-        <translation type="unfinished">Kesalahan yang fatal telah terjadi. %1 tidak bisa berlanjut dengan selamat dan akan keluar.</translation>
+        <translation type="unfinished">Error yang fatal telah terjadi. %1 tidak bisa berlanjut dengan selamat dan akan keluar.</translation>
     </message>
     <message>
         <source>Internal error</source>
         <translation type="unfinished">Kesalahan internal</translation>
     </message>
-    <message>
-        <source>An internal error occurred. %1 will attempt to continue safely. This is an unexpected bug which can be reported as described below.</source>
-        <translation type="unfinished">Terjadi kesalahan internal.  %1 akan mencoba melanjutkan secara aman. Ini adalah bug yang tidak terduga yang dapat dilaporkan seperti penjelasan di bawah ini.</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -424,6 +416,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Kesalahan membaca %s! Semua kunci dibaca dengan benar, tetapi data transaksi atau entri buku alamat mungkin hilang atau salah.</translation>
     </message>
     <message>
+        <source>Error reading %s! Transaction data may be missing or incorrect. Rescanning wallet.</source>
+        <translation type="unfinished">Kesalahan membaca %s! Data transaksi mungkin hilang atau salah. Memindai ulang dompet.</translation>
+    </message>
+    <message>
         <source>Error: Dumpfile format record is incorrect. Got "%s", expected "format".</source>
         <translation type="unfinished">Kesalahan: Rekaman pengenal dumpfile salah. Mendapat "%s", diharapkan "format". </translation>
     </message>
@@ -438,10 +434,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Error: Legacy wallets only support the "legacy", "p2sh-segwit", and "bech32" address types</source>
         <translation type="unfinished">Kesalahan: Dompet lama hanya mendukung jenis alamat "warisan", "p2sh-segwit", dan "bech32"</translation>
-    </message>
-    <message>
-        <source>Error: Listening for incoming connections failed (listen returned error %s)</source>
-        <translation type="unfinished">Kesalahan: Mendengarkan koneksi yang masuk gagal (dengarkan kesalahan yang dikembalikan %s)</translation>
     </message>
     <message>
         <source>Fee estimation failed. Fallbackfee is disabled. Wait a few blocks or enable -fallbackfee.</source>
@@ -564,6 +556,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Tidak bisa menyelesaikan -%s alamat: '%s'</translation>
     </message>
     <message>
+        <source>Cannot set -forcednsseed to true when setting -dnsseed to false.</source>
+        <translation type="unfinished">Tidak bisa mengatur -forcednsseed ke benar ketika mengatur -dnsseed ke salah</translation>
+    </message>
+    <message>
         <source>Cannot set -peerblockfilters without -blockfilterindex.</source>
         <translation type="unfinished">Tidak dapat menyetel -peerblockfilters tanpa -blockfilterindex.</translation>
     </message>
@@ -648,10 +644,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Kesalahan membaca catatan berikutnya dari basis data dompet</translation>
     </message>
     <message>
-        <source>Error upgrading chainstate database</source>
-        <translation type="unfinished">Kesalahan memutakhirkan basis data chainstate</translation>
-    </message>
-    <message>
         <source>Error: Couldn't create cursor into database</source>
         <translation type="unfinished">Kesalahan: Tidak dapat membuat kursor ke basis data</translation>
     </message>
@@ -724,6 +716,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Inisialisasi pemeriksa kewarasan gagal. %s sedang dimatikan.</translation>
     </message>
     <message>
+        <source>Input not found or already spent</source>
+        <translation type="unfinished">Input tidak ditemukan atau sudah dibelanjakan</translation>
+    </message>
+    <message>
         <source>Insufficient funds</source>
         <translation type="unfinished">Saldo tidak mencukupi</translation>
     </message>
@@ -776,12 +772,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Memuat dompet...</translation>
     </message>
     <message>
+        <source>Missing amount</source>
+        <translation type="unfinished">Jumlah tidak ada</translation>
+    </message>
+    <message>
         <source>Need to specify a port with -whitebind: '%s'</source>
         <translation type="unfinished">Perlu menentukan port dengan -whitebind: '%s'</translation>
     </message>
     <message>
-        <source>No proxy server specified. Use -proxy=&lt;ip&gt; or -proxy=&lt;ip:port&gt;.</source>
-        <translation type="unfinished">Tidak ada server proxy yang ditentukan. Gunakan -proxy=&lt;ip&gt; atau -proxy=&lt;ip:port&gt;.</translation>
+        <source>No addresses available</source>
+        <translation type="unfinished">Tidak ada alamat tersedia</translation>
     </message>
     <message>
         <source>Not enough file descriptors available.</source>
@@ -790,10 +790,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Prune cannot be configured with a negative value.</source>
         <translation type="unfinished">Pemangkasan tidak dapat dikonfigurasi dengan nilai negatif.</translation>
-    </message>
-    <message>
-        <source>Prune mode is incompatible with -coinstatsindex.</source>
-        <translation type="unfinished">Mode pangkas tidak kompatibel dengan -coinstatsindex.</translation>
     </message>
     <message>
         <source>Prune mode is incompatible with -txindex.</source>
@@ -904,6 +900,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Transaksi harus mempunyai paling tidak satu penerima</translation>
     </message>
     <message>
+        <source>Transaction needs a change address, but we can't generate it.</source>
+        <translation type="unfinished">Transaksi memerlukan alamat perubahan, tetapi kami tidak dapat membuatnya.</translation>
+    </message>
+    <message>
         <source>Transaction too large</source>
         <translation type="unfinished">Transaksi terlalu besar</translation>
     </message>
@@ -958,10 +958,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Unsupported logging category %s=%s.</source>
         <translation type="unfinished">Kategori logging yang tidak didukung %s=%s.</translation>
-    </message>
-    <message>
-        <source>Upgrading UTXO database</source>
-        <translation type="unfinished">Memutakhirkan basis data UTXO</translation>
     </message>
     <message>
         <source>User Agent comment (%s) contains unsafe characters.</source>
@@ -1089,7 +1085,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Sign messages with your Bitcoin addresses to prove you own them</source>
-        <translation type="unfinished">Tanda tangani sebuah pesan menggunakan alamat Bitcoin Anda untuk membuktikan bahwa Anda adalah pemiliknya</translation>
+        <translation type="unfinished">Tanda tangani sebuah pesan menggunakan alamat Bitcoin Anda untuk membuktikan bahwa Anda adalah pemilik alamat tersebut</translation>
     </message>
     <message>
         <source>&amp;Verify message…</source>
@@ -1282,6 +1278,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Tidak ada wallet tersedia</translation>
     </message>
     <message>
+        <source>Wallet Data</source>
+        <extracomment>Name of the wallet data file format.</extracomment>
+        <translation type="unfinished">Data Dompet</translation>
+    </message>
+    <message>
+        <source>Wallet Name</source>
+        <extracomment>Label of the input field where the name of the wallet is entered.</extracomment>
+        <translation type="unfinished">Nama Dompet</translation>
+    </message>
+    <message>
         <source>&amp;Window</source>
         <translation type="unfinished">&amp;Jendela</translation>
     </message>
@@ -1292,6 +1298,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>%1 client</source>
         <translation type="unfinished">%1 klien</translation>
+    </message>
+    <message>
+        <source>&amp;Hide</source>
+        <translation type="unfinished">Sembunyi</translation>
+    </message>
+    <message>
+        <source>S&amp;how</source>
+        <translation type="unfinished">Tampilkan</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Bitcoin network.</source>
@@ -1559,7 +1573,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Can't list signers</source>
         <translation type="unfinished">Tidak dapat mencantumkan penandatangan</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>LoadWalletsActivity</name>
     <message>
@@ -1769,13 +1783,23 @@ Signing is only possible with addresses of the type 'legacy'.</source>
 </context>
 <context>
     <name>Intro</name>
-    <message>
-        <source>(of %1 GB needed)</source>
-        <translation type="unfinished">(dari %1 GB yang dibutuhkan)</translation>
+    <message numerus="yes">
+        <source>%n GB of space available</source>
+        <translation type="unfinished">
+            <numerusform />
+        </translation>
     </message>
-    <message>
-        <source>(%1 GB needed for full chain)</source>
-        <translation type="unfinished">(%1 GB dibutuhkan untuk rantai penuh)</translation>
+    <message numerus="yes">
+        <source>(of %n GB needed)</source>
+        <translation type="unfinished">
+            <numerusform />
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>(%n GB needed for full chain)</source>
+        <translation type="unfinished">
+            <numerusform />
+        </translation>
     </message>
     <message>
         <source>At least %1 GB of data will be stored in this directory, and it will grow over time.</source>
@@ -1819,10 +1843,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>As this is the first time the program is launched, you can choose where %1 will store its data.</source>
         <translation type="unfinished">Karena ini adalah pertama kalinya program dijalankan, Anda dapat memilih lokasi %1 akan menyimpan data.</translation>
-    </message>
-    <message>
-        <source>When you click OK, %1 will begin to download and process the full %4 block chain (%2GB) starting with the earliest transactions in %3 when %4 initially launched.</source>
-        <translation type="unfinished">Ketika Anda mengklik OK, %1 akan mulai mengunduh dan memproses %4 block chain penuh (%2GB), dimulai dari transaksi-transaksi awal di %3 saat %4 diluncurkan pertama kali.</translation>
     </message>
     <message>
         <source>Limit block chain storage to</source>
@@ -1933,7 +1953,7 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>Unknown. Syncing Headers (%1, %2%)…</source>
         <translation type="unfinished">Tidak diketahui. Sinkronisasi Header (%1, %2%)...</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -2027,8 +2047,28 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Set nomor thread script verifikasi. Nilai negatif sesuai dengan core yang tidak ingin digunakan di dalam system.</translation>
     </message>
     <message>
+        <source>This allows you or a third party tool to communicate with the node through command-line and JSON-RPC commands.</source>
+        <extracomment>Tooltip text for Options window setting that enables the RPC server.</extracomment>
+        <translation type="unfinished">Ini memungkinkan Anda atau alat pihak ketiga untuk berkomunikasi dengan node melalui perintah baris perintah dan JSON-RPC.</translation>
+    </message>
+    <message>
+        <source>Enable R&amp;PC server</source>
+        <extracomment>An Options window setting to enable the RPC server.</extracomment>
+        <translation type="unfinished">Aktifkan server R&amp;PC</translation>
+    </message>
+    <message>
         <source>W&amp;allet</source>
         <translation type="unfinished">D&amp;ompet</translation>
+    </message>
+    <message>
+        <source>Whether to set subtract fee from amount as default or not.</source>
+        <extracomment>Tooltip text for Options window setting that sets subtracting the fee from a sending amount as default.</extracomment>
+        <translation type="unfinished">Apakah akan menetapkan biaya pengurangan dari jumlah sebagai default atau tidak.</translation>
+    </message>
+    <message>
+        <source>Subtract &amp;fee from amount by default</source>
+        <extracomment>An Options window setting to set subtracting the fee from a sending amount as default.</extracomment>
+        <translation type="unfinished">Kurangi biaya dari jumlah secara default</translation>
     </message>
     <message>
         <source>Expert</source>
@@ -2045,6 +2085,16 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>&amp;Spend unconfirmed change</source>
         <translation type="unfinished">&amp;Perubahan saldo untuk transaksi yang belum dikonfirmasi</translation>
+    </message>
+    <message>
+        <source>Enable &amp;PSBT controls</source>
+        <extracomment>An options window setting to enable PSBT controls.</extracomment>
+        <translation type="unfinished">Aktifkan kontrol &amp;PSBT</translation>
+    </message>
+    <message>
+        <source>Whether to show PSBT controls.</source>
+        <extracomment>Tooltip text for options window setting that enables PSBT controls.</extracomment>
+        <translation type="unfinished">Apakah akan menampilkan kontrol PSBT.</translation>
     </message>
     <message>
         <source>External Signer (e.g. hardware wallet)</source>
@@ -2147,6 +2197,14 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Pilihan standar unit yang ingin ditampilkan pada layar aplikasi dan saat mengirim koin.</translation>
     </message>
     <message>
+        <source>Third-party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
+        <translation type="unfinished">URL pihak ketika (misalnya sebuah block explorer) yang mumcul dalam tab transaksi sebagai konteks menu. %s dalam URL diganti dengan kode transaksi. URL dipisahkan dengan tanda vertikal |.</translation>
+    </message>
+    <message>
+        <source>&amp;Third-party transaction URLs</source>
+        <translation type="unfinished">&amp;URL transaksi Pihak Ketiga</translation>
+    </message>
+    <message>
         <source>Whether to show coin control features or not.</source>
         <translation type="unfinished">Ingin menunjukkan cara pengaturan koin atau tidak.</translation>
     </message>
@@ -2161,10 +2219,6 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Monospaced font in the Overview tab:</source>
         <translation type="unfinished">Font spasi tunggal di tab Ringkasan: </translation>
-    </message>
-    <message>
-        <source>Options set in this dialog are overridden by the command line or in the configuration file:</source>
-        <translation type="unfinished">Set opsi pengaturan pada jendela dialog ini tertutup oleh baris perintah atau dalam konfigurasi file:</translation>
     </message>
     <message>
         <source>&amp;OK</source>
@@ -2189,14 +2243,17 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     </message>
     <message>
         <source>Confirm options reset</source>
+        <extracomment>Window title text of pop-up window shown when the user has chosen to reset options.</extracomment>
         <translation type="unfinished">Memastikan reset pilihan</translation>
     </message>
     <message>
         <source>Client restart required to activate changes.</source>
+        <extracomment>Text explaining that the settings changed will not come into effect until the client is restarted.</extracomment>
         <translation type="unfinished">Restart klien diperlukan untuk mengaktifkan perubahan.</translation>
     </message>
     <message>
         <source>Client will be shut down. Do you want to proceed?</source>
+        <extracomment>Text asking the user to confirm if they would like to proceed with a client shutdown.</extracomment>
         <translation type="unfinished">Klien akan dimatikan, apakah anda hendak melanjutkan?</translation>
     </message>
     <message>
@@ -2208,6 +2265,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <source>The configuration file is used to specify advanced user options which override GUI settings. Additionally, any command-line options will override this configuration file.</source>
         <extracomment>Explanatory text about the priority order of instructions considered by client. The order from high to low being: command-line, configuration file, GUI settings.</extracomment>
         <translation type="unfinished">File konfigurasi digunakan untuk menspesifikkan pilihan khusus pengguna yang akan menimpa pengaturan GUI. Sebagai tambahan, pengaturan command-line apapun akan menimpa file konfigurasi itu.</translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation type="unfinished">Lanjutkan</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -2336,6 +2397,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
         <translation type="unfinished">Gagal untuk menandatangani transaksi: %1</translation>
     </message>
     <message>
+        <source>Cannot sign inputs while wallet is locked.</source>
+        <translation type="unfinished">Tidak dapat menandatangani input saat dompet terkunci.</translation>
+    </message>
+    <message>
         <source>Could not sign any more inputs.</source>
         <translation type="unfinished">Tidak bisa menandatangani lagi input apapun.</translation>
     </message>
@@ -2403,6 +2468,10 @@ Signing is only possible with addresses of the type 'legacy'.</source>
     <message>
         <source>Transaction still needs signature(s).</source>
         <translation type="unfinished">Transaksi masih membutuhkan tanda tangan(s).</translation>
+    </message>
+    <message>
+        <source>(But no wallet is loaded.)</source>
+        <translation type="unfinished">(Tapi tidak ada dompet yang dimuat.)</translation>
     </message>
     <message>
         <source>(But this wallet cannot sign transactions.)</source>
@@ -2649,6 +2718,26 @@ Jika Anda menerima kesalahan ini, Anda harus meminta pedagang untuk memberikan U
         <translation type="unfinished">AS yang Dipetakan</translation>
     </message>
     <message>
+        <source>Whether we relay addresses to this peer.</source>
+        <extracomment>Tooltip text for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation type="unfinished">Apakah kita menyampaikan alamat ke rekan ini.</translation>
+    </message>
+    <message>
+        <source>Address Relay</source>
+        <extracomment>Text title for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation type="unfinished">Alamat Relay</translation>
+    </message>
+    <message>
+        <source>Addresses Processed</source>
+        <extracomment>Text title for the Addresses Processed field in the peer details area, which displays the total number of addresses received from this peer that were processed (excludes addresses that were dropped due to rate-limiting).</extracomment>
+        <translation type="unfinished">Alamat Diproses</translation>
+    </message>
+    <message>
+        <source>Addresses Rate-Limited</source>
+        <extracomment>Text title for the Addresses Rate-Limited field in the peer details area, which displays the total number of addresses received from this peer that were dropped (not processed) due to rate-limiting.</extracomment>
+        <translation type="unfinished">Tarif Alamat Terbatas</translation>
+    </message>
+    <message>
         <source>User Agent</source>
         <translation type="unfinished">Agen Pengguna
 
@@ -2853,6 +2942,11 @@ Jika Anda menerima kesalahan ini, Anda harus meminta pedagang untuk memberikan U
     <message>
         <source>1 &amp;year</source>
         <translation type="unfinished">1 &amp;tahun</translation>
+    </message>
+    <message>
+        <source>&amp;Copy IP/Netmask</source>
+        <extracomment>Context menu action to copy the IP/Netmask of a banned peer. IP/Netmask is the combination of a peer's IP address and its Netmask. For IP address, see: https://en.wikipedia.org/wiki/IP_address.</extracomment>
+        <translation type="unfinished">&amp;Salin IP/Netmask</translation>
     </message>
     <message>
         <source>&amp;Unban</source>
@@ -3338,6 +3432,16 @@ Catatan: Karena biaya dihitung berdasarkan per byte, tarif biaya "100 satoshi pe
         <translation type="unfinished">Anda dapat menambah biaya kemudian (sinyal Replace-By-Fee, BIP-125).</translation>
     </message>
     <message>
+        <source>Do you want to create this transaction?</source>
+        <extracomment>Message displayed when attempting to create a transaction. Cautionary text to prompt the user to verify that the displayed transaction details represent the transaction the user intends to create.</extracomment>
+        <translation type="unfinished">Apakah Anda ingin membuat transaksi ini?</translation>
+    </message>
+    <message>
+        <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
+        <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
+        <translation type="unfinished">Harap untuk analisi proposal transaksi anda kembali. Anda dapat membuat dan mengirim transaksi ini atau membuat transaksi bitcoin yang ditandai tangani sebagaian (PSBT) yang bisa anda simpan atau salin dan tanda tangan dengan contoh dompet offline %1, atau dompet yang kompatibel dengan PSBT</translation>
+    </message>
+    <message>
         <source>Please, review your transaction.</source>
         <extracomment>Text to prompt a user to review the details of the transaction they are attempting to send.</extracomment>
         <translation type="unfinished">Mohon periksa kembali transaksi anda.</translation>
@@ -3385,10 +3489,6 @@ Catatan: Karena biaya dihitung berdasarkan per byte, tarif biaya "100 satoshi pe
     <message>
         <source>A fee higher than %1 is considered an absurdly high fee.</source>
         <translation type="unfinished">Biaya yang lebih tinggi dari %1 dianggap sebagai biaya yang sangat tinggi.</translation>
-    </message>
-    <message>
-        <source>Payment request expired.</source>
-        <translation type="unfinished">Permintaan pembayaran telah kadaluarsa.</translation>
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>
@@ -3468,28 +3568,12 @@ Catatan: Karena biaya dihitung berdasarkan per byte, tarif biaya "100 satoshi pe
         <translation type="unfinished">Pesan:</translation>
     </message>
     <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation type="unfinished">Ini permintaan pembayaran yang tidak diautentikasi.</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation type="unfinished">Ini permintaan pembayaran yang diautentikasi.</translation>
-    </message>
-    <message>
         <source>Enter a label for this address to add it to the list of used addresses</source>
         <translation type="unfinished">Masukkan label untuk alamat ini untuk dimasukan dalam daftar alamat yang pernah digunakan</translation>
     </message>
     <message>
         <source>A message that was attached to the bitcoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Bitcoin network.</source>
         <translation type="unfinished">Pesan yang dilampirkan ke bitcoin: URI yang akan disimpan dengan transaksi untuk referensi Anda. Catatan: Pesan ini tidak akan dikirim melalui jaringan Bitcoin.</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation type="unfinished">Kirim Ke:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation type="unfinished">Catatan Peringatan:</translation>
     </message>
 </context>
 <context>
@@ -3651,33 +3735,36 @@ Catatan: Karena biaya dihitung berdasarkan per byte, tarif biaya "100 satoshi pe
     </message>
 </context>
 <context>
+    <name>SplashScreen</name>
+    <message>
+        <source>(press q to shutdown and continue later)</source>
+        <translation type="unfinished">(tekan q untuk mematikan dan melanjutkan nanti)</translation>
+    </message>
+    <message>
+        <source>press q to shutdown</source>
+        <translation type="unfinished">tekan q untuk mematikan</translation>
+    </message>
+</context>
+<context>
     <name>TransactionDesc</name>
     <message>
         <source>conflicted with a transaction with %1 confirmations</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an unconfirmed transaction that conflicts with a confirmed transaction.</extracomment>
         <translation type="unfinished">Konflik dengan sebuah transaksi dengan %1 konfirmasi</translation>
     </message>
     <message>
-        <source>0/unconfirmed, %1</source>
-        <translation type="unfinished">0/belum dikonfirmasi, %1</translation>
-    </message>
-    <message>
-        <source>in memory pool</source>
-        <translation type="unfinished">Dalam pool memory</translation>
-    </message>
-    <message>
-        <source>not in memory pool</source>
-        <translation type="unfinished">Tidak dalam pool memory</translation>
-    </message>
-    <message>
         <source>abandoned</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents an abandoned transaction.</extracomment>
         <translation type="unfinished">ditinggalkan</translation>
     </message>
     <message>
         <source>%1/unconfirmed</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents a transaction confirmed in at least one block, but less than 6 blocks.</extracomment>
         <translation type="unfinished">%1/belum dikonfirmasi</translation>
     </message>
     <message>
         <source>%1 confirmations</source>
+        <extracomment>Text explaining the current status of a transaction, shown in the status field of the details window for this transaction. This status represents a transaction confirmed in 6 or more blocks.</extracomment>
         <translation type="unfinished">%1 konfirmasi</translation>
     </message>
     <message>
@@ -3990,6 +4077,11 @@ Catatan: Karena biaya dihitung berdasarkan per byte, tarif biaya "100 satoshi pe
     <message>
         <source>&amp;Edit address label</source>
         <translation type="unfinished">&amp;Ubah label alamat</translation>
+    </message>
+    <message>
+        <source>Show in %1</source>
+        <extracomment>Transactions table context menu action to show the selected transaction in a third-party block explorer. %1 is a stand-in argument for the URL of the explorer.</extracomment>
+        <translation type="unfinished">Menunjukkan %1</translation>
     </message>
     <message>
         <source>Export Transaction History</source>
