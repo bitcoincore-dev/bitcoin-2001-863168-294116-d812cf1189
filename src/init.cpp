@@ -1658,10 +1658,11 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
 
     const auto BadPortWarning = [](const char* prefix, uint16_t port) {
         return strprintf(_("%s request to listen on port %u. This port is considered \"bad\" and "
-                           "thus it is unlikely that any Bitcoin Core peers connect to it. See "
+                           "thus it is unlikely that any %s peers connect to it. See "
                            "doc/p2p-bad-ports.md for details and a full list."),
                          prefix,
-                         port);
+                         port,
+                         PACKAGE_NAME);
     };
 
     for (const std::string& bind_arg : args.GetArgs("-bind")) {
