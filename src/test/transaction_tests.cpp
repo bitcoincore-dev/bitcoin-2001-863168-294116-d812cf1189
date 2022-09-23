@@ -79,7 +79,7 @@ bool CheckMapFlagNames()
 */
 bool CheckTxScripts(const CTransaction& tx, const std::map<COutPoint, CScript>& map_prevout_scriptPubKeys,
     const std::map<COutPoint, int64_t>& map_prevout_values, unsigned int flags,
-    const PrecomputedTransactionData& txdata, const std::string& strTest, bool expect_valid)
+    PrecomputedTransactionData& txdata, const std::string& strTest, bool expect_valid)
 {
     bool tx_valid = true;
     ScriptError err = expect_valid ? SCRIPT_ERR_UNKNOWN_ERROR : SCRIPT_ERR_OK;
@@ -163,11 +163,19 @@ BOOST_AUTO_TEST_CASE(tx_valid)
         std::string strTest = test.write();
         if (test[0].isArray())
         {
-            if (test.size() != 3 || !test[1].isStr() || !test[2].isStr())
+            const size_t size = test.size();
+            const bool default_args = size == 3;
+            const bool has_skip_exclude_one = size == 5;
+            const bool has_extra_flags = size == 4;
+            const bool size_correct = default_args || has_extra_flags || has_skip_exclude_one;
+            const bool extra_flags_correct = !has_extra_flags || test[3].isStr();
+            const bool skip_exclude_one_correct = !has_skip_exclude_one  || test[4].isBool();
+            if (!size_correct || !test[1].isStr() || !test[2].isStr() || !extra_flags_correct || !skip_exclude_one_correct)
             {
                 BOOST_ERROR("Bad test: " << strTest);
                 continue;
             }
+            const bool skip_exclude_one = has_skip_exclude_one? test[4].get_bool() : false;
 
             std::map<COutPoint, CScript> mapprevOutScriptPubKeys;
             std::map<COutPoint, int64_t> mapprevOutValues;
@@ -206,35 +214,38 @@ BOOST_AUTO_TEST_CASE(tx_valid)
             BOOST_CHECK_MESSAGE(CheckTransaction(tx, state), strTest);
             BOOST_CHECK(state.IsValid());
 
-            PrecomputedTransactionData txdata(tx);
+            PrecomputedTransactionData txdata(tx, nullptr);
             unsigned int verify_flags = ParseScriptFlags(test[2].get_str());
+            unsigned int extra_verify_flags = has_extra_flags? ParseScriptFlags(test[3].get_str()) : 0;
 
             // Check that the test gives a valid combination of flags (otherwise VerifyScript will throw). Don't edit the flags.
             if (~verify_flags != FillFlags(~verify_flags)) {
                 BOOST_ERROR("Bad test flags: " << strTest);
             }
 
-            BOOST_CHECK_MESSAGE(CheckTxScripts(tx, mapprevOutScriptPubKeys, mapprevOutValues, ~verify_flags, txdata, strTest, /*expect_valid=*/true),
+            BOOST_CHECK_MESSAGE(CheckTxScripts(tx, mapprevOutScriptPubKeys, mapprevOutValues, extra_verify_flags|~verify_flags, txdata, strTest, /* expect_valid=*/ true),
                                 "Tx unexpectedly failed: " << strTest);
 
             // Backwards compatibility of script verification flags: Removing any flag(s) should not invalidate a valid transaction
             for (const auto& [name, flag] : mapFlagNames) {
                 // Removing individual flags
-                unsigned int flags = TrimFlags(~(verify_flags | flag));
-                if (!CheckTxScripts(tx, mapprevOutScriptPubKeys, mapprevOutValues, flags, txdata, strTest, /*expect_valid=*/true)) {
+                unsigned int flags = TrimFlags(extra_verify_flags | ~(verify_flags | flag));
+                if (!CheckTxScripts(tx, mapprevOutScriptPubKeys, mapprevOutValues, flags, txdata, strTest, /* expect_valid=*/ true)) {
                     BOOST_ERROR("Tx unexpectedly failed with flag " << name << " unset: " << strTest);
                 }
                 // Removing random combinations of flags
-                flags = TrimFlags(~(verify_flags | (unsigned int)InsecureRandBits(mapFlagNames.size())));
-                if (!CheckTxScripts(tx, mapprevOutScriptPubKeys, mapprevOutValues, flags, txdata, strTest, /*expect_valid=*/true)) {
+                flags = TrimFlags(extra_verify_flags | ~(verify_flags | (unsigned int)InsecureRandBits(mapFlagNames.size())));
+                if (!CheckTxScripts(tx, mapprevOutScriptPubKeys, mapprevOutValues, flags, txdata, strTest, /* expect_valid=*/ true)) {
                     BOOST_ERROR("Tx unexpectedly failed with random flags " << ToString(flags) << ": " << strTest);
                 }
             }
 
             // Check that flags are maximal: transaction should fail if any unset flags are set.
-            for (auto flags_excluding_one : ExcludeIndividualFlags(verify_flags)) {
-                if (!CheckTxScripts(tx, mapprevOutScriptPubKeys, mapprevOutValues, ~flags_excluding_one, txdata, strTest, /*expect_valid=*/false)) {
-                    BOOST_ERROR("Too many flags unset: " << strTest);
+            if (!skip_exclude_one) {
+                for (auto flags_excluding_one : ExcludeIndividualFlags(verify_flags)) {
+                    if (!CheckTxScripts(tx, mapprevOutScriptPubKeys, mapprevOutValues, ~flags_excluding_one, txdata, strTest, /* expect_valid=*/ false)) {
+                        BOOST_ERROR("Too many flags unset: " << strTest);
+                    }
                 }
             }
         }
@@ -251,10 +262,40 @@ BOOST_AUTO_TEST_CASE(tx_invalid)
         std::string strTest = test.write();
         if (test[0].isArray())
         {
-            if (test.size() != 3 || !test[1].isStr() || !test[2].isStr())
+            const bool mandatory_fields_present = test.size() >= 3 && test[1].isStr() && test[2].isStr();
+            const bool one_by_one_fills = test.size() >= 4 ? test[3].isArray() : true;
+            const bool max_arg_count = test.size() <= 4;
+            if (!mandatory_fields_present || !max_arg_count || !one_by_one_fills)
             {
                 BOOST_ERROR("Bad test: " << strTest);
                 continue;
+            }
+            std::vector<std::pair<unsigned int, unsigned int>> excluded_flag_settings;
+            if (test.size() >= 4) {
+                try {
+                    const UniValue& fills = test[3].get_array();
+                    for (unsigned int i = 0; i < fills.size(); ++i) {
+                        const UniValue& fill = fills[i].get_obj();
+                        const UniValue if_unset = fill["if_unset"].get_array();
+                        const UniValue then_unset = fill["then_unset"].get_array();
+                        excluded_flag_settings.push_back(std::make_pair(0, 0));
+                        unsigned int& if_set_flags = excluded_flag_settings.back().first;
+                        unsigned int& then_set_flags = excluded_flag_settings.back().second;
+                        for (unsigned int j = 0; j < if_unset.size(); ++j) {
+                            const auto& flag = mapFlagNames.find(if_unset[j].get_str());
+                            if (flag == mapFlagNames.end()) BOOST_ERROR("Unknown Flag: " << if_unset[j].get_str());
+                            if_set_flags |= flag->second;
+                        }
+                        for (unsigned int j = 0; j < then_unset.size(); ++j) {
+                            const auto& flag = mapFlagNames.find(then_unset[j].get_str());
+                            if (flag == mapFlagNames.end()) BOOST_ERROR("Unknown Flag: " << then_unset[j].get_str());
+                            then_set_flags |= flag->second;
+                        }
+
+                    }
+                } catch (std::runtime_error e) {
+                    BOOST_ERROR("Improperly Formatted One-By-One Fill Settings " << strTest);
+                }
             }
 
             std::map<COutPoint, CScript> mapprevOutScriptPubKeys;
@@ -296,7 +337,7 @@ BOOST_AUTO_TEST_CASE(tx_invalid)
                 continue;
             }
 
-            PrecomputedTransactionData txdata(tx);
+            PrecomputedTransactionData txdata(tx, nullptr);
             unsigned int verify_flags = ParseScriptFlags(test[2].get_str());
 
             // Check that the test gives a valid combination of flags (otherwise VerifyScript will throw). Don't edit the flags.
@@ -323,9 +364,27 @@ BOOST_AUTO_TEST_CASE(tx_invalid)
             }
 
             // Check that flags are minimal: transaction should succeed if any set flags are unset.
+            // unset flags according to if_unset/then_unset rules and de-duplicate entries.
+            std::set<unsigned int> flags_excluded;
             for (auto flags_excluding_one : ExcludeIndividualFlags(verify_flags)) {
-                if (!CheckTxScripts(tx, mapprevOutScriptPubKeys, mapprevOutValues, flags_excluding_one, txdata, strTest, /*expect_valid=*/true)) {
-                    BOOST_ERROR("Too many flags set: " << strTest);
+                // re-apply rules until result is stable
+                unsigned int pre;
+                do {
+                    pre = flags_excluding_one;
+                    for (const auto& fill_if : excluded_flag_settings) {
+                        // check if all flags in the entry are unset
+                        if ((fill_if.first & flags_excluding_one) == 0) {
+                            flags_excluding_one &= ~fill_if.second;
+                            // re-evaluate all prior rules early if changed
+                            if (pre != flags_excluding_one) break;
+                        }
+                    }
+                } while (pre != flags_excluding_one);
+                flags_excluded.insert(flags_excluding_one);
+            }
+            for (auto flags_excluding_one : flags_excluded) {
+                if (!CheckTxScripts(tx, mapprevOutScriptPubKeys, mapprevOutValues, flags_excluding_one, txdata, strTest, /* expect_valid=*/ true)) {
+                    BOOST_ERROR("Too many flags set: " << FormatScriptFlags(flags_excluding_one) << "\n" << strTest);
                 }
             }
         }
@@ -493,7 +552,7 @@ BOOST_AUTO_TEST_CASE(test_big_witness_transaction)
     CTransaction tx(deserialize, ssout);
 
     // check all inputs concurrently, with the cache
-    PrecomputedTransactionData txdata(tx);
+    PrecomputedTransactionData txdata(tx, nullptr);
     CCheckQueue<CScriptCheck> scriptcheckqueue(128);
     CCheckQueueControl<CScriptCheck> control(&scriptcheckqueue);
 
