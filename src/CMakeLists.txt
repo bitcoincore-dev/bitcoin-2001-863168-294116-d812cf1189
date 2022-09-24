@@ -286,7 +286,7 @@ if(BUILD_DAEMON)
 endif()
 
 
-if(BUILD_CLI)
+if(BUILD_CLI OR NOT WITH_GUI STREQUAL "no")
   add_library(rpc_client STATIC EXCLUDE_FROM_ALL "")
   target_sources(rpc_client PRIVATE rpc/client.cpp)
   target_include_directories(rpc_client
@@ -382,4 +382,9 @@ if(BUILD_UTIL_CHAINSTATE)
       univalue
       secp256k1
   )
+endif()
+
+
+if(NOT WITH_GUI STREQUAL "no")
+  add_subdirectory(qt)
 endif()
