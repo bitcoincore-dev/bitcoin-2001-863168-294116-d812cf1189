@@ -60,6 +60,7 @@ option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting execu
 option(WERROR "Treat compiler warnings as errors" OFF)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_BENCH "Build benchmarks" ON)
+option(INSTALL_MAN "Install man pages" ON)
 
 if(CXX20 OR MSVC)
   set(CMAKE_CXX_STANDARD 20)
