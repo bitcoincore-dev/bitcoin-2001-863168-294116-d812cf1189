@@ -60,6 +60,7 @@ if(NOT BUILD_SHARED AND NOT BUILD_STATIC)
   message(FATAL_ERROR "At least one of BUILD_SHARED and BUILD_STATIC must be enabled.")
 endif()
 option(BUILD_BITCOINCONSENSUS_LIB "Build bitcoinconsensus library." ON)
+option(BUILD_BITCOINKERNEL_LIB "Build experimental bitcoinkernel library." OFF)
 
 option(CXX20 "Enable compilation in c++20 mode." OFF)
 option(HARDENING "Attempt to harden the resulting executables." ON)
@@ -231,15 +232,17 @@ include(cmake/subtree-secp256k1.cmake)
 include(CheckStdFilesystem)
 check_std_filesystem()
 
-find_package(PkgConfig)
-if(BUILD_DAEMON OR BUILD_CLI OR BUILD_TX)
+if(BUILD_DAEMON OR BUILD_CLI OR BUILD_TX OR BUILD_BITCOINKERNEL_LIB)
   set(THREADS_PREFER_PTHREAD_FLAG ON)
   find_package(Threads REQUIRED)
 
   # Find Boost headers only.
   find_package(Boost 1.64.0 REQUIRED)
   mark_as_advanced(Boost_INCLUDE_DIR)
+endif()
 
+find_package(PkgConfig)
+if(BUILD_DAEMON OR BUILD_CLI)
   pkg_check_modules(libevent REQUIRED libevent>=2.1.8 IMPORTED_TARGET)
   target_link_libraries(PkgConfig::libevent
     INTERFACE
@@ -272,6 +275,7 @@ message("Libraries:")
 message("  build shared ........................ ${BUILD_SHARED}")
 message("  build static ........................ ${BUILD_STATIC}")
 message("  libbitcoinconsensus ................. ${BUILD_BITCOINCONSENSUS_LIB}")
+message("  libbitcoinkernel (experimental) ..... ${BUILD_BITCOINKERNEL_LIB}")
 message("")
 get_directory_property(definitions COMPILE_DEFINITIONS)
 message("Preprocessor defined macros ........... ${definitions}")
