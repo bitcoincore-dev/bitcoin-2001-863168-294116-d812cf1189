@@ -32,6 +32,8 @@ project("Bitcoin Core"
   LANGUAGES CXX C ASM
 )
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/module)
+
 # Configurable options.
 # When adding a new option, end the <help_text> with a full stop for consistency.
 option(CXX20 "Enable compilation in c++20 mode." OFF)
@@ -45,6 +47,52 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+include(TryAppendLinkerFlag)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  add_definitions(-D_MT -DWIN32 -D_WINDOWS -D_WIN32_WINNT=0x0601 -D_WIN32_IE=0x0501 -DWIN32_LEAN_AND_MEAN)
+  if(MSVC)
+    set(CMAKE_DISABLE_PRECOMPILE_HEADERS ON)
+    add_definitions(
+      /utf-8
+      /Zc:__cplusplus
+      /DNOMINMAX
+      /D_CRT_SECURE_NO_WARNINGS
+      /D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+    )
+    add_compile_options(/wd4018 /wd4244 /wd4267 /wd4273 /wd4715 /wd4805 /wd4834)
+  endif()
+  if(MINGW)
+    set(mingw_linker_flags "")
+    try_append_linker_flag(mingw_linker_flags "-static")
+    # We require Windows 7 (NT 6.1) or later.
+    try_append_linker_flag(mingw_linker_flags "-Wl,--major-subsystem-version,6")
+    try_append_linker_flag(mingw_linker_flags "-Wl,--minor-subsystem-version,1")
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+      separate_arguments(mingw_linker_flags)
+      add_link_options(${mingw_linker_flags})
+    else()
+      link_libraries(${mingw_linker_flags})
+    endif()
+  endif()
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  add_definitions(-DMAC_OSX -DOBJC_OLD_DISPATCH_PROTOTYPES=0)
+  # These flags are specific to ld64, and may cause issues with other linkers.
+  # For example: GNU ld will interpret -dead_strip as -de and then try and use
+  # "ad_strip" as the symbol for the entry point.
+  try_append_linker_flag(darwin_linker_flags "-Wl,-dead_strip")
+  try_append_linker_flag(darwin_linker_flags "-Wl,-dead_strip_dylibs")
+  try_append_linker_flag(darwin_linker_flags "-Wl,-headerpad_max_install_names")
+  if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+    separate_arguments(darwin_linker_flags)
+    add_link_options(${darwin_linker_flags})
+  else()
+    link_libraries(${darwin_linker_flags})
+  endif()
+endif()
 
 message("\n")
 message("Configure summary")
