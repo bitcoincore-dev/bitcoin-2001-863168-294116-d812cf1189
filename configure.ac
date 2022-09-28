@@ -431,12 +431,6 @@ if test "$enable_werror" = "yes"; then
     AC_MSG_ERROR([enable-werror set but -Werror is not usable])
   fi
   ERROR_CXXFLAGS=$CXXFLAG_WERROR
-
-  dnl -Wreturn-type is broken in GCC for MinGW-w64.
-  dnl https://sourceforge.net/p/mingw-w64/bugs/306/
-  AX_CHECK_COMPILE_FLAG([-Werror=return-type], [], [ERROR_CXXFLAGS="$ERROR_CXXFLAGS -Wno-error=return-type"], [$CXXFLAG_WERROR],
-                        [AC_LANG_SOURCE([[#include <cassert>
-                                          int f(){ assert(false); }]])])
 fi
 
 if test "$CXXFLAGS_overridden" = "no"; then
@@ -476,6 +470,11 @@ if test "$CXXFLAGS_overridden" = "no"; then
   if test "$suppress_external_warnings" != "yes" ; then
     AX_CHECK_COMPILE_FLAG([-Wdeprecated-copy], [NOWARN_CXXFLAGS="$NOWARN_CXXFLAGS -Wno-deprecated-copy"], [], [$CXXFLAG_WERROR])
   fi
+  dnl -Wreturn-type is broken in GCC for MinGW-w64.
+  dnl https://sourceforge.net/p/mingw-w64/bugs/306/
+  AX_CHECK_COMPILE_FLAG([-Wreturn-type], [], [NOWARN_CXXFLAGS="$NOWARN_CXXFLAGS -Wno-return-type"], [$CXXFLAG_WERROR],
+                        [AC_LANG_SOURCE([[#include <cassert>
+                                          int f(){ assert(false); }]])])
 fi
 
 dnl Don't allow extended (non-ASCII) symbols in identifiers. This is easier for code review.
