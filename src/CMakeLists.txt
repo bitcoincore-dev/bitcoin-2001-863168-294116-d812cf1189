@@ -317,3 +317,7 @@ endif()
 if(BUILD_BITCOINCONSENSUS_LIB)
   add_subdirectory(script)
 endif()
+
+if(BUILD_BITCOINKERNEL_LIB)
+  add_subdirectory(kernel)
+endif()
