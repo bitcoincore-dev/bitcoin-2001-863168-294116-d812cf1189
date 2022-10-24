@@ -332,6 +332,16 @@ Podpisywanie jest możliwe tylko z adresami typu 'legacy'.</translation>
         <translation type="unfinished">Ręczny</translation>
     </message>
     <message>
+        <source>Feeler</source>
+        <extracomment>Short-lived peer connection type that tests the aliveness of known addresses.</extracomment>
+        <translation type="unfinished">Szczelinomierz</translation>
+    </message>
+    <message>
+        <source>Address Fetch</source>
+        <extracomment>Short-lived peer connection type that solicits known addresses from a peer.</extracomment>
+        <translation type="unfinished">Pobieranie adresu</translation>
+    </message>
+    <message>
         <source>None</source>
         <translation type="unfinished">Żaden</translation>
     </message>
@@ -1929,6 +1939,10 @@ Podpisywanie jest możliwe tylko z adresami typu 'legacy'.</translation>
         <source>%1 is currently syncing.  It will download headers and blocks from peers and validate them until reaching the tip of the block chain.</source>
         <translation type="unfinished">%1 jest w trakcie synchronizacji. Trwa pobieranie i weryfikacja nagłówków oraz bloków z sieci w celu uzyskania aktualnego stanu łańcucha.</translation>
     </message>
+    <message>
+        <source>Unknown. Syncing Headers (%1, %2%)…</source>
+        <translation type="unfinished">nieznany, Synchronizowanie nagłówków (1%1, 2%2%)</translation>
+    </message>
     </context>
 <context>
     <name>OpenURIDialog</name>
@@ -1959,6 +1973,10 @@ Podpisywanie jest możliwe tylko z adresami typu 'legacy'.</translation>
     <message>
         <source>&amp;Start %1 on system login</source>
         <translation type="unfinished">Uruchamiaj %1 wraz z zalogowaniem do &amp;systemu</translation>
+    </message>
+    <message>
+        <source>Enabling pruning significantly reduces the disk space required to store transactions. All blocks are still fully validated. Reverting this setting requires re-downloading the entire blockchain.</source>
+        <translation type="unfinished">Włączenie czyszczenia znacznie zmniejsza ilość miejsca na dysku wymaganego do przechowywania transakcji. Wszystkie bloki są nadal w pełni zweryfikowane. Przywrócenie tego ustawienia wymaga ponownego pobrania całego łańcucha bloków.</translation>
     </message>
     <message>
         <source>Size of &amp;database cache</source>
@@ -2007,6 +2025,11 @@ Podpisywanie jest możliwe tylko z adresami typu 'legacy'.</translation>
     <message>
         <source>Reverting this setting requires re-downloading the entire blockchain.</source>
         <translation type="unfinished">Cofnięcie tego ustawienia wymaga ponownego załadowania całego łańcucha bloków.</translation>
+    </message>
+    <message>
+        <source>Maximum database cache size. A larger cache can contribute to faster sync, after which the benefit is less pronounced for most use cases. Lowering the cache size will reduce memory usage. Unused mempool memory is shared for this cache.</source>
+        <extracomment>Tooltip text for Options window setting that sets the size of the database cache. Explains the corresponding effects of increasing/decreasing this value.</extracomment>
+        <translation type="unfinished">Maksymalny rozmiar pamięci podręcznej bazy danych. Większa pamięć podręczna może przyczynić się do szybszej synchronizacji, po której korzyści są mniej widoczne w większości przypadków użycia. Zmniejszenie rozmiaru pamięci podręcznej zmniejszy zużycie pamięci. Nieużywana pamięć mempool jest współdzielona dla tej pamięci podręcznej.</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -2148,6 +2171,10 @@ Podpisywanie jest możliwe tylko z adresami typu 'legacy'.</translation>
     <message>
         <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
         <translation type="unfinished">Wybierz podział jednostki pokazywany w interfejsie  oraz podczas wysyłania monet</translation>
+    </message>
+    <message>
+        <source>&amp;Third-party transaction URLs</source>
+        <translation type="unfinished">&amp;Adresy URL transakcji stron trzecich</translation>
     </message>
     <message>
         <source>Whether to show coin control features or not.</source>
@@ -2346,6 +2373,10 @@ Podpisywanie jest możliwe tylko z adresami typu 'legacy'.</translation>
         <translation type="unfinished">Nie udało się podpisać transakcji: %1</translation>
     </message>
     <message>
+        <source>Cannot sign inputs while wallet is locked.</source>
+        <translation type="unfinished">Nie można podpisywać danych wejściowych, gdy portfel jest zablokowany.</translation>
+    </message>
+    <message>
         <source>Could not sign any more inputs.</source>
         <translation type="unfinished">Nie udało się podpisać więcej wejść.</translation>
     </message>
@@ -2372,6 +2403,11 @@ Podpisywanie jest możliwe tylko z adresami typu 'legacy'.</translation>
     <message>
         <source>Save Transaction Data</source>
         <translation type="unfinished">Zapisz dane transakcji</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (Binary)</source>
+        <extracomment>Expanded name of the binary PSBT file format. See: BIP 174.</extracomment>
+        <translation type="unfinished">Częściowo podpisana transakcja (binarna)</translation>
     </message>
     <message>
         <source>PSBT saved to disk.</source>
@@ -2662,6 +2698,11 @@ Jeśli pojawia się ten błąd, poproś sprzedawcę o podanie URI zgodnego z BIP
     <message>
         <source>Mapped AS</source>
         <translation type="unfinished">Zmapowany autonomiczny system (ang. asmap)</translation>
+    </message>
+    <message>
+        <source>Whether we relay addresses to this peer.</source>
+        <extracomment>Tooltip text for the Address Relay field in the peer details area, which displays whether we relay addresses to this peer (Yes/No).</extracomment>
+        <translation type="unfinished">Czy przekazujemy adresy do tego peera.</translation>
     </message>
     <message>
         <source>Address Relay</source>
@@ -3289,6 +3330,11 @@ Korzystanie z opłaty domyślnej może skutkować wysłaniem transakcji, która 
     <message>
         <source>Save Transaction Data</source>
         <translation type="unfinished">Zapisz dane transakcji</translation>
+    </message>
+    <message>
+        <source>Partially Signed Transaction (Binary)</source>
+        <extracomment>Expanded name of the binary PSBT file format. See: BIP 174.</extracomment>
+        <translation type="unfinished">Częściowo podpisana transakcja (binarna)</translation>
     </message>
     <message>
         <source>PSBT saved</source>
