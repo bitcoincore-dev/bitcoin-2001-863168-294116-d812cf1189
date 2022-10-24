@@ -388,7 +388,7 @@ void BitcoinApplication::requestShutdown()
     pollShutdownTimer->stop();
 
 #ifdef ENABLE_WALLET
-    // Delete wallet controller here manually, instead of relying on Qt object
+    // Delete splash screen and wallet controller here manually, instead of relying on Qt object
     // tracking (https://doc.qt.io/qt-5/objecttrees.html). This makes sure
     // walletmodel m_handle_* notification handlers are deleted before wallets
     // are unloaded, which can simplify wallet implementations. It also avoids
@@ -396,6 +396,8 @@ void BitcoinApplication::requestShutdown()
     // destroyed, making GUI code less fragile as well.
     delete m_wallet_controller;
     m_wallet_controller = nullptr;
+    delete m_splash;
+    m_splash = nullptr;
 #endif // ENABLE_WALLET
 
     delete clientModel;
