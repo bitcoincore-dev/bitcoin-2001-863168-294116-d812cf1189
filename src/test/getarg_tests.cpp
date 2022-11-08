@@ -2,7 +2,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include <random.h>
 #include <test/util/setup_common.h>
+#include <tinyformat.h>
 #include <univalue.h>
 #include <util/settings.h>
 #include <util/strencodings.h>
@@ -428,8 +430,9 @@ BOOST_AUTO_TEST_CASE(logargs)
     const auto okaylog_negbool = std::make_pair("-okaylog-negbool", ArgsManager::ALLOW_ANY);
     const auto okaylog = std::make_pair("-okaylog", ArgsManager::ALLOW_ANY);
     const auto dontlog = std::make_pair("-dontlog", ArgsManager::ALLOW_ANY | ArgsManager::SENSITIVE);
+    const auto private_data = strprintf("%04x", GetRand<uint16_t>());
     SetupArgs(local_args, {okaylog_bool, okaylog_negbool, okaylog, dontlog});
-    ResetArgs(local_args, "-okaylog-bool -nookaylog-negbool -okaylog=public -dontlog=private");
+    ResetArgs(local_args, strprintf("-okaylog-bool -nookaylog-negbool -okaylog=public -dontlog=%s", private_data));
 
     // Everything logged to debug.log will also append to str
     std::string str;
@@ -447,7 +450,7 @@ BOOST_AUTO_TEST_CASE(logargs)
     BOOST_CHECK(str.find("Command-line arg: okaylog-negbool=false") != std::string::npos);
     BOOST_CHECK(str.find("Command-line arg: okaylog=\"public\"") != std::string::npos);
     BOOST_CHECK(str.find("dontlog=****") != std::string::npos);
-    BOOST_CHECK(str.find("private") == std::string::npos);
+    BOOST_CHECK(str.find(private_data) == std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
