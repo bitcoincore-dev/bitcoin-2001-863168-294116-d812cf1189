@@ -23,7 +23,7 @@ if [ -n "$USE_VALGRIND" ]; then
 fi
 
 if [ "$RUN_UNIT_TESTS" = "true" ]; then
-  CI_EXEC "${TEST_RUNNER_ENV}" DIR_UNIT_TEST_DATA="${DIR_UNIT_TEST_DATA}" LD_LIBRARY_PATH="${DEPENDS_DIR}/${HOST}/lib" make "$MAKEJOBS" check VERBOSE=1
+  CI_EXEC CTEST_OUTPUT_ON_FAILURE=ON "${TEST_RUNNER_ENV}" DIR_UNIT_TEST_DATA="${DIR_UNIT_TEST_DATA}" LD_LIBRARY_PATH="${DEPENDS_DIR}/${HOST}/lib" make "$MAKEJOBS" check
 fi
 
 if [ "$RUN_UNIT_TESTS_SEQUENTIAL" = "true" ]; then
@@ -36,9 +36,9 @@ fi
 
 if [ "${RUN_TIDY}" = "true" ]; then
   set -eo pipefail
-  export P_CI_DIR="${BASE_BUILD_DIR}/bitcoin-$HOST/src/"
-  ( CI_EXEC run-clang-tidy -quiet "${MAKEJOBS}" ) | grep -C5 "error"
-  export P_CI_DIR="${BASE_BUILD_DIR}/bitcoin-$HOST/"
+  export P_CI_DIR="${BASE_ROOT_DIR}/src"
+  ( CI_EXEC run-clang-tidy -p "${BASE_BUILD_DIR}" -quiet "${MAKEJOBS}" ) | grep -C5 "error"
+  export P_CI_DIR="${BASE_ROOT_DIR}"
   CI_EXEC "python3 ${DIR_IWYU}/include-what-you-use/iwyu_tool.py"\
           " src/common/url.cpp"\
           " src/compat"\
@@ -70,7 +70,7 @@ if [ "${RUN_TIDY}" = "true" ]; then
           " src/util/string.cpp"\
           " src/util/syserror.cpp"\
           " src/zmq"\
-          " -p . ${MAKEJOBS} -- -Xiwyu --cxx17ns -Xiwyu --mapping_file=${BASE_BUILD_DIR}/bitcoin-$HOST/contrib/devtools/iwyu/bitcoin.core.imp"
+          " -p ${BASE_BUILD_DIR} ${MAKEJOBS} -- -Xiwyu --cxx17ns -Xiwyu --mapping_file=${BASE_ROOT_DIR}/contrib/devtools/iwyu/bitcoin.core.imp"
 fi
 
 if [ "$RUN_SECURITY_TESTS" = "true" ]; then
