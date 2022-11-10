@@ -5663,6 +5663,16 @@ void Chainstate::InvalidateCoinsDBOnDisk()
     }
 }
 
+const ChainstateRole Chainstate::GetRole() const
+{
+    if (!m_chainman.IsSnapshotActive()) {
+        return ChainstateRole::NORMAL;
+    }
+    return (this != &m_chainman.ActiveChainstate()) ?
+               ChainstateRole::BACKGROUND :
+               ChainstateRole::ASSUMEDVALID;
+}
+
 const CBlockIndex* ChainstateManager::GetSnapshotBaseBlock() const
 {
     const auto blockhash_op = this->SnapshotBlockhash();
