@@ -1565,16 +1565,20 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
 
         g_txindex = std::make_unique<TxIndex>(interfaces::MakeChain(node), cache_sizes.tx_index, false, fReindex);
         node.indexes.emplace_back(g_txindex.get());
+        chainman.indexers.push_back(g_txindex.get());
     }
 
     for (const auto& filter_type : g_enabled_filter_types) {
         InitBlockFilterIndex([&]{ return interfaces::MakeChain(node); }, filter_type, cache_sizes.filter_index, false, fReindex);
-        node.indexes.emplace_back(GetBlockFilterIndex(filter_type));
+        auto* bfindex = GetBlockFilterIndex(filter_type);
+        node.indexes.emplace_back(bfindex);
+        chainman.indexers.push_back(bfindex);
     }
 
     if (args.GetBoolArg("-coinstatsindex", DEFAULT_COINSTATSINDEX)) {
         g_coin_stats_index = std::make_unique<CoinStatsIndex>(interfaces::MakeChain(node), /*cache_size=*/0, false, fReindex);
         node.indexes.emplace_back(g_coin_stats_index.get());
+        chainman.indexers.push_back(g_coin_stats_index.get());
     }
 
     // Init indexes
