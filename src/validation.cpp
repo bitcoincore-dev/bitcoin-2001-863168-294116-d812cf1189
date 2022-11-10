@@ -5712,6 +5712,16 @@ util::Result<void> Chainstate::InvalidateCoinsDBOnDisk()
     return {};
 }
 
+ChainstateRole Chainstate::GetRole() const
+{
+    if (m_chainman.GetAll().size() <= 1) {
+        return ChainstateRole::NORMAL;
+    }
+    return (this != &m_chainman.ActiveChainstate()) ?
+               ChainstateRole::BACKGROUND :
+               ChainstateRole::ASSUMEDVALID;
+}
+
 const CBlockIndex* ChainstateManager::GetSnapshotBaseBlock() const
 {
     return m_active_chainstate ? m_active_chainstate->SnapshotBase() : nullptr;
