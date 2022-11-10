@@ -1576,13 +1576,16 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
         if (!g_txindex->Start()) {
             return false;
         }
+        chainman.indexers.push_back(g_txindex.get());
     }
 
     for (const auto& filter_type : g_enabled_filter_types) {
         InitBlockFilterIndex([&]{ return interfaces::MakeChain(node); }, filter_type, cache_sizes.filter_index, false, fReindex);
-        if (!GetBlockFilterIndex(filter_type)->Start()) {
+        auto* bfindex = GetBlockFilterIndex(filter_type);
+        if (!bfindex->Start()) {
             return false;
         }
+        chainman.indexers.push_back(bfindex);
     }
 
     if (args.GetBoolArg("-coinstatsindex", DEFAULT_COINSTATSINDEX)) {
@@ -1590,6 +1593,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
         if (!g_coin_stats_index->Start()) {
             return false;
         }
+        chainman.indexers.push_back(g_coin_stats_index.get());
     }
 
     // ********************************************************* Step 9: load wallet
