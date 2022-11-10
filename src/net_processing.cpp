@@ -1907,8 +1907,14 @@ void PeerManagerImpl::BlockConnected(
     const std::shared_ptr<const CBlock>& pblock,
     const CBlockIndex* pindex)
 {
-    m_orphanage.EraseForBlock(*pblock);
+    // Update this for all chainstate roles so that we don't mistakenly see peers
+    // helping us do background IBD as having a stale tip.
     m_last_tip_update = GetTime<std::chrono::seconds>();
+
+    if (role == ChainstateRole::BACKGROUND) {
+        return;
+    }
+    m_orphanage.EraseForBlock(*pblock);
 
     {
         LOCK(m_recent_confirmed_transactions_mutex);
