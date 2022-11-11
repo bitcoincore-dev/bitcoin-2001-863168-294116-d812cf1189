@@ -123,4 +123,5 @@ target_link_libraries(bitcoin_util
     univalue
     Threads::Threads
     $<TARGET_NAME_IF_EXISTS:std_filesystem>
+    $<$<BOOL:${MINGW}>:ws2_32>
 )
