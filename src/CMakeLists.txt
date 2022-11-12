@@ -93,6 +93,7 @@ target_link_libraries(bitcoin_common
 )
 
 
+set(installable_targets "")
 if(ENABLE_WALLET)
   add_subdirectory(wallet)
 
@@ -109,6 +110,7 @@ if(ENABLE_WALLET)
       Boost::boost
     )
     copy_target_for_tests(bitcoin-wallet)
+    list(APPEND installable_targets bitcoin-wallet)
   endif()
 endif()
 
@@ -239,6 +241,7 @@ if(BUILD_DAEMON)
       $<$<BOOL:${MINGW}>:-static>
   )
   copy_target_for_tests(bitcoind)
+  list(APPEND installable_targets bitcoind)
 endif()
 
 
@@ -262,6 +265,7 @@ if(BUILD_CLI)
     libevent::libevent
   )
   copy_target_for_tests(bitcoin-cli)
+  list(APPEND installable_targets bitcoin-cli)
 endif()
 
 
@@ -273,6 +277,7 @@ if(BUILD_TX)
     univalue
   )
   copy_target_for_tests(bitcoin-tx)
+  list(APPEND installable_targets bitcoin-tx)
 endif()
 
 
@@ -283,6 +288,7 @@ if(BUILD_UTIL)
     bitcoin_util
   )
   copy_target_for_tests(bitcoin-util)
+  list(APPEND installable_targets bitcoin-util)
 endif()
 
 
@@ -313,6 +319,7 @@ if(BUILD_UTIL_CHAINSTATE)
     $<TARGET_NAME_IF_EXISTS:std_filesystem>
     $<$<PLATFORM_ID:Windows>:ws2_32>
   )
+  list(APPEND installable_targets bitcoin-chainstate)
 endif()
 
 add_subdirectory(test/util)
@@ -321,4 +328,16 @@ if(BUILD_TESTS)
 endif()
 if(BUILD_BENCH)
   add_subdirectory(bench)
+endif()
+
+
+include(GNUInstallDirs)
+install(TARGETS ${installable_targets}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+if(INSTALL_MAN)
+  install(DIRECTORY ../doc/man/
+    DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
+    FILES_MATCHING PATTERN *.1
+  )
 endif()
