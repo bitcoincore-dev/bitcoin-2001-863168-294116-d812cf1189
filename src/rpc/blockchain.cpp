@@ -2714,13 +2714,7 @@ static RPCHelpMan loadtxoutset()
                 "path to the snapshot file. If relative, will be prefixed by datadir."},
         },
         RPCResult{
-            RPCResult::Type::OBJ, "", "",
-                {
-                    {RPCResult::Type::NUM, "coins_loaded", "the number of coins loaded by the snapshot"},
-                    {RPCResult::Type::STR_HEX, "tip_hash", "the hash of the new tip"},
-                    {RPCResult::Type::NUM, "tip_height", "the height of the new chain"},
-                    {RPCResult::Type::STR, "path", "the absolute path that the snapshot was loaded from"},
-                }
+            RPCResult::Type::ELISION, "", "",
         },
         RPCExamples{
             HelpExampleCli("loadtxoutset", "utxo.dat")
