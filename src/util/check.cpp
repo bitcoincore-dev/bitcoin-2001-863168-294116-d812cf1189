@@ -12,6 +12,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
 #include <string>
 
 
@@ -25,5 +26,11 @@ void assertion_fail(const char* file, int line, const char* func, const char* as
 {
     auto str = strprintf("%s:%s %s: Assertion `%s' failed.\n", file, line, func, assertion);
     fwrite(str.data(), 1, str.size(), stderr);
+    std::abort();
+}
+
+void unreachable_fail(const char* file, int line, const char* func)
+{
+    std::cerr << strprintf("Internal bug detected: Unreachable code reached (fatal, aborting)\n%s:%d (%s)\nPlease report this issue here: %s\n", file, line, func, PACKAGE_BUGREPORT) << std::endl;
     std::abort();
 }
