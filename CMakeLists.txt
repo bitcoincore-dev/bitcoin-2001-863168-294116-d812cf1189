@@ -63,6 +63,21 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 include(CheckSourceCompilesAndLinks)
 include(cmake/introspection.cmake)
 
+if(WIN32)
+  add_compile_definitions(_WIN32_WINNT=0x0601 _WIN32_IE=0x0501 WIN32_LEAN_AND_MEAN)
+endif()
+
+if(MSVC)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  add_compile_definitions(NOMINMAX _CRT_SECURE_NO_WARNINGS)
+  add_compile_options(/utf-8 /Zc:__cplusplus)
+  add_link_options($<$<CONFIG:Release>:/NODEFAULTLIB:LIBCMTD>)
+endif()
+
+if(APPLE)
+  add_compile_definitions(MAC_OSX)
+endif()
+
 include(cmake/crc32c.cmake)
 include(cmake/leveldb.cmake)
 
