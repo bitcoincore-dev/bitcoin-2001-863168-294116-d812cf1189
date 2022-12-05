@@ -679,12 +679,12 @@ UniValue RPCHelpMan::GetArgMap() const
 
 std::string RPCArg::GetFirstName() const
 {
-    return m_names.substr(0, m_names.find("|"));
+    return m_names.substr(0, m_names.find('|'));
 }
 
 std::string RPCArg::GetName() const
 {
-    CHECK_NONFATAL(std::string::npos == m_names.find("|"));
+    CHECK_NONFATAL(std::string::npos == m_names.find('|'));
     return m_names;
 }
 
