@@ -202,11 +202,11 @@ BOOST_FIXTURE_TEST_CASE(Merge, MergeTestingSetup)
             if (action == SET || action == SECTION_SET) {
                 for (int i = 0; i < 2; ++i) {
                     dest.push_back(value_prefix + ToString(++value_suffix));
-                    desc += " " + name_prefix + name + "=" + dest.back().get_str();
+                    desc.append(" ").append(name_prefix).append(name).append("=").append(dest.back().get_str());
                 }
             } else if (action == NEGATE || action == SECTION_NEGATE) {
                 dest.push_back(false);
-                desc += " " + name_prefix + "no" + name;
+                desc.append(" ").append(name_prefix).append("no").append(name);
             }
         };
 

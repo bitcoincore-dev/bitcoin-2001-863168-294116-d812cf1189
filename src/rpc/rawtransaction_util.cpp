@@ -190,9 +190,10 @@ void ParsePrevouts(const UniValue& prevTxsUnival, FillableSigningProvider* keyst
             {
                 auto coin = coins.find(out);
                 if (coin != coins.end() && !coin->second.IsSpent() && coin->second.out.scriptPubKey != scriptPubKey) {
-                    std::string err("Previous output scriptPubKey mismatch:\n");
-                    err = err + ScriptToAsmStr(coin->second.out.scriptPubKey) + "\nvs:\n"+
-                        ScriptToAsmStr(scriptPubKey);
+                    auto err = std::string("Previous output scriptPubKey mismatch:\n")
+                                   .append(ScriptToAsmStr(coin->second.out.scriptPubKey))
+                                   .append("\nvs:\n")
+                                   .append(ScriptToAsmStr(scriptPubKey));
                     throw JSONRPCError(RPC_DESERIALIZATION_ERROR, err);
                 }
                 Coin newcoin;

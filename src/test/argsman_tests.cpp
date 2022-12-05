@@ -782,11 +782,11 @@ struct ArgsMergeTestingSetup : public BasicTestingSetup {
             if (action == SECTION_SET || action == SECTION_NEGATE) prefix = section + ".";
             if (action == SET || action == SECTION_SET) {
                 for (int i = 0; i < 2; ++i) {
-                    values.push_back(prefix + name + "=" + value_prefix + ToString(++suffix));
+                    values.push_back(std::string(prefix).append(name).append("=").append(value_prefix).append(ToString(++suffix)));
                 }
             }
             if (action == NEGATE || action == SECTION_NEGATE) {
-                values.push_back(prefix + "no" + name + "=1");
+                values.push_back(std::string(prefix).append("no").append(name).append("=1"));
             }
         }
         return values;

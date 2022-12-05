@@ -3587,7 +3587,7 @@ void CWallet::SetupDescriptorScriptPubKeyMans()
                 std::string desc_error;
                 std::unique_ptr<Descriptor> desc = Parse(desc_str, keys, desc_error, false);
                 if (desc == nullptr) {
-                    throw std::runtime_error(std::string(__func__) + ": Invalid descriptor \"" + desc_str + "\" (" + desc_error + ")");
+                    throw std::runtime_error(std::string(__func__).append(": Invalid descriptor \"").append(desc_str).append("\" (").append(desc_error).append(")"));
                 }
                 if (!desc->GetOutputType()) {
                     continue;
