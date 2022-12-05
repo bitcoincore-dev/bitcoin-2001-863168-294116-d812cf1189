@@ -45,7 +45,7 @@ public:
     /**
      * Move constructor, grab the socket from another object and close ours (if set).
      */
-    Sock(Sock&& other);
+    Sock(Sock&& other) noexcept;
 
     /**
      * Destructor, close the socket or do nothing if empty.
@@ -60,7 +60,7 @@ public:
     /**
      * Move assignment operator, grab the socket from another object and close ours (if set).
      */
-    virtual Sock& operator=(Sock&& other);
+    virtual Sock& operator=(Sock&& other) noexcept;
 
     /**
      * Get the value of the contained socket.

@@ -111,7 +111,7 @@ public:
 
     ~StaticContentsSock() override { m_socket = INVALID_SOCKET; }
 
-    StaticContentsSock& operator=(Sock&& other) override
+    StaticContentsSock& operator=(Sock&& other) noexcept override
     {
         assert(false && "Move of Sock into MockSock not allowed.");
         return *this;
