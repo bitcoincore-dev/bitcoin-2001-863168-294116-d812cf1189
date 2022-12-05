@@ -49,7 +49,7 @@ public:
 
     ~FuzzedSock() override;
 
-    FuzzedSock& operator=(Sock&& other) override;
+    FuzzedSock& operator=(Sock&& other) noexcept override;
 
     ssize_t Send(const void* data, size_t len, int flags) const override;
 
