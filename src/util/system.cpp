@@ -64,6 +64,16 @@
 #include <thread>
 #include <typeinfo>
 
+#ifndef WIN32
+namespace {
+constexpr mode_t private_umask = 0077;
+void SetDefaultUmask()
+{
+    umask(private_umask);
+}
+} // namespace
+#endif // WIN32
+
 // Application startup time (used for uptime calculation)
 const int64_t nStartupTime = GetTime();
 
@@ -1359,6 +1369,10 @@ void SetupEnvironment()
     // Set the default input/output charset is utf-8
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
+#endif
+
+#ifndef WIN32
+    SetDefaultUmask();
 #endif
 }
 
