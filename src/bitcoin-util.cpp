@@ -7,6 +7,7 @@
 #endif
 
 #include <arith_uint256.h>
+#include <common/license.h>
 #include <chain.h>
 #include <chainparams.h>
 #include <chainparamsbase.h>

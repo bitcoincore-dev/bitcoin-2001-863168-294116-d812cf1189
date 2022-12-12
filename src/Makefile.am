@@ -634,6 +634,7 @@ libbitcoin_common_a_SOURCES = \
   coins.cpp \
   common/bloom.cpp \
   common/interfaces.cpp \
+  common/license.cpp \
   common/run_command.cpp \
   compressor.cpp \
   core_read.cpp \
