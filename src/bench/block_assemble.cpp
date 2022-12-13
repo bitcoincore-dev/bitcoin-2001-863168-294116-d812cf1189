@@ -42,8 +42,21 @@ static void AssembleBlock(benchmark::Bench& bench)
     }
 
     bench.run([&] {
-        PrepareBlock(test_setup->m_node, P2WSH_OP_TRUE);
+        PrepareBlock(test_setup->m_node, P2WSH_OP_TRUE, true);
+    });
+}
+static void BlockAssemblerAddPackageTxns(benchmark::Bench& bench)
+{
+    FastRandomContext det_rand{true};
+    auto testing_setup = MakeNoLogFileContext<TestChain100Setup>();
+    CTxMemPool& pool = *testing_setup.get()->m_node.mempool;
+    LOCK2(cs_main, pool.cs);
+    const auto transactions = testing_setup->PopulateMempool(det_rand, 1000, true);
+
+    bench.run([&] {
+        PrepareBlock(testing_setup->m_node, P2WSH_OP_TRUE, false);
     });
 }
 
 BENCHMARK(AssembleBlock, benchmark::PriorityLevel::HIGH);
+BENCHMARK(BlockAssemblerAddPackageTxns, benchmark::PriorityLevel::HIGH);
