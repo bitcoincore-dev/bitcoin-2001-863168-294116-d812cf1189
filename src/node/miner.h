@@ -135,6 +135,9 @@ private:
     unsigned int nBlockMaxWeight;
     CFeeRate blockMinFeeRate;
 
+    // Whether to call TestBlockValidity() at the end of CreateNewBlock().
+    const bool test_block_validity;
+
     // Information on the current status of the block
     uint64_t nBlockWeight;
     uint64_t nBlockTx;
@@ -155,6 +158,7 @@ public:
         Options();
         size_t nBlockMaxWeight;
         CFeeRate blockMinFeeRate;
+        bool test_block_validity;
     };
 
     explicit BlockAssembler(Chainstate& chainstate, const CTxMemPool* mempool);

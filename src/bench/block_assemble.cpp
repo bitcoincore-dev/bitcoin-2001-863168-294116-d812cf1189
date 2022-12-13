@@ -42,7 +42,7 @@ static void AssembleBlock(benchmark::Bench& bench)
     }
 
     bench.run([&] {
-        PrepareBlock(test_setup->m_node, P2WSH_OP_TRUE);
+        PrepareBlock(test_setup->m_node, P2WSH_OP_TRUE, true);
     });
 }
 

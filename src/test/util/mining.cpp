@@ -61,7 +61,7 @@ std::vector<std::shared_ptr<CBlock>> CreateBlockChain(size_t total_height, const
 
 CTxIn MineBlock(const NodeContext& node, const CScript& coinbase_scriptPubKey)
 {
-    auto block = PrepareBlock(node, coinbase_scriptPubKey);
+    auto block = PrepareBlock(node, coinbase_scriptPubKey, true);
 
     while (!CheckProofOfWork(block->GetHash(), block->nBits, Params().GetConsensus())) {
         ++block->nNonce;
@@ -74,10 +74,12 @@ CTxIn MineBlock(const NodeContext& node, const CScript& coinbase_scriptPubKey)
     return CTxIn{block->vtx[0]->GetHash(), 0};
 }
 
-std::shared_ptr<CBlock> PrepareBlock(const NodeContext& node, const CScript& coinbase_scriptPubKey)
+std::shared_ptr<CBlock> PrepareBlock(const NodeContext& node, const CScript& coinbase_scriptPubKey, bool check)
 {
+    BlockAssembler::Options options;
+    options.test_block_validity = check;
     auto block = std::make_shared<CBlock>(
-        BlockAssembler{Assert(node.chainman)->ActiveChainstate(), Assert(node.mempool.get())}
+        BlockAssembler{Assert(node.chainman)->ActiveChainstate(), Assert(node.mempool.get()), options}
             .CreateNewBlock(coinbase_scriptPubKey)
             ->block);
 
