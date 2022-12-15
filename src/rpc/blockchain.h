@@ -16,7 +16,7 @@
 #include <stdint.h>
 #include <vector>
 
-extern RecursiveMutex cs_main;
+extern RecursiveMutex cs_main; // NOLINT(readability-redundant-declaration)
 
 class CBlock;
 class CBlockIndex;

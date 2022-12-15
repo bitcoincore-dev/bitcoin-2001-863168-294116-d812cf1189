@@ -38,7 +38,7 @@ static constexpr int64_t TIMESTAMP_WINDOW = MAX_FUTURE_BLOCK_TIME;
  */
 static constexpr int64_t MAX_BLOCK_TIME_GAP = 90 * 60;
 
-extern RecursiveMutex cs_main;
+extern RecursiveMutex cs_main; // NOLINT(readability-redundant-declaration)
 
 class CBlockFileInfo
 {
