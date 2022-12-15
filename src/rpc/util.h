@@ -184,10 +184,10 @@ struct RPCArg {
     const RPCArgOptions m_opts;
 
     RPCArg(
-        const std::string name,
-        const Type type,
-        const Fallback fallback,
-        const std::string description,
+        std::string name,
+        Type type,
+        Fallback fallback,
+        std::string description,
         RPCArgOptions opts = {})
         : m_names{std::move(name)},
           m_type{std::move(type)},
@@ -199,11 +199,11 @@ struct RPCArg {
     }
 
     RPCArg(
-        const std::string name,
-        const Type type,
-        const Fallback fallback,
-        const std::string description,
-        const std::vector<RPCArg> inner,
+        std::string name,
+        Type type,
+        Fallback fallback,
+        std::string description,
+        std::vector<RPCArg> inner,
         RPCArgOptions opts = {})
         : m_names{std::move(name)},
           m_type{std::move(type)},
@@ -266,12 +266,12 @@ struct RPCResult {
     const std::string m_cond;
 
     RPCResult(
-        const std::string cond,
-        const Type type,
-        const std::string m_key_name,
+        std::string cond,
+        Type type,
+        std::string m_key_name,
         const bool optional,
-        const std::string description,
-        const std::vector<RPCResult> inner = {})
+        std::string description,
+        std::vector<RPCResult> inner = {})
         : m_type{std::move(type)},
           m_key_name{std::move(m_key_name)},
           m_inner{std::move(inner)},
@@ -293,11 +293,11 @@ struct RPCResult {
         : RPCResult{cond, type, m_key_name, false, description, inner} {}
 
     RPCResult(
-        const Type type,
-        const std::string m_key_name,
+        Type type,
+        std::string m_key_name,
         const bool optional,
-        const std::string description,
-        const std::vector<RPCResult> inner = {},
+        std::string description,
+        std::vector<RPCResult> inner = {},
         bool skip_type_check = false)
         : m_type{std::move(type)},
           m_key_name{std::move(m_key_name)},
