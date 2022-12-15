@@ -72,11 +72,10 @@ BlockAssembler::BlockAssembler(Chainstate& chainstate, const CTxMemPool* mempool
     nBlockMaxWeight = std::max<size_t>(4000, std::min<size_t>(MAX_BLOCK_WEIGHT - 4000, options.nBlockMaxWeight));
 }
 
-static BlockAssembler::Options DefaultOptions()
+void ApplyArgsManOptions(const ArgsManager& gArgs, BlockAssembler::Options& options)
 {
     // Block resource limits
     // If -blockmaxweight is not given, limit to DEFAULT_BLOCK_MAX_WEIGHT
-    BlockAssembler::Options options;
     options.nBlockMaxWeight = gArgs.GetIntArg("-blockmaxweight", DEFAULT_BLOCK_MAX_WEIGHT);
     if (gArgs.IsArgSet("-blockmintxfee")) {
         std::optional<CAmount> parsed = ParseMoney(gArgs.GetArg("-blockmintxfee", ""));
@@ -84,6 +83,11 @@ static BlockAssembler::Options DefaultOptions()
     } else {
         options.blockMinFeeRate = CFeeRate{DEFAULT_BLOCK_MIN_TX_FEE};
     }
+}
+static BlockAssembler::Options DefaultOptions()
+{
+    BlockAssembler::Options options;
+    ApplyArgsManOptions(gArgs, options);
     return options;
 }
 
