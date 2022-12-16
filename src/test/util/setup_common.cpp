@@ -415,7 +415,7 @@ std::vector<CTransactionRef> TestChain100Setup::PopulateMempool(FastRandomContex
             }
         }
         if (submit) {
-            LOCK2(m_node.mempool->cs, cs_main);
+            LOCK2(cs_main, m_node.mempool->cs);
             LockPoints lp;
             m_node.mempool->addUnchecked(CTxMemPoolEntry(ptx, 1000, 0, 1, false, 4, lp));
         }
