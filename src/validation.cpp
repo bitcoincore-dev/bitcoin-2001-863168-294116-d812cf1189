@@ -1732,8 +1732,7 @@ bool CheckInputScripts(const CTransaction& tx, TxValidationState& state,
         // Verify signature
         CScriptCheck check(txdata.m_spent_outputs[i], tx, i, flags, cacheSigStore, &txdata);
         if (pvChecks) {
-            pvChecks->push_back(CScriptCheck());
-            check.swap(pvChecks->back());
+            pvChecks->push_back(std::move(check));
         } else if (!check()) {
             if (flags & STANDARD_NOT_MANDATORY_VERIFY_FLAGS) {
                 // Check whether the failure was caused by a

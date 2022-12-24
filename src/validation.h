@@ -303,6 +303,8 @@ public:
     ScriptError GetScriptError() const { return error; }
 };
 
+static_assert(std::is_move_constructible_v<CScriptCheck>);
+
 /** Initializes the script-execution cache */
 [[nodiscard]] bool InitScriptExecutionCache(size_t max_size_bytes);
 
