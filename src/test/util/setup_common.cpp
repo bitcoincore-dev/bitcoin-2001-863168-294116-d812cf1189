@@ -182,18 +182,15 @@ ChainTestingSetup::ChainTestingSetup(const std::string& chainName, const std::ve
         .chainparams = chainparams,
         .adjusted_time_callback = GetAdjustedTime,
         .check_block_index = true,
+        .worker_threads_num = 2,
     };
     m_node.chainman = std::make_unique<ChainstateManager>(chainman_opts);
     m_node.chainman->m_blockman.m_block_tree_db = std::make_unique<CBlockTreeDB>(m_cache_sizes.block_tree_db, true);
-
-    constexpr int script_check_threads = 2;
-    StartScriptCheckWorkerThreads(script_check_threads);
 }
 
 ChainTestingSetup::~ChainTestingSetup()
 {
     if (m_node.scheduler) m_node.scheduler->stop();
-    StopScriptCheckWorkerThreads();
     GetMainSignals().FlushBackgroundCallbacks();
     GetMainSignals().UnregisterBackgroundSignalScheduler();
     m_node.connman.reset();
