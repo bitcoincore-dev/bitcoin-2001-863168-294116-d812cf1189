@@ -143,6 +143,9 @@ public:
         }
     }
 
+    CCheckQueue(const CCheckQueue&) = delete;
+    CCheckQueue& operator=(const CCheckQueue&) = delete;
+
     //! Wait until execution finishes, and return whether all evaluations were successful.
     bool Wait() EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
     {
