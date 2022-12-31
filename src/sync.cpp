@@ -156,7 +156,7 @@ static void push_lock(MutexType* c, const CLockLocation& locklocation)
         std::is_base_of<std::recursive_mutex, MutexType>::value;
 
     LockData& lockdata = GetLockData();
-    std::lock_guard<std::mutex> lock(lockdata.dd_mutex);
+    std::unique_lock lock{lockdata.dd_mutex};
 
     LockStack& lock_stack = lockdata.m_lock_stacks[std::this_thread::get_id()];
     lock_stack.emplace_back(c, locklocation);
@@ -172,6 +172,7 @@ static void push_lock(MutexType* c, const CLockLocation& locklocation)
             // same thread as that results in an undefined behavior.
             auto lock_stack_copy = lock_stack;
             lock_stack.pop_back();
+            lock.unlock();
             double_lock_detected(c, lock_stack_copy);
             // double_lock_detected() does not return.
         }
@@ -184,6 +185,7 @@ static void push_lock(MutexType* c, const CLockLocation& locklocation)
         if (lockdata.lockorders.count(p2)) {
             auto lock_stack_copy = lock_stack;
             lock_stack.pop_back();
+            lock.unlock();
             potential_deadlock_detected(p1, lockdata.lockorders[p2], lock_stack_copy);
             // potential_deadlock_detected() does not return.
         }
