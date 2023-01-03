@@ -5255,10 +5255,9 @@ static ChainstateManager::Options&& Flatten(ChainstateManager::Options&& opts)
 }
 
 ChainstateManager::ChainstateManager(Options options)
-    : m_script_check_queue{/*nBatchSizeIn=*/128},
+    : m_script_check_queue{/*batch_size=*/128, options.worker_threads_num},
       m_options{Flatten(std::move(options))}
 {
-    m_script_check_queue.StartWorkerThreads(m_options.worker_threads_num);
 }
 
 ChainstateManager::~ChainstateManager()
