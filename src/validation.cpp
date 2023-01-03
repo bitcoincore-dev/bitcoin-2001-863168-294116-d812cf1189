@@ -1885,11 +1885,6 @@ DisconnectResult Chainstate::DisconnectBlock(const CBlock& block, const CBlockIn
     return fClean ? DISCONNECT_OK : DISCONNECT_UNCLEAN;
 }
 
-void ChainstateManager::StopScriptCheckWorkerThreads()
-{
-    m_script_check_queue.StopWorkerThreads();
-}
-
 /**
  * Threshold condition checker that triggers when unknown versionbits are seen on the network.
  */
@@ -5268,8 +5263,6 @@ ChainstateManager::ChainstateManager(Options options)
 
 ChainstateManager::~ChainstateManager()
 {
-    StopScriptCheckWorkerThreads();
-
     LOCK(::cs_main);
 
     m_versionbitscache.Clear();
