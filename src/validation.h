@@ -14,10 +14,11 @@
 #include <attributes.h>
 #include <chain.h>
 #include <chainparams.h>
-#include <kernel/chainstatemanager_opts.h>
+#include <checkqueue.h>
 #include <consensus/amount.h>
 #include <deploymentstatus.h>
 #include <fs.h>
+#include <kernel/chainstatemanager_opts.h>
 #include <node/blockstorage.h>
 #include <policy/feerate.h>
 #include <policy/packages.h>
@@ -94,11 +95,6 @@ extern uint256 g_best_block;
 
 /** Documentation for argument 'checklevel'. */
 extern const std::vector<std::string> CHECKLEVEL_DOC;
-
-/** Run instances of script checking worker threads */
-void StartScriptCheckWorkerThreads(int threads_num);
-/** Stop all of the script checking worker threads */
-void StopScriptCheckWorkerThreads();
 
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams);
 
@@ -847,6 +843,9 @@ private:
     /** Most recent headers presync progress update, for rate-limiting. */
     std::chrono::time_point<std::chrono::steady_clock> m_last_presync_update GUARDED_BY(::cs_main) {};
 
+    //! A queue for script verifications that have to be performed by worker threads.
+    CCheckQueue<CScriptCheck> m_script_check_queue;
+
 public:
     using Options = kernel::ChainstateManagerOpts;
 
@@ -1037,6 +1036,9 @@ public:
     //! previously.
     Chainstate& ActivateExistingSnapshot(CTxMemPool* mempool, uint256 base_blockhash)
         EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+
+    CCheckQueue<CScriptCheck>& GetCheckQueue() { return m_script_check_queue; }
+    void StopScriptCheckWorkerThreads();
 
     ~ChainstateManager();
 };

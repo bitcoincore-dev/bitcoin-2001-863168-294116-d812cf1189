@@ -1885,16 +1885,9 @@ DisconnectResult Chainstate::DisconnectBlock(const CBlock& block, const CBlockIn
     return fClean ? DISCONNECT_OK : DISCONNECT_UNCLEAN;
 }
 
-static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
-
-void StartScriptCheckWorkerThreads(int threads_num)
+void ChainstateManager::StopScriptCheckWorkerThreads()
 {
-    scriptcheckqueue.StartWorkerThreads(threads_num);
-}
-
-void StopScriptCheckWorkerThreads()
-{
-    scriptcheckqueue.StopWorkerThreads();
+    m_script_check_queue.StopWorkerThreads();
 }
 
 /**
@@ -1987,7 +1980,7 @@ bool Chainstate::ConnectBlock(const CBlock& block, BlockValidationState& state, 
 
     uint256 block_hash{block.GetHash()};
     assert(*pindex->phashBlock == block_hash);
-    const bool parallel_script_checks{scriptcheckqueue.HasThreads()};
+    const bool parallel_script_checks{m_chainman.GetCheckQueue().HasThreads()};
 
     const auto time_start{SteadyClock::now()};
     const CChainParams& params{m_chainman.GetParams()};
@@ -2176,7 +2169,7 @@ bool Chainstate::ConnectBlock(const CBlock& block, BlockValidationState& state, 
     // in multiple threads). Preallocate the vector size so a new allocation
     // doesn't invalidate pointers into the vector, and keep txsdata in scope
     // for as long as `control`.
-    CCheckQueueControl<CScriptCheck> control(fScriptChecks && parallel_script_checks ? &scriptcheckqueue : nullptr);
+    CCheckQueueControl<CScriptCheck> control(fScriptChecks && parallel_script_checks ? &m_chainman.GetCheckQueue() : nullptr);
     std::vector<PrecomputedTransactionData> txsdata(block.vtx.size());
 
     std::vector<int> prevheights;
@@ -5266,10 +5259,17 @@ static ChainstateManager::Options&& Flatten(ChainstateManager::Options&& opts)
     return std::move(opts);
 }
 
-ChainstateManager::ChainstateManager(Options options) : m_options{Flatten(std::move(options))} {}
+ChainstateManager::ChainstateManager(Options options)
+    : m_script_check_queue{/*nBatchSizeIn=*/128},
+      m_options{Flatten(std::move(options))}
+{
+    m_script_check_queue.StartWorkerThreads(m_options.worker_threads_num);
+}
 
 ChainstateManager::~ChainstateManager()
 {
+    StopScriptCheckWorkerThreads();
+
     LOCK(::cs_main);
 
     m_versionbitscache.Clear();
