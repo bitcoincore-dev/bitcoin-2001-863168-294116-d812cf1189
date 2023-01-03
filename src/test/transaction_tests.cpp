@@ -554,7 +554,6 @@ BOOST_AUTO_TEST_CASE(test_big_witness_transaction)
 
     bool controlCheck = control.Wait();
     assert(controlCheck);
-    scriptcheckqueue.StopWorkerThreads();
 }
 
 SignatureData CombineSignatures(const CMutableTransaction& input1, const CMutableTransaction& input2, const CTransactionRef tx)
