@@ -33,7 +33,7 @@ Sock::Sock() : m_socket(INVALID_SOCKET) {}
 
 Sock::Sock(SOCKET s) : m_socket(s) {}
 
-Sock::Sock(Sock&& other)
+Sock::Sock(Sock&& other) noexcept
 {
     m_socket = other.m_socket;
     other.m_socket = INVALID_SOCKET;
@@ -41,7 +41,7 @@ Sock::Sock(Sock&& other)
 
 Sock::~Sock() { Close(); }
 
-Sock& Sock::operator=(Sock&& other)
+Sock& Sock::operator=(Sock&& other) noexcept
 {
     Close();
     m_socket = other.m_socket;
