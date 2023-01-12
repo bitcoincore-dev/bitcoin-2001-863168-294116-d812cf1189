@@ -64,21 +64,24 @@ class VaultsTest(BitcoinTestFramework):
             def title(t: str):
                 self.log.info(f"[unvault type: {unvault_type}] {t}")
 
-            title("Testing normal vault spend")
+            title("testing normal vault spend")
             self.single_vault_test(node, wallet, unvault_type=unvault_type)
 
-            title("Testing sweep-to-recovery from the vault")
+            title("testing sweep-to-recovery from the vault")
             self.single_vault_test(
                 node, wallet, sweep_from_vault=True, unvault_type=unvault_type)
 
-            title("Testing sweep-to-recovery from the unvault trigger")
+            title("testing sweep-to-recovery from the unvault trigger")
             self.single_vault_test(
                 node, wallet, sweep_from_unvault=True, unvault_type=unvault_type)
 
-            title("Testing a batch sweep operation across multiple vaults")
+            title("testing a batch sweep operation across multiple vaults")
             self.test_batch_sweep(node, wallet, unvault_type=unvault_type)
 
-            title("Testing a batch unvault")
+            title("testing a batch unvault")
+            self.test_batch_unvault(node, wallet, unvault_type=unvault_type)
+
+            title("testing revaults")
             self.test_batch_unvault(node, wallet, unvault_type=unvault_type)
 
     def single_vault_test(
@@ -321,6 +324,67 @@ class VaultsTest(BitcoinTestFramework):
         # Finalize the batch withdrawal.
         self.assert_broadcast_tx(node, final_tx, mine_all=True)
 
+    def test_revault(
+        self,
+        node,
+        wallet,
+        unvault_type: OutputType = OutputType.P2TR,
+    ):
+        """
+        Test that some amount can be "revaulted" during the unvault process. That
+        amount is immediately deposited back into the same vault that is currently
+        undergoing unvaulting, so that the remaining balance within the vault can
+        be managed indepdent of the timelock that the first unvault process has
+        induced.
+        """
+        common_spend_delay = 10
+        # Create some vaults with the same spend delay and recovery key, so that they
+        # can be unvaulted together, but different unvault keys.
+        vaults = [
+            VaultSpec(spend_delay=common_spend_delay,
+                      unvault_trigger_secret=i) for i in [10, 11, 12]
+        ]
+
+        for v in vaults:
+            init_tx = v.get_initialize_vault_tx(wallet)
+            self.assert_broadcast_tx(node, init_tx)
+
+        assert_equal(node.getmempoolinfo()["size"], len(vaults))
+        self.generate(wallet, 1)
+        assert_equal(node.getmempoolinfo()["size"], 0)
+
+        revault_amount = COIN
+        # Construct the final unvault target; save a coin to peel off in the revault.
+        unvault_total_sats = sum(
+            v.total_amount_sats for v in vaults) - revault_amount  # type: ignore
+        assert unvault_total_sats > 0
+        target_key = key.ECKey(secret=(1).to_bytes(32, "big"))
+
+        # The final withdrawal destination for the vaulted funds.
+        final_target_vout = [
+            CTxOut(nValue=unvault_total_sats,
+                   scriptPubKey=make_segwit0_spk(target_key))
+        ]
+        target_out_hash = target_outputs_hash(final_target_vout)
+
+        unvault_tx = get_trigger_unvault_tx(
+            target_out_hash, vaults, unvault_type, revault_amount_sats=revault_amount)
+        txid = self.assert_broadcast_tx(node, unvault_tx, mine_all=True)
+
+        unvault_outpoint = COutPoint(
+            hash=int.from_bytes(bytes.fromhex(txid), byteorder="big"), n=0
+        )
+        final_tx = get_final_withdrawal_tx(
+            unvault_outpoint, final_target_vout, unvault_tx)
+
+        self.assert_broadcast_tx(
+            node, final_tx, expect_error_msg="non-BIP68-final")
+
+        self.generate(node, common_spend_delay)
+
+        # Finalize the batch withdrawal.
+        self.assert_broadcast_tx(node, final_tx, mine_all=True)
+
     def assert_broadcast_tx(
         self,
         node,
@@ -526,13 +590,16 @@ def get_trigger_unvault_tx(
     target_hash: bytes,
     vaults: t.List[VaultSpec],
     unvault_output_type: OutputType = OutputType.P2TR,
+    revault_amount_sats: t.Optional[int] = None,
 ) -> UnvaultTriggerTransaction:
     """
     Return a transaction that triggers the withdrawal process to some arbitrary
     target output set.
-    """
-    total_vaults_amount_sats = sum(v.total_amount_sats for v in vaults)  # type: ignore
 
+    Args:
+        revault_amount_sats (int): if given, "peel off" this amount from the
+            total vault value to be revaulted.
+    """
     # Okay to take from the first because we want to error if the vaults don't share
     # a spend delay.
     spend_delay = vaults[0].spend_delay
@@ -550,6 +617,16 @@ def get_trigger_unvault_tx(
     trigger_tx = UnvaultTriggerTransaction()
     trigger_tx.unvault_output_type = unvault_output_type
     trigger_tx.spend_delay = spend_delay
+
+    total_vaults_amount_sats = sum(v.total_amount_sats for v in vaults)  # type: ignore
+    revault_output = None
+
+    if revault_amount_sats:
+        total_vaults_amount_sats -= revault_amount_sats
+        vault_output = vaults[0].vault_output
+        assert vault_output
+        revault_output = CTxOut(
+            nValue=revault_amount_sats, scriptPubKey=vault_output.scriptPubKey)
 
     unvault_txout = CTxOut(nValue=total_vaults_amount_sats, scriptPubKey=unvault_spk)
 
@@ -573,6 +650,9 @@ def get_trigger_unvault_tx(
     trigger_tx.nVersion = 2
     trigger_tx.vin = [CTxIn(outpoint=v.vault_outpoint) for v in vaults]
     trigger_tx.vout = [unvault_txout]
+
+    if revault_output:
+        trigger_tx.vout.append(revault_output)
 
     vault_outputs = [v.vault_output for v in vaults]
 

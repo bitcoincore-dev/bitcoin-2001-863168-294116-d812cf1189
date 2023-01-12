@@ -521,7 +521,7 @@ static bool CheckUnvaultTriggerOutputsWitness(
             return false;
         }
     } else {
-        // Anyone-can-spend for unrecognized witness verisons - maintain upgradeability.
+        // Anyone-can-spend for unrecognized witness versions - maintain upgradeability.
         if (flags & SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM) {
             return set_error(serror, SCRIPT_ERR_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM);
         }
@@ -2096,17 +2096,34 @@ bool GenericTransactionSignatureChecker<T>::CheckSequence(const CScriptNum& nSeq
     return true;
 }
 
+//! Check that
+//!
+//!   1. The number of outputs is either 1 or 2.
+//!   2. The total value of the vault is preserved.
+//!   3. If there is a second output, it is a 0-value ephemeral anchor output.
+//!   4. The recovery scriptPubKey is as expected.
 template <class T>
 bool GenericTransactionSignatureChecker<T>::CheckVaultSpendToRecoveryOutputs(
     const uint256& recovery_spk_hash) const
 {
     if (!this->txdata) return HandleMissingData(m_mdb);
     const auto& txd{*this->txdata};
+    const auto& vout = this->txTo->vout;
 
-    if (!CommonVaultSpendChecks(txd, this->txTo->vout)) {
+    const auto num_outs = vout.size();
+    if (num_outs < 1 || num_outs > 2) {
         return false;
     }
-    const CTxOut& value_out = this->txTo->vout[0];
+
+    const CTxOut& value_out = vout[0];
+    if (value_out.nValue != txd.m_total_in) {
+        return false;
+    }
+
+    // Ensure the second output, if one exists, is a 0-value ephemeral anchor.
+    if (num_outs == 2 && !IsOutputEphemeralAnchor(vout[1])) {
+        return false;
+    }
 
     return (VaultScriptHash(HASHER_VAULT_RECOVERY_SPK, value_out.scriptPubKey) ==
             recovery_spk_hash);
@@ -2127,6 +2144,18 @@ static bool IsOutputEphemeralAnchor(const CTxOut& out)
 }
 
 
+//! Check that
+//!
+//!   1. The number of outputs is either 1, 2, or 3.
+//!   2. If there are a second and third output, they are either an ephemeral anchor or
+//!     a revault. Up to one of each is allowed.
+//!   3. The total value of the vault is preserved by the sum of the OP_UNVAULT output
+//!     and the revault output, if one exists.
+//!
+//! More comprehensive checks verifying the contents of the output scriptPubKeys
+//! are done in CheckUnvaultTriggerOutputs{Bare,Witness}().
+//!
+//! Return the unvault_output_spk in an out param for inspection by the caller.
 template <class T>
 bool GenericTransactionSignatureChecker<T>::CheckUnvaultTriggerOutputsCommon(
     const uint256& recovery_spk_hash,
@@ -2137,11 +2166,49 @@ bool GenericTransactionSignatureChecker<T>::CheckUnvaultTriggerOutputsCommon(
     if (!this->txdata) return HandleMissingData(m_mdb);
     const auto& txd{*this->txdata};
 
-    if (!CommonVaultSpendChecks(txd, this->txTo->vout)) {
+    const auto num_outs = this->txTo->vout.size();
+    if (num_outs < 1 || num_outs > 3) {
         return false;
     }
 
-    unvault_output_spk = this->txTo->vout[0].scriptPubKey;
+    CAmount total_val_out_to_vaults{0};
+
+    assert(txd.m_spent_outputs_ready);
+    const CScript& vault_spk = txd.m_spent_outputs[this->nIn].scriptPubKey;
+
+    bool has_ea{false};
+    bool has_revault{false};
+
+    // Verify that all optional outputs are either an ephemeral anchor or a revault.
+    // Permit the optional outputs to appear in any order.
+    for (size_t i = 1; i < num_outs; ++i) {
+        const CTxOut& optional_out = this->txTo->vout[i];
+        const bool is_ea = IsOutputEphemeralAnchor(optional_out);
+        const bool is_revault = optional_out.scriptPubKey == vault_spk;
+
+        if (is_ea) {
+            // Only one allowed.
+            if (has_ea) return false;
+            has_ea = true;
+        } else if (is_revault) {
+            // Only one allowed.
+            if (has_revault) return false;
+            has_revault = true;
+            total_val_out_to_vaults += optional_out.nValue;
+        } else {
+            // Has to be either an EA or a revault.
+            return false;
+        }
+    }
+
+    const CTxOut& value_out = this->txTo->vout[0];
+    total_val_out_to_vaults += value_out.nValue;
+
+    if (total_val_out_to_vaults != txd.m_total_in) {
+        return false;
+    }
+
+    unvault_output_spk = value_out.scriptPubKey;
     return true;
 
 }
@@ -2154,34 +2221,6 @@ bool GenericTransactionSignatureChecker<T>::CheckUnvaultTarget(
     // witness, the precomputation routines don't run. I.e. `txdata.hashOutputs` is blank.
     return SHA256Uint256(GetOutputsSHA256(*this->txTo)) == target_outputs_hash;
 }
-
-//! Check that
-//!
-//!   1. The number of outputs is either 1 or 2.
-//!   2. The total value of the vault is preserved.
-//!   3. If there is a second output, it is a 0-value ephemeral anchor output.
-//!
-static bool CommonVaultSpendChecks(
-    const PrecomputedTransactionData& txdata,
-    const std::vector<CTxOut>& vout)
-{
-    const auto num_outs = vout.size();
-    if (num_outs < 1 || num_outs > 2) {
-        return false;
-    }
-
-    const CTxOut& value_out = vout[0];
-    if (value_out.nValue != txdata.m_total_in) {
-        return false;
-    }
-
-    // Ensure the second output, if one exists, is a 0-value ephemeral anchor.
-    if (num_outs == 2 && !IsOutputEphemeralAnchor(vout[1])) {
-        return false;
-    }
-    return true;
-}
-
 
 // explicit instantiation
 template class GenericTransactionSignatureChecker<CTransaction>;
