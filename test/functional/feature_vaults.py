@@ -10,7 +10,6 @@ transactional structure of vaults.
 """
 
 import copy
-import random
 import typing as t
 from enum import Enum
 
@@ -61,8 +60,8 @@ class VaultsTest(BitcoinTestFramework):
         self.generate(wallet, 200)
 
         for unvault_type in OutputType:
-            def title(t: str):
-                self.log.info(f"[unvault type: {unvault_type}] {t}")
+            def title(name: str):
+                self.log.info(f"[unvault type: {unvault_type}] {name}")
 
             title("testing normal vault spend")
             self.single_vault_test(node, wallet, unvault_type=unvault_type)
@@ -82,7 +81,7 @@ class VaultsTest(BitcoinTestFramework):
             self.test_batch_unvault(node, wallet, unvault_type=unvault_type)
 
             title("testing revaults")
-            self.test_batch_unvault(node, wallet, unvault_type=unvault_type)
+            self.test_revault(node, wallet, unvault_type=unvault_type)
 
     def single_vault_test(
         self,
@@ -101,12 +100,12 @@ class VaultsTest(BitcoinTestFramework):
         vault = VaultSpec()
         vault_init_tx = vault.get_initialize_vault_tx(wallet)
 
-        self.assert_broadcast_tx(node, vault_init_tx, mine_all=True)
+        self.assert_broadcast_tx(vault_init_tx, mine_all=True)
 
         if sweep_from_vault:
             assert vault.vault_outpoint
             sweep_tx = get_sweep_to_recovery_tx({vault: vault.vault_outpoint})
-            self.assert_broadcast_tx(node, sweep_tx, mine_all=True)
+            self.assert_broadcast_tx(sweep_tx, mine_all=True)
 
             return
 
@@ -124,39 +123,22 @@ class VaultsTest(BitcoinTestFramework):
         ]
 
         target_out_hash = target_outputs_hash(final_target_vout)
-        start_unvault_tx = get_trigger_unvault_tx(target_out_hash, [vault], unvault_type)
+        start_unvault_tx = get_trigger_unvault_tx(
+            target_out_hash, [vault], unvault_type)
 
-        bad_unvault_spk = CScript([
-            # <recovery-spk-hash>
-            bytes([0x01] * 32),
-            # <spend-delay>
-            vault.spend_delay,
-            # <target-outputs-hash>
-            target_out_hash,
-            OP_UNVAULT,
-        ])
-        bad_unvault = copy.deepcopy(start_unvault_tx)
-        bad_unvault.vout[0].scriptPubKey = bad_unvault_spk
-        assert_invalid(bad_unvault, "OP_UNVAULT outputs not compatible", node)
+        tx_mutator = TxMutator(vault, unvault_type)
 
-        bad_unvault_spk = CScript([
-            # <recovery-spk-hash>
-            recovery_spk_tagged_hash(vault.recovery_tr_info.scriptPubKey),
-            # <spend-delay>
-            vault.spend_delay - 1,
-            # <target-outputs-hash>
-            target_out_hash,
-            OP_UNVAULT,
-        ])
-        bad_unvault = copy.deepcopy(start_unvault_tx)
-        bad_unvault.vout[0].scriptPubKey = bad_unvault_spk
-        assert_invalid(bad_unvault, "OP_UNVAULT outputs not compatible", node)
+        mutation_to_err = {
+            tx_mutator.unvault_with_bad_recovery_spk: 'OP_UNVAULT outputs not compatible',
+            tx_mutator.unvault_with_bad_spend_delay: 'OP_UNVAULT outputs not compatible',
+            tx_mutator.unvault_with_low_amount: 'OP_UNVAULT outputs not compatible',
+            tx_mutator.unvault_with_high_amount: 'bad-txns-in-belowout',
+            tx_mutator.unvault_with_bad_opcode: 'OP_UNVAULT outputs not compatible',
+        }
+        for mutation, err in mutation_to_err.items():
+            self.assert_tx_mutation_fails(mutation, start_unvault_tx, err=err)
 
-        bad_unvault = copy.deepcopy(start_unvault_tx)
-        bad_unvault.vout[0].nValue = start_unvault_tx.vout[0].nValue - 1
-        assert_invalid(bad_unvault, "OP_UNVAULT outputs not compatible", node)
-
-        start_unvault_txid = self.assert_broadcast_tx(node, start_unvault_tx)
+        start_unvault_txid = self.assert_broadcast_tx(start_unvault_tx)
 
         unvault_outpoint = COutPoint(
             hash=int.from_bytes(bytes.fromhex(start_unvault_txid), byteorder="big"), n=0
@@ -165,15 +147,14 @@ class VaultsTest(BitcoinTestFramework):
         if sweep_from_unvault:
             sweep_tx = get_sweep_to_recovery_tx(
                 {vault: unvault_outpoint}, start_unvault_tx)
-            self.assert_broadcast_tx(node, sweep_tx, mine_all=True)
+            self.assert_broadcast_tx(sweep_tx, mine_all=True)
             return
 
         final_tx = get_final_withdrawal_tx(
             unvault_outpoint, final_target_vout, start_unvault_tx)
 
         # Broadcasting before start_unvault is confirmed fails.
-        self.assert_broadcast_tx(
-            node, final_tx, expect_error_msg="non-BIP68-final")
+        self.assert_broadcast_tx(final_tx, err_msg="non-BIP68-final")
 
         XXX_mempool_fee_hack_for_no_pkg_relay(node, start_unvault_txid)
 
@@ -181,23 +162,22 @@ class VaultsTest(BitcoinTestFramework):
         self.generate(wallet, vault.spend_delay - 1)
         assert_equal(node.getmempoolinfo()["size"], 0)
 
-        self.assert_broadcast_tx(
-            node, final_tx, expect_error_msg="non-BIP68-final")
+        self.assert_broadcast_tx(final_tx, err_msg="non-BIP68-final")
 
         self.generate(wallet, 1)
 
         # Generate bad nSequence values.
         final_bad = copy.deepcopy(final_tx)
         final_bad.vin[0].nSequence = final_tx.vin[0].nSequence - 1
-        assert_invalid(final_bad, "timelock has not matured", node)
+        self.assert_broadcast_tx(final_bad, err_msg="timelock has not matured")
 
         # Generate bad amounts.
         final_bad = copy.deepcopy(final_tx)
         final_bad.vout[0].nValue = final_tx.vout[0].nValue - 1
-        assert_invalid(final_bad, "target hash mismatch", node)
+        self.assert_broadcast_tx(final_bad, err_msg="target hash mismatch")
 
         # Finally the unvault completes.
-        self.assert_broadcast_tx(node, final_tx, mine_all=True)
+        self.assert_broadcast_tx(final_tx, mine_all=True)
 
     def test_batch_sweep(
         self,
@@ -219,7 +199,7 @@ class VaultsTest(BitcoinTestFramework):
 
         for v in vaults:
             init_tx = v.get_initialize_vault_tx(wallet)
-            self.assert_broadcast_tx(node, init_tx)
+            self.assert_broadcast_tx(init_tx)
 
         assert_equal(node.getmempoolinfo()["size"], len(vaults))
         self.generate(wallet, 1)
@@ -247,7 +227,7 @@ class VaultsTest(BitcoinTestFramework):
             vaults[1]: vaults[1].vault_outpoint,
             vaults[2]: vaults[2].vault_outpoint,
         }, unvault1_tx)
-        self.assert_broadcast_tx(node, sweep_tx, mine_all=True)
+        self.assert_broadcast_tx(sweep_tx, mine_all=True)
 
     def test_batch_unvault(
         self,
@@ -277,7 +257,7 @@ class VaultsTest(BitcoinTestFramework):
 
         for v in vaults + [vault_diff_recovery, vault_diff_delay]:
             init_tx = v.get_initialize_vault_tx(wallet)
-            self.assert_broadcast_tx(node, init_tx)
+            self.assert_broadcast_tx(init_tx)
 
         assert_equal(node.getmempoolinfo()["size"], len(vaults) + 2)
         self.generate(wallet, 1)
@@ -303,12 +283,11 @@ class VaultsTest(BitcoinTestFramework):
                 target_out_hash, vaults + incompat_vaults, unvault_type
             )
             self.assert_broadcast_tx(
-                node, failed_unvault,
-                expect_error_msg="OP_UNVAULT outputs not compatible")
+                failed_unvault, err_msg="OP_UNVAULT outputs not compatible")
 
         good_batch_unvault = get_trigger_unvault_tx(
             target_out_hash, vaults, unvault_type)
-        good_txid = self.assert_broadcast_tx(node, good_batch_unvault, mine_all=True)
+        good_txid = self.assert_broadcast_tx(good_batch_unvault, mine_all=True)
 
         unvault_outpoint = COutPoint(
             hash=int.from_bytes(bytes.fromhex(good_txid), byteorder="big"), n=0
@@ -316,13 +295,12 @@ class VaultsTest(BitcoinTestFramework):
         final_tx = get_final_withdrawal_tx(
             unvault_outpoint, final_target_vout, good_batch_unvault)
 
-        self.assert_broadcast_tx(
-            node, final_tx, expect_error_msg="non-BIP68-final")
+        self.assert_broadcast_tx(final_tx, err_msg="non-BIP68-final")
 
         self.generate(node, common_spend_delay)
 
         # Finalize the batch withdrawal.
-        self.assert_broadcast_tx(node, final_tx, mine_all=True)
+        self.assert_broadcast_tx(final_tx, mine_all=True)
 
     def test_revault(
         self,
@@ -334,20 +312,20 @@ class VaultsTest(BitcoinTestFramework):
         Test that some amount can be "revaulted" during the unvault process. That
         amount is immediately deposited back into the same vault that is currently
         undergoing unvaulting, so that the remaining balance within the vault can
-        be managed indepdent of the timelock that the first unvault process has
+        be managed independent of the timelock that the first unvault process has
         induced.
         """
         common_spend_delay = 10
-        # Create some vaults with the same spend delay and recovery key, so that they
-        # can be unvaulted together, but different unvault keys.
+        # To support revaults when dealing with a batch, each vault must share the
+        # same vault sPK.
         vaults = [
-            VaultSpec(spend_delay=common_spend_delay,
-                      unvault_trigger_secret=i) for i in [10, 11, 12]
+            VaultSpec(spend_delay=common_spend_delay, unvault_trigger_secret=10)
+            for _ in range(3)
         ]
 
         for v in vaults:
             init_tx = v.get_initialize_vault_tx(wallet)
-            self.assert_broadcast_tx(node, init_tx)
+            self.assert_broadcast_tx(init_tx)
 
         assert_equal(node.getmempoolinfo()["size"], len(vaults))
         self.generate(wallet, 1)
@@ -369,41 +347,62 @@ class VaultsTest(BitcoinTestFramework):
 
         unvault_tx = get_trigger_unvault_tx(
             target_out_hash, vaults, unvault_type, revault_amount_sats=revault_amount)
-        txid = self.assert_broadcast_tx(node, unvault_tx, mine_all=True)
+
+        tx_mutator = TxMutator(vaults[0], unvault_type)
+        mutation_to_err = {
+            tx_mutator.revault_with_high_amount: 'bad-txns-in-belowout',
+            tx_mutator.revault_with_low_amount: 'OP_UNVAULT outputs not compatible',
+        }
+        for mutation, err in mutation_to_err.items():
+            self.assert_tx_mutation_fails(mutation, unvault_tx, err=err)
+
+        txid = self.assert_broadcast_tx(unvault_tx, mine_all=True)
 
         unvault_outpoint = COutPoint(
-            hash=int.from_bytes(bytes.fromhex(txid), byteorder="big"), n=0
-        )
+            hash=int.from_bytes(bytes.fromhex(txid), byteorder="big"), n=0)
+
         final_tx = get_final_withdrawal_tx(
             unvault_outpoint, final_target_vout, unvault_tx)
 
-        self.assert_broadcast_tx(
-            node, final_tx, expect_error_msg="non-BIP68-final")
+        self.assert_broadcast_tx(final_tx, err_msg="non-BIP68-final")
+
+        revault_spec = copy.deepcopy(vaults[0])
+        revault_spec.total_amount_sats = revault_amount
+        revault_spec.vault_output = unvault_tx.vout[1]
+        revault_spec.vault_outpoint = COutPoint(
+            hash=int.from_bytes(bytes.fromhex(txid), byteorder="big"), n=1)
+
+        revault_unvault_tx = get_trigger_unvault_tx(
+            b'\x00' * 32, [revault_spec], unvault_type,
+        )
+        # The revault output should be immediately spendable into an OP_UNVAULT
+        # output.
+        self.assert_broadcast_tx(revault_unvault_tx, mine_all=True)
 
         self.generate(node, common_spend_delay)
 
         # Finalize the batch withdrawal.
-        self.assert_broadcast_tx(node, final_tx, mine_all=True)
+        self.assert_broadcast_tx(final_tx, mine_all=True)
 
     def assert_broadcast_tx(
         self,
-        node,
         tx: CTransaction,
         mine_all: bool = False,
-        expect_error_msg: t.Optional[str] = None
+        err_msg: t.Optional[str] = None
     ) -> str:
         """
         Broadcast a transaction and facilitate various assertions about how the
         broadcast went.
         """
+        node = self.nodes[0]
         txhex = tx.serialize().hex()
         txid = tx.rehash()
 
-        if not expect_error_msg:
+        if not err_msg:
             assert_equal(node.sendrawtransaction(txhex), txid)
         else:
             assert_raises_rpc_error(
-                -26, expect_error_msg, node.sendrawtransaction, txhex,
+                -26, err_msg, node.sendrawtransaction, txhex,
             )
 
         if mine_all:
@@ -412,6 +411,23 @@ class VaultsTest(BitcoinTestFramework):
             assert_equal(node.getmempoolinfo()["size"], 0)
 
         return txid
+
+    def assert_tx_mutation_fails(
+        self,
+        mutation_func: t.Callable[[CTransaction], None],
+        tx_to_mutate: CTransaction,
+        *,
+        err: str,
+        **kwargs,
+    ):
+        assert mutation_func.__doc__, "Mutation needs a description"
+        desc = mutation_func.__doc__[:80]
+        self.log.info("  asserting bad tx fails: %s", desc)
+        tx_copy = copy.deepcopy(tx_to_mutate)
+
+        mutation_func(tx_copy)
+        self.assert_broadcast_tx(tx_copy, err_msg=err)
+
 
 
 def XXX_mempool_fee_hack_for_no_pkg_relay(node, txid: str):
@@ -512,6 +528,77 @@ class VaultSpec:
             n=0
         )
         return vault_init
+
+
+class TxMutator(t.NamedTuple):
+    """
+    A class that tweaks transactions in various ways to test that invalid vault
+    operations fail.
+
+    Each method takes in a transaction copy and modifies it in place.
+
+    For use with `VaultsTest.assert_tx_mutation_fails()`.
+    """
+    vault: VaultSpec
+    unvault_type: OutputType
+
+    def unvault_with_bad_recovery_spk(self, tx: CTransaction):
+        """Unvault with wrong recovery path."""
+        bad_unvault_spk = CScript([
+            # <recovery-spk-hash>
+            bytes([0x01] * 32),
+            # <spend-delay>
+            self.vault.spend_delay,
+            # <target-outputs-hash>
+            b'\x00' * 32,
+            OP_UNVAULT,
+        ])
+
+        if self.unvault_type == OutputType.Bare:
+            tx.vout[0].scriptPubKey = bad_unvault_spk
+
+        elif self.unvault_type == OutputType.P2WSH:
+            tx.vout[0].scriptPubKey = CScript([OP_0, messages.sha256(bad_unvault_spk)])
+
+        elif self.unvault_type == OutputType.P2TR:
+            bad_taproot = script.taproot_construct(
+                UNVAULT_NUMS_INTERNAL_PUBKEY,
+                scripts=[('only-path', bad_unvault_spk, 0xC0)])
+
+            tx.vout[0].scriptPubKey = bad_taproot.scriptPubKey
+
+    def unvault_with_bad_spend_delay(self, tx: CTransaction):
+        """Unvault with wrong spend delay."""
+        tx.vout[0].scriptPubKey = CScript([
+            # <recovery-spk-hash>
+            recovery_spk_tagged_hash(self.vault.recovery_tr_info.scriptPubKey),
+            # <spend-delay>
+            self.vault.spend_delay - 1,
+            # <target-outputs-hash>
+            b'\x00' * 32,
+            OP_UNVAULT,
+        ])
+
+    def unvault_with_bad_opcode(self, tx: CTransaction):
+        """Unvault with wrong opcode."""
+        spk = tx.vout[0].scriptPubKey
+        tx.vout[0].scriptPubKey = spk[:-1] + bytes([OP_VAULT])
+
+    def unvault_with_low_amount(self, tx: CTransaction):
+        """Unvault with wrong amount (too little)."""
+        tx.vout[0].nValue -= 1
+
+    def unvault_with_high_amount(self, tx: CTransaction):
+        """Unvault with wrong amount (too much)."""
+        tx.vout[0].nValue += 1
+
+    def revault_with_high_amount(self, tx: CTransaction):
+        """Revault with wrong amount (too much)."""
+        tx.vout[1].nValue += 1
+
+    def revault_with_low_amount(self, tx: CTransaction):
+        """Revault with wrong amount (too little)."""
+        tx.vout[1].nValue -= 1
 
 
 class UnvaultTriggerTransaction(CTransaction):
@@ -688,6 +775,9 @@ def get_trigger_unvault_tx(
     return trigger_tx
 
 
+
+
+
 def get_final_withdrawal_tx(
     unvault_outpoint: COutPoint,
     final_target_vout: t.List[CTxOut],
@@ -711,13 +801,6 @@ def get_final_withdrawal_tx(
             unvault_trigger_tx.spend_witness_stack)
 
     return final_tx
-
-
-def assert_invalid(tx, msg, node):
-    """
-    Make a copy of the transaction, modify it, and ensure it fails to validate.
-    """
-    assert_raises_rpc_error(-26, msg, node.sendrawtransaction, tx.serialize().hex())
 
 
 def recovery_spk_tagged_hash(script: CScript) -> bytes:
