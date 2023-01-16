@@ -139,6 +139,11 @@ struct FrozenCleanupCheck {
             cv.wait(l, []{ return nFrozen.load(std::memory_order_relaxed) == 0;});
         }
     }
+    FrozenCleanupCheck(FrozenCleanupCheck&& other) noexcept
+    {
+        should_freeze = other.should_freeze;
+        other.should_freeze = false;
+    }
     void swap(FrozenCleanupCheck& x) noexcept
     {
         std::swap(should_freeze, x.should_freeze);
@@ -170,14 +175,12 @@ static void Correct_Queue_range(std::vector<size_t> range)
 {
     auto small_queue = std::make_unique<Correct_Queue>(QUEUE_BATCH_SIZE);
     small_queue->StartWorkerThreads(SCRIPT_CHECK_THREADS);
-    // Make vChecks here to save on malloc (this test can be slow...)
-    std::vector<FakeCheckCheckCompletion> vChecks;
     for (const size_t i : range) {
         size_t total = i;
         FakeCheckCheckCompletion::n_calls = 0;
         CCheckQueueControl<FakeCheckCheckCompletion> control(small_queue.get());
         while (total) {
-            vChecks.resize(std::min(total, (size_t) InsecureRandRange(10)));
+            std::vector<FakeCheckCheckCompletion> vChecks{std::min(total, (size_t)InsecureRandRange(10))};
             total -= vChecks.size();
             control.Add(vChecks);
         }
