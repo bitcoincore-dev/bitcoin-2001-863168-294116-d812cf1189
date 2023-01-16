@@ -18,21 +18,14 @@ if [ ! -d "${PYTHON_PATH}/bin" ]; then
   )
   # For dependencies see https://github.com/pyenv/pyenv/wiki#suggested-build-environment
   ${CI_RETRY_EXE} apt-get install -y build-essential libssl-dev zlib1g-dev \
-    libbz2-dev libreadline-dev libsqlite3-dev curl llvm \
+    libbz2-dev libreadline-dev libsqlite3-dev curl clang llvm \
     libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
-  python-build "$(cat "${BASE_ROOT_DIR}/.python-version")" "${PYTHON_PATH}"
+  # Using clang to workaround https://github.com/pyenv/pyenv/issues/2359.
+  env CC=clang python-build "$(cat "${BASE_ROOT_DIR}/.python-version")" "${PYTHON_PATH}"
 fi
 export PATH="${PYTHON_PATH}/bin:${PATH}"
 command -v python3
 python3 --version
-
-(
-  # Temporary workaround for https://github.com/bitcoin/bitcoin/pull/26130#issuecomment-1260499544
-  # Can be removed once the underlying image is bumped to something that includes git2.34 or later
-  sed -i -e 's/bionic/jammy/g' /etc/apt/sources.list
-  ${CI_RETRY_EXE} apt-get update
-  ${CI_RETRY_EXE} apt-get install -y --reinstall git
-)
 
 ${CI_RETRY_EXE} pip3 install codespell==2.2.1
 ${CI_RETRY_EXE} pip3 install flake8==4.0.1
