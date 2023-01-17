@@ -13,7 +13,7 @@
 
 #include <optional>
 
-extern RecursiveMutex cs_main;
+extern RecursiveMutex cs_main; // NOLINT(readability-redundant-declaration)
 
 namespace node {
 //! Metadata describing a serialized version of a UTXO set from which an
