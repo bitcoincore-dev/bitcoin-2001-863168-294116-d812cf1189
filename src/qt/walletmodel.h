@@ -123,8 +123,8 @@ public:
         // Copy constructor is disabled.
         UnlockContext(const UnlockContext&) = delete;
         // Move operator and constructor transfer the context
-        UnlockContext(UnlockContext&& obj) { CopyFrom(std::move(obj)); }
-        UnlockContext& operator=(UnlockContext&& rhs) { CopyFrom(std::move(rhs)); return *this; }
+        UnlockContext(UnlockContext&& obj) noexcept { CopyFrom(std::move(obj)); }
+        UnlockContext& operator=(UnlockContext&& rhs) noexcept { CopyFrom(std::move(rhs)); return *this; }
     private:
         WalletModel *wallet;
         bool valid;
