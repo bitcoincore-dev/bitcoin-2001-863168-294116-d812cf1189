@@ -418,7 +418,7 @@ static uint256 VaultScriptHash(const HashWriter hw, const CScript& script) {
 //! script.
 static bool CheckUnvaultTriggerOutputsBare(
     const CScript& unvault_spk,
-    const uint256& recovery_spk_hash,
+    const valtype& recovery_params,
     const CScriptNum& spend_delay,
     const bool require_minimal)
 {
@@ -426,13 +426,11 @@ static bool CheckUnvaultTriggerOutputsBare(
     valtype pushdata;
     opcodetype opcode;
 
-    // Check for 32 bytes of recovery-spk-hash.
-    if (!unvault_spk.GetOp(pc, opcode, pushdata) || opcode != 0x20) {
+    // Get the recovery params.
+    if (!unvault_spk.GetOp(pc, opcode, pushdata)) {
         return false;
     }
-    uint256 proposed_recovery_spk_hash{pushdata};
-
-    if (proposed_recovery_spk_hash != recovery_spk_hash) {
+    if (pushdata != recovery_params) {
         return false;
     }
 
@@ -485,7 +483,7 @@ const XOnlyPubKey VAULT_NUMS_INTERNAL_PUBKEY = XOnlyPubKey(VAULT_NUMS_POINT);
 static bool CheckUnvaultTriggerOutputsWitness(
     const int opuv_witversion,
     const valtype opuv_witprogram,
-    const uint256& recovery_spk_hash,
+    const valtype& recovery_params,
     const CScriptNum& spend_delay,
     const uint256& target_hash,
     bool require_minimal,
@@ -494,7 +492,7 @@ static bool CheckUnvaultTriggerOutputsWitness(
 {
     CScript expected_opuv_script;
     expected_opuv_script <<
-        ToByteVector(recovery_spk_hash) << spend_delay.getint() << ToByteVector(target_hash) << OP_UNVAULT;
+        ToByteVector(recovery_params) << spend_delay.getint() << ToByteVector(target_hash) << OP_UNVAULT;
 
     if (opuv_witversion == 0) {
         if (opuv_witprogram.size() != WITNESS_V0_SCRIPTHASH_SIZE) {
@@ -1350,11 +1348,12 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     // <recovery-spk-hash> <spend-delay> <trigger-spk-hash>
                     if (stack.size() < 3) return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
 
-                    valtype& hash_from_stack = stacktop(-3);
-                    if (hash_from_stack.size() != 32) {
-                        return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                    // Note that this is making a copy, not taking a reference, so that
+                    // we avoid UB when using this state after stack pops.
+                    const valtype recovery_params = stacktop(-3);
+                    if (recovery_params.size() < (uint256::WIDTH + 1)) {
+                        return set_error(serror, SCRIPT_ERR_VAULT_INVALID_RECOVERY_PARAMS);
                     }
-                    const uint256 recovery_spk_hash{hash_from_stack};
 
                     // `spend-delay` is a CScriptNum, up to 4 bytes, that is interpreted
                     // in the same way as the first 23 bits of nSequence are per
@@ -1363,6 +1362,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     // the same machinery as OP_CHECKSEQUENCEVERIFY.
                     const CScriptNum spend_delay(stacktop(-2), fRequireMinimal);
 
+                    valtype hash_from_stack;
                     hash_from_stack = stacktop(-1);
                     if (hash_from_stack.size() != 32) {
                         return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
@@ -1373,8 +1373,28 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     popstack(stack);
                     popstack(stack);
 
+                    valtype recovery_spk;
+
                     // Case 1: sweep to recovery
-                    if (checker.CheckVaultSpendToRecoveryOutputs(recovery_spk_hash)) {
+                    if (checker.CheckVaultSpendToRecoveryOutputs(recovery_params, recovery_spk)) {
+                        if (recovery_spk.size() < 1) {
+                            return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                        }
+                        CScript recov_spk_script{recovery_spk.begin(), recovery_spk.end()};
+                        CScriptWitness recov_witness;
+
+                        // Everything remaining on the stack will be used to satisfy
+                        // the recovery sPK.
+                        recov_witness.stack = stack;
+
+                        // Pass the scriptSig as blank.
+                        bool verified = VerifyScript(
+                            CScript(), recov_spk_script, &recov_witness, flags, checker, serror);
+
+                        if (!verified) {
+                            // serror has been set by the VerifyScript call above.
+                            return false;
+                        }
                         stack.push_back(vchTrue);
                         break;
                     }
@@ -1389,7 +1409,6 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     CScript unvault_output_spk;
 
                     if (!checker.CheckUnvaultTriggerOutputsCommon(
-                            recovery_spk_hash,
                             spend_delay,
                             fRequireMinimal,
                             unvault_output_spk)) {
@@ -1410,7 +1429,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                         // Validate the OP_UNVAULT output as a bare script.
                         if (!CheckUnvaultTriggerOutputsBare(
                                 unvault_output_spk,
-                                recovery_spk_hash, spend_delay, fRequireMinimal)) {
+                                recovery_params, spend_delay, fRequireMinimal)) {
                             return set_error(serror, SCRIPT_ERR_UNVAULT_MISMATCH);
                         }
                     } else {
@@ -1430,7 +1449,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
 
                         if (!CheckUnvaultTriggerOutputsWitness(
                                 opuv_witversion, opuv_witprogram,
-                                recovery_spk_hash, spend_delay, target_hash,
+                                recovery_params, spend_delay, target_hash,
                                 fRequireMinimal, flags, serror)) {
                             return set_error(serror, SCRIPT_ERR_UNVAULT_MISMATCH);
                         }
@@ -1446,7 +1465,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                         trigger_witness_program.begin(), trigger_witness_program.end());
 
                     const uint256 trigger_spk_hash = VaultScriptHash(
-                            HASHER_VAULT_UNVAULT_SPK, trigger_witness_spk);
+                        HASHER_VAULT_UNVAULT_SPK, trigger_witness_spk);
 
                     if (trigger_spk_hash != expected_trigger_spk_hash) {
                         return set_error(serror, SCRIPT_ERR_VAULT_WRONG_TRIGGER_WITNESS_PROGRAM);
@@ -1484,16 +1503,18 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                         return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
                     }
 
-                    valtype& hash_from_stack = stacktop(-3);
-                    if (hash_from_stack.size() != 32) {
-                        return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                    // Note that this is making a copy, not taking a reference, so that
+                    // we avoid UB when using this state after stack pops.
+                    const valtype recovery_params = stacktop(-3);
+                    if (recovery_params.size() < (uint256::WIDTH + 1)) {
+                        return set_error(serror, SCRIPT_ERR_VAULT_INVALID_RECOVERY_PARAMS);
                     }
-                    const uint256 recovery_spk_hash{hash_from_stack};
 
                     // See above note in OP_VAULT on `spend_delay` being interpreted
                     // as lower 23 bits of nSequence.
                     const CScriptNum spend_delay(stacktop(-2), fRequireMinimal);
 
+                    valtype hash_from_stack;
                     hash_from_stack = stacktop(-1);
                     if (hash_from_stack.size() != 32) {
                         return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
@@ -1504,11 +1525,32 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     popstack(stack);
                     popstack(stack);
 
+                    valtype recovery_spk;
+
                     // Case 1: sweep to recovery
-                    if (checker.CheckVaultSpendToRecoveryOutputs(recovery_spk_hash)) {
+                    if (checker.CheckVaultSpendToRecoveryOutputs(recovery_params, recovery_spk)) {
+                        if (recovery_spk.size() < 1) {
+                            return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                        }
+                        CScript recov_spk_script{recovery_spk.begin(), recovery_spk.end()};
+                        CScriptWitness recov_witness;
+
+                        // Everything remaining on the stack will be used to satisfy
+                        // the recovery sPK.
+                        recov_witness.stack = stack;
+
+                        // Pass the scriptSig as blank.
+                        bool verified = VerifyScript(
+                            CScript(), recov_spk_script, &recov_witness, flags, checker, serror);
+
+                        if (!verified) {
+                            // serror has been set by the VerifyScript call above.
+                            return false;
+                        }
                         stack.push_back(vchTrue);
                         break;
                     }
+
                     // Case 2: spend to a compatible target:
                     //   - satisfies relative timelock, and
                     //   - txTo outputs match target hash.
@@ -2104,7 +2146,7 @@ bool GenericTransactionSignatureChecker<T>::CheckSequence(const CScriptNum& nSeq
 //!   4. The recovery scriptPubKey is as expected.
 template <class T>
 bool GenericTransactionSignatureChecker<T>::CheckVaultSpendToRecoveryOutputs(
-    const uint256& recovery_spk_hash) const
+    const valtype& recovery_params, valtype& recovery_spk_out) const
 {
     if (!this->txdata) return HandleMissingData(m_mdb);
     const auto& txd{*this->txdata};
@@ -2125,8 +2167,24 @@ bool GenericTransactionSignatureChecker<T>::CheckVaultSpendToRecoveryOutputs(
         return false;
     }
 
-    return (VaultScriptHash(HASHER_VAULT_RECOVERY_SPK, value_out.scriptPubKey) ==
-            recovery_spk_hash);
+    assert(recovery_params.size() > uint256::WIDTH);
+    const valtype& recovery_target_spk_hash_data{
+        recovery_params.begin(), recovery_params.begin() + uint256::WIDTH};
+    assert(recovery_target_spk_hash_data.size() == 32);
+    uint256 expected_recovery_target_spk_hash{recovery_target_spk_hash_data};
+
+    uint256 got_target_spk_hash = VaultScriptHash(
+        HASHER_VAULT_RECOVERY_SPK, value_out.scriptPubKey);
+
+    // Expected recovery target sPK doesn't match.
+    if (got_target_spk_hash != expected_recovery_target_spk_hash) {
+        return false;
+    }
+
+    // Extract the sPK that must be satisfied
+    recovery_spk_out = {
+        recovery_params.begin() + uint256::WIDTH, recovery_params.end()};
+    return true;
 }
 
 
@@ -2158,7 +2216,6 @@ static bool IsOutputEphemeralAnchor(const CTxOut& out)
 //! Return the unvault_output_spk in an out param for inspection by the caller.
 template <class T>
 bool GenericTransactionSignatureChecker<T>::CheckUnvaultTriggerOutputsCommon(
-    const uint256& recovery_spk_hash,
     const CScriptNum& spend_delay,
     bool require_minimal,
     CScript& unvault_output_spk) const

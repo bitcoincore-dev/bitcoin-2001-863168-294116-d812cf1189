@@ -117,6 +117,8 @@ std::string ScriptErrorString(const ScriptError serror)
             return "Signature is found in scriptCode";
         case SCRIPT_ERR_UNVAULT_MISMATCH:
             return "OP_UNVAULT outputs not compatible with OP_VAULT";
+        case SCRIPT_ERR_VAULT_INVALID_RECOVERY_PARAMS:
+            return "Vault recovery params are malformed";
         case SCRIPT_ERR_VAULT_WRONG_TRIGGER_WITNESS_PROGRAM:
             return "OP_UNVAULT trigger scriptPubKey does not match OP_VAULT hash";
         case SCRIPT_ERR_VAULT_INVALID_TRIGGER_WITNESS_PROGRAM:

@@ -267,13 +267,14 @@ public:
          return false;
     }
 
-    virtual bool CheckVaultSpendToRecoveryOutputs(const uint256& recovery_spk_hash) const
+    virtual bool CheckVaultSpendToRecoveryOutputs(
+        const std::vector<unsigned char>& recovery_params,
+        std::vector<unsigned char>& recovery_spk_out) const
     {
          return false;
     }
 
     virtual bool CheckUnvaultTriggerOutputsCommon(
-        const uint256& recovery_spk_hash,
         const CScriptNum& spend_delay,
         bool require_minimal,
         CScript& unvault_output_spk) const
@@ -322,9 +323,10 @@ public:
     bool CheckSchnorrSignature(Span<const unsigned char> sig, Span<const unsigned char> pubkey, SigVersion sigversion, ScriptExecutionData& execdata, ScriptError* serror = nullptr) const override;
     bool CheckLockTime(const CScriptNum& nLockTime) const override;
     bool CheckSequence(const CScriptNum& nSequence) const override;
-    bool CheckVaultSpendToRecoveryOutputs(const uint256& recovery_spk_hash) const override;
+    bool CheckVaultSpendToRecoveryOutputs(
+        const std::vector<unsigned char>& recovery_params,
+        std::vector<unsigned char>& recovery_spk_out) const override;
     bool CheckUnvaultTriggerOutputsCommon(
-        const uint256& recovery_spk_hash,
         const CScriptNum& spend_delay,
         bool require_minimal,
         CScript& unvault_output_spk) const override;
@@ -360,18 +362,19 @@ public:
     {
         return m_checker.CheckSequence(nSequence);
     }
-    bool CheckVaultSpendToRecoveryOutputs(const uint256& recovery_spk_hash) const override
+    bool CheckVaultSpendToRecoveryOutputs(
+        const std::vector<unsigned char>& recovery_params,
+        std::vector<unsigned char>& recovery_spk_out) const override
     {
-        return m_checker.CheckVaultSpendToRecoveryOutputs(recovery_spk_hash);
+        return m_checker.CheckVaultSpendToRecoveryOutputs(recovery_params, recovery_spk_out);
     }
     bool CheckUnvaultTriggerOutputsCommon(
-        const uint256& recovery_spk_hash,
         const CScriptNum& spend_delay,
         bool require_minimal,
         CScript& unvault_output_spk) const override
     {
         return m_checker.CheckUnvaultTriggerOutputsCommon(
-            recovery_spk_hash, spend_delay, require_minimal, unvault_output_spk);
+            spend_delay, require_minimal, unvault_output_spk);
     }
     bool CheckUnvaultTarget(const uint256& target_outputs_hash) const override
     {

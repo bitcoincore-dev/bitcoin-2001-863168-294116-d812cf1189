@@ -222,6 +222,9 @@ class VaultsTest(BitcoinTestFramework):
             hash=int.from_bytes(bytes.fromhex(unvault1_txid), byteorder="big"), n=0
         )
 
+        assert vaults[1].vault_outpoint
+        assert vaults[2].vault_outpoint
+
         sweep_tx = get_sweep_to_recovery_tx({
             vaults[0]: unvault1_outpoint,
             vaults[1]: vaults[1].vault_outpoint,
@@ -264,7 +267,7 @@ class VaultsTest(BitcoinTestFramework):
         assert_equal(node.getmempoolinfo()["size"], 0)
 
         # Construct the final unvault target.
-        unvault_total_sats = sum(v.total_amount_sats for v in vaults)
+        unvault_total_sats = sum(v.total_amount_sats for v in vaults)  # type: ignore
         assert unvault_total_sats > 0
         target_key = key.ECKey(secret=(1).to_bytes(32, "big"))
 
@@ -459,6 +462,13 @@ class VaultSpec:
         # Taproot info for the recovery key.
         self.recovery_tr_info = taproot_from_privkey(self.recovery_key)
 
+        # The sPK that needs to be satisfied in order to sweep to the recovery path.
+        self.recovery_spk = CScript([script.OP_TRUE])
+
+        self.recovery_params: bytes = (
+            recovery_spk_tagged_hash(self.recovery_tr_info.scriptPubKey) +
+            self.recovery_spk)
+
         # Use a basic key-path TR spend to trigger an unvault attempt.
         self.unvault_key = key.ECKey(
             secret=(
@@ -474,8 +484,8 @@ class VaultSpec:
         # The OP_VAULT scriptPubKey that is hidden in the initializing vault
         # outputs's script-path spend.
         self.vault_spk = CScript([
-            # <recovery-spk-hash>
-            recovery_spk_tagged_hash(self.recovery_tr_info.scriptPubKey),
+            # <recovery-params>
+            self.recovery_params,
             # <spend-delay>
             self.spend_delay,
             # <unvault-spk-hash>
@@ -495,7 +505,6 @@ class VaultSpec:
         # Outpoint for spending the initialized vault.
         self.vault_outpoint: t.Optional[messages.COutPoint] = None
         self.vault_output: t.Optional[CTxOut] = None
-
 
     def get_initialize_vault_tx(
         self,
@@ -545,7 +554,7 @@ class TxMutator(t.NamedTuple):
     def unvault_with_bad_recovery_spk(self, tx: CTransaction):
         """Unvault with wrong recovery path."""
         bad_unvault_spk = CScript([
-            # <recovery-spk-hash>
+            # <recovery-params>
             bytes([0x01] * 32),
             # <spend-delay>
             self.vault.spend_delay,
@@ -570,7 +579,7 @@ class TxMutator(t.NamedTuple):
     def unvault_with_bad_spend_delay(self, tx: CTransaction):
         """Unvault with wrong spend delay."""
         tx.vout[0].scriptPubKey = CScript([
-            # <recovery-spk-hash>
+            # <recovery-params>
             recovery_spk_tagged_hash(self.vault.recovery_tr_info.scriptPubKey),
             # <spend-delay>
             self.vault.spend_delay - 1,
@@ -692,8 +701,8 @@ def get_trigger_unvault_tx(
     spend_delay = vaults[0].spend_delay
 
     unvault_spk = CScript([
-        # <recovery-spk-hash>
-        recovery_spk_tagged_hash(vaults[0].recovery_tr_info.scriptPubKey),
+        # <recovery-params>
+        vaults[0].recovery_params,
         # <spend-delay>
         spend_delay,
         # <target-outputs-hash>
