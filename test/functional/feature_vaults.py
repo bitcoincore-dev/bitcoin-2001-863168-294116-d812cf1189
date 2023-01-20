@@ -28,7 +28,6 @@ class OutputType(str, Enum):
     Possible forms that the OP_UNVAULT output can take. The latter two conceal
     the unvault process until it is complete.
     """
-    Bare = 'bare'
     P2WSH = 'P2WSH'
     P2TR = 'P2TR'
 
@@ -563,10 +562,7 @@ class TxMutator(t.NamedTuple):
             OP_UNVAULT,
         ])
 
-        if self.unvault_type == OutputType.Bare:
-            tx.vout[0].scriptPubKey = bad_unvault_spk
-
-        elif self.unvault_type == OutputType.P2WSH:
+        if self.unvault_type == OutputType.P2WSH:
             tx.vout[0].scriptPubKey = CScript([OP_0, messages.sha256(bad_unvault_spk)])
 
         elif self.unvault_type == OutputType.P2TR:
@@ -575,18 +571,32 @@ class TxMutator(t.NamedTuple):
                 scripts=[('only-path', bad_unvault_spk, 0xC0)])
 
             tx.vout[0].scriptPubKey = bad_taproot.scriptPubKey
+        else:
+            raise RuntimeError("unrecognized unvault output type")
 
     def unvault_with_bad_spend_delay(self, tx: CTransaction):
         """Unvault with wrong spend delay."""
-        tx.vout[0].scriptPubKey = CScript([
+        bad_unvault_spk = CScript([
             # <recovery-params>
-            recovery_spk_tagged_hash(self.vault.recovery_tr_info.scriptPubKey),
+            self.vault.recovery_params,
             # <spend-delay>
             self.vault.spend_delay - 1,
             # <target-outputs-hash>
             b'\x00' * 32,
             OP_UNVAULT,
         ])
+
+        if self.unvault_type == OutputType.P2WSH:
+            tx.vout[0].scriptPubKey = CScript([OP_0, messages.sha256(bad_unvault_spk)])
+
+        elif self.unvault_type == OutputType.P2TR:
+            bad_taproot = script.taproot_construct(
+                UNVAULT_NUMS_INTERNAL_PUBKEY,
+                scripts=[('only-path', bad_unvault_spk, 0xC0)])
+
+            tx.vout[0].scriptPubKey = bad_taproot.scriptPubKey
+        else:
+            raise RuntimeError("unrecognized unvault output type")
 
     def unvault_with_bad_opcode(self, tx: CTransaction):
         """Unvault with wrong opcode."""
@@ -666,9 +676,8 @@ def get_sweep_to_recovery_tx(
             ]
         # Otherwise, we're sweeping away from an OP_UNVAULT trigger transaction.
         elif unvault_trigger_tx:
-            if unvault_trigger_tx.unvault_output_type != OutputType.Bare:
-                sweep_tx.wit.vtxinwit[i].scriptWitness.stack = (
-                    unvault_trigger_tx.spend_witness_stack)
+            sweep_tx.wit.vtxinwit[i].scriptWitness.stack = (
+                unvault_trigger_tx.spend_witness_stack)
         else:
             raise ValueError(
                 "must pass `unvault_trigger_tx` if spending from unvault")
@@ -727,9 +736,7 @@ def get_trigger_unvault_tx(
     unvault_txout = CTxOut(nValue=total_vaults_amount_sats, scriptPubKey=unvault_spk)
 
     if unvault_output_type is OutputType.P2WSH:
-        unvault_txout.scriptPubKey = CScript([
-            OP_0, messages.sha256(unvault_spk),
-        ])
+        unvault_txout.scriptPubKey = CScript([OP_0, messages.sha256(unvault_spk)])
         trigger_tx.spend_witness_stack = [unvault_spk]
 
     elif unvault_output_type is OutputType.P2TR:
@@ -742,6 +749,9 @@ def get_trigger_unvault_tx(
             unvault_spk,
             (bytes([0xC0 + nums_tr.negflag]) + nums_tr.internal_pubkey),
         ]
+
+    else:
+        raise RuntimeError("unrecognized unvault output type")
 
     trigger_tx.nVersion = 2
     trigger_tx.vin = [CTxIn(outpoint=v.vault_outpoint) for v in vaults]
@@ -763,23 +773,14 @@ def get_trigger_unvault_tx(
             vault.unvault_tweaked_privkey, unvault_sigmsg)
 
         trigger_tx.wit.vtxinwit += [messages.CTxInWitness()]
-
-        optional_target_hash_on_stack = None
-
-        if unvault_output_type in [OutputType.P2WSH, OutputType.P2TR]:
-            optional_target_hash_on_stack = target_hash
-
-        trigger_tx.wit.vtxinwit[i].scriptWitness.stack = list(filter(None, (
+        trigger_tx.wit.vtxinwit[i].scriptWitness.stack = [
             unvault_signature,
             vault.unvault_tr_info.scriptPubKey,
-
-            # Note this is filtered out if Bare output used
-            optional_target_hash_on_stack,
-
+            target_hash,
             vault.vault_spk,
             (bytes([0xC0 + vault.init_tr_info.negflag])
              + vault.init_tr_info.internal_pubkey),
-        )))
+        ]
 
     return trigger_tx
 
@@ -803,11 +804,9 @@ def get_final_withdrawal_tx(
         CTxIn(outpoint=unvault_outpoint, nSequence=unvault_trigger_tx.spend_delay)
     ]
     final_tx.vout = final_target_vout
-
-    if unvault_trigger_tx.unvault_output_type in [OutputType.P2WSH, OutputType.P2TR]:
-        final_tx.wit.vtxinwit += [messages.CTxInWitness()]
-        final_tx.wit.vtxinwit[0].scriptWitness.stack = (
-            unvault_trigger_tx.spend_witness_stack)
+    final_tx.wit.vtxinwit += [messages.CTxInWitness()]
+    final_tx.wit.vtxinwit[0].scriptWitness.stack = (
+        unvault_trigger_tx.spend_witness_stack)
 
     return final_tx
 

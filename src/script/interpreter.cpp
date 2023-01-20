@@ -413,62 +413,6 @@ static uint256 VaultScriptHash(const HashWriter hw, const CScript& script) {
     return (HashWriter{hw} << script).GetSHA256();
 }
 
-//! Validate that the output being created by spending an OP_VAULT pays to an
-//! OP_UNVAULT script with compatible parameters. The output will be a bare
-//! script.
-static bool CheckUnvaultTriggerOutputsBare(
-    const CScript& unvault_spk,
-    const valtype& recovery_params,
-    const CScriptNum& spend_delay,
-    const bool require_minimal)
-{
-    auto pc = unvault_spk.begin();
-    valtype pushdata;
-    opcodetype opcode;
-
-    // Get the recovery params.
-    if (!unvault_spk.GetOp(pc, opcode, pushdata)) {
-        return false;
-    }
-    if (pushdata != recovery_params) {
-        return false;
-    }
-
-    // Check for spend-delay; must be between 1 and 4 bytes.
-    if (!unvault_spk.GetOp(pc, opcode, pushdata)) {
-        return false;
-    }
-    CScriptNum proposed_spend_delay{-1};
-
-    // TODO: this is ugly, but basically we have to replicate EvalScript's parsing
-    // of numbers here. If the number is between [1, 16], it will be OP_[n], but
-    // if it's larger it's encoded as pushdata.
-    if (opcode >= OP_1 && opcode <= OP_16) {
-        proposed_spend_delay = (int)opcode - (int)(OP_1 - 1);
-    } else {
-        if (pushdata.size() < 1 || pushdata.size() > CScriptNum::nDefaultMaxNumSize) {
-            return false;
-        }
-        proposed_spend_delay = CScriptNum(pushdata, require_minimal);
-    }
-
-    if (proposed_spend_delay != spend_delay) {
-        return false;
-    }
-
-    // Check for target-hash; we don't care what it is as long as it's 32 bytes.
-    if (!unvault_spk.GetOp(pc, opcode) || opcode != 0x20) {
-        return false;
-    }
-
-    // Finally, check that OP_UNVAULT is the last opcode.
-    if (!unvault_spk.GetOp(pc, opcode) || opcode != OP_UNVAULT || pc != unvault_spk.end()) {
-        return false;
-    }
-
-    return true;
-}
-
 //! Used as the (unusable) internal pubkey when constructing an OP_UNVAULT P2TR output
 //! for an OP_VAULT spend. Pulled from BIP-324.
 const std::vector<unsigned char> VAULT_NUMS_POINT{
@@ -1343,10 +1287,14 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                 case OP_VAULT:
                 {
                     // only available post-segwit
-                    if (sigversion == SigVersion::BASE) return set_error(serror, SCRIPT_ERR_BAD_OPCODE);
+                    if (sigversion == SigVersion::BASE) {
+                        return set_error(serror, SCRIPT_ERR_BAD_OPCODE);
+                    }
 
                     // <recovery-spk-hash> <spend-delay> <trigger-spk-hash>
-                    if (stack.size() < 3) return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                    if (stack.size() < 3) {
+                        return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                    }
 
                     // Note that this is making a copy, not taking a reference, so that
                     // we avoid UB when using this state after stack pops.
@@ -1362,12 +1310,11 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     // the same machinery as OP_CHECKSEQUENCEVERIFY.
                     const CScriptNum spend_delay(stacktop(-2), fRequireMinimal);
 
-                    valtype hash_from_stack;
-                    hash_from_stack = stacktop(-1);
-                    if (hash_from_stack.size() != 32) {
+                    const valtype& trig_spk_from_stack = stacktop(-1);
+                    if (trig_spk_from_stack.size() != 32) {
                         return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
                     }
-                    const uint256 expected_trigger_spk_hash{hash_from_stack};
+                    const uint256 expected_trigger_spk_hash{trig_spk_from_stack};
 
                     popstack(stack);
                     popstack(stack);
@@ -1401,14 +1348,18 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
 
                     // Case 2: spend to compatible OP_UNVAULT
 
-                    // [trigger witness stack ...] <trigger-spk> [prev stack items]
-                    if (stack.size() < 2) {
+                    // [trigger witness stack ...] <trigger-spk> <target-hash> [prev stack items]
+                    //
+                    // <target-hash> is used to validate the proposed OP_UNVAULT witness
+                    // output sPK, which hides the actual OP_UNVAULT script behind a
+                    // scripthash.
+                    if (stack.size() < 3) {
                         return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
                     }
 
                     CScript unvault_output_spk;
 
-                    if (!checker.CheckUnvaultTriggerOutputsCommon(
+                    if (!checker.CheckUnvaultTriggerOutputs(
                             spend_delay,
                             fRequireMinimal,
                             unvault_output_spk)) {
@@ -1416,43 +1367,27 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     }
                     assert(unvault_output_spk.size() > 0);
 
-                    // Determine the type of the proposed OP_UNVAULT script.
-                    // If it lives behind a scripthash, we will have to construct
-                    // a specific expected scriptPubKey and compare to that. Otherwise
-                    // we'll analyze its prefix as a bare script.
                     int opuv_witversion;
                     valtype opuv_witprogram;
                     const bool is_unvault_output_wit =
                         unvault_output_spk.IsWitnessProgram(opuv_witversion, opuv_witprogram);
 
                     if (!is_unvault_output_wit) {
-                        // Validate the OP_UNVAULT output as a bare script.
-                        if (!CheckUnvaultTriggerOutputsBare(
-                                unvault_output_spk,
-                                recovery_params, spend_delay, fRequireMinimal)) {
-                            return set_error(serror, SCRIPT_ERR_UNVAULT_MISMATCH);
-                        }
-                    } else {
-                        // We now expect an additional item on the stack, <target-hash>,
-                        // which is used to validate the proposed OP_UNVAULT witness
-                        // output sPK - which hides the actual OP_UNVAULT script behind a
-                        // scripthash.
-                        if (stack.size() < 3) {
-                            return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
-                        }
-                        valtype& hash_from_stack = stacktop(-1);
-                        if (hash_from_stack.size() != 32) {
-                            return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
-                        }
-                        const uint256 target_hash{hash_from_stack};
-                        popstack(stack);
+                        return set_error(serror, SCRIPT_ERR_UNVAULT_NONWITNESS);
+                    }
 
-                        if (!CheckUnvaultTriggerOutputsWitness(
-                                opuv_witversion, opuv_witprogram,
-                                recovery_params, spend_delay, target_hash,
-                                fRequireMinimal, flags, serror)) {
-                            return set_error(serror, SCRIPT_ERR_UNVAULT_MISMATCH);
-                        }
+                    const valtype& target_hash_data = stacktop(-1);
+                    if (target_hash_data.size() != 32) {
+                        return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
+                    }
+                    const uint256 target_hash{target_hash_data};
+                    popstack(stack);
+
+                    if (!CheckUnvaultTriggerOutputsWitness(
+                            opuv_witversion, opuv_witprogram,
+                            recovery_params, spend_delay, target_hash,
+                            fRequireMinimal, flags, serror)) {
+                        return set_error(serror, SCRIPT_ERR_UNVAULT_MISMATCH);
                     }
 
                     // Now that we have verified the structure of the outputs, verify
@@ -1498,6 +1433,11 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
 
                 case OP_UNVAULT:
                 {
+                    // only available post-segwit
+                    if (sigversion == SigVersion::BASE) {
+                        return set_error(serror, SCRIPT_ERR_BAD_OPCODE);
+                    }
+
                     // <recovery-spk-hash> <spend-delay> <target-hash>
                     if (stack.size() < 3) {
                         return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
@@ -1514,8 +1454,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     // as lower 23 bits of nSequence.
                     const CScriptNum spend_delay(stacktop(-2), fRequireMinimal);
 
-                    valtype hash_from_stack;
-                    hash_from_stack = stacktop(-1);
+                    const valtype& hash_from_stack = stacktop(-1);
                     if (hash_from_stack.size() != 32) {
                         return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
                     }
@@ -2215,7 +2154,7 @@ static bool IsOutputEphemeralAnchor(const CTxOut& out)
 //!
 //! Return the unvault_output_spk in an out param for inspection by the caller.
 template <class T>
-bool GenericTransactionSignatureChecker<T>::CheckUnvaultTriggerOutputsCommon(
+bool GenericTransactionSignatureChecker<T>::CheckUnvaultTriggerOutputs(
     const CScriptNum& spend_delay,
     bool require_minimal,
     CScript& unvault_output_spk) const

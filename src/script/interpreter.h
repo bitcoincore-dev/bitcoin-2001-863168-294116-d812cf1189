@@ -274,7 +274,7 @@ public:
          return false;
     }
 
-    virtual bool CheckUnvaultTriggerOutputsCommon(
+    virtual bool CheckUnvaultTriggerOutputs(
         const CScriptNum& spend_delay,
         bool require_minimal,
         CScript& unvault_output_spk) const
@@ -326,7 +326,7 @@ public:
     bool CheckVaultSpendToRecoveryOutputs(
         const std::vector<unsigned char>& recovery_params,
         std::vector<unsigned char>& recovery_spk_out) const override;
-    bool CheckUnvaultTriggerOutputsCommon(
+    bool CheckUnvaultTriggerOutputs(
         const CScriptNum& spend_delay,
         bool require_minimal,
         CScript& unvault_output_spk) const override;
@@ -368,12 +368,12 @@ public:
     {
         return m_checker.CheckVaultSpendToRecoveryOutputs(recovery_params, recovery_spk_out);
     }
-    bool CheckUnvaultTriggerOutputsCommon(
+    bool CheckUnvaultTriggerOutputs(
         const CScriptNum& spend_delay,
         bool require_minimal,
         CScript& unvault_output_spk) const override
     {
-        return m_checker.CheckUnvaultTriggerOutputsCommon(
+        return m_checker.CheckUnvaultTriggerOutputs(
             spend_delay, require_minimal, unvault_output_spk);
     }
     bool CheckUnvaultTarget(const uint256& target_outputs_hash) const override
