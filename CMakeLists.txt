@@ -155,6 +155,9 @@ else()
   endif()
 endif()
 
+find_package(Python3 3.8 REQUIRED COMPONENTS Interpreter)
+set(PYTHON_COMMAND ${Python3_EXECUTABLE})
+
 add_subdirectory(src)
 add_subdirectory(test)
 
