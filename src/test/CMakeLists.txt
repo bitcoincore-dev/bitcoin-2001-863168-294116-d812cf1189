@@ -174,6 +174,35 @@ if(ENABLE_WALLET)
   endif()
 endif()
 
+if(MULTIPROCESS)
+  include(GenerateMPCode)
+  generate_from_capnp(ipc_test.capnp)
+
+  add_library(bitcoin_ipc_test STATIC EXCLUDE_FROM_ALL
+    ${CMAKE_CURRENT_BINARY_DIR}/ipc_test.capnp.c++
+    ${CMAKE_CURRENT_BINARY_DIR}/ipc_test.capnp.proxy-client.c++
+    ${CMAKE_CURRENT_BINARY_DIR}/ipc_test.capnp.proxy-server.c++
+    ${CMAKE_CURRENT_BINARY_DIR}/ipc_test.capnp.proxy-types.c++
+    ipc_test.cpp
+  )
+  target_include_directories(bitcoin_ipc_test
+    PUBLIC
+      $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
+  )
+  target_link_libraries(bitcoin_ipc_test
+    PRIVATE
+      core_interface
+      PkgConfig::libmultiprocess
+      univalue
+  )
+
+  target_sources(test_bitcoin
+    PRIVATE
+      ipc_tests.cpp
+  )
+  target_link_libraries(test_bitcoin bitcoin_ipc_test)
+endif()
+
 install(TARGETS test_bitcoin
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
