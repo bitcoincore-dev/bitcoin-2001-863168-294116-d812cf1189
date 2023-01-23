@@ -18,6 +18,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 // Maximum number of bytes pushable to the stack
@@ -195,12 +196,8 @@ enum opcodetype
     OP_CHECKSEQUENCEVERIFY = 0xb2,
     OP_NOP3 = OP_CHECKSEQUENCEVERIFY,
     OP_NOP4 = 0xb3,
-
-    OP_VAULT = 0xb4,
-    OP_NOP5 = OP_VAULT,
-    OP_UNVAULT = 0xb5,
-    OP_NOP6 = OP_UNVAULT,
-
+    OP_NOP5 = 0xb4,
+    OP_NOP6 = 0xb5,
     OP_NOP7 = 0xb6,
     OP_NOP8 = 0xb7,
     OP_NOP9 = 0xb8,
@@ -210,7 +207,28 @@ enum opcodetype
     OP_CHECKSIGADD = 0xba,
 
     OP_INVALIDOPCODE = 0xff,
+
+    // vaults - OP_SUCCESS126, OP_SUCCESS127
+    OP_VAULT = 0x7e,
+    OP_UNVAULT = 0x7f,
 };
+
+
+//! Structured declaration of an OP_SUCCESS opcode which reclaims an old opcode that
+//! is potentially disallowed in legacy script.
+struct OpSuccessOverride
+{
+    std::string successname;
+    std::string oldname;
+};
+
+//! Consolidate OP_SUCCESS overrides here which clash with older opcodes.
+//! Various parts of the code need to have an awareness of these overrides.
+const std::unordered_map<opcodetype, OpSuccessOverride> OP_SUCCESS_OVERRIDES{
+    {OP_VAULT, {"VAULT", "CAT"}},
+    {OP_UNVAULT, {"UNVAULT", "SUBSTR"}},
+};
+
 
 // Maximum value that an opcode can be
 static const unsigned int MAX_OPCODE = OP_NOP10;

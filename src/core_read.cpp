@@ -16,6 +16,7 @@
 
 #include <algorithm>
 #include <string>
+#include <iostream>
 
 namespace {
 class OpCodeParser
@@ -41,6 +42,13 @@ public:
             if (strName.compare(0, 3, "OP_") == 0) { // strName starts with "OP_"
                 mapOpNames[strName.substr(3)] = static_cast<opcodetype>(op);
             }
+        }
+
+        // Legacy opcodes which are overridden by OP_SUCCESSx when in a Taproot context
+        // must be manually inserted.
+        for (const auto& [code, override] : OP_SUCCESS_OVERRIDES) {
+            mapOpNames["OP_" + override.oldname] = code;
+            mapOpNames[override.oldname] = code;
         }
     }
     opcodetype Parse(const std::string& s) const

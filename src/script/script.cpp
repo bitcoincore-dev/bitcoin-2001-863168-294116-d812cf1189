@@ -71,8 +71,9 @@ std::string GetOpName(opcodetype opcode)
     case OP_TUCK                   : return "OP_TUCK";
 
     // splice ops
-    case OP_CAT                    : return "OP_CAT";
-    case OP_SUBSTR                 : return "OP_SUBSTR";
+    // Replaced by OP_VAULT/OP_UNVAULT
+    // case OP_CAT                    : return "OP_CAT";
+    // case OP_SUBSTR                 : return "OP_SUBSTR";
     case OP_LEFT                   : return "OP_LEFT";
     case OP_RIGHT                  : return "OP_RIGHT";
     case OP_SIZE                   : return "OP_SIZE";
@@ -133,8 +134,8 @@ std::string GetOpName(opcodetype opcode)
     case OP_CHECKLOCKTIMEVERIFY    : return "OP_CHECKLOCKTIMEVERIFY";
     case OP_CHECKSEQUENCEVERIFY    : return "OP_CHECKSEQUENCEVERIFY";
     case OP_NOP4                   : return "OP_NOP4";
-    case OP_VAULT                  : return "OP_VAULT";
-    case OP_UNVAULT                : return "OP_UNVAULT";
+    case OP_NOP5                   : return "OP_NOP5";
+    case OP_NOP6                   : return "OP_NOP6";
     case OP_NOP7                   : return "OP_NOP7";
     case OP_NOP8                   : return "OP_NOP8";
     case OP_NOP9                   : return "OP_NOP9";
@@ -144,6 +145,9 @@ std::string GetOpName(opcodetype opcode)
     case OP_CHECKSIGADD            : return "OP_CHECKSIGADD";
 
     case OP_INVALIDOPCODE          : return "OP_INVALIDOPCODE";
+
+    case OP_VAULT                  : return "OP_VAULT";
+    case OP_UNVAULT                : return "OP_UNVAULT";
 
     default:
         return "OP_UNKNOWN";

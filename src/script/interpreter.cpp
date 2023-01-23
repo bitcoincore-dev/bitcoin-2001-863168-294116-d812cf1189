@@ -438,18 +438,9 @@ static bool CheckUnvaultTriggerOutputsWitness(
     expected_opuv_script <<
         ToByteVector(recovery_params) << spend_delay.getint() << ToByteVector(target_hash) << OP_UNVAULT;
 
-    if (opuv_witversion == 0) {
-        if (opuv_witprogram.size() != WITNESS_V0_SCRIPTHASH_SIZE) {
-            return false;
-        }
-        uint256 expected_scripthash;
-        CSHA256().Write(expected_opuv_script.data(), expected_opuv_script.size()).Finalize(
-            expected_scripthash.data());
+    assert(opuv_witversion > 0);
 
-        if (memcmp(expected_scripthash.data(), opuv_witprogram.data(), 32)) {
-            return false;
-        }
-    } else if (opuv_witversion == 1) {
+    if (opuv_witversion == 1) {
         if (opuv_witprogram.size() != WITNESS_V1_TAPROOT_SIZE) {
             return false;
         }
@@ -524,7 +515,11 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                 }
             }
 
-            if (opcode == OP_CAT ||
+            const bool is_tapscript_override =
+                sigversion == SigVersion::TAPSCRIPT && OP_SUCCESS_OVERRIDES.count(opcode) > 0;
+
+            if (!is_tapscript_override && (
+                opcode == OP_CAT ||
                 opcode == OP_SUBSTR ||
                 opcode == OP_LEFT ||
                 opcode == OP_RIGHT ||
@@ -538,7 +533,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                 opcode == OP_DIV ||
                 opcode == OP_MOD ||
                 opcode == OP_LSHIFT ||
-                opcode == OP_RSHIFT)
+                opcode == OP_RSHIFT))
                 return set_error(serror, SCRIPT_ERR_DISABLED_OPCODE); // Disabled opcodes (CVE-2010-5137).
 
             // With SCRIPT_VERIFY_CONST_SCRIPTCODE, OP_CODESEPARATOR in non-segwit script is rejected even in an unexecuted branch
@@ -662,8 +657,8 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     break;
                 }
 
-                case OP_NOP1: case OP_NOP4:
-                case OP_NOP7: case OP_NOP8: case OP_NOP9: case OP_NOP10:
+                case OP_NOP1: case OP_NOP4: case OP_NOP5:
+                case OP_NOP6: case OP_NOP7: case OP_NOP8: case OP_NOP9: case OP_NOP10:
                 {
                     if (flags & SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS)
                         return set_error(serror, SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS);
@@ -1286,8 +1281,8 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
 
                 case OP_VAULT:
                 {
-                    // only available post-segwit
-                    if (sigversion == SigVersion::BASE) {
+                    // Only available in Tapscript
+                    if (sigversion == SigVersion::BASE || sigversion == SigVersion::WITNESS_V0) {
                         return set_error(serror, SCRIPT_ERR_BAD_OPCODE);
                     }
 
@@ -1433,8 +1428,8 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
 
                 case OP_UNVAULT:
                 {
-                    // only available post-segwit
-                    if (sigversion == SigVersion::BASE) {
+                    // Only available in Tapscript
+                    if (sigversion == SigVersion::BASE || sigversion == SigVersion::WITNESS_V0) {
                         return set_error(serror, SCRIPT_ERR_BAD_OPCODE);
                     }
 
@@ -2236,7 +2231,8 @@ static bool ExecuteWitnessScript(const Span<const valtype>& stack_span, const CS
                 return set_error(serror, SCRIPT_ERR_BAD_OPCODE);
             }
             // New opcodes will be listed here. May use a different sigversion to modify existing opcodes.
-            if (IsOpSuccess(opcode)) {
+            if (IsOpSuccess(opcode) &&
+                    opcode != OP_VAULT && opcode != OP_UNVAULT) {
                 if (flags & SCRIPT_VERIFY_DISCOURAGE_OP_SUCCESS) {
                     return set_error(serror, SCRIPT_ERR_DISCOURAGE_OP_SUCCESS);
                 }

@@ -11,26 +11,15 @@ transactional structure of vaults.
 
 import copy
 import typing as t
-from enum import Enum
 
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.p2p import P2PInterface
 from test_framework.wallet import MiniWallet, MiniWalletMode
-from test_framework.script import CScript, OP_VAULT, OP_UNVAULT, OP_0
+from test_framework.script import CScript, OP_VAULT, OP_UNVAULT
 from test_framework.messages import CTransaction, COutPoint, CTxOut, CTxIn, COIN
 from test_framework.util import assert_equal, assert_raises_rpc_error
 
 from test_framework import script, key, messages
-
-
-class OutputType(str, Enum):
-    """
-    Possible forms that the OP_UNVAULT output can take. The latter two conceal
-    the unvault process until it is complete.
-    """
-    P2WSH = 'P2WSH'
-    P2TR = 'P2TR'
-
 
 
 class VaultsTest(BitcoinTestFramework):
@@ -58,29 +47,25 @@ class VaultsTest(BitcoinTestFramework):
         # Generate some matured UTXOs to spend into vaults.
         self.generate(wallet, 200)
 
-        for unvault_type in OutputType:
-            def title(name: str):
-                self.log.info(f"[unvault type: {unvault_type}] {name}")
+        self.log.info("testing normal vault spend")
+        self.single_vault_test(node, wallet)
 
-            title("testing normal vault spend")
-            self.single_vault_test(node, wallet, unvault_type=unvault_type)
+        self.log.info("testing sweep-to-recovery from the vault")
+        self.single_vault_test(
+            node, wallet, sweep_from_vault=True)
 
-            title("testing sweep-to-recovery from the vault")
-            self.single_vault_test(
-                node, wallet, sweep_from_vault=True, unvault_type=unvault_type)
+        self.log.info("testing sweep-to-recovery from the unvault trigger")
+        self.single_vault_test(
+            node, wallet, sweep_from_unvault=True)
 
-            title("testing sweep-to-recovery from the unvault trigger")
-            self.single_vault_test(
-                node, wallet, sweep_from_unvault=True, unvault_type=unvault_type)
+        self.log.info("testing a batch sweep operation across multiple vaults")
+        self.test_batch_sweep(node, wallet)
 
-            title("testing a batch sweep operation across multiple vaults")
-            self.test_batch_sweep(node, wallet, unvault_type=unvault_type)
+        self.log.info("testing a batch unvault")
+        self.test_batch_unvault(node, wallet)
 
-            title("testing a batch unvault")
-            self.test_batch_unvault(node, wallet, unvault_type=unvault_type)
-
-            title("testing revaults")
-            self.test_revault(node, wallet, unvault_type=unvault_type)
+        self.log.info("testing revaults")
+        self.test_revault(node, wallet)
 
     def single_vault_test(
         self,
@@ -88,7 +73,6 @@ class VaultsTest(BitcoinTestFramework):
         wallet,
         sweep_from_vault: bool = False,
         sweep_from_unvault: bool = False,
-        unvault_type: OutputType = OutputType.P2TR,
     ):
         """
         Test the creation and spend of a single vault, optionally sweeping at various
@@ -122,10 +106,9 @@ class VaultsTest(BitcoinTestFramework):
         ]
 
         target_out_hash = target_outputs_hash(final_target_vout)
-        start_unvault_tx = get_trigger_unvault_tx(
-            target_out_hash, [vault], unvault_type)
+        start_unvault_tx = get_trigger_unvault_tx(target_out_hash, [vault])
 
-        tx_mutator = TxMutator(vault, unvault_type)
+        tx_mutator = TxMutator(vault)
 
         mutation_to_err = {
             tx_mutator.unvault_with_bad_recovery_spk: 'OP_UNVAULT outputs not compatible',
@@ -182,7 +165,6 @@ class VaultsTest(BitcoinTestFramework):
         self,
         node,
         wallet,
-        unvault_type: OutputType = OutputType.P2TR,
     ):
         """
         Test generating multiple vaults and sweeping them to the recovery path in batch.
@@ -205,7 +187,7 @@ class VaultsTest(BitcoinTestFramework):
         assert_equal(node.getmempoolinfo()["size"], 0)
 
         # Start unvaulting the first vault.
-        unvault1_tx = get_trigger_unvault_tx(b'\x00' * 32, [vaults[0]], unvault_type)
+        unvault1_tx = get_trigger_unvault_tx(b'\x00' * 32, [vaults[0]])
         unvault1_txid = unvault1_tx.rehash()
         assert_equal(
             node.sendrawtransaction(unvault1_tx.serialize().hex()), unvault1_txid,
@@ -235,7 +217,6 @@ class VaultsTest(BitcoinTestFramework):
         self,
         node,
         wallet,
-        unvault_type: OutputType = OutputType.P2TR,
     ):
         """
         Test generating multiple vaults and ensure those with compatible parameters
@@ -282,13 +263,11 @@ class VaultsTest(BitcoinTestFramework):
                                 [vault_diff_delay],
                                 [vault_diff_recovery, vault_diff_delay]]:
             failed_unvault = get_trigger_unvault_tx(
-                target_out_hash, vaults + incompat_vaults, unvault_type
-            )
+                target_out_hash, vaults + incompat_vaults)
             self.assert_broadcast_tx(
                 failed_unvault, err_msg="OP_UNVAULT outputs not compatible")
 
-        good_batch_unvault = get_trigger_unvault_tx(
-            target_out_hash, vaults, unvault_type)
+        good_batch_unvault = get_trigger_unvault_tx(target_out_hash, vaults)
         good_txid = self.assert_broadcast_tx(good_batch_unvault, mine_all=True)
 
         unvault_outpoint = COutPoint(
@@ -308,7 +287,6 @@ class VaultsTest(BitcoinTestFramework):
         self,
         node,
         wallet,
-        unvault_type: OutputType = OutputType.P2TR,
     ):
         """
         Test that some amount can be "revaulted" during the unvault process. That
@@ -348,9 +326,9 @@ class VaultsTest(BitcoinTestFramework):
         target_out_hash = target_outputs_hash(final_target_vout)
 
         unvault_tx = get_trigger_unvault_tx(
-            target_out_hash, vaults, unvault_type, revault_amount_sats=revault_amount)
+            target_out_hash, vaults, revault_amount_sats=revault_amount)
 
-        tx_mutator = TxMutator(vaults[0], unvault_type)
+        tx_mutator = TxMutator(vaults[0])
         mutation_to_err = {
             tx_mutator.revault_with_high_amount: 'bad-txns-in-belowout',
             tx_mutator.revault_with_low_amount: 'OP_UNVAULT outputs not compatible',
@@ -374,9 +352,7 @@ class VaultsTest(BitcoinTestFramework):
         revault_spec.vault_outpoint = COutPoint(
             hash=int.from_bytes(bytes.fromhex(txid), byteorder="big"), n=1)
 
-        revault_unvault_tx = get_trigger_unvault_tx(
-            b'\x00' * 32, [revault_spec], unvault_type,
-        )
+        revault_unvault_tx = get_trigger_unvault_tx(b'\x00' * 32, [revault_spec])
         # The revault output should be immediately spendable into an OP_UNVAULT
         # output.
         self.assert_broadcast_tx(revault_unvault_tx, mine_all=True)
@@ -548,7 +524,6 @@ class TxMutator(t.NamedTuple):
     For use with `VaultsTest.assert_tx_mutation_fails()`.
     """
     vault: VaultSpec
-    unvault_type: OutputType
 
     def unvault_with_bad_recovery_spk(self, tx: CTransaction):
         """Unvault with wrong recovery path."""
@@ -562,17 +537,11 @@ class TxMutator(t.NamedTuple):
             OP_UNVAULT,
         ])
 
-        if self.unvault_type == OutputType.P2WSH:
-            tx.vout[0].scriptPubKey = CScript([OP_0, messages.sha256(bad_unvault_spk)])
+        bad_taproot = script.taproot_construct(
+            UNVAULT_NUMS_INTERNAL_PUBKEY,
+            scripts=[('only-path', bad_unvault_spk, 0xC0)])
 
-        elif self.unvault_type == OutputType.P2TR:
-            bad_taproot = script.taproot_construct(
-                UNVAULT_NUMS_INTERNAL_PUBKEY,
-                scripts=[('only-path', bad_unvault_spk, 0xC0)])
-
-            tx.vout[0].scriptPubKey = bad_taproot.scriptPubKey
-        else:
-            raise RuntimeError("unrecognized unvault output type")
+        tx.vout[0].scriptPubKey = bad_taproot.scriptPubKey
 
     def unvault_with_bad_spend_delay(self, tx: CTransaction):
         """Unvault with wrong spend delay."""
@@ -586,17 +555,11 @@ class TxMutator(t.NamedTuple):
             OP_UNVAULT,
         ])
 
-        if self.unvault_type == OutputType.P2WSH:
-            tx.vout[0].scriptPubKey = CScript([OP_0, messages.sha256(bad_unvault_spk)])
+        bad_taproot = script.taproot_construct(
+            UNVAULT_NUMS_INTERNAL_PUBKEY,
+            scripts=[('only-path', bad_unvault_spk, 0xC0)])
 
-        elif self.unvault_type == OutputType.P2TR:
-            bad_taproot = script.taproot_construct(
-                UNVAULT_NUMS_INTERNAL_PUBKEY,
-                scripts=[('only-path', bad_unvault_spk, 0xC0)])
-
-            tx.vout[0].scriptPubKey = bad_taproot.scriptPubKey
-        else:
-            raise RuntimeError("unrecognized unvault output type")
+        tx.vout[0].scriptPubKey = bad_taproot.scriptPubKey
 
     def unvault_with_bad_opcode(self, tx: CTransaction):
         """Unvault with wrong opcode."""
@@ -629,7 +592,6 @@ class UnvaultTriggerTransaction(CTransaction):
         super().__init__(*args, **kwargs)
 
         # These are set after the transaction has been fully generated.
-        self.unvault_output_type: t.Optional[OutputType] = None
         self.spend_delay: t.Optional[int] = None
 
         # Cache the necessary witness stack for later spending.
@@ -694,7 +656,6 @@ UNVAULT_NUMS_INTERNAL_PUBKEY = bytes.fromhex(
 def get_trigger_unvault_tx(
     target_hash: bytes,
     vaults: t.List[VaultSpec],
-    unvault_output_type: OutputType = OutputType.P2TR,
     revault_amount_sats: t.Optional[int] = None,
 ) -> UnvaultTriggerTransaction:
     """
@@ -720,7 +681,6 @@ def get_trigger_unvault_tx(
     ])
 
     trigger_tx = UnvaultTriggerTransaction()
-    trigger_tx.unvault_output_type = unvault_output_type
     trigger_tx.spend_delay = spend_delay
 
     total_vaults_amount_sats = sum(v.total_amount_sats for v in vaults)  # type: ignore
@@ -735,23 +695,15 @@ def get_trigger_unvault_tx(
 
     unvault_txout = CTxOut(nValue=total_vaults_amount_sats, scriptPubKey=unvault_spk)
 
-    if unvault_output_type is OutputType.P2WSH:
-        unvault_txout.scriptPubKey = CScript([OP_0, messages.sha256(unvault_spk)])
-        trigger_tx.spend_witness_stack = [unvault_spk]
+    nums_tr = script.taproot_construct(
+        UNVAULT_NUMS_INTERNAL_PUBKEY, scripts=[('only-path', unvault_spk, 0xC0)])
 
-    elif unvault_output_type is OutputType.P2TR:
-        nums_tr = script.taproot_construct(
-            UNVAULT_NUMS_INTERNAL_PUBKEY, scripts=[('only-path', unvault_spk, 0xC0)])
-
-        unvault_txout.scriptPubKey = nums_tr.scriptPubKey
-        # Cache the taproot info for later use when constructing a spend.
-        trigger_tx.spend_witness_stack = [
-            unvault_spk,
-            (bytes([0xC0 + nums_tr.negflag]) + nums_tr.internal_pubkey),
-        ]
-
-    else:
-        raise RuntimeError("unrecognized unvault output type")
+    unvault_txout.scriptPubKey = nums_tr.scriptPubKey
+    # Cache the taproot info for later use when constructing a spend.
+    trigger_tx.spend_witness_stack = [
+        unvault_spk,
+        (bytes([0xC0 + nums_tr.negflag]) + nums_tr.internal_pubkey),
+    ]
 
     trigger_tx.nVersion = 2
     trigger_tx.vin = [CTxIn(outpoint=v.vault_outpoint) for v in vaults]
