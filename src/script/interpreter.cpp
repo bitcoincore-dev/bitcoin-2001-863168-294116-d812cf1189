@@ -463,9 +463,15 @@ static bool CheckUnvaultTriggerOutputsWitness(
     return true;
 }
 
-static bool VerifyWitnessProgram(const CScriptWitness& witness, int witversion, const std::vector<unsigned char>& program, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror, bool is_p2sh);
+static bool VerifyNestedWitnessProgram(
+    std::vector<valtype>& stack,
+    const CScript& spk, ScriptError* serror,
+    unsigned int flags,
+    const BaseSignatureChecker& checker,
+    bool limit_recursion);
 
-bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptExecutionData& execdata, ScriptError* serror)
+
+bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptExecutionData& execdata, ScriptError* serror, bool limit_recursion)
 {
     static const CScriptNum bnZero(0);
     static const CScriptNum bnOne(1);
@@ -1286,7 +1292,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                         return set_error(serror, SCRIPT_ERR_BAD_OPCODE);
                     }
 
-                    // <recovery-spk-hash> <spend-delay> <trigger-spk-hash>
+                    // <recovery-params> <spend-delay> <trigger-spk-hash>
                     if (stack.size() < 3) {
                         return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
                     }
@@ -1323,21 +1329,14 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                             return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
                         }
                         CScript recov_spk_script{recovery_spk.begin(), recovery_spk.end()};
-                        CScriptWitness recov_witness;
 
                         // Everything remaining on the stack will be used to satisfy
                         // the recovery sPK.
-                        recov_witness.stack = stack;
-
-                        // Pass the scriptSig as blank.
-                        bool verified = VerifyScript(
-                            CScript(), recov_spk_script, &recov_witness, flags, checker, serror);
-
-                        if (!verified) {
-                            // serror has been set by the VerifyScript call above.
+                        if (!VerifyNestedWitnessProgram(
+                                stack, recov_spk_script, serror, flags, checker, limit_recursion)) {
+                            // serror has been set by the call above.
                             return false;
                         }
-                        stack.push_back(vchTrue);
                         break;
                     }
 
@@ -1404,23 +1403,8 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     // Everything remaining on the stack is the witness stack
                     // to be fed into the witness program above.
 
-                    CScriptWitness witness;
-                    witness.stack = stack;
-                    int witnessversion;
-                    std::vector<unsigned char> witnessprogram;
-
-                    if (!trigger_witness_spk.IsWitnessProgram(witnessversion, witnessprogram)) {
-                        return set_error(serror, SCRIPT_ERR_VAULT_INVALID_TRIGGER_WITNESS_PROGRAM);
-                    }
-                    // Note that this will recursively call EvalScript. We could get
-                    // into a further recursion if OP_VAULT spends are included in the
-                    // trigger witness program; the recursion depth is limited
-                    // solely by script size constraints.
-                    //
-                    // TODO: think more about whether to limit recursive OP_VAULT
-                    // evaluations in trigger witness programs.
-                    if (!VerifyWitnessProgram(
-                            witness, witnessversion, witnessprogram, flags, checker, serror, /*is_p2sh=*/false)) {
+                    if (!VerifyNestedWitnessProgram(
+                            stack, trigger_witness_spk, serror, flags, checker, limit_recursion)) {
                         return set_error(serror, SCRIPT_ERR_VAULT_INVALID_TRIGGER_WITNESS);
                     }
                 }
@@ -1467,21 +1451,14 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                             return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
                         }
                         CScript recov_spk_script{recovery_spk.begin(), recovery_spk.end()};
-                        CScriptWitness recov_witness;
 
                         // Everything remaining on the stack will be used to satisfy
                         // the recovery sPK.
-                        recov_witness.stack = stack;
-
-                        // Pass the scriptSig as blank.
-                        bool verified = VerifyScript(
-                            CScript(), recov_spk_script, &recov_witness, flags, checker, serror);
-
-                        if (!verified) {
-                            // serror has been set by the VerifyScript call above.
+                        if (!VerifyNestedWitnessProgram(
+                                stack, recov_spk_script, serror, flags, checker, limit_recursion)) {
+                            // serror has been set by the call above.
                             return false;
                         }
-                        stack.push_back(vchTrue);
                         break;
                     }
 
@@ -1517,10 +1494,10 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
     return set_success(serror);
 }
 
-bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptError* serror)
+bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptError* serror, bool limit_recursion)
 {
     ScriptExecutionData execdata;
-    return EvalScript(stack, script, flags, checker, sigversion, execdata, serror);
+    return EvalScript(stack, script, flags, checker, sigversion, execdata, serror, limit_recursion);
 }
 
 namespace {
@@ -2217,7 +2194,7 @@ bool GenericTransactionSignatureChecker<T>::CheckUnvaultTarget(
 template class GenericTransactionSignatureChecker<CTransaction>;
 template class GenericTransactionSignatureChecker<CMutableTransaction>;
 
-static bool ExecuteWitnessScript(const Span<const valtype>& stack_span, const CScript& exec_script, unsigned int flags, SigVersion sigversion, const BaseSignatureChecker& checker, ScriptExecutionData& execdata, ScriptError* serror)
+static bool ExecuteWitnessScript(const Span<const valtype>& stack_span, const CScript& exec_script, unsigned int flags, SigVersion sigversion, const BaseSignatureChecker& checker, ScriptExecutionData& execdata, ScriptError* serror, bool limit_recursion)
 {
     std::vector<valtype> stack{stack_span.begin(), stack_span.end()};
 
@@ -2250,7 +2227,7 @@ static bool ExecuteWitnessScript(const Span<const valtype>& stack_span, const CS
     }
 
     // Run the script interpreter.
-    if (!EvalScript(stack, exec_script, flags, checker, sigversion, execdata, serror)) return false;
+    if (!EvalScript(stack, exec_script, flags, checker, sigversion, execdata, serror, limit_recursion)) return false;
 
     // Scripts inside witness implicitly require cleanstack behaviour
     if (stack.size() != 1) return set_error(serror, SCRIPT_ERR_CLEANSTACK);
@@ -2303,7 +2280,7 @@ static bool VerifyTaprootCommitment(const std::vector<unsigned char>& control, c
     return q.CheckTapTweak(p, merkle_root, control[0] & 1);
 }
 
-static bool VerifyWitnessProgram(const CScriptWitness& witness, int witversion, const std::vector<unsigned char>& program, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror, bool is_p2sh)
+static bool VerifyWitnessProgram(const CScriptWitness& witness, int witversion, const std::vector<unsigned char>& program, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror, bool is_p2sh, bool limit_recursion = false)
 {
     CScript exec_script; //!< Actually executed script (last stack item in P2WSH; implied P2PKH script in P2WPKH; leaf script in P2TR)
     Span stack{witness.stack};
@@ -2322,14 +2299,14 @@ static bool VerifyWitnessProgram(const CScriptWitness& witness, int witversion, 
             if (memcmp(hash_exec_script.begin(), program.data(), 32)) {
                 return set_error(serror, SCRIPT_ERR_WITNESS_PROGRAM_MISMATCH);
             }
-            return ExecuteWitnessScript(stack, exec_script, flags, SigVersion::WITNESS_V0, checker, execdata, serror);
+            return ExecuteWitnessScript(stack, exec_script, flags, SigVersion::WITNESS_V0, checker, execdata, serror, limit_recursion);
         } else if (program.size() == WITNESS_V0_KEYHASH_SIZE) {
             // BIP141 P2WPKH: 20-byte witness v0 program (which encodes Hash160(pubkey))
             if (stack.size() != 2) {
                 return set_error(serror, SCRIPT_ERR_WITNESS_PROGRAM_MISMATCH); // 2 items in witness
             }
             exec_script << OP_DUP << OP_HASH160 << program << OP_EQUALVERIFY << OP_CHECKSIG;
-            return ExecuteWitnessScript(stack, exec_script, flags, SigVersion::WITNESS_V0, checker, execdata, serror);
+            return ExecuteWitnessScript(stack, exec_script, flags, SigVersion::WITNESS_V0, checker, execdata, serror, limit_recursion);
         } else {
             return set_error(serror, SCRIPT_ERR_WITNESS_PROGRAM_WRONG_LENGTH);
         }
@@ -2369,7 +2346,7 @@ static bool VerifyWitnessProgram(const CScriptWitness& witness, int witversion, 
                 exec_script = CScript(script.begin(), script.end());
                 execdata.m_validation_weight_left = ::GetSerializeSize(witness.stack, PROTOCOL_VERSION) + VALIDATION_WEIGHT_OFFSET;
                 execdata.m_validation_weight_left_init = true;
-                return ExecuteWitnessScript(stack, exec_script, flags, SigVersion::TAPSCRIPT, checker, execdata, serror);
+                return ExecuteWitnessScript(stack, exec_script, flags, SigVersion::TAPSCRIPT, checker, execdata, serror, limit_recursion);
             }
             if (flags & SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_TAPROOT_VERSION) {
                 return set_error(serror, SCRIPT_ERR_DISCOURAGE_UPGRADABLE_TAPROOT_VERSION);
@@ -2384,6 +2361,42 @@ static bool VerifyWitnessProgram(const CScriptWitness& witness, int witversion, 
         return true;
     }
     // There is intentionally no return statement here, to be able to use "control reaches end of non-void function" warnings to detect gaps in the logic above.
+}
+
+//! Utility to execute nested witness program verification from within EvalScript.
+//! Specifically limits recursion, so that only one of these calls can be made within
+//! a stacktrace.
+static bool VerifyNestedWitnessProgram(
+    std::vector<valtype>& stack,
+    const CScript& spk,
+    ScriptError* serror,
+    unsigned int flags,
+    const BaseSignatureChecker& checker,
+    bool limit_recursion)
+{
+    if (limit_recursion) {
+        return set_error(serror, SCRIPT_ERR_RECURSION_TOO_DEEP);
+    }
+
+    CScriptWitness witness;
+    witness.stack = stack;
+    int witnessversion;
+    std::vector<unsigned char> witnessprogram;
+
+    if (!spk.IsWitnessProgram(witnessversion, witnessprogram)) {
+        return set_error(serror, SCRIPT_ERR_VAULT_NESTED_SCRIPT_NOT_WITNESS);
+    }
+    // Note that this will recursively call EvalScript. We explicitly limit this
+    // recursion to a depth of 1 with the `limit_recursion` parameter.
+    if (!VerifyWitnessProgram(
+            witness, witnessversion, witnessprogram, flags, checker, serror,
+            /*is_p2sh=*/false, /*limit_recursion=*/true)) {
+        return false;
+    }
+
+    // Similar to VerifyScript, clean up the stack and push TRUE to indicate success.
+    stack.assign(1, {1});
+    return true;
 }
 
 bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const CScriptWitness* witness, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* serror)

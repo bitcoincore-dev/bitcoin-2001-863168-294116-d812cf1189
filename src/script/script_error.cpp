@@ -123,14 +123,16 @@ std::string ScriptErrorString(const ScriptError serror)
             return "Vault recovery params are malformed";
         case SCRIPT_ERR_VAULT_WRONG_TRIGGER_WITNESS_PROGRAM:
             return "OP_UNVAULT trigger scriptPubKey does not match OP_VAULT hash";
-        case SCRIPT_ERR_VAULT_INVALID_TRIGGER_WITNESS_PROGRAM:
-            return "OP_UNVAULT trigger scriptPubKey is invalid";
+        case SCRIPT_ERR_VAULT_NESTED_SCRIPT_NOT_WITNESS:
+            return "Nested scriptPubKey is not a witness program";
         case SCRIPT_ERR_VAULT_INVALID_TRIGGER_WITNESS:
             return "OP_UNVAULT trigger witness is invalid";
         case SCRIPT_ERR_UNVAULT_LOCKTIME:
             return "OP_UNVAULT timelock has not matured";
         case SCRIPT_ERR_UNVAULT_TARGET_HASH:
             return "OP_UNVAULT output target hash mismatch";
+        case SCRIPT_ERR_RECURSION_TOO_DEEP:
+            return "Too many recursive calls to script interpreter";
         case SCRIPT_ERR_UNKNOWN_ERROR:
         case SCRIPT_ERR_ERROR_COUNT:
         default: break;

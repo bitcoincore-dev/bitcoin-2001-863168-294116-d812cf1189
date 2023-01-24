@@ -11,6 +11,7 @@ transactional structure of vaults.
 
 import copy
 import typing as t
+from dataclasses import dataclass
 
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.p2p import P2PInterface
@@ -18,6 +19,7 @@ from test_framework.wallet import MiniWallet, MiniWalletMode
 from test_framework.script import CScript, OP_VAULT, OP_UNVAULT
 from test_framework.messages import CTransaction, COutPoint, CTxOut, CTxIn, COIN
 from test_framework.util import assert_equal, assert_raises_rpc_error
+from test_framework.script_util import script_to_p2wsh_script
 
 from test_framework import script, key, messages
 
@@ -67,6 +69,9 @@ class VaultsTest(BitcoinTestFramework):
         self.log.info("testing revaults")
         self.test_revault(node, wallet)
 
+        self.log.info("testing recursive sweep attack")
+        self.test_recursive_recovery_witness(node, wallet)
+
     def single_vault_test(
         self,
         node,
@@ -111,8 +116,10 @@ class VaultsTest(BitcoinTestFramework):
         tx_mutator = TxMutator(vault)
 
         mutation_to_err = {
-            tx_mutator.unvault_with_bad_recovery_spk: 'OP_UNVAULT outputs not compatible',
-            tx_mutator.unvault_with_bad_spend_delay: 'OP_UNVAULT outputs not compatible',
+            tx_mutator.unvault_with_bad_recovery_spk:
+            'OP_UNVAULT outputs not compatible',
+            tx_mutator.unvault_with_bad_spend_delay:
+            'OP_UNVAULT outputs not compatible',
             tx_mutator.unvault_with_low_amount: 'OP_UNVAULT outputs not compatible',
             tx_mutator.unvault_with_high_amount: 'bad-txns-in-belowout',
             tx_mutator.unvault_with_bad_opcode: 'OP_UNVAULT outputs not compatible',
@@ -362,6 +369,35 @@ class VaultsTest(BitcoinTestFramework):
         # Finalize the batch withdrawal.
         self.assert_broadcast_tx(final_tx, mine_all=True)
 
+    def test_recursive_recovery_witness(self, node, wallet):
+        """
+        Test a pathological script that would induce infinite recursion in the script
+        interpreter if recursive EvalScript() calls were not specifically limited.
+        """
+        assert_equal(node.getmempoolinfo()["size"], 0)
+
+        recursive_script = CScript(
+            [script.OP_3, script.OP_PICK, script.OP_3, script.OP_PICK, script.OP_3,
+             script.OP_PICK, script.OP_3, script.OP_PICK, script.OP_VAULT])
+
+        exploit_auth = TaprootScriptRecoveryAuth(recursive_script)
+
+        vault = VaultSpec(recovery_auth=exploit_auth)
+        vault_init_tx = vault.get_initialize_vault_tx(wallet)
+        assert vault.vault_outpoint
+
+        exploit_auth.script_witness_stack = [
+            recursive_script,
+            vault.recovery_params,
+            CScript([vault.spend_delay]),
+            b'\x00' * 32,
+        ]
+
+        self.assert_broadcast_tx(vault_init_tx, mine_all=True)
+        sweep_tx = get_sweep_to_recovery_tx({vault: vault.vault_outpoint})
+
+        self.assert_broadcast_tx(sweep_tx, err_msg="Too many recursive calls")
+
     def assert_broadcast_tx(
         self,
         tx: CTransaction,
@@ -421,6 +457,49 @@ DEFAULT_RECOVERY_SECRET = 2
 DEFAULT_UNVAULT_SECRET = 3
 
 
+@dataclass
+class RecoveryAuthorization:
+    """
+    Handles generating sPKs and corresponding spend scripts for the optional
+    sweep-to-recovery authorization.
+    """
+    spk: CScript
+
+    def get_spend_wit_stack(self, tx_to: t.Optional[CTransaction] = None):
+        return []
+
+
+class AnyonecanspendRecoveryAuth(RecoveryAuthorization):
+
+    def __init__(self):
+        self.script = CScript([script.OP_TRUE])
+        self.spk = script_to_p2wsh_script(self.script)
+
+    def get_spend_wit_stack(self):
+        return [self.script]
+
+
+class TaprootScriptRecoveryAuth(RecoveryAuthorization):
+    """Recovery authorization via Taproot script spend."""
+
+    def __init__(self, script: CScript):
+        self.script = script
+        self.key = key.ECKey(secret=DEFAULT_RECOVERY_SECRET.to_bytes(32, 'big'))
+        self.tr_info = taproot_from_privkey(self.key, scripts=[("only-path", script)])
+
+        self.spk = self.tr_info.scriptPubKey
+
+        # To be set later for spend.
+        self.script_witness_stack: t.List[bytes] = []
+
+    def get_spend_wit_stack(self):
+        return [
+            *self.script_witness_stack,
+            self.script,
+            (bytes([0xC0 + self.tr_info.negflag]) + self.tr_info.internal_pubkey),
+        ]
+
+
 class VaultSpec:
     """
     A specification for a single vault UTXO that consolidates the context needed to
@@ -431,6 +510,7 @@ class VaultSpec:
         recovery_secret: t.Optional[int] = None,
         unvault_trigger_secret: t.Optional[int] = None,
         spend_delay: int = 10,
+        recovery_auth: RecoveryAuthorization = AnyonecanspendRecoveryAuth(),
     ):
         self.recovery_key = key.ECKey(
             secret=(recovery_secret or DEFAULT_RECOVERY_SECRET).to_bytes(32, 'big'))
@@ -438,11 +518,10 @@ class VaultSpec:
         self.recovery_tr_info = taproot_from_privkey(self.recovery_key)
 
         # The sPK that needs to be satisfied in order to sweep to the recovery path.
-        self.recovery_spk = CScript([script.OP_TRUE])
-
+        self.recovery_auth = recovery_auth
         self.recovery_params: bytes = (
             recovery_spk_tagged_hash(self.recovery_tr_info.scriptPubKey) +
-            self.recovery_spk)
+            self.recovery_auth.spk)
 
         # Use a basic key-path TR spend to trigger an unvault attempt.
         self.unvault_key = key.ECKey(
@@ -626,20 +705,27 @@ def get_sweep_to_recovery_tx(
 
     for i, vault in enumerate(vaults):
         sweep_tx.wit.vtxinwit += [messages.CTxInWitness()]
+        scriptwit = sweep_tx.wit.vtxinwit[i].scriptWitness
+        scriptwit.stack = []
+
+        # If this vault uses the optional recovery authorization, push the necessary
+        # witness data into the stack.
+        if vault.recovery_auth:
+            scriptwit.stack.extend(vault.recovery_auth.get_spend_wit_stack())
 
         # If the outpoint we're spending isn't an OP_UNVAULT (i.e. if the unvault
         # process hasn't yet been triggered), then we need to reveal the vault via
         # script-path TR witness.
         if vaults_to_outpoints[vault] == vault.vault_outpoint:
-            sweep_tx.wit.vtxinwit[i].scriptWitness.stack = [
+            scriptwit.stack.extend([
                 vault.vault_spk,
                 (bytes([0xC0 + vault.init_tr_info.negflag])
                  + vault.init_tr_info.internal_pubkey),
-            ]
+            ])
         # Otherwise, we're sweeping away from an OP_UNVAULT trigger transaction.
         elif unvault_trigger_tx:
-            sweep_tx.wit.vtxinwit[i].scriptWitness.stack = (
-                unvault_trigger_tx.spend_witness_stack)
+            assert unvault_trigger_tx.spend_witness_stack
+            scriptwit.stack.extend(unvault_trigger_tx.spend_witness_stack)
         else:
             raise ValueError(
                 "must pass `unvault_trigger_tx` if spending from unvault")
