@@ -1479,9 +1479,21 @@ if test "$use_boost" = "yes"; then
   BOOST_CPPFLAGS="$BOOST_CPPFLAGS -DBOOST_MULTI_INDEX_DISABLE_SERIALIZATION"
 
   dnl Prevent use of std::unary_function, which was removed in C++17,
-  dnl and will generate warnings with newer compilers.
-  dnl See: https://github.com/boostorg/container_hash/issues/22.
-  BOOST_CPPFLAGS="$BOOST_CPPFLAGS -DBOOST_NO_CXX98_FUNCTION_BASE"
+  dnl and will generate warnings with newer compilers for Boost
+  dnl older than 1.80.
+  dnl See: https://github.com/boostorg/config/pull/430.
+
+  TEMP_CPPFLAGS="$CPPFLAGS"
+  CPPFLAGS="-DBOOST_NO_CXX98_FUNCTION_BASE"
+  AC_MSG_CHECKING([whether BOOST_NO_CXX98_FUNCTION_BASE macro definition is needed])
+  AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[#include <boost/config.hpp>]])],
+    [
+      AC_MSG_RESULT([yes])
+      BOOST_CPPFLAGS="$BOOST_CPPFLAGS -DBOOST_NO_CXX98_FUNCTION_BASE"
+    ], [
+      AC_MSG_RESULT([no])
+  ])
+  CPPFLAGS="$TEMP_CPPFLAGS"
 
   if test "$enable_debug" = "yes" || test "$enable_fuzz" = "yes"; then
     BOOST_CPPFLAGS="$BOOST_CPPFLAGS -DBOOST_MULTI_INDEX_ENABLE_SAFE_MODE"
