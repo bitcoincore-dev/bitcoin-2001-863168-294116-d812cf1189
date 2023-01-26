@@ -521,10 +521,12 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                 }
             }
 
-            const bool is_tapscript_override =
-                sigversion == SigVersion::TAPSCRIPT && OP_SUCCESS_OVERRIDES.count(opcode) > 0;
+            const bool vault_active = (flags & SCRIPT_VERIFY_VAULT);
 
-            if (!is_tapscript_override && (
+            if (vault_active && (opcode == OP_VAULT || opcode == OP_UNVAULT)) {
+                // Skip this check since OP_VAULT overrides OP_CAT and OP_UNVAULT
+                // overrides OP_SUBSTR.
+            } else if (
                 opcode == OP_CAT ||
                 opcode == OP_SUBSTR ||
                 opcode == OP_LEFT ||
@@ -539,8 +541,9 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                 opcode == OP_DIV ||
                 opcode == OP_MOD ||
                 opcode == OP_LSHIFT ||
-                opcode == OP_RSHIFT))
+                opcode == OP_RSHIFT) {
                 return set_error(serror, SCRIPT_ERR_DISABLED_OPCODE); // Disabled opcodes (CVE-2010-5137).
+            }
 
             // With SCRIPT_VERIFY_CONST_SCRIPTCODE, OP_CODESEPARATOR in non-segwit script is rejected even in an unexecuted branch
             if (opcode == OP_CODESEPARATOR && sigversion == SigVersion::BASE && (flags & SCRIPT_VERIFY_CONST_SCRIPTCODE))
@@ -2204,6 +2207,8 @@ static bool ExecuteWitnessScript(const Span<const valtype>& stack_span, const CS
 {
     std::vector<valtype> stack{stack_span.begin(), stack_span.end()};
 
+    const bool is_vault_active = (flags & SCRIPT_VERIFY_VAULT);
+
     if (sigversion == SigVersion::TAPSCRIPT) {
         // OP_SUCCESSx processing overrides everything, including stack element size limits
         CScript::const_iterator pc = exec_script.begin();
@@ -2214,8 +2219,9 @@ static bool ExecuteWitnessScript(const Span<const valtype>& stack_span, const CS
                 return set_error(serror, SCRIPT_ERR_BAD_OPCODE);
             }
             // New opcodes will be listed here. May use a different sigversion to modify existing opcodes.
-            if (IsOpSuccess(opcode) &&
-                    opcode != OP_VAULT && opcode != OP_UNVAULT) {
+            if (is_vault_active && (opcode == OP_VAULT || opcode == OP_UNVAULT)) {
+                continue;
+            } else if (IsOpSuccess(opcode)) {
                 if (flags & SCRIPT_VERIFY_DISCOURAGE_OP_SUCCESS) {
                     return set_error(serror, SCRIPT_ERR_DISCOURAGE_OP_SUCCESS);
                 }

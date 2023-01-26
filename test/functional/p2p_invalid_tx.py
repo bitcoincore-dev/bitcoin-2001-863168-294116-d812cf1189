@@ -65,6 +65,8 @@ class InvalidTxRequestTest(BitcoinTestFramework):
         self.log.info("Mature the block.")
         self.generatetoaddress(self.nodes[0], 100, self.nodes[0].get_deterministic_priv_key().address)
 
+        num_reconnections = 0
+
         # Iterate through a list of known invalid transaction types, ensuring each is
         # rejected. Some are consensus invalid and some just violate policy.
         for BadTxTemplate in invalid_txs.iter_all_templates():
@@ -80,11 +82,13 @@ class InvalidTxRequestTest(BitcoinTestFramework):
             if template.expect_disconnect:
                 self.log.info("Reconnecting to peer")
                 self.reconnect_p2p()
+                num_reconnections += 1
 
         # Make two p2p connections to provide the node with orphans
         # * p2ps[0] will send valid orphan txs (one with low fee)
         # * p2ps[1] will send an invalid orphan tx (and is later disconnected for that)
         self.reconnect_p2p(num_connections=2)
+        num_reconnections += 1
 
         self.log.info('Test orphan transaction handling ... ')
         # Create a root transaction that we withhold until all dependent transactions
@@ -165,7 +169,7 @@ class InvalidTxRequestTest(BitcoinTestFramework):
             node.p2ps[0].send_txs_and_test([rejected_parent], node, success=False)
 
         self.log.info('Test that a peer disconnection causes erase its transactions from the orphan pool')
-        with node.assert_debug_log(['Erased 100 orphan tx from peer=25']):
+        with node.assert_debug_log([f'Erased 100 orphan tx from peer={num_reconnections}']):
             self.reconnect_p2p(num_connections=1)
 
         self.log.info('Test that a transaction in the orphan pool is included in a new tip block causes erase this transaction from the orphan pool')
