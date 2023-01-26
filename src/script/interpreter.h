@@ -269,7 +269,7 @@ public:
 
     virtual bool CheckVaultSpendToRecoveryOutputs(
         const std::vector<unsigned char>& recovery_params,
-        std::vector<unsigned char>& recovery_spk_out) const
+        CScript& recovery_spk_out) const
     {
          return false;
     }
@@ -325,7 +325,7 @@ public:
     bool CheckSequence(const CScriptNum& nSequence) const override;
     bool CheckVaultSpendToRecoveryOutputs(
         const std::vector<unsigned char>& recovery_params,
-        std::vector<unsigned char>& recovery_spk_out) const override;
+        CScript& recovery_spk_out) const override;
     bool CheckUnvaultTriggerOutputs(
         const CScriptNum& spend_delay,
         bool require_minimal,
@@ -364,7 +364,7 @@ public:
     }
     bool CheckVaultSpendToRecoveryOutputs(
         const std::vector<unsigned char>& recovery_params,
-        std::vector<unsigned char>& recovery_spk_out) const override
+        CScript& recovery_spk_out) const override
     {
         return m_checker.CheckVaultSpendToRecoveryOutputs(recovery_params, recovery_spk_out);
     }

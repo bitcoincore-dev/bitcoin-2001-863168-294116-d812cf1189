@@ -1300,7 +1300,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     // Note that this is making a copy, not taking a reference, so that
                     // we avoid UB when using this state after stack pops.
                     const valtype recovery_params = stacktop(-3);
-                    if (recovery_params.size() < (uint256::WIDTH + 1)) {
+                    if (recovery_params.size() < uint256::WIDTH) {
                         return set_error(serror, SCRIPT_ERR_VAULT_INVALID_RECOVERY_PARAMS);
                     }
 
@@ -1321,21 +1321,23 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     popstack(stack);
                     popstack(stack);
 
-                    valtype recovery_spk;
+                    CScript recovery_spk;
 
                     // Case 1: sweep to recovery
                     if (checker.CheckVaultSpendToRecoveryOutputs(recovery_params, recovery_spk)) {
-                        if (recovery_spk.size() < 1) {
-                            return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
-                        }
-                        CScript recov_spk_script{recovery_spk.begin(), recovery_spk.end()};
-
-                        // Everything remaining on the stack will be used to satisfy
-                        // the recovery sPK.
-                        if (!VerifyNestedWitnessProgram(
-                                stack, recov_spk_script, serror, flags, checker, limit_recursion)) {
-                            // serror has been set by the call above.
-                            return false;
+                        // If an optional recovery authorization witness program has been given,
+                        // ensure it has been satisfied.
+                        if (recovery_spk.size() > 0) {
+                            // Everything remaining on the stack will be used to satisfy
+                            // the recovery sPK.
+                            if (!VerifyNestedWitnessProgram(
+                                    stack, recovery_spk, serror, flags, checker, limit_recursion)) {
+                                // serror has been set by the call above.
+                                return false;
+                            }
+                        } else {
+                            // Satisfy CLEANSTACK as `VerifyNestedWitnessProgram` would.
+                            stack.assign(1, {1});
                         }
                         break;
                     }
@@ -1366,8 +1368,8 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     const bool is_unvault_output_wit =
                         unvault_output_spk.IsWitnessProgram(opuv_witversion, opuv_witprogram);
 
-                    if (!is_unvault_output_wit) {
-                        return set_error(serror, SCRIPT_ERR_UNVAULT_NONWITNESS);
+                    if (!is_unvault_output_wit || opuv_witversion < 1) {
+                        return set_error(serror, SCRIPT_ERR_UNVAULT_INCOMPAT_OUTPUT_TYPE);
                     }
 
                     const valtype& target_hash_data = stacktop(-1);
@@ -1425,7 +1427,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     // Note that this is making a copy, not taking a reference, so that
                     // we avoid UB when using this state after stack pops.
                     const valtype recovery_params = stacktop(-3);
-                    if (recovery_params.size() < (uint256::WIDTH + 1)) {
+                    if (recovery_params.size() < uint256::WIDTH) {
                         return set_error(serror, SCRIPT_ERR_VAULT_INVALID_RECOVERY_PARAMS);
                     }
 
@@ -1443,21 +1445,23 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     popstack(stack);
                     popstack(stack);
 
-                    valtype recovery_spk;
+                    CScript recovery_spk;
 
                     // Case 1: sweep to recovery
                     if (checker.CheckVaultSpendToRecoveryOutputs(recovery_params, recovery_spk)) {
-                        if (recovery_spk.size() < 1) {
-                            return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
-                        }
-                        CScript recov_spk_script{recovery_spk.begin(), recovery_spk.end()};
-
-                        // Everything remaining on the stack will be used to satisfy
-                        // the recovery sPK.
-                        if (!VerifyNestedWitnessProgram(
-                                stack, recov_spk_script, serror, flags, checker, limit_recursion)) {
-                            // serror has been set by the call above.
-                            return false;
+                        // If an optional recovery authorization witness program has been given,
+                        // ensure it has been satisfied.
+                        if (recovery_spk.size() > 0) {
+                            // Everything remaining on the stack will be used to satisfy
+                            // the recovery sPK.
+                            if (!VerifyNestedWitnessProgram(
+                                    stack, recovery_spk, serror, flags, checker, limit_recursion)) {
+                                // serror has been set by the call above.
+                                return false;
+                            }
+                        } else {
+                            // Satisfy CLEANSTACK as `VerifyNestedWitnessProgram` would.
+                            stack.assign(1, {1});
                         }
                         break;
                     }
@@ -2057,7 +2061,7 @@ bool GenericTransactionSignatureChecker<T>::CheckSequence(const CScriptNum& nSeq
 //!   4. The recovery scriptPubKey is as expected.
 template <class T>
 bool GenericTransactionSignatureChecker<T>::CheckVaultSpendToRecoveryOutputs(
-    const valtype& recovery_params, valtype& recovery_spk_out) const
+    const valtype& recovery_params, CScript& recovery_spk_out) const
 {
     if (!this->txdata) return HandleMissingData(m_mdb);
     const auto& txd{*this->txdata};
@@ -2078,10 +2082,9 @@ bool GenericTransactionSignatureChecker<T>::CheckVaultSpendToRecoveryOutputs(
         return false;
     }
 
-    assert(recovery_params.size() > uint256::WIDTH);
+    assert(recovery_params.size() >= uint256::WIDTH);
     const valtype& recovery_target_spk_hash_data{
         recovery_params.begin(), recovery_params.begin() + uint256::WIDTH};
-    assert(recovery_target_spk_hash_data.size() == 32);
     uint256 expected_recovery_target_spk_hash{recovery_target_spk_hash_data};
 
     uint256 got_target_spk_hash = VaultScriptHash(
@@ -2092,9 +2095,12 @@ bool GenericTransactionSignatureChecker<T>::CheckVaultSpendToRecoveryOutputs(
         return false;
     }
 
-    // Extract the sPK that must be satisfied
-    recovery_spk_out = {
-        recovery_params.begin() + uint256::WIDTH, recovery_params.end()};
+    // If an optional recovery authorization has been specified, extract the sPK
+    // that it requires to sweep to recovery.
+    if (recovery_params.size() > uint256::WIDTH) {
+        recovery_spk_out = CScript{
+            recovery_params.begin() + uint256::WIDTH, recovery_params.end()};
+    }
     return true;
 }
 

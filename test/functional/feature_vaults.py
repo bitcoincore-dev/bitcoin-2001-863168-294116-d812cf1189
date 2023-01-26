@@ -11,7 +11,6 @@ transactional structure of vaults.
 
 import copy
 import typing as t
-from dataclasses import dataclass
 
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.p2p import P2PInterface
@@ -19,9 +18,19 @@ from test_framework.wallet import MiniWallet, MiniWalletMode
 from test_framework.script import CScript, OP_VAULT, OP_UNVAULT
 from test_framework.messages import CTransaction, COutPoint, CTxOut, CTxIn, COIN
 from test_framework.util import assert_equal, assert_raises_rpc_error
-from test_framework.script_util import script_to_p2wsh_script
 
-from test_framework import script, key, messages
+from test_framework import script, key, messages, script_util
+
+
+class RecoveryAuthorization:
+    """
+    Handles generating sPKs and corresponding spend scripts for the optional
+    sweep-to-recovery authorization.
+    """
+    spk: t.Union[CScript, bytes] = b''
+
+    def get_spend_wit_stack(self, tx_to: CTransaction, vin_idx: int, amount: int, outpoint: CTxOut):
+        return []
 
 
 class VaultsTest(BitcoinTestFramework):
@@ -49,25 +58,28 @@ class VaultsTest(BitcoinTestFramework):
         # Generate some matured UTXOs to spend into vaults.
         self.generate(wallet, 200)
 
-        self.log.info("testing normal vault spend")
-        self.single_vault_test(node, wallet)
+        for recovery_auth in (NoRecoveryAuth(),
+                              P2WPKHRecoveryAuth(),
+                              TaprootKeyRecoveryAuth()):
+            self.log.info("testing normal vault spend")
+            self.single_vault_test(node, wallet, recovery_auth)
 
-        self.log.info("testing sweep-to-recovery from the vault")
-        self.single_vault_test(
-            node, wallet, sweep_from_vault=True)
+            self.log.info("testing sweep-to-recovery from the vault")
+            self.single_vault_test(
+                node, wallet, recovery_auth, sweep_from_vault=True)
 
-        self.log.info("testing sweep-to-recovery from the unvault trigger")
-        self.single_vault_test(
-            node, wallet, sweep_from_unvault=True)
+            self.log.info("testing sweep-to-recovery from the unvault trigger")
+            self.single_vault_test(
+                node, wallet, recovery_auth, sweep_from_unvault=True)
 
-        self.log.info("testing a batch sweep operation across multiple vaults")
-        self.test_batch_sweep(node, wallet)
+            self.log.info("testing a batch sweep operation across multiple vaults")
+            self.test_batch_sweep(node, wallet, recovery_auth)
 
-        self.log.info("testing a batch unvault")
-        self.test_batch_unvault(node, wallet)
+            self.log.info("testing a batch unvault")
+            self.test_batch_unvault(node, wallet, recovery_auth)
 
-        self.log.info("testing revaults")
-        self.test_revault(node, wallet)
+            self.log.info("testing revaults")
+            self.test_revault(node, wallet, recovery_auth)
 
         self.log.info("testing recursive sweep attack")
         self.test_recursive_recovery_witness(node, wallet)
@@ -76,6 +88,7 @@ class VaultsTest(BitcoinTestFramework):
         self,
         node,
         wallet,
+        recovery_auth: RecoveryAuthorization,
         sweep_from_vault: bool = False,
         sweep_from_unvault: bool = False,
     ):
@@ -85,16 +98,22 @@ class VaultsTest(BitcoinTestFramework):
         """
         assert_equal(node.getmempoolinfo()["size"], 0)
 
-        vault = VaultSpec()
+        vault = VaultSpec(recovery_auth=recovery_auth)
         vault_init_tx = vault.get_initialize_vault_tx(wallet)
 
         self.assert_broadcast_tx(vault_init_tx, mine_all=True)
 
+        tx_mutator = TxMutator(vault)
+
         if sweep_from_vault:
             assert vault.vault_outpoint
             sweep_tx = get_sweep_to_recovery_tx({vault: vault.vault_outpoint})
-            self.assert_broadcast_tx(sweep_tx, mine_all=True)
 
+            if type(recovery_auth) != NoRecoveryAuth:
+                for mutation, err in {tx_mutator.recovery_with_bad_witness: 'script-verify-flag'}.items():
+                    self.assert_tx_mutation_fails(mutation, sweep_tx, err=err)
+
+            self.assert_broadcast_tx(sweep_tx, mine_all=True)
             return
 
         assert vault.total_amount_sats and vault.total_amount_sats > 0
@@ -112,8 +131,6 @@ class VaultsTest(BitcoinTestFramework):
 
         target_out_hash = target_outputs_hash(final_target_vout)
         start_unvault_tx = get_trigger_unvault_tx(target_out_hash, [vault])
-
-        tx_mutator = TxMutator(vault)
 
         mutation_to_err = {
             tx_mutator.unvault_with_bad_recovery_spk:
@@ -136,6 +153,11 @@ class VaultsTest(BitcoinTestFramework):
         if sweep_from_unvault:
             sweep_tx = get_sweep_to_recovery_tx(
                 {vault: unvault_outpoint}, start_unvault_tx)
+
+            if type(recovery_auth) != NoRecoveryAuth:
+                for mutation, err in {tx_mutator.recovery_with_bad_witness: 'script-verify-flag'}.items():
+                    self.assert_tx_mutation_fails(mutation, sweep_tx, err=err)
+
             self.assert_broadcast_tx(sweep_tx, mine_all=True)
             return
 
@@ -172,6 +194,7 @@ class VaultsTest(BitcoinTestFramework):
         self,
         node,
         wallet,
+        recovery_auth: RecoveryAuthorization,
     ):
         """
         Test generating multiple vaults and sweeping them to the recovery path in batch.
@@ -224,6 +247,7 @@ class VaultsTest(BitcoinTestFramework):
         self,
         node,
         wallet,
+        recovery_auth: RecoveryAuthorization,
     ):
         """
         Test generating multiple vaults and ensure those with compatible parameters
@@ -294,6 +318,7 @@ class VaultsTest(BitcoinTestFramework):
         self,
         node,
         wallet,
+        recovery_auth: RecoveryAuthorization,
     ):
         """
         Test that some amount can be "revaulted" during the unvault process. That
@@ -457,32 +482,58 @@ DEFAULT_RECOVERY_SECRET = 2
 DEFAULT_UNVAULT_SECRET = 3
 
 
-@dataclass
-class RecoveryAuthorization:
-    """
-    Handles generating sPKs and corresponding spend scripts for the optional
-    sweep-to-recovery authorization.
-    """
-    spk: CScript
+class NoRecoveryAuth(RecoveryAuthorization):
+    spk = b''
 
-    def get_spend_wit_stack(self, tx_to: t.Optional[CTransaction] = None):
+    def get_spend_wit_stack(self, *args, **kwargs) -> t.List[bytes]:
         return []
 
 
-class AnyonecanspendRecoveryAuth(RecoveryAuthorization):
+class P2WPKHRecoveryAuth(RecoveryAuthorization):
 
-    def __init__(self):
-        self.script = CScript([script.OP_TRUE])
-        self.spk = script_to_p2wsh_script(self.script)
+    def __init__(self) -> None:
+        self.key = key.ECKey(secret=DEFAULT_RECOVERY_SECRET.to_bytes(32, 'big'))
+        self.pubkey = self.key.get_pubkey().get_bytes()
+        self.spk = script_util.key_to_p2wpkh_script(self.key.get_pubkey().get_bytes())
 
-    def get_spend_wit_stack(self):
-        return [self.script]
+    def get_spend_wit_stack(
+        self, tx_to: CTransaction, vin_idx: int, amount: int, *args, **kwargs
+    ) -> t.List[bytes]:
+        sigscript = script_util.keyhash_to_p2pkh_script(script.hash160(self.pubkey))
+        sighash = script.SegwitV0SignatureHash(
+            sigscript, tx_to, vin_idx, script.SIGHASH_ALL, amount)
+        sig = self.key.sign_ecdsa(sighash) + bytes([script.SIGHASH_ALL])
+        return [sig, self.pubkey]
+
+
+class TaprootKeyRecoveryAuth(RecoveryAuthorization):
+    """Recovery authorization via Taproot script spend."""
+
+    def __init__(self) -> None:
+        self.key = key.ECKey(secret=DEFAULT_RECOVERY_SECRET.to_bytes(32, 'big'))
+        self.tr_info = taproot_from_privkey(self.key)
+        self.tweaked_privkey = key.tweak_add_privkey(
+            self.key.get_bytes(), self.tr_info.tweak
+        )
+
+        self.spk = self.tr_info.scriptPubKey
+
+    def get_spend_wit_stack(
+        self, tx_to: CTransaction, vin_idx: int, amount: int, outpoint: CTxOut,
+    ) -> t.List[bytes]:
+        sigmsg = script.TaprootSignatureHash(
+            tx_to, [outpoint], input_index=vin_idx, hash_type=0
+        )
+        assert isinstance(self.tweaked_privkey, bytes)
+        sig = key.sign_schnorr(self.tweaked_privkey, sigmsg)
+
+        return [sig]
 
 
 class TaprootScriptRecoveryAuth(RecoveryAuthorization):
     """Recovery authorization via Taproot script spend."""
 
-    def __init__(self, script: CScript):
+    def __init__(self, script: CScript) -> None:
         self.script = script
         self.key = key.ECKey(secret=DEFAULT_RECOVERY_SECRET.to_bytes(32, 'big'))
         self.tr_info = taproot_from_privkey(self.key, scripts=[("only-path", script)])
@@ -492,7 +543,7 @@ class TaprootScriptRecoveryAuth(RecoveryAuthorization):
         # To be set later for spend.
         self.script_witness_stack: t.List[bytes] = []
 
-    def get_spend_wit_stack(self):
+    def get_spend_wit_stack(self, *args, **kwargs) -> t.List[bytes]:
         return [
             *self.script_witness_stack,
             self.script,
@@ -510,7 +561,7 @@ class VaultSpec:
         recovery_secret: t.Optional[int] = None,
         unvault_trigger_secret: t.Optional[int] = None,
         spend_delay: int = 10,
-        recovery_auth: RecoveryAuthorization = AnyonecanspendRecoveryAuth(),
+        recovery_auth: RecoveryAuthorization = NoRecoveryAuth(),
     ):
         self.recovery_key = key.ECKey(
             secret=(recovery_secret or DEFAULT_RECOVERY_SECRET).to_bytes(32, 'big'))
@@ -661,6 +712,13 @@ class TxMutator(t.NamedTuple):
         """Revault with wrong amount (too little)."""
         tx.vout[1].nValue -= 1
 
+    def recovery_with_bad_witness(self, tx: CTransaction):
+        """Recovery with a bad witness fails."""
+        stack = tx.wit.vtxinwit[0].scriptWitness.stack
+
+        assert len(stack) >= 1
+        stack[0] = stack[0][::-1]
+
 
 class UnvaultTriggerTransaction(CTransaction):
     """
@@ -707,16 +765,25 @@ def get_sweep_to_recovery_tx(
         sweep_tx.wit.vtxinwit += [messages.CTxInWitness()]
         scriptwit = sweep_tx.wit.vtxinwit[i].scriptWitness
         scriptwit.stack = []
+        vault_outpoint = vaults_to_outpoints[vault]
+        recovering_from_vaulted = vault_outpoint == vault.vault_outpoint
 
         # If this vault uses the optional recovery authorization, push the necessary
         # witness data into the stack.
         if vault.recovery_auth:
-            scriptwit.stack.extend(vault.recovery_auth.get_spend_wit_stack())
+            spent_output = vault.vault_output
+            if not recovering_from_vaulted:
+                assert unvault_trigger_tx
+                spent_output = unvault_trigger_tx.vout[0]
+            assert spent_output
+
+            scriptwit.stack.extend(vault.recovery_auth.get_spend_wit_stack(
+                sweep_tx, i, sweep_tx.vout[0].nValue, spent_output))
 
         # If the outpoint we're spending isn't an OP_UNVAULT (i.e. if the unvault
         # process hasn't yet been triggered), then we need to reveal the vault via
         # script-path TR witness.
-        if vaults_to_outpoints[vault] == vault.vault_outpoint:
+        if recovering_from_vaulted:
             scriptwit.stack.extend([
                 vault.vault_spk,
                 (bytes([0xC0 + vault.init_tr_info.negflag])
