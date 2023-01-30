@@ -11,6 +11,7 @@
 #include <util/threadnames.h>
 
 #include <algorithm>
+#include <atomic>
 #include <vector>
 
 template <typename T>
@@ -63,7 +64,7 @@ private:
     const unsigned int nBatchSize;
 
     std::vector<std::thread> m_worker_threads;
-    bool m_request_stop GUARDED_BY(m_mutex){false};
+    std::atomic<bool> m_request_stop{false};
 
     /** Internal function that does bulk of the verification work. */
     bool Loop(bool fMaster) EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
@@ -187,24 +188,16 @@ public:
         }
     }
 
-    //! Stop all of the worker threads.
-    void StopWorkerThreads() EXCLUSIVE_LOCKS_REQUIRED(!m_mutex)
+    ~CCheckQueue()
     {
-        WITH_LOCK(m_mutex, m_request_stop = true);
+        m_request_stop = true;
         m_worker_cv.notify_all();
         for (std::thread& t : m_worker_threads) {
             t.join();
         }
-        m_worker_threads.clear();
-        WITH_LOCK(m_mutex, m_request_stop = false);
     }
 
     bool HasThreads() const { return !m_worker_threads.empty(); }
-
-    ~CCheckQueue()
-    {
-        assert(m_worker_threads.empty());
-    }
 };
 
 /**
