@@ -399,7 +399,7 @@ struct Config {
     Config();
     ~Config();
     Config& operator=(Config const&);
-    Config& operator=(Config&&);
+    Config& operator=(Config&&) noexcept;
     Config(Config const&);
     Config(Config&&) noexcept;
 };
@@ -425,7 +425,7 @@ public:
 
     ~Result();
     Result& operator=(Result const&);
-    Result& operator=(Result&&);
+    Result& operator=(Result&&) noexcept;
     Result(Result const&);
     Result(Result&&) noexcept;
 
@@ -620,8 +620,8 @@ public:
      */
     Bench();
 
-    Bench(Bench&& other);
-    Bench& operator=(Bench&& other);
+    Bench(Bench&& other) noexcept;
+    Bench& operator=(Bench&& other) noexcept;
     Bench(Bench const& other);
     Bench& operator=(Bench const& other);
     ~Bench() noexcept;
@@ -2808,14 +2808,14 @@ std::ostream& operator<<(std::ostream& os, MarkDownCode const& mdCode) {
 Config::Config() = default;
 Config::~Config() = default;
 Config& Config::operator=(Config const&) = default;
-Config& Config::operator=(Config&&) = default;
+Config& Config::operator=(Config&&) noexcept = default;
 Config::Config(Config const&) = default;
 Config::Config(Config&&) noexcept = default;
 
 // provide implementation here so it's only generated once
 Result::~Result() = default;
 Result& Result::operator=(Result const&) = default;
-Result& Result::operator=(Result&&) = default;
+Result& Result::operator=(Result&&) noexcept = default;
 Result::Result(Result const&) = default;
 Result::Result(Result&&) noexcept = default;
 
@@ -3015,8 +3015,8 @@ Bench::Bench() {
     mConfig.mOut = &std::cout;
 }
 
-Bench::Bench(Bench&&) = default;
-Bench& Bench::operator=(Bench&&) = default;
+Bench::Bench(Bench&&) noexcept = default;
+Bench& Bench::operator=(Bench&&) noexcept = default;
 Bench::Bench(Bench const&) = default;
 Bench& Bench::operator=(Bench const&) = default;
 Bench::~Bench() noexcept = default;
