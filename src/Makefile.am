@@ -611,6 +611,8 @@ libbitcoin_consensus_a_SOURCES = \
   pubkey.cpp \
   pubkey.h \
   script/bitcoinconsensus.cpp \
+  script/standard.cpp \
+  script/standard.h \
   script/interpreter.cpp \
   script/interpreter.h \
   script/script.cpp \
@@ -622,6 +624,7 @@ libbitcoin_consensus_a_SOURCES = \
   tinyformat.h \
   uint256.cpp \
   uint256.h \
+  util/check.h \
   util/strencodings.cpp \
   util/strencodings.h \
   version.h
