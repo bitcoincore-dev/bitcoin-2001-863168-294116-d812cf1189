@@ -145,6 +145,9 @@ std::string GetOpName(opcodetype opcode)
 
     case OP_INVALIDOPCODE          : return "OP_INVALIDOPCODE";
 
+    case OP_VAULT                  : return "OP_VAULT";
+    case OP_VAULT_RECOVER          : return "OP_VAULT_RECOVER";
+
     default:
         return "OP_UNKNOWN";
     }
