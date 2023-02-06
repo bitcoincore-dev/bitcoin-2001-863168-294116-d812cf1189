@@ -53,12 +53,12 @@ public:
     bool IsOpen() { return m_fd != -1; }
 
     // Move-only class.
-    TokenPipeEnd(TokenPipeEnd&& other)
+    TokenPipeEnd(TokenPipeEnd&& other) noexcept
     {
         m_fd = other.m_fd;
         other.m_fd = -1;
     }
-    TokenPipeEnd& operator=(TokenPipeEnd&& other)
+    TokenPipeEnd& operator=(TokenPipeEnd&& other) noexcept
     {
         Close();
         m_fd = other.m_fd;
@@ -102,14 +102,14 @@ public:
     void Close();
 
     // Move-only class.
-    TokenPipe(TokenPipe&& other)
+    TokenPipe(TokenPipe&& other) noexcept
     {
         for (int i = 0; i < 2; ++i) {
             m_fds[i] = other.m_fds[i];
             other.m_fds[i] = -1;
         }
     }
-    TokenPipe& operator=(TokenPipe&& other)
+    TokenPipe& operator=(TokenPipe&& other) noexcept
     {
         Close();
         for (int i = 0; i < 2; ++i) {

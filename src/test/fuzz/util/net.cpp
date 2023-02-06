@@ -70,7 +70,7 @@ FuzzedSock::~FuzzedSock()
     m_socket = INVALID_SOCKET;
 }
 
-FuzzedSock& FuzzedSock::operator=(Sock&& other)
+FuzzedSock& FuzzedSock::operator=(Sock&& other) noexcept
 {
     assert(false && "Move of Sock into FuzzedSock not allowed.");
     return *this;
