@@ -671,14 +671,14 @@ util::Result<SelectionResult> AutomaticCoinSelection(const CWallet& wallet, Coin
         // future: add "error level" so the worst one can be picked instead.
         std::vector<util::Result<SelectionResult>> res_detailed_errors;
         for (const auto& select_filter : ordered_filters) {
-            if (auto res{AttemptSelection(wallet, value_to_select, select_filter.filter, available_coins,
-                                          coin_selection_params, select_filter.allow_mixed_output_types)}) {
-                return res; // result found
+            if (auto selection_result{AttemptSelection(wallet, value_to_select, select_filter.filter, available_coins,
+                                                       coin_selection_params, select_filter.allow_mixed_output_types)}) {
+                return selection_result; // result found
             } else {
                 // If any specific error message appears here, then something particularly wrong might have happened.
                 // Save the error and continue the selection process. So if no solutions gets found, we can return
                 // the detailed error to the upper layers.
-                if (HasErrorMsg(res)) res_detailed_errors.emplace_back(res);
+                if (HasErrorMsg(selection_result)) res_detailed_errors.emplace_back(selection_result);
             }
         }
         // Coin Selection failed.
