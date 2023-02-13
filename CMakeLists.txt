@@ -21,6 +21,19 @@ project("Bitcoin Core"
   LANGUAGES CXX C ASM
 )
 
+set(PACKAGE_NAME ${PROJECT_NAME})
+set(PACKAGE_VERSION ${PROJECT_VERSION})
+set(CLIENT_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CLIENT_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(CLIENT_VERSION_BUILD ${PROJECT_VERSION_PATCH})
+set(CLIENT_VERSION_IS_RELEASE "false")
+set(PACKAGE_BUGREPORT "https://github.com/bitcoin/bitcoin/issues")
+set(PACKAGE_URL "https://bitcoincore.org/")
+set(COPYRIGHT_YEAR "2023")
+set(COPYRIGHT_HOLDERS "The %s developers")
+set(COPYRIGHT_HOLDERS_SUBSTITUTION ${PROJECT_NAME})
+set(COPYRIGHT_HOLDERS_FINAL "The Bitcoin Core developers")
+
 # Configurable options.
 # When adding a new option, end the <help_text> with a full stop for consistency.
 include(CMakeDependentOption)
@@ -47,6 +60,8 @@ else()
   list(APPEND configure_warnings "No PIE options will be passed to a linker for executable targets.")
 endif()
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+add_subdirectory(src)
 
 message("\n")
 message("Configure summary")
