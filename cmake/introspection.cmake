@@ -231,3 +231,25 @@ int main()
   sysctl(name, 2, nullptr, nullptr, nullptr, 0);
 }
 " HAVE_SYSCTL_ARND)
+
+check_cxx_source_compiles("
+#include <stdint.h>
+#include <type_traits>
+
+int main()
+{
+  static_assert(std::is_same<int8_t, char>::value);
+}
+" CHAR_EQUALS_INT8)
+
+check_cxx_source_compiles("
+int foo(void) __attribute__((visibility(\"default\")));
+int main(){}
+" HAVE_DEFAULT_VISIBILITY_ATTRIBUTE)
+
+if(WIN32)
+  check_cxx_source_compiles("
+  __declspec(dllexport) int foo(void);
+  int main(){}
+  " HAVE_DLLEXPORT_ATTRIBUTE)
+endif()
