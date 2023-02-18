@@ -60,6 +60,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 include(cmake/introspection.cmake)
 
+include(cmake/leveldb.cmake)
+
 add_subdirectory(src)
 
 message("\n")
