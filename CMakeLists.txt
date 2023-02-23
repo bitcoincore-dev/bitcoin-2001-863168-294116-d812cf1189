@@ -38,6 +38,7 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/module)
 # Configurable options.
 # When adding a new option, end the <help_text> with a full stop for consistency.
 include(CMakeDependentOption)
+option(BUILD_DAEMON "Build bitcoind executable." ON)
 option(ASM "Use assembly routines." ON)
 cmake_dependent_option(CXX20 "Enable compilation in C++20 mode." OFF "NOT MSVC" ON)
 
@@ -87,11 +88,53 @@ include(cmake/secp256k1.cmake)
 include(CheckStdFilesystem)
 check_std_filesystem()
 
+find_package(PkgConfig)
+if(BUILD_DAEMON)
+  set(THREADS_PREFER_PTHREAD_FLAG ON)
+  find_package(Threads REQUIRED)
+  if(NOT MINGW AND NOT CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+    target_compile_definitions(Threads::Threads INTERFACE
+      $<$<COMPILE_FEATURES:cxx_thread_local>:HAVE_THREAD_LOCAL>
+    )
+  endif()
+
+  if(APPLE AND BREW_COMMAND)
+    execute_process(
+      COMMAND ${BREW_COMMAND} --prefix boost
+      OUTPUT_VARIABLE BOOST_ROOT
+      ERROR_QUIET
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+  endif()
+  set(Boost_NO_BOOST_CMAKE ON)
+  # Find Boost headers only.
+  find_package(Boost 1.64.0 REQUIRED)
+  mark_as_advanced(Boost_INCLUDE_DIR)
+  target_compile_definitions(Boost::boost INTERFACE
+    $<$<CONFIG:Debug>:BOOST_MULTI_INDEX_ENABLE_SAFE_MODE>
+  )
+  if(CMAKE_VERSION VERSION_LESS 3.15)
+    add_library(Boost::headers ALIAS Boost::boost)
+  endif()
+
+  pkg_check_modules(libevent REQUIRED libevent>=2.1.8 IMPORTED_TARGET)
+  target_link_libraries(PkgConfig::libevent INTERFACE
+    $<$<PLATFORM_ID:Windows>:iphlpapi;ws2_32>
+  )
+endif()
+
+if(NOT WIN32 AND BUILD_DAEMON)
+  pkg_check_modules(libevent_pthreads REQUIRED libevent_pthreads>=2.1.8 IMPORTED_TARGET)
+endif()
+
 add_subdirectory(src)
 
 message("\n")
 message("Configure summary")
 message("=================")
+message("Executables:")
+message("  bitcoind ............................ ${BUILD_DAEMON}")
+message("")
 get_directory_property(definitions COMPILE_DEFINITIONS)
 string(REPLACE ";" " " definitions "${definitions}")
 message("Preprocessor defined macros ........... ${definitions}")

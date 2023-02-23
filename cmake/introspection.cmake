@@ -263,3 +263,7 @@ check_cxx_source_compiles("
   int main(){}
   " HAVE_DLLEXPORT_ATTRIBUTE
 )
+
+if(APPLE)
+  find_program(BREW_COMMAND brew)
+endif()
