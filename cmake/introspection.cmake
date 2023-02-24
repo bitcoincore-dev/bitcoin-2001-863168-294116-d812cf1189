@@ -162,24 +162,6 @@ check_cxx_source_compiles("
   " HAVE_MALLOPT_ARENA_MAX
 )
 
-# Check for posix_fallocate().
-check_cxx_source_compiles("
-  // same as in src/util/system.cpp
-  #ifdef __linux__
-  #ifdef _POSIX_C_SOURCE
-  #undef _POSIX_C_SOURCE
-  #endif
-  #define _POSIX_C_SOURCE 200112L
-  #endif // __linux__
-  #include <fcntl.h>
-
-  int main()
-  {
-    return posix_fallocate(0, 0, 0);
-  }
-  " HAVE_POSIX_FALLOCATE
-)
-
 # Check for strong getauxval() support in the system headers.
 check_cxx_source_compiles("
   #include <sys/auxv.h>
@@ -189,56 +171,6 @@ check_cxx_source_compiles("
     getauxval(AT_HWCAP);
   }
   " HAVE_STRONG_GETAUXVAL
-)
-
-# Check for different ways of gathering OS randomness:
-# - Linux getrandom()
-check_cxx_source_compiles("
-  #include <unistd.h>
-  #include <sys/syscall.h>
-  #include <linux/random.h>
-
-  int main()
-  {
-    syscall(SYS_getrandom, nullptr, 32, 0);
-  }
-  " HAVE_SYS_GETRANDOM
-)
-
-# - BSD getentropy()
-check_cxx_symbol_exists(getentropy "unistd.h;sys/random.h" HAVE_GETENTROPY_RAND)
-
-# - BSD sysctl()
-check_cxx_source_compiles("
-  #include <sys/types.h>
-  #include <sys/sysctl.h>
-
-  #ifdef __linux__
-  #error Don't use sysctl on Linux, it's deprecated even when it works
-  #endif
-
-  int main()
-  {
-    sysctl(nullptr, 2, nullptr, nullptr, nullptr, 0);
-  }
-  " HAVE_SYSCTL
-)
-
-# - BSD sysctl(KERN_ARND)
-check_cxx_source_compiles("
-  #include <sys/types.h>
-  #include <sys/sysctl.h>
-
-  #ifdef __linux__
-  #error Don't use sysctl on Linux, it's deprecated even when it works
-  #endif
-
-  int main()
-  {
-    static int name[2] = {CTL_KERN, KERN_ARND};
-    sysctl(name, 2, nullptr, nullptr, nullptr, 0);
-  }
-  " HAVE_SYSCTL_ARND
 )
 
 check_cxx_source_compiles("
