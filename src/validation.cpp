@@ -2660,10 +2660,6 @@ bool Chainstate::DisconnectTip(BlockValidationState& state, DisconnectedBlockTra
     AssertLockHeld(cs_main);
     if (m_mempool) AssertLockHeld(m_mempool->cs);
 
-    if (this != &m_chainman.ActiveChainstate()) {
-        return error("DisconnectTip(): Background chainstate should never disconnect blocks");
-    }
-
     CBlockIndex *pindexDelete = m_chain.Tip();
     assert(pindexDelete);
     assert(pindexDelete->pprev);
