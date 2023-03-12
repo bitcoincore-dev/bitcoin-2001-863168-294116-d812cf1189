@@ -7,7 +7,7 @@
 #include <univalue.h>
 
 #ifdef ENABLE_EXTERNAL_SIGNER
-#include <boost/process.hpp>
+#include <util/subprocess.hpp>
 #endif // ENABLE_EXTERNAL_SIGNER
 
 #include <boost/test/unit_test.hpp>
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(run_command)
 #ifdef WIN32
         const UniValue result = RunCommandParseJSON("cmd.exe /c echo {\"success\": true}");
 #else
-        const UniValue result = RunCommandParseJSON("echo \"{\"success\": true}\"");
+        const UniValue result = RunCommandParseJSON("echo {\"success\": true}");
 #endif
         BOOST_CHECK(result.isObject());
         const UniValue& success = result.find_value("success");
@@ -48,17 +48,13 @@ BOOST_AUTO_TEST_CASE(run_command)
         BOOST_CHECK_EQUAL(success.get_bool(), true);
     }
     {
-        // An invalid command is handled by Boost
+        // An invalid command is handled by cpp-subprocess
 #ifdef WIN32
-        const int expected_error{wine_runtime ? 6 : 2};
+        const std::string expected{"CreateProcess failed: "};
 #else
-        const int expected_error{2};
+        const std::string expected{"execve failed: "};
 #endif
-        BOOST_CHECK_EXCEPTION(RunCommandParseJSON("invalid_command"), boost::process::process_error, [&](const boost::process::process_error& e) {
-            BOOST_CHECK(std::string(e.what()).find("RunCommandParseJSON error:") == std::string::npos);
-            BOOST_CHECK_EQUAL(e.code().value(), expected_error);
-            return true;
-        });
+        BOOST_CHECK_EXCEPTION(RunCommandParseJSON("invalid_command"), subprocess::CalledProcessError, HasReason(expected));
     }
     {
         // Return non-zero exit code, no output to stderr
