@@ -1429,7 +1429,7 @@ inline int Popen::wait() noexcept(false)
 
 inline int Popen::poll() noexcept(false)
 {
-#ifndef _MSC_VER
+#ifndef __USING_WINDOWS__
   if (!child_created_) return -1; // TODO: ??
 #endif
 
