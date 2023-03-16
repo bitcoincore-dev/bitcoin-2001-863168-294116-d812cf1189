@@ -173,10 +173,7 @@ public:
 
         {
             LOCK(m_mutex);
-            for (T& check : vChecks) {
-                queue.emplace_back();
-                check.swap(queue.back());
-            }
+            std::move(vChecks.begin(), vChecks.end(), std::back_inserter(queue));
             nTodo += vChecks.size();
         }
 

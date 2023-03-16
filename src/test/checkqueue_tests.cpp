@@ -139,6 +139,11 @@ struct FrozenCleanupCheck {
             cv.wait(l, []{ return nFrozen.load(std::memory_order_relaxed) == 0;});
         }
     }
+    FrozenCleanupCheck(FrozenCleanupCheck&& other) noexcept
+    {
+        should_freeze = other.should_freeze;
+        other.should_freeze = false;
+    }
     void swap(FrozenCleanupCheck& x) noexcept
     {
         std::swap(should_freeze, x.should_freeze);
