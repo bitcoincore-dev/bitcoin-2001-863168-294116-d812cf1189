@@ -192,7 +192,7 @@ static void Correct_Queue_range(std::vector<size_t> range)
             vChecks.clear();
             vChecks.resize(std::min<size_t>(total, InsecureRandRange(vChecks.capacity() + 1)));
             total -= vChecks.size();
-            control.Add(vChecks);
+            control.Add(std::move(vChecks));
         }
         BOOST_REQUIRE(control.Wait());
         if (FakeCheckCheckCompletion::n_calls != i) {
@@ -254,7 +254,7 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_Catches_Failure)
             vChecks.reserve(r);
             for (size_t k = 0; k < r && remaining; k++, remaining--)
                 vChecks.emplace_back(remaining == 1);
-            control.Add(vChecks);
+            control.Add(std::move(vChecks));
         }
         bool success = control.Wait();
         if (i > 0) {
@@ -279,7 +279,7 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_Recovers_From_Failure)
                 std::vector<FailingCheck> vChecks;
                 vChecks.resize(100, false);
                 vChecks[99] = end_fails;
-                control.Add(vChecks);
+                control.Add(std::move(vChecks));
             }
             bool r =control.Wait();
             BOOST_REQUIRE(r != end_fails);
@@ -305,7 +305,7 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_UniqueCheck)
             std::vector<UniqueCheck> vChecks;
             for (size_t k = 0; k < r && total; k++)
                 vChecks.emplace_back(--total);
-            control.Add(vChecks);
+            control.Add(std::move(vChecks));
         }
     }
     {
@@ -343,7 +343,7 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_Memory)
                     // to catch any sort of deallocation failure
                     vChecks.emplace_back(total == 0 || total == i || total == i/2);
                 }
-                control.Add(vChecks);
+                control.Add(std::move(vChecks));
             }
         }
         BOOST_REQUIRE_EQUAL(MemoryCheck::fake_allocated_memory, 0U);
@@ -365,7 +365,7 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_FrozenCleanup)
         // swaps in default initialized Checks (otherwise freezing destructor
         // would get called twice).
         vChecks[0].should_freeze = true;
-        control.Add(vChecks);
+        control.Add(std::move(vChecks));
         bool waitResult = control.Wait(); // Hangs here
         assert(waitResult);
     });
