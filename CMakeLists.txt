@@ -24,7 +24,7 @@ project("Bitcoin Core"
   VERSION 24.99.0
   DESCRIPTION "Bitcoin client software"
   HOMEPAGE_URL "https://bitcoincore.org/"
-  LANGUAGES CXX C ASM
+  LANGUAGES CXX ASM
 )
 
 set(CLIENT_VERSION_IS_RELEASE "false")
@@ -52,16 +52,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(configure_warnings)
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.14)
-  include(CheckPIESupported)
-  check_pie_supported(OUTPUT_VARIABLE check_pie_output LANGUAGES CXX)
-  if(NOT CMAKE_CXX_LINK_PIE_SUPPORTED)
-    list(APPEND configure_warnings "PIE link options are not supported for executable targets: ${check_pie_output}.")
-  endif()
-else()
-  list(APPEND configure_warnings "No PIE options will be passed to a linker for executable targets.")
-endif()
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if(WIN32)
   #[=[
@@ -98,6 +88,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   add_compile_definitions(MAC_OSX)
 endif()
 
+if(CMAKE_CROSSCOMPILING AND DEPENDS_ALLOW_HOST_PACKAGES)
+  list(APPEND CMAKE_FIND_ROOT_PATH "${CMAKE_SYSTEM_PREFIX_PATH}")
+endif()
+
 include(AddThreadsIfNeeded)
 add_threads_if_needed()
 
@@ -119,6 +113,19 @@ include(cmake/secp256k1.cmake)
 include(CheckStdFilesystem)
 check_std_filesystem()
 
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.14)
+  include(CheckPIESupported)
+  check_pie_supported(OUTPUT_VARIABLE check_pie_output LANGUAGES CXX)
+  if(CMAKE_CXX_LINK_PIE_SUPPORTED)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+  endif()
+else()
+  check_cxx_source_links_with_flags(-fPIE "int main(){}" COMPILER_SUPPORTS_PIE)
+  if(COMPILER_SUPPORTS_PIE)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+  endif()
+endif()
+
 add_subdirectory(src)
 
 message("\n")
@@ -127,6 +134,12 @@ message("=================")
 message("Executables:")
 message("  bitcoind ............................ ${BUILD_DAEMON}")
 message("")
+if(CMAKE_CROSSCOMPILING)
+  set(cross_status "TRUE, for ${CMAKE_SYSTEM_NAME}, ${CMAKE_SYSTEM_PROCESSOR}")
+else()
+  set(cross_status "FALSE")
+endif()
+message("Cross compiling ....................... ${cross_status}")
 get_directory_property(definitions COMPILE_DEFINITIONS)
 string(REPLACE ";" " " definitions "${definitions}")
 message("Preprocessor defined macros ........... ${definitions}")
