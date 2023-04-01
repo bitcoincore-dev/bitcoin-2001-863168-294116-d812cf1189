@@ -56,6 +56,7 @@ cmake_dependent_option(BUILD_WALLET_TOOL "Build bitcoin-wallet tool." ON "ENABLE
 
 cmake_dependent_option(CXX20 "Enable compilation in C++20 mode." OFF "NOT MSVC" ON)
 option(THREADLOCAL "Enable features that depend on the C++ thread_local keyword (currently just thread names in debug logs)." ON)
+option(HARDENING "Attempt to harden the resulting executables." ON)
 
 tristate_option(CCACHE "Use ccache for compiling." "if ccache is found." AUTO)
 tristate_option(WITH_NATPMP "Enable NAT-PMP." "if libnatpmp is found." AUTO)
@@ -238,6 +239,45 @@ else()
 endif()
 
 include(cmake/optional.cmake)
+
+set(hardened_cxx_flags "")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  # All versions of gcc that we commonly use for building are subject to bug
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90348. To work around that, set
+  # -fstack-reuse=none for all gcc builds.
+  try_append_cxx_flags(hardened_cxx_flags "-fstack-reuse=none")
+endif()
+if(HARDENING)
+  if(MSVC)
+    try_append_cxx_flags(core "/DYNAMICBASE")
+    try_append_cxx_flags(core "/HIGHENTROPYVA")
+    try_append_cxx_flags(core "/NXCOMPAT")
+  else()
+    try_append_cxx_flags(hardened_cxx_flags "-Wstack-protector")
+    try_append_cxx_flags(hardened_cxx_flags "-fstack-protector-all")
+    try_append_cxx_flags(hardened_cxx_flags "-fcf-protection=full")
+    if(MINGW)
+      link_libraries(ssp)
+    else()
+      # stack-clash-protection doesn't currently work, and likely should just be skipped for Windows.
+      # See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90458 for more details.
+      try_append_cxx_flags(hardened_cxx_flags "-fstack-clash-protection")
+    endif()
+
+    try_append_linker_flag(core "-Wl,--enable-reloc-section")
+    try_append_linker_flag(core "-Wl,--dynamicbase")
+    try_append_linker_flag(core "-Wl,--nxcompat")
+    try_append_linker_flag(core "-Wl,--high-entropy-va")
+    try_append_linker_flag(core "-Wl,-z,relro")
+    try_append_linker_flag(core "-Wl,-z,now")
+    try_append_linker_flag(core "-Wl,-z,separate-code")
+    if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+      try_append_linker_flag(core "-Wl,-bind_at_load")
+    endif()
+  endif()
+endif()
+separate_arguments(hardened_cxx_flags)
+target_compile_options(core INTERFACE ${hardened_cxx_flags})
 
 find_package(Python3 3.8 COMPONENTS Interpreter)
 set(PYTHON_COMMAND ${Python3_EXECUTABLE})
