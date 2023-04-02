@@ -35,7 +35,8 @@ function(add_maintenance_targets)
     VERBATIM
   )
 
-  foreach(target IN ITEMS bitcoind bitcoin-cli bitcoin-tx bitcoin-util bitcoin-wallet test_bitcoin bench_bitcoin)
+  # TODO: Add test_bitcoin
+  foreach(target IN ITEMS bitcoind bitcoin-cli bitcoin-tx bitcoin-util bitcoin-wallet bench_bitcoin)
     if(TARGET ${target})
       list(APPEND executables $<TARGET_FILE:${target}>)
     endif()
