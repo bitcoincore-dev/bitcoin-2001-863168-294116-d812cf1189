@@ -17,14 +17,8 @@ function(add_boost_if_needed)
   directory and other added INTERFACE properties.
   ]=]
 
-  if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin" AND BREW_COMMAND)
-    execute_process(
-      COMMAND ${BREW_COMMAND} --prefix boost
-      OUTPUT_VARIABLE BOOST_ROOT
-      ERROR_QUIET
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-  endif()
+  include(GetBrewPackageDetails)
+  get_brew_package_details(BOOST)
 
   set(Boost_NO_BOOST_CMAKE ON)
   find_package(Boost 1.64.0 REQUIRED)
