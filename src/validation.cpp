@@ -696,7 +696,7 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
 
     // Rather not work on nonstandard transactions (unless -testnet/-regtest)
     std::string reason;
-    if (m_pool.m_require_standard && !IsStandardTx(tx, m_pool.m_max_datacarrier_bytes, m_pool.m_permit_bare_multisig, m_pool.m_dust_relay_feerate, reason)) {
+    if (m_pool.m_require_standard && !IsStandardTx(tx, m_pool.m_max_datacarrier_bytes, m_pool.m_permit_bare_multisig, m_pool.m_dust_relay_feerate, m_pool.m_permit_anchors, reason)) {
         return state.Invalid(TxValidationResult::TX_NOT_STANDARD, reason);
     }
 
@@ -804,6 +804,11 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
         return false; // state filled in by CheckTxInputs
     }
 
+    // We check for 0-base-fee transaction here now that we have access to ws.m_base_fees.
+    if (HasEphemeralAnchor(tx) && ws.m_base_fees != 0) {
+        return state.Invalid(TxValidationResult::TX_NOT_STANDARD, "invalid-ephemeral-fee");
+    }
+
     if (m_pool.m_require_standard && !AreInputsStandard(tx, m_view)) {
         return state.Invalid(TxValidationResult::TX_INPUTS_NOT_STANDARD, "bad-txns-nonstandard-inputs");
     }
@@ -833,6 +838,9 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
     entry.reset(new CTxMemPoolEntry(ptx, ws.m_base_fees, nAcceptTime, m_active_chainstate.m_chain.Height(),
             fSpendsCoinbase, nSigOpsCost, lp));
     ws.m_vsize = entry->GetTxSize();
+
+    // Remove after package relay deployed: Apply ephemeral anchor delta now that we have entry initialized
+    m_pool.ApplyEphemeralDelta(*entry, ws.m_modified_fees);
 
     if (nSigOpsCost > MAX_STANDARD_TX_SIGOPS_COST)
         return state.Invalid(TxValidationResult::TX_NOT_STANDARD, "bad-txns-too-many-sigops",

@@ -892,12 +892,23 @@ static util::Result<CreatedTransactionResult> CreateTransactionInternal(
         if (IsDust(txout, wallet.chain().relayDustFee())) {
             return util::Error{_("Transaction amount too small")};
         }
+
+        if (recipient.scriptPubKey.IsPayToAnchor() && !wallet.chain().allowsEphemeralAnchors()) {
+            return util::Error{_("Anchor outputs are not allowed for relay: check -ephemeralanchors option")};
+        }
+
         txNew.vout.push_back(txout);
     }
 
     // Include the fees for things that aren't inputs, excluding the change output
     const CAmount not_input_fees = coin_selection_params.m_effective_feerate.GetFee(coin_selection_params.tx_noinputs_size);
     CAmount selection_target = recipients_sum + not_input_fees;
+
+    // This can only happen if feerate is 0, and requested destinations are value of 0 (e.g. OP_RETURN)
+    // and no pre-selected inputs. This will result in 0-input transaction, which is consensus-invalid anyways
+    if (selection_target == 0 && !coin_control.HasSelected()) {
+        return util::Error{_("Transaction requires one destination of non-0 value, a non-0 feerate, or a pre-selected input")};
+    }
 
     // Get available coins
     auto available_coins = AvailableCoins(wallet,

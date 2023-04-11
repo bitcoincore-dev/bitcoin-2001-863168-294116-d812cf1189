@@ -154,6 +154,11 @@ static std::vector<RPCArg> CreateTxDoc()
                         {"data", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "A key-value pair. The key must be \"data\", the value is hex-encoded data"},
                     },
                 },
+                {"", RPCArg::Type::OBJ, RPCArg::Optional::OMITTED, "",
+                    {
+                        {"anchor", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "Creates an ephemeral anchor. A key-value pair. The key must be \"anchor\", the value is the amount in " + CURRENCY_UNIT},
+                    },
+                },
             },
         },
         {"locktime", RPCArg::Type::NUM, RPCArg::Default{0}, "Raw locktime. Non-0 value also locktime-activates inputs"},
@@ -422,6 +427,7 @@ static RPCHelpMan decodescript()
         case TxoutType::WITNESS_V1_TAPROOT:
         // don't wrap CTV because P2SH CTV is a hash cycle
         case TxoutType::TX_BARE_DEFAULT_CHECK_TEMPLATE_VERIFY_HASH:
+        case TxoutType::ANCHOR:
             // Should not be wrapped
             return false;
         } // no default case, so the compiler can warn about missing cases
@@ -466,6 +472,7 @@ static RPCHelpMan decodescript()
             case TxoutType::WITNESS_V1_TAPROOT:
             // don't wrap CTV because P2SH CTV is a hash cycle
             case TxoutType::TX_BARE_DEFAULT_CHECK_TEMPLATE_VERIFY_HASH:
+            case TxoutType::ANCHOR:
                 // Should not be wrapped
                 return false;
             } // no default case, so the compiler can warn about missing cases

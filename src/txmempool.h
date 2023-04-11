@@ -572,6 +572,8 @@ public:
     const CFeeRate m_min_relay_feerate;
     const CFeeRate m_dust_relay_feerate;
     const bool m_permit_bare_multisig;
+    const bool m_permit_anchors;
+    const CFeeRate m_ephemeral_delta;
     const std::optional<unsigned> m_max_datacarrier_bytes;
     const bool m_annex_datacarrier;
     const bool m_require_standard;
@@ -634,6 +636,7 @@ public:
     /** Affect CreateNewBlock prioritisation of transactions */
     void PrioritiseTransaction(const uint256& hash, const CAmount& nFeeDelta);
     void ApplyDelta(const uint256& hash, CAmount &nFeeDelta) const EXCLUSIVE_LOCKS_REQUIRED(cs);
+    void ApplyEphemeralDelta(const CTxMemPoolEntry& entry, CAmount& delta) const EXCLUSIVE_LOCKS_REQUIRED(cs);
     void ClearPrioritisation(const uint256& hash) EXCLUSIVE_LOCKS_REQUIRED(cs);
 
     /** Get the transaction in the pool that spends the same prevout */

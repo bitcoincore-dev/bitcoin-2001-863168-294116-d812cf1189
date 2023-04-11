@@ -42,6 +42,10 @@ CAmount GetDustThreshold(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
     if (txout.scriptPubKey.IsUnspendable())
         return 0;
 
+    // Anchor outputs have no dust limit
+    if (txout.scriptPubKey.IsPayToAnchor())
+        return 0;
+
     size_t nSize = GetSerializeSize(txout);
     int witnessversion = 0;
     std::vector<unsigned char> witnessprogram;
@@ -91,7 +95,7 @@ bool IsStandard(const CScript& scriptPubKey, const std::optional<unsigned>& max_
     return true;
 }
 
-bool IsStandardTx(const CTransaction& tx, const std::optional<unsigned>& max_datacarrier_bytes, bool permit_bare_multisig, const CFeeRate& dust_relay_fee, std::string& reason)
+bool IsStandardTx(const CTransaction& tx, const std::optional<unsigned>& max_datacarrier_bytes, bool permit_bare_multisig, const CFeeRate& dust_relay_fee, bool permit_ephemeral_anchor, std::string& reason)
 {
     if (tx.nVersion > TX_MAX_STANDARD_VERSION || tx.nVersion < 1) {
         reason = "version";
@@ -129,6 +133,7 @@ bool IsStandardTx(const CTransaction& tx, const std::optional<unsigned>& max_dat
     }
 
     unsigned int nDataOut = 0;
+    unsigned int num_anchors = 0;
     TxoutType whichType;
     for (const CTxOut& txout : tx.vout) {
         if (!::IsStandard(txout.scriptPubKey, max_datacarrier_bytes, whichType)) {
@@ -141,15 +146,26 @@ bool IsStandardTx(const CTransaction& tx, const std::optional<unsigned>& max_dat
         else if ((whichType == TxoutType::MULTISIG) && (!permit_bare_multisig)) {
             reason = "bare-multisig";
             return false;
+        } else if (whichType == TxoutType::ANCHOR && !permit_ephemeral_anchor) {
+            reason = "ephemeral-anchor";
+            return false;
         } else if (IsDust(txout, dust_relay_fee)) {
             reason = "dust";
             return false;
+        } else if (whichType == TxoutType::ANCHOR) {
+            num_anchors++;
         }
     }
 
     // only one OP_RETURN txout is permitted
     if (nDataOut > 1) {
         reason = "multi-op-return";
+        return false;
+    }
+
+    // only one ANCHOR is permitted
+    if (num_anchors > 1) {
+        reason = "too-many-ephemeral-anchors";
         return false;
     }
 
@@ -307,6 +323,16 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs,
         }
     }
     return true;
+}
+
+size_t HasEphemeralAnchor(const CTransaction& tx)
+{
+    for (const CTxOut& txout : tx.vout) {
+        if (txout.scriptPubKey.IsPayToAnchor()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 int64_t GetVirtualTransactionSize(int64_t nWeight, int64_t nSigOpCost, unsigned int bytes_per_sigop)
