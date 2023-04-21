@@ -175,7 +175,6 @@ static void Correct_Queue_range(std::vector<size_t> range)
         BOOST_REQUIRE(control.Wait());
         BOOST_REQUIRE_EQUAL(FakeCheckCheckCompletion::n_calls, i);
     }
-    small_queue->StopWorkerThreads();
 }
 
 /** Test that 0 checks is correct
@@ -239,7 +238,6 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_Catches_Failure)
             BOOST_REQUIRE(success);
         }
     }
-    fail_queue->StopWorkerThreads();
 }
 // Test that a block validation which fails does not interfere with
 // future blocks, ie, the bad state is cleared.
@@ -261,7 +259,6 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_Recovers_From_Failure)
             BOOST_REQUIRE(r != end_fails);
         }
     }
-    fail_queue->StopWorkerThreads();
 }
 
 // Test that unique checks are actually all called individually, rather than
@@ -293,7 +290,6 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_UniqueCheck)
         }
         BOOST_REQUIRE(r);
     }
-    queue->StopWorkerThreads();
 }
 
 
@@ -324,7 +320,6 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_Memory)
         }
         BOOST_REQUIRE_EQUAL(MemoryCheck::fake_allocated_memory, 0U);
     }
-    queue->StopWorkerThreads();
 }
 
 // Test that a new verification cannot occur until all checks
@@ -360,7 +355,6 @@ BOOST_AUTO_TEST_CASE(test_CheckQueue_FrozenCleanup)
     // Wait for control to finish
     t0.join();
     BOOST_REQUIRE(!fails);
-    queue->StopWorkerThreads();
 }
 
 
