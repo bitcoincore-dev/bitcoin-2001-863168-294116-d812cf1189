@@ -20,11 +20,16 @@ class AssumeutxoTest(BitcoinTestFramework):
         self.num_nodes = 2
         self.rpc_timeout = 120
 
+        self.extra_args = [
+            ["-fastprune", "-prune=1", "-blockfilterindex=1", "-coinstatsindex=1"],
+            ["-fastprune", "-prune=1", "-blockfilterindex=1", "-coinstatsindex=1"],
+        ]
+
     def setup_network(self):
         """Start with the nodes disconnected so that one can generate a snapshot
         including blocks the other hasn't yet seen."""
         self.add_nodes(2)
-        self.start_nodes()
+        self.start_nodes(extra_args=self.extra_args)
 
     def run_test(self):
         """
@@ -110,9 +115,16 @@ class AssumeutxoTest(BitcoinTestFramework):
         # N.B.: the `ibd` key disappears once the background validation is complete.
         wait_until_helper(lambda: not n2.monitorsnapshot().get('ibd'))
 
+        # Ensure indexes have synced.
+        expected_filter = {
+            'basic block filter index': {'synced': True, 'best_block_height': FINAL_HEIGHT},
+            'coinstatsindex': {'synced': True, 'best_block_height': FINAL_HEIGHT}
+        }
+        self.wait_until(lambda: n2.getindexinfo() == expected_filter)
+
         for i, n in enumerate(self.nodes):
             self.log.info(f"Restarting node {i} to ensure (Check|Load)BlockIndex passes")
-            self.restart_node(i)
+            self.restart_node(i, extra_args=self.extra_args[i])
 
             assert_equal(n.getblockchaininfo()["blocks"], FINAL_HEIGHT)
 
@@ -120,6 +132,8 @@ class AssumeutxoTest(BitcoinTestFramework):
             assert_equal(n.monitorsnapshot()['ibd']['blocks'], FINAL_HEIGHT)
             assert_equal(n.monitorsnapshot().get('snapshot'), None)
 
+            # Ensure indexes have synced
+            self.wait_until(lambda: n.getindexinfo() == expected_filter)
 
 if __name__ == '__main__':
     AssumeutxoTest().main()
