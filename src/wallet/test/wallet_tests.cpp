@@ -460,11 +460,11 @@ BOOST_FIXTURE_TEST_CASE(LoadReceiveRequests, TestingSetup)
             WalletBatch batch{wallet->GetDatabase()};
             BOOST_CHECK(batch.WriteAddressPreviouslySpent(PKHash(), true));
             BOOST_CHECK(batch.WriteAddressPreviouslySpent(ScriptHash(), true));
-            BOOST_CHECK(wallet->SetAddressReceiveRequest(batch, PKHash(), "0", "val_rr00"));
-            BOOST_CHECK(wallet->EraseAddressReceiveRequest(batch, PKHash(), "0"));
-            BOOST_CHECK(wallet->SetAddressReceiveRequest(batch, PKHash(), "1", "val_rr10"));
-            BOOST_CHECK(wallet->SetAddressReceiveRequest(batch, PKHash(), "1", "val_rr11"));
-            BOOST_CHECK(wallet->SetAddressReceiveRequest(batch, ScriptHash(), "2", "val_rr20"));
+            BOOST_CHECK(wallet->SetAddressReceiveRequest(batch, PKHash(), 0, "val_rr00"));
+            BOOST_CHECK(wallet->EraseAddressReceiveRequest(batch, PKHash(), 0));
+            BOOST_CHECK(wallet->SetAddressReceiveRequest(batch, PKHash(), 1, "val_rr10"));
+            BOOST_CHECK(wallet->SetAddressReceiveRequest(batch, PKHash(), 1, "val_rr11"));
+            BOOST_CHECK(wallet->SetAddressReceiveRequest(batch, ScriptHash(), 2, "val_rr20"));
         });
         TestLoadWallet(name, format, [](std::shared_ptr<CWallet> wallet) EXCLUSIVE_LOCKS_REQUIRED(wallet->cs_wallet) {
             BOOST_CHECK(wallet->IsAddressPreviouslySpent(PKHash()));
