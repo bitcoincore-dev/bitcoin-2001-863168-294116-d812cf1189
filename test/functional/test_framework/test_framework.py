@@ -228,6 +228,22 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
 
         PortSeed.n = self.options.port_seed
 
+    def set_binary_paths(self):
+        binaries = {
+            "bitcoind": ("bitcoind", "BITCOIND"),
+            "bitcoin-cli": ("bitcoincli", "BITCOINCLI"),
+            "bitcoin-util": ("bitcoinutil", "BITCOINUTIL"),
+        }
+        for binary in binaries.keys():
+            attribute_name = binaries[binary][0]
+            env_variable_name = binaries[binary][1]
+            default_filename = os.path.join(
+                self.config["environment"]["BUILDDIR"],
+                "src",
+                binary + self.config["environment"]["EXEEXT"],
+            )
+            setattr(self.options, attribute_name, os.getenv(env_variable_name, default=default_filename))
+
     def setup(self):
         """Call this method to start up the test framework object with options set."""
 
@@ -237,24 +253,7 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
 
         config = self.config
 
-        fname_bitcoind = os.path.join(
-            config["environment"]["BUILDDIR"],
-            "src",
-            "bitcoind" + config["environment"]["EXEEXT"],
-        )
-        fname_bitcoincli = os.path.join(
-            config["environment"]["BUILDDIR"],
-            "src",
-            "bitcoin-cli" + config["environment"]["EXEEXT"],
-        )
-        fname_bitcoinutil = os.path.join(
-            config["environment"]["BUILDDIR"],
-            "src",
-            "bitcoin-util" + config["environment"]["EXEEXT"],
-        )
-        self.options.bitcoind = os.getenv("BITCOIND", default=fname_bitcoind)
-        self.options.bitcoincli = os.getenv("BITCOINCLI", default=fname_bitcoincli)
-        self.options.bitcoinutil = os.getenv("BITCOINUTIL", default=fname_bitcoinutil)
+        self.set_binary_paths()
 
         os.environ['PATH'] = os.pathsep.join([
             os.path.join(config['environment']['BUILDDIR'], 'src'),
