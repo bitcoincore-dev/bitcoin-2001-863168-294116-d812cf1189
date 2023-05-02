@@ -233,6 +233,7 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
             "bitcoind": ("bitcoind", "BITCOIND"),
             "bitcoin-cli": ("bitcoincli", "BITCOINCLI"),
             "bitcoin-util": ("bitcoinutil", "BITCOINUTIL"),
+            "bitcoin-wallet": ("bitcoinwallet", "BITCOINWALLET"),
         }
         for binary in binaries.keys():
             attribute_name = binaries[binary][0]
