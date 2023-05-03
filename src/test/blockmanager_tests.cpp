@@ -10,7 +10,6 @@
 #include <boost/test/unit_test.hpp>
 #include <test/util/setup_common.h>
 
-using node::BlockManager;
 using node::BLOCK_SERIALIZATION_HEADER_SIZE;
 using node::MAX_BLOCKFILE_SIZE;
 using node::OpenBlockFile;
@@ -18,26 +17,26 @@ using node::OpenBlockFile;
 // use BasicTestingSetup here for the data directory configuration, setup, and cleanup
 BOOST_FIXTURE_TEST_SUITE(blockmanager_tests, BasicTestingSetup)
 
-BOOST_AUTO_TEST_CASE(blockmanager_find_block_pos)
+BOOST_FIXTURE_TEST_CASE(blockmanager_find_block_pos, TestingSetup)
 {
     const auto params {CreateChainParams(ArgsManager{}, CBaseChainParams::MAIN)};
-    BlockManager blockman{{}};
-    CChain chain {};
-    // simulate adding a genesis block normally
-    BOOST_CHECK_EQUAL(blockman.SaveBlockToDisk(params->GenesisBlock(), 0, chain, *params, nullptr).nPos, BLOCK_SERIALIZATION_HEADER_SIZE);
+    auto& blockman = m_node.chainman->m_blockman;
+    const auto& chainstate = m_node.chainman->ActiveChainstate();
+    LOCK(::cs_main);
+
     // simulate what happens during reindex
     // simulate a well-formed genesis block being found at offset 8 in the blk00000.dat file
     // the block is found at offset 8 because there is an 8 byte serialization header
     // consisting of 4 magic bytes + 4 length bytes before each block in a well-formed blk file.
     FlatFilePos pos{0, BLOCK_SERIALIZATION_HEADER_SIZE};
-    BOOST_CHECK_EQUAL(blockman.SaveBlockToDisk(params->GenesisBlock(), 0, chain, *params, &pos).nPos, BLOCK_SERIALIZATION_HEADER_SIZE);
+    BOOST_CHECK_EQUAL(blockman.SaveBlockToDisk(params->GenesisBlock(), 0, chainstate, *params, &pos).nPos, BLOCK_SERIALIZATION_HEADER_SIZE);
     // now simulate what happens after reindex for the first new block processed
     // the actual block contents don't matter, just that it's a block.
     // verify that the write position is at offset 0x12d.
     // this is a check to make sure that https://github.com/bitcoin/bitcoin/issues/21379 does not recur
     // 8 bytes (for serialization header) + 285 (for serialized genesis block) = 293
     // add another 8 bytes for the second block's serialization header and we get 293 + 8 = 301
-    FlatFilePos actual{blockman.SaveBlockToDisk(params->GenesisBlock(), 1, chain, *params, nullptr)};
+    FlatFilePos actual{blockman.SaveBlockToDisk(params->GenesisBlock(), 1, chainstate, *params, nullptr)};
     BOOST_CHECK_EQUAL(actual.nPos, BLOCK_SERIALIZATION_HEADER_SIZE + ::GetSerializeSize(params->GenesisBlock(), CLIENT_VERSION) + BLOCK_SERIALIZATION_HEADER_SIZE);
 }
 
