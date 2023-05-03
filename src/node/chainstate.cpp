@@ -185,7 +185,12 @@ ChainstateLoadResult LoadChainstate(ChainstateManager& chainman, const CacheSize
     chainman.InitializeChainstate(options.mempool);
 
     // Load a chain created from a UTXO snapshot, if any exist.
-    chainman.DetectSnapshotChainstate(options.mempool);
+    bool has_snapshot = chainman.DetectSnapshotChainstate(options.mempool);
+
+    if (has_snapshot && (options.reindex || options.reindex_chainstate)) {
+        LogPrintf("[snapshot] deleting snapshot chainstate due to reindexing\n");
+        chainman.DeleteSnapshotChainstate();
+    }
 
     auto [init_status, init_error] = CompleteChainstateInitialization(chainman, cache_sizes, options);
     if (init_status != ChainstateLoadStatus::SUCCESS) {
