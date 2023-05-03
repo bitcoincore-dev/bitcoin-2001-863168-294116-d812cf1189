@@ -69,6 +69,15 @@ struct PruneLockInfo {
     int height_first{std::numeric_limits<int>::max()}; //! Height of earliest block that should be kept and not pruned
 };
 
+enum class BlockfileType {
+    // For the purposes of blockfile fragmentation, treat background IBD chainstates
+    // as normal.
+    NORMAL,
+    ASSUMED,
+};
+
+std::ostream& operator<<(std::ostream& os, const BlockfileType& type);
+
 /**
  * Maintains a tree of blocks (stored in `m_block_index`) which is consulted
  * to determine where the most-work tip is.
@@ -91,9 +100,10 @@ private:
      */
     bool LoadBlockIndex()
         EXCLUSIVE_LOCKS_REQUIRED(cs_main);
-    void FlushBlockFile(bool fFinalize = false, bool finalize_undo = false);
+    void FlushBlockFile(int blockfile_num, bool fFinalize = false, bool finalize_undo = false);
+    void FlushChainstateBlockFile(const Chainstate& chainstate, bool fFinalize = false, bool finalize_undo = false);
     void FlushUndoFile(int block_file, bool finalize = false);
-    bool FindBlockPos(FlatFilePos& pos, unsigned int nAddSize, unsigned int nHeight, CChain& active_chain, uint64_t nTime, bool fKnown);
+    bool FindBlockPos(FlatFilePos& pos, unsigned int nAddSize, unsigned int nHeight, const Chainstate& chainstate, uint64_t nTime, bool fKnown) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
     bool FindUndoPos(BlockValidationState& state, int nFile, FlatFilePos& pos, unsigned int nAddSize);
 
     FlatFileSeq BlockFileSeq() const;
@@ -137,7 +147,26 @@ private:
 
     RecursiveMutex cs_LastBlockFile;
     std::vector<CBlockFileInfo> m_blockfile_info;
-    int m_last_blockfile = 0;
+
+    //! Since assumedvalid chainstates may be syncing a range of the chain that is very
+    //! far away from the normal/background validation process, we should segment blockfiles
+    //! for assumed chainstates. Otherwise, we might have wildly different height ranges
+    //! mixed into the same block files, which would impair our ability to prune
+    //! effectively.
+    //!
+    //! This data structure maintains separate blockfile number cursors for each
+    //! BlockfileType. The ASSUMED state is initialized, when necessary, in FindBlockPos().
+    std::map<BlockfileType, std::optional<int>> m_blockfile_cursors GUARDED_BY(cs_LastBlockFile) = {
+        {BlockfileType::NORMAL, 0},
+        {BlockfileType::ASSUMED, std::nullopt},
+    };
+    int MaxBlockfileNum() const EXCLUSIVE_LOCKS_REQUIRED(cs_LastBlockFile)
+    {
+        const auto& normal = m_blockfile_cursors.at(BlockfileType::NORMAL).value_or(0);
+        const auto& assumed = m_blockfile_cursors.at(BlockfileType::ASSUMED).value_or(0);
+        return std::max(normal, assumed);
+    }
+
     /** Global flag to indicate we should check to see if there are
      *  block/undo files that should be deleted.  Set on startup
      *  or if we allocate more file space when we're in prune mode
@@ -210,7 +239,7 @@ public:
         EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     /** Store block on disk. If dbp is not nullptr, then it provides the known position of the block within a block file on disk. */
-    FlatFilePos SaveBlockToDisk(const CBlock& block, int nHeight, CChain& active_chain, const FlatFilePos* dbp);
+    FlatFilePos SaveBlockToDisk(const CBlock& block, int nHeight, const Chainstate& chainstate, const FlatFilePos* dbp) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     /** Whether running in -prune mode. */
     [[nodiscard]] bool IsPruneMode() const { return m_prune_mode; }
