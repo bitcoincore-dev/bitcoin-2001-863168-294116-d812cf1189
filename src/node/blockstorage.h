@@ -8,6 +8,7 @@
 #include <attributes.h>
 #include <chain.h>
 #include <kernel/blockmanager_opts.h>
+#include <kernel/chain.h>
 #include <kernel/chainparams.h>
 #include <kernel/cs_main.h>
 #include <protocol.h>
@@ -68,6 +69,30 @@ struct PruneLockInfo {
     int height_first{std::numeric_limits<int>::max()}; //! Height of earliest block that should be kept and not pruned
 };
 
+enum class BlockfileType {
+    // For the purposes of blockfile fragmentation, treat background IBD chainstates
+    // as normal.
+    NORMAL,
+    ASSUMED,
+};
+
+std::ostream& operator<<(std::ostream& os, const BlockfileType& type);
+
+struct BlockfileCursor {
+    // The latest blockfile number.
+    int file_num{0};
+
+    // Track the largest height block whose undo data is in `file_num` blockfile.
+    // When we move to the next blockfile, if the undo data is keeping up then
+    // we know we can trim the size of the file and truncate any excess
+    // allocations. If not, we assume that eventually we'll add more undo data
+    // to this file, and when we revisit it we'll trim it then.
+    int undo_height{0};
+};
+
+std::ostream& operator<<(std::ostream& os, const BlockfileCursor& cursor);
+
+
 /**
  * Maintains a tree of blocks (stored in `m_block_index`) which is consulted
  * to determine where the most-work tip is.
@@ -90,9 +115,10 @@ private:
      */
     bool LoadBlockIndex(const std::optional<uint256>& snapshot_blockhash)
         EXCLUSIVE_LOCKS_REQUIRED(cs_main);
-    void FlushBlockFile(bool fFinalize = false, bool finalize_undo = false);
+    void FlushBlockFile(int blockfile_num, bool fFinalize = false, bool finalize_undo = false);
+    void FlushChainstateBlockFile(const ChainstateRole& chainstate_role, bool fFinalize = false, bool finalize_undo = false);
     void FlushUndoFile(int block_file, bool finalize = false);
-    bool FindBlockPos(FlatFilePos& pos, unsigned int nAddSize, unsigned int nHeight, uint64_t nTime, bool fKnown);
+    bool FindBlockPos(FlatFilePos& pos, unsigned int nAddSize, unsigned int nHeight, const ChainstateRole& chainstate_role, uint64_t nTime, bool fKnown);
     bool FindUndoPos(BlockValidationState& state, int nFile, FlatFilePos& pos, unsigned int nAddSize);
 
     FlatFileSeq BlockFileSeq() const;
@@ -136,13 +162,27 @@ private:
 
     RecursiveMutex cs_LastBlockFile;
     std::vector<CBlockFileInfo> m_blockfile_info;
-    int m_last_blockfile = 0;
-    // Track the largest height block whose undo data is in m_last_blockfile.
-    // When we move to the next blockfile, if the undo data is keeping up then
-    // we know we can trim the size of the file and truncate any excess
-    // allocations. If not, we assume that eventually we'll add more undo data
-    // to this file, and when we revisit it we'll trim it then.
-    unsigned int m_undo_height_in_last_blockfile = 0;
+
+    //! Since assumedvalid chainstates may be syncing a range of the chain that is very
+    //! far away from the normal/background validation process, we should segment blockfiles
+    //! for assumed chainstates. Otherwise, we might have wildly different height ranges
+    //! mixed into the same block files, which would impair our ability to prune
+    //! effectively.
+    //!
+    //! This data structure maintains separate blockfile number cursors for each
+    //! BlockfileType. The ASSUMED state is initialized, when necessary, in FindBlockPos().
+    std::map<BlockfileType, std::optional<BlockfileCursor>> m_blockfile_cursors GUARDED_BY(cs_LastBlockFile) = {
+        {BlockfileType::NORMAL, BlockfileCursor{}},
+        {BlockfileType::ASSUMED, std::nullopt},
+    };
+    int MaxBlockfileNum() const EXCLUSIVE_LOCKS_REQUIRED(cs_LastBlockFile)
+    {
+        static const BlockfileCursor empty_cursor{0, 0};
+        const auto& normal = m_blockfile_cursors.at(BlockfileType::NORMAL).value_or(empty_cursor);
+        const auto& assumed = m_blockfile_cursors.at(BlockfileType::ASSUMED).value_or(empty_cursor);
+        return std::max(normal.file_num, assumed.file_num);
+    }
+
     /** Global flag to indicate we should check to see if there are
      *  block/undo files that should be deleted.  Set on startup
      *  or if we allocate more file space when we're in prune mode
@@ -212,11 +252,11 @@ public:
     /** Get block file info entry for one block file */
     CBlockFileInfo* GetBlockFileInfo(size_t n);
 
-    bool WriteUndoDataForBlock(const CBlockUndo& blockundo, BlockValidationState& state, CBlockIndex& block)
+    bool WriteUndoDataForBlock(const CBlockUndo& blockundo, BlockValidationState& state, const ChainstateRole& role, CBlockIndex& block)
         EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     /** Store block on disk. If dbp is not nullptr, then it provides the known position of the block within a block file on disk. */
-    FlatFilePos SaveBlockToDisk(const CBlock& block, int nHeight, const FlatFilePos* dbp);
+    FlatFilePos SaveBlockToDisk(const CBlock& block, int nHeight, const ChainstateRole& chainstate_role, const FlatFilePos* dbp);
 
     /** Whether running in -prune mode. */
     [[nodiscard]] bool IsPruneMode() const { return m_prune_mode; }
