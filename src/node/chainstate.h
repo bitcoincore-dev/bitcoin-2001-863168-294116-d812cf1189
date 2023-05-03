@@ -46,6 +46,7 @@ enum class ChainstateLoadStatus {
     FAILURE_FATAL, //!< Fatal error which should not prompt to reindex
     FAILURE_INCOMPATIBLE_DB,
     FAILURE_INSUFFICIENT_DBCACHE,
+    FAILURE_NO_REINDEX,
     INTERRUPTED,
 };
 
