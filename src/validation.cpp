@@ -3408,6 +3408,20 @@ void Chainstate::ResetBlockFailureFlags(CBlockIndex *pindex) {
     }
 }
 
+void Chainstate::TryAddBlockIndexCandidate(CBlockIndex* pindex)
+{
+    // FIXME: the background-validation chainstate should only add new entries
+    // that build on blocks for which we actually have all the data, while the
+    // snapshot chainstate (if we have one) is able to build on blocks that are
+    // missing but for which BLOCK_ASSUME_VALID is set.
+    // So this is broken right now. XXX
+    AssertLockHeld(cs_main);
+    if (m_chain.Tip() == nullptr || !setBlockIndexCandidates.value_comp()(pindex, m_chain.Tip())) {
+        LogPrintf("TryAddBlockIndexCandidate: %s (%d) is now a candidate (%s)\n", pindex->GetBlockHash().ToString(), pindex->nHeight, (this == &m_chainman.ActiveChainstate() ? "active" : "inactive"));
+        setBlockIndexCandidates.insert(pindex);
+    }
+}
+
 /** Mark a block as having its data received and checked (up to BLOCK_VALID_TRANSACTIONS). */
 void Chainstate::ReceivedBlockTransactions(const CBlock& block, CBlockIndex* pindexNew, const FlatFilePos& pos)
 {
@@ -4017,6 +4031,11 @@ bool ChainstateManager::ProcessNewBlock(const std::shared_ptr<const CBlock>& blo
     if (!ActiveChainstate().ActivateBestChain(state, block)) {
         return error("%s: ActivateBestChain failed (%s)", __func__, state.ToString());
     }
+    BlockValidationState background_sync_state;
+    if (WITH_LOCK(::cs_main, return BackgroundSyncInProgress()) &&
+            !WITH_LOCK(::cs_main, return *m_ibd_chainstate).ActivateBestChain(state, block)) {
+        return error("%s: [background] ActivateBestChain failed (%s)", __func__, state.ToString());
+    }
 
     return true;
 }
@@ -4446,8 +4465,8 @@ bool ChainstateManager::LoadBlockIndex()
                 // be practical.
                 for (Chainstate* chainstate : GetAll()) {
                     if (chainstate->reliesOnAssumedValid() ||
-                            pindex->nHeight < first_assumed_valid_height) {
-                        chainstate->setBlockIndexCandidates.insert(pindex);
+                            pindex->nStatus & BLOCK_HAVE_DATA) {
+                        chainstate->TryAddBlockIndexCandidate(pindex);
                     }
                 }
             }
