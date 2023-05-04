@@ -4070,6 +4070,11 @@ bool ChainstateManager::ProcessNewBlock(const std::shared_ptr<const CBlock>& blo
     if (!ActiveChainstate().ActivateBestChain(state, block)) {
         return error("%s: ActivateBestChain failed (%s)", __func__, state.ToString());
     }
+    BlockValidationState background_sync_state;
+    if (WITH_LOCK(::cs_main, return BackgroundSyncInProgress()) &&
+            !WITH_LOCK(::cs_main, return *m_ibd_chainstate).ActivateBestChain(state, block)) {
+        return error("%s: [background] ActivateBestChain failed (%s)", __func__, state.ToString());
+    }
 
     return true;
 }
