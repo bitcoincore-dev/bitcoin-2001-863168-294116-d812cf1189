@@ -266,11 +266,19 @@ CBlockIndex* BlockManager::InsertBlockIndex(const uint256& hash)
     return pindex;
 }
 
-bool BlockManager::LoadBlockIndex()
+bool BlockManager::LoadBlockIndex(const std::optional<uint256>& snapshot_blockhash)
 {
     if (!m_block_tree_db->LoadBlockIndexGuts(
             GetConsensus(), [this](const uint256& hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main) { return this->InsertBlockIndex(hash); }, m_interrupt)) {
         return false;
+    }
+
+    if (snapshot_blockhash) {
+        // Since nChainTx (responsible for estiamted progress) isn't persisted
+        // to disk, we must bootstrap the value for assumedvalid chainstates
+        // from the hardcoded assumeutxo chainparams.
+        LookupBlockIndex(*snapshot_blockhash)->nChainTx =
+            Assert(GetParams().AssumeutxoForBlockhash(*snapshot_blockhash))->nChainTx;
     }
 
     // Calculate nChainWork
@@ -332,9 +340,9 @@ bool BlockManager::WriteBlockIndexDB()
     return true;
 }
 
-bool BlockManager::LoadBlockIndexDB()
+bool BlockManager::LoadBlockIndexDB(const std::optional<uint256>& snapshot_blockhash)
 {
-    if (!LoadBlockIndex()) {
+    if (!LoadBlockIndex(snapshot_blockhash)) {
         return false;
     }
 
