@@ -228,6 +228,18 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
 
         PortSeed.n = self.options.port_seed
 
+    def set_binary_paths(self):
+        binaries = {
+            "bitcoin-wallet": ("bitcoinwallet", "BITCOINWALLET"),
+        }
+        for binary, [attribute_name, env_variable_name] in binaries.items():
+            default_filename = os.path.join(
+                self.config["environment"]["BUILDDIR"],
+                "src",
+                binary + self.config["environment"]["EXEEXT"],
+            )
+            setattr(self.options, attribute_name, os.getenv(env_variable_name, default=default_filename))
+
     def setup(self):
         """Call this method to start up the test framework object with options set."""
 
@@ -255,6 +267,7 @@ class BitcoinTestFramework(metaclass=BitcoinTestMetaClass):
         self.options.bitcoind = os.getenv("BITCOIND", default=fname_bitcoind)
         self.options.bitcoincli = os.getenv("BITCOINCLI", default=fname_bitcoincli)
         self.options.bitcoinutil = os.getenv("BITCOINUTIL", default=fname_bitcoinutil)
+        self.set_binary_paths()
 
         os.environ['PATH'] = os.pathsep.join([
             os.path.join(config['environment']['BUILDDIR'], 'src'),
