@@ -267,7 +267,7 @@ CBlockIndex* BlockManager::InsertBlockIndex(const uint256& hash)
     return pindex;
 }
 
-bool BlockManager::LoadBlockIndex()
+bool BlockManager::LoadBlockIndex(const std::optional<uint256>& snapshot_blockhash)
 {
     if (!m_block_tree_db->LoadBlockIndexGuts(
             GetConsensus(), [this](const uint256& hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main) { return this->InsertBlockIndex(hash); }, m_interrupt)) {
@@ -290,7 +290,13 @@ bool BlockManager::LoadBlockIndex()
         // Pruned nodes may have deleted the block.
         if (pindex->nTx > 0) {
             if (pindex->pprev) {
-                if (pindex->pprev->nChainTx > 0) {
+                if (snapshot_blockhash && pindex->GetBlockHash() == *snapshot_blockhash) {
+                    // Since nChainTx (responsible for estiamted progress) isn't persisted
+                    // to disk, we must bootstrap the value for assumedvalid chainstates
+                    // from the hardcoded assumeutxo chainparams.
+                    const auto au_data = *Assert(GetParams().AssumeutxoForBlockhash(*snapshot_blockhash));
+                    pindex->nChainTx = au_data.nChainTx;
+                } else if (pindex->pprev->nChainTx > 0) {
                     pindex->nChainTx = pindex->pprev->nChainTx + pindex->nTx;
                 } else {
                     pindex->nChainTx = 0;
@@ -333,9 +339,9 @@ bool BlockManager::WriteBlockIndexDB()
     return true;
 }
 
-bool BlockManager::LoadBlockIndexDB()
+bool BlockManager::LoadBlockIndexDB(const std::optional<uint256>& snapshot_blockhash)
 {
-    if (!LoadBlockIndex()) {
+    if (!LoadBlockIndex(snapshot_blockhash)) {
         return false;
     }
 
