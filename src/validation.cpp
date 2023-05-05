@@ -5191,6 +5191,9 @@ bool ChainstateManager::ActivateSnapshot(
         const bool chaintip_loaded = m_snapshot_chainstate->LoadChainTip();
         assert(chaintip_loaded);
 
+        // Transfer possession of the mempool to the snapshot chianstate.
+        m_snapshot_chainstate->m_mempool = m_active_chainstate->m_mempool;
+        m_active_chainstate->m_mempool = nullptr;
         m_active_chainstate = m_snapshot_chainstate.get();
         m_blockman.m_snapshot_height = this->GetSnapshotBaseHeight();
 
@@ -5680,6 +5683,8 @@ Chainstate& ChainstateManager::ActivateExistingSnapshot(CTxMemPool* mempool, uin
     m_snapshot_chainstate =
         std::make_unique<Chainstate>(mempool, m_blockman, *this, base_blockhash);
     LogPrintf("[snapshot] switching active chainstate to %s\n", m_snapshot_chainstate->ToString());
+    m_snapshot_chainstate->m_mempool = m_active_chainstate->m_mempool;
+    m_active_chainstate->m_mempool = nullptr;
     m_active_chainstate = m_snapshot_chainstate.get();
     return *m_snapshot_chainstate;
 }
