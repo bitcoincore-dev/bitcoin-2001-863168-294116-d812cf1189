@@ -4,6 +4,7 @@
 
 #include <bench/bench.h>
 
+#include <crypto/sha256.h>
 #include <test/util/setup_common.h>
 #include <util/fs.h>
 #include <util/string.h>
@@ -14,7 +15,10 @@
 #include <iostream>
 #include <map>
 #include <regex>
+#include <set>
 #include <string>
+#include <type_traits>
+#include <utility>
 #include <vector>
 
 using namespace std::chrono_literals;
@@ -63,6 +67,29 @@ uint8_t StringToPriority(const std::string& str)
 {
     auto it = map_label_priority.find(str);
     if (it == map_label_priority.end()) throw std::runtime_error(strprintf("Unknown priority level %s", str));
+    return it->second;
+}
+
+std::map<std::string, sha256_implementation::UseImplementation> map_label_sha_implementation = {
+    {"standard", sha256_implementation::STANDARD},
+    {"sse4", sha256_implementation::USE_SSE4},
+    {"avx2", sha256_implementation::USE_AVX2},
+    {"sha-ni", sha256_implementation::USE_SHANI},
+    {"all", sha256_implementation::USE_ALL},
+};
+
+std::string ListShaImplementations()
+{
+    using item_t = std::pair<std::string, std::underlying_type_t<sha256_implementation::UseImplementation>>;
+    auto sort_by_implementation = [](item_t a, item_t b) { return a.second < b.second; };
+    std::set<item_t, decltype(sort_by_implementation)> sorted_sha_implementations(map_label_sha_implementation.begin(), map_label_sha_implementation.end(), sort_by_implementation);
+    return Join(sorted_sha_implementations, ',', [](const auto& entry) { return entry.first; });
+}
+
+uint8_t StringToShaImplementation(const std::string& str)
+{
+    auto it = map_label_sha_implementation.find(str);
+    if (it == map_label_sha_implementation.end()) throw std::runtime_error(strprintf("Unknown SHA implementation %s", str));
     return it->second;
 }
 

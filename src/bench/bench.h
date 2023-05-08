@@ -51,6 +51,10 @@ enum PriorityLevel : uint8_t
 std::string ListPriorities();
 uint8_t StringToPriority(const std::string& str);
 
+// List comma-separated SHA implementations.
+std::string ListShaImplementations();
+uint8_t StringToShaImplementation(const std::string& str);
+
 struct Args {
     bool is_list_only;
     bool sanity_check;

@@ -16,12 +16,15 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 static const char* DEFAULT_BENCH_FILTER = ".*";
 static constexpr int64_t DEFAULT_MIN_TIME_MS{10};
 /** Priority level default value, run "all" priority levels */
 static const std::string DEFAULT_PRIORITY{"all"};
+/** SHA implementation default value, try "all" implementations */
+static const std::string DEFAULT_SHA_IMPLEMENTATION{"all"};
 
 static void SetupBenchArgs(ArgsManager& argsman)
 {
@@ -36,6 +39,9 @@ static void SetupBenchArgs(ArgsManager& argsman)
     argsman.AddArg("-sanity-check", "Run benchmarks for only one iteration with no output", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     argsman.AddArg("-priority-level=<l1,l2,l3>", strprintf("Run benchmarks of one or multiple priority level(s) (%s), default: '%s'",
                                                            benchmark::ListPriorities(), DEFAULT_PRIORITY), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+    argsman.AddArg("-sha-implementation=<i1,i2,i3>",
+                   strprintf("Try to use one or multiple SHA implementation(s) (%s), default: '%s'", benchmark::ListShaImplementations(), DEFAULT_SHA_IMPLEMENTATION),
+                   ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
 }
 
 // parses a comma separated list like "10,20,30,50"
@@ -57,6 +63,15 @@ static uint8_t parsePriorityLevel(const std::string& str) {
         levels |= benchmark::StringToPriority(level);
     }
     return levels;
+}
+
+static sha256_implementation::UseImplementation parseShaImplementation(const std::string& str) {
+    sha256_implementation::UseImplementation implementations{sha256_implementation::STANDARD};
+    using T = std::underlying_type_t <sha256_implementation::UseImplementation>;
+    for (const auto& impl: SplitString(str, ',')) {
+        implementations = static_cast<sha256_implementation::UseImplementation>(static_cast<T>(implementations) | static_cast<T>(benchmark::StringToShaImplementation(impl)));
+    }
+    return implementations;
 }
 
 int main(int argc, char** argv)
@@ -119,10 +134,10 @@ int main(int argc, char** argv)
         return EXIT_SUCCESS;
     }
 
-    std::string sha256_algo = SHA256AutoDetect();
-    tfm::format(std::cout, "Using the '%s' SHA256 implementation\n", sha256_algo);
-
     try {
+        std::string sha256_algo = SHA256AutoDetect(parseShaImplementation(argsman.GetArg("-sha-implementation", DEFAULT_SHA_IMPLEMENTATION)));
+        tfm::format(std::cout, "Using the '%s' SHA256 implementation\n", sha256_algo);
+
         benchmark::Args args;
         args.asymptote = parseAsymptote(argsman.GetArg("-asymptote", ""));
         args.is_list_only = argsman.GetBoolArg("-list", false);
