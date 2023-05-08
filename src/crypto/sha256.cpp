@@ -579,7 +579,7 @@ bool AVXEnabled()
 } // namespace
 
 
-std::string SHA256AutoDetect()
+std::string SHA256AutoDetect(sha256_implementation::UseImplementation use_implementation)
 {
     std::string ret = "standard";
 #if defined(USE_ASM) && defined(HAVE_GETCPUID)
@@ -592,7 +592,9 @@ std::string SHA256AutoDetect()
 
     uint32_t eax, ebx, ecx, edx;
     GetCPUID(1, 0, eax, ebx, ecx, edx);
-    have_sse4 = (ecx >> 19) & 1;
+    if (use_implementation & sha256_implementation::USE_SSE4) {
+        have_sse4 = (ecx >> 19) & 1;
+    }
     have_xsave = (ecx >> 27) & 1;
     have_avx = (ecx >> 28) & 1;
     if (have_xsave && have_avx) {
@@ -600,8 +602,12 @@ std::string SHA256AutoDetect()
     }
     if (have_sse4) {
         GetCPUID(7, 0, eax, ebx, ecx, edx);
-        have_avx2 = (ebx >> 5) & 1;
-        have_x86_shani = (ebx >> 29) & 1;
+        if (use_implementation & sha256_implementation::USE_AVX2) {
+            have_avx2 = (ebx >> 5) & 1;
+        }
+        if (use_implementation & sha256_implementation::USE_SHANI) {
+            have_x86_shani = (ebx >> 29) & 1;
+        }
     }
 
 #if defined(ENABLE_X86_SHANI) && !defined(BUILD_BITCOIN_INTERNAL)
