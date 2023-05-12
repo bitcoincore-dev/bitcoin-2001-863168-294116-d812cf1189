@@ -5728,6 +5728,8 @@ Chainstate& ChainstateManager::ActivateExistingSnapshot(CTxMemPool* mempool, uin
     m_snapshot_chainstate =
         std::make_unique<Chainstate>(mempool, m_blockman, *this, base_blockhash);
     LogPrintf("[snapshot] switching active chainstate to %s\n", m_snapshot_chainstate->ToString());
+    m_snapshot_chainstate->m_mempool = m_active_chainstate->m_mempool;
+    m_active_chainstate->m_mempool = nullptr;
     m_active_chainstate = m_snapshot_chainstate.get();
     m_ibd_chainstate->m_snapshot_entry = m_snapshot_chainstate->m_snapshot_entry;
     return *m_snapshot_chainstate;
