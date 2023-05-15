@@ -409,6 +409,7 @@ bool SQLiteBatch::ReadKey(DataStream&& key, DataStream& value)
     // Leftmost column in result is index 0
     const std::byte* data{AsBytePtr(sqlite3_column_blob(m_read_stmt, 0))};
     size_t data_size(sqlite3_column_bytes(m_read_stmt, 0));
+    value.clear();
     value.write({data, data_size});
 
     sqlite3_clear_bindings(m_read_stmt);
