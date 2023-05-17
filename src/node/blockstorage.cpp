@@ -10,6 +10,7 @@
 #include <flatfile.h>
 #include <hash.h>
 #include <kernel/chainparams.h>
+#include <kernel/notifications_interface.h>
 #include <logging.h>
 #include <pow.h>
 #include <reverse_iterator.h>
@@ -24,6 +25,8 @@
 
 #include <map>
 #include <unordered_map>
+
+using kernel::ShutdownReason;
 
 namespace node {
 std::atomic_bool fReindex(false);
@@ -931,14 +934,14 @@ void ThreadImport(ChainstateManager& chainman, std::vector<fs::path> vImportFile
             BlockValidationState state;
             if (!chainstate->ActivateBestChain(state, nullptr)) {
                 LogPrintf("Failed to connect best block (%s)\n", state.ToString());
-                StartShutdown();
+                chainman.GetNotifications().startShutdown(ShutdownReason::FailedConnectingBestBlock);
                 return;
             }
         }
 
         if (chainman.m_blockman.StopAfterBlockImport()) {
             LogPrintf("Stopping after block import\n");
-            StartShutdown();
+            chainman.GetNotifications().startShutdown(ShutdownReason::StopAfterBlockImport);
             return;
         }
     } // End scope of ImportingNow
