@@ -7,7 +7,9 @@
 
 #include <kernel/context.h>
 
+#include <atomic>
 #include <cassert>
+#include <cstdlib>
 #include <functional>
 #include <memory>
 #include <vector>
@@ -62,6 +64,7 @@ struct NodeContext {
     interfaces::WalletLoader* wallet_loader{nullptr};
     std::unique_ptr<CScheduler> scheduler;
     std::function<void()> rpc_interruption_point = [] {};
+    std::atomic<int> exit_status{EXIT_SUCCESS};
 
     //! Declare default constructor and destructor that are not inline, so code
     //! instantiating the NodeContext struct doesn't need to #include class
