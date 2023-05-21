@@ -1,4 +1,8 @@
 # Fixups / upstreamed changes
 [
   { include: [ "<bits/chrono.h>", private, "<chrono>", public ] },
+
+  # Boost.Test
+  { include: [ "@<boost/test/.*>", private, "<boost/test/unit_test.hpp>", public ] },
+  { include: [ "@<boost/preprocessor/.*>", private, "<boost/test/unit_test.hpp>", public ] },
 ]
