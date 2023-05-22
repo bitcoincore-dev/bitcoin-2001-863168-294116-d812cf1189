@@ -6,6 +6,13 @@
 
 export LC_ALL=C.UTF-8
 
+if [[ $CI_IMAGE_NAME_TAG == *centos* ]]; then
+  bash -c "dnf -y --allowerasing install git"
+elif [ "$CI_USE_APT_INSTALL" != "no" ]; then
+  ${CI_RETRY_EXE} apt-get update
+  ${CI_RETRY_EXE} bash -c "apt-get install --no-install-recommends --no-upgrade -y git"
+fi
+
 CFG_DONE="ci.base-install-done"  # Use a global git setting to remember whether this script ran to avoid running it twice
 
 if [ "$(git config --global ${CFG_DONE})" == "true" ]; then
