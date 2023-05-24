@@ -3409,7 +3409,21 @@ void Chainstate::TryAddBlockIndexCandidate(CBlockIndex* pindex)
     AssertLockHeld(cs_main);
     // If the block has more work than our tip, then it should be a candidate for most-work-chain.
     if (m_chain.Tip() == nullptr || !setBlockIndexCandidates.value_comp()(pindex, m_chain.Tip())) {
-        setBlockIndexCandidates.insert(pindex);
+        bool is_bg_chainstate = m_chainman.IsSnapshotActive() && m_chainman.IsBackgroundChainstate(this) && !m_disabled;
+        if (!is_bg_chainstate) {
+            // The active chainstate should always add entries that have more
+            // work than the tip.
+            setBlockIndexCandidates.insert(pindex);
+        } else {
+            // For the background chainstate, we only consider connecting blocks
+            // towards the snapshot base (which can't be nullptr or else we'll
+            // never make progress).
+            const CBlockIndex* snapshot_entry = m_chainman.GetSnapshotBaseBlock();
+            assert(snapshot_entry != nullptr);
+            if (snapshot_entry->GetAncestor(pindex->nHeight) == pindex) {
+                setBlockIndexCandidates.insert(pindex);
+            }
+        }
     }
 }
 
