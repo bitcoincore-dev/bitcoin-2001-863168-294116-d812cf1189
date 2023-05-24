@@ -1578,7 +1578,12 @@ Chainstate::Chainstate(
     : m_mempool(mempool),
       m_blockman(blockman),
       m_chainman(chainman),
-      m_from_snapshot_blockhash(from_snapshot_blockhash) {}
+      m_from_snapshot_blockhash(from_snapshot_blockhash)
+{
+    if (m_from_snapshot_blockhash) {
+        m_snapshot_entry = WITH_LOCK(::cs_main, return m_chainman.m_blockman.LookupBlockIndex(*m_from_snapshot_blockhash));
+    }
+}
 
 void Chainstate::InitCoinsDB(
     size_t cache_size_bytes,
@@ -3442,15 +3447,19 @@ void Chainstate::ResetBlockFailureFlags(CBlockIndex *pindex) {
 
 void Chainstate::TryAddBlockIndexCandidate(CBlockIndex* pindex)
 {
-    // FIXME: the background-validation chainstate should only add new entries
-    // that build on blocks for which we actually have all the data, while the
-    // snapshot chainstate (if we have one) is able to build on blocks that are
-    // missing but for which BLOCK_ASSUME_VALID is set.
-    // So this is broken right now. XXX
     AssertLockHeld(cs_main);
     if (m_chain.Tip() == nullptr || !setBlockIndexCandidates.value_comp()(pindex, m_chain.Tip())) {
-        LogPrintf("TryAddBlockIndexCandidate: %s (%d) is now a candidate (%s)\n", pindex->GetBlockHash().ToString(), pindex->nHeight, (this == &m_chainman.ActiveChainstate() ? "active" : "inactive"));
-        setBlockIndexCandidates.insert(pindex);
+        // The active chainstate should always add entries that have more work than the tip.
+        // For the background chainstate, we only consider connecting blocks
+        // towards the snapshot base.
+        bool is_bg_chainstate = m_chainman.IsSnapshotActive() && m_chainman.IsBackgroundChainstate(this) && !m_disabled;
+        bool ancestor_of_snapshot_base = (m_snapshot_entry != nullptr ? m_snapshot_entry->GetAncestor(pindex->nHeight) == pindex : false);
+        // If we're the bg chainstate, then our snapshot entry must be filled
+        // in (or else we'll never make progress).
+        assert(!is_bg_chainstate || m_snapshot_entry != nullptr);
+        if (!is_bg_chainstate || ancestor_of_snapshot_base) {
+            setBlockIndexCandidates.insert(pindex);
+        }
     }
 }
 
@@ -4443,6 +4452,14 @@ bool ChainstateManager::LoadBlockIndex()
         bool ret{m_blockman.LoadBlockIndexDB()};
         if (!ret) return false;
 
+        // If we already have 2 chainstates, then we need to update the
+        // snapshot base to point to the correct block entry.
+        if (IsSnapshotActive()) {
+            CBlockIndex *entry = m_blockman.LookupBlockIndex(*SnapshotBlockhash());
+            m_ibd_chainstate->UpdateSnapshotBaseEntry(entry);
+            m_snapshot_chainstate->UpdateSnapshotBaseEntry(entry);
+        }
+
         m_blockman.ScanAndUnlinkAlreadyPrunedFiles();
 
         std::vector<CBlockIndex*> vSortedByHeight{m_blockman.GetAllBlockIndices()};
@@ -5205,6 +5222,8 @@ bool ChainstateManager::ActivateSnapshot(
             m_snapshot_chainstate->CoinsTip().DynamicMemoryUsage() / (1000 * 1000));
 
         this->MaybeRebalanceCaches();
+
+        m_ibd_chainstate->m_snapshot_entry = m_snapshot_chainstate->m_snapshot_entry;
     }
     return true;
 }
@@ -5689,6 +5708,7 @@ Chainstate& ChainstateManager::ActivateExistingSnapshot(CTxMemPool* mempool, uin
         std::make_unique<Chainstate>(mempool, m_blockman, *this, base_blockhash);
     LogPrintf("[snapshot] switching active chainstate to %s\n", m_snapshot_chainstate->ToString());
     m_active_chainstate = m_snapshot_chainstate.get();
+    m_ibd_chainstate->m_snapshot_entry = m_snapshot_chainstate->m_snapshot_entry;
     return *m_snapshot_chainstate;
 }
 
