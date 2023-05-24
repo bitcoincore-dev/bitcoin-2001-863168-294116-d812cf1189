@@ -442,11 +442,12 @@ BOOST_FIXTURE_TEST_CASE(chainstatemanager_loadblockindex, TestChain100Setup)
     reload_all_block_indexes();
     BOOST_CHECK_EQUAL(cs1.setBlockIndexCandidates.size(), 1);
 
-    // Mark some region of the chain assumed-valid.
+    // Mark some region of the chain assumed-valid, and remove the HAVE_DATA flag.
     for (int i = 0; i <= cs1.m_chain.Height(); ++i) {
         LOCK(::cs_main);
         auto index = cs1.m_chain[i];
 
+        // Blocks with heights in range [20, 40) are marked ASSUMED_VALID
         if (i < last_assumed_valid_idx && i >= assumed_valid_start_idx) {
             index->nStatus = BlockStatus::BLOCK_VALID_TREE | BlockStatus::BLOCK_ASSUMED_VALID;
         }
@@ -459,15 +460,16 @@ BOOST_FIXTURE_TEST_CASE(chainstatemanager_loadblockindex, TestChain100Setup)
             validated_tip = index;
             BOOST_CHECK(!index->IsAssumedValid());
         }
-        // Note the block after the last assumed valid block as the snapshot base
-        if (i == last_assumed_valid_idx) {
+        // Note the last assumed valid block as the snapshot base
+        if (i == last_assumed_valid_idx - 1) {
             assumed_base = index;
-            BOOST_CHECK(!index->IsAssumedValid());
+            BOOST_CHECK(index->IsAssumedValid());
         }
     }
 
     BOOST_CHECK_EQUAL(expected_assumed_valid, num_assumed_valid);
 
+    // Note: cs2's tip is not set when ActivateExistingSnapshot is called.
     Chainstate& cs2 = WITH_LOCK(::cs_main,
         return chainman.ActivateExistingSnapshot(&mempool, *assumed_base->phashBlock));
 
@@ -476,14 +478,18 @@ BOOST_FIXTURE_TEST_CASE(chainstatemanager_loadblockindex, TestChain100Setup)
 
     reload_all_block_indexes();
 
-    // The fully validated chain should have the current validated tip, the assumed valid
-    // blocks, and the assumed valid base as candidates.
-    BOOST_CHECK_EQUAL(cs1.setBlockIndexCandidates.size(), expected_assumed_valid + 2);
+    // The fully validated chain should have the current validated tip
+    // and the assumed valid base as candidates.
+    BOOST_CHECK_EQUAL(cs1.setBlockIndexCandidates.size(), 2);
+    BOOST_CHECK_EQUAL(cs1.setBlockIndexCandidates.count(validated_tip), 1);
+    BOOST_CHECK_EQUAL(cs1.setBlockIndexCandidates.count(assumed_base), 1);
 
-    // The assumed-valid tolerant chain has all blocks as candidates.
+    // The assumed-valid tolerant chain has the assumed valid base as a
+    // candidate, but otherwise has none of the assumed-valid (which do not
+    // HAVE_DATA) blocks as candidates.
     BOOST_CHECK_EQUAL(cs2.setBlockIndexCandidates.count(validated_tip), 1);
     BOOST_CHECK_EQUAL(cs2.setBlockIndexCandidates.count(assumed_tip), 1);
-    BOOST_CHECK_EQUAL(cs2.setBlockIndexCandidates.size(), num_indexes);
+    BOOST_CHECK_EQUAL(cs2.setBlockIndexCandidates.size(), num_indexes - num_assumed_valid + 1);
 }
 
 //! Ensure that snapshot chainstates initialize properly when found on disk.
