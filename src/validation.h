@@ -493,6 +493,13 @@ protected:
     //! is set to true on the snapshot chainstate.
     bool m_disabled GUARDED_BY(::cs_main) {false};
 
+    void UpdateSnapshotBaseEntry(const CBlockIndex *entry) EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+        { m_snapshot_entry = entry; }
+
+    //! Track the snapshot entry
+    const CBlockIndex* m_snapshot_entry GUARDED_BY(::cs_main) {nullptr};
+
+
 public:
     //! Reference to a BlockManager instance which itself is shared across all
     //! Chainstate instances.
@@ -1055,6 +1062,12 @@ public:
     //! @returns true if a snapshot-based chainstate is in use. Also implies
     //!          that a background validation chainstate is also in use.
     bool IsSnapshotActive() const;
+
+    //! @returns true if the chainstate is the background chainstate
+    bool IsBackgroundChainstate(const Chainstate *chainstate) const EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
+    {
+        return chainstate == m_ibd_chainstate.get();
+    }
 
     std::optional<uint256> SnapshotBlockhash() const;
 
