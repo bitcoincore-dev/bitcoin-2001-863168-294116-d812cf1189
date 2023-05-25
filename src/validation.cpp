@@ -4773,12 +4773,18 @@ void Chainstate::CheckBlockIndex()
     CBlockIndex* pindexFirstNotTransactionsValid = nullptr; // Oldest ancestor of pindex which does not have BLOCK_VALID_TRANSACTIONS (regardless of being valid or not).
     CBlockIndex* pindexFirstNotChainValid = nullptr; // Oldest ancestor of pindex which does not have BLOCK_VALID_CHAIN (regardless of being valid or not).
     CBlockIndex* pindexFirstNotScriptsValid = nullptr; // Oldest ancestor of pindex which does not have BLOCK_VALID_SCRIPTS (regardless of being valid or not).
+    const bool is_bg{this != &m_chainman.ActiveChainstate()};
+
     while (pindex != nullptr) {
+        if (is_bg && pindex->nHeight > m_chain.Tip()->nHeight) {
+            // No need for background validation chainstate to exceed its tip.
+            break;
+        }
         nNodes++;
         if (pindexFirstInvalid == nullptr && pindex->nStatus & BLOCK_FAILED_VALID) pindexFirstInvalid = pindex;
         // Assumed-valid index entries will not have data since we haven't downloaded the
         // full block yet.
-        if (pindexFirstMissing == nullptr && !(pindex->nStatus & BLOCK_HAVE_DATA) && !pindex->IsAssumedValid()) {
+        if (pindexFirstMissing == nullptr && !(pindex->nStatus & BLOCK_HAVE_DATA)) {
             pindexFirstMissing = pindex;
         }
         if (pindexFirstNeverProcessed == nullptr && pindex->nTx == 0) pindexFirstNeverProcessed = pindex;
@@ -4815,7 +4821,7 @@ void Chainstate::CheckBlockIndex()
         // HAVE_DATA is only equivalent to nTx > 0 (or VALID_TRANSACTIONS) if no pruning has occurred.
         // Unless these indexes are assumed valid and pending block download on a
         // background chainstate.
-        if (!m_blockman.m_have_pruned && !pindex->IsAssumedValid()) {
+        if (!m_blockman.m_have_pruned && !this->reliesOnAssumedValid()) {
             // If we've never pruned, then HAVE_DATA should be equivalent to nTx > 0
             assert(!(pindex->nStatus & BLOCK_HAVE_DATA) == (pindex->nTx == 0));
             assert(pindexFirstMissing == pindexFirstNeverProcessed);
@@ -4889,7 +4895,7 @@ void Chainstate::CheckBlockIndex()
         if (pindexFirstMissing == nullptr) assert(!foundInUnlinked); // We aren't missing data for any parent -- cannot be in m_blocks_unlinked.
         if (pindex->pprev && (pindex->nStatus & BLOCK_HAVE_DATA) && pindexFirstNeverProcessed == nullptr && pindexFirstMissing != nullptr) {
             // We HAVE_DATA for this block, have received data for all parents at some point, but we're currently missing data for some parent.
-            assert(m_blockman.m_have_pruned); // We must have pruned.
+            assert(m_blockman.m_have_pruned || this->reliesOnAssumedValid()); // We must have pruned.
             // This block may have entered m_blocks_unlinked if:
             //  - it has a descendant that at some point had more work than the
             //    tip, and
@@ -4950,8 +4956,10 @@ void Chainstate::CheckBlockIndex()
         }
     }
 
-    // Check that we actually traversed the entire map.
-    assert(nNodes == forward.size());
+    if (!is_bg) {
+        // Check that we actually traversed the entire map.
+        assert(nNodes == forward.size());
+    }
 }
 
 std::string Chainstate::ToString()
