@@ -4793,7 +4793,13 @@ void Chainstate::CheckBlockIndex()
     CBlockIndex* pindexFirstNotChainValid = nullptr; // Oldest ancestor of pindex which does not have BLOCK_VALID_CHAIN (regardless of being valid or not).
     CBlockIndex* pindexFirstNotScriptsValid = nullptr; // Oldest ancestor of pindex which does not have BLOCK_VALID_SCRIPTS (regardless of being valid or not).
     CBlockIndex* pindexFirstAssumeValid = nullptr; // Oldest ancestor of pindex which has BLOCK_ASSUMED_VALID
+    const bool is_bg{this != &m_chainman.ActiveChainstate()};
+
     while (pindex != nullptr) {
+        if (is_bg && pindex->nHeight > m_chain.Tip()->nHeight) {
+            // No need for background validation chainstate to exceed its tip.
+            break;
+        }
         nNodes++;
         if (pindexFirstAssumeValid == nullptr && pindex->nStatus & BLOCK_ASSUMED_VALID) pindexFirstAssumeValid = pindex;
         if (pindexFirstInvalid == nullptr && pindex->nStatus & BLOCK_FAILED_VALID) pindexFirstInvalid = pindex;
@@ -4836,7 +4842,7 @@ void Chainstate::CheckBlockIndex()
         // HAVE_DATA is only equivalent to nTx > 0 (or VALID_TRANSACTIONS) if no pruning has occurred.
         // Unless these indexes are assumed valid and pending block download on a
         // background chainstate.
-        if (!m_blockman.m_have_pruned && !pindex->IsAssumedValid()) {
+        if (!m_blockman.m_have_pruned && !this->reliesOnAssumedValid()) {
             // If we've never pruned, then HAVE_DATA should be equivalent to nTx > 0
             assert(!(pindex->nStatus & BLOCK_HAVE_DATA) == (pindex->nTx == 0));
             if (pindexFirstAssumeValid == nullptr) {
@@ -4977,8 +4983,10 @@ void Chainstate::CheckBlockIndex()
         }
     }
 
-    // Check that we actually traversed the entire map.
-    assert(nNodes == forward.size());
+    if (!is_bg) {
+        // Check that we actually traversed the entire map.
+        assert(nNodes == forward.size());
+    }
 }
 
 std::string Chainstate::ToString()
