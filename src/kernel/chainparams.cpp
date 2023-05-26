@@ -491,6 +491,12 @@ public:
 
         m_assumeutxo_data = {
             {
+                .height = 0,
+                .hash_serialized = AssumeutxoHash{uint256S("0xe8e5dcc60dfee8cf522a7f68a0cc75ad453dfc093ca337f679ab6e32ec8e875c")},
+                .nChainTx = 1,
+                .blockhash = uint256S("0x0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206")
+            },
+            {
                 .height = 110,
                 .hash_serialized = AssumeutxoHash{uint256S("0x1ebbf5850204c0bdb15bf030f47c7fe91d45c44c712697e4509ba67adb01c618")},
                 .nChainTx = 110,
