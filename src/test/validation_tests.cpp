@@ -129,7 +129,7 @@ BOOST_AUTO_TEST_CASE(test_assumeutxo)
 
     // These heights don't have assumeutxo configurations associated, per the contents
     // of kernel/chainparams.cpp.
-    std::vector<int> bad_heights{0, 100, 111, 115, 209, 211};
+    std::vector<int> bad_heights{1, 100, 111, 115, 209, 211};
 
     for (auto empty : bad_heights) {
         const auto out = params->AssumeutxoForHeight(empty);
