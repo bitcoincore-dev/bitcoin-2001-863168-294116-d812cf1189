@@ -24,4 +24,8 @@
   { include: [ "<boost/test/unit_test_suite.hpp>", public, "<boost/test/unit_test.hpp>", public ] },
   { include: [ "<boost/test/utils/basic_cstring/basic_cstring.hpp>", public, "<boost/test/unit_test.hpp>", public ] },
   { include: [ "<boost/test/utils/lazy_ostream.hpp>", public, "<boost/test/unit_test.hpp>", public ] },
+
+  # Boost.Signals2
+  { symbol: ["boost::signals2::mutex", "private", "<boost/signals2/signal.hpp>", "public" ] },
+  { symbol: ["boost::signals2::signal", "private", "<boost/signals2/signal.hpp>", "public" ] },
 ]
