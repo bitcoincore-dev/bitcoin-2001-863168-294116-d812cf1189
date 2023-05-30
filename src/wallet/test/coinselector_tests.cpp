@@ -16,8 +16,10 @@
 #include <wallet/test/wallet_test_fixture.h>
 #include <wallet/wallet.h>
 
-#include <algorithm>
+#include <boost/assert.hpp>
 #include <boost/test/unit_test.hpp>
+
+#include <algorithm>
 #include <random>
 
 namespace wallet {

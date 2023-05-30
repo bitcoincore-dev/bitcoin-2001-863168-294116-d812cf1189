@@ -6,6 +6,7 @@
 #include <wallet/wallet.h>
 #include <test/util/setup_common.h>
 
+#include <boost/assert.hpp>
 #include <boost/test/unit_test.hpp>
 
 namespace wallet {

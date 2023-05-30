@@ -16,6 +16,7 @@
 #include <rpc/server.h>
 #include <test/util/logging.h>
 #include <test/util/setup_common.h>
+#include <univalue.h>
 #include <util/translation.h>
 #include <validation.h>
 #include <wallet/coincontrol.h>
@@ -25,8 +26,8 @@
 #include <wallet/test/util.h>
 #include <wallet/test/wallet_test_fixture.h>
 
+#include <boost/assert.hpp>
 #include <boost/test/unit_test.hpp>
-#include <univalue.h>
 
 using node::MAX_BLOCKFILE_SIZE;
 
