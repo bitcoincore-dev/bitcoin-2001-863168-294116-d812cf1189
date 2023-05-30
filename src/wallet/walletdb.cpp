@@ -300,12 +300,6 @@ bool WalletBatch::EraseLockedUTXO(const COutPoint& output)
 
 class CWalletScanState {
 public:
-    unsigned int nKeys{0};
-    unsigned int nCKeys{0};
-    unsigned int nWatchKeys{0};
-    unsigned int nKeyMeta{0};
-    unsigned int m_unknown_records{0};
-    bool fIsEncrypted{false};
     bool fAnyUnordered{false};
     std::vector<uint256> vWalletUpgrade;
     std::map<OutputType, uint256> m_active_external_spks;
@@ -531,18 +525,12 @@ ReadKeyValue(CWallet* pwallet, DataStream& ssKey, CDataStream& ssValue,
                 return false;
             }
         } else if (strType == DBKeys::WATCHS) {
-            wss.nWatchKeys++;
         } else if (strType == DBKeys::KEY) {
-            wss.nKeys++;
         } else if (strType == DBKeys::MASTER_KEY) {
             if (!LoadEncryptionKey(pwallet, ssKey, ssValue, strErr)) return false;
         } else if (strType == DBKeys::CRYPTED_KEY) {
-            wss.nCKeys++;
-            wss.fIsEncrypted = true;
         } else if (strType == DBKeys::KEYMETA) {
-            wss.nKeyMeta++;
         } else if (strType == DBKeys::WATCHMETA) {
-            wss.nKeyMeta++;
         } else if (strType == DBKeys::DEFAULTKEY) {
             // We don't want or need the default key, but if there is one set,
             // we want to make sure that it is valid so that we can detect corruption
@@ -607,7 +595,6 @@ ReadKeyValue(CWallet* pwallet, DataStream& ssKey, CDataStream& ssValue,
                    strType != DBKeys::MINVERSION && strType != DBKeys::ACENTRY &&
                    strType != DBKeys::VERSION && strType != DBKeys::SETTINGS &&
                    strType != DBKeys::FLAGS) {
-            wss.m_unknown_records++;
         }
     } catch (const std::exception& e) {
         if (strErr.empty()) {
@@ -1186,9 +1173,6 @@ DBErrors WalletBatch::LoadWallet(CWallet* pwallet)
     // upgrading, we don't want to make it worse.
     if (result != DBErrors::LOAD_OK)
         return result;
-
-    pwallet->WalletLogPrintf("Keys: %u plaintext, %u encrypted, %u w/ metadata, %u total. Unknown wallet records: %u\n",
-           wss.nKeys, wss.nCKeys, wss.nKeyMeta, wss.nKeys + wss.nCKeys, wss.m_unknown_records);
 
     for (const uint256& hash : wss.vWalletUpgrade)
         WriteTx(pwallet->mapWallet.at(hash));
