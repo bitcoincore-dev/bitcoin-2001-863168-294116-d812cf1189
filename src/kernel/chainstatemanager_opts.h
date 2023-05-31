@@ -47,6 +47,8 @@ struct ChainstateManagerOpts {
     CoinsViewOptions coins_view{};
     Notifications& notifications;
     int stop_at_height{DEFAULT_STOPATHEIGHT};
+    //! Number of script check worker threads. Zero means no parallel verification.
+    int worker_threads_num{0};
 };
 
 } // namespace kernel
