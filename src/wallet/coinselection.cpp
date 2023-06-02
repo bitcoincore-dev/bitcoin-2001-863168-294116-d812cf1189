@@ -165,7 +165,7 @@ std::optional<SelectionResult> SelectCoinsBnB(std::vector<OutputGroup>& utxo_poo
     return result;
 }
 
-std::optional<SelectionResult> SelectCoinsSRD(const std::vector<OutputGroup>& utxo_pool, CAmount target_value, FastRandomContext& rng)
+std::optional<SelectionResult> SelectCoinsSRD(const std::vector<OutputGroup>& utxo_pool, CAmount target_value, CAmount change_fee, FastRandomContext& rng)
 {
     SelectionResult result(target_value, SelectionAlgorithm::SRD);
 
@@ -173,7 +173,7 @@ std::optional<SelectionResult> SelectCoinsSRD(const std::vector<OutputGroup>& ut
     // barely meets the target. Just use the lower bound change target instead of the randomly
     // generated one, since SRD will result in a random change amount anyway; avoid making the
     // target needlessly large.
-    target_value += CHANGE_LOWER;
+    target_value += CHANGE_LOWER + change_fee;
 
     std::vector<size_t> indexes;
     indexes.resize(utxo_pool.size());
