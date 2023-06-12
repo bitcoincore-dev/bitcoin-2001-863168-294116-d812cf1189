@@ -12,13 +12,13 @@
 #include <util/overflow.h>
 
 #include <algorithm>
-#include <assert.h>
+#include <cassert>
+#include <cstdint>
 #include <cstdio>
+#include <cstring>
 #include <ios>
 #include <limits>
 #include <optional>
-#include <stdint.h>
-#include <string.h>
 #include <string>
 #include <utility>
 #include <vector>
@@ -474,6 +474,66 @@ public:
         m_ostream << m_buffer;
         m_buffer = 0;
         m_offset = 0;
+    }
+};
+
+/**
+ * Like an AutoFile whose data is XOR'd.
+ */
+class XorFile
+{
+private:
+    std::FILE* m_file;
+    const int m_version;
+    const std::vector<std::byte> m_xor;
+
+public:
+    //
+    // AutoFile subset
+    //
+    explicit XorFile(std::FILE* file, int ver, std::vector<std::byte> data_xor)
+        : m_file{file},
+          m_version{ver},
+          m_xor{std::move(data_xor)} {}
+    ~XorFile() { fclose(); }
+    XorFile(const XorFile&) = delete;
+    XorFile& operator=(const XorFile&) = delete;
+    int GetVersion() const { return m_version; }
+    bool feof() const { return std::feof(m_file); }
+    int fclose()
+    {
+        if (std::FILE * file{release()}) return std::fclose(file);
+        return 0;
+    }
+    std::FILE* release()
+    {
+        std::FILE* ret = m_file;
+        m_file = nullptr;
+        return ret;
+    }
+    std::FILE* Get() const { return m_file; }
+    bool IsNull() const { return m_file == nullptr; }
+    std::size_t detail_fread(Span<std::byte> dst);
+
+    //
+    // Stream subset
+    //
+    void read(Span<std::byte> dst);
+    void ignore(size_t num_bytes);
+    void write(Span<const std::byte> src);
+
+    template <typename T>
+    XorFile& operator<<(const T& obj)
+    {
+        ::Serialize(*this, obj);
+        return *this;
+    }
+
+    template <typename T>
+    XorFile& operator>>(T&& obj)
+    {
+        ::Unserialize(*this, obj);
+        return *this;
     }
 };
 
