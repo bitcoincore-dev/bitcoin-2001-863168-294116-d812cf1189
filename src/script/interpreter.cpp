@@ -460,17 +460,9 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
     execdata.m_codeseparator_pos_init = true;
 
     // Get an output index off the stack - returns false if error.
-    const auto GetVoutIdxFromStack = [&](
-            std::optional<size_t>& idx_out,
-            const size_t stack_idx) -> bool {
-        auto out{-1};
-        try {
-            out = CScriptNum(stacktop(stack_idx), fRequireMinimal).GetInt64();
-        } catch (...) {
-            return false;
-        }
-        idx_out = out < 0 ? std::nullopt : std::make_optional(static_cast<size_t>(out));
-        return true;
+    const auto GetVoutIdxFromStack = [&](const size_t stack_idx) -> auto {
+        auto out = CScriptNum(stacktop(stack_idx), fRequireMinimal).GetInt64();
+        return out < 0 ? std::nullopt : std::make_optional(static_cast<size_t>(out));
     };
 
     try
@@ -1308,8 +1300,8 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     }
                     const uint256 recovery_spk_hash{hash_bytes_from_stack};
 
-                    std::optional<size_t> recovery_vout_idx;
-                    if (!GetVoutIdxFromStack(recovery_vout_idx, -2) || !recovery_vout_idx) {
+                    std::optional<size_t> recovery_vout_idx = GetVoutIdxFromStack(-2);
+                    if (!recovery_vout_idx) {
                         return set_error(serror, SCRIPT_ERR_VAULT_BAD_VOUT_IDX);
                     }
 
@@ -1337,7 +1329,8 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     //  [ n items ... ]
                     //  - <trigger-vout-idx>
                     //  - <revault-vout-idx>
-                    if (stack.size() < 4) {
+                    //  - <revault-amount>
+                    if (stack.size() < 5) {
                         return set_error(serror, SCRIPT_ERR_INVALID_STACK_OPERATION);
                     }
 
@@ -1367,24 +1360,30 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
 
                     // Indicates which of the vouts carries forward
                     // the value from the vault into the unvault trigger output.
-                    std::optional<size_t> trigger_vout_idx;
-                    if (!GetVoutIdxFromStack(trigger_vout_idx, -1) || !trigger_vout_idx) {
+                    std::optional<size_t> trigger_vout_idx = GetVoutIdxFromStack(-1);
+                    if (!trigger_vout_idx) {
                         return set_error(serror, SCRIPT_ERR_VAULT_BAD_VOUT_IDX);
                     }
 
                     // Indicates which (if any) of the vouts is a "revault" of some
                     // portion of the value back into the original vault sPK.
-                    std::optional<size_t> revault_vout_idx;
-                    if (!GetVoutIdxFromStack(revault_vout_idx, -2)) {
-                        return set_error(serror, SCRIPT_ERR_VAULT_BAD_VOUT_IDX);
+                    std::optional<size_t> revault_vout_idx = GetVoutIdxFromStack(-2);
+
+                    auto revault_amount = CScriptNum(
+                        // nMaxNumSize of 7, since that's the maximum number of bytes
+                        // necessary to capture any valid satoshi values (21e6 * 100e6).
+                        stacktop(-3), fRequireMinimal, /*nMaxNumSize=*/7).GetInt64();
+                    if (revault_amount < 0) {
+                        return set_error(serror, SCRIPT_ERR_VAULT_BAD_REVAULT);
                     }
 
                     if (const auto& err = checker.CheckVaultTrigger(
-                            execdata, *trigger_vout_idx, revault_vout_idx,
+                            execdata, *trigger_vout_idx, revault_vout_idx, revault_amount,
                             flu_script, flags, serror)) {
                         return set_error(serror, *err);
                     }
 
+                    popstack(stack);
                     popstack(stack);
                     popstack(stack);
                     stack.push_back(vchTrue);
@@ -2158,6 +2157,7 @@ std::optional<ScriptError> GenericTransactionSignatureChecker<T>::CheckVaultTrig
     ScriptExecutionData& execdata,
     const size_t trigger_out_idx,
     const std::optional<size_t> maybe_revault_out_idx,
+    const CAmount revault_amount,
     CScript flu_script,
     unsigned int flags,
     ScriptError* serror) const
@@ -2230,11 +2230,22 @@ std::optional<ScriptError> GenericTransactionSignatureChecker<T>::CheckVaultTrig
         if (*maybe_revault_out_idx >= vout.size()) {
             return SCRIPT_ERR_VAULT_BAD_REVAULT;
         }
+        // Belt-and-suspenders amount checks.
+        if (revault_amount <= 0 || revault_amount > this->amount) {
+            return SCRIPT_ERR_VAULT_BAD_REVAULT;
+        }
+
         const auto& revault_out = vout[*maybe_revault_out_idx];
+
         if (revault_out.scriptPubKey != vault_spk) {
             return SCRIPT_ERR_VAULT_BAD_REVAULT;
         }
         total_val_out_to_vaults += revault_out.nValue;
+    } else {
+        // If no revault index given, revault amount should be zero.
+        if (revault_amount != 0) {
+            return SCRIPT_ERR_VAULT_BAD_REVAULT;
+        }
     }
 
     if (total_val_out_to_vaults < this->amount) {
@@ -2244,7 +2255,7 @@ std::optional<ScriptError> GenericTransactionSignatureChecker<T>::CheckVaultTrig
     }
 
     execdata.AddDeferredVaultTriggerCheck(
-        trigger_out_idx, maybe_revault_out_idx, this->amount);
+        trigger_out_idx, maybe_revault_out_idx, revault_amount, this->amount);
     return std::nullopt;
 }
 

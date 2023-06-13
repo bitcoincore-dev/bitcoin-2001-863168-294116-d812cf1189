@@ -273,11 +273,13 @@ struct DeferredVaultTriggerCheck
     //! An optional output that includes a revault balance.
     std::optional<unsigned int> revault_vout_idx;
 
+    CAmount revault_amount;
+
     //! The amount of the input to cover - NOT the total expected amount of the output.
     CAmount amount;
 
-    DeferredVaultTriggerCheck(unsigned int vout_idx, std::optional<unsigned int> revault_idx, CAmount amount) noexcept
-        : vout_idx(vout_idx), revault_vout_idx(revault_idx), amount(amount) {}
+    DeferredVaultTriggerCheck(unsigned int vout_idx, std::optional<unsigned int> revault_idx, const CAmount revault_amount, const CAmount amount) noexcept
+        : vout_idx(vout_idx), revault_vout_idx(revault_idx), revault_amount(revault_amount), amount(amount) {}
 };
 
 //! Data that is accumulated during the script verification of a single input and then
@@ -352,10 +354,11 @@ struct ScriptExecutionData
         dc.m_recov_spend_check = {vout_idx, amount};
     }
 
-    void AddDeferredVaultTriggerCheck(unsigned int vout_idx, std::optional<unsigned int> revault_idx, CAmount amount)
+    void AddDeferredVaultTriggerCheck(
+        unsigned int vout_idx, std::optional<unsigned int> revault_idx, CAmount revault_amount, CAmount amount)
     {
         auto& dc = this->NewDeferredCheck();
-        dc.m_vault_trigger_check = {vout_idx, revault_idx, amount};
+        dc.m_vault_trigger_check = {vout_idx, revault_idx, revault_amount, amount};
     }
 };
 
@@ -423,6 +426,7 @@ public:
         ScriptExecutionData& execdata,
         const size_t trigger_out_idx,
         const std::optional<size_t> revault_out_idx,
+        const CAmount revault_amount,
         CScript flu_script_with_data,
         unsigned int flags,
         ScriptError* serror) const
@@ -479,6 +483,7 @@ public:
         ScriptExecutionData& execdata,
         const size_t trigger_out_idx,
         const std::optional<size_t> revault_out_idx,
+        const CAmount revault_amount,
         CScript flu_script_with_data,
         unsigned int flags,
         ScriptError* serror) const override;
@@ -527,12 +532,13 @@ public:
         ScriptExecutionData& execdata,
         const size_t trigger_out_idx,
         const std::optional<size_t> revault_out_idx,
+        const CAmount revault_amount,
         CScript flu_script_with_data,
         unsigned int flags,
         ScriptError* serror) const override
     {
         return m_checker.CheckVaultTrigger(
-            execdata, trigger_out_idx, revault_out_idx, flu_script_with_data, flags, serror);
+            execdata, trigger_out_idx, revault_out_idx, revault_amount, flu_script_with_data, flags, serror);
     }
 };
 

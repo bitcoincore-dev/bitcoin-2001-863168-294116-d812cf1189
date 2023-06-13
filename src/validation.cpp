@@ -1690,22 +1690,30 @@ static std::optional<DeferredCheckError> ValidateDeferredChecks(
     const std::vector<DeferredCheck>& checks,
     const CTransaction& tx)
 {
-    std::unordered_map<unsigned int, CAmount> expected_recov_total;
-    std::unordered_map<UnvaultTriggerIdx, CAmount, SimpleHash> expected_unvault_total;
+    std::unordered_map<size_t, CAmount> expected_trigger_out;
+    std::unordered_map<size_t, CAmount> expected_recovery_out;
 
     for (const auto& c : checks) {
         if (const auto& recov_check = c.m_recov_spend_check) {
-            expected_recov_total[recov_check->vout_idx] += recov_check->amount;
+            expected_recovery_out[recov_check->vout_idx] += recov_check->amount;
         }
         else if (const auto& trigger_check = c.m_vault_trigger_check) {
-            auto key = std::make_pair(trigger_check->vout_idx, trigger_check->revault_vout_idx);
-            expected_unvault_total[key] += trigger_check->amount;
+            if (!trigger_check->revault_vout_idx) {
+                expected_trigger_out[trigger_check->vout_idx] += trigger_check->amount;
+            } else {
+                auto revault_amt{trigger_check->revault_amount};
+                auto trigger_amt{trigger_check->amount - revault_amt};
+                Assume(trigger_amt >= 0);
+
+                expected_trigger_out[trigger_check->vout_idx] += trigger_amt;
+                expected_trigger_out[*trigger_check->revault_vout_idx] += revault_amt;
+            }
         }
     }
 
     // Ensure that all vault inputs being swept to recovery have their value reflected
     // in the corresponding outputs.
-    for (const auto& [vout_idx, amount] : expected_recov_total) {
+    for (const auto& [vout_idx, amount] : expected_recovery_out) {
         if (tx.vout[vout_idx].nValue != amount) {
             return DeferredCheckError{"vault-insufficient-recovery-value"};
         }
@@ -1713,16 +1721,8 @@ static std::optional<DeferredCheckError> ValidateDeferredChecks(
 
     // Ensure that all vault inputs being triggered for unvault have their value
     // reflected in the corresponding outputs.
-    for (const auto& [pair, amount] : expected_unvault_total) {
-        const auto& [vout_idx, revault_idx] = pair;
-
-        CAmount total = tx.vout[vout_idx].nValue;
-
-        if (revault_idx.has_value()) {
-            total += tx.vout[*revault_idx].nValue;
-        }
-
-        if (total != amount) {
+    for (const auto& [vout_idx, amount] : expected_trigger_out) {
+        if (tx.vout[vout_idx].nValue != amount) {
             return DeferredCheckError{"vault-insufficient-trigger-value"};
         }
     }
