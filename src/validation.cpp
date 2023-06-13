@@ -2327,7 +2327,15 @@ bool Chainstate::ConnectBlock(const CBlock& block, BlockValidationState& state, 
     }
 
     for (const auto &[tx, checks] : tx_to_checks) {
-        if (auto error = ValidateDeferredChecks(checks, *tx)) {
+        std::optional<DeferredCheckError> error{std::nullopt};
+        try {
+            error = ValidateDeferredChecks(checks, *tx);
+        } catch (const std::exception& e) {
+            LogPrintf("Encountered exception processing deferred check: %s\n", e.what());
+            error = DeferredCheckError{"unknown"};
+        }
+
+        if (error) {
             return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "block-validation-failed");
         }
     }
