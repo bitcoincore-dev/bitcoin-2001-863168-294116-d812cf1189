@@ -948,7 +948,7 @@ BadTriggerRecoverOpcode = BadBehavior(
     "trigger with bad recover script", "Trigger outputs not compatible")
 
 BadRevaultLowAmount = BadBehavior(
-    "bad revault amount (low)", "vault-insufficient-trigger-value")
+    "bad revault amount (low)", ("Bad revault", "vault-insufficient-trigger-value"))
 BadRevaultHighAmount = BadBehavior(
     "bad revault amount (high)", "bad-txns-in-belowout")
 
@@ -1186,6 +1186,8 @@ class UnvaultSpec:
         self.trigger_txout = CTxOut(nValue=self.amount, scriptPubKey=self.trigger_spk)
 
         self.revault_txout = None
+        self.revault_input_vault = None
+
         if self.revault_amount_sats:
             vault_output = self.compat_vaults[0].vault_output
             assert vault_output
@@ -1198,6 +1200,15 @@ class UnvaultSpec:
             self.revault_txout = CTxOut(
                 nValue=self.revault_amount_sats,
                 scriptPubKey=vault_output.scriptPubKey)
+
+            for vault in self.compat_vaults:
+                if vault.total_amount_sats > self.revault_amount_sats:
+                    self.revault_input_vault = vault
+                    break
+
+            # We must have selected an input vault with enough to handle
+            # the revault.
+            assert self.revault_input_vault
 
         # Cache the taproot info for later use when constructing a spend.
         self.withdraw_spend_wit_fragment = [
@@ -1284,9 +1295,20 @@ def get_trigger_tx(
 
         trigger_vout_idx = spec_to_vout_idx[spec]
 
+        revault_amount = script.bn2vch(0)
+        revault_idx = script.bn2vch(-1)
+
+        # Determine whether this is the input that the revault will pull
+        # from, if there is a revault.
+        if spec.revault_amount_sats and vault == spec.revault_input_vault:
+            revault_amount = script.bn2vch(spec.revault_amount_sats)
+            revault_idx = script.bn2vch(revault_vout_idx)
+
         trigger_tx.wit.vtxinwit += [messages.CTxInWitness()]
         trigger_tx.wit.vtxinwit[i].scriptWitness.stack = [
-            script.bn2vch(revault_vout_idx),
+            # TODO: test bad revault_amount_sats values
+            revault_amount,
+            revault_idx,
             CScript([trigger_vout_idx]) if trigger_vout_idx != 0 else b'',
             spec.target_hash,
             unvault_signature,
