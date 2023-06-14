@@ -97,6 +97,17 @@ def find_extra_boosts():
 
     extra_boosts = set(filtered_included_boost_set.difference(exclusion_set))
 
+    # Special case: looking for the BOOST_ASSERT macro, which requires the "boost/assert.hpp" header.
+    try:
+        check_output(["git", "grep", "-E", r"BOOST_ASSERT\(", "--", "*.cpp", "*.h"], text=True, encoding="utf8")
+    except CalledProcessError as e:
+        if e.returncode > 1:
+            raise e
+        elif e.returncode == 1:
+            return extra_boosts
+
+    extra_boosts.add("BOOST_ASSERT")
+
     return extra_boosts
 
 
