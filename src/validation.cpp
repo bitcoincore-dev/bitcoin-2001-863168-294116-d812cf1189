@@ -4420,7 +4420,7 @@ bool ChainstateManager::LoadBlockIndex()
 
         for (CBlockIndex* pindex : vSortedByHeight) {
             if (ShutdownRequested()) return false;
-            if (pindex->IsAssumedValid() ||
+            if (pindex == GetSnapshotBaseBlock() ||
                     (pindex->IsValid(BLOCK_VALID_TRANSACTIONS) &&
                      (pindex->HaveTxsDownloaded() || pindex->pprev == nullptr))) {
 
