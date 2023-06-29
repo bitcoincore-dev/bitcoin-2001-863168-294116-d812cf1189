@@ -8,6 +8,7 @@
 #include <crypto/chacha20.h>
 #include <crypto/poly1305.h>
 #include <span.h>
+#include <support/cleanse.h>
 
 #include <assert.h>
 #include <cstdint>
@@ -46,11 +47,11 @@ void UpdateTag(Poly1305& poly1305, Span<const std::byte> aad, Span<const std::by
 {
     static const std::byte PADDING[16] = {{}};
     // Process the padded AAD with Poly1305.
-    poly1305.Update(aad);
-    poly1305.Update(Span{PADDING}.first((16 - (aad.size() % 16)) % 16));
+    unsigned aad_padding = (16 - (aad.size() % 16)) % 16;
+    poly1305.Update(aad).Update(Span{PADDING}.first(aad_padding));
     // Process the padded ciphertext with Poly1305.
-    poly1305.Update(cipher);
-    poly1305.Update(Span{PADDING}.first((16 - (cipher.size() % 16)) % 16));
+    unsigned cipher_padding = (16 - (cipher.size() % 16)) % 16;
+    poly1305.Update(cipher).Update(Span{PADDING}.first(cipher_padding));
     // Process the AAD and plaintext length with Poly1305.
     std::byte length_desc[16];
     WriteLE64(UCharCast(length_desc), aad.size());
@@ -102,4 +103,42 @@ bool AEADChaCha20Poly1305::Decrypt(Span<const std::byte> cipher, Span<const std:
     // Decrypt.
     m_chacha20.Crypt(UCharCast(cipher.data()), UCharCast(plain.data()), plain.size());
     return true;
+}
+
+void AEADChaCha20Poly1305::Keystream(Nonce96 nonce, Span<std::byte> keystream) noexcept
+{
+    // Skip the first output block, as it's used for generating the poly1305 key.
+    m_chacha20.Seek64(nonce, 1);
+    m_chacha20.Keystream(UCharCast(keystream.data()), keystream.size());
+}
+
+void FSChaCha20Poly1305::NextPacket() noexcept
+{
+    if (++m_packet_counter == m_rekey_interval) {
+        // Generate a full block of keystream, to avoid needing the ChaCha20 buffer, even though
+        // we only need KEYLEN (32) bytes.
+        std::byte one_block[64];
+        m_aead.Keystream({0xFFFFFFFF, m_rekey_counter}, one_block);
+        // Switch keys.
+        m_aead.SetKey(Span{one_block}.first(KEYLEN));
+        // Wipe the generated keystream (a copy remains inside m_aead, which will be cleaned up
+        // once it cycles again, or is destroyed).
+        memory_cleanse(one_block, sizeof(one_block));
+        // Update counters.
+        m_packet_counter = 0;
+        ++m_rekey_counter;
+    }
+}
+
+void FSChaCha20Poly1305::Encrypt(Span<const std::byte> plain, Span<const std::byte> aad, Span<std::byte> cipher) noexcept
+{
+    m_aead.Encrypt(plain, aad, {m_packet_counter, m_rekey_counter}, cipher);
+    NextPacket();
+}
+
+bool FSChaCha20Poly1305::Decrypt(Span<const std::byte> cipher, Span<const std::byte> aad, Span<std::byte> plain) noexcept
+{
+    bool ret = m_aead.Decrypt(cipher, aad, {m_packet_counter, m_rekey_counter}, plain);
+    NextPacket();
+    return ret;
 }
