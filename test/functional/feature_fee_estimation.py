@@ -309,7 +309,7 @@ class EstimateFeeTest(BitcoinTestFramework):
         os.utime(fee_dat, (last_modified_time, last_modified_time))
 
         # Start node and ensure the fee_estimates.dat file was not read
-        self.start_node(0)
+        self.start_node(0, extra_args=["-acceptstalefeeestimates=0"])
         assert_equal(self.nodes[0].estimatesmartfee(1)["errors"], ["Insufficient data or no feerate found"])
 
 

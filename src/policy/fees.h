@@ -31,7 +31,7 @@ static constexpr std::chrono::hours FEE_FLUSH_INTERVAL{1};
 static constexpr std::chrono::hours MAX_FILE_AGE{60};
 
 // Whether we allow importing a fee_estimates file older than MAX_FILE_AGE.
-static constexpr bool DEFAULT_ACCEPT_STALE_FEE_ESTIMATES{false};
+static constexpr bool DEFAULT_ACCEPT_STALE_FEE_ESTIMATES{true};
 
 class AutoFile;
 class CTxMemPoolEntry;
