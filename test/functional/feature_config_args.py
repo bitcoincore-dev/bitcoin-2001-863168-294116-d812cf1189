@@ -328,7 +328,7 @@ class ConfArgsTest(BitcoinTestFramework):
         node = self.nodes[0]
         with tempfile.NamedTemporaryFile(dir=self.options.tmpdir, mode="wt", delete=False) as temp_conf:
             temp_conf.write(f"datadir={node.datadir}\n")
-        node.assert_start_raises_init_error([f"-conf={temp_conf.name}"], re.escape(
+        node.assert_start_raises_init_error([f"-conf={temp_conf.name}", "-allowignoredconf=0"], re.escape(
             f'Error: Data directory "{node.datadir}" contains a "bitcoin.conf" file which is ignored, because a '
             f'different configuration file "{temp_conf.name}" from command line argument "-conf={temp_conf.name}" '
             f'is being used instead.') + r"[\s\S]*", match=ErrorMatch.FULL_REGEX)
@@ -365,7 +365,7 @@ class ConfArgsTest(BitcoinTestFramework):
         # config file.
         node_args = node.args
         node.args = [arg for arg in node.args if not arg.startswith("-datadir=")]
-        node.assert_start_raises_init_error([], re.escape(
+        node.assert_start_raises_init_error(["-allowignoredconf=0"], re.escape(
             f'Error: Data directory "{node.datadir}" contains a "bitcoin.conf" file which is ignored, because a '
             f'different configuration file "{default_datadir}/bitcoin.conf" from data directory "{default_datadir}" '
             f'is being used instead.') + r"[\s\S]*", env=env, match=ErrorMatch.FULL_REGEX)
