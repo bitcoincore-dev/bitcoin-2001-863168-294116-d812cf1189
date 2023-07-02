@@ -17,7 +17,10 @@ from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
 )
-from test_framework.wallet import MiniWallet
+from test_framework.wallet import (
+    MiniWallet,
+    MiniWalletMode,
+)
 
 # custom limits for node1
 CUSTOM_ANCESTOR_LIMIT = 5
@@ -44,7 +47,8 @@ class MempoolPackagesTest(BitcoinTestFramework):
         ]
 
     def run_test(self):
-        self.wallet = MiniWallet(self.nodes[0])
+        self.wallet = MiniWallet(self.nodes[0], mode=MiniWalletMode.ADDRESS_OP_TRUE_OLD)
+        self.generatetoaddress(self.nodes[0], nblocks=101, address=self.wallet.get_address())
         self.wallet.rescan_utxos()
 
         if self.is_specified_wallet_compiled():
