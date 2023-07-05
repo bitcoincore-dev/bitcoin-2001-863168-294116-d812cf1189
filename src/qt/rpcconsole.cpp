@@ -512,11 +512,11 @@ bool RPCExecutor::executeConsoleGenerate(const std::vector<std::string>& parsed_
         } else {
             if (!RPCConsole::RPCExecuteCommandLine(m_node, result, "generatetoaddress " + nblocks + " " + address + " " + maxtries + "\n", /*pstrFilteredOut=*/nullptr, wallet_model)) {
                     Q_EMIT reply(RPCConsole::CMD_ERROR, QString("Error: could not generate blocks"));
-            } else {
+                } else {
                     std::string answer = "{\n  \"address\": \"" + address + "\",\n  \"blocks\": " + result + "\n}";
                     Q_EMIT reply(RPCConsole::CMD_REPLY, QString::fromStdString("\n" + answer + "\n\n"));
+                }
             }
-        }
         return true;
     } else {
         // Default to "help generate" when wrong number of parameters are given
