@@ -500,6 +500,8 @@ public:
     AutoFile(const AutoFile&) = delete;
     AutoFile& operator=(const AutoFile&) = delete;
 
+    bool feof() const { return std::feof(file); }
+
     int fclose()
     {
         int retval{0};
@@ -526,14 +528,16 @@ public:
      */
     bool IsNull() const         { return (file == nullptr); }
 
+    /** Implementation detail, only used internally. */
+    std::size_t detail_fread(Span<std::byte> dst);
+
     //
     // Stream subset
     //
     void read(Span<std::byte> dst)
     {
-        if (!file) throw std::ios_base::failure("AutoFile::read: file handle is nullptr");
-        if (fread(dst.data(), 1, dst.size(), file) != dst.size()) {
-            throw std::ios_base::failure(feof(file) ? "AutoFile::read: end of file" : "AutoFile::read: fread failed");
+        if (detail_fread(dst) != dst.size()) {
+            throw std::ios_base::failure(feof() ? "AutoFile::read: end of file" : "AutoFile::read: fread failed");
         }
     }
 
@@ -544,7 +548,7 @@ public:
         while (nSize > 0) {
             size_t nNow = std::min<size_t>(nSize, sizeof(data));
             if (fread(data, 1, nNow, file) != nNow)
-                throw std::ios_base::failure(feof(file) ? "AutoFile::ignore: end of file" : "AutoFile::read: fread failed");
+                throw std::ios_base::failure(feof() ? "AutoFile::ignore: end of file" : "AutoFile::read: fread failed");
             nSize -= nNow;
         }
     }
