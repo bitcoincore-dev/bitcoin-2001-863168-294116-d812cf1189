@@ -498,18 +498,18 @@ bool RPCExecutor::executeConsoleGenerate(const std::vector<std::string>& parsed_
 {
     // Catch the console-only generate command with 2 or less parameters before RPC call is executed .
     if (parsed_command.size() <= 3) {
-            // Default number of blocks is 1 if missing
-            const std::string nblocks{parsed_command.size() > 1 ? parsed_command[1] : "1"};
-            // An empty maxtries parameters will be modified by generatetoaddress' default value
-            const std::string maxtries{parsed_command.size() > 2 ? parsed_command[2] : ""};
+        // Default number of blocks is 1 if missing
+        const std::string nblocks{parsed_command.size() > 1 ? parsed_command[1] : "1"};
+        // An empty maxtries parameters will be modified by generatetoaddress' default value
+        const std::string maxtries{parsed_command.size() > 2 ? parsed_command[2] : ""};
 
-            // Generate address
-            std::string result;
-            std::string address;
-            if (!RPCConsole::RPCExecuteCommandLine(m_node, address, "getnewaddress\n", /*pstrFilteredOut=*/nullptr, wallet_model)) {
-                Q_EMIT reply(RPCConsole::CMD_ERROR, QString("Error: could not generate new address"));
-            } else {
-                if (!RPCConsole::RPCExecuteCommandLine(m_node, result, "generatetoaddress " + nblocks + " " + address + " " + maxtries + "\n", /*pstrFilteredOut=*/nullptr, wallet_model)) {
+        // Generate address
+        std::string result;
+        std::string address;
+        if (!RPCConsole::RPCExecuteCommandLine(m_node, address, "getnewaddress\n", /*pstrFilteredOut=*/nullptr, wallet_model)) {
+            Q_EMIT reply(RPCConsole::CMD_ERROR, QString("Error: could not generate new address"));
+        } else {
+            if (!RPCConsole::RPCExecuteCommandLine(m_node, result, "generatetoaddress " + nblocks + " " + address + " " + maxtries + "\n", /*pstrFilteredOut=*/nullptr, wallet_model)) {
                     Q_EMIT reply(RPCConsole::CMD_ERROR, QString("Error: could not generate blocks"));
                 } else {
                     std::string answer = "{\n  \"address\": \"" + address + "\",\n  \"blocks\": " + result + "\n}";
