@@ -93,6 +93,25 @@ target_link_libraries(bitcoin_common
 )
 
 
+if(ENABLE_WALLET)
+  add_subdirectory(wallet)
+
+  if(BUILD_WALLET_TOOL)
+    add_executable(bitcoin-wallet
+      bitcoin-wallet.cpp
+      init/bitcoin-wallet.cpp
+      wallet/wallettool.cpp
+    )
+    target_link_libraries(bitcoin-wallet
+      bitcoin_wallet
+      bitcoin_common
+      bitcoin_util
+      Boost::headers
+    )
+  endif()
+endif()
+
+
 # P2P and RPC server functionality used by `bitcoind` and `bitcoin-qt` executables.
 add_library(bitcoin_node STATIC EXCLUDE_FROM_ALL
   addrdb.cpp
@@ -178,9 +197,13 @@ add_library(bitcoin_node STATIC EXCLUDE_FROM_ALL
   validation.cpp
   validationinterface.cpp
   versionbits.cpp
-
-  dummywallet.cpp
 )
+if(ENABLE_WALLET)
+  target_sources(bitcoin_node PRIVATE wallet/init.cpp)
+  target_link_libraries(bitcoin_node PRIVATE bitcoin_wallet)
+else()
+  target_sources(bitcoin_node PRIVATE dummywallet.cpp)
+endif()
 target_link_libraries(bitcoin_node
   PRIVATE
     bitcoin_common
@@ -211,4 +234,55 @@ if(BUILD_DAEMON)
     PRIVATE
       $<$<BOOL:${MINGW}>:-static>
   )
+endif()
+
+
+add_library(bitcoin_cli STATIC EXCLUDE_FROM_ALL
+  compat/stdin.cpp
+  rpc/client.cpp
+)
+target_link_libraries(bitcoin_cli
+  PUBLIC
+    univalue
+)
+
+
+# Bitcoin Core RPC client
+if(BUILD_CLI)
+  add_executable(bitcoin-cli bitcoin-cli.cpp)
+  target_link_libraries(bitcoin-cli
+    bitcoin_cli
+    bitcoin_common
+    bitcoin_util
+    libevent::libevent
+  )
+endif()
+
+
+if(BUILD_TX)
+  add_executable(bitcoin-tx bitcoin-tx.cpp)
+  target_link_libraries(bitcoin-tx
+    bitcoin_common
+    bitcoin_util
+    univalue
+  )
+endif()
+
+
+if(BUILD_UTIL)
+  add_executable(bitcoin-util bitcoin-util.cpp)
+  target_link_libraries(bitcoin-util
+    bitcoin_common
+    bitcoin_util
+  )
+endif()
+
+
+add_subdirectory(test/util)
+if(BUILD_BENCH)
+  add_subdirectory(bench)
+endif()
+
+if(BUILD_TESTS)
+  add_subdirectory(test)
 endif()

@@ -27,6 +27,7 @@ project("Bitcoin Core"
   LANGUAGES CXX ASM
 )
 
+set(PACKAGE_NAME ${PROJECT_NAME})
 set(CLIENT_VERSION_IS_RELEASE "false")
 set(COPYRIGHT_YEAR "2023")
 set(COPYRIGHT_HOLDERS "The %s developers")
@@ -39,13 +40,23 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/module)
 # When adding a new option, end the <help_text> with a full stop for consistency.
 include(CMakeDependentOption)
 option(BUILD_DAEMON "Build bitcoind executable." ON)
+option(BUILD_CLI "Build bitcoin-cli executable." ON)
+option(BUILD_TX "Build bitcoin-tx executable." ON)
+option(BUILD_UTIL "Build bitcoin-util executable." ON)
 option(ASM "Use assembly routines." ON)
-cmake_dependent_option(CXX20 "Enable compilation in C++20 mode." OFF "NOT MSVC" ON)
-option(THREADLOCAL "Enable features that depend on the C++ thread_local keyword (currently just thread names in debug logs)." ON)
 
+option(ENABLE_WALLET "Enable wallet." ON)
 # TODO: These tri-state options will be removed and most features
 #       will become opt-in by default before merging into master.
 include(TristateOption)
+tristate_option(WITH_SQLITE "Enable SQLite wallet support." "if libsqlite3 is found." AUTO)
+tristate_option(WITH_BDB "Enable Berkeley DB (BDB) wallet support." "if libdb_cxx is found." AUTO)
+option(WARN_INCOMPATIBLE_BDB "Warn when using a Berkeley DB (BDB) version other than 4.8." ON)
+cmake_dependent_option(BUILD_WALLET_TOOL "Build bitcoin-wallet tool." ON "ENABLE_WALLET" OFF)
+
+cmake_dependent_option(CXX20 "Enable compilation in C++20 mode." OFF "NOT MSVC" ON)
+option(THREADLOCAL "Enable features that depend on the C++ thread_local keyword (currently just thread names in debug logs)." ON)
+
 tristate_option(CCACHE "Use ccache for compiling." "if ccache is found." AUTO)
 tristate_option(WITH_NATPMP "Enable NAT-PMP." "if libnatpmp is found." AUTO)
 tristate_option(WITH_MINIUPNPC "Enable UPnP." "if libminiupnpc is found." AUTO)
@@ -55,6 +66,9 @@ tristate_option(WITH_USDT
   "if sys/sdt.h is found."
   AUTO
 )
+
+option(BUILD_TESTS "Build test_bitcoin executable." ON)
+option(BUILD_BENCH "Build bench_bitcoin executable." ON)
 
 if(CXX20)
   set(CMAKE_CXX_STANDARD 20)
@@ -141,18 +155,34 @@ else()
   endif()
 endif()
 
+find_package(Python3 3.8 COMPONENTS Interpreter)
+set(PYTHON_COMMAND ${Python3_EXECUTABLE})
+
 add_subdirectory(src)
+add_subdirectory(test)
+
+include(cmake/tests.cmake)
 
 message("\n")
 message("Configure summary")
 message("=================")
 message("Executables:")
 message("  bitcoind ............................ ${BUILD_DAEMON}")
+message("  bitcoin-cli ......................... ${BUILD_CLI}")
+message("  bitcoin-tx .......................... ${BUILD_TX}")
+message("  bitcoin-util ........................ ${BUILD_UTIL}")
+message("  bitcoin-wallet ...................... ${BUILD_WALLET_TOOL}")
+message("Wallet support:")
+message("  SQLite, descriptor wallets .......... ${WITH_SQLITE}")
+message("  Berkeley DB, legacy wallets ......... ${WITH_BDB}")
 message("Optional packages:")
 message("  NAT-PMP ............................. ${WITH_NATPMP}")
 message("  UPnP ................................ ${WITH_MINIUPNPC}")
 message("  ZeroMQ .............................. ${WITH_ZMQ}")
 message("  USDT tracing ........................ ${WITH_USDT}")
+message("Tests:")
+message("  test_bitcoin ........................ ${BUILD_TESTS}")
+message("  bench_bitcoin ....................... ${BUILD_BENCH}")
 message("")
 if(CMAKE_CROSSCOMPILING)
   set(cross_status "TRUE, for ${CMAKE_SYSTEM_NAME}, ${CMAKE_SYSTEM_PROCESSOR}")
