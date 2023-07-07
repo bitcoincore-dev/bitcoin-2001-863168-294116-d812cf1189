@@ -61,13 +61,14 @@ void UpdateTag(Poly1305& poly1305, Span<const std::byte> aad, Span<const std::by
 
 } // namespace
 
-void AEADChaCha20Poly1305::Encrypt(Span<const std::byte> plain, Span<const std::byte> aad, Nonce96 nonce, Span<std::byte> cipher) noexcept
+void AEADChaCha20Poly1305::Encrypt(Span<const std::byte> plain1, Span<const std::byte> plain2, Span<const std::byte> aad, Nonce96 nonce, Span<std::byte> cipher) noexcept
 {
-    assert(cipher.size() == plain.size() + EXPANSION);
+    assert(cipher.size() == plain1.size() + plain2.size() + EXPANSION);
 
     // Encrypt using ChaCha20 (starting at index 1).
     m_chacha20.Seek64(nonce, 1);
-    m_chacha20.Crypt(UCharCast(plain.data()), UCharCast(cipher.data()), plain.size());
+    m_chacha20.Crypt(UCharCast(plain1.data()), UCharCast(cipher.data()), plain1.size());
+    m_chacha20.Crypt(UCharCast(plain2.data()), UCharCast(cipher.data() + plain1.size()), plain2.size());
 
     // Get first block of keystream.
     std::byte first_block[64];
@@ -76,15 +77,15 @@ void AEADChaCha20Poly1305::Encrypt(Span<const std::byte> plain, Span<const std::
     // Use the first 32 bytes of the first keystream block as poly1305 key.
     Poly1305 poly1305{Span{first_block}.first(Poly1305::KEYLEN)};
     // Compute tag.
-    UpdateTag(poly1305, aad, cipher.first(plain.size()));
+    UpdateTag(poly1305, aad, cipher.first(cipher.size() - EXPANSION));
 
     // Write tag to ciphertext.
     poly1305.Finalize(cipher.last(EXPANSION));
 }
 
-bool AEADChaCha20Poly1305::Decrypt(Span<const std::byte> cipher, Span<const std::byte> aad, Nonce96 nonce, Span<std::byte> plain) noexcept
+bool AEADChaCha20Poly1305::Decrypt(Span<const std::byte> cipher, Span<const std::byte> aad, Nonce96 nonce, Span<std::byte> plain1, Span<std::byte> plain2) noexcept
 {
-    assert(cipher.size() == plain.size() + EXPANSION);
+    assert(cipher.size() == plain1.size() + plain2.size() + EXPANSION);
 
     // Get first block of keystream.
     std::byte first_block[64];
@@ -93,15 +94,16 @@ bool AEADChaCha20Poly1305::Decrypt(Span<const std::byte> cipher, Span<const std:
     // Use the first 32 bytes of the first keystream block as poly1305 key.
     Poly1305 poly1305{Span{first_block}.first(Poly1305::KEYLEN)};
     // Compute tag.
-    UpdateTag(poly1305, aad, cipher.first(plain.size()));
+    UpdateTag(poly1305, aad, cipher.first(cipher.size() - EXPANSION));
 
     // Verify tag.
     std::byte expected_tag[EXPANSION];
     poly1305.Finalize(expected_tag);
-    if (timingsafe_bcmp(UCharCast(expected_tag), UCharCast(cipher.data() + plain.size()), EXPANSION)) return false;
+    if (timingsafe_bcmp(UCharCast(expected_tag), UCharCast(cipher.data() + cipher.size() - EXPANSION), EXPANSION)) return false;
 
     // Decrypt.
-    m_chacha20.Crypt(UCharCast(cipher.data()), UCharCast(plain.data()), plain.size());
+    m_chacha20.Crypt(UCharCast(cipher.data()), UCharCast(plain1.data()), plain1.size());
+    m_chacha20.Crypt(UCharCast(cipher.data() + plain1.size()), UCharCast(plain2.data()), plain2.size());
     return true;
 }
 
@@ -130,15 +132,15 @@ void FSChaCha20Poly1305::NextPacket() noexcept
     }
 }
 
-void FSChaCha20Poly1305::Encrypt(Span<const std::byte> plain, Span<const std::byte> aad, Span<std::byte> cipher) noexcept
+void FSChaCha20Poly1305::Encrypt(Span<const std::byte> plain1, Span<const std::byte> plain2, Span<const std::byte> aad, Span<std::byte> cipher) noexcept
 {
-    m_aead.Encrypt(plain, aad, {m_packet_counter, m_rekey_counter}, cipher);
+    m_aead.Encrypt(plain1, plain2, aad, {m_packet_counter, m_rekey_counter}, cipher);
     NextPacket();
 }
 
-bool FSChaCha20Poly1305::Decrypt(Span<const std::byte> cipher, Span<const std::byte> aad, Span<std::byte> plain) noexcept
+bool FSChaCha20Poly1305::Decrypt(Span<const std::byte> cipher, Span<const std::byte> aad, Span<std::byte> plain1, Span<std::byte> plain2) noexcept
 {
-    bool ret = m_aead.Decrypt(cipher, aad, {m_packet_counter, m_rekey_counter}, plain);
+    bool ret = m_aead.Decrypt(cipher, aad, {m_packet_counter, m_rekey_counter}, plain1, plain2);
     NextPacket();
     return ret;
 }
