@@ -288,7 +288,7 @@ epilogue:
     // dereferencing and UB.
     scheduler.stop();
     if (chainman.m_thread_load.joinable()) chainman.m_thread_load.join();
-    StopScriptCheckWorkerThreads();
+    chainman.StopScriptCheckWorkerThreads();
 
     GetMainSignals().FlushBackgroundCallbacks();
     {
