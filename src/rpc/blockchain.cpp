@@ -430,7 +430,7 @@ static RPCHelpMan getblockfrompeer()
         "getblockfrompeer",
         "Attempt to fetch block from a given peer.\n\n"
         "We must have the header for this block, e.g. using submitheader.\n"
-        "Subsequent calls for the same block and a new peer will cause the response from the previous peer to be ignored.\n"
+        "Subsequent calls for the same block may cause the response from the previous peer to be ignored.\n"
         "Peers generally ignore requests for a stale block that they never fully verified, or one that is more than a month old.\n"
         "When a peer does not respond with a block, we will disconnect.\n"
         "Note: The block could be re-pruned as soon as it is received.\n\n"
@@ -459,11 +459,13 @@ static RPCHelpMan getblockfrompeer()
         throw JSONRPCError(RPC_MISC_ERROR, "Block header missing");
     }
 
+#if 0
     // Fetching blocks before the node has syncing past their height can prevent block files from
     // being pruned, so we avoid it if the node is in prune mode.
     if (chainman.m_blockman.IsPruneMode() && index->nHeight > WITH_LOCK(chainman.GetMutex(), return chainman.ActiveTip()->nHeight)) {
         throw JSONRPCError(RPC_MISC_ERROR, "In prune mode, only blocks that the node has already synced previously can be fetched from a peer");
     }
+#endif
 
     const bool block_has_data = WITH_LOCK(::cs_main, return index->nStatus & BLOCK_HAVE_DATA);
     if (block_has_data) {
