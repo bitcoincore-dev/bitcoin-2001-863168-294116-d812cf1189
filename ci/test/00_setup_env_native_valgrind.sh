@@ -8,10 +8,9 @@ export LC_ALL=C.UTF-8
 
 export CI_IMAGE_NAME_TAG="debian:bookworm"
 export CONTAINER_NAME=ci_native_valgrind
-export PACKAGES="valgrind clang llvm libclang-rt-dev python3-zmq libevent-dev libboost-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libsqlite3-dev"
+export PACKAGES="valgrind clang llvm libclang-rt-dev python3-zmq"
 export USE_VALGRIND=1
-export NO_DEPENDS=1
+export DEP_OPTS="DEBUG=1 CC='clang -gdwarf-4' CXX='clang++ -gdwarf-4'"  # Temporarily pin dwarf 4, until using Valgrind 3.20 or later
 export TEST_RUNNER_EXTRA="--exclude feature_init,rpc_bind,feature_bind_extra"  # Excluded for now, see https://github.com/bitcoin/bitcoin/issues/17765#issuecomment-602068547
 export GOAL="install"
-# Temporarily pin dwarf 4, until using Valgrind 3.20 or later
-export BITCOIN_CONFIG="--enable-zmq --with-incompatible-bdb --with-gui=no CC='clang -gdwarf-4' CXX='clang++ -gdwarf-4'"  # TODO enable GUI
+export BITCOIN_CONFIG="--enable-zmq --with-gui=no CPPFLAGS='-DABORT_ON_FAILED_ASSUME -DBOOST_MULTI_INDEX_ENABLE_SAFE_MODE'"  # TODO enable GUI
