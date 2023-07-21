@@ -783,6 +783,8 @@ CNetMessage V1Transport::GetMessage(const std::chrono::microseconds time, bool& 
 {
     // Initialize out parameter
     reject_message = false;
+
+    LOCK(m_cs_recv);
     // decompose a single CNetMessage from the TransportDeserializer
     CNetMessage msg(std::move(vRecv));
 
@@ -792,7 +794,6 @@ CNetMessage V1Transport::GetMessage(const std::chrono::microseconds time, bool& 
     msg.m_message_size = hdr.nMessageSize;
     msg.m_raw_message_size = hdr.nMessageSize + CMessageHeader::HEADER_SIZE;
 
-    LOCK(m_cs_recv);
     uint256 hash = GetMessageHash();
 
     // We just received a message off the wire, harvest entropy from the time (and the message checksum)
@@ -817,7 +818,13 @@ CNetMessage V1Transport::GetMessage(const std::chrono::microseconds time, bool& 
     return msg;
 }
 
-void V1Transport::prepareForTransport(CSerializedNetMsg& msg, std::vector<unsigned char>& header) const
+bool V1Transport::DoneSendingMessage() const noexcept
+{
+    LOCK(m_cs_send);
+    return !m_sending_header && m_bytes_sent == m_message_to_send.data.size();
+}
+
+void V1Transport::SetMessageToSend(CSerializedNetMsg&& msg) noexcept
 {
     // create dbl-sha256 checksum
     uint256 hash = Hash(msg.data);
@@ -827,8 +834,46 @@ void V1Transport::prepareForTransport(CSerializedNetMsg& msg, std::vector<unsign
     memcpy(hdr.pchChecksum, hash.begin(), CMessageHeader::CHECKSUM_SIZE);
 
     // serialize header
-    header.reserve(CMessageHeader::HEADER_SIZE);
-    CVectorWriter{SER_NETWORK, INIT_PROTO_VERSION, header, 0, hdr};
+    LOCK(m_cs_send);
+    m_header_to_send.clear();
+    CVectorWriter{SER_NETWORK, INIT_PROTO_VERSION, m_header_to_send, 0, hdr};
+
+    // update state
+    m_message_to_send = std::move(msg);
+    m_sending_header = true;
+    m_bytes_sent = 0;
+}
+
+bool V1Transport::HaveBytesToSend() const noexcept
+{
+    LOCK(m_cs_send);
+    return m_sending_header || m_bytes_sent != m_message_to_send.data.size();
+}
+
+Transport::BytesToSend V1Transport::GetBytesToSend() const noexcept
+{
+    LOCK(m_cs_send);
+    if (m_sending_header) {
+        return {Span{m_header_to_send}.subspan(m_bytes_sent), !m_message_to_send.data.empty(), m_message_to_send.m_type};
+    } else {
+        return {Span{m_message_to_send.data}.subspan(m_bytes_sent), false, m_message_to_send.m_type};
+    }
+}
+
+void V1Transport::MarkBytesSent(size_t bytes_sent) noexcept
+{
+    LOCK(m_cs_send);
+    m_bytes_sent += bytes_sent;
+    if (m_sending_header && m_bytes_sent == m_header_to_send.size()) {
+        // We're done sending a message's header. Switch to sending its data bytes.
+        m_sending_header = false;
+        m_bytes_sent = 0;
+    } else if (!m_sending_header && m_bytes_sent == m_message_to_send.data.size()) {
+        // We're done sending a message's data. Wipe the data vector to reduce memory consumption.
+        m_message_to_send.data.clear();
+        m_message_to_send.data.shrink_to_fit();
+        m_bytes_sent = 0;
+    }
 }
 
 size_t CConnman::SocketSendData(CNode& node) const
@@ -2866,23 +2911,25 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
         msg.data.data()
     );
 
-    // make sure we use the appropriate network transport format
-    std::vector<unsigned char> serializedHeader;
-    pnode->m_transport->prepareForTransport(msg, serializedHeader);
-    size_t nTotalSize = nMessageSize + serializedHeader.size();
-
     size_t nBytesSent = 0;
     {
         LOCK(pnode->cs_vSend);
         bool optimisticSend(pnode->vSendMsg.empty());
 
-        //log total amount of bytes per message type
-        pnode->AccountForSentBytes(msg.m_type, nTotalSize);
-        pnode->nSendSize += nTotalSize;
+        assert(pnode->m_transport->DoneSendingMessage());
+        pnode->m_transport->SetMessageToSend(std::move(msg));
 
-        if (pnode->nSendSize > nSendBufferMaxSize) pnode->fPauseSend = true;
-        pnode->vSendMsg.push_back(std::move(serializedHeader));
-        if (nMessageSize) pnode->vSendMsg.push_back(std::move(msg.data));
+        while (true) {
+            const auto& [bytes, more, msg_type] = pnode->m_transport->GetBytesToSend();
+            if (bytes.empty()) break;
+            pnode->AccountForSentBytes(msg_type, bytes.size());
+            pnode->nSendSize += bytes.size();
+            if (pnode->nSendSize > nSendBufferMaxSize) pnode->fPauseSend = true;
+            pnode->vSendMsg.push_back({bytes.begin(), bytes.end()});
+            pnode->m_transport->MarkBytesSent(bytes.size());
+        }
+
+        assert(pnode->m_transport->DoneSendingMessage());
 
         // If write queue empty, attempt "optimistic write"
         if (optimisticSend) nBytesSent = SocketSendData(*pnode);

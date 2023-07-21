@@ -271,10 +271,26 @@ public:
     // decomposes a message from the context
     virtual CNetMessage GetMessage(std::chrono::microseconds time, bool& reject_message) = 0;
 
-    // 2. Sending side functions:
+    // 2. Sending side functions, for serializing messages into bytes to be sent over the wire.
+    // Callers must guarantee that none of these functions are called concurrently w.r.t. one
+    // another.
 
-    // prepare message for transport (header construction, error-correction computation, payload encryption, etc.)
-    virtual void prepareForTransport(CSerializedNetMsg& msg, std::vector<unsigned char>& header) const = 0;
+    /** Whether the last provided message has been sent, and a new one can be provided. */
+    virtual bool DoneSendingMessage() const noexcept = 0;
+    /** Set a message to send (only allowed if DoneSendingMessage()). */
+    virtual void SetMessageToSend(CSerializedNetMsg&& msg) noexcept = 0;
+    /** Whether there are bytes to send on the wire. */
+    virtual bool HaveBytesToSend() const noexcept = 0;
+    /** Return type for GetBytesToSend, consisting of:
+     *  - Span<const uint8_t>: span of bytes to be sent over the wire (empty if !HaveBytesToSend())
+     *  - bool: whether more bytes to be sent follow after the ones in the span have been sent
+     *  - const std::string&: message type on behalf of which this is being sent (or "" if n/a)
+     */
+    using BytesToSend = std::tuple<Span<const uint8_t>, bool, const std::string&>;
+    /** Get bytes to send on the wire. */
+    virtual BytesToSend GetBytesToSend() const noexcept = 0;
+    /** Report how many bytes returned by GetBytesToSend() have been sent. No effect if 0. */
+    virtual void MarkBytesSent(size_t bytes_sent) noexcept = 0;
 };
 
 class V1Transport final : public Transport
@@ -313,6 +329,17 @@ private:
         return hdr.nMessageSize == nDataPos;
     }
 
+    /** Lock for sending state. */
+    mutable Mutex m_cs_send;
+    /** The header of the message currently being sent. */
+    std::vector<uint8_t> m_header_to_send GUARDED_BY(m_cs_send);
+    /** The data of the message currently being sent. */
+    CSerializedNetMsg m_message_to_send GUARDED_BY(m_cs_send);
+    /** Whether we're currently sending header bytes or message bytes. */
+    bool m_sending_header GUARDED_BY(m_cs_send) {false};
+    /** How many bytes have been sent so far (from m_header_to_send, or from m_message_to_send.data). */
+    size_t m_bytes_sent GUARDED_BY(m_cs_send) {0};
+
 public:
     V1Transport(const CChainParams& chain_params, const NodeId node_id, int nTypeIn, int nVersionIn)
         : m_chain_params(chain_params),
@@ -349,7 +376,11 @@ public:
     }
     CNetMessage GetMessage(std::chrono::microseconds time, bool& reject_message) override EXCLUSIVE_LOCKS_REQUIRED(!m_cs_recv);
 
-    void prepareForTransport(CSerializedNetMsg& msg, std::vector<unsigned char>& header) const override;
+    bool DoneSendingMessage() const noexcept override EXCLUSIVE_LOCKS_REQUIRED(!m_cs_send);
+    void SetMessageToSend(CSerializedNetMsg&& msg) noexcept override EXCLUSIVE_LOCKS_REQUIRED(!m_cs_send);
+    bool HaveBytesToSend() const noexcept override EXCLUSIVE_LOCKS_REQUIRED(!m_cs_send);
+    BytesToSend GetBytesToSend() const noexcept override EXCLUSIVE_LOCKS_REQUIRED(!m_cs_send);
+    void MarkBytesSent(size_t bytes_sent) noexcept override EXCLUSIVE_LOCKS_REQUIRED(!m_cs_send);
 };
 
 struct CNodeOptions
@@ -364,7 +395,8 @@ struct CNodeOptions
 class CNode
 {
 public:
-    /** Transport serializer/deserializer. The receive side functions are only called under cs_vRecv. */
+    /** Transport serializer/deserializer. The receive side functions are only called under cs_vRecv, while
+     * the sending side functions are only called under cs_vSend. */
     const std::unique_ptr<Transport> m_transport;
 
     const NetPermissionFlags m_permission_flags;
