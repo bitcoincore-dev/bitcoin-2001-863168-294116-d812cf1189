@@ -897,37 +897,30 @@ size_t CConnman::SocketSendData(CNode& node) const
     auto it = node.vSendMsg.begin();
     size_t nSentSize = 0;
 
-    while (it != node.vSendMsg.end()) {
-        const auto& data = *it;
-        assert(data.size() > node.nSendOffset);
+    while (true) {
+        const auto& [data, more, msg_type] = node.m_transport->GetBytesToSend();
         int nBytes = 0;
-        {
+        if (!data.empty()) {
             LOCK(node.m_sock_mutex);
             if (!node.m_sock) {
                 break;
             }
             int flags = MSG_NOSIGNAL | MSG_DONTWAIT;
 #ifdef MSG_MORE
-            if (it + 1 != node.vSendMsg.end()) {
+            if (more || it != node.vSendMsg.end()) {
                 flags |= MSG_MORE;
             }
 #endif
-            nBytes = node.m_sock->Send(reinterpret_cast<const char*>(data.data()) + node.nSendOffset, data.size() - node.nSendOffset, flags);
+            nBytes = node.m_sock->Send(reinterpret_cast<const char*>(data.data()), data.size(), flags);
         }
         if (nBytes > 0) {
             node.m_last_send = GetTime<std::chrono::seconds>();
             node.nSendBytes += nBytes;
-            node.nSendOffset += nBytes;
+            node.m_transport->MarkBytesSent(nBytes);
+            node.AccountForSentBytes(msg_type, nBytes);
             nSentSize += nBytes;
-            if (node.nSendOffset == data.size()) {
-                node.nSendOffset = 0;
-                node.m_send_memusage -= sizeof(data) + memusage::DynamicUsage(data);
-                it++;
-            } else {
-                // could not send full message; stop sending more
-                break;
-            }
-        } else {
+        }
+        if (nBytes < (ssize_t)data.size()) {
             if (nBytes < 0) {
                 // error
                 int nErr = WSAGetLastError();
@@ -936,15 +929,22 @@ size_t CConnman::SocketSendData(CNode& node) const
                     node.CloseSocketDisconnect();
                 }
             }
-            // couldn't send anything at all
+            // could not send full message (or nothing at all); stop sending more
             break;
+        }
+        if (node.m_transport->DoneSendingMessage()) {
+            // If neither the transport nor vSendMsg have anything to send, stop.
+            if (it == node.vSendMsg.end()) break;
+            // If instead there are messages left in vSendMsg, move one to the transport.
+            node.m_send_memusage -= it->GetMemoryUsage();
+            node.m_transport->SetMessageToSend(std::move(*it));
+            ++it;
         }
     }
 
     node.fPauseSend = node.m_send_memusage + node.m_transport->GetSendMemoryUsage() > nSendBufferMaxSize;
 
     if (it == node.vSendMsg.end()) {
-        assert(node.nSendOffset == 0);
         assert(node.m_send_memusage == 0);
     }
     node.vSendMsg.erase(node.vSendMsg.begin(), it);
@@ -1298,7 +1298,9 @@ Sock::EventsPerSock CConnman::GenerateWaitSockets(Span<CNode* const> nodes)
         bool select_send;
         {
             LOCK(pnode->cs_vSend);
-            select_send = !pnode->vSendMsg.empty();
+            // This relies on optimistic send to make sure the transport always has a message to
+            // send if there are any.
+            select_send = pnode->m_transport->HaveBytesToSend();
         }
 
         LOCK(pnode->m_sock_mutex);
@@ -2931,22 +2933,11 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
     size_t nBytesSent = 0;
     {
         LOCK(pnode->cs_vSend);
-        bool optimisticSend(pnode->vSendMsg.empty());
+        bool optimisticSend{pnode->vSendMsg.empty() && pnode->m_transport->DoneSendingMessage()};
 
-        assert(pnode->m_transport->DoneSendingMessage());
-        pnode->m_transport->SetMessageToSend(std::move(msg));
-
-        while (true) {
-            const auto& [bytes, more, msg_type] = pnode->m_transport->GetBytesToSend();
-            if (bytes.empty()) break;
-            pnode->AccountForSentBytes(msg_type, bytes.size());
-            pnode->vSendMsg.push_back({bytes.begin(), bytes.end()});
-            pnode->m_send_memusage += sizeof(pnode->vSendMsg.back()) + memusage::DynamicUsage(pnode->vSendMsg.back());
-            pnode->m_transport->MarkBytesSent(bytes.size());
-        }
+        pnode->m_send_memusage += msg.GetMemoryUsage();
+        pnode->vSendMsg.push_back(std::move(msg));
         if (pnode->m_send_memusage + pnode->m_transport->GetSendMemoryUsage() > nSendBufferMaxSize) pnode->fPauseSend = true;
-
-        assert(pnode->m_transport->DoneSendingMessage());
 
         // If write queue empty, attempt "optimistic write"
         if (optimisticSend) nBytesSent = SocketSendData(*pnode);

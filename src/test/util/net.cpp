@@ -72,6 +72,12 @@ void ConnmanTestMsg::NodeReceiveMsgBytes(CNode& node, Span<const uint8_t> msg_by
 
 bool ConnmanTestMsg::ReceiveMsgFrom(CNode& node, CSerializedNetMsg&& ser_msg) const
 {
+    /* Flush out any unsent bytes from previous messages. */
+    while (node.m_transport->HaveBytesToSend()) {
+        const auto& [data, _more, _msg_type] = node.m_transport->GetBytesToSend();
+        node.m_transport->MarkBytesSent(data.size());
+    }
+
     assert(node.m_transport->DoneSendingMessage());
     node.m_transport->SetMessageToSend(std::move(ser_msg));
 

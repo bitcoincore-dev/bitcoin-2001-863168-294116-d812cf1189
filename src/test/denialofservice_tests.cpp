@@ -87,8 +87,15 @@ BOOST_AUTO_TEST_CASE(outbound_slow_chain_eviction)
 
     {
         LOCK(dummyNode1.cs_vSend);
-        BOOST_CHECK(dummyNode1.vSendMsg.size() > 0);
+        BOOST_CHECK(!dummyNode1.vSendMsg.empty() || dummyNode1.m_transport->HaveBytesToSend());
+        // Clear messages in vSendMsg.
         dummyNode1.vSendMsg.clear();
+        dummyNode1.m_send_memusage = 0;
+        // Clear data from m_transport.
+        while (dummyNode1.m_transport->HaveBytesToSend()) {
+            const auto& [data, _more, _msg_type] = dummyNode1.m_transport->GetBytesToSend();
+            dummyNode1.m_transport->MarkBytesSent(data.size());
+        }
     }
 
     int64_t nStartTime = GetTime();
@@ -97,7 +104,7 @@ BOOST_AUTO_TEST_CASE(outbound_slow_chain_eviction)
     BOOST_CHECK(peerman.SendMessages(&dummyNode1)); // should result in getheaders
     {
         LOCK(dummyNode1.cs_vSend);
-        BOOST_CHECK(dummyNode1.vSendMsg.size() > 0);
+        BOOST_CHECK(!dummyNode1.vSendMsg.empty() || dummyNode1.m_transport->HaveBytesToSend());
     }
     // Wait 3 more minutes
     SetMockTime(nStartTime+24*60);
