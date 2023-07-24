@@ -19,6 +19,7 @@
 #include <crypto/sha256.h>
 #include <i2p.h>
 #include <logging.h>
+#include <memusage.h>
 #include <net_permissions.h>
 #include <netaddress.h>
 #include <netbase.h>
@@ -112,6 +113,14 @@ GlobalMutex g_maplocalhost_mutex;
 std::map<CNetAddr, LocalServiceInfo> mapLocalHost GUARDED_BY(g_maplocalhost_mutex);
 static bool vfLimited[NET_MAX] GUARDED_BY(g_maplocalhost_mutex) = {};
 std::string strSubVersion;
+
+size_t CSerializedNetMsg::GetMemoryUsage() const noexcept
+{
+    // Don't count the dynamic memory used for the m_type string, by assuming it fits in the
+    // "small string" optimization area (which stores data inside the object itself, up to some
+    // size; 15 bytes in modern libstdc++).
+    return sizeof(*this) + memusage::DynamicUsage(data);
+}
 
 void CConnman::AddAddrFetch(const std::string& strDest)
 {
@@ -876,6 +885,13 @@ void V1Transport::MarkBytesSent(size_t bytes_sent) noexcept
     }
 }
 
+size_t V1Transport::GetSendMemoryUsage() const noexcept
+{
+    LOCK(m_cs_send);
+    // Don't count sending-side fields besides m_message_to_send, as they're all small and bounded.
+    return m_message_to_send.GetMemoryUsage();
+}
+
 size_t CConnman::SocketSendData(CNode& node) const
 {
     auto it = node.vSendMsg.begin();
@@ -905,8 +921,7 @@ size_t CConnman::SocketSendData(CNode& node) const
             nSentSize += nBytes;
             if (node.nSendOffset == data.size()) {
                 node.nSendOffset = 0;
-                node.nSendSize -= data.size();
-                node.fPauseSend = node.nSendSize > nSendBufferMaxSize;
+                node.m_send_memusage -= sizeof(data) + memusage::DynamicUsage(data);
                 it++;
             } else {
                 // could not send full message; stop sending more
@@ -926,9 +941,11 @@ size_t CConnman::SocketSendData(CNode& node) const
         }
     }
 
+    node.fPauseSend = node.m_send_memusage + node.m_transport->GetSendMemoryUsage() > nSendBufferMaxSize;
+
     if (it == node.vSendMsg.end()) {
         assert(node.nSendOffset == 0);
-        assert(node.nSendSize == 0);
+        assert(node.m_send_memusage == 0);
     }
     node.vSendMsg.erase(node.vSendMsg.begin(), it);
     return nSentSize;
@@ -2923,11 +2940,11 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
             const auto& [bytes, more, msg_type] = pnode->m_transport->GetBytesToSend();
             if (bytes.empty()) break;
             pnode->AccountForSentBytes(msg_type, bytes.size());
-            pnode->nSendSize += bytes.size();
-            if (pnode->nSendSize > nSendBufferMaxSize) pnode->fPauseSend = true;
             pnode->vSendMsg.push_back({bytes.begin(), bytes.end()});
+            pnode->m_send_memusage += sizeof(pnode->vSendMsg.back()) + memusage::DynamicUsage(pnode->vSendMsg.back());
             pnode->m_transport->MarkBytesSent(bytes.size());
         }
+        if (pnode->m_send_memusage + pnode->m_transport->GetSendMemoryUsage() > nSendBufferMaxSize) pnode->fPauseSend = true;
 
         assert(pnode->m_transport->DoneSendingMessage());
 
