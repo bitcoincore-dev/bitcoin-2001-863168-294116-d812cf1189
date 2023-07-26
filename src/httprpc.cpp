@@ -258,7 +258,7 @@ static bool InitRPCAuthentication()
         auto cookie_perms_arg{gArgs.GetArg("-rpccookieperms")};
         if (cookie_perms_arg) {
             auto perms{StringToOctal(*cookie_perms_arg)};
-            if (!perms) {
+            if ((!perms) || cookie_perms_arg->size() < 3) {
                 LogPrintf("Invalid -rpccookieperms=%s; must be octal number (like 0600).\n", *cookie_perms_arg);
                 return false;
             }

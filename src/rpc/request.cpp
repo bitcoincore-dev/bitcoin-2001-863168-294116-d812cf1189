@@ -127,7 +127,9 @@ bool GenerateAuthCookie(std::string* cookie_out, std::optional<fs::perms> cookie
         return false;
     }
     LogPrintf("Generated RPC authentication cookie %s\n", fs::PathToString(filepath));
-    LogPrintf("Permissions used for cookie: %s\n", perms_to_str(fs::status(filepath).permissions()));
+    LogPrintf("Permissions used for cookie%s: %s\n",
+              cookie_perms ? " (set by -rpccookieperms)" : "",
+              perms_to_str(fs::status(filepath).permissions()));
 
     if (cookie_out)
         *cookie_out = cookie;
