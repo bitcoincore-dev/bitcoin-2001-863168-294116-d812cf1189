@@ -25,6 +25,7 @@
 #include <optional>
 #include <set>
 #include <string>
+#include <utility>
 #include <vector>
 
 /** WWW-Authenticate to present with 401 Unauthorized response */
@@ -267,7 +268,7 @@ static bool InitRPCAuthentication()
             }
         }
 
-        if (!GenerateAuthCookie(&strRPCUserColonPass, cookie_perms)) {
+        if (!GenerateAuthCookie(&strRPCUserColonPass, std::make_pair(cookie_perms, bool(cookie_perms_arg)))) {
             return false;
         }
     } else {
