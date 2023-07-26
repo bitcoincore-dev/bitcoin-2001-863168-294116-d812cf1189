@@ -773,7 +773,7 @@ int V1Transport::readData(Span<const uint8_t> msg_bytes)
 
 const uint256& V1Transport::GetMessageHash() const
 {
-    assert(Complete());
+    assert(CompleteInternal());
     if (data_hash.IsNull())
         hasher.Finalize(data_hash);
     return data_hash;
@@ -792,6 +792,7 @@ CNetMessage V1Transport::GetMessage(const std::chrono::microseconds time, bool& 
     msg.m_message_size = hdr.nMessageSize;
     msg.m_raw_message_size = hdr.nMessageSize + CMessageHeader::HEADER_SIZE;
 
+    LOCK(m_cs_recv);
     uint256 hash = GetMessageHash();
 
     // We just received a message off the wire, harvest entropy from the time (and the message checksum)

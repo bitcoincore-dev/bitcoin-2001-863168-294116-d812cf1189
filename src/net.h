@@ -282,20 +282,21 @@ class V1Transport final : public Transport
 private:
     const CChainParams& m_chain_params;
     const NodeId m_node_id; // Only for logging
-    mutable CHash256 hasher;
-    mutable uint256 data_hash;
-    bool in_data;                   // parsing header (false) or data (true)
-    CDataStream hdrbuf;             // partially received header
-    CMessageHeader hdr;             // complete header
-    CDataStream vRecv;              // received message data
-    unsigned int nHdrPos;
-    unsigned int nDataPos;
+    mutable Mutex m_cs_recv; //!< Lock for receive state
+    mutable CHash256 hasher GUARDED_BY(m_cs_recv);
+    mutable uint256 data_hash GUARDED_BY(m_cs_recv);
+    bool in_data GUARDED_BY(m_cs_recv); // parsing header (false) or data (true)
+    CDataStream hdrbuf GUARDED_BY(m_cs_recv); // partially received header
+    CMessageHeader hdr GUARDED_BY(m_cs_recv); // complete header
+    CDataStream vRecv GUARDED_BY(m_cs_recv); // received message data
+    unsigned int nHdrPos GUARDED_BY(m_cs_recv);
+    unsigned int nDataPos GUARDED_BY(m_cs_recv);
 
-    const uint256& GetMessageHash() const;
-    int readHeader(Span<const uint8_t> msg_bytes);
-    int readData(Span<const uint8_t> msg_bytes);
+    const uint256& GetMessageHash() const EXCLUSIVE_LOCKS_REQUIRED(m_cs_recv);
+    int readHeader(Span<const uint8_t> msg_bytes) EXCLUSIVE_LOCKS_REQUIRED(m_cs_recv);
+    int readData(Span<const uint8_t> msg_bytes) EXCLUSIVE_LOCKS_REQUIRED(m_cs_recv);
 
-    void Reset() {
+    void Reset() EXCLUSIVE_LOCKS_REQUIRED(m_cs_recv) {
         vRecv.clear();
         hdrbuf.clear();
         hdrbuf.resize(24);
@@ -306,6 +307,12 @@ private:
         hasher.Reset();
     }
 
+    bool CompleteInternal() const noexcept EXCLUSIVE_LOCKS_REQUIRED(m_cs_recv)
+    {
+        if (!in_data) return false;
+        return hdr.nMessageSize == nDataPos;
+    }
+
 public:
     V1Transport(const CChainParams& chain_params, const NodeId node_id, int nTypeIn, int nVersionIn)
         : m_chain_params(chain_params),
@@ -313,22 +320,25 @@ public:
           hdrbuf(nTypeIn, nVersionIn),
           vRecv(nTypeIn, nVersionIn)
     {
+        LOCK(m_cs_recv);
         Reset();
     }
 
-    bool Complete() const override
+    bool Complete() const override EXCLUSIVE_LOCKS_REQUIRED(!m_cs_recv)
     {
-        if (!in_data)
-            return false;
-        return (hdr.nMessageSize == nDataPos);
+        return WITH_LOCK(m_cs_recv, return CompleteInternal());
     }
-    void SetVersion(int nVersionIn) override
+
+    void SetVersion(int nVersionIn) override EXCLUSIVE_LOCKS_REQUIRED(!m_cs_recv)
     {
+        LOCK(m_cs_recv);
         hdrbuf.SetVersion(nVersionIn);
         vRecv.SetVersion(nVersionIn);
     }
-    int Read(Span<const uint8_t>& msg_bytes) override
+
+    int Read(Span<const uint8_t>& msg_bytes) override EXCLUSIVE_LOCKS_REQUIRED(!m_cs_recv)
     {
+        LOCK(m_cs_recv);
         int ret = in_data ? readData(msg_bytes) : readHeader(msg_bytes);
         if (ret < 0) {
             Reset();
@@ -337,7 +347,7 @@ public:
         }
         return ret;
     }
-    CNetMessage GetMessage(std::chrono::microseconds time, bool& reject_message) override;
+    CNetMessage GetMessage(std::chrono::microseconds time, bool& reject_message) override EXCLUSIVE_LOCKS_REQUIRED(!m_cs_recv);
 
     void prepareForTransport(CSerializedNetMsg& msg, std::vector<unsigned char>& header) const override;
 };
@@ -354,7 +364,7 @@ struct CNodeOptions
 class CNode
 {
 public:
-    /** Transport serializer/deserializer. The receive side functions in it are under cs_vRecv. */
+    /** Transport serializer/deserializer. The receive side functions are only called under cs_vRecv. */
     const std::unique_ptr<Transport> m_transport;
 
     const NetPermissionFlags m_permission_flags;
