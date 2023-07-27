@@ -25,6 +25,7 @@ std::vector<std::string> g_all_messages;
 
 void initialize_p2p_transport_serialization()
 {
+    ECC_Start();
     SelectParams(ChainType::REGTEST);
     g_all_messages = getAllNetMessageTypes();
     std::sort(g_all_messages.begin(), g_all_messages.end());
@@ -334,6 +335,22 @@ std::unique_ptr<Transport> MakeV1Transport(NodeId nodeid) noexcept
     return std::make_unique<V1Transport>(nodeid, SER_NETWORK, INIT_PROTO_VERSION);
 }
 
+template<typename RNG>
+std::unique_ptr<Transport> MakeV2Transport(NodeId nodeid, bool initiator, RNG& rng, FuzzedDataProvider& provider)
+{
+    // Retrieve key
+    auto key_data = provider.ConsumeBytes<unsigned char>(32);
+    key_data.resize(32);
+    CKey key;
+    key.Set(key_data.begin(), key_data.end(), true);
+    if (!key.IsValid()) return {};
+    // Retrieve entropy
+    auto ent = provider.ConsumeBytes<std::byte>(32);
+    ent.resize(32);
+
+    return std::make_unique<V2Transport>(nodeid, initiator, SER_NETWORK, INIT_PROTO_VERSION, key, ent);
+}
+
 } // namespace
 
 FUZZ_TARGET(p2p_transport_bidirectional, .init = initialize_p2p_transport_serialization)
@@ -343,6 +360,17 @@ FUZZ_TARGET(p2p_transport_bidirectional, .init = initialize_p2p_transport_serial
     XoRoShiRo128PlusPlus rng(provider.ConsumeIntegral<uint64_t>());
     auto t1 = MakeV1Transport(NodeId{0});
     auto t2 = MakeV1Transport(NodeId{1});
+    if (!t1 || !t2) return;
+    SimulationTest(*t1, *t2, rng, provider);
+}
+
+FUZZ_TARGET(p2p_transport_bidirectional_v2, .init = initialize_p2p_transport_serialization)
+{
+    // Test with two V2 transports talking to each other.
+    FuzzedDataProvider provider{buffer.data(), buffer.size()};
+    XoRoShiRo128PlusPlus rng(provider.ConsumeIntegral<uint64_t>());
+    auto t1 = MakeV2Transport(NodeId{0}, true, rng, provider);
+    auto t2 = MakeV2Transport(NodeId{1}, false, rng, provider);
     if (!t1 || !t2) return;
     SimulationTest(*t1, *t2, rng, provider);
 }
