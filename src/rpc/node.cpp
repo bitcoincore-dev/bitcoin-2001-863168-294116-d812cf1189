@@ -4,6 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <chainparams.h>
+#include <clientversion.h>
 #include <httpserver.h>
 #include <index/blockfilterindex.h>
 #include <index/coinstatsindex.h>
@@ -13,6 +14,7 @@
 #include <interfaces/init.h>
 #include <interfaces/ipc.h>
 #include <kernel/cs_main.h>
+#include <net.h>
 #include <node/context.h>
 #include <rpc/server.h>
 #include <rpc/server_util.h>
@@ -204,6 +206,40 @@ static RPCHelpMan getmemoryinfo()
     } else {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "unknown mode " + mode);
     }
+},
+    };
+}
+
+static RPCHelpMan getgeneralinfo()
+{
+    return RPCHelpMan{"getgeneralinfo",
+                "Returns data about the bitcoin daemon.\n",
+                {},
+                RPCResult{
+                    RPCResult::Type::OBJ, "", "",
+                    {
+                        {RPCResult::Type::STR, "clientversion", "Client version"},
+                        {RPCResult::Type::STR, "useragent", "Client name"},
+                        {RPCResult::Type::STR, "datadir", "Data directory path"},
+                        {RPCResult::Type::STR, "blocksdir", "Blocks directory path"},
+                        {RPCResult::Type::NUM, "startuptime", "Startup time"},
+                    }
+                },
+                RPCExamples{
+                    HelpExampleCli("getgeneralinfo", "")
+            + HelpExampleRpc("getgeneralinfo", "")
+                },
+        [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
+{
+        const ArgsManager& args{EnsureAnyArgsman(request.context)};
+
+        UniValue obj(UniValue::VOBJ);
+        obj.pushKV("clientversion", FormatFullVersion());
+        obj.pushKV("useragent", strSubVersion);
+        obj.pushKV("datadir", fs::PathToString(args.GetDataDirNet()));
+        obj.pushKV("blocksdir", fs::PathToString(args.GetBlocksDirPath()));
+        obj.pushKV("startuptime", GetStartupTime());
+        return obj;
 },
     };
 }
@@ -421,6 +457,7 @@ void RegisterNodeRPCCommands(CRPCTable& t)
 {
     static const CRPCCommand commands[]{
         {"control", &getmemoryinfo},
+        {"control", &getgeneralinfo},
         {"control", &logging},
         {"util", &getindexinfo},
         {"hidden", &setmocktime},
