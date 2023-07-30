@@ -916,22 +916,28 @@ V2Transport::V2Transport(NodeId nodeid, bool initiating, int type_in, int versio
     m_cipher{}, m_initiating{initiating}, m_nodeid{nodeid},
     m_recv_type{type_in}, m_recv_version{version_in},
     m_recv_state{initiating ? RecvState::KEY : RecvState::WAITING},
-    m_send_state{initiating ? SendState::KEY : SendState::KEY_WAITING}
+    m_send_state{initiating ? SendState::KEY_GARB : SendState::KEY_GARB_WAITING}
 {
-    // Initialize the send buffer with ellswift pubkey.
-    m_send_buffer.resize(EllSwiftPubKey::size());
+    // Construct garbage (including its length) using a FastRandomContext.
+    FastRandomContext rng;
+    size_t garbage_len = rng.randrange(MAX_GARBAGE_LEN + 1);
+    // Initialize the send buffer with ellswift pubkey + garbage.
+    m_send_buffer.resize(EllSwiftPubKey::size() + garbage_len);
     std::copy(std::begin(m_cipher.GetOurPubKey()), std::end(m_cipher.GetOurPubKey()), MakeWritableByteSpan(m_send_buffer).begin());
+    rng.fillrand(MakeWritableByteSpan(m_send_buffer).subspan(EllSwiftPubKey::size()));
 }
 
-V2Transport::V2Transport(NodeId nodeid, bool initiating, int type_in, int version_in, const CKey& key, Span<const std::byte> ent32) noexcept :
+V2Transport::V2Transport(NodeId nodeid, bool initiating, int type_in, int version_in, const CKey& key, Span<const std::byte> ent32, Span<const uint8_t> garbage) noexcept :
     m_cipher{key, ent32}, m_initiating{initiating}, m_nodeid{nodeid},
     m_recv_type{type_in}, m_recv_version{version_in},
     m_recv_state{initiating ? RecvState::KEY : RecvState::WAITING},
-    m_send_state{initiating ? SendState::KEY : SendState::KEY_WAITING}
+    m_send_state{initiating ? SendState::KEY_GARB : SendState::KEY_GARB_WAITING}
 {
-    // Initialize the send buffer with ellswift pubkey.
-    m_send_buffer.resize(EllSwiftPubKey::size());
+    assert(garbage.size() <= MAX_GARBAGE_LEN);
+    // Initialize the send buffer with ellswift pubkey + provided garbage.
+    m_send_buffer.resize(EllSwiftPubKey::size() + garbage.size());
     std::copy(std::begin(m_cipher.GetOurPubKey()), std::end(m_cipher.GetOurPubKey()), MakeWritableByteSpan(m_send_buffer).begin());
+    std::copy(garbage.begin(), garbage.end(), m_send_buffer.begin() + EllSwiftPubKey::size());
 }
 
 bool V2Transport::ReceivedMessageComplete() const noexcept
@@ -998,19 +1004,21 @@ void V2Transport::ProcessReceivedKey() noexcept
         m_recv_state = RecvState::GARB_GARBTERM;
         m_recv_buffer.clear();
 
-        // Switch sender state to KEY_GARBTERM_GARBAUTH_VERSION.
-        assert(m_send_state == SendState::KEY);
-        m_send_state = SendState::KEY_GARBTERM_GARBAUTH_VERSION;
+        // Switch sender state to KEY_GARB_GARBTERM_GARBAUTH_VERSION.
+        assert(m_send_state == SendState::KEY_GARB);
+        m_send_state = SendState::KEY_GARB_GARBTERM_GARBAUTH_VERSION;
         // Append the garbage terminator to the send buffer.
+        size_t garbage_len = m_send_buffer.size() - EllSwiftPubKey::size();
         m_send_buffer.resize(m_send_buffer.size() + BIP324Cipher::GARBAGE_TERMINATOR_LEN);
         std::copy(m_cipher.GetSendGarbageTerminator().begin(),
                   m_cipher.GetSendGarbageTerminator().end(),
                   MakeWritableByteSpan(m_send_buffer).last(BIP324Cipher::GARBAGE_TERMINATOR_LEN).begin());
-        // Construct garbage authentication packet in the send buffer.
+        // Construct garbage authentication packet in the send buffer (using the garbage data which
+        // already there).
         m_send_buffer.resize(m_send_buffer.size() + BIP324Cipher::EXPANSION);
         m_cipher.Encrypt(
             {},
-            {}, /* empty garbage for now */
+            MakeByteSpan(m_send_buffer).subspan(EllSwiftPubKey::size(), garbage_len),
             false,
             MakeWritableByteSpan(m_send_buffer).last(BIP324Cipher::EXPANSION));
         // Construct version packet in the send buffer.
@@ -1122,8 +1130,8 @@ bool V2Transport::ReceivedBytes(Span<const uint8_t>& msg_bytes) noexcept
             if (!m_recv_buffer.empty()) {
                 m_recv_state = RecvState::KEY;
                 LOCK(m_send_mutex);
-                assert(m_send_state == SendState::KEY_WAITING);
-                m_send_state = SendState::KEY;
+                assert(m_send_state == SendState::KEY_GARB_WAITING);
+                m_send_state = SendState::KEY_GARB;
             }
             break;
 
@@ -1220,18 +1228,18 @@ Transport::BytesToSend V2Transport::GetBytesToSend(bool have_next_message) const
 {
     AssertLockNotHeld(m_send_mutex);
     LOCK(m_send_mutex);
-    // We do not send anything in KEY_WAITING state (as we have not received anything),
+    // We do not send anything in KEY_GARB_WAITING state (as we have not received anything),
     // despite there being data in the send buffer in that state.
-    if (m_send_state == SendState::KEY_WAITING) return {{}, false, m_send_type};
+    if (m_send_state == SendState::KEY_GARB_WAITING) return {{}, false, m_send_type};
     return {
         Span{m_send_buffer}.subspan(m_send_pos),
         // We only have more to send after the current m_send_buffer if there is a (next)
         // message to be sent, and we're in one of the APP states (during which those can
-        // be sent), or in the KEY_GARBTERM_GARBAUTH_VERSION (after which we automatically
+        // be sent), or in the KEY_GARB_GARBTERM_GARBAUTH_VERSION (after which we automatically
         // transition to the APP_READY state).
         have_next_message && (m_send_state == SendState::APP ||
                               m_send_state == SendState::APP_READY ||
-                              m_send_state == SendState::KEY_GARBTERM_GARBAUTH_VERSION),
+                              m_send_state == SendState::KEY_GARB_GARBTERM_GARBAUTH_VERSION),
         m_send_type
     };
 }
@@ -1241,7 +1249,7 @@ void V2Transport::MarkBytesSent(size_t bytes_sent) noexcept
     AssertLockNotHeld(m_send_mutex);
     LOCK(m_send_mutex);
     m_send_pos += bytes_sent;
-    if (m_send_state == SendState::KEY_GARBTERM_GARBAUTH_VERSION || m_send_state == SendState::APP) {
+    if (m_send_state == SendState::KEY_GARB_GARBTERM_GARBAUTH_VERSION || m_send_state == SendState::APP) {
         if (m_send_pos == m_send_buffer.size()) {
             m_send_state = SendState::APP_READY;
             m_send_pos = 0;

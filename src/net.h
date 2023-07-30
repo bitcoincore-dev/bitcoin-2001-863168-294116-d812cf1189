@@ -493,28 +493,29 @@ private:
 
     /** State type that defines the contents of the send buffer. */
     enum class SendState {
-        /** (Responder only) Public key.
+        /** (Responder only) Public key and garbage.
          *
-         * This is the initial state for responders. The send buffer contain the public key, but
-         * nothing is sent in this state yet. When data is received, the sender state becomes KEY.
+         * This is the initial state for responders. The send buffer contain the public key and
+         * garbage to send, but nothing is sent in this state yet. When data is received, the
+         * sender state becomes KEY_GARB.
          */
-        KEY_WAITING,
+        KEY_GARB_WAITING,
 
-        /** Public key.
+        /** Public key and garbage.
          *
-         * This is the initial state for initiators. The public key is sent out. When the receiver
-         * receives the other side's public key and transitions to GARB_GARBTERM, the sender state
-         * becomes KEY_GARBTERM_GARBAUTH_VERSION. The key is left in the send buffer when this
-         * happens, because it may not have been fully sent out yet. */
-        KEY,
+         * This is the initial state for initiators. The public key plus garbage are sent out. When
+         * the receiver receives the other side's public key and transitions to GARB_GARBTERM, the
+         * sender state becomes KEY_GARB_GARBTERM_GARBAUTH_VERSION. The key and garbage are left in
+         * the send buffer when this happens, because they may not have been fully sent out yet. */
+        KEY_GARB,
 
-        /** Public key + garbage terminator + garbage authenticator + version packet.
+        /** Public key + garbage + garbage terminator + garbage authenticator + version packet.
          *
          * This is the state the sender is in after the other side's public key has been received.
-         * Whatever remains of the public key is sent, plus garbage terminator, authentication
-         * packet, and version packet. When all of that is sent, the sender state becomes
-         * APP_READY. */
-        KEY_GARBTERM_GARBAUTH_VERSION,
+         * Whatever remains of the public key and garbage are sent, plus garbage terminator,
+         * authentication packet, and version packet. When all of that is sent, the sender state
+         * becomes APP_READY. */
+        KEY_GARB_GARBTERM_GARBAUTH_VERSION,
 
         /** Nothing (an application message to send can be provided).
          *
@@ -580,8 +581,8 @@ public:
 
     /** Construct a V2 transport with securely generated random keys. */
     V2Transport(NodeId nodeid, bool initiating, int type_in, int version_in) noexcept;
-    /** Construct a V2 transport with specified keys (test use only). */
-    V2Transport(NodeId nodeid, bool initiating, int type_in, int version_in, const CKey& key, Span<const std::byte> ent32) noexcept;
+    /** Construct a V2 transport with specified keys and garbage (test use only). */
+    V2Transport(NodeId nodeid, bool initiating, int type_in, int version_in, const CKey& key, Span<const std::byte> ent32, Span<const uint8_t> garbage) noexcept;
 
     // Receive side functions.
     bool ReceivedMessageComplete() const noexcept override EXCLUSIVE_LOCKS_REQUIRED(!m_recv_mutex);
