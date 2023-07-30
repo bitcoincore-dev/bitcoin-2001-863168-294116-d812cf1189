@@ -442,11 +442,12 @@ private:
 
     /** State type that defines the contents of the receive buffer. */
     enum class RecvState {
-        /** (Responder only) Nothing.
+        /** (Responder only) either v2 public key or v1 header.
          *
-         * This is the initial state for responders, before data has been received. When that
-         * happens the state becomes KEY. */
-        WAITING,
+         * This is the initial state for responders, before data has been received to distinguish
+         * v1 from v2 connections. When that happens, the state becomes either KEY (for v2) or V1
+         * (for v1). */
+        KEY_MAYBE_V1,
 
         /** Public key.
          *
@@ -489,6 +490,11 @@ private:
          * Nothing can be received in this state. When the message is retrieved by GetMessage,
          * the state becomes APP again. */
         APP_READY,
+
+        /** Nothing (this transport is using v1 fallback).
+         *
+         * All receive operations are redirected to m_v1_fallback. */
+        V1,
     };
 
     /** State type that defines the contents of the send buffer. */
@@ -496,10 +502,11 @@ private:
         /** (Responder only) Public key and garbage.
          *
          * This is the initial state for responders. The send buffer contain the public key and
-         * garbage to send, but nothing is sent in this state yet. When data is received, the
-         * sender state becomes KEY_GARB.
+         * garbage to send, but nothing is sent in this state yet. When the receiver determines
+         * whether this is a V1 or V2 connection, the sender state becomes KEY_GARB (for v2) or
+         * V1 (for v1) as well.
          */
-        KEY_GARB_WAITING,
+        KEY_GARB_MAYBE_V1,
 
         /** Public key and garbage.
          *
@@ -528,6 +535,11 @@ private:
          * There is an encrypted packet encoding an application message in the send buffer right now.
          * When it is fully sent, the sender state becomes APP_READY. */
         APP,
+
+        /** Nothing (this transport is using v1 fallback).
+         *
+         * All send operations are redirected to m_v1_fallback. */
+        V1,
     };
 
     /** Cipher state. */
@@ -536,6 +548,10 @@ private:
     const bool m_initiating;
     /** NodeId (for debug logging). */
     const NodeId m_nodeid;
+    /** Encapsulate a V1Transport to fall back to. */
+    V1Transport m_v1_fallback;
+    /** V1 prefix to look for (4-byte network magic + "version\x00"; magic will be filled in). */
+    std::array<uint8_t, 12> m_v1_prefix = {0, 0, 0, 0, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x00};
 
     /** Lock for receiver-side fields. */
     mutable Mutex m_recv_mutex;
@@ -570,6 +586,8 @@ private:
     static std::optional<std::string> GetMessageType(Span<const uint8_t>& contents) noexcept;
     /** Determine how many received bytes can be processed in one go (not allowed in V1 state). */
     size_t GetMaxBytesToProcess() noexcept EXCLUSIVE_LOCKS_REQUIRED(m_recv_mutex);
+    /** Process m_recv_buffer in KEY_MAYBE_V1 state. */
+    void ProcessReceivedMaybeV1() noexcept EXCLUSIVE_LOCKS_REQUIRED(m_recv_mutex, !m_send_mutex);
     /** Process m_recv_buffer in KEY state. */
     void ProcessReceivedKey() noexcept EXCLUSIVE_LOCKS_REQUIRED(m_recv_mutex, !m_send_mutex);
     /** Process m_recv_buffer in GARB_GARBTERM state. */
