@@ -912,6 +912,69 @@ size_t V1Transport::GetSendMemoryUsage() const noexcept
     return m_message_to_send.GetMemoryUsage();
 }
 
+namespace {
+
+/** List of short message IDs as defined in BIP324, in order. */
+const std::string V2_MESSAGE_IDS[] = {
+    "", // 12 bytes follow encoding the message type like in V1
+    NetMsgType::ADDR,
+    NetMsgType::BLOCK,
+    NetMsgType::BLOCKTXN,
+    NetMsgType::CMPCTBLOCK,
+    NetMsgType::FEEFILTER,
+    NetMsgType::FILTERADD,
+    NetMsgType::FILTERCLEAR,
+    NetMsgType::FILTERLOAD,
+    NetMsgType::GETBLOCKS,
+    NetMsgType::GETBLOCKTXN,
+    NetMsgType::GETDATA,
+    NetMsgType::GETHEADERS,
+    NetMsgType::HEADERS,
+    NetMsgType::INV,
+    NetMsgType::MEMPOOL,
+    NetMsgType::MERKLEBLOCK,
+    NetMsgType::NOTFOUND,
+    NetMsgType::PING,
+    NetMsgType::PONG,
+    NetMsgType::SENDCMPCT,
+    NetMsgType::TX,
+    NetMsgType::GETCFILTERS,
+    NetMsgType::CFILTER,
+    NetMsgType::GETCFHEADERS,
+    NetMsgType::CFHEADERS,
+    NetMsgType::GETCFCHECKPT,
+    NetMsgType::CFCHECKPT,
+    NetMsgType::ADDRV2,
+    "reqrecon",
+    "sketch",
+    "reqsketchext",
+    "reconcildiff",
+};
+
+class V2MessageMap
+{
+    std::unordered_map<std::string, uint8_t> m_map;
+
+public:
+    V2MessageMap() noexcept
+    {
+        for (size_t i = 1; i < std::size(V2_MESSAGE_IDS); ++i) {
+            m_map.emplace(V2_MESSAGE_IDS[i], i);
+        }
+    }
+
+    std::optional<uint8_t> operator()(const std::string& message_name) const noexcept
+    {
+        auto it = m_map.find(message_name);
+        if (it == m_map.end()) return std::nullopt;
+        return it->second;
+    }
+};
+
+const V2MessageMap V2_MESSAGE_MAP;
+
+} // namespace
+
 V2Transport::V2Transport(NodeId nodeid, bool initiating, int type_in, int version_in) noexcept :
     m_cipher{}, m_initiating{initiating}, m_nodeid{nodeid},
     m_v1_fallback{nodeid, type_in, version_in}, m_recv_type{type_in}, m_recv_version{version_in},
@@ -1211,7 +1274,22 @@ bool V2Transport::ReceivedBytes(Span<const uint8_t>& msg_bytes) noexcept
 
 std::optional<std::string> V2Transport::GetMessageType(Span<const uint8_t>& contents) noexcept
 {
-    if (contents.size() < 13 || contents[0] != 0) return std::nullopt; // Short encoding not yet supported
+    if (contents.size() == 0) return std::nullopt; // Empty contents
+    uint8_t first_byte = contents[0];
+
+    if (first_byte != 0) {
+        // Short (1 byte) encoding.
+        if (first_byte < std::size(V2_MESSAGE_IDS)) {
+            // Valid short message id.
+            contents = contents.subspan(1);
+            return V2_MESSAGE_IDS[first_byte];
+        } else {
+            // Unknown short message id.
+            return std::nullopt;
+        }
+    }
+
+    if (contents.size() < 13) return std::nullopt; // Long encoding needs at least 13 bytes
 
     size_t msg_type_len{0};
     while (msg_type_len < 12 && contents[1 + msg_type_len] != 0) {
@@ -1268,9 +1346,17 @@ bool V2Transport::SetMessageToSend(CSerializedNetMsg& msg) noexcept
 
     if (m_send_state != SendState::APP_READY) return false;
     // Construct contents (encoding message type + payload).
-    std::vector<uint8_t> contents(13 + msg.data.size(), 0);
-    std::copy(msg.m_type.begin(), msg.m_type.end(), reinterpret_cast<char*>(contents.data() + 1));
-    std::copy(msg.data.begin(), msg.data.end(), contents.begin() + 13);
+    std::vector<uint8_t> contents;
+    auto short_message_id = V2_MESSAGE_MAP(msg.m_type);
+    if (short_message_id) {
+        contents.resize(1 + msg.data.size());
+        contents[0] = *short_message_id;
+        std::copy(msg.data.begin(), msg.data.end(), contents.begin() + 1);
+    } else {
+        contents.resize(13 + msg.data.size());
+        std::copy(msg.m_type.begin(), msg.m_type.end(), reinterpret_cast<char*>(contents.data() + 1));
+        std::copy(msg.data.begin(), msg.data.end(), contents.begin() + 13);
+    }
     // Construct ciphertext in send buffer.
     m_send_buffer.resize(contents.size() + BIP324Cipher::EXPANSION);
     m_cipher.Encrypt(MakeByteSpan(contents), {}, false, MakeWritableByteSpan(m_send_buffer));
