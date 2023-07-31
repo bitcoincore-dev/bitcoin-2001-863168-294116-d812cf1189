@@ -15,7 +15,7 @@ class ArgsManager;
 
 namespace wallet {
 class CWallet;
-bool DumpWallet(const ArgsManager& args, CWallet& wallet, bilingual_str& error);
+bool DumpWallet(CWallet& wallet, bilingual_str& error, const std::string& dump_filename);
 bool CreateFromDump(const ArgsManager& args, const std::string& name, const fs::path& wallet_path, bilingual_str& error, std::vector<bilingual_str>& warnings);
 } // namespace wallet
 
