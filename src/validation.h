@@ -268,7 +268,7 @@ static inline MempoolAcceptResult AcceptToMemoryPool(Chainstate& active_chainsta
 * possible for the package to be partially submitted.
 */
 PackageMempoolAcceptResult ProcessNewPackage(Chainstate& active_chainstate, CTxMemPool& pool,
-                                                   const Package& txns, bool test_accept)
+                                                   const Package& txns, bool test_accept, const ignore_rejects_type& ignore_rejects=empty_ignore_rejects)
                                                    EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
 /* Mempool validation helper functions */
