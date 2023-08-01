@@ -1329,6 +1329,7 @@ PackageMempoolAcceptResult MemPoolAccept::AcceptMultipleTransactions(const std::
     const CFeeRate package_feerate(m_total_modified_fees, m_total_vsize);
     TxValidationState placeholder_state;
     if (args.m_package_feerates &&
+        (!args.m_ignore_rejects.count("package-fee-too-low")) &&
         !CheckFeeRate(m_total_vsize, m_total_modified_fees, placeholder_state, empty_ignore_rejects)) {
         package_state.Invalid(PackageValidationResult::PCKG_POLICY, "package-fee-too-low");
         return PackageMempoolAcceptResult(package_state, {});
