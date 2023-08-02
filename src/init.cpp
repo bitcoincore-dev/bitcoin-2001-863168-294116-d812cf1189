@@ -1423,6 +1423,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
         });
 
     if (g_zmq_notification_interface) {
+        CValidationInterface::any_use_tip_block_cache = true;
         RegisterValidationInterface(g_zmq_notification_interface.get());
     }
 #endif
